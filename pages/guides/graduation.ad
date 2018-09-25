@@ -1,0 +1,444 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Guide to Successful Graduation
+Apache Incubator PMC
+2002-10-16
+:jbake-type: guide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+The intent of this document is to help podlings
+understand the process of
+graduation and offer some views about how to approach it.
+It also links to the Incubator
+link:http://incubator.apache.org/incubation/Incubation_Policy.html#Graduating_from_the_Incubator[exit policies].
+It is not an inflexible standard but represents a
+consensus condensed from previous discussions on the
+incubator general list. It also describes some of
+the first steps that should be taken after
+graduation.
+
+*This is just a guide. Policy is stated link:/policy/incubation.html[here].*
+
+Help to improve the system by posting a patch for
+this document to the incubator section of JIRA or a
+comment to the link:lists.html#general_at_incubator.apache.org[general] list at
+incubator.
+
+== What is Graduation?
+
+Graduation is the act of a podling becoming either a
+subproject under an already existing Apache project, or
+becoming a top level Apache project. Graduating is a
+democratic process: in the end, it comes down to a *link:http://www.apache.org/foundation/voting.html[VOTE]*. Note
+that during your stay in the incubator, you are already busy
+with the process of Graduating: by adopting Apache procedures,
+growing and fostering your community, having (civil) fights
+concerning code style (tabs versus spaces), cutting releases
+and so forth. All these acts have an influence on your
+projects graduation.
+
+The road to graduation is pretty clear: depending on whether your
+project wants to become a top level project, or join as a
+subproject under an already existing project the steps are
+fairly simple but do take time and effort. This document
+provides guidelines for making this process run smooth.
+
+This document is offered for guidance and education only.
+Actual policy is documented in the link:../incubation/Incubation_Policy.html[Incubation PolicyGuide] in 
+link:../incubation/Incubation_Policy.html#Graduating_from_the_Incubator[this]
+section. Please post any questions about graduation
+to the link:lists.html#general_at_incubator.apache.org[general incubator list].
+
+== Whether to Graduate to Subproject or to Top Level Project
+
+Each proposal has a link:/incubation/Roles_and_Responsibilities.html#Sponsor[Sponsor].
+The identity of the Sponsor indicates the natural
+destination. For proposals sponsored by the link:/policy/roles_and_responsibilities.html#the_board[Board] or by
+the 
+link:/policy/roles_and_responsibilities.html#incubator_project_management_committee_ipmc[IncubatorPMC (IPMC)], this is a top level project. For others,
+this is as a subproject of the sponsoring project. However, the
+destination is fixed only on graduation, not entry. Projects
+grow and evolve during the graduation process. As
+graduation approaches, this original preference should be
+reviewed based on where the project is now.
+
+Graduation as a subproject is only possible if the
+subproject still falls within the scope of the project and
+requires the consent of the project link:http://www.apache.org/foundation/how-it-works.html#structure[PMC].
+Graduation as a project requires the formation of the new
+project by the link:/incubation/Roles_and_Responsibilities.html#board[Board].
+
+The link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[IPMC]
+will also express a democratic opinion. For those seeking
+to graduate to a subproject this *link:http://www.apache.org/foundation/voting.html[VOTE]*
+is to approve the
+transfer. For those seeking to graduation as a top level
+project, this will be a recommendation to the link:/incubation/Roles_and_Responsibilities.html#board[Board].
+Expect IPMC-ers to ask questions about the project
+including about the choice of destination. This is part of
+the normal process.
+
+== Before You Graduate
+
+Before you start thinking about graduation, you need to make
+sure you are ready and meet the requirements imposed on Apache projects.
+This section will provide a shortlist for podlings to
+determine if they meet the criteria for asking graduation.
+
+=== Graduation Check List
+
+The following is a short checklist giving an overview, not
+a substitute for reading the content below.
+
+* Preparations
+** Complete (and sign off) tasks documented in the link:#notes-status[status file]
+** Ensure link:#notes-names[suitable names] for project name and product names
+** Demonstrate ability to link:#releases[create Apache releases]
+** Demonstrate link:#community[community readiness]
+** Ensure link:/incubation/Roles_and_Responsibilities.html#Mentor[Mentors] and link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[IPMC] have no link:#notes-issues[remaining issues]
+* Decide upon link:#subproject-or-top-level[destination]
+* Prepare a link:#tlp-resolution[resolution] *(top level candidates only)*.
+* link:#subproject-acceptance[Subproject acceptance *VOTE*] by destination Project *(subproject candidates only)*
+* link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[Incubator PMC (IPMC)]:
+** For top level candidates, this is a link:#ipmc-top-level-recommendation[recommendation *VOTE*]
+** For subproject candidates, this is a link:#subproject-graduation[graduation approval *VOTE*]
+* Final link:#notes-on-hand-over[hand-over]
+* Consider post graduation link:#project-first-steps[tasks]
+
+=== Checking the Status File
+
+The status file records and summarizes incubation-related
+information on the podling. The 
+link:ppmc.html#Incubator_ASF_Board_Reports[PPMC] is
+responsible for keeping this file current. Before you are
+able to graduate, all tasks need to be completed.
+
+The status file is a great way of keeping tabs on how your
+project is doing and what needs to be done to meet the
+graduation criteria. The link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[Incubator PMC]
+will check this
+file when they vote on the graduation of your project.
+Once all tasks are done and the listed criteria met, your
+project may be ready for graduation.
+
+The status file of the JUDDI project is link:http://incubator.apache.org/projects/juddi.html[one example].
+
+== Ensure suitable project name and product names
+
+Please read link:http://www.apache.org/foundation/marks/naming.html[detailed documentation here].
+The "Process for ensuring suitable project and product names" is mandatory for every podling which wants to
+graduate.
+
+== Creating an Apache Release
+[quote,Eric Steven Raymond, http://catb.org/esr/writings/cathedral-bazaar/cathedral-bazaar/ar01s04.html]
+====
+Release Early, Release Often
+====
+
+Projects need to cut releases. Apache projects need to
+understand how to cut Apache releases. Therefore it is an
+important step during your stay in the incubator to
+demonstrate the ability to create an Apache Release.
+
+Podlings do not need to actually *publish* a
+release to demonstrate that they understand how to
+accomplish such a feat. However, creating a release that
+is approved by the link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[incubator project management committee] is usually the
+simplest way to do this.
+
+If you are going to cut a release (which is highly
+recommended), then please read the link:releasemanagement.html[Incubator Release Management Guide] for hints, tips and guidelines for cutting a
+release that will get approved by the
+link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[IPMC]
+without problems.
+
+== Creating an Open and Diverse community
+
+A major criterion for graduation is to have developed an
+open and diverse link:http://www.apache.org/foundation/glossary.html#Meritocracy[meritocratic]
+community. Time has demonstrated that these kinds of
+communities are more robust and productive than more
+closed ones.
+
+Apache projects are self-sustaining and self-governing
+communities. Long term success and health requires that
+these communities understand how to:
+
+- recruit users, developers, committers and PMCers
+- take responsible collective action
+- disagree in public on technical matters without destroying personal relationships
+- create an open, positive and inclusive atmosphere on the mailing lists
+
+Graduation tests whether (in the opinion of the link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[IPMC])
+a podling has learned enough and is responsible enough to
+sustain itself as such a community.
+
+Read more on how to successfully build an open and diverse
+community for your podling in the link:community.html[community guide].
+
+As a project grows, it needs to renew itself by accepting
+new committers. A project needs to learn how it can
+recruit new developers and committers into the community.
+Accepting new committers usually increases the diversity
+of the project. So, this process is very beneficial. link:community.html[Community building] requires
+energy which could have been spent on code development but
+this cost is an important investment for the future of the
+project.
+
+The openness of the community is not only measured by the
+number of contributors. Open and respectful discussions on
+the mailing lists are vital. Ways to resolve technical
+conflict without destroying personal relationships must be
+learned. Learning to use mailing lists effectively is very
+important. If this can be achieved, then you have shown to
+be a lively, active and successful community. The future
+looks bright.
+
+The project is considered to have a diverse community when
+it is not highly dependent on any single contributor
+(there are at least 3 legally independent committers and
+there is no single company or entity that is vital to the
+success of the project). Basically this means that when a
+project mostly consists of contributors from one company,
+this is a sign of not being diverse enough. You can
+mitigate this requirement by admitting more external
+contributors to your project that have no tie to the
+single entity.
+
+Growing an open and diverse meritocratic community is not
+something that just happens: it takes work. Read the link:community.html[building a community guide] for
+guidelines, hints and tips on how you can accomplish this
+for your project.
+
+=== Other Issues
+
+The Incubator relies more on people than rules: rather
+than try to create rules to cover every circumstance,
+rules are developed and codified as required. People
+are trusted to evolve process and policy. This guide
+can only document the most common issues and it is
+possible that there are other concerns that may require
+resolution that are not covered.
+
+Podlings who are unsure if they are ready to graduate may want to consider completing the link:http://community.apache.org/apache-way/apache-project-maturity-model.html[Apache Project Maturity Model].  You may find this to be a useful guide when looking at various factors in your podling's community.
+
+== The Graduation Process
+
+=== Graduating to a Top Level Project
+
+Top level projects are created by the
+link:/incubation/Roles_and_Responsibilities.html#board[Board]. The
+link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[Incubator Project Management Committee (IPMC)] can therefore only
+recommend to the Board that the project is ready to
+graduate to a top level project.
+
+Graduation to a top level project requires:
+
+- a charter for your project
+- a positive community graduation *link:http://www.apache.org/foundation/voting.html[VOTE]*
+- a positive IPMC recommendation *link:http://www.apache.org/foundation/voting.html[VOTE]*
+- the acceptance of the link:#tlp-resolution[resolution] by the Board
+
+This process can take a while, since it typically sparks
+some discussion inside the community and possibly in the
+IPMC.
+
+Here's an estimated timeline for the graduation process.
+It should help you understand when you should start
+ramping up your community to get timely graduation and
+make the process smooth.
+
+image:/images/graduation-timeline.png[Graduation timeline]
+
+For each event we scheduled one or two weeks. Even though
+a *link:http://www.apache.org/foundation/voting.html[VOTE]*
+is usually limited to 72 hours, you should prepare
+for discussion and possibly having to cast a revote with a
+revised proposal.
+
+=== Community Graduation Vote
+
+A community needs to be willing to govern itself
+before it can become a top level project. A good way
+to demonstrate this is through a free *link:http://www.apache.org/foundation/voting.html[VOTE]* (by the
+community) on the graduation proposal.
+
+This *VOTE* is not a requirement but is recommended. It
+is unlikely that link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[IPMC]members 
+will vote to approve graduation unless the link:/incubation/Roles_and_Responsibilities.html#Mentor[Mentors]
+and community positively express their readiness for
+graduation. It is wise to notify the 
+link:lists.html#general_at_incubator.apache.org[incubator general list] that the community vote is starting. Please do not Cc the
+vote to the general list as that creates confusion, instead you can either:
+- FWD the [VOTE] e-mail to the general list, or
+- Send a different copy to the general list indicating that a graduation community [VOTE] is in progress 
+
+=== Preparing a Charter
+
+So, in this case a suitable 
+link:/incubation/Roles_and_Responsibilities.html#board[Board] resolution should be
+drawn up by the community advised by the
+link:/incubation/Roles_and_Responsibilities.html#Mentor[Mentors].
+Committers can access the podling template for
+resolutions in the 
+link:https://svn.apache.org/repos/private/committers/board/templates/podling-tlp-resolution.txt[committers svn repository].  Your link:https://whimsy.apache.org/roster/ppmc/[whimsy roster] also includes a feature to draft a resolution.  Also, resolutions are included in the Board minutes, which are posted publicly
+link:http://www.apache.org/foundation/board/calendar.html[here ] . These contain numerous examples. Good examples include:
+
+- Harmony (see section *E. Establish the Apache Harmony project* in the link:http://www.apache.org/foundation/records/minutes/2006/board_minutes_2006_10_25.txt[October 2006 Board minutes])
+- OFBiz (see section *B. Establish Apache Open for Business Project* in the link:http://www.apache.org/foundation/records/minutes/2006/board_minutes_2006_12_20.txt[December 2006 Board minutes])
+- Cayenne (see section *C. Establish Apache Cayenne Project* in the link:http://www.apache.org/foundation/records/minutes/2006/board_minutes_2006_12_20.txt[December 2006 Board minutes])
+
+The original proposal and the status document should
+be consulted when creating this document. Projects
+evolve over time and some deviation from the original
+proposal may well prove acceptable. The 
+link:/incubation/Roles_and_Responsibilities.html#board[Board]
+resolution is the ultimate definition of the scope of
+an Apache project. So, it is important that it
+reflects the vision for the project as it appears on
+the eve of graduation.
+
+A good resolution is neither too narrow nor too broad.
+If the project's scope is too narrow, then its
+activities will be unnecessarily constrained. If a
+project's scope is too broad then it may lack focus
+and suffer from governance issues.
+
+If you read these resolutions you also see that you
+need to appoint a link:http://www.apache.org/foundation/glossary.html#Chair[Chair]
+for your project. It is up to the
+link:ppmc.html[PPMC] to choose one
+person to act as the chair after graduation.
+
+=== The Recommendation Vote
+
+The link:#tlp-resolution[resolution] should be proposed on the general
+link:mailto:general@incubator.apache.org[incubator list] before a *link:http://www.apache.org/foundation/voting.html[VOTE]*
+is started to allow feedback. Once a consensus has been reached, a *VOTE*
+should be started on the same general incubator list by a member of the link:ppmc.html[PPMC] proposing
+that the
+link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[IPMC]
+recommends the resolution to the link:/incubation/Roles_and_Responsibilities.html#board[Board].
+
+=== Submission of the Resolution to the Board
+
+Top level projects are created by a link:#tlp-resolution[resolution] by the
+link:/policy/roles_and_responsibilities.html#the_board[Board].
+Once the link:#tlp-resolution[resolution] has been
+finalized and consensus reached, it should be
+submitted to the Board. For inclusion in the agenda
+for the next meeting, the resolution should be
+submitted at least 72 hours before that meeting. A
+calendar for meetings is link:http://www.apache.org/foundation/board/calendar.html[available].
+
+Business for the link:/policy/roles_and_responsibilities.html#the_board[Board] should be submitted by a post
+to the *board* mailing list. Posting from
+an Apache address is recommended. Mixing public and
+private lists on a post is not recommended.
+
+The *board* list is private.
+The usual link:http://www.apache.org/foundation/how-it-works.html#management[netiquette]
+for Apache private lists should be observed. So, it is
+recommended that only the podling and
+link:/policy/roles_and_responsibilities.html#incubator_project_management_committee_ipmc[IPMC]
+private lists are CC'd (rather than the general incubator
+list). Please treat responses with appropriate
+confidentiality.
+
+The submission should include:
+- A clear subject (for example *Establish Foo TLP*)
+- A brief introduction
+- The name of proposed VP
+- Links to the *VOTE* threads
+- Summary of the *VOTE* results
+- The link:#tlp-resolution[resolution] text
+
+For example:
+[source]
+====
+From: &lt;you _at_ apache dot org&gt;
+To: &lt;board _at_ apache dot org&gt;
+CC: &lt;&lt;project&gt;-private _at_ incubator dot apache dot org&gt;
+Subject: Proposed Resolution: Establish &lt;project&gt; TLP
+
+Dear Apache Board,
+
+&lt;Project&gt; is ready for graduation out of the incubator. So, please
+consider the draft resolution below at your next meeting.
+
+&lt;thank you, best regards, personal note if you wish, etc etc&gt;
+
+&lt;your name&gt;
+
+--
+References:
+
+Home: &lt;project home page&gt;
+Vote by project: &lt;link to vote thread on project list&gt;
+Vote by incubator: &lt;link to vote thread on general list&gt;
+
+Resolution draft:
+
+&lt;&lt;resolution goes here, 72 characters wide,
+indent with 4 spaces&gt;&gt;
+
+--
+&lt;your e-mail sig, if you have one&gt;
+====
+
+Please try to keep the *board* list traffic low. Do not
+submit reminders or ask whether messages have been
+received on the list. link:http://www.apache.org/foundation/members.html[Apache Members] have access to the link:/incubation/Roles_and_Responsibilities.html#board[Board]
+archives and may
+observe Board meetings. To follow the progress of a
+resolution, please ask a friendly Mentor, Member or
+link:http://www.apache.org/foundation/board/[Director].
+
+=== Press Releases for new TLPs
+
+Once there is clear consensus that the recommendation will happen,
+a member of the PPMC should contact ASF Marketing &amp; Publicity at
+*press(at)apache(dot)org* if your project is interested in a
+formal press release announcing your graduation.  This should be done
+roughly at the same time that the board resolution is sent.
+
+== Graduating to a Subproject
+
+Subprojects are accepted by a Project Management
+Committee. The link:/incubation/Roles_and_Responsibilities.html#Incubator_Project_Management_Committee_IPMC[Incubator Project Management Committee]
+needs to approve the graduation of the podling to a
+subproject.
+
+=== Community Graduation Vote
+
+Becoming a subproject is a voluntary process, and should be accepted by the community becoming a sub-project.  It should be clear to the PPMC and committers for the podling what the make up of the new sub-project should be, e.g. who belongs on the receiving PMC, who will be a committer.  Due to this nature, it is important that the podling votes to become a sub-project.  This vote should happen on a public dev list.
+
+=== Subproject Acceptance Vote
+
+A formal *link:http://www.apache.org/foundation/voting.html[VOTE]*
+by the Project link:http://www.apache.org/foundation/how-it-works.html#structure[PMC]
+to accept the podling as a subproject is a
+prerequisite. Sometimes, projects may feel that the
+podling has grown too big and would be better as a
+top level project. The Chair of the project is the
+right contact.
+
+=== Graduation Approval Vote
+
+Once the accepting TLP have voted to accept the podling and the podling has voted to become a subproject, noticed should be sent to the IPMC via `general AT incubator.a.o` email list indicating that the podling will become a subproject.  If after 72 hours no issues are raised, the podling may be considered a subproject of the accepting TLP.  Likewise, if any IPMC member raises an issue, that should be discussed.  If the issue is addressed, the member raising the issue should indicate they rescind their concerns or otherwise consider them resolved.
+
+=== Final steps
+
+Please read the link:/guides/transferring.html[Guide to Transferring Resources out of the Incubator]

@@ -1,0 +1,112 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Podling Websites
+Apache Incubator PMC
+2002-10-16
+:jbake-type: guide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+Podlings need to build a community in Apache in order to be accepted
+as part of the Apache Software Foundation. One of the tools used to build
+a community is the web site.
+
+== Podling Website Requirements
+
+Podlings are, by definition, not yet fully accepted as part of the
+Apache Software Foundation. Therefore, they are subject to additional
+constraints on their websites. These policies MUST be adhered to
+before Graduation is considered unless prior approval is obtained from
+the Incubator PMC.
+
+- The published site for each podling must conform to the guidelines in link:/guides/branding.html[Podling Branding/Publicity].
+- Podlings should review link:https://www.apache.org/foundation/marks/linking[Corporate Recognition Best Practices], link:https://www.apache.org/foundation/marks/resources[Apache trademark information], and must aim to be in compliance with link:https://www.apache.org/foundation/marks/pmcs[Apache Project Website Branding Policy]
+- The sources for every podling site sources should be maintained in the podling's site SVN or git directory
+- The published site for each podling should conform to this URL space: #http://podlingname.incubator.apache.org/#
+- The staging site (if using CMS) for each podling should conform to this URL space: #http://podlingname.staging.apache.org/#
+- Every podling should maintain an incubation status file under: #http://incubator.apache.org/projects/podlingname.html#
+- Eventual extra incubation documents should be filed under: #http://incubator.apache.org/projects/podlingname/**#
+
+== Creating the Podling Website
+=== Creating A Good Podling Site
+
+Apache Project Web Sites typically include several standard pages.
+Each page is formatted with a navigation bar on the left and a project
+standard header that includes the Incubator graphic.
+
+The Web Site can be established during incubation, and migrated
+after incubation to a permanent place in the TLP home.
+
+- Project Home Page: the primary entry point to the site; contains project description, news, invitation to join the project.
+- License Page: link to the Apache License 2.0
+- Downloads: many projects in incubation will release code, and this page describes them and has links to the download pages that redirect to Apache Mirror sites.
+- Documentation: this page describes the project documentation, including javadoc for Java projects; guides, tutorials, and links to external documentation.
+- Committers: a list of current committers on the project.
+- Mailing Lists: there are several mailing lists that the community might be interested in, and this page contains mailto: links that allow easy subscription (and unsubscription) to any of them.
+- FAQ: frequently asked questions are answered here.
+- Road Map: if the project has a vision of future community or development activities, the road map is published here.
+- Source Code: links to the browsable source repository and git or svn commands to check out the sources.
+- Coding Standards: the coding standards for submitted code by the community, along with a description of how strict the project intends to be.
+- Issue Tracking: links to the JIRA or other issue tracking tool, possibly including frequently used filters for issue lists.
+- Dependencies: other projects that this project depends on.
+- favicon: the project's icon in a format suitable for a browser's address bar. If absent, an Apache Feather will be displayed.
+
+=== Web Site Generation Tool
+
+The choice of tool used to generate the web site is left to
+the podling. If you already have a tool that you are comfortable
+with, you can continue to use it. If you do not, consider using
+the Jekyll based link:http://www.apache.org/dev/cmsref.html[Apache website template].
+
+Regardless of which tool you use, the web site should be maintained
+in the svn/git repository, and include the site generation tool as a binary
+file. This simplifies the process of site generation and enables changes
+to the site to be made by any committer. The generated site should also
+be checked into svn/git. This allows the generated site to be relocated
+to any part of the Apache site after incubation is complete.
+
+Since the site is independent of the code, it should exist high in
+the svn/git repository, e.g. parallel to the trunk of the source tree.
+
+=== Publishing Your Website
+
+Managing a podling's website is now the same as a top-level project.  Review the link:http://www.apache.org/dev/project-site.html[Infra Documentation on Project Websites]
+
+=== Using A Wiki To Create Documentation
+
+Podlings may use a wiki to create documentation (including the website) providing that follow the
+link:http://cwiki.apache.org/[guidelines]. In particular, care must be taken to
+ensure that access to the wiki used to create documentation that may be included in the project
+release is restricted to only those with filed link:http://www.apache.org/licenses/[individual CLAs].  The PPMC MUST review all changes and ensure that trust is not abused.
+
+=== Web Site Transition
+
+Projects may arrive with existing web sites outside Apache. Contributing as much
+documentation as possible to the project from these sites is strongly encouraged.
+Offshore sites related to projects are fine but official web sites for Apache
+projects should be hosted by Apache.
+
+Some projects elect to maintain previous releases outside Apache. In this case, the existing site
+is typically retained as a hub for this maintenance work. Otherwise, sites should link
+or redirect to the official Apache site.
+
+Apache may accept donations of domains related to projects moving here.
+Infrastructure will then arrange for renewal of the domains and redirection
+of traffic the official site. Ask infrastructure for more details.
+
+Apache needs to deal with all commercial entities equitably. Linking to
+useful information on commercial sites is fine but unfair discrimination between
+commercial sites is not. Most Apache projects find it better to simply link only
+to relevant articles on commercial sites rather than having to vet every request
+for links to commercial activity.

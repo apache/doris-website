@@ -1,0 +1,119 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Guide to Participation
+Apache Incubator PMC
+2002-10-16
+:jbake-type: pmcGuide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+This document is descriptive, not normative. It aims to help those who are new
+to the Incubator learn its ways and netiquette.
+
+== General Netiquette
+
+The usual advice applies. If you are not familiar with the way mailing lists
+work at Apache, read link:http://jakarta.apache.org/site/mail.html[this].
+
+Please ensure that your mail client is correctly configured. In particular, post only plain
+text emails to these lists. Apache spam filters may reject HTML emails.
+
+The incubator is a public meeting place with a diverse and ever-changing community.
+Creating social bonds and establishing a reputation is important. Please be polite,
+courteous and diplomatic.
+
+When in doubt - ask on link:lists.html#general+at+incubator.apache.org[general.AT.incubator.apache.org].
+
+== Ways To Participate
+=== On The General Mailing List
+
+The *general.AT.incubator.apache.org* is an public list with open subscription.
+All are encouraged to subscribe, read and post their opinions in the usual way.
+
+Anyone can by their words influence the decision-making process and may vote on
+link:http://www.apache.org/foundation/voting.html[VOTE threads].
+However (as is usual) only the votes of those on the
+link:/incubation/Roles_and_Responsibilities.html#Incubator+Project+Management+Committee+%28PMC%29[Incubator PMC] are binding.
+
+=== As A User
+
+A link:http://www.apache.org/foundation/how-it-works.html#users[user]
+is anyone who uses our software. Most Apache projects have active user
+communities who are willing to provide help. This is not always the case with incubator podlings.
+
+To gain the maximum benefit from any immature project (as many podlings are),
+adopt an active attitude.
+Read link:http://jakarta.apache.org/site/contributing.html[On Contributing]
+and
+link:http://jakarta.apache.org/site/understandingopensource.html[Understanding Open Source].
+Become a link:#developer[developer] (in the Apache meaning of the term).
+
+=== As A Developer
+
+At Apache, a link:http://www.apache.org/foundation/how-it-works.html#developers[developer]
+(aka contributor) is anyone who actively helps to develop our software. This includes more than just coders
+and documenters. For example, anyone who joins in discussions on the mailing lists or answers questions
+from users is also a developer.
+
+Apache is a link:http://www.apache.org/foundation/how-it-works.html#decision-making[_DO_-ocracy]. The first step along the road leading to
+link:#committer[committership] is to become a developer. For more information start with
+link:http://www.apache.org/foundation/how-it-works.html[How Apache Works]
+and the link:http://www.apache.org/dev/[developer documentation].
+
+=== As A Committer
+
+A link:/incubation/Roles_and_Responsibilities.html#Committers[committer]
+is anyone with write access to the source repository. Election to committership in the Incubator
+works a little differently from the process that is usual elsewhere at Apache.
+
+Once a podling has been bootstrapped, link:#developer[developers] are nominated
+and election to committer happens in the link:ppmc.html#Voting+in+a+new+committer[usual way].
+
+When a proposal is just a link:/incubation/Roles_and_Responsibilities.html#Candidate[candidate],
+there are two possible approaches (for those interested in committership).
+
+The proposal typically
+link:proposal.html#template-initial-committers[contains] a list of initial committers.
+When a podling is bootstrapped, this list is used by the mentors to set up initial accounts.
+So, one way to become a committer for a podling is to be listed on the proposal as an initial
+committer.
+
+The right way to express interest is by a post to the list with a brief introduction.
+Piling onto a proposal (by adding your own name as an initial committer) is impolite.
+Read
+link:http://mail-archives.apache.org/mod_mbox/incubator-general/200607.mbox/%3cC73C6D24-3216-4EB4-8846-1218B38CC594@gbiv.com%3e[this thread].
+
+A podling needs to learn how to recruit new committers from its developers. So,
+another way is to show up on the list and start helping with the development.
+This path will help the podling more than adding your name to the list of initial committers.
+
+=== As A Mentor
+
+Anyone with knowledge of open source or Apache can participate as a informal mentor
+for a podling. Development is open and anyone with an interest is encouraged to
+subscribe.
+
+Eligibility to act as a formal
+link:/incubation/Roles_and_Responsibilities.html#Mentor[Mentor] is
+link:/incubation/Incubation_Policy#Mentor[limited]. The best way for an eligible
+individual to become a Mentor is to post a note introducing him- or herself
+and volunteering their services to *general.AT.incubator.apache.org*
+during the development of the link:proposal.html[proposal].
+
+=== On The Incubator PMC
+
+Apache Members are encouraged to join the
+link:/incubation/Roles_and_Responsibilities.html#Incubator+Project+Management+Committee+%28PMC%29[Incubator PMC]. Post a note to the Incubator PMC private list.
+
+Those who aren't members may be elected in the usual Apache way. These elections are held on private lists.

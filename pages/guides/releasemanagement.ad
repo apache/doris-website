@@ -1,0 +1,49 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Release Management
+Apache Incubator PMC
+2002-10-16
+:jbake-type: guide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+== What goes into a release
+
+A podling should begin to familiarize itself with ASF policies for releases.  Those policies can be found at link:http://www.apache.org/dev/#releases[http://www.apache.org/dev/#releases].
+
+It is well understood that one of the goals of incubation is to help a podling understand how to
+build link:http://www.apache.org/dev/#releases[ASF compliant releases]. This is why its
+mandatory to have at least 3 +1 votes from
+link:/incubation/Roles_and_Responsibilities.html#Incubator+Project+Management+Committee+%28PMC%29[IPMC members]
+review the releases (this should include your link:/incubation/Roles_and_Responsibilities.html#Mentor[mentors] but is not mandatory)
+for accuracy in compliance with the ASF and link:/incubation/Incubation_Policy.html#Releases[Incubator policies].
+The podling community, of course, needs to be fully engaged in review process as well. Anybody reviewing
+the releases will provide the release manager and IPMC members with information about what is wrong
+with the release. The severity of the issues and whether they are blocking or not may be discussed
+but the ultimate guidance on where podling releases may get additional flexibility belongs to the mentors and IPMC members.
+
+== Podling Constraints
+
+The link:/incubation/Incubation_Policy.html#Releases[Incubator policies] apply two additional constraints to podlings for their releases.  They are repeated here for clarity only.
+- Release artifacts must include #incubating# in the final file name
+- Release artifacts must include a link:/guides/branding.html#disclaimers[disclaimer] as noted
+
+In order for a podling to receive full permission from the IPMC to execute the release, the release
+vote must be held on the link:/guides/lists.html#general+at+incubator.apache.org[incubator general list]
+and pass based on the link:http://apache.org/foundation/voting.html#ReleaseVotes[standard Package Release voting rules].
+Only Incubator PMC votes are binding, but all are encouraged to vote.
+
+The Incubator PMC expects the source releases to be staged on
+#https://dist.apache.org/repos/dist/dev/incubator/$podlingName# so that they can easily be moved
+to the release location via #svn mv#.

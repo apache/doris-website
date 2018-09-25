@@ -1,0 +1,29 @@
+= Apache Incubator
+Apache Incubator PMC
+2002-10-16
+:jbake-type: homepage
+:jbake-status: published
+:idprefix:
+:imagesdir: ./images/
+
+The Incubator project is the entry path into The Apache Software Foundation (ASF) for projects and codebases wishing to become part of the Foundation's efforts. All code donations from external organisations and existing external projects wishing to join Apache enter through the Incubator.
+
+The Apache Incubator has two primary goals:
+
+- Ensure all donations are in accordance with the ASF http://www.apache.org/licenses/[legal standards]
+- Develop new communities that adhere to our http://www.apache.org/foundation/how-it-works.html[guiding principles]
+
+See also the http://www.youtube.com/watch?v=KopPbWS87fw[Life In The Apache Incubator video], where former Incubator PMC chair Jukka Zitting presents the Incubator, at ApacheCon EU 2012.
+
+== Getting in touch with the Incubator
+
+Our discussions happen on the \general@incubator.apache.org mailing list: mailto:general-subscribe@incubator.apache.org[Subscribe] - mailto:general-unsubscribe@incubator.apache.org[Unsubscribe].
+
+That list is archived using Pony Mail, which also allows you to reply without subscribing, using a https://s.apache.org/B5Ai[forum-style interface].
+
+See also https://incubator.apache.org/guides/lists.html .
+
+== About The Apache Software Foundation
+The Apache Software Foundation provides organizational, legal, and financial support for a broad range of open source software projects. The Foundation provides an established framework for intellectual property and financial contributions that simultaneously limits the potential legal exposure for the contributors. Through a collaborative and meritocratic development process, Apache projects deliver enterprise-grade, freely available software products that attract large communities of users. The pragmatic Apache License makes it easy for all users, commercial and individual, to deploy Apache products.
+
+Click to find out http://www.apache.org/foundation/[more about the ASF]

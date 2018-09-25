@@ -1,0 +1,108 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Podling Press Kit
+Apache Incubator PMC
+2002-10-16
+:jbake-type: guide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+== Apache Incubator Graphics
+
+This page contains various graphical assets that are intended to be used by Apache Incubator podlings and their communities.
+The Apache Software Foundation owns all Apache-related trademarks, service marks, and graphic logos. You can read our link:http://www.apache.org/foundation/marks/[formal Trademark Policy] that addresses allowable uses and how to contact us for permissions.
+The Apache Incubator provides two main types of graphic:
+
+- Incubator Graphics - the official Apache Incubator logo
+- “Powered By” Apache Incubator Logos - to be used by Apache Incubator podlings
+
+Please note that each Apache podling provides and maintains their own official project logo on their homepage. The best place to ask for a copy of a project logo is on their dev@ mailing list.
+
+= Downloadable Graphics
+
+This section contains downloadable graphics of the Apache Incubator logo.
+
+REMINDER: all graphics/images/logos are trademarks of the ASF, and must not be used without appropriate attribution and permission from the ASF. Please see our formal Trademark Policy for more details. In particular, as a vendor-neutral public charity that provides independent governance to all Apache projects, you must use care when displaying the feather, and ensure it's clear that it's referring to the ASF as an independent organization.
+
+=== Official Incubator Logo
+
+This is the latest version of the Apache Incubator logo, as launched in March 2017. This logo is to be used on ALL podling pages during the incubation process.
+
+image:/images/incubator_feather_egg_logo.png[]
+
+link:/images/SVG/apache_incubator.svg[SVG] | link:/images/PDF/apache_incubator.pdf[PDF] | link:/images/EPS/apache_incubator_RGB.eps[EPS - RGB] | link:/images/EPS/apache_incubator_CMYK.eps[EPS - CMYK]
+
+=== Red-On-White Version of Logo
+
+The red-on-white version of the Apache Incubator Logo is
+
+image:/images/incubator_feather_egg_logo_red_crop.png[]
+
+link:/images/SVG/apache_incubator_red.svg[SVG] | link:/images/PDF/apache_incubator_red.pdf[PDF] | link:/images/EPS/apache_incubator_red_RGB.eps[EPS - RGB] | link:/images/EPS/apache_incubator_red_CMYK.eps[EPS - CMYK]
+
+=== Black-On-White Version of Logo
+
+The black-on-white version of the Apache Incubator Logo is
+
+image:/images/incubator_feather_egg_logo_wb_crop.png[]
+
+link:/images/SVG/apache_incubator_black.svg[SVG] | link:/images/PDF/apache_incubator_black.pdf[PDF] | link:/images/EPS/apache_incubator_black_RGB.eps[EPS - RGB] | link:/images/EPS/apache_incubator_black_CMYK.eps[EPS - CMYK]
+
+=== White-On-Black Version of Logo
+
+The white-on-black version of the Apache Incubator Logo is
+
+image:/images/incubator_feather_egg_logo_bw_crop.png[]
+
+link:/images/SVG/apache_incubator_white.svg[SVG] | link:/images/PDF/apache_incubator_white.pdf[PDF] | link:/images/EPS/apache_incubator_white_RGB.eps[EPS - RGB] | link:/images/EPS/apache_incubator_white_CMYK.eps[EPS - CMYK]
+
+== "Powered By" Apache Incubator Podling Logos
+
+Inspired by the ASF’s “Powered by Apache” logo [LINK], the “Apache Incubator Podling” logo was created to maintain the unique identity of each Apache podling whilst undergoing development in the Apache Incubator. All Apache podlings and their communities are encouraged to proudly display “Apache Incubator Podling” assets on their Websites, documentation, marketing materials, etc.
+Guidelines for the appropriate use of the “Powered By Apache” logos include:
+
+- The standalone “Powered By” Apache Incubator and “Apache Incubator Podling” circular banded logos may be used standalone with just the Apache Incubator logomark (denoting general use of an Apache Incubator podling) or in combination with an official Apache podling logo;
+- The official podling logo may not be altered in any way other than removing/separating the name(s) where applicable as approved by the associated Podling Project Management Committee (PPMC);
+- The appropriate trademark symbol(s), such as ® or ™, associated with the podling's logo --if applicable-- must be included in the logo;
+- The “Powered By” logo's circular band format, font, and color must not be altered in any way;
+- The logo and/or its contents must not be rotated, animated, distorted, or otherwise altered, nor should it be used as a graphic element, background, or pattern;
+- The logo and/or its contents must not be translated or localized, nor should it have versioning numbers or other unauthorized words added to it;
+- The preferred background color for the logo is white, however, the logo may appear on colored, black, or image/photographic backgrounds providing the logo's legibility is not compromised;
+- The logo may be sized and produced in multiple file formats as required by the Podling Project Management Committee, with a preferred minimum size of 80 pixels high in Web/online applications (where possible) to ensure legibility;
+- The logo may not, under any circumstances, be incorporated with a third party's company name, product name, or logo(s), or adopt marks and/or logos that are confusingly similar to or imply improper association with The Apache Software Foundation;
+- Third parties and programs are not allowed to use official Apache project or podling logos and/or create alternate logos or identifying marks relating to any Apache project without written permission from the associated Podling Project Management Committee and/or ASF Brand Management.
+- We have a link:https://www.apache.org/foundation/marks/faq/#poweredby[trademark use policy for the "Powered By" phrase]
+
+In addition, official Apache Project pages and documentation on apache.org must utilize the appropriate trademark symbols on the respective Project logo, along with the following footnote: "Apache, Apache [PODLING NAME], and the Apache [PODLING NAME] logo are registered trademarks or trademarks of The Apache Software Foundation in the U.S. and/or other countries."
+
+=== Template and Usage
+
+==== Standalone "Powered By" Apache Incubator Logo
+image:/images/incubator_ring_logo.png[height=200]
+
+==== Per-Project Powered By Logos
+
+Logos for individual podlings, such as the ones below, are available in jpg, psd, and eps format. They can be retrieved by requesting:
+
+image:/images/incubator_power_ring.jpg[height=200]
+image:/images/incubator_ring_airflow.jpg[height=200]
+
+For example, creating the “Apache Incubator Podling” logo for Apache Airflow can be accomplished by retrieving the Airflow logo from link:http://airflow.incubator.apache.org/_images/pin_large.png[http://airflow.incubator.apache.org/_images/pin_large.png]
+If you are unable to find the logo you are looking for, please contact the podling’s mailing list.
+
+==== Template For the Creation of Powered By Logos
+image:/images/template_airflow.jpg[height=200]
+image:/images/template_hawq.jpg[height=200]
+image:/images/template_spot.jpg[height=200]
+

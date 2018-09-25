@@ -1,0 +1,95 @@
+= The Story of a Podling
+Apache Incubator PMC
+2002-10-16
+:jbake-type: proposalGuide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: /images/
+
+*This is just a draft for now...still a work in progress*
+
+This is an informational overview of the life of a podling, from proposal to graduation.
+
+It is intended for people considering incubating their project at the ASF, or people joining podlings,
+as a single page that gives an overview of the incubation process, without going into too much detail.
+
+Links to examples of proposals, discussions etc. are provided
+to give a more concrete overview of what happens during incubation. 
+
+We won't include many details - the goal is to keep this short, 
+so that you consume it in about ten minutes.
+
+== Proposal
+
+The first step towards incubation is to create a proposal for the Incubator.
+Examples like the link:http://wiki.apache.org/incubator/ClerezzaProposal[Clerezza] and 
+link:http://wiki.apache.org/incubator/FlexProposal[Flex] proposals will
+give you a feel for what to put in there.
+
+Creating the proposal will usually raise a number of questions about your future
+podling, and it's good to already find an ASF link:http://incubator.apache.org/incubation/Roles_and_Responsibilities.html#Champion[champion] 
+at this stage,
+to answer any questions that you might have or make the necessary contacts.
+
+Once your proposal is ready and you have decided to go forward, you can add it 
+to the link:http://wiki.apache.org/incubator/[wiki] and send a [PROPOSAL]
+message to the general@a.o list. Incubator PMC members can then give their feedback
+to help refine the proposal before voting upon it. 
+See the link:http://markmail.org/message/5udhowlggdmjsmd6[Flex discussion] for an example.
+
+== Mentors and initial committers
+In general 2-3 incubation mentors, either ASF members of Incubator PMC members
+Need to decide how to manage the list of initial committers
+
+== Incubator entry vote
+Starts when discussion is done
+Point to Flex vote
+72 hours as per ASF voting rules
+Usually driven by the champion
+Usually not contentious, as the previous phases help build consensus
+
+== Podling creation
+Point to Flex jira issues
+Driven by the champion
+
+== Initial code and trademarks
+
+If initial code is being donated you need software grants
+If the donated code has multiple owners or contributors, you might need to chase them down at this point, or omit the code for which you cannot get permission
+Any relevant trademarks should be donated at this point
+
+== First release
+
+It's good to make a first release early, even if it's not of great technical quality.
+From the Incubator's point of view, the release only has to fulfill the ASF's release requirements, which are primarily legal.
+Whether the product is good or useful software doesn't matter at this stage.  
+
+Learning the ASF's legal rules and customs, adapting the codebase to conform to them, and getting that first release past the Incubator PMC voting stage can be hard, so it's a good idea to tackle this task during the initial burst of energy as incubation begins.
+A secondary goal of making an early release is to document the podling's release process (link to Flex or Sling process), so that subsequent releases are easy and fast and people who are not core developers may serve as release managers.
+
+== Community growth
+
+To graduate, a podling has to demonstrate its ability to grow its community. In practice, this means attracting and electing new committers and PPMC members.
+Starting early on this helps. (TODO: reading list, Jukka's posts?)
+
+TODO: demonstrate openness/diversity
+
+== Exit discussions
+Incubation can proceed in unexpected directions - the standard exit is to become a TLP but that's not the only possibility (join a TLP, go elsewhere, retire, ...) - which are not necessarily failures.
+
+Discuss with the mentors and community based on the graduation criteria (link - Clerezza discussion?)
+== Graduation vote
+
+If graduating to TLP, First step is to create the board resolution, discuss who's on the new PMC (link to flex as one example), 
+it's good to have at least one ASF member in there.
+Community votes first, then IPMC.
+Point to policy + example votes
+
+== Board resolution
+The Incubator PMC acceptance vote is only a recommendation for the board to accept the new project.
+The new TLP only exists once the board approves the resolution to establish it. This is usually announced right after the board meeting, and the new PMC chair
+can then start the mechanics of establishing the TLP.
+
+== Champagne!
+Congratulations - at this point the new TLP is a full blown Apache project, and the newly created PMC is fully in charge of its destiny.

@@ -1,0 +1,269 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Mentors' Guide
+Apache Incubator PMC
+2002-10-16
+:jbake-type: pmcGuide
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+The Mentors' guide is a go-to place for information about getting a podling up and running from an infrastructure point of view.
+
+This document targets any Incubating Project member, but
+especially Mentors, who have to ensure that some things get done.
+For a general description of the role of a mentor on an incubating
+project see the
+link:/policy/roles_and_responsibilities.html#Mentor[Roles and Responsibilities]document.
+
+This guide is a descriptive and at times
+discursive document. It describes established practices.
+It is informational not normative. Policy is laid down in the
+link:/incubation/Incubation_Policy.html[Incubation Policy].
+
+== Overview
+
+After the Podling has been accepted by the Incubator PMC, one of the mentors
+link:/incubation/Incubation_Policy.html#Setting+Up+a+New+Podling[sets up]
+the Podling; _i.e._ adds the podling metadata, creates the initial Podling status page, and
+either creates or requests that
+other resources (mail lists, subversion, bug tracker, _etc._)
+be created.
+
+== Add to Incubation Summary file
+
+Add the podling to the podling summary file in
+the "incubator" SVN at *content/podlings.xml*
+(e.g. copy the entry from another podling that also has status="current")
+and see link:website.html[instructions].
+
+Please do this step ASAP after Acceptance. Other setup procedures utilize
+this metadata.
+
+Add a *'reporting'* tag (after *'description'*) with the attribute *'monthly="true"'*
+and the appropriate "group" attribute, based on the month in which  the podling
+entered incubation (1 for January, April, July, October, 2 for February, May,
+August, November or 3 for March, June, September, December). The text content
+of the 'reporting' tag must contain the initial list of reporting months,
+starting with the month after the podling entered incubation.  Below is an example of the final XML snippet
+
+[literal]
+----
+    <podling name="PodlingName" status="current" resource="podlingname" sponsor="Sponsor" startdate="YYYY-MM-DD">
+        <description>A description of the podling, for the status page and reports</description>
+        <reporting group="1|2|3" monthly="true">First,Second,Third</reporting>
+        <champion availid="userid">Champion Name</champion>
+        <mentors>
+            <mentor username="userid">Mentor One</mentor>
+            <mentor username="userid">Mentor Two</mentor>
+            <mentor username="userid">Mentor Three</mentor>
+        </mentors>
+    </podling>
+----
+
+An example reporting block:
+[literal]
+----
+<reporting group="3" monthly="true">June, July, August</reporting>
+----
+Once the first three reports are complete, the monthly attribute should be removed
+and the list of months removed as well.
+
+The first report might be
+very short. However it is better that the Incubator PMC can help to
+guide through the early setup stages.
+For more details see the
+link:ppmc.html#Incubator+ASF+Board+Reports[PPMC Guide].
+
+== Initialize Podling Status Page
+
+A mentor needs to
+link:website.html#Edit+your+project+status+page[create the web page] that will track the project's status.
+A mentor will also need to update it until
+link:ppmc.html#Project+Status+Updates[others in the project's PPMC can update it].
+
+The status
+page is the incubator's record of the progress made.
+It MUST be kept update to date during incubation.
+Some of the information is available from the proposal.
+As the startup process continues and resources are
+created the status SHOULD be updated.
+
+The template contains lists of actions which may be needed
+to start up a podling. All those which do not apply should
+be deleted.
+
+The status page is a useful aid to workflow. Volunteers
+can use it to sign up to the various tasks and monitor their
+progress. Once the mailing lists are set up and prospective
+committers subscribe then these may be used for discussion.
+
+== Resources
+
+Resources should be requested in a particular order, and based on paperwork processed.  Do not request source repositories before SGAs are filed, for instance, if the source code is not already Apache licensed or Category A licensed.
+
+The proposal should include a list of required resources. All of these will
+require active set up. Some are created by infrastructure after an appropriate
+request, others can be set up by any IPMC members (typically mentors).
+
+The first resources to be created are LDAP and DNS.  These should be requested via link:https://issues.apache.org/jira/browse/INFRA[Apache Infra JIRA -> New Podling Parent Request]
+
+Once these items are requested, mailing lists should be created next. Other resources typically post information to these lists.
+
+=== Request Mailing Lists
+
+Apache mailing lists require volunteer moderators. New moderators can be
+link:http://www.apache.org/dev/committers.html#mailing-list-moderators[changed later]
+but at least one volunteer is required before the mailing lists can be set up.
+Moderation is a reasonably
+link:http://www.apache.org/dev/committers.html#mail-moderate[easy task]
+though moderators may want to set up
+link:http://spamassassin.apache.org/[spam filtering].
+Having at least three moderators is recommended to spread the load.
+
+The proposal should contain the rest of the information that needs to be collected
+before the mailing lists can be requested. Incubator is the responsible top level project.
+So the domain *MUST* be *incubator.apache.org*.
+For example:
+
+- dev@${podling}.incubator.apache.org
+- commits@${podling}.incubator.apache.org
+- private@${podling}.incubator.apache.org
+
+For initial community building it is usually appropriate to only have a "dev" list, to keep the discussions focussed. Later add a "user" list if needed.  A podling that is already established and using an existing user interaction channel may want to keep those resources around until they feel they have transitioned to the ASF successfully.  You will want to discuss this on your existing development lists.
+
+Note:
+[NOTE]
+----
+If you are using SVN
+Commits under *http://svn.apache.org/repos/asf/incubator/_${podling}_* will be emailed to *commits@${podling}.incubator.apache.org*.
+Any deviation will require special configuration in the *asf-mailer.conf* file by the IPMC.
+----
+
+Mailing lists creation is a task for the link:#who-infra[infrastructure team]. The
+infrastructure team offers a tool that simplifies the creation of mailing lists.  You can access the
+link:https://selfserve.apache.org/mail.html[Incubator Mailing List Request Form^]
+to request a list.  A notification will be sent to private@incubator when the lists have been created.
+
+Remember to update the project status file with mailing list details. Prospective committers
+and mentors will need to subscribe. Email them once the status file has been updated. Inform
+any existing mailing lists or forums previously used by the project.
+
+Once the *commits* list is created, the project MUST review
+the */incubator/${podling}* tree, since any commits made prior
+to the list's creation will have generated no email trail.
+
+==== Mail Archives
+
+Archives at link:http://mail-archives.apache.org[http://mail-archives.apache.org] for the public
+mailing lists will be setup as part of the mailing list creation process. No action is
+required by Mentors. The archives will be link:http://mail-archives.apache.org/mod_mbox/[visible]
+as soon as posts have been made (and moderated) to these lists.
+
+You can also leverage link:https://lists.apache.org[lists.apache.org^] for
+mailing list archives.  There is a login link in the top right corner, which allows you to respond to
+threads from within the web application.
+
+Many projects are independently archived externally (for example, at
+link:http://www.mail-archive.com/[The Mail Archive] and
+link:http://marc.info/?q=about[MARC])
+Independent archives help to
+increase project visibility as well as preserving a independent historic record.
+These subscriptions are not automatically created. If desired, subscribe manually.
+
+Subscriptions to news-to-mailing-list bridges (for example, link:http://www.nabble.com[Nabble])
+must also be created manually. Subscribing helps accessibility and visibility but Nabble news
+users may not be aware that they are posting to a mailing list.
+
+==== Mailing List Administration
+
+Apache uses link:http://www.ezmlm.org/[ezmlm]. See the
+link:http://www.ezmlm.org/man/ezmlmman.html[manual] and
+committer link:http://www.apache.org/dev/committers.html#mail[mail FAQ]
+for more details.
+
+==== Mailing List Transition
+
+Independent mailing lists and groups are perfectly acceptable but development should
+happen on the official mailing lists at Apache. If a project has existing mailing lists,
+forums or groups the community needs to consider their future and plan for the transition
+to the official Apache mailing lists.
+
+It may be useful to move development first to the official lists followed gradually
+by the user resources.
+
+Note that subscribers of external mailing lists will not be automatically subscribed
+to the new Incubator project mailing lists. Instead, a note should be posted to the
+old external mailing list asking them to subscribe to the new list. If possible, add
+a footer to the old mailing list with some instructions.
+
+=== Self Service Requests
+
+Most of the resources you will request can be done via Self Service.  To do that, visit https://selfserve.apache.org/ and request the necessary resources.  This includes git, mailing lists, JIRA and Confluence.  If you do not have access to Self Serve, please use link:https://issues.apache.org/jira/browse/INFRA[JIRA] instead.
+
+==== JIRA Issue Tracking
+
+To request JIRA, visit https://selfserve.apache.org/jira.html
+
+==== Other Issue Trackers
+
+Request an issue tracker on the link:https://issues.apache.org/jira/browse/INFRA[infra jira]
+
+Remember to post an email announcing that the issue tracker is available.
+
+=== Git Migrations
+
+To request a git migration, please file a link:https://issues.apache.org/jira/browse/INFRA[New Git Repository] infra ticket, requesting to migrate from an existing organization to the Apache Organization
+
+=== Gitbox Requests
+
+To request gitbox repositories for a new podling, please first file a link:https://issues.apache.org/jira/browse/INFRA[GitBox Integration] infra ticket.  Once your podling has been added, you can use link:https://gitbox.apache.org/ to manage your gitbox repositories and user information.
+
+== [DRAFT] Podling Bootstrap
+
+*NOTE* This section is a DRAFT under development.
+
+Following podling creation, it needs to be bootstrapped. Here are some of the tasks:
+
+- Ensure link:#mentors-ipmc[Mentors are on the IPMC][*Mentors*]
+- Add podling to link:#Sending+in+an+Incubation+Report[reporting schedule] [*IPMC member*]
+- link:#Initialize+Podling+Status+Page[Initialize project status page] [*IPMC member*]
+- Start link:#orientation[orientation] [*link:#who-committers[Prospective committers]*]
+- Start *CLA* and *CCLA* submission [*link:#who-committers[Prospective committers]*]
+- Start link:#initial-ip-clearance[IP Clearance] [*IPMC member*]
+- Request Required Resources
+-- link:#request-mailing-lists[Mailing Lists] [Infrastructure Team]
+--- Consider and plan link:#transition-mailing-lists[transition to official mailing lists]
+-- link:#Set+Up+Repository[Subversion] [IPMC]
+-- link:#request-issue-tracking[Issue Tracking] [link:#who-infra[Infrastructure Team]]
+--- Consider and plan link:#issue-tracking-transition[issue tracking transition]
+- link:#create-website[Create website] [*link:#who-committers[Prospective committers]*]
+-- Consider and plan link:#web-site-transition[web site transition]
+
+== Mentors MUST be on the IPMC
+
+Mentors link:/policy/incubation.html#Mentor[MUST] be on the IPMC.  This should be checked prior to beginning incubation.
+Any prospective Mentors who are not yet on the IPMC should ask to be added (by election).
+Email the application to *private@incubator.apache.org*.
+
+[NOTE]
+----
+This process may take a few days.
+----
+
+== CLA and CCLA Submission
+
+Prospective committers need to submit a Contributor License Agreement
+(link:http://www.apache.org/licenses/#clas[CLA]).
+This process can take a while so it is recommended that committers start to submit
+these as soon as the podling is accepted.

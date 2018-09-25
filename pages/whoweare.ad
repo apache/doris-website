@@ -1,0 +1,44 @@
+﻿= Who We Are
+Apache Incubator PMC
+2002-10-16
+:jbake-type: simplepage
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: /images/
+
+[NOTE]
+====
+We ask that you please do not send us emails privately asking for
+support. We are non-paid volunteers who help out with the project and
+we do not necessarily have the time or energy to help people on an
+individual basis. Instead, we have setup mailing lists which often
+contain hundreds of individuals who will help answer detailed
+requests for help. The benefit of using mailing lists over private
+communication is that it is a shared resource where others can also
+learn from common mistakes and as a community we all grow together.
+====
+
+== The Incubator Project Management Commitee (PMC)
+The Incubator PMC is responsible to the link:http://www.apache.org/foundation/board/[Board]
+for the management of the Incubator Project. Only votes cast by members of the incubator PMC
+are binding upon Apache. The work that this project is charged with overseeing differs from 
+other projects and so functions a little differently. 
+For more details read the link:/guides/pmc.html[Incubator PMC guide].
+
+The list of Incubator PMC members can be found at link:http://people.apache.org/phonebook.html?pmc=incubator[people.apache.org].
+
+== Mentors
+
+Each podling status page lists its mentors.  Please see the link:/projects/index.html[summary of Incubator projects].
+
+== Incubator Committers
+
+Each podling status page lists its committers.
+Please see the link:/projects/index.html[summary of Incubator projects].
+
+The list of all Incubator committers can be found on
+link:https://people.apache.org/phonebook.html?unix=incubator[people.apache.org].
+
+There is also a
+link:http://people.apache.org/committer-index.html[list of all Apache committers].
