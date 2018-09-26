@@ -1,0 +1,58 @@
+Dear Joe Bob
+
+In recognition of your demonstrated commitment to, and alignment with, the
+goals of the Apache Frizzle project, the Frizzle PPMC has voted to offer you
+membership in the Frizzle PPMC ("Podling Project Management Committee").
+
+Please let us know if you accept by subscribing to the private alias [by
+sending mail to private-subscribe@frizzle.incubator.apache.org], and posting 
+a message to private@frizzle.incubator.apache.org.
+
+The PPMC is the Incubator podling version of a project PMC ("Project
+Management Committee") that for every top-level project is tasked by the
+Apache Board of Directors with official oversight and binding votes in
+that project.  When Frizzle graduates from the Incubator to a top-level
+project, the project PMC is usually formed from the membership of the PPMC.
+Note that while participation in the PMC after graduation is not
+guaranteed, simply continuing your constructive and active participation
+is usually sufficient.
+
+As a PPMC member, and later as a PMC member, you are responsible for
+continuing the general project, code, and community oversight that you
+have exhibited so far.  The votes of the PPMC are not legally binding;
+votes of the Incubator PMC are.  However, many of the PPMC members
+are also Incubator PMC members, so they implicitly cast binding votes
+when we vote on PPMC issues.  While this is an important legal
+distinction, it shouldn't enter your thinking when working on the PPMC -
+members should treat every decision as if it were legally binding for the ASF.  
+Also, in day-to-day activities, the Incubator PMC member vs PPMC member
+distinction should be invisible -- we are peers.
+
+All PPMC members are subscribed to the project's private mail list, which 
+is used to discuss issues unsuitable for an open, public forum, such as
+people issues (e.g. new committers, problematic community members, etc.),
+security issues, and the like.  It can't be emphasized enough that
+care should be taken to minimize the use of the private list, discussing
+everything possible on the appropriate public list.
+
+The private PPMC list is *private* - it is strictly for the use of the
+PPMC. Messages are not to be forwarded to anyone else without the express
+permission of the PPMC. Also note that any Member of the Foundation has
+the right to review and participate in any PPMC or PMC list, as a PMC 
+and PPMC are acting on behalf of the Membership.
+
+Finally, the PPMC (and assuming graduation, the PMC) is not meant to create 
+a hierarchy within the committership or the community.  In fact, a goal is to
+add all committers over time to the PPMC/PMC, as our belief is that those who
+do the work should get a binding vote.  Therefore, in our day-to-day
+interactions with the rest of the community, we continue to interact as
+peers, where every reasonable opinion is considered, and all community
+members are invited to participate in our public voting.  If there ever
+is a situation where the PMC/PPMC's view differs significantly from that 
+of the rest of the community, this is a symptom of a problem that needs to
+be addressed.
+
+With the expectation of your acceptance, welcome!
+
+The Apache Frizzle PPMC
+

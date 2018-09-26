@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Podling Name Search Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="JBake">
+
+    <!-- Le styles -->
+    <link href="../css/incubator.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/asciidoctor.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="https://www.apache.org/favicon.ico">
+  </head>
+  <body onload="prettyPrint()">
+    <div id="wrap">
+   
+
+	<!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://doris.incubator.apache.org"><i class="icon-home"></i>Apache Incubator</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Policies <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.incubator.apache.org/policy/incubation.html">Incubation Policy</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/policy/process.html">Incubation Process</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li>
+                
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Proposals <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                <li><a href="http://doris.incubator.apache.org/guides/proposal.html">A Guide To Proposal Creation</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/guides/entry.html">Enter The Incubator</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/podling-story.html">The Story of a Podling</a></li>
+                
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Podling Guides <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/branding.html">Incubator Branding Guide</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/ip_clearance.html">IP Clearance</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/press-kit.html">Podling Press Kit</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/transferring.html">Transferring Resources out of the Incubator</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/committer.html">Committers</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/names.html">Podling Name Search Guide</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/releasemanagement.html">Release Management</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/transitioning_asf.html">Initial Code Import</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/community.html">Guide to Successful Community Building</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/podling_sourcecontrol.html">Podling Source Control</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/retirement.html">Guide to Retirement</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/graduation.html">Guide to Successful Graduation</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/ppmc.html">Podling Project Management Committee</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/sites.html">Podling Websites</a></li>
+                
+                <li><a href="/clutch">Clutch Report</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">PMC Guides <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                <li><a href="http://doris.incubator.apache.org/guides/chair.html">Incubator Chair Guide</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/guides/pmc.html">The Incubator PMC</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/guides/lists.html">Incubator Mailing Lists Guide</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/guides/website.html">Updating the top-level Incubator website</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/guides/mentor.html">Mentors' Guide</a></li>
+                
+                <li><a href="http://doris.incubator.apache.org/guides/participation.html">Guide to Participation</a></li>
+                
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">ASF <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li>
+                <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li>
+                <li><a href="http://www.apache.org/legal/">Legal</a></li>
+                <li><a href="http://www.apache.org/foundation/">Foundation</a></li>
+                <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li>
+                <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+              </ul>
+            </li>
+            <li><a href="http://doris.incubator.apache.org/faq.html">FAQs</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 vcenter"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" width="250"></a></div>
+          <div class="col-md-4 vcenter"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="100"></a></div>
+          <div class="col-md-4 vcenter"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="75" width="75"></a></div>
+      </div>
+    </div>
+    <div class="top-container container">
+
+<div class="page-header">
+    <h1>Guide :: Podling Name Search Guide</h1>
+</div>
+
+<div class="article-body">
+
+Estimated Reading Time: <span class="eta"></span>
+
+<p><div id="toc" class="toc"> 
+ <div id="toctitle">
+  Table of Contents
+ </div> 
+ <ul class="sectlevel1"> 
+  <li><a href="#introduction">Introduction</a> 
+   <ul class="sectlevel2"> 
+    <li><a href="#meet_the_apache_branding_team">Meet The Apache Branding Team</a></li> 
+    <li><a href="#trademarks">Trademarks</a></li> 
+    <li><a href="#what_makes_a_name_good">What Makes A Name Good</a></li> 
+    <li><a href="#podling_suitable_name_search">Podling Suitable Name Search</a></li> 
+   </ul> </li> 
+  <li><a href="#conducting_a_suitable_name_search">Conducting A Suitable Name Search</a> 
+   <ul class="sectlevel2"> 
+    <li><a href="#eliminate_unsuitable_names">Eliminate Unsuitable Names</a></li> 
+    <li><a href="#evidence_of_registration">Evidence Of Registration</a></li> 
+   </ul> </li> 
+ </ul> 
+</div> 
+<div class="sect1"> 
+ <h2 id="introduction">Introduction</h2> 
+ <div class="sectionbody"> 
+  <div class="paragraph"> 
+   <p>This guide is <strong>not</strong> <em>legal advice</em> or <em>legal opinion</em>: <strong>do not</strong> use it as a substitute. Its aims are education and information <strong>only</strong>.</p> 
+  </div> 
+  <div class="paragraph"> 
+   <p>This process filters out unsuitable names early, reducing the legal resources required and limiting the potential disruption to a community of a forced name change later. A smooth path, but not the only one. If there are reasons why this road isn’t right for your podling, consult <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/">incubator general</a>.</p> 
+  </div> 
+  <div class="sect2"> 
+   <h3 id="meet_the_apache_branding_team">Meet The Apache Branding Team</h3> 
+   <div class="paragraph"> 
+    <p>Names <a href="http://www.apache.org/foundation/marks/#whoweare">fall</a> within the responsibilities of the <a href="http://www.apache.org/foundation/">V.P., Brand Management</a> (and <a href="http://www.apache.org/foundation/marks/#whoweare">team</a>). Please start by reading:</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>-the <a href="http://www.apache.org/foundation/marks/">Apache Trademark Policy</a> (which introduces trademarks and outlines our policy); -the <a href="http://www.apache.org/foundation/marks/faq/">Apache Trademark FAQs</a> (which answers questions asked by downstream consumers); and -the <a href="http://www.apache.org/foundation/marks/pmcs.html">Apache Project Branding Requirements</a> (which guides PMCs).</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>For podlings in the Incubator, naming issues are managed co-operatively by the Brand and Incubator communities. Rules for podlings include all branding requirements for PMCs, plus a few extras.</p> 
+   </div> 
+  </div> 
+  <div class="sect2"> 
+   <h3 id="trademarks">Trademarks</h3> 
+   <div class="paragraph"> 
+    <p>Trademark law is a complex subject. Distinctive differences from other intellectual property laws (such as patent or copyright) mean that intuition or knowledge gained from other areas may not be applicable. The <a href="http://www.apache.org/foundation">Apache Software Foundation</a> is a <a href="http://www.apache.org/foundation/faq.html#is-ASF-a-corporation">US corporation</a>. Developing some understanding of the basic principles of US trademark law is therefore important.</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>Please read:</p> 
+   </div> 
+   <div class="ulist"> 
+    <ul> 
+     <li> <p><a href="http://www.apache.org/foundation/marks/#principles">Description of key trademark principles</a> for Apache projects;</p> </li> 
+     <li> <p>USPTO trademark</p> </li> 
+     <li> <p><a href="http://www.uspto.gov/trademarks/index.jsp">home</a> page</p> </li> 
+     <li> <p><a href="http://www.uspto.gov/trademarks/basics/index.jsp">basics</a>, and follow the links for materials;</p> </li> 
+     <li> <p><a href="http://en.wikibooks.org/wiki/US_Trademark_Law">US Trademark Law</a> WikiBook; and</p> </li> 
+     <li> <p><a href="http://www.ifosslr.org/ifosslr/article/view/11/37">Passport Without A Visa: Open Source Software Licensing and Trademarks</a> by Tiki Dare and Harvey Anderson in the <a href="http://www.ifosslr.org/">International Free and Open Source Software Law Review</a>.</p> </li> 
+    </ul> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="trademarks_and_the_apache_license">Trademarks And The Apache License</h4> 
+    <div class="paragraph"> 
+     <p>Like <a href="http://www.ifosslr.org/ifosslr/article/view/11/37">many</a> <a href="http://www.opensource.org">open source</a> licenses, the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a> focuses on granting copyright and patent rights to the public. The <em>trademark</em> section permits only very limited trademark rights.</p> 
+    </div> 
+    <div class="quoteblock"> 
+     <blockquote> 
+      <div class="paragraph"> 
+       <p><strong>6. Trademarks.</strong> This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file."</p> 
+      </div> 
+     </blockquote> 
+    </div> 
+    <div class="paragraph"> 
+     <p> — <a href="http://www.apache.org/licenses/LICENSE-2.0.html#trademarks">Apache License, Version 2.0</a></p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>All Apache projects share the Apache License. This issues standard <strong>copy</strong> and <strong>patent</strong> rights to downstream consumers. <strong>Trademark</strong> rights for Apache products are issued and managed independently, beyond the Apache License. This allows Apache communities to use trademark law to protect their reputation and that of the <a href="http://www.apache.org/foundation/">Foundation</a>, within the broader framework provided by the Brand team.</p> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="sect2"> 
+   <h3 id="what_makes_a_name_good">What Makes A Name Good</h3> 
+   <div class="paragraph"> 
+    <p>Good names for commercial products or <em>UNIX</em> utilities have tended to work less well here at Apache. Many successful Apache project names are memorable, unusual and a little <a href="http://www.sdtimes.com/TOP_FIVE_HEAD_SCRATCHINGEST_NAMES_FOR_APACHE_PROJECTS/By_Victoria_Reitano/About_APACHE_and_HADOOP_and_HARMONY_and_MYSQL_and_OODT_and_YAY/35959">whimsical</a>. These qualities also happen to be useful when it comes to securing trademark protection. Have fun. Be creative.</p> 
+   </div> 
+  </div> 
+  <div class="sect2"> 
+   <h3 id="podling_suitable_name_search">Podling Suitable Name Search</h3> 
+   <div class="paragraph"> 
+    <p>The initial <a href="http://incubator.apache.org/guides/proposal.html">proposal</a> establishes a working name for the new podling. Often some discussion and filtering of suitable names happens during the election process but this proposed name is <strong>not</strong> final, only <em>provisional</em>. The community may choose to change it. Or the community may discover that the name is unsuitable: in which case a suitable new name must be found.</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>A podling needs to discover whether a name is suitable. The Incubator community calls this process the <em>suitable name search</em>. This avoids any potential confusion with phrases like <em>trademark search</em> with technical meanings in the trademark community. Please be careful with language. In particular:</p> 
+   </div> 
+   <div class="ulist"> 
+    <ul> 
+     <li> <p>avoid using loaded technical legal terms;</p> </li> 
+     <li> <p>use plain, simple English to describe what you did and what you found;</p> </li> 
+     <li> <p>avoid speculation; and</p> </li> 
+     <li> <p>don’t offer <em>advice</em> or <em>opinions</em>.</p> </li> 
+    </ul> 
+   </div> 
+   <div class="paragraph"> 
+    <p>A suitable name search must be successfully completed before a podling can graduate. This isn’t the only way one might be done, just a smooth path.</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>Names are an essential part of building a brand and community. Switching names wastes the efforts put into establishing the original name. Therefore complete this task as soon as possible.</p> 
+   </div> 
+  </div> 
+ </div> 
+</div> 
+<div class="sect1"> 
+ <h2 id="conducting_a_suitable_name_search">Conducting A Suitable Name Search</h2> 
+ <div class="sectionbody"> 
+  <div class="paragraph"> 
+   <p>The aim - to find a name that is acceptable to the community and is not unsuitable.</p> 
+  </div> 
+  <div class="paragraph"> 
+   <p>A suitable name search has public and private elements. The <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">tracker</a> provides the public record. Incubator best practice evolves over time, documentation lags. The public records of past searches are a primary source of guidance. Review now the records of previous searches, beginning with the most recent then working back.</p> 
+  </div> 
+  <div class="paragraph"> 
+   <p>The public record consists of <em>actions</em> (how you searched) and <em>facts</em> (what your search found). In particular, in <strong>all</strong> public forums (mailing lists, issue trackers and so on):</p> 
+  </div> 
+  <div class="paragraph"> 
+   <p>-<strong>Do not</strong> speculate. -<strong>Do not</strong> use loaded technical legal language. -<strong>Do not</strong> offer -opinions, -advice, -interpretation, or -analysis.</p> 
+  </div> 
+  <div class="paragraph"> 
+   <p>Use the public lists in the Incubator to ask questions about <em>how</em> the search should be conducted. Once the information is collected and collated, then ask the trademark team to help interpret and analyse these results on the private lists, copying in the PPMC. Finally discuss the results of your investigation on the private PPMC list. Whether a name is suitable or unsuitable (or somewhere in between) should be recorded when the issue is closed.</p> 
+  </div> 
+  <div class="sect2"> 
+   <h3 id="eliminate_unsuitable_names">Eliminate Unsuitable Names</h3> 
+   <div class="paragraph"> 
+    <p>To be suitable, a name needs to be</p> 
+   </div> 
+   <div class="ulist"> 
+    <ul> 
+     <li> <p>judged <em>appropriate</em> by the wider community; and</p> </li> 
+     <li> <p><em>unique enough</em> to avoid confusion</p> </li> 
+    </ul> 
+   </div> 
+   <div class="paragraph"> 
+    <p>Facts and activities performed are <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">recorded</a> for the public. Interpretation and analysis of these facts happens on private mailing lists, the PPMC private in the first instance. Whether the name proved suitable or unsuitable should be entered into the public record but take care to use our language (<em>ethically unsuitable</em> or <em>not unique enough</em>) and to avoid loaded legal terms.</p> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="the_main_sequence">The Main Sequence</h4> 
+    <div class="paragraph"> 
+     <p>Every podling is unique, but using a <a href="http://outreach.atnf.csiro.au/education/senior/astrophysics/stellarevolution_mainsequence.html">cosmic</a> metaphor, most fit into a main sequence. For podlings on the main sequence, most of the bugs should have been squashed and rough edges documented away, so expect a smooth journey. Away from the main sequence, process may need to be grown, documentation is likely be sparse and progress less smooth.</p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>The main sequence is described here. This well known path is appropriate for almost all podlings. If there are good reasons to think that your podling is a special case, discuss this with the <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/">Incubator community</a> and reach consensus on the way forward.</p> 
+    </div> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="appropriateness">Appropriateness</h4> 
+    <div class="paragraph"> 
+     <p>Some names are not appropriate for open source projects. Acceptability under <a href="http://www.law.cornell.edu/uscode/15/1052.shtml">US Trademark Law</a> is a good base line. This excludes marks that</p> 
+    </div> 
+    <div class="listingblock"> 
+     <div class="content"> 
+      <pre>Consists of or comprises immoral, deceptive, or scandalous matter;
+or matter which may disparage or falsely suggest a connection with persons,
+living or dead, institutions, beliefs, or national symbols, or bring them into contempt, or disrepute;</pre> 
+     </div> 
+    </div> 
+    <div class="paragraph"> 
+     <p> — <a href="http://www.law.cornell.edu/uscode/15/1052.shtml">US Code 15:1052</a></p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>Proposals with inappropriate names are unlikely to pass the initial hustings but spend a few moments considering whether anything has been missed. Check for alternative meanings, perhaps in foreign languages.</p> 
+    </div> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="unique_enough_names">Unique Enough Names</h4> 
+    <div class="paragraph"> 
+     <p>The name needs be unique enough to avoid confusion with software that already exists. For the community to be able to protect its reputation for quality and openness, its name needs to unique enough to have potential as a trademark.</p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>But this isn’t only about being able to register trademark protection. Ethics also plays a role. Even where a name may offer enough protection, existing adoption of the name by an active community may mean that the choice needs to be eliminated on ethical grounds. There is some judgment involved in this decision. So, involve the wider Incubator community if a name is already used.</p> 
+    </div> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="how_to_collect_evidence_of_uniqueness">How To Collect Evidence Of Uniqueness</h4> 
+    <div class="paragraph"> 
+     <p>To decide whether a potential name is <em>unique enough</em> to be suitable</p> 
+    </div> 
+    <div class="ulist"> 
+     <ul> 
+      <li> <p>Collect evidence about current name usage.</p> </li> 
+      <li> <p><a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">Record</a> the facts.</p> </li> 
+      <li> <p>Analyse and interpret these facts; in private with help from the brand team.</p> </li> 
+      <li> <p>Reach consensus about whether the name is unique enough.</p> </li> 
+      <li> <p><a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">Record</a> whether the name is suitable.</p> </li> 
+      <li> <p>If unsuitable then the community should pick a more unique name and repeat this process.</p> </li> 
+     </ul> 
+    </div> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="evidence_of_open_source_adoption">Evidence Of Open Source Adoption</h4> 
+    <div class="paragraph"> 
+     <p>Existing adoption amongst another active open source community may give ethical reasons for eliminating a name. This is an example of a condition with a fractal boundary. Not every name which has been used before need be eliminated as unsuitable but this is an issue which needs to be discussed more widely and a consensus reached with the broad <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/">Incubator community</a>.</p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>Look for evidence of existing adoption amongst open source communities by searching well known foundries (for example <a href="http://www.github.com">GitHub</a> and <a href="http://www.sourceforge.net">Sourceforge</a>) and the web (use several search engines for example <a href="http://www.bing.com">Bing</a>, <a href="http://www.google.com">Google</a> and <a href="http://www.yahoo.com">Yahoo</a>). Review recent <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">records</a> for contemporary details about where to search. <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">Record</a> each search and describe the results.</p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>If the name been used by the same community before it arrived at Apache, that’s fine but should be noted in the <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">record</a>.</p> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="sect2"> 
+   <h3 id="evidence_of_registration">Evidence Of Registration</h3> 
+   <div class="paragraph"> 
+    <p>A number of online resources exist which may help to discover evidence of competing registered trademarks. Not every trademark is registered. Not every registered trademark is listed in these resources. Even if evidence is found of existing registrations, this does not necessary eliminate the proposed name. Just <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">record</a> the facts. Leave analysis and interpretation to private lists. When a search returns a large number of hits, focus on live registrations related to software.</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>The foremost online resource is TESS run by USPTO. Before using TESS, please browse the documentation links from <a href="http://www.uspto.gov/trademarks/index.jsp">USPTO trademark home</a>.</p> 
+   </div> 
+   <div class="paragraph"> 
+    <p>Other resources which allow cheap searches of their databases exist but are often ephemeral. Review the <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH">records</a> for the state of this art.</p> 
+   </div> 
+   <div class="sect3"> 
+    <h4 id="evidence_of_use_on_the_world_wide_web">Evidence Of Use On The World Wide Web</h4> 
+    <div class="paragraph"> 
+     <p>Registration of trademark is not required. Rights may also be obtained by use of a mark in commerce.</p> 
+    </div> 
+    <div class="paragraph"> 
+     <p>Use a variety of web search engines (for example, <a href="http://www.bing.com">bing</a>, <a href="http://www.google.com">google</a> and <a href="http://search.yahoo.com">yahoo</a>) to survey usage on the world wide web. -The results returned by a search for the name itself may provide evidence of well known usages of the term. -The results returned by searching for the name and <em>software</em> may provide evidence of existing use in trade. You may also want to search for the name and key functionality the software provides and name and <em>open source</em></p> 
+    </div> 
+   </div> 
+  </div> 
+ </div> 
+</div></p>
+
+</div>
+
+		</div>
+		<div id="push"></div>
+    </div>
+    
+    <div id="footer">
+      <div class="container">
+          <p class="muted credit">&copy; 2017 The Apache Software Foundation | Licensed under the Apache License, Version 2.0.<br/>
+          Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.</p>
+      </div>
+    </div>
+
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/readingTime.js"></script>
+    <script src="../js/incubator.js"></script>
+
+  </body>
+</html>
