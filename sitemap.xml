@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <url>
+    	<loc>http://localhost:8820/index.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/whoweare.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/faq.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/past_podlings.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/graduation.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/community.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/committer.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/branding.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/ppmc.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/podling_sourcecontrol.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/names.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/ip_clearance.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/sites.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/retirement.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/releasemanagement.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/press-kit.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/transitioning_asf.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/transferring.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/proposal.html</loc>
+    	<lastmod>2018-09-26</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/podling-story.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/entry.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/website.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/pmc.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/participation.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/mentor.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/lists.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/guides/chair.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/policy/roles_and_responsibilities.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/policy/process.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://localhost:8820/policy/incubation.html</loc>
+    	<lastmod>2002-10-16</lastmod>
+    </url>
+
+</urlset>
