@@ -2,157 +2,157 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
     <url>
-    	<loc>http://localhost:8820/index.html</loc>
+    	<loc>http://doris.incubator.apache.org/index.html</loc>
     	<lastmod>2018-09-28</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/faq.html</loc>
+    	<loc>http://doris.incubator.apache.org/faq.html</loc>
     	<lastmod>2018-09-28</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/whoweare.html</loc>
+    	<loc>http://doris.incubator.apache.org/whoweare.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/past_podlings.html</loc>
+    	<loc>http://doris.incubator.apache.org/past_podlings.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/graduation.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/graduation.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/community.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/community.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/committer.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/committer.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/branding.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/branding.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/ppmc.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/ppmc.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/podling_sourcecontrol.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/podling_sourcecontrol.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/names.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/names.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/ip_clearance.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/ip_clearance.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/sites.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/sites.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/retirement.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/retirement.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/releasemanagement.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/releasemanagement.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/press-kit.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/press-kit.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/transitioning_asf.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/transitioning_asf.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/transferring.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/transferring.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/sql_reference.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/proposal.html</loc>
+    	<lastmod>2018-09-29</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://doris.incubator.apache.org/guides/sql_reference.html</loc>
     	<lastmod>2018-09-28</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/proposal.html</loc>
-    	<lastmod>2018-09-27</lastmod>
-    </url>
-
-    <url>
-    	<loc>http://localhost:8820/podling-story.html</loc>
+    	<loc>http://doris.incubator.apache.org/podling-story.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/entry.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/entry.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/website.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/website.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/pmc.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/pmc.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/participation.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/participation.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/mentor.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/mentor.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/lists.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/lists.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/guides/chair.html</loc>
+    	<loc>http://doris.incubator.apache.org/guides/chair.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/policy/roles_and_responsibilities.html</loc>
+    	<loc>http://doris.incubator.apache.org/policy/roles_and_responsibilities.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/policy/process.html</loc>
+    	<loc>http://doris.incubator.apache.org/policy/process.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://localhost:8820/policy/incubation.html</loc>
+    	<loc>http://doris.incubator.apache.org/policy/incubation.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
