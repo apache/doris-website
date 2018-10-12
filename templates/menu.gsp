@@ -15,34 +15,14 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documents <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <%proposalGuides.each {guide -> %>
-		  <li><a href="${config.site_host}/${guide.uri}">${guide.title}</a></li>
-                <%}%>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <%proposalGuides.each {guide -> %>
-                <li><a href="${config.site_host}/${guide.uri}">${guide.title}</a></li>
-                <%}%>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Downloads <b class="caret"></b></a>
-              <ul class="dropdown-menu">
                 <%guides.each {guide -> %>
                   <li><a href="${config.site_host}/${guide.uri}">${guide.title}</a></li>
                 <%}%>
-                <li><a href="/clutch">Clutch Report</a></li>
               </ul>
             </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">FAQs <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-		<li><a href="${config.site_host}/faq.html">FAQs</a></li>
-              </ul>
-            </li>
+	    <li><a href="${config.site_host}/community.html">Community </a></li>
+	    <li><a href="${config.site_host}/downloads.html">Downloads </a></li>
+	    <li><a href="${config.site_host}/faq.html">FAQs </a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

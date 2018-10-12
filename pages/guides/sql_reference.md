@@ -1,6 +1,6 @@
 title=Apache Doris SQL Reference
 date=2018-09-28
-type=proposalGuide
+type=Guide
 status=published
 imagesdir=/images/
 ~~~~~~

@@ -1,11 +1,24 @@
-title=Apache Doris FAQs
-date=2018-09-28
-type=simplepage
-status=published
-imagesdir=/images/
-~~~~~~
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Apache Doris FAQs
+Apache Doris FAQs
+2018-09-29
+:jbake-type: simplepage
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
 
-# 建表
+= 1. 建表
 
 **Q:建表报错：Float or double can't be used as a key, use decimal instead**
 
@@ -47,7 +60,7 @@ A:没有
 
 A:Palo只支持utf8编码，对gbk不支持
 
-# 表的属性和信息查看
+= 2. 表的属性和信息查看
 
 **Q:如何看一个表占了多少物理存储？**
 
@@ -69,7 +82,7 @@ A:desc table_name all;
 
 A:show partitions from table_name;
 
-# 修改表
+= 3. 修改表
 
 **Q:palo可以对已有的表增加列吗？**
 
@@ -151,7 +164,7 @@ A:delete执行之后目前是会影响性能，建议少发delete
 
 A:是的
 
-# 导入
+= 4. 导入
 
 **Q:show load能按照一些条件查询么，能部分匹配么**
 
@@ -261,7 +274,7 @@ A:在columns参数中指定表和数据中列的对应关系，并且在需要�
 
 A:超过7天的历史数据会被清空
 
-# 查询
+= 5. 查询
 
 **Q:查询报错：memory limit exceeded**
 
@@ -307,7 +320,7 @@ A:由create view时的as select决定的，具体可以通过执行explain selec
 
 A:可以通过palo查询mysql库，palo本身不存储mysql的数据，也不能使用palo往mysql中导入数据
 
-# 其它
+= 6. 其它
 
 **Q:报错：Sql parsing error, check your sql.**
 

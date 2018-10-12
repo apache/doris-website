@@ -1,0 +1,114 @@
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+= Apache Doris Community
+Apache Doris Community
+2018-09-29
+:jbake-type: simplepage
+:jbake-status: published
+:idprefix:
+:toc:
+:imagesdir: ../images/
+
+Most discussion about Doris happens over email and GitHub.
+
+= 1. Doris Community
+
+**WiKi** link:https://github.com/apache/incubator-doris/wiki[Wiki On Github]  
+
+**Development mailing list** dev#doris.apache.org for discussion about project development link:mailto:dev-subscribe@doris.incubator.apache.org[(Click here to subscribe this email list)]
+
+**Issues** link:https://github.com/apache/incubator-doris/issues[GitHub Doris Issues and Pull Requests]
+
+**Meetups Doris** meetups for different meetup groups around the world.
+
+= 2. Contributing
+Doris is a community-led project and we are delighted to receive contributions of anything from minor fixes to big new features.
+
+== 2.1 What to work on
+
+If you have an itch to scratch, then by all means do that! Fixing bugs you run into, or adding features you need, are both immensely helpful.
+
+If you're looking for some starter projects, we maintain a list of issues suitable for new developers.
+
+There are plenty of ways to help outside writing Doris code. Code review of pull requests (even if you are not a committer), feature suggestions, reporting bugs, documentation and usability feedback all matter immensely. 
+
+== 2.2 Getting your changes accepted
+
+Patches to Doris are done through GitHub pull requests.
+
+In general please follow the contributing guidelines when sending in pull requests. This will help review proceed as quickly as possible.
+
+For code contributions, we require that you agree to a Contributor License Agreement (CLA) before we can accept your code. 
+
+= 3. Mentors
+
+* David Fisher (wave@apache#org)
+* Luke Han (lukehan@apache#org)
+* Willem Ning Jiang (ningjiang@apache#org)
+
+= 4. PPMC
+
+* Ruyue Ma (https://github.com/maruyue, maruyue@apache#org)
+
+* Chun Zhao (https://github.com/imay, zhaoc@apache#org)
+
+* Mingyu Chen (https://github.com/morningman, morningman@apache#org)
+
+* De Li (https://github.com/lide-reed, lide@apache#org）
+
+* Bin Lin (https://github.com/lingbin, lingbin@apache#org)
+
+* Hao Chen (https://github.com/chenhao7253886, chenhao@apache#org)
+
+* Chaoyong Li (https://github.com/cyongli, lichaoyong@apache#org)
+
+* Sijie Guo (sijie@apache#org)
+
+* Zheng Shao (zshao@apache#org)
+
+
+= 5. Committers
+Committers are collectively responsible for Doris's technical management. This involves setting the direction of the project, contributing code, and reviewing code contributed by others.
+
+You don't need to be a committer to contribute- pull requests are welcome from anyone.
+
+All committers are members of the PPMC.
+
+== 5.1 Becoming a committer
+
+If you'd like to become a committer, that's great! Please contact one of the existing committers for a walk through the process. Basically, what we're looking for is an interest in ongoing contributions to Doris.
+
+= 6. General committer guidelines
+
+If you are an official Doris committer then congratulations! You are part of a fantastic group of people. Here are some guidelines to follow to help ensure the Doris project continues to grow and improve:
+
+You can merge your own pull request if it fits the rest of the criteria. A common thing to see is "+1 after travis" from other committers.
+
+A pull request should have at least one +1 from a committer who is not the author, on the "code/textual" level of review.
+
+Pull requests which have just one +1 from a committer couldn't be merged earlier than after 3 working days since PR submission.
+
+A pull request with just one +1 could be merged only by (or in coordination with) the committer who provided the review. Because the reviewer may think that the PR is complex or risky enough that needs another pair of eyes to look at it. If this is the case, the first reviewer should indicate this in the PR approval message.
+
+If a pull request has two or more +1's from committers who are not the author, it could be merged immediately and by any committer. But still, enough time since the PR submission should pass to give folks a reasonable chance to indicate a desire to comment on the pull request. AKA: don't merge a pull request that was submitted Friday evening until at least 1~2 regular work days have passed. Use good judgement here.
+
+= 7. Governance
+The PMC (Project Management Committee) is responsible for the administrative aspects of the Doris project. The responsibilities of the PMC include:
+
+* Approving releases
+
+* Nominating new committers
+
+* Maintaining the project's shared resources, including the github account, mailing lists, websites, social media channels, etc.
+
+* Maintaining guidelines for the project
+
