@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Who We Are</title>
+    <title>Apache Doris Downloads</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -72,69 +72,82 @@
 
 
 <div class="incubator-page-header">
-    <h1>Who We Are</h1>
+    <h1>Apache Doris Downloads</h1>
 </div>
 
 <div id="toc" class="toc"> 
  <div id="toctitle">
   Table of Contents
  </div> 
- <ul class="sectlevel1"> 
-  <li><a href="#the_incubator_project_management_commitee_pmc">The Incubator Project Management Commitee (PMC)</a></li> 
-  <li><a href="#mentors">Mentors</a></li> 
-  <li><a href="#incubator_committers">Incubator Committers</a></li> 
+ <ul class="sectlevel0"> 
+  <li><a href="#stable_release">Stable release</a> 
+   <ul class="sectlevel1"> 
+    <li><a href="#change_log">Change Log</a></li> 
+    <li><a href="#compatibility">Compatibility</a></li> 
+   </ul> </li> 
  </ul> 
 </div> 
-<div id="preamble"> 
+<h1 id="stable_release" class="sect0">Stable release</h1> 
+<div class="paragraph"> 
+ <p>The current Doris stable release is 0.8.2. This version is recommended for production use.</p> 
+</div> 
+<div class="ulist"> 
+ <ul> 
+  <li> <p><a href="https://github.com/apache/incubator-doris/releases/download/v0.8.2/palo-0.8.2-release-20180824.tar.gz">palo-0.8.2-release-20180824.tar.gz</a> 184 MB</p> </li> 
+  <li> <p><a href="https://github.com/apache/incubator-doris/archive/v0.8.2.zip">Source code (zip)</a></p> </li> 
+  <li> <p><a href="https://github.com/apache/incubator-doris/archive/v0.8.2.tar.gz">Source code (tar.gz)</a></p> </li> 
+ </ul> 
+</div> 
+<div class="sect1"> 
+ <h2 id="change_log">Change Log</h2> 
  <div class="sectionbody"> 
-  <div class="admonitionblock note"> 
-   <table> 
-    <tbody>
-     <tr> 
-      <td class="icon"> 
-       <div class="title">
-        Note
-       </div> </td> 
-      <td class="content"> 
-       <div class="paragraph"> 
-        <p>We ask that you please do not send us emails privately asking for support. We are non-paid volunteers who help out with the project and we do not necessarily have the time or energy to help people on an individual basis. Instead, we have setup mailing lists which often contain hundreds of individuals who will help answer detailed requests for help. The benefit of using mailing lists over private communication is that it is a shared resource where others can also learn from common mistakes and as a community we all grow together.</p> 
-       </div> </td> 
-     </tr> 
-    </tbody>
-   </table> 
+  <div class="olist arabic"> 
+   <ol class="arabic"> 
+    <li> <p>Performance improvement</p> 
+     <div class="ulist"> 
+      <ul> 
+       <li> <p>Support vectorized execution engine.</p> </li> 
+       <li> <p>Support aggregation operator parallelization.</p> </li> 
+       <li> <p>Optimized storage engine for more efficient data fetching.</p> </li> 
+      </ul> 
+     </div> </li> 
+    <li> <p>Table-level privileges support</p> 
+     <div class="ulist"> 
+      <ul> 
+       <li> <p>User can grant fine-grained privileges on specified tables to specified user from specified host.</p> </li> 
+      </ul> 
+     </div> </li> 
+    <li> <p>Backup and restore</p> 
+     <div class="ulist"> 
+      <ul> 
+       <li> <p>User can backup snapshot of data to HDFS and restore snapshot to other Palo cluster.</p> </li> 
+      </ul> 
+     </div> </li> 
+    <li> <p>Broker supports HDFS HA and Hadoop kerberos authentication.</p> </li> 
+    <li> <p>Using [BRPC](<a href="https://github.com/brpc/brpc" class="bare">https://github.com/brpc/brpc</a>) instead of the old RPC framework.</p> </li> 
+    <li> <p>A lot of bugs fixed.</p> </li> 
+    <li> <p>Other changes:</p> 
+     <div class="ulist"> 
+      <ul> 
+       <li> <p>Rewrite http server in Backend using Libevent to replace Mongoose.</p> </li> 
+       <li> <p>Remove mysql code to avoid copyright problem.</p> </li> 
+       <li> <p>More metrics to expose internal situation of Palo system.</p> </li> 
+       <li> <p>Same Frontend can be removed and added again without the changing port.</p> </li> 
+       <li> <p>Change the format of Frontend’s audit log for parsing it more conveniently.</p> </li> 
+      </ul> 
+     </div> </li> 
+   </ol> 
   </div> 
  </div> 
 </div> 
 <div class="sect1"> 
- <h2 id="the_incubator_project_management_commitee_pmc">The Incubator Project Management Commitee (PMC)</h2> 
+ <h2 id="compatibility">Compatibility</h2> 
  <div class="sectionbody"> 
   <div class="paragraph"> 
-   <p>The Incubator PMC is responsible to the <a href="http://www.apache.org/foundation/board/">Board</a> for the management of the Incubator Project. Only votes cast by members of the incubator PMC are binding upon Apache. The work that this project is charged with overseeing differs from other projects and so functions a little differently. For more details read the <a href="/guides/pmc.html">Incubator PMC guide</a>.</p> 
+   <p><strong>This release version DOES NOT support rolling upgrade, and CAN NOT rollback after upgrade. So it is HIGHLY RECOMMENDED to backup your data and meta data before upgrading to this release version. Or upgrade it in your test/pre-online Palo cluster to make sufficient test.</strong></p> 
   </div> 
   <div class="paragraph"> 
-   <p>The list of Incubator PMC members can be found at <a href="http://people.apache.org/phonebook.html?pmc=incubator">people.apache.org</a>.</p> 
-  </div> 
- </div> 
-</div> 
-<div class="sect1"> 
- <h2 id="mentors">Mentors</h2> 
- <div class="sectionbody"> 
-  <div class="paragraph"> 
-   <p>Each podling status page lists its mentors. Please see the <a href="/projects/index.html">summary of Incubator projects</a>.</p> 
-  </div> 
- </div> 
-</div> 
-<div class="sect1"> 
- <h2 id="incubator_committers">Incubator Committers</h2> 
- <div class="sectionbody"> 
-  <div class="paragraph"> 
-   <p>Each podling status page lists its committers. Please see the <a href="/projects/index.html">summary of Incubator projects</a>.</p> 
-  </div> 
-  <div class="paragraph"> 
-   <p>The list of all Incubator committers can be found on <a href="https://people.apache.org/phonebook.html?unix=incubator">people.apache.org</a>.</p> 
-  </div> 
-  <div class="paragraph"> 
-   <p>There is also a <a href="http://people.apache.org/committer-index.html">list of all Apache committers</a>.</p> 
+   <p>|Item|Content| |---|---| |Forward Compatibility | 0.8.1, 0.8.0 | |Rolling Upgrade | No | |Rollback | No |</p> 
   </div> 
  </div> 
 </div>
