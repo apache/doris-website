@@ -25,7 +25,7 @@ Doris is a MPP-based interactive SQL data warehousing for reporting and analysis
 
 Doris’s implementation consists of two daemons: Frontend (FE) and Backend (BE).
 
-image::architecture.png[]
+image::architecture.jpg[]
 
 **Frontend daemon** consists of query coordinator and catalog manager. Query coordinator is responsible for receiving users’ sql queries, compiling queries and managing queries execution. Catalog manager is responsible for managing metadata such as databases, tables, partitions, replicas and etc. Several frontend daemons could be deployed to guarantee fault-tolerance, and load balancing.
 
