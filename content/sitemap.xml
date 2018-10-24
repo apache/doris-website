@@ -27,8 +27,13 @@
     </url>
 
     <url>
+    	<loc>http://doris.incubator.apache.org/guides/tutorial.html</loc>
+    	<lastmod>2018-10-24</lastmod>
+    </url>
+
+    <url>
     	<loc>http://doris.incubator.apache.org/guides/sql_reference.html</loc>
-    	<lastmod>2018-09-28</lastmod>
+    	<lastmod>2018-10-24</lastmod>
     </url>
 
 </urlset>
