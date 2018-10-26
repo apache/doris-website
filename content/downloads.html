@@ -77,82 +77,132 @@
     <h1>Apache Doris Downloads</h1>
 </div>
 
-<div id="toc" class="toc"> 
- <div id="toctitle">
-  Table of Contents
- </div> 
- <ul class="sectlevel0"> 
-  <li><a href="#stable_release">Stable release</a> 
-   <ul class="sectlevel1"> 
-    <li><a href="#change_log">Change Log</a></li> 
-    <li><a href="#compatibility">Compatibility</a></li> 
-   </ul> </li> 
- </ul> 
-</div> 
-<h1 id="stable_release" class="sect0">Stable release</h1> 
-<div class="paragraph"> 
- <p>The current Doris stable release is 0.8.2. This version is recommended for production use.</p> 
-</div> 
-<div class="ulist"> 
- <ul> 
-  <li> <p><a href="https://github.com/apache/incubator-doris/releases/download/v0.8.2/palo-0.8.2-release-20180824.tar.gz">palo-0.8.2-release-20180824.tar.gz</a> 184 MB</p> </li> 
-  <li> <p><a href="https://github.com/apache/incubator-doris/archive/v0.8.2.zip">Source code (zip)</a></p> </li> 
-  <li> <p><a href="https://github.com/apache/incubator-doris/archive/v0.8.2.tar.gz">Source code (tar.gz)</a></p> </li> 
- </ul> 
-</div> 
-<div class="sect1"> 
- <h2 id="change_log">Change Log</h2> 
- <div class="sectionbody"> 
-  <div class="olist arabic"> 
-   <ol class="arabic"> 
-    <li> <p>Performance improvement</p> 
-     <div class="ulist"> 
-      <ul> 
-       <li> <p>Support vectorized execution engine.</p> </li> 
-       <li> <p>Support aggregation operator parallelization.</p> </li> 
-       <li> <p>Optimized storage engine for more efficient data fetching.</p> </li> 
-      </ul> 
-     </div> </li> 
-    <li> <p>Table-level privileges support</p> 
-     <div class="ulist"> 
-      <ul> 
-       <li> <p>User can grant fine-grained privileges on specified tables to specified user from specified host.</p> </li> 
-      </ul> 
-     </div> </li> 
-    <li> <p>Backup and restore</p> 
-     <div class="ulist"> 
-      <ul> 
-       <li> <p>User can backup snapshot of data to HDFS and restore snapshot to other Palo cluster.</p> </li> 
-      </ul> 
-     </div> </li> 
-    <li> <p>Broker supports HDFS HA and Hadoop kerberos authentication.</p> </li> 
-    <li> <p>Using [BRPC](<a href="https://github.com/brpc/brpc" class="bare">https://github.com/brpc/brpc</a>) instead of the old RPC framework.</p> </li> 
-    <li> <p>A lot of bugs fixed.</p> </li> 
-    <li> <p>Other changes:</p> 
-     <div class="ulist"> 
-      <ul> 
-       <li> <p>Rewrite http server in Backend using Libevent to replace Mongoose.</p> </li> 
-       <li> <p>Remove mysql code to avoid copyright problem.</p> </li> 
-       <li> <p>More metrics to expose internal situation of Palo system.</p> </li> 
-       <li> <p>Same Frontend can be removed and added again without the changing port.</p> </li> 
-       <li> <p>Change the format of Frontend’s audit log for parsing it more conveniently.</p> </li> 
-      </ul> 
-     </div> </li> 
-   </ol> 
-  </div> 
- </div> 
-</div> 
-<div class="sect1"> 
- <h2 id="compatibility">Compatibility</h2> 
- <div class="sectionbody"> 
-  <div class="paragraph"> 
-   <p><strong>This release version DOES NOT support rolling upgrade, and CAN NOT rollback after upgrade. So it is HIGHLY RECOMMENDED to backup your data and meta data before upgrading to this release version. Or upgrade it in your test/pre-online Palo cluster to make sufficient test.</strong></p> 
-  </div> 
-  <div class="paragraph"> 
-   <p>|Item|Content| |---|---| |Forward Compatibility | 0.8.1, 0.8.0 | |Rolling Upgrade | No | |Rollback | No |</p> 
-  </div> 
- </div> 
-</div>
+<!--Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.--> 
+<h2><a href="#current-release" id="current-release">Current Release</a></h2> 
+<h3><a href="#0821" id="0821">0.8.2.1</a></h3> 
+<p>NOTICE:</p> 
+<p>These is not an official Apache release version of Doris. We still same have works to do release a real Apache version.<br> But this does not affect the use of this release version in a production environment.</p> 
+<h4><a href="#download" id="download">Download:</a></h4> 
+<ul> 
+ <li><a href="http://palo-opensource-bj.bj.bcebos.com/palo-0.8.2.1-release-20181026.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-10-26T08:50:53Z/-1/host/3538578971c0a1e7cbc8e355f86a8bd55b278c211ff8be366679167227e9c129">palo-0.8.2.1-release-20181026.tar.gz</a> [183MB]</li> 
+ <li>source code is associate with commit <code>4f6f857</code></li> 
+</ul> 
+<h4><a href="#change-log" id="change-log">Change Log</a></h4> 
+<ol> 
+ <li> <p>Added:</p> 
+  <ul> 
+   <li>Add 2 new proc ‘/current_queries’ and ‘/current_backend_instances’ to monitor the current running queries.</li> 
+   <li>Add a manual compaction api on Backend to trigger cumulative or base compaction manually.</li> 
+   <li>Add Frontend config ‘max_bytes_per_broker_scanner’ to limit to bytes per one broker scanner. This is to limit the memory cost of a single broker load job.</li> 
+   <li>Add Frontend config ‘max_unfinished_load_job’ to limit load job number: if number of running load jobs exceed the limit, no more load job is allowed to be submmitted.</li> 
+   <li>exposure backend info to user when encounter error on Backend. for debugging it more convenient.</li> 
+   <li>Add 3 new metrics of Backends: host_fd_metrics, process_fd_metrics and process_thread_metrics, to monitor open file number and thread number.</li> 
+   <li>Support getting column size and precision info of table or view using JDBC.</li> 
+  </ul> </li> 
+ <li> <p>Updated:</p> 
+  <ul> 
+   <li>Hide password and other sensitive information in log and audit log.</li> 
+   <li>Change the promethues type name GAUGE to lowercase, to fit the latest promethues version.</li> 
+   <li>Backend ip saved in FE will be compared with BE’s local ip when doing heartbeat, to avoid false positive heartbeat response.</li> 
+   <li>Using version_num of tablet instead of calculating nice value to select cumulative compaction candicates.</li> 
+  </ul> </li> 
+ <li> <p>Fixed</p> 
+  <ul> 
+   <li>privilege logic error: 
+    <ol> 
+     <li>No one can set root password expect for root user itself.</li> 
+     <li>NODE_PRIV cannot be granted.</li> 
+     <li>ADMIN_PRIV and GRANT_PRIV can only be granted or revoked on <em>.</em>.</li> 
+     <li>No one can modifly privs of default role ‘operator’ and ‘admin’.</li> 
+     <li>No user can be granted to role ‘operator’.</li> 
+    </ol> </li> 
+   <li>missing password and auth check when handling mini load request in Frontend.</li> 
+   <li>DomainResolver should start after Frontends transfer to a certain ROLE, not in Catalog construction methods.</li> 
+   <li>read null data twice When reading data with a null value, in some cases, the same data will be read twice by the storage engine, resulting in a wrong result.The reason for this problem is that when splitting, and the start key is the minimum value, the data with null is read.</li> 
+   <li>fixed a mem leak of using ByteBuf when parsing auth info of http request.</li> 
+   <li>Backend process should crash if failed to saving header.</li> 
+   <li>Should remove fd from map when inputstream or outputstream is closed in Broker process.</li> 
+   <li>Predicates should not be pushed down to subquery which contains limit clause.</li> 
+   <li>Fix the formula of calculating BE load score.</li> 
+   <li>Fix a bug that in some edge cases, non-master Fontend may wait for a unnecessary long timeout after forwarding cmd to Master FE.</li> 
+   <li>A bug that granting privs on more than one table does not work.</li> 
+   <li>Support ‘Insert into’ table which contains HLL columns.</li> 
+   <li>ExportStmt’ toSql() method may throw NullPointer Exception if table does not exist.</li> 
+   <li>Remove unnecessary ‘get capacity’ operation to avoid IO impact.</li> 
+  </ul> </li> 
+</ol> 
+<h4><a href="#compatibility" id="compatibility">Compatibility</a></h4> 
+<p>This release version support rolling upgrade ONLY from 0.8.2.<br> The compatibility is same as 0.8.2.</p> 
+<h2><a href="#history-release" id="history-release">History Release</a></h2> 
+<h3><a href="#082" id="082">0.8.2</a></h3> 
+<h4><a href="#download" id="download">Download</a></h4> 
+<ul> 
+ <li> <p><a href="https://github.com/apache/incubator-doris/releases/download/v0.8.2/palo-0.8.2-release-20180824.tar.gz">palo-0.8.2-release-20180824.tar.gz</a> [184 MB]</p> </li> 
+ <li> <p><a href="https://github.com/apache/incubator-doris/archive/v0.8.2.zip">Source code (zip)</a></p> </li> 
+ <li> <p><a href="https://github.com/apache/incubator-doris/archive/v0.8.2.tar.gz">Source code (tar.gz)</a></p> </li> 
+</ul> 
+<h4><a href="#change-log" id="change-log">Change Log</a></h4> 
+<ol> 
+ <li> <p>Performance improvement</p> 
+  <ul> 
+   <li>Support vectorized execution engine.</li> 
+   <li>Support aggregation operator parallelization.</li> 
+   <li>Optimized storage engine for more efficient data fetching.</li> 
+  </ul> </li> 
+ <li> <p>Table-level privileges support</p> 
+  <ul> 
+   <li>User can grant fine-grained privileges on specified tables to specified user from specified host.</li> 
+  </ul> </li> 
+ <li> <p>Backup and restore</p> 
+  <ul> 
+   <li>User can backup snapshot of data to HDFS and restore snapshot to other Palo cluster.</li> 
+  </ul> </li> 
+ <li> <p>Broker supports HDFS HA and Hadoop kerberos authentication.</p> </li> 
+ <li> <p>Using <a href="https://github.com/brpc/brpc">BRPC</a> instead of the old RPC framework.</p> </li> 
+ <li> <p>A lot of bugs fixed.</p> </li> 
+ <li> <p>Other changes:</p> 
+  <ul> 
+   <li>Rewrite http server in Backend using Libevent to replace Mongoose.</li> 
+   <li>Remove mysql code to avoid copyright problem.</li> 
+   <li>More metrics to expose internal situation of Palo system.</li> 
+   <li>Same Frontend can be removed and added again without the changing port.</li> 
+   <li>Change the format of Frontend’s audit log for parsing it more conveniently.</li> 
+  </ul> </li> 
+</ol> 
+<h4><a href="#compatibility" id="compatibility">Compatibility</a></h4> 
+<p><strong>This release version DOES NOT support rolling upgrade, and CAN NOT rollback after upgrade. So it is HIGHLY RECOMMENDED to backup your data and meta data before upgrading to this release version. Or upgrade it in your test/pre-online Palo cluster to make sufficient test.</strong></p> 
+<table> 
+ <thead> 
+  <tr>
+   <th>Item</th>
+   <th>Content</th>
+  </tr> 
+ </thead> 
+ <tbody> 
+  <tr>
+   <td>Forward Compatibility </td>
+   <td> 0.8.1, 0.8.0 </td>
+  </tr> 
+  <tr>
+   <td>Rolling Upgrade </td>
+   <td> No </td>
+  </tr> 
+  <tr>
+   <td>Rollback </td>
+   <td> No </td>
+  </tr> 
+ </tbody> 
+</table>
 
 		</div>
 		<div id="push"></div>
