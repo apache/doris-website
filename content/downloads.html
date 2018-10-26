@@ -91,7 +91,7 @@ limitations under the License.-->
 <h2><a href="#current-release" id="current-release">Current Release</a></h2> 
 <h3><a href="#0821" id="0821">0.8.2.1</a></h3> 
 <p>NOTICE:</p> 
-<p>These is not an official Apache release version of Doris. We still same have works to do release a real Apache version.<br> But this does not affect the use of this release version in a production environment.</p> 
+<p>These is not an official Apache release version of Doris. We still have some works to do to release a real Apache version.<br> But this does not affect the use of this release version in a production environment.</p> 
 <h4><a href="#download" id="download">Download:</a></h4> 
 <ul> 
  <li><a href="http://palo-opensource-bj.bj.bcebos.com/palo-0.8.2.1-release-20181026.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-10-26T08:50:53Z/-1/host/3538578971c0a1e7cbc8e355f86a8bd55b278c211ff8be366679167227e9c129">palo-0.8.2.1-release-20181026.tar.gz</a> [183MB]</li> 
@@ -102,42 +102,42 @@ limitations under the License.-->
  <li> <p>Added:</p> 
   <ul> 
    <li>Add 2 new proc ‘/current_queries’ and ‘/current_backend_instances’ to monitor the current running queries.</li> 
-   <li>Add a manual compaction api on Backend to trigger cumulative or base compaction manually.</li> 
-   <li>Add Frontend config ‘max_bytes_per_broker_scanner’ to limit to bytes per one broker scanner. This is to limit the memory cost of a single broker load job.</li> 
-   <li>Add Frontend config ‘max_unfinished_load_job’ to limit load job number: if number of running load jobs exceed the limit, no more load job is allowed to be submmitted.</li> 
-   <li>exposure backend info to user when encounter error on Backend. for debugging it more convenient.</li> 
-   <li>Add 3 new metrics of Backends: host_fd_metrics, process_fd_metrics and process_thread_metrics, to monitor open file number and thread number.</li> 
+   <li>Add a manual compaction api on Backend to trigger cumulative and base compaction manually.</li> 
+   <li>Add Frontend config ‘max_bytes_per_broker_scanner’ to limit the loading bytes per one broker scanner. This is to limit the memory cost of a single broker load job.</li> 
+   <li>Add Frontend config ‘max_unfinished_load_job’ to limit load job number. If number of running load jobs exceed the limit, no more load job is allowed to be submmitted.</li> 
+   <li>Exposure backend info to user when encounter errors on Backend, for debugging it more convenient.</li> 
+   <li>Add 3 new metrics of Backends: host_fd_metrics, process_fd_metrics and process_thread_metrics, to monitor open files number and threads number.</li> 
    <li>Support getting column size and precision info of table or view using JDBC.</li> 
   </ul> </li> 
  <li> <p>Updated:</p> 
   <ul> 
-   <li>Hide password and other sensitive information in log and audit log.</li> 
-   <li>Change the promethues type name GAUGE to lowercase, to fit the latest promethues version.</li> 
-   <li>Backend ip saved in FE will be compared with BE’s local ip when doing heartbeat, to avoid false positive heartbeat response.</li> 
+   <li>Hide password and other sensitive information in fe.log and fe.audit.log.</li> 
+   <li>Change the promethues type name ‘GAUGE’ to lowercase, to fit the latest promethues version.</li> 
+   <li>Backend ip saved in FE will be compared with BE’s local ip when heartbeating, to avoid false positive heartbeat response.</li> 
    <li>Using version_num of tablet instead of calculating nice value to select cumulative compaction candicates.</li> 
   </ul> </li> 
  <li> <p>Fixed</p> 
   <ul> 
-   <li>privilege logic error: 
+   <li>Fix privilege logic error: 
     <ol> 
      <li>No one can set root password expect for root user itself.</li> 
      <li>NODE_PRIV cannot be granted.</li> 
-     <li>ADMIN_PRIV and GRANT_PRIV can only be granted or revoked on <em>.</em>.</li> 
+     <li>ADMIN_PRIV and GRANT_PRIV can only be granted or revoked on *.*.</li> 
      <li>No one can modifly privs of default role ‘operator’ and ‘admin’.</li> 
      <li>No user can be granted to role ‘operator’.</li> 
     </ol> </li> 
-   <li>missing password and auth check when handling mini load request in Frontend.</li> 
-   <li>DomainResolver should start after Frontends transfer to a certain ROLE, not in Catalog construction methods.</li> 
-   <li>read null data twice When reading data with a null value, in some cases, the same data will be read twice by the storage engine, resulting in a wrong result.The reason for this problem is that when splitting, and the start key is the minimum value, the data with null is read.</li> 
-   <li>fixed a mem leak of using ByteBuf when parsing auth info of http request.</li> 
-   <li>Backend process should crash if failed to saving header.</li> 
-   <li>Should remove fd from map when inputstream or outputstream is closed in Broker process.</li> 
+   <li>Missing password and auth check when handling mini load request in Frontend.</li> 
+   <li>DomainResolver should start after Frontend transfering to a certain ROLE, not in Catalog construction methods.</li> 
+   <li>Fix a bug that read null data twice: When reading data with a null value, in some cases, the same data will be read twice by the storage engine, resulting in a wrong result. The reason for this problem is that when splitting, and the start key is the minimum value, the data with null is read.</li> 
+   <li>Fixed a mem leak of using ByteBuf when parsing auth info of http request.</li> 
+   <li>Backend process should crash if failed to saving tablet’s header.</li> 
+   <li>Should remove fd from map when input stream or output stream is closed in Broker process.</li> 
    <li>Predicates should not be pushed down to subquery which contains limit clause.</li> 
    <li>Fix the formula of calculating BE load score.</li> 
    <li>Fix a bug that in some edge cases, non-master Fontend may wait for a unnecessary long timeout after forwarding cmd to Master FE.</li> 
-   <li>A bug that granting privs on more than one table does not work.</li> 
+   <li>Fix a bug that granting privs on more than one table does not work.</li> 
    <li>Support ‘Insert into’ table which contains HLL columns.</li> 
-   <li>ExportStmt’ toSql() method may throw NullPointer Exception if table does not exist.</li> 
+   <li>ExportStmt’s toSql() method may throw NullPointer Exception if table does not exist.</li> 
    <li>Remove unnecessary ‘get capacity’ operation to avoid IO impact.</li> 
   </ul> </li> 
 </ol> 
