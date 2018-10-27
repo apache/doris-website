@@ -27,13 +27,14 @@ But this does not affect the use of this release version in a production environ
 
 #### Download:
 
-* [palo-0.8.2.1-release-20181026.tar.gz](http://palo-opensource-bj.bj.bcebos.com/palo-0.8.2.1-release-20181026.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-10-26T08:50:53Z/-1/host/3538578971c0a1e7cbc8e355f86a8bd55b278c211ff8be366679167227e9c129) [183MB]
-* source code is associate with commit `4f6f857`
+* [palo-0.8.2.1-release-20181027.tar.gz](http://palo-opensource-bj.bj.bcebos.com/palo-0.8.2.1-release-20181027.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-10-27T09:06:12Z/-1/host/d9ebd01de7e266946e6dd1f2fb6951e92d4a8cd0a7b437253f9e0dcc3efe7039) [213.5MB]
+* source code is associate with commit `e453fc`
 
 #### Change Log
 
 1. Added: 
 
+	* Using MAVEN instead of ANT to build Frontend and Apache HDFS broker project.
 	* Add 2 new proc '/current\_queries' and '/current\_backend\_instances' to monitor the current running queries.
 	* Add a manual compaction api on Backend to trigger cumulative and base compaction manually.
 	* Add Frontend config 'max\_bytes\_per\_broker\_scanner' to limit the loading bytes per one broker scanner. This is to limit the memory cost of a single broker load job.
