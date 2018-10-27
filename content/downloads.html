@@ -94,13 +94,14 @@ limitations under the License.-->
 <p>These is not an official Apache release version of Doris. We still have some works to do to release a real Apache version.<br> But this does not affect the use of this release version in a production environment.</p> 
 <h4><a href="#download" id="download">Download:</a></h4> 
 <ul> 
- <li><a href="http://palo-opensource-bj.bj.bcebos.com/palo-0.8.2.1-release-20181026.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-10-26T08:50:53Z/-1/host/3538578971c0a1e7cbc8e355f86a8bd55b278c211ff8be366679167227e9c129">palo-0.8.2.1-release-20181026.tar.gz</a> [183MB]</li> 
- <li>source code is associate with commit <code>4f6f857</code></li> 
+ <li><a href="http://palo-opensource-bj.bj.bcebos.com/palo-0.8.2.1-release-20181027.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-10-27T09:06:12Z/-1/host/d9ebd01de7e266946e6dd1f2fb6951e92d4a8cd0a7b437253f9e0dcc3efe7039">palo-0.8.2.1-release-20181027.tar.gz</a> [213.5MB]</li> 
+ <li>source code is associate with commit <code>e453fc</code></li> 
 </ul> 
 <h4><a href="#change-log" id="change-log">Change Log</a></h4> 
 <ol> 
  <li> <p>Added:</p> 
   <ul> 
+   <li>Using MAVEN instead of ANT to build Frontend and Apache HDFS broker project.</li> 
    <li>Add 2 new proc ‘/current_queries’ and ‘/current_backend_instances’ to monitor the current running queries.</li> 
    <li>Add a manual compaction api on Backend to trigger cumulative and base compaction manually.</li> 
    <li>Add Frontend config ‘max_bytes_per_broker_scanner’ to limit the loading bytes per one broker scanner. This is to limit the memory cost of a single broker load job.</li> 
