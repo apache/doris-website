@@ -16,13 +16,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.-->
 
-
 # Contributing to Apache Doris (incubating)
 
 Thanks for your interest in contributing.
 As you see from [GitHub] (https://github.com/apache/incubator-doris), Apache Doris (incubating)’s codebase consists of two parts: frontend (FE) which written in JAVA and backend (BE) which writte in C++.
 
-## How to contribute?
+## 1. How to contribute?
 
 Most of the contributions that we receive are code contributions, but you can
 also contribute to the documentation or simply report solid bugs
@@ -30,109 +29,109 @@ for us to fix.
 
 When you contribute code, you affirm that the contribution is your original work and that you license the work to the project under the project’s open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project’s open source license and warrant that you have the legal authority to do so.
 
-## GitHub Workflow
+## 2. GitHub Workflow
 
-1. Fork the apache/incubator-doris repository into your GitHub account
+### 2.1 How to fork and pull request
+
+1) Fork the apache/incubator-doris repository into your GitHub account
 
     <https://github.com/apache/incubator-doris/fork>
 
-1. Clone your fork of the GitHub repository
+2) Clone your fork of the GitHub repository
 
-    ```sh
-    git clone git@github.com:<username>/doris.git
-    ```
 
-    replace `<username>` with your GitHub username.
+```
+git clone git@github.com:<username>/doris.git
+```
+Replace `<username>` with your GitHub username.
 
-1. Add a remote to keep up with upstream changes
 
-    ```
-    git remote add upstream https://github.com/apache/incubator-doris.git
-    ```
+3) Add a remote to keep up with upstream changes
 
-    If you already have a copy, fetch upstream changes
+```
+git remote add upstream https://github.com/apache/incubator-doris.git
+```
 
-    ```
-    git fetch upstream master
-    ```
+If you already have a copy, fetch upstream changes
 
-1. Create a feature branch to work in
+```
+git fetch upstream master
+```
 
-    ```
-    git checkout -b feature-xxx remotes/upstream/master
-    ```
+4) Create a feature branch to work in
 
-1. _Before submitting a pull request_ periodically rebase your changes
+```
+git checkout -b feature-xxx remotes/upstream/master
+```
+
+5) Before submitting a pull request periodically rebase your changes
     (but don't do it when a pull request is already submitted)
 
-    ```
-    git pull --rebase upstream master
-    ```
+```
+git pull --rebase upstream master
+```
 
-1. Before submitting a pull request, combine ("squash") related commits into a single one
+6) Before submitting a pull request, combine ("squash") related commits into a single one
 
-    ```
-    git rebase upstream/master
-    ```
+```
+git rebase upstream/master
+```
 
-1. Submit a pull-request
+7) Submit a pull-request
 
-    ```
-    git push origin feature-xxx
-    ```
+```
+git push origin feature-xxx
+```
 
-    Go to your Doris fork main page
+Go to your Doris fork main page
 
-    ```
-    https://github.com/<username>/doris
-    ```
+```
+https://github.com/<username>/doris
+```
 
-    If you recently pushed your changes GitHub will automatically pop up a
-    `Compare & pull request` button for any branches you recently pushed to. If you
-    click that button it will automatically offer you to submit your pull-request
-    to the apache/incubator-doris repository.
+If you recently pushed your changes GitHub will automatically pop up a `Compare & pull request` button for any branches you recently pushed to. If you click that button it will automatically offer you to submit your pull-request to the apache/incubator-doris repository.
 
-    - Give your pull-request a meaningful title.
-    - In the description, explain your changes and the problem they are solving.
+Give your pull-request a meaningful title.
 
-1. Addressing code review comments
+In the description, explain your changes and the problem they are solving.
 
-    Address code review comments by committing changes and pushing them to your feature
-    branch.
+8) Addressing code review comments
 
-    ```
-    git push origin feature-xxx
-    ```
+Address code review comments by committing changes and pushing them to your feature branch.
 
-### If your pull request shows conflicts with master
-  If your pull request shows conflicts with master, merge master into your feature branch:
-  
+```
+git push origin feature-xxx
+```
 
-  ```
-  git merge upstream/master
-  ```
-  
-  and resolve the conflicts. After resolving conflicts, push your branch again:
-  
-  ```
-  git push origin feature-xxx
-  ```
+### 2.2 If your pull request shows conflicts with master
+If your pull request shows conflicts with master, merge master into your feature branch:
 
-  _Avoid rebasing and force pushes after submitting a pull request,_ since these make it
-  difficult for reviewers to see what you've changed in response to their reviews. The Doris
-  committer that merges your change will rebase and squash it into a single commit before
-  committing it to master.
-  
-## How to report a bug?
+```
+git merge upstream/master
+```
 
-* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/apache/incubator-doris/issues).
+and resolve the conflicts. After resolving conflicts, push your branch again:
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/apache/incubator-doris/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+```
+git push origin feature-xxx
+```
+
+Avoid rebasing and force pushes after submitting a pull request, since these make it difficult for reviewers to see what you've changed in response to their reviews.
+
+The Doris committer that merges your change will rebase and squash it into a single commit before committing it to master.
+
+## 3. How to report a bug
+
+Ensure the bug was not already reported by searching on GitHub under [Issues](https://github.com/apache/incubator-doris/issues).
+
+If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/apache/incubator-doris/issues/new).
+
+Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
 
-## How to add a new feature or change an existing one
+## 4. How to add a new feature or change an existing one
 
-_Before making any significant changes, please [open an issue](https://github.com/apache/incubator-doris/issues)._ Discussing your proposed changes ahead of time will make the contribution process smooth for everyone.
+Before making any significant changes, please [open an issue](https://github.com/apache/incubator-doris/issues). Discussing your proposed changes ahead of time will make the contribution process smooth for everyone.
 
 Once we've discussed your changes and you've got your code ready, make sure that tests are passing and open your pull request. Your PR is most likely to be accepted if it:
 
@@ -140,19 +139,19 @@ Once we've discussed your changes and you've got your code ready, make sure that
 * Includes tests for new functionality.
 * References the original issue in description, e.g. "Resolves #123".
 * Has a good commit message: (refer to <https://chris.beams.io/posts/git-commit/>)
+	* Separate subject from body with a blank line.
+	* Limit the subject line to 50 characters.
+	* Capitalize the subject line.
+	* Do not end the subject line with a period.
+	* Use the imperative mood in the subject line.
+	* Wrap the body at 72 characters.
+	* Use the body to explain what and why vs. how.
 
-1. Separate subject from body with a blank line
-1. Limit the subject line to 50 characters
-1. Capitalize the subject line
-1. Do not end the subject line with a period
-1. Use the imperative mood in the subject line
-1. Wrap the body at 72 characters
-1. Use the body to explain what and why vs. how
+## 5. Contact US
 
-## Contact US
+You can contact us by one of following way:
 
-1. Development maillist: <dev@doris.apache.org>
-1. Website: <http://doris.apache.org>
-1. CodeBase: <https://github.com/apache/incubator-doris>
+* Development maillist: <dev@doris.apache.org>
+* Website: <http://doris.apache.org>
 
-Subscribe to the dev list dev@doris.apache.org.  You do that by sending mail to dev-subscribe@doris.apache.org.
+Subscribe to the dev list <dev@doris.apache.org>. You do that by sending mail to <dev-subscribe@doris.apache.org>.
