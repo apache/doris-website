@@ -33,6 +33,8 @@ Most discussion about Doris happens over email and GitHub.
 = 2. Contributing
 Doris is a community-led project and we are delighted to receive contributions of anything from minor fixes to big new features.
 
+See detail: link:http://doris.incubator.apache.org/guides/contributing.html[How to Contributing]
+
 == 2.1 What to work on
 
 If you have an itch to scratch, then by all means do that! Fixing bugs you run into, or adding features you need, are both immensely helpful.
