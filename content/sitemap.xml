@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
     <url>
-    	<loc>http://doris.incubator.apache.org/index.html</loc>
+    	<loc>http://doris.apache.org/index.html</loc>
     	<lastmod>2018-09-29</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/downloads.html</loc>
+    	<loc>http://doris.apache.org/downloads.html</loc>
     	<lastmod>2018-10-26</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/faq.html</loc>
+    	<loc>http://doris.apache.org/faq.html</loc>
     	<lastmod>2018-09-29</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/community.html</loc>
+    	<loc>http://doris.apache.org/community.html</loc>
     	<lastmod>2018-09-29</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/whoweare.html</loc>
+    	<loc>http://doris.apache.org/whoweare.html</loc>
     	<lastmod>2002-10-16</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/guides/contributing.html</loc>
+    	<loc>http://doris.apache.org/guides/contributing.html</loc>
     	<lastmod>2018-11-01</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/guides/tutorial.html</loc>
+    	<loc>http://doris.apache.org/guides/tutorial.html</loc>
     	<lastmod>2018-10-24</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.incubator.apache.org/guides/sql_reference.html</loc>
+    	<loc>http://doris.apache.org/guides/sql_reference.html</loc>
     	<lastmod>2018-10-24</lastmod>
     </url>
 
