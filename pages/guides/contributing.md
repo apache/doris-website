@@ -16,8 +16,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.-->
 
-# Contributing to Apache Doris (incubating)
-
 Thanks for your interest in contributing.
 As you see from [GitHub] (https://github.com/apache/incubator-doris), Apache Doris (incubating)’s codebase consists of two parts: frontend (FE) which written in JAVA and backend (BE) which writte in C++.
 
