@@ -96,70 +96,83 @@ See the License for the specific language governing permissions and
 limitations under the License.--> 
 <h1><a href="#contributing-to-apache-doris-incubating" id="contributing-to-apache-doris-incubating">Contributing to Apache Doris (incubating)</a></h1> 
 <p>Thanks for your interest in contributing. As you see from <a href="https://github.com/apache/incubator-doris">GitHub</a>, Apache Doris (incubating)’s codebase consists of two parts: frontend (FE) which written in JAVA and backend (BE) which writte in C++.</p> 
-<h2><a href="#how-to-contribute" id="how-to-contribute">How to contribute?</a></h2> 
+<h2><a href="#1-how-to-contribute" id="1-how-to-contribute">1. How to contribute?</a></h2> 
 <p>Most of the contributions that we receive are code contributions, but you can also contribute to the documentation or simply report solid bugs for us to fix.</p> 
 <p>When you contribute code, you affirm that the contribution is your original work and that you license the work to the project under the project’s open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project’s open source license and warrant that you have the legal authority to do so.</p> 
-<h2><a href="#github-workflow" id="github-workflow">GitHub Workflow</a></h2> 
-<ol> 
- <li> <p>Fork the apache/incubator-doris repository into your GitHub account</p> <p><a href="https://github.com/apache/incubator-doris/fork">https://github.com/apache/incubator-doris/fork</a></p> </li> 
- <li> <p>Clone your fork of the GitHub repository</p> <pre><code class="language-sh">git clone git@github.com:&lt;username&gt;/doris.git
-</code></pre> <p>replace <code>&lt;username&gt;</code> with your GitHub username.</p> </li> 
- <li> <p>Add a remote to keep up with upstream changes</p> <pre><code>git remote add upstream https://github.com/apache/incubator-doris.git
-</code></pre> <p>If you already have a copy, fetch upstream changes</p> <pre><code>git fetch upstream master
-</code></pre> </li> 
- <li> <p>Create a feature branch to work in</p> <pre><code>git checkout -b feature-xxx remotes/upstream/master
-</code></pre> </li> 
- <li> <p><em>Before submitting a pull request</em> periodically rebase your changes (but don’t do it when a pull request is already submitted)</p> <pre><code>git pull --rebase upstream master
-</code></pre> </li> 
- <li> <p>Before submitting a pull request, combine (“squash”) related commits into a single one</p> <pre><code>git rebase upstream/master
-</code></pre> </li> 
- <li> <p>Submit a pull-request</p> <pre><code>git push origin feature-xxx
-</code></pre> <p>Go to your Doris fork main page</p> <pre><code>https://github.com/&lt;username&gt;/doris
-</code></pre> <p>If you recently pushed your changes GitHub will automatically pop up a <code>Compare &amp; pull request</code> button for any branches you recently pushed to. If you click that button it will automatically offer you to submit your pull-request to the apache/incubator-doris repository.</p> 
-  <ul> 
-   <li>Give your pull-request a meaningful title.</li> 
-   <li>In the description, explain your changes and the problem they are solving.</li> 
-  </ul> </li> 
- <li> <p>Addressing code review comments</p> <p>Address code review comments by committing changes and pushing them to your feature branch.</p> <pre><code>git push origin feature-xxx
-</code></pre> </li> 
-</ol> 
-<h3><a href="#if-your-pull-request-shows-conflicts-with-master" id="if-your-pull-request-shows-conflicts-with-master">If your pull request shows conflicts with master</a></h3> 
+<h2><a href="#2-github-workflow" id="2-github-workflow">2. GitHub Workflow</a></h2> 
+<h3><a href="#21-how-to-fork-and-pull-request" id="21-how-to-fork-and-pull-request">2.1 How to fork and pull request</a></h3> 
+<p>1) Fork the apache/incubator-doris repository into your GitHub account</p> 
+<pre><code>&lt;https://github.com/apache/incubator-doris/fork&gt;
+</code></pre> 
+<p>2) Clone your fork of the GitHub repository</p> 
+<pre><code>git clone git@github.com:&lt;username&gt;/doris.git
+</code></pre> 
+<p>Replace <code>&lt;username&gt;</code> with your GitHub username.</p> 
+<p>3) Add a remote to keep up with upstream changes</p> 
+<pre><code>git remote add upstream https://github.com/apache/incubator-doris.git
+</code></pre> 
+<p>If you already have a copy, fetch upstream changes</p> 
+<pre><code>git fetch upstream master
+</code></pre> 
+<p>4) Create a feature branch to work in</p> 
+<pre><code>git checkout -b feature-xxx remotes/upstream/master
+</code></pre> 
+<p>5) Before submitting a pull request periodically rebase your changes (but don’t do it when a pull request is already submitted)</p> 
+<pre><code>git pull --rebase upstream master
+</code></pre> 
+<p>6) Before submitting a pull request, combine (“squash”) related commits into a single one</p> 
+<pre><code>git rebase upstream/master
+</code></pre> 
+<p>7) Submit a pull-request</p> 
+<pre><code>git push origin feature-xxx
+</code></pre> 
+<p>Go to your Doris fork main page</p> 
+<pre><code>https://github.com/&lt;username&gt;/doris
+</code></pre> 
+<p>If you recently pushed your changes GitHub will automatically pop up a <code>Compare &amp; pull request</code> button for any branches you recently pushed to. If you click that button it will automatically offer you to submit your pull-request to the apache/incubator-doris repository.</p> 
+<p>Give your pull-request a meaningful title.</p> 
+<p>In the description, explain your changes and the problem they are solving.</p> 
+<p>8) Addressing code review comments</p> 
+<p>Address code review comments by committing changes and pushing them to your feature branch.</p> 
+<pre><code>git push origin feature-xxx
+</code></pre> 
+<h3><a href="#22-if-your-pull-request-shows-conflicts-with-master" id="22-if-your-pull-request-shows-conflicts-with-master">2.2 If your pull request shows conflicts with master</a></h3> 
 <p>If your pull request shows conflicts with master, merge master into your feature branch:</p> 
 <pre><code>git merge upstream/master
 </code></pre> 
 <p>and resolve the conflicts. After resolving conflicts, push your branch again:</p> 
 <pre><code>git push origin feature-xxx
 </code></pre> 
-<p><em>Avoid rebasing and force pushes after submitting a pull request,</em> since these make it difficult for reviewers to see what you’ve changed in response to their reviews. The Doris committer that merges your change will rebase and squash it into a single commit before committing it to master.</p> 
-<h2><a href="#how-to-report-a-bug" id="how-to-report-a-bug">How to report a bug?</a></h2> 
-<ul> 
- <li> <p><strong>Ensure the bug was not already reported</strong> by searching on GitHub under <a href="https://github.com/apache/incubator-doris/issues">Issues</a>.</p> </li> 
- <li> <p>If you’re unable to find an open issue addressing the problem, <a href="https://github.com/apache/incubator-doris/issues/new">open a new one</a>. Be sure to include a <strong>title and clear description</strong>, as much relevant information as possible, and a <strong>code sample</strong> or an <strong>executable test case</strong> demonstrating the expected behavior that is not occurring.</p> </li> 
-</ul> 
-<h2><a href="#how-to-add-a-new-feature-or-change-an-existing-one" id="how-to-add-a-new-feature-or-change-an-existing-one">How to add a new feature or change an existing one</a></h2> 
-<p><em>Before making any significant changes, please <a href="https://github.com/apache/incubator-doris/issues">open an issue</a>.</em> Discussing your proposed changes ahead of time will make the contribution process smooth for everyone.</p> 
+<p>Avoid rebasing and force pushes after submitting a pull request, since these make it difficult for reviewers to see what you’ve changed in response to their reviews.</p> 
+<p>The Doris committer that merges your change will rebase and squash it into a single commit before committing it to master.</p> 
+<h2><a href="#3-how-to-report-a-bug" id="3-how-to-report-a-bug">3. How to report a bug</a></h2> 
+<p>Ensure the bug was not already reported by searching on GitHub under <a href="https://github.com/apache/incubator-doris/issues">Issues</a>.</p> 
+<p>If you’re unable to find an open issue addressing the problem, <a href="https://github.com/apache/incubator-doris/issues/new">open a new one</a>.</p> 
+<p>Be sure to include a <strong>title and clear description</strong>, as much relevant information as possible, and a <strong>code sample</strong> or an <strong>executable test case</strong> demonstrating the expected behavior that is not occurring.</p> 
+<h2><a href="#4-how-to-add-a-new-feature-or-change-an-existing-one" id="4-how-to-add-a-new-feature-or-change-an-existing-one">4. How to add a new feature or change an existing one</a></h2> 
+<p>Before making any significant changes, please <a href="https://github.com/apache/incubator-doris/issues">open an issue</a>. Discussing your proposed changes ahead of time will make the contribution process smooth for everyone.</p> 
 <p>Once we’ve discussed your changes and you’ve got your code ready, make sure that tests are passing and open your pull request. Your PR is most likely to be accepted if it:</p> 
 <ul> 
  <li>Update the README.md with details of changes to the interface.</li> 
  <li>Includes tests for new functionality.</li> 
  <li>References the original issue in description, e.g. “Resolves #123”.</li> 
- <li>Has a good commit message: (refer to <a href="https://chris.beams.io/posts/git-commit/">https://chris.beams.io/posts/git-commit/</a>)</li> 
+ <li>Has a good commit message: (refer to <a href="https://chris.beams.io/posts/git-commit/">https://chris.beams.io/posts/git-commit/</a>) 
+  <ul> 
+   <li>Separate subject from body with a blank line.</li> 
+   <li>Limit the subject line to 50 characters.</li> 
+   <li>Capitalize the subject line.</li> 
+   <li>Do not end the subject line with a period.</li> 
+   <li>Use the imperative mood in the subject line.</li> 
+   <li>Wrap the body at 72 characters.</li> 
+   <li>Use the body to explain what and why vs. how.</li> 
+  </ul> </li> 
 </ul> 
-<ol> 
- <li>Separate subject from body with a blank line</li> 
- <li>Limit the subject line to 50 characters</li> 
- <li>Capitalize the subject line</li> 
- <li>Do not end the subject line with a period</li> 
- <li>Use the imperative mood in the subject line</li> 
- <li>Wrap the body at 72 characters</li> 
- <li>Use the body to explain what and why vs. how</li> 
-</ol> 
-<h2><a href="#contact-us" id="contact-us">Contact US</a></h2> 
-<ol> 
+<h2><a href="#5-contact-us" id="5-contact-us">5. Contact US</a></h2> 
+<p>You can contact us by one of following way:</p> 
+<ul> 
  <li>Development maillist: <a href="mailto:dev@doris.apache.org">dev@doris.apache.org</a></li> 
  <li>Website: <a href="http://doris.apache.org">http://doris.apache.org</a></li> 
- <li>CodeBase: <a href="https://github.com/apache/incubator-doris">https://github.com/apache/incubator-doris</a></li> 
-</ol> 
+</ul> 
 <p>Subscribe to the dev list <a href="mailto:dev@doris.apache.org">dev@doris.apache.org</a>. You do that by sending mail to <a href="mailto:dev-subscribe@doris.apache.org">dev-subscribe@doris.apache.org</a>.</p></p>
 
 </div>
