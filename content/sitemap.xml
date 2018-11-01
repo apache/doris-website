@@ -27,6 +27,11 @@
     </url>
 
     <url>
+    	<loc>http://doris.incubator.apache.org/guides/contributing.html</loc>
+    	<lastmod>2018-11-01</lastmod>
+    </url>
+
+    <url>
     	<loc>http://doris.incubator.apache.org/guides/tutorial.html</loc>
     	<lastmod>2018-10-24</lastmod>
     </url>

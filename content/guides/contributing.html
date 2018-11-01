@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Contributing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="JBake">
+
+    <!-- Le styles -->
+    <link href="../css/incubator.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/asciidoctor.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="https://www.apache.org/favicon.ico">
+  </head>
+  <body onload="prettyPrint()">
+    <div id="wrap">
+   
+
+	<!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://doris.incubator.apache.org"><i class="icon-home"></i>Apache Doris</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documents <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/contributing.html">Contributing</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/sql_reference.html">SQL reference</a></li>
+                
+                  <li><a href="http://doris.incubator.apache.org/guides/tutorial.html">Tutorial</a></li>
+                
+              </ul>
+            </li>
+	    <li><a href="http://doris.incubator.apache.org/community.html">Community </a></li>
+	    <li><a href="http://doris.incubator.apache.org/downloads.html">Downloads </a></li>
+	    <li><a href="http://doris.incubator.apache.org/faq.html">FAQs </a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 vcenter"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" width="250"></a></div>
+          <div class="col-md-4 vcenter"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="100"></a></div>
+          <div class="col-md-4 vcenter"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="75" width="75"></a></div>
+      </div>
+    </div>
+    <div class="top-container container">
+
+
+<div class="page-header">
+    <h1>Guide :: Contributing</h1>
+</div>
+
+<div class="article-body">
+
+Estimated Reading Time: <span class="eta"></span>
+
+<p><!--Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.--> 
+<h1><a href="#contributing-to-apache-doris-incubating" id="contributing-to-apache-doris-incubating">Contributing to Apache Doris (incubating)</a></h1> 
+<p>Thanks for your interest in contributing. As you see from <a href="https://github.com/apache/incubator-doris">GitHub</a>, Apache Doris (incubating)’s codebase consists of two parts: frontend (FE) which written in JAVA and backend (BE) which writte in C++.</p> 
+<h2><a href="#how-to-contribute" id="how-to-contribute">How to contribute?</a></h2> 
+<p>Most of the contributions that we receive are code contributions, but you can also contribute to the documentation or simply report solid bugs for us to fix.</p> 
+<p>When you contribute code, you affirm that the contribution is your original work and that you license the work to the project under the project’s open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project’s open source license and warrant that you have the legal authority to do so.</p> 
+<h2><a href="#github-workflow" id="github-workflow">GitHub Workflow</a></h2> 
+<ol> 
+ <li> <p>Fork the apache/incubator-doris repository into your GitHub account</p> <p><a href="https://github.com/apache/incubator-doris/fork">https://github.com/apache/incubator-doris/fork</a></p> </li> 
+ <li> <p>Clone your fork of the GitHub repository</p> <pre><code class="language-sh">git clone git@github.com:&lt;username&gt;/doris.git
+</code></pre> <p>replace <code>&lt;username&gt;</code> with your GitHub username.</p> </li> 
+ <li> <p>Add a remote to keep up with upstream changes</p> <pre><code>git remote add upstream https://github.com/apache/incubator-doris.git
+</code></pre> <p>If you already have a copy, fetch upstream changes</p> <pre><code>git fetch upstream master
+</code></pre> </li> 
+ <li> <p>Create a feature branch to work in</p> <pre><code>git checkout -b feature-xxx remotes/upstream/master
+</code></pre> </li> 
+ <li> <p><em>Before submitting a pull request</em> periodically rebase your changes (but don’t do it when a pull request is already submitted)</p> <pre><code>git pull --rebase upstream master
+</code></pre> </li> 
+ <li> <p>Before submitting a pull request, combine (“squash”) related commits into a single one</p> <pre><code>git rebase upstream/master
+</code></pre> </li> 
+ <li> <p>Submit a pull-request</p> <pre><code>git push origin feature-xxx
+</code></pre> <p>Go to your Doris fork main page</p> <pre><code>https://github.com/&lt;username&gt;/doris
+</code></pre> <p>If you recently pushed your changes GitHub will automatically pop up a <code>Compare &amp; pull request</code> button for any branches you recently pushed to. If you click that button it will automatically offer you to submit your pull-request to the apache/incubator-doris repository.</p> 
+  <ul> 
+   <li>Give your pull-request a meaningful title.</li> 
+   <li>In the description, explain your changes and the problem they are solving.</li> 
+  </ul> </li> 
+ <li> <p>Addressing code review comments</p> <p>Address code review comments by committing changes and pushing them to your feature branch.</p> <pre><code>git push origin feature-xxx
+</code></pre> </li> 
+</ol> 
+<h3><a href="#if-your-pull-request-shows-conflicts-with-master" id="if-your-pull-request-shows-conflicts-with-master">If your pull request shows conflicts with master</a></h3> 
+<p>If your pull request shows conflicts with master, merge master into your feature branch:</p> 
+<pre><code>git merge upstream/master
+</code></pre> 
+<p>and resolve the conflicts. After resolving conflicts, push your branch again:</p> 
+<pre><code>git push origin feature-xxx
+</code></pre> 
+<p><em>Avoid rebasing and force pushes after submitting a pull request,</em> since these make it difficult for reviewers to see what you’ve changed in response to their reviews. The Doris committer that merges your change will rebase and squash it into a single commit before committing it to master.</p> 
+<h2><a href="#how-to-report-a-bug" id="how-to-report-a-bug">How to report a bug?</a></h2> 
+<ul> 
+ <li> <p><strong>Ensure the bug was not already reported</strong> by searching on GitHub under <a href="https://github.com/apache/incubator-doris/issues">Issues</a>.</p> </li> 
+ <li> <p>If you’re unable to find an open issue addressing the problem, <a href="https://github.com/apache/incubator-doris/issues/new">open a new one</a>. Be sure to include a <strong>title and clear description</strong>, as much relevant information as possible, and a <strong>code sample</strong> or an <strong>executable test case</strong> demonstrating the expected behavior that is not occurring.</p> </li> 
+</ul> 
+<h2><a href="#how-to-add-a-new-feature-or-change-an-existing-one" id="how-to-add-a-new-feature-or-change-an-existing-one">How to add a new feature or change an existing one</a></h2> 
+<p><em>Before making any significant changes, please <a href="https://github.com/apache/incubator-doris/issues">open an issue</a>.</em> Discussing your proposed changes ahead of time will make the contribution process smooth for everyone.</p> 
+<p>Once we’ve discussed your changes and you’ve got your code ready, make sure that tests are passing and open your pull request. Your PR is most likely to be accepted if it:</p> 
+<ul> 
+ <li>Update the README.md with details of changes to the interface.</li> 
+ <li>Includes tests for new functionality.</li> 
+ <li>References the original issue in description, e.g. “Resolves #123”.</li> 
+ <li>Has a good commit message: (refer to <a href="https://chris.beams.io/posts/git-commit/">https://chris.beams.io/posts/git-commit/</a>)</li> 
+</ul> 
+<ol> 
+ <li>Separate subject from body with a blank line</li> 
+ <li>Limit the subject line to 50 characters</li> 
+ <li>Capitalize the subject line</li> 
+ <li>Do not end the subject line with a period</li> 
+ <li>Use the imperative mood in the subject line</li> 
+ <li>Wrap the body at 72 characters</li> 
+ <li>Use the body to explain what and why vs. how</li> 
+</ol> 
+<h2><a href="#contact-us" id="contact-us">Contact US</a></h2> 
+<ol> 
+ <li>Development maillist: <a href="mailto:dev@doris.apache.org">dev@doris.apache.org</a></li> 
+ <li>Website: <a href="http://doris.apache.org">http://doris.apache.org</a></li> 
+ <li>CodeBase: <a href="https://github.com/apache/incubator-doris">https://github.com/apache/incubator-doris</a></li> 
+</ol> 
+<p>Subscribe to the dev list <a href="mailto:dev@doris.apache.org">dev@doris.apache.org</a>. You do that by sending mail to <a href="mailto:dev-subscribe@doris.apache.org">dev-subscribe@doris.apache.org</a>.</p></p>
+
+</div>
+
+		</div>
+		<div id="push"></div>
+    </div>
+    
+    <div id="footer">
+      <div class="container">
+          <p class="muted credit">&copy; 2017 The Apache Software Foundation | Licensed under the Apache License, Version 2.0.<br/>
+          Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.</p>
+      </div>
+    </div>
+
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/readingTime.js"></script>
+    <script src="../js/incubator.js"></script>
+
+  </body>
+</html>
