@@ -1,4 +1,4 @@
-title=Doris 文档
+title=建表、数据导入与删除
 date=2018-11-06
 type=guide
 status=published
