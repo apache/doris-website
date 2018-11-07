@@ -34,7 +34,7 @@ status=published
 初次来到 Doris 社区，您可以：
 
 - 订阅我们的 [邮件列表](subscribe-mail-list.html)； 
-- 加入 Doris [微信群](use-wechat.html) 随时提问；
+- 加入 Doris 微信群(加微信号：morningman-cmy, 备注：加入Doris群) 随时提问；
 - 进入 Doris 的 [Gitter](use-gitter.html) 聊天室；
 
 通过以上方式及时了解 Doris 项目的开发动态并为您关注的话题发表意见。
