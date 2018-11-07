@@ -20,7 +20,15 @@
                 <%}%>
               </ul>
             </li>
-	    <li><a href="${config.site_host}/community.html">Community </a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <%policys.each {policy -> %>
+                  <li><a href="${config.site_host}/${policy.uri}">${policy.title}</a></li>
+                <%}%>
+              </ul>
+             </li> 
+
 	    <li><a href="${config.site_host}/downloads.html">Downloads </a></li>
 	    <li><a href="${config.site_host}/faq.html">FAQs </a></li>
           </ul>
