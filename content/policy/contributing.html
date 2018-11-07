@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>如何做贡献</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="JBake">
+
+    <!-- Le styles -->
+    <link href="../css/incubator.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/asciidoctor.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="https://www.apache.org/favicon.ico">
+  </head>
+  <body onload="prettyPrint()">
+    <div id="wrap">
+   
+
+	<!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://doris.apache.org"><i class="icon-home"></i>Apache Doris</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documents <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.apache.org/guides/backup-restore.html">备份与恢复</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/deploy-upgrade.html">部署和升级</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/metadata-design.html">元数据设计文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/best-practices.html">最佳实践</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/documents.html">Doris 文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/monitor-alert.html">监控和报警</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/create-load-and-delete.html">Doris 文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/multi-tenant.html">多租户设计</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/data-model-rollup-prefix-index.html">数据模型和索引</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/install.html">安装文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/privilege.html">权限管理</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/sql_reference.html">SQL reference</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/getting-start.html">Tutorial</a></li>
+                
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.apache.org/policy/contributing.html">如何做贡献</a></li>
+                
+                  <li><a href="http://doris.apache.org/policy/pull-request.html">代码提交指南</a></li>
+                
+                  <li><a href="http://doris.apache.org/policy/subscribe-mail-list.html">订阅邮件列表</a></li>
+                
+                  <li><a href="http://doris.apache.org/policy/use-gitter.html">Gitter 使用指南</a></li>
+                
+              </ul>
+             </li> 
+
+	    <li><a href="http://doris.apache.org/downloads.html">Downloads </a></li>
+	    <li><a href="http://doris.apache.org/faq.html">FAQs </a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 vcenter"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" width="250"></a></div>
+          <div class="col-md-4 vcenter"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="100"></a></div>
+          <div class="col-md-4 vcenter"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="75" width="75"></a></div>
+      </div>
+    </div>
+    <div class="top-container container">
+
+
+<div class="page-header">
+    <h1>如何做贡献</h1>
+</div>
+
+<p><h3><a href="#目录" id="目录">目录</a></h3> 
+<ol> 
+ <li> <p><a href="#为-doris-做贡献">为 Doris 做贡献</a></p> </li> 
+ <li> <p><a href="#初次接触">初次接触</a></p> </li> 
+ <li> <p><a href="#doris-的代码和文档">Doris 的代码和文档</a></p> </li> 
+ <li> <p><a href="#改进文档">改进文档</a></p> </li> 
+ <li> <p><a href="#如果发现了一个-bug-或问题">如果发现了一个 Bug 或问题</a></p> </li> 
+ <li> <p><a href="#修改代码和提交prpull-request">修改代码和提交PR（Pull Request）</a></p> </li> 
+</ol> 
+<h2><a href="#为-doris-做贡献" id="为-doris-做贡献">为 Doris 做贡献</a></h2> 
+<p>非常感谢您对 Doris 项目感兴趣，我们非常欢迎您对 Doris 项目的各种建议、意见（包括批评）、评论和贡献。</p> 
+<p>您对 Doris 的各种建议、意见、评论可以直接通过 GitHub 的 <a href="https://github.com/apache/incubator-doris/issues/new/choose">Issues</a> 提出。</p> 
+<p>参与 Doris 项目并为其作出贡献的方法有很多：代码实现、测试编写、流程工具改进、文档完善等等。任何贡献我们都会非常欢迎，并将您加入贡献者列表，进一步，有了足够的贡献后，您还可以有机会成为 Aapche 的 Commiter，拥有 Apache 邮箱，并被收录到 <a href="http://people.apache.org/committer-index.html">Apache Commiter 列表中</a>。</p> 
+<p>任何问题，您都可以联系我们得到及时解答，联系方式包括微信、Gitter（GitHub提供的即时聊天工具）、邮件等等。</p> 
+<h2><a href="#初次接触" id="初次接触">初次接触</a></h2> 
+<p>初次来到 Doris 社区，您可以：</p> 
+<ul> 
+ <li>订阅我们的 <a href="subscribe-mail-list.html">邮件列表</a>；</li> 
+ <li>加入 Doris <a href="use-wechat.html">微信群</a> 随时提问；</li> 
+ <li>进入 Doris 的 <a href="use-gitter.html">Gitter</a> 聊天室；</li> 
+</ul> 
+<p>通过以上方式及时了解 Doris 项目的开发动态并为您关注的话题发表意见。</p> 
+<h2><a href="#doris-的代码和文档" id="doris-的代码和文档">Doris 的代码和文档</a></h2> 
+<p>正如您在 <a href="https://github.com/apache/incubator-doris">GitHub</a> 上看到的，Apache Doris (incubating) 的代码库主要包括三部分：frontend (FE), backend (BE) 和 broker (为了支持 HDFS 文件读取)，文档主要是 Doris 网站和 GitHub 上的 wiki，还有运行 Doris 的时候的在线帮助手册。这些组件的详细情况参见下表：</p> 
+<table> 
+ <thead> 
+  <tr>
+   <th> 组件名称 </th>
+   <th> 组件描述 </th>
+   <th> 相关语言 </th>
+  </tr> 
+ </thead> 
+ <tbody> 
+  <tr>
+   <td> <a href="https://github.com/apache/incubator-doris">Frontend daemon (FE)</a></td>
+   <td> 由“查询协调器”和“元数据管理器”组成 </td>
+   <td> Java</td>
+  </tr> 
+  <tr>
+   <td> <a href="https://github.com/apache/incubator-doris">Backend daemon (BE)</a> </td>
+   <td> 负责存储数据和执行查询片段 </td>
+   <td> C++</td>
+  </tr> 
+  <tr>
+   <td> <a href="https://github.com/apache/incubator-doris">Broker</a> </td>
+   <td> 读取 HDFS 数据到 Doris </td>
+   <td> Java </td>
+  </tr> 
+  <tr>
+   <td> <a href="https://github.com/apache/incubator-doris-website">Website</a> </td>
+   <td> Doris 网站 </td>
+   <td> Markdown </td>
+  </tr> 
+  <tr>
+   <td> <a href="https://github.com/apache/incubator-doris/wiki">GitHub Wiki</a> </td>
+   <td> Doris GitHub Wiki </td>
+   <td> Markdown </td>
+  </tr> 
+  <tr>
+   <td> Doris 运行时 help 文档 </td>
+   <td> 运行 Doris 的时候的在线帮助手册 </td>
+   <td> Markdown </td>
+  </tr> 
+ </tbody> 
+</table> 
+<h2><a href="#改进文档" id="改进文档">改进文档</a></h2> 
+<p>文档是您了解 Apache Doris 的最主要的方式，也是我们最需要帮助的地方！</p> 
+<p>浏览文档，可以加深您对 Doris 的了解，也可以帮助您理解 Doris 的功能和技术细节，如果您发现文档有问题，请及时联系我们；</p> 
+<p>如果您对改进文档的质量感兴趣，不论是修订一个页面的地址、更正一个链接、以及写一篇更优秀的入门文档，我们都非常欢迎！</p> 
+<p>我们的文档大多数是使用 markdown 格式编写的，您可以访问 Doris 的<a href="https://github.com/apache/incubator-doris-website">网站</a>项目，直接在 github 上编辑后提交 PR 即可。</p> 
+<h2><a href="#如果发现了一个-bug-或问题" id="如果发现了一个-bug-或问题">如果发现了一个 Bug 或问题</a></h2> 
+<p>如果发现了一个 Bug 或问题，您可以直接通过 GitHub 的 <a href="https://github.com/apache/incubator-doris/issues/new/choose">Issues</a> 提一个新的 Issue，我们会有人定期处理。</p> 
+<p>您也可以通过阅读分析代码自己修复（当然在这之前最好能和我们交流下，或许已经有人在修复同样的问题了），然后提交一个 <a href="pull-request.html">Pull Request</a>。</p> 
+<h2><a href="#修改代码和提交prpull-request" id="修改代码和提交prpull-request">修改代码和提交PR（Pull Request）</a></h2> 
+<p>您可以下载代码，编译安装，部署运行试一试（可以参考<a href="../guides/install.html">怎样编译安装运行文档</a>），看看是否与您预想的一样工作。如果有问题，您可以直接联系我们，提 Issue 或者通过阅读和分析源代码自己修复。</p> 
+<p>无论是修复 Bug 还是增加 Feature，我们都非常欢迎。如果您希望给 Doris 提交代码，您需要从 GitHub 上 fork 代码库至您的项目空间下，为您提交的代码创建一个新的分支，添加源项目为upstream，并提交PR，更详细的步骤可以参考<a href="pull-request.html">这篇文档</a>。</p></p>
+
+		</div>
+		<div id="push"></div>
+    </div>
+    
+    <div id="footer">
+      <div class="container">
+          <p class="muted credit">&copy; 2017 The Apache Software Foundation | Licensed under the Apache License, Version 2.0.<br/>
+          Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.</p>
+      </div>
+    </div>
+
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/readingTime.js"></script>
+    <script src="../js/incubator.js"></script>
+
+  </body>
+</html>

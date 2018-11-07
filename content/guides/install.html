@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>安装文档</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="JBake">
+
+    <!-- Le styles -->
+    <link href="../css/incubator.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/asciidoctor.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="https://www.apache.org/favicon.ico">
+  </head>
+  <body onload="prettyPrint()">
+    <div id="wrap">
+   
+
+	<!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://doris.apache.org"><i class="icon-home"></i>Apache Doris</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documents <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.apache.org/guides/backup-restore.html">备份与恢复</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/deploy-upgrade.html">部署和升级</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/metadata-design.html">元数据设计文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/best-practices.html">最佳实践</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/documents.html">Doris 文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/monitor-alert.html">监控和报警</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/create-load-and-delete.html">Doris 文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/multi-tenant.html">多租户设计</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/data-model-rollup-prefix-index.html">数据模型和索引</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/install.html">安装文档</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/privilege.html">权限管理</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/sql_reference.html">SQL reference</a></li>
+                
+                  <li><a href="http://doris.apache.org/guides/getting-start.html">Tutorial</a></li>
+                
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                  <li><a href="http://doris.apache.org/policy/contributing.html">如何做贡献</a></li>
+                
+                  <li><a href="http://doris.apache.org/policy/pull-request.html">代码提交指南</a></li>
+                
+                  <li><a href="http://doris.apache.org/policy/subscribe-mail-list.html">订阅邮件列表</a></li>
+                
+                  <li><a href="http://doris.apache.org/policy/use-gitter.html">Gitter 使用指南</a></li>
+                
+              </ul>
+             </li> 
+
+	    <li><a href="http://doris.apache.org/downloads.html">Downloads </a></li>
+	    <li><a href="http://doris.apache.org/faq.html">FAQs </a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 vcenter"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" width="250"></a></div>
+          <div class="col-md-4 vcenter"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="100"></a></div>
+          <div class="col-md-4 vcenter"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="75" width="75"></a></div>
+      </div>
+    </div>
+    <div class="top-container container">
+
+
+<div class="page-header">
+    <h1>Guide :: 安装文档</h1>
+</div>
+
+<div class="article-body">
+
+Estimated Reading Time: <span class="eta"></span>
+
+<p><h1><a href="#doris-安装文档" id="doris-安装文档">Doris 安装文档</a></h1> 
+<p>本文档会介绍 Doris 的系统依赖，编译，部署和常见问题解决。</p> 
+<p>您可以前往 <a href="https://github.com/apache/incubator-doris/releases">release</a> 页面下载最新的已编译完成的 release 版本直接进行使用。部署方式直接跳至 <strong>3. 部署</strong> 章节查看。release 预编译版本已包含 static libc, 理论上可以运行于任意 Linux 发行版本。如无法使用，请按照本文档自行编译。</p> 
+<ul> 
+ <li> <p>自 0.8.2 版本起，Apache 官方 Release 版本会在 <a href="http://doris.incubator.apache.org/downloads.html">http://doris.incubator.apache.org/downloads.html</a> 同步。</p> </li> 
+ <li> <p>每个 tag 都在 <code>tags/download_url.md</code> 提供对应 tag 版本的 预编译二进制包。</p> </li> 
+</ul> 
+<p>同时我们提供了 docker 镜像下载（20171213 update）：<a href="http://palo-opensource.gz.bcebos.com/palo-fe-0.8.0-docker-image-20171213?authorization=bce-auth-v1%2F069fc2786e464e63a5f1183824ddb522%2F2017-12-13T05%3A44%3A07Z%2F-1%2Fhost%2Ff25e5dc66bf62fae2fee6cc8579747f8a01ad0f2e722adf5da3327e2212af05e">palo-fe-0.8.0-docker-image</a>, <a href="http://palo-opensource.gz.bcebos.com/palo-be-0.8.0-docker-image-20171213?authorization=bce-auth-v1%2F069fc2786e464e63a5f1183824ddb522%2F2017-12-13T05%3A43%3A17Z%2F-1%2Fhost%2F99e78f00289c3c481832b7829c0f0884f463726f50fffbba18ae8c5fbea0ed62">palo-be-0.8.0-docker-image</a></p> 
+<p>docker 镜像的使用方式参见本文最后一节。</p> 
+<h2><a href="#1-系统依赖" id="1-系统依赖">1. 系统依赖</a></h2> 
+<p>Doris 当前只能运行在 Linux 系统上，无论是编译还是部署，都建议确保系统安装了如下软件或者库：</p> 
+<ul> 
+ <li> <p>GCC 4.8.2+，Oracle JDK 1.8+，Python 2.7+，确认 gcc, java, python 命令指向正确版本, 设置 JAVA_HOME 环境变量</p> </li> 
+ <li> <p>Ubuntu需要安装：<code>sudo apt-get install g++ ant cmake zip byacc flex automake libtool binutils-dev libiberty-dev bison python2.7 libncurses5-dev</code>；安转完成后，需要执行 <code>sudo updatedb</code>。</p> </li> 
+ <li> <p>CentOS需要安装：<code>sudo yum install gcc-c++ libstdc++-static ant cmake byacc flex automake libtool binutils-devel bison ncurses-devel</code>；安装完成后，需要执行 <code>sudo updatedb</code>。</p> </li> 
+ <li> <p>某些 Linux 发行版本不包含 <code>lsb_release</code> 命令。如果没有，Ubuntu 用户可以通过以下命令安装：<code>apt-get install lsb-release</code>；CentOS 用户可以通过以下命令安装：<code>yum install redhat-lsb</code>。</p> </li> 
+ <li> <p>某些 Linux 发行版本不包含 <code>updatedb</code> 命令。如果没有，Ubuntu 用户可以通过以下命令安装：<code>apt-get install mlocate</code>；CentOS 用户可以通过以下命令安装：<code>yum install mlocate</code>。</p> </li> 
+ <li> <p>自 0.8.2.1 版本起（commit log <code>e453fc</code>）, Frontend 和 broker 的代码编译方式由 ant 替换为 maven。建议从 <a href="https://maven.apache.org/download.cgi">这里</a> 下载最新的 Apache Maven（建议版本 3.5.4+）。</p> </li> 
+</ul> 
+<h2><a href="#2-编译" id="2-编译">2. 编译</a></h2> 
+<p>请按照下面步骤进行源码编译。</p> 
+<h3><a href="#21-编译第三方依赖库" id="21-编译第三方依赖库">2.1 编译第三方依赖库</a></h3> 
+<p>为防止从官网下载第三方库失败，我们提前打包了 doris 所需的第三方库，下载地址: <a href="http://doris-opensource.bj.bcebos.com/doris-thirdparty-20181102.tar.gz?authorization=bce-auth-v1/069fc2786e464e63a5f1183824ddb522/2018-11-02T09:27:57Z/-1/host/b30621ca2be77596cec9477f6cfb3608b681206d73084338d1b2f1204a3e3848">doris-thirdparty-20181102.tar.gz</a>。</p> 
+<p>第三方库下载后，将解压后的 doris-thirdparty-<code>date</code>/ 下的所有文件拷贝到 thirdparty/src/ 目录下（src目录如没有，自行创建）</p> 
+<p>运行<code>sh thirdparty/build-thirdparty.sh</code>编译第三方库。</p> 
+<p><strong>注意</strong>：<code>build-thirdparty.sh</code> 依赖 thirdparty 目录下的其它两个脚本，其中 <code>vars.sh</code> 定义了一些编译第三方库时依赖的环境变量；<code>download-thirdparty.sh</code> 负责完成从官网下载所需第三方依赖库。</p> 
+<h3><a href="#22-编译-doris-fe-和-be" id="22-编译-doris-fe-和-be">2.2 编译 Doris FE 和 BE</a></h3> 
+<p><code>sh build.sh</code></p> 
+<p>最终的部署文件将产出到 output/ 目录下。</p> 
+<h3><a href="#23-可选-编译-fs-broker" id="23-可选-编译-fs-broker">2.3 (可选) 编译 FS_Broker</a></h3> 
+<p>FS_Broker 用于从其他数据源（如Hadoop HDFS、百度云 BOS）导入数据时使用，如果不需要从这两个数据源导入数据可以先不编译和部署。需要的时候，可以后面再编译和部署。</p> 
+<p>需要哪个 broker，就进入 fs_brokers/ 下对应的 broker 的目录，执行相应的build脚本即可，执行完毕后，产生的部署文件生成在对应 broker 的 output 目录下。</p> 
+<h2><a href="#3-部署" id="3-部署">3. 部署</a></h2> 
+<p>Doris 主要包括 Frontend（FE）和 Backend（BE）两个进程。其中 FE 主要负责元数据管理、集群管理、接收用户请求和查询计划生成；BE 主要负责数据存储和查询计划执行。</p> 
+<p>一般 100 台规模的集群，可根据性能需求部署 1 到 5 台 FE，而剩下的全部机器部署 BE。其中建议 FE 的机器采用带有 RAID 卡的 SAS 硬盘，或者 SSD 硬盘，不建议使用普通 SATA 硬盘；而 BE 对硬盘没有太多要求。</p> 
+<h3><a href="#31-单-fe-部署" id="31-单-fe-部署">3.1 单 FE 部署</a></h3> 
+<ul> 
+ <li> <p>拷贝 FE 部署文件到指定节点</p> <p>将源码编译生成的 output 下的 fe 文件夹拷贝到 FE 的节点指定部署路径下。</p> </li> 
+ <li> <p>配置 FE</p> 
+  <ol> 
+   <li>配置文件为 conf/fe.conf。其中注意：<code>meta_dir</code>：元数据存放位置。默认在 fe/palo-meta/ 下。需<strong>手动创建</strong>该目录。</li> 
+   <li>fe.conf 中 JAVA_OPTS 默认 java 最大堆内存为 2GB，建议生产环境调整至 8G 以上。</li> 
+  </ol> </li> 
+ <li> <p>启动FE</p> <p><code>sh bin/start_fe.sh</code></p> <p>FE进程启动进入后台执行。日志默认存放在 fe/log/ 目录下。如启动失败，可以通过查看 fe/log/fe.log 或者 fe/log/fe.out 查看错误信息。</p> </li> 
+ <li> <p>如需部署多 FE，请参见 “FE 高可用” 章节</p> </li> 
+</ul> 
+<h3><a href="#32-多-be-部署" id="32-多-be-部署">3.2 多 BE 部署</a></h3> 
+<ul> 
+ <li> <p>拷贝 BE 部署文件到所有要部署BE的节点</p> <p>将源码编译生成的 output 下的 be 文件夹拷贝到 BE 的节点的指定部署路径下。</p> </li> 
+ <li> <p>修改所有 BE 的配置</p> <p>修改 be/conf/be.conf。主要是配置 <code>storage_root_path</code>：数据存放目录，使用 <code>;</code> 分隔（最后一个目录后不要加 <code>;</code>），其它可以采用默认值。</p> </li> 
+ <li> <p>在 FE 中添加所有 BE 节点</p> <p>BE 节点需要先在 FE 中添加，才可加入集群。可以使用 mysql-client 连接到FE：</p> <p><code>./mysql-client -h host -P port -uroot</code></p> <p>其中 host 为 FE 所在节点 ip；port 为 fe/conf/fe.conf 中的 query_port；默认使用root账户，无密码登录。</p> <p>登录后，执行以下命令来添加每一个BE：</p> <p><code>ALTER SYSTEM ADD BACKEND "host:port";</code></p> <p>如果使用多租户功能，则执行以下命令添加BE:</p> <p><code>ALTER SYSTEM ADD FREE BACKEND "host:port";</code></p> <p>其中 host 为 BE所在节点 ip；port 为 be/conf/be.conf 中的 heartbeat_service_port。</p> <p>如果不添加free关键字，be默认进入自动生成的cluster，添加了free关键字后新的be不属于任何cluster，这样创建新cluster的时候就可以从这些空闲的be中选取，详细见<a href="https://github.com/apache/incubator-doris/wiki/Multi-Tenant">多租户设计文档</a></p> </li> 
+ <li> <p>启动 BE</p> <p><code>sh bin/start_be.sh</code></p> <p>BE 进程将启动并进入后台执行。日志默认存放在 be/log/ 目录下。如启动失败，可以通过查看 be/log/be.log 或者 be/log/be.out 查看错误信息。</p> </li> 
+ <li> <p>查看BE状态</p> <p>使用 mysql-client 连接到 FE，并执行 <code>SHOW PROC '/backends';</code> 查看 BE 运行情况。如一切正常，<code>isAlive</code> 列应为 <code>true</code>。</p> </li> 
+</ul> 
+<h3><a href="#33-可选fs-broker-部署" id="33-可选fs-broker-部署">3.3 （可选）FS_Broker 部署</a></h3> 
+<p>broker 以插件的形式，独立于 Doris 部署。如果需要从第三方存储系统导入数据，需要部署相应的 broker，默认提供了读取 HDFS 和百度云 BOS 的 fs_broker。fs_broker 是无状态的，建议每一个 FE 和 BE 节点都部署一个 broker。</p> 
+<ul> 
+ <li> <p>拷贝源码 fs_broker 的 output 目录下的相应 broker 目录到需要部署的所有节点上。建议和 BE 或者 FE 目录保持同级。</p> </li> 
+ <li> <p>修改相应broker配置</p> <p>在相应 broker/conf/ 目录下对应的配置文件中，可以修改相应配置。</p> </li> 
+ <li> <p>启动broker</p> <p>sh bin/start_broker.sh 启动broker。</p> </li> 
+ <li> <p>添加broker</p> <p>要让 doris 的 fe 和 be 知道 broker 在哪些节点上，通过 sql 命令添加 broker 节点列表。</p> <p>使用 mysql-client 连接启动的 FE，执行以下命令：</p> <p><code>ALTER SYSTEM ADD BROKER broker_name "host1:port1","host2:port2",...;</code></p> <p>其中 host 为 broker 所在节点 ip；port 为 broker 配置文件中的 broker_ipc_port。</p> </li> 
+ <li> <p>查看broker 状态</p> <p>使用 mysql-client 连接任一已启动的 FE，执行以下命令查看 broker 状态：<code>SHOW PROC "/brokers";</code></p> </li> 
+</ul> 
+<h2><a href="#4-常见问题解决" id="4-常见问题解决">4. 常见问题解决</a></h2> 
+<ul> 
+ <li> <p>执行 <code>sh build-thirdparty.sh</code> 报错: source: not found</p> <p>请使用 /bin/bash 代替 sh 执行脚本。</p> </li> 
+ <li> <p>编译 gperftools：找不到 libunwind</p> <p>创建到 libunwind.so.x 的软链：<code>cd thirdparty/installed/lib &amp;&amp; ln -s libunwind.so.8 libunwind.so</code>，之后重新执行：<code>build-thirdparty.sh</code>。</p> </li> 
+ <li> <p>编译 thrift：找不到 libssl 或 libcrypto</p> <p>创建到系统 libssl.so.x 的软链：</p> <p><code>cd thirdparty/installed/lib</code></p> <p><code>rm libssl.so libcrypto.so</code></p> <p><code>ln -s /usr/lib64/libssl.so.10 libssl.so</code></p> <p><code>ln -s /lib64/libcrypto.so.10 libcrypto.so</code></p> <p>(系统库路径可能不相同，请对应修改)</p> <p>在 thirdparty/build-thirdparty.sh 中，注释掉 build_openssl 之后重新执行 <code>build-thirdparty.sh</code>。</p> </li> 
+ <li> <p>编译 thrift：No rule to make target `gen-cpp/Service.cpp’, needed by `Service.lo’. Stop.</p> <p>重新执行：<code>sh build-thirdparty.sh</code></p> </li> 
+ <li> <p>编译 Boost：Boost.Context fails to build -&gt; Call of overloaded ‘callcc(…) is ambiguous’</p> <p>如果你使用 gcc 4.8 或 4.9 版本，则可能出现这个问题。执行以下命令：</p> <p><code>cd thirdparty/src/boost_1_64_0</code></p> <p><code>patch -p0 &lt; ../../patches/boost-1.64.0-gcc4.8.patch</code></p> <p>之后重新执行：<code>sh build-thirdparty.sh</code>；</p> 
+  <blockquote> 
+   <p>参考：<a href="https://github.com/boostorg/fiber/issues/121">https://github.com/boostorg/fiber/issues/121</a></p> 
+  </blockquote> </li> 
+ <li>编译 mysql：Inconsistency detected by ld.so: dl-version.c: 224: _dl_check_map_versions: Assertion `needed != ((void *)0)’ failed! <p>如果你使用 Ubuntu 14.04 LTS apt-get 安装的 cmake 2.8.2 版本，则可能出现这个问题。</p> <p>用 apt-get 删除 cmake，并从cmake官网下载安装最新的 cmake。</p> <p>之后重新执行：<code>sh build-thirdparty.sh</code>；</p> 
+  <blockquote> 
+   <p>参考：<a href="https://forum.directadmin.com/archive/index.php/t-51343.html">https://forum.directadmin.com/archive/index.php/t-51343.html</a></p> 
+  </blockquote> </li> 
+ <li>编译 thrift：syntax error near unexpected token `GLIB,’ <p>检查是否安装了 pkg-config，并且版本高于 0.22。如果已经安装，但依然出现此问题，请删除 <code>thirdparty/src/thrift-0.9.3</code> 后，重新执行：sh build-thirdparty.sh`</p> </li> 
+ <li> <p>编译 curl：libcurl.so: undefined reference to `SSL_get0_alpn_selected’</p> <p>在 thirdparty/build-thirdparty.sh 中确认没有注释掉 build_openssl。同时注释掉 build_thrift。之后重新执行：<code>sh build-thirdparty.sh</code></p> </li> 
+ <li> <p>编译 ncurse: error: expected ‘)’ before ‘int’</p> <p>参考：<a href="https://stackoverflow.com/questions/37475222/ncurses-6-0-compilation-error-error-expected-before-int">https://stackoverflow.com/questions/37475222/ncurses-6-0-compilation-error-error-expected-before-int</a></p> </li> 
+ <li> <p>编译 Doris FE 和 BE：[bits/c++config.h] 或 [cstdef] 找不到</p> <p>在 be/CMakeLists.txt 中修改对应的 CLANG_BASE_FLAGS 中设置的 include 路径。可以通过命令：<code>locate c++config.h</code> 确认头文件的地址。</p> </li> 
+ <li> <p>编译 Doris FE 和 BE：cstddef: no member named ‘max_align_t’ in the global namespace</p> <p>在 Ubuntu 14.04 LTS 和 16.04 环境下可能会遇到此问题。首先通过 <code>locate cstddef</code> 定位到系统的 cstddef 文件位置。打开 cstddef 文件，修改如下片段：</p> <pre><code>namespace std {
+  // We handle size_t, ptrdiff_t, and nullptr_t in c++config.h.
+  +#ifndef __clang__
+  using ::max_align_t;
+  +#endif
+}
+</code></pre> 
+  <blockquote> 
+   <p>参考：<a href="http://clang-developers.42468.n3.nabble.com/another-try-lastest-ubuntu-14-10-gcc4-9-1-can-t-build-clang-td4043875.html">http://clang-developers.42468.n3.nabble.com/another-try-lastest-ubuntu-14-10-gcc4-9-1-can-t-build-clang-td4043875.html</a></p> 
+  </blockquote> </li> 
+ <li>编译 Doris FE 和 BE：/bin/bash^M: bad interpreter: No such file or directory <p>对应的脚本程序可能采用了 window 的换行格式。使用 vim 打开对应的脚本文件，执行： <code>:set ff=unix</code> 保存并退出。</p> </li> 
+</ul> 
+<h2><a href="#5-fe-高可用" id="5-fe-高可用">5. FE 高可用</a></h2> 
+<p>FE 分为 leader，follower 和 observer 三种角色。 默认一个集群，只能有一个 leader，可以有多个 follower 和 observer。其中 leader 和 follower 组成一个 Paxos 选择组，如果 leader 宕机，则剩下的 follower 会自动选出新的 leader，保证写入高可用。observer 同步 leader 的数据，但是不参加选举。如果只部署一个 FE，则 FE默认就是 leader。</p> 
+<p>第一个启动的 FE 自动成为 leader。在此基础上，可以添加若干 follower 和 observer。</p> 
+<p>添加 follower 或 observer。使用 mysql-client 连接到已启动的 FE，并执行：</p> 
+<p><code>ALTER SYSTEM ADD FOLLOWER "host:port";</code></p> 
+<p>或</p> 
+<p><code>ALTER SYSTEM ADD OBSERVER "host:port";</code></p> 
+<p>其中 host 为 follower 或 observer 所在节点 ip；port 为其配置文件fe.conf中的 edit_log_port。</p> 
+<p>配置及启动 follower 或 observer。follower 和 observer 的配置同 leader 的配置。第一次启动时，需执行以下命令：</p> 
+<p><code>sh bin/start_fe.sh -helper host:port</code></p> 
+<p>其中host为 Leader 所在节点 ip；port 为 Leader 的配置文件 fe.conf 中的 edit_log_port。-helper 参数仅在 follower 和 observer 第一次启动时才需要。</p> 
+<p>查看 Follower 或 Observer 运行状态。使用 mysql-client 连接到任一已启动的 FE，并执行：SHOW PROC ‘/frontend’; 可以查看当前已加入集群的 FE 及其对应角色。</p> 
+<h2><a href="#6-docker-镜像" id="6-docker-镜像">6. Docker 镜像</a></h2> 
+<p>我们以 CentOS 7.2 环境为例，介绍如何使用 Doris Docker 镜像快速部署Doris环境。</p> 
+<ol> 
+ <li> <p>安装并启动 Docker 服务</p> <p><code>yum install docker</code><br> <code>service docker start</code></p> </li> 
+ <li> <p>加载 docker 镜像</p> <p><code>docker load -i palo-fe-0.8.0-docker-image</code><br> <code>docker load -i palo-be-0.8.0-docker-image</code></p> </li> 
+ <li> <p>分别在 FE 和 BE 节点的宿主机上创建运行路径</p> 
+  <ul> 
+   <li> <p>FE 需创建配置文件目录、元数据目录、日志目录 <code>cd /your/workspace/ &amp;&amp; mkdir -p fe/conf fe/palo-meta fe/log</code></p> </li> 
+   <li> <p>BE 需创建配置文件目录、数据目录、日志目录 <code>cd /your/workspace/ &amp;&amp; mkdir -p be/conf be/data be/log</code></p> </li> 
+  </ul> </li> 
+ <li> <p>准备配置文件</p> 
+  <ul> 
+   <li>将 FE 和 BE 的配置文件拷贝到上一步中创建的各自的配置文件目录中。</li> 
+   <li>FE 和 BE 配置文件中需添加 <strong>priority_networks</strong> 配置 
+    <blockquote> 
+     <p>因为 docker 服务启动后，会自动创建一个名为 docker0 的虚拟网桥，ip 通常是 172.7.0.1。该网桥地址会影响 Doris 正确识别自身可访问的 ip。<br> 通过添加 <strong>priority_networks</strong> 配置，可以协助 Doris 获取到正确的 ip 地址。<br> 举例说明：<br> 假设 FE 和 BE 所在宿主机的局域网 ip 分别为：192.168.0.1 和 192.168.0.2。那么，在 fe.conf 和 be.conf 中，都加入配置：<code>priority_networks=192.168.0.0/16</code>。则可保证 Doris 获取到指定网段的 ip 地址。</p> 
+    </blockquote> </li> 
+   <li>FE 默认配置文件点击<a href="https://github.com/apache/incubator-doris/blob/master/conf/fe.conf">这里</a></li> 
+   <li>BE 默认配置文件点击<a href="https://github.com/apache/incubator-doris/blob/master/conf/be.conf">这里</a></li> 
+   <li>默认配置文件中，不包含 priority_networks 配置。</li> 
+  </ul> </li> 
+ <li> <p>启动 container</p> 
+  <ul> 
+   <li> <p>FE<br> <code>docker run --net=host -p 9030:9030 -p 8030:8030 -p 9010:9010 -p 9020:9020 -v /your/workspace/fe/log:/home/palo/run/fe/log -v /your/workspace/fe/palo-meta:/home/palo/run/fe/palo-meta -v /your/workspace/fe/conf:/home/palo/run/fe/conf/ -i -t -d -v /etc/localtime:/etc/localtime:ro palo-fe:0.8.0</code></p> </li> 
+   <li> <p>BE<br> <code>docker run --net=host --privileged -p 9050:9050 -p 8040:8040 -p 9060:9060 -p 9070:9070 -v /your/workspace/be/log:/home/palo/run/be/log -v /your/workspace/be/data:/home/palo/run/be/data -v /your/workspace/be/conf:/home/palo/run/be/conf/ -i -t -d -v /etc/localtime:/etc/localtime:ro palo-be:0.8.0</code></p> </li> 
+  </ul> 
+  <blockquote> 
+   <p>注：<br> 以上命令将 FE 和 BE 所需的所有端口映射到宿主机对应端口，并将 FE 和 BE 所需的持久化目录（配置、元信息、数据、日志）挂载到之前创建的工作目录下。<br> 必须使用 <strong>host 网络模式</strong>以确保 FE 和 BE，以及 BE 之间的连通性。</p> 
+  </blockquote> </li> 
+ <li>确认系统正常 <p>通过 mysql 客户端连接 FE。如果能够正确的添加 BE、建库、建表，则基本确认部署正确。<br> 具体确认部署正确的方法，请参阅 <a href="https://github.com/apache/incubator-doris/wiki/Doris-Deploy-%26-Upgrade">Doris 部署和升级文档</a> 中的 <strong>常见问题</strong></p> </li> 
+ <li> <p>Dockerfile</p> <p>这里提供 <a href="https://github.com/apache/incubator-doris/wiki/Dockerfile">Dockerfile</a> 供参考。</p> </li> 
+</ol></p>
+
+</div>
+
+		</div>
+		<div id="push"></div>
+    </div>
+    
+    <div id="footer">
+      <div class="container">
+          <p class="muted credit">&copy; 2017 The Apache Software Foundation | Licensed under the Apache License, Version 2.0.<br/>
+          Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.</p>
+      </div>
+    </div>
+
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/readingTime.js"></script>
+    <script src="../js/incubator.js"></script>
+
+  </body>
+</html>
