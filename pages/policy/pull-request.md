@@ -74,8 +74,18 @@ status=published
 
 ![create PR](../images/create-pr.png)
 
-#### （3）填写 comment
+#### （3）填写 Commit Message
 这里请填写 comment 的总结和详细内容，然后点击 `Create pull request` 进行创建。
+
+关于如何写 Commit Message，下面列出了一些 Tips：
+
+* 请用英文 动词 + 宾语 的形式，动词不用过去式，语句用祈使句；
+* 消息主题（Subject）和具体内容（Body）都要写，它们之间要有空行分割（GitHub PR界面上分别填写即可）。
+* 消息主题长度不要超过**50**个字符；
+* 消息内容每行不要超过 72 个字符，超过的需要手动换行；
+* 消息内容用于解释做了什么、为什么做以及怎么做的。
+
+更详细的内容请参考 <https://chris.beams.io/posts/git-commit>
 
 ![create PR](../images/create-pr2.png)
 
