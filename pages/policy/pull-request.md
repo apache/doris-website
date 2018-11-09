@@ -85,7 +85,7 @@ status=published
 * 消息内容每行不要超过**72**个字符，超过的需要手动换行；
 * 消息内容用于解释做了什么、为什么做以及怎么做的；
 * 消息主题第一个字母要**大写**，句尾**不要**有句号；
-* 消息内容中写明关联的issue，例如 #233;
+* 消息内容中写明关联的issue(如果有)，例如 #233;
 
 更详细的内容请参考 <https://chris.beams.io/posts/git-commit>
 
@@ -213,8 +213,8 @@ $ git add -u
 ####（7）填写 message 并提交到本地的新建分支上
 
 ```
-$ git commit -m "fix a typo"
-[my_branch 55e0ba2] fix a typo
+$ git commit -m "Fix a typo"
+[my_branch 55e0ba2] Fix a typo
  1 files changed, 2 insertions(+), 2 deletions(-)
 ```
 
