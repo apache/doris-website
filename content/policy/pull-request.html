@@ -151,8 +151,17 @@ git push origin &lt;your_branch_name&gt;
 <h4><a href="#2准备分支" id="2准备分支">（2）准备分支</a></h4> 
 <p>这时候，会出现 <code>Create pull request</code> 按钮，如果没有请检查是否正确选择了分支，也可以点击 “compare across forks” 重新选择 repo 和分支。</p> 
 <p><img src="http://doris.apache.org/../images/create-pr.png" alt="create PR"></p> 
-<h4><a href="#3填写-comment" id="3填写-comment">（3）填写 comment</a></h4> 
+<h4><a href="#3填写-commit-message" id="3填写-commit-message">（3）填写 Commit Message</a></h4> 
 <p>这里请填写 comment 的总结和详细内容，然后点击 <code>Create pull request</code> 进行创建。</p> 
+<p>关于如何写 Commit Message，下面列出了一些 Tips：</p> 
+<ul> 
+ <li>请用英文 动词 + 宾语 的形式，动词不用过去式，语句用祈使句；</li> 
+ <li>消息主题（Subject）和具体内容（Body）都要写，它们之间要有空行分割（GitHub PR界面上分别填写即可）。</li> 
+ <li>消息主题长度不要超过<strong>50</strong>个字符；</li> 
+ <li>消息内容每行不要超过 72 个字符，超过的需要手动换行；</li> 
+ <li>消息内容用于解释做了什么、为什么做以及怎么做的。</li> 
+</ul> 
+<p>更详细的内容请参考 <a href="https://chris.beams.io/posts/git-commit">https://chris.beams.io/posts/git-commit</a></p> 
 <p><img src="http://doris.apache.org/../images/create-pr2.png" alt="create PR"></p> 
 <h4><a href="#4完成创建" id="4完成创建">（4）完成创建</a></h4> 
 <p>创建成功后，您可以看到 Doris 项目需要 review，您可以等待我们 review 和合入，您也可以直接联系我们。</p> 
