@@ -161,7 +161,7 @@ git push origin &lt;your_branch_name&gt;
  <li>消息内容每行不要超过<strong>72</strong>个字符，超过的需要手动换行；</li> 
  <li>消息内容用于解释做了什么、为什么做以及怎么做的；</li> 
  <li>消息主题第一个字母要<strong>大写</strong>，句尾<strong>不要</strong>有句号；</li> 
- <li>消息内容中写明关联的issue，例如 #233;</li> 
+ <li>消息内容中写明关联的issue(如果有)，例如 #233;</li> 
 </ul> 
 <p>更详细的内容请参考 <a href="https://chris.beams.io/posts/git-commit">https://chris.beams.io/posts/git-commit</a></p> 
 <p><img src="http://doris.apache.org/../images/create-pr2.png" alt="create PR"></p> 
@@ -243,8 +243,8 @@ $ git branch
 <pre><code>$ git add -u
 </code></pre> 
 <h4><a href="#7填写-message-并提交到本地的新建分支上" id="7填写-message-并提交到本地的新建分支上">（7）填写 message 并提交到本地的新建分支上</a></h4> 
-<pre><code>$ git commit -m "fix a typo"
-[my_branch 55e0ba2] fix a typo
+<pre><code>$ git commit -m "Fix a typo"
+[my_branch 55e0ba2] Fix a typo
  1 files changed, 2 insertions(+), 2 deletions(-)
 </code></pre> 
 <h4><a href="#8将分支推到-github-远端自己的-repo-中" id="8将分支推到-github-远端自己的-repo-中">（8）将分支推到 GitHub 远端自己的 repo 中</a></h4> 
