@@ -37,8 +37,8 @@
     </div>
     <div class="container">
       <div class="row">
-          <div class="col-md-4 vcenter"><a href="/"><img src="../images/doris-logo-1.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="100"></a></div>
-        <div class="col-md-4 vcenter"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" width="250"></a></div>
+        <div class="col-md-4 vcenter"><a href="https://www.apache.org/"><img src="https://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="200"></a></div>
+	<div class="col-md-4 vcenter"><a href="/"><img src="../images/doris-logo-2.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-left: 70px; margin-top: 2px" height="200"></a></div>
       </div>
     </div>
     <div class="top-container container">
