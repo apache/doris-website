@@ -1,0 +1,4288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Incubator Projects - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2><img src="../images/redarrow.gif" />This page lists all Incubator projects by status</h2>
+<div class="section-content">
+<p>
+       These tables are generated from the <code>podlings.xml</code> file.
+       Please keep your project metadata up-to-date (see
+       <a href="/guides/mentor.html#Overview">here</a> and
+       <a href="/guides/graduation.html#records">here</a>).
+      </p>
+<ul>
+        <li><a href="#current">Currently in incubation</a></li>
+        <li><a href="#graduated">Graduated from incubation</a></li>
+        <li><a href="#retired">Retired from incubation</a></li>
+      </ul>
+</div>
+        <h2 id='current'><img src="../images/redarrow.gif" />Currently in incubation</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+<tr>
+<th>Project</th>
+<th>Description</th>
+<th>Sponsor (Champion)</th>
+<th>Mentors</th>
+<th>Start Date</th>
+</tr>
+        <tr id="airflow">
+          <td>
+            <a href="../projects/airflow.html">Airflow</a>
+          </td>
+          <td>Airflow is a workflow automation and scheduling system that can be used to author and manage data pipelines.</td>
+          <td>Incubator<br />(Chris Riccomini)</td>
+          <td>Hitesh Shah, Jakob Homan</td>
+          <td>2016-03-31</td>
+        </tr>
+
+        <tr id="amaterasu">
+          <td>
+            <a href="../projects/amaterasu.html">Amaterasu</a>
+          </td>
+          <td>Apache Amaterasu is a framework providing continuous deployment for Big Data pipelines.</td>
+          <td>Incubator<br />(Jean-Baptiste Onofré)</td>
+          <td>Jean-Baptiste Onofré, Olivier Lamy, Davor Bonaci</td>
+          <td>2017-09-07</td>
+        </tr>
+
+        <tr id="annotator">
+          <td>
+            <a href="../projects/annotator.html">Annotator</a>
+          </td>
+          <td>Annotator provides annotation enabling code for browsers, servers, and humans.</td>
+          <td>Incubator<br />(Daniel Gruno)</td>
+          <td>Nick Kew, Steve Blackmon, Tommaso Teofili</td>
+          <td>2016-08-30</td>
+        </tr>
+
+        <tr id="batchee">
+          <td>
+            <a href="../projects/batchee.html">BatchEE</a>
+          </td>
+          <td>
+            BatchEE projects aims to provide a JBatch implementation (aka JSR352)
+            and a set of useful extensions for this specification.
+        </td>
+          <td>Incubator<br />(FIXME)</td>
+          <td>Jean-Baptiste Onofré, Olivier Lamy, Mark Struberg</td>
+          <td>2013-10-03</td>
+        </tr>
+
+        <tr id="brpc">
+          <td>
+            <a href="../projects/brpc.html">BRPC</a>
+          </td>
+          <td>brpc is an industrial-grade RPC framework for building reliable and high-performance services.</td>
+          <td>Incubator</td>
+          <td>Kevin A. McGrail, Jean-Baptiste Onofré, Von Gosling</td>
+          <td>2018-11-13</td>
+        </tr>
+
+        <tr id="crail">
+          <td>
+            <a href="../projects/crail.html">Crail</a>
+          </td>
+          <td>Crail is a storage platform for sharing performance critical data in distributed data processing jobs at very high speed.</td>
+          <td>Incubator<br />(Luciano Resende)</td>
+          <td>Julian Hyde, Luciano Resende</td>
+          <td>2017-11-01</td>
+        </tr>
+
+        <tr id="daffodil">
+          <td>
+            <a href="../projects/daffodil.html">Daffodil</a>
+          </td>
+          <td>Apache Daffodil is an implementation of the Data Format Description Language (DFDL) used to convert between fixed format data and XML/JSON.</td>
+          <td>Incubator<br />(John D. Ament)</td>
+          <td>John D. Ament, David Fisher</td>
+          <td>2017-08-27</td>
+        </tr>
+
+        <tr id="dlab">
+          <td>
+            <a href="../projects/dlab.html">DLab</a>
+          </td>
+          <td>DLab is a platform for creating self-service, exploratory data science environments in the cloud using best-of-breed data science tools.</td>
+          <td>Incubator<br />(P. Taylor Goetz)</td>
+          <td>P. Taylor Goetz, Henry Saputra, Konstantin I Boudnik</td>
+          <td>2018-08-20</td>
+        </tr>
+
+        <tr id="doris">
+          <td>
+            <a href="../projects/doris.html">Doris</a>
+          </td>
+          <td>Doris is a MPP-based interactive SQL data warehousing for reporting and analysis.</td>
+          <td>Incubator<br />(Dave Fisher)</td>
+          <td>Dave Fisher, Luke Han, Willem Ning Jiang, Shao Feng Shi</td>
+          <td>2018-07-18</td>
+        </tr>
+
+        <tr id="druid">
+          <td>
+            <a href="../projects/druid.html">Druid</a>
+          </td>
+          <td>Druid is a high-performance, column-oriented, distributed data store.</td>
+          <td>Incubator<br />(Julian Hyde)</td>
+          <td>Julian Hyde, P. Taylor Goetz, Jun Rao</td>
+          <td>2018-02-28</td>
+        </tr>
+
+        <tr id="dubbo">
+          <td>
+            <a href="../projects/dubbo.html">Dubbo</a>
+          </td>
+          <td>Dubbo is a high-performance, lightweight, java based RPC framework.</td>
+          <td>Incubator<br />(Justin Mclean)</td>
+          <td>Justin Mclean, Mark Thomas, David Fisher</td>
+          <td>2018-02-16</td>
+        </tr>
+
+        <tr id="echarts">
+          <td>
+            <a href="../projects/echarts.html">ECharts</a>
+          </td>
+          <td>ECharts is a charting and data visualization library written in JavaScript.</td>
+          <td>Incubator<br />(Kevin A. McGrail)</td>
+          <td>John D. Ament, Kevin A. McGrail, Dave Fisher</td>
+          <td>2018-01-18</td>
+        </tr>
+
+        <tr id="edgent">
+          <td>
+            <a href="../projects/edgent.html">Edgent</a>
+          </td>
+          <td>Edgent is a stream processing programming model and lightweight runtime to execute analytics at devices on the edge or at the gateway. (Formerly known as Quarks)</td>
+          <td>Incubator<br />(Katherine Marsden)</td>
+          <td>Luciano Resende, Justin Mclean, Christofer Dutz</td>
+          <td>2016-02-29</td>
+        </tr>
+
+        <tr id="gobblin">
+          <td>
+            <a href="../projects/gobblin.html">Gobblin</a>
+          </td>
+          <td>Gobblin is a distributed data integration framework that simplifies common aspects of big data integration such as data ingestion, replication, organization and lifecycle management for both streaming and batch data ecosystems.</td>
+          <td>Incubator<br />(Olivier Lamy)</td>
+          <td>Jean-Baptiste Onofre, Olivier Lamy, Jim Jagielski</td>
+          <td>2017-02-23</td>
+        </tr>
+
+        <tr id="heron">
+          <td>
+            <a href="../projects/heron.html">Heron</a>
+          </td>
+          <td>A real-time, distributed, fault-tolerant stream processing engine.</td>
+          <td>Incubator<br />(Julien Le Dem)</td>
+          <td>Jake Farrell, Julien Le Dem, P. Taylor Goetz, David Fisher</td>
+          <td>2017-06-23</td>
+        </tr>
+
+        <tr id="hivemall">
+          <td>
+            <a href="../projects/hivemall.html">Hivemall</a>
+          </td>
+          <td>Hivemall is a library for machine learning implemented as Hive UDFs/UDAFs/UDTFs.</td>
+          <td>Incubator<br />(Roman Shaposhnik)</td>
+          <td>Xiangrui Meng, Daniel Dai, Koji Sekiguchi</td>
+          <td>2016-09-13</td>
+        </tr>
+
+        <tr id="hudi">
+          <td>
+            <a href="../projects/hudi.html">Hudi</a>
+          </td>
+          <td>Hudi provides atomic upserts and incremental data streams on Big Data</td>
+          <td>incubator<br />(Julien Le Dem)</td>
+          <td>Thomas Weise, Luciano Resende, Kishore Gopalakrishnan, Suneel Marthi</td>
+          <td>2019-01-17</td>
+        </tr>
+
+        <tr id="iceberg">
+          <td>
+            <a href="../projects/iceberg.html">Iceberg</a>
+          </td>
+          <td>Iceberg is a table format for large, slow-moving tabular data.</td>
+          <td>Incubator<br />(Owen O'Malley)</td>
+          <td>Ryan Blue, Julien Le Dem, Owen O'Malley, James Taylor, Carl Steinbach</td>
+          <td>2018-11-16</td>
+        </tr>
+
+        <tr id="iotdb">
+          <td>
+            <a href="../projects/iotdb.html">IoTDB</a>
+          </td>
+          <td>IoTDB is a data store for managing large amounts of time series data such as timestamped data from IoT sensors in industrial applications.</td>
+          <td>Incubator</td>
+          <td>Justin Mclean, Christofer Dutz, Willem Ning Jiang, Joe Witt, Kevin A. McGrail</td>
+          <td>2018-11-18</td>
+        </tr>
+
+        <tr id="joshua">
+          <td>
+            <a href="../projects/joshua.html">Joshua</a>
+          </td>
+          <td>Joshua is a statistical machine translation toolkit</td>
+          <td>Incubator<br />(Chris Mattmann)</td>
+          <td>Paul Ramirez, Lewis John McGibbney, Chris Mattmann, Tom Barber</td>
+          <td>2016-02-13</td>
+        </tr>
+
+        <tr id="livy">
+          <td>
+            <a href="../projects/livy.html">Livy</a>
+          </td>
+          <td>Livy is web service that exposes a REST interface for managing long running Apache Spark contexts in your cluster. With Livy, new applications can be built on top of Apache Spark that require fine grained interaction with many Spark contexts.</td>
+          <td>Incubator<br />(Sean Busbey)</td>
+          <td>Bikas Saha, Brock Noland, Luciano Resende, Jean-Baptiste Onofre</td>
+          <td>2017-06-05</td>
+        </tr>
+
+        <tr id="marvin-ai">
+          <td>
+            <a href="../projects/marvin.html">Marvin-AI</a>
+          </td>
+          <td>Marvin-AI is an open-source artificial intelligence (AI) platform that helps data scientists, prototype and productionalize complex solutions with a scalable, low-latency, language-agnostic, and standardized architecture while simplifies the process of exploration and modeling.</td>
+          <td>Incubator<br />(Luciano Resende)</td>
+          <td>Jim Jagielski, Luciano Resende, William Colen</td>
+          <td>2018-08-21</td>
+        </tr>
+
+        <tr id="milagro">
+          <td>
+            <a href="../projects/milagro.html">Milagro</a>
+          </td>
+          <td>Distributed Cryptography; M-Pin protocol for Identity and Trust</td>
+          <td>Incubator<br />(Nick Kew)</td>
+          <td>Nick Kew</td>
+          <td>2015-12-21</td>
+        </tr>
+
+        <tr id="mxnet">
+          <td>
+            <a href="../projects/mxnet.html">MXNet</a>
+          </td>
+          <td>A Flexible and Efficient Library for Deep Learning</td>
+          <td>Incubator<br />(Henri Yandell)</td>
+          <td>Sebastian Schelter, Henri Yandell, Markus Weimer, Jim Jagielski, Michael Wall, Bob Paulin, Jason Dai</td>
+          <td>2017-01-23</td>
+        </tr>
+
+        <tr id="myriad">
+          <td>
+            <a href="../projects/myriad.html">Myriad</a>
+          </td>
+          <td>Myriad enables co-existence of Apache Hadoop YARN and Apache Mesos together on the same cluster and allows dynamic resource allocations across both Hadoop and other applications running on the same physical data center infrastructure.</td>
+          <td>Incubator<br />(Benjamin Hindman)</td>
+          <td>Benjamin Hindman, Ted Dunning</td>
+          <td>2015-03-01</td>
+        </tr>
+
+        <tr id="nemo">
+          <td>
+            <a href="../projects/nemo.html">Nemo</a>
+          </td>
+          <td>Nemo is a data processing system to flexibly control the runtime behaviors of a job to adapt to varying deployment characteristics.</td>
+          <td>Incubator<br />(Byung-Gon Chun)</td>
+          <td>Davor Bonaci, Hyunsik Choi, Byung-Gon Chun, Jean-Baptiste Onofre, Markus Weimer</td>
+          <td>2018-02-04</td>
+        </tr>
+
+        <tr id="netbeans">
+          <td>
+            <a href="../projects/netbeans.html">NetBeans</a>
+          </td>
+          <td>NetBeans is a development environment, tooling platform and application framework.</td>
+          <td>Incubator<br />(Bertrand Delacretaz)</td>
+          <td>Ate Douma, Bertrand Delacretaz, Daniel Gruno, Mark Struberg</td>
+          <td>2016-10-01</td>
+        </tr>
+
+        <tr id="omid">
+          <td>
+            <a href="../projects/omid.html">Omid</a>
+          </td>
+          <td>Omid is a flexible, reliable, high performant and scalable ACID transactional framework that allows client applications to execute transactions on top of MVCC key/value-based NoSQL datastores (currently Apache HBase) providing Snapshot Isolation guarantees on the accessed data.</td>
+          <td>Incubator<br />(Daniel Dai)</td>
+          <td>Alan Gates, James Taylor</td>
+          <td>2016-03-28</td>
+        </tr>
+
+        <tr id="openwhisk">
+          <td>
+            <a href="../projects/openwhisk.html">OpenWhisk</a>
+          </td>
+          <td>distributed Serverless computing platform</td>
+          <td>Incubator<br />(Sam Ruby)</td>
+          <td>Bertrand Delacretaz</td>
+          <td>2016-11-23</td>
+        </tr>
+
+        <tr id="pagespeed">
+          <td>
+            <a href="../projects/pagespeed.html">PageSpeed</a>
+          </td>
+          <td>
+            PageSpeed represents a series of open source technologies to help make the
+            web faster by rewriting web pages to reduce latency and bandwidth.
+        </td>
+          <td>Incubator<br />(Leif Hedstrom)</td>
+          <td>Jukka Zitting, Leif Hedstrom, Nick Kew, Phil Sorber</td>
+          <td>2017-09-30</td>
+        </tr>
+
+        <tr id="pinot">
+          <td>
+            <a href="../projects/pinot.html">Pinot</a>
+          </td>
+          <td>Pinot is a distributed columnar storage engine that can ingest data in real-time and serve analytical queries at low latency.</td>
+          <td>Incubator<br />(Olivier Lamy)</td>
+          <td>Kishore Gopalakrishna, Jim Jagielski, Roman Shaposhnik, Olivier Lamy, Felix Cheung</td>
+          <td>2018-10-17</td>
+        </tr>
+
+        <tr id="plc4x">
+          <td>
+            <a href="../projects/plc4x.html">PLC4X</a>
+          </td>
+          <td>PLC4X is a set of libraries for communicating with industrial programmable logic controllers (PLCs) using a variety of protocols but with a shared API.</td>
+          <td>Incubator<br />(Justin Mclean)</td>
+          <td>Greg Trasuk, Justin Mclean, Stefan Bodewig</td>
+          <td>2017-12-18</td>
+        </tr>
+
+        <tr id="ponymail">
+          <td>
+            <a href="../projects/ponymail.html">Pony Mail</a>
+          </td>
+          <td>Pony Mail is a mail-archiving, archive viewing, and interaction service, that can be integrated with many email platforms.</td>
+          <td>Incubator<br />(Suneel Marthi)</td>
+          <td>John D. Ament, Sharan Foga</td>
+          <td>2016-05-27</td>
+        </tr>
+
+        <tr id="ratis">
+          <td>
+            <a href="../projects/ratis.html">Ratis</a>
+          </td>
+          <td>Ratis is a java implementation for RAFT consensus protocol</td>
+          <td>Incubator<br />(Jitendra Pandey)</td>
+          <td>Jakob Homan, Uma Maheswara Rao G, Devaraj Das</td>
+          <td>2017-01-03</td>
+        </tr>
+
+        <tr id="rya">
+          <td>
+            <a href="../projects/rya.html">Rya</a>
+          </td>
+          <td>Rya (pronounced "ree-uh" /rēə/) is a cloud-based RDF triple store that supports SPARQL queries. Rya is a scalable RDF data management system built on top of Accumulo. Rya uses novel storage methods, indexing schemes, and query processing techniques that scale to billions of triples across multiple nodes. Rya provides fast and easy access to the data through SPARQL, a conventional query mechanism for RDF data.</td>
+          <td>Incubator<br />(Adam Fuchs)</td>
+          <td>Josh Elser, Billie Rinaldi</td>
+          <td>2015-09-18</td>
+        </tr>
+
+        <tr id="s2graph">
+          <td>
+            <a href="../projects/s2graph.html">S2Graph</a>
+          </td>
+          <td>S2Graph is a distributed and scalable OLTP graph database built on Apache HBase to support fast traversal of extremely large graphs.</td>
+          <td>Incubator<br />(Hyunsik Choi)</td>
+          <td>Sergio Fernández, Woonsan Ko</td>
+          <td>2015-11-29</td>
+        </tr>
+
+        <tr id="samoa">
+          <td>
+            <a href="../projects/samoa.html">SAMOA</a>
+          </td>
+          <td>SAMOA provides a collection of distributed streaming algorithms for the most common data mining and machine learning tasks such as classification, clustering, and regression, as well as programming abstractions to develop new algorithms that run on top of distributed stream processing engines (DSPEs). It features a pluggable architecture that allows it to run on several DSPEs such as Apache Storm, Apache S4, and Apache Samza.</td>
+          <td>Incubator<br />(Daniel Dai)</td>
+          <td>Alan Gates, Ashutosh Chauhan</td>
+          <td>2014-12-15</td>
+        </tr>
+
+        <tr id="sdap">
+          <td>
+            <a href="../projects/sdap.html">SDAP</a>
+          </td>
+          <td>SDAP is an integrated data analytic center for Big Science problems.</td>
+          <td>Incubator<br />(Lewis John McGibbney)</td>
+          <td>Jörn Rottmann, Suneel Marthi</td>
+          <td>2017-10-22</td>
+        </tr>
+
+        <tr id="senssoft">
+          <td>
+            <a href="../projects/senssoft.html">SensSoft</a>
+          </td>
+          <td>SensSoft is a software tool usability testing platform</td>
+          <td>Incubator<br />(Lewis John McGibbney)</td>
+          <td>Lewis John McGibbney, David Meikle, Atri Sharma</td>
+          <td>2016-07-13</td>
+        </tr>
+
+        <tr id="shardingsphere">
+          <td>
+            <a href="../projects/shardingsphere.html">ShardingSphere</a>
+          </td>
+          <td>Sharding-Sphere is an ecosystem of transparent distributed database middleware, focusing on data sharding, distributed transaction and database orchestration.</td>
+          <td>Incubator<br />(Roman Shaposhnik)</td>
+          <td>Craig L Russell, Benjamin Hindman, Willem Ning Jiang, Von Gosling</td>
+          <td>2018-11-10</td>
+        </tr>
+
+        <tr id="singa">
+          <td>
+            <a href="../projects/singa.html">SINGA</a>
+          </td>
+          <td>SINGA is a distributed deep learning platform.</td>
+          <td>Incubator<br />(Thejas Nair)</td>
+          <td>Alan Gates, Ted Dunning, Thejas Nair</td>
+          <td>2015-03-17</td>
+        </tr>
+
+        <tr id="skywalking">
+          <td>
+            <a href="../projects/skywalking.html">SkyWalking</a>
+          </td>
+          <td>Skywalking is an APM (application performance monitor), especially for microservice, Cloud Native and container-based architecture systems. Also known as a distributed tracing system. It provides an automatic way to instrument applications: no need to change any of the source code of the target application; and an collector with an very high efficiency streaming module.</td>
+          <td>Incubator<br />(Mick Semb Wever)</td>
+          <td>Luke Han, Willem Ning Jiang, Mick Semb Wever, Ignasi Barrera</td>
+          <td>2017-12-08</td>
+        </tr>
+
+        <tr id="spot">
+          <td>
+            <a href="../projects/spot.html">Spot</a>
+          </td>
+          <td>Apache Spot is a platform for network telemetry built on an open data model and Apache Hadoop.</td>
+          <td>Incubator<br />(Doug Cutting)</td>
+          <td>Uma Maheswara Rao G</td>
+          <td>2016-09-23</td>
+        </tr>
+
+        <tr id="superset">
+          <td>
+            <a href="../projects/superset.html">Superset</a>
+          </td>
+          <td>Superset is an enterprise-ready web application for data exploration, data visualization and dashboarding.</td>
+          <td>Incubator<br />(Daniel Dai)</td>
+          <td>Ashutosh Chauhan, Luke Han, Alan Gates</td>
+          <td>2017-05-21</td>
+        </tr>
+
+        <tr id="tamaya">
+          <td>
+            <a href="../projects/tamaya.html">Tamaya</a>
+          </td>
+          <td>Tamaya is a highly flexible configuration solution based on an modular, extensible and injectable key/value based design, which should provide a minimal but extendible modern and functional API leveraging SE, ME and EE environments.</td>
+          <td>Incubator<br />(David Blevins)</td>
+          <td>John D. Ament, David Blevins</td>
+          <td>2014-11-14</td>
+        </tr>
+
+        <tr id="taverna">
+          <td>
+            <a href="../projects/taverna.html">Taverna</a>
+          </td>
+          <td>Taverna is a domain-independent suite of tools used to design and execute data-driven workflows.</td>
+          <td>Incubator<br />(Andy Seaborne)</td>
+          <td>Marlon Pierce, Stian Soiland-Reyes, Suresh Srinivas</td>
+          <td>2014-10-20</td>
+        </tr>
+
+        <tr id="tephra">
+          <td>
+            <a href="../projects/tephra.html">Tephra</a>
+          </td>
+          <td>
+            Tephra is a system for providing globally consistent transactions on
+            top of Apache HBase and other storage engines.
+        </td>
+          <td>Incubator<br />(James Taylor)</td>
+          <td>Alan Gates, James Taylor</td>
+          <td>2016-03-07</td>
+        </tr>
+
+        <tr id="toree">
+          <td>
+            <a href="../projects/toree.html">Toree</a>
+          </td>
+          <td>Toree provides applications with a mechanism to interactively and remotely access Apache Spark.</td>
+          <td>Incubator<br />(Sam Ruby)</td>
+          <td>Luciano Resende, Julien Le Dem, Ryan Blue</td>
+          <td>2015-12-02</td>
+        </tr>
+
+        <tr id="unomi">
+          <td>
+            <a href="../projects/unomi.html">Unomi</a>
+          </td>
+          <td>Unomi is a reference implementation of the OASIS Context Server specification currently being worked on by the OASIS Context Server Technical Committee. It provides a high-performance user profile and event tracking server.</td>
+          <td>Incubator<br />(Jean-Baptiste Onofre)</td>
+          <td>Jean-Baptiste Onofre</td>
+          <td>2015-10-05</td>
+        </tr>
+
+        <tr id="warble">
+          <td>
+            <a href="../projects/warble.html">Warble</a>
+          </td>
+          <td>a distributed endpoint monitoring solution where the agent is hosted on your own hardware.</td>
+          <td>Incubator<br />(Daniel Gruno)</td>
+          <td>Daniel Takamori, Chris Lambertus</td>
+          <td>2018-06-11</td>
+        </tr>
+
+        <tr id="weex">
+          <td>
+            <a href="../projects/weex.html">Weex</a>
+          </td>
+          <td>Weex is a framework for building Mobile cross-platform high performance UI.</td>
+          <td>Incubator<br />(Edward J. Yoon)</td>
+          <td>Willem Ning Jiang, Myrle Krantz</td>
+          <td>2016-11-30</td>
+        </tr>
+
+        <tr id="zipkin">
+          <td>
+            <a href="../projects/zipkin.html">Zipkin</a>
+          </td>
+          <td>Zipkin is a distributed tracing system. It helps gather timing data needed to troubleshoot latency problems in microservice architectures.</td>
+          <td>Incubator<br />(Michael Semb Wever)</td>
+          <td>Michael Semb Wever, John D. Ament, Willem Ning Jiang, Andriy Redko, Sheng Wu</td>
+          <td>2018-08-29</td>
+        </tr>
+
+      </table>
+</div>
+        <h2 id='graduated'><img src="../images/redarrow.gif" />Graduated from incubation</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+<tr>
+<th>Project</th>
+<th>Description</th>
+<th>Apache Sponsor</th>
+<th>Mentors</th>
+<th>Start Date</th>
+<th>End Date</th>
+</tr>
+        <tr id="abdera">
+          <td>
+            <a href="../projects/abdera.html">Abdera</a>
+            <hr />
+            <a href="http://abdera.apache.org/">
+            <img src="../images/redarrow.gif" />Abdera
+            </a>
+          </td>
+          <td>An implementation of the Atom Syndication Format and Atom Publishing Protocol.</td>
+          <td>Incubator</td>
+          <td>Garrett Rooney, Paul Querna</td>
+          <td>2006-06-06</td>
+          <td>2008-11-08</td>
+        </tr>
+
+        <tr id="accumulo">
+          <td>
+            <a href="../projects/accumulo.html">Accumulo</a>
+            <hr />
+            <a href="http://accumulo.apache.org/">
+            <img src="../images/redarrow.gif" />Accumulo
+            </a>
+          </td>
+          <td>Accumulo is a distributed key/value store that provides expressive, cell-level access labels.</td>
+          <td>Incubator</td>
+          <td>Benson Margulies, Alan Cabrera, Bernd Fondermann</td>
+          <td>2011-09-12</td>
+          <td>2012-03-21</td>
+        </tr>
+
+        <tr id="ace">
+          <td>
+            <a href="../projects/ace.html">ACE</a>
+            <hr />
+            <a href="http://ace.apache.org/">
+            <img src="../images/redarrow.gif" />ACE
+            </a>
+          </td>
+          <td>A software distribution framework based on OSGi that allows you to manage and distribute artifacts.</td>
+          <td>Board</td>
+          <td>Niclas Hedhman, Carsten Ziegeler, Bertrand Delacrétaz</td>
+          <td>2009-04-24</td>
+          <td>2011-12-21</td>
+        </tr>
+
+        <tr id="activemq">
+          <td>
+            <a href="../projects/activemq.html">ActiveMQ</a>
+            <hr />
+            <a href="http://activemq.apache.org/">
+            <img src="../images/redarrow.gif" />ActiveMQ
+            </a>
+          </td>
+          <td>A robust and high performance Message Orientated Middleware provider which will be integrated into Apache Geronimo but also be usable from inside any JVM.</td>
+          <td>Geronimo</td>
+          <td>James Strachan</td>
+          <td>2005-12-01</td>
+          <td>2007-02-06</td>
+        </tr>
+
+        <tr id="airavata">
+          <td>
+            <a href="../projects/airavata.html">Airavata</a>
+            <hr />
+            <a href="http://airavata.apache.org/">
+            <img src="../images/redarrow.gif" />Airavata
+            </a>
+          </td>
+          <td>A software suite to compose, manage, execute, and monitor large scale applications and workflows on computational resources ranging from local clusters to national grids and computing clouds.</td>
+          <td>Board</td>
+          <td>Alek Slominski, Ate Douma, Sanjiva Weerawarana, Chris Mattmann</td>
+          <td>2011-05-05</td>
+          <td>2012-09-19</td>
+        </tr>
+
+        <tr id="allura">
+          <td>
+            <a href="../projects/allura.html">Allura</a>
+            <hr />
+            <a href="http://allura.apache.org/">
+            <img src="../images/redarrow.gif" />Allura
+            </a>
+          </td>
+          <td>Forge software for the development of software projects, including source control systems, issue tracking, discussion, wiki, and other software project management tools.</td>
+          <td>Incubator</td>
+          <td>Ross Gardler, Greg Stein, Jim Jagielski</td>
+          <td>2012-06-25</td>
+          <td>2014-03-19</td>
+        </tr>
+
+        <tr id="ambari">
+          <td>
+            <a href="../projects/ambari.html">Ambari</a>
+            <hr />
+            <a href="http://ambari.apache.org/">
+            <img src="../images/redarrow.gif" />Ambari
+            </a>
+          </td>
+          <td>Ambari is a monitoring, administration and lifecycle management project for Apache Hadoop clusters. (Formerly known as HMS)</td>
+          <td>Incubator</td>
+          <td>Owen O'Malley, Chris Douglas, Arun Murthy</td>
+          <td>2011-08-30</td>
+          <td>2013-11-20</td>
+        </tr>
+
+        <tr id="amber">
+          <td>
+            <a href="../projects/amber.html">Amber</a>
+            <hr />
+            <a href="http://oltu.apache.org">
+            <img src="../images/redarrow.gif" />Oltu
+            </a>
+          </td>
+          <td>
+            The Amber project will deliver a Java development framework mainly aimed to build OAuth-aware applications.
+            Amber graduated with the name Apache Oltu
+        </td>
+          <td>Shindig</td>
+          <td>Jean-Frederic Clere, Gianugo Rabellino, David Jencks, Raymond Feng</td>
+          <td>2010-05-09</td>
+          <td>2013-01-16</td>
+        </tr>
+
+        <tr id="any23">
+          <td>
+            <a href="../projects/any23.html">Any23</a>
+            <hr />
+            <a href="http://any23.apache.org/">
+            <img src="../images/redarrow.gif" />Any23
+            </a>
+          </td>
+          <td>Anything To Triples (any23) is a library, a web service and a command line tool that extracts structured data in RDF format from a variety of Web documents.</td>
+          <td>Tika</td>
+          <td>Chris Mattmann, Nick Kew, Paul Ramirez, Simone Tripodi, Tommaso Teofili</td>
+          <td>2011-10-01</td>
+          <td>2012-08-28</td>
+        </tr>
+
+        <tr id="apex">
+          <td>
+            <a href="../projects/apex.html">Apex</a>
+            <hr />
+            <a href="http://apex.apache.org/">
+            <img src="../images/redarrow.gif" />Apex
+            </a>
+          </td>
+          <td>Apex is an enterprise grade native YARN big data-in-motion platform that unifies stream processing as well as batch processing.</td>
+          <td>Incubator</td>
+          <td>Chris Nauroth, Alan Gates, Hitesh Shah, Justin Mclean, P. Taylor Goetz, Ted Dunning</td>
+          <td>2015-08-17</td>
+          <td>2016-04-20</td>
+        </tr>
+
+        <tr id="apollo">
+          <td>
+            <a href="../projects/apollo.html">Apollo</a>
+          </td>
+          <td>A robust implementation of the OASIS WS-ResourceFramework (WSRF) family of specifications</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas</td>
+          <td>2004-11-08</td>
+          <td>2005-06-03</td>
+        </tr>
+
+        <tr id="aries">
+          <td>
+            <a href="../projects/aries.html">Aries</a>
+            <hr />
+            <a href="http://aries.apache.org/">
+            <img src="../images/redarrow.gif" />Aries
+            </a>
+          </td>
+          <td>The Aries project will deliver a set of pluggable Java components enabling an enterprise OSGi application programming model.</td>
+          <td>Incubator</td>
+          <td>Davanum Srinivas, Guillaume Nodet, Kevan Miller</td>
+          <td>2009-09-22</td>
+          <td>2010-12-15</td>
+        </tr>
+
+        <tr id="asterixdb">
+          <td>
+            <a href="../projects/asterixdb.html">AsterixDB</a>
+            <hr />
+            <a href="http://asterixdb.apache.org/">
+            <img src="../images/redarrow.gif" />AsterixDB
+            </a>
+          </td>
+          <td>Apache AsterixDB is a scalable big data management system (BDMS) that provides storage, management, and query capabilities for large collections of semi-structured data.</td>
+          <td>Incubator</td>
+          <td>Ate Douma, Chris Mattmann, Henry Saputra, Jochen Wiedmann, Ted Dunning</td>
+          <td>2015-02-28</td>
+          <td>2016-04-20</td>
+        </tr>
+
+        <tr id="atlas">
+          <td>
+            <a href="../projects/atlas.html">Atlas</a>
+            <hr />
+            <a href="http://atlas.apache.org/">
+            <img src="../images/redarrow.gif" />Atlas
+            </a>
+          </td>
+          <td>Apache Atlas is a scalable and extensible set of core foundational governance services that enables enterprises to effectively and efficiently meet their compliance requirements within Hadoop and allows integration with the complete enterprise data ecosystem</td>
+          <td>Incubator</td>
+          <td>Arun Murthy, Chris Douglas, Jakob Homan, Vinod Kumar Vavilapalli</td>
+          <td>2015-05-05</td>
+          <td>2017-06-21</td>
+        </tr>
+
+        <tr id="aurora">
+          <td>
+            <a href="../projects/aurora.html">Aurora</a>
+            <hr />
+            <a href="http://aurora.apache.org/">
+            <img src="../images/redarrow.gif" />Aurora
+            </a>
+          </td>
+          <td>Aurora is a service scheduler used to schedule jobs onto Apache Mesos.</td>
+          <td>Incubator</td>
+          <td>Jake Farrell, Benjamin Hindman, Chris Mattmann, Henry Saputra</td>
+          <td>2013-10-01</td>
+          <td>2015-03-18</td>
+        </tr>
+
+        <tr id="beam">
+          <td>
+            <a href="../projects/beam.html">Beam</a>
+            <hr />
+            <a href="http://beam.apache.org/">
+            <img src="../images/redarrow.gif" />Beam
+            </a>
+          </td>
+          <td>Apache Beam is an open source, unified model and set of language-specific SDKs for defining and executing data processing workflows, and also data ingestion and integration flows, supporting Enterprise Integration Patterns (EIPs) and Domain Specific Languages (DSLs). Dataflow pipelines simplify the mechanics of large-scale batch and streaming data processing and can run on a number of runtimes like Apache Flink, Apache Spark, and Google Cloud Dataflow (a cloud service). Beam also brings DSL in different languages, allowing users to easily implement their data integration processes.</td>
+          <td>Incubator</td>
+          <td>Jean-Baptiste Onofre, Jim Jagielski, Venkatesh Seetharam, Bertrand Delacretaz, Ted Dunning</td>
+          <td>2016-02-01</td>
+          <td>2016-12-21</td>
+        </tr>
+
+        <tr id="beanvalidation">
+          <td>
+            <a href="../projects/bval.html">Bean Validation</a>
+            <hr />
+            <a href="http://bval.apache.org/">
+            <img src="../images/redarrow.gif" />Bean Validation
+            </a>
+          </td>
+          <td>The Bean Validation project will create an implementation of Bean Validation as defined by the Java EE specifications.</td>
+          <td>Incubator</td>
+          <td>Kevan Miller, Luciano Resende, Niall Pemberton, Matthias Wessendorf</td>
+          <td>2010-03-01</td>
+          <td>2012-02-15</td>
+        </tr>
+
+        <tr id="beehive">
+          <td>
+            <a href="../projects/beehive.html">Beehive</a>
+            <hr />
+            <a href="http://beehive.apache.org/">
+            <img src="../images/redarrow.gif" />Beehive
+            </a>
+          </td>
+          <td>Extensible Java application framework with an integrated metadata-driven programming model for web services, web applications, and resource access</td>
+          <td>Incubator</td>
+          <td>Craig McClanahan</td>
+          <td>2004-05-21</td>
+          <td>2005-07-18</td>
+        </tr>
+
+        <tr id="bigtop">
+          <td>
+            <a href="../projects/bigtop.html">Bigtop</a>
+            <hr />
+            <a href="http://bigtop.apache.org/">
+            <img src="../images/redarrow.gif" />Bigtop
+            </a>
+          </td>
+          <td>Bigtop is a project for the development of packaging and tests of the Hadoop ecosystem.</td>
+          <td>Incubator</td>
+          <td>Patrick Hunt, Tom White, Owen O'Malley, Alan Gates, Steve Loughran</td>
+          <td>2011-06-20</td>
+          <td>2012-09-19</td>
+        </tr>
+
+        <tr id="bloodhound">
+          <td>
+            <a href="../projects/bloodhound.html">Bloodhound</a>
+            <hr />
+            <a href="http://bloodhound.apache.org/">
+            <img src="../images/redarrow.gif" />Bloodhound
+            </a>
+          </td>
+          <td>Bloodhound is a software development collaboration tool, including issue tracking, wiki and repository browsing.</td>
+          <td>Incubator</td>
+          <td>Hyrum Wright, Greg Stein, Branko Čibej</td>
+          <td>2011-12-23</td>
+          <td>2013-03-20</td>
+        </tr>
+
+        <tr id="brooklyn">
+          <td>
+            <a href="../projects/brooklyn.html">Brooklyn</a>
+            <hr />
+            <a href="http://brooklyn.apache.org/">
+            <img src="../images/redarrow.gif" />Brooklyn
+            </a>
+          </td>
+          <td>
+            Brooklyn is a framework for modelling, monitoring, and managing applications
+            through autonomic blueprints.
+        </td>
+          <td>Incubator</td>
+          <td>Matt Hogstrom, Alex Karasulu, David Nalley, Marcel Offermans, Jean-Baptiste Onofré, Olivier Lamy, Chip Childers, Andrei Savu, Joe Brockmeier, Jim Jagielski</td>
+          <td>2014-05-01</td>
+          <td>2015-11-18</td>
+        </tr>
+
+        <tr id="buildr">
+          <td>
+            <a href="../projects/buildr.html">Buildr</a>
+            <hr />
+            <a href="http://buildr.apache.org/">
+            <img src="../images/redarrow.gif" />Buildr
+            </a>
+          </td>
+          <td>Buildr is a simple and intuitive build system for Java projects written in Ruby.</td>
+          <td>Incubator</td>
+          <td>Jim Jagielski, Matthieu Riou, Yoav Shapira</td>
+          <td>2007-11-01</td>
+          <td>2009-02-23</td>
+        </tr>
+
+        <tr id="calcite">
+          <td>
+            <a href="../projects/calcite.html">Calcite</a>
+            <hr />
+            <a href="http://calcite.apache.org/">
+            <img src="../images/redarrow.gif" />Calcite
+            </a>
+          </td>
+          <td>Calcite is a highly customizable engine for parsing and planning queries on data in a wide variety of formats. It allows database-like access, and in particular a SQL interface and advanced query optimization, for data not residing in a traditional database. (Renamed from Optiq on 2014-09-30.)</td>
+          <td>Incubator</td>
+          <td>Ted Dunning, Alan Gates, Steven Noels</td>
+          <td>2014-05-19</td>
+          <td>2015-10-22</td>
+        </tr>
+
+        <tr id="carbondata">
+          <td>
+            <a href="../projects/carbondata.html">CarbonData</a>
+            <hr />
+            <a href="http://carbondata.apache.org/">
+            <img src="../images/redarrow.gif" />CarbonData
+            </a>
+          </td>
+          <td>Apache CarbonData is a new Apache Hadoop native file format for faster interactive query using advanced columnar storage, index, compression and encoding techniques to improve computing efficiency, in turn it will help speedup queries an order of magnitude faster over PetaBytes of data.</td>
+          <td>Incubator</td>
+          <td>Henry Saputra, Jean-Baptiste Onofre, Uma Maheswara Rao G</td>
+          <td>2016-06-02</td>
+          <td>2017-04-19</td>
+        </tr>
+
+        <tr id="cassandra">
+          <td>
+            <a href="../projects/cassandra.html">Cassandra</a>
+            <hr />
+            <a href="http://cassandra.apache.org/">
+            <img src="../images/redarrow.gif" />Cassandra
+            </a>
+          </td>
+          <td>Cassandra</td>
+          <td>Incubator</td>
+          <td>Anthony Elder, Brian McCallister, Matthieu Riou</td>
+          <td>2009-01-01</td>
+          <td>2010-02-17</td>
+        </tr>
+
+        <tr id="cayenne">
+          <td>
+            <a href="../projects/cayenne.html">Cayenne</a>
+            <hr />
+            <a href="http://cayenne.apache.org/">
+            <img src="../images/redarrow.gif" />Cayenne
+            </a>
+          </td>
+          <td>Robust Persistence</td>
+          <td>DB</td>
+          <td>Jean T. Anderson, Bill Dudney, Jim Jagielski, Brian McCallister</td>
+          <td>2006-03-09</td>
+          <td>2006-12-20</td>
+        </tr>
+
+        <tr id="celix">
+          <td>
+            <a href="../projects/celix.html">Celix</a>
+            <hr />
+            <a href="http://celix.apache.org/">
+            <img src="../images/redarrow.gif" />Celix
+            </a>
+          </td>
+          <td>Celix is an OSGi like implementation in C with a distinct focus on interoperability between Java and C.</td>
+          <td>Incubator</td>
+          <td>Marcel Offermans, Karl Pauls, Roman Shaposhnik</td>
+          <td>2010-11-02</td>
+          <td>2014-07-16</td>
+        </tr>
+
+        <tr id="chemistry">
+          <td>
+            <a href="../projects/chemistry.html">Chemistry</a>
+            <hr />
+            <a href="http://chemistry.apache.org/">
+            <img src="../images/redarrow.gif" />Chemistry
+            </a>
+          </td>
+          <td>Chemistry</td>
+          <td>Incubator</td>
+          <td>Felix Meschberger, Gianugo Rabellino, Jukka Zitting</td>
+          <td>2009-04-30</td>
+          <td>2010-02-16</td>
+        </tr>
+
+        <tr id="chukwa">
+          <td>
+            <a href="../projects/chukwa.html">Chukwa</a>
+            <hr />
+            <a href="http://chukwa.apache.org/">
+            <img src="../images/redarrow.gif" />Chukwa
+            </a>
+          </td>
+          <td>Chukwa is a log collection and analysis framework for Apache Hadoop clusters.</td>
+          <td>Incubator</td>
+          <td>Alan Cabrera, Anthony Elder, Bernd Fondermann, Jukka Zitting</td>
+          <td>2010-07-14</td>
+          <td>2013-09-27</td>
+        </tr>
+
+        <tr id="clerezza">
+          <td>
+            <a href="../projects/clerezza.html">Clerezza</a>
+            <hr />
+            <a href="http://clerezza.apache.org/">
+            <img src="../images/redarrow.gif" />Clerezza
+            </a>
+          </td>
+          <td>an OSGi-based modular application and set of components (bundles) for building RESTFul Semantic Web applications and services.</td>
+          <td>Incubator</td>
+          <td>Ross Gardler, Reinhard Poetz</td>
+          <td>2009-11-27</td>
+          <td>2013-02-20</td>
+        </tr>
+
+        <tr id="click">
+          <td>
+            <a href="../projects/click.html">Click</a>
+            <hr />
+            <a href="http://click.apache.org/">
+            <img src="../images/redarrow.gif" />Click
+            </a>
+          </td>
+          <td>Component based Java Web Framework</td>
+          <td>Incubator</td>
+          <td>Henning Schmiedehausen, Ted Husted, Will Glass-Husain, Andrus Adamchik</td>
+          <td>2008-07-21</td>
+          <td>2009-11-18</td>
+        </tr>
+
+        <tr id="cloudstack">
+          <td>
+            <a href="../projects/cloudstack.html">CloudStack</a>
+            <hr />
+            <a href="http://cloudstack.apache.org/">
+            <img src="../images/redarrow.gif" />CloudStack
+            </a>
+          </td>
+          <td>CloudStack is an IaaS (“Infrastracture as a Service”) cloud orchestration platform.</td>
+          <td>Incubator</td>
+          <td>Jim Jagielski, J. Daniel Kulp, Alex Karasulu, Olivier Lamy, Brett Porter, Matt Hogstrom, Mohammad Nour El-Din</td>
+          <td>2012-04-16</td>
+          <td>2013-03-20</td>
+        </tr>
+
+        <tr id="commonsrdf">
+          <td>
+            <a href="../projects/commonsrdf.html">CommonsRDF</a>
+            <hr />
+            <a href="https://commons.apache.org/rdf">
+            <img src="../images/redarrow.gif" />Commons RDF
+            </a>
+          </td>
+          <td>Commons RDF is a set of interfaces and classes for RDF 1.1 concepts and behaviours.  The commons-rdf-api module defines interfaces and testing harness.  The commons-rdf-simple module provides a basic reference implementation to exercise the test harness and clarify API contracts.</td>
+          <td>Incubator</td>
+          <td>John D Ament, Gary Gregory</td>
+          <td>2015-03-06</td>
+          <td>2016-11-28</td>
+        </tr>
+
+        <tr id="cordova">
+          <td>
+            <a href="../projects/cordova.html">Cordova</a>
+            <hr />
+            <a href="http://cordova.apache.org/">
+            <img src="../images/redarrow.gif" />Cordova
+            </a>
+          </td>
+          <td>Apache Cordova is a platform for building native mobile applications using HTML, CSS and JavaScript (formerly Phonegap). The project entered incubation as Callback, but decided to change its name to Cordova on 2011-11-28.</td>
+          <td>Incubator</td>
+          <td>Jukka Zitting, Gianugo Rabellino, Ross Gardler, Andrew Savory</td>
+          <td>2011-10-15</td>
+          <td>2012-10-17</td>
+        </tr>
+
+        <tr id="couchdb">
+          <td>
+            <a href="../projects/couchdb.html">CouchDB</a>
+            <hr />
+            <a href="http://couchdb.apache.org/">
+            <img src="../images/redarrow.gif" />CouchDB
+            </a>
+          </td>
+          <td>CouchDB</td>
+          <td>Incubator</td>
+          <td>Ted Leung, Gianugo Rabellino, Jim Jagielski</td>
+          <td>2008-02-12</td>
+          <td>2008-11-19</td>
+        </tr>
+
+        <tr id="crunch">
+          <td>
+            <a href="../projects/crunch.html">Crunch</a>
+            <hr />
+            <a href="http://crunch.apache.org/">
+            <img src="../images/redarrow.gif" />Crunch
+            </a>
+          </td>
+          <td>Crunch is a Java library for writing, testing, and running pipelines of MapReduce jobs on Apache Hadoop.</td>
+          <td>Incubator</td>
+          <td>Arun Murthy, Patrick Hunt, Tom White</td>
+          <td>2012-05-26</td>
+          <td>2013-02-20</td>
+        </tr>
+
+        <tr id="ctakes">
+          <td>
+            <a href="../projects/ctakes.html">cTAKES</a>
+            <hr />
+            <a href="http://ctakes.apache.org/">
+            <img src="../images/redarrow.gif" />cTAKES
+            </a>
+          </td>
+          <td>cTAKES (clinical Text Analysis and Knowledge Extraction System) is an natural language processing tool for information extraction from electronic medical record clinical free-text.</td>
+          <td>Incubator</td>
+          <td>Jörn Kottmann, Grant Ingersoll, Chris Mattmann</td>
+          <td>2012-06-11</td>
+          <td>2013-03-20</td>
+        </tr>
+
+        <tr id="curator">
+          <td>
+            <a href="../projects/curator.html">Curator</a>
+            <hr />
+            <a href="http://curator.apache.org/">
+            <img src="../images/redarrow.gif" />Curator
+            </a>
+          </td>
+          <td>Curator - ZooKeeper client wrapper and rich ZooKeeper framework</td>
+          <td>Incubator</td>
+          <td>Enis Söztutar, Luciano Resende, Mahadev Konar, Patrick Hunt</td>
+          <td>2013-03-11</td>
+          <td>2013-09-01</td>
+        </tr>
+
+        <tr id="cxf">
+          <td>
+            <a href="../projects/cxf.html">CXF</a>
+            <hr />
+            <a href="http://cxf.apache.org/">
+            <img src="../images/redarrow.gif" />CXF
+            </a>
+          </td>
+          <td>The CXF project will create a SOA services framework by merges the ObjectWeb Celtix project and the Codehaus XFire project.</td>
+          <td>Incubator</td>
+          <td>Jim Jagielski, James Strachan</td>
+          <td>2006-08-15</td>
+          <td>2008-04-16</td>
+        </tr>
+
+        <tr id="datafu">
+          <td>
+            <a href="../projects/datafu.html">DataFu</a>
+          </td>
+          <td>DataFu provides a collection of Hadoop MapReduce jobs and functions in higher level languages based on it to perform data analysis. It provides functions for common statistics tasks (e.g. quantiles, sampling), PageRank, stream sessionization, and set and bag operations. DataFu also provides Hadoop jobs for incremental data processing in MapReduce.</td>
+          <td>Incubator</td>
+          <td>Ashutosh Chauhan, Roman Shaposhnik, Ted Dunning, Jakob Homan</td>
+          <td>2014-01-05</td>
+          <td>2018-02-21</td>
+        </tr>
+
+        <tr id="deltacloud">
+          <td>
+            <a href="../projects/deltacloud.html">Deltacloud</a>
+            <hr />
+            <a href="http://deltacloud.apache.org/">
+            <img src="../images/redarrow.gif" />Deltacloud
+            </a>
+          </td>
+          <td>Deltacloud, cloud API (REST) and abstraction framework</td>
+          <td>Incubator</td>
+          <td>Carl Trielof, Craig Russell, Matt Hogstrom, Davanum Srinivas</td>
+          <td>2010-05-19</td>
+          <td>2011-10-26</td>
+        </tr>
+
+        <tr id="deltaspike">
+          <td>
+            <a href="../projects/deltaspike.html">DeltaSpike</a>
+            <hr />
+            <a href="http://deltaspike.apache.org/">
+            <img src="../images/redarrow.gif" />DeltaSpike
+            </a>
+          </td>
+          <td>DeltaSpike is a collection of JSR-299 (CDI) Extensions for building applications on the Java SE and EE platforms.</td>
+          <td>Incubator</td>
+          <td>Mark Struberg, Gerhard Petracek, David Blevins, Matt Benson, Jim Jagielski</td>
+          <td>2011-12-07</td>
+          <td>2013-05-28</td>
+        </tr>
+
+        <tr id="derby">
+          <td>
+            <a href="../projects/derby.html">Derby</a>
+            <hr />
+            <a href="http://db.apache.org/derby/">
+            <img src="../images/redarrow.gif" />DB Derby
+            </a>
+          </td>
+          <td>Java relational database</td>
+          <td>DB</td>
+          <td>Ken Coar</td>
+          <td>2004-08-15</td>
+          <td>2005-07-18</td>
+        </tr>
+
+        <tr id="devicemap">
+          <td>
+            <a href="../projects/devicemap.html">DeviceMap</a>
+            <hr />
+            <a href="http://devicemap.apache.org/">
+            <img src="../images/redarrow.gif" />DeviceMap
+            </a>
+          </td>
+          <td>Apache DeviceMap is a data repository containing device information, images and other relevant information for all sorts of mobile devices, e.g. smartphones and tablets. While the focus is initially on that data, APIs will also be created to use and manage it.</td>
+          <td>Incubator</td>
+          <td>Bertrand Delacretaz, Kevan Miller, Andrew Savory</td>
+          <td>2012-01-03</td>
+          <td>2014-11-19</td>
+        </tr>
+
+        <tr id="directmemory">
+          <td>
+            <a href="../projects/directmemory.html">DirectMemory</a>
+            <hr />
+            <a href="http://directmemory.apache.org/">
+            <img src="../images/redarrow.gif" />DirectMemory
+            </a>
+          </td>
+          <td>DirectMemory's main purpose is to to act as a second level cache able to store large amounts of data without filling up the Java heap and thus avoiding long garbage collection cycles.</td>
+          <td>Incubator</td>
+          <td>Anthony Elder, Olivier Lamy, Sylvain Wallez, Tim Williams</td>
+          <td>2011-10-05</td>
+          <td>2012-08-15</td>
+        </tr>
+
+        <tr id="directory">
+          <td>
+            <a href="../projects/directory.html">Directory</a>
+            <hr />
+            <a href="http://directory.apache.org/">
+            <img src="../images/redarrow.gif" />Directory
+            </a>
+          </td>
+          <td>Directory projects.</td>
+          <td>Incubator</td>
+          <td>Noel J. Bergman, Nicola Ken Barozzi</td>
+          <td>2003-10-23</td>
+          <td>2005-02-23</td>
+        </tr>
+
+        <tr id="distributedlog">
+          <td>
+            <a href="../projects/distributedlog.html">DistributedLog</a>
+            <hr />
+            <a href="https://bookkeeper.apache.org">
+            <img src="../images/redarrow.gif" />BookKeeper DistributedLog
+            </a>
+          </td>
+          <td>DistributedLog is a high-performance replicated log service. It offers durability, replication and strong consistency, which provides a fundamental building block for building reliable distributed systems.</td>
+          <td>Incubator</td>
+          <td>Flavio Junqueira, Chris Nauroth, Henry Saputra</td>
+          <td>2016-06-24</td>
+          <td>2017-07-01</td>
+        </tr>
+
+        <tr id="drill">
+          <td>
+            <a href="../projects/drill.html">Drill</a>
+            <hr />
+            <a href="http://drill.apache.org/">
+            <img src="../images/redarrow.gif" />Drill
+            </a>
+          </td>
+          <td>Drill is a distributed system for interactive analysis of large-scale datasets, inspired by Google's Dremel.</td>
+          <td>Incubator</td>
+          <td>Ted Dunning, Grant Ingersoll, Isabel Drost</td>
+          <td>2012-08-11</td>
+          <td>2014-11-19</td>
+        </tr>
+
+        <tr id="eagle">
+          <td>
+            <a href="../projects/eagle.html">Eagle</a>
+            <hr />
+            <a href="http://eagle.apache.org/">
+            <img src="../images/redarrow.gif" />Eagle
+            </a>
+          </td>
+          <td>Apache Eagle is an open source analytics solution for identifying security and performance issues instantly on big data platforms, e.g. Apache Hadoop, Apache Spark. It analyzes data activities, yarn applications, jmx metrics, and daemon logs etc., provides state-of-the-art alert engine to identify security breach, performance issues and shows insights.</td>
+          <td>Incubator</td>
+          <td>Owen O'Malley, Henry Saputra, Julian Hyde, P. Taylor Goetz, Amareshwari Sriramdasu</td>
+          <td>2015-10-26</td>
+          <td>2016-12-21</td>
+        </tr>
+
+        <tr id="easyant">
+          <td>
+            <a href="../projects/easyant.html">EasyAnt</a>
+            <hr />
+            <a href="http://ant.apache.org/easyant/">
+            <img src="../images/redarrow.gif" />EasyAnt
+            </a>
+          </td>
+          <td>Easyant is a build system based on Apache Ant and Apache Ivy.</td>
+          <td>Ant</td>
+          <td>Anthony Elder, Antoine Lévy-Lambert, Stefan Bodewig</td>
+          <td>2011-01-31</td>
+          <td>2013-03-12</td>
+        </tr>
+
+        <tr id="empire-db">
+          <td>
+            <a href="../projects/empire-db.html">Empire-db</a>
+            <hr />
+            <a href="http://empire-db.apache.org/">
+            <img src="../images/redarrow.gif" />Empire-db
+            </a>
+          </td>
+          <td>Data persistence component.</td>
+          <td>Incubator</td>
+          <td>Benson Margulies, Thomas Fischer, Martijn Dashorst</td>
+          <td>2008-07-08</td>
+          <td>2012-01-24</td>
+        </tr>
+
+        <tr id="esme">
+          <td>
+            <a href="../projects/esme.html">ESME</a>
+            <hr />
+            <a href="http://esme.apache.org/">
+            <img src="../images/redarrow.gif" />ESME
+            </a>
+          </td>
+          <td>Enterprise Social Messaging Experiment (ESME) is a secure and highly scalable microsharing and micromessaging platform that allows people to discover and meet one another and get controlled access to other sources of information, all in a business process context.</td>
+          <td>Incubator</td>
+          <td>J. Aaron Farr, Bertrand Delacrétaz, Dan Kulp, Gianugo Rabellino, Sylvain Wallez</td>
+          <td>2008-12-02</td>
+          <td>2010-12-15</td>
+        </tr>
+
+        <tr id="etch">
+          <td>
+            <a href="../projects/etch.html">Etch</a>
+            <hr />
+            <a href="http://etch.apache.org/">
+            <img src="../images/redarrow.gif" />Etch
+            </a>
+          </td>
+          <td>A cross-platform, language- and transport-independent framework for building and consuming network services.</td>
+          <td>Incubator</td>
+          <td>Niclas Hedhman, Doug Cutting, Yonik Seeley, Martijn Dashorst</td>
+          <td>2008-09-02</td>
+          <td>2013-01-16</td>
+        </tr>
+
+        <tr id="falcon">
+          <td>
+            <a href="../projects/falcon.html">Falcon</a>
+            <hr />
+            <a href="http://falcon.apache.org/">
+            <img src="../images/redarrow.gif" />Falcon
+            </a>
+          </td>
+          <td>A data processing and management solution for Hadoop designed for data motion, coordination of data pipelines, lifecycle management, and data discovery.</td>
+          <td>Incubator</td>
+          <td>Alan Gates, Chris Douglas, Devaraj Das, Owen O'Malley</td>
+          <td>2013-03-27</td>
+          <td>2014-12-17</td>
+        </tr>
+
+        <tr id="felix">
+          <td>
+            <a href="../projects/felix.html">Felix</a>
+            <hr />
+            <a href="http://felix.apache.org/">
+            <img src="../images/redarrow.gif" />Felix
+            </a>
+          </td>
+          <td>Implementation of the OSGi R4 specification. (Formerly known as Oscar)</td>
+          <td>Incubator</td>
+          <td>Alex Karasulu</td>
+          <td>2005-07-19</td>
+          <td>2007-04-01</td>
+        </tr>
+
+        <tr id="fineract">
+          <td>
+            <a href="../projects/fineract.html">Fineract</a>
+            <hr />
+            <a href="http://fineract.apache.org/">
+            <img src="../images/redarrow.gif" />Fineract
+            </a>
+          </td>
+          <td>Fineract is an open source system for core banking as a platform.</td>
+          <td>Incubator</td>
+          <td>Ross Gardler, Greg Stein, Roman Shaposhnik, Jim Jagielski</td>
+          <td>2015-12-15</td>
+          <td>2017-04-19</td>
+        </tr>
+
+        <tr id="flex">
+          <td>
+            <a href="../projects/flex.html">Flex</a>
+            <hr />
+            <a href="http://flex.apache.org/">
+            <img src="../images/redarrow.gif" />Flex
+            </a>
+          </td>
+          <td>Application framework for building Flash-based applications.</td>
+          <td>Incubator</td>
+          <td>Bertrand Delacretaz, Greg Reddin, Anne Kathrine Petteroe, Dave Fisher</td>
+          <td>2011-12-30</td>
+          <td>2012-12-19</td>
+        </tr>
+
+        <tr id="flink">
+          <td>
+            <a href="../projects/flink.html">Flink</a>
+            <hr />
+            <a href="http://flink.apache.org/">
+            <img src="../images/redarrow.gif" />Flink
+            </a>
+          </td>
+          <td>Flink is an open source system for expressive, declarative, fast, and efficient data analysis. Stratosphere combines the scalability and programming flexibility of distributed MapReduce-like platforms with the efficiency, out-of-core execution, and query optimization capabilities found in parallel databases.  Flink was originally known as Stratosphere when it entered the Incubator.</td>
+          <td>Incubator</td>
+          <td>Sean Owen, Ted Dunning, Owen O'Malley, Henry Saputra, Ashutosh Chauhan</td>
+          <td>2014-04-14</td>
+          <td>2014-12-17</td>
+        </tr>
+
+        <tr id="flume">
+          <td>
+            <a href="../projects/flume.html">Flume</a>
+            <hr />
+            <a href="http://flume.apache.org/">
+            <img src="../images/redarrow.gif" />Flume
+            </a>
+          </td>
+          <td>Flume is a distributed, reliable, and available system for efficiently collecting, aggregating, and moving large amounts of log data from many different sources to a centralized data store.</td>
+          <td>Incubator</td>
+          <td>Nigel Daley, Ralph Goers, Patrick Hunt, Tom White</td>
+          <td>2011-06-13</td>
+          <td>2012-06-20</td>
+        </tr>
+
+        <tr id="fluo">
+          <td>
+            <a href="../projects/fluo.html">Fluo</a>
+          </td>
+          <td>Fluo is a distributed system for incrementally processing large data sets stored in Accumulo.</td>
+          <td>Incubator</td>
+          <td>Billie Rinaldi, Drew Farris, Josh Elser</td>
+          <td>2016-05-17</td>
+          <td>2017-07-19</td>
+        </tr>
+
+        <tr id="freemarker">
+          <td>
+            <a href="../projects/freemarker.html">FreeMarker</a>
+            <hr />
+            <a href="http://freemarker.apache.org/">
+            <img src="../images/redarrow.gif" />FreeMarker
+            </a>
+          </td>
+          <td>FreeMarker is a template engine, i.e. a generic tool to generate text output based on templates. FreeMarker is implemented in Java as a class library for programmers.</td>
+          <td>Incubator</td>
+          <td>Jacopo Cappellato, Ralph Goers, Sergio Fernández</td>
+          <td>2015-07-01</td>
+          <td>2018-03-21</td>
+        </tr>
+
+        <tr id="ftpserver">
+          <td>
+            <a href="../projects/ftpserver.html">FtpServer</a>
+            <hr />
+            <a href="http://mina.apache.org/ftpserver/">
+            <img src="../images/redarrow.gif" />FtpServer
+            </a>
+          </td>
+          <td>A complete FTP Server based on Mina I/O system.</td>
+          <td>Incubator</td>
+          <td>Paul Hammant, Nicola Ken Barozzi, Niclas Hedhman</td>
+          <td>2003-03-29</td>
+          <td>2007-12-18</td>
+        </tr>
+
+        <tr id="geode">
+          <td>
+            <a href="../projects/geode.html">Geode</a>
+            <hr />
+            <a href="http://geode.apache.org/">
+            <img src="../images/redarrow.gif" />Geode
+            </a>
+          </td>
+          <td>Geode is a data management platform that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures.</td>
+          <td>Incubator</td>
+          <td>Konstantin Boudnik, Chip Childers, Justin Erenkrantz, Jan Iversen, Chris Mattmann, William A. Rowe Jr., Roman Shaposhnik</td>
+          <td>2015-04-27</td>
+          <td>2016-11-16</td>
+        </tr>
+
+        <tr id="geronimo">
+          <td>
+            <a href="../projects/geronimo.html">Geronimo</a>
+            <hr />
+            <a href="http://geronimo.apache.org/">
+            <img src="../images/redarrow.gif" />Geronimo
+            </a>
+          </td>
+          <td>J2EE Container</td>
+          <td>Board</td>
+          <td>Geir Magnusson Jr., James Strachan, Jim Jagielski</td>
+          <td>2003-08-06</td>
+          <td>2004-05-26</td>
+        </tr>
+
+        <tr id="giraph">
+          <td>
+            <a href="../projects/giraph.html">Giraph</a>
+            <hr />
+            <a href="http://giraph.apache.org/">
+            <img src="../images/redarrow.gif" />Giraph
+            </a>
+          </td>
+          <td>Giraph is a large-scale, fault-tolerant, Bulk Synchronous Parallel (BSP)-based graph processing framework.</td>
+          <td>Incubator</td>
+          <td>Owen O'Malley, Chris Mattmann, Alan Gates</td>
+          <td>2011-08-01</td>
+          <td>2012-05-16</td>
+        </tr>
+
+        <tr id="gora">
+          <td>
+            <a href="../projects/gora.html">Gora</a>
+            <hr />
+            <a href="http://gora.apache.org/">
+            <img src="../images/redarrow.gif" />Gora
+            </a>
+          </td>
+          <td>Gora is an ORM framework for column stores such as Apache HBase and Apache Cassandra with a specific focus on Hadoop.</td>
+          <td>Incubator</td>
+          <td>Chris Mattmann, Andrzej Bialecki, Tom White</td>
+          <td>2010-09-26</td>
+          <td>2012-01-15</td>
+        </tr>
+
+        <tr id="griffin">
+          <td>
+            <a href="../projects/griffin.html">Griffin</a>
+            <hr />
+            <a href="http://griffin.apache.org/">
+            <img src="../images/redarrow.gif" />Griffin
+            </a>
+          </td>
+          <td>Griffin is a open source Data Quality solution for distributed data systems at any scale in both streaming or batch data context</td>
+          <td>Incubator</td>
+          <td>Kasper Sørensen, Luciano Resende, Henry Saputra</td>
+          <td>2016-12-05</td>
+          <td>2018-11-21</td>
+        </tr>
+
+        <tr id="groovy">
+          <td>
+            <a href="../projects/groovy.html">Groovy</a>
+            <hr />
+            <a href="http://groovy.apache.org/">
+            <img src="../images/redarrow.gif" />Groovy
+            </a>
+          </td>
+          <td>Groovy is an object-oriented programming language for the Java platform. It is a language with features similar to those of Python, Ruby, Java, Perl, and Smalltalk.</td>
+          <td>Incubator</td>
+          <td>Andrew Bayer, Konstantin Boudnik, Bertrand Delacretaz, Jim Jagielski, Emmanuel Lecharny, Roman Shaposhnik</td>
+          <td>2015-03-17</td>
+          <td>2015-11-18</td>
+        </tr>
+
+        <tr id="guacamole">
+          <td>
+            <a href="../projects/guacamole.html">Guacamole</a>
+            <hr />
+            <a href="http://guacamole.apache.org/">
+            <img src="../images/redarrow.gif" />Guacamole
+            </a>
+          </td>
+          <td>Guacamole is an enterprise-grade, protocol-agnostic, remote desktop gateway. Combined with cloud hosting, Guacamole provides an excellent alternative to traditional desktops. Guacamole aims to make cloud-hosted desktop access preferable to traditional, local access.</td>
+          <td>Incubator</td>
+          <td>Jean-Baptiste Onofre, Daniel Gruno, Jim Jagielski, Greg Trasuk</td>
+          <td>2016-02-10</td>
+          <td>2017-11-15</td>
+        </tr>
+
+        <tr id="hama">
+          <td>
+            <a href="../projects/hama.html">Hama</a>
+            <hr />
+            <a href="http://hama.apache.org/">
+            <img src="../images/redarrow.gif" />Hama
+            </a>
+          </td>
+          <td>Hama is a distributed computing framework based on BSP (Bulk Synchronous Parallel) computing techniques for massive scientific computations, e.g., matrix, graph and network algorithms.</td>
+          <td>Incubator</td>
+          <td>Ian Holsman, Jeff Eastman, Tommaso Teofili, Steve Loughran</td>
+          <td>2008-05-20</td>
+          <td>2012-05-16</td>
+        </tr>
+
+        <tr id="harmony">
+          <td>
+            <a href="../projects/harmony.html">Harmony</a>
+            <hr />
+            <a href="http://harmony.apache.org/">
+            <img src="../images/redarrow.gif" />Harmony
+            </a>
+          </td>
+          <td>Compatible implementation of J2SE</td>
+          <td>Incubator</td>
+          <td>Geir Magnusson Jr, Noel Bergman, Ben Laurie, Stefano Mazzocchi, Sam Ruby, Leo Simons, Davanum Srinivas</td>
+          <td>2005-05-18</td>
+          <td>2006-10-29</td>
+        </tr>
+
+        <tr id="hawq">
+          <td>
+            <a href="../projects/hawq.html">HAWQ</a>
+            <hr />
+            <a href="http://hawq.apache.org/">
+            <img src="../images/redarrow.gif" />HAWQ
+            </a>
+          </td>
+          <td>HAWQ is an advanced enterprise SQL on Hadoop analytic engine built around a robust and high-performance massively-parallel processing (MPP) SQL framework evolved from Pivotal Greenplum Database.</td>
+          <td>Incubator</td>
+          <td>Alan Gates, Justin Erenkrantz, Thejas Nair, Roman Shaposhnik</td>
+          <td>2015-09-04</td>
+          <td>2018-08-15</td>
+        </tr>
+
+        <tr id="hcatalog">
+          <td>
+            <a href="../projects/hcatalog.html">HCatalog</a>
+            <hr />
+            <a href="http://hive.apache.org">
+            <img src="../images/redarrow.gif" />Hive
+            </a>
+          </td>
+          <td>HCatalog is a table and storage management service for data created using Apache Hadoop.<hr />HCatalog became part of the Hive project</td>
+          <td>Incubator</td>
+          <td>Alan Gates, Alex Karasulu, Owen O'Malley</td>
+          <td>2011-03-14</td>
+          <td>2013-02-13</td>
+        </tr>
+
+        <tr id="helix">
+          <td>
+            <a href="../projects/helix.html">Helix</a>
+            <hr />
+            <a href="http://helix.apache.org/">
+            <img src="../images/redarrow.gif" />Helix
+            </a>
+          </td>
+          <td>Apache Helix is a generic cluster management framework used to build distributed systems and provides automatic partition management, fault tolerance and elasticity.</td>
+          <td>Incubator</td>
+          <td>Patrick Hunt, Olivier Lamy, Mahadev Konar, Owen O'Malley</td>
+          <td>2012-10-14</td>
+          <td>2013-12-18</td>
+        </tr>
+
+        <tr id="hermes">
+          <td>
+            <a href="../projects/hermes.html">Hermes</a>
+          </td>
+          <td>A robust implementation of the OASIS WS-Notification (WSN) family of specifications</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas</td>
+          <td>2004-11-08</td>
+          <td>2005-06-03</td>
+        </tr>
+
+        <tr id="httpd-cli">
+          <td>
+            <a href="../projects/httpd-cli.html">httpd-CLI</a>
+          </td>
+          <td>CLI integration project for httpd server</td>
+          <td>HTTP Server</td>
+          <td>Will Rowe</td>
+          <td>2004-07-15</td>
+          <td>2004-12-16</td>
+        </tr>
+
+        <tr id="ibatis">
+          <td>
+            <a href="../projects/ibatis.html">iBATIS</a>
+            <hr />
+            <a href="http://ibatis.apache.org/">
+            <img src="../images/redarrow.gif" />iBATIS
+            </a>
+          </td>
+          <td>The iBATIS Data Mapper framework makes it easier to use a database with Java or .NET applications. iBATIS couples objects with stored procedures or SQL statements using a XML descriptor.</td>
+          <td>Incubator</td>
+          <td>Ted Husted</td>
+          <td>2004-08-16</td>
+          <td>2005-04-27</td>
+        </tr>
+
+        <tr id="ignite">
+          <td>
+            <a href="../projects/ignite.html">Ignite</a>
+            <hr />
+            <a href="http://ignite.apache.org/">
+            <img src="../images/redarrow.gif" />Ignite
+            </a>
+          </td>
+          <td>A unified In-Memory Data Fabric providing high-performance, distributed in-memory data management software layer between various data sources and user applications.</td>
+          <td>Incubator</td>
+          <td>Branko Čibej, Konstantin Boudnik, Roman Shaposhnik, Michael Stack</td>
+          <td>2014-10-01</td>
+          <td>2015-09-18</td>
+        </tr>
+
+        <tr id="impala">
+          <td>
+            <a href="../projects/impala.html">Impala</a>
+            <hr />
+            <a href="http://impala.apache.org/">
+            <img src="../images/redarrow.gif" />Impala
+            </a>
+          </td>
+          <td>Impala is a high-performance C++ and Java SQL query engine for data stored in Apache Hadoop-based clusters.</td>
+          <td>Incubator</td>
+          <td>Tom White, Todd Lipcon, Carl Steinbach, Brock Noland</td>
+          <td>2015-12-03</td>
+          <td>2017-11-15</td>
+        </tr>
+
+        <tr id="isis">
+          <td>
+            <a href="../projects/isis.html">Isis</a>
+            <hr />
+            <a href="http://isis.apache.org/">
+            <img src="../images/redarrow.gif" />Isis
+            </a>
+          </td>
+          <td>The Isis project will be an extensible standards-based framework to rapidly develop and enterprise level deploy domain-driven (DDD) applications.</td>
+          <td>Incubator</td>
+          <td>Mark Struberg, Benson Margulies, Siegfried Goeschl, James W. Carman, Vincent Massol, Mohammad Nour El-Din</td>
+          <td>2010-09-07</td>
+          <td>2012-10-17</td>
+        </tr>
+
+        <tr id="ivy">
+          <td>
+            <a href="../projects/ivy.html">Ivy</a>
+            <hr />
+            <a href="http://ant.apache.org/ivy/">
+            <img src="../images/redarrow.gif" />Ivy
+            </a>
+          </td>
+          <td>A java based tool for tracking, resolving and managing project dependencies.</td>
+          <td>Ant</td>
+          <td>Antoine Lévy-Lambert, Stephane Bailliez, Steve Loughran, Stefan Bodewig</td>
+          <td>2006-10-23</td>
+          <td>2007-10-11</td>
+        </tr>
+
+        <tr id="jackrabbit">
+          <td>
+            <a href="../projects/jackrabbit.html">Jackrabbit</a>
+            <hr />
+            <a href="http://jackrabbit.apache.org/">
+            <img src="../images/redarrow.gif" />Jackrabbit
+            </a>
+          </td>
+          <td>Content Repository API based on JSR 170</td>
+          <td>Incubator</td>
+          <td>Roy T. Fielding</td>
+          <td>2004-08-28</td>
+          <td>2006-03-15</td>
+        </tr>
+
+        <tr id="jaxme">
+          <td>
+            <a href="../projects/jaxme.html">JaxMe</a>
+            <hr />
+            <a href="http://ws.apache.org/jaxme/">
+            <img src="../images/redarrow.gif" />JaxMe
+            </a>
+          </td>
+          <td>Implementation of JAXB, the specification for Java/XML binding</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas</td>
+          <td>2003-09-15</td>
+          <td>2004-03-17</td>
+        </tr>
+
+        <tr id="jclouds">
+          <td>
+            <a href="../projects/jclouds.html">jclouds</a>
+            <hr />
+            <a href="http://jclouds.apache.org/">
+            <img src="../images/redarrow.gif" />jclouds
+            </a>
+          </td>
+          <td>A cloud agnostic library that enables developers to access a variety of supported cloud providers using one API</td>
+          <td>Incubator</td>
+          <td>Brian McCallister, Tom White, Henning Schmiedehausen, David Nalley, Jean-Baptiste Onofré, Mohammad Nour El-Din, Olivier Lamy, Tomaz Muraus, Suresh Marru, Carlos Sanchez</td>
+          <td>2013-04-29</td>
+          <td>2013-10-16</td>
+        </tr>
+
+        <tr id="jdo">
+          <td>
+            <a href="../projects/jdo.html">JDO</a>
+            <hr />
+            <a href="http://db.apache.org/jdo/">
+            <img src="../images/redarrow.gif" />JDO
+            </a>
+          </td>
+          <td>JDO2</td>
+          <td>DB</td>
+          <td>Geir Magnusson Jr.</td>
+          <td>2005-05-18</td>
+          <td>2005-12-09</td>
+        </tr>
+
+        <tr id="jena">
+          <td>
+            <a href="../projects/jena.html">Jena</a>
+            <hr />
+            <a href="http://jena.apache.org/">
+            <img src="../images/redarrow.gif" />Jena
+            </a>
+          </td>
+          <td>Java framework for building Semantic Web applications.</td>
+          <td>Incubator</td>
+          <td>Bertrand Delacrétaz, Leo Simons, Benson Margulies, Ross Gardler</td>
+          <td>2010-11-23</td>
+          <td>2012-04-18</td>
+        </tr>
+
+        <tr id="johnzon">
+          <td>
+            <a href="../projects/johnzon.html">Johnzon</a>
+            <hr />
+            <a href="http://johnzon.apache.org/">
+            <img src="../images/redarrow.gif" />Johnzon
+            </a>
+          </td>
+          <td>Implementation of JSR-353 JavaTM API for JSON Processing (Renamed from Fleece)</td>
+          <td>Incubator</td>
+          <td>Justin Mclean, Daniel Kulp</td>
+          <td>2014-06-09</td>
+          <td>2016-04-20</td>
+        </tr>
+
+        <tr id="jspwiki">
+          <td>
+            <a href="../projects/jspwiki.html">JSPWiki</a>
+            <hr />
+            <a href="http://jspwiki.apache.org/">
+            <img src="../images/redarrow.gif" />JSPWiki
+            </a>
+          </td>
+          <td>Java-based wiki engine</td>
+          <td>Incubator</td>
+          <td>Dave Johnson, Craig Russell, Henning Schmiedehausen, Sam Ruby</td>
+          <td>2007-09-17</td>
+          <td>2013-07-19</td>
+        </tr>
+
+        <tr id="juddi">
+          <td>
+            <a href="../projects/juddi.html">jUDDI</a>
+            <hr />
+            <a href="http://juddi.apache.org/">
+            <img src="../images/redarrow.gif" />jUDDI
+            </a>
+          </td>
+          <td>Implementation of a Universal Description Discovery and Integration (UDDI) registry</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas</td>
+          <td>2003-09-15</td>
+          <td>2004-03-17</td>
+        </tr>
+
+        <tr id="juneau">
+          <td>
+            <a href="../projects/juneau.html">Juneau</a>
+          </td>
+          <td>Apache Juneau is a toolkit for marshalling POJOs to a wide variety of content types using a common framework, and for creating sophisticated self-documenting REST interfaces and microservices using VERY little code.</td>
+          <td>Incubator</td>
+          <td>Craig Russell, Jochen Wiedmann, John D. Ament</td>
+          <td>2016-06-24</td>
+          <td>2017-10-18</td>
+        </tr>
+
+        <tr id="kafka">
+          <td>
+            <a href="../projects/kafka.html">Kafka</a>
+            <hr />
+            <a href="http://kafka.apache.org/">
+            <img src="../images/redarrow.gif" />Kafka
+            </a>
+          </td>
+          <td>Kafka is a distributed publish-subscribe system for processing large amounts of streaming data.</td>
+          <td>Incubator</td>
+          <td>Alan Cabrera, Chris Douglas, Geir Magnusson Jr., Owen O'Malley</td>
+          <td>2011-07-04</td>
+          <td>2012-10-23</td>
+        </tr>
+
+        <tr id="knox">
+          <td>
+            <a href="../projects/knox.html">Knox</a>
+            <hr />
+            <a href="http://knox.apache.org/">
+            <img src="../images/redarrow.gif" />Knox
+            </a>
+          </td>
+          <td>Knox Gateway is a system that provides a single point of secure access for Apache Hadoop clusters.</td>
+          <td>Incubator</td>
+          <td>Owen O'Malley, Chris Douglas, Mahadev Konar, Alan Gates, Devaraj Das, Chris Mattmann, Tom White</td>
+          <td>2013-02-22</td>
+          <td>2014-02-19</td>
+        </tr>
+
+        <tr id="kudu">
+          <td>
+            <a href="../projects/kudu.html">Kudu</a>
+            <hr />
+            <a href="http://kudu.apache.org/">
+            <img src="../images/redarrow.gif" />Kudu
+            </a>
+          </td>
+          <td>Kudu is a distributed columnar storage engine built for the Apache Hadoop ecosystem.</td>
+          <td>Incubator</td>
+          <td>Jake Farrell, Brock Noland, Michael Stack, Jarek Jarcec Cecho, Chris Mattmann, Julien Le Dem, Carl Steinbach</td>
+          <td>2015-12-03</td>
+          <td>2016-07-20</td>
+        </tr>
+
+        <tr id="kylin">
+          <td>
+            <a href="../projects/kylin.html">Kylin</a>
+            <hr />
+            <a href="http://kylin.apache.org/">
+            <img src="../images/redarrow.gif" />Kylin
+            </a>
+          </td>
+          <td>Kylin is a distributed and scalable OLAP engine built on Hadoop to support extremely large datasets.</td>
+          <td>Incubator</td>
+          <td>Owen O'Malley, Ted Dunning, Henry Saputra, Julian Hyde, P. Taylor Goetz</td>
+          <td>2014-11-25</td>
+          <td>2015-11-18</td>
+        </tr>
+
+        <tr id="lens">
+          <td>
+            <a href="../projects/lens.html">Lens</a>
+            <hr />
+            <a href="http://lens.apache.org/">
+            <img src="../images/redarrow.gif" />Lens
+            </a>
+          </td>
+          <td>Lens is a platform that enables multi-dimensional queries in a unified way over datasets stored in multiple warehouses. Lens integrates Apache Hive with other data warehouses by tiering them together to form logical data cubes.</td>
+          <td>Incubator</td>
+          <td>Christopher Douglas, Jakob Glen Homan, Jean-Baptiste Onofre</td>
+          <td>2014-10-10</td>
+          <td>2015-08-19</td>
+        </tr>
+
+        <tr id="lenya">
+          <td>
+            <a href="../projects/lenya.html">Lenya</a>
+            <hr />
+            <a href="http://lenya.apache.org/">
+            <img src="../images/redarrow.gif" />Lenya
+            </a>
+          </td>
+          <td>Content Management and publishing system based on Cocoon</td>
+          <td>Cocoon</td>
+          <td>Steven Noels, Stefano Mazzocchi</td>
+          <td>2003-03-15</td>
+          <td>2004-08-18</td>
+        </tr>
+
+        <tr id="libcloud">
+          <td>
+            <a href="../projects/libcloud.html">Libcloud</a>
+            <hr />
+            <a href="http://libcloud.apache.org/">
+            <img src="../images/redarrow.gif" />Libcloud
+            </a>
+          </td>
+          <td>libcloud is a standard client library for many popular cloud providers, written in python</td>
+          <td>Incubator</td>
+          <td>Paul Querna, Jean-Frederic Clere, Anthony Elder, Carlos Sanchez</td>
+          <td>2009-11-01</td>
+          <td>2011-05-19</td>
+        </tr>
+
+        <tr id="log4cxx">
+          <td>
+            <a href="../projects/log4cxx.html">log4cxx</a>
+            <hr />
+            <a href="http://logging.apache.org/log4cxx/">
+            <img src="../images/redarrow.gif" />log4cxx
+            </a>
+          </td>
+          <td>Logging for C++. N.B. the code has re-entered the Incubator as log4cxx2.</td>
+          <td>Logging Services</td>
+          <td>Ceki Gülcü</td>
+          <td>2004-01-31</td>
+          <td>2005-01-11</td>
+        </tr>
+
+        <tr id="log4cxx2">
+          <td>
+            <a href="../projects/log4cxx2.html">log4cxx2</a>
+            <hr />
+            <a href="http://logging.apache.org/log4cxx/latest_stable/">
+            <img src="../images/redarrow.gif" />log4cxx2
+            </a>
+          </td>
+          <td>Logging for C++. N.B. This is a reboot of the Log4cxx podling which previously graduated.</td>
+          <td>Logging Services</td>
+          <td>Ralph Goers</td>
+          <td>2013-12-09</td>
+          <td>2017-03-16</td>
+        </tr>
+
+        <tr id="log4net">
+          <td>
+            <a href="../projects/log4net.html">log4net</a>
+            <hr />
+            <a href="http://logging.apache.org/log4net/">
+            <img src="../images/redarrow.gif" />log4net
+            </a>
+          </td>
+          <td>Logging for .NET</td>
+          <td>Logging Services</td>
+          <td>Ceki Gülcü, Mark Womack, Curt Arnold</td>
+          <td>2004-01-15</td>
+          <td>2007-02-21</td>
+        </tr>
+
+        <tr id="log4php">
+          <td>
+            <a href="../projects/log4php.html">Log4php</a>
+            <hr />
+            <a href="http://logging.apache.org/log4php/">
+            <img src="../images/redarrow.gif" />Log4php
+            </a>
+          </td>
+          <td>Logging for PHP.</td>
+          <td>Logging Services</td>
+          <td>Gavin McDonald, Niclas Hedhman, Jim Jagielski</td>
+          <td>2004-01-31</td>
+          <td>2010-03-07</td>
+        </tr>
+
+        <tr id="lucene.net">
+          <td>
+            <a href="../projects/lucene.net.html">Lucene.NET</a>
+            <hr />
+            <a href="http://lucenenet.apache.org/">
+            <img src="../images/redarrow.gif" />Lucene.NET
+            </a>
+          </td>
+          <td>Lucene.NET is a source code, class-per-class, API-per-API and algorithmatic port of the Java Lucene search engine to the C# and .NET platform utilizing Microsoft .NET Framework.</td>
+          <td>Lucene</td>
+          <td>Gianugo Rabellino, Stefan Bodewig, Benson Margulies</td>
+          <td>2011-02-05</td>
+          <td>2012-08-15</td>
+        </tr>
+
+        <tr id="lucy">
+          <td>
+            <a href="../projects/lucy.html">Lucy</a>
+            <hr />
+            <a href="http://lucy.apache.org/">
+            <img src="../images/redarrow.gif" />Lucy
+            </a>
+          </td>
+          <td>A loose port of the Lucene search engine library, written in C and targeted at dynamic language users.</td>
+          <td>Incubator</td>
+          <td>Chris Hostetter, Chris Mattmann, Joe Schaefer, Upayavira</td>
+          <td>2010-07-22</td>
+          <td>2012-02-22</td>
+        </tr>
+
+        <tr id="madlib">
+          <td>
+            <a href="../projects/madlib.html">MADlib</a>
+          </td>
+          <td>Big Data Machine Learning in SQL for Data Scientists.</td>
+          <td>Incubator</td>
+          <td>Konstantin Boudnik, Ted Dunning, Roman Shaposhnik</td>
+          <td>2015-09-15</td>
+          <td>2017-07-19</td>
+        </tr>
+
+        <tr id="manifoldcf">
+          <td>
+            <a href="../projects/manifoldcf.html">Manifold Connector Framework (ManifoldCF)</a>
+            <hr />
+            <a href="http://manifoldcf.apache.org/">
+            <img src="../images/redarrow.gif" />ManifoldCF
+            </a>
+          </td>
+          <td>Connectors for content repositories like Sharepoint, Documentum, etc.</td>
+          <td>Lucene</td>
+          <td>Grant Ingersoll, Jukka Zitting, Gianugo Rabellino</td>
+          <td>2010-01-10</td>
+          <td>2012-05-16</td>
+        </tr>
+
+        <tr id="marmotta">
+          <td>
+            <a href="../projects/marmotta.html">Marmotta</a>
+            <hr />
+            <a href="http://marmotta.apache.org/">
+            <img src="../images/redarrow.gif" />Marmotta
+            </a>
+          </td>
+          <td>An open implementation of a Linked Data Platform.</td>
+          <td>Incubator</td>
+          <td>Fabian Christ, Nandana Mihindukulasooriya, Andy Seaborne</td>
+          <td>2012-12-03</td>
+          <td>2013-11-20</td>
+        </tr>
+
+        <tr id="merlindeveloper">
+          <td>
+            <a href="../projects/merlin-developer.html">MerlinDeveloper</a>
+          </td>
+          <td>Merlin eclipse plugin merged with an existing eclipse plugin already at avalon.</td>
+          <td>Avalon</td>
+          <td>Leo Simons</td>
+          <td>2004-01-15</td>
+          <td>2004-01-15</td>
+        </tr>
+
+        <tr id="mesos">
+          <td>
+            <a href="../projects/mesos.html">Mesos</a>
+            <hr />
+            <a href="http://mesos.apache.org/">
+            <img src="../images/redarrow.gif" />Mesos
+            </a>
+          </td>
+          <td>Mesos is a cluster manager that provides resource sharing and isolation across cluster applications.</td>
+          <td>Incubator</td>
+          <td>Chris Mattmann, Brian McCallister, Tom White</td>
+          <td>2010-12-23</td>
+          <td>2013-06-19</td>
+        </tr>
+
+        <tr id="metamodel">
+          <td>
+            <a href="../projects/metamodel.html">MetaModel</a>
+            <hr />
+            <a href="http://metamodel.apache.org/">
+            <img src="../images/redarrow.gif" />MetaModel
+            </a>
+          </td>
+          <td>MetaModel is a data access framework, providing a common interface for exploration and querying of different types of datastores.</td>
+          <td>Incubator</td>
+          <td>Henry Saputra, Arvind Prabhakar, Matt Franklin, Noah Slater</td>
+          <td>2013-06-12</td>
+          <td>2014-11-20</td>
+        </tr>
+
+        <tr id="metron">
+          <td>
+            <a href="../projects/metron.html">Metron</a>
+            <hr />
+            <a href="http://metron.apache.org/">
+            <img src="../images/redarrow.gif" />Metron
+            </a>
+          </td>
+          <td>Metron is a project dedicated to providing an extensible and scalable advanced network security analytics tool. It has strong foundations in the Apache Hadoop ecosystem.</td>
+          <td>Incubator</td>
+          <td>Billie Rinaldi, Chris Mattmann, Owen O'Malley, P. Taylor Goetz, Vinod Kumar Vavilapalli</td>
+          <td>2015-12-06</td>
+          <td>2017-04-19</td>
+        </tr>
+
+        <tr id="mnemonic">
+          <td>
+            <a href="../projects/mnemonic.html">Mnemonic</a>
+            <hr />
+            <a href="http://mnemonic.apache.org/">
+            <img src="../images/redarrow.gif" />Mnemonic
+            </a>
+          </td>
+          <td>Mnemonic is a Java based non-volatile memory library for in-place structured data processing and computing.</td>
+          <td>Incubator</td>
+          <td>Patrick Hunt, Andrew Purtell, James Taylor, Henry Saputra</td>
+          <td>2016-03-03</td>
+          <td>2017-11-15</td>
+        </tr>
+
+        <tr id="mod_ftp">
+          <td>
+            <a href="../projects/mod_ftp.html">mod_ftp</a>
+            <hr />
+            <a href="http://httpd.apache.org/mod_ftp/">
+            <img src="../images/redarrow.gif" />mod_ftp
+            </a>
+          </td>
+          <td>FTP protocol module for Apache httpd 2.x</td>
+          <td>HTTP Server</td>
+          <td>Jim Jagielski</td>
+          <td>2005-08-06</td>
+          <td>2007-02-21</td>
+        </tr>
+
+        <tr id="mrunit">
+          <td>
+            <a href="../projects/mrunit.html">MRUnit</a>
+            <hr />
+            <a href="http://mrunit.apache.org/">
+            <img src="../images/redarrow.gif" />MRUnit
+            </a>
+          </td>
+          <td>MRUnit is a library to support unit testing of Hadoop MapReduce jobs.</td>
+          <td>Incubator</td>
+          <td>Nigel Daley, Patrick Hunt, Chris Mattmann</td>
+          <td>2011-03-08</td>
+          <td>2012-05-16</td>
+        </tr>
+
+        <tr id="muse">
+          <td>
+            <a href="../projects/muse.html">Muse</a>
+            <hr />
+            <a href="http://ws.apache.org/muse/">
+            <img src="../images/redarrow.gif" />Muse
+            </a>
+          </td>
+          <td>A robust implementation of the OASIS WSDM, Management using Web Services (MuWS) specification</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas</td>
+          <td>2004-11-08</td>
+          <td>2005-06-03</td>
+        </tr>
+
+        <tr id="myfaces">
+          <td>
+            <a href="../projects/myfaces.html">MyFaces</a>
+            <hr />
+            <a href="http://myfaces.apache.org/">
+            <img src="../images/redarrow.gif" />MyFaces
+            </a>
+          </td>
+          <td>MyFaces is a framework for building Java Server application GUIs based on JavaServer Faces (certified implementation of JSR-127).</td>
+          <td>Incubator</td>
+          <td>Ted Husted</td>
+          <td>2004-07-16</td>
+          <td>2005-03-09</td>
+        </tr>
+
+        <tr id="mynewt">
+          <td>
+            <a href="../projects/mynewt.html">Mynewt</a>
+            <hr />
+            <a href="http://mynewt.apache.org/">
+            <img src="../images/redarrow.gif" />Mynewt
+            </a>
+          </td>
+          <td>Mynewt is a real-time operating system for constrained embedded systems like wearables, lightbulbs, locks and doorbells. It works on a variety of 32-bit MCUs (microcontrollers), including ARM Cortex-M and MIPS architectures.</td>
+          <td>Incubator</td>
+          <td>Sterling Hughes, Jim Jagielski, Justin Mclean, Greg Stein, P. Taylor Goetz</td>
+          <td>2015-10-20</td>
+          <td>2017-06-21</td>
+        </tr>
+
+        <tr id="nifi">
+          <td>
+            <a href="../projects/nifi.html">NiFi</a>
+            <hr />
+            <a href="http://nifi.apache.org/">
+            <img src="../images/redarrow.gif" />NiFi
+            </a>
+          </td>
+          <td>NiFi is a dataflow system based on the concepts of flow-based programming.</td>
+          <td>Incubator</td>
+          <td>Billie Rinaldi, Arvind Prabhakar, Sergio Fernandez, Benson Margulies, Brock Noland, Drew Farris, Andrew Purtell</td>
+          <td>2014-11-24</td>
+          <td>2015-07-15</td>
+        </tr>
+
+        <tr id="nutch">
+          <td>
+            <a href="../projects/nutch.html">Nutch</a>
+            <hr />
+            <a href="http://nutch.apache.org/">
+            <img src="../images/redarrow.gif" />Nutch
+            </a>
+          </td>
+          <td>Web search software.</td>
+          <td>Incubator</td>
+          <td>Doug Cutting</td>
+          <td>2005-01-15</td>
+          <td>2005-06-01</td>
+        </tr>
+
+        <tr id="nuvem">
+          <td>
+            <a href="../projects/nuvem.html">Nuvem</a>
+            <hr />
+            <a href="http://tuscany.apache.org/">
+            <img src="../images/redarrow.gif" />Tuscany
+            </a>
+          </td>
+          <td>
+            Nuvem defines an open application programming interface for common cloud application services, allowing applications to be easily ported across the most popular cloud platforms.
+            The podling was voted to become part of Tuscany in Nov 2012 but (as of Aug 2014) nothing has happened. Tuscany was terminated in May 2016.
+        </td>
+          <td>Incubator</td>
+          <td>Jean-Frederic Clere, Anthony Elder, Donald Woods</td>
+          <td>2010-06-24</td>
+          <td>2012-11-29</td>
+        </tr>
+
+        <tr id="ode">
+          <td>
+            <a href="../projects/ode.html">Ode</a>
+            <hr />
+            <a href="http://ode.apache.org/">
+            <img src="../images/redarrow.gif" />Ode
+            </a>
+          </td>
+          <td>Orchestration Director Engine</td>
+          <td>Incubator</td>
+          <td>Paul Fremantle, Niclas Hedhman, Davanum Srinivas</td>
+          <td>2006-02-17</td>
+          <td>2007-07-18</td>
+        </tr>
+
+        <tr id="ofbiz">
+          <td>
+            <a href="../projects/ofbiz.html">OFBiz</a>
+            <hr />
+            <a href="http://ofbiz.apache.org/">
+            <img src="../images/redarrow.gif" />OFBiz
+            </a>
+          </td>
+          <td>The Open For Business Project (OFBiz) is an open source enterprise automation software project.</td>
+          <td>Incubator</td>
+          <td>David N. Welton, Yoav Shapira, J. Aaron Farr</td>
+          <td>2006-01-31</td>
+          <td>2006-12-20</td>
+        </tr>
+
+        <tr id="ognl">
+          <td>
+            <a href="../projects/ognl.html">OGNL</a>
+            <hr />
+            <a href="http://commons.apache.org/ognl">
+            <img src="../images/redarrow.gif" />Commons OGNL
+            </a>
+          </td>
+          <td>Object-Graph Notation Language implementation in Java</td>
+          <td>Incubator</td>
+          <td>Christian Grobmeier, Jochen Wiedmann, Olivier Lamy, Upayavira</td>
+          <td>2011-04-26</td>
+          <td>2011-08-30</td>
+        </tr>
+
+        <tr id="olingo">
+          <td>
+            <a href="../projects/olingo.html">Olingo</a>
+            <hr />
+            <a href="http://olingo.apache.org/">
+            <img src="../images/redarrow.gif" />Olingo
+            </a>
+          </td>
+          <td>OData implementation in Java</td>
+          <td>Incubator</td>
+          <td>Alan Cabrera, Dave Fisher, Florian Müller</td>
+          <td>2013-07-08</td>
+          <td>2014-03-19</td>
+        </tr>
+
+        <tr id="onami">
+          <td>
+            <a href="../projects/onami.html">Onami</a>
+            <hr />
+            <a href="http://onami.apache.org/">
+            <img src="../images/redarrow.gif" />Onami
+            </a>
+          </td>
+          <td>Apache Onami aims to create a community focused on the development and maintenance of a set of Google Guice extensions not provided out of the box by the library itself nor the Google developers team, such as integration with 3rd part frameworks or extra functionalities.</td>
+          <td>Incubator</td>
+          <td>Christian Grobmeier, Mohammad Nour El-Din, Olivier Lamy</td>
+          <td>2012-11-14</td>
+          <td>2013-04-17</td>
+        </tr>
+
+        <tr id="oodt">
+          <td>
+            <a href="../projects/oodt.html">OODT</a>
+            <hr />
+            <a href="http://oodt.apache.org/">
+            <img src="../images/redarrow.gif" />OODT
+            </a>
+          </td>
+          <td>A grid middleware framework for science data processing, information integration, and retrieval.</td>
+          <td>Incubator</td>
+          <td>Justin Erenkrantz, Ross Gardler, Ian Holsman, Jean-Frederic Clere, Chris Mattmann</td>
+          <td>2010-01-21</td>
+          <td>2010-11-17</td>
+        </tr>
+
+        <tr id="oozie">
+          <td>
+            <a href="../projects/oozie.html">Oozie</a>
+            <hr />
+            <a href="http://oozie.apache.org/">
+            <img src="../images/redarrow.gif" />Oozie
+            </a>
+          </td>
+          <td>Server-based workflow scheduling and coordination system to manage data processing jobs for Apache Hadoop</td>
+          <td>Incubator</td>
+          <td>Alan Gates, Chris Douglas, Devaraj Das, Owen O'Malley</td>
+          <td>2011-07-11</td>
+          <td>2012-08-28</td>
+        </tr>
+
+        <tr id="openclimateworkbench">
+          <td>
+            <a href="../projects/climate.html">Open Climate Workbench</a>
+            <hr />
+            <a href="http://climate.apache.org/">
+            <img src="../images/redarrow.gif" />Open Climate Workbench
+            </a>
+          </td>
+          <td>A tool for scalable comparison of remote sensing observations to climate model outputs, regionally and globally.</td>
+          <td>Incubator</td>
+          <td>Chris Douglas, Nick Kew, Suresh Marru, Chris A. Mattmann</td>
+          <td>2013-02-15</td>
+          <td>2014-02-19</td>
+        </tr>
+
+        <tr id="openejb">
+          <td>
+            <a href="../projects/openejb.html">OpenEJB</a>
+            <hr />
+            <a href="http://openejb.apache.org/">
+            <img src="../images/redarrow.gif" />OpenEJB
+            </a>
+          </td>
+          <td>OpenEJB EJB Server and Container</td>
+          <td>Incubator</td>
+          <td>Brett Porter, Jason van Zyl, Henri Yandell</td>
+          <td>2006-07-05</td>
+          <td>2007-05-16</td>
+        </tr>
+
+        <tr id="openjpa">
+          <td>
+            <a href="../projects/openjpa.html">OpenJPA</a>
+            <hr />
+            <a href="http://openjpa.apache.org/">
+            <img src="../images/redarrow.gif" />OpenJPA
+            </a>
+          </td>
+          <td>OpenJPA is an open source implementation of the Java Persistence API</td>
+          <td>Incubator</td>
+          <td>Geir Magnusson Jr.</td>
+          <td>2006-04-10</td>
+          <td>2007-05-16</td>
+        </tr>
+
+        <tr id="openmeetings">
+          <td>
+            <a href="../projects/openmeetings.html">Openmeetings</a>
+            <hr />
+            <a href="http://openmeetings.apache.org/">
+            <img src="../images/redarrow.gif" />Openmeetings
+            </a>
+          </td>
+          <td>Openmeetings is a web conferencing solution.</td>
+          <td>Incubator</td>
+          <td>Andrus Adamchik, Jim Jagielski, Alexei Fedotov, Yegor Kozlov</td>
+          <td>2011-11-12</td>
+          <td>2013-01-18</td>
+        </tr>
+
+        <tr id="opennlp">
+          <td>
+            <a href="../projects/opennlp.html">OpenNLP</a>
+            <hr />
+            <a href="http://opennlp.apache.org/">
+            <img src="../images/redarrow.gif" />OpenNLP
+            </a>
+          </td>
+          <td>OpenNLP is a machine learning based toolkit for the processing of natural language text.</td>
+          <td>Incubator</td>
+          <td>Benson Margulies, Grant Ingersoll, Isabel Drost</td>
+          <td>2010-11-23</td>
+          <td>2012-02-15</td>
+        </tr>
+
+        <tr id="openoffice.org">
+          <td>
+            <a href="../projects/openofficeorg.html">OpenOffice.org</a>
+            <hr />
+            <a href="http://openofficeorg.apache.org/">
+            <img src="../images/redarrow.gif" />OpenOffice.org
+            </a>
+          </td>
+          <td>OpenOffice.org is comprised of six personal productivity applications: a word processor (and its web-authoring component), spreadsheet, presentation graphics, drawing, equation editor, and database.</td>
+          <td>Incubator</td>
+          <td>Jim Jagielski, Sam Ruby, Danese Cooper, Shane Curcuru, Noirin Plunkett, Joe Schaefer, Christian Grobmeier, Ross Gardler</td>
+          <td>2011-06-13</td>
+          <td>2012-10-17</td>
+        </tr>
+
+        <tr id="openwebbeans">
+          <td>
+            <a href="../projects/openwebbeans.html">OpenWebBeans</a>
+            <hr />
+            <a href="http://openwebbeans.apache.org/">
+            <img src="../images/redarrow.gif" />OpenWebBeans
+            </a>
+          </td>
+          <td>JSR-299 Implementation</td>
+          <td>Incubator</td>
+          <td>Kevan Miller, Matthias Wessendorf</td>
+          <td>2008-10-26</td>
+          <td>2009-12-17</td>
+        </tr>
+
+        <tr id="parquet">
+          <td>
+            <a href="../projects/parquet.html">Parquet</a>
+            <hr />
+            <a href="http://parquet.apache.org/">
+            <img src="../images/redarrow.gif" />Parquet
+            </a>
+          </td>
+          <td>Parquet is a columnar storage format for Hadoop.</td>
+          <td>Incubator</td>
+          <td>Jake Farrell, Chris Mattmann, Roman Shaposhnik, Tom White</td>
+          <td>2014-05-20</td>
+          <td>2015-04-22</td>
+        </tr>
+
+        <tr id="pdfbox">
+          <td>
+            <a href="../projects/pdfbox.html">PDFBox</a>
+            <hr />
+            <a href="http://pdfbox.apache.org/">
+            <img src="../images/redarrow.gif" />PDFBox
+            </a>
+          </td>
+          <td>PDF library (reading, text extraction, manipulation, viewer)</td>
+          <td>Incubator</td>
+          <td>Jukka Zitting, Jeremias Maerki</td>
+          <td>2008-02-07</td>
+          <td>2009-10-21</td>
+        </tr>
+
+        <tr id="phoenix">
+          <td>
+            <a href="../projects/phoenix.html">Phoenix</a>
+            <hr />
+            <a href="http://phoenix.apache.org/">
+            <img src="../images/redarrow.gif" />Phoenix
+            </a>
+          </td>
+          <td>Phoenix is an open source SQL query engine for Apache HBase, a NoSQL data store. It is accessed as a JDBC driver and enables querying and managing HBase tables using SQL.</td>
+          <td>Incubator</td>
+          <td>Lars Hofhansl, Andrew Purtell, Devaraj Das, Enis Soztutar, Steven Noels</td>
+          <td>2013-12-11</td>
+          <td>2014-05-21</td>
+        </tr>
+
+        <tr id="pig">
+          <td>
+            <a href="../projects/pig.html">Pig</a>
+            <hr />
+            <a href="http://pig.apache.org/">
+            <img src="../images/redarrow.gif" />Pig
+            </a>
+          </td>
+          <td>Pig is a platform for analyzing large datasets.</td>
+          <td>Incubator</td>
+          <td>Doug Cutting, Torsten Curdt, Bertrand Delacrétaz, Yoav Shapira, Sylvain Wallez</td>
+          <td>2007-10-02</td>
+          <td>2008-10-22</td>
+        </tr>
+
+        <tr id="pivot">
+          <td>
+            <a href="../projects/pivot.html">Pivot</a>
+            <hr />
+            <a href="http://pivot.apache.org/">
+            <img src="../images/redarrow.gif" />Pivot
+            </a>
+          </td>
+          <td>A platform for building rich internet applications in Java.</td>
+          <td>Incubator</td>
+          <td>Niclas Hedhman, Martijn Dashorst</td>
+          <td>2009-01-26</td>
+          <td>2009-12-16</td>
+        </tr>
+
+        <tr id="pluto">
+          <td>
+            <a href="../projects/pluto.html">Pluto</a>
+            <hr />
+            <a href="http://portals.apache.org/pluto/">
+            <img src="../images/redarrow.gif" />Pluto
+            </a>
+          </td>
+          <td>JSR 168 Reference Implementation</td>
+          <td>Jakarta</td>
+          <td>Sam Ruby</td>
+          <td>2003-09-30</td>
+          <td>2004-05-15</td>
+        </tr>
+
+        <tr id="predictionio">
+          <td>
+            <a href="../projects/predictionio.html">PredictionIO</a>
+            <hr />
+            <a href="http://predictionio.apache.org/">
+            <img src="../images/redarrow.gif" />PredictionIO
+            </a>
+          </td>
+          <td>PredictionIO is an open source Machine Learning Server built on top of state-of-the-art open source stack, that enables developers to manage and deploy production-ready predictive services for various kinds of machine learning tasks.</td>
+          <td>Incubator</td>
+          <td>Andrew Purtell, James Taylor, Lars Hofhansl, Luciano Resende, Xiangrui Meng, Suneel Marthi</td>
+          <td>2016-05-26</td>
+          <td>2017-10-18</td>
+        </tr>
+
+        <tr id="pulsar">
+          <td>
+            <a href="../projects/pulsar.html">Pulsar</a>
+          </td>
+          <td>Pulsar is a highly scalable, low latency messaging platform running on commodity hardware. It provides simple pub-sub semantics over topics, guaranteed at-least-once delivery of messages, automatic cursor management for subscribers, and cross-datacenter replication.</td>
+          <td>Incubator</td>
+          <td>Dave Fisher, Jim Jagielski, P. Taylor Goetz, Francis Liu</td>
+          <td>2017-06-01</td>
+          <td>2018-09-19</td>
+        </tr>
+
+        <tr id="qpid">
+          <td>
+            <a href="../projects/qpid.html">Qpid</a>
+            <hr />
+            <a href="http://qpid.apache.org/">
+            <img src="../images/redarrow.gif" />Qpid
+            </a>
+          </td>
+          <td>Qpid provides multiple language implementations of the Advanced Messaged Queuing Protocol (AMQP)</td>
+          <td>Incubator</td>
+          <td>Cliff Schmidt, Craig Russell, Paul Fremantle, Scott Deboy, Yoav Shapira</td>
+          <td>2006-08-27</td>
+          <td>2008-12-18</td>
+        </tr>
+
+        <tr id="ranger">
+          <td>
+            <a href="../projects/ranger.html">Ranger</a>
+            <hr />
+            <a href="http://ranger.apache.org/">
+            <img src="../images/redarrow.gif" />Ranger
+            </a>
+          </td>
+          <td>
+            The Ranger project is a framework to enable, monitor and manage comprehensive data security across the Hadoop platform.
+            (The podling was originally called Argus)
+        </td>
+          <td>Incubator</td>
+          <td>Alan Gates, Daniel Gruno, Devaraj Das, Jakob Homan, Owen O'Malley</td>
+          <td>2014-07-24</td>
+          <td>2017-01-18</td>
+        </tr>
+
+        <tr id="rat">
+          <td>
+            <a href="../projects/rat.html">RAT</a>
+            <hr />
+            <a href="http://creadur.apache.org/rat/">
+            <img src="../images/redarrow.gif" />RAT
+            </a>
+          </td>
+          <td>Comprehension and auditing for distributions and source code<hr />Became part of new Apache Creadur TLP</td>
+          <td>Incubator</td>
+          <td>Ross Gardler, Matt Hogstrom, Jim Jagielski</td>
+          <td>2008-01-06</td>
+          <td>2012-04-18</td>
+        </tr>
+
+        <tr id="rave">
+          <td>
+            <a href="../projects/rave.html">Rave</a>
+            <hr />
+            <a href="http://rave.apache.org/">
+            <img src="../images/redarrow.gif" />Rave
+            </a>
+          </td>
+          <td>Rave is A WEb And SOcial Mashup Engine.</td>
+          <td>Incubator</td>
+          <td>Ate Douma, Hadrian Zbarcea, Ross Gardler, Sylvain Wallez, Upayavira</td>
+          <td>2011-03-01</td>
+          <td>2012-03-21</td>
+        </tr>
+
+        <tr id="reef">
+          <td>
+            <a href="../projects/reef.html">REEF</a>
+            <hr />
+            <a href="http://reef.apache.org/">
+            <img src="../images/redarrow.gif" />REEF
+            </a>
+          </td>
+          <td>REEF (Retainable Evaluator Execution Framework) is a scale-out computing fabric that eases the development of Big Data applications on top of resource managers such as Apache YARN and Mesos.</td>
+          <td>Incubator</td>
+          <td>Chris Douglas, Chris Mattmann, Ross Gardler, Owen O'Malley</td>
+          <td>2014-08-12</td>
+          <td>2015-11-18</td>
+        </tr>
+
+        <tr id="river">
+          <td>
+            <a href="../projects/river.html">River</a>
+            <hr />
+            <a href="http://river.apache.org/">
+            <img src="../images/redarrow.gif" />River
+            </a>
+          </td>
+          <td>River : Jini technology</td>
+          <td>Incubator</td>
+          <td>Niclas Hedhman, Benson Margulies, Jukka Zitting</td>
+          <td>2006-12-26</td>
+          <td>2011-01-19</td>
+        </tr>
+
+        <tr id="rocketmq">
+          <td>
+            <a href="../projects/rocketmq.html">RocketMQ</a>
+          </td>
+          <td>RocketMQ is a fast, low latency, reliable, scalable, distributed, easy to use message-oriented middleware, especially for processing large amounts of streaming data.</td>
+          <td>Incubator</td>
+          <td>Bruce Snyder, Brian McCallister, Willem Ning Jiang, Luke Han, Justin McLean, Jim Jagielski</td>
+          <td>2016-11-21</td>
+          <td>2017-09-20</td>
+        </tr>
+
+        <tr id="roller">
+          <td>
+            <a href="../projects/roller.html">Roller</a>
+            <hr />
+            <a href="http://roller.apache.org/">
+            <img src="../images/redarrow.gif" />Roller
+            </a>
+          </td>
+          <td>Roller blog server</td>
+          <td>Incubator</td>
+          <td>Sam Ruby, Henri Yandell</td>
+          <td>2005-06-20</td>
+          <td>2007-02-21</td>
+        </tr>
+
+        <tr id="samza">
+          <td>
+            <a href="../projects/samza.html">Samza</a>
+            <hr />
+            <a href="http://samza.apache.org/">
+            <img src="../images/redarrow.gif" />Samza
+            </a>
+          </td>
+          <td>
+            Samza is a stream processing system for running continuous computation on
+            infinite streams of data.
+        </td>
+          <td>Incubator</td>
+          <td>Chris Douglas, Arun Murthy, Roman Shaposhnik</td>
+          <td>2013-07-30</td>
+          <td>2015-01-21</td>
+        </tr>
+
+        <tr id="sanselan">
+          <td>
+            <a href="../projects/sanselan.html">Sanselan</a>
+            <hr />
+            <a href="http://commons.apache.org/sanselan/">
+            <img src="../images/redarrow.gif" />Sanselan
+            </a>
+          </td>
+          <td>The Sanselan Project is a pure-java image library for reading and writing a variety of image formats.</td>
+          <td>Incubator</td>
+          <td>Carsten Ziegeler, Craig Russell, Yoav Shapira, Jeremias Maerki</td>
+          <td>2007-09-09</td>
+          <td>2009-06-30</td>
+        </tr>
+
+        <tr id="sentry">
+          <td>
+            <a href="../projects/sentry.html">Sentry</a>
+            <hr />
+            <a href="http://sentry.apache.org/">
+            <img src="../images/redarrow.gif" />Sentry
+            </a>
+          </td>
+          <td>
+            Sentry is a highly modular system for providing fine grained role
+            based authorization to both data and metadata stored on an Apache Hadoop cluster.
+        </td>
+          <td>Incubator</td>
+          <td>Arvind Prabhakar, Joe Brockmeier, David Nalley, Patrick Hunt, Thomas White</td>
+          <td>2013-08-08</td>
+          <td>2016-03-16</td>
+        </tr>
+
+        <tr id="servicecomb">
+          <td>
+            <a href="../projects/servicecomb.html">ServiceComb</a>
+            <hr />
+            <a href="http://servicecomb.apache.org/">
+            <img src="../images/redarrow.gif" />ServiceComb
+            </a>
+          </td>
+          <td>ServiceComb is a microservice framework that provides a set of tools and components to make development and deployment of cloud applications easier.</td>
+          <td>Incubator</td>
+          <td>Roman Shaposhnik, Jean-Baptiste Onofre, Timothy Chen</td>
+          <td>2017-11-22</td>
+          <td>
+                            ?
+                        </td>
+        </tr>
+
+        <tr id="servicemix">
+          <td>
+            <a href="../projects/servicemix.html">ServiceMix</a>
+            <hr />
+            <a href="http://servicemix.apache.org/">
+            <img src="../images/redarrow.gif" />ServiceMix
+            </a>
+          </td>
+          <td>The ServiceMix project will create an ESB and component suite based on the Java Business Interface (JBI) standard - JSR 208.</td>
+          <td>Geronimo</td>
+          <td>James Strachan</td>
+          <td>2005-12-01</td>
+          <td>2007-09-19</td>
+        </tr>
+
+        <tr id="shindig">
+          <td>
+            <a href="../projects/shindig.html">Shindig</a>
+            <hr />
+            <a href="http://shindig.apache.org/">
+            <img src="../images/redarrow.gif" />Shindig
+            </a>
+          </td>
+          <td>The Shindig Project is an OpenSocial container.</td>
+          <td>Incubator</td>
+          <td>Thomas Dudziak, Brian Fitzpatrick, Santiago Gala, Brian McCallister, Greg Stein, Upayavira, Sylvain Wallez</td>
+          <td>2007-12-03</td>
+          <td>2010-01-21</td>
+        </tr>
+
+        <tr id="shiro">
+          <td>
+            <a href="../projects/shiro.html">Shiro</a>
+            <hr />
+            <a href="http://shiro.apache.org/">
+            <img src="../images/redarrow.gif" />Shiro
+            </a>
+          </td>
+          <td>Security framework. (Initially known as JSecurity or Ki, renamed June 2009)</td>
+          <td>Incubator</td>
+          <td>Alan Cabrera, Paul Fremantle, Emmanuel Lecharny, Craig Russell</td>
+          <td>2008-05-20</td>
+          <td>2010-09-22</td>
+        </tr>
+
+        <tr id="sis">
+          <td>
+            <a href="../projects/sis.html">SIS</a>
+            <hr />
+            <a href="http://sis.apache.org/">
+            <img src="../images/redarrow.gif" />SIS
+            </a>
+          </td>
+          <td>The Spatial Information System (SIS) Project is a toolkit that spatial information system builders or users can leverage to build applications containing location context.</td>
+          <td>Incubator</td>
+          <td>Greg Reddin, Joe Schaefer, Kevan Miller, Chris Mattmann</td>
+          <td>2010-02-21</td>
+          <td>2012-09-19</td>
+        </tr>
+
+        <tr id="sling">
+          <td>
+            <a href="../projects/sling.html">Sling</a>
+            <hr />
+            <a href="http://sling.apache.org/">
+            <img src="../images/redarrow.gif" />Sling
+            </a>
+          </td>
+          <td>Sling is a framework to develop content centric web applications based on the idea of modularizing the rendering of HTTP resources.</td>
+          <td>Board</td>
+          <td>Jukka Zitting, Gianugo Rabellino, J. Aaron Farr</td>
+          <td>2007-09-09</td>
+          <td>2009-06-17</td>
+        </tr>
+
+        <tr id="solr">
+          <td>
+            <a href="../projects/solr.html">Solr</a>
+            <hr />
+            <a href="http://lucene.apache.org/solr/">
+            <img src="../images/redarrow.gif" />Solr
+            </a>
+          </td>
+          <td>Full Text Search Server</td>
+          <td>Lucene</td>
+          <td>Doug Cutting, Erik Hatcher</td>
+          <td>2006-01-17</td>
+          <td>2007-01-17</td>
+        </tr>
+
+        <tr id="spamassassin">
+          <td>
+            <a href="../projects/spamassassin.html">SpamAssassin</a>
+            <hr />
+            <a href="http://spamassassin.apache.org/">
+            <img src="../images/redarrow.gif" />SpamAssassin
+            </a>
+          </td>
+          <td>Mail filter to identify spam.</td>
+          <td>Board</td>
+          <td>Sander Striker</td>
+          <td>2003-12-20</td>
+          <td>2004-06-23</td>
+        </tr>
+
+        <tr id="spark">
+          <td>
+            <a href="../projects/spark.html">Spark</a>
+            <hr />
+            <a href="http://spark.apache.org/">
+            <img src="../images/redarrow.gif" />Spark
+            </a>
+          </td>
+          <td>Spark is an open source system for fast and flexible large-scale data analysis. Spark provides a general purpose runtime that supports low-latency execution in several forms.</td>
+          <td>Incubator</td>
+          <td>Chris Mattmann, Paul Ramirez, Andrew Hart, Thomas Dudziak, Suresh Marru, Henry Saputra, Roman Shaposhnik</td>
+          <td>2013-06-19</td>
+          <td>2014-02-19</td>
+        </tr>
+
+        <tr id="sqoop">
+          <td>
+            <a href="../projects/sqoop.html">Sqoop</a>
+            <hr />
+            <a href="http://sqoop.apache.org/">
+            <img src="../images/redarrow.gif" />Sqoop
+            </a>
+          </td>
+          <td>Sqoop is a tool designed for efficiently transferring bulk data between Apache Hadoop and structured datastores such as relational databases.</td>
+          <td>Incubator</td>
+          <td>Patrick Hunt, Olivier Lamy, Mohammad Nour El-Din, Tom White</td>
+          <td>2011-06-13</td>
+          <td>2012-03-21</td>
+        </tr>
+
+        <tr id="stanbol">
+          <td>
+            <a href="../projects/stanbol.html">Stanbol</a>
+            <hr />
+            <a href="http://stanbol.apache.org/">
+            <img src="../images/redarrow.gif" />Stanbol
+            </a>
+          </td>
+          <td>A modular software stack and reusable set of components for semantic content management</td>
+          <td>Board</td>
+          <td>Ted Dunning, Ross Gardler</td>
+          <td>2010-11-15</td>
+          <td>2012-09-19</td>
+        </tr>
+
+        <tr id="stdcxx">
+          <td>
+            <a href="../projects/stdcxx.html">stdcxx</a>
+            <hr />
+            <a href="http://stdcxx.apache.org/">
+            <img src="../images/redarrow.gif" />stdcxx
+            </a>
+          </td>
+          <td>The Apache C++ Standard Library project is a complete implementation of the ISO/IEC 14882 C++ Standard Library.</td>
+          <td>Incubator</td>
+          <td>Justin Erenkrantz, Ben Laurie, William A. Rowe Jr.</td>
+          <td>2005-05-19</td>
+          <td>2007-11-14</td>
+        </tr>
+
+        <tr id="storm">
+          <td>
+            <a href="../projects/storm.html">Storm</a>
+            <hr />
+            <a href="http://storm.apache.org/">
+            <img src="../images/redarrow.gif" />Storm
+            </a>
+          </td>
+          <td>Storm is a distributed, fault-tolerant, and high-performance realtime computation system that provides strong guarantees on the processing of data.</td>
+          <td>Incubator</td>
+          <td>Ted Dunning, Arvind Prabhakar, Devaraj Das, Matt Franklin, Benjamin Hindman</td>
+          <td>2013-09-18</td>
+          <td>2014-09-17</td>
+        </tr>
+
+        <tr id="stratos">
+          <td>
+            <a href="../projects/stratos.html">Stratos</a>
+            <hr />
+            <a href="http://stratos.apache.org/">
+            <img src="../images/redarrow.gif" />Stratos
+            </a>
+          </td>
+          <td>Stratos will be a polyglot PaaS framework, providing developers a cloud-based environment for developing, testing, and running scalable applications, and IT providers high utilization rates, automated resource management, and platform-wide insight including monitoring and billing.</td>
+          <td>Incubator</td>
+          <td>Afkham Azeez, Anthony Elder, Chip Childers, Marlon Pierce, Mohammad Nour, Noah Slater</td>
+          <td>2013-06-20</td>
+          <td>2014-05-21</td>
+        </tr>
+
+        <tr id="streams">
+          <td>
+            <a href="../projects/streams.html">Streams</a>
+          </td>
+          <td>Apache Streams is a lightweight server for ActivityStreams.</td>
+          <td>Incubator</td>
+          <td>Matt Franklin, Ate Douma, Craig McClanahan, Suneel Marthi</td>
+          <td>2012-11-20</td>
+          <td>2017-07-19</td>
+        </tr>
+
+        <tr id="subversion">
+          <td>
+            <a href="../projects/subversion.html">Subversion</a>
+            <hr />
+            <a href="http://subversion.apache.org/">
+            <img src="../images/redarrow.gif" />Subversion
+            </a>
+          </td>
+          <td>Subversion is an open-source version control system, with a long and detailed list of features. (See http://subversion.apache.org/features.html)</td>
+          <td>Incubator</td>
+          <td>Justin Erenkrantz, Greg Stein, Sander Striker, Daniel Rall</td>
+          <td>2009-11-07</td>
+          <td>2010-02-17</td>
+        </tr>
+
+        <tr id="synapse">
+          <td>
+            <a href="../projects/synapse.html">Synapse</a>
+            <hr />
+            <a href="http://synapse.apache.org/">
+            <img src="../images/redarrow.gif" />Synapse
+            </a>
+          </td>
+          <td>Web Services Mediation Framework</td>
+          <td>Web Services</td>
+          <td>Glen Daniels, Sanjiva Weerawarana, Davanum Srinivas</td>
+          <td>2005-08-22</td>
+          <td>2007-01-02</td>
+        </tr>
+
+        <tr id="syncope">
+          <td>
+            <a href="../projects/syncope.html">Syncope</a>
+            <hr />
+            <a href="http://syncope.apache.org/">
+            <img src="../images/redarrow.gif" />Syncope
+            </a>
+          </td>
+          <td>An Open Source system for managing digital identities in enterprise environments, implemented in JEE technology</td>
+          <td>Incubator</td>
+          <td>Colm O Heigeartaigh, Emmanuel Lecharny, Simone Tripodi</td>
+          <td>2012-02-10</td>
+          <td>2012-11-21</td>
+        </tr>
+
+        <tr id="systemml">
+          <td>
+            <a href="../projects/systemml.html">SystemML</a>
+          </td>
+          <td>SystemML provides declarative large-scale machine learning (ML) that aims at flexible specification of ML algorithms and automatic generation of hybrid runtime plans ranging from single node, in-memory computations, to distributed computations such as Apache Hadoop MapReduce and Apache Spark.</td>
+          <td>Incubator</td>
+          <td>Luciano Resende, Henry Saputra, Patrick Wendell, Reynold Xin, Rich Bowen</td>
+          <td>2015-11-02</td>
+          <td>2017-05-18</td>
+        </tr>
+
+        <tr id="tajo">
+          <td>
+            <a href="../projects/tajo.html">Tajo</a>
+            <hr />
+            <a href="http://tajo.apache.org/">
+            <img src="../images/redarrow.gif" />Tajo
+            </a>
+          </td>
+          <td>Tajo is a distributed data warehouse system for Hadoop.</td>
+          <td>Incubator</td>
+          <td>Chris Mattmann, Owen O'Malley</td>
+          <td>2013-03-07</td>
+          <td>2014-04-01</td>
+        </tr>
+
+        <tr id="tapestry">
+          <td>
+            <a href="../projects/tapestry.html">Tapestry</a>
+            <hr />
+            <a href="http://tapestry.apache.org/">
+            <img src="../images/redarrow.gif" />Tapestry
+            </a>
+          </td>
+          <td>Alternative framework to JSP and Velocity scripting environments</td>
+          <td>Jakarta</td>
+          <td>Andrew C. Oliver, Dion Gillard</td>
+          <td>2003-04-01</td>
+          <td>2003-05-29</td>
+        </tr>
+
+        <tr id="tez">
+          <td>
+            <a href="../projects/tez.html">Tez</a>
+            <hr />
+            <a href="http://tez.apache.org/">
+            <img src="../images/redarrow.gif" />Tez
+            </a>
+          </td>
+          <td>Tez is an effort to develop a generic application framework which can be used to process arbitrarily complex data-processing tasks and also a re-usable set of data-processing primitives which can be used by other projects.</td>
+          <td>Incubator</td>
+          <td>Alan Gates, Arun Murthy, Chris Douglas, Chris Mattmann, Jakob Homan, Owen O'Malley</td>
+          <td>2013-02-24</td>
+          <td>2014-07-16</td>
+        </tr>
+
+        <tr id="thrift">
+          <td>
+            <a href="../projects/thrift.html">Thrift</a>
+            <hr />
+            <a href="http://thrift.apache.org/">
+            <img src="../images/redarrow.gif" />Thrift
+            </a>
+          </td>
+          <td>Cross-language serialization and RPC framework.</td>
+          <td>Lucene</td>
+          <td>Doug Cutting</td>
+          <td>2008-04-18</td>
+          <td>2010-10-20</td>
+        </tr>
+
+        <tr id="tika">
+          <td>
+            <a href="../projects/tika.html">Tika</a>
+            <hr />
+            <a href="http://tika.apache.org/">
+            <img src="../images/redarrow.gif" />Tika
+            </a>
+          </td>
+          <td>Content analysis toolkit</td>
+          <td>Lucene</td>
+          <td>Doug Cutting, Bertrand Delacrétaz, Jukka Zitting</td>
+          <td>2007-03-22</td>
+          <td>2008-10-28</td>
+        </tr>
+
+        <tr id="tinkerpop">
+          <td>
+            <a href="../projects/tinkerpop.html">TinkerPop</a>
+            <hr />
+            <a href="http://tinkerpop.apache.org/">
+            <img src="../images/redarrow.gif" />TinkerPop
+            </a>
+          </td>
+          <td>TinkerPop is a graph computing framework written in Java</td>
+          <td>Incubator</td>
+          <td>Rich Bowen, Daniel Gruno, Hadrian Zbarcea, Matt Franklin, David Nalley</td>
+          <td>2015-01-16</td>
+          <td>2016-05-23</td>
+        </tr>
+
+        <tr id="tobago">
+          <td>
+            <a href="../projects/tobago.html">Tobago</a>
+            <hr />
+            <a href="http://myfaces.apache.org/tobago/">
+            <img src="../images/redarrow.gif" />Tobago
+            </a>
+          </td>
+          <td>A JSF based framework for web-applications.</td>
+          <td>MyFaces</td>
+          <td>Ted Husted</td>
+          <td>2005-10-27</td>
+          <td>2006-03-23</td>
+        </tr>
+
+        <tr id="trafficcontrol">
+          <td>
+            <a href="../projects/trafficcontrol.html">Traffic Control</a>
+            <hr />
+            <a href="http://trafficcontrol.apache.org/">
+            <img src="../images/redarrow.gif" />Traffic Control
+            </a>
+          </td>
+          <td>Apache Traffic Control can be used to build, monitor, configure, and provision a large-scale content delivery network (CDN).</td>
+          <td>Incubator</td>
+          <td>Phil Sorber, Eric Covener, Leif Hedstrom</td>
+          <td>2016-07-12</td>
+          <td>2018-05-16</td>
+        </tr>
+
+        <tr id="trafficserver">
+          <td>
+            <a href="../projects/trafficserver.html">Traffic Server</a>
+            <hr />
+            <a href="http://trafficserver.apache.org/">
+            <img src="../images/redarrow.gif" />Traffic Server
+            </a>
+          </td>
+          <td>A scalable and extensible HTTP proxy server and cache.</td>
+          <td>Incubator</td>
+          <td>Doug Cutting, Jim Jagielski, Jean-Frederic Clere, Mladen Turk, Nick Kew</td>
+          <td>2009-07-13</td>
+          <td>2010-04-21</td>
+        </tr>
+
+        <tr id="trafodion">
+          <td>
+            <a href="../projects/trafodion.html">Trafodion</a>
+          </td>
+          <td>Trafodion is a webscale SQL-on-Hadoop solution enabling transactional or operational workloads on Hadoop.</td>
+          <td>Incubator</td>
+          <td>Michael Stack, Jacques Le Roux</td>
+          <td>2015-05-24</td>
+          <td>2017-12-20</td>
+        </tr>
+
+        <tr id="trinidad">
+          <td>
+            <a href="../projects/trinidad.html">Trinidad</a>
+            <hr />
+            <a href="http://myfaces.apache.org/trinidad/">
+            <img src="../images/redarrow.gif" />Trinidad
+            </a>
+          </td>
+          <td>JSF Component Library</td>
+          <td>MyFaces</td>
+          <td>Craig R. McClanahan</td>
+          <td>2006-03-08</td>
+          <td>2007-04-22</td>
+        </tr>
+
+        <tr id="tuscany">
+          <td>
+            <a href="../projects/tuscany.html">Tuscany</a>
+            <hr />
+            <a href="http://tuscany.apache.org/">
+            <img src="../images/redarrow.gif" />Tuscany
+            </a>
+          </td>
+          <td>Service Component Architecture implementation</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas, Sam Ruby</td>
+          <td>2005-12-07</td>
+          <td>2008-05-21</td>
+        </tr>
+
+        <tr id="twill">
+          <td>
+            <a href="../projects/twill.html">Twill</a>
+            <hr />
+            <a href="http://twill.apache.org/">
+            <img src="../images/redarrow.gif" />Twill
+            </a>
+          </td>
+          <td>Twill is an abstraction over Apache Hadoop YARN that reduces the complexity of developing distributed applications, allowing developers to focus more on their business logic</td>
+          <td>Incubator</td>
+          <td>Arun C Murthy, Tom White, Patrick Hunt, Andrei Savu</td>
+          <td>2013-11-14</td>
+          <td>2016-06-15</td>
+        </tr>
+
+        <tr id="uima">
+          <td>
+            <a href="../projects/uima.html">UIMA</a>
+            <hr />
+            <a href="http://uima.apache.org/">
+            <img src="../images/redarrow.gif" />UIMA
+            </a>
+          </td>
+          <td>Framework for analysing unstructured data.</td>
+          <td>Incubator</td>
+          <td>Ken Coar, Sam Ruby</td>
+          <td>2006-10-23</td>
+          <td>2010-03-18</td>
+        </tr>
+
+        <tr id="usergrid">
+          <td>
+            <a href="../projects/usergrid.html">Usergrid</a>
+            <hr />
+            <a href="http://usergrid.apache.org/">
+            <img src="../images/redarrow.gif" />Usergrid
+            </a>
+          </td>
+          <td>Usergrid is Backend-as-a-Service (BaaS) composed of an integrated database (Cassandra), application layer and client tier with SDKs for developers.</td>
+          <td>Incubator</td>
+          <td>Dave Johnson, Jake Farrell, Jim Jagielski, John D. Ament, Lewis John Mcgibbney, Luciano Resende</td>
+          <td>2013-10-03</td>
+          <td>2015-08-19</td>
+        </tr>
+
+        <tr id="vcl">
+          <td>
+            <a href="../projects/vcl.html">VCL</a>
+            <hr />
+            <a href="http://vcl.apache.org/">
+            <img src="../images/redarrow.gif" />VCL
+            </a>
+          </td>
+          <td>Virtual Computing Lab. Framework for creating, dispensing and running virtual images.</td>
+          <td>Incubator</td>
+          <td>Alan Cabrera, Matt Hogstrom, Kevan Miller</td>
+          <td>2008-10-06</td>
+          <td>2012-06-20</td>
+        </tr>
+
+        <tr id="vxquery">
+          <td>
+            <a href="../projects/vxquery.html">VXQuery</a>
+            <hr />
+            <a href="http://vxquery.apache.org/">
+            <img src="../images/redarrow.gif" />VXQuery
+            </a>
+          </td>
+          <td>A standards compliant XML Query processor.</td>
+          <td>Incubator</td>
+          <td>Anthony Elder, Jochen Wiedmann, Marvin Humphrey, Sanjiva Weerawarana, Radu Preotiuc-Pietro</td>
+          <td>2009-07-06</td>
+          <td>2014-07-16</td>
+        </tr>
+
+        <tr id="webwork2">
+          <td>
+            <a href="../projects/webwork2.html">WebWork 2</a>
+            <hr />
+            <a href="http://struts.apache.org/">
+            <img src="../images/redarrow.gif" />WebWork 2
+            </a>
+          </td>
+          <td>A Java web-application development framework</td>
+          <td>Struts</td>
+          <td>Don Brown, Martin Cooper, Ted Husted</td>
+          <td>2006-01-15</td>
+          <td>2006-05-24</td>
+        </tr>
+
+        <tr id="whirr">
+          <td>
+            <a href="../projects/whirr.html">Whirr</a>
+            <hr />
+            <a href="http://whirr.apache.org/">
+            <img src="../images/redarrow.gif" />Whirr
+            </a>
+          </td>
+          <td>Whirr provides code for running a variety of software services on cloud infrastructure.</td>
+          <td>Incubator</td>
+          <td>Tom White, Doug Cutting, Steve Loughran</td>
+          <td>2010-05-11</td>
+          <td>2011-08-17</td>
+        </tr>
+
+        <tr id="wicket">
+          <td>
+            <a href="../projects/wicket.html">Wicket</a>
+            <hr />
+            <a href="http://wicket.apache.org/">
+            <img src="../images/redarrow.gif" />Wicket
+            </a>
+          </td>
+          <td>A web application framework that focusses on bringing plain object oriented Java programming to the web tier</td>
+          <td>Incubator</td>
+          <td>Upayavira, Alex Karasulu, Sylvain Wallez, Bertrand Delacrétaz</td>
+          <td>2006-08-28</td>
+          <td>2007-06-20</td>
+        </tr>
+
+        <tr id="wink">
+          <td>
+            <a href="../projects/wink.html">Wink</a>
+            <hr />
+            <a href="http://wink.apache.org/">
+            <img src="../images/redarrow.gif" />Wink
+            </a>
+          </td>
+          <td>Apache Wink is a project that enables development and consumption of REST style web services. The core server runtime is based on the JAX-RS (JSR 311) standard. The project also introduces a client runtime which can leverage certain components of the server-side runtime. Apache Wink will deliver component technology that can be easily integrated into a variety of environments.</td>
+          <td>Incubator</td>
+          <td>Davanum Srinivas, Kevan Miller</td>
+          <td>2009-05-27</td>
+          <td>2012-12-19</td>
+        </tr>
+
+        <tr id="woden">
+          <td>
+            <a href="../projects/woden.html">Woden</a>
+            <hr />
+            <a href="http://ws.apache.org/woden/">
+            <img src="../images/redarrow.gif" />Woden
+            </a>
+          </td>
+          <td>Implementation of WSDL 2.0</td>
+          <td>Web Services</td>
+          <td>Paul Fremantle, Sanjiva Weerawarana, Davanum Srinivas</td>
+          <td>2005-03-24</td>
+          <td>2007-12-08</td>
+        </tr>
+
+        <tr id="wookie">
+          <td>
+            <a href="../projects/wookie.html">Wookie</a>
+            <hr />
+            <a href="http://wookie.apache.org/">
+            <img src="../images/redarrow.gif" />Wookie
+            </a>
+          </td>
+          <td>a W3C widget engine with Google Wave and Open Social Extensions.</td>
+          <td>Incubator</td>
+          <td>Ross Gardler, Ate Douma, Luciano Resende, Andrew Savory, Henning Schmiedehausen, Matt Franklin</td>
+          <td>2009-07-17</td>
+          <td>2012-11-22</td>
+        </tr>
+
+        <tr id="xmlbeans">
+          <td>
+            <a href="../projects/xmlbeans.html">XMLBeans</a>
+            <hr />
+            <a href="http://xmlbeans.apache.org/">
+            <img src="../images/redarrow.gif" />XMLBeans
+            </a>
+          </td>
+          <td>XML-Java binding tool with 100% support for XML Schema and full Infoset fidelity</td>
+          <td>XML</td>
+          <td>Ted Leung</td>
+          <td>2003-07-30</td>
+          <td>2004-06-23</td>
+        </tr>
+
+        <tr id="zeppelin">
+          <td>
+            <a href="../projects/zeppelin.html">Zeppelin</a>
+            <hr />
+            <a href="http://zeppelin.apache.org/">
+            <img src="../images/redarrow.gif" />Zeppelin
+            </a>
+          </td>
+          <td>A collaborative data analytics and visualization tool for distributed, general-purpose data processing systems such as Apache Spark, Apache Flink, etc.</td>
+          <td>Incubator</td>
+          <td>Konstantin Boudnik, Henry Saputra, Roman Shaposhnik, Ted Dunning, Hyunsik Choi</td>
+          <td>2014-12-23</td>
+          <td>2016-05-18</td>
+        </tr>
+
+      </table>
+</div>
+        <h2 id='retired'><img src="../images/redarrow.gif" />Retired from incubation</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+<tr>
+<th>Project</th>
+<th>Description</th>
+<th>Apache Sponsor</th>
+<th>Mentors</th>
+<th>Start Date</th>
+<th>End Date</th>
+</tr>
+        <tr id="agila">
+          <td>
+            <a href="../projects/agila.html">Agila</a>
+            <hr />
+            <a href="ode.html">
+            <img src="../images/redarrow.gif" />ODE
+            </a>
+          </td>
+          <td>Extensible Business Process Management (BPM) engine core.<hr />Project activity transferred to another Incubator project - ODE.</td>
+          <td>Jakarta</td>
+          <td>Geir Magnusson Jr.</td>
+          <td>2004-09-29</td>
+          <td>2006-12-05</td>
+        </tr>
+
+        <tr id="alois">
+          <td>
+            <a href="../projects/alois.html">Alois</a>
+          </td>
+          <td>ALOIS is a log collection and correlation software with reporting and alarming functionalities.<hr />Podling requested to be retired</td>
+          <td>Incubator</td>
+          <td>Scott Deboy, Christian Grobmeier</td>
+          <td>2010-09-21</td>
+          <td>2011-06-30</td>
+        </tr>
+
+        <tr id="altrmi">
+          <td>
+            <a href="../projects/altrmi.html">AltRMI</a>
+            <hr />
+            <a href="http://jremoting.codehaus.org/">
+            <img src="../images/redarrow.gif" />JRemoting
+            </a>
+          </td>
+          <td>A transparent Remote Procedure Call bean.<hr />Development stalled and the project activity transferred to JRemoting</td>
+          <td>Incubator</td>
+          <td>Paul Hammant</td>
+          <td>2003-02-13</td>
+          <td>2007-01-18</td>
+        </tr>
+
+        <tr id="ariatosca">
+          <td>
+            <a href="../projects/ariatosca.html">AriaTosca</a>
+          </td>
+          <td>ARIA TOSCA project offers an easily consumable Software Development Kit(SDK) and a Command Line Interface(CLI) to implement TOSCA(Topology and Orchestration Specification of Cloud Applications) based solutions.</td>
+          <td>Incubator</td>
+          <td>Suneel Marthi, John D. Ament, Jakob Homan</td>
+          <td>2016-08-27</td>
+          <td>2018-07-01</td>
+        </tr>
+
+        <tr id="awf">
+          <td>
+            <a href="../projects/awf.html">AWF</a>
+          </td>
+          <td>
+            AWF is a non-blocking, asynchronous, event driven high performance web framework running on the JVM.
+            (Note: originally known as Deft, renamed to AWF on 2012-02-15)
+        <hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Emmanuel Lecharny, Mohammad Nour El-Din, Mark Struberg</td>
+          <td>2011-07-08</td>
+          <td>2012-09-16</td>
+        </tr>
+
+        <tr id="axion">
+          <td>
+            <a href="../projects/axion.html">Axion</a>
+            <hr />
+            <a href="http://axion.tigris.org/">
+            <img src="../images/redarrow.gif" />Axion
+            </a>
+          </td>
+          <td>Relational database engine written in Java.<hr />Project remains at Axion Tigris.org</td>
+          <td>DB</td>
+          <td>Morgan Delagrange</td>
+          <td>2003-12-19</td>
+          <td>2006-01-23</td>
+        </tr>
+
+        <tr id="bluesky">
+          <td>
+            <a href="../projects/bluesky.html">Bluesky</a>
+          </td>
+          <td>Distance learning collaboration tool</td>
+          <td>Incubator</td>
+          <td>Bill Stoddard, J. Aaron Farr</td>
+          <td>2008-01-12</td>
+          <td>2011-07-05</td>
+        </tr>
+
+        <tr id="blur">
+          <td>
+            <a href="../projects/blur.html">Blur</a>
+          </td>
+          <td>
+            Blur is a search platform capable of searching massive amounts of data
+            in a cloud computing environment.
+        <hr />Retired</td>
+          <td>Incubator</td>
+          <td>Doug Cutting, Patrick Hunt, Tim Williams</td>
+          <td>2012-07-24</td>
+          <td>2017-06-22</td>
+        </tr>
+
+        <tr id="climatemodeldiagnosticanalyzer">
+          <td>
+            <a href="../projects/cmda.html">Climate Model Diagnostic Analyzer</a>
+          </td>
+          <td>
+            CMDA provides web services for multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs.
+        <hr />Retired for lack of on list activity and primary development being outside the ASF</td>
+          <td>Incubator</td>
+          <td>James W. Carman, Chris Mattmann, Michael James Joyce, Kim Whitehall</td>
+          <td>2015-05-08</td>
+          <td>2017-02-05</td>
+        </tr>
+
+        <tr id="composer">
+          <td>
+            <a href="../projects/composer.html">Composer</a>
+          </td>
+          <td>Embeddable IoC container</td>
+          <td>Incubator</td>
+          <td>Jason Van Zyl, Peter Royal</td>
+          <td>2007-10-30</td>
+          <td>2008-05-13</td>
+        </tr>
+
+        <tr id="concerted">
+          <td>
+            <a href="../projects/concerted.html">Concerted</a>
+          </td>
+          <td>Apache Concerted is a Do-It-Yourself toolkit for building in-memory data engines.<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Chris Nauroth, Daniel Dai, Jake Farrell, Julian Hyde, Lars Hofhansl</td>
+          <td>2015-10-14</td>
+          <td>2016-04-25</td>
+        </tr>
+
+        <tr id="corinthia">
+          <td>
+            <a href="../projects/corinthia.html">Corinthia</a>
+          </td>
+          <td>Corinthia is a toolkit/application for converting between and editing common office file formats, with an initial focus on word processing. It is designed to cater for multiple classes of platforms - desktop, web, and mobile - and relies heavily on web technologies such as HTML, CSS, and JavaScript for representing and manipulating documents. The toolkit is small, portable, and flexible, with minimal dependencies. The target audience is developers wishing to include office viewing, conversion, and editing functionality into their applications.<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Daniel Gruno, Jan Iversen, Dave Fischer</td>
+          <td>2014-12-08</td>
+          <td>2015-11-19</td>
+        </tr>
+
+        <tr id="cotton">
+          <td>
+            <a href="../projects/cotton.html">Cotton</a>
+          </td>
+          <td>Cotton is an Apache Mesos framework for running MySQL instances. (Formerly known as Mysos)<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Dave Lester, Benjamin Hindman, Henry Saputra</td>
+          <td>2015-06-01</td>
+          <td>2015-12-01</td>
+        </tr>
+
+        <tr id="depot">
+          <td>
+            <a href="../projects/depot.html">Depot</a>
+          </td>
+          <td>Integrated tools for automating downloading, publishing and managing software artifacts, along with tools for manipulating their metadata.<hr />Project closed after development stalled.</td>
+          <td>Incubator</td>
+          <td>Nicola Ken Barozzi</td>
+          <td>2003-12-04</td>
+          <td>2004-10-28</td>
+        </tr>
+
+        <tr id="droids">
+          <td>
+            <a href="../projects/droids.html">Droids</a>
+          </td>
+          <td>Droids aims to be an intelligent standalone robot framework that allows to create and extend existing droids (robots).<hr />Retired from incubation.</td>
+          <td>HttpComponents, Lucene</td>
+          <td>Thorsten Scherler, Richard Frovarp</td>
+          <td>2008-10-09</td>
+          <td>2015-11-01</td>
+        </tr>
+
+        <tr id="gearpump">
+          <td>
+            <a href="../projects/gearpump.html">Gearpump</a>
+          </td>
+          <td>Gearpump is a reactive real-time streaming engine based on the micro-service Actor model.<hr />Retired</td>
+          <td>Incubator</td>
+          <td>Xuefu Zhang</td>
+          <td>2016-03-08</td>
+          <td>2018-09-19</td>
+        </tr>
+
+        <tr id="gossip">
+          <td>
+            <a href="../projects/gossip.html">Gossip</a>
+          </td>
+          <td>Gossip is an implementation of the Gossip Protocol.<hr />Retired</td>
+          <td>Incubator</td>
+          <td>P. Taylor Goetz, Josh Elser, Drew Farris</td>
+          <td>2016-04-28</td>
+          <td>2018-08-21</td>
+        </tr>
+
+        <tr id="graffito">
+          <td>
+            <a href="../projects/graffito.html">Graffito</a>
+          </td>
+          <td>Portal oriented Content Management System (Formerly known as JCMS)</td>
+          <td>Portals</td>
+          <td>Raphael Luta</td>
+          <td>2004-09-20</td>
+          <td>2007-07-11</td>
+        </tr>
+
+        <tr id="hadoopdevelopmenttools(hdt)">
+          <td>
+            <a href="../projects/hdt.html">Hadoop Development Tools (HDT)</a>
+          </td>
+          <td>Eclipse based tools for developing applications on the Hadoop platform<hr />Retired at request of PPMC as the project failed to grow community.</td>
+          <td>Incubator</td>
+          <td>Suresh Marru, Chris Mattmann, Roman Shaposhnik</td>
+          <td>2012-11-09</td>
+          <td>2014-12-02</td>
+        </tr>
+
+        <tr id="heraldry">
+          <td>
+            <a href="../projects/heraldry.html">Heraldry</a>
+            <hr />
+            <a href="http://openid.net/">
+            <img src="../images/redarrow.gif" />OpenID.net
+            </a>
+          </td>
+          <td>Identity for the rest of us.<hr />Project retired. Some activity moved to OpenID.net</td>
+          <td>Incubator</td>
+          <td>Ben Laurie, Paul Querna, Ted Leung, J. Aaron Farr, William Rowe</td>
+          <td>2005-07-14</td>
+          <td>2007-06-09</td>
+        </tr>
+
+        <tr id="hise">
+          <td>
+            <a href="../projects/hise.html">HISE</a>
+          </td>
+          <td>HISE<hr />Retired due to inactivity.</td>
+          <td>ODE</td>
+          <td>Glen Daniels, Matthieu Riou, Paul Fremantle</td>
+          <td>2009-11-05</td>
+          <td>2012-02-11</td>
+        </tr>
+
+        <tr id="horn">
+          <td>
+            <a href="../projects/horn.html">HORN</a>
+          </td>
+          <td>HORN is a neuron-centric programming APIs and execution framework for large-scale deep learning, built on top of Apache Hama.<hr />Retired</td>
+          <td>Incubator</td>
+          <td>Luciano Resende, Edward J. Yoon</td>
+          <td>2015-09-04</td>
+          <td>2017-07-13</td>
+        </tr>
+
+        <tr id="htrace">
+          <td>
+            <a href="../projects/htrace.html">HTrace</a>
+          </td>
+          <td>HTrace is a tracing framework intended for use with distributed systems written in java.<hr />HTrace made several releases however energy gradually evaporated and a community retirement VOTE was held with the RESULT that HTrace be retired.</td>
+          <td>Incubator</td>
+          <td>Jake Farrell, Todd Lipcon, Lewis John Mcgibbney, Billie Rinaldi, Michael Stack</td>
+          <td>2014-11-11</td>
+          <td>2018-04-11</td>
+        </tr>
+
+        <tr id="imperius">
+          <td>
+            <a href="../projects/imperius.html">Imperius</a>
+          </td>
+          <td>Rule-based Management Policy Engine<hr />Although the Apache Imperius project was successful in building an SPL implementation and had a successful release, there is not sufficient community energy to warrant continued development of Imperius at the Apache Software Foundation.</td>
+          <td>Incubator</td>
+          <td>Bill Stoddard, Craig Russell, Filip Hanik, Kevan Miller</td>
+          <td>2007-11-10</td>
+          <td>2011-05-14</td>
+        </tr>
+
+        <tr id="iota">
+          <td>
+            <a href="../projects/iota.html">iota</a>
+          </td>
+          <td>Open source system that enables the orchestration of IoT devices.</td>
+          <td>Incubator</td>
+          <td>Daniel Gruno, Sterling Hughes, Justin Mclean, Hadrian Zbarcea</td>
+          <td>2016-01-20</td>
+          <td>2018-02-15</td>
+        </tr>
+
+        <tr id="juice">
+          <td>
+            <a href="../projects/juice.html">JuiCE</a>
+          </td>
+          <td>OpenSSL based JCE provider. Project going into retired status after lack of community interest.</td>
+          <td>XML</td>
+          <td>Berin Lautenbach</td>
+          <td>2004-04-05</td>
+          <td>2007-10-18</td>
+        </tr>
+
+        <tr id="kabuki">
+          <td>
+            <a href="../projects/kabuki.html">Kabuki</a>
+          </td>
+          <td>An AJAX toolkit</td>
+          <td>Incubator</td>
+          <td>Andy Clark, Paul Fremantle, Sam Ruby, Sanjiva Weerawarana</td>
+          <td>2006-01-26</td>
+          <td>2006-06-24</td>
+        </tr>
+
+        <tr id="kalumet">
+          <td>
+            <a href="../projects/kalumet.html">Kalumet</a>
+          </td>
+          <td>Kalumet a complete environment manager and deployer including J2EE environments (application servers, applications, etc), softwares, and resources.<hr />Podling retired from incubation.</td>
+          <td>Incubator</td>
+          <td>Jim Jagielski, Henri Gomez, Jean-Baptiste Onofre, Olivier Lamy</td>
+          <td>2011-09-20</td>
+          <td>2015-11-01</td>
+        </tr>
+
+        <tr id="kato">
+          <td>
+            <a href="../projects/kato.html">Kato</a>
+          </td>
+          <td>Kato is a project to develop the Specification, Reference Implementation, and TCK for JSR 326: the JVM Post-mortem Diagnostics API.<hr />Retired due to inactivity.</td>
+          <td>Incubator</td>
+          <td>Ant Elder, Robert Burrell Donkin, Geir Magnusson Jr.</td>
+          <td>2008-11-06</td>
+          <td>2012-08-01</td>
+        </tr>
+
+        <tr id="kitty">
+          <td>
+            <a href="../projects/kitty.html">Kitty</a>
+          </td>
+          <td>Kitty is a lightweight, production focused, Java-based application server performance diagnostic and management utility.<hr />Retired due to inactivity.</td>
+          <td>Incubator</td>
+          <td>Jim Jagielski, Kevan Miller</td>
+          <td>2010-10-03</td>
+          <td>2012-10-19</td>
+        </tr>
+
+        <tr id="lokahi">
+          <td>
+            <a href="../projects/lokahi.html">Lokahi</a>
+          </td>
+          <td>The Lokahi project will create a management console for Apache HTTP Server and Apache Tomcat projects on a framework extensible to other ASF projects.<hr />Retired due to inactivity. Some talk of moving parts of the codebase to Tomcat.</td>
+          <td>Incubator</td>
+          <td>Will Rowe, Yoav Shapira</td>
+          <td>2006-03-01</td>
+          <td>2009-08-16</td>
+        </tr>
+
+        <tr id="lucene4c">
+          <td>
+            <a href="../projects/lucene4c.html">Lucene4c</a>
+          </td>
+          <td>Lucene for C.<hr />Progress stalled as developers ran out of free time and motivation.</td>
+          <td>Lucene</td>
+          <td>Erik Hatcher</td>
+          <td>2005-02-21</td>
+          <td>2006-10-15</td>
+        </tr>
+
+        <tr id="mrql">
+          <td>
+            <a href="../projects/mrql.html">MRQL</a>
+          </td>
+          <td>MRQL is a query processing and optimization system for large-scale, distributed data analysis, built on top of Apache Hadoop, Hama, Spark, and Flink.<hr />Retired.</td>
+          <td>Incubator</td>
+          <td>Alan Cabrera, Edward J. Yoon, Mohammad Nour El-Din</td>
+          <td>2013-03-13</td>
+          <td>2017-08-18</td>
+        </tr>
+
+        <tr id="nmaven">
+          <td>
+            <a href="../projects/nmaven.html">NMaven</a>
+            <hr />
+            <a href="npanday.html">
+            <img src="../images/redarrow.gif" />NPanday
+            </a>
+          </td>
+          <td>.NET integration for Maven. Failed to build active community.<hr />Efforts moved to NPanday. Other similar projects are NMaven @ Codeplex (http://www.codeplex.com/nmaven/) and Byldan @ Codeplex (http://www.codeplex.com/byldan/).</td>
+          <td>Maven</td>
+          <td>Brett Porter, Jason van Zyl</td>
+          <td>2006-11-17</td>
+          <td>2008-11-13</td>
+        </tr>
+
+        <tr id="npanday">
+          <td>
+            <a href="../projects/npanday.html">NPanday</a>
+          </td>
+          <td>NPanday allows projects using the .NET framework to be built with Apache Maven.<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Raphael Bircher, Konstantin Boudnik</td>
+          <td>2010-08-13</td>
+          <td>2015-02-08</td>
+        </tr>
+
+        <tr id="odftoolkit">
+          <td>
+            <a href="../projects/odftoolkit.html">ODF Toolkit</a>
+          </td>
+          <td>Java modules that allow programmatic creation, scanning and manipulation of OpenDocument Format (ISO/IEC 26300 == ODF) documents</td>
+          <td>Incubator</td>
+          <td>Nick Burch, Tom Barber</td>
+          <td>2011-08-01</td>
+          <td>2018-11-27</td>
+        </tr>
+
+        <tr id="olio">
+          <td>
+            <a href="../projects/olio.html">Olio</a>
+          </td>
+          <td>Web 2.0 evaluation kit</td>
+          <td>Incubator</td>
+          <td>Craig Russell, Henning Schmiedehausen, Matt Hogstrom, Rick Hillegas</td>
+          <td>2008-09-29</td>
+          <td>2011-11-16</td>
+        </tr>
+
+        <tr id="openaz">
+          <td>
+            <a href="../projects/openaz.html">OpenAz</a>
+          </td>
+          <td>Tools and libraries for developing Attribute-based Access Control (ABAC) Systems in a variety of languages.<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Emmanuel Lecharny, Colm O Heigeartaigh, Hadrian Zbarcea</td>
+          <td>2015-01-20</td>
+          <td>2016-08-26</td>
+        </tr>
+
+        <tr id="photark">
+          <td>
+            <a href="../projects/photark.html">PhotArk</a>
+          </td>
+          <td>A Photo Gallery application, accessible via the web and written in Java<hr />Retired due to inactivity.</td>
+          <td>Incubator</td>
+          <td>Luciano Resende</td>
+          <td>2008-08-19</td>
+          <td>2012-12-29</td>
+        </tr>
+
+        <tr id="pirk">
+          <td>
+            <a href="../projects/pirk.html">Pirk</a>
+          </td>
+          <td>Pirk is a framework for scalable Private Information Retrieval (PIR).<hr />Retired due to inactivity.</td>
+          <td>Incubator</td>
+          <td>Billie Rinaldi, Joe Witt, Josh Elser, Suneel Marthi, Tim Ellison</td>
+          <td>2016-06-17</td>
+          <td>2017-04-17</td>
+        </tr>
+
+        <tr id="provisionr">
+          <td>
+            <a href="../projects/provisionr.html">Provisionr</a>
+          </td>
+          <td>Provisionr provides a service to manage pools of virtual machines on multiple clouds.<hr />Failed to grow a community. Retired at request of PPMC.</td>
+          <td>Incubator</td>
+          <td>Roman Shaposhnik, Tom White, Mohammad Nour El-Din</td>
+          <td>2013-03-07</td>
+          <td>2013-11-22</td>
+        </tr>
+
+        <tr id="quickstep">
+          <td>
+            <a href="../projects/quickstep.html">Quickstep</a>
+          </td>
+          <td>Quickstep is a high-performance database engine.<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Julian Hyde, Roman Shaposhnik</td>
+          <td>2016-03-29</td>
+          <td>2018-11-30</td>
+        </tr>
+
+        <tr id="rcf">
+          <td>
+            <a href="../projects/rcf.html">RCF</a>
+          </td>
+          <td>JSF Component Library.<hr />Never got started, so retired.</td>
+          <td>MyFaces</td>
+          <td>Martin van den Bemt, Henning Schmiedehausen, Carsten Ziegeler</td>
+          <td>2007-04-06</td>
+          <td>2009-09-15</td>
+        </tr>
+
+        <tr id="ripple">
+          <td>
+            <a href="../projects/ripple.html">Ripple</a>
+          </td>
+          <td>Ripple is a browser based mobile phone emulator designed to aid in the development of HTML5 based mobile applications.  Ripple is a cross platform and cross runtime testing/debugging tool. It currently supports such runtimes as Cordova, WebWorks aand the Mobile Web.<hr />Retired for lack of activity</td>
+          <td>Incubator</td>
+          <td>Jukka Zitting, Christian Grobmeier, Andrew Savory</td>
+          <td>2012-10-16</td>
+          <td>2015-12-06</td>
+        </tr>
+
+        <tr id="s4">
+          <td>
+            <a href="../projects/s4.html">S4</a>
+          </td>
+          <td>S4 (Simple Scalable Streaming System) is a general-purpose, distributed, scalable, partially fault-tolerant, pluggable platform that allows programmers to easily develop applications for processing continuous, unbounded streams of data.</td>
+          <td>Incubator</td>
+          <td>Patrick Hunt, Arun Murthy</td>
+          <td>2011-09-26</td>
+          <td>2014-06-19</td>
+        </tr>
+
+        <tr id="sirona">
+          <td>
+            <a href="../projects/sirona.html">Sirona</a>
+          </td>
+          <td>Monitoring Solution.<hr />Retired</td>
+          <td>Incubator</td>
+          <td>Jean-Baptiste Onofre, Tammo van Lessen, Mark Struberg</td>
+          <td>2013-10-15</td>
+          <td>2017-07-03</td>
+        </tr>
+
+        <tr id="slider">
+          <td>
+            <a href="../projects/slider.html">Slider</a>
+          </td>
+          <td>Slider is a collection of tools and technologies to package, deploy, and manage long running applications on Apache Hadoop YARN clusters.<hr />Development of long-running service support for Apache Hadoop YARN has been moved to the hadoop-yarn-services-core module in Apache Hadoop.</td>
+          <td>Incubator</td>
+          <td>Arun C Murthy, Jean-Baptiste Onofré, Mahadev Konar, Vinod Kumar Vavilapalli</td>
+          <td>2014-04-29</td>
+          <td>2018-05-24</td>
+        </tr>
+
+        <tr id="socialsite">
+          <td>
+            <a href="../projects/socialsite.html">SocialSite</a>
+          </td>
+          <td>SocialSite is an OpenSocial-based headless social networking server and a set of OpenSocial Gadgets that make it easy to add social features to existing web sites. Server provides admin console for configuration, gadget approval and management. Gadgets can be combined to form complete UI for social networking with friending, group management and message support.</td>
+          <td>Incubator</td>
+          <td>Dave Johnson, Henning Schmiedehausen</td>
+          <td>2009-05-08</td>
+          <td>2010-10-17</td>
+        </tr>
+
+        <tr id="stonehenge">
+          <td>
+            <a href="../projects/stonehenge.html">Stonehenge</a>
+          </td>
+          <td>Stonehenge is a set of interoperability scenarios for Service Oriented Architecture and Web Services that demonstrate interoperability between multiple systems including Apache Axis2, WSF/PHP and Microsoft WCF. The code also demonstrates good practice for standards-based interoperability.<hr />
+            "The Stonehenge project pretty much accomplished what it originally
+            set out to do and then really didn't find a way to transition to
+            something that is longer lasting and able to develop a community
+            around it."
+        </td>
+          <td>Incubator</td>
+          <td>Ken Coar, Danese Cooper, Matthieu Riou, Dan Kulp, Jim Jagielski, Paul Fremantle</td>
+          <td>2008-11-19</td>
+          <td>2011-07-05</td>
+        </tr>
+
+        <tr id="tashi">
+          <td>
+            <a href="../projects/tashi.html">Tashi</a>
+          </td>
+          <td>An infrastructure for cloud computing on big data.</td>
+          <td>Incubator</td>
+          <td>Matthieu Riou, Craig Russell</td>
+          <td>2008-09-04</td>
+          <td>2012-10-02</td>
+        </tr>
+
+        <tr id="triplesoup">
+          <td>
+            <a href="../projects/triplesoup.html">TripleSoup</a>
+          </td>
+          <td>SPARQL endpoint for your webserver. Project entering retired status after failing to get traction.</td>
+          <td>Incubator</td>
+          <td>Leo Simons, Stefano Mazzocchi, Ben Hyde, Dirk-Willem van Gulik</td>
+          <td>2007-02-05</td>
+          <td>2007-10-18</td>
+        </tr>
+
+        <tr id="tsik">
+          <td>
+            <a href="../projects/tsik.html">TSIK</a>
+          </td>
+          <td>implementations of various W3C and OASIS specifications related to XML and Web services security<hr />Failed to gather community momentum. Cancelled at request of Sponsoring TLP.</td>
+          <td>Web Services</td>
+          <td>Davanum Srinivas, Sam Ruby, Dirk-Willem Gulik</td>
+          <td>2005-05-17</td>
+          <td>2006-03-21</td>
+        </tr>
+
+        <tr id="wadi">
+          <td>
+            <a href="../projects/wadi.html">WADI</a>
+          </td>
+          <td>a robust hetorgeneous clustering engine used to cluster geronimo, tomcat, jetty and other containers eventually.<hr />Proposal withdrawn by creator; project continues at Codehaus.</td>
+          <td>Geronimo</td>
+          <td>Geir Magnusson, James Strachan</td>
+          <td>2005-12-05</td>
+          <td>2005-12-05</td>
+        </tr>
+
+        <tr id="wave">
+          <td>
+            <a href="../projects/wave.html">Wave</a>
+          </td>
+          <td>A wave is a hosted, live, concurrent data structure for rich communication. It can be used like email, chat, or a document.</td>
+          <td>Incubator</td>
+          <td>Upayavira, John D. Ament</td>
+          <td>2010-12-04</td>
+          <td>2018-01-15</td>
+        </tr>
+
+        <tr id="wsrp4j">
+          <td>
+            <a href="../projects/wsrp4j.html">WSRP4J</a>
+          </td>
+          <td>Implementation of OASIS Web Services for Remote Portlets (WSRP)</td>
+          <td>Portals</td>
+          <td>Portals PMC members</td>
+          <td>2003-09-03</td>
+          <td>2010-04-18</td>
+        </tr>
+
+        <tr id="xap">
+          <td>
+            <a href="../projects/xap.html">XAP</a>
+          </td>
+          <td>Declarative framework for building Ajax-powered web apps</td>
+          <td>Incubator</td>
+          <td>Cliff Schmidt, Robert Burrell Donkin, Susan Wu</td>
+          <td>2006-05-22</td>
+          <td>2009-06-26</td>
+        </tr>
+
+        <tr id="xmlbeans/c++">
+          <td>
+            <a href="../projects/xmlbeanscxx.html">XMLBeans/C++</a>
+          </td>
+          <td>C++ equivalent of Apache XMLBeans.<hr />Failed to get traction.</td>
+          <td>Web Services</td>
+          <td>Cliff Schmidt</td>
+          <td>2005-06-06</td>
+          <td>2007-05-16</td>
+        </tr>
+
+        <tr id="yoko">
+          <td>
+            <a href="../projects/yoko.html">Yoko</a>
+          </td>
+          <td>A CORBA Server.</td>
+          <td>Geronimo</td>
+          <td>Ken Coar, Geir Magnusson Jr., James Strachan</td>
+          <td>2006-01-31</td>
+          <td>2007-12-17</td>
+        </tr>
+
+        <tr id="zetacomponents">
+          <td>
+            <a href="../projects/zetacomponents.html">Zeta Components</a>
+          </td>
+          <td>Zeta Components is a high-quality library of loosely-coupled PHP components.</td>
+          <td>Incubator</td>
+          <td>Julien Vermillard, Christian Grobmeier, Craig Russell</td>
+          <td>2010-05-21</td>
+          <td>2012-04-20</td>
+        </tr>
+
+      </table>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

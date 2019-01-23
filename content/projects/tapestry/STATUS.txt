@@ -1,0 +1,92 @@
+APACHE Tapestry INCUBATOR PROJECT STATUS:                 -*-indented-text-*-
+Last modified at [$Date: 2004-10-28 18:07:52 +0800 (Thu, 28 Oct 2004) $]
+
+Background:
+    o See the PROPOSAL file for project details.
+
+    Current Project Page: http://jakarta.apache.org/proposals/tapestry
+    Current License: Apache Software License
+    Current Copyright Holder: ASF
+
+
+Project Shepards:
+    o Andrew Oliver <acoliver@apache.org>
+    o dIon Gillard <dion@multitask.com.au>
+
+
+Project Volunteer Contributors:
+
+
+Pending Issues:
+    o Distribution
+      - Create both .zip and .tar.gz distributions
+      - Sign distributions
+      - Distribute keys
+      - Mirroring
+    
+Resolved Issues:
+    o Infrastructure needed:
+      - CVS setup
+      - Mailing list setup
+      - Bugzilla setup
+    o Gump integration
+    o Code Audits
+      - Removed LPGL code and linkages
+      
+
+Project committers (as of 2003-04-25):
+    o  hlship,dsolis,nclayton,rlewisshell,mindbridge,glongman
+
+================
+From: "Howard M. Lewis Ship" <hlship@attbi.com>
+Date: Mon Mar 10, 2003  3:58:22  PM US/Pacific
+To: <general@incubator.apache.org>
+Subject: [STATUS] Tapestry [LACK-OF] Progress
+Reply-To: general@incubator.apache.org
+
+How, exactly, is Tapestry ever expected to exit the proposal stage?
+
+Despite repeated attempts, Tapestry is NOT in BugZilla.  We're still forced
+to use SourceForge for bug tracking.
+
+Tapestry's mailing lists are not getting archived any more (not since 2/21).
+
+Nobody seems to know ANY of the procedures for getting things done.  Nothing
+is documented.  Simple things like the correct way to distribute a release
+(including signing and mirroring) are just "known" by the right people ...
+and I don't even know who is in the know.
+
+Andrew and Dion have been helpful, both before the move and after.
+
+The only other accomplishment of the incubation process has been a code
+audit that resulted in a shuffling of the libraries checked into CVS and
+distributed with the framework.
+
+Jakarta infrastructure is non-existent. Worse, the Jakarta culture
+erroneously expects things to get done based on e-mails, rather than
+something organized, like using BugZilla to track infrastructure requests. 
+
+The Incubator team has yet to provide a time table or a check list to
+indicate what the exit criteria are.  In terms of Tapestry's commitments to
+the Incubator, it looks like we're more than there (based on
+http://incubator.apache.org/process.html).  In terms of Incubator's
+commitments to Tapestry ... that is, to assist Tapestry in moving into
+Jakarta, fitting in, and accessing infrastructure; very little has been
+accomplished.
+
+================
+From: "Howard M. Lewis Ship" <hlship@attbi.com>
+Date: Wed Mar 12, 2003  12:10:25  PM US/Pacific
+To: <general@incubator.apache.org>
+Subject: Updated Tapestry code audit
+Reply-To: general@incubator.apache.org
+
+I've redone the Tapestry code audit for March, along with notes about what
+changed, and why, since February.
+
+  http://nagoya.apache.org/wiki/apachewiki.cgi?TapestryAudits/Mar2003
+
+Although I was blindsided by the LPGL constraints that came out in the last
+few days, I believe Tapestry is fully in compliance at this time.  Does
+anybody know what license DocBook and DocBook XSL is released under?  I
+couldn't find it.

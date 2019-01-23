@@ -92,8 +92,8 @@
     </url>
 
     <url>
-    	<loc>http://doris.apache.org/policy/use-gitter.html</loc>
-    	<lastmod>2018-11-06</lastmod>
+    	<loc>http://doris.apache.org/policy/pmc.html</loc>
+    	<lastmod>2019-01-23</lastmod>
     </url>
 
     <url>
@@ -108,6 +108,11 @@
 
     <url>
     	<loc>http://doris.apache.org/policy/contributing.html</loc>
+    	<lastmod>2018-11-06</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://doris.apache.org/policy/use-gitter.html</loc>
     	<lastmod>2018-11-06</lastmod>
     </url>
 

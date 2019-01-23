@@ -1,0 +1,39 @@
+*** This is an Archival Record taken from the Apache Wiki
+
+----------------
+A lot has changed after Tapestry 2.4-alpha-4, here's the new audit (Mar 12 2003).
+
+Category 1: In CVS and included in the distribution.  Needed at framework build, at runtime and potentially at application build time.
+
+* lib/ext/bcel-5.0.jar (ASL)
+* lib/ext/bsf-2.3.0.jar (ASL)
+* lib/ext/commons-logging-1.0.2.jar (ASL)
+* lib/ext/jakarta-oro-2.0.6.jar (ASL)
+* lib/ext/ognl-2.3.0-opt.jar (Modern BSD)
+* lib/ext/commons-lang-1.0.jar (ASL)
+* lib/runtime/log4j-1.2.6.jar (ASL)
+
+Category 2: <b>Not</b> in CVS, needed at framework build. Not part of Tapestry distribution.  Typically provided by application server at runtime.
+
+* jboss-j2ee.jar (LPGL, from JBoss distribution)
+* mail.jar (???, from JBoss distribution)
+* crimson.jar (ASL, from Jetty distribution)
+* javax.xml.jaxp.jar (Sun BCLA, from Jetty distribution)
+* javax.servlet.jar (ASL, from Jetty distribution)
+
+Tapestry does not contain any Jetty- or JBoss- specific code (not in the frameworks, not in the example code, nowhere).  
+Tapestry code imports from javax.ejb, javax.xml, javax.servlet and so forth.
+The Jetty and JBoss distributions are handy places to obtain that code from, and are also used for some Tapestry demos.
+
+Category 3: External distributions.  Not in CVS, not part of Tapestry distribution.
+* ext-dist/jdom-b8.jar (Modified ASL?) Build time only (part of test suite)
+* ext-dist/junit.jar (CPL) Build time only (part of test suite)
+* ext-dist/jCharts-0.6.0.jar (BSD) Build time and runtime
+* ext-dist/docbkx412.zip (???) For documentation build
+* ext-dist/docbook-xsl-1.59.2.zip (???) For documentation build
+
+
+====
+
+HowardLewisShip: The /Feb2003 audit pointed out problems I knew about that could not be deferred (McKoi) and problems I didn't know about (other LPGL modules).  I've factored out McKoi completely ... the code is needed at runtime to support the examples but not at compile time.  The big LGPL offender was JFreeChart, which has been replaced with jCharts.
+There's some grumbling currently about JBoss and/or Jetty (both LGPL), but the code being imported is all from javax packages; the Jetty and JBoss distributions are just handy places to get that code from.  The turn-key demos are structured to automatically configure JBoss, so it makes sense that Tapestry users will have JBoss handy.

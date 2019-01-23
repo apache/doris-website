@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>JSPWiki Incubation Status - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='JSPWiki+Project+Incubation+Status'><img src="../images/redarrow.gif" />JSPWiki Project Incubation Status</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more general
+         project status, look on the project website.</p>
+<p><span class="graduated">The JSPWiki project graduated on 2013-07-19</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<p>The JSPWiki Project is a modular and user-extensible wiki-engine, based on the open source JSPWiki software.</p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<ul>
+        <li>2013-07-19: Apache JSPWiki graduated as TLP</li>
+      </ul>
+<ul>
+        <li>2013-05-15: Apache JSPWiki 2.9.1-incubating release is out</li>
+      </ul>
+<ul>
+        <li>2013-01-04: new committer and PPMC member - Glen Mazza</li>
+      </ul>
+<ul>
+        <li>2012-12-01: Apache JSPWiki 2.9.0-incubating release is out</li>
+      </ul>
+<ul>
+        <li>2012-11-01: New mentor - Siegfried Goeschl</li>
+      </ul>
+<ul>
+        <li>2012-01-23: Targetting 2.9 as first Apache release</li>
+      </ul>
+<ul>
+        <li>2008-11-28: New committer - Florian Holeczek</li>
+      </ul>
+<ul>
+        <li>2008-07-19: New committer - Harry Metske</li>
+      </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+        <tr>
+          <th>item</th>
+          <th>type</th>
+          <th>reference</th>
+        </tr>
+        <tr>
+          <td>Website</td>
+          <td>www</td>
+          <td id="www">
+            <a href="http://incubator.apache.org/jspwiki/">http://incubator.apache.org/jspwiki/</a>
+          </td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>wiki</td>
+          <td><a href="http://www.jspwiki.org/">http://www.jspwiki.org/</a></td>
+        </tr>
+        <tr>
+          <td>Mailing list</td>
+          <td>dev</td>
+          <td id="mail-dev"><code>jspwiki-dev</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>user</td>
+          <td id="mail-user"><code>jspwiki-user</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>commits</td>
+          <td id="mail-commits"><code>jspwiki-commits</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>Bug tracking</td>
+          <td>JIRA</td>
+          <td id="tracker">
+            <a href="http://issues.apache.org/jira/browse/JSPWIKI">http://issues.apache.org/jira/browse/JSPWIKI</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Source code</td>
+          <td>SVN</td>
+          <td id="svn">
+            <a href="https://svn.apache.org/repos/asf/incubator/jspwiki/">https://svn.apache.org/repos/asf/incubator/jspwiki/</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Mentors</td>
+          <td>clr</td>
+          <td>Craig Russell</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>rubys</td>
+          <td>Sam Ruby</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>sgoeschl</td>
+          <td>Siegfried Goeschl</td>
+        </tr>
+        <tr>
+          <td>Committers</td>
+          <td>jalkanen</td>
+          <td>Janne Jalkanen</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>ajaquith</td>
+          <td>Andrew Jaquith</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>brushed</td>
+          <td>Dirk Frederickx</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>csauer</td>
+          <td>Christoph Sauer</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>juanpablo</td>
+          <td>Juan Pablo Santos Rodríguez</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>altheim</td>
+          <td>Murray Altheim</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>metskem</td>
+          <td>Harry Metske</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>florianh</td>
+          <td>Florian Holeczek</td>
+        </tr>
+      </table>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports</h2>
+<div class="section-content">
+<ul>
+        <li>See <a href="http://svn.apache.org/repos/asf/incubator/jspwiki/board/">http://svn.apache.org/repos/asf/incubator/jspwiki/board/</a>.</li>
+      </ul>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at Apache.</p>
+<p>
+          <em>Item assignment is shown by the Apache id.</em>
+          <em>Completed tasks are shown by the completion date (YYYY-MM-dd).</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2008-09-28</td>
+              <td>Make sure that the requested project name does not already exist and
+                  check www.nameprotect.com to be sure that the name is not already
+                  trademarked for an existing software product.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-09-17</td>
+              <td>Identify all the Mentors for the incubation, by asking all that can
+                  be Mentors.</td>
+            </tr>
+            <tr>
+              <td>2007-10-06</td>
+              <td>Give all Mentors access to the incubator SVN repository.</td>
+            </tr>
+            <tr>
+              <td>2008-09-28</td>
+              <td>Tell Mentors to track progress in the file 'incubator/projects/{project.name}.html'</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2009-06-21</td>
+              <td>Check and make sure that the papers that transfer rights to the ASF
+                  been received. It is only necessary to transfer rights for the
+                  package, the core code, and any new code produced by the project.
+              </td>
+            </tr>
+            <tr>
+              <td>2009-08-11</td>
+              <td>Check and make sure that the files that have been donated have been
+                  updated to reflect the new ASF copyright. <a href="https://issues.apache.org/jira/browse/JSPWIKI-545">See JSPWIKI-545 for RAT reports.</a></td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2009-08-16</td>
+              <td>Check and make sure that for all code included with the distribution
+                  that is not under the Apache license, we have the right to combine
+                  with Apache-licensed code and redistribute.
+               </td>
+            </tr>
+            <tr>
+              <td>2009-08-11</td>
+              <td>Check and make sure that all source code distributed by the project
+                  is covered by one or more of the following approved licenses: Apache,
+                  BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+                  the same terms. <a href="https://issues.apache.org/jira/browse/JSPWIKI-545">See JSPWIKI-545 for RAT reports.</a></td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-10-15</td>
+              <td>Check that all active committers have submitted a contributors
+                  agreement.</td>
+            </tr>
+            <tr>
+              <td>2009-08-11</td>
+              <td>Add all active committers in the STATUS file.</td>
+            </tr>
+            <tr>
+              <td>2007-10-15</td>
+              <td>Ask root for the creation of committers' accounts on
+                  people.apache.org.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-10-06</td>
+              <td>Create source repository modules and grant the
+                  committers karma.</td>
+            </tr>
+            <tr>
+              <td>2007-10-06</td>
+              <td>Ask infrastructure to set up and archive Mailing lists.</td>
+            </tr>
+            <tr>
+              <td>2007-10-15</td>
+              <td>Decide about and then ask infrastructure to setup an issuetracking
+                  system (Bugzilla, Scarab, Jira).</td>
+            </tr>
+            <tr>
+              <td>2008-02-12</td>
+              <td>Migrate the project to our infrastructure.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Project+specific'>Project specific</h4>
+<div class="section-content">
+<p>
+            <em>Add project specific tasks here.</em>
+          </p>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole incubation process.</p>
+<p>
+          <em>These items are not to be signed as done during incubation, as they
+              may change during incubation.</em>
+          <em>They are to be looked into and described in the status reports and
+              completed in the request for incubation signoff.</em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+            <li>Have all of the active long-term volunteers been identified and
+                acknowledged as committers on the project?
+            </li>
+            <li>Are there three or more independent committers? (The legal definition
+                of independent is long and boring, but basically it means that there
+                is no binding relationship between the individuals, such as a shared
+                employer, that is capable of overriding their free will as
+                individuals, directly or indirectly.)</li>
+            <li>Are project decisions being made in public by the committers?</li>
+            <li>Are the decision-making guidelines published and agreed to by all of
+                the committers?</li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+            <li>Are all licensing, trademark, credit issues being taken care of and
+                acknowleged by all committers?</li>
+          </ul>
+</div>
+<h4 id='Project+Specific'>Project Specific</h4>
+<div class="section-content">
+<p>Find the project specific items sorted by status and last update <a href="https://issues.apache.org/jira/sr/jira.issueviews:searchrequest-printable/temp/SearchRequest.html?jqlQuery=project+%3D+JSPWIKI+AND+fixVersion+%3D+12313986+order+by+status+asc%2C+updated">here</a>.</p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project</h4>
+<div class="section-content">
+<ul>
+            <li>If graduating to an existing PMC, has the PMC voted to accept it?</li>
+            <li>If graduating to a new PMC, has the board voted to accept it?</li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+            <li>Has the Incubator decided that the project has accomplished all of
+                the above tasks?</li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

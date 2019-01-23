@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../../style/style.css" type="text/css" />
+        <title>Proposal for an Apache J2EE Server Project
+ - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../../index.html">Welcome</a></li> 
+          <li><a href="../../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../../projects">Project List</a></li> 
+          <li><a href="../../clutch">Clutch Report</a></li> 
+          <li><a href="../../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../../guides/participation.html">Participation</a></li> 
+          <li><a href="../../faq.html">General FAQ</a></li> 
+          <li><a href="../../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Submission+Date+and+Submitters'><img src="../../images/redarrow.gif" />Submission Date and Submitters
+</h2>
+<div class="section-content">
+<p>05 Aug 2003 : Geir Magnusson Jr., James Strachan and Richard
+Monson-Haefel
+</p>
+</div>
+        <h2 id='Section+0+%3A+Rationale'><img src="../../images/redarrow.gif" />Section 0 : Rationale
+</h2>
+<div class="section-content">
+<p>The Java 2, Enterprise Edition (J2EE) platform is employed widely by
+organizations implementing enterprise applications. It is commonly
+used in business-to-consumer and most recently in Web service
+deployments. Most of the largest business organizations today have
+deployed applications on a J2EE platform.
+</p>
+<p>While the J2EE specification is implemented by a number of large and
+small vendors, there is no open source J2EE container available with
+a BSD or BSD-derived licence nor is there an open source project
+today that provides a fully compliant implementation. Verifiable
+compliance with the J2EE specification is important to business
+because it ensures that applications deployed by developers are
+portable and interoperable across J2EE providers. As a result
+organizations large and small have felt compelled to pay thousands of
+dollars to commercial vendors in order to deploy applications based
+on J2EE compliant servers.
+</p>
+<p>The Apache foundation supports several projects that implement pieces
+of the J2EE platform such as Servlets, JSP, Tag Libraries, and a Web
+services stack. However, Apache does not currently support a J2EE
+project.
+</p>
+<p>The aim of the project is to produce a large and healthy community of
+J2EE developers tasked with the development of an open source,
+certified J2EE server which is ASF licensed and passes Sun's TCK
+reusing the best ASF/BSD licensed code available today and adding new
+code to complete the J2EE stack.
+</p>
+</div>
+        <h2 id='Section+0.1+%3A+criteria'><img src="../../images/redarrow.gif" />Section 0.1 : criteria
+</h2>
+<div class="section-content">
+<p>We feel that this project has a good chance for success as the
+following project aspects are carefully considered :
+</p>
+<ul>
+        <li>Meritocracy: The project will be meritocratic - the usual Apache
+meritocracy rules would apply.
+</li>
+        <li>Community: The user community for this project is potentially
+massive. The initial developer community for this project consists of
+developers from Apache, Castor, JBoss, mx4j, and OpenEJB projects.
+The aim is for this community to grow considerably once this project
+goes public.
+</li>
+        <li>Core Developers: The initial developers are listed below and consist
+of some existing Apache committers together with committers from
+Castor, JBoss, mx4j and OpenEJB. We believe that as the project
+grows, the modular nature of the J2EE stack will require steady
+expansion of the committer group that is considered 'core' - thus
+providing a healthier, more robust developer community.
+</li>
+        <li>Alignment: There is clear alignment with many existing Apache
+projects. From Jakarta projects such as Tomcat, James and log4j
+initially as well as possibly others along the way. J2EE now includes
+a web services stack and so there will be some alignment with the WS
+project, Axis in particular, along with the reuse of several XML
+projects. In addition the J2EE Server project may reuse other ASF/BSD
+licensed code which is not currently hosted in source form at Apache
+such as (at time of writing) mx4j, openjms and tyrex.
+</li>
+      </ul>
+<p>However we see the J2EE Server project as a separate project to
+existing Apache projects, serving two primary roles
+</p>
+<ul>
+        <li>integration of various existing and new code bases into a J2EE stack,
+with those codebases existing both inside and outside of the project
+</li>
+        <li>certification of the J2EE stack
+</li>
+      </ul>
+<p>Note that the J2EE server project can happily support competition
+within the J2EE services stack (for example, offering choices for
+elements such as the servlet engine like Tomcat or Jetty, or some new
+JTA implementation versus Tyrex or some new JMS implementation versus
+OpenJMS etc).
+</p>
+</div>
+        <h2 id='Section+0.2+%3A++warning+signs'><img src="../../images/redarrow.gif" />Section 0.2 : warning signs
+</h2>
+<div class="section-content">
+<p>We feel that this project has a good chance for success as the
+following warning signs do not apply to the project we are proposing :
+</p>
+<ul>
+        <li>Orphaned products: This project is starting with a new code base
+together with reusing lots of the currently available high quality
+J2EE open source code out there which is ASF/BSD licensed.
+</li>
+        <li>Inexperience with open source: The initial community is made up of
+existing Apache, Castor, JBoss, mx4j , and OpenEJB committers.
+</li>
+        <li>Homogeneous developers: The current list of committers represents
+developers from various backgrounds and open source projects,
+employed by various companies and based around the globe in the US,
+Europe, Asia and Australia. There will be no majority bloc, at least
+from the start.
+</li>
+        <li>Reliance on salaried developers: None of the initial developers are
+currently paid to work on the J2EE project.
+</li>
+        <li>No ties to other Apache products: The J2EE Server project is
+complementary to existing technologies at Apache. Indeed it will
+integrate many of those technologies in an effort to provide a code
+base that can be J2EE certified according to the JCP process.
+</li>
+        <li>A fascination with the Apache brand: The committers are interested in
+developing a healthy open source community around an ASF/BSD licensed
+J2EE certified server, whether Apache is the right place or not. The
+aspects of Apache that attract this effort are the experienced
+stewardship of open source projects by the ASF, the non-profit status
+of the ASF for TCK certification, and the existing Java community
+that has been a longstanding part of the ASF.
+</li>
+      </ul>
+</div>
+        <h2 id='Section+1+%3A+scope+of+the+project'><img src="../../images/redarrow.gif" />Section 1 : scope of the project
+</h2>
+<div class="section-content">
+<p>There are two main aspects to this Apache project :
+</p>
+<ul>
+        <li>a complete J2EE certified server which is fully ASF/BSD licensed and
+backed by a healthy open source community.
+</li>
+        <li>to create a fully modular J2EE stack so that the Apache community can
+use whichever parts of the J2EE stack they require separate from the
+J2EE server project.
+</li>
+      </ul>
+</div>
+        <h2 id='Section+2+%3A+initial+source+from+which+the+project+is+to+be+populated'><img src="../../images/redarrow.gif" />Section 2 : initial source from which the project is to be populated
+</h2>
+<div class="section-content">
+<p>There are several potential initial contributions. Upon formation of
+the project our first action will be an open, public call for
+contribution and comment from the J2EE community. Because of recent
+circumstances in the J2EE OSS community, all code proposed for
+inclusion must be publicly reviewed and open to public comment.
+</p>
+</div>
+        <h2 id='Section+3%3A+identify+the+ASF+resources+to+be+created'><img src="../../images/redarrow.gif" />Section 3: identify the ASF resources to be created
+</h2>
+<div class="section-content">
+<h3 id='Section+3.1+%3A+mailing+lists'>Section 3.1 : mailing lists
+</h3>
+<div class="section-content">
+<ul>
+          <li>geronimo-dev
+</li>
+          <li>geronimo-user
+</li>
+        </ul>
+</div>
+<h3 id='Section+3.2%3A+CVS+repositories'>Section 3.2: CVS repositories
+</h3>
+<div class="section-content">
+<ul>
+          <li>geronimo
+</li>
+        </ul>
+</div>
+<h3 id='Section+3.3%3A+Bugzilla'>Section 3.3: Bugzilla
+</h3>
+<div class="section-content">
+<ul>
+          <li>geronimo
+</li>
+        </ul>
+<p>Though would there be an issue with using JIRA?
+</p>
+</div>
+</div>
+        <h2 id='Section+4%3A+identify+the+initial+set+of+committers'><img src="../../images/redarrow.gif" />Section 4: identify the initial set of committers
+</h2>
+<div class="section-content">
+<p>The committers are listed below, along with the open source
+project(s) where they also have commit privileges.
+</p>
+<ul>
+        <li>Bruce Snyder (Castor JDO)
+</li>
+        <li>Dain Sundstrom (JBoss)
+</li>
+        <li>David Blevins (OpenEJB)
+</li>
+        <li>David Jencks (JBoss)
+</li>
+        <li>Geir Magnusson Jr. (Apache)
+</li>
+        <li>Greg Wilkins (JBoss/Jetty)
+</li>
+        <li>James Strachan (Apache)
+</li>
+        <li>Jan Bartel (JBoss/Jetty)
+</li>
+        <li>Jason Dillon (JBoss)
+</li>
+        <li>Jeremy Boynes (JBoss)
+</li>
+        <li>Jim Jagielski (Apache)
+</li>
+        <li>Jules Golsnell (JBoss/Jetty)
+</li>
+        <li>Richard Monson-Haefel (OpenEJB)
+</li>
+        <li>Remigio Chirino (JBoss)
+</li>
+        <li>Simone Bordet (mx4j)
+</li>
+      </ul>
+</div>
+        <h2 id='Section+5%3A+identify+apache+sponsoring+individual'><img src="../../images/redarrow.gif" />Section 5: identify apache sponsoring individual
+</h2>
+<div class="section-content">
+<ul>
+        <li>Ceki Gulcu
+</li>
+        <li>Geir Magnusson Jr.
+</li>
+        <li>James Strachan
+</li>
+        <li>Jim Jagielski
+</li>
+      </ul>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>pluto
+ - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Pluto+Project+Incubation+Status'><img src="../images/redarrow.gif" />Pluto Project Incubation Status
+</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more general
+project status, look on the project
+
+        <a href="http://jakarta.apache.org/pluto/">website
+</a>.
+
+      </p>
+<p><span class="graduated">The Pluto project graduated on 2004-05-15</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description
+</h2>
+<div class="section-content">
+<p>Pluto is the Reference Implementation of the Java Portlet
+Specfication. The current version of this specification is &lt;JSR
+168|http://jcp.org/en/jsr/detail?id=168]. Please read the
+
+        <a href="http://nagoya.apache.org/wiki/apachewiki.cgi?PlutoProposal">proposal
+</a>that started the project in the incubator.
+
+      </p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News
+</h2>
+<div class="section-content">
+<p>Pluto Graduated! On May 15, 2004, The Incubator PMC released Pluto to
+the Portals project. See thread at:
+</p>
+<p>http://mail-archives.apache.org/eyebrowse/BrowseList?listName=general@
+ncubator.apache.org&amp;by=thread&amp;from=751960
+</p>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info
+</h2>
+<div class="section-content">
+<ul>
+        <li>
+          <a href="http://jakarta.apache.org/pluto/">Website
+</a>
+        </li>
+        <li>
+          <a href="http://jakarta.apache.org/pluto/project-info.html">Project Info
+</a>
+        </li>
+        <li>
+          <a href="http://cvs.apache.org/viewcvs.cgi/jakarta-pluto/">CVS
+</a>
+        </li>
+        <li>
+          <a href="http://jakarta.apache.org/site/mail2.html#Pluto">Mailing Lists
+</a>
+        </li>
+      </ul>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports
+</h2>
+<div class="section-content">
+<h3 id='2004-05-01+Pluto+Status'>2004-05-01 Pluto Status
+</h3>
+<div class="section-content">
+<div class="source"><code>2004-05-01 Pluto Status * Is the STATUS file up to date? (also post
+link) Yes. http://incubator.apache.org/projects/pluto.html * Any
+legal, cross-project or personal issues that still need to be
+addressed? No outstanding issues. * What has been done for incubation
+since the last report? All project committers have received
+confirmation that CLA's have been received and accepted. The Pluto
+has worked hard towards 1.0 release of the Pluto Portlet Container
+reference implementation. The release is ready, pending graduation of
+Pluto from incubation. The Pluto Web Site has continued to be updated
+and built out. http://jakarta.apache.org/pluto Upon graduation from
+incubation and acceptance into Apache Portals, Pluto will be moved to
+http://portals.apache.org/pluto All source files have been modified
+to include the ASF v2.0 copyright notice. The mailing lists
+pluto-dev@jakarta.apache.org and pluto-user@jakarta.apache.org are
+now being archived at both Apache and MARC. Past list traffic has
+been imported into the Apache archives. * What are the project's
+plans and expectations for the next period? Put out release 1.0 to
+coincide with the Java Portlet API Specification. Future work will
+include refactoring and compontenization of Pluto, and support of the
+next release of the Java Portlet API Specification. Assemble a to-do
+list (roadmap) for future development and publish to the Pluto web
+site. Exit the Apache Incubator (hey, it was fun). * Any
+recommendations for how incubation could run more smoothly for you?
+The current process has worked well for us.
+</code>
+</div>
+</div>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items
+</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup
+</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at
+Apache.
+</p>
+<p>
+          <em>Item assignment is shown by the Apache id.
+</em>
+          <em>Completed tasks are shown by the completion date (YYYY-MM-dd).
+</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date
+</th>
+              <th>item
+</th>
+            </tr>
+            <tr>
+              <td>....-..-..
+</td>
+              <td>Make sure that the requested project name does not already exist and
+check www.nameprotect.com to be sure that the name is not already
+trademarked for an existing software product.
+</td>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>If request from an existing Apache project to adopt an external
+package, then ask the Apache project for the cvs module and mail
+address names.
+</td>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>If request from outside Apache to enter an existing Apache project,
+then post a message to that project for them to decide on acceptance.
+</td>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>If request from anywhere to become a stand-alone PMC, then assess the
+fit with the ASF, and create the lists and modules under the
+incubator address/module names if accepted.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date
+</th>
+              <th>item
+</th>
+            </tr>
+            <tr>
+              <td>2003-10-03
+</td>
+              <td>Identify all the Mentors for the incubation, by asking all that can
+be Mentors.
+</td>
+            </tr>
+            <tr>
+              <td>2003-10-03
+</td>
+              <td>Subscribe all Mentors on the pmc and general lists.
+</td>
+            </tr>
+            <tr>
+              <td>2003-10-03
+</td>
+              <td>Give all Mentors access to all incubator CVS modules. (to be done by
+PMC chair)
+</td>
+            </tr>
+            <tr>
+              <td>2003-10-03
+</td>
+              <td>Tell Mentors to track progress in the file
+'incubator/projects/{project.name}.cwiki'
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date
+</th>
+              <th>item
+</th>
+            </tr>
+            <tr>
+              <td>2004-05-03
+</td>
+              <td>Check and make sure that the papers that transfer rights to the ASF
+been received. It is only necessary to transfer rights for the
+package, the core code, and any new code produced by the project.
+</td>
+            </tr>
+            <tr>
+              <td>2004-05-03
+</td>
+              <td>Check and make sure that the files that have been donated have been
+updated to reflect the new ASF copyright.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date
+</th>
+              <th>item
+</th>
+            </tr>
+            <tr>
+              <td>2004-04-13
+</td>
+              <td>Check and make sure that for all code included with the distribution
+that is not under the Apache license, e have the right to combine
+with Apache-licensed code and redistribute.
+</td>
+            </tr>
+            <tr>
+              <td>2004-04-13
+</td>
+              <td>Check and make sure that all source code distributed by the project
+is covered by one or more of the following approved licenses: Apache,
+BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+the same terms.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers+%21'>Establish a list of active committers !
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date
+</th>
+              <th>item
+</th>
+            </tr>
+            <tr>
+              <td>2004-01-21
+</td>
+              <td>Check that all active committers have submitted a contributors
+agreement.
+</td>
+            </tr>
+            <tr>
+              <td>2004-02-13
+</td>
+              <td>Add all active committers in the STATUS file.
+</td>
+            </tr>
+            <tr>
+              <td>2004-01-21
+</td>
+              <td>Ask root for the creation of committers' accounts on cvs.apache.org.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure+%21'>Infrastructure !
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date
+</th>
+              <th>item
+</th>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>Ask infrastructure to create source repository modules and grant the
+committers karma.
+</td>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>Ask infrastructure to set up and archive Mailing lists.
+</td>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>Decide about and then ask infrastructure to setup an issuetracking
+system (Bugzilla, Scarab, Jira).
+</td>
+            </tr>
+            <tr>
+              <td>2003-09-13
+</td>
+              <td>Migrate the project to our infrastructure.
+</td>
+            </tr>
+          </table>
+</div>
+</div>
+<h3 id='Incubation'>Incubation
+</h3>
+<div class="section-content">
+<h4 id='Collaborative+Development'>Collaborative Development
+</h4>
+<div class="section-content">
+<ul>
+            <li>Have all of the active long-term volunteers been identified and
+acknowledged as committers on the project?
+</li>
+          </ul>
+<p>Yes.
+</p>
+<ul>
+            <li>Are there three or more independent committers? (The legal definition
+of independent is long and boring, but basically it means that there
+is no binding relationship between the individuals, such as a shared
+employer, that is capable of overriding their free will as
+individuals, directly or indirectly.)
+</li>
+          </ul>
+<p>Yes.
+</p>
+<ul>
+            <li>Are project decisions being made in public by the committers?
+</li>
+          </ul>
+<p>Yes.
+</p>
+<ul>
+            <li>Are the decision-making guidelines published and agreed to by all of
+the committers?
+</li>
+          </ul>
+<p>Yes.
+</p>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness
+</h4>
+<div class="section-content">
+<ul>
+            <li>Are all licensing, trademark, credit issues being taken care of and
+acknowleged by all committers?
+</li>
+          </ul>
+<p>Yes.
+</p>
+</div>
+</div>
+<h3 id='Exit'>Exit
+</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.
+</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project
+</h4>
+<div class="section-content">
+<ul>
+            <li>If graduating to an existing PMC, has the PMC voted to accept it?
+</li>
+          </ul>
+<p>Yes. The Apache Portals Project PMC has voted to unanimously accept
+Pluto into the Apache Portals project.
+</p>
+<ul>
+            <li>If graduating to a new PMC, has the board voted to accept it?
+</li>
+          </ul>
+<p>See above.
+</p>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off
+</h4>
+<div class="section-content">
+<ul>
+            <li>Has the Incubator decided that the project has accomplished all of
+the above tasks?
+</li>
+          </ul>
+<p>Yes. On May 15, 2004, The Incubator PMC released Pluto to the Portals
+project. See thread at:
+</p>
+<p>http://mail-archives.apache.org/eyebrowse/BrowseList?listName=general@
+ncubator.apache.org&amp;by=thread&amp;from=751960
+</p>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

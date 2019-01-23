@@ -1,0 +1,980 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Apache stdcxx Incubation Status - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Apache+stdcxx+Incubation+Status'><img src="../images/redarrow.gif" />Apache stdcxx Incubation Status</h2>
+<div class="section-content">
+<div class="section">
+        <p>This page tracks the incubation status of the stdcxx project.</p>
+      </div>
+<p><span class="graduated">The stdcxx project graduated on 2007-11-14</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<div class="section">
+        <p>
+
+          The  Apache  C++  Standard  Library project  is  a  complete
+          implementation of the ISO/IEC 14882 C++ Standard Library.
+
+        </p>
+        <p>
+
+          The    most    distinguishing    characteristic   of    this
+          implementation   of  the   C++  Standard   Library   is  its
+          portability to  a large  number of C++  compilers, operating
+          systems, and hardware architectures.
+
+        </p>
+      </div>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<div class="section">
+        <ul>
+          <li>
+
+            11/14/2007 STDCXX graduates into a Top Level Project.
+
+          </li>
+          <li>
+
+            10/29/2007 With
+            the             <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/200710.mbox/%3c4725F2BE.8070500@roguewave.com%3e">approval</a>
+            of the Incubator PMC, STDCXX 4.2.0 is released.
+
+          </li>
+          <li>
+
+            9/5/2007 STDCXX community adds two new committers, Eric (Brad) Lemings and Mark Brown.
+
+          </li>
+          <li>
+
+            3/26/2007 Tim Triemstra joins the PPMC.
+
+          </li>
+          <li>
+
+            2/13/2007 Andrew Black and Farid Zaripov join the PPMC.
+
+          </li>
+          <li>
+
+            10/11/2006 STDCXX community adds a new committer, Andrew Black.
+
+          </li>
+          <li>
+
+            8/10/2006 STDCXX community adds a new committer, Farid Zaripov.
+
+          </li>
+          <li>
+
+            1/30/2006              With             the             <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/200601.mbox/%3c43DEC03F.3030601@roguewave.com%3e">approval</a>
+            of the Incubator PMC STDCXX 4.1.3 was released.
+
+          </li>
+          <li>
+
+            1/13/2006 STDCXX community adds a new committer, Anton Pevtsov.
+
+          </li>
+          <li>
+
+            11/25/2005 Windows  configuration and build infarstructure
+            <a href="http://svn.apache.org/viewcvs.cgi?rev=349027&amp;view=rev">committed</a>
+            to Subversion                                              (<a href="http://issues.apache.org/jira/browse/stdcxx-5">STDCXX-5</a>).
+
+          </li>
+          <li>
+
+            9/16/2005             The             first             <a href="http://cvs.apache.org/dist/incubator/stdcxx/snapshots/stdcxx-incubating-4.1.2-2005-07-19.tar.gz">snapshot</a>
+            of stdcxx 4.1.2 has been published.
+
+          </li>
+          <li>
+
+            9/5/2005      The      test      suite      driver      <a href="http://svn.apache.org/viewcvs.cgi/incubator/stdcxx/trunk/tests/?rev=278837">committed</a>
+            to Subversion                                             (<a href="http://issues.apache.org/jira/browse/stdcxx-3">STDCXX-3</a>).
+
+          </li>
+          <li>
+
+            9/1/2005                        A                       <a href="http://mail-archives.apache.org/mod_mbox/incubator-stdcxx-dev/200508.mbox/%3c430E39CD.7040501@roguewave.com%3e">proposal</a>to
+            publish the  first stdcxx snapshot on the  stdcxx Web site
+            has         passed         the        community         <a href="http://mail-archives.apache.org/mod_mbox/incubator-stdcxx-dev/200509.mbox/%3c4317A0AE.9040204@roguewave.com%3e">vote</a>.
+
+          </li>
+          <li>
+
+            8/28/2005   The  process   of  downloading   stdcxx  files
+            documented              on              the             <a href="http://incubator.apache.org/stdcxx/download.html">Download</a>
+            page.                                                   (<a href="http://issues.apache.org/jira/browse/stdcxx-17">STDCXX-17</a>).
+
+          </li>
+
+          <li>
+
+            8/01/2005 The  process of reporting bugs in  the stdcxx <a href="http://issues.apache.org/jira/browse/stdcxx">bug
+            tracking  database</a>documented and  published on  the <a href="http://incubator.apache.org/stdcxx/bugs.html">Bugs</a>
+            page. (<a href="http://issues.apache.org/jira/browse/stdcxx-9">STDCXX-9</a>.)
+
+          </li>
+          <li>
+
+            7/19/2005                     stdcxx                    <a href="http://incubator.apache.org/stdcxx">project
+            page</a> and                                             <a href="http://incubator.apache.org/projects/stdcxx.html">status
+            page</a> committed to subversion.
+
+          </li>
+          <li>
+
+            7/18/2005  stdcxx sources  and documentation  moved  to <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/">subversion</a>.
+
+          </li>
+          <li>
+
+            5/19/2005            stdcxx           project           <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/200505.mbox/%3cC398496DF88AD711908C00065BEEE32C01473785@dfwmail.quovadx.com%3e">accepted</a>
+            for incubation.
+
+          </li>
+          <li>
+
+            5/13/2005            stdcxx           project           <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/200505.mbox/%3cC398496DF88AD711908C00065BEEE32C01473747@dfwmail.quovadx.com%3e">proposal</a>.
+
+          </li>
+        </ul>
+      </div>
+</div>
+        <h2 id='Project+Info'><img src="../images/redarrow.gif" />Project Info</h2>
+<div class="section-content">
+<div class="section">
+        <table>
+          <tr>
+            <th>item</th>
+            <th>id</th>
+            <th>reference</th>
+          </tr>
+          <tr>
+            <td>Web site</td>
+            <td>www</td>
+            <td>
+              <a href="http://incubator.apache.org/stdcxx/">
+                http://incubator.apache.org/stdcxx/</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>wiki</td>
+            <td>Wiki not requested.</td>
+          </tr>
+          <tr>
+            <td>Mailing lists</td>
+            <td>dev</td>
+            <td>
+              <a href="mailto:stdcxx-dev@incubator.apache.org">stdcxx-dev@incubator.apache.org</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>user</td>
+            <td>
+              <a href="mailto:stdcxx-user@incubator.apache.org">
+                stdcxx-user@incubator.apache.org</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>svn</td>
+            <td>
+              <a href="mailto:stdcxx-commits@incubator.apache.org">
+                stdcxx-commits@incubator.apache.org</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>ppmc</td>
+            <td>
+              <a href="mailto:stdcxx-ppmc@incubator.apache.org">
+                stdcxx-ppmc@incubator.apache.org</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Moderators</td>
+            <td>sebor</td>
+            <td>
+              <a href="mailto:sebor_at_apache.org">Martin Sebor</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>wrowe</td>
+            <td>
+              <a href="mailto:wrowe_at_rowe-clan.net">
+                William A. Rowe, Jr.</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Bug tracking</td>
+            <td>jira</td>
+            <td>
+              <a href="http://issues.apache.org/jira/browse/stdcxx">
+                http://issues.apache.org/jira/browse/stdcxx</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Source code</td>
+            <td>svn</td>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/">
+                http://svn.apache.org/repos/asf/incubator/stdcxx/</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Sponsor</td>
+            <td />
+            <td>
+              <a href="mailto:pmc_at_incubator.apache.org">
+                Incubator PMC</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Mentors</td>
+            <td>jerenkrantz</td>
+            <td>
+              <a href="mailto:justin_at_erenkrantz.com">
+                Justin Erenkrantz</a> (See this <a href="http://www.mail-archive.com/general@incubator.apache.org/msg04836.html">post</a>.)
+
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>ben</td>
+            <td>
+              <a href="mailto:ben_at_algroup.co.uk">
+                Ben Laurie</a> (See this <a href="http://www.mail-archive.com/general@incubator.apache.org/msg04844.html">post</a>.)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>wrowe</td>
+            <td>
+              <a href="mailto:wrowe_at_rowe-clan.net">
+                William A. Rowe, Jr.</a> (See this <a href="http://www.mail-archive.com/general@incubator.apache.org/msg04972.html">post</a>.)
+            </td>
+          </tr>
+          <tr>
+            <td id="committers">Committers</td>
+            <td>ablack</td>
+            <td>
+              <a href="mailto:ablack@roguewave.com">
+                Andrew Black</a> (Rogue Wave)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>hbuelow</td>
+            <td>
+              <a href="mailto:heidi.buelow@apache.org">
+                Heidi Buelow</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>ldiduck</td>
+            <td>
+              <a href="mailto:lancediduck@nyc.rr.com">
+                Lance Diduck</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>jhollis</td>
+            <td>
+              <a href="mailto:johnh@roguewave.com">John Hollis</a>
+              (Rogue Wave)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>ajindal</td>
+            <td>
+              <a href="mailto:ajindal@apache.org">Amit Jindal</a>
+              (self)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>lnicoara</td>
+            <td>
+              <a href="mailto:nicoara@roguewave.com">Liviu Nicoara</a>
+              (Rogue Wave)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>rpalepu</td>
+            <td>
+              <a href="mailto:palepu@roguewave.com">Ravi Palepu</a>
+              (Rogue Wave)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>antonp</td>
+            <td>
+              <a href="mailto:antonp@moscow.vdiweb.com">Anton Pevtsov</a>
+              (VDI)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>sebor</td>
+            <td>
+              <a href="mailto:sebor@roguewave.com">Martin Sebor</a>
+              (Rogue Wave)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>ttriemstra</td>
+            <td>
+              <a href="mailto:tim.triemstra@gmail.com">Tim Triemstra</a>
+              (Apple)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>faridz</td>
+            <td>
+              <a href="mailto:farid_zaripov@epam.com">Farid Zaripov</a>
+              (EPAM)
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>mbrown</td>
+            <td>
+              <a href="mailto:marg.g.brown@gmail.com">Mark Brown</a>
+            </td>
+          </tr>
+          <tr>
+            <td />
+            <td>elemings</td>
+            <td>
+              <a href="mailto:lemings@roguewave.com">Eric Lemings</a>
+              (Rogue Wave)
+            </td>
+          </tr>
+        </table>
+      </div>
+</div>
+        <h2 id='Incubation+Status+Reports'><img src="../images/redarrow.gif" />Incubation Status Reports</h2>
+<div class="section-content">
+<div class="section">
+        <table>
+          <tr>
+            <th>file</th>
+            <th>note</th>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2007-11.text">2007-11.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in November 2007.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2007-08.text">2007-08.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in August 2007.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2007-05.text">2007-05.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in May 2007.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2007-02.text">2007-02.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in February 2007.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2006-11.text">2006-11.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in November 2006.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2006-08.text">2006-08.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in August 2006.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2006-04.text">2006-04.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in April 2006.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2005-12.text">2005-12.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in December 2005.</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/site/status/2005-09.text">2005-09.text</a>
+            </td>
+            <td>Status report for the calendar quarter ending in September 2005.</td>
+          </tr>
+        </table>
+      </div>
+</div>
+        <h2 id='Incubation+Work+Items'><img src="../images/redarrow.gif" />Incubation Work Items</h2>
+<div class="section-content">
+<p />
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p />
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>
+
+                Make  sure that  the requested  project name  does not
+                already        exist        and
+                check        <a href="http://www.nameprotect.com">NameProtect</a>
+                to be sure that  the name is not already  trademarked
+                for an existing software product.
+
+              </td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>
+
+                If request from an existing Apache project to adopt an
+                external package, then ask  the Apache project for the
+                cvs module and mail address names.
+
+              </td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>
+
+                If request  from outside  Apache to enter  an existing
+                Apache project,  then post  a message to  that project
+                for them to decide on acceptance.
+
+              </td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>
+
+                If request from anywhere  to become a stand-alone PMC,
+                then assess the fit with the ASF, and create the lists
+                and modules  under the incubator  address/module names
+                if accepted.
+
+              </td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>
+
+                Identify all the Mentors for the incubation, by asking
+                all that can be Mentors.
+
+              </td>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>Subscribe all Mentors on the pmc and general lists.</td>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>
+
+                Give all  Mentors access to all  incubator SVN modules
+                (to be done by PMC chair).
+
+              </td>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>Tell Mentors to track progress in the status file.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>
+
+                Check  and make  sure  that the  papers that  transfer
+                rights to the ASF  been received. It is only necessary
+                to transfer rights for the package, the core code, and
+                any new code produced by the project.
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/18/2005 - 6/23/2007</td>
+              <td>
+
+                Check  and make  sure that  the files  that  have been
+                donated  have  been updated  to  reflect  the new  ASF
+                copyright (<a href="https://issues.apache.org/jira/browse/STDCXX-457">STDCXX-457</a>).
+
+              </td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>
+
+                Check and  make sure that  for all code  included with
+                the distribution that is not under the Apache license,
+                has the right to combine with Apache-licensed code and
+                redistribute.
+
+              </td>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>
+
+                Check and  make sure that all  source code distributed
+                by  the project  is  covered  by one  or  more of  the
+                following  approved licenses:  Apache,  BSD, Artistic,
+                MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+                the same terms.
+
+              </td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>7/11/2005</td>
+              <td>
+
+                Check  that  all active  committers  have submitted  a
+                contributors   agreement   (see   the   list   of   <a href="#committers">committers</a>above     for     any
+                exceptions).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/19/2005</td>
+              <td>Add all active committers to the status page.</td>
+            </tr>
+            <tr>
+              <td>7/16/2005</td>
+              <td>
+
+                Ask   root   to   create   committers'   accounts   on
+                cvs.apache.org                                      (<a href="http://issues.apache.org/jira/browse/INFRA-440">INFRA-440</a>).
+
+              </td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>7/16/2005</td>
+              <td>
+
+                Ask infrastructure to create source repository modules
+                and     grant     the     committers     karma     (<a href="http://issues.apache.org/jira/browse/INFRA-441">INFRA-441</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/13/2005</td>
+              <td>
+
+                Ask infrastructure to set up and archive mailing lists
+                (<a href="http://issues.apache.org/jira/browse/INFRA-339">INFRA-339</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/16/2005</td>
+              <td>
+
+                Decide about  and then ask infrastructure  to setup an
+                issue           tracking           system          (<a href="http://issues.apache.org/jira/browse/INFRA-438">INFRA-438</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>DONE</td>
+              <td>Migrate the project to our infrastructure.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Project-specific'>Project-specific</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>8/2/2005 - 8/3/2005</td>
+              <td>
+
+                Publish                      a                      <a href="http://incubator.apache.org/stdcxx/bugs.html">page</a>on
+                how  to file  issues against  the project  and  how to
+                submit                   patches                   (<a href="http://issues.apache.org/jira/browse/STDCXX-9">STDCXX-9</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - 7/31/2005</td>
+              <td>
+
+                Improve                     the                     <a href="http://incubator.apache.org/stdcxx/">project
+                page</a> (<a href="http://issues.apache.org/jira/browse/STDCXX-6">STDCXX-6</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - 1/18/2006</td>
+              <td>
+
+                Make                       the                      <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/trunk/doc/stdlibref/">Class
+                Reference</a> and                                    <a href="http://svn.apache.org/repos/asf/incubator/stdcxx/trunk/doc/stdlibug/">Users
+                Guide</a> available online, from the project  page (<a href="http://issues.apache.org/jira/browse/STDCXX-12">STDCXX-12</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - 9/16/2005</td>
+              <td>
+
+                Make a tarball of stable project sources available for
+                download from the project site.
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - ...</td>
+              <td>
+
+                Document  the  design  and development  practices  and
+                publish them on the project site.
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - ...</td>
+              <td>
+
+                Put together a list of  things to do and publish it on
+                the project site.
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - 9/5/2005</td>
+              <td>
+
+                Check      in       the      test      driver      (<a href="http://issues.apache.org/jira/browse/stdcxx-3">STDCXX-3</a>).
+
+              </td>
+            </tr>
+            <tr>
+              <td>7/25/2005 - ...</td>
+              <td>
+
+                Check    in    the     project    test    suite    (<a href="http://issues.apache.org/jira/browse/stdcxx-4">STDCXX-4</a>).
+
+              </td>
+            </tr>
+          </table>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>
+
+          These action items  have to be checked for  during the whole
+          incubation process.
+
+        </p>
+<p>
+          <em>
+
+            These  items   are  not  to  be  signed   as  done  during
+            incubation, as they may change during incubation.
+
+          </em>
+          <em>
+
+            They are  to be  looked into and  described in  the status
+            reports  and  completed  in  the  request  for  incubation
+            signoff.
+
+          </em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+            <li>
+
+              Have  all  of   the  active  long-term  volunteers  been
+              identified  and   acknowledged  as  committers   on  the
+              project?
+
+            </li>
+            <li>
+
+              Are  there three  or more  independent  committers? (The
+              legal definition of independent  is long and boring, but
+              basically it means that there is no binding relationship
+              between the individuals, such as a shared employer, that
+              is capable of overriding their free will as individuals,
+              directly or indirectly.)
+
+            </li>
+            <li>
+
+              Are  project  decisions  being  made in  public  by  the
+              committers?
+
+            </li>
+            <li>
+
+              Are the decision-making  guidelines published and agreed
+              to by all of the committers?
+
+            </li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+            <li>
+
+              Are all licensing,  trademark, credit issues being taken
+              care of and acknowleged by all committers?
+
+            </li>
+          </ul>
+</div>
+<h4 id='Project-specific-N10439'>Project-specific</h4>
+<div class="section-content">
+<p>
+            <em>No project-specific tasks.</em>
+          </p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>
+            Organizational acceptance of responsibility for the project
+          </h4>
+<div class="section-content">
+<ul>
+            <li>
+
+              If graduating to  an existing PMC, has the  PMC voted to
+              accept it? N/A.
+
+            </li>
+            <li>
+
+              If  graduating to  a new  PMC,  has the  board voted  to
+              accept it? Yes. See this <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/200711.mbox/%3c473C8F92.4060805@rowe-clan.net%3e">post</a>.
+
+            </li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+            <li>
+
+              Has   the  Incubator  decided   that  the   project  has
+              accomplished all of the above tasks? Yes. See the <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/200710.mbox/%3c13246183.post@talk.nabble.com%3e">VOTE RESULT</a>.
+
+            </li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

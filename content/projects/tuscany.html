@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Tuscany Incubation Status - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Tuscany+Project+Incubation+Status'><img src="../images/redarrow.gif" />Tuscany Project Incubation Status</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more general project status, look on the project website.</p>
+<p><span class="graduated">The Tuscany project graduated on 2008-05-21</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<p>Tuscany provides multiple language implementations of the Service Component Architecture (SCA) specifications and related technologies such as SDO.</p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<ul>
+                <li>2008-05-21 Tuscany graduates to Top Level Project, <a href="http://tuscany.apache.org">http://tuscany.apache.org</a>.</li> 
+                <li>2008-03-26 Vote to add Giorgio Zoppi as Tuscany committer</li>
+                <li>2008-03-06 Andrew Borley resigned as Tuscany PPMC member</li>
+                <li>2008-02-10 Vote to add Mark Combellack as Tuscany PPMC Member</li>
+                <li>2008-02-05 Java SCA 1.1 released</li>
+                <li>2007-11-19 Vote to add Rajini Sivaram as Tuscany committer</li>
+                <li>2007-11-07 Java SCA 1.0.1 released</li>                
+                <li>2007-11-01 Vote to add Mark Combellack as Tuscany committer</li>
+                <li>2007-10-21 Vote to add Michael Yoder as Tuscany committer</li>
+                <li>2007-10-08 Vote to add Amita Vadhavkar as a new committer</li>
+                <li>2007-10-06 Java DAS Beta2 released</li>
+                <li>2007-09-24 Java SCA 1.0 released</li>
+                <li>2007-09-19 Vote to add Simon Nash as a new committer</li>
+                <li>2007-09-11 Dims steps down as mentor, Paul Fremantle and Matthieu Riou take his place</li>
+                <li>2007-08-31 Java SCA 0.99 released</li>
+                <li>2007-08-22 Java DAS Beta1 released</li>
+                <li>2007-08-21 Brady Johnson voted as committer</li>
+                <li>2007-08-09 Java SDO 1.0 released</li>
+                <li>2007-07-14 Tuscany PPMC formally created</li>
+                <li>2007-07-23 Java SCA 0.91 release</li>
+                <li>2007-07-12 Vote to add Fuhwei Lwo as a new committer</li>
+                <li>2007-06-05 Java SCA 0.90 release</li>
+                <li>2007-05-16 Java SDO Beta 1 release</li>
+                <li>2007-05-01 Vote to add Andy Grove as a new committer</li>
+                <li>2007-04-03 Vote to add Adriano Crestani as a new committer</li>
+                <li>2007-02-09 CCLA sent for IBM's contribution of EJB Binding</li>
+                <li>2007-03-14 Change name of Tuscany SCA for C++ project to Tuscany SCA Native</li>
+                <li>2007-01-22 Vote to add Simon Laws as a new committer</li>
+                <li>2006-12-24 Java SCA Milestone 2 release</li>
+                <li>2006-11-20 Java DAS Milestone 2 release</li>
+                <li>2006-11-15 Vote to add Geoffrey Winn as a new committer</li>
+                <li>2006-11-14 Java SDO Milestone 2 release</li>
+                <li>2006-11-10 Vote to add Luciano Resende as a new commiter</li>
+                <li>2006-11-07 Vote to add Rajith Attapattu</li>
+                <li>2006-11-03 C++ Milestone 2 release</li>
+                <li>2006-10-19 Voted to release pom and buildtools for Java M2 release</li>
+                <li>2006-09-29 Vote to add Ignacio Silva-Lepe as a new committer</li>
+                <li>2006-09-18 Vote to add Venkata Krishnan as a new committer</li>
+                <li>2006-08-10 Vote to add Andrew Borley as a new committer</li>
+                <li>2006-08-07 Vote to add Meeraj Kunnumpurath as a new committer</li>
+                <li>2006-08-07 Vote to add Kelvin Goodson as a new committer</li>
+                <li>2006-08-06 Vote to add Brent Daniel as a new committer</li>
+                <li>2006-08-04 Vote to add Raymond Feng as a new committer</li>
+                <li>2006-08-01 C++ Milestone 1 release</li>
+                <li>2006-06-07 Java Milestone 1 release</li>
+                <li>2006-05-02 Vote to add Dan Kulp as a new committer</li>
+                <li>2006-03-01 Vote to add Ant Elder as a new committer</li>
+                <li>2006-01-05 Initial code contributions committed to Apache SVN</li>
+                <li>2005-12-28 CCLAs sent for inital code contributions</li>
+                <li>2005-12-07 Project proposal accepted by Web Services PMC</li>
+                <li>2005-11-30 Project proposal submitted to Incubator</li>
+            </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+                <tr>
+                    <td>Project Status File</td>
+                    <td>
+                        <a href="http://svn.apache.org/repos/asf/incubator/tuscany/STATUS">http://svn.apache.org/repos/asf/incubator/tuscany/STATUS</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Project Web Site</td>
+                    <td>
+                        <a href="http://incubator.apache.org/tuscany/">http://incubator.apache.org/tuscany/</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>User Mailing List</td>
+                    <td>
+                        <a href="mailto:tuscany-user@ws.apache.org">tuscany-user@ws.apache.org</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Developer Mailing List</td>
+                    <td>
+                        <a href="mailto:tuscany-dev@ws.apache.org">tuscany-dev@ws.apache.org</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Commits Mailing List</td>
+                    <td>
+                        <a href="mailto:tuscany-commits@ws.apache.org">tuscany-commits@ws.apache.org</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Source Code</td>
+                    <td>
+                        <a href="http://svn.apache.org/repos/asf/incubator/tuscany/">http://svn.apache.org/repos/asf/incubator/tuscany/</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Issue Tracking</td>
+                    <td>
+                        <a href="http://issues.apache.org/jira/browse/TUSCANY">http://issues.apache.org/jira/browse/TUSCANY</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mentors</td>
+                    <td>Geir Magnusson Jr. (geirm)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Sam Ruby (rubys)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Paul Fremantle (pzf)</td>
+                </tr>                
+                <tr>
+                    <td>.</td>
+                    <td>Matthieu Riou (mriou)</td>
+                </tr>                
+                <tr>
+                    <td>Committers</td>
+                    <td>Adriano Crestani (adrianocrestani)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Amita Vadhavkar (amita)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Andrew Borley (ajborley)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Andy Grove (agrove)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Ant Elder (antelder)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Brady Johnson (bjohnson)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Brent Daniel (bdaniel)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Dan Kulp (dkulp)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Ed Slattery (edslattery)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Frank Budinsky (frankb)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Fuhwei Lwo (fuhwei)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Geoffrey Winn (gwinn)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Ignacio Silva-Lepe (isilval)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Jean-Sebastien Delfino (jsdelfino)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Jeremy Boynes (jboynes)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Jim Marino (jmarino)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Kelvin Goodson (kelvingoodson)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Ken Tam (kentam)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Kevin Williams (kwilliams)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Luciano Resende (lresende)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Mark Combellack (mcombellack)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Michael Yoder (myoder)</td>
+                </tr>                
+                <tr>
+                    <td>.</td>
+                    <td>Mike Edwards (edwardsmj)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Meeraj Kunnumpurath (meerajk)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Rajini Sivaram (???)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Rajith Attapattu (rajith)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Raymond Feng (rfeng)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Pete Robbins (robbinspg)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Rick Rineholt (rineholt)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Simon Laws (slaws)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Simon Nash (nash)</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>Venkata Krishnan (svkrish)</td>
+                </tr>
+            </table>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports</h2>
+<div class="section-content">
+<ul>
+                <li><a href="http://wiki.apache.org/incubator/August2007#head-0d602b01fade03dacbcdd407ed427e3f9101c19f">August 2007</a></li>
+                <li><a href="http://wiki.apache.org/incubator/May2007#head-a981968c5ee69603892f993ed6d2e29174feb2c2">May 2007</a></li>
+                <li><a href="http://wiki.apache.org/incubator/February2007#head-511146ca66a2917ccd9019f82e34237e4727f2ea">February 2007</a></li>
+                <li><a href="http://wiki.apache.org/incubator/November2006#head-29fe85b3c573c14275757ef1a791f2860309b289">November 2006</a></li>
+                <li><a href="http://wiki.apache.org/incubator/August2006#head-eab0cfa692f03369616d90b6d662ff51d3d04256">August 2006</a></li>
+                <li><a href="http://wiki.apache.org/incubator/May2006#head-2a8b31759889d614aaff621a666a1809160f87eb">May 2006</a></li>
+            </ul>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at Apache.</p>
+<p>
+                    <em>Item assignment is shown by the Apache id.</em>
+                    <em>Completed tasks are shown by the completion date (YYYY-MM-dd).</em>
+                </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2005-11-30</td>
+                            <td>Make sure that the requested project name does not already exist and check www.nameprotect.com to be sure that the name is not already
+                                trademarked for an existing software product.</td>
+                        </tr>
+                        <tr>
+                            <td>N/A</td>
+                            <td>If request from an existing Apache project to adopt an external package, then ask the Apache project for the cvs module and mail address names.</td>
+                        </tr>
+                        <tr>
+                            <td>2005-12-07</td>
+                            <td>If request from outside Apache to enter an existing Apache project, then post a message to that project for them to decide on acceptance.</td>
+                        </tr>
+                        <tr>
+                            <td>N/A</td>
+                            <td>If request from anywhere to become a stand-alone PMC, then assess the fit with the ASF, and create the lists and modules under the incubator address/module names if accepted.</td>
+                        </tr>
+                    </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2005-11-30</td>
+                            <td>Identify all the Mentors for the incubation, by asking all that can be Mentors.</td>
+                        </tr>
+                        <tr>
+                            <td>2005-11-30</td>
+                            <td>Subscribe all Mentors on the pmc and general lists.</td>
+                        </tr>
+                        <tr>
+                            <td>2005-11-30</td>
+                            <td>Give all Mentors access to all incubator CVS modules. (to be done by PMC chair)</td>
+                        </tr>
+                        <tr>
+                            <td>2005-11-30</td>
+                            <td>Tell Mentors to track progress in the file 'incubator/projects/tuscany.html'</td>
+                        </tr>
+                    </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2005-12-28</td>
+                            <td>Check and make sure that the papers that transfer rights to the ASF been received. It is only necessary to transfer rights for the package, the core code, and any new code produced by the project.</td>
+                        </tr>
+                        <tr>
+                            <td>2006-01-05</td>
+                            <td>Check and make sure that the files that have been donated have been updated to reflect the new ASF copyright.</td>
+                        </tr>
+                    </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2006-08-01</td>
+                            <td>Check and make sure that for all code included with the distribution that is not under the Apache license, e have the right to combine with Apache-licensed code and redistribute.</td>
+                        </tr>
+                        <tr>
+                            <td>2006-08-01</td>
+                            <td>Check and make sure that all source code distributed by the project is covered by one or more of the following approved licenses: Apache, BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially the same terms.</td>
+                        </tr>
+                    </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers+%21'>Establish a list of active committers !</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2006-01-05</td>
+                            <td>Check that all active committers have submitted a contributors agreement.</td>
+                        </tr>
+                        <tr>
+                            <td>2006-05-08</td>
+                            <td>Add all active committers in the STATUS file.</td>
+                        </tr>
+                        <tr>
+                            <td>2006-01-05</td>
+                            <td>Ask root for the creation of committers' accounts on cvs.apache.org.</td>
+                        </tr>
+                    </table>
+</div>
+<h4 id='Infrastructure+%21'>Infrastructure !</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+                        <tr>
+                            <th>date</th>
+                            <th>item</th>
+                        </tr>
+                        <tr>
+                            <td>2005-12-13</td>
+                            <td>Ask infrastructure to create source repository modules and grant the committers karma.</td>
+                        </tr>
+                        <tr>
+                            <td>2005-12-13</td>
+                            <td>Ask infrastructure to set up and archive Mailing lists.</td>
+                        </tr>
+                        <tr>
+                            <td>2005-12-13</td>
+                            <td>Decide about and then ask infrastructure to setup an issuetracking system (Bugzilla, Scarab, Jira).</td>
+                        </tr>
+                        <tr>
+                            <td>2006-01-05</td>
+                            <td>Migrate the project to our infrastructure.</td>
+                        </tr>
+                    </table>
+</div>
+<h4 id='Project+specific'>Project specific</h4>
+<div class="section-content">
+<p>
+                        <em>Add project specific tasks here.</em>
+                    </p>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole incubation process.</p>
+<p>
+                    <em>These items are not to be signed as done during incubation, as they may change during incubation.</em>
+                    <em>They are to be looked into and described in the status reports and completed in the request for incubation signoff.</em>
+                </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+                        <li>Have all of the active long-term volunteers been identified and acknowledged as committers on the project?</li>
+                        <li>Are there three or more independent committers? (The legal definition of independent is long and boring, but basically it means that there is no binding relationship between the individuals, such as a shared employer, that is capable of overriding their free will as individuals, directly or indirectly.)</li>
+                        <li>Are project decisions being made in public by the committers?</li>
+                        <li>Are the decision-making guidelines published and agreed to by all of the committers?</li>
+                    </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+                        <li>Are all licensing, trademark, credit issues being taken care of and acknowleged by all committers?</li>
+                    </ul>
+</div>
+<h4 id='Project+Specific'>Project Specific</h4>
+<div class="section-content">
+<p>
+                        <em>Add project specific tasks here.</em>
+                    </p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p>
+                    <em>Things to check for before voting the project out.</em>
+                </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project</h4>
+<div class="section-content">
+<ul>
+                        <li>If graduating to an existing PMC, has the PMC voted to accept it?</li>
+                        <li>If graduating to a new PMC, has the board voted to accept it?</li>
+                    </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+                        <li>Has the Incubator decided that the project has accomplished all of the above tasks?</li>
+                    </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

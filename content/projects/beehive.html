@@ -1,0 +1,958 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Apache Beehive Incubation Status
+ - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Apache+Beehive+Project+Incubation+Status'><img src="../images/redarrow.gif" />Apache Beehive Project Incubation Status
+</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more general
+project status, look on the
+
+        <a href="http://incubator.apache.org/beehive">project website
+</a>.
+
+      </p>
+<p><span class="graduated">The Beehive project graduated on 2005-07-18</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description
+</h2>
+<div class="section-content">
+<p>The Beehive project is an extensible Java application framework with
+an integrated metadata-driven programming model for web services, web
+applications, and resource access. The framework leverages the latest
+innovations in the forthcoming JDK 1.5, particularly JSR 175 metadata
+annotations. It currently builds on key Apache projects such as
+Tomcat, Struts, MyFaces, and Axis.
+</p>
+<p>While this proposal focuses on a framework consisting of these three
+subprojects, it is expected that the Apache community will come up
+with additional innovative ideas that will evolve into future
+subprojects. The currently planned components include:
+</p>
+<ul>
+        <li>Controls: The Control architecture is a lightweight component
+framework based upon annotated JavaBeans, exposing a simple and
+consistent client model for accessing a variety of J2EE resource
+types. The framework provides a variety of functions including:
+JavaBean-based client access, configuration through JSR-175 metadata
+and external configuration data, automatic resource management,
+context services, and an extensible authoring model for creating new
+Control types.
+</li>
+        <li>NetUI: NetUI Page Flow is a web application framework based on Apache
+Struts with an easy to use, single-file programming model based on
+JSR-175 metadata. It builds on the core Struts separation of
+model/view/controller elements, and adds features such as automatic
+state management and first-class integration with Controls, XMLBeans,
+and Java Server Faces.
+</li>
+        <li>Metadata for Java Web Services: This component is an implementation
+of the JSR-181 specification and is a key piece of the Beehive
+framework. JSR 181 uses JSR-175 metadata annotations in Java methods
+and classes to easily build Web services.
+</li>
+      </ul>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News
+</h2>
+<div class="section-content">
+<ul>
+        <li>2005-06-06: Beehive releases 1.0 milestone 1
+</li>
+        <li>2005-05-09: Beehive starts building a nightly release available from
+http://cvs.apache.org
+</li>
+        <li>2005-05-09: Beehive completes the addition of the core J2EE system
+controls to Apache SVN
+</li>
+        <li>2005-03-28: Beehive reaches a beta milestone and releases pre-1.0
+beta version
+</li>
+        <li>2005-02-07: Beehive adds Bryan Che as a committer
+</li>
+        <li>2004-12-17: Beehive adds Fumitada Hatori as a committer
+</li>
+        <li>2004-11-12: Beehive reaches an alpha milestone and releases pre-1.0
+alpha version for ApacheCon
+</li>
+        <li>2004-07-16: Beehive source code for NetUI and Controls are now
+available. Web Services code will begin with the Axis 181 codebase
+</li>
+      </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info
+</h2>
+<div class="section-content">
+<ul>
+        <li>Project Web Site:
+
+          <a href="http://incubator.apache.org/beehive">http://incubator.apache.org/beehive
+</a>
+        </li>
+        <li>Mailing List Info:
+
+          <a href="http://incubator.apache.org/beehive/mailinglists.html">http://incubator.apache.org/beehive/mailinglists.html
+</a>
+        </li>
+      </ul>
+<h3 id='Detailed+References%3A'>Detailed References:
+</h3>
+<div class="section-content">
+<table class="colortable" width="100%">
+          <tr>
+            <th>Item
+</th>
+            <th>Type
+</th>
+            <th>Reference
+</th>
+          </tr>
+          <tr>
+            <td>Website
+</td>
+            <td>www
+</td>
+            <td>
+              <a href="http://incubator.apache.org/beehive/">http://incubator.apache.org/beehive/
+</a>
+            </td>
+          </tr>
+          <tr>
+            <td>.
+</td>
+            <td>wiki
+</td>
+            <td>
+              <a href="http://wiki.apache.org/beehive">http://wiki.apache.org/beehive
+</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Mailing list
+</td>
+            <td>dev
+</td>
+            <td>beehive-dev@incubator.apache.org
+</td>
+          </tr>
+          <tr>
+            <td>.
+</td>
+            <td>user
+</td>
+            <td>beehive-user@incubator.apache.org
+</td>
+          </tr>
+          <tr>
+            <td>.
+</td>
+            <td>commits
+</td>
+            <td>beehive-commits@incubator.apache.org
+</td>
+          </tr>
+          <tr>
+            <td>.
+</td>
+            <td>ppmc
+</td>
+            <td>beehive-ppmc@incubator.apache.org
+</td>
+          </tr>
+          <tr>
+            <td>Bug tracking
+</td>
+            <td>.
+</td>
+            <td>JIRA: Beehive (BEEHIVE), Admin: Heather Stephens (heathers)
+</td>
+          </tr>
+          <tr>
+            <td>Source code
+</td>
+            <td>SVN
+</td>
+            <td>
+              <a href="http://svn.apache.org/viewcvs.cgi/incubator/beehive/">http://svn.apache.org/repos/asf/incubator/beehive
+</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Proposal
+</td>
+            <td>wiki
+</td>
+            <td>
+              <a href="http://wiki.apache.org/incubator/BeehiveProposal">http://wiki.apache.org/incubator/BeehiveProposal
+</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Mentor
+</td>
+            <td>craigmcc
+</td>
+            <td>Craig R. McClanahan
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>ias
+</td>
+            <td>Changshin Lee
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>cjudson
+</td>
+            <td>Chris Judson
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>cliffs
+</td>
+            <td>Cliff Schmidt
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>craigc
+</td>
+            <td>Craig Crutcher
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>dolander
+</td>
+            <td>Daryl Olander
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>dims
+</td>
+            <td>Davanum Srinivas
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>davidbau
+</td>
+            <td>David Bau
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>dmkarr
+</td>
+            <td>David M. Karr
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>daveread
+</td>
+            <td>David Read
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>ekoneil
+</td>
+            <td>Eddie O'Neil
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>heathers
+</td>
+            <td>Heather Stephens
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>jongjinchoi
+</td>
+            <td>Jongjin Choi
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>kylem
+</td>
+            <td>Kyle Marvin
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>jsong
+</td>
+            <td>James Song
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>kentam
+</td>
+            <td>Ken Tam
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>mclark
+</td>
+            <td>Michael Clark
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>rich
+</td>
+            <td>Richard Feit
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>rotan
+</td>
+            <td>Rotan Hanrahan
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>scottryan
+</td>
+            <td>Scott Ryan
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>steveh
+</td>
+            <td>Steve Hanson
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>stocco
+</td>
+            <td>Steven Tocco
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>vsalvato
+</td>
+            <td>Vince Salvato
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>mmerz
+</td>
+            <td>Mike Merz
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>hattori
+</td>
+            <td>Fumitada Hattori
+</td>
+          </tr>
+          <tr>
+            <td>Committers
+</td>
+            <td>bryanche
+</td>
+            <td>Brian Che
+</td>
+          </tr>
+        </table>
+</div>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports
+</h2>
+<div class="section-content">
+<p>
+        <strong>2005-04-26
+</strong>
+        <br />
+        <br />Beehive is in the home stretch of its 1.0-level release; we declared
+a beta release in March, and are on track to deliver a 1.0 in the
+late May timeframe. Posting automated daily builds continues to be an
+challenge, but otherwise infrastructure is well in place. At this
+point we are largely focused on fit'n'finish issues in the code, as
+well as a polished set of samples and documentation.
+
+        <br />
+        <br />The Beehive community added Bryan Che as a new committer in February,
+2005. With the beta release and open planning on features for the
+next version, we are seeing increased dev/user list activity -- we
+anticipate that the 1.0 release will be even more significant in
+building the community, and hope to graduate from the Incubator
+sometime soon after the 1.0 release. Certain Beehive components have
+a very clear affinity with the Apache Struts and AXIS projects, and
+those projects may play a role in graduation (pending further
+discussion).
+
+        <br />
+        <br />
+        <strong>2004-10-18
+</strong>
+        <br />
+        <br />
+        <strong>Code &amp; Infrastructure
+</strong>
+      </p>
+<ul>
+        <li>initial code drop was made in mid-July. Ongoing development is very
+active.
+</li>
+        <li>over the last three months, we've set up SVN, JIRA, a website, and a
+wiki.
+</li>
+        <li>docs and tutorials contributions continue - a better Beehive build
+system has been proposed by a contributor. It is currently under
+review by committers.
+</li>
+        <li>Beehive jars were added to java-repository in order to support
+control builders who prefer to use Maven.
+</li>
+      </ul>
+<strong>Legal
+</strong>
+<br />
+<ul>
+        <li>all code shows ASF copyright notice.
+</li>
+        <li>software grant, individual CLAs, and corporate CLAs, are in place for
+all active committers (one initial committer has no account while we
+wait for his employer to complete review of CLA and CCLA)
+</li>
+      </ul>
+<strong>Community
+</strong>
+<br />
+<ul>
+        <li>Web services metadata subproject has participation from key members
+of Axis community; We've accepted Wolfgang (Fumitada Hattori) as a
+new committer on the project in the Web services area
+</li>
+        <li>NetUI and Controls subprojects are still primarily driven by BEA
+employees. We expect this to begin to change after getting out an
+initial release for the community to experiment with and digest.
+</li>
+        <li>We've seen a growth in interest/use on both the user and dev mailing
+lists
+</li>
+        <li>Amazon, XFire and Hibernate pre-1.0 controls built on Beehive have
+been released at Controlhaus.
+</li>
+      </ul>
+<strong>Release Plans
+</strong>
+<br />
+<ul>
+        <li>The community cut a pre-1.0 release for ApacheCon. This release
+followed the incubation release rules requiring a) incubator
+disclaimer in README and from any download links, b) filename to
+include 'incubating', and c) ppmc vote (providing the incubator pmc
+approval since all interested incubator pmc members should be on the
+beehive ppmc mailing list.
+</li>
+        <li>A generic release plan proposed and discussed but needs a final vote.
+Roadmap documents have been posted to make it easier for new
+developers to get the big picture and figure out where they can help.
+</li>
+      </ul>
+<br />
+<br />
+<br />
+<br />
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items
+</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup
+</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at
+Apache.
+</p>
+<p>
+          <em>Item assignment is shown by the Apache id.
+</em>
+          <em>Completed tasks are shown by the completion date (YYYY-MM-dd).
+</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>Date
+</th>
+              <th>Item
+</th>
+            </tr>
+            <tr>
+              <td>DONE - ....-..-..
+</td>
+              <td>Make sure that the requested project name does not already exist and
+check www.nameprotect.com to be sure that the name is not already
+trademarked for an existing software product.
+</td>
+            </tr>
+            <tr>
+              <td>N/A
+</td>
+              <td>If request from an existing Apache project to adopt an external
+package, then ask the Apache project for the cvs module and mail
+address names.
+</td>
+            </tr>
+            <tr>
+              <td>N/A
+</td>
+              <td>If request from outside Apache to enter an existing Apache project,
+then post a message to that project for them to decide on acceptance.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-15
+</td>
+              <td>If request from anywhere to become a stand-alone PMC, then assess the
+fit with the ASF, and create the lists and modules under the
+incubator address/module names if accepted.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>Date
+</th>
+              <th>Item
+</th>
+            </tr>
+            <tr>
+              <td>DONE - 2004-05-09
+</td>
+              <td>Identify all the Mentors for the incubation, by asking all that can
+be Mentors.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-06-15
+</td>
+              <td>Subscribe all Mentors on the pmc and general lists.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-16
+</td>
+              <td>Give all Mentors access to all incubator CVS modules. (to be done by
+PMC chair)
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-18
+</td>
+              <td>Tell Mentors to track progress in the file
+'incubator/projects/{project.name}.html'
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>Date
+</th>
+              <th>Item
+</th>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-16
+</td>
+              <td>Check and make sure that the papers that transfer rights to the ASF
+been received. It is only necessary to transfer rights for the
+package, the core code, and any new code produced by the project.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-10-18
+</td>
+              <td>Check and make sure that the files that have been donated have been
+updated to reflect the new ASF copyright.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2005-05-09
+</td>
+              <td>Migrated the "system controls" from
+
+                <a href="http://www.controlhaus.org">ControlHaus
+</a>to Apache SVN with ASF 2.0 License and Apache copyright.
+
+              </td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>Date
+</th>
+              <th>Item
+</th>
+            </tr>
+            <tr>
+              <td>DONE - 2004-10-18
+</td>
+              <td>Check and make sure that for all code included with the distribution
+that is not under the Apache license, we have the right to combine
+with Apache-licensed code and redistribute.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-10-18
+</td>
+              <td>Check and make sure that all source code distributed by the project
+is covered by one or more of the following approved licenses: Apache,
+BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+the same terms.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2005-05-04
+</td>
+              <td>BEA completes code grant for the "system control" source code from
+
+                <a href="http://www.controlhaus.org">ControlHaus
+</a>to be added to the Beehive SVN repository and released with our
+distributions.
+
+              </td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>Date
+</th>
+              <th>Item
+</th>
+            </tr>
+            <tr>
+              <td>DONE ....-..-..
+</td>
+              <td>Check that all active committers have submitted a contributors
+agreement.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-14
+</td>
+              <td>Add all active committers in the STATUS file.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-18
+</td>
+              <td>Ask root for the creation of committers' accounts on cvs.apache.org.
+</td>
+            </tr>
+            <tr>
+              <td>2004-12-17
+</td>
+              <td>Added Fumitada Hatori (Wolfgang) as a committer.
+</td>
+            </tr>
+            <tr>
+              <td>2005-02-07
+</td>
+              <td>Added Bryan Che a committer.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure
+</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>Date
+</th>
+              <th>Item
+</th>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-15
+</td>
+              <td>Ask infrastructure to set up and archive Mailing lists.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-16
+</td>
+              <td>Ask infrastructure to create source repository modules and grant the
+committers karma.
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-16
+</td>
+              <td>Decide about and then ask infrastructure to setup an issuetracking
+system (JIRA).
+</td>
+            </tr>
+            <tr>
+              <td>DONE - 2004-07-16
+</td>
+              <td>Migrate the project to our infrastructure.
+</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Project+specific'>Project specific
+</h4>
+<div class="section-content">
+<p>
+            <em>Add project specific tasks here.
+</em>
+          </p>
+</div>
+</div>
+<h3 id='Incubation'>Incubation
+</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole incubation
+process.
+</p>
+<p>
+          <em>These items are not to be signed as done during incubation, as they
+may change during incubation.
+</em>
+          <em>They are to be looked into and described in the status reports and
+completed in the request for incubation signoff.
+</em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development
+</h4>
+<div class="section-content">
+<ul>
+            <li>DONE - Have all of the active long-term volunteers been identified
+and acknowledged as committers on the project?
+</li>
+            <li>DONE - Are there three or more independent committers? (The legal
+definition of independent is long and boring, but basically it means
+that there is no binding relationship between the individuals, such
+as a shared employer, that is capable of overriding their free will
+as individuals, directly or indirectly.)
+</li>
+            <li>DONE - Are project decisions being made in public by the committers?
+</li>
+            <li>DONE - Are the decision-making guidelines published and agreed to by
+all of the committers?
+</li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness
+</h4>
+<div class="section-content">
+<ul>
+            <li>DONE - Are all licensing, trademark, credit issues being taken care
+of and acknowleged by all committers?
+</li>
+          </ul>
+</div>
+<h4 id='Project+Specific+Tasks'>Project Specific Tasks
+</h4>
+<div class="section-content">
+<p>
+            <em>Add project specific tasks here.
+</em>
+          </p>
+</div>
+</div>
+<h3 id='Exit'>Exit
+</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.
+</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project
+</h4>
+<div class="section-content">
+<ul>
+            <li>If graduating to an existing PMC, has the PMC voted to accept it?
+</li>
+            <li>If graduating to a new PMC, has the board voted to accept it?
+</li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off
+</h4>
+<div class="section-content">
+<ul>
+            <li>Has the Incubator decided that the project has accomplished all of
+the above tasks?
+</li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

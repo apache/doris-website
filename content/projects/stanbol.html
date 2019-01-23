@@ -1,0 +1,636 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Stanbol Podling Status Page - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Stanbol+Project+Incubation+Status'><img src="../images/redarrow.gif" />Stanbol Project Incubation Status</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more general
+         project status, look on the project website.</p>
+<p><span class="graduated">The Stanbol project graduated on 2012-09-19</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<p>
+      Stanbol is a modular software stack and reusable set of components for semantic content management.
+      </p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<ul>
+        <li>2010-11-15 Project enters incubation.</li>
+        <li>2011-07-25 Project elected Florent André as a new committer</li>
+        <li>2011-12-16 Project elected Reto Bachmann Gmuer as a new committer</li>
+        <li>2012-01-25 Project elected Ali Anil Sinaci as a new committer</li>
+        <li>2012-05-06 Project made its first release of Apache Stanbol 0.9.0-incubating</li>
+        <li>2012-07-10 Project released Apache Stanbol Entityhub 0.10.0-incubating</li>
+        <li>2012-09-19 Project graduated to TLP</li>
+      </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+        <tr>
+          <th>item</th>
+          <th>type</th>
+          <th>reference</th>
+        </tr>
+        <tr>
+          <td>Website</td>
+          <td>www</td>
+          <td id="www">
+            <a href="http://incubator.apache.org/stanbol/">http://incubator.apache.org/stanbol/</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Mailing lists</td>
+          <td>developer</td>
+          <td id="mail-dev"><code>stanbol-dev</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td />
+          <td>private (PPMC)</td>
+          <td><code>stanbol-private</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td />
+          <td>commits</td>
+          <td id="mail-commits"><code>stanbol-commits</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td />
+          <td>user</td>
+          <td id="mail-user">No user mailing list at the moment</td>
+        </tr>
+        <tr>
+          <td>Bug tracking</td>
+          <td />
+          <td id="tracker"><a href="https://issues.apache.org/jira/browse/STANBOL">https://issues.apache.org/jira/browse/STANBOL</a></td>
+        </tr>
+        <tr>
+          <td>Source code</td>
+          <td>SVN</td>
+          <td id="svn"><a href="http://svn.apache.org/repos/asf/incubator/stanbol">http://svn.apache.org/repos/asf/incubator/stanbol</a></td>
+        </tr>
+        <tr>
+          <td>Champion</td>
+          <td colspan="2">Bertrand Delacrétaz</td>
+        </tr>
+        <tr>
+          <td>Mentors</td>
+          <td colspan="2">Ted Dunning, Ross Gardler, Tommaso Teofili</td>
+        </tr>
+        <tr>
+          <td>Committers</td>
+          <td colspan="2">See the <a href="http://stanbol.apache.org/team.html">Stanbol team page</a></td>
+        </tr>
+      </table>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports</h2>
+<div class="section-content">
+<ul>
+        <li><a href="http://wiki.apache.org/incubator/December2010">December 2010</a>
+          <p>Stanbol is a modular software stack and reusable set of components for semantic content management.</p>
+          <p>Stanbol just entered incubation, on 2010-11-15.</p>
+          <p>Mailing lists, SVN and JIRA are ready, most user accounts created, pre-existing code from the IKS project has been imported under a code grant.</p>
+          <p>The Stanbol community has been invited to participate in a free workshop organized by the IKS project (*).
+            It is a good opportunity to establish best practices for collaboration and communication between IKS
+            (an EU-funded research project in which most current Stanbol committers are involved, http://iks-project.eu/) and the Stanbol podling.</p>
+          <p>Branding requirements checked, see https://issues.apache.org/jira/browse/STANBOL-14</p>
+          <p>Next steps:
+          <ul>
+            <li>leanup dependencies and code as per ASF requirements</li>
+            <li>Make an initial release</li>
+            <li>Start establishing and growing the community</li>
+          </ul></p>
+          <p>(*) Workshop URL: http://wiki.iks-project.eu/index.php/Workshops/EAworkshopAmsterdam</p>
+        </li>
+        <li><a href="http://wiki.apache.org/incubator/February2011">February 2011</a>
+          <p>Stanbol is a modular software stack and reusable set of components for semantic content management.
+            Entered incubation on 2010-11-15.</p>
+          <p>Community development:
+            <ul>
+              <li>Five new committers mentioned in the previous report elected, accounts requested.</li>
+            </ul>
+          </p>
+          <p>Project activities:
+            <ul>
+              <li>Java packages renamed org.apache.stanbol for enhancer and entityhub modules</li>
+              <li>Work on removing LGPL dependencies in the Kres module ongoing</li>
+              <li>Integration tests added to enhancer module via reusable testing tool</li>
+            </ul>
+          </p>
+          <p>Next steps:
+            <ul>
+              <li>Finish package renaming</li>
+              <li>Finish LGPL dependencies cleanup</li>
+              <li>Setup Hudson (Jenkins?) continuous integration</li>
+              <li>Make a first release, possibly omitting modules with ASF-incompatible dependencies</li>
+              <li>Grow the community</li>
+            </ul>
+          </p>
+          <p>Signed off by mentor: bdelacretaz (champion)</p>
+        </li>
+        <li><a href="http://wiki.apache.org/incubator/May2011">May 2011</a>
+          <p>Stanbol is a modular software stack and reusable set of components for semantic content management.
+            Entered incubation on 2010-11-15.</p>
+          <p>Community development:
+            <ul>
+              <li>some new users started playing with Stanbol and asking for guidance on the mailing lists</li>
+            </ul>
+          </p>
+          <p>Project activities:
+            <ul>
+              <li>lots of package/module refactoring</li>
+              <li>added a benchmark tool for Enhancer</li>
+              <li>KReS module build and tests fixed</li>
+              <li>setup continuous integration with Jenkins</li>
+              <li>added JCR module of CMS Adapter</li>
+            </ul>
+          </p>
+          <p>Next steps:
+            <ul>
+              <li>Make a first release, possibly omitting modules with ASF-incompatible dependencies</li>
+              <li>Grow the community</li>
+            </ul>
+          </p>
+          <p>Signed off by mentor: Tommaso Teofili</p>
+        </li>
+        <li><a href="http://wiki.apache.org/incubator/August2011">August 2011</a>
+          <p>Stanbol is a modular software stack and reusable set of components for semantic content management.
+            Entered incubation on 2010-11-15.</p>
+          <ol>
+            <li>A list of the three most important issues to address in the move towards graduation.</li>
+            <ul>
+              <li>make a first release (depends on a first release of Apache Clerezza to eliminate SNAPSHOT dependencies)</li>
+              <li>create demos showing the power of Stanbol to grow the community</li>
+              <li>improve documentation and web site to lower the barrier for new users</li>
+            </ul>
+            <li>Any issues that the Incubator PMC or ASF Board might wish/need to be aware of</li>
+            <ul>
+              <li>none</li>
+            </ul>
+            <li>How has the community developed since the last report</li>
+            <ul>
+              <li>Florent André was elected as a new committer</li>
+              <li>some new users showed up on the mailing list</li>
+              <li>Potentially new users from the CMS industry were attracted in a Stanbol
+                hands-on session during a CMS community workshop organized by the IKS project in
+                Paris (http://www.iks-project.eu/news-and-events/events/mycms-and-web-data-iks-community-workshop)</li>
+            </ul>
+            <li>How has the project developed since the last report.</li>
+            <ul>
+              <li>Code preparations for first release (solved incompatible license issues, license headers, release profile, etc.)</li>
+              <li>Added new component "FactStore"</li>
+              <li>Integration tests added to EntityHub</li>
+              <li>CMIS module added to CMS Adapter</li>
+            </ul>
+          </ol>
+          <p>Signed off by mentor: rgardler</p>
+        </li>
+        <li><a href="http://wiki.apache.org/incubator/November2011">November 2011</a>
+          <p>Stanbol is a modular software stack and reusable set of components for semantic content management. Entered incubation on 2010-11-15.</p>
+          <p>There are no issues that require the Incubator PMC or ASF Board attention at this time.</p>
+          <ol>
+            <li>Three most important issues to address in the move towards graduation.</li>
+            <ul>
+              <li>Make a first release (depends on a first release of Apache Clerezza to eliminate SNAPSHOT dependencies).<br />
+                No concrete progress here.</li>
+              <li>Create demos showing the power of Stanbol to grow the community<br />
+                Demo server at http://dev.iks-project.eu, should be moved to Apache servers.</li>
+              <li>Improve documentation and web site to lower the barrier for new users<br />
+                Work in progress, docs are now available for the enhancer, entity hub, content hub, cms adapter and reasoners components, and for multi-language support.</li>
+             </ul>
+            <li>How has the community developed since the last report?</li>
+            <ul>
+              <li>No new committers, some new users have shown up on the mailing list.</li>
+              <li>Ali Anil Sinaci provided a number of patches which cover all current functionalities of Contenthub.</li>
+              <li>Stanbol was presented at various events: Nuxeo Wold, ApacheCon, "Smart Content = Smart Business" workshop at the
+                [J. Boye](http://jboye.com/conferences/aarhus11/) conference in Aarhus, Denmark.</li>
+            </ul>
+            <li>How has the project developed since the last report.</li>
+            <ul>
+              <li>Integration with the Linked Media Framework (http://code.google.com/p/kiwi/) is in progress.</li>
+              <li>Integration of the Semantic Search capabilities with the Stanbol ContentHub.</li>
+              <li>New EnhancementEngine for extracting Keywords from Controlled vocabularies.</li>
+              <li>Improved multi language support.</li>
+              <li>Bidirectional mapping feature between JCR/CMIS content repositories and RDF data.</li>
+              <li>Implementation of long term operations for reasoners is in progress.</li>
+            </ul>
+          </ol>
+          <p>Signed off by mentor: bdelacretaz</p>
+        </li>
+        <li><a href="http://wiki.apache.org/incubator/February2012">February 2012</a>
+          <p>Apache Stanbol is an open source modular software stack and reusable
+            set of components for semantic content management. Incubating since
+            November, 2010.</p>
+          <ol>
+            <li>Three most important issues to address in the move towards graduation.</li>
+            <ul>
+              <li>Make a first release (depends on a first release of Apache Clerezza to
+                eliminate SNAPSHOT dependencies)</li>
+              <li>Auditing/clarifying multiple maven repositories and corresponding
+                dependencies</li>
+              <li>Make the data models downloadable independently from the ASF repositories
+                to avoid gray copyright / licensing issues (for instance for the OpenNLP
+                models).</li>
+            </ul>
+            <li>How has the community developed since the last report?</li>
+            <ul>
+              <li>Reto Bachmann Gmuer and Ali Anil Sinaci has been elected as new committers.</li>
+              <li>Alberto Musetti has contributed to the project by providing patches</li>
+              <li>David Riccitelli provided patch that uses the Stanbol Commons Jobs to
+                implement an Asynchronous RESTful API for the Stanbol Enhancer.</li>
+            </ul>
+            <li>How has the project developed since the last report.</li>
+            <ul>Features:
+              <li>LDPath (http://code.google.com/p/ldpath/) support for Entityhub and
+                Contenthub</li>
+              <li>Contenthub now supports multiple semantic indexes and Solr RESTful API
+                can be directly used for search</li>
+              <li>Enhancer now support for multiple Enhancement Chains and multi-part
+                ContentItems. Work on extended RESTful API will be finished soon.</li>
+              <li>Enhancement Engine for Topic Classification (STANBOL-197)</li>
+              <li>First version of a Apache Stanbol/Apache Camel integration</li>
+              <li>Improved Documentation (both on the Stanbol Homepage and the Web UI of
+                Apache Stanbol)</li>
+            </ul>
+          </ol>
+          <p>Signed off by mentor: bdelacretaz, tommaso</p>
+        </li>
+        <li><a href="http://wiki.apache.org/incubator/May2012">May 2012</a>
+          <p>Apache Stanbol is an open source modular software stack and reusable set of
+            components for semantic content management. Incubating since November, 2010.</p>
+          <p>Graduation:</p>
+          <p>We believe Stanbol will be ready to graduate in the next few days: the
+              issues mentioned in our previous report have been adressed, the release
+              is being voted on (after six iterations of release candidates) and should
+              be out in the next few days if all goes well. Community activity is steady
+              and slowly increasing.</p>
+          <p>Community:</p>
+          <ul>
+            <li>No new committers or PPMC members since the last report, but steady activity
+              on our lists from both existing and new members of our community.</li>
+            <li>Two Stanbol committers have been elected as Clerezza committers, furthering
+            ties between both podlings.</li>
+            <li>A Stanbol GSoC project has been accepted, with Rupert Westenthaler as
+            its mentor.</li>
+            <li>Contribution of several EnhancementEngines based on LinguaGrid (NLP
+            framework) by Alessio Bosca (STANBOL-583).</li>
+            <li>Integration of DBpedia Spotlight (http://dbpedia.org/spotlight) with the
+              Stanbol Enhancer, led by a new Stanbol contributor.</li>
+            <li>Stanbol was presented in the Developer Track of WWW2012
+              (slides: http://s.apache.org/AgK)</li>
+          </ul>
+          <p>Project activity:</p>
+          <ul>
+            <li>Reorganization of the codebase for the release, the one binary dependency
+                left that's not available in Maven Central has been moved to a separate
+                -deps package for the release, as discussed on the incubator general list.</li>
+            <li>Content hub faceted search improvements.</li>
+            <li>New EnhancementEngine based on Apache Tika</li>
+            <li>TopicEngine (STANBOL-197) is now functional</li>
+            <li>Full LDpath support for the Entityhub Indexing tools (STANBOL-408).</li>
+          </ul>
+          <p>Signed off by mentor: bdelacretaz, rgardler</p>
+        </li>
+      </ul>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at Apache.</p>
+<p>
+          <em>Item assignment is shown by the Apache id.</em>
+          <em>Completed tasks are shown by the completion date (YYYY-MM-dd).</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-08-03</td>
+              <td>Make sure that the requested project name does not already exist and
+                  check www.nameprotect.com to be sure that the name is not already
+                trademarked for an existing software product.<br />
+                See <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH-8">PODLINGNAMESEARCH-8</a></td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>If request from an existing Apache project to adopt an external
+                  package, then ask the Apache project for the SVN module and mail
+                  address names.</td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>If request from outside Apache to enter an existing Apache project,
+                  then post a message to that project for them to decide on acceptance.</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>If request from anywhere to become a stand-alone PMC, then assess the
+                  fit with the ASF, and create the lists and modules under the
+                  incubator address/module names if accepted.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Identify all the Mentors for the incubation, by asking all that can
+                  be Mentors.</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Subscribe all Mentors on the pmc and general lists.</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Give all Mentors access to the incubator SVN repository. 
+                (to be done by the Incubator PMC chair or an Incubator PMC
+                Member wih karma for the authorizations file)</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Tell Mentors to track progress in the file 'incubator/projects/{project.name}.html'</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2010-11-30</td>
+              <td>Check and make sure that the papers that transfer rights to the ASF
+                  been received. It is only necessary to transfer rights for the
+                  package, the core code, and any new code produced by the project.
+              </td>
+            </tr>
+            <tr>
+              <td>2011-07-18</td>
+              <td>The Apache RAT check was added to check and make sure that the files that have been donated have been
+                  updated to reflect the new ASF copyright.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-05-02</td>
+              <td>Check and make sure that for all code included with the distribution
+                  that is not under the Apache license, e have the right to combine
+                  with Apache-licensed code and redistribute.
+               </td>
+            </tr>
+            <tr>
+              <td>2012-05-02</td>
+              <td>Check and make sure that all source code distributed by the project
+                  is covered by one or more of the following approved licenses: Apache,
+                  BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+                  the same terms.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2010-11-30</td>
+              <td>Check that all active committers have submitted a contributors
+                  agreement.</td>
+            </tr>
+            <tr>
+              <td>....-..-..</td>
+              <td>Add all active committers in the STATUS file.</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Ask root for the creation of committers' accounts on
+                  people.apache.org.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Ask infrastructure to create source repository modules and grant the
+                  committers karma.</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Ask infrastructure to set up and archive Mailing lists.</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Decide about and then ask infrastructure to setup an issuetracking
+                  system (Bugzilla, Scarab, Jira).</td>
+            </tr>
+            <tr>
+              <td>2010-11-15</td>
+              <td>Migrate the project to our infrastructure.</td>
+            </tr>
+          </table>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole incubation process.</p>
+<p>
+          <em>These items are not to be signed as done during incubation, as they
+              may change during incubation.</em>
+          <em>They are to be looked into and described in the status reports and
+              completed in the request for incubation signoff.</em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+            <li>Have all of the active long-term volunteers been identified and
+                acknowledged as committers on the project?
+            </li>
+            <li>Are there three or more independent committers? (The legal definition
+                of independent is long and boring, but basically it means that there
+                is no binding relationship between the individuals, such as a shared
+                employer, that is capable of overriding their free will as
+                individuals, directly or indirectly.)</li>
+            <li>Are project decisions being made in public by the committers?</li>
+            <li>Are the decision-making guidelines published and agreed to by all of
+                the committers?</li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+            <li>Are all licensing, trademark, credit issues being taken care of and
+                acknowleged by all committers?</li>
+          </ul>
+</div>
+<h4 id='Project+Specific'>Project Specific</h4>
+<div class="section-content">
+<p>
+            <em>Add project specific tasks here.</em>
+          </p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project</h4>
+<div class="section-content">
+<ul>
+            <li>If graduating to a new PMC, has the board voted to accept it?<br />
+                Yes, in the board meeting at September 19, 2012.</li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+            <li>Has the Incubator decided that the project has accomplished all of
+                the above tasks?<br />
+                Yes, with this <a href="http://markmail.org/thread/bjijudvfiajhi2dn">vote</a>.</li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

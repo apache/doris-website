@@ -1,0 +1,27 @@
+"BRPC Developers" <dev@brpc.incubator.apache.org>
+"Crail Developers" <dev@crail.incubator.apache.org>
+"Daffodil Developers" <dev@daffodil.incubator.apache.org>
+"DLab Developers" <dev@dlab.incubator.apache.org>
+"Druid Developers" <dev@druid.incubator.apache.org>
+"Dubbo Developers" <dev@dubbo.incubator.apache.org>
+"Hivemall Developers" <dev@hivemall.incubator.apache.org>
+"Hudi Developers" <general@incubator.apache.org>
+"Iceberg Developers" <dev@iceberg.incubator.apache.org>
+"IoTDB Developers" <dev@iotdb.incubator.apache.org>
+"Marvin-AI Developers" <dev@marvin.incubator.apache.org>
+"Myriad Developers" <dev@myriad.incubator.apache.org>
+"Nemo Developers" <dev@nemo.incubator.apache.org>
+"Omid Developers" <dev@omid.incubator.apache.org>
+"OpenWhisk Developers" <dev@openwhisk.incubator.apache.org>
+"Pinot Developers" <dev@pinot.incubator.apache.org>
+"Pony Mail Developers" <dev@ponymail.incubator.apache.org>
+"SAMOA Developers" <dev@samoa.incubator.apache.org>
+"ShardingSphere Developers" <dev@shardingsphere.incubator.apache.org>
+"SINGA Developers" <dev@singa.incubator.apache.org>
+"SkyWalking Developers" <dev@skywalking.incubator.apache.org>
+"Spot Developers" <dev@spot.incubator.apache.org>
+"Superset Developers" <dev@superset.incubator.apache.org>
+"Taverna Developers" <dev@taverna.incubator.apache.org>
+"Tephra Developers" <dev@tephra.incubator.apache.org>
+"Warble Developers" <dev@warble.incubator.apache.org>
+"Zipkin Developers" <dev@zipkin.incubator.apache.org>

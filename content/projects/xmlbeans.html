@@ -1,0 +1,473 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>xmlbeans
+ - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='XmlBeans+Project+Incubation+status'><img src="../images/redarrow.gif" />XmlBeans Project Incubation status
+</h2>
+<div class="section-content">
+<p>----------------------------------------------------------------------
+---------
+</p>
+<p>
+        <strong>NOTE: XMLBeans has graduated from Incubation
+</strong>- please see
+
+        <a href="http://xml.apache.org/xmlbeans/">http://xml.apache.org/xmlbeans/
+</a>
+      </p>
+<p>----------------------------------------------------------------------
+---------
+</p>
+<p><span class="graduated">The XMLBeans project graduated on 2004-06-23</span></p>
+</div>
+        <h2 id='Tasks+completed%3A'><img src="../images/redarrow.gif" />Tasks completed:
+</h2>
+<div class="section-content">
+<ul>
+        <li>create STATUS file in incubator-cvs
+</li>
+        <li>create mailing lists
+</li>
+        <li>create xml-xmlbeans CVS
+</li>
+        <ul>
+          <li>configure viewcvs
+</li>
+          <li>commit mails -&gt; xml-xmlbeans-cvs@apache.org
+</li>
+        </ul>
+        <li>setup xmlbeans bugzilla
+</li>
+        <li>Complete License Grant agreement
+</li>
+        <li>Have all committers sign CLA's
+</li>
+        <ul>
+          <li>Cezar Andrei
+</li>
+          <li>David Bau
+</li>
+          <li>Patrick Calahan
+</li>
+          <li>Ken Kress
+</li>
+          <li>Laurence Moroney
+</li>
+          <li>David Remy
+</li>
+          <li>Dutta Satadip
+</li>
+          <li>Cliff Schmidt
+</li>
+          <li>Eric Vasilik
+</li>
+          <li>David Waite
+</li>
+          <li>Scott Ziegler
+</li>
+        </ul>
+        <li>Relicense XML beans files with ASL 2.0
+</li>
+        <ul>
+          <li>add ASF copyright to all files
+</li>
+          <li>move all packages to org.apache.xmlbeans
+</li>
+          <li>eliminate all non ASL code and library dependencies
+</li>
+        </ul>
+        <li>mailing list tasks
+</li>
+        <ul>
+          <li>lists-archived:
+</li>
+          <ul>
+            <li>mbox -&gt; xml.apache.org/mail
+</li>
+            <li>Eyebrowse setup
+</li>
+          </ul>
+        </ul>
+        <li>setup xmlbeans wiki area and refactor pages to there
+</li>
+        <li>set up to sign builds
+</li>
+        <ul>
+          <li>committer PGP keys
+</li>
+          <li>committer keys signed by someone in ASF (probably twl)
+</li>
+        </ul>
+        <li>build xmlbeans website
+</li>
+        <li>grant some comitters access to xml-site
+</li>
+        <li>Define incubation exit criteria
+</li>
+        <li>configure build to match ASF style
+</li>
+        <li>setup mirroring of builds
+</li>
+      </ul>
+<p>----------------------------------------------------------------------
+---------
+</p>
+</div>
+        <h2 id='Exit+criteria+%28put+an+X+next+to+item+when+it+is+complete%29%3A'><img src="../images/redarrow.gif" />Exit criteria (put an X next to item when it is complete):
+</h2>
+<div class="section-content">
+<h3 id='Identify+the+project+to+be+incubated%3A+XMLBeans'>Identify the project to be incubated: XMLBeans
+</h3>
+<div class="section-content">
+<p>X- Make sure that the requested project name does not already exist
+and check www.nameprotect.com to be sure that the name is not already
+trademarked for an existing software product.
+</p>
+<p>X- If request from an existing Apache project to adopt an external
+package, then ask the Apache project for the cvs module and mail
+address names.
+</p>
+<p>xml-xmlbeans
+</p>
+<p>xmlbeans-dev@xml.apache.org xmlbeans-user@xml.apache.org
+xmlbeans-cvs@xml.apache.org
+</p>
+<p>X- If request from outside Apache to enter an existing Apache
+project, then post a message to that project for them to decide on
+acceptance.
+</p>
+<p>X- If request from anywhere to become a stand-alone PMC, then assess
+the fit with the ASF, and create the lists and modules under the
+incubator address/module names if accepted.
+</p>
+</div>
+<h3 id='Interim+responsibility%3A'>Interim responsibility:
+</h3>
+<div class="section-content">
+<p>X- Who has been identified as the shepherd for the incubation?
+</p>
+<p>Ted Leung &lt;twl@apache.org&gt;
+</p>
+<p>X- Are they tracking progress in the file
+</p>
+<p>incubator:site/projects/xmlbeans.cwiki
+</p>
+</div>
+<h3 id='Copyright%3A'>Copyright:
+</h3>
+<div class="section-content">
+<p>X- Have the papers that transfer rights to the ASF been received? It
+is only necessary to transfer rights for the package, the core code,
+and any new code produced by the project.
+</p>
+<p>X- Have the files been updated to reflect the new ASF copyright?
+</p>
+</div>
+<h3 id='Verify+distribution+rights%3A'>Verify distribution rights:
+</h3>
+<div class="section-content">
+<p>X- For all code included with the distribution that is not under the
+Apache license, do we have the right to combine with Apache-licensed
+code and redistribute?
+</p>
+<p>X- Is all source code distributed by the project covered by one or
+more of the following approved licenses: Apache, BSD, Artistic,
+MIT/X, MIT/W3C, MPL 1.1, or something with essentially the same terms?
+</p>
+</div>
+<h3 id='Establish+a+list+of+active+committers%3A'>Establish a list of active committers:
+</h3>
+<div class="section-content">
+<p>X- Are all active committers in the STATUS file?
+</p>
+<p>X- Do they have accounts on cvs.apache.org?
+</p>
+<p>X- Have they submitted a contributors agreement?
+</p>
+</div>
+<h3 id='Infrastructure%3A'>Infrastructure:
+</h3>
+<div class="section-content">
+<p>X- CVS modules created and committers added to avail file?
+</p>
+<p>X- Mailing lists set up and archived?
+</p>
+<p>X- Problem tracking system (Jira)?
+</p>
+<p>X- Has the project migrated to our infrastructure?
+</p>
+</div>
+<h3 id='Collaborative+Development%3A'>Collaborative Development:
+</h3>
+<div class="section-content">
+<p>X- Have all of the active long-term volunteers been identified and
+acknowledged as committers on the project?
+</p>
+<p>X- Are there three or more independent committers?
+</p>
+<p>X- Are project decisions being made in public by the committers?
+</p>
+<p>X- Are the decision-making guidelines published and agreed to by all
+of the committers?
+</p>
+</div>
+<h3 id='Organizational+acceptance+of+responsibility+for+the+project%3A'>Organizational acceptance of responsibility for the project:
+</h3>
+<div class="section-content">
+<p>N/A If graduating to an existing PMC, has the PMC voted to accept it?
+</p>
+<p>X- If graduating to a new PMC, has the board voted to accept it?
+</p>
+</div>
+<h3 id='Incubator+sign-off%3A'>Incubator sign-off:
+</h3>
+<div class="section-content">
+<p>X- Has the Incubator decided that the project has accomplished all of
+the above tasks?
+</p>
+</div>
+</div>
+        <h2 id='Incubation+Status+Reports'><img src="../images/redarrow.gif" />Incubation Status Reports
+</h2>
+<div class="section-content">
+<h3 id='2004-04-20'>2004-04-20
+</h3>
+<div class="section-content">
+<div class="source"><code>- Status report for the Incubator - Changes since last report in
+January: * Added Dutta Satadip as a committer * Released
+incubating-xmlbeans-1.0.2 after a thorough legal review ** after
+review of license issues: added jaxen to distribution, removed junit,
+noted W3C XML Schemas ** applied Apache License 2.0 * Formed a PPMC;
+set up mailing list and designed guidelines * Moved from bugzilla to
+JIRA. * Set up new wiki pages. Expectations for next three months: *
+Find two more committers * Release one more distribution * Improve
+web site (faq, current info, etc) * Exit incubator
+</code>
+</div>
+</div>
+<h3 id='2004-01-17'>2004-01-17
+</h3>
+<div class="section-content">
+<div class="source"><code>- Status report for the Incubator - Overall the xmlbeans project is
+progressing with good committer productivity and a growing user
+community. Converting over the Apache CVS systems and build process
+has been accomplished along with various other Apache administrative
+tasks such as setting up the Apache website. There is some movement
+towards growth in the development side of the community with one
+contributor (Dutta Satadip) submitting a nice enhancement and several
+other contributors submitting small patches related to bugs. More on
+each of the bullet points below. * is the STATUS file up to date?
+(also post link) &lt;Cliff Schmidt&gt; We need to update the status file
+with the latest incubator guidelines. We're mostly there, but there
+are a couple things that need to be added. I also think the status
+file needs to be updated in one or two other ways. For instance, the
+tasks completed should now include: - build xmlbeans website - grant
+some committers access to xml-site (Cliff and Remy) &lt;/Cliff Schmidt&gt;
+http://incubator.apache.org/projects/xmlbeans.html * any legal,
+cross-project or personal issues that still need to be addressed? In
+general it appears xmlbeans is through most of the known issues that
+existed getting started. The committers have been able to be
+productive and there is a lot of code being created in version 2 and
+fixes are being made into version 1. One issue that we have run into
+is how best to accommodate commonly used api jars primarily (but not
+exclusively) JCP related api's from SUN. We are not sure the
+appropriate process to determine whether we can use a particular jar
+and host the jar in the xmlbeans build. examples of api's that we are
+unsure the appropriate/best way to deal with are: * JSR173 api and
+JSR 173 RI (Streaming API for XML, a.k.a., STAX) - the JSR173 RI
+dependency is temporary. Currently xmlbeans downloads it from
+external server during the build process * SAAJ api - we used the
+saaj-api source code in axis. * xml commons resolver (Apache jakarta)
+* jaxen (jaxen.sourceforge.net - apache-style license, but not
+apache) Here are some specific questions on this subject that David
+Bau posted: &lt;David Bau&gt; - We currently load resolver.jar and
+jaxen.jar if the user happens to put them on the classpath, and throw
+a runtime exception if the user tries to use a resolver- or jaxen-
+dependent feature without those JARs present. This is OK, but it
+would be nicer for users if resolver and jaxen were just included in
+xbean.jar, but this presents both licensing issues (for jaxen) and
+possible-version-conflict issues (for commons resolver). A question
+is: is there a nice way we include resolver.jar and jaxen.jar inside
+xbean.jar, or should we stay away from that idea? - We need the JSR
+173 API to run, and this is definitely something that we want to be
+able to distribute either directly inside xbean.jar, or at least
+directly inside Apache since it's so core. In other words, we can't
+expect users to do anything without this API present. I've noticed
+that for other APIs, such as SAAJ, Apache seems to have a &quot;clean
+room&quot; copy of the APIs. Should we be making such a copy of the JSR
+173 APIs? What is the right way to do this? &lt;/David Bau&gt; * what has
+been done for incubation since the last report? &lt;David Bau&gt; The main
+thing is that we've been working on the project. We're getting more
+folks hanging around on the lists; we're getting some of the code
+that we've talked about on the lists and on the wiki actually written
+and checked in. We've been encouraging the wider community to
+critique and contribute ideas and code. Community-building is a
+gradual process; we don't have a mature community yet, but we've
+certainly gotten started at building a little one. &lt;/David Bau&gt; *
+source code checkin (was that since last status report?) * build and
+test ant scripts established * website updated including docs, source
+code access, etc. * established version 2 effort and modified CVS
+tree accordingly * proposed (close to implementing I think) branching
+strategy for version 1 (by Kevin Krouse) * gump integration (thanks
+to Robert Burrell Donkin) * plans and expectations for the next
+period? * development on v2 will continue incorporating community
+feedback. * continued work on soliciting volunteers for contribution
+and committership. * work on organizing bug tracking and follow up *
+xmlbeans-1.01 distribution (minor bug fixes to v1) * improve process
+of bug testing and fixing from BugZilla contributions. * any
+recommendations for how incubation could run more smoothly for you?
+Incubation seems to be going well with one, albeit an important one,
+challenge of getting outside committers. Having a large existing
+codebase in a fairly complicated area makes it challenging. The
+growing user community and the excellent posts that we are getting on
+the xmbleans-dev list make us optimistic we will make some
+breakthroughs in the next period. * things that xmlbeans could/will
+improve on (summary, contributed by Cliff Schmidt) 1. Bug management:
+http://nagoya.apache.org/bugzilla/buglist.cgi?product=XMLBeans (as
+has already been mentioned by one or two others) -- This is just as
+much related to community as code. Of the 12 bugs entered so far, we
+haven't done a very good job of keeping them updated with status. We
+should encourage people to file bugs by showing that the committers
+are actually responding to them (even if the response is &quot;need more
+info to repro&quot; or simply noting the priority). 2. Web site:
+http://xml.apache.org/xmlbeans/ -- We got this built and running but
+we need to keep it updated. For instance, it still shows the
+ApacheCon advertisement. 3. Binary download. -- We started to get
+this done, but I don't think we ever finished. Actually, I'd like to
+try to get this done in the next couple days. 4. PPMC -- The
+incubator introduced the idea of a PPMC and we haven't responded to
+this yet. I'll follow up in a separate post on what needs to be done.
+5. Status file -- We need to update the status file with the latest
+incubator guidelines. We're mostly there, but there are a couple
+things that need to be added. I also think the status file needs to
+be updated in one or two other ways. For instance, the tasks
+completed should now include: - build xmlbeans website - grant some
+committers access to xml-site (although I forgot who has this; I
+think it is me and Remy) 6. Committer keys Bau and I were both able
+to make it to ApacheCon and we both participated in the key-signing
+party. We need to get other committers to make keys and get them
+signed by me and Bau whenever we run into each other in person again.
+7. New Committers The biggest issue of all is definitely the new
+committers, as everyone seems to agree. We really need to find more
+ways to encourage others to contribute. I think we are all ready and
+willing to share some of the responsibility; we just need to find
+people who are showing enough interest (and action) to be considered
+for committership.
+</code>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

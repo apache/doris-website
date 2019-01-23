@@ -1,0 +1,1908 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Status of the clutch - Apache Incubator</title>
+  <script type="text/javascript" src="clutch.js"> </script>
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='current'><img src="../images/redarrow.gif" />Status of the clutch currently in incubation</h2>
+<div class="section-content">
+<p>
+        Clutch is a tool which gathers details about the projects currently in
+        incubation and re-generates the table below.
+        It aims to encourage and nurture, to provide an overview of
+        the state of establishment of various resources, and to provide quick
+        access to those resources.
+        See more <a href="#notes">notes</a> below regarding purpose and
+        interpretation.
+      </p>
+<ul>
+        <li>
+          The <span class="care">orange</span> items indicate where more care
+          and attention is needed. Anything <span class="issue">vermilion</span>
+          is an issue that should be addressed ASAP.
+          The <span class="cool1">bluish-green</span> items indicate success
+          and the <span class="cool2">yellow</span> items are okay.
+        </li>
+        <li>
+          A: startDate
+        </li>
+        <li>
+          B: elapsedDays
+          - <span class="cool3">&lt;3</span>
+            <span class="cool1">&lt;12</span>
+            <span class="cool2">&lt;18</span>
+            <span class="cool3">&lt;24</span>
+            <span class="cool4">&gt;24</span> months
+        </li>
+        <li>
+          C: reportingMonthly
+          (current report: <a href="http://wiki.apache.org/incubator/January2019">January2019</a>
+)
+        </li>
+        <li>
+          D: reportingGroup - in which set of months do they report:<br />
+          group-1=Jan,Apr,Jul,Oct group-2=Feb,May,Aug,Nov group-3=Mar,Jun,Sep,Dec
+        </li>
+        <li>
+          E: hasReportingGroup - did podling remember to choose a group
+        </li>
+        <li>
+          F: hasStatusEntry in
+          the main "Currently in incubation" table
+          (i.e. <a href="projects/">i.a.o/projects</a> generated from
+          content/podlings.xml)
+        </li>
+        <li>
+          G: statusUpdateDate - the status page was last updated
+        </li>
+        <li>
+          H: statusAge - days since the SVN status page was last updated
+          - <span class="cool1">&lt;2</span>
+            <span class="cool2">&lt;4</span>
+            <span class="cool3">&lt;9</span>
+            <span class="cool4">&gt;9</span> months
+        </li>
+        <li>
+          I: statusUpdateCounts - number of commits to status file in the
+          previous 2,4,9 months (cumulative)
+        </li>
+        <li>
+          J: numberCommitters - accounts have been established, total number to date
+        </li>
+        <li>
+          K: numberCommittersNew - new committers added since establishment
+          (gathered from each project's Status page "News" section)
+        </li>
+        <li>
+          L: hasSvn - Subversion repository is created
+        </li>
+        <li>
+          M: hasTracker - has an Issue Tracker
+        </li>
+        <li>
+          N: hasMailListDev - has dev mail list and archives
+        </li>
+        <li>
+          O: hasMailListCommits - has commits mail list and archives
+        </li>
+        <li>
+          P: hasWebSite
+        </li>
+        <li>
+          Q: hasDistributionArea - has w.a.o/dist/incubator/... area (not necessarily yet a release)
+        </li>
+        <li>
+          R: hasKeys - has a PGP "<code>KEYS</code>" file in their distribution area
+        </li>
+        <li>
+          S: hasRelease - has a release in their distribution area
+        </li>
+        <li>
+          other persistent <a href="#data">data files</a> 
+        </li>
+<!-- generated by clutch; do not edit -->
+<li>other issues <a href="#other">listed</a> below for: 
+ <span class="care">commonsrdf</span> 
+ <span class="care">griffin</span> 
+ <span class="care">netbeans</span> 
+ <span class="care">predictionio</span> 
+ <span class="care">senssoft</span> 
+ <span class="care">toree</span> 
+ <span class="care">trafficcontrol</span> 
+ <span class="care">trafficcontrol</span> 
+ <span class="care">trafficcontrol</span> 
+ <span class="care">unomi</span> 
+</li>
+
+      </ul>
+<p><!-- generated by clutch; do not edit -->
+
+        Clutch last gathered: Sat Jan 19 18:06:00 2019 UTC.<br />
+        Number of podlings in incubation: 52
+</p>
+<table id="clutch" class="colortable" width="100%">
+        <tr>
+          <th>Project</th>
+          <th>Sponsor</th>
+          <th title="Start Date">A</th>
+          <th title="elapsedDays">B</th>
+          <th title="reportingMonthly">C</th>
+          <th title="reportingGroup">D</th>
+          <th title="hasReportingGroup">E</th>
+          <th title="hasStatusEntry">F</th>
+          <th title="statusUpdateDate">G</th>
+          <th title="statusAge">H</th>
+          <th title="statusUpdateCounts">I</th>
+          <th title="numberCommitters">J</th>
+          <th title="numberCommittersNew">K</th>
+          <th title="hasSvn">L</th>
+          <th title="hasTracker">M</th>
+          <th title="hasMailListDev">N</th>
+          <th title="hasMailListCommits">O</th>
+          <th title="hasWebSite">P</th>
+          <th title="hasDistributionArea">Q</th>
+          <th title="hasKeys">R</th>
+          <th title="hasRelease">S</th>
+        </tr>
+<!-- generated by clutch; do not edit -->
+        <tr id="airflow">
+          <td>Airflow</td>
+          <td>Incubator</td>
+          <td>2016-03-31</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/airflow.html">True</a></td>
+          <td>2018-11-30</td>
+          <td />
+          <td>3,3,6</td>
+          <td class="care">-</td>
+          <td class="cool1 number">10</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/Airflow/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/airflow-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/airflow-commits/">True</a></td>
+          <td class="cool1"><a href="http://airflow.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/airflow/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/airflow/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/airflow/">True</a></td>
+        </tr>
+        <tr id="amaterasu">
+          <td>Amaterasu</td>
+          <td>Incubator</td>
+          <td>2017-09-07</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/amaterasu.html">True</a></td>
+          <td>2017-09-25</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/AMATERASU">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/amaterasu-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/amaterasu-commits/">True</a></td>
+          <td class="cool1"><a href="http://amaterasu.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/amaterasu/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/amaterasu/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/amaterasu/">True</a></td>
+        </tr>
+        <tr id="annotator">
+          <td>Annotator</td>
+          <td>Incubator</td>
+          <td>2016-08-30</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/annotator.html">True</a></td>
+          <td>2017-02-13</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/ANNO">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/annotator-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/annotator-commits/">True</a></td>
+          <td class="cool1"><a href="http://annotator.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="batchee">
+          <td>BatchEE</td>
+          <td>Incubator</td>
+          <td>2013-10-03</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/batchee.html">True</a></td>
+          <td>2015-01-06</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/BATCHEE">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/batchee-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/batchee-commits/">True</a></td>
+          <td class="cool1"><a href="http://batchee.incubator.apache.org">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/batchee/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/batchee/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/batchee/">True</a></td>
+        </tr>
+        <tr id="brpc">
+          <td>BRPC</td>
+          <td>Incubator</td>
+          <td>2018-11-13</td>
+          <td />
+          <td class="care">True</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/brpc.html">True</a></td>
+          <td>2018-11-23</td>
+          <td />
+          <td>1,1,-</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/BRPC">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/brpc-dev/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="crail">
+          <td>Crail</td>
+          <td>Incubator</td>
+          <td>2017-11-01</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/crail.html">True</a></td>
+          <td>2018-01-03</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/CRAIL">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/crail-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/crail-commits/">True</a></td>
+          <td class="cool1"><a href="http://crail.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/crail/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/crail/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/crail/">True</a></td>
+        </tr>
+        <tr id="daffodil">
+          <td>Daffodil</td>
+          <td>Incubator</td>
+          <td>2017-08-27</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/daffodil.html">True</a></td>
+          <td>2018-08-28</td>
+          <td />
+          <td>0,0,1</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/DAFFODIL">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/daffodil-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/daffodil-commits/">True</a></td>
+          <td class="cool1"><a href="http://daffodil.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/daffodil/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/daffodil/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/daffodil/">True</a></td>
+        </tr>
+        <tr id="dlab">
+          <td>DLab</td>
+          <td>Incubator</td>
+          <td>2018-08-20</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/dlab.html">True</a></td>
+          <td>2018-08-20</td>
+          <td />
+          <td>0,0,1</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/projects/DLAB">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/dlab-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/dlab-commits/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="doris">
+          <td>Doris</td>
+          <td>Incubator</td>
+          <td>2018-07-18</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/doris.html">True</a></td>
+          <td>2018-08-23</td>
+          <td />
+          <td>0,0,2</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://github.com/baidu/palo/issues">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/doris-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/doris-commits/">True</a></td>
+          <td class="cool1"><a href="http://doris.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="druid">
+          <td>Druid</td>
+          <td>Incubator</td>
+          <td>2018-02-28</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/druid.html">True</a></td>
+          <td>2018-05-03</td>
+          <td />
+          <td>0,0,1</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/DRUID">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/druid-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/druid-commits/">True</a></td>
+          <td class="cool1"><a href="http://druid.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/druid/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/druid/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/druid/">True</a></td>
+        </tr>
+        <tr id="dubbo">
+          <td>Dubbo</td>
+          <td>Incubator</td>
+          <td>2018-02-16</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/dubbo.html">True</a></td>
+          <td>2018-12-10</td>
+          <td />
+          <td>2,5,5</td>
+          <td class="care">-</td>
+          <td class="cool1 number">11</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/Dubbo">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/dubbo-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/dubbo-commits/">True</a></td>
+          <td class="cool1"><a href="http://dubbo.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/dubbo/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/dubbo/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/dubbo/">True</a></td>
+        </tr>
+        <tr id="echarts">
+          <td>ECharts</td>
+          <td>Incubator</td>
+          <td>2018-01-18</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/echarts.html">True</a></td>
+          <td>2018-02-22</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/ECHARTS">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/echarts-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/echarts-commits/">True</a></td>
+          <td class="cool1"><a href="http://echarts.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/echarts/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/echarts/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/echarts/">True</a></td>
+        </tr>
+        <tr id="edgent">
+          <td>Edgent</td>
+          <td>Incubator</td>
+          <td>2016-02-29</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/edgent.html">True</a></td>
+          <td>2017-05-22</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/EDGENT">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/edgent-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/edgent-commits/">True</a></td>
+          <td class="cool1"><a href="http://edgent.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/edgent/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/edgent/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/edgent/">True</a></td>
+        </tr>
+        <tr id="gobblin">
+          <td>Gobblin</td>
+          <td>Incubator</td>
+          <td>2017-02-23</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/gobblin.html">True</a></td>
+          <td>2017-07-28</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/GOBBLIN">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/gobblin-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/gobblin-commits/">True</a></td>
+          <td class="cool1"><a href="http://gobblin.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/gobblin/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/gobblin/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/gobblin/">True</a></td>
+        </tr>
+        <tr id="heron">
+          <td>Heron</td>
+          <td>Incubator</td>
+          <td>2017-06-23</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/heron.html">True</a></td>
+          <td>2018-09-21</td>
+          <td />
+          <td>0,1,1</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/HERON">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/heron-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/heron-commits/">True</a></td>
+          <td class="cool1"><a href="http://heron.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/heron/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/heron/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/heron/">True</a></td>
+        </tr>
+        <tr id="hivemall">
+          <td>Hivemall</td>
+          <td>Incubator</td>
+          <td>2016-09-13</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/hivemall.html">True</a></td>
+          <td>2017-02-03</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="cool1"><a href="https://git-wip-us.apache.org/repos/asf/incubator-hivemall-site.git">True</a></td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/HIVEMALL">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/hivemall-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/hivemall-commits/">True</a></td>
+          <td class="cool1"><a href="http://hivemall.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/hivemall/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/hivemall/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/hivemall/">True</a></td>
+        </tr>
+        <tr id="hudi">
+          <td>Hudi</td>
+          <td>incubator</td>
+          <td>2019-01-17</td>
+          <td />
+          <td class="care">True</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/hudi.html">True</a></td>
+          <td>2019-01-19</td>
+          <td />
+          <td>2,-,-</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/HUDI">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="iceberg">
+          <td>Iceberg</td>
+          <td>Incubator</td>
+          <td>2018-11-16</td>
+          <td />
+          <td class="care">True</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/iceberg.html">True</a></td>
+          <td>2018-11-19</td>
+          <td />
+          <td>0,3,-</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://github.com/apache/incubator-iceberg/issues">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/iceberg-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/iceberg-commits/">True</a></td>
+          <td class="cool1"><a href="http://iceberg.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="iotdb">
+          <td>IoTDB</td>
+          <td>Incubator</td>
+          <td>2018-11-18</td>
+          <td />
+          <td class="care">True</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/iotdb.html">True</a></td>
+          <td>2018-11-23</td>
+          <td />
+          <td>1,1,-</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://github.com/apache/incubator-iceberg/issues">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/iotdb-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/iotdb-commits/">True</a></td>
+          <td class="cool1"><a href="http://iotdb.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="joshua">
+          <td>Joshua</td>
+          <td>Incubator</td>
+          <td>2016-02-13</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/joshua.html">True</a></td>
+          <td>2017-04-19</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/joshua">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/joshua-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/joshua-commits/">True</a></td>
+          <td class="cool1"><a href="http://joshua.incubator.apache.org">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/joshua/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/joshua/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/joshua/">True</a></td>
+        </tr>
+        <tr id="livy">
+          <td>Livy</td>
+          <td>Incubator</td>
+          <td>2017-06-05</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/livy.html">True</a></td>
+          <td>2017-06-23</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/LIVY">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/livy-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/livy-commits/">True</a></td>
+          <td class="cool1"><a href="https://livy.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/livy/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/livy/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/livy/">True</a></td>
+        </tr>
+        <tr id="marvin-ai">
+          <td>Marvin-AI</td>
+          <td>Incubator</td>
+          <td>2018-08-21</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/marvin.html">True</a></td>
+          <td>2018-11-08</td>
+          <td />
+          <td>0,1,2</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/MARVIN">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/incubator-marvin-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/incubator-marvin-commits/">True</a></td>
+          <td class="cool1"><a href="http://marvin.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="milagro">
+          <td>Milagro</td>
+          <td>Incubator</td>
+          <td>2015-12-21</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/milagro.html">True</a></td>
+          <td>2016-04-12</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/MILAGRO">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/milagro-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/milagro-commits/">True</a></td>
+          <td class="cool1"><a href="http://milagro.incubator.apache.org/ (coming soon)">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="mxnet">
+          <td>MXNet</td>
+          <td>Incubator</td>
+          <td>2017-01-23</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/mxnet.html">True</a></td>
+          <td>2018-10-01</td>
+          <td />
+          <td>0,2,4</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/MXNET">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/mxnet-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/mxnet-commits/">True</a></td>
+          <td class="cool1"><a href="http://mxnet.io/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/mxnet/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/mxnet/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/mxnet/">True</a></td>
+        </tr>
+        <tr id="myriad">
+          <td>Myriad</td>
+          <td>Incubator</td>
+          <td>2015-03-01</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/myriad.html">True</a></td>
+          <td>2018-12-17</td>
+          <td />
+          <td>1,3,5</td>
+          <td class="care">-</td>
+          <td class="cool1 number">3</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/MYRIAD">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/myriad-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/myriad-commits/">True</a></td>
+          <td class="cool1"><a href="http://myriad.incubator.apache.org">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/myriad/">True</a></td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/myriad/">True</a></td>
+        </tr>
+
+        <tr>
+          <th>Project</th>
+          <th>Sponsor</th>
+          <th title="Start Date">A</th>
+          <th title="elapsedDays">B</th>
+          <th title="reportingMonthly">C</th>
+          <th title="reportingGroup">D</th>
+          <th title="hasReportingGroup">E</th>
+          <th title="hasStatusEntry">F</th>
+          <th title="statusUpdateDate">G</th>
+          <th title="statusAge">H</th>
+          <th title="statusUpdateCounts">I</th>
+          <th title="numberCommitters">J</th>
+          <th title="numberCommittersNew">K</th>
+          <th title="hasSvn">L</th>
+          <th title="hasTracker">M</th>
+          <th title="hasMailListDev">N</th>
+          <th title="hasMailListCommits">O</th>
+          <th title="hasWebSite">P</th>
+          <th title="hasDistributionArea">Q</th>
+          <th title="hasKeys">R</th>
+          <th title="hasRelease">S</th>
+        </tr>
+<!-- generated by clutch; do not edit -->
+        <tr id="nemo">
+          <td>Nemo</td>
+          <td>Incubator</td>
+          <td>2018-02-04</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/nemo.html">True</a></td>
+          <td>2018-03-01</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/NEMO">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/nemo-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/nemo-commits/">True</a></td>
+          <td class="cool1"><a href="http://nemo.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/nemo/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/nemo/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/nemo/">True</a></td>
+        </tr>
+        <tr id="netbeans">
+          <td>NetBeans</td>
+          <td>Incubator</td>
+          <td>2016-10-01</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/netbeans.html">True</a></td>
+          <td>2017-11-18</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/NETBEANS">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/netbeans-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/netbeans-commits/">True</a></td>
+          <td class="cool1"><a href="http://netbeans.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/netbeans/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/netbeans/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/netbeans/">True</a></td>
+        </tr>
+        <tr id="omid">
+          <td>Omid</td>
+          <td>Incubator</td>
+          <td>2016-03-28</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/omid.html">True</a></td>
+          <td>2018-09-19</td>
+          <td />
+          <td>0,0,1</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/Omid">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/omid-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/omid-commits/">True</a></td>
+          <td class="cool1"><a href="http://omid.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/omid/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/omid/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/omid/">True</a></td>
+        </tr>
+        <tr id="openwhisk">
+          <td>OpenWhisk</td>
+          <td>Incubator</td>
+          <td>2016-11-23</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/openwhisk.html">True</a></td>
+          <td>2018-02-22</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://github.com/openwhisk/openwhisk/issues">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/openwhisk-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/openwhisk-commits/">True</a></td>
+          <td class="cool1"><a href="http://openwhisk.org">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/openwhisk/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/openwhisk/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/openwhisk/">True</a></td>
+        </tr>
+        <tr id="pagespeed">
+          <td>PageSpeed</td>
+          <td>Incubator</td>
+          <td>2017-09-30</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/pagespeed.html">True</a></td>
+          <td>2017-10-02</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/PAGESPEED">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/pagespeed-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/pagespeed-commits/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="pinot">
+          <td>Pinot</td>
+          <td>Incubator</td>
+          <td>2018-10-17</td>
+          <td />
+          <td class="care">True</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/pinot.html">True</a></td>
+          <td>2018-10-25</td>
+          <td />
+          <td>0,1,-</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/PINOT">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/pinot-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/pinot-commits/">True</a></td>
+          <td class="cool1"><a href="http://pinot.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="plc4x">
+          <td>PLC4X</td>
+          <td>Incubator</td>
+          <td>2017-12-18</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/plc4x.html">True</a></td>
+          <td>2017-12-30</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/PLC4X">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/plc4x-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/plc4x-commits/">True</a></td>
+          <td class="cool1"><a href="http://plc4x.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/plc4x/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/plc4x/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/plc4x/">True</a></td>
+        </tr>
+        <tr id="ponymail">
+          <td>Pony Mail</td>
+          <td>Incubator</td>
+          <td>2016-05-27</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/ponymail.html">True</a></td>
+          <td>2017-08-01</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://github.com/apache/incubator-ponymail/issues">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/ponymail-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/ponymail-commits/">True</a></td>
+          <td class="cool1"><a href="http://ponymail.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/ponymail/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/ponymail/KEYS">True</a></td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="ratis">
+          <td>Ratis</td>
+          <td>Incubator</td>
+          <td>2017-01-03</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/ratis.html">True</a></td>
+          <td>2017-02-02</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/ratis">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/ratis-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/ratis-commits/">True</a></td>
+          <td class="cool1"><a href="http://ratis.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/ratis/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/ratis/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/ratis/">True</a></td>
+        </tr>
+        <tr id="rya">
+          <td>Rya</td>
+          <td>Incubator</td>
+          <td>2015-09-18</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/rya.html">True</a></td>
+          <td>2018-11-25</td>
+          <td />
+          <td>1,4,5</td>
+          <td class="care">-</td>
+          <td class="cool1 number">2</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/RYA">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/rya-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/rya-commits/">True</a></td>
+          <td class="cool1"><a href="http://rya.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/rya/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/rya/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/rya/">True</a></td>
+        </tr>
+        <tr id="s2graph">
+          <td>S2Graph</td>
+          <td>Incubator</td>
+          <td>2015-11-29</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/s2graph.html">True</a></td>
+          <td>2016-05-10</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/S2GRAPH">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/s2graph-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/s2graph-commits/">True</a></td>
+          <td class="cool1"><a href="http://s2graph.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/s2graph/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/s2graph/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/s2graph/">True</a></td>
+        </tr>
+        <tr id="samoa">
+          <td>SAMOA</td>
+          <td>Incubator</td>
+          <td>2014-12-15</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/samoa.html">True</a></td>
+          <td>2015-01-06</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/SAMOA">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/samoa-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/samoa-commits/">True</a></td>
+          <td class="cool1"><a href="http://samoa.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/samoa/">True</a></td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/samoa/">True</a></td>
+        </tr>
+        <tr id="sdap">
+          <td>SDAP</td>
+          <td>Incubator</td>
+          <td>2017-10-22</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/sdap.html">True</a></td>
+          <td>2017-10-26</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/sdap">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/sdap-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/sdap-commits/">True</a></td>
+          <td class="cool1"><a href="http://sdap.incubator.apache.org">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="senssoft">
+          <td>SensSoft</td>
+          <td>Incubator</td>
+          <td>2016-07-13</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/senssoft.html">True</a></td>
+          <td>2017-01-11</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/senssoft">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/senssoft-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/senssoft-commits/">True</a></td>
+          <td class="cool1"><a href="http://senssoft.incubator.apache.org">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/senssoft/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/senssoft/KEYS">True</a></td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="shardingsphere">
+          <td>ShardingSphere</td>
+          <td>Incubator</td>
+          <td>2018-11-10</td>
+          <td />
+          <td class="care">True</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/shardingsphere.html">True</a></td>
+          <td>2019-01-16</td>
+          <td />
+          <td>7,9,-</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/SHARDINGSPHERE">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/shardingsphere-dev/">True</a></td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="http://shardingsphere.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="singa">
+          <td>SINGA</td>
+          <td>Incubator</td>
+          <td>2015-03-17</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/singa.html">True</a></td>
+          <td>2015-05-20</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/SINGA">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/singa-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/singa-commits/">True</a></td>
+          <td class="cool1"><a href="http://singa.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/singa/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/singa/1.2.0/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/singa/">True</a></td>
+        </tr>
+        <tr id="skywalking">
+          <td>SkyWalking</td>
+          <td>Incubator</td>
+          <td>2017-12-08</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/skywalking.html">True</a></td>
+          <td>2018-11-24</td>
+          <td />
+          <td>3,4,5</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/SKYWALKING">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/skywalking-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/skywalking-commits/">True</a></td>
+          <td class="cool1"><a href="http://skywalking.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/skywalking/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/skywalking/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/skywalking/">True</a></td>
+        </tr>
+        <tr id="spot">
+          <td>Spot</td>
+          <td>Incubator</td>
+          <td>2016-09-23</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/spot.html">True</a></td>
+          <td>2016-10-28</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/SPOT">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/spot-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/spot-commits/">True</a></td>
+          <td class="cool1"><a href="http://spot.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/spot/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/spot/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/spot/">True</a></td>
+        </tr>
+        <tr id="superset">
+          <td>Superset</td>
+          <td>Incubator</td>
+          <td>2017-05-21</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/superset.html">True</a></td>
+          <td>2017-06-26</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/SUPERSET">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/superset-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/superset-commits/">True</a></td>
+          <td class="cool1"><a href="http://superset.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="tamaya">
+          <td>Tamaya</td>
+          <td>Incubator</td>
+          <td>2014-11-14</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/tamaya.html">True</a></td>
+          <td>2015-08-31</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="cool2 number">1</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/TAMAYA">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/tamaya-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/tamaya-commits/">True</a></td>
+          <td class="cool1"><a href="http://tamaya.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/tamaya/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/tamaya/0.3-incubating/extensions/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/tamaya/">True</a></td>
+        </tr>
+        <tr id="taverna">
+          <td>Taverna</td>
+          <td>Incubator</td>
+          <td>2014-10-20</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/taverna.html">True</a></td>
+          <td>2018-12-05</td>
+          <td />
+          <td>1,1,2</td>
+          <td class="care">-</td>
+          <td class="cool1 number">4</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/TAVERNA">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/taverna-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/taverna-commits/">True</a></td>
+          <td class="cool1"><a href="http://taverna.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/taverna/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/taverna/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/taverna/">True</a></td>
+        </tr>
+        <tr id="tephra">
+          <td>Tephra</td>
+          <td>Incubator</td>
+          <td>2016-03-07</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/tephra.html">True</a></td>
+          <td>2016-11-17</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="cool1"><a href="https://svn.apache.org/repos/asf/incubator/tephra/">True</a></td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/TEPHRA">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/tephra-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/tephra-commits/">True</a></td>
+          <td class="cool1"><a href="http://tephra.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/tephra/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/tephra/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/tephra/">True</a></td>
+        </tr>
+        <tr id="toree">
+          <td>Toree</td>
+          <td>Incubator</td>
+          <td>2015-12-02</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/toree.html">True</a></td>
+          <td>2018-09-18</td>
+          <td />
+          <td>0,0,1</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/TOREE">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/toree-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/toree-commits/">True</a></td>
+          <td class="cool1"><a href="http://toree.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/toree/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/toree/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/toree/">True</a></td>
+        </tr>
+        <tr id="unomi">
+          <td>Unomi</td>
+          <td>Incubator</td>
+          <td>2015-10-05</td>
+          <td />
+          <td>False</td>
+          <td>group-2</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/unomi.html">True</a></td>
+          <td>2015-11-05</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/UNOMI">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/unomi-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/unomi-commits/">True</a></td>
+          <td class="cool1"><a href="http://unomi.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/unomi/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/unomi/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/unomi/">True</a></td>
+        </tr>
+        <tr id="warble">
+          <td>Warble</td>
+          <td>Incubator</td>
+          <td>2018-06-11</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/warble.html">True</a></td>
+          <td>2018-09-19</td>
+          <td />
+          <td>0,0,4</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/WARBLE">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/warble-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/warble-commits/">True</a></td>
+          <td class="cool1"><a href="http://warble.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+        <tr id="weex">
+          <td>Weex</td>
+          <td>Incubator</td>
+          <td>2016-11-30</td>
+          <td />
+          <td>False</td>
+          <td>group-1</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/weex.html">True</a></td>
+          <td>2017-01-02</td>
+          <td />
+          <td>0,0,0</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/WEEX">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/weex-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/weex-commits/">True</a></td>
+          <td class="cool1"><a href="http://weex.incubator.apache.org/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/weex/">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dist/incubator/weex/KEYS">True</a></td>
+          <td class="cool1"><a href="http://www.apache.org/dyn/closer.cgi/incubator/weex/">True</a></td>
+        </tr>
+        <tr id="zipkin">
+          <td>Zipkin</td>
+          <td>Incubator</td>
+          <td>2018-08-29</td>
+          <td />
+          <td>False</td>
+          <td>group-3</td>
+          <td class="cool1">True</td>
+          <td class="cool1"><a href="projects/zipkin.html">True</a></td>
+          <td>2018-12-13</td>
+          <td />
+          <td>2,3,8</td>
+          <td class="care">-</td>
+          <td class="care number">0</td>
+          <td class="care">False</td>
+          <td class="cool1"><a href="https://issues.apache.org/jira/browse/ZIPKIN">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/zipkin-dev/">True</a></td>
+          <td class="cool1"><a href="http://mail-archives.apache.org/mod_mbox/zipkin-commits/">True</a></td>
+          <td class="cool1"><a href="http://zipkin.incubator.apache.org/">True</a></td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+          <td class="care">False</td>
+        </tr>
+
+        <tr>
+          <th>Project</th>
+          <th>Sponsor</th>
+          <th title="Start Date">A</th>
+          <th title="elapsedDays">B</th>
+          <th title="reportingMonthly">C</th>
+          <th title="reportingGroup">D</th>
+          <th title="hasReportingGroup">E</th>
+          <th title="hasStatusEntry">F</th>
+          <th title="statusUpdateDate">G</th>
+          <th title="statusAge">H</th>
+          <th title="statusUpdateCounts">I</th>
+          <th title="numberCommitters">J</th>
+          <th title="numberCommittersNew">K</th>
+          <th title="hasSvn">L</th>
+          <th title="hasTracker">M</th>
+          <th title="hasMailListDev">N</th>
+          <th title="hasMailListCommits">O</th>
+          <th title="hasWebSite">P</th>
+          <th title="hasDistributionArea">Q</th>
+          <th title="hasKeys">R</th>
+          <th title="hasRelease">S</th>
+        </tr>
+      </table>
+</div>
+        <h2 id='other'><img src="../images/redarrow.gif" />Other issues</h2>
+<div class="section-content">
+<p>
+        Occasionally there are other issues, usually regarding podlings not cleaning up after their "graduation".
+      </p>
+<ul>
+        <!-- generated by clutch; do not edit -->
+        <li>commonsrdf: Has graduated, but still has remains on Incubator distribution mirrors. See <a href="#h-Graduate">help</a>.</li>
+        <li>griffin: Has graduated, but still has remains on Incubator distribution mirrors. See <a href="#h-Graduate">help</a>.</li>
+        <li>netbeans: Has a distribution filename missing the word "incubating/incubator". See <a href="#h-hasRelease">help</a>.</li>
+        <li>predictionio: Has graduated, but still has remains on Incubator distribution mirrors. See <a href="#h-Graduate">help</a>.</li>
+        <li>senssoft: Has a distribution filename missing the word "incubating/incubator". See <a href="#h-hasRelease">help</a>.</li>
+        <li>toree: Has a distribution filename missing the word "incubating/incubator". See <a href="#h-hasRelease">help</a>.</li>
+        <li>trafficcontrol: Has a distribution filename missing the word "incubating/incubator". See <a href="#h-hasRelease">help</a>.</li>
+        <li>trafficcontrol: Has graduated, but still has remains on Incubator distribution mirrors. See <a href="#h-Graduate">help</a>.</li>
+        <li>trafficcontrol: Has graduated, but still has remains on Incubator distribution mirrors. See <a href="#h-Graduate">help</a>.</li>
+        <li>unomi: Has a distribution filename missing the word "incubating/incubator". See <a href="#h-hasRelease">help</a>.</li>
+
+      </ul>
+</div>
+        <h2 id='notes'><img src="../images/redarrow.gif" />Notes</h2>
+<div class="section-content">
+<p>
+        Any Incubator committer can run 'clutch'. In the top-level of the
+        "incubator/public/trunk" SVN, do: '<code>python3 clutch.py</code>' which will
+        re-generate some xml entities for the data.
+        The normal site build process will automatically combine these with
+        the "content/clutch.xml" source.
+        Do '<code>svn diff</code>' to see what changed.
+        Then build and deploy the <a href="./guides/website.html">site</a> as normal.
+      </p>
+<p>
+        Clutch reads the source file for the
+        "<a href="projects/">projects currently in incubation</a>" table
+        (i.e. content/podlings.xml),
+        ensures that each new project has an entry, adds some more attributes.
+        Clutch then gathers some data from each project's Status page, makes
+        other guesses, and validates that certain facilities are established
+        and steps are achieved.
+      </p>
+<p>
+        The <a href="http://en.wikipedia.org/wiki/Clutch_(eggs)">clutch</a> is
+        the set of eggs which have been laid. The mother hen (our Incubator PMC)
+        needs to continually gather them, to ensure that none have rolled from
+        the nest or moved to the outside, being forgotten or becoming cold.
+        Clutch also means to grasp eagerly.
+      </p>
+<p>
+        So please interpret this table from the point-of-view of encouragement
+        and nurture.
+      </p>
+</div>
+        <h2 id='steps'><img src="../images/redarrow.gif" />Assist with Incubation Steps</h2>
+<div class="section-content">
+<p>
+        Essentially Clutch is helping us all to follow the process from the
+        "Acceptance" phase onwards (explained in
+        <a href="./incubation/Process_Description.html#Acceptance">Process Description</a>
+        and
+        <a href="./incubation/Incubation_Policy.html#Acceptance+By+Incubator">Incubation Policy</a>
+        and
+        <a href="./guides/mentor.html">Mentor Guide</a>
+        and
+        <a href="./guides/index.html">Other Guides</a>
+        and summarised at
+        <a href="./guides/mentor.html#bootstrap">Podling Bootstrap</a>).
+        Any committer on a podling can help with these steps. Don't leave it
+        to your mentors, although there are some steps that only they can do.
+      </p>
+<p>
+        The first steps are the "Acceptance" phase. See 
+        <a href="incubation/Process_Description.html#Acceptance">doc</a> and
+        <a href="incubation/Incubation_Policy.html#Acceptance+By+Incubator">doc</a> and
+        <a href="guides/mentor.html#Overview">doc</a>.
+      </p>
+<p>
+        The <span class="care">orange</span> and <span class="issue">vermilion</span>
+        items indicate where more care and attention is needed. The following
+        notes for each column, expand on the column definitions
+        <a href="#current">above</a> and
+        attempt to link directly to the relevant process documentation:
+      </p>
+<ul>
+        <li id="h-Project">Project -
+          If your project is in incubation, but is missing from the Clutch table,
+          then you have forgotten to add it to the podlings.xml file.
+          (See <a href="guides/mentor.html#Overview">doc</a> and
+          notes for "<a href="#h-hasStatusEntry">hasStatusEntry</a>" below.)
+        </li>
+        <li><span class="grad">Project</span> - If this cell is highlighted with a border, then this
+          project is in the process of graduating or retiring, and not yet finished their
+          <a href="#h-Graduate">move</a>.
+          Hence resources (e.g. mail lists, svn) seem to disappear as they migrate.
+          See <a href="#other">Other issues</a> below.
+        </li>
+        <li id="h-Sponsor">Sponsor -
+          This information is gathered from the list of
+          <a href="projects/">Projects in incubation</a> summary table.
+          The "not known" is because it is missing from that table.
+          See notes for "<a href="#h-hasStatusEntry">hasStatusEntry</a>" below.
+        </li>
+        <li id="h-startDate">
+          A: startDate -
+          This information is gathered from the list of
+          <a href="projects/">Projects in incubation</a> summary table.
+          The "not known" is because it is missing from that table.
+          See notes for "<a href="#h-hasStatusEntry">hasStatusEntry</a>" below.
+        </li>
+        <li id="h-elapsedDays">
+          B: elapsedDays - Calculated from startDate.
+        </li>
+        <li id="h-reportingMonthly">
+          C: reportingMonthly -
+          Your project PPMC should manage your entry in the podlings.xml file
+        </li>
+        <li id="h-reportingGroup">
+          D: reportingGroup - in which set of months do they report.
+        </li>
+        <li id="h-hasReportingGroup">
+          E: hasReportingGroup - did podling remember to choose a group.
+          See notes for "<a href="#h-Project">Project</a>" above.
+        </li>
+        <li id="h-hasStatusEntry">
+          F: hasStatusEntry in the <a href="projects/">Currently in incubation</a> table
+          (i.e. generated from content/podlings.xml)
+          and has an
+          associated project Status page.
+          (<a href="incubation/Incubation_Policy.html#Ongoing+Activities">doc</a> and
+          <a href="guides/mentor.html#Sending+in+an+Incubation+Report">doc</a> and
+          <a href="guides/mentor.html#Initialize+Podling+Status+Page">doc</a> and
+          <a href="guides/ppmc.html#Project+Status+Updates">doc</a> and
+          <a href="guides/website.html#Edit+your+project+status+page">doc</a>)
+        </li>
+        <li id="h-statusUpdateDate">
+          G: statusUpdateDate - the status page was last updated. Clutch does an 'svn log'
+          query for the project's Status page.
+        </li>
+        <li id="h-statusAge">
+          H: statusAge - days since the SVN status page was last updated
+        </li>
+        <li id="h-statusUpdateCounts">
+          I: statusUpdateCounts - number of commits to status file in the
+          previous 2,4,9 months (cumulative).
+          Clutch does an 'svn log' query for the project's Status page, and counts the edits
+          for those time ranges.
+        </li>
+        <li id="h-numberCommitters">
+          J: numberCommitters - accounts have been established, total number to date.
+          Clutch parses the relevant section of the
+          <a href="http://people.apache.org/committers-by-project.html">ASF Committers by Project Modules</a>
+          page and counts the total, including mentors.
+        </li>
+        <li id="h-numberCommittersNew">
+          K: numberCommittersNew - new committers added since establishment
+          (gathered from each project's Status page "News" section). Clutch parses the News
+          section and detects the string "new committer", counting each matched line.
+          See notes for "<a href="#h-hasStatusEntry">hasStatusEntry</a>" above.
+          (<a href="guides/ppmc.html#Voting+in+a+new+committer">doc</a> and
+          <a href="guides/ppmc.html#Voting+in+a+new+PPMC+member">doc</a> and
+          <a href="guides/community.html">doc</a>)
+        </li>
+        <li id="h-hasSvn">
+          L: hasSvn - Subversion repository is created.
+          (<a href="guides/mentor.html#Set+Up+Repository">doc</a> and
+          <a href="guides/mentor.html#Authorize+Committers">doc</a>)
+        </li>
+        <li id="h-hasTracker">
+          M: hasTracker - has an Issue Tracker
+        </li>
+        <li id="h-hasMailListDev">
+          N: hasMailListDev - Hints about mail list names are gathered from
+          their Status page, then tries standard convention, then verifies that
+          the <a href="http://mail-archives.apache.org/mod_mbox/#incubator">mailing lists</a>
+          are established, then ensures that the
+          <a href="mail/">mail archives</a> are now available.
+        </li>
+        <li id="h-hasMailListCommits">
+          O: hasMailListCommits - see above.
+        </li>
+        <li id="h-hasWebSite">
+          P: hasWebSite -
+        </li>
+        <li id="h-hasDistributionArea">
+          Q: hasDistributionArea - has w.a.o/dist/incubator/... area (not necessarily yet a release)
+        </li>
+        <li id="h-hasKeys">
+          R: hasKeys - has a PGP "<code>KEYS</code>" file in their distribution area.
+          This utilises Henk's
+          <a href="http://people.apache.org/~henkp/checker/md5.html">md5 checker</a>
+          which gathers the list of all KEYS files.
+        </li>
+        <li id="h-hasRelease">
+          S: hasRelease - has a release in their distribution area. The test is
+          whether they have a signature file (*.asc or *.sig ) associated with
+          a source release artifact (*.tar.gz or *.tgz or *.bz2 or *zip) and the
+          filename includes the word "incubating".
+          (<a href="guides/releasemanagement.html">doc</a> and
+           <a href="http://www.apache.org/dev/#releases">doc</a>)
+        </li>
+        <li id="h-otherIssues">
+          otherIssues - When projects graduate or become retired, then they need to clean up.
+        </li>
+        <li id="h-Graduate">
+          Graduating: Update your project metadata in the content/podlings.xml file as you
+          progress through the graduation phases.
+          Do various other tasks listed in the docs, such as final tidy of
+          Status page, tidy your old release distribution area, etc.
+          (<a href="incubation/Process_Description.html#Graduation">doc</a>
+          and
+          <a href="guides/graduation.html">doc</a>
+          and
+          <a href="guides/graduation.html#project-first-steps">doc</a>)
+        </li>
+        <li id="h-Retire">
+          Retiring: In the <a href="projects/">Projects in incubation</a> table, mark its status as
+          "retired".
+          (<a href="https://issues.apache.org/jira/browse/INCUBATOR-100">doc</a>)
+        </li>
+      </ul>
+</div>
+        <h2 id='mentors'><img src="../images/redarrow.gif" />Mentors projects</h2>
+<div class="section-content">
+<p>
+        This list is gathered from the <a href="projects/">Projects in incubation</a>
+        summary table.
+        The <a href="./incubation/Roles_and_Responsibilities.html#Mentor">Mentors</a>
+        are ASF members who have chosen to assist these projects.
+        The best way to find mentors for a new project, is during your
+        Discuss and Proposal phases on the general@ mail list.
+      </p>
+<ul>
+      <!-- generated by clutch; do not edit -->
+        <li><strong>Alan Gates</strong>: Omid, SAMOA, SINGA, Superset, Tephra</li>
+        <li><strong>Andriy Redko</strong>: Zipkin</li>
+        <li><strong>Ashutosh Chauhan</strong>: SAMOA, Superset</li>
+        <li><strong>Ate Douma</strong>: NetBeans</li>
+        <li><strong>Atri Sharma</strong>: SensSoft</li>
+        <li><strong>Benjamin Hindman</strong>: Myriad, ShardingSphere</li>
+        <li><strong>Bertrand Delacretaz</strong>: NetBeans, OpenWhisk</li>
+        <li><strong>Bikas Saha</strong>: Livy</li>
+        <li><strong>Billie Rinaldi</strong>: Rya</li>
+        <li><strong>Bob Paulin</strong>: MXNet</li>
+        <li><strong>Brock Noland</strong>: Livy</li>
+        <li><strong>Byung-Gon Chun</strong>: Nemo</li>
+        <li><strong>Carl Steinbach</strong>: Iceberg</li>
+        <li><strong>Chris Lambertus</strong>: Warble</li>
+        <li><strong>Chris Mattmann</strong>: Joshua</li>
+        <li><strong>Christofer Dutz</strong>: Edgent, IoTDB</li>
+        <li><strong>Craig L Russell</strong>: ShardingSphere</li>
+        <li><strong>Daniel Dai</strong>: Hivemall</li>
+        <li><strong>Daniel Gruno</strong>: NetBeans</li>
+        <li><strong>Daniel Takamori</strong>: Warble</li>
+        <li><strong>Dave Fisher</strong>: Doris, ECharts</li>
+        <li><strong>David Blevins</strong>: Tamaya</li>
+        <li><strong>David Fisher</strong>: Daffodil, Dubbo, Heron</li>
+        <li><strong>David Meikle</strong>: SensSoft</li>
+        <li><strong>Davor Bonaci</strong>: Amaterasu, Nemo</li>
+        <li><strong>Devaraj Das</strong>: Ratis</li>
+        <li><strong>Felix Cheung</strong>: Pinot</li>
+        <li><strong>Greg Trasuk</strong>: PLC4X</li>
+        <li><strong>Henri Yandell</strong>: MXNet</li>
+        <li><strong>Henry Saputra</strong>: DLab</li>
+        <li><strong>Hitesh Shah</strong>: Airflow</li>
+        <li><strong>Hyunsik Choi</strong>: Nemo</li>
+        <li><strong>Ignasi Barrera</strong>: SkyWalking</li>
+        <li><strong>Jake Farrell</strong>: Heron</li>
+        <li><strong>Jakob Homan</strong>: Airflow, Ratis</li>
+        <li><strong>James Taylor</strong>: Iceberg, Omid, Tephra</li>
+        <li><strong>Jason Dai</strong>: MXNet</li>
+        <li><strong>Jean-Baptiste Onofre</strong>: Gobblin, Livy, Nemo, Unomi</li>
+        <li><strong>Jean-Baptiste Onofré</strong>: Amaterasu, BatchEE, BRPC</li>
+        <li><strong>Jim Jagielski</strong>: Gobblin, Marvin-AI, MXNet, OpenWhisk, Pinot</li>
+        <li><strong>Joe Witt</strong>: IoTDB</li>
+        <li><strong>John D. Ament</strong>: Daffodil, ECharts, Pony Mail, Tamaya, Zipkin</li>
+        <li><strong>Josh Elser</strong>: Rya</li>
+        <li><strong>Jukka Zitting</strong>: PageSpeed</li>
+        <li><strong>Julian Hyde</strong>: Crail, Druid</li>
+        <li><strong>Julien Le Dem</strong>: Heron, Iceberg, Toree</li>
+        <li><strong>Jun Rao</strong>: Druid</li>
+        <li><strong>Justin Mclean</strong>: Dubbo, Edgent, IoTDB, PLC4X</li>
+        <li><strong>Jörn Rottmann</strong>: SDAP</li>
+        <li><strong>Kevin A. McGrail</strong>: BRPC, ECharts</li>
+        <li><strong>Kishore Gopalakrishna</strong>: Pinot</li>
+        <li><strong>Kishore Gopalakrishnan</strong>: Hudi</li>
+        <li><strong>Koji Sekiguchi</strong>: Hivemall</li>
+        <li><strong>Konstantin I Boudnik</strong>: DLab</li>
+        <li><strong>Leif Hedstrom</strong>: PageSpeed</li>
+        <li><strong>Lewis John McGibbney</strong>: Joshua, SensSoft</li>
+        <li><strong>Luciano Resende</strong>: Crail, Edgent, Hudi, Livy, Marvin-AI, Toree</li>
+        <li><strong>Luke Han</strong>: Doris, SkyWalking, Superset</li>
+        <li><strong>Mark Struberg</strong>: BatchEE, NetBeans</li>
+        <li><strong>Mark Thomas</strong>: Dubbo</li>
+        <li><strong>Markus Weimer</strong>: MXNet, Nemo</li>
+        <li><strong>Marlon Pierce</strong>: Taverna</li>
+        <li><strong>Michael Semb Wever</strong>: Zipkin</li>
+        <li><strong>Michael Wall</strong>: MXNet</li>
+        <li><strong>Mick Semb Wever</strong>: SkyWalking</li>
+        <li><strong>Myrle Krantz</strong>: Weex</li>
+        <li><strong>Nick Kew</strong>: Annotator, Milagro, PageSpeed</li>
+        <li><strong>Olivier Lamy</strong>: Amaterasu, BatchEE, Gobblin, Pinot</li>
+        <li><strong>Owen O'Malley</strong>: Iceberg</li>
+        <li><strong>P. Taylor Goetz</strong>: DLab, Druid, Heron</li>
+        <li><strong>Paul Ramirez</strong>: Joshua</li>
+        <li><strong>Phil Sorber</strong>: PageSpeed</li>
+        <li><strong>Roman Shaposhnik</strong>: Pinot</li>
+        <li><strong>Ryan Blue</strong>: Iceberg, Toree</li>
+        <li><strong>Sebastian Schelter</strong>: MXNet</li>
+        <li><strong>Sergio Fernández</strong>: S2Graph</li>
+        <li><strong>Sharan Foga</strong>: Pony Mail</li>
+        <li><strong>Sheng Wu</strong>: Zipkin</li>
+        <li><strong>Stefan Bodewig</strong>: PLC4X</li>
+        <li><strong>Steve Blackmon</strong>: Annotator</li>
+        <li><strong>Stian Soiland-Reyes</strong>: Taverna</li>
+        <li><strong>Suneel Marthi</strong>: Hudi, SDAP</li>
+        <li><strong>Suresh Srinivas</strong>: Taverna</li>
+        <li><strong>Ted Dunning</strong>: Myriad, SINGA</li>
+        <li><strong>Thejas Nair</strong>: SINGA</li>
+        <li><strong>Thomas Weise</strong>: Hudi</li>
+        <li><strong>Tom Barber</strong>: Joshua</li>
+        <li><strong>Tommaso Teofili</strong>: Annotator</li>
+        <li><strong>Uma Maheswara Rao G</strong>: Ratis, Spot</li>
+        <li><strong>Von Gosling</strong>: BRPC, ShardingSphere</li>
+        <li><strong>Willem Ning Jiang</strong>: Doris, IoTDB, ShardingSphere, SkyWalking, Weex, Zipkin</li>
+        <li><strong>William Colen</strong>: Marvin-AI</li>
+        <li><strong>Woonsan Ko</strong>: S2Graph</li>
+        <li><strong>Xiangrui Meng</strong>: Hivemall</li>
+
+      </ul>
+</div>
+        <h2 id='data'><img src="../images/redarrow.gif" />Data files</h2>
+<div class="section-content">
+<p>
+        Data files are also generated so that other tools can easily re-use the
+        metadata for the set of projects currently in incubation: 
+      </p>
+<ul>
+        <li>
+          <code><a href="clutch.txt">clutch.txt</a></code>
+          - list of projects, one per line. Comma-separated values (CSV).
+        </li>
+        <li>
+          <code>clutch.pkl</code>
+          - a Python "pickle" file with various attributes (it is in the top-level of SVN incubator/public/trunk).
+        </li>
+        <li>
+          <code><a href="/report-groups.txt">report-groups.txt</a></code>
+          - list of current projects showing their report groups.
+        </li>
+        <li>
+          One text file for each Reporting group
+          listing the dev mail address of the group of projects due to report.
+          (See <code>report_due_[1-3].txt</code>)
+          This is used by other systems to send monthly marvin mail alert reminders.
+        </li>
+        <li>
+          Structured list of various details. Not yet happening - need to
+          decide which format (e.g. RDFa, etc.) and which attributes to be
+          stored.
+        </li>
+      </ul>
+</div>
+        <h2 id='notes-2'><img src="../images/redarrow.gif" />Other Notes</h2>
+<div class="section-content">
+<h3 id='notes-origin'>Origin</h3>
+<div class="section-content">
+<p>
+          The nest was becoming full, some podlings were forgotten, rolled
+          into dark corners:
+          <a href="http://thread.gmane.org/gmane.comp.apache.incubator.general/20226">new tool "clutch" assist oversight of all podlings</a>
+          2008-10-19 (<a href="http://s.apache.org/clutch_start?action=display">http://s.apache.org/clutch_start</a>).
+          There was prior list discussion. Also see
+          <a href="https://issues.apache.org/jira/browse/INCUBATOR-78">INCUBATOR-78</a>
+        </p>
+</div>
+<h3 id='notes-cud'>Colour Scheme</h3>
+<div class="section-content">
+<p>
+          The colours for the table were specifically chosen to assist with
+          colour-blindness and general accessibility.
+          See the email discussion that led to this:
+          <a href="http://thread.gmane.org/gmane.comp.apache.incubator.general/20788/focus=20810">Re: Clutch color coding</a>
+          2008-12-04 (<a href="http://s.apache.org/clutch_colour?action=display">http://s.apache.org/clutch_colour</a>).
+          and see some testing
+          <a href="http://people.apache.org/~crossley/cud/test.html">notes</a> and demonstrations.
+        </p>
+<p>
+          Thanks again to:
+          "Color Universal Design (CUD) - How to make figures and
+          presentations that are friendly to Colorblind people."
+          Masataka Okabe and Kei Ito.
+          (<a href="http://jfly.iam.u-tokyo.ac.jp/color/">http://jfly.iam.u-tokyo.ac.jp/color/</a>)
+        </p>
+</div>
+<h3 id='notes-summaries'>Other Summaries</h3>
+<div class="section-content">
+<p>
+          A time-plot of Apache Incubator <a href="history/">history</a>.
+        </p>
+</div>
+<div id="clutch-bottom-spacer">
+        <!-- Spacer so that can link directly to each step above. -->
+      </div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

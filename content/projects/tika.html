@@ -1,0 +1,800 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>Apache Tika Incubation Status - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='Apache+Tika+Incubation+Status'><img src="../images/redarrow.gif" />Apache Tika Incubation Status</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise.</p>
+<p><span class="graduated">The Tika project graduated on 2008-10-28</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<p>
+        Tika is a toolkit for detecting and extracting metadata and
+        structured text content from various documents using existing
+        parser libraries.
+      </p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<ul>
+        <li><strong>2008-10-28:</strong> Tika graduates into a Lucene subproject</li>
+        <li><strong>2008-10-01:</strong> Dave Meikle added as new committer</li>
+        <li><strong>2008-04-07:</strong> Niall Pemberton added as new committer</li>
+        <li><strong>2007-12-27:</strong> Apache Tika 0.1-incubating released</li>
+        <li><strong>2007-10-02:</strong> Keith Bennett added as new committer</li>
+        <li><strong>2007-03-22:</strong> Apache Tika begins incubation</li>
+      </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info</h2>
+<div class="section-content">
+<table class="colortable" width="100%">
+        <tr>
+          <th>item</th>
+          <th>type</th>
+          <th>reference</th>
+        </tr>
+        <tr>
+          <td>Website</td>
+          <td>www</td>
+          <td id="www">
+            <a href="http://incubator.apache.org/tika/">http://incubator.apache.org/tika/</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Mailing list</td>
+          <td>dev</td>
+          <td id="mail-dev"><code>tika-dev</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td />
+          <td>commits</td>
+          <td id="mail-commits"><code>tika-commits</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>Moderators</td>
+          <td>jukka</td>
+          <td>Jukka Zitting</td>
+        </tr>
+        <tr>
+          <td>Bug tracking</td>
+          <td>jira</td>
+          <td id="tracker"><a href="https://issues.apache.org/jira/browse/TIKA">https://issues.apache.org/jira/browse/TIKA</a></td>
+        </tr>
+        <tr>
+          <td>Source code</td>
+          <td>svn</td>
+          <td id="svn"><a href="https://svn.apache.org/repos/asf/incubator/tika/">https://svn.apache.org/repos/asf/incubator/tika/</a></td>
+        </tr>
+        <tr>
+          <td>Sponsor</td>
+          <td />
+          <td><a href="http://lucene.apache.org/">Apache Lucene PMC</a></td>
+        </tr>
+        <tr>
+          <td>Mentors</td>
+          <td>cutting</td>
+          <td>Doug Cutting</td>
+        </tr>
+        <tr>
+          <td />
+          <td>bdelacretaz</td>
+          <td>Bertrand Delacretaz</td>
+        </tr>
+        <tr>
+          <td />
+          <td>jukka</td>
+          <td>Jukka Zitting</td>
+        </tr>
+        <tr>
+          <td>Committers</td>
+          <td>ridabenjelloun</td>
+          <td>Rida Benjelloun</td>
+        </tr>
+        <tr>
+          <td />
+          <td>mharwood</td>
+          <td>Mark Harwood</td>
+        </tr>
+        <tr>
+          <td />
+          <td>mattmann</td>
+          <td>Chris A. Mattmann</td>
+        </tr>
+        <tr>
+          <td />
+          <td>siren</td>
+          <td>Sami Siren</td>
+        </tr>
+        <tr>
+          <td />
+          <td>jukka</td>
+          <td>Jukka Zitting</td>
+        </tr>
+        <tr>
+          <td />
+          <td>kbennett</td>
+          <td>Keith Bennett</td>
+        </tr>
+        <tr>
+          <td />
+          <td>niallp</td>
+          <td>Niall Pemberton</td>
+        </tr>
+        <tr>
+          <td />
+          <td>dmeikle</td>
+          <td>Dave Meikle</td>
+        </tr>
+      </table>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports</h2>
+<div class="section-content">
+<h3 id='October 2008'>October 2008</h3>
+<div class="section-content">
+<p>
+          Apache Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing parser
+          libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<ul>
+          <li>Dave Meikle was just voted in as a new committer.</li>
+          <li>Paolo Mottadelli will present Tika at ApacheCon US.</li>
+        </ul>
+<p><strong>Development</strong></p>
+<ul>
+          <li>Tika 0.2 should be released soon.</li>
+          <li>Usage documentation has been added to the website.</li>
+        </ul>
+<p><strong>Issues before graduation</strong></p>
+<ul>
+          <li>
+            The current plan is to graduate as a Lucene subproject, which
+            could happen soon as the incubation criteria seem to be met.
+          </li>
+        </ul>
+</div>
+<h3 id='July 2008'>July 2008</h3>
+<div class="section-content">
+<p>
+          Apache Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing parser
+          libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<ul>
+          <li>
+            Tika community remains relatively small, with just a handful of
+            active members
+          </li>
+        </ul>
+<p><strong>Development</strong></p>
+<ul>
+          <li>
+            Work towards Tika 0.2 continues, Chris Mattman has volunteered
+            to be the release manager
+          </li>
+        </ul>
+<p><strong>Issues before graduation</strong></p>
+<ul>
+          <li>
+            Increase the size and diversity of the community (or graduate
+            into a Lucene subproject?)
+          </li>
+        </ul>
+</div>
+<h3 id='April 2008'>April 2008</h3>
+<div class="section-content">
+<p>
+          Apache Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing parser
+          libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<ul>
+          <li>
+            Niall Pemberton joined the project as a committer and PPMC member
+          </li>
+          <li>
+            The number of issues reported by external contributors
+            is growing gradually
+          </li>
+          <li>There was a Fast Feather Talk on Tika in ApacheCon EU 2008</li>
+          <li>We have good contacts especially with Apache POI and PDFBox</li>
+        </ul>
+<p><strong>Development</strong></p>
+<ul>
+          <li>We are working towards Tika 0.2</li>
+          <li>Metadata handling improvements are being discussed</li>
+        </ul>
+<p><strong>Issues before graduation</strong></p>
+<ul>
+          <li>Increase the size of the community</li>
+        </ul>
+</div>
+<h3 id='January 2008'>January 2008</h3>
+<div class="section-content">
+<p>
+          Tika (http://incubator.apache.org/tika) is a toolkit for detecting
+          and extracting metadata and structured text content from various
+          documents using existing parser Libraries. Tika entered incubation
+          on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<ul>
+          <li>
+            No new committers since the last report, activity has been
+            moderate but steady, leading to the 0.1 release.
+          </li>
+        </ul>
+<p><strong>Development</strong></p>
+<ul>
+          <li>Tika 0.1 (incubating) has just been released.</li>
+          <li>
+            Chris Mattmann intends to use that release in Nutch, That's
+            good progress towards Tika's goal of providing data extraction
+            functionality to other projects.
+          </li>
+          <li>
+            A new Tika logo was created by Google Highly Open Participation
+            student, hasn't been integrated yet.
+          </li>
+        </ul>
+<p><strong>Issues before graduation</strong></p>
+<ul>
+          <li>
+            Now that the first release is out, we need to work on growing
+            the community and figuring out how to best interact with external
+            parser projects.
+          </li>
+        </ul>
+</div>
+<h3>October 2007</h3>
+<div class="section-content">
+<p>
+          Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing
+          parser libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<p>
+          There have been a number of positive items within Tika during the
+          last few months. The traffic on the Tika mailing list has increased
+          significantly (with typically 2, 3 questions, and 1 or 2 commits
+          every day, or every other day), and there have been a lot of recent
+          inquiries from external projects wanting to collaborate with Tika
+          (including Aperture, PDFBox and a fellow developing a JSon library
+          currently hosted at Google code). In addition, Tika's architecture
+          has become a recent discussion of interest (as we'll see below).
+        </p>
+<p>
+          We recently elected Keith Bennett as a new committer to Tika.
+          Keith has been spearheading many of the new patches committed to
+          Tika, as well as participating in discussions about the
+          architecture, and future direction of the project.
+        </p>
+<p>
+          Tika will be represented at the "Fast Feather" track at
+          ApacheCon US by Jukka Zitting. The rest of the community is helping
+          to create the content for the presentation. The abstract is listed
+          below:
+        </p>
+<blockquote>
+          Tika is a new content analysis framework borne from the desire to
+          factor our commonality from the Apache Nutch search engine framework.
+          Tika provides a mime detection framework, an extensible parsing
+          framework and metadata environment for content analysis. Though in
+          its nascent stages, progress on Tika has recently taken shape and
+          the project is nearing a stable 0.1 release. In this talk, we'll
+          describe the core APIs of Tika and discuss its use in several
+          distinct domains including search engines, scientific data
+          dissemination and an industrial setting.
+        </blockquote>
+<p><strong>Development</strong></p>
+<p>
+          There have been a flurry of JIRA issues and code activity
+          (http://issues.apache.org/jira/browse/TIKA) including 47 issues
+          currently in JIRA, with 32 resolved issues, 14 closed issues,
+          and 2 open major/minor issues in progress).
+        </p>
+<p>
+          Tika's Parser interface (one of its key components) has just
+          undergone a major overhaul led by Jukka Zitting, and Chris
+          Mattmann has recently contributed a MimeType system (with help from
+          fellow Apache Nutch committer Jerome Charron) to Tika. We also
+          cleaned up and refactored large parts of the rest of the code
+          (removing references to LiusLite and branding the project wherever
+          possible with the Tika name), in preparation for an upcoming
+          0.1 release.
+        </p>
+<p>
+          Chris Mattmann has led an effort to carve out the existing MimeType
+          detection system in Apache Nutch (http://lucene.apache.org/nutch/)
+          and replace it with Tika's improved MimeType detection system.
+          There is a patch sitting in JIRA right now
+          (http://issues.apache.org/jira/browse/NUTCH-562), and barring
+          objections, Nutch will rely on Tika for its MimeType detection
+          abilities.
+        </p>
+<p>
+          Also active recently were committers Bertrand Delacretaz, Sami
+          Siren and Rida Benjelloun, committing patches and improvements
+          wherever needed.
+        </p>
+<p><strong>Issues before graduation</strong></p>
+<p>
+          No changes since our last report: the Tika project is still at
+          an early stage of incubation. We need to continue bringing in the
+          initial codebases and are targeting an initial incubating release
+          (0.1) probably within the next month. We also need to work on
+          growing the community and figuring out how to best interact with
+          external parser projects.
+        </p>
+</div>
+<h3 id='July 2007'>July 2007</h3>
+<div class="section-content">
+<p>
+          Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various document formats using existing
+          parser libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<ul>
+          <li>
+            The Tika mailing list has seen increased activity in the last
+            weeks, with some new people showing interest for Tika's goals.
+          </li>
+          <li>
+            Grant Ingersoll brought the Aperture framework to our attention
+            (http://aperture.sourceforge.net/), which has similar goals to
+            Tika. We will look at possible synergies.
+          </li>
+        </ul>
+<p><strong>Development</strong></p>
+<ul>
+          <li>
+            No code has been committed since our last report, but some
+            initial code is ready in JIRA and should be committed soon.
+          </li>
+        </ul>
+<p><strong>Issues before graduation</strong></p>
+<ul>
+          <li>
+            No changes since our last report: the Tika project is still at
+            an early stage of incubation. We need to continue bringing in
+            the initial codebases and probably target for an initial
+            incubating release later this year. We also need to work on
+            growing the community and figuring out how to best interact with
+            external parser projects.
+          </li>
+        </ul>
+</div>
+<h3 id='June 2007'>June 2007</h3>
+<div class="section-content">
+<p>
+          Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing
+          parser libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<p>
+          The Tika mailing lists have been relatively quiet lately, probably
+          because with little code we don't yet have many concrete issues
+          to talk about.
+        </p>
+<p><strong>Development</strong></p>
+<p>
+          We saw the first piece of Tika code when Chris A. Mattmann ported
+          the Nutch metadata framework to Tika. Rida Benjelloun has created
+          a version of the Lius codebase to be included in Tika, and the
+          code is currently in the issue tracker.
+        </p>
+<p><strong>Issues before graduation</strong></p>
+<p>
+          The Tika project is still at an early stage of incubation. We need
+          to continue bringing in the initial codebases and probably target
+          for an initial incubating release later this year. We also need to
+          work on growing the community and figuring out how to best interact
+          with external parser projects.
+        </p>
+</div>
+<h3 id='May 2007'>May 2007</h3>
+<div class="section-content">
+<p>
+          Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing
+          parser libraries.
+        </p>
+<p>
+          Incubating since: March 22nd, 2007.
+        </p>
+<p><strong>Community</strong></p>
+<p>
+          We had a good project bootstrap meeting as a part of the text
+          analysis BOF at the ApacheCon EU in Amsterdam. The resulting ideas
+          were summarized on the project mailing list, and the first design
+          threads have started.
+        </p>
+<p><strong>Development</strong></p>
+<p>
+          We've started discussing the design of the Tika toolkit. It seems
+          like we will select one of the existing codebases listed in the
+          project proposal as the basis of an early 0.1 release, and start
+          refactoring the code into a more generic toolkit. The Tika svn
+          tree is still empty, but I expect us to see the first code commits
+          before the next report.
+        </p>
+<p><strong>Infrastructure</strong></p>
+<p>
+          All the initial infrastructure is now in place. There is still
+          some activity on the temporary Tika wiki on the Google Project
+          hosting service, so we may end up requesting a Tika wiki to be
+          set up on the ASF infrastructure.
+        </p>
+<p><strong>Issues before graduation</strong></p>
+<p>
+          The Tika project is still at an early stage of incubation. The
+          most important tasks before graduation are to develop and release
+          the Tika codebase and to grow a diverse and sustainable project
+          community.
+        </p>
+</div>
+<h3 id='April 2007'>April 2007</h3>
+<div class="section-content">
+<p>
+          Tika is a toolkit for detecting and extracting metadata and
+          structured text content from various documents using existing
+          parser libraries. Tika entered incubation on March 22nd, 2007.
+        </p>
+<p>
+          The Tika project has just started. The basic infrastructure
+          (mailing lists, subversion, issue tracker, web site) is mostly
+          in place; the only thing still missing is one committer account.
+          We expect to get started with the actual design and code work
+          during the next few weeks.
+        </p>
+</div>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at Apache.</p>
+<p>
+          <em>Item assignment is shown by the Apache id.</em>
+          <em>Completed tasks are shown by the completion date (YYYY-MM-dd).</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-03-07</td>
+              <td>Make sure that the requested project name does not already exist and
+                  check www.nameprotect.com to be sure that the name is not already
+                  trademarked for an existing software product.</td>
+            </tr>
+            <tr>
+              <td>NA</td>
+              <td>If request from an existing Apache project to adopt an external
+                  package, then ask the Apache project for the SVN module and mail
+                  address names.</td>
+            </tr>
+            <tr>
+              <td>NA</td>
+              <td>If request from outside Apache to enter an existing Apache project,
+                  then post a message to that project for them to decide on acceptance.</td>
+            </tr>
+            <tr>
+              <td>NA</td>
+              <td>If request from anywhere to become a stand-alone PMC, then assess the
+                  fit with the ASF, and create the lists and modules under the
+                  incubator address/module names if accepted.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Interim responsibility</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-03-08</td>
+              <td>Identify all the Mentors for the incubation, by asking all that can
+                  be Mentors.</td>
+            </tr>
+            <tr>
+              <td>2007-03-08</td>
+              <td>Subscribe all Mentors on the pmc and general lists.</td>
+            </tr>
+            <tr>
+              <td>2007-03-08</td>
+              <td>Give all Mentors access to the incubator SVN repository. (to be done by
+                  PMC chair)</td>
+            </tr>
+            <tr>
+              <td>2007-03-31</td>
+              <td>Tell Mentors to track progress in the file 'incubator/projects/tika.html'</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2008-10-17</td>
+              <td>Check and make sure that the papers that transfer rights to the ASF
+                  been received. It is only necessary to transfer rights for the
+                  package, the core code, and any new code produced by the project.
+              </td>
+            </tr>
+            <tr>
+              <td>2008-10-17</td>
+              <td>Check and make sure that the files that have been donated have been
+                  updated to reflect the new ASF copyright.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2008-10-17</td>
+              <td>Check and make sure that for all code included with the distribution
+                  that is not under the Apache license, have the right to combine
+                  with Apache-licensed code and redistribute.
+               </td>
+            </tr>
+            <tr>
+              <td>2008-10-17</td>
+              <td>Check and make sure that all source code distributed by the project
+                  is covered by one or more of the following approved licenses: Apache,
+                  BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+                  the same terms.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-03-07</td>
+              <td>Check that all active committers have submitted a contributors
+                  agreement.</td>
+            </tr>
+            <tr>
+              <td>2007-03-31</td>
+              <td>Add all active committers in the STATUS file.</td>
+            </tr>
+            <tr>
+              <td>2008-10-17</td>
+              <td>Ask root for the creation of committers' accounts on
+                  people.apache.org.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2007-03-31</td>
+              <td>Ask infrastructure to create source repository modules and grant the
+                  committers karma.</td>
+            </tr>
+            <tr>
+              <td>2007-03-31</td>
+              <td>Ask infrastructure to set up and archive Mailing lists.</td>
+            </tr>
+            <tr>
+              <td>2007-03-31</td>
+              <td>Decide about and then ask infrastructure to setup an issuetracking
+                  system (Bugzilla, Scarab, Jira).</td>
+            </tr>
+            <tr>
+              <td>2007-05-09</td>
+              <td>Migrate the project to our infrastructure.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Project+specific'>Project specific</h4>
+<div class="section-content">
+<p>
+            See the <a href="https://issues.apache.org/jira/browse/TIKA">issue tracker</a>.
+          </p>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole incubation process.</p>
+<p>
+          <em>These items are not to be signed as done during incubation, as they
+              may change during incubation.</em>
+          <em>They are to be looked into and described in the status reports and
+              completed in the request for incubation signoff.</em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+            <li>Have all of the active long-term volunteers been identified and
+                acknowledged as committers on the project?
+            </li>
+            <li>Are there three or more independent committers? (The legal definition
+                of independent is long and boring, but basically it means that there
+                is no binding relationship between the individuals, such as a shared
+                employer, that is capable of overriding their free will as
+                individuals, directly or indirectly.)</li>
+            <li>Are project decisions being made in public by the committers?</li>
+            <li>Are the decision-making guidelines published and agreed to by all of
+                the committers?</li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+            <li>Are all licensing, trademark, credit issues being taken care of and
+                acknowleged by all committers?</li>
+          </ul>
+</div>
+<h4 id='Project+Specific'>Project Specific</h4>
+<div class="section-content">
+<p>
+            <em>Add project specific tasks here.</em>
+          </p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project</h4>
+<div class="section-content">
+<ul>
+            <li>If graduating to an existing PMC, has the PMC voted to accept it?</li>
+            <li>If graduating to a new PMC, has the board voted to accept it?</li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+            <li>Has the Incubator decided that the project has accomplished all of
+                the above tasks?</li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

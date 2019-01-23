@@ -1,0 +1,1236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>CloudStack Project Incubation Status - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='CloudStack+Project+Incubation+Status'><img src="../images/redarrow.gif" />CloudStack Project Incubation Status</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more general
+         project status, look on the project website.</p>
+<p><span class="graduated">The CloudStack project graduated on 2013-03-20</span></p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<p>CloudStack is an IaaS (“Infrastracture as a Service”) cloud orchestration platform.</p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<ul>
+        <li>2013-03-20 Apache CloudStack graduates to become a TLP</li>
+        <li>2013-03-01 Sebastien Goasguen is voted and added as a new PPMC member</li>
+        <li>2013-03-01 Marcus Sorenson is voted and added as a new PPMC member</li>
+        <li>2013-02-27 Noa Resare is voted and added as a new committer</li>
+        <li>2013-02-26 Sateesh Chodapuneedi is voted and added as a new committer</li>
+        <li>2013-02-26 Radhika Puthiyetath is voted and added as a new committer</li>
+        <li>2013-02-13 Likitha Shetty is voted and added as a new commiter</li>
+        <li>2013-02-12 Version 4.0.1-incubating released.</li>
+        <li>2013-01-31 Koushik Das is voted and added as a new committer</li>
+        <li>2013-01-24 John Burwell is voted and added as a new committer</li>
+        <li>2013-01-03 Sebastien Goasguen is voted and added as a new committer</li>
+        <li>2013-01-03 Joe Brockmeier is voted and added as a new PPMC member</li>
+        <li>2013-01-02 Kelcey Damage is voted and added as a new committer</li>
+        <li>2012-12-11 Min Chen is voted and added as a new committer</li>
+        <li>2012-12-02 Chiradeep Vittal is voted and added as a new PPMC member</li>
+        <li>2012-11-19 Hugo Trippaers is voted and added as a new PPMC member</li>
+        <li>2012-11-12 Sudha Ponnaganti is voted and added as a new committer</li>
+        <li>2012-11-06 Version 4.0.0-incubating released. </li>
+        <li>2012-10-30 Alex Huang is voted and added as a new PPMC member</li>
+        <li>2012-10-18 Gavin Lee is voted and added as a new committer</li>
+        <li>2012-10-10 Edison Su is voted and added as a new PPMC member</li>
+        <li>2012-10-10 Marcus Sorensen is voted and added as a new committer</li>
+        <li>2012-10-05 Rohit Yadav is voted and added as a new committer</li>
+        <li>2012-09-04 John Kinsella is voted and added as a new PPMC member</li>
+        <li>2012-09-03 Jira instance at the ASF goes live</li>
+        <li>2012-08-23 Joe Brockmeier is voted and added as a new committer</li>
+        <li>2012-08-14 Chip Childers is voted and added as a new PPMC member </li>
+        <li>2012-08-07 Wido den Hollander is voted and added as a new PPMC member</li>
+        <li>2012-08-06 Jason Bausewein is voted and added as a new committer</li>
+        <li>2012-08-06 Mice Xia is voted and added as a new committer</li>
+        <li>2012-07-25 Chip Childers is voted and added as a new committer</li>
+        <li>2012-07-11 John Kinsella is voted and added as a new committer</li>
+        <li>2012-07-11 Pranav Saxena is voted and added as a new committer</li>
+        <li>2012-07-11 Prasanna Santhanam is voted and added as a new committer</li>
+
+        <li>2012-07-11 Hugo Trippaers is voted and added as a new commiter</li>
+        <li>2012-06-19 Olga Smola is voted and added as a new committer</li>
+        <li>2012-06-18 Wido den Hollander is voted and added as a new committer</li>
+        <li>2012-04-16 Project enters incubation.</li>
+      </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info</h2>
+<div class="section-content">
+<ul>
+        <li>link to the main website</li>
+      </ul>
+<ul>
+        <li>link to the page(s) that tell how to participate (Website,Mailing
+            lists,Bug tracking,Source code)</li>
+      </ul>
+<ul>
+        <li>link to the project status file (Committers,non-incubation action
+            items,project resources, etc)</li>
+      </ul>
+<p>If the project website and code repository are not yet setup, use the
+         following table:</p>
+<table class="colortable" width="100%">
+        <tr>
+          <th>item</th>
+          <th>type</th>
+          <th>reference</th>
+        </tr>
+        <tr>
+          <td>Website</td>
+          <td>www</td>
+          <td id="www">
+            <a href="http://incubator.apache.org/cloudstack">http://incubator.apache.org/cloudstack</a>
+          </td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>wiki</td>
+          <td>
+		    <a href="https://cwiki.apache.org/confluence/display/CLOUDSTACK/Index">https://cwiki.apache.org/confluence/display/CLOUDSTACK/Index</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Mailing list</td>
+          <td>dev</td>
+          <td id="mail-dev"><code>cloudstack-dev</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>commits</td>
+          <td id="mail-commits"><code>cloudstack-commits</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>users</td>
+          <td id="mail-commits"><code>cloudstack-users</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>issues</td>
+          <td id="mail-issues"><code>cloudstack-issues</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>marketing</td>
+          <td id="mail-marketing"><code>cloudstack-marketing</code><code>@</code><code>incubator.apache.org</code></td>
+        </tr>
+        <tr>
+          <td>Bug tracking</td>
+          <td>.</td>
+          <td id="tracker">
+            <a href="https://issues.apache.org/jira/browse/CLOUDSTACK">https://issues.apache.org/jira/browse/CLOUDSTACK</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Source code</td>
+          <td>Git</td>
+          <td id="git">
+            <a href="https://git-wip-us.apache.org/repos/asf/incubator-cloudstack.git">https://git-wip-us.apache.org/repos/asf/incubator-cloudstack.git</a>
+          </td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>SVN (project site and PPMC admin docs only)</td>
+          <td id="svn">
+            <a href="https://svn.apache.org/repos/asf/incubator/cloudstack/">https://svn.apache.org/repos/asf/incubator/cloudstack/</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Mentors</td>
+          <td>jim</td>
+          <td>Jim Jagielski</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>dkulp</td>
+          <td>J. Daniel Kulp</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>akarasulu</td>
+          <td>Alex Karasulu</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>olamy</td>
+          <td>Olivier Lamy</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>brett</td>
+          <td>Brett Porter</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>hogstrom</td>
+          <td>Matt Richard Hogstrom</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>mnour</td>
+          <td>Mohammad Nour El-Din</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>nslater</td>
+          <td>Noah Slater (2012-08-07)</td>
+        </tr>
+        <tr>
+          <td>Podling PMC</td>
+          <td>willchan</td>
+          <td>Will Chan</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>widodh</td>
+          <td>Wido den Hollander (2012-08-07)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>kluge</td>
+          <td>Kevin Kluge</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>ke4qqq</td>
+          <td>David Nalley</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>chipchilders</td>
+          <td>Chip Childers (2012-08-14)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>jlk</td>
+          <td>John Kinsella (2012-07-11)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>edison</td>
+          <td>Edison Su</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>ahuang</td>
+          <td>Alex Huang</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>hugo</td>
+          <td>Hugo Trippaers (2012-07-11)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>chiradeep</td>
+          <td>Chiradeep Vittal</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>jzb</td>
+          <td>Joe Brockmeier (2012-08-23)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>mlsorensen</td>
+          <td>Marcus Sorensen (2012-10-10)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>sebgoa</td>
+          <td>Sebastien Goasguen (2013-01-03)</td>
+        </tr>
+        <tr>
+          <td>Committers</td>
+          <td>aprateek</td>
+          <td>Abhinandan Prateek</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>alena1108</td>
+          <td>Alena Prokharchyk</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>anthonyxu</td>
+          <td>Anthony Xu</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>bfederle</td>
+          <td>Brian Federle</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>frankzhang</td>
+          <td>Frank Zhang</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>gavinlee</td>
+          <td>Gavin Lee (2012-10-18)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>jbausewein</td>
+          <td>Jason Bausewein (2012-08-06)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>jtomechak</td>
+          <td>Jessica Tomechak</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>jessicawang</td>
+          <td>Jessica Wang</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>jburwell</td>
+          <td>John Burwell (2013-01-24)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>kdamage</td>
+          <td>Kelcey Damage (2013-01-02)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>kelveny</td>
+          <td>Kelven Yang</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>kishan</td>
+          <td>Kishan Kavala</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>koushik</td>
+          <td>Koushik Das (2013-01-31)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>likithas</td>
+          <td>Likitha Shetty (2013-02-13)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>mchen</td>
+          <td>Minh Chen (2012-12-11)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>mice</td>
+          <td>Mice Xia (2012-08-06)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>muralireddy</td>
+          <td>Murali Reddy</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>nitin</td>
+          <td>Nitin Mehta</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>noa</td>
+          <td>Noa Resare (2013-02-27)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>olgasmola</td>
+          <td>Olga Smola (2012-06-19)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>prachidamle</td>
+          <td>Prachi Damle</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>pranavs</td>
+          <td>Pranav Saxena (2012-07-11)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>tsp</td>
+          <td>Prasanna Santhanam (2012-07-11)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>radhika</td>
+          <td>Radhika Puthiyetath (2013-02-26)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>bhaisaab</td>
+          <td>Rohit Yadav (2012-10-05)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>slriv</td>
+          <td>Sam Robertson</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>sateesh</td>
+          <td>Sateesh Chodapuneedi (2013-02-26)</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>yasker</td>
+          <td>Sheng Yang</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>schhen</td>
+          <td>Sonny Chhen</td>
+        </tr>
+        <tr>
+          <td>.</td>
+          <td>sudhap</td>
+          <td>Sudha Ponnaganti (2012-11-12)</td>
+        </tr>
+        <tr>
+          <td>Extra</td>
+          <td>.</td>
+          <td>.</td>
+        </tr>
+      </table>
+</div>
+        <h2 id='Incubation+status+reports'><img src="../images/redarrow.gif" />Incubation status reports</h2>
+<div class="section-content">
+<h3 id='Jan2013'>January 2013</h3>
+<div class="section-content">
+<div class="source"><code>
+CloudStack
+
+CloudStack is an IaaS (“Infrastracture as a Service”) cloud orchestration platform.
+
+CloudStack has been incubating since 2012-04-16.
+
+A list of the three most important issues to address in the move towards graduation
+
+  1. Continuing to build the community and increase diversity, while effectively managing the overall scale of the project.
+  2. Ensuring all deliberation, decision-making, and development is happening openly and collaboratively.
+  3. Transfer trademark, etc. to Apache
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues at this time
+
+How has the community developed since the last report?
+
+  The project has continuted to grow and has added several new PPMC members and committers since October:
+
+  - Edison Su, Alex Huang, Hugo Trippaers, and Chiradeep Vittal, have joined the PPMC since October.
+
+  - Rohit Yadav, Marcus Sorensen, Gavin Lee, Sudha Ponnaganti, Kelcey Damage, and Min Chen have become committers.
+
+  Members of the CloudStack community have been active in promoting the project since the last report, with members giving talks about Apache CloudStack at USENIX LISA, CPOSC, ApacheCon EU, LinuxCon EU, and other events. 
+
+  The CloudStack Collaboration Conference (sponsored primarily by Citrix) was a fairly successful first conference. More than 300 people attended the event, held November 30 - December 2 in Las Vegas at The Venetian. 
+
+How has the project developed since the last report?
+
+  The first release, 4.0.0-incubating, was announced on November 6th. 
+
+  The CloudStack.org domain now points to Apache infrastructure. 
+
+  4.0.1 and 4.1.0 are currently in development. The community has decided to work on a time-based release cycle for feature releases, with 4.1.0 expected at the beginning of April. Feature releases will follow a four-month cycle thereafter. 
+
+        </code>
+</div>
+</div>
+<h3 id='October2012'>October 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+CloudStack
+
+CloudStack is an IaaS (“Infrastracture as a Service”) cloud orchestration
+platform. CloudStack has been in incubation since 2012-04-16
+
+A list of the three most important issues to address in the move towards
+graduation
+
+  1. Continuing to build the community and increase diversity
+  2. Shipping a release
+  3. Transfer trademark, etc. to Apache
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues at this time
+
+How has the community developed since the last report?
+
+  The project has continued to improve its diversity, adding
+  Chip Childers, John Kinsella, and Wido den Hollander to the PPMC
+  and 3 new committers since the month of August. (Mice Xia, Jason
+  Bausewein, and Joe Brockmeier.) We have also taken on a new mentor,
+  Noah Slater.
+
+  Contributors and committers have been active in promoting CloudStack
+  at events, such as LinuxCon, Ohio LinuxFest, PuppetConf, a get-together
+  at Schuberg Philis, and a number of other events.
+
+  The community is participation at LinuxCon EU and ApacheCon EU and
+  a number of other events through the remainder of 2012.
+ 
+  Citrix is acting as primary sponsor of a CloudStack Collaboration
+  Conference for November 30 through December 2 in Las Vegas. The
+  conference is open to the community, and programming for the event
+  will be chosen by a committee that includes members of the CloudStack
+  community outside Citrix.
+
+How has the project developed since the last report?
+
+  The pending 4.0 release has been branched. The project has made a great
+  deal of progress towards the 4.0 release, handling a number of technical
+  issues (such as a move to Maven) and resolving almost all known legal
+  issues that would pose an obstacle to a release. The sole remaining
+  blocker is under discussion and should be resolved shortly.
+
+  The Jira instance for CloudStack was stood up in early September. License
+  checks have been automated to ensure that we remain compliant with Apache
+  guidelines going forward.
+
+Signed-off-by: nslater, mfranklin
+        </code>
+</div>
+</div>
+<h3 id='August2012'>August 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+CloudStack
+
+A list of the three most important issues to address in the move towards graduation
+
+  1. Licensing work
+  2. Finishing up the move of CloudStack infrastructure resources to the ASF.
+  3. Shipping a release.
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues at this time
+
+How has the community developed since the last report?
+
+  CloudStack has added 6 new committers in the month of July.
+
+  We had BOF and hackathon time at OSCON, which was a positive benefit for
+  those committers who attended, particularly in being able to delve into
+  issues around incubation, branding, and licensing. Additionally two
+  committers presented tutorials at OSCON one focused on end users deploying
+  CloudStack and the other focused on developers hacking on CloudStack, both
+  had great attendance.
+
+  We have also had some offers of contribution from people at Bitergia who are
+  interested in contributing the work that they have done around metrics. which
+  was a very encouraging start to growing the community.
+
+How has the project developed since the last report?
+
+  Lots of modularization has been injected into CloudStack, which makes some
+  of our licensing issues far less of a problem as we can merely turn the
+  affected code off by default.
+
+  The wiki has begun migration to an ASF hosted wiki instance.
+
+  One of the CloudStack committers provided a dramatically easier way to be
+  able to test and develop for CloudStack in the form a completely contained
+  CloudStack environment that can be run as a VirtualBox VM. Much additional
+  enhancement has been contributed to this making the process easier and
+  easier to update.
+
+  We also saw the movement of documentation from binary .docx files to
+  DocBook XML; while this effort isn't complete it does permit folks to far
+  more easily collaborate, as well as providing a far better interface
+  for l10n.
+
+Signed-off-by: brett, jukka, jim
+        </code>
+</div>
+</div>
+<h3 id='July2012'>July 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+CloudStack
+
+CloudStack is an IaaS (“Infrastracture as a Service”) cloud orchestration
+platform. CloudStack has been in incubation since 2012-04-16
+
+The top 3 issues to address to move towards graduation:
+
+  - CloudStack's source still contains works that are prohibited for release
+    under ASF guidelines
+  - Performing a release
+  - Migration of infrastructure (bug tracker, CI, websites, etc)
+
+How has the community developed since the last report:
+
+  As of the time of this report at least one new committer has been added.
+  Additionally, a number of previously unknown developers have begun making
+  substantial quantities of bugfixes and even working on new functionality.
+
+How has the project developed since the last report:
+
+  The project itself continues to deal with process questions as well as
+  learning how to operate in the new environment. A good deal of work has
+  been happening on resolving the problems in the code base around licensing,
+  though not currently close to finishing.
+
+Signed off by mentor:
+        </code>
+</div>
+</div>
+<h3 id='June2012'>June 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+CloudStack
+
+CloudStack is an IaaS (“Infrastracture as a Service”) cloud orchestration
+platform. CloudStack has been in incubation since 2012-04-16
+
+CloudStack has been in the incubator for approximately 1.5 months. Mailing
+lists have migrated, accounts for the initial committers have been set up,
+and the initial code drop/git repo has been setup. Many new names are now
+participating in conversations on the mailing lists, with several of them
+volunteering to help move things along. The number of submitted patches from
+'new names' in the month of May is in the double digits, and range from
+trivial one line fixes to two major patches with over 1,000 changed lines
+each. The community is beginning to exercise some of its decision making
+power by deciding about release tempo, future version schemes and numbers,
+and a number of other internal plumbing issues. Much remains to be done in
+preparation for the initial release, and those tasks are being identified.
+We also have a number of external resources (bug tracker, wiki, CI) that
+are still awaiting migration. 
+
+Top 3 Issues to address in move towards graduation
+
+  - The project is using source and binaries with a number of
+    non-ASF-approved licenses. This needs remediation.
+
+  - Diversity of the contributor base still needs to be expanded.
+
+  - While we are making progress, there still remains a number of large
+    pieces (bug tracker, wiki, test infra) that still need to be migrated
+    to ASF infrastructure.
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues that we are aware of at this point.
+
+How has the community developed since the last report?
+
+  See the above narration, but generally speaking the community is beginning
+  to exercise its decision making powers, largely around internal plumbing
+  issues at the moment. We are also seeing a number of new developers
+  submitting patches. 
+
+How has the project developed since the last report?
+
+  The project continues to have many issues to tackle for its first release
+  and is identifying and moving forward on those issues. Work continues on
+  solutions to remove the need to massive (or any) amount of additional
+  hardware to test/develop with in an effort to lower the barrier to
+  participate. 
+
+Signed off by mentor:
+        </code>
+</div>
+</div>
+<h3 id='May2012'>May 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+Overview:
+
+  Cloudstack just entered the incubator a couple of weeks ago. Since then,
+  the mailing list has been setup  and discussions have started to migrate
+  from the existing list to the ASF-hosted list, with several 'new names'
+  participating including one of those 'new names' submitting a patch.
+  Currently, the code repository and bulk of existing infrastructure is still
+  hosted by Citrix, but the community is looking forward to getting that
+  moved to Apache as soon as possible.
+
+A list of the most important issues to address in the move towards graduation:
+
+  1. The base level of infrastructure migration has begun but still has far
+     to be finished. At present the mailing lists exist, but wiki, project
+     website, source repository, bug tracker, etc still need to be brought
+     up and migrated. In many ways we are blocked on further progress by
+     lack of account creation for initial committers.
+
+  2. Diversity of the contributor base still needs to be expanded - this was
+     identified as an issue in the proposal, and remains one, though we are
+     encouraged by a seeming uptick (we've been in incubation for less than
+     a week, so trends are indeed difficult to identify at this point) in
+     interest on the mailing lists from previously uninvolved individuals.
+
+  3. The project needs a working process definition.  What is the review
+     process for contributions, recommendations for engaging before writing
+     large amounts of code, etc.
+
+  4. The project is using source and binaries with a number of
+     non-ASF-approved licenses.  This needs remediation.
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues that we are aware of at this point.
+
+How has the community developed since the last report?
+
+  There has been no previous report - so nothing to report here.
+
+How has the project developed since the last report?
+
+  There has been no previous report - so nothing to report here.
+        </code>
+</div>
+</div>
+<h3 id='June2012'>June 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+CloudStack has been in the incubator for approximately 1.5 months. Mailing
+lists have migrated, accounts for the initial committers have been set up,
+and the initial code drop/git repo has been setup. Many new names are now
+participating in conversations on the mailing lists, with several of them
+volunteering to help move things along. The number of submitted patches from
+'new names' in the month of May is in the double digits, and range from
+trivial one line fixes to two major patches with over 1,000 changed lines
+each. The community is beginning to exercise some of its decision making
+power by deciding about release tempo, future version schemes and numbers,
+and a number of other internal plumbing issues. Much remains to be done in
+preparation for the initial release, and those tasks are being identified.
+We also have a number of external resources (bug tracker, wiki, CI) that
+are still awaiting migration. 
+
+Top 3 Issues to address in move towards graduation
+
+  - The project is using source and binaries with a number of
+    non-ASF-approved licenses. This needs remediation.
+
+  - Diversity of the contributor base still needs to be expanded.
+
+  - While we are making progress, there still remains a number of large
+    pieces (bug tracker, wiki, test infra) that still need to be migrated
+    to ASF infrastructure.
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues that we are aware of at this point.
+
+How has the community developed since the last report?
+
+  See the above narration, but generally speaking the community is beginning
+  to exercise its decision making powers, largely around internal plumbing
+  issues at the moment. We are also seeing a number of new developers
+  submitting patches. 
+
+How has the project developed since the last report?
+
+  The project continues to have many issues to tackle for its first release
+  and is identifying and moving forward on those issues. Work continues on
+  solutions to remove the need to massive (or any) amount of additional
+  hardware to test/develop with in an effort to lower the barrier to
+  participate.
+        </code>
+</div>
+</div>
+<h3 id='July2012'>July 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+          The top 3 issues to address to move towards graduation:
+
+          - CloudStack's source still contains works that are prohibited for release
+            under ASF guidelines
+          - Performing a release
+          - Migration of infrastructure (bug tracker, CI, websites, etc)
+
+          How has the community developed since the last report:
+
+            As of the time of this report at least one new committer has been added.
+            Additionally, a number of previously unknown developers have begun making
+            substantial quantities of bugfixes and even working on new functionality.
+
+          How has the project developed since the last report:
+
+            The project itself continues to deal with process questions as well as
+            learning how to operate in the new environment. A good deal of work has
+            been happening on resolving the problems in the code base around licensing,
+            though not currently close to finishing.
+        </code>
+</div>
+</div>
+<h3 id='Aug2012'>August 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+A list of the three most important issues to address in the move towards graduation
+
+  1. Licensing work
+  2. Finishing up the move of CloudStack infrastructure resources to the ASF.
+  3. Shipping a release.
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues at this time
+
+How has the community developed since the last report?
+
+  CloudStack has added 6 new committers in the month of July.
+
+  We had BOF and hackathon time at OSCON, which was a positive benefit for
+  those committers who attended, particularly in being able to delve into
+  issues around incubation, branding, and licensing. Additionally two
+  committers presented tutorials at OSCON one focused on end users deploying
+  CloudStack and the other focused on developers hacking on CloudStack, both
+  had great attendance.
+
+  We have also had some offers of contribution from people at Bitergia who are
+  interested in contributing the work that they have done around metrics. which
+  was a very encouraging start to growing the community.
+
+How has the project developed since the last report?
+
+  Lots of modularization has been injected into CloudStack, which makes some
+  of our licensing issues far less of a problem as we can merely turn the
+  affected code off by default.
+
+  The wiki has begun migration to an ASF hosted wiki instance.
+
+  One of the CloudStack committers provided a dramatically easier way to be
+  able to test and develop for CloudStack in the form a completely contained
+  CloudStack environment that can be run as a VirtualBox VM. Much additional
+  enhancement has been contributed to this making the process easier and
+  easier to update.
+
+  We also saw the movement of documentation from binary .docx files to
+  DocBook XML; while this effort isn't complete it does permit folks to far
+  more easily collaborate, as well as providing a far better interface
+  for l10n.
+
+Signed-off-by: brett, jukka, jim
+        </code>
+</div>
+</div>
+<h3 id='October2012'>October 2012</h3>
+<div class="section-content">
+<div class="source"><code>
+A list of the three most important issues to address in the move towards
+graduation
+
+  1. Continuing to build the community and increase diversity
+  2. Shipping a release
+  3. Transfer trademark, etc. to Apache
+
+Any issues that the Incubator PMC (IPMC) or ASF Board wish/need to be aware of?
+
+  No issues at this time
+
+How has the community developed since the last report?
+
+  The project has continued to improve its diversity, adding
+  Chip Childers, John Kinsella, and Wido den Hollander to the PPMC
+  and 3 new committers since the month of August. (Mice Xia, Jason
+  Bausewein, and Joe Brockmeier.) We have also taken on a new mentor,
+  Noah Slater.
+
+  Contributors and committers have been active in promoting CloudStack
+  at events, such as LinuxCon, Ohio LinuxFest, PuppetConf, a get-together
+  at Schuberg Philis, and a number of other events.
+
+  The community is participation at LinuxCon EU and ApacheCon EU and
+  a number of other events through the remainder of 2012.
+ 
+  Citrix is acting as primary sponsor of a CloudStack Collaboration
+  Conference for November 30 through December 2 in Las Vegas. The
+  conference is open to the community, and programming for the event
+  will be chosen by a committee that includes members of the CloudStack
+  community outside Citrix.
+
+How has the project developed since the last report?
+
+  The pending 4.0 release has been branched. The project has made a great
+  deal of progress towards the 4.0 release, handling a number of technical
+  issues (such as a move to Maven) and resolving almost all known legal
+  issues that would pose an obstacle to a release. The sole remaining
+  blocker is under discussion and should be resolved shortly.
+
+  The Jira instance for CloudStack was stood up in early September. License
+  checks have been automated to ensure that we remain compliant with Apache
+  guidelines going forward.
+
+Signed-off-by: nslater, mfranklin
+        </code>
+</div>
+</div>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the project at Apache.</p>
+<p>
+          <em>Item assignment is shown by the Apache id.</em>
+          <em>Completed tasks are shown by the completion date (YYYY-MM-dd).</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2013-02-25</td>
+              <td>Make sure that the requested project name does not already exist and
+                  check www.nameprotect.com to be sure that the name is not already
+                  trademarked for an existing software product.  Completed via 
+                  <a href="https://issues.apache.org/jira/browse/PODLINGNAMESEARCH-23">PODLINGNAMESEARCH-23</a></td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>If request from an existing Apache project to adopt an external
+                  package, then ask the Apache project for the SVN module and mail
+                  address names.</td>
+            </tr>
+            <tr>
+              <td>N/A</td>
+              <td>If request from outside Apache to enter an existing Apache project,
+                  then post a message to that project for them to decide on acceptance.</td>
+            </tr>
+            <tr>
+              <td>2012-05-27</td>
+              <td>If request from anywhere to become a stand-alone PMC, then assess the
+                  fit with the ASF, and create the lists and modules under the
+                  incubator address/module names if accepted.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-05-27</td>
+              <td>Ask infrastructure to create source repository modules
+                  and grant the committers karma.</td>
+            </tr>
+            <tr>
+              <td>2012-04-19</td>
+              <td>Ask infrastructure to set up and archive mailing lists.</td>
+            </tr>
+            <tr>
+              <td>2012-04-17</td>
+              <td>Ask infrastructure to set up issue tracker (JIRA, Bugzilla).</td>
+            </tr>
+            <tr>
+              <td>2012-07-14</td>
+              <td>Ask infrastructure to set up wiki (Confluence, Moin).</td>
+            </tr>
+            <tr>
+              <td>2012-11-01</td>
+              <td>Migrate the end-user site</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Mentor-related responsibility/oversight</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-09-10</td>
+              <td>Identify all the Mentors for the incubation, by asking all
+                  that can be Mentors.</td>
+            </tr>
+            <tr>
+              <td>2012-09-10</td>
+              <td>Subscribe all Mentors on the pmc and general lists.</td>
+            </tr>
+            <tr>
+              <td>2012-09-10</td>
+              <td>Give all Mentors access to the incubator SVN and git repositories. 
+                (to be done by the Incubator PMC chair or an Incubator PMC
+                Member wih karma for the authorizations file)</td>
+            </tr>
+            <tr>
+              <td>2012-10-10</td>
+              <td>Tell Mentors to track progress in the file
+                  'incubator/projects/{project.name}.html'</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-09-12</td>
+              <td>Check and make sure that the papers that transfer rights to the ASF
+                  been received. It is only necessary to transfer rights for the
+                  package, the core code, and any new code produced by the project.
+              </td>
+            </tr>
+            <tr>
+              <td>2012-09-14</td>
+              <td>Check and make sure that the files that have been donated have been
+                  updated to reflect the new ASF copyright.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-09-14</td>
+              <td>Check and make sure that for all code included with the distribution
+                  that is not under the Apache license, we have the right to combine
+                  with Apache-licensed code and redistribute.
+               </td>
+            </tr>
+            <tr>
+              <td>2012-09-14</td>
+              <td>Check and make sure that all source code distributed by the project
+                  is covered by one or more of the following approved licenses: Apache,
+                  BSD, Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with essentially
+                  the same terms.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-10-05</td>
+              <td>Check that all active committers have submitted a contributors
+                  agreement.</td>
+            </tr>
+            <tr>
+              <td>2012-10-05</td>
+              <td>Add all active committers in the STATUS file.</td>
+            </tr>
+            <tr>
+              <td>2012-10-05</td>
+              <td>Ask root for the creation of committers' accounts on
+                  people.apache.org.</td>
+            </tr>
+          </table>
+</div>
+<h4 id='Project+specific'>Project specific</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tr>
+              <th>date</th>
+              <th>item</th>
+            </tr>
+            <tr>
+              <td>2012-09-14</td>
+              <td>Remove all binaries from source repo</td>
+            </tr>
+            <tr>
+              <td>2012-10-09</td>
+              <td>Fix artifact naming so that they comply with ASF guidelines</td>
+            </tr>
+            <tr>
+              <td>2012-10-10</td>
+              <td>Comply with ASF Cryptography requirements for Export compliance</td>
+            </tr>
+            <tr>
+              <td>2012-10-08</td>
+              <td>Write release process documentation</td>
+            </tr>
+          </table>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole incubation process.</p>
+<p>
+          <em>These items are not to be signed as done during incubation, as they
+              may change during incubation.</em>
+          <em>They are to be looked into and described in the status reports and
+              completed in the request for incubation signoff.</em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+            <li>Have all of the active long-term volunteers been identified and
+                acknowledged as committers on the project?
+            </li>
+            <li>Are there three or more independent committers? (The legal definition
+                of independent is long and boring, but basically it means that there
+                is no binding relationship between the individuals, such as a shared
+                employer, that is capable of overriding their free will as
+                individuals, directly or indirectly.)</li>
+            <li>Are project decisions being made in public by the committers?</li>
+            <li>Are the decision-making guidelines published and agreed to by all of
+                the committers?</li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+            <li>Are all licensing, trademark, credit issues being taken care of and
+                acknowleged by all committers?</li>
+          </ul>
+</div>
+<h4 id='Project+Specific'>Project Specific</h4>
+<div class="section-content">
+<p>N/A
+          </p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p>
+          <em>Things to check for before voting the project out.</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the project</h4>
+<div class="section-content">
+<ul>
+            <li>Board resolution passed on 2013-03-20.</li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+            <li>IPMC Vote <a href="http://mail-archives.apache.org/mod_mbox/incubator-general/201303.mbox/%3C20130317165226.GG16726%40USLT-205755.sungardas.corp%3E">RESULT</a></li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>

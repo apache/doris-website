@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License. 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../style/bootstrap-1-3-0-min.css" type="text/css" />
+  <link rel="stylesheet" href="../style/style.css" type="text/css" />
+        <title>OpenWhisk Incubation Status - Apache Incubator</title>
+  
+ </head>
+ <body>
+ <div class="container">
+  <div class="row"><div class="span6"><a href="https://www.apache.org/"><img src="http://www.apache.org/img/asf_logo.png" alt="The Apache Software Foundation" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span7"><a href="/"><img src="https://incubator.apache.org/images/incubator_feather_egg_logo_sm.png" alt="The Apache Software Foundation Incubator" border="0" style="margin-top: 2px" height="88"/></a></div>
+<div class="span2"><a href="https://www.apache.org/foundation/contributing.html"><img src="https://www.apache.org/images/SupportApache-small.png" height="100" width="100"/></a></div>
+</div>
+  <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span4">
+    <form action="http://www.google.com/search" method="get">
+     <input value="incubator.apache.org" name="sitesearch" type="hidden"/>
+     <input size="20" name="q" id="query" type="text" value="search..."
+      onclick="if(this.value == 'search...') {this.value = ''}"/>
+     <input name="Search" value="Go" type="submit"/>
+    </form>
+          <div class="menuheader">General</div>
+    <menu compact="compact">
+          <li><a href="../index.html">Welcome</a></li> 
+          <li><a href="../policy/process.html">Incubation Overview</a></li> 
+          <li><a href="../policy/incubation.html">Incubation Policy</a></li> 
+          <li><a href="../guides/index.html">Incubation Guides</a></li> 
+          <li><a href="../policy/roles_and_responsibilities.html">Roles and Responsibilities</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="http://wiki.apache.org/incubator">Incubator Wiki</a></li> 
+          <li><a href="../whoweare.html">Who We Are</a></li> 
+            </menu>
+      <div class="menuheader">Status</div>
+    <menu compact="compact">
+          <li><a href="../projects">Project List</a></li> 
+          <li><a href="../clutch">Clutch Report</a></li> 
+          <li><a href="../ip-clearance">IP Clearance</a></li> 
+          <li><a href="../history">Incubator History</a></li> 
+            </menu>
+      <div class="menuheader">Entry Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/proposal.html">Proposal Guide</a></li> 
+            </menu>
+      <div class="menuheader">Podling Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/committer.html">Podling Committers</a></li> 
+          <li><a href="../guides/ppmc.html">Podling PMC (PPMC)</a></li> 
+          <li><a href="../guides/mentor.html">Podling Mentor</a></li> 
+          <li><a href="../guides/releasemanagement.html">Podling Releases</a></li> 
+          <li><a href="../guides/branding.html">Podling Branding/Publicity</a></li> 
+          <li><a href="../guides/sites.html">Podling Websites</a></li> 
+          <li><a href="../guides/graduation.html">Graduation</a></li> 
+          <li><a href="../guides/retirement.html">Retirement</a></li> 
+            </menu>
+      <div class="menuheader">Other Guides</div>
+    <menu compact="compact">
+          <li><a href="../guides/participation.html">Participation</a></li> 
+          <li><a href="../faq.html">General FAQ</a></li> 
+          <li><a href="../guides/pmc.html">Incubator PMC (IPMC)</a></li> 
+          <li><a href="../guides/chair.html">IPMC Chair</a></li> 
+          <li><a href="../guides/lists.html">Mailing Lists</a></li> 
+          <li><a href="../guides/website.html">Incubator Website</a></li> 
+            </menu>
+      <div class="menuheader">ASF</div>
+    <menu compact="compact">
+          <li><a href="http://www.apache.org/foundation/how-it-works.html">How Apache Works</a></li> 
+          <li><a href="http://www.apache.org/dev/">Developer Documentation</a></li> 
+          <li><a href="http://www.apache.org/foundation/">Foundation</a></li> 
+          <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsor Apache</a></li> 
+          <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li> 
+            </menu>
+    <!-- start Ads Server -->
+    <iframe src="http://www.apache.org/ads/buttonbar.html"
+     style="border-width:0; float: left" frameborder="0" scrolling="no"
+     width="135" height="265"></iframe>
+    <!-- end Ads Server -->
+   </div>
+   
+   <div class="span12">
+            <h2 id='OpenWhisk+Project+Incubation+Status'><img src="../images/redarrow.gif" />OpenWhisk Project Incubation Status</h2>
+<div class="section-content">
+<p>This page tracks the project status, incubator-wise. For more
+        general project status, look on the project website.</p>
+</div>
+        <h2 id='Description'><img src="../images/redarrow.gif" />Description</h2>
+<div class="section-content">
+<p>Apache OpenWhisk is a serverless event-based programming platform.</p>
+</div>
+        <h2 id='News'><img src="../images/redarrow.gif" />News</h2>
+<div class="section-content">
+<ul>
+        <li>2016-11-23 Project enters incubation.</li>
+        <li>2016-12-06 dev and private lists created; commits lists requested.</li>
+        <li>2017-01-07 Confluence Wiki created</li>
+        <li>2017-05-05 Moved 24/26 OpenWhisk project and ecosystem repositories from openwhisk to Apache organization within GitHub.</li>
+        <li>2017-05-11 Requested Infra. to move "openwhisk" (core) repo. to Apache.</li>
+        <li>2017-05-12 "Core" openwhisk (last source code) repo. moved under Apache GitHub.</li>
+      </ul>
+</div>
+        <h2 id='Project+info'><img src="../images/redarrow.gif" />Project info</h2>
+<div class="section-content">
+<ul>
+        <li>link to the main website:</li>
+        <ul>
+          <li><a href="http://openwhisk.org">http://openwhisk.org</a></li>
+        </ul>
+      </ul>
+<ul>
+        <li>link to the page(s) that tell how to participate (Website,
+          Mailing lists, Bug tracking, Source code):</li>
+        <ul>
+          <li><a href="https://cwiki.apache.org/confluence/display/openwhisk/OpenWhisk+Project+Wiki">https://cwiki.apache.org/confluence/display/openwhisk/OpenWhisk+Project+Wiki</a>
+          </li>
+        </ul>
+      </ul>
+<ul>
+        <li>link to the project status file (Committers,
+          non-incubation action items, project resources, etc.)</li>
+      </ul>
+<p>If the project website and code repository are not yet setup,
+        use the following table:</p>
+<table width="817" class="colortable">
+        <tbody>
+          <tr>
+            <th>item</th>
+            <th>type</th>
+            <th>reference</th>
+          </tr>
+          <tr>
+            <td>Website</td>
+            <td>www</td>
+            <td id="www"> <a href="http://openwhisk.org">http://openwhisk.org</a>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" />
+            <td valign="top">Apache</td>
+            <td valign="top"><a href="http://openwhisk.incubator.apache.org/">http://openwhisk.incubator.apache.org/</a></td>
+          </tr>
+          <tr>
+            <td />
+            <td>wiki</td>
+            <td><a href="https://cwiki.apache.org/confluence/display/openwhisk">https://cwiki.apache.org/confluence/display/openwhisk/</a></td>
+          </tr>
+          <tr>
+            <td>Mailing list</td>
+            <td>dev</td>
+            <td id="mail-dev"><code>dev</code><code>@</code><code>openwhisk.incubator.apache.org</code></td>
+          </tr>
+          <tr>
+            <td />
+            <td>commits</td>
+            <td id="mail-commits"><code>commits</code><code>@</code><code>openwhisk.incubator.apache.org</code></td>
+          </tr>
+          <tr>
+            <td>Issue (bug) tracking</td>
+            <td>GitHub Issues</td>
+            <td id="tracker"> <a href="https://github.com/apache/incubator-openwhisk/issues">https://github.com/apache/incubator-openwhisk/issues (core)</a>
+              GitHub issues for other OpenWhisk repos. can be found from project listing: <a href="https://github.com/apache?q=openwhisk" />https://github.com/apache?q=openwhisk</td>
+          </tr>
+          <tr>
+            <td valign="top" />
+            <td valign="top">JIRA</td>
+            <td valign="top">N/A, using GitHub issues (per-repo.)</td>
+          </tr>
+          <tr>
+            <td>Source code</td>
+            <td>GitHub (Apache)</td>
+            <td id="git"><a href="https://github.com/apache?q=openwhisk">https://github.com/apache?q=openwhisk</a>
+              (Filtered link to all code repos. under Apache org.)</td>
+          </tr>
+          <tr>
+            <td valign="top" />
+            <td valign="top">GitHub (OpenWhisk)</td>
+            <td valign="top"><a href="https://github.com/openwhisk">https://github.com/openwhisk</a>
+              (Website repo. only) In-progress: Jenkins (Jekyll) build, gitpubsub.</td>
+          </tr>
+          <tr>
+            <td>Mentors</td>
+            <td />
+            <td>See <a href="https://whimsy.apache.org/roster/ppmc/openwhisk">https://whimsy.apache.org/roster/ppmc/openwhisk</a></td>
+          </tr>
+          <tr>
+            <td>Sub-project Listing</td>
+            <td />
+            <td><a href="https://cwiki.apache.org/confluence/display/OPENWHISK/Subproject+listing">https://cwiki.apache.org/confluence/display/openwhisk/Subproject+listing</a></td>
+          </tr>
+          <tr>
+            <td>PPMC list (Whimsy)</td>
+            <td />
+            <td><a href="https://whimsy.apache.org/roster/ppmc/openwhisk">https://whimsy.apache.org/roster/ppmc/openwhisk</a></td>
+          </tr>
+        </tbody>
+      </table>
+<p>The list of committers, PPMC members and mentors is found at 
+         <a href="https://whimsy.apache.org/roster/ppmc/openwhisk">https://whimsy.apache.org/roster/ppmc/openwhisk</a>
+      </p>
+<p>Incubation status reports are found at <a href="https://whimsy.apache.org/board/minutes/Incubator">https://whimsy.apache.org/board/minutes/Incubator</a>
+      </p>
+</div>
+        <h2 id='Incubation+work+items'><img src="../images/redarrow.gif" />Incubation work items</h2>
+<div class="section-content">
+<h3 id='Project+Setup'>Project Setup</h3>
+<div class="section-content">
+<p>This is the first phase on incubation, needed to start the
+          project at Apache.</p>
+<p> <em>Item assignment is shown by the Apache id.</em> <em>Completed
+            tasks are shown by the completion date (YYYY-MM-dd).</em>
+        </p>
+<h4 id='Identify+the+project+to+be+incubated'>Identify the project to be incubated</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tbody>
+              <tr>
+                <th>date</th>
+                <th>item</th>
+              </tr>
+              <tr>
+                <td>N/A</td>
+                <td>Make sure that the requested project name does not
+                  already exist. <a href="http://www.apache.org/foundation/marks/naming.html">Please
+                    follow the guide to ensure a suitable
+                    project/product name.</a></td>
+              </tr>
+              <tr>
+                <td>N/A</td>
+                <td>If request from an existing Apache project to
+                  adopt an external package, then ask the Apache
+                  project for the SVN module and mail address names.</td>
+              </tr>
+              <tr>
+                <td>N/A</td>
+                <td>If request from outside Apache to enter an
+                  existing Apache project, then post a message to that
+                  project for them to decide on acceptance.</td>
+              </tr>
+              <tr>
+                <td>N/A</td>
+                <td>If request from anywhere to become a stand-alone
+                  PMC, then assess the fit with the ASF, and create
+                  the lists and modules under the incubator
+                  address/module names if accepted.</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<h4 id='Infrastructure'>Infrastructure</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tbody>
+              <tr>
+                <th>date</th>
+                <th>item</th>
+              </tr>
+              <tr>
+                <td>2016-12-06</td>
+                <td>Ask infrastructure to set up and archive mailing
+                  lists.</td>
+              </tr>
+              <tr>
+                <td>2017-04-26</td>
+                <td>Ask infrastructure to create (transfer) source repository
+                  modules from openwhisk to Apache org. under GitHub.</td>
+                <!-- Use https://infrahelp.apache.org/ --> </tr>
+              <tr>
+                <td>N/A, Issue tracking established as part of GitHub.</td>
+                <td>Ask infrastructure to set up issue tracker (JIRA,
+                  Bugzilla).</td>
+              </tr>
+              <tr>
+                <td>2017-01-07</td>
+                <td>Ask infrastructure to set up wiki (Confluence,
+                  Moin).</td>
+              </tr>
+              <tr>
+                <td>2017-05-12</td>
+                <td>Migrate the project to our infrastructure.</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<h4 id='Interim+responsibility'>Mentor-related responsibility/oversight</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tbody>
+              <tr>
+                <th>date</th>
+                <th>item</th>
+              </tr>
+              <tr>
+                <td>2017-02-01</td>
+                <td>Subscribe all Mentors on the pmc and general
+                  lists.</td>
+              </tr>
+              <tr>
+                <td>2017-01-16</td>
+                <td>Give all Mentors access to the incubator GitHub
+                  repository. (to be done by the Incubator PPMC chair)</td>
+              </tr>
+              <tr>
+                <td>....-..-..</td>
+                <td>Tell Mentors to track progress in the file
+                  'incubator/projects/{project.name}.html'</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<h4 id='Copyright'>Copyright</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tbody>
+              <tr>
+                <th>date</th>
+                <th>item</th>
+              </tr>
+              <tr>
+                <td>....-..-..</td>
+                <td>Check and make sure that the papers that transfer
+                  rights to the ASF been received. It is only
+                  necessary to transfer rights for the package, the
+                  core code, and any new code produced by the project.
+                </td>
+              </tr>
+              <tr>
+                <td>....-..-..</td>
+                <td>Check and make sure that the files that have been
+                  donated have been updated to reflect the new ASF
+                  copyright.</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<h4 id='Verify+distribution+rights'>Verify distribution rights</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tbody>
+              <tr>
+                <th>date</th>
+                <th>item</th>
+              </tr>
+              <tr>
+                <td>....-..-..</td>
+                <td>Check and make sure that for all code included
+                  with the distribution that is not under the Apache
+                  license, we have the right to combine with
+                  Apache-licensed code and redistribute. </td>
+              </tr>
+              <tr>
+                <td>....-..-..</td>
+                <td>Check and make sure that all source code
+                  distributed by the project is covered by one or more
+                  of the following approved licenses: Apache, BSD,
+                  Artistic, MIT/X, MIT/W3C, MPL 1.1, or something with
+                  essentially the same terms.</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<h4 id='Establish+a+list+of+active+committers'>Establish a list of active committers</h4>
+<div class="section-content">
+<table class="colortable" width="100%">
+            <tbody>
+              <tr>
+                <th>date</th>
+                <th>item</th>
+              </tr>
+              <tr>
+                <td>2017-02-03</td>
+                <td>Check that all active committers have submitted a
+                  contributors agreement.</td>
+                <!-- check http://people.apache.org/committer-index.html -->
+              </tr>
+              <tr>
+                <td>2017-02-06</td>
+                <td>Add all active committers in the relevant section
+                  above.</td>
+              </tr>
+              <tr>
+                <td>2017-02-06</td>
+                <td>Ask root for the creation of committers' accounts
+                  in LDAP.</td>
+                <!-- this may happen automatically as their ICLAs are filed.
+                 If you are using git source control, ensure that all
+                 committers are members of the 'incubator' group. -->
+              </tr>
+            </tbody>
+          </table>
+</div>
+<h4 id='Project+specific'>Project specific</h4>
+<div class="section-content">
+<p> <em>Add project specific tasks here.</em> </p>
+</div>
+</div>
+<h3 id='Incubation'>Incubation</h3>
+<div class="section-content">
+<p>These action items have to be checked for during the whole
+          incubation process.</p>
+<p> <em>These items are not to be signed as done during
+            incubation, as they may change during incubation.</em> <em>They
+            are to be looked into and described in the status reports
+            and completed in the request for incubation signoff.</em>
+        </p>
+<h4 id='Collaborative+Development'>Collaborative Development</h4>
+<div class="section-content">
+<ul>
+            <li>Have all of the active long-term volunteers been
+              identified and acknowledged as committers on the
+              project? </li>
+            <li>Are there three or more independent committers? (The
+              legal definition of independent is long and boring, but
+              basically it means that there is no binding relationship
+              between the individuals, such as a shared employer, that
+              is capable of overriding their free will as individuals,
+              directly or indirectly.)</li>
+            <li>Are project decisions being made in public by the
+              committers?</li>
+            <li>Are the decision-making guidelines published and
+              agreed to by all of the committers?</li>
+          </ul>
+</div>
+<h4 id='Licensing+awareness'>Licensing awareness</h4>
+<div class="section-content">
+<ul>
+            <li>Are all licensing, trademark, credit issues being
+              taken care of and acknowleged by all committers?</li>
+          </ul>
+</div>
+<h4 id='Project+Specific'>Project Specific</h4>
+<div class="section-content">
+<p> <em>Add project specific tasks here.</em> </p>
+</div>
+</div>
+<h3 id='Exit'>Exit</h3>
+<div class="section-content">
+<p> <em>Things to check for before voting the project out.</em>
+        </p>
+<h4 id='Organizational+acceptance+of+responsibility+for+the+project'>Organizational acceptance of responsibility for the
+            project</h4>
+<div class="section-content">
+<ul>
+            <li>If graduating to an existing PMC, has the PMC voted to
+              accept it?</li>
+            <li>If graduating to a new PMC, has the board voted to
+              accept it?</li>
+          </ul>
+</div>
+<h4 id='Incubator+sign-off'>Incubator sign-off</h4>
+<div class="section-content">
+<ul>
+            <li>Has the Incubator decided that the project has
+              accomplished all of the above tasks?</li>
+          </ul>
+</div>
+</div>
+</div>
+       </div>
+   </div>
+  
+   <div class="row"><div class="span16"><hr noshade="noshade" size="1"/></div></div>
+  <div class="row">
+   <div class="span16 footer">
+     Copyright &#169; 2009-2019 The Apache Software Foundation<br />
+     Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.<br/>
+     Apache Incubator, Apache, the Apache feather logo, and the Apache Incubator project logo are trademarks of The Apache Software Foundation.
+     
+     
+    </div>
+  </div>
+ </div> 
+ </body>
+</html>
