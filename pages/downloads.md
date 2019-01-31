@@ -22,53 +22,27 @@ Comming soon...
 
 ## History Release
 
-### 0.8.2 (20180824)
+### Palo 0.8.1-beta Release (20180418)
 
 #### Download
 
-* [palo-0.8.2-release-20180824.tar.gz](https://github.com/apache/incubator-doris/releases/download/v0.8.2/palo-0.8.2-release-20180824.tar.gz) [184 MB]
+* [palo-0.8.1-release-20180418.tar.gz](http://palo-opensource.gz.bcebos.com/palo-0.8.1-release-20180418.tar.gz?authorization=bce-auth-v1%2F069fc2786e464e63a5f1183824ddb522%2F2018-04-18T05%3A11%3A34Z%2F-1%2Fhost%2F9dabe5cb37dd5fa253b41075f360c1c4389fa4965ccd59cb7e774d3c1b099f9f)
 
-* [Source code (zip)](https://github.com/apache/incubator-doris/archive/v0.8.2.zip)
+* [Source code (zip)](https://github.com/apache/incubator-doris/archive/v0.8.1-beta.zip)
 
-* [Source code (tar.gz)](https://github.com/apache/incubator-doris/archive/v0.8.2.tar.gz)
+* [Source code (tar.gz)](https://github.com/apache/incubator-doris/archive/v0.8.1-beta.tar.gz)
 
-#### Change Log
 
-1. Performance improvement
+#### Change log
 
-    * Support vectorized execution engine.
-    * Support aggregation operator parallelization.
-    * Optimized storage engine for more efficient data fetching.
-
-2. Table-level privileges support
-
-    * User can grant fine-grained privileges on specified tables to specified user from specified host.
-
-3. Backup and restore
-
-    * User can backup snapshot of data to HDFS and restore snapshot to other Palo cluster.
-
-4. Broker supports HDFS HA and Hadoop kerberos authentication.
-
-5. Using [BRPC](https://github.com/brpc/brpc) instead of the old RPC framework.
-
-6. A lot of bugs fixed.
-
-7. Other changes:
-
-    * Rewrite http server in Backend using Libevent to replace Mongoose.
-    * Remove mysql code to avoid copyright problem.
-    * More metrics to expose internal situation of Palo system.
-    * Same Frontend can be removed and added again without the changing port.
-    * Change the format of Frontend's audit log for parsing it more conveniently.
+1. Fix query bugs
+2. Enhance compatibility with mysql protocol
 
 #### Compatibility
 
-**This release version DOES NOT support rolling upgrade, and CAN NOT rollback after upgrade. So it is HIGHLY RECOMMENDED to backup your data and meta data before upgrading to this release version. Or upgrade it in your test/pre-online Palo cluster to make sufficient test.**
-
 |Item|Content|
 |---|---|
-|Forward Compatibility | 0.8.1, 0.8.0 |
-|Rolling Upgrade | No |
-|Rollback | No |
+|Forward Compatibility | 0.8.0 |
+|Rolling Upgrade | Yes |
+|Rollback | Yes |
 
