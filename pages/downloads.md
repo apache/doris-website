@@ -1,4 +1,4 @@
-title=Apache Doris Downloads
+title=Downloads
 date=2018-10-26
 type=simplepage
 status=published
@@ -16,17 +16,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.-->
 
-## Current Release
+## [Apache Doris 0.9.0 (incubating) Release](http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz)
 
-### Apache Doris 0.9.0 (incubating) Release
+### Download
 
-## Download
+Source Package: [**apache-doris-0.9.0-incubating-src.tar.gz**](http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz) ([SHA-512](http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512), [PGP ASC](http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc))
 
-Source Package: [apache-doris-0.9.0-incubating-src.tar.gz](http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz) ([SHA-512](http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512), [PGP ASC](http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc))
+Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available [**here**](http://archive.apache.org/dist/incubator/doris/KEYS).
 
-Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available [here](http://archive.apache.org/dist/incubator/doris/KEYS).
-
-## Building from source in Docker Image
+### Building from source in Docker Image
 
 Firstly, you must be install and start docker service, and then you could build Doris as following steps:
 
@@ -62,9 +60,9 @@ $ cd apache-doris-0.9.0-incubating-src
 $ sh build.sh
 ```
 
-## Change Log
+### Change Log
 
-### Features, Changes and Enhanced:
+#### Features, Changes and Enhanced
 
 1. Add streaming load feature. You can execute 'help stream load;' to see more information.
 2. Introduce RocksDB to save the header info of tablets in Backends, to reduce the IO operations and increate speeding of restarting.
@@ -86,7 +84,7 @@ $ sh build.sh
 18. Add connection id to CurrentQueryStatisticsProcDir (#355)
 19. Change SQL built-in function's symbol (#274)
 
-### Bugs:
+#### Bugs Fix
 1. Failed to register equal conjuncts which refer more than three tuples (#266)
 2. Rewrite aes encryption (#264)
 3. Fix a bug that user can not kill it own connection (#276)
@@ -111,7 +109,7 @@ $ sh build.sh
 22. Fix cast error in StreamLoadScanNodeush (#356)
 23. Fix insert error when it contains HLL (#358)
 
-## Compatibility
+### Compatibility
 
 **This release version DOES NOT support rolling upgrade, and CAN NOT rollback after upgrade. So it is HIGHLY RECOMMENDED to backup your data and meta data before upgrading to this release version. Or upgrade it in your test/pre-online Palo cluster to make sufficient test.**
 
