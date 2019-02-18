@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Apache Doris Downloads</title>
+    <title>Downloads</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -112,7 +112,7 @@
 
 
 <div class="incubator-page-header">
-    <h1>Apache Doris Downloads</h1>
+    <h1>Downloads</h1>
 </div>
 
 <!--Licensed under the Apache License, Version 2.0 (the "License");
@@ -126,8 +126,102 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.--> 
-<h2><a href="#current-release" id="current-release">Current Release</a></h2> 
-<p>Comming soon…</p>
+<h2><a href="#apache-doris-090-incubating-release" id="apache-doris-090-incubating-release"></a><a href="http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz">Apache Doris 0.9.0 (incubating) Release</a></h2> 
+<h3><a href="#download" id="download">Download</a></h3> 
+<p>Source Package: <a href="http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz"><strong>apache-doris-0.9.0-incubating-src.tar.gz</strong></a> (<a href="http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512">SHA-512</a>, <a href="http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc">PGP ASC</a>)</p> 
+<p>Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available <a href="http://archive.apache.org/dist/incubator/doris/KEYS"><strong>here</strong></a>.</p> 
+<h3><a href="#building-from-source-in-docker-image" id="building-from-source-in-docker-image">Building from source in Docker Image</a></h3> 
+<p>Firstly, you must be install and start docker service, and then you could build Doris as following steps:</p> 
+<p>Step1: Pull the docker image with Doris building environment</p> 
+<pre><code>$ docker pull apachedoris/doris-dev:build-env
+</code></pre> 
+<p>You can check it by listing images, its size is about 3.28GB.</p> 
+<p>Step2: Run the Docker image You can run image directyly:</p> 
+<pre><code>$ docker run -it apachedoris/doris-dev:build-env
+</code></pre> 
+<p>Step3: Download Doris source Now you should in docker environment, and you can download Doris source package, for example: (If you have downloaded source and it is not in image, you can map its path to image in Step2.)</p> 
+<pre><code>$ wget http://mirror.bit.edu.cn/apache/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz
+</code></pre> 
+<p>Step4: Build Doris Now you can decompress and enter Doris source path and build Doris.</p> 
+<pre><code>$ tar zxvf apache-doris-0.9.0-incubating-src.tar.gz
+$ cd apache-doris-0.9.0-incubating-src
+$ sh build.sh
+</code></pre> 
+<h3><a href="#change-log" id="change-log">Change Log</a></h3> 
+<h4><a href="#features-changes-and-enhanced" id="features-changes-and-enhanced">Features, Changes and Enhanced</a></h4> 
+<ol> 
+ <li>Add streaming load feature. You can execute ‘help stream load;’ to see more information.</li> 
+ <li>Introduce RocksDB to save the header info of tablets in Backends, to reduce the IO operations and increate speeding of restarting.</li> 
+ <li>Change project name from Palo to Doris, include variables and namespace name (#268)</li> 
+ <li>Change license to Apache License 2.0 (#262)</li> 
+ <li>Improve build scripts and add docker dev environment (#301).</li> 
+ <li>Support NULLS LAST and NULLS FIRST syntax (#252)</li> 
+ <li>Support AnalyticExpr in View (#248)</li> 
+ <li>Improve cardinality, avgRowSize, numNodes stat info in OlapScanNode (#256)</li> 
+ <li>Transform row-oriented table to columnar-oriented table (#311)</li> 
+ <li>Change ByteBuffer to StorageByteBuffer in olap/byte_buffer.h (#341)</li> 
+ <li>Improve the Backend’s disk info report performance (#349)</li> 
+ <li>Add path info of replica in catalog (#327)</li> 
+ <li>Change log verbose level to vlog(3) (#325)</li> 
+ <li>Change PaloMetrics’ name and Catalog’s Id generator (#329)</li> 
+ <li>Rename Rowset to SegmentGroup (#364)</li> 
+ <li>Subsititue ColumnType to Type (#366)</li> 
+ <li>Optimize the publish logic of streaming load (#350)</li> 
+ <li>Add connection id to CurrentQueryStatisticsProcDir (#355)</li> 
+ <li>Change SQL built-in function’s symbol (#274)</li> 
+</ol> 
+<h4><a href="#bugs-fix" id="bugs-fix">Bugs Fix</a></h4> 
+<ol> 
+ <li>Failed to register equal conjuncts which refer more than three tuples (#266)</li> 
+ <li>Rewrite aes encryption (#264)</li> 
+ <li>Fix a bug that user can not kill it own connection (#276)</li> 
+ <li>Fix lose of be’s meta data bug (#318)</li> 
+ <li>Fix SHOW BACKENDS return ERROR (#320)</li> 
+ <li>Fix Ubuntu llvm compile (#361)</li> 
+ <li>Support for custom build toolchains (#330)</li> 
+ <li>Modify partition’s version name to what it means (#334)</li> 
+ <li>Fix compile issue of thirdparty library (#338)</li> 
+ <li>Fix a compile issue of DORIS_GCC_HOME (#339)</li> 
+ <li>Add special add_column_statistics method for linked_schema_change (#337)</li> 
+ <li>Fix wrong query result when column value is Null (#344)</li> 
+ <li>Fix bug of using symbolic link dir as storage path (#340)</li> 
+ <li>Add distributor which schedule task to be fairly, for routine load job (#333)</li> 
+ <li>Fix UnionStmt toSql bug (#249)</li> 
+ <li>Fix a bug that user can not kill it own connection (#276)</li> 
+ <li>Fix failed cases in regression test (#299)</li> 
+ <li>Fix code LICENSE for file modified from LevelDB. (#300)</li> 
+ <li>Fix snapshot’s making header bug (#362)</li> 
+ <li>Fix stream load failure when target table contains HLL and insert failure when it contains subquery (#359)</li> 
+ <li>Avoid ‘No more data to read’ error when handling stream load RPC (#354)</li> 
+ <li>Fix cast error in StreamLoadScanNodeush (#356)</li> 
+ <li>Fix insert error when it contains HLL (#358)</li> 
+</ol> 
+<h3><a href="#compatibility" id="compatibility">Compatibility</a></h3> 
+<p><strong>This release version DOES NOT support rolling upgrade, and CAN NOT rollback after upgrade. So it is HIGHLY RECOMMENDED to backup your data and meta data before upgrading to this release version. Or upgrade it in your test/pre-online Palo cluster to make sufficient test.</strong></p> 
+<table> 
+ <thead> 
+  <tr>
+   <th>Item</th>
+   <th>Content</th>
+  </tr> 
+ </thead> 
+ <tbody> 
+  <tr>
+   <td>Forward Compatibility </td>
+   <td> 0.8.1, 0.8.0 </td>
+  </tr> 
+  <tr>
+   <td>Rolling Upgrade </td>
+   <td> No </td>
+  </tr> 
+  <tr>
+   <td>Rollback </td>
+   <td> No </td>
+  </tr> 
+ </tbody> 
+</table> 
+<h2><a href="#disclaimer" id="disclaimer">DISCLAIMER</a></h2> 
+<p>Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.</p>
 
 		</div>
 		<div id="push"></div>
