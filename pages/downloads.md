@@ -20,9 +20,9 @@ limitations under the License.-->
 
 ### Download
 
-Source Package: [**apache-doris-0.9.0-incubating-src.tar.gz**](http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz) ([SHA-512](http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512), [PGP ASC](http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc))
+Source Package: [**apache-doris-0.9.0-incubating-src.tar.gz**](http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz) ([SHA-512](https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512), [PGP ASC](https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc))
 
-Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available [**here**](http://archive.apache.org/dist/incubator/doris/KEYS).
+Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available [**here**](https://dist.apache.org/repos/dist/release/incubator/doris/KEYS).
 
 ### Building from source in Docker Image
 
@@ -48,7 +48,7 @@ Now you should in docker environment, and you can download Doris source package,
 (If you have downloaded source and it is not in image, you can map its path to image in Step2.)
 
 ```
-$ wget http://mirror.bit.edu.cn/apache/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz
+$ wget --trust-server-names "https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz"
 ```
 
 Step4: Build Doris
