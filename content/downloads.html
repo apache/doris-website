@@ -128,8 +128,8 @@ See the License for the specific language governing permissions and
 limitations under the License.--> 
 <h2><a href="#apache-doris-090-incubating-release" id="apache-doris-090-incubating-release"></a><a href="http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz">Apache Doris 0.9.0 (incubating) Release</a></h2> 
 <h3><a href="#download" id="download">Download</a></h3> 
-<p>Source Package: <a href="http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz"><strong>apache-doris-0.9.0-incubating-src.tar.gz</strong></a> (<a href="http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512">SHA-512</a>, <a href="http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc">PGP ASC</a>)</p> 
-<p>Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available <a href="http://archive.apache.org/dist/incubator/doris/KEYS"><strong>here</strong></a>.</p> 
+<p>Source Package: <a href="http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz"><strong>apache-doris-0.9.0-incubating-src.tar.gz</strong></a> (<a href="https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512">SHA-512</a>, <a href="https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc">PGP ASC</a>)</p> 
+<p>Officially, it is important that you verify the integrity of the downloaded files using the PGP signatures (.asc file) or a hash (.sha512 files). The PGP keys used to sign this release are available <a href="https://dist.apache.org/repos/dist/release/incubator/doris/KEYS"><strong>here</strong></a>.</p> 
 <h3><a href="#building-from-source-in-docker-image" id="building-from-source-in-docker-image">Building from source in Docker Image</a></h3> 
 <p>Firstly, you must be install and start docker service, and then you could build Doris as following steps:</p> 
 <p>Step1: Pull the docker image with Doris building environment</p> 
@@ -140,7 +140,7 @@ limitations under the License.-->
 <pre><code>$ docker run -it apachedoris/doris-dev:build-env
 </code></pre> 
 <p>Step3: Download Doris source Now you should in docker environment, and you can download Doris source package, for example: (If you have downloaded source and it is not in image, you can map its path to image in Step2.)</p> 
-<pre><code>$ wget http://mirror.bit.edu.cn/apache/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz
+<pre><code>$ wget --trust-server-names "https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz"
 </code></pre> 
 <p>Step4: Build Doris Now you can decompress and enter Doris source path and build Doris.</p> 
 <pre><code>$ tar zxvf apache-doris-0.9.0-incubating-src.tar.gz

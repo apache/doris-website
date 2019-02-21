@@ -5,7 +5,7 @@
 "Druid Developers" <dev@druid.incubator.apache.org>
 "Dubbo Developers" <dev@dubbo.incubator.apache.org>
 "Hivemall Developers" <dev@hivemall.incubator.apache.org>
-"Hudi Developers" <general@incubator.apache.org>
+"Hudi Developers" <dev@hudi.incubator.apache.org>
 "Iceberg Developers" <dev@iceberg.incubator.apache.org>
 "IoTDB Developers" <dev@iotdb.incubator.apache.org>
 "Marvin-AI Developers" <dev@marvin.incubator.apache.org>
@@ -21,7 +21,9 @@
 "SkyWalking Developers" <dev@skywalking.incubator.apache.org>
 "Spot Developers" <dev@spot.incubator.apache.org>
 "Superset Developers" <dev@superset.incubator.apache.org>
+"Tamaya Developers" <dev@tamaya.incubator.apache.org>
 "Taverna Developers" <dev@taverna.incubator.apache.org>
 "Tephra Developers" <dev@tephra.incubator.apache.org>
+"Training Developers" <general@incubator.apache.org>
 "Warble Developers" <dev@warble.incubator.apache.org>
 "Zipkin Developers" <dev@zipkin.incubator.apache.org>

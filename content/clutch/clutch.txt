@@ -1,5 +1,4 @@
 #identifier,name,sponsor
-airflow,"Airflow","Incubator"
 amaterasu,"Amaterasu","Incubator"
 annotator,"Annotator","Incubator"
 batchee,"BatchEE","Incubator"
@@ -47,6 +46,7 @@ tamaya,"Tamaya","Incubator"
 taverna,"Taverna","Incubator"
 tephra,"Tephra","Incubator"
 toree,"Toree","Incubator"
+training,"Training","Incubator"
 unomi,"Unomi","Incubator"
 warble,"Warble","Incubator"
 weex,"Weex","Incubator"

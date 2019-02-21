@@ -1,10 +1,9 @@
-"Airflow Developers" <dev@airflow.incubator.apache.org>
 "Amaterasu Developers" <dev@amaterasu.incubator.apache.org>
 "Annotator Developers" <dev@annotator.incubator.apache.org>
 "BatchEE Developers" <dev@batchee.incubator.apache.org>
 "BRPC Developers" <dev@brpc.incubator.apache.org>
 "Gobblin Developers" <dev@gobblin.incubator.apache.org>
-"Hudi Developers" <general@incubator.apache.org>
+"Hudi Developers" <dev@hudi.incubator.apache.org>
 "Iceberg Developers" <dev@iceberg.incubator.apache.org>
 "IoTDB Developers" <dev@iotdb.incubator.apache.org>
 "Livy Developers" <dev@livy.incubator.apache.org>
@@ -16,4 +15,6 @@
 "Rya Developers" <dev@rya.incubator.apache.org>
 "SensSoft Developers" <dev@senssoft.incubator.apache.org>
 "ShardingSphere Developers" <dev@shardingsphere.incubator.apache.org>
+"Tamaya Developers" <dev@tamaya.incubator.apache.org>
+"Training Developers" <general@incubator.apache.org>
 "Weex Developers" <dev@weex.incubator.apache.org>
