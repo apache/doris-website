@@ -6,7 +6,6 @@
 "Hudi Developers" <dev@hudi.incubator.apache.org>
 "Iceberg Developers" <dev@iceberg.incubator.apache.org>
 "IoTDB Developers" <dev@iotdb.incubator.apache.org>
-"Joshua Developers" <dev@joshua.incubator.apache.org>
 "PageSpeed Developers" <dev@pagespeed.incubator.apache.org>
 "Pinot Developers" <dev@pinot.incubator.apache.org>
 "Ratis Developers" <dev@ratis.incubator.apache.org>
@@ -15,5 +14,6 @@
 "ShardingSphere Developers" <dev@shardingsphere.incubator.apache.org>
 "Tamaya Developers" <dev@tamaya.incubator.apache.org>
 "Toree Developers" <dev@toree.incubator.apache.org>
-"Training Developers" <general@incubator.apache.org>
+"Training Developers" <dev@training.incubator.apache.org>
+"TVM Developers" <general@incubator.apache.org>
 "Unomi Developers" <dev@unomi.incubator.apache.org>

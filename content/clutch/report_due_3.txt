@@ -24,6 +24,7 @@
 "Tamaya Developers" <dev@tamaya.incubator.apache.org>
 "Taverna Developers" <dev@taverna.incubator.apache.org>
 "Tephra Developers" <dev@tephra.incubator.apache.org>
-"Training Developers" <general@incubator.apache.org>
+"Training Developers" <dev@training.incubator.apache.org>
+"TVM Developers" <general@incubator.apache.org>
 "Warble Developers" <dev@warble.incubator.apache.org>
 "Zipkin Developers" <dev@zipkin.incubator.apache.org>

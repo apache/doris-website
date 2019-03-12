@@ -92,13 +92,13 @@
     </url>
 
     <url>
-    	<loc>http://doris.apache.org/policy/pmc.html</loc>
-    	<lastmod>2019-01-23</lastmod>
+    	<loc>http://doris.apache.org/policy/release_process.html</loc>
+    	<lastmod>2019-03-12</lastmod>
     </url>
 
     <url>
-    	<loc>http://doris.apache.org/policy/subscribe-mail-list.html</loc>
-    	<lastmod>2018-11-06</lastmod>
+    	<loc>http://doris.apache.org/policy/pmc.html</loc>
+    	<lastmod>2019-01-23</lastmod>
     </url>
 
     <url>
@@ -113,6 +113,11 @@
 
     <url>
     	<loc>http://doris.apache.org/policy/use-gitter.html</loc>
+    	<lastmod>2018-11-06</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://doris.apache.org/policy/subscribe-mail-list.html</loc>
     	<lastmod>2018-11-06</lastmod>
     </url>
 

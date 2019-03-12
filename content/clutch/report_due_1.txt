@@ -16,5 +16,6 @@
 "SensSoft Developers" <dev@senssoft.incubator.apache.org>
 "ShardingSphere Developers" <dev@shardingsphere.incubator.apache.org>
 "Tamaya Developers" <dev@tamaya.incubator.apache.org>
-"Training Developers" <general@incubator.apache.org>
+"Training Developers" <dev@training.incubator.apache.org>
+"TVM Developers" <general@incubator.apache.org>
 "Weex Developers" <dev@weex.incubator.apache.org>

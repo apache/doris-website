@@ -10,11 +10,10 @@
         <li><strong>Billie Rinaldi</strong>: Rya</li>
         <li><strong>Bob Paulin</strong>: MXNet</li>
         <li><strong>Brock Noland</strong>: Livy</li>
-        <li><strong>Byung-Gon Chun</strong>: Nemo</li>
+        <li><strong>Byung-Gon Chun</strong>: Nemo, TVM</li>
         <li><strong>Carl Steinbach</strong>: Iceberg</li>
         <li><strong>Chris Lambertus</strong>: Warble</li>
-        <li><strong>Chris Mattmann</strong>: Joshua</li>
-        <li><strong>Christofer Dutz</strong>: Edgent, IoTDB, Training</li>
+        <li><strong>Christofer Dutz</strong>: Daffodil, Edgent, IoTDB, Training</li>
         <li><strong>Craig L Russell</strong>: ShardingSphere</li>
         <li><strong>Craig Russell</strong>: Training</li>
         <li><strong>Daniel Dai</strong>: Hivemall</li>
@@ -27,19 +26,21 @@
         <li><strong>Davor Bonaci</strong>: Amaterasu, Nemo</li>
         <li><strong>Devaraj Das</strong>: Ratis</li>
         <li><strong>Felix Cheung</strong>: Pinot</li>
+        <li><strong>Furkan Kamaci</strong>: TVM</li>
         <li><strong>Greg Trasuk</strong>: PLC4X</li>
         <li><strong>Henri Yandell</strong>: MXNet</li>
-        <li><strong>Henry Saputra</strong>: DLab</li>
+        <li><strong>Henry Saputra</strong>: DLab, TVM</li>
         <li><strong>Hyunsik Choi</strong>: Nemo</li>
         <li><strong>Ignasi Barrera</strong>: SkyWalking</li>
         <li><strong>Jake Farrell</strong>: Heron</li>
         <li><strong>Jakob Homan</strong>: Ratis</li>
         <li><strong>James Taylor</strong>: Iceberg, Omid, Tephra</li>
+        <li><strong>Jan Piotrowski</strong>: Weex</li>
         <li><strong>Jason Dai</strong>: MXNet</li>
         <li><strong>Jean-Baptiste Onofre</strong>: Gobblin, Livy, Nemo, Unomi</li>
         <li><strong>Jean-Baptiste Onofré</strong>: Amaterasu, BatchEE, BRPC</li>
         <li><strong>Jim Jagielski</strong>: Gobblin, Marvin-AI, MXNet, Pinot</li>
-        <li><strong>John D. Ament</strong>: Daffodil, ECharts, Pony Mail, Tamaya, Zipkin</li>
+        <li><strong>John D. Ament</strong>: ECharts, Pony Mail, Tamaya, Zipkin</li>
         <li><strong>Josh Elser</strong>: Rya</li>
         <li><strong>Jukka Zitting</strong>: PageSpeed</li>
         <li><strong>Julian Hyde</strong>: Crail, Druid</li>
@@ -52,14 +53,15 @@
         <li><strong>Kishore Gopalakrishnan</strong>: Hudi</li>
         <li><strong>Koji Sekiguchi</strong>: Hivemall</li>
         <li><strong>Konstantin I Boudnik</strong>: DLab</li>
+        <li><strong>Lars Francke</strong>: Training</li>
         <li><strong>Leif Hedstrom</strong>: PageSpeed</li>
-        <li><strong>Lewis John McGibbney</strong>: Joshua, SensSoft</li>
+        <li><strong>Lewis John McGibbney</strong>: SensSoft</li>
         <li><strong>Luciano Resende</strong>: Crail, Edgent, Hudi, Livy, Marvin-AI, Toree</li>
-        <li><strong>Luke Han</strong>: Doris, SkyWalking, Superset</li>
         <li><strong>Mark Struberg</strong>: BatchEE, NetBeans</li>
         <li><strong>Mark Thomas</strong>: Dubbo</li>
         <li><strong>Markus Weimer</strong>: MXNet, Nemo</li>
         <li><strong>Marlon Pierce</strong>: Taverna</li>
+        <li><strong>Matt Sicker</strong>: OpenWhisk</li>
         <li><strong>Michael Semb Wever</strong>: Zipkin</li>
         <li><strong>Michael Wall</strong>: MXNet</li>
         <li><strong>Mick Semb Wever</strong>: SkyWalking</li>
@@ -68,11 +70,10 @@
         <li><strong>Olivier Lamy</strong>: Amaterasu, BatchEE, Gobblin, Pinot</li>
         <li><strong>Owen O'Malley</strong>: Iceberg</li>
         <li><strong>P. Taylor Goetz</strong>: DLab, Druid, Heron</li>
-        <li><strong>Paul Ramirez</strong>: Joshua</li>
         <li><strong>Phil Sorber</strong>: PageSpeed</li>
         <li><strong>Roman Shaposhnik</strong>: Pinot</li>
         <li><strong>Ryan Blue</strong>: Iceberg, Toree</li>
-        <li><strong>Sebastian Schelter</strong>: MXNet</li>
+        <li><strong>Sebastian Schelter</strong>: MXNet, TVM</li>
         <li><strong>Sergio Fernández</strong>: S2Graph</li>
         <li><strong>Shao Feng Shi</strong>: Doris</li>
         <li><strong>Sharan Foga</strong>: Pony Mail</li>
@@ -85,7 +86,7 @@
         <li><strong>Ted Dunning</strong>: Myriad, SINGA</li>
         <li><strong>Thejas Nair</strong>: SINGA</li>
         <li><strong>Thomas Weise</strong>: Hudi</li>
-        <li><strong>Tom Barber</strong>: Joshua</li>
+        <li><strong>Timothy Chen</strong>: TVM</li>
         <li><strong>Tommaso Teofili</strong>: Annotator</li>
         <li><strong>Uma Maheswara Rao G</strong>: Ratis, Spot</li>
         <li><strong>Von Gosling</strong>: BRPC, ShardingSphere</li>
