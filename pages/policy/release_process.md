@@ -30,14 +30,25 @@ Release manager 在发布前需要先生成自己的签名公钥，并上传到�
 可以发起一个标题为 [DISCUSS] x.y.z release 的邮件，在社区内部进行讨论，说明已经修复了哪些bug，开发了哪些 features。
 如果 DISCUSS 邮件得到大家支持就可以进行下一步。
 
-###  1.2 准备分支和打 tag
+###  1.2 准备分支
 
-发布前需要先新建一个分支，然后在新建分支上打 tag。
+发布前需要先新建一个分支，这个分支要进行比较充分的测试，使得功能可用，bug收敛，重要bug都得到修复。
 
 例如：
 
 ```
 $ git checkout -b branch-0.9
+
+```
+
+###  1.3 打 tag
+
+当上述分支已经比较稳定后，就可以在此分支上打 tag。
+
+例如：
+
+```
+$ git checkout branch-0.9
 $ git tag -a 0.9.0-rc01 -m "0.9.0 release candidate 01"
 
 $ git push origin --tags
@@ -49,7 +60,6 @@ To git@github.com:apache/incubator-doris.git
 
 $ git tag
 ```
-
 
 ## 2. 签名软件 GnuPG 的安装配置
 ###  2.1 GnuPG
@@ -111,7 +121,7 @@ Compression: Uncompressed, ZIP, ZLIB, BZIP2
 ### 3.2 生成新的签名
 
 ```
-$ gpg --gen-key 
+$ gpg --gen-key
 gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -131,7 +141,7 @@ Please specify how long the key should be valid.
       <n>w = key expires in n weeks
       <n>m = key expires in n months
       <n>y = key expires in n years
-Key is valid for? (0) 
+Key is valid for? (0)
 Key does not expire at all
 Is this correct? (y/N) y
 
@@ -141,7 +151,7 @@ Real name: xxx
 Name must be at least 5 characters long
 Real name: xxx-yyy
 Email address: xxx@apache.org
-Comment: reed's key
+Comment: xxx's key
 You selected this USER-ID:
     "xxx-yyy (xxx's key) <xxx@apache.org>"
 
@@ -167,7 +177,7 @@ gpg --armor --output public-key.txt --export [用户ID]
 
 ```
 $ gpg --armor --output public-key.txt --export xxx-yyy
-$ cat public-key.txt 
+$ cat public-key.txt
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
@@ -216,7 +226,7 @@ sub   4096R/0E8182E6 2018-12-06
 将上面的 fingerprint 粘贴到自己的用户信息中：
 
 https://id.apache.org
-OpenPGP Public Key Primary Fingerprint: 
+OpenPGP Public Key Primary Fingerprint:
 
 ## 6. 生成 keys
 
@@ -229,7 +239,7 @@ Users: pgp < KEYS
 or
        gpg --import KEYS
 
-Developers: 
+Developers:
     pgp -kxa <your name> and append it to this file.
 or
     (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
@@ -247,7 +257,7 @@ gpg --list-sigs xxx-yyy >> KEYS
 最后，将 public key 追加导入：
 
 ```
-gpg --armor --export xxx-yyy >> KEYS 
+gpg --armor --export xxx-yyy >> KEYS
 ```
 
 通过 svn，用自己的 apache 用户密码，将 KEYS 上传到下面目录：
@@ -255,7 +265,7 @@ gpg --armor --export xxx-yyy >> KEYS
 https://dist.apache.org/repos/dist/dev/incubator/doris/
 
 ```
-$ svn add KEYS 
+$ svn add KEYS
 A         KEYS
 
 $ svn commit -m "Add KEYS"
@@ -293,7 +303,7 @@ $ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
 
 
 ```
-svn add 0.9.0-incubating/ 
+svn add 0.9.0-incubating/
 svn commit -m "Add doris folder"
 
 ```
@@ -353,7 +363,7 @@ The vote will be open for at least 72 hours.
 [ ] -1 Do not release this package because ...
 
 Best Regards,
-Reed
+xxx
 ```
 
 ## 10. 投票通过后，发 Result 邮件
@@ -365,14 +375,14 @@ Thanks to everyone, and this vote is now closed.
 
 It has passed with 4 +1 (binding) votes and no 0 or -1 votes.
 
-Binding:  
+Binding:
 +1 Zhao Chun
-+1 Reed
++1 xxx
 +1 Li Chaoyong
 +1 Mingyu Chen
 
 Best Regards,
-Reed
+xxx
 
 ```
 
@@ -409,9 +419,9 @@ https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS
 It is also listed here:
 https://people.apache.org/keys/committer/lide.asc
 
-The vote will be open for at least 72 hours. 
+The vote will be open for at least 72 hours.
 [ ] +1 Approve the release
-[ ] +0 No opinion 
+[ ] +0 No opinion
 [ ] -1 Do not release this package because ...
 
 To verify and build, you can refer to following instruction:
@@ -438,7 +448,7 @@ $ cd apache-doris-0.9.0.rc02-incubating-src
 $ sh build.sh
 
 Best Regards,
-Reed
+xxx
 ```
 
 ## 12. 发 Result 邮件到 general@incubator.apache.org
@@ -463,7 +473,7 @@ The vote thread:
 https://lists.apache.org/thread.html/da05fdd8d84e35de527f27200b5690d7811a1e97d419d1ea66562130@%3Cgeneral.incubator.apache.org%3E
 
 Best Regards,
-Reed
+xxx
 ```
 
 ## 13. 上传 package 到 release
@@ -478,7 +488,7 @@ Reed
 https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/
 
 最终能在 apache 官网看到：
-http://www.apache.org/dist/incubator/doris/0.9.0-incubating/ 
+http://www.apache.org/dist/incubator/doris/0.9.0-incubating/
 
 ```
 
@@ -516,7 +526,7 @@ https://github.com/apache/incubator-doris/releases
 Best Regards,
 
 On behalf of the Doris team,
-Reed
+xxx
 ```
 
 ## 15. 在 Doris 官网和 github 发布链接
@@ -562,3 +572,4 @@ https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc02
 ```
 http://doris.apache.org/downloads.html
 ```
+
