@@ -136,10 +136,16 @@
 <h2><a href="#1-准备发布" id="1-准备发布">1. 准备发布</a></h2> 
 <h3><a href="#11-在社区发起-discuss" id="11-在社区发起-discuss">1.1 在社区发起 DISCUSS</a></h3> 
 <p>如果觉得已经修复了很多bug，开发了比较重要的 feature，任何 IPMC 成员都可以发起 DISCUSS 讨论发布新版本。 可以发起一个标题为 [DISCUSS] x.y.z release 的邮件，在社区内部进行讨论，说明已经修复了哪些bug，开发了哪些 features。 如果 DISCUSS 邮件得到大家支持就可以进行下一步。</p> 
-<h3><a href="#12-准备分支和打-tag" id="12-准备分支和打-tag">1.2 准备分支和打 tag</a></h3> 
-<p>发布前需要先新建一个分支，然后在新建分支上打 tag。</p> 
+<h3><a href="#12-准备分支" id="12-准备分支">1.2 准备分支</a></h3> 
+<p>发布前需要先新建一个分支，这个分支要进行比较充分的测试，使得功能可用，bug收敛，重要bug都得到修复。</p> 
 <p>例如：</p> 
 <pre><code>$ git checkout -b branch-0.9
+
+</code></pre> 
+<h3><a href="#13-打-tag" id="13-打-tag">1.3 打 tag</a></h3> 
+<p>当上述分支已经比较稳定后，就可以在此分支上打 tag。</p> 
+<p>例如：</p> 
+<pre><code>$ git checkout branch-0.9
 $ git tag -a 0.9.0-rc01 -m "0.9.0 release candidate 01"
 
 $ git push origin --tags
@@ -189,7 +195,7 @@ Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
 Compression: Uncompressed, ZIP, ZLIB, BZIP2
 </code></pre> 
 <h3><a href="#32-生成新的签名" id="32-生成新的签名">3.2 生成新的签名</a></h3> 
-<pre><code>$ gpg --gen-key 
+<pre><code>$ gpg --gen-key
 gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -209,7 +215,7 @@ Please specify how long the key should be valid.
       &lt;n&gt;w = key expires in n weeks
       &lt;n&gt;m = key expires in n months
       &lt;n&gt;y = key expires in n years
-Key is valid for? (0) 
+Key is valid for? (0)
 Key does not expire at all
 Is this correct? (y/N) y
 
@@ -219,7 +225,7 @@ Real name: xxx
 Name must be at least 5 characters long
 Real name: xxx-yyy
 Email address: xxx@apache.org
-Comment: reed's key
+Comment: xxx's key
 You selected this USER-ID:
     "xxx-yyy (xxx's key) &lt;xxx@apache.org&gt;"
 
@@ -237,7 +243,7 @@ sub   4096R/0E8182E6 2018-12-06
 <p>其中 xxx-yyy 就是用户ID。</p> 
 <p>gpg –armor –output public-key.txt –export [用户ID]</p> 
 <pre><code>$ gpg --armor --output public-key.txt --export xxx-yyy
-$ cat public-key.txt 
+$ cat public-key.txt
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
@@ -277,7 +283,7 @@ Users: pgp &lt; KEYS
 or
        gpg --import KEYS
 
-Developers: 
+Developers:
     pgp -kxa &lt;your name&gt; and append it to this file.
 or
     (pgpk -ll &lt;your name&gt; &amp;&amp; pgpk -xa &lt;your name&gt;) &gt;&gt; this file.
@@ -289,11 +295,11 @@ or
 <pre><code>gpg --list-sigs xxx-yyy &gt;&gt; KEYS
 </code></pre> 
 <p>最后，将 public key 追加导入：</p> 
-<pre><code>gpg --armor --export xxx-yyy &gt;&gt; KEYS 
+<pre><code>gpg --armor --export xxx-yyy &gt;&gt; KEYS
 </code></pre> 
 <p>通过 svn，用自己的 apache 用户密码，将 KEYS 上传到下面目录：</p> 
 <p><a href="https://dist.apache.org/repos/dist/dev/incubator/doris/">https://dist.apache.org/repos/dist/dev/incubator/doris/</a></p> 
-<pre><code>$ svn add KEYS 
+<pre><code>$ svn add KEYS
 A         KEYS
 
 $ svn commit -m "Add KEYS"
@@ -324,7 +330,7 @@ $ sha512sum apache-doris-0.9.0-incubating-src.tar.gz &gt; apache-doris-0.9.0-inc
 $ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
 </code></pre> 
 <h2><a href="#8-上传签名的软件包到-dev" id="8-上传签名的软件包到-dev">8. 上传签名的软件包到 DEV</a></h2> 
-<pre><code>svn add 0.9.0-incubating/ 
+<pre><code>svn add 0.9.0-incubating/
 svn commit -m "Add doris folder"
 
 </code></pre> 
@@ -376,7 +382,7 @@ The vote will be open for at least 72 hours.
 [ ] -1 Do not release this package because ...
 
 Best Regards,
-Reed
+xxx
 </code></pre> 
 <h2><a href="#10-投票通过后发-result-邮件" id="10-投票通过后发-result-邮件">10. 投票通过后，发 Result 邮件</a></h2> 
 <p>[Result][VOTE] Release Apache Doris 0.9.0-incubating-rc02</p> 
@@ -384,14 +390,14 @@ Reed
 
 It has passed with 4 +1 (binding) votes and no 0 or -1 votes.
 
-Binding:  
+Binding:
 +1 Zhao Chun
-+1 Reed
++1 xxx
 +1 Li Chaoyong
 +1 Mingyu Chen
 
 Best Regards,
-Reed
+xxx
 
 </code></pre> 
 <h2><a href="#11-发邮件到-generalincubatorapacheorg-进行投票" id="11-发邮件到-generalincubatorapacheorg-进行投票">11. 发邮件到 </a><a href="mailto:general@incubator.apache.org">general@incubator.apache.org</a> 进行投票</h2> 
@@ -424,9 +430,9 @@ https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS
 It is also listed here:
 https://people.apache.org/keys/committer/lide.asc
 
-The vote will be open for at least 72 hours. 
+The vote will be open for at least 72 hours.
 [ ] +1 Approve the release
-[ ] +0 No opinion 
+[ ] +0 No opinion
 [ ] -1 Do not release this package because ...
 
 To verify and build, you can refer to following instruction:
@@ -453,7 +459,7 @@ $ cd apache-doris-0.9.0.rc02-incubating-src
 $ sh build.sh
 
 Best Regards,
-Reed
+xxx
 </code></pre> 
 <h2><a href="#12-发-result-邮件到-generalincubatorapacheorg" id="12-发-result-邮件到-generalincubatorapacheorg">12. 发 Result 邮件到 </a><a href="mailto:general@incubator.apache.org">general@incubator.apache.org</a></h2> 
 <p>[RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc02</p> 
@@ -473,7 +479,7 @@ The vote thread:
 https://lists.apache.org/thread.html/da05fdd8d84e35de527f27200b5690d7811a1e97d419d1ea66562130@%3Cgeneral.incubator.apache.org%3E
 
 Best Regards,
-Reed
+xxx
 </code></pre> 
 <h2><a href="#13-上传-package-到-release" id="13-上传-package-到-release">13. 上传 package 到 release</a></h2> 
 <p>当正式发布投票成功后，先发[Result]邮件，然后就准备 release package。 将之前在dev下发布的对应rc文件夹下的源码包、签名文件和hash文件拷贝到另一个目录 0.9.0-incubating，注意文件名字中不要rcxx (可以rename，但不要重新计算签名，hash可以重新计算，结果不会变)</p> 
@@ -482,7 +488,7 @@ Reed
 https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/
 
 最终能在 apache 官网看到：
-http://www.apache.org/dist/incubator/doris/0.9.0-incubating/ 
+http://www.apache.org/dist/incubator/doris/0.9.0-incubating/
 
 </code></pre> 
 <h2><a href="#14-发-announce-邮件到-generalincubatorapacheorg" id="14-发-announce-邮件到-generalincubatorapacheorg">14. 发 Announce 邮件到 </a><a href="mailto:general@incubator.apache.org">general@incubator.apache.org</a></h2> 
@@ -509,7 +515,7 @@ https://github.com/apache/incubator-doris/releases
 Best Regards,
 
 On behalf of the Doris team,
-Reed
+xxx
 </code></pre> 
 <h2><a href="#15-在-doris-官网和-github-发布链接" id="15-在-doris-官网和-github-发布链接">15. 在 Doris 官网和 github 发布链接</a></h2> 
 <h3><a href="#151-创建下载链接" id="151-创建下载链接">15.1 创建下载链接</a></h3> 
