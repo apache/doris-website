@@ -1,0 +1,642 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Colocation Join &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="数据导出" href="export_manual.html" />
+    <link rel="prev" title="备份与恢复" href="backup-restore.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Colocation Join</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">名词解释</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">原理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">使用方式</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">建表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">删表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#group">查看 Group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#colocate-group">修改表 Colocate Group 属性</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">其他相关操作</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#colocation">Colocation 副本均衡和修复</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">副本修复</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">副本均衡</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">查询</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">高级操作</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe">FE 配置项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#http-restful-api">HTTP Restful API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="export_manual.html">数据导出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">操作手册</a> &raquo;</li>
+        
+      <li>Colocation Join</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/Docs/cn/administrator-guide/colocation-join.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="colocation-join">
+<h1>Colocation Join<a class="headerlink" href="#colocation-join" title="Permalink to this headline">¶</a></h1>
+<p>Colocation Join 是在 Doris 0.9 版本中引入的新功能。旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，加速查询。</p>
+<p>最初的设计、实现和效果可以参阅 <a class="reference external" href="https://github.com/apache/incubator-doris/issues/245">ISSUE 245</a>。</p>
+<p>Colocation Join 功能经过一次改版，设计和使用方式和最初设计稍有不同。本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。</p>
+<div class="section" id="id1">
+<h2>名词解释<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
+<li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
+<li>Colocation Group（CG）：一个 CG 中会包含一张及以上的 Table。在同一个 Group 内的 Table 有着相同的 Colocation Group Schema，并且有着相同的数据分片分布。</li>
+<li>Colocation Group Schema（CGS）：用于描述一个 CG 中的 Table，和 Colocation 相关的通用 Schema 信息。包括分桶列类型，分桶数以及副本数等。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>原理<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Colocation Join 功能，是将一组拥有相同 CGS 的 Table 组成一个 CG。并保证这些 Table 对应的数据分片会落在同一个 BE 节点上。使得当 CG 内的表进行分桶列上的 Join 操作时，可以通过直接进行本地数据 Join，减少数据在节点间的传输耗时。</p>
+<p>一个表的数据，最终会根据分桶列值 Hash、对桶数取模的后落在某一个分桶内。假设一个 Table 的分桶数为 8，则共有 <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7]</span></code> 8 个分桶（Bucket），我们称这样一个序列为一个 <code class="docutils literal notranslate"><span class="pre">BucketsSequence</span></code>。每个 Bucket 内会有一个或多个数据分片（Tablet）。当表为单分区表时，一个 Bucket 内仅有一个 Tablet。如果是多分区表，则会有多个。</p>
+<p>为了使得 Table 能够有相同的数据分布，同一 CG 内的 Table 必须保证以下属性相同：</p>
+<ol>
+<li><p class="first">分桶列和分桶数</p>
+<p>分桶列，即在建表语句中 <code class="docutils literal notranslate"><span class="pre">DISTRIBUTED</span> <span class="pre">BY</span> <span class="pre">HASH(col1,</span> <span class="pre">col2,</span> <span class="pre">...)</span></code> 中指定的列。分桶列决定了一张表的数据通过哪些列的值进行 Hash 划分到不同的 Tablet 中。同一 CG 内的 Table 必须保证分桶列的类型和数量完全一致，并且桶数一致，才能保证多张表的数据分片能够一一对应的进行分布控制。</p>
+</li>
+<li><p class="first">副本数</p>
+<p>同一个 CG 内所有表的所有分区（Partition）的副本数必须一致。如果不一致，可能出现某一个 Tablet 的某一个副本，在同一个 BE 上没有其他的表分片的副本对应。</p>
+</li>
+</ol>
+<p>同一个 CG 内的表，分区的个数、范围以及分区列的类型不要求一致。</p>
+<p>在固定了分桶列和分桶数后，同一个 CG 内的表会拥有相同的 BucketsSequnce。而副本数决定了每个分桶内的 Tablet 的多个副本，存放在哪些 BE 上。假设 BucketsSequnce 为 <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7]</span></code>，BE 节点有 <code class="docutils literal notranslate"><span class="pre">[A,</span> <span class="pre">B,</span> <span class="pre">C,</span> <span class="pre">D]</span></code> 4个。则一个可能的数据分布如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span>
+<span class="o">|</span> <span class="mi">0</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">5</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">6</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">7</span> <span class="o">|</span>
+<span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span>
+<span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span>
+<span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span>
+</pre></div>
+</div>
+<p>CG 内所有表的数据都会按照上面的规则进行统一分布，这样就保证了，分桶列值相同的数据都在同一个 BE 节点上，可以进行本地数据 Join。</p>
+</div>
+<div class="section" id="id3">
+<h2>使用方式<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>建表<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>建表时，可以在 <code class="docutils literal notranslate"><span class="pre">PROPERTIES</span></code> 中指定属性 <code class="docutils literal notranslate"><span class="pre">&quot;colocate_with&quot;</span> <span class="pre">=</span> <span class="pre">&quot;group_name&quot;</span></code>，表示这个表是一个 Colocation Join 表，并且归属于一个指定的 Colocation Group。</p>
+<p>示例：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">tbl</span> <span class="p">(</span><span class="n">k1</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v1</span> <span class="nb">int</span> <span class="nb">sum</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">k1</span><span class="p">)</span>
+<span class="n">BUCKETS</span> <span class="mi">8</span>
+<span class="n">PROPERTIES</span><span class="p">(</span>
+    <span class="s2">&quot;colocate_with&quot;</span> <span class="o">=</span> <span class="s2">&quot;group1&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>如果指定的 Group 不存在，则 Doris 会自动创建一个只包含当前这张表的 Group。如果 Group 已存在，则 Doris 会检查当前表是否满足 Colocation Group Schema。如果满足，则会创建该表，并将该表加入 Group。同时，表会根据已存在的 Group 中的数据分布规则创建分片和副本。
+Group 归属于一个 Database，Group 的名字在一个 Database 内唯一。在内部存储是 Group 的全名为 <code class="docutils literal notranslate"><span class="pre">dbId_groupName</span></code>，但用户只感知 groupName。</p>
+</div>
+<div class="section" id="id5">
+<h3>删表<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>当 Group 中最后一张表彻底删除后（彻底删除是指从回收站中删除。通常，一张表通过 <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code> 命令删除后，会在回收站默认停留一天的时间后，再删除），该 Group 也会被自动删除。</p>
+</div>
+<div class="section" id="group">
+<h3>查看 Group<a class="headerlink" href="#group" title="Permalink to this headline">¶</a></h3>
+<p>以下命令可以查看集群内已存在的 Group 信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">PROC</span> <span class="s1">&#39;/colocation_group&#39;</span><span class="p">;</span>
+
+<span class="o">+-------------+--------------+--------------+------------+----------------+----------+----------+</span>
+<span class="o">|</span> <span class="n">GroupId</span>     <span class="o">|</span> <span class="n">GroupName</span>    <span class="o">|</span> <span class="n">TableIds</span>     <span class="o">|</span> <span class="n">BucketsNum</span> <span class="o">|</span> <span class="n">ReplicationNum</span> <span class="o">|</span> <span class="n">DistCols</span> <span class="o">|</span> <span class="n">IsStable</span> <span class="o">|</span>
+<span class="o">+-------------+--------------+--------------+------------+----------------+----------+----------+</span>
+<span class="o">|</span> <span class="mf">10005.10008</span> <span class="o">|</span> <span class="mi">10005</span><span class="n">_group1</span> <span class="o">|</span> <span class="mi">10007</span><span class="p">,</span> <span class="mi">10040</span> <span class="o">|</span> <span class="mi">10</span>         <span class="o">|</span> <span class="mi">3</span>              <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>  <span class="o">|</span> <span class="n">true</span>     <span class="o">|</span>
+<span class="o">+-------------+--------------+--------------+------------+----------------+----------+----------+</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>GroupId：          一个 Group 的全集群唯一标识，前半部分为 db id，后半部分为 group id。</li>
+<li>GroupName：        Group 的全名。</li>
+<li>TabletIds：        该 Group 包含的 Table 的 id 列表。</li>
+<li>BucketsNum：       分桶数。</li>
+<li>ReplicationNum：   副本数。</li>
+<li>DistCols：         Distribution columns，即分桶列类型。</li>
+<li>IsStable：         该 Group 是否稳定（稳定的定义，见 <code class="docutils literal notranslate"><span class="pre">Colocation</span> <span class="pre">副本均衡和修复</span></code> 一节）。</li>
+</ul>
+<p>通过以下命令可以进一步查看一个 Group 的数据分布情况：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">PROC</span> <span class="s1">&#39;/colocation_group/10005.10008&#39;</span><span class="p">;</span>
+
+<span class="o">+-------------+---------------------+</span>
+<span class="o">|</span> <span class="n">BucketIndex</span> <span class="o">|</span> <span class="n">BackendIds</span>          <span class="o">|</span>
+<span class="o">+-------------+---------------------+</span>
+<span class="o">|</span> <span class="mi">0</span>           <span class="o">|</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">1</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">2</span>           <span class="o">|</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">3</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">4</span>           <span class="o">|</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10003</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">5</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">6</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">7</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10002</span> <span class="o">|</span>
+<span class="o">+-------------+---------------------+</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>BucketIndex：  分桶序列的下标。</li>
+<li>BackendIds：   分桶中数据分片所在的 BE 节点 id 列表。</li>
+</ul>
+<blockquote>
+<div>以上命令需要 AMDIN 权限。暂不支持普通用户查看。</div></blockquote>
+</div>
+<div class="section" id="colocate-group">
+<h3>修改表 Colocate Group 属性<a class="headerlink" href="#colocate-group" title="Permalink to this headline">¶</a></h3>
+<p>可以对一个已经创建的表，修改其 Colocation Group 属性。示例：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl</span> <span class="pre">SET</span> <span class="pre">(&quot;colocate_with&quot;</span> <span class="pre">=</span> <span class="pre">&quot;group2&quot;);</span></code></p>
+<ul class="simple">
+<li>如果该表之前没有指定过 Group，则该命令检查 Schema，并将该表加入到该 Group（Group 不存在则会创建）。</li>
+<li>如果该表之前有指定其他 Group，则该命令会先将该表从原有 Group 中移除，并加入新 Group（Group 不存在则会创建）。</li>
+</ul>
+<p>也可以通过以下命令，删除一个表的 Colocation 属性：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl</span> <span class="pre">SET</span> <span class="pre">(&quot;colocate_with&quot;</span> <span class="pre">=</span> <span class="pre">&quot;&quot;);</span></code></p>
+</div>
+<div class="section" id="id6">
+<h3>其他相关操作<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>当对一个具有 Colocation 属性的表进行增加分区（ADD PARTITION）、修改副本数时，Doris 会检查修改是否会违反 Colocation Group Schema，如果违反则会拒绝。</p>
+</div>
+</div>
+<div class="section" id="colocation">
+<h2>Colocation 副本均衡和修复<a class="headerlink" href="#colocation" title="Permalink to this headline">¶</a></h2>
+<p>Colocation 表的副本分布需要遵循 Group 中指定的分布，所以在副本修复和均衡方面和普通分片有所区别。</p>
+<p>Group 自身有一个 Stable 属性，当 Stable 为 true 时，表示当前 Group 内的表的所有分片没有正在进行变动，Colocation 特性可以正常使用。当 Stable 为 false 时（Unstable），表示当前 Group 内有部分表的分片正在做修复或迁移，此时，相关表的 Colocation Join 将退化为普通 Join。</p>
+<div class="section" id="id7">
+<h3>副本修复<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>副本只能存储在指定的 BE 节点上。所以当某个 BE 不可用时（宕机、Decommission 等），需要寻找一个新的 BE 进行替换。Doris 会优先寻找负载最低的 BE 进行替换。替换后，该 Bucket 内的所有在旧 BE 上的数据分片都要做修复。迁移过程中，Group 被标记为 Unstable。</p>
+</div>
+<div class="section" id="id8">
+<h3>副本均衡<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>Doris 会尽力将 Colocation 表的分片均匀分布在所有 BE 节点上。对于普通表的副本均衡，是以单副本为粒度的，即单独为每一个副本寻找负载较低的 BE 节点即可。而 Colocation 表的均衡是 Bucket 级别的，即一个 Bucket 内的所有副本都会一起迁移。我们采用一个简单的均衡算法，即在不考虑副本实际大小，而只根据副本数量，将 BucketsSequnce 均匀的分布在所有 BE 上。具体算法可以参阅 <code class="docutils literal notranslate"><span class="pre">ColocateTableBalancer.java</span></code> 中的代码注释。</p>
+<blockquote>
+<div><p>注1：当前的 Colocation 副本均衡和修复算法，对于异构部署的 Doris 集群效果可能不佳。所谓异构部署，即 BE 节点的磁盘容量、数量、磁盘类型（SSD 和 HDD）不一致。在异构部署情况下，可能出现小容量的 BE 节点和大容量的 BE 节点存储了相同的副本数量。</p>
+<p>注2：当一个 Group 处于 Unstable 状态时，其中的表的 Join 将退化为普通 Join。此时可能会极大降低集群的查询性能。如果不希望系统自动均衡，可以设置 FE 的配置项 <code class="docutils literal notranslate"><span class="pre">disable_colocate_balance</span></code> 来禁止自动均衡。然后在合适的时间打开即可。（具体参阅 <code class="docutils literal notranslate"><span class="pre">高级操作</span></code> 一节）</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>查询<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>对 Colocation 表的查询方式和普通表一样，用户无需感知 Colocation 属性。如果 Colocation 表所在的 Group 处于 Unstable 状态，将自动退化为普通 Join。</p>
+<p>举例说明：</p>
+<p>表1：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE `tbl1` (
+    `k1` date NOT NULL COMMENT &quot;&quot;,
+    `k2` int(11) NOT NULL COMMENT &quot;&quot;,
+    `v1` int(11) SUM NOT NULL COMMENT &quot;&quot;
+) ENGINE=OLAP
+AGGREGATE KEY(`k1`, `k2`)
+PARTITION BY RANGE(`k1`)
+(
+    PARTITION p1 VALUES LESS THAN (&#39;2019-05-31&#39;),
+    PARTITION p2 VALUES LESS THAN (&#39;2019-06-30&#39;)
+)
+DISTRIBUTED BY HASH(`k2`) BUCKETS 8
+PROPERTIES (
+    &quot;colocate_with&quot; = &quot;group1&quot;
+);
+</pre></div>
+</div>
+<p>表2：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE `tbl2` (
+    `k1` datetime NOT NULL COMMENT &quot;&quot;,
+    `k2` int(11) NOT NULL COMMENT &quot;&quot;,
+    `v1` double SUM NOT NULL COMMENT &quot;&quot;
+) ENGINE=OLAP
+AGGREGATE KEY(`k1`, `k2`)
+DISTRIBUTED BY HASH(`k2`) BUCKETS 8
+PROPERTIES (
+    &quot;colocate_with&quot; = &quot;group1&quot;
+);
+</pre></div>
+</div>
+<p>查看查询计划：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
+
++----------------------------------------------------+
+| Explain String                                     |
++----------------------------------------------------+
+| PLAN FRAGMENT 0                                    |
+|  OUTPUT EXPRS:`tbl1`.`k1` |                        |
+|   PARTITION: RANDOM                                |
+|                                                    |
+|   RESULT SINK                                      |
+|                                                    |
+|   2:HASH JOIN                                      |
+|   |  join op: INNER JOIN                           |
+|   |  hash predicates:                              |
+|   |  colocate: true                                |
+|   |    `tbl1`.`k2` = `tbl2`.`k2`                   |
+|   |  tuple ids: 0 1                                |
+|   |                                                |
+|   |----1:OlapScanNode                              |
+|   |       TABLE: tbl2                              |
+|   |       PREAGGREGATION: OFF. Reason: null        |
+|   |       partitions=0/1                           |
+|   |       rollup: null                             |
+|   |       buckets=0/0                              |
+|   |       cardinality=-1                           |
+|   |       avgRowSize=0.0                           |
+|   |       numNodes=0                               |
+|   |       tuple ids: 1                             |
+|   |                                                |
+|   0:OlapScanNode                                   |
+|      TABLE: tbl1                                   |
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo |
+|      partitions=0/2                                |
+|      rollup: null                                  |
+|      buckets=0/0                                   |
+|      cardinality=-1                                |
+|      avgRowSize=0.0                                |
+|      numNodes=0                                    |
+|      tuple ids: 0                                  |
++----------------------------------------------------+
+</pre></div>
+</div>
+<p>如果 Colocation Join 生效，则 Hash Join 节点会显示 <code class="docutils literal notranslate"><span class="pre">colocate:</span> <span class="pre">true</span></code>。</p>
+<p>如果没有生效，则查询计划如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>+----------------------------------------------------+
+| Explain String                                     |
++----------------------------------------------------+
+| PLAN FRAGMENT 0                                    |
+|  OUTPUT EXPRS:`tbl1`.`k1` |                        |
+|   PARTITION: RANDOM                                |
+|                                                    |
+|   RESULT SINK                                      |
+|                                                    |
+|   2:HASH JOIN                                      |
+|   |  join op: INNER JOIN (BROADCAST)               |
+|   |  hash predicates:                              |
+|   |  colocate: false, reason: group is not stable  |
+|   |    `tbl1`.`k2` = `tbl2`.`k2`                   |
+|   |  tuple ids: 0 1                                |
+|   |                                                |
+|   |----3:EXCHANGE                                  |
+|   |       tuple ids: 1                             |
+|   |                                                |
+|   0:OlapScanNode                                   |
+|      TABLE: tbl1                                   |
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo |
+|      partitions=0/2                                |
+|      rollup: null                                  |
+|      buckets=0/0                                   |
+|      cardinality=-1                                |
+|      avgRowSize=0.0                                |
+|      numNodes=0                                    |
+|      tuple ids: 0                                  |
+|                                                    |
+| PLAN FRAGMENT 1                                    |
+|  OUTPUT EXPRS:                                     |
+|   PARTITION: RANDOM                                |
+|                                                    |
+|   STREAM DATA SINK                                 |
+|     EXCHANGE ID: 03                                |
+|     UNPARTITIONED                                  |
+|                                                    |
+|   1:OlapScanNode                                   |
+|      TABLE: tbl2                                   |
+|      PREAGGREGATION: OFF. Reason: null             |
+|      partitions=0/1                                |
+|      rollup: null                                  |
+|      buckets=0/0                                   |
+|      cardinality=-1                                |
+|      avgRowSize=0.0                                |
+|      numNodes=0                                    |
+|      tuple ids: 1                                  |
++----------------------------------------------------+
+</pre></div>
+</div>
+<p>HASH JOIN 节点会显示对应原因：<code class="docutils literal notranslate"><span class="pre">colocate:</span> <span class="pre">false,</span> <span class="pre">reason:</span> <span class="pre">group</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">stable</span></code>。同时会有一个 EXCHANGE 节点生成。</p>
+</div>
+<div class="section" id="id10">
+<h2>高级操作<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe">
+<h3>FE 配置项<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">disable_colocate_relocate</p>
+<p>是否关闭 Doris 的自动 Colocation 副本修复。默认为 false，即不关闭。该参数只影响 Colocation 表的副本修复，不影响普通表。</p>
+</li>
+<li><p class="first">disable_colocate_balance</p>
+<p>是否关闭 Doris 的自动 Colocation 副本均衡。默认为 false，即不关闭。该参数只影响 Colocation 表的副本均衡，不影响普通表。</p>
+</li>
+</ul>
+<p>以上参数可以动态修改，设置方式请参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ADMIN</span> <span class="pre">SHOW</span> <span class="pre">CONFIG;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ADMIN</span> <span class="pre">SET</span> <span class="pre">CONFIG;</span></code>。</p>
+<ul>
+<li><p class="first">disable_colocate_join</p>
+<p>是否关闭 Colocation Join 功能。在 0.10 及之前的版本，默认为 true，即关闭。在之后的某个版本中将默认为 false，即开启。</p>
+</li>
+<li><p class="first">use_new_tablet_scheduler</p>
+<p>在 0.10 及之前的版本中，新的副本调度逻辑与 Colocation Join 功能不兼容，所以在 0.10 及之前版本，如果 <code class="docutils literal notranslate"><span class="pre">disable_colocate_join</span> <span class="pre">=</span> <span class="pre">false</span></code>，则需设置 <code class="docutils literal notranslate"><span class="pre">use_new_tablet_scheduler</span> <span class="pre">=</span> <span class="pre">false</span></code>，即关闭新的副本调度器。之后的版本中，<code class="docutils literal notranslate"><span class="pre">use_new_tablet_scheduler</span></code> 将衡为 true。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="http-restful-api">
+<h3>HTTP Restful API<a class="headerlink" href="#http-restful-api" title="Permalink to this headline">¶</a></h3>
+<p>Doris 提供了几个和 Colocation Join 有关的 HTTP Restful API，用于查看和修改 Colocation Group。</p>
+<p>该 API 实现在 FE 端，使用 <code class="docutils literal notranslate"><span class="pre">fe_host:fe_http_port</span></code> 进行访问。需要 ADMIN 权限。</p>
+<ol>
+<li><p class="first">查看集群的全部 Colocation 信息</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GET /api/colocate
+
+返回以 Json 格式表示内部 Colocation 信息。
+
+{
+	&quot;colocate_meta&quot;: {
+		&quot;groupName2Id&quot;: {
+			&quot;g1&quot;: {
+				&quot;dbId&quot;: 10005,
+				&quot;grpId&quot;: 10008
+			}
+		},
+		&quot;group2Tables&quot;: {},
+		&quot;table2Group&quot;: {
+			&quot;10007&quot;: {
+				&quot;dbId&quot;: 10005,
+				&quot;grpId&quot;: 10008
+			},
+			&quot;10040&quot;: {
+				&quot;dbId&quot;: 10005,
+				&quot;grpId&quot;: 10008
+			}
+		},
+		&quot;group2Schema&quot;: {
+			&quot;10005.10008&quot;: {
+				&quot;groupId&quot;: {
+					&quot;dbId&quot;: 10005,
+					&quot;grpId&quot;: 10008
+				},
+				&quot;distributionColTypes&quot;: [{
+					&quot;type&quot;: &quot;INT&quot;,
+					&quot;len&quot;: -1,
+					&quot;isAssignedStrLenInColDefinition&quot;: false,
+					&quot;precision&quot;: 0,
+					&quot;scale&quot;: 0
+				}],
+				&quot;bucketsNum&quot;: 10,
+				&quot;replicationNum&quot;: 2
+			}
+		},
+		&quot;group2BackendsPerBucketSeq&quot;: {
+			&quot;10005.10008&quot;: [
+				[10004, 10002],
+				[10003, 10002],
+				[10002, 10004],
+				[10003, 10002],
+				[10002, 10004],
+				[10003, 10002],
+				[10003, 10004],
+				[10003, 10004],
+				[10003, 10004],
+				[10002, 10004]
+			]
+		},
+		&quot;unstableGroups&quot;: []
+	},
+	&quot;status&quot;: &quot;OK&quot;
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">将 Group 标记为 Stable 或 Unstable</p>
+<ul>
+<li><p class="first">标记为 Stable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>POST /api/colocate/group_stable?db_id=10005&amp;group_id=10008
+
+返回：200
+</pre></div>
+</div>
+</li>
+<li><p class="first">标记为 Unstable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DELETE /api/colocate/group_stable?db_id=10005&amp;group_id=10008
+
+返回：200
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">设置 Group 的数据分布</p>
+<p>该接口可以强制设置某一 Group 的数分布。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>POST /api/colocate/bucketseq?db_id=10005&amp;group_id= 10008
+
+Body:
+[[10004,10002],[10003,10002],[10002,10004],[10003,10002],[10002,10004],[10003,10002],[10003,10004],[10003,10004],[10003,10004],[10002,10004]]
+
+返回 200
+</pre></div>
+</div>
+<p>其中 Body 是以嵌套数组表示的 BucketsSequence 以及每个 Bucket 中分片分布所在 BE 的 id。</p>
+<p>注意，使用该命令，可能需要将 FE 的配置 <code class="docutils literal notranslate"><span class="pre">disable_colocate_relocate</span></code> 和 <code class="docutils literal notranslate"><span class="pre">disable_colocate_balance</span></code> 设为 true。即关闭系统自动的 Colocation 副本修复和均衡。否则可能在修改后，会被系统自动重置。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="export_manual.html" class="btn btn-neutral float-right" title="数据导出" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="backup-restore.html" class="btn btn-neutral float-left" title="备份与恢复" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

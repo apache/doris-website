@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>监控和报警 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="多租户(Experimental)" href="multi-tenant.html" />
+    <link rel="prev" title="元数据运维" href="metadata-operation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">运维操作</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="metadata-operation.html">元数据运维</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">监控和报警</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">组件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">监控数据</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">监控架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">开始搭建</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dashboard">Dashboard 说明</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Dashboard 更新</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multi-tenant.html">多租户(Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tablet-meta-tool.html">Tablet 元数据管理工具</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tablet-repair-and-balance.html">数据副本管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../export_manual.html">数据导出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">运维操作</a> &raquo;</li>
+        
+      <li>监控和报警</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/Docs/cn/administrator-guide/operation/monitor-alert.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>监控和报警<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>本文档主要介绍 Doris 的监控项及如何采集、展示监控项。以及如何配置报警（TODO）</p>
+<p><a class="reference external" href="https://grafana.com/dashboards/9734/revisions">Dashborad 模板点击下载</a></p>
+<blockquote>
+<div>注：0.9.0（不含）之前的版本请使用 revision 1。0.9.x 版本请使用 revision 2。0.10.x 版本请使用 revision 3。</div></blockquote>
+<p>Dashboard 模板会不定期更新。更新模板的方式见最后一小节。</p>
+<p>欢迎提供更优的 dashboard。</p>
+<div class="section" id="id2">
+<h2>组件<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Doris 使用 <a class="reference external" href="https://prometheus.io/">Prometheus</a> 和 <a class="reference external" href="https://grafana.com/">Grafana</a> 进项监控项的采集和展示。</p>
+<p><img alt="../../../../_images/dashboard_overview.png" src="../../../../_images/dashboard_overview.png" /></p>
+<ol>
+<li><p class="first">Prometheus</p>
+<p>Prometheus 是一款开源的系统监控和报警套件。它可以通过 Pull 或 Push 采集被监控系统的监控项，存入自身的时序数据库中。并且通过丰富的多维数据查询语言，满足用户的不同数据展示需求。</p>
+</li>
+<li><p class="first">Grafana</p>
+<p>Grafana 是一款开源的数据分析和展示平台。支持包括 Prometheus 在内的多个主流时序数据库源。通过对应的数据库查询语句，从数据源中获取展现数据。通过灵活可配置的 Dashboard，快速的将这些数据以图表的形式展示给用户。</p>
+</li>
+</ol>
+<blockquote>
+<div>注: 本文档仅提供一种使用 Prometheus 和 Grafana 进行 Doris 监控数据采集和展示的方式。原则上不开发、维护这些组件。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>监控数据<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Doris 的监控数据通过 Frontend 和 Backend 的 http 接口向外暴露。监控数据以 Key-Value 的文本形式对外展现。每个 Key 还可能有不同的 Label 加以区分。当用户搭建好 Doris 后，可以在浏览器，通过以下接口访问到节点的监控数据：</p>
+<ul class="simple">
+<li>Frontend: <code class="docutils literal notranslate"><span class="pre">fe_host:fe_http_port/metrics</span></code></li>
+<li>Backend: <code class="docutils literal notranslate"><span class="pre">be_host:be_web_server_port/metrics</span></code></li>
+<li>Broker: 暂不提供</li>
+</ul>
+<p>用户将看到如下监控项结果（示例为 FE 部分监控项）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```
+# HELP  jvm_heap_size_bytes jvm heap stat
+# TYPE  jvm_heap_size_bytes gauge
+jvm_heap_size_bytes{type=&quot;max&quot;} 41661235200
+jvm_heap_size_bytes{type=&quot;committed&quot;} 19785285632
+jvm_heap_size_bytes{type=&quot;used&quot;} 10113221064
+# HELP  jvm_non_heap_size_bytes jvm non heap stat
+# TYPE  jvm_non_heap_size_bytes gauge
+jvm_non_heap_size_bytes{type=&quot;committed&quot;} 105295872
+jvm_non_heap_size_bytes{type=&quot;used&quot;} 103184784
+# HELP  jvm_young_size_bytes jvm young mem pool stat
+# TYPE  jvm_young_size_bytes gauge
+jvm_young_size_bytes{type=&quot;used&quot;} 6505306808
+jvm_young_size_bytes{type=&quot;peak_used&quot;} 10308026368
+jvm_young_size_bytes{type=&quot;max&quot;} 10308026368
+# HELP  jvm_old_size_bytes jvm old mem pool stat
+# TYPE  jvm_old_size_bytes gauge
+jvm_old_size_bytes{type=&quot;used&quot;} 3522435544
+jvm_old_size_bytes{type=&quot;peak_used&quot;} 6561017832
+jvm_old_size_bytes{type=&quot;max&quot;} 30064771072
+# HELP  jvm_direct_buffer_pool_size_bytes jvm direct buffer pool stat
+# TYPE  jvm_direct_buffer_pool_size_bytes gauge
+jvm_direct_buffer_pool_size_bytes{type=&quot;count&quot;} 91
+jvm_direct_buffer_pool_size_bytes{type=&quot;used&quot;} 226135222
+jvm_direct_buffer_pool_size_bytes{type=&quot;capacity&quot;} 226135221
+# HELP  jvm_young_gc jvm young gc stat
+# TYPE  jvm_young_gc gauge
+jvm_young_gc{type=&quot;count&quot;} 2186
+jvm_young_gc{type=&quot;time&quot;} 93650
+# HELP  jvm_old_gc jvm old gc stat
+# TYPE  jvm_old_gc gauge
+jvm_old_gc{type=&quot;count&quot;} 21
+jvm_old_gc{type=&quot;time&quot;} 58268
+# HELP  jvm_thread jvm thread stat
+# TYPE  jvm_thread gauge
+jvm_thread{type=&quot;count&quot;} 767
+jvm_thread{type=&quot;peak_count&quot;} 831
+...
+```
+</pre></div>
+</div>
+<p>这是一个以 <a class="reference external" href="https://prometheus.io/docs/practices/naming/">Promethus 格式</a> 呈现的监控数据。我们以其中一个监控项为例进行说明：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># HELP  jvm_heap_size_bytes jvm heap stat</span>
+<span class="c1"># TYPE  jvm_heap_size_bytes gauge</span>
+<span class="n">jvm_heap_size_bytes</span><span class="p">{</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">}</span> <span class="mi">41661235200</span>
+<span class="n">jvm_heap_size_bytes</span><span class="p">{</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;committed&quot;</span><span class="p">}</span> <span class="mi">19785285632</span>
+<span class="n">jvm_heap_size_bytes</span><span class="p">{</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;used&quot;</span><span class="p">}</span> <span class="mi">10113221064</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>“#” 开头的行为注释行。其中 HELP 为该监控项的描述说明；TYPE 表示该监控项的数据类型，示例中为 Gauge，即标量数据。还有 Counter、Histogram 等数据类型。具体可见 <a class="reference external" href="https://prometheus.io/docs/practices/instrumentation/#counter-vs.-gauge,-summary-vs.-histogram">Prometheus 官方文档</a> 。</li>
+<li><code class="docutils literal notranslate"><span class="pre">jvm_heap_size_bytes</span></code> 即监控项的名称（Key）；<code class="docutils literal notranslate"><span class="pre">type=&quot;max&quot;</span></code> 即为一个名为 <code class="docutils literal notranslate"><span class="pre">type</span></code> 的 Label，值为 <code class="docutils literal notranslate"><span class="pre">max</span></code>。一个监控项可以有多个 Label。</li>
+<li>最后的数字，如 <code class="docutils literal notranslate"><span class="pre">41661235200</span></code>，即为监控数值。</li>
+</ol>
+</div>
+<div class="section" id="id4">
+<h2>监控架构<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>整个监控架构如下图所示：</p>
+<p><img alt="../../../../_images/monitor_arch.png" src="../../../../_images/monitor_arch.png" /></p>
+<ol class="simple">
+<li>黄色部分为 Prometheus 相关组件。Prometheus Server 为 Prometheus 的主进程，目前 Prometheus 通过 Pull 的方式访问 Doris 节点的监控接口，然后将时序数据存入时序数据库 TSDB 中（TSDB 包含在 Prometheus 进程中，无需单独部署）。Prometheus 也支持通过搭建 <a class="reference external" href="https://github.com/prometheus/pushgateway">Push Gateway</a> 的方式，允许被监控系统将监控数据通过 Push 的方式推到 Push Gateway, 再由 Prometheus Server 通过 Pull 的方式从 Push Gateway 中获取数据。</li>
+<li><a class="reference external" href="https://github.com/prometheus/alertmanager">Alert Manager</a> 为 Prometheus 报警组件，需单独部署（暂不提供方案，可参照官方文档自行搭建）。通过 Alert Manager，用户可以配置报警策略，接收邮件、短信等报警。</li>
+<li>绿色部分为 Grafana 相关组件。Grafana Server 为 Grafana 的主进程。启动后，用户可以通过 Web 页面对 Grafana 进行配置，包括数据源的设置、用户设置、Dashboard 绘制等。这里也是最终用户查看监控数据的地方。</li>
+</ol>
+</div>
+<div class="section" id="id5">
+<h2>开始搭建<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>请在完成 Doris 的部署后，开始搭建监控系统。</p>
+<div class="section" id="prometheus">
+<h3>Prometheus<a class="headerlink" href="#prometheus" title="Permalink to this headline">¶</a></h3>
+<ol>
+<li><p class="first">在 <a class="reference external" href="https://prometheus.io/download/">Prometheus 官网</a> 下载最新版本的 Prometheus。这里我们以 2.3.2-linux-amd64 版本为例。</p>
+</li>
+<li><p class="first">在准备运行监控服务的机器上，解压下载后的 tar 文件。</p>
+</li>
+<li><p class="first">打开配置文件 promethues.yml。这里我们提供一个示例配置并加以说明（配置文件为 yml 格式，一定注意统一的缩进和空格）：</p>
+<p>这里我们使用最简单的静态文件的方式进行监控配置。Prometheus 支持多种 <a class="reference external" href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">服务发现</a> 方式，可以动态的感知节点的加入和删除。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># my global config</span>
+<span class="k">global</span><span class="p">:</span>
+  <span class="n">scrape_interval</span><span class="p">:</span>     <span class="mi">15</span><span class="n">s</span> <span class="c1"># 全局的采集间隔，默认是 1m，这里设置为 15s</span>
+  <span class="n">evaluation_interval</span><span class="p">:</span> <span class="mi">15</span><span class="n">s</span> <span class="c1"># 全局的规则触发间隔，默认是 1m，这里设置 15s</span>
+
+<span class="c1"># Alertmanager configuration</span>
+<span class="n">alerting</span><span class="p">:</span>
+  <span class="n">alertmanagers</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">static_configs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">targets</span><span class="p">:</span>
+      <span class="c1"># - alertmanager:9093</span>
+
+<span class="c1"># A scrape configuration containing exactly one endpoint to scrape:</span>
+<span class="c1"># Here it&#39;s Prometheus itself.</span>
+<span class="n">scrape_configs</span><span class="p">:</span>
+  <span class="c1"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span>
+  <span class="o">-</span> <span class="n">job_name</span><span class="p">:</span> <span class="s1">&#39;PALO_CLUSTER&#39;</span> <span class="c1"># 每一个 Doris 集群，我们称为一个 job。这里可以给 job 取一个名字，作为 Doris 集群在监控系统中的名字。</span>
+    <span class="n">metrics_path</span><span class="p">:</span> <span class="s1">&#39;/metrics&#39;</span> <span class="c1"># 这里指定获取监控项的 restful api。配合下面的 targets 中的 host:port，Prometheus 最终会通过 host:port/metrics_path 来采集监控项。</span>
+    <span class="n">static_configs</span><span class="p">:</span> <span class="c1"># 这里开始分别配置 FE 和 BE 的目标地址。所有的 FE 和 BE 都分别写入各自的 group 中。</span>
+      <span class="o">-</span> <span class="n">targets</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;fe_host1:8030&#39;</span><span class="p">,</span> <span class="s1">&#39;fe_host2:8030&#39;</span><span class="p">,</span> <span class="s1">&#39;fe_host3:8030&#39;</span><span class="p">]</span>
+        <span class="n">labels</span><span class="p">:</span>
+          <span class="n">group</span><span class="p">:</span> <span class="n">fe</span> <span class="c1"># 这里配置了 fe 的 group，该 group 中包含了 3 个 Frontends</span>
+
+      <span class="o">-</span> <span class="n">targets</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;be_host1:8040&#39;</span><span class="p">,</span> <span class="s1">&#39;be_host2:8040&#39;</span><span class="p">,</span> <span class="s1">&#39;be_host3:8040&#39;</span><span class="p">]</span>
+        <span class="n">labels</span><span class="p">:</span>
+          <span class="n">group</span><span class="p">:</span> <span class="n">be</span> <span class="c1"># 这里配置了 be 的 group，该 group 中包含了 3 个 Backends</span>
+
+  <span class="o">-</span> <span class="n">job_name</span><span class="p">:</span> <span class="s1">&#39;PALO_CLUSTER_2&#39;</span> <span class="c1"># 我们可以在一个 Prometheus 中监控多个 Doris 集群，这里开始另一个 Doris 集群的配置。配置同上，以下略。</span>
+    <span class="n">metrics_path</span><span class="p">:</span> <span class="s1">&#39;/metrics&#39;</span>
+    <span class="n">static_configs</span><span class="p">:</span> 
+      <span class="o">-</span> <span class="n">targets</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;fe_host1:8030&#39;</span><span class="p">,</span> <span class="s1">&#39;fe_host2:8030&#39;</span><span class="p">,</span> <span class="s1">&#39;fe_host3:8030&#39;</span><span class="p">]</span>
+        <span class="n">labels</span><span class="p">:</span>
+          <span class="n">group</span><span class="p">:</span> <span class="n">fe</span> 
+
+      <span class="o">-</span> <span class="n">targets</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;be_host1:8040&#39;</span><span class="p">,</span> <span class="s1">&#39;be_host2:8040&#39;</span><span class="p">,</span> <span class="s1">&#39;be_host3:8040&#39;</span><span class="p">]</span>
+        <span class="n">labels</span><span class="p">:</span>
+          <span class="n">group</span><span class="p">:</span> <span class="n">be</span> 
+</pre></div>
+</div>
+</li>
+<li><p class="first">启动 Promethues</p>
+<p>通过以下命令启动 Promethues：</p>
+<p><code class="docutils literal notranslate"><span class="pre">nohup</span> <span class="pre">./prometheus</span> <span class="pre">--web.listen-address=&quot;0.0.0.0:8181&quot;</span> <span class="pre">&amp;</span></code></p>
+<p>该命令将后台运行 Prometheus，并指定其 web 端口为 8181。启动后，即开始采集数据，并将数据存放在 data 目录中。</p>
+</li>
+<li><p class="first">停止 Promethues</p>
+<p>目前没有发现正式的进程停止方式，直接 kill -9 即可。当然也可以将 Prometheus 设为一种 service，以 service 的方式启停。</p>
+</li>
+<li><p class="first">访问 Prometheus</p>
+<p>Prometheus 可以通过 web 页面进行简单的访问。通过浏览器打开 8181 端口，即可访问 Prometheus 的页面。点击导航栏中，<code class="docutils literal notranslate"><span class="pre">Status</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Targets</span></code>，可以看到所有分组 Job 的监控主机节点。正常情况下，所有节点都应为 <code class="docutils literal notranslate"><span class="pre">UP</span></code>，表示数据采集正常。点击某一个 <code class="docutils literal notranslate"><span class="pre">Endpoint</span></code>，即可看到当前的监控数值。如果节点状态不为 UP，可以先访问 Doris 的 metrics 接口（见前文）检查是否可以访问，或查询 Prometheus 相关文档尝试解决。</p>
+</li>
+<li><p class="first">至此，一个简单的 Prometheus 已经搭建、配置完毕。更多高级使用方式，请参阅 <a class="reference external" href="https://prometheus.io/docs/introduction/overview/">官方文档</a></p>
+</li>
+</ol>
+</div>
+<div class="section" id="grafana">
+<h3>Grafana<a class="headerlink" href="#grafana" title="Permalink to this headline">¶</a></h3>
+<ol>
+<li><p class="first">在 <a class="reference external" href="https://grafana.com/grafana/download">Grafana 官网</a> 下载最新版本的 Grafana。这里我们以 5.2.1.linux-amd64 版本为例。</p>
+</li>
+<li><p class="first">在准备运行监控服务的机器上，解压下载后的 tar 文件。</p>
+</li>
+<li><p class="first">打开配置文件 conf/defaults.ini。这里我们仅列举需要改动的配置项，其余配置可使用默认。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is used)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+<span class="c1"># Directory where grafana can store logs</span>
+<span class="n">logs</span> <span class="o">=</span> <span class="n">data</span><span class="o">/</span><span class="n">log</span>
+
+<span class="c1"># Protocol (http, https, socket)</span>
+<span class="n">protocal</span> <span class="o">=</span> <span class="n">http</span>
+
+<span class="c1"># The ip address to bind to, empty will bind to all interfaces</span>
+<span class="n">http_addr</span> <span class="o">=</span>
+
+<span class="c1"># The http port to use</span>
+<span class="n">http_port</span> <span class="o">=</span> <span class="mi">8182</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">启动 Grafana</p>
+<p>通过以下命令启动 Grafana</p>
+<p><code class="docutils literal notranslate"><span class="pre">nohuo</span> <span class="pre">./bin/grafana-server</span> <span class="pre">&amp;</span></code></p>
+<p>该命令将后台运行 Grafana，访问端口为上面配置的 8182</p>
+</li>
+<li><p class="first">停止 Grafana</p>
+<p>目前没有发现正式的进程停止方式，直接 kill -9 即可。当然也可以将 Grafana 设为一种 service，以 service 的方式启停。</p>
+</li>
+<li><p class="first">访问 Grafana</p>
+<p>通过浏览器，打开 8182 端口，可以开始访问 Grafana 页面。默认用户名密码为 admin。</p>
+</li>
+<li><p class="first">配置 Grafana</p>
+<p>初次登陆，需要根据提示设置数据源（data source）。我们这里的数据源，即上一步配置的 Prometheus。</p>
+<p>数据源配置的 Setting 页面说明如下：</p>
+<ol class="simple">
+<li>Name: 数据源的名称，自定义，比如 doris_monitor_data_source</li>
+<li>Type: 选择 Prometheus</li>
+<li>URL: 填写 Prometheus 的 web 地址，如 http://host:8181</li>
+<li>Access: 这里我们选择 Server 方式，即通过 Grafana 进程所在服务器，访问 Prometheus。</li>
+<li>其余选项默认即可。</li>
+<li>点击最下方 <code class="docutils literal notranslate"><span class="pre">Save</span> <span class="pre">&amp;</span> <span class="pre">Test</span></code>，如果显示 <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">source</span> <span class="pre">is</span> <span class="pre">working</span></code>，即表示数据源可用。</li>
+<li>确认数据源可用后，点击左边导航栏的 + 号，开始添加 Dashboard。这里我们已经准备好了 Doris 的 Dashboard 模板（本文档开头）。下载完成后，点击上方的 <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">dashboard</span></code>-&gt;<code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">dashboard</span></code>-&gt;<code class="docutils literal notranslate"><span class="pre">Upload</span> <span class="pre">.json</span> <span class="pre">File</span></code>，将下载的 json 文件导入。</li>
+<li>导入后，可以命名 Dashboard，默认是 <code class="docutils literal notranslate"><span class="pre">Doris</span> <span class="pre">Overview</span></code>。同时，需要选择数据源，这里选择之前创建的 <code class="docutils literal notranslate"><span class="pre">doris_monitor_data_source</span></code></li>
+<li>点击 <code class="docutils literal notranslate"><span class="pre">Import</span></code>，即完成导入。之后，可以看到 Doris 的 Dashboard 展示。</li>
+</ol>
+</li>
+<li><p class="first">至此，一个简单的 Grafana 已经搭建、配置完毕。更多高级使用方式，请参阅 <a class="reference external" href="http://docs.grafana.org/">官方文档</a></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="dashboard">
+<h2>Dashboard 说明<a class="headerlink" href="#dashboard" title="Permalink to this headline">¶</a></h2>
+<p>这里我们简要介绍 Doris Dashboard。Dashboard 的内容可能会随版本升级，不断变化，本文档不保证是最新的 Dashboard 说明。</p>
+<ol>
+<li><p class="first">顶栏</p>
+<p><img alt="../../../../_images/dashboard_navibar.png" src="../../../../_images/dashboard_navibar.png" /></p>
+<ul class="simple">
+<li>左上角为 Dashboard 名称。</li>
+<li>右上角显示当前监控时间范围，可以下拉选择不同的时间范围，还可以指定定时刷新页面间隔。</li>
+<li>cluster_name: 即 Prometheus 配置文件中的各个 job_name，代表一个 Doris 集群。选择不同的 cluster，下方的图表将展示对应集群的监控信息。</li>
+<li>fe_master: 对应集群的 Master Frontend 节点。</li>
+<li>fe_instance: 对应集群的所有 Frontend 节点。选择不同的 Frontend，下方的图表将展示对应 Frontend 的监控信息。</li>
+<li>be_instance: 对应集群的所有 Backend 节点。选择不同的 Backend，下方的图表将展示对应 Backend 的监控信息。</li>
+<li>interval: 有些图表展示了速率相关的监控项，这里可选择以多大间隔进行采样计算速率（注：15s 间隔可能导致一些图表无法显示）。</li>
+</ul>
+</li>
+<li><p class="first">Row</p>
+<p><img alt="../../../../_images/dashboard_row.png" src="../../../../_images/dashboard_row.png" /></p>
+<p>Grafana 中，Row 的概念，即一组图表的集合。如上图中的 Overview、Cluster Overview 即两个不同的 Row。可以通过点击 Row，对 Row 进行折叠。当前 Dashboard 有如下 Rows（持续更新中）：</p>
+<ol class="simple">
+<li>Overview: 所有 Doris 集群的汇总展示。</li>
+<li>Cluster Overview: 选定集群的汇总展示。</li>
+<li>Query Statistic: 选定集群的查询相关监控。</li>
+<li>FE JVM: 选定 Frontend 的 JVM 监控。</li>
+<li>BE: 选定集群的 Backends 的汇总展示。</li>
+<li>BE Task: 选定集群的 Backends 任务信息的展示。</li>
+</ol>
+</li>
+<li><p class="first">图表</p>
+<p><img alt="../../../../_images/dashboard_panel.png" src="../../../../_images/dashboard_panel.png" /></p>
+<p>一个典型的图标分为以下几部分：</p>
+<ol class="simple">
+<li>鼠标悬停左上角的 i 图标，可以查看该图表的说明。</li>
+<li>点击下方的图例，可以单独查看某一监控项。再次点击，则显示所有。</li>
+<li>在图表中拖拽可以选定时间范围。</li>
+<li>标题的 [] 中显示选定的集群名称。</li>
+<li>一些数值对应左边的Y轴，一些对应右边的，可以通过图例末尾的 <code class="docutils literal notranslate"><span class="pre">-right</span></code> 区分。</li>
+<li>点击图表名称-&gt;<code class="docutils literal notranslate"><span class="pre">Edit</span></code>，可以对图表进行编辑。</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="id6">
+<h2>Dashboard 更新<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>点击 Grafana 左边栏的 <code class="docutils literal notranslate"><span class="pre">+</span></code>，点击 <code class="docutils literal notranslate"><span class="pre">Dashboard</span></code>。</li>
+<li>点击左上角的 <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">dashboard</span></code>，在点击右侧出现的 <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">dashboard</span></code>。</li>
+<li>点击 <code class="docutils literal notranslate"><span class="pre">Upload</span> <span class="pre">.json</span> <span class="pre">File</span></code>，选择最新的模板文件。</li>
+<li>选择数据源</li>
+<li>点击 <code class="docutils literal notranslate"><span class="pre">Import(Overwrite)</span></code>，完成模板更新。</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="multi-tenant.html" class="btn btn-neutral float-right" title="多租户(Experimental)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="metadata-operation.html" class="btn btn-neutral float-left" title="元数据运维" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Broker Load &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="例行导入" href="routine-load-manual.html" />
+    <link rel="prev" title="数据导入" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">数据导入</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Broker Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#properties">properties</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="routine-load-manual.html">例行导入</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../export_manual.html">数据导出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">数据导入</a> &raquo;</li>
+        
+      <li>Broker Load</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/Docs/cn/administrator-guide/load-data/broker-load-manual.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="broker-load">
+<h1>Broker Load<a class="headerlink" href="#broker-load" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="properties">
+<h2>properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="strict-mode">
+<h3>strict mode<a class="headerlink" href="#strict-mode" title="Permalink to this headline">¶</a></h3>
+<p>broker load导入可以开启strict mode模式。开启方式为 <code class="docutils literal notranslate"><span class="pre">properties</span> <span class="pre">(&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;)</span></code> 。默认的 strict mode为开启。</p>
+<p><em>注意：strict mode 功能仅在新版本的broker load中有效，如果导入明确指定 <code class="docutils literal notranslate"><span class="pre">&quot;version&quot;</span> <span class="pre">=</span> <span class="pre">&quot;v1&quot;</span></code> 则没有此功能。</em></p>
+<p>strict mode模式的意思是：对于导入过程中的列类型转换进行严格过滤。严格过滤的策略如下：</p>
+<ol class="simple">
+<li>对于列类型转换来说，如果 strict_mode 为true，则错误的数据将被filter。这里的错误数据是指：原始数据并不为空值，在参与列类型转换后结果为空值的这一类数据。</li>
+<li>对于导入的某列包含函数变换的，导入的值和函数的结果一致，strict 对其不产生影响。（其中 strftime 等 broker 系统支持的函数也属于这类）。</li>
+<li>对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict 对其也不产生影响。<ul>
+<li>例如：如果类型是 decimal(1,0), 原始数据为10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="strict-mode-source-data">
+<h3>strict mode 与 source data 的导入关系<a class="headerlink" href="#strict-mode-source-data" title="Permalink to this headline">¶</a></h3>
+<p>这里以列类型为 TinyInt 来举例</p>
+<p>注：当表中的列允许导入空值时</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>source data</th>
+<th>source data example</th>
+<th>string to int</th>
+<th>strict_mode</th>
+<th>load_data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空值</td>
+<td>\N</td>
+<td>N/A</td>
+<td>true or false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa or 2000</td>
+<td>NULL</td>
+<td>true</td>
+<td>filtered</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa</td>
+<td>NULL</td>
+<td>false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>1</td>
+<td>1</td>
+<td>true or false</td>
+<td>correct data</td>
+</tr>
+</tbody>
+</table><p>这里以列类型为 Decimal(1,0) 举例</p>
+<p>注：当表中的列允许导入空值时</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>source data</th>
+<th>source data example</th>
+<th>string to int</th>
+<th>strict_mode</th>
+<th>load_data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空值</td>
+<td>\N</td>
+<td>N/A</td>
+<td>true or false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa</td>
+<td>NULL</td>
+<td>true</td>
+<td>filtered</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa</td>
+<td>NULL</td>
+<td>false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>1 or 10</td>
+<td>1</td>
+<td>true or false</td>
+<td>correct data</td>
+</tr>
+</tbody>
+</table><p><em>注意：10 虽然是一个超过范围的值，但是因为其类型符合decimal的要求，所以strict mode对其不产生影响。10 最后会在其他 ETL 处理流程中被过滤。但不会被strict mode过滤。</em></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="routine-load-manual.html" class="btn btn-neutral float-right" title="例行导入" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="数据导入" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

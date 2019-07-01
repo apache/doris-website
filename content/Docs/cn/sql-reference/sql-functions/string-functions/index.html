@@ -1,0 +1,392 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>字符串函数 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="ascii" href="ascii.html" />
+    <link rel="prev" title="ST_Y" href="../spatial-functions/st_y.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">SQL 函数</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../cast.html">CAST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../date-time-functions/index.html">日期函数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatial-functions/index.html">地理位置函数</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">字符串函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ascii.html">ascii</a></li>
+<li class="toctree-l4"><a class="reference internal" href="concat.html">concat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="concat_ws.html">concat_ws</a></li>
+<li class="toctree-l4"><a class="reference internal" href="find_in_set.html">find_in_set</a></li>
+<li class="toctree-l4"><a class="reference internal" href="get_json_double.html">get_json_double</a></li>
+<li class="toctree-l4"><a class="reference internal" href="get_json_int.html">get_json_int</a></li>
+<li class="toctree-l4"><a class="reference internal" href="get_json_string.html">get_json_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="group_concat.html">group_concat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="instr.html">instr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lcase.html">lcase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="left.html">left</a></li>
+<li class="toctree-l4"><a class="reference internal" href="length.html">length</a></li>
+<li class="toctree-l4"><a class="reference internal" href="locate.html">locate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lower.html">lower</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lpad.html">lpad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ltrim.html">ltrim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="money_format.html">money_format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="regexp_extract.html">regexp_extract</a></li>
+<li class="toctree-l4"><a class="reference internal" href="regexp_replace.html">regexp_replace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="repeat.html">repeat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="right.html">right</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strleft.html">strleft</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strright.html">strright</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
+        
+          <li><a href="../index.html">SQL 函数</a> &raquo;</li>
+        
+      <li>字符串函数</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-functions/string-functions/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>字符串函数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ascii.html">ascii</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ascii.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ascii.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ascii.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concat.html">concat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concat.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concat.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concat.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concat_ws.html">concat_ws</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concat_ws.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concat_ws.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concat_ws.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="find_in_set.html">find_in_set</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="find_in_set.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_in_set.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_in_set.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="get_json_double.html">get_json_double</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_json_double.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_json_double.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_json_double.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="get_json_int.html">get_json_int</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_json_int.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_json_int.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_json_int.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="get_json_string.html">get_json_string</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_json_string.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_json_string.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_json_string.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="group_concat.html">group_concat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="group_concat.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_concat.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_concat.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="instr.html">instr</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="instr.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instr.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instr.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lcase.html">lcase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lcase.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcase.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="left.html">left</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="left.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="left.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="left.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="length.html">length</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="length.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="length.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="length.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="locate.html">locate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="locate.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="locate.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="locate.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lower.html">lower</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lower.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lower.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lower.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lpad.html">lpad</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lpad.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lpad.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lpad.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ltrim.html">ltrim</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ltrim.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltrim.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltrim.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="money_format.html">money_format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="money_format.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="money_format.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="money_format.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="regexp_extract.html">regexp_extract</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="regexp_extract.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regexp_extract.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regexp_extract.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="regexp_replace.html">regexp_replace</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="regexp_replace.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regexp_replace.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regexp_replace.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="repeat.html">repeat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="repeat.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repeat.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repeat.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="right.html">right</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="right.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="right.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="right.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="strleft.html">strleft</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="strleft.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strleft.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strleft.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="strright.html">strright</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="strright.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strright.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strright.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ascii.html" class="btn btn-neutral float-right" title="ascii" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../spatial-functions/st_y.html" class="btn btn-neutral float-left" title="ST_Y" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

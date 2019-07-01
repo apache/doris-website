@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>编译 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="安装与部署" href="install-deploy.html" />
+    <link rel="prev" title="编译与部署" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">编译与部署</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">编译</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#docker">使用 Docker 开发镜像编译（推荐）</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">使用现成的镜像</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">自行编译开发环境镜像</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#centos-ubuntu">直接编译（CentOS/Ubuntu）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="install-deploy.html">安装与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade.html">集群升级</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">编译与部署</a> &raquo;</li>
+        
+      <li>编译</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/Docs/cn/installing/compilation.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>编译<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>本文档主要介绍如何通过源码编译 Doris。</p>
+<div class="section" id="docker">
+<h2>使用 Docker 开发镜像编译（推荐）<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>使用现成的镜像<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ol>
+<li><p class="first">下载 Docker 镜像</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">apachedoris/doris-dev:build-env</span></code></p>
+<p>检查镜像下载完成：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker images
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+apachedoris/doris-dev   build-env           f8bc5d4024e0        21 hours ago        3.28GB
+</pre></div>
+</div>
+</li>
+</ol>
+<p>注: 针对不同的 Doris 版本，需要下载对应的镜像版本</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>image version</th>
+<th>commit id</th>
+<th>release version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apachedoris/doris-dev:build-env</td>
+<td>before <a href="https://github.com/apache/incubator-doris/commit/ff0dd0d2daa588f18b6db56f947e813a56d8ec81">ff0dd0d</a></td>
+<td>0.8.x, 0.9.x</td>
+</tr>
+<tr>
+<td>apachedoris/doris-dev:build-env-1.1</td>
+<td><a href="https://github.com/apache/incubator-doris/commit/ff0dd0d2daa588f18b6db56f947e813a56d8ec81">ff0dd0d</a> or later</td>
+<td>0.10.x or later</td>
+</tr>
+</tbody>
+</table><ol>
+<li><p class="first">运行镜像</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-it</span> <span class="pre">apachedoris/doris-dev:build-env</span></code></p>
+<p>如果你希望编译本地 Doris 源码，则可以挂载路径：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker run -it -v /your/local/incubator-doris-DORIS-x.x.x-release/:/root/incubator-doris-DORIS-x.x.x-release/ apachedoris/doris-dev:build-env
+</pre></div>
+</div>
+</li>
+<li><p class="first">下载源码</p>
+<p>启动镜像后，你应该已经处于容器内。可以通过以下命令下载 Doris 源码（已挂载本地源码目录则不用）：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ wget https://dist.apache.org/repos/dist/dev/incubator/doris/xxx.tar.gz
+or
+$ git clone https://github.com/apache/incubator-doris.git
+</pre></div>
+</div>
+</li>
+<li><p class="first">编译 Doris</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sh build.sh
+</pre></div>
+</div>
+<p>编译完成后，产出文件在 <code class="docutils literal notranslate"><span class="pre">output/</span></code> 目录中。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h3>自行编译开发环境镜像<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>你也可以自己创建一个 Doris 开发环境镜像，具体可参阅 <code class="docutils literal notranslate"><span class="pre">docker/README.md</span></code> 文件。</p>
+</div>
+</div>
+<div class="section" id="centos-ubuntu">
+<h2>直接编译（CentOS/Ubuntu）<a class="headerlink" href="#centos-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>你可以在自己的 linux 环境中直接尝试编译 Doris。</p>
+<ol>
+<li><p class="first">系统依赖</p>
+<p><code class="docutils literal notranslate"><span class="pre">GCC</span> <span class="pre">5.3.1+,</span> <span class="pre">Oracle</span> <span class="pre">JDK</span> <span class="pre">1.8+,</span> <span class="pre">Python</span> <span class="pre">2.7+,</span> <span class="pre">Apache</span> <span class="pre">Maven</span> <span class="pre">3.5+,</span> <span class="pre">CMake</span> <span class="pre">3.4.3+</span></code></p>
+<p>安装完成后，自行设置环境变量 <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code> 等。</p>
+</li>
+<li><p class="first">编译 Doris</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sh build.sh
+</pre></div>
+</div>
+<p>编译完成后，产出文件在 <code class="docutils literal notranslate"><span class="pre">output/</span></code> 目录中。</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="install-deploy.html" class="btn btn-neutral float-right" title="安装与部署" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="编译与部署" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>最佳实践 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="数据划分" href="data-partition.html" />
+    <link rel="prev" title="高级使用指南" href="advance-usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">开始使用</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="basic-usage.html">基础使用指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advance-usage.html">高级使用指南</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">最佳实践</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1 建表</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">1.1 数据模型选择</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#star-schema">1.2 大宽表与 Star Schema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">1.4 分区和分桶</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bloom-filter">1.5 稀疏索引和 Bloom Filter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rollup">1.6 物化视图(rollup)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#schema-change">2 Schema Change</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data-partition.html">数据划分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup.html">数据模型、ROLLUP 及前缀索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hit-the-rollup.html">Rollup 与查询</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">开始使用</a> &raquo;</li>
+        
+      <li>最佳实践</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/Docs/cn/getting-started/best-practice.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>最佳实践<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>1 建表<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>1.1 数据模型选择<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Doris 数据模型上目前分为三类: AGGREGATE KEY, UNIQUE KEY, DUPLICATE KEY。三种模型中数据都是按KEY进行排序。</p>
+<ol>
+<li><p class="first">AGGREGATE KEY</p>
+<p>AGGREGATE KEY相同时，新旧记录进行聚合，目前支持的聚合函数有SUM, MIN, MAX, REPLACE。</p>
+<p>AGGREGATE KEY模型可以提前聚合数据, 适合报表和多维分析业务。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">site_visit</span>
+<span class="p">(</span>
+    <span class="n">siteid</span>      <span class="n">INT</span><span class="p">,</span>
+    <span class="n">city</span>        <span class="n">SMALLINT</span><span class="p">,</span>
+    <span class="n">username</span>    <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+    <span class="n">pv</span> <span class="n">BIGINT</span>   <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">)</span>
+<span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">UNIQUE KEY</p>
+<p>UNIQUE KEY 相同时，新记录覆盖旧记录。目前 UNIQUE KEY 实现上和 GGREGATE KEY 的 REPLACE 聚合方法一样，二者本质上相同。适用于有更新需求的分析业务。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">sales_order</span>
+<span class="p">(</span>
+    <span class="n">orderid</span>     <span class="n">BIGINT</span><span class="p">,</span>
+    <span class="n">status</span>      <span class="n">TINYINT</span><span class="p">,</span>
+    <span class="n">username</span>    <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+    <span class="n">amount</span>      <span class="n">BIGINT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">)</span>
+<span class="n">UNIQUE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">orderid</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">orderid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">DUPLICATE KEY</p>
+<p>只指定排序列，相同的行不会合并。适用于数据无需提前聚合的分析业务。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">session_data</span>
+<span class="p">(</span>
+    <span class="n">visitorid</span>   <span class="n">SMALLINT</span><span class="p">,</span>
+    <span class="n">sessionid</span>   <span class="n">BIGINT</span><span class="p">,</span>
+    <span class="n">visittime</span>   <span class="n">DATETIME</span><span class="p">,</span>
+    <span class="n">city</span>        <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+    <span class="n">province</span>    <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+    <span class="n">ip</span>          <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+    <span class="n">brower</span>      <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+    <span class="n">url</span>         <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">DUPLICATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">visitorid</span><span class="p">,</span> <span class="n">sessionid</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">sessionid</span><span class="p">,</span> <span class="n">visitorid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="star-schema">
+<h3>1.2 大宽表与 Star Schema<a class="headerlink" href="#star-schema" title="Permalink to this headline">¶</a></h3>
+<p>业务方建表时, 为了和前端业务适配, 往往不对维度信息和指标信息加以区分, 而将 Schema 定义成大宽表。对于 Doris 而言, 这类大宽表往往性能不尽如人意:</p>
+<ul class="simple">
+<li>Schema 中字段数比较多, 聚合模型中可能 key 列比较多, 导入过程中需要排序的列会增加。</li>
+<li>维度信息更新会反应到整张表中，而更新的频率直接影响查询的效率。</li>
+</ul>
+<p>使用过程中，建议用户尽量使用 Star Schema 区分维度表和指标表。频繁更新的维度表也可以放在 MySQL 外部表中。而如果只有少量更新, 可以直接放在 Doris 中。在 Doris 中存储维度表时，可对维度表设置更多的副本，提升 Join 的性能。</p>
+</div>
+<div class="section" id="id4">
+<h3>1.4 分区和分桶<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Doris 支持两级分区存储, 第一层为 RANGE 分区(partition), 第二层为 HASH 分桶(bucket)。</p>
+<ol>
+<li><p class="first">RANGE分区(partition)</p>
+<p>RANGE分区用于将数据划分成不同区间, 逻辑上可以理解为将原始表划分成了多个子表。业务上，多数用户会选择采用按时间进行partition, 让时间进行partition有以下好处：</p>
+<ul class="simple">
+<li>可区分冷热数据</li>
+<li>可用上Doris分级存储(SSD + SATA)的功能</li>
+<li>按分区删除数据时，更加迅速</li>
+</ul>
+</li>
+<li><p class="first">HASH分桶(bucket)</p>
+<p>根据hash值将数据划分成不同的 bucket。</p>
+<ul class="simple">
+<li>建议采用区分度大的列做分桶, 避免出现数据倾斜</li>
+<li>为方便数据恢复, 建议单个 bucket 的 size 不要太大, 保持在 10GB 以内, 所以建表或增加 partition 时请合理考虑 bucket 数目, 其中不同 partition 可指定不同的 buckets 数。</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="bloom-filter">
+<h3>1.5 稀疏索引和 Bloom Filter<a class="headerlink" href="#bloom-filter" title="Permalink to this headline">¶</a></h3>
+<p>Doris对数据进行有序存储, 在数据有序的基础上为其建立稀疏索引,索引粒度为 block(1024行)。</p>
+<p>稀疏索引选取 schema 中固定长度的前缀作为索引内容, 目前 Doris 选取 36 个字节的前缀作为索引。</p>
+<ul class="simple">
+<li>建表时建议将查询中常见的过滤字段放在 Schema 的前面, 区分度越大，频次越高的查询字段越往前放。</li>
+<li>这其中有一个特殊的地方,就是 varchar 类型的字段。varchar 类型字段只能作为稀疏索引的最后一个字段。索引会在 varchar 处截断, 因此 varchar 如果出现在前面，可能索引的长度可能不足 36 个字节。具体可以参阅 <a class="reference internal" href="data-model-rollup.html"><span class="doc">数据模型、ROLLUP 及前缀索引</span></a>。</li>
+<li>除稀疏索引之外, Doris还提供bloomfilter索引, bloomfilter索引对区分度比较大的列过滤效果明显。 如果考虑到varchar不能放在稀疏索引中, 可以建立bloomfilter索引。</li>
+</ul>
+</div>
+<div class="section" id="rollup">
+<h3>1.6 物化视图(rollup)<a class="headerlink" href="#rollup" title="Permalink to this headline">¶</a></h3>
+<p>Rollup 本质上可以理解为原始表(Base Table)的一个物化索引。建立 Rollup 时可只选取 Base Table 中的部分列作为 Schema。Schema 中的字段顺序也可与 Base Table 不同。</p>
+<p>下列情形可以考虑建立 Rollup：</p>
+<ol class="simple">
+<li>Base Table 中数据聚合度不高。</li>
+</ol>
+<p>这一般是因 Base Table 有区分度比较大的字段而导致。此时可以考虑选取部分列，建立 Rollup。</p>
+<p>如对于 <code class="docutils literal notranslate"><span class="pre">site_visit</span></code> 表：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">site_visit</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>siteid 可能导致数据聚合度不高，如果业务方经常根据城市统计pv需求，可以建立一个只有 city, pv 的 Rollup：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">rollup_city</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">pv</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>Base Table 中的前缀索引无法命中</li>
+</ol>
+<p>这一般是 Base Table 的建表方式无法覆盖所有的查询模式。此时可以考虑调整列顺序，建立 Rollup。</p>
+<p>如对于 session_data 表：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session_data</span><span class="p">(</span><span class="n">visitorid</span><span class="p">,</span> <span class="n">sessionid</span><span class="p">,</span> <span class="n">visittime</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">province</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">brower</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果除了通过 visitorid 分析访问情况外，还有通过 brower, province 分析的情形，可以单独建立 Rollup。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">session_data</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">rollup_brower</span><span class="p">(</span><span class="n">brower</span><span class="p">,</span><span class="n">province</span><span class="p">,</span><span class="n">ip</span><span class="p">,</span><span class="n">url</span><span class="p">)</span> <span class="n">DUPLICATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">brower</span><span class="p">,</span><span class="n">province</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="schema-change">
+<h2>2 Schema Change<a class="headerlink" href="#schema-change" title="Permalink to this headline">¶</a></h2>
+<p>Doris中目前进行 Schema Change 的方式有三种：Sorted Schema Change，Direct Schema Change, Linked Schema Change。</p>
+<ol>
+<li><p class="first">Sorted Schema Change</p>
+<p>改变了列的排序方式，需对数据进行重新排序。例如删除排序列中的一列, 字段重排序。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">DROP</span> <span class="n">COLUMN</span> <span class="n">city</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Direct Schema Change: 无需重新排序，但是需要对数据做一次转换。例如修改列的类型，在稀疏索引中加一列等。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">MODIFY</span> <span class="n">COLUMN</span> <span class="n">username</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Linked Schema Change: 无需转换数据，直接完成。例如加列操作。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">click</span> <span class="n">bigint</span> <span class="n">SUM</span> <span class="n">default</span> <span class="s1">&#39;0&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>建表时建议考虑好 Schema，这样在进行 Schema Change 时可以加快速度。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data-partition.html" class="btn btn-neutral float-right" title="数据划分" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="advance-usage.html" class="btn btn-neutral float-left" title="高级使用指南" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

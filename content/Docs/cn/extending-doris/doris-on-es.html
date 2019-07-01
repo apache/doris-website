@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Doris On ES &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="User Define Function" href="user-defined-function.html" />
+    <link rel="prev" title="扩展功能" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">扩展功能</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Doris On ES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">名词解释</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">如何使用</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">创建外表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">查询</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">原理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#push-down-operations">Push-Down operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">其他说明</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user-defined-function.html">User Define Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">扩展功能</a> &raquo;</li>
+        
+      <li>Doris On ES</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/Docs/cn/extending-doris/doris-on-es.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="doris-on-es">
+<h1>Doris On ES<a class="headerlink" href="#doris-on-es" title="Permalink to this headline">¶</a></h1>
+<p>Doris-On-ES将Doris的分布式查询规划能力和ES(Elasticsearch)的全文检索能力相结合，提供更完善的OLAP分析场景解决方案：</p>
+<ol class="simple">
+<li>ES中的多index分布式Join查询</li>
+<li>Doris和ES中的表联合查询，更复杂的全文检索过滤</li>
+<li>ES keyword类型字段的聚合查询：适用于index 频繁发生变化、单个分片文档数量千万级以上且该字段基数(cardinality)非常大</li>
+</ol>
+<p>本文档主要介绍该功能的实现原理、使用方式等。</p>
+<div class="section" id="id1">
+<h2>名词解释<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
+<li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
+<li>Elasticsearch(ES)：目前最流行的开源分布式搜索引擎。</li>
+<li>DataNode：ES的数据存储与计算节点。</li>
+<li>MasterNode：ES的Master节点，管理元数据、节点、数据分布等。</li>
+<li>scroll：ES内置的数据集游标特性，用来对数据进行流式扫描和过滤。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>如何使用<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>创建外表<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE EXTERNAL TABLE `es_table` (
+  `id` bigint(20) COMMENT &quot;&quot;,
+  `k1` bigint(20) COMMENT &quot;&quot;,
+  `k2` datetime COMMENT &quot;&quot;,
+  `k3` varchar(20) COMMENT &quot;&quot;,
+  `k4` varchar(100) COMMENT &quot;&quot;,
+  `k5` float COMMENT &quot;&quot;
+) ENGINE=ELASTICSEARCH
+PARTITION BY RANGE(`id`)
+()
+PROPERTIES (
+&quot;host&quot; = &quot;http://192.168.0.1:8200,http://192.168.0.2:8200&quot;,
+&quot;user&quot; = &quot;root&quot;,
+&quot;password&quot; = &quot;root&quot;,
+&quot;index&quot; = &quot;tindex”,
+&quot;type&quot; = &quot;doc&quot;
+);
+</pre></div>
+</div>
+<p>参数说明：</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>host</td>
+<td>ES集群连接地址，可指定一个或多个，Doris通过这个地址获取到ES版本号、index的shard分布信息</td>
+</tr>
+<tr>
+<td>user</td>
+<td>开启basic认证的ES集群的用户名，需要确保该用户有访问: /_cluster/state/_nodes/http等路径权限和对index的读权限</td>
+</tr>
+<tr>
+<td>password</td>
+<td>对应用户的密码信息</td>
+</tr>
+<tr>
+<td>index</td>
+<td>Doris中的表对应的ES的index名字，可以是alias</td>
+</tr>
+<tr>
+<td>type</td>
+<td>指定index的type，默认是_doc</td>
+</tr>
+<tr>
+<td>transport</td>
+<td>内部保留，默认为http</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="id4">
+<h3>查询<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h4>基本条件过滤<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="n">k3</span> <span class="o">=</span><span class="s1">&#39;term&#39;</span> <span class="ow">or</span> <span class="n">k4</span> <span class="n">like</span> <span class="s1">&#39;fu*z_&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="esquery-sql">
+<h4>扩展的esquery sql语法<a class="headerlink" href="#esquery-sql" title="Permalink to this headline">¶</a></h4>
+<p>通过<code class="docutils literal notranslate"><span class="pre">esquery</span></code>函数将一些无法用sql表述的ES query如match、geoshape等下推给ES进行过滤处理，<code class="docutils literal notranslate"><span class="pre">esquery</span></code>的第一个列名参数用于关联<code class="docutils literal notranslate"><span class="pre">index</span></code>，第二个参数是ES的基本<code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">DSL</span></code>的json表述，使用花括号<code class="docutils literal notranslate"><span class="pre">{}</span></code>包含，json的<code class="docutils literal notranslate"><span class="pre">root</span> <span class="pre">key</span></code>有且只能有一个，如match、geo_shape、bool等</p>
+<p>match查询：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">esquery</span><span class="p">(</span><span class="n">k4</span><span class="p">,</span> <span class="s1">&#39;{</span>
+        <span class="s2">&quot;match&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;k4&quot;</span><span class="p">:</span> <span class="s2">&quot;doris on elasticsearch&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span><span class="s1">&#39;);</span>
+</pre></div>
+</div>
+<p>geo相关查询：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">esquery</span><span class="p">(</span><span class="n">k4</span><span class="p">,</span> <span class="s1">&#39;{</span>
+      <span class="s2">&quot;geo_shape&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;envelope&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                  <span class="p">[</span>
+                     <span class="mi">13</span><span class="p">,</span>
+                     <span class="mi">53</span>
+                  <span class="p">],</span>
+                  <span class="p">[</span>
+                     <span class="mi">14</span><span class="p">,</span>
+                     <span class="mi">52</span>
+                  <span class="p">]</span>
+               <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;relation&quot;</span><span class="p">:</span> <span class="s2">&quot;within&quot;</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">}</span><span class="s1">&#39;);</span>
+</pre></div>
+</div>
+<p>bool查询：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">esquery</span><span class="p">(</span><span class="n">k4</span><span class="p">,</span> <span class="s1">&#39; {</span>
+         <span class="s2">&quot;bool&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;must&quot;</span><span class="p">:</span> <span class="p">[</span>
+               <span class="p">{</span>
+                  <span class="s2">&quot;terms&quot;</span><span class="p">:</span> <span class="p">{</span>
+                     <span class="s2">&quot;k1&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">11</span><span class="p">,</span>
+                        <span class="mi">12</span>
+                     <span class="p">]</span>
+                  <span class="p">}</span>
+               <span class="p">},</span>
+               <span class="p">{</span>
+                  <span class="s2">&quot;terms&quot;</span><span class="p">:</span> <span class="p">{</span>
+                     <span class="s2">&quot;k2&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">100</span>
+                     <span class="p">]</span>
+                  <span class="p">}</span>
+               <span class="p">}</span>
+            <span class="p">]</span>
+         <span class="p">}</span>
+      <span class="p">}</span><span class="s1">&#39;);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>原理<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----------------------------------------------+</span>
+<span class="o">|</span>                                              <span class="o">|</span>
+<span class="o">|</span> <span class="n">Doris</span>      <span class="o">+------------------+</span>              <span class="o">|</span>
+<span class="o">|</span>            <span class="o">|</span>       <span class="n">FE</span>         <span class="o">+--------------+-------+</span>
+<span class="o">|</span>            <span class="o">|</span>                  <span class="o">|</span>  <span class="n">Request</span> <span class="n">Shard</span> <span class="n">Location</span>
+<span class="o">|</span>            <span class="o">+--+-------------+-+</span>              <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>               <span class="o">^</span>             <span class="o">^</span>                <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>               <span class="o">|</span>             <span class="o">|</span>                <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">+-------------------+</span> <span class="o">+------------------+</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span>            <span class="o">|</span>      <span class="o">|</span> <span class="o">|</span>    <span class="o">|</span>             <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+----------+----+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">+--+-----------+</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>      <span class="n">BE</span>       <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>      <span class="n">BE</span>      <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+---------------+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">+--------------+</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">+----------------------------------------------+</span>       <span class="o">|</span>
+   <span class="o">|</span>        <span class="o">|</span>          <span class="o">|</span> <span class="o">|</span>        <span class="o">|</span>         <span class="o">|</span>          <span class="o">|</span>
+   <span class="o">|</span>        <span class="o">|</span>          <span class="o">|</span> <span class="o">|</span>        <span class="o">|</span>         <span class="o">|</span>          <span class="o">|</span>
+   <span class="o">|</span>    <span class="n">HTTP</span> <span class="n">SCROLL</span>    <span class="o">|</span> <span class="o">|</span>    <span class="n">HTTP</span> <span class="n">SCROLL</span>   <span class="o">|</span>          <span class="o">|</span>
+<span class="o">+-----------+---------------------+------------+</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span>        <span class="n">v</span>          <span class="o">|</span> <span class="o">|</span>        <span class="n">v</span>         <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+------+--------+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">+------+-------+</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>               <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>              <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>   <span class="n">DataNode</span>    <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>   <span class="n">DataNode</span>   <span class="o">+&lt;-----------+</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>               <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>              <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>               <span class="o">+&lt;--------------------------------+</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+---------------+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|--------------|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">+-------------------+</span> <span class="o">+------------------+</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>   <span class="n">Same</span> <span class="n">Physical</span> <span class="n">Node</span>                         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                                              <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">+-----------------------+</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>                       <span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>      <span class="n">MasterNode</span>       <span class="o">+&lt;-----------------+</span>
+<span class="o">|</span> <span class="n">ES</span>        <span class="o">|</span>                       <span class="o">|</span>          <span class="o">|</span>
+<span class="o">|</span>           <span class="o">+-----------------------+</span>          <span class="o">|</span>
+<span class="o">+----------------------------------------------+</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>创建ES外表后，FE会请求建表指定的主机，获取所有节点的HTTP端口信息以及index的shard分布信息等，如果请求失败会顺序遍历host列表直至成功或完全失败</li>
+<li>查询时，会根据FE得到的一些节点信息和index的元数据信息，生成查询计划并发给对应的BE节点</li>
+<li>BE节点会根据<code class="docutils literal notranslate"><span class="pre">就近原则</span></code>即优先请求本地部署的ES节点，BE通过<code class="docutils literal notranslate"><span class="pre">HTTP</span> <span class="pre">Scroll</span></code>方式流式的从ES index的每个分片中并发的获取数据</li>
+<li>计算完结果后，返回给client端</li>
+</ol>
+</div>
+<div class="section" id="push-down-operations">
+<h2>Push-Down operations<a class="headerlink" href="#push-down-operations" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Doris</span> <span class="pre">On</span> <span class="pre">Elasticsearch</span></code>一个重要的功能就是过滤条件的下推: 过滤条件下推给ES，这样只有真正满足条件的数据才会被返回，能够显著的提高查询性能和降低Doris和Elasticsearch的CPU、memory、IO利用率</p>
+<p>下面的操作符(Operators)会被优化成如下下推filters:</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>SQL syntax</th>
+<th align="center">ES 5.x+ syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>=</td>
+<td align="center">term query</td>
+</tr>
+<tr>
+<td>in</td>
+<td align="center">terms query</td>
+</tr>
+<tr>
+<td>&gt; , &lt; , &gt;= , ⇐</td>
+<td align="center">range</td>
+</tr>
+<tr>
+<td>and</td>
+<td align="center">bool.filter</td>
+</tr>
+<tr>
+<td>or</td>
+<td align="center">bool.should</td>
+</tr>
+<tr>
+<td>not</td>
+<td align="center">bool.must_not</td>
+</tr>
+<tr>
+<td>not in</td>
+<td align="center">bool.must_not + terms</td>
+</tr>
+<tr>
+<td>esquery</td>
+<td align="center">ES Query DSL</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="id7">
+<h2>其他说明<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">ES的版本要求</p>
+<p>ES主版本大于5，ES在2.x之前和5.x之后数据的扫描方式不同，目前支持5.x之后的</p>
+</li>
+<li><p class="first">是否支持X-Pack认证的ES集群</p>
+<p>支持所有使用HTTP Basic认证方式的ES集群</p>
+</li>
+<li><p class="first">一些查询比请求ES慢很多</p>
+<p>是，比如_count相关的query等，ES内部会直接读取满足条件的文档个数相关的元数据，不需要对真实的数据进行过滤</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user-defined-function.html" class="btn btn-neutral float-right" title="User Define Function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="扩展功能" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

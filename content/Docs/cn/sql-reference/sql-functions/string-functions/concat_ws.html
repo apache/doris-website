@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>concat_ws &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="find_in_set" href="find_in_set.html" />
+    <link rel="prev" title="concat" href="concat.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">SQL 函数</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../cast.html">CAST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../date-time-functions/index.html">日期函数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatial-functions/index.html">地理位置函数</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">字符串函数</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ascii.html">ascii</a></li>
+<li class="toctree-l4"><a class="reference internal" href="concat.html">concat</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">concat_ws</a></li>
+<li class="toctree-l4"><a class="reference internal" href="find_in_set.html">find_in_set</a></li>
+<li class="toctree-l4"><a class="reference internal" href="get_json_double.html">get_json_double</a></li>
+<li class="toctree-l4"><a class="reference internal" href="get_json_int.html">get_json_int</a></li>
+<li class="toctree-l4"><a class="reference internal" href="get_json_string.html">get_json_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="group_concat.html">group_concat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="instr.html">instr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lcase.html">lcase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="left.html">left</a></li>
+<li class="toctree-l4"><a class="reference internal" href="length.html">length</a></li>
+<li class="toctree-l4"><a class="reference internal" href="locate.html">locate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lower.html">lower</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lpad.html">lpad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ltrim.html">ltrim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="money_format.html">money_format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="regexp_extract.html">regexp_extract</a></li>
+<li class="toctree-l4"><a class="reference internal" href="regexp_replace.html">regexp_replace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="repeat.html">repeat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="right.html">right</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strleft.html">strleft</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strright.html">strright</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
+        
+          <li><a href="../index.html">SQL 函数</a> &raquo;</li>
+        
+          <li><a href="index.html">字符串函数</a> &raquo;</li>
+        
+      <li>concat_ws</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-functions/string-functions/concat_ws.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="concat-ws">
+<h1>concat_ws<a class="headerlink" href="#concat-ws" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">concat_ws(VARCHAR</span> <span class="pre">sep,</span> <span class="pre">VARCHAR</span> <span class="pre">str,...)</span></code></p>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>使用第一个参数 sep 作为连接符，将第二个参数以及后续所有参数拼接成一个字符串.
+如果分隔符是 NULL，返回 NULL。
+<code class="docutils literal notranslate"><span class="pre">concat_ws</span></code>函数不会跳过空字符串，会跳过 NULL 值</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat_ws</span><span class="p">(</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;is&quot;</span><span class="p">);</span>
+<span class="o">+----------------------------+</span>
+<span class="o">|</span> <span class="n">concat_ws</span><span class="p">(</span><span class="s1">&#39;or&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+----------------------------+</span>
+<span class="o">|</span> <span class="n">doris</span>                      <span class="o">|</span>
+<span class="o">+----------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat_ws</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;is&quot;</span><span class="p">);</span>
+<span class="o">+----------------------------+</span>
+<span class="o">|</span> <span class="n">concat_ws</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+----------------------------+</span>
+<span class="o">|</span> <span class="n">NULL</span>                       <span class="o">|</span>
+<span class="o">+----------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat_ws</span><span class="p">(</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span><span class="s2">&quot;is&quot;</span><span class="p">);</span>
+<span class="o">+---------------------------------+</span>
+<span class="o">|</span> <span class="n">concat_ws</span><span class="p">(</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span><span class="s2">&quot;is&quot;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+---------------------------------+</span>
+<span class="o">|</span> <span class="n">doris</span>                           <span class="o">|</span>
+<span class="o">+---------------------------------+</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="find_in_set.html" class="btn btn-neutral float-right" title="find_in_set" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="concat.html" class="btn btn-neutral float-left" title="concat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>数据导出 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="权限管理" href="privilege.html" />
+    <link rel="prev" title="Colocation Join" href="colocation-join.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">数据导出</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">名词解释</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">原理</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">查询计划拆分</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">查询计划执行</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">使用示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">最佳实践</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id8">查询计划的拆分</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exec-mem-limit">exec_mem_limit</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">注意事项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">相关配置</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fe">FE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">操作手册</a> &raquo;</li>
+        
+      <li>数据导出</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/Docs/cn/administrator-guide/export_manual.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>数据导出<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>数据导出（Export）是 Doris 提供的一种将数据导出的功能。该功能可以将用户指定的表或分区的数据，以文本的格式，通过 Broker 进程导出到远端存储上，如 HDFS/BOS 等。</p>
+<p>本文档主要介绍 Export 的基本原理、使用方式、最佳实践以及注意事项。</p>
+<div class="section" id="id2">
+<h2>名词解释<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
+<li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
+<li>Broker：Doris 可以通过 Broker 进程对远端存储进行文件操作。</li>
+<li>Tablet：数据分片。一个表会划分成多个数据分片。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>原理<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>用户提交一个 Export 作业后。Doris 会统计这个作业涉及的所有 Tablet。然后对这些 Tablet 进行分组，每组生成一个特殊的查询计划。该查询计划会读取所包含的 Tablet 上的数据，然后通过 Broker 将数据写到远端存储指定的路径中。</p>
+<p>总体的调度方式如下:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+--------+</span>
+<span class="o">|</span> <span class="n">Client</span> <span class="o">|</span>
+<span class="o">+---+----+</span>
+    <span class="o">|</span>  <span class="mf">1.</span> <span class="n">Submit</span> <span class="n">Job</span>
+    <span class="o">|</span>
+<span class="o">+---</span><span class="n">v</span><span class="o">--------------------+</span>
+<span class="o">|</span> <span class="n">FE</span>                     <span class="o">|</span>
+<span class="o">|</span>                        <span class="o">|</span>
+<span class="o">|</span> <span class="o">+-------------------+</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="n">ExportPendingTask</span> <span class="o">|</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="o">+-------------------+</span>  <span class="o">|</span>
+<span class="o">|</span>                        <span class="o">|</span> <span class="mf">2.</span> <span class="n">Generate</span> <span class="n">Tasks</span>
+<span class="o">|</span> <span class="o">+--------------------+</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="n">ExportExporingTask</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">+--------------------+</span> <span class="o">|</span>
+<span class="o">|</span>                        <span class="o">|</span>
+<span class="o">|</span> <span class="o">+-----------+</span>          <span class="o">|</span>     <span class="o">+----+</span>   <span class="o">+------+</span>   <span class="o">+---------+</span>
+<span class="o">|</span> <span class="o">|</span> <span class="n">QueryPlan</span> <span class="o">+----------------&gt;</span> <span class="n">BE</span> <span class="o">+---&gt;</span><span class="n">Broker</span><span class="o">+---&gt;</span>         <span class="o">|</span>
+<span class="o">|</span> <span class="o">+-----------+</span>          <span class="o">|</span>     <span class="o">+----+</span>   <span class="o">+------+</span>   <span class="o">|</span> <span class="n">Remote</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="o">+-----------+</span>          <span class="o">|</span>     <span class="o">+----+</span>   <span class="o">+------+</span>   <span class="o">|</span> <span class="n">Storage</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="n">QueryPlan</span> <span class="o">+----------------&gt;</span> <span class="n">BE</span> <span class="o">+---&gt;</span><span class="n">Broker</span><span class="o">+---&gt;</span>         <span class="o">|</span>
+<span class="o">|</span> <span class="o">+-----------+</span>          <span class="o">|</span>     <span class="o">+----+</span>   <span class="o">+------+</span>   <span class="o">+---------+</span>
+<span class="o">+------------------------+</span>         <span class="mf">3.</span> <span class="n">Execute</span> <span class="n">Tasks</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>用户提交一个 Export 作业到 FE。</li>
+<li>FE 的 Export 调度器会通过两阶段来执行一个 Export 作业：<ol>
+<li>PENDING：FE 生成 ExportPendingTask，向 BE 发送 snapshot 命令，对所有涉及到的 Tablet 做一个快照。并生成多个查询计划。</li>
+<li>EXPORTING：FE 生成 ExportExporingTask，开始执行查询计划。</li>
+</ol>
+</li>
+</ol>
+<div class="section" id="id4">
+<h3>查询计划拆分<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Export 作业会生成多个查询计划，每个查询计划负责扫描一部分 Tablet。每个查询计划扫描的 Tablet 个数由 FE 配置参数 <code class="docutils literal notranslate"><span class="pre">export_tablet_num_per_task</span></code> 指定，默认为 5。即假设一共 100 个 Tablet，则会生成 20 个查询计划。用户也可以在提交作业时，通过作业属性 <code class="docutils literal notranslate"><span class="pre">tablet_num_per_task</span></code> 指定这个数值。</p>
+<p>一个作业的多个查询计划顺序执行。</p>
+</div>
+<div class="section" id="id5">
+<h3>查询计划执行<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>一个查询计划扫描多个分片，将读取的数据以行的形式组织，每 1024 行为一个 batch，调用 Broker 写入到远端存储上。</p>
+<p>查询计划遇到错误会整体自动重试 3 次。如果一个查询计划重试 3 次依然失败，则整个作业失败。</p>
+<p>Doris 会首先在指定的远端存储的路径中，建立一个名为 <code class="docutils literal notranslate"><span class="pre">__doris_export_tmp_12345</span></code> 的临时目录（其中 <code class="docutils literal notranslate"><span class="pre">12345</span></code> 为作业 id）。导出的数据首先会写入这个临时目录。每个查询计划会生成一个文件，文件名示例：</p>
+<p><code class="docutils literal notranslate"><span class="pre">export-data-c69fcf2b6db5420f-a96b94c1ff8bccef-1561453713822</span></code></p>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">c69fcf2b6db5420f-a96b94c1ff8bccef</span></code> 为查询计划的 query id。<code class="docutils literal notranslate"><span class="pre">1561453713822</span></code> 为文件生成的时间戳。</p>
+<p>当所有数据都导出后，Doris 会将这些文件 rename 到用户指定的路径中。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>使用示例<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Export 的详细命令可以通过 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">EXPORT;</span></code> 。举例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXPORT</span> <span class="n">TABLE</span> <span class="n">db1</span><span class="o">.</span><span class="n">tbl1</span> 
+<span class="n">PARTITION</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">)</span>
+<span class="n">TO</span> <span class="s2">&quot;bos://bj-test-cmy/export/&quot;</span> 
+<span class="n">PROPERTIES</span>
+<span class="p">(</span>
+    <span class="s2">&quot;column_separator&quot;</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;exec_mem_limit&quot;</span><span class="o">=</span><span class="s2">&quot;2147483648&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span> <span class="o">=</span> <span class="s2">&quot;3600&quot;</span>
+<span class="p">)</span>
+<span class="n">WITH</span> <span class="n">BROKER</span> <span class="s2">&quot;hdfs&quot;</span>
+<span class="p">(</span>
+	<span class="s2">&quot;username&quot;</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;passwd&quot;</span><span class="p">,</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">column_separator</span></code>：列分隔符。默认为 <code class="docutils literal notranslate"><span class="pre">\t</span></code>。</li>
+<li><code class="docutils literal notranslate"><span class="pre">line_delimiter</span></code>：行分隔符。默认为 <code class="docutils literal notranslate"><span class="pre">\n</span></code>。</li>
+<li><code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>： 表示 Export 作业中，一个查询计划在单个 BE 上的内存使用限制。默认 2GB。单位字节。</li>
+<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>：作业超时时间。默认 2小时。单位秒。</li>
+<li><code class="docutils literal notranslate"><span class="pre">tablet_num_per_task</span></code>：每个查询计划分配的最大分片数。默认为 5。</li>
+</ul>
+<p>提交作业后，可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">EXPORT</span></code> 命令查询导入作业状态。结果举例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">JobId</span><span class="p">:</span> <span class="mi">14008</span>
+     <span class="n">State</span><span class="p">:</span> <span class="n">FINISHED</span>
+  <span class="n">Progress</span><span class="p">:</span> <span class="mi">100</span><span class="o">%</span>
+  <span class="n">TaskInfo</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;partitions&quot;</span><span class="p">:[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span><span class="s2">&quot;exec mem limit&quot;</span><span class="p">:</span><span class="mi">2147483648</span><span class="p">,</span><span class="s2">&quot;column separator&quot;</span><span class="p">:</span><span class="s2">&quot;,&quot;</span><span class="p">,</span><span class="s2">&quot;line delimiter&quot;</span><span class="p">:</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;tablet num&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;broker&quot;</span><span class="p">:</span><span class="s2">&quot;hdfs&quot;</span><span class="p">,</span><span class="s2">&quot;coord num&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;db&quot;</span><span class="p">:</span><span class="s2">&quot;default_cluster:db1&quot;</span><span class="p">,</span><span class="s2">&quot;tbl&quot;</span><span class="p">:</span><span class="s2">&quot;tbl3&quot;</span><span class="p">}</span>
+      <span class="n">Path</span><span class="p">:</span> <span class="n">bos</span><span class="p">:</span><span class="o">//</span><span class="n">bj</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">cmy</span><span class="o">/</span><span class="n">export</span><span class="o">/</span>
+<span class="n">CreateTime</span><span class="p">:</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">25</span> <span class="mi">17</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">24</span>
+ <span class="n">StartTime</span><span class="p">:</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">25</span> <span class="mi">17</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">28</span>
+<span class="n">FinishTime</span><span class="p">:</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">25</span> <span class="mi">17</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">34</span>
+   <span class="n">Timeout</span><span class="p">:</span> <span class="mi">3600</span>
+  <span class="n">ErrorMsg</span><span class="p">:</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>JobId：作业的唯一 ID</li>
+<li>State：作业状态：<ul>
+<li>PENDING：作业待调度</li>
+<li>EXPORING：数据导出中</li>
+<li>FINISHED：作业成功</li>
+<li>CANCELLED：作业失败</li>
+</ul>
+</li>
+<li>Progress：作业进度。该进度以查询计划为单位。假设一共 10 个查询计划，当前已完成 3 个，则进度为 30%。</li>
+<li>TaskInfo：以 Json 格式展示的作业信息：<ul>
+<li>db：数据库名</li>
+<li>tbl：表名</li>
+<li>partitions：指定导出的分区。<code class="docutils literal notranslate"><span class="pre">*</span></code> 表示所有分区。</li>
+<li>exec mem limit：查询计划内存使用限制。单位字节。</li>
+<li>column separator：导出文件的列分隔符。</li>
+<li>line delimiter：导出文件的行分隔符。</li>
+<li>tablet num：涉及的总 Tablet 数量。</li>
+<li>broker：使用的 broker 的名称。</li>
+<li>coord num：查询计划的个数。</li>
+</ul>
+</li>
+<li>Path：远端存储上的导出路径。</li>
+<li>CreateTime/StartTime/FinishTime：作业的创建时间、开始调度时间和结束时间。</li>
+<li>Timeout：作业超时时间。单位是秒。该时间从 CreateTime 开始计算。</li>
+<li>ErrorMsg：如果作业出现错误，这里会显示错误原因。</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>最佳实践<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>查询计划的拆分<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>一个 Export 作业有多少查询计划需要执行，取决于总共有多少 Tablet，以及一个查询计划最多可以分配多少个 Tablet。因为多个查询计划是串行执行的，所以如果让一个查询计划处理更多的分片，则可以减少作业的执行时间。但如果查询计划出错（比如调用 Broker 的 RPC 失败，远端存储出现抖动等），过多的 Tablet 会导致一个查询计划的重试成本变高。所以需要合理安排查询计划的个数以及每个查询计划所需要扫描的分片数，在执行时间和执行成功率之间做出平衡。一般建议一个查询计划扫描的数据量在 3-5 GB内（一个表的 Tablet 的大小以及个数可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">TABLET</span> <span class="pre">FROM</span> <span class="pre">tbl_name;</span></code> 语句查看。）。</p>
+</div>
+<div class="section" id="exec-mem-limit">
+<h3>exec_mem_limit<a class="headerlink" href="#exec-mem-limit" title="Permalink to this headline">¶</a></h3>
+<p>通常一个 Export 作业的查询计划只有 <code class="docutils literal notranslate"><span class="pre">扫描</span></code>-<code class="docutils literal notranslate"><span class="pre">导出</span></code> 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。但在某些场景下，比如一个查询计划，在同一个 BE 上需要扫描的 Tablet 过多，或者 Tablet 的数据版本过多时，可能会导致内存不足。此时需要通过这个参数设置更大的内存，比如 4GB、8GB 等。</p>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>注意事项<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>不建议一次性导出大量数据。一个 Export 作业建议的导出数据量最大在几十 GB。过大的导出会导致更多的垃圾文件和更高的重试成本。</li>
+<li>如果表数据量过大，建议按照分区导出。</li>
+<li>在 Export 作业运行过程中，如果 FE 发生重启或切主，则 Export 作业会失败，需要用户重新提交。</li>
+<li>如果 Export 作业运行失败，在远端存储中产生的 <code class="docutils literal notranslate"><span class="pre">__doris_export_tmp_xxx</span></code> 临时目录，以及已经生成的文件不会被删除，需要用户手动删除。</li>
+<li>如果 Export 作业运行成功，在远端存储中产生的 <code class="docutils literal notranslate"><span class="pre">__doris_export_tmp_xxx</span></code> 目录，根据远端存储的文件系统语义，可能会保留，也可能会被清除。比如在百度对象存储（BOS）中，通过 rename 操作将一个目录中的最后一个文件移走后，该目录也会被删除。如果该目录没有被清除，用户可以手动清除。</li>
+<li>当 Export 运行完成后（成功或失败），FE 发生重启或切主，则 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">EXPORT</span></code> 展示的作业的部分信息会丢失，无法查看。</li>
+<li>Export 作业只会导出 Base 表的数据，不会导出 Rollup Index 的数据。</li>
+<li>Export 作业会扫描数据，占用 IO 资源，可能会影响系统的查询延迟。</li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h2>相关配置<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe">
+<h3>FE<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">export_checker_interval_second</span></code>：Export 作业调度器的调度间隔，默认为 5 秒。设置该参数需重启 FE。</li>
+<li><code class="docutils literal notranslate"><span class="pre">export_running_job_num_limit</span></code>：正在运行的 Export 作业数量限制。如果超过，则作业将等待并处于 PENDING 状态。默认为 5，可以运行时调整。</li>
+<li><code class="docutils literal notranslate"><span class="pre">export_task_default_timeout_second</span></code>：Export 作业默认超时时间。默认为 2 小时。可以运行时调整。</li>
+<li><code class="docutils literal notranslate"><span class="pre">export_tablet_num_per_task</span></code>：一个查询计划负责的最大分片数。默认为 5。</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="privilege.html" class="btn btn-neutral float-right" title="权限管理" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="colocation-join.html" class="btn btn-neutral float-left" title="Colocation Join" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
