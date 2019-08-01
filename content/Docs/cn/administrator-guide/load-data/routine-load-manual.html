@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>例行导入 &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>Routine Load &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="HTTP API" href="../http-actions/index.html" />
-    <link rel="prev" title="Broker Load" href="broker-load-manual.html" /> 
+    <link rel="next" title="Insert Into" href="insert-into-manual.html" />
+    <link rel="prev" title="Stream load" href="stream-load-manual.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,15 +89,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">数据导入</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-manual.html">导入总览</a></li>
 <li class="toctree-l3"><a class="reference internal" href="broker-load-manual.html">Broker Load</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">例行导入</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id2">名词解释</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">原理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stream-load-manual.html">Stream load</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Routine Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">名词解释</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">原理</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kafka">Kafka 例行导入</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id8">其他说明</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id9">相关参数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">其他说明</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">相关参数</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="insert-into-manual.html">Insert Into</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
@@ -162,7 +165,7 @@
         
           <li><a href="index.html">数据导入</a> &raquo;</li>
         
-      <li>例行导入</li>
+      <li>Routine Load</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -181,12 +184,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="id1">
-<h1>例行导入<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="routine-load">
+<h1>Routine Load<a class="headerlink" href="#routine-load" title="Permalink to this headline">¶</a></h1>
 <p>例行导入（Routine Load）功能为用户提供了一种自动从指定数据源进行数据导入的功能。</p>
 <p>本文档主要介绍该功能的实现原理、使用方式以及最佳实践。</p>
-<div class="section" id="id2">
-<h2>名词解释<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h2>名词解释<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
 <li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
@@ -196,8 +199,8 @@
 <li>TaskScheduler：任务调度器。用于调度 Task 的执行。</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h2>原理<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>原理<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">+---------+</span>
          <span class="o">|</span>  <span class="n">Client</span> <span class="o">|</span>
          <span class="o">+----+----+</span>
@@ -231,16 +234,16 @@
 <div class="section" id="kafka">
 <h2>Kafka 例行导入<a class="headerlink" href="#kafka" title="Permalink to this headline">¶</a></h2>
 <p>当前我们仅支持从 Kafka 系统进行例行导入。该部分会详细介绍 Kafka 例行导入使用方式和最佳实践。</p>
-<div class="section" id="id4">
-<h3>使用限制<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>使用限制<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
 <li>支持无认证的 Kafka 访问，以及通过 SSL 方式认证的 Kafka 集群。</li>
 <li>支持的消息格式为 csv 文本格式。每一个 message 为一行，且行尾<strong>不包含</strong>换行符。</li>
 <li>仅支持 Kafka 0.10.0.0(含) 以上版本。</li>
 </ol>
 </div>
-<div class="section" id="id5">
-<h3>创建例行导入任务<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>创建例行导入任务<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>创建例行导入任务的的详细语法可以连接到 Doris 后，执行 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 查看语法帮助。这里主要详细介绍，创建作业时的注意事项。</p>
 <ul>
 <li><p class="first">columns_mapping</p>
@@ -322,19 +325,19 @@
 </div></blockquote>
 </div>
 </div>
-<div class="section" id="id6">
-<h3>查看导入作业状态<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>查看导入作业状态<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>查看<strong>作业</strong>状态的具体命令和示例可以通过 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 命令查看。</p>
 <p>查看<strong>任务</strong>运行状态的具体命令和示例可以通过 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD</span> <span class="pre">TASK;</span></code> 命令查看。</p>
 <p>只能查看当前正在运行中的任务，已结束和未开始的任务无法查看。</p>
 </div>
-<div class="section" id="id7">
-<h3>作业控制<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>作业控制<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>用户可以通过 <code class="docutils literal notranslate"><span class="pre">STOP/PAUSE/RESUME</span></code> 三个命令来控制作业的停止，暂停和重启。可以通过 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">STOP</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code>, <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">PAUSE</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">RESUME</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 三个命令查看帮助和示例。</p>
 </div>
 </div>
-<div class="section" id="id8">
-<h2>其他说明<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>其他说明<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <ol>
 <li><p class="first">例行导入作业和 ALTER TABLE 操作的关系</p>
 <ul class="simple">
@@ -361,8 +364,8 @@
 </li>
 </ol>
 </div>
-<div class="section" id="id9">
-<h2>相关参数<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h2>相关参数<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p>一些系统配置参数会影响例行导入的使用。</p>
 <ol>
 <li><p class="first">max_routine_load_task_concurrent_num</p>
@@ -386,10 +389,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../http-actions/index.html" class="btn btn-neutral float-right" title="HTTP API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="insert-into-manual.html" class="btn btn-neutral float-right" title="Insert Into" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="broker-load-manual.html" class="btn btn-neutral float-left" title="Broker Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="stream-load-manual.html" class="btn btn-neutral float-left" title="Stream load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

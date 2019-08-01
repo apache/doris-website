@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>to_days &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>timediff &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="unix_timestamp" href="unix_timestamp.html" />
-    <link rel="prev" title="timediff" href="timediff.html" /> 
+    <link rel="next" title="to_days" href="to_days.html" />
+    <link rel="prev" title="str_to_date" href="str_to_date.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -110,8 +110,8 @@
 <li class="toctree-l4"><a class="reference internal" href="monthname.html">monthname</a></li>
 <li class="toctree-l4"><a class="reference internal" href="now.html">now</a></li>
 <li class="toctree-l4"><a class="reference internal" href="str_to_date.html">str_to_date</a></li>
-<li class="toctree-l4"><a class="reference internal" href="timediff.html">timediff</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">to_days</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">timediff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="to_days.html">to_days</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unix_timestamp.html">unix_timestamp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="utc_timestamp.html">utc_timestamp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="workofyear.html">weekofyear</a></li>
@@ -178,13 +178,13 @@
         
           <li><a href="index.html">日期函数</a> &raquo;</li>
         
-      <li>to_days</li>
+      <li>timediff</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-functions/date-time-functions/to_days.md.txt" rel="nofollow"> View page source</a>
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-functions/date-time-functions/timediff.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -197,25 +197,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="to-days">
-<h1>to_days<a class="headerlink" href="#to-days" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="timediff">
+<h1>timediff<a class="headerlink" href="#timediff" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="syntax">
 <h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">INT</span> <span class="pre">TO_DAYS(DATETIME</span> <span class="pre">date)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">TIME</span> <span class="pre">TIMEDIFF(DATETIME</span> <span class="pre">expr1,</span> <span class="pre">DATETIME</span> <span class="pre">expr2)</span></code></p>
 </div>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>返回date距离0000-01-01的天数</p>
-<p>参数为Date或者Datetime类型</p>
+<p>TIMEDIFF返回两个DATETIME之间的差值</p>
+<p>TIMEDIFF函数返回表示为时间值的expr1 - expr2的结果，返回值为TIME类型</p>
+<p>其结果被限制在从-838:59:59到838:59:59之间的TIME值范围内</p>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">to_days</span><span class="p">(</span><span class="s1">&#39;2007-10-07&#39;</span><span class="p">);</span>
-<span class="o">+-----------------------+</span>
-<span class="o">|</span> <span class="n">to_days</span><span class="p">(</span><span class="s1">&#39;2007-10-07&#39;</span><span class="p">)</span> <span class="o">|</span>
-<span class="o">+-----------------------+</span>
-<span class="o">|</span>                <span class="mi">733321</span> <span class="o">|</span>
-<span class="o">+-----------------------+</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">TIMEDIFF</span><span class="p">(</span><span class="n">now</span><span class="p">(),</span><span class="n">utc_timestamp</span><span class="p">());</span>
+<span class="o">+----------------------------------+</span>
+<span class="o">|</span> <span class="n">timediff</span><span class="p">(</span><span class="n">now</span><span class="p">(),</span> <span class="n">utc_timestamp</span><span class="p">())</span> <span class="o">|</span>
+<span class="o">+----------------------------------+</span>
+<span class="o">|</span> <span class="mi">08</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>                         <span class="o">|</span>
+<span class="o">+----------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">TIMEDIFF</span><span class="p">(</span><span class="s1">&#39;2019-07-11 16:59:30&#39;</span><span class="p">,</span><span class="s1">&#39;2019-07-11 16:59:21&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">timediff</span><span class="p">(</span><span class="s1">&#39;2019-07-11 16:59:30&#39;</span><span class="p">,</span> <span class="s1">&#39;2019-07-11 16:59:21&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------------------+</span>
+<span class="o">|</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">09</span>                                               <span class="o">|</span>
+<span class="o">+--------------------------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">TIMEDIFF</span><span class="p">(</span><span class="s1">&#39;2019-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2009-01-01 00:00:00&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">timediff</span><span class="p">(</span><span class="s1">&#39;2019-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2009-01-01 00:00:00&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------------------+</span>
+<span class="o">|</span> <span class="mi">838</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">59</span>                                              <span class="o">|</span>
+<span class="o">+--------------------------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">TIMEDIFF</span><span class="p">(</span><span class="s1">&#39;2019-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span> <span class="n">timediff</span><span class="p">(</span><span class="s1">&#39;2019-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="n">NULL</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span> <span class="n">NULL</span>                                  <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
 </pre></div>
 </div>
 </div>
@@ -229,10 +251,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="unix_timestamp.html" class="btn btn-neutral float-right" title="unix_timestamp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="to_days.html" class="btn btn-neutral float-right" title="to_days" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="timediff.html" class="btn btn-neutral float-left" title="timediff" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="str_to_date.html" class="btn btn-neutral float-left" title="str_to_date" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

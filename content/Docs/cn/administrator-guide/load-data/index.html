@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Broker Load" href="broker-load-manual.html" />
+    <link rel="next" title="导入总览" href="load-manual.html" />
     <link rel="prev" title="操作手册" href="../index.html" /> 
 </head>
 
@@ -89,8 +89,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">数据导入</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="load-manual.html">导入总览</a></li>
 <li class="toctree-l3"><a class="reference internal" href="broker-load-manual.html">Broker Load</a></li>
-<li class="toctree-l3"><a class="reference internal" href="routine-load-manual.html">例行导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stream-load-manual.html">Stream load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="routine-load-manual.html">Routine Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="insert-into-manual.html">Insert Into</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
@@ -176,16 +179,46 @@
 <h1>数据导入<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="broker-load-manual.html">Broker Load</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#properties">properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load-manual.html">导入总览</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="load-manual.html#id2">基本概念</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-manual.html#id3">导入方式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-manual.html#id4">基本原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-manual.html#id6">同步和异步</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-manual.html#id10">最佳实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="load-manual.html#id11">通用系统配置</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="routine-load-manual.html">例行导入</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id2">名词解释</a></li>
-<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id3">原理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="broker-load-manual.html">Broker Load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id1">适用场景</a></li>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id2">名词解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id3">基本原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id4">基本操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id10">相关系统配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id11">最佳实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="broker-load-manual.html#id15">常见问题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stream-load-manual.html">Stream load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stream-load-manual.html#id1">基本原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stream-load-manual.html#id2">基本操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stream-load-manual.html#id8">相关系统配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stream-load-manual.html#id9">最佳实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stream-load-manual.html#id13">常见问题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="routine-load-manual.html">Routine Load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id1">名词解释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id2">原理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#kafka">Kafka 例行导入</a></li>
-<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id8">其他说明</a></li>
-<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id9">相关参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id7">其他说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routine-load-manual.html#id8">相关参数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="insert-into-manual.html">Insert Into</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="insert-into-manual.html#id1">基本操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="insert-into-manual.html#id4">相关系统配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="insert-into-manual.html#id5">最佳实践</a></li>
+<li class="toctree-l2"><a class="reference internal" href="insert-into-manual.html#id9">常见问题</a></li>
 </ul>
 </li>
 </ul>
@@ -200,7 +233,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="broker-load-manual.html" class="btn btn-neutral float-right" title="Broker Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="load-manual.html" class="btn btn-neutral float-right" title="导入总览" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral float-left" title="操作手册" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
