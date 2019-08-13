@@ -100,7 +100,6 @@
 <li class="toctree-l4"><a class="reference internal" href="avg.html">AVG</a></li>
 <li class="toctree-l4"><a class="reference internal" href="count.html">COUNT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="count_distinct.html">COUNT_DISTINCT</a></li>
-<li class="toctree-l4"><a class="reference internal" href="group_concat.html">GROUP_CONCAT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="hll_union_agg.html">HLL_UNION_AGG</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">MAX</a></li>
 <li class="toctree-l4"><a class="reference internal" href="min.html">MIN</a></li>
@@ -115,7 +114,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -191,16 +190,16 @@
             
   <div class="section" id="max">
 <h1>MAX<a class="headerlink" href="#max" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">MAX(expr)</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MAX(expr)</span></code></p>
 <p>返回expr表达式的最大值</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL &gt; select max(scan_rows) from log_statis group by datetime;
 +------------------+
 | max(`scan_rows`) |
@@ -209,6 +208,8 @@
 +------------------+
 </pre></div>
 </div>
+<p>##keyword
+MAX</p>
 </div>
 </div>
 

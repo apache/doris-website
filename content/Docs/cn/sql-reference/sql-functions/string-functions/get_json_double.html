@@ -125,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -201,20 +201,20 @@
             
   <div class="section" id="get-json-double">
 <h1>get_json_double<a class="headerlink" href="#get-json-double" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p>`DOUBLE get_json_double(VARCHAR json_str, VARCHAR json_path)</p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p>`DOUBLE get_json_double(VARCHAR json_str, VARCHAR json_path)</p>
 <p>解析并获取 json 字符串内指定路径的浮点型内容。
 其中 json_path 必须以 $ 符号作为开头，使用 . 作为路径分割符。如果路径中包含 . ，则可以使用双引号包围。
 使用 [ ] 表示数组下标，从 0 开始。
 path 的内容不能包含 “, [ 和 ]。
 如果 json_string 格式不对，或 json_path 格式不对，或无法找到匹配项，则返回 NULL。</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
 <li>获取 key 为 “k1” 的 value</li>
 </ol>
@@ -248,6 +248,8 @@ path 的内容不能包含 “, [ 和 ]。
 <span class="o">+---------------------------------------------------------------------+</span>
 </pre></div>
 </div>
+<p>##keyword
+GET_JSON_DOUBLE,GET,JSON,DOUBLE</p>
 </div>
 </div>
 

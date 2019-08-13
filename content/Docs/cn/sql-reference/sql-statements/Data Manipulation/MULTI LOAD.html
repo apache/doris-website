@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MULTI LOAD &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="PAUSE ROUTINE LOAD" href="PAUSE ROUTINE LOAD.html" />
+    <link rel="prev" title="MINI LOAD" href="MINI LOAD.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../sql-functions/index.html">SQL 函数</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">语法帮助</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../Account Management/index.html">用户账户管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Administration/index.html">集群管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Definition/index.html">DDL</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">DML</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="BROKER LOAD.html">BROKER LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CANCEL LOAD.html">CANCEL LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DELETE.html">DELETE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="EXPORT.html">EXPORT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="LOAD.html">LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="MINI LOAD.html">MINI LOAD</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">MULTI LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PAUSE ROUTINE LOAD.html">PAUSE ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="RESUME ROUTINE LOAD.html">RESUME ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ROUTINE LOAD.html">ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW ALTER.html">SHOW ALTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW BACKUP.html">SHOW BACKUP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW DATA.html">SHOW DATA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW DATABASES.html">SHOW DATABASES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW DELETE.html">SHOW DELETE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW EXPORT.html">SHOW EXPORT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW LOAD.html">SHOW LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW PARTITIONS.html">SHOW PARTITIONS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW PROPERTY.html">SHOW PROPERTY</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW REPOSITORIES.html">SHOW REPOSITORIES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW RESTORE.html">SHOW RESTORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW ROUTINE LOAD.html">SHOW ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW ROUTINE LOAD TASK.html">SHOW ROUTINE LOAD TASK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW SNAPSHOT.html">SHOW SNAPSHOT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW TABLES.html">SHOW TABLES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW TABLET.html">SHOW TABLET</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STOP ROUTINE LOAD.html">STOP ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STREAM LOAD.html">STREAM LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="insert.html">INSERT</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Types/index.html">数据类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Utility/index.html">辅助命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
+        
+          <li><a href="../index.html">语法帮助</a> &raquo;</li>
+        
+          <li><a href="index.html">DML</a> &raquo;</li>
+        
+      <li>MULTI LOAD</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-statements/Data Manipulation/MULTI LOAD.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="multi-load">
+<h1>MULTI LOAD<a class="headerlink" href="#multi-load" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Syntax:
+    curl --location-trusted -u user:passwd -XPOST http://host:port/api/{db}/_multi_start?label=xxx
+    curl --location-trusted -u user:passwd -T data.file http://host:port/api/{db}/{table1}/_load?label=xxx\&amp;sub_label=yyy
+    curl --location-trusted -u user:passwd -T data.file http://host:port/api/{db}/{table2}/_load?label=xxx\&amp;sub_label=zzz
+    curl --location-trusted -u user:passwd -XPOST http://host:port/api/{db}/_multi_commit?label=xxx
+    curl --location-trusted -u user:passwd -XPOST http://host:port/api/{db}/_multi_desc?label=xxx
+
+&#39;MULTI LOAD&#39;在&#39;MINI LOAD&#39;的基础上，可以支持用户同时向多个表进行导入，具体的命令如上面所示
+&#39;/api/{db}/_multi_start&#39;    开始一个多表导入任务
+&#39;/api/{db}/{table}/_load&#39;   向一个导入任务添加一个要导入的表，与&#39;MINI LOAD&#39;的主要区别是，需要传入&#39;sub_label&#39;参数
+&#39;/api/{db}/_multi_commit&#39;   提交整个多表导入任务，后台开始进行处理
+&#39;/api/{db}/_multi_abort&#39;    放弃一个多表导入任务
+&#39;/api/{db}/_multi_desc&#39;     可以展示某个多表导入任务已经提交的作业数
+
+HTTP协议相关说明
+    权限认证            当前 Doris 使用http的Basic方式权限认证。所以在导入的时候需要指定用户名密码
+                        这种方式是明文传递密码的，鉴于我们当前都是内网环境。。。
+
+    Expect              Doris 需要发送过来的http请求，需要有&#39;Expect&#39;头部信息，内容为&#39;100-continue&#39;
+                        为什么呢？因为我们需要将请求进行redirect，那么必须在传输数据内容之前，
+                        这样可以避免造成数据的多次传输，从而提高效率。
+
+    Content-Length      Doris 需要在发送请求是带有&#39;Content-Length&#39;这个头部信息。如果发送的内容比
+                        &#39;Content-Length&#39;要少，那么Palo认为传输出现问题，则提交此次任务失败。
+                        NOTE: 如果，发送的数据比&#39;Content-Length&#39;要多，那么 Doris 只读取&#39;Content-Length&#39;
+                        长度的内容，并进行导入
+
+参数说明：
+    user:               用户如果是在default_cluster中的，user即为user_name。否则为user_name@cluster_name。
+
+    label:              用于指定这一批次导入的label号，用于后期进行作业状态查询等。
+                        这个参数是必须传入的。
+
+    sub_label:          用于指定一个多表导入任务内部的子版本号。对于多表导入的load， 这个参数是必须传入的。
+
+    columns:            用于描述导入文件中对应的列名字。
+                        如果不传入，那么认为文件中的列顺序与建表的顺序一致，
+                        指定的方式为逗号分隔，例如：columns=k1,k2,k3,k4
+
+    column_separator:   用于指定列与列之间的分隔符，默认的为&#39;\t&#39;
+                        NOTE: 需要进行url编码，譬如需要指定&#39;\t&#39;为分隔符，
+                        那么应该传入&#39;column_separator=%09&#39;
+
+    max_filter_ratio:   用于指定允许过滤不规范数据的最大比例，默认是0，不允许过滤
+                        自定义指定应该如下：&#39;max_filter_ratio=0.2&#39;，含义是允许20%的错误率
+                        在&#39;_multi_start&#39;时传入有效果
+
+NOTE: 
+    1. 此种导入方式当前是在一台机器上完成导入工作，因而不宜进行数据量较大的导入工作。
+    建议导入数据量不要超过1GB
+
+    2. 当前无法使用`curl -T &quot;{file1, file2}&quot;`这样的方式提交多个文件，因为curl是将其拆成多个
+    请求发送的，多个请求不能共用一个label号，所以无法使用
+
+    3. 支持类似streaming的方式使用curl来向 Doris 中导入数据，但是，只有等这个streaming结束后 Doris
+    才会发生真实的导入行为，这中方式数据量也不能过大。
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 将本地文件&#39;testData1&#39;中的数据导入到数据库&#39;testDb&#39;中&#39;testTbl1&#39;的表，并且
+把&#39;testData2&#39;的数据导入到&#39;testDb&#39;中的表&#39;testTbl2&#39;(用户是defalut_cluster中的)
+    curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_start?label=123
+    curl --location-trusted -u root -T testData1 http://host:port/api/testDb/testTbl1/_load?label=123\&amp;sub_label=1
+    curl --location-trusted -u root -T testData2 http://host:port/api/testDb/testTbl2/_load?label=123\&amp;sub_label=2
+    curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_commit?label=123
+
+2. 多表导入中途放弃(用户是defalut_cluster中的)
+    curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_start?label=123
+    curl --location-trusted -u root -T testData1 http://host:port/api/testDb/testTbl1/_load?label=123\&amp;sub_label=1
+    curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_abort?label=123
+
+3. 多表导入查看已经提交多少内容(用户是defalut_cluster中的)
+    curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_start?label=123
+    curl --location-trusted -u root -T testData1 http://host:port/api/testDb/testTbl1/_load?label=123\&amp;sub_label=1
+    curl --location-trusted -u root -XPOST http://host:port/api/testDb/_multi_desc?label=123
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MULTI</span><span class="p">,</span> <span class="n">MINI</span><span class="p">,</span> <span class="n">LOAD</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="PAUSE ROUTINE LOAD.html" class="btn btn-neutral float-right" title="PAUSE ROUTINE LOAD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="MINI LOAD.html" class="btn btn-neutral float-left" title="MINI LOAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

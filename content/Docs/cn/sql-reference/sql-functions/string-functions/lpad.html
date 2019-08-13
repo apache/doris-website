@@ -125,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -201,16 +201,16 @@
             
   <div class="section" id="lpad">
 <h1>lpad<a class="headerlink" href="#lpad" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">lpad(VARCHAR</span> <span class="pre">str,</span> <span class="pre">INT</span> <span class="pre">len,</span> <span class="pre">VARCHAR</span> <span class="pre">pad)</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">lpad(VARCHAR</span> <span class="pre">str,</span> <span class="pre">INT</span> <span class="pre">len,</span> <span class="pre">VARCHAR</span> <span class="pre">pad)</span></code></p>
 <p>返回 str 中长度为 len（从首字母开始算起）的字符串。如果 len 大于 str 的长度，则在 str 的前面不断补充 pad 字符，直到该字符串的长度达到 len 为止。如果 len 小于 str 的长度，该函数相当于截断 str 字符串，只返回长度为 len 的字符串。</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">lpad</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;xy&quot;</span><span class="p">);</span>
 <span class="o">+---------------------+</span>
 <span class="o">|</span> <span class="n">lpad</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">)</span> <span class="o">|</span>
@@ -226,6 +226,8 @@
 <span class="o">+---------------------+</span>
 </pre></div>
 </div>
+<p>##keyword
+LPAD</p>
 </div>
 </div>
 

@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MIGRATE DATABASE &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="SHOW BACKENDS" href="SHOW BACKENDS.html" />
+    <link rel="prev" title="LINK DATABASE" href="LINK DATABASE.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../sql-functions/index.html">SQL 函数</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">语法帮助</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../Account Management/index.html">用户账户管理</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">集群管理</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ADMIN CANCEL REPAIR.html">ADMIN CANCEL REPAIR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ADMIN REPAIR.html">ADMIN REPAIR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ADMIN SET CONFIG.html">ADMIN SET CONFIG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ADMIN SHOW CONFIG.html">ADMIN SHOW CONFIG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ADMIN SHOW REPLICA DISTRIBUTION.html">ADMIN SHOW REPLICA DISTRIBUTION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ADMIN SHOW REPLICA STATUS.html">ADMIN SHOW REPLICA STATUS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ALTER CLUSTER.html">ALTER CLUSTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ALTER SYSTEM.html">ALTER SYSTEM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CANCEL DECOMMISSION.html">CANCEL DECOMMISSION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CREATE CLUSTER.html">CREATE CLUSTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CREATE FILE.html">CREATE FILE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DROP CLUSTER.html">DROP CLUSTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DROP FILE.html">DROP FILE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ENTER.html">ENTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="LINK DATABASE.html">LINK DATABASE</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">MIGRATE DATABASE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW BACKENDS.html">SHOW BACKENDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW BROKER.html">SHOW BROKER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW FILE.html">SHOW FILE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW FRONTENDS.html">SHOW FRONTENDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW MIGRATIONS.html">SHOW MIGRATIONS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Definition/index.html">DDL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Manipulation/index.html">DML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Types/index.html">数据类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Utility/index.html">辅助命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
+        
+          <li><a href="../index.html">语法帮助</a> &raquo;</li>
+        
+          <li><a href="index.html">集群管理</a> &raquo;</li>
+        
+      <li>MIGRATE DATABASE</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-statements/Administration/MIGRATE DATABASE.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="migrate-database">
+<h1>MIGRATE DATABASE<a class="headerlink" href="#migrate-database" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>（已废弃！！！）
+该语句用于迁移一个逻辑集群的数据库到另外一个逻辑集群，执行此操作前数据库必须已经处于链接状态, 需要管理
+
+员权限
+
+语法
+
+MIGRATE DATABASE src_cluster_name.src_db_name des_cluster_name.des_db_name
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">迁移test_clusterA中的test_db到test_clusterB</span>
+
+   <span class="n">MIGRATE</span> <span class="n">DATABASE</span> <span class="n">test_clusterA</span><span class="o">.</span><span class="n">test_db</span> <span class="n">test_clusterB</span><span class="o">.</span><span class="n">link_test_db</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MIGRATE</span><span class="p">,</span><span class="n">DATABASE</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="SHOW BACKENDS.html" class="btn btn-neutral float-right" title="SHOW BACKENDS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="LINK DATABASE.html" class="btn btn-neutral float-left" title="LINK DATABASE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

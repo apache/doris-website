@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
 <li class="toctree-l2"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
 <li class="toctree-l2"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l2"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">数据导出</a><ul>
@@ -115,6 +116,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="privilege.html">权限管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time-zone.html">时区</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
@@ -257,7 +259,7 @@
 <p>Export 的详细命令可以通过 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">EXPORT;</span></code> 。举例如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXPORT</span> <span class="n">TABLE</span> <span class="n">db1</span><span class="o">.</span><span class="n">tbl1</span> 
 <span class="n">PARTITION</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">)</span>
-<span class="n">TO</span> <span class="s2">&quot;bos://bj-test-cmy/export/&quot;</span> 
+<span class="n">TO</span> <span class="s2">&quot;hdfs://host/path/to/export/&quot;</span> 
 <span class="n">PROPERTIES</span>
 <span class="p">(</span>
     <span class="s2">&quot;column_separator&quot;</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>

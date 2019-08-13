@@ -107,11 +107,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../export_manual.html">数据导出</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../time-zone.html">时区</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
@@ -278,7 +280,7 @@
     <span class="n">SET</span>
     <span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="n">tmp_c2</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">tmp_c1</span><span class="p">)</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">tmp_c1</span>
     <span class="p">),</span>
     <span class="n">DATA</span> <span class="n">INFILE</span><span class="p">(</span><span class="s2">&quot;hdfs://abc.com:8888/user/palo/test/ml/file2&quot;</span><span class="p">)</span>
     <span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">tbl2</span>
@@ -316,6 +318,9 @@
 </li>
 <li><p class="first">partition</p>
 <p>在 <code class="docutils literal notranslate"><span class="pre">data_desc</span></code> 中可以指定待导入表的 partition 信息，如果待导入数据不属于指定的 partition 则不会被导入。同时，不在指定 Partition 的数据会被认为是错误数据。</p>
+</li>
+<li><p class="first">set column mapping</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">data_desc</span></code> 中的 SET 语句负责设置列函数变换，这里的列函数变换支持所有查询的等值表达式变换。如果原始数据的列和表中的列不一一对应，就需要用到这个属性。</p>
 </li>
 </ul>
 </div>

@@ -94,7 +94,9 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">SQL 函数</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../cast.html">CAST</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">日期函数</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="convert_tz.html">convert_tz</a></li>
 <li class="toctree-l4"><a class="reference internal" href="current_timestamp.html">current_timestamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="curtime.html">curtime,current_time</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_add.html">date_add</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_format.html">date_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_sub.html">date_sub</a></li>
@@ -123,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -199,23 +201,25 @@
             
   <div class="section" id="dayofweek">
 <h1>dayofweek<a class="headerlink" href="#dayofweek" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">INT</span> <span class="pre">dayofweek(DATETIME</span> <span class="pre">date)</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">INT</span> <span class="pre">dayofweek(DATETIME</span> <span class="pre">date)</span></code></p>
 <p>DAYOFWEEK函数返回日期的工作日索引值，即星期日为1，星期一为2，星期六为7</p>
 <p>参数为Date或者Datetime类型</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">dayofweek</span><span class="p">(</span><span class="s1">&#39;2019-06-25&#39;</span><span class="p">);</span>
 <span class="o">+----------------------------------+</span>
 <span class="o">|</span> <span class="n">dayofweek</span><span class="p">(</span><span class="s1">&#39;2019-06-25 00:00:00&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+----------------------------------+</span>
 <span class="o">|</span>                                <span class="mi">3</span> <span class="o">|</span>
 <span class="o">+----------------------------------+</span>
+<span class="c1">##keyword</span>
+<span class="n">DAYOFWEEK</span>
 </pre></div>
 </div>
 </div>

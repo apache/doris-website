@@ -125,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -201,16 +201,16 @@
             
   <div class="section" id="money-format">
 <h1>money_format<a class="headerlink" href="#money-format" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p>VARCHAR money_format(Number)</p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p>VARCHAR money_format(Number)</p>
 <p>将数字按照货币格式输出，整数部分每隔3位用逗号分隔，小数部分保留2位</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">money_format</span><span class="p">(</span><span class="mi">17014116</span><span class="p">);</span>
 <span class="o">+------------------------+</span>
 <span class="o">|</span> <span class="n">money_format</span><span class="p">(</span><span class="mi">17014116</span><span class="p">)</span> <span class="o">|</span>
@@ -233,6 +233,8 @@
 <span class="o">+----------------------+</span>
 </pre></div>
 </div>
+<p>##keyword
+MONEY_FORMAT,MONEY,FORMAT</p>
 </div>
 </div>
 

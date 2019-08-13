@@ -125,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -201,16 +201,16 @@
             
   <div class="section" id="group-concat">
 <h1>group_concat<a class="headerlink" href="#group-concat" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">group_concat(VARCHAR</span> <span class="pre">str[,</span> <span class="pre">VARCHAR</span> <span class="pre">sep])</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">group_concat(VARCHAR</span> <span class="pre">str[,</span> <span class="pre">VARCHAR</span> <span class="pre">sep])</span></code></p>
 <p>该函数是类似于 sum() 的聚合函数，group_concat 将结果集中的多行结果连接成一个字符串。第二个参数 sep 为字符串之间的连接符号，该参数可以省略。该函数通常需要和 group by 语句一起使用。</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mysql&gt; select value from test;
 +-------+
 | value |
@@ -235,6 +235,8 @@ mysql&gt; select group_concat(value, &quot; &quot;) from test;
 +----------------------------+
 </pre></div>
 </div>
+<p>##keyword
+GROUP_CONCAT,GROUP,CONCAT</p>
 </div>
 </div>
 

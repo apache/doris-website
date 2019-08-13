@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DDL 语句 &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>语法帮助 &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="CREATE FUNCTION" href="create-function.html" />
+    <link rel="next" title="用户账户管理" href="Account Management/index.html" />
     <link rel="prev" title="VARIANCE,VAR_POP,VARIANCE_POP" href="../sql-functions/aggregate-functions/variance.html" /> 
 </head>
 
@@ -92,11 +92,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">SQL 手册</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../sql-functions/index.html">SQL 函数</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DDL 语句</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="create-function.html">CREATE FUNCTION</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drop-function.html">DROP FUNCTION</a></li>
-<li class="toctree-l3"><a class="reference internal" href="insert.html">INSERT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="show-function.html">SHOW FUNCTION</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">语法帮助</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Account Management/index.html">用户账户管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Administration/index.html">集群管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Data Definition/index.html">DDL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Data Manipulation/index.html">DML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Data Types/index.html">数据类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Utility/index.html">辅助命令</a></li>
 </ul>
 </li>
 </ul>
@@ -149,7 +151,7 @@
         
           <li><a href="../index.html">SQL 手册</a> &raquo;</li>
         
-      <li>DDL 语句</li>
+      <li>语法帮助</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -168,39 +170,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ddl">
-<h1>DDL 语句<a class="headerlink" href="#ddl" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="id1">
+<h1>语法帮助<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="create-function.html">CREATE FUNCTION</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="create-function.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="create-function.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="create-function.html#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="create-function.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="drop-function.html">DROP FUNCTION</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="drop-function.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="drop-function.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="drop-function.html#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="drop-function.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="insert.html">INSERT</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="insert.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="insert.html#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="insert.html#note">Note</a></li>
-<li class="toctree-l2"><a class="reference internal" href="insert.html#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="show-function.html">SHOW FUNCTION</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="show-function.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="show-function.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="show-function.html#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="show-function.html#examples">Examples</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </div>
 
@@ -212,7 +184,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="create-function.html" class="btn btn-neutral float-right" title="CREATE FUNCTION" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Account Management/index.html" class="btn btn-neutral float-right" title="用户账户管理" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../sql-functions/aggregate-functions/variance.html" class="btn btn-neutral float-left" title="VARIANCE,VAR_POP,VARIANCE_POP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

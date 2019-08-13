@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CREATE REPOSITORY &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="CREATE TABLE" href="CREATE TABLE.html" />
+    <link rel="prev" title="CREATE DATABASE" href="CREATE DATABASE.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../sql-functions/index.html">SQL 函数</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">语法帮助</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../Account Management/index.html">用户账户管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Administration/index.html">集群管理</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">DDL</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ALTER DATABASE.html">ALTER DATABASE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ALTER TABLE.html">ALTER TABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="BACKUP.html">BACKUP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CANCEL ALTER.html">CANCEL ALTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CANCEL BACKUP.html">CANCEL BACKUP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CANCEL RESTORE.html">CANCEL RESTORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CREATE DATABASE.html">CREATE DATABASE</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CREATE REPOSITORY</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CREATE TABLE.html">CREATE TABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CREATE VIEW.html">CREATE VIEW</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DROP DATABASE.html">DROP DATABASE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DROP REPOSITORY.html">DROP REPOSITORY</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DROP TABLE.html">DROP TABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DROP VIEW.html">DROP VIEW</a></li>
+<li class="toctree-l4"><a class="reference internal" href="HLL.html">HLL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="RECOVER.html">RECOVER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="RESTORE.html">RESTORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TRUNCATE TABLE.html">TRUNCATE TABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create-function.html">CREATE FUNCTION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="drop-function.html">DROP FUNCTION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="show-function.html">SHOW FUNCTION</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Manipulation/index.html">DML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Types/index.html">数据类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Utility/index.html">辅助命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
+        
+          <li><a href="../index.html">语法帮助</a> &raquo;</li>
+        
+          <li><a href="index.html">DDL</a> &raquo;</li>
+        
+      <li>CREATE REPOSITORY</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-statements/Data Definition/CREATE REPOSITORY.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="create-repository">
+<h1>CREATE REPOSITORY<a class="headerlink" href="#create-repository" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于创建仓库。仓库用于属于备份或恢复。仅 root 或 superuser 用户可以创建仓库。
+语法：
+    CREATE [READ ONLY] REPOSITORY `repo_name`
+    WITH BROKER `broker_name`
+    ON LOCATION `repo_location`
+    PROPERTIES (&quot;key&quot;=&quot;value&quot;, ...);
+        
+说明：
+    1. 仓库的创建，依赖于已存在的 broker
+    2. 如果是只读仓库，则只能在仓库上进行恢复。如果不是，则可以进行备份和恢复操作。
+    3. 根据 broker 的不同类型，PROPERTIES 有所不同，具体见示例。
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 创建名为 bos_repo 的仓库，依赖 BOS broker &quot;bos_broker&quot;，数据根目录为：bos://palo_backup
+    CREATE REPOSITORY `bos_repo`
+    WITH BROKER `bos_broker`
+    ON LOCATION &quot;bos://palo_backup&quot;
+    PROPERTIES
+    (
+        &quot;bos_endpoint&quot; = &quot;http://gz.bcebos.com&quot;,
+        &quot;bos_accesskey&quot; = &quot;069fc2786e664e63a5f111111114ddbs22&quot;,
+        &quot;bos_secret_accesskey&quot;=&quot;70999999999999de274d59eaa980a&quot;
+    );
+ 
+2. 创建和示例 1 相同的仓库，但属性为只读：
+    CREATE READ ONLY REPOSITORY `bos_repo`
+    WITH BROKER `bos_broker`
+    ON LOCATION &quot;bos://palo_backup&quot;
+    PROPERTIES
+    (
+        &quot;bos_endpoint&quot; = &quot;http://gz.bcebos.com&quot;,
+        &quot;bos_accesskey&quot; = &quot;069fc2786e664e63a5f111111114ddbs22&quot;,
+        &quot;bos_secret_accesskey&quot;=&quot;70999999999999de274d59eaa980a&quot;
+    );
+
+3. 创建名为 hdfs_repo 的仓库，依赖 Baidu hdfs broker &quot;hdfs_broker&quot;，数据根目录为：hdfs://hadoop-name-node:54310/path/to/repo/
+    CREATE REPOSITORY `hdfs_repo`
+    WITH BROKER `hdfs_broker`
+    ON LOCATION &quot;hdfs://hadoop-name-node:54310/path/to/repo/&quot;
+    PROPERTIES
+    (
+        &quot;username&quot; = &quot;user&quot;,
+        &quot;password&quot; = &quot;password&quot;
+    );
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">REPOSITORY</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CREATE TABLE.html" class="btn btn-neutral float-right" title="CREATE TABLE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CREATE DATABASE.html" class="btn btn-neutral float-left" title="CREATE DATABASE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="current_timestamp" href="current_timestamp.html" />
+    <link rel="next" title="convert_tz" href="convert_tz.html" />
     <link rel="prev" title="CAST" href="../cast.html" /> 
 </head>
 
@@ -94,7 +94,9 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">SQL 函数</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../cast.html">CAST</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">日期函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="convert_tz.html">convert_tz</a></li>
 <li class="toctree-l4"><a class="reference internal" href="current_timestamp.html">current_timestamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="curtime.html">curtime,current_time</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_add.html">date_add</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_format.html">date_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_sub.html">date_sub</a></li>
@@ -123,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -199,136 +201,192 @@
 <h1>日期函数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="convert_tz.html">convert_tz</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="convert_tz.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convert_tz.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="convert_tz.html#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="current_timestamp.html">current_timestamp</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="current_timestamp.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="current_timestamp.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="current_timestamp.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="current_timestamp.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="current_timestamp.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="current_timestamp.html#example">example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="curtime.html">curtime,current_time</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="curtime.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="curtime.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="curtime.html#examples">Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="date_add.html">date_add</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="date_add.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="date_add.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="date_add.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="date_add.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="date_add.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="date_add.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="date_format.html">date_format</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="date_format.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="date_format.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="date_format.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="date_format.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="date_format.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="date_format.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="date_sub.html">date_sub</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="date_sub.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="date_sub.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="date_sub.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="date_sub.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="date_sub.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="date_sub.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="datediff.html">datediff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="datediff.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datediff.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datediff.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datediff.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datediff.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datediff.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="day.html">day</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="day.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="day.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="day.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="day.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="day.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="day.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dayname.html">dayname</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dayname.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayname.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayname.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dayname.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dayname.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dayname.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dayofmonth.html">dayofmonth</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dayofmonth.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayofmonth.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayofmonth.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dayofmonth.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dayofmonth.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dayofmonth.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dayofweek.html">dayofweek</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dayofweek.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayofweek.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayofweek.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dayofweek.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dayofweek.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dayofweek.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dayofyear.html">dayofyear</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dayofyear.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayofyear.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dayofyear.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dayofyear.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dayofyear.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dayofyear.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="from_days.html">from_days</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="from_days.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="from_days.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="from_days.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="from_days.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="from_days.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="from_days.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="from_unixtime.html">from_unixtime</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="from_unixtime.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="from_unixtime.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="from_unixtime.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="from_unixtime.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="from_unixtime.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="from_unixtime.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="month.html">month</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="month.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="month.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="month.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="month.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="month.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="month.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="monthname.html">monthname</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="monthname.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="monthname.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="monthname.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monthname.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="monthname.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="monthname.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="now.html">now</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="now.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="now.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="now.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="now.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="now.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="now.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="str_to_date.html">str_to_date</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="str_to_date.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="str_to_date.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="str_to_date.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="str_to_date.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="str_to_date.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="str_to_date.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="timediff.html">timediff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="timediff.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="timediff.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="timediff.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timediff.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="timediff.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="timediff.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="to_days.html">to_days</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="to_days.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="to_days.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="to_days.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="to_days.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="to_days.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="to_days.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="unix_timestamp.html">unix_timestamp</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="unix_timestamp.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unix_timestamp.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unix_timestamp.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unix_timestamp.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="unix_timestamp.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="unix_timestamp.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utc_timestamp.html">utc_timestamp</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utc_timestamp.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utc_timestamp.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utc_timestamp.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utc_timestamp.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utc_timestamp.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utc_timestamp.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="workofyear.html">weekofyear</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="workofyear.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workofyear.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workofyear.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workofyear.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workofyear.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="workofyear.html#example">example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="year.html">year</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="year.html#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="year.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="year.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="year.html#description">description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="year.html#syntax">Syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="year.html#example">example</a></li>
 </ul>
 </li>
 </ul>
@@ -343,7 +401,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="current_timestamp.html" class="btn btn-neutral float-right" title="current_timestamp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="convert_tz.html" class="btn btn-neutral float-right" title="convert_tz" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../cast.html" class="btn btn-neutral float-left" title="CAST" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

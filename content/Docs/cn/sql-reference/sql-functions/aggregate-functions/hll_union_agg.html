@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="MAX" href="max.html" />
-    <link rel="prev" title="GROUP_CONCAT" href="group_concat.html" /> 
+    <link rel="prev" title="COUNT_DISTINCT" href="count_distinct.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -100,7 +100,6 @@
 <li class="toctree-l4"><a class="reference internal" href="avg.html">AVG</a></li>
 <li class="toctree-l4"><a class="reference internal" href="count.html">COUNT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="count_distinct.html">COUNT_DISTINCT</a></li>
-<li class="toctree-l4"><a class="reference internal" href="group_concat.html">GROUP_CONCAT</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">HLL_UNION_AGG</a></li>
 <li class="toctree-l4"><a class="reference internal" href="max.html">MAX</a></li>
 <li class="toctree-l4"><a class="reference internal" href="min.html">MIN</a></li>
@@ -115,7 +114,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -191,19 +190,19 @@
             
   <div class="section" id="hll-union-agg">
 <h1>HLL_UNION_AGG<a class="headerlink" href="#hll-union-agg" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">HLL_UNION_AGG(hll)</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">HLL_UNION_AGG(hll)</span></code></p>
 <p>HLL是基于HyperLogLog算法的工程实现，用于保存HyperLogLog计算过程的中间结果</p>
 <p>它只能作为表的value列类型、通过聚合来不断的减少数据量，以此来实现加快查询的目的</p>
 <p>基于它得到的是一个估算结果，误差大概在1%左右，hll列是通过其它列或者导入数据里面的数据生成的</p>
 <p>导入的时候通过hll_hash函数来指定数据中哪一列用于生成hll列，它常用于替代count distinct，通过结合rollup在业务上用于快速计算uv等</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL &gt; select HLL_UNION_AGG(uv_set) from test_uv;;
 +-------------------------+
 | HLL_UNION_AGG(`uv_set`) |
@@ -212,6 +211,8 @@
 +-------------------------+
 </pre></div>
 </div>
+<p>##keyword
+HLL_UNION_AGG,HLL,UNION,AGG</p>
 </div>
 </div>
 
@@ -226,7 +227,7 @@
         <a href="max.html" class="btn btn-neutral float-right" title="MAX" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="group_concat.html" class="btn btn-neutral float-left" title="GROUP_CONCAT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="count_distinct.html" class="btn btn-neutral float-left" title="COUNT_DISTINCT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -8,6 +8,7 @@
     load-data/index
     http-actions/index
     operation/index
+    alter-table/index 
 
 .. toctree::
     :maxdepth: 1

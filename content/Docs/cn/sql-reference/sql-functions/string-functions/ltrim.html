@@ -125,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -201,16 +201,16 @@
             
   <div class="section" id="ltrim">
 <h1>ltrim<a class="headerlink" href="#ltrim" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">ltrim(VARCHAR</span> <span class="pre">str)</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">ltrim(VARCHAR</span> <span class="pre">str)</span></code></p>
 <p>将参数 str 中从开始部分连续出现的空格去掉</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">ltrim</span><span class="p">(</span><span class="s1">&#39;   ab d&#39;</span><span class="p">);</span>
 <span class="o">+------------------+</span>
 <span class="o">|</span> <span class="n">ltrim</span><span class="p">(</span><span class="s1">&#39;   ab d&#39;</span><span class="p">)</span> <span class="o">|</span>
@@ -219,6 +219,8 @@
 <span class="o">+------------------+</span>
 </pre></div>
 </div>
+<p>##keyword
+LTRIM</p>
 </div>
 </div>
 

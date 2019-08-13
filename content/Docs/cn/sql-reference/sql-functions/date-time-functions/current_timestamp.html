@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="date_add" href="date_add.html" />
-    <link rel="prev" title="日期函数" href="index.html" /> 
+    <link rel="next" title="curtime,current_time" href="curtime.html" />
+    <link rel="prev" title="convert_tz" href="convert_tz.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,7 +94,9 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">SQL 函数</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../cast.html">CAST</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">日期函数</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="convert_tz.html">convert_tz</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">current_timestamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="curtime.html">curtime,current_time</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_add.html">date_add</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_format.html">date_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="date_sub.html">date_sub</a></li>
@@ -123,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../aggregate-functions/index.html">聚合函数</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">DDL 语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
@@ -199,22 +201,24 @@
             
   <div class="section" id="current-timestamp">
 <h1>current_timestamp<a class="headerlink" href="#current-timestamp" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">DATETIME</span> <span class="pre">CURRENT_TIMESTAMP()</span></code></p>
-</div>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">DATETIME</span> <span class="pre">CURRENT_TIMESTAMP()</span></code></p>
 <p>获得当前的时间，以Datetime类型返回</p>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">current_timestamp</span><span class="p">();</span>
 <span class="o">+---------------------+</span>
 <span class="o">|</span> <span class="n">current_timestamp</span><span class="p">()</span> <span class="o">|</span>
 <span class="o">+---------------------+</span>
 <span class="o">|</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">27</span> <span class="mi">15</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">33</span> <span class="o">|</span>
 <span class="o">+---------------------+</span>
+<span class="c1">##keyword</span>
+<span class="n">CURRENT_TIMESTAMP</span><span class="p">,</span><span class="n">CURRENT</span><span class="p">,</span><span class="n">TIMESTAMP</span>
 </pre></div>
 </div>
 </div>
@@ -228,10 +232,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="date_add.html" class="btn btn-neutral float-right" title="date_add" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="curtime.html" class="btn btn-neutral float-right" title="curtime,current_time" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="日期函数" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="convert_tz.html" class="btn btn-neutral float-left" title="convert_tz" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

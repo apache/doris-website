@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SHOW EXPORT &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="SHOW LOAD" href="SHOW LOAD.html" />
+    <link rel="prev" title="SHOW DELETE" href="SHOW DELETE.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../sql-functions/index.html">SQL 函数</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">语法帮助</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../Account Management/index.html">用户账户管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Administration/index.html">集群管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Definition/index.html">DDL</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">DML</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="BROKER LOAD.html">BROKER LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="CANCEL LOAD.html">CANCEL LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DELETE.html">DELETE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="EXPORT.html">EXPORT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="LOAD.html">LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="MINI LOAD.html">MINI LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="MULTI LOAD.html">MULTI LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PAUSE ROUTINE LOAD.html">PAUSE ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="RESUME ROUTINE LOAD.html">RESUME ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ROUTINE LOAD.html">ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW ALTER.html">SHOW ALTER</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW BACKUP.html">SHOW BACKUP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW DATA.html">SHOW DATA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW DATABASES.html">SHOW DATABASES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW DELETE.html">SHOW DELETE</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">SHOW EXPORT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW LOAD.html">SHOW LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW PARTITIONS.html">SHOW PARTITIONS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW PROPERTY.html">SHOW PROPERTY</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW REPOSITORIES.html">SHOW REPOSITORIES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW RESTORE.html">SHOW RESTORE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW ROUTINE LOAD.html">SHOW ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW ROUTINE LOAD TASK.html">SHOW ROUTINE LOAD TASK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW SNAPSHOT.html">SHOW SNAPSHOT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW TABLES.html">SHOW TABLES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="SHOW TABLET.html">SHOW TABLET</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STOP ROUTINE LOAD.html">STOP ROUTINE LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STREAM LOAD.html">STREAM LOAD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="insert.html">INSERT</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../Data Types/index.html">数据类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Utility/index.html">辅助命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
+        
+          <li><a href="../index.html">语法帮助</a> &raquo;</li>
+        
+          <li><a href="index.html">DML</a> &raquo;</li>
+        
+      <li>SHOW EXPORT</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../../_sources/Docs/cn/sql-reference/sql-statements/Data Manipulation/SHOW EXPORT.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="show-export">
+<h1>SHOW EXPORT<a class="headerlink" href="#show-export" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于展示指定的导出任务的执行情况
+语法：
+    SHOW EXPORT
+    [FROM db_name]
+    [
+        WHERE
+        [EXPORT_JOB_ID = your_job_id]
+        [STATE = [&quot;PENDING&quot;|&quot;EXPORTING&quot;|&quot;FINISHED&quot;|&quot;CANCELLED&quot;]]
+    ]
+    [ORDER BY ...]
+    [LIMIT limit];
+    
+说明：
+    1) 如果不指定 db_name，使用当前默认db
+    2) 如果指定了 STATE，则匹配 EXPORT 状态
+    3) 可以使用 ORDER BY 对任意列组合进行排序
+    4) 如果指定了 LIMIT，则显示 limit 条匹配记录。否则全部显示
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 展示默认 db 的所有导出任务
+    SHOW EXPORT;
+    
+2. 展示指定 db 的导出任务，按 StartTime 降序排序
+    SHOW EXPORT FROM example_db ORDER BY StartTime DESC;
+
+3. 展示指定 db 的导出任务，state 为 &quot;exporting&quot;, 并按 StartTime 降序排序
+    SHOW EXPORT FROM example_db WHERE STATE = &quot;exporting&quot; ORDER BY StartTime DESC;
+
+4. 展示指定db，指定job_id的导出任务
+        SHOW EXPORT FROM example_db WHERE EXPORT_JOB_ID = job_id;
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span><span class="p">,</span><span class="n">EXPORT</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="SHOW LOAD.html" class="btn btn-neutral float-right" title="SHOW LOAD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="SHOW DELETE.html" class="btn btn-neutral float-left" title="SHOW DELETE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
