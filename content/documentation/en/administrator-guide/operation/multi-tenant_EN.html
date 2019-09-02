@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Multi-tenancy(Exprimental) &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Tablet metadata management tool" href="tablet-meta-tool_EN.html" />
+    <link rel="prev" title="Monitoring and alarming" href="monitor-alert_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Maintainence Operation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="metadata-operation_EN.html">Metadata Operations and Maintenance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="monitor-alert_EN.html">Monitoring and alarming</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Multi-tenancy(Exprimental)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-meta-tool_EN.html">Tablet metadata management tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance_EN.html">Data replica management</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../index.html">Administrator Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Maintainence Operation</a> &raquo;</li>
+        
+      <li>Multi-tenancy(Exprimental)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/operation/multi-tenant_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="multi-tenancy-exprimental">
+<h1>Multi-tenancy(Exprimental)<a class="headerlink" href="#multi-tenancy-exprimental" title="Permalink to this headline">¶</a></h1>
+<p>This function is experimental and is not recommended for use in production environment.</p>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Doris, as a PB-level online report and multi-dimensional analysis database, provides cloud-based database services through open cloud, and deploys a physical cluster for each client in the cloud. Internally, a physical cluster deploys multiple services, and separately builds clusters for services with high isolation requirements. In view of the above problems:</p>
+<ul class="simple">
+<li>Deployment of multiple physical cluster maintenance costs a lot (upgrade, functionality on-line, bug repair).</li>
+<li>A user’s query or a bug caused by a query often affects other users.</li>
+<li>In the actual production environment, only one BE process can be deployed on a single machine. Multiple BEs can better solve the problem of fat nodes. And for join, aggregation operations can provide higher concurrency.</li>
+</ul>
+<p>Together with the above three points, Doris needs a new multi-tenant scheme, which not only can achieve better resource isolation and fault isolation, but also can reduce the cost of maintenance to meet the needs of common and private clouds.</p>
+</div>
+<div class="section" id="design-principles">
+<h2>Design Principles<a class="headerlink" href="#design-principles" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Easy to use</li>
+<li>Low Development Cost</li>
+<li>Convenient migration of existing clusters</li>
+</ul>
+</div>
+<div class="section" id="noun-interpretation">
+<h2>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE: Frontend, the module for metadata management or query planning in Doris.</li>
+<li>BE: Backend, the module used to store and query data in Doris.</li>
+<li>Master: A role for FE. A Doris cluster has only one Master and the other FE is Observer or Follower.</li>
+<li>instance: A BE process is an instance in time.</li>
+<li>host: a single physical machine</li>
+<li>Cluster: A cluster consisting of multiple instances.</li>
+<li>Tenant: A cluster belongs to a tenant. Cluster is a one-to-one relationship with tenants.</li>
+<li>database: A user-created database</li>
+</ul>
+</div>
+<div class="section" id="main-ideas">
+<h2>Main Ideas<a class="headerlink" href="#main-ideas" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Deploy instances of multiple BEs on a host to isolate resources at the process level.</li>
+<li>Multiple instances form a cluster, and a cluster is assigned to a business-independent tenant.</li>
+<li>FE adds cluster level and is responsible for cluster management.</li>
+<li>CPU, IO, memory and other resources are segregated by cgroup.</li>
+</ul>
+</div>
+<div class="section" id="design-scheme">
+<h2>Design scheme<a class="headerlink" href="#design-scheme" title="Permalink to this headline">¶</a></h2>
+<p>In order to achieve isolation, the concept of <strong>virtual cluster</strong> is introduced.</p>
+<ol class="simple">
+<li>Cluster represents a virtual cluster consisting of instances of multiple BEs. Multiple clusters share FE.</li>
+<li>Multiple instances can be started on a host. When a cluster is created, an arbitrary number of instances are selected to form a cluster.</li>
+<li>While creating a cluster, an account named superuser is created, which belongs to the cluster. Super user can manage clusters, create databases, assign privileges, and so on.</li>
+<li>After Doris starts, the sink creates a default cluster: default_cluster. If the user does not want to use the function of multi-cluster, the default cluster is provided and other operational details of multi-cluster are hidden.</li>
+</ol>
+<p>The concrete structure is as follows:
+<img alt="../../../../_images/multi_tenant_arch1.png" src="../../../../_images/multi_tenant_arch1.png" /></p>
+</div>
+<div class="section" id="sql-interface">
+<h2>SQL interface<a class="headerlink" href="#sql-interface" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Login</p>
+<p>Default cluster login name: user_name&#64;default_cluster or user_name</p>
+<p>Custom cluster login name: user_name&#64;cluster_name</p>
+<p><code class="docutils literal notranslate"><span class="pre">mysqlclient</span> <span class="pre">-h</span> <span class="pre">host</span> <span class="pre">-P</span> <span class="pre">port</span> <span class="pre">-u</span> <span class="pre">user_name&#64;cluster_name</span> <span class="pre">-p</span> <span class="pre">password</span></code></p>
+</li>
+<li><p class="first">Add, delete, decommission and cancel BE</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DROP</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code></p>
+<p>It is strongly recommended to use DECOMMISSION instead of DROP to delete BACKEND. The DECOMMISSION operation will first need to copy data from the offline node to other instances in the cluster. After that, they will be offline.</p>
+</li>
+<li><p class="first">Create a cluster and specify the password for the superuser account</p>
+<p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CLUSTER</span> <span class="pre">cluster_name</span> <span class="pre">PROPERTIES</span> <span class="pre">(&quot;instance_num&quot;</span> <span class="pre">=</span> <span class="pre">&quot;10&quot;)</span> <span class="pre">identified</span> <span class="pre">by</span> <span class="pre">&quot;password&quot;</span></code></p>
+</li>
+<li><p class="first">Enter a cluster</p>
+<p><code class="docutils literal notranslate"><span class="pre">ENTER</span> <span class="pre">cluster</span> <span class="pre">name</span></code></p>
+</li>
+<li><p class="first">Cluster Expansion and Shrinkage</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">CLUSTER</span> <span class="pre">cluster_name</span> <span class="pre">PROPERTIES</span> <span class="pre">(&quot;instance_num&quot;</span> <span class="pre">=</span> <span class="pre">&quot;10&quot;)</span></code></p>
+<p>When the number of instances specified is more than the number of existing be in cluster, it is expanded and if less than it is condensed.</p>
+</li>
+<li><p class="first">Link, migrate DB</p>
+<p><code class="docutils literal notranslate"><span class="pre">LINK</span> <span class="pre">DATABASE</span> <span class="pre">src_cluster_name.db_name</span> <span class="pre">dest_cluster_name.db_name</span></code></p>
+<p>Soft-chain dB of one cluster to dB of another cluster can be used by users who need temporary access to dB of other clusters but do not need actual data migration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MIGRATE</span> <span class="pre">DATABASE</span> <span class="pre">src_cluster_name.db_name</span> <span class="pre">dest_cluster_name.db_name</span></code></p>
+<p>If you need to migrate dB across clusters, after linking, migrate the actual migration of data.</p>
+<p>Migration does not affect the query, import and other operations of the current two dbs. This is an asynchronous operation. You can see the progress of migration through <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">MIGRATIONS</span></code>.</p>
+</li>
+<li><p class="first">Delete clusters</p>
+<p><code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">CLUSTER</span> <span class="pre">cluster_name</span></code></p>
+<p>Deleting a cluster requires that all databases in the cluster be deleted manually first.</p>
+</li>
+<li><p class="first">Others</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">CLUSTERS</span></code></p>
+<p>Show clusters that have been created in the system. Only root users have this permission.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKENDS</span></code></p>
+<p>View the BE instance in the cluster.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">MIGRATIONS</span></code></p>
+<p>Show current DB migration tasks. After the migration of DB is completed, you can view the progress of the migration through this command.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="detailed-design">
+<h2>Detailed design<a class="headerlink" href="#detailed-design" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">Namespace isolation</p>
+<p>In order to introduce multi-tenant, the namespaces between clusters in the system need to be isolated.</p>
+<p>Doris’s existing metadata is image + Journal (metadata is designed in related documents). Doris records operations involving metadata as a journal, and then regularly writes images in the form of <strong>Fig. 1</strong> and reads them in the order in which they are written when loaded. But this brings a problem that the format that has been written is not easy to modify. For example, the metadata format for recording data distribution is: database + table + tablet + replica nesting. If we want to isolate the namespace between clusters in the past way, we need to add a layer of cluster on the database and the level of internal metadata. Change to cluster + database + table + tablet + replica, as shown in <strong>Figure 2</strong>. But the problems brought about by adding one layer are as follows:</p>
+<ul class="simple">
+<li>The change of metadata brought by adding one layer is incompatible. It needs to be written in cluster+db+table+tablet+replica level in the way of Figure 2. This changes the way of metadata organization in the past. The upgrading of the old version will be more troublesome. The ideal way is to write cluster in the order of Figure 3 in the form of existing metadata. Metadata.</li>
+<li>All the DB and user used in the code need to add a layer of cluster. There are many workload changes and deep levels. Most of the code acquires db. The existing functions almost need to be changed, and a layer of cluster locks need to be nested on the basis of DB locks.</li>
+</ul>
+<p><img alt="../../../../_images/palo_meta1.png" src="../../../../_images/palo_meta1.png" /></p>
+<p>To sum up, we adopt a prefix to DB and user names to isolate the internal problems caused by the conflict of DB and user names between clusters.</p>
+<p>As follows, all SQL input involves db name and user name, and all SQL input needs to spell the full name of DB and user according to their cluster.</p>
+<p><img alt="../../../../_images/cluster_namaspace1.png" src="../../../../_images/cluster_namaspace1.png" /></p>
+<p>In this way, the above two problems no longer exist. Metadata is also organized in a relatively simple way. That is to say, use ** Figure 3 ** to record db, user and nodes belonging to their own cluster.</p>
+</li>
+<li><p class="first">BE 节点管理</p>
+<p>Each cluster has its own set of instances, which can be viewed through <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKENDS</span></code>. In order to distinguish which cluster the instance belongs to and how it is used, BE introduces several states:</p>
+<ul class="simple">
+<li>Free: When a BE node is added to the system, be is idle when it does not belong to any cluster.</li>
+<li>Use: When creating a cluster or expanding capacity is selected into a cluster, it is in use.</li>
+<li>Cluster decommission: If a shrinkage is performed, the be that is executing the shrinkage is in this state. After that, the be state becomes free.</li>
+<li>System decommission: be is offline. When the offline is completed, the be will be permanently deleted.</li>
+</ul>
+<p>Only root users can check whether all be in the cluster is used through the cluster item in <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">&quot;/backends&quot;</span></code>. To be free is to be idle, otherwise to be in use. <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKENDS</span> </code>can only see the nodes in the cluster. The following is a schematic diagram of the state changes of be nodes.</p>
+<p><img alt="../../../../_images/backend_state1.png" src="../../../../_images/backend_state1.png" /></p>
+</li>
+<li><p class="first">Creating Clusters</p>
+<p>Only root users can create a cluster and specify any number of BE instances.</p>
+<p>Supports selecting multiple instances on the same machine. The general principle of selecting instance is to select be on different machines as much as possible and to make the number of be used on all machines as uniform as possible.</p>
+<p>For use, each user and DB belongs to a cluster (except root). To create user and db, you first need to enter a cluster. When a cluster is created, the system defaults to the manager of the cluster, the superuser account. Supuser has the right to create db, user, and view the number of be nodes in the cluster to which it belongs. All non-root user logins must specify a cluster, namely <code class="docutils literal notranslate"><span class="pre">user_name&#64;cluster_name</span></code>.</p>
+<p>Only root users can view all clusters in the system through `SHOW CLUSTER’, and can enter different clusters through &#64; different cluster names. User clusters are invisible except root.</p>
+<p>In order to be compatible with the old version of Doris, a cluster named default_cluster was built in, which could not be used when creating the cluster.</p>
+<p><img alt="../../../../_images/user_authority1.png" src="../../../../_images/user_authority1.png" /></p>
+</li>
+<li><p class="first">Cluster Expansion</p>
+<p>The process of cluster expansion is the same as that of cluster creation. BE instance on hosts that are not outside the cluster is preferred. The selected principles are the same as creating clusters.</p>
+</li>
+<li><p class="first">集群缩容、CLUSTER DECOMMISSION</p>
+<p>Users can scale clusters by setting instance num of clusters.</p>
+<p>Cluster shrinkage takes precedence over downlining instances on hosts with the largest number of BE instances.</p>
+<p>Users can also directly use <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">CLUSTER</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span></code> to specify BE for cluster scaling.</p>
+</li>
+</ol>
+<p><img alt="../../../../_images/replica_recover1.png" src="../../../../_images/replica_recover1.png" /></p>
+<ol>
+<li><p class="first">Create table</p>
+<p>To ensure high availability, each fragmented copy must be on a different machine. So when building a table, the strategy of choosing the be where the replica is located is to randomly select a be on each host. Then, the number of be copies needed is randomly selected from these be. On the whole, it can distribute patches evenly on each machine.</p>
+<p>Therefore, adding a fragment that needs to create a 3-copy fragment, even if the cluster contains three or more instances, but only two or less hosts, still cannot create the fragment.</p>
+</li>
+<li><p class="first">Load Balancing</p>
+<p>The granularity of load balancing is cluster level, and there is no load balancing between clusters. However, the computing load is carried out at the host level, and there may be BE instances of different clusters on a host. In the cluster, the load is calculated by the number of fragments on each host and the utilization of storage, and then the fragments on the machine with high load are copied to the machine with low load (see the load balancing documents for details).</p>
+</li>
+<li><p class="first">LINK DATABASE (Soft Chain)</p>
+<p>Multiple clusters can access each other’s data through a soft chain. The link level is dB for different clusters.</p>
+<p>DB in other clusters is accessed by adding DB information of other clusters that need to be accessed in one cluster.</p>
+<p>When querying the linked db, the computing and storage resources used are those of the cluster where the source DB is located.</p>
+<p>DB that is soft-chained cannot be deleted in the source cluster. Only when the linked DB is deleted can the source DB be deleted. Deleting link DB will not delete source db.</p>
+</li>
+<li><p class="first">MIGRATE DATABASE</p>
+<p>DB can be physically migrated between clusters.</p>
+<p>To migrate db, you must first link db. After migration, the data will migrate to the cluster where the linked DB is located, and after migration, the source DB will be deleted and the link will be disconnected.</p>
+<p>Data migration reuses the process of replicating data in load balancing and replica recovery (see load balancing related documents for details). Specifically, after executing the <code class="docutils literal notranslate"><span class="pre">MIRAGTE</span></code> command, Doris will modify the cluster of all copies of the source DB to the destination cluster in the metadata.</p>
+<p>Doris regularly checks whether machines in the cluster are balanced, replicas are complete, and redundant replicas are available. The migration of DB borrows this process, checking whether the be where the replica is located belongs to the cluster while checking the replica is complete, and if not, it is recorded in the replica to be restored. And when the duplicate is redundant to be deleted, it will first delete the duplicate outside the cluster, and then choose according to the existing strategy: the duplicate of the downtime be -&gt; the duplicate of clone -&gt; the duplicate of the backward version - &gt; the duplicate on the host with high load, until the duplicate is not redundant.</p>
+</li>
+</ol>
+<p><img alt="../../../../_images/cluster_link_and_migrate_db1.png" src="../../../../_images/cluster_link_and_migrate_db1.png" /></p>
+<ol>
+<li><p class="first">BE process isolation</p>
+<p>In order to isolate the actual cpu, IO and memory between be processes, we need to rely on the deployment of be. When deploying, you need to configure the CGroup on the periphery and write all the processes of be to be deployed to the cgroup. If the physical isolation of IO between the data storage paths of each be configuration requires different disks, there is no much introduction here.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tablet-meta-tool_EN.html" class="btn btn-neutral float-right" title="Tablet metadata management tool" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="monitor-alert_EN.html" class="btn btn-neutral float-left" title="Monitoring and alarming" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

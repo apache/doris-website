@@ -1,0 +1,502 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ALTER TABLE &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="BACKUP" href="BACKUP_EN.html" />
+    <link rel="prev" title="ALTER DATABASE" href="ALTER DATABASE_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL Functions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">DDL Statements</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">Account Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Administration/index.html">Administration</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Data Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Manipulation/index.html">Data Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">Data Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">Utility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL Manual</a> &raquo;</li>
+        
+          <li><a href="../index.html">DDL Statements</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Definition</a> &raquo;</li>
+        
+      <li>ALTER TABLE</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Data Definition/ALTER TABLE_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="alter-table">
+<h1>ALTER TABLE<a class="headerlink" href="#alter-table" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This statement is used to modify an existing table. If no rollup index is specified, the default operation is base index.
+该语句分为三种操作类型： schema change 、rollup 、partition
+These three types of operations cannot appear in an ALTER TABLE statement at the same time.
+Where schema change and rollup are asynchronous operations, task submission returns if it succeeds. You can then use the SHOW ALTER command to view progress.
+Partition is a synchronous operation, and the return of the command indicates that the execution is complete.</p>
+<p>Grammar:
+ALTER TABLE [database.]table
+alter_clause1[, alter_clause2, …];</p>
+<p>alter_clause 分为 partition 、rollup、schema change 和 rename 四种。</p>
+<p>partition 支持如下几种修改方式</p>
+<ol class="simple">
+<li>Adding partitions
+Grammar:
+ADD PARTITION [IF NOT EXISTS] partition_name VALUES LESS THAN [MAXVALUE|(“value1”)] [“key”=”value”]
+[DISTRIBUTED BY HASH (k1[,k2 …]) [BUCKETS num]]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>The partition is left-closed and right-open, the user specifies the right boundary, and the system automatically determines the left boundary.</li>
+<li>If no bucket-dividing method is specified, the bucket-dividing method used in table-building will be used automatically.</li>
+<li>If the barrel-dividing method is specified, only the number of barrels can be modified, but not the barrel-dividing method or the barrel-dividing column.</li>
+<li>The [“key”= “value”] section can set some properties of the partition, as specified in CREATE TABLE</li>
+</ol>
+<ol class="simple">
+<li>Delete partitions
+Grammar:
+DROP PARTITION [IF EXISTS] partition_name
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>A partitioned table should have at least one partition.</li>
+<li>During the execution of DROP PARTITION, deleted partitions can be restored through RECOVER statements. See RECOVER statement for details</li>
+</ol>
+<ol class="simple">
+<li>Modify partition attributes
+Grammar:
+MODIFY PARTITION partition u name SET (“key” =”value”,…)
+Explain:</li>
+</ol>
+<ol class="simple">
+<li>Currently, three attributes, storage_medium, storage_cooldown_time and replication_num, are supported to modify partitions.</li>
+<li>For a single partition table, partition_name is the same table name.</li>
+</ol>
+<p>Rollup supports the following ways of creation:
+One. 1.2.1.1.1.1.1.1.1.
+Grammar:
+ADD ROLLUP rollup_name (column_name1, column_name2, …)
+[FROM from index name]
+[PROPERTIES (“key”=”value”, …)]
+Be careful:</p>
+<ol class="simple">
+<li>If no from_index_name is specified, it is created by default from base index</li>
+<li>The column in the rollup table must be an existing column from_index</li>
+<li>In properties, you can specify the storage format. See CREATE TABLE for details.</li>
+</ol>
+<ol class="simple">
+<li>1.2.2.2.2.2.2.2.2.
+Grammar:
+DROP ROLLUP rollup_name
+[PROPERTIES (“key”=”value”, …)]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>Base index cannot be deleted</li>
+<li>During the execution of DROP ROLLUP, the deleted rollup index can be restored by RECOVER statement. See RECOVER statement for details</li>
+</ol>
+<p>schema change 支持如下几种修改方式：</p>
+<ol class="simple">
+<li>Add a column to the specified index location
+Grammar:
+ADD COLUMN column_name column_type [KEY | agg_type] [DEFAULT “default_value”]
+[AFTER column_name|FIRST]
+[TO rollup_index_name]
+[PROPERTIES (“key”=”value”, …)]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>If the value column is added to the aggregation model, agg_type needs to be specified</li>
+<li>If the key column is added to the non-aggregate model, KEY keywords need to be specified.</li>
+<li>Cannot add columns already existing in base index in rollup index
+If necessary, you can re-create a rollup index.</li>
+</ol>
+<ol class="simple">
+<li>Add multiple columns to the specified index
+Grammar:
+ADD COLUMN (column_name1 column_type [KEY | agg_type] DEFAULT “default_value”, …)
+[TO rollup_index_name]
+[PROPERTIES (“key”=”value”, …)]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>If the value column is added to the aggregation model, agg_type needs to be specified</li>
+<li>If the key column is added to the non-aggregate model, KEY keywords need to be specified.</li>
+<li>Cannot add columns already existing in base index in rollup index
+(You can re-create a rollup index if you need to)</li>
+</ol>
+<ol class="simple">
+<li>Delete a column from the specified index
+Grammar:
+DROP COLUMN column_name
+[FROM rollup_index_name]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>Partition columns cannot be deleted</li>
+<li>If a column is deleted from base index, it will also be deleted if it is included in rollup index</li>
+</ol>
+<ol class="simple">
+<li>Modify the column type and column location of the specified index
+Grammar:
+MODIFY COLUMN column_name column_type [KEY | agg_type] [NULL | NOT NULL] [DEFAULT “default_value”]
+[AFTER column_name|FIRST]
+[FROM rollup_index_name]
+[PROPERTIES (“key”=”value”, …)]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>The aggregation model needs to specify agg_type if it modifies the value column</li>
+<li>If you modify the key column for a non-aggregated type, you need to specify the KEY keyword</li>
+<li>The type of column can only be modified, and the other attributes of the column remain the same (that is, other attributes should be explicitly written in the statement according to the original attributes, see example 8).</li>
+<li>Partition column cannot be modified</li>
+<li>The following types of conversion are currently supported (accuracy loss is guaranteed by users)
+TINYINT/SMALLINT/INT/BIGINT is converted to TINYINT/SMALLINT/INT/BIGINT/DOUBLE.
+LARGEINT 转换成 DOUBLE
+VARCHAR 25345;’20462;’ 25913;’38271;’ 24230s;</li>
+<li>Conversion from NULL to NOT NULL is not supported</li>
+</ol>
+<ol class="simple">
+<li>Reordering columns with specified index
+Grammar:
+ORDER BY (column_name1, column_name2, …)
+[FROM rollup_index_name]
+[PROPERTIES (“key”=”value”, …)]
+Be careful:</li>
+</ol>
+<ol class="simple">
+<li>All columns in index should be written out</li>
+<li>Value is listed after the key column</li>
+</ol>
+<ol class="simple">
+<li>Modify table attributes, which currently support modifying bloom filter columns and colocate_with attributes
+Grammar:
+PROPERTIES (“key”=”value”)
+Be careful:
+You can also incorporate it into the schema change operation above to modify it, as shown in the following example</li>
+</ol>
+<p>Rename supports the modification of the following names:</p>
+<ol class="simple">
+<li>Modify the table name
+Grammar:
+RENAME new_table_name;</li>
+<li>1.2.2.5.5.5.5.;5.5.5.5.5.5.
+Grammar:
+RENAME ROLLUP old_rollup_name new_rollup_name;</li>
+<li>修改 partition 名称
+Grammar:
+Rename old partition name and new partition name</li>
+</ol>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>[partition]</p>
+<ol class="simple">
+<li>Increase partitions, existing partitions [MIN, 2013-01-01], increase partitions [2013-01-01, 2014-01-01], using default bucket partitioning
+ALTER TABLE example_db.my_table
+ADD PARTITION p1 VALUES LESS THAN (“2014-01-01”);</li>
+<li>Increase partitions and use new buckets
+ALTER TABLE example_db.my_table
+ADD PARTITION p1 VALUES LESS THAN (“2015-01-01”)
+DISTRIBUTED BY HASH(k1) BUCKETS 20;</li>
+<li>Delete partitions
+ALTER TABLE example_db.my_table
+DROP PARTITION p1;</li>
+</ol>
+<p>[rollup]</p>
+<ol class="simple">
+<li>Create index: example_rollup_index, based on base index (k1, k2, k3, v1, v2). Formula storage.
+ALTER TABLE example_db.my_table
+ADD ROLLUP example_rollup_index(k1, k3, v1, v2)
+PROPERTIES(“storage_type”=”column”);</li>
+<li>Create index: example_rollup_index2, based on example_rollup_index (k1, k3, v1, v2)
+ALTER TABLE example_db.my_table
+ADD ROLLUP example_rollup_index2 (k1, v1)
+FROM example_rollup_index;</li>
+<li>Delete index: example_rollup_index2
+ALTER TABLE example_db.my_table
+DROP ROLLUP example_rollup_index2;</li>
+</ol>
+<p>[schema change]</p>
+<ol class="simple">
+<li>Add a key column new_col (non-aggregate model) to col1 of example_rollup_index
+ALTER TABLE example_db.my_table
+ADD COLUMN new_col INT KEY DEFAULT “0” AFTER col1
+TO example_rollup_index;</li>
+<li>Add a value column new_col (non-aggregate model) to col1 of example_rollup_index
+ALTER TABLE example_db.my_table
+ADD COLUMN new_col INT DEFAULT “0” AFTER col1
+TO example_rollup_index;</li>
+<li>Add a key column new_col (aggregation model) to col1 of example_rollup_index
+ALTER TABLE example_db.my_table
+ADD COLUMN new_col INT DEFAULT “0” AFTER col1
+TO example_rollup_index;</li>
+<li>Add a value column new_col SUM aggregation type (aggregation model) to col1 of example_rollup_index
+ALTER TABLE example_db.my_table
+ADD COLUMN new_col INT SUM DEFAULT “0” AFTER col1
+TO example_rollup_index;</li>
+<li>Add multiple columns to example_rollup_index (aggregation model)
+ALTER TABLE example_db.my_table
+ADD COLUMN (col1 INT DEFAULT “1”, col2 FLOAT SUM DEFAULT “2.3”)
+TO example_rollup_index;</li>
+<li>Delete a column from example_rollup_index
+ALTER TABLE example_db.my_table
+DROP COLUMN col2
+FROM example_rollup_index;</li>
+<li>Modify the col1 column type of base index to BIGINT and move to the back of col2 column
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col1 BIGINT DEFAULT “1” AFTER col2;</li>
+<li>修改 base index 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT “abc”)
+ALTER TABLE example_db.my_table
+MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT “abc”;</li>
+<li>Rearrange the columns in example_rollup_index (set the original column order to k1, k2, k3, v1, v2)
+ALTER TABLE example_db.my_table
+ORDER BY (k3,k1,k2,v2,v1)
+FROM example_rollup_index;</li>
+<li>Perform two operations simultaneously
+ALTER TABLE example_db.my_table
+ADD COLUMN v2 INT MAX DEFAULT “0” AFTER k2 TO example_rollup_index,
+ORDER BY (k3,k1,k2,v2,v1) FROM example_rollup_index;</li>
+<li>20462;- 259130;-bloom filter -210151;
+ALTER TABLE example_db.my_table SET (“bloom_filter_columns”=”k1,k2,k3”);</li>
+</ol>
+<p>You can also incorporate it into the schema change operation above (note that the grammar of multiple clauses is slightly different)
+ALTER TABLE example_db.my_table
+DROP COLUMN col2
+PROPERTIES (“bloom_filter_columns”=”k1,k2,k3”);</p>
+<ol class="simple">
+<li>Modify the Colocate property of the table
+ALTER TABLE example_db.my_table set (“colocate_with”=”t1”);</li>
+</ol>
+<p>[Rename]</p>
+<ol class="simple">
+<li>Modify the table named Table 1 to table2
+ALTER TABLE table1 RENAME table2;</li>
+<li>将表 example_table 中名为 rollup1 的 rollup index 修改为 rollup2
+ALTER TABLE example_table RENAME ROLLUP rollup1 rollup2;</li>
+<li>将表 example_table 中名为 p1 的 partition 修改为 p2
+ALTER TABLE example_table RENAME PARTITION p1 p2;</li>
+</ol>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<p>ALTER,TABLE,ROLLUP,COLUMN,PARTITION,RENAME</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="BACKUP_EN.html" class="btn btn-neutral float-right" title="BACKUP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ALTER DATABASE_EN.html" class="btn btn-neutral float-left" title="ALTER DATABASE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

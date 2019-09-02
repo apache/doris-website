@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Cluster upgrade &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Getting started" href="../getting-started/index.html" />
+    <link rel="prev" title="Installation and deployment" href="install-deploy_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Compilation and deployment</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="compilation_EN.html">Compilation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install-deploy_EN.html">Installation and deployment</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cluster upgrade</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#test-the-correctness-of-be-upgrade">Test the correctness of BE upgrade</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-fe-metadata-compatibility">Testing FE Metadata Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#upgrade-preparation">Upgrade preparation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rolling-upgrade">rolling upgrade</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Compilation and deployment</a> &raquo;</li>
+        
+      <li>Cluster upgrade</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/installing/upgrade_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cluster-upgrade">
+<h1>Cluster upgrade<a class="headerlink" href="#cluster-upgrade" title="Permalink to this headline">¶</a></h1>
+<p>Doris can upgrade smoothly by rolling upgrades. The following steps are recommended for security upgrade.</p>
+<blockquote>
+<div><p>Note:</p>
+<ol class="simple">
+<li>The following approaches are based on highly available deployments. That is, data 3 replicas, FE high availability.</li>
+</ol>
+</div></blockquote>
+<div class="section" id="test-the-correctness-of-be-upgrade">
+<h2>Test the correctness of BE upgrade<a class="headerlink" href="#test-the-correctness-of-be-upgrade" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>Arbitrarily select a BE node and deploy the latest palo_be binary file.</li>
+<li>Restart the BE node and check the BE log be.INFO to see if the boot was successful.</li>
+<li>If the startup fails, you can check the reason first. If the error is not recoverable, you can delete the BE directly through DROP BACKEND, clean up the data, and restart the BE using the previous version of palo_be. Then re-ADD BACKEND. (<strong>This method will result in the loss of a copy of the data, please make sure that three copies are complete, and perform this operation!!!</strong></li>
+</ol>
+</div>
+<div class="section" id="testing-fe-metadata-compatibility">
+<h2>Testing FE Metadata Compatibility<a class="headerlink" href="#testing-fe-metadata-compatibility" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><strong>Important! Exceptional metadata compatibility is likely to cause data can not be restored!!</strong></li>
+<li>Deploy a test FE process (such as your own local developer) using the new version alone.</li>
+<li>Modify the FE configuration file fe.conf for testing and set all ports to <strong>different from online</strong>.</li>
+<li>Add configuration in fe.conf: cluster_id=123456</li>
+<li>Add the configuration in fe.conf: metadatafailure_recovery=true</li>
+<li>Copy the metadata directory palo-meta of the online environment Master FE to the test environment</li>
+<li>Modify the cluster_id in the palo-meta/image/VERSION file copied into the test environment to 123456 (that is, the same as in Step 3)</li>
+<li>“27979;” “35797;” “3681616;” sh bin /start fe.sh “21551;” FE</li>
+<li>Observe whether the start-up is successful through FE log fe.log.</li>
+<li>If the startup is successful, run sh bin/stop_fe.sh to stop the FE process of the test environment.</li>
+<li><strong>The purpose of the above 2-6 steps is to prevent the FE of the test environment from being misconnected to the online environment after it starts.</strong></li>
+</ol>
+</div>
+<div class="section" id="upgrade-preparation">
+<h2>Upgrade preparation<a class="headerlink" href="#upgrade-preparation" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>After data validation, the new version of BE and FE binary files are distributed to their respective directories.</li>
+<li>Usually small version upgrade, BE only needs to upgrade palo_be; FE only needs to upgrade palo-fe.jar. If it is a large version upgrade, you may need to upgrade other files (including but not limited to bin / lib / etc.) If you are not sure whether you need to replace other files, it is recommended to replace all of them.</li>
+</ol>
+</div>
+<div class="section" id="rolling-upgrade">
+<h2>rolling upgrade<a class="headerlink" href="#rolling-upgrade" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>Confirm that the new version of the file is deployed. Restart FE and BE instances one by one.</li>
+<li>It is suggested that BE be restarted one by one and FE be restarted one by one. Because Doris usually guarantees backward compatibility between FE and BE, that is, the old version of FE can access the new version of BE. However, the old version of BE may not be supported to access the new version of FE.</li>
+<li>It is recommended to restart the next instance after confirming that the previous instance started successfully. Refer to the Installation Deployment Document for the identification of successful instance startup.</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../getting-started/index.html" class="btn btn-neutral float-right" title="Getting started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install-deploy_EN.html" class="btn btn-neutral float-left" title="Installation and deployment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

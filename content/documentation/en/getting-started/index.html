@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting started &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Guidelines for Basic Use" href="basic-usage_EN.html" />
+    <link rel="prev" title="Cluster upgrade" href="../installing/upgrade_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html">Guidelines for Basic Use</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html">Advanced Use Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html">Best Practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html">Data partition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html">Data Model, ROLLUP and Prefix Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html">Noun Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+      <li>Getting started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/getting-started/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage_EN.html">Guidelines for Basic Use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic-usage_EN.html#create-users">1 Create Users</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#root-user-logon-and-password-modification">1.1 Root User Logon and Password Modification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#creating-new-users">1.3 Creating New Users</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="basic-usage_EN.html#data-table-creation-and-data-import">2 Data Table Creation and Data Import</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#create-a-database">2.1 Create a database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#account-authorization">2.2 Account Authorization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#formulation">2.3 Formulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic-usage_EN.html#single-partition">Single partition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic-usage_EN.html#composite-partition">Composite partition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#import-data">2.4 Import data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="basic-usage_EN.html#flow-in">Flow-in</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="basic-usage_EN.html#data-query">3 Data query</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#simple-query">3.1 Simple Query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#join-query">3.3 Join Query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#subquery">3.4 Subquery</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advance-usage_EN.html">Advanced Use Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advance-usage_EN.html#table-1-structural-change">Table 1 Structural Change</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advance-usage_EN.html#rollup">2 Rollup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advance-usage_EN.html#query-of-data-table">2 Query of Data Table</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#memory-limitation">2.1 Memory Limitation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#query-timeout">2.2 Query timeout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#query-retry-and-high-availability">2.4 Query Retry and High Availability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="best-practice_EN.html">Best Practices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="best-practice_EN.html#tabulation">1 tabulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html#data-model-selection">1.1 Data Model Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html#wide-table-vs-star-schema">1.2 Wide Table vs. Star Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html#partitions-and-barrels">1.4 Partitions and Barrels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html#sparse-index-and-bloom-filter">1.5 Sparse Index and Bloom Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html#physical-and-chemical-view-rollup">1.6 Physical and Chemical View (rollup)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="best-practice_EN.html#schema-change">2 Schema Change</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data-partition_EN.html">Data partition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data-partition_EN.html#basic-concepts">Basic concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#row-column">Row &amp; Column</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data-partition_EN.html#id1">Data partition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#column-definition">Column Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#zoning-and-bucketing">Zoning and Bucketing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="data-partition_EN.html#multi-column-partition">Multi-column partition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#properties">PROPERTIES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#engine">ENGINE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#others">Others</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data-partition_EN.html#common-questions">Common Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html#common-problems-in-table-building-operation">Common problems in table building operation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data-model-rollup_EN.html">Data Model, ROLLUP and Prefix Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#basic-concepts">Basic concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#aggregate-model">Aggregate Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#example-1-importing-data-aggregation">Example 1: Importing data aggregation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#example-2-keep-detailed-data">Example 2: Keep detailed data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#example-3-importing-data-and-aggregating-existing-data">Example 3: Importing data and aggregating existing data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#uniq-model">Uniq Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#duplicate-model">Duplicate Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#rollup">ROLLUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#id1">Basic concepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="data-model-rollup_EN.html#rollup-in-aggregate-model-and-uniq-model">ROLLUP in Aggregate Model and Uniq Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data-model-rollup_EN.html#ollup-in-duplicate-model">OLLUP in Duplicate Model</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#prefix-index-and-rollup">Prefix Index and ROLLUP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="data-model-rollup_EN.html#prefix-index">prefix index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data-model-rollup_EN.html#rollup-adjusts-prefix-index">ROLLUP adjusts prefix index</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#some-explanations-of-rollup">Some Explanations of ROLLUP</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#limitations-of-aggregation-model">Limitations of aggregation model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html#id2">Duplicate Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#suggestions-for-choosing-data-model">Suggestions for Choosing Data Model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html">Noun Interpretation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="basic-usage_EN.html" class="btn btn-neutral float-right" title="Guidelines for Basic Use" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../installing/upgrade_EN.html" class="btn btn-neutral float-left" title="Cluster upgrade" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

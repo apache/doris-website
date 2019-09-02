@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>磁盘空间管理 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="元数据运维" href="metadata-operation.html" />
+    <link rel="prev" title="运维操作" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">运维操作</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">磁盘空间管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metadata-operation.html">元数据运维</a></li>
+<li class="toctree-l4"><a class="reference internal" href="monitor-alert.html">监控和报警</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi-tenant.html">多租户(Experimental)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-meta-tool.html">Tablet 元数据管理工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance.html">数据副本管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-restore-tool.html">BE Tablet数据恢复工具</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">运维操作</a> &raquo;</li>
+        
+      <li>磁盘空间管理</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/operation/disk-capacity.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>磁盘空间管理<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>本文档主要介绍和磁盘存储空间有关的系统参数和处理策略。</p>
+<p>Doris 的数据磁盘空间如果不加以控制，会因磁盘写满而导致进程挂掉。因此我们监测磁盘的使用率和剩余空间，通过设置不同的警戒水位，来控制 Doris 系统中的各项操作，尽量避免发生磁盘被写满的情况。</p>
+<div class="section" id="id2">
+<h2>名词解释<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
+<li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
+<li>Data Dir：数据目录，在 BE 配置文件 <code class="docutils literal notranslate"><span class="pre">be.conf</span></code> 的 <code class="docutils literal notranslate"><span class="pre">storage_root_path</span></code> 中指定的各个数据目录。通常一个数据目录对应一个磁盘、因此下文中 <strong>磁盘</strong> 也指代一个数据目录。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>基本原理<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>BE 定期（每隔一分钟）会向 FE 汇报一次磁盘使用情况。FE 记录这些统计值，并根据这些统计值，限制不同的操作请求。</p>
+<p>在 FE 中分别设置了 <strong>高水位（High Watermark）</strong> 和 <strong>危险水位（Flood Stage）</strong> 两级阈值。危险水位高于高水位。当磁盘使用率高于高水位时，Doris 会限制某些操作的执行（如副本均衡等）。而如果高于危险水位，则会禁止某些操作的执行（如导入）。</p>
+<p>同时，在 BE 上也设置了 <strong>危险水位（Flood Stage）</strong>。考虑到 FE 并不能完全及时的检测到 BE 上的磁盘使用情况，以及无法控制某些 BE 自身运行的操作（如 Compaction）。因此 BE 上的危险水位用于 BE 主动拒绝和停止某些操作，达到自我保护的目的。</p>
+</div>
+<div class="section" id="fe">
+<h2>FE 参数<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h2>
+<p><strong>高水位：</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>storage_high_watermark_usage_percent 默认 85 (85%)。
+storage_min_left_capacity_bytes 默认 2GB。
+</pre></div>
+</div>
+<p>当磁盘空间使用率<strong>大于</strong> <code class="docutils literal notranslate"><span class="pre">storage_high_watermark_usage_percent</span></code>，<strong>或者</strong> 磁盘空间剩余大小<strong>小于</strong> <code class="docutils literal notranslate"><span class="pre">storage_min_left_capacity_bytes</span></code> 时，该磁盘不会再被作为以下操作的目的路径：</p>
+<ul class="simple">
+<li>Tablet 均衡操作（Balance）</li>
+<li>Colocation 表数据分片的重分布（Relocation）</li>
+<li>Decommission</li>
+</ul>
+<p><strong>危险水位：</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>storage_flood_stage_usage_percent 默认 95 (95%)。
+storage_flood_stage_left_capacity_bytes 默认 1GB。
+</pre></div>
+</div>
+<p>当磁盘空间使用率<strong>大于</strong> <code class="docutils literal notranslate"><span class="pre">storage_flood_stage_usage_percent</span></code>，<strong>并且</strong> 磁盘空间剩余大小<strong>小于</strong> <code class="docutils literal notranslate"><span class="pre">storage_flood_stage_left_capacity_bytes</span></code> 时，该磁盘不会再被作为以下操作的目的路径，并禁止某些操作：</p>
+<ul class="simple">
+<li>Tablet 均衡操作（Balance）</li>
+<li>Colocation 表数据分片的重分布（Relocation）</li>
+<li>副本补齐</li>
+<li>恢复操作（Restore）</li>
+<li>数据导入（Load/Insert）</li>
+</ul>
+</div>
+<div class="section" id="be">
+<h2>BE 参数<a class="headerlink" href="#be" title="Permalink to this headline">¶</a></h2>
+<p><strong>危险水位：</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>capacity_used_percent_flood_stage 默认 95 (95%)。
+capacity_min_left_bytes_flood_stage 默认 1GB。
+</pre></div>
+</div>
+<p>当磁盘空间使用率<strong>大于</strong> <code class="docutils literal notranslate"><span class="pre">storage_flood_stage_usage_percent</span></code>，<strong>并且</strong> 磁盘空间剩余大小<strong>小于</strong> <code class="docutils literal notranslate"><span class="pre">storage_flood_stage_left_capacity_bytes</span></code> 时，该磁盘上的以下操作会被禁止：</p>
+<ul class="simple">
+<li>Base/Cumulative Compaction。</li>
+<li>数据写入。包括各种导入操作。</li>
+<li>Clone Task。通常发生于副本修复或均衡时。</li>
+<li>Push Task。发生在 Hadoop 导入的 Loading 阶段，下载文件。</li>
+<li>Alter Task。Schema Change 或 Rollup 任务。</li>
+<li>Download Task。恢复操作的 Downloading 阶段。</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>磁盘空间释放<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>当磁盘空间高于高水位甚至危险水位后，很多操作都会被禁止。此时可以尝试通过以下方式减少磁盘使用率，恢复系统。</p>
+<ul>
+<li><p class="first">删除表或分区</p>
+<p>通过删除表或分区的方式，能够快速降低磁盘空间使用率，恢复集群。<strong>注意：只有 <code class="docutils literal notranslate"><span class="pre">DROP</span></code> 操作可以达到快速降低磁盘空间使用率的目的，<code class="docutils literal notranslate"><span class="pre">DELETE</span></code> 操作不可以。</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DROP</span> <span class="n">TABLE</span> <span class="n">tbl</span><span class="p">;</span>
+<span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">tbl</span> <span class="n">DROP</span> <span class="n">PARTITION</span> <span class="n">p1</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">扩容 BE</p>
+<p>扩容后，数据分片会自动均衡到磁盘使用率较低的 BE 节点上。扩容操作会根据数据量及节点数量不同，在数小时或数天后使集群到达均衡状态。</p>
+</li>
+<li><p class="first">修改表或分区的副本</p>
+<p>可以将表或分区的副本数降低。比如默认3副本可以降低为2副本。该方法虽然降低了数据的可靠性，但是能够快速的降低磁盘使用率，使集群恢复正常。该方法通常用于紧急恢复系统。请在恢复后，通过扩容或删除数据等方式，降低磁盘使用率后，将副本数恢复为 3。</p>
+<p>修改副本操作为瞬间生效，后台会自动异步的删除多余的副本。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">tbl</span> <span class="n">MODIFY</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">SET</span><span class="p">(</span><span class="s2">&quot;replication_num&quot;</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">删除多余文件</p>
+<p>当 BE 进程已经因为磁盘写满而挂掉并无法启动时（此现象可能因 FE 或 BE 检测不及时而发生）。需要通过删除数据目录下的一些临时文件，保证 BE 进程能够启动。以下目录中的文件可以直接删除：</p>
+<ul class="simple">
+<li>log/：日志目录下的日志文件。</li>
+<li>snapshot/: 快照目录下的快照文件。</li>
+<li>trash/：回收站中的文件。</li>
+</ul>
+</li>
+<li><p class="first">删除数据文件（危险！！！）</p>
+<p>当以上操作都无法释放空间时，需要通过删除数据文件来释放空间。数据文件在指定数据目录的 <code class="docutils literal notranslate"><span class="pre">data/</span></code> 目录下。删除数据分片（Tablet）必须先确保该 Tablet 至少有一个副本是正常的，否则<strong>删除唯一副本会导致数据丢失</strong>。假设我们要删除 id 为 12345 的 Tablet：</p>
+<ul>
+<li><p class="first">找到 Tablet 对应的目录，通常位于 <code class="docutils literal notranslate"><span class="pre">data/shard_id/tablet_id/</span></code> 下。如：</p>
+<p><code class="docutils literal notranslate"><span class="pre">data/0/12345/</span></code></p>
+</li>
+<li><p class="first">记录 tablet id 和 schema hash。其中 schema hash 为上一步目录的下一级目录名。如下为 352781111：</p>
+<p><code class="docutils literal notranslate"><span class="pre">data/0/12345/352781111</span></code></p>
+</li>
+<li><p class="first">删除数据目录：</p>
+<p><code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-rf</span> <span class="pre">data/0/12345/</span></code></p>
+</li>
+<li><p class="first">删除 Tablet 元数据（具体参考 <a class="reference internal" href="tablet-meta-tool.html"><span class="doc">Tablet 元数据管理工具</span></a>）</p>
+<p><code class="docutils literal notranslate"><span class="pre">./lib/meta_tool</span> <span class="pre">--operation=delete_header</span> <span class="pre">--root_path=/path/to/root_path</span> <span class="pre">--tablet_id=12345</span> <span class="pre">--schema_hash=</span> <span class="pre">352781111</span></code></p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metadata-operation.html" class="btn btn-neutral float-right" title="元数据运维" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="运维操作" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

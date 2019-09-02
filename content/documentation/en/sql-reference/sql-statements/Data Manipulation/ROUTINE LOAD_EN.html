@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ROUTINE LOAD &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="SHOW ALTER" href="SHOW ALTER_EN.html" />
+    <link rel="prev" title="RESUME ROUTINE LOAD" href="RESUME ROUTINE LOAD_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL Functions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">DDL Statements</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">Account Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Administration/index.html">Administration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Definition/index.html">Data Definition</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Data Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">Data Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">Utility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL Manual</a> &raquo;</li>
+        
+          <li><a href="../index.html">DDL Statements</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Manipulation</a> &raquo;</li>
+        
+      <li>ROUTINE LOAD</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Data Manipulation/ROUTINE LOAD_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="routine-load">
+<h1>ROUTINE LOAD<a class="headerlink" href="#routine-load" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Routine Load enables users to submit a permanent import task and import data into Doris by constantly reading data from a specified data source.
+Currently only support importing text format (CSV) data from Kakfa through unauthenticated or SSL authentication.</p>
+<p>Grammar:</p>
+<p>CREATE ROUTINE LOAD [db.]job_name ON tbl_name
+[load_properties]
+[job_properties]
+FROM data_source
+[data source properties]</p>
+<ol class="simple">
+<li>[db.]job_name</li>
+</ol>
+<p>The name of the import job, in the same database, can only have one job running with the same name.</p>
+<ol class="simple">
+<li>tbl name</li>
+</ol>
+<p>Specifies the name of the table to be imported.</p>
+<ol class="simple">
+<li>load_properties</li>
+</ol>
+<p>Used to describe imported data. Grammar:</p>
+<p>[Swing separator],
+[columns_mapping],
+[where_predicates],
+[partitions]</p>
+<p>One Column U separator:</p>
+<p>Specify column separators, such as:</p>
+<p>COLUMNS TERMINATED BY “,”</p>
+<p>Default: t</p>
+<ol class="simple">
+<li>columns_mapping:</li>
+</ol>
+<p>Specifies the mapping relationship of columns in source data and defines how derivative columns are generated.</p>
+<ol class="simple">
+<li>Mapping column:</li>
+</ol>
+<p>Specify in sequence which columns in the source data correspond to those in the destination table. For columns you want to skip, you can specify a column name that does not exist.
+Assume that the destination table has three columns k1, k2, v1. Source data has four columns, of which columns 1, 2 and 4 correspond to k2, K1 and v1, respectively. Written as follows:</p>
+<p>COLUMNS (k2, k1, xxx, v1)</p>
+<p>XXX is a non-existent column used to skip the third column in the source data.</p>
+<ol class="simple">
+<li>Derivative column:</li>
+</ol>
+<p>Columns in the form of col_name = expr are called derived columns. That is to say, it supports calculating the values of the corresponding columns in the destination table by expr.
+Derivative columns are usually arranged after the mapping column. Although this is not mandatory, Doris always parses the mapping column first and then the derived column.
+Following an example, suppose that the destination table also has the fourth column v2, which is generated by the sum of K1 and k2. It can be written as follows:</p>
+<p>COLUMNS (k2, k1, xxx, v1, v2 = k1 + k2);</p>
+<ol class="simple">
+<li>where_predicates</li>
+</ol>
+<p>Used to specify filtering conditions to filter out unnecessary columns. The filter column can be a mapping column or a derived column.
+For example, if we only want to import columns with K1 greater than 100 and K2 equal to 1000, we write as follows:</p>
+<p>WHERE k1 &gt; 100 and k2 = 1000</p>
+<p>Four Division</p>
+<p>Specify which partitions to import into the destination table. If not specified, it is automatically imported into the corresponding partition.
+Examples:</p>
+<p>Segmentation (P1, P2, P3)</p>
+<ol class="simple">
+<li>job_properties</li>
+</ol>
+<p>General parameters used to specify routine import jobs.
+Grammar:</p>
+<p>PROPERTIES (
+“key1” = “val1”,
+“key2” = “val2”
+)</p>
+<p>At present, we support the following parameters:</p>
+<ol class="simple">
+<li>desired_concurrent_number</li>
+</ol>
+<p>Expected concurrency. A routine import job is divided into multiple subtasks. This parameter specifies how many tasks a job can perform simultaneously. Must be greater than 0. The default is 3.
+This concurrency degree is not the actual concurrency degree. The actual concurrency degree will be considered comprehensively by the node number, load and data source of the cluster.
+Example:</p>
+<p>“desired_concurrent_number” = “3”</p>
+<ol class="simple">
+<li>max_batch_interval/max_batch_rows/max_batch_size</li>
+</ol>
+<p>These three parameters are respectively expressed as follows:</p>
+<ol class="simple">
+<li>Maximum execution time per sub-task in seconds. The range is 5 to 60. The default is 10.</li>
+<li>The maximum number of rows read by each subtask. Must be greater than or equal to 200000. The default is 2000.</li>
+<li>The maximum number of bytes read by each subtask. Units are bytes, ranging from 100MB to 1GB. The default is 100MB.</li>
+</ol>
+<p>These three parameters are used to control the execution time and processing capacity of a subtask. When any one reaches the threshold, the task ends.
+Example:</p>
+<p>“max_batch_interval” = “20”,
+“max_batch_rows” = “300000”,
+“max_batch_size” = “209715200”</p>
+<p>Three The biggest mistake</p>
+<p>The maximum number of error lines allowed in the sampling window. Must be greater than or equal to 0. The default is 0, that is, no error lines are allowed.
+The sampling window is max_batch_rows* 10. That is, if the number of error lines is greater than max_error_number in the sampling window, routine jobs will be suspended, and manual intervention is needed to check data quality.
+Rows filtered by where conditions are not incorrect rows.</p>
+<p>Five. data source</p>
+<p>Types of data sources. Current support:</p>
+<p>KAFKA</p>
+<p>Six. data source properties</p>
+<p>Specify information about the data source.
+Grammar:</p>
+<p>(
+“key1” = “val1”,
+“key2” = “val2”
+)</p>
+<p>One. KAFKA -25968;<code class="docutils literal notranslate"> <span class="pre">25454;</span></code>28304;</p>
+<p>One. Kafka -u broker list</p>
+<p>Kafka’s broker connection information. The format is ip: host. Multiple brokers are separated by commas.
+Examples:</p>
+<p>“broker list”= “broker1:9092,broker2:9092”</p>
+<p>Two Kafkato Pitch</p>
+<p>Specify the topic of Kafka to subscribe to.
+Examples:</p>
+<p>“coffee topic” =”my topic”</p>
+<p>Three Kafka score/Kafka offset printing</p>
+<p>Specify the Kafka partition to be subscribed to and the corresponding initial offset for each partition.</p>
+<p>Offset can specify a specific offset from greater than or equal to 0, or:</p>
+<ol class="simple">
+<li>OFFSET_BEGINNING: Subscribe from a location with data.</li>
+<li>OFFSET_END: Subscribe from the end.</li>
+</ol>
+<p>If not specified, all partitions under topic are subscribed by default from OFFSET_END.
+Examples:</p>
+<p>“kafka partitions” =”0,1,2,3”,
+“Kafka\ xED”= “101.0, ofset\ xEnd”</p>
+<ol class="simple">
+<li>property</li>
+</ol>
+<p>Specify custom Kafka parameters.
+The function is equivalent to the “- property” parameter in the Kafka shell.
+When the value of a parameter is a file, you need to add the keyword “FILE:” before the value.
+For how to create a file, see “HELP CREATE FILE;”
+For more support for custom parameters, see the client-side configuration item in the official CONFIGURATION document of librdkafka.</p>
+<p>Examples:
+“property.client.id” = “12345”,
+“property.ssl.ca.location” =”FILE:ca.pem”</p>
+<p>When connecting Kafka with SSL, you need to specify the following parameters:</p>
+<p>“property.security.protocol” = “ssl”,
+“property.ssl.ca.location” =”FILE:ca.pem”,
+“property.ssl.certificate.location” =”FILE:client.pem”,
+“property.ssl.key.location” =”FILE:client.key”,
+“property.ssl.key.password” = “abcdefg”</p>
+<p>Among them:
+Property. security. protocol and property. ssl. ca. location are required to specify the connection mode is SSL and the location of CA certificates.</p>
+<p>If the client authentication is enabled on the Kafka server side, the following settings are required:</p>
+<p>“property.ssl.certificate.location”
+“property.ssl.key.location”
+“property.ssl.key.password”</p>
+<p>The passwords used to specify the public key, private key and private key of the client, respectively.</p>
+<ol class="simple">
+<li>Import data format sample</li>
+</ol>
+<p>Integer classes (TINYINT/SMALLINT/INT/BIGINT/LARGEINT): 1,1000,1234
+Floating Point Class (FLOAT/DOUBLE/DECIMAL): 1.1, 0.23, 356
+Date class (DATE/DATETIME): 2017-10-03, 2017-06-13 12:34:03.
+String class (CHAR/VARCHAR) (without quotation marks): I am a student, a
+NULL value: N</p>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>Create a Kafka routine import task named test 1 for example_tbl of example_db.</li>
+</ol>
+<p>CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS (k1, k2, k3, v1, v2, v3 = k1 *100),
+WHERE k1 &gt; 100 and k2 like “%doris%”
+PROPERTIES
+(
+“desired_concurrent_number”=”3”,
+“max_batch_interval” = “20”,
+“max_batch_rows” = “300000”,
+“max_batch_size” = “209715200”
+)
+FROM KAFKA
+(
+“broker list”= “broker1:9092,broker2:9092,broker3:9092”,
+“kafu topic” =”my topic”,
+“kafka partitions” =”0,1,2,3”,
+“kafka_offsets” = “101,0,0,200”
+);</p>
+<ol class="simple">
+<li>Import data from Kafka cluster through SSL authentication. Set the client. ID parameter at the same time.</li>
+</ol>
+<p>CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS (k1, k2, k3, v1, v2, v3 = k1 *100),
+WHERE k1 &gt; 100 and k2 like “%doris%”
+PROPERTIES
+(
+“desired_concurrent_number”=”3”,
+“max_batch_interval” = “20”,
+“max_batch_rows” = “300000”,
+“max_batch_size” = “209715200”
+)
+FROM KAFKA
+(
+“broker list”= “broker1:9092,broker2:9092,broker3:9092”,
+“kafu topic” =”my topic”,
+“property.security.protocol” = “ssl”,
+“property.ssl.ca.location” =”FILE:ca.pem”,
+“property.ssl.certificate.location” =”FILE:client.pem”,
+“property.ssl.key.location” =”FILE:client.key”,
+“property.ssl.key.password” = “abcdefg”,
+“property.client.id” = “my_client_id”
+);</p>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<p>CREATE,ROUTINE,LOAD</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="SHOW ALTER_EN.html" class="btn btn-neutral float-right" title="SHOW ALTER" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="RESUME ROUTINE LOAD_EN.html" class="btn btn-neutral float-left" title="RESUME ROUTINE LOAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

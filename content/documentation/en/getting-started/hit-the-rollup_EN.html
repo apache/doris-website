@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Noun Interpretation &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Administrator Guide" href="../administrator-guide/index.html" />
+    <link rel="prev" title="Data Model, ROLLUP and Prefix Index" href="data-model-rollup_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Getting started</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html">Guidelines for Basic Use</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html">Advanced Use Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html">Best Practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html">Data partition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html">Data Model, ROLLUP and Prefix Index</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Noun Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#index">Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aggregate-data">Aggregate data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Getting started</a> &raquo;</li>
+        
+      <li>Noun Interpretation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/getting-started/hit-the-rollup_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p>35; Rollup -19982;* 26597;* 35810</p>
+<p>As a polymer view in Doris, Rollup can play two roles in queries:</p>
+<ul class="simple">
+<li>Index</li>
+<li>Aggregate data (only for aggregate models, aggregate key)</li>
+</ul>
+<p>However, in order to hit Rollup, certain conditions need to be met, and the value of PreAggregation of ScanNdo node in the execution plan can be used to determine whether Rollup can be hit or not, and the Rollup field can be used to determine which Rollup table is hit.</p>
+<div class="section" id="noun-interpretation">
+<h1>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h1>
+<p>Base: Base table.</p>
+<p>Rollup: Generally, it refers to the Rollup tables created based on Base tables, but in some scenarios, it includes Base and Rollup tables.</p>
+</div>
+<div class="section" id="index">
+<h1>Index<a class="headerlink" href="#index" title="Permalink to this headline">¶</a></h1>
+<p>Doris’s prefix index has been introduced in the previous query practice, that is, Doris will generate the first 36 bytes in the Base/Rollup table separately in the underlying storage engine (with varchar type, the prefix index may be less than 36 bytes, varchar will truncate the prefix index, and use up to 20 bytes of varchar). A sorted sparse index data (data is also sorted, positioned by index, and then searched by dichotomy in the data), and then matched each Base/Rollup prefix index according to the conditions in the query, and selected a Base/Rollup that matched the longest prefix index.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>---&gt; matching from left to right
++----+----+----+----+----+----+
+C1 `124; c2 `124; c3 `124; c4 `124; c5 `124;... 1244;
+</pre></div>
+</div>
+<p>As shown in the figure above, the conditions of where and on in the query are pushed up and down to ScanNode and matched from the first column of the prefix index. Check if there are any of these columns in the condition, and then accumulate the matching length until the matching cannot match or the end of 36 bytes (columns of varchar type can only match 20 bytes and match less than 36 words). Section truncates prefix index, and then chooses a Base/Rollup with the longest matching length. The following example shows how to create a Base table and four rollups:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>+---------------+-------+--------------+------+-------+---------+-------+
+| IndexName     | Field | Type         | Null | Key   | Default | Extra |
++---------------+-------+--------------+------+-------+---------+-------+
+| test          | k1    | TINYINT      | Yes  | true  | N/A     |       |
+|               | k2    | SMALLINT     | Yes  | true  | N/A     |       |
+|               | k3    | INT          | Yes  | true  | N/A     |       |
+|               | k4    | BIGINT       | Yes  | true  | N/A     |       |
+|               | k5    | DECIMAL(9,3) | Yes  | true  | N/A     |       |
+|               | k6    | CHAR(5)      | Yes  | true  | N/A     |       |
+|               | k7    | DATE         | Yes  | true  | N/A     |       |
+|               | k8    | DATETIME     | Yes  | true  | N/A     |       |
+Yes 1244; true 124N /A 124R; 124R (20) VARCHAR (20) 124R; Yes
+|               | k10   | DOUBLE       | Yes  | false | N/A     | MAX   |
+|               | k11   | FLOAT        | Yes  | false | N/A     | SUM   |
+|               |       |              |      |       |         |       |
+Roll -up of index 1 `124; k9 `124R; VARCHAR (20)&#39;124R; Yes `1244true `124N /A `1244&#39;;
+|               | k1    | TINYINT      | Yes  | true  | N/A     |       |
+|               | k2    | SMALLINT     | Yes  | true  | N/A     |       |
+|               | k3    | INT          | Yes  | true  | N/A     |       |
+|               | k4    | BIGINT       | Yes  | true  | N/A     |       |
+|               | k5    | DECIMAL(9,3) | Yes  | true  | N/A     |       |
+|               | k6    | CHAR(5)      | Yes  | true  | N/A     |       |
+|               | k7    | DATE         | Yes  | true  | N/A     |       |
+|               | k8    | DATETIME     | Yes  | true  | N/A     |       |
+|               | k10   | DOUBLE       | Yes  | false | N/A     | MAX   |
+|               | k11   | FLOAT        | Yes  | false | N/A     | SUM   |
+|               |       |              |      |       |         |       |
+
+|               | k2    | SMALLINT     | Yes  | true  | N/A     |       |
+|               | k1    | TINYINT      | Yes  | true  | N/A     |       |
+|               | k3    | INT          | Yes  | true  | N/A     |       |
+|               | k4    | BIGINT       | Yes  | true  | N/A     |       |
+|               | k5    | DECIMAL(9,3) | Yes  | true  | N/A     |       |
+|               | k6    | CHAR(5)      | Yes  | true  | N/A     |       |
+|               | k7    | DATE         | Yes  | true  | N/A     |       |
+|               | k8    | DATETIME     | Yes  | true  | N/A     |       |
+|               | k10   | DOUBLE       | Yes  | false | N/A     | MAX   |
+|               | k11   | FLOAT        | Yes  | false | N/A     | SUM   |
+|               |       |              |      |       |         |       |
+| rollup_index3 | k4    | BIGINT       | Yes  | true  | N/A     |       |
+|               | k5    | DECIMAL(9,3) | Yes  | true  | N/A     |       |
+|               | k6    | CHAR(5)      | Yes  | true  | N/A     |       |
+|               | k1    | TINYINT      | Yes  | true  | N/A     |       |
+|               | k2    | SMALLINT     | Yes  | true  | N/A     |       |
+|               | k3    | INT          | Yes  | true  | N/A     |       |
+|               | k7    | DATE         | Yes  | true  | N/A     |       |
+|               | k8    | DATETIME     | Yes  | true  | N/A     |       |
+Yes 1244; true 124N /A 124R; 124R (20) VARCHAR (20) 124R; Yes
+|               | k10   | DOUBLE       | Yes  | false | N/A     | MAX   |
+|               | k11   | FLOAT        | Yes  | false | N/A     | SUM   |
+|               |       |              |      |       |         |       |
+| rollup_index4 | k4    | BIGINT       | Yes  | true  | N/A     |       |
+|               | k6    | CHAR(5)      | Yes  | true  | N/A     |       |
+|               | k5    | DECIMAL(9,3) | Yes  | true  | N/A     |       |
+|               | k1    | TINYINT      | Yes  | true  | N/A     |       |
+|               | k2    | SMALLINT     | Yes  | true  | N/A     |       |
+|               | k3    | INT          | Yes  | true  | N/A     |       |
+|               | k7    | DATE         | Yes  | true  | N/A     |       |
+|               | k8    | DATETIME     | Yes  | true  | N/A     |       |
+Yes 1244; true 124N /A 124R; 124R (20) VARCHAR (20) 124R; Yes
+|               | k10   | DOUBLE       | Yes  | false | N/A     | MAX   |
+|               | k11   | FLOAT        | Yes  | false | N/A     | SUM   |
++---------------+-------+--------------+------+-------+---------+-------+
+</pre></div>
+</div>
+<p>The prefix indexes of the three tables are</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Base</span> <span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">k4</span><span class="p">,</span> <span class="n">k5</span><span class="p">,</span> <span class="n">k6</span><span class="p">,</span> <span class="n">k7</span><span class="p">)</span>
+
+<span class="n">Index1</span> <span class="p">(</span><span class="n">k9</span><span class="p">)</span><span class="o">/</span><span class="n">index</span> <span class="n">rollup</span> <span class="p">(</span><span class="n">k9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Conditions on columns that can be indexed with the prefix need to be <code class="docutils literal notranslate"><span class="pre">=</span> <span class="pre">``or',</span> <span class="pre">``in',</span> </code>between’, and these conditions are side-by-side and the relationship uses <code class="docutils literal notranslate"><span class="pre">and</span> </code>connections’, which cannot be hit for <code class="docutils literal notranslate"><span class="pre">or',</span> </code>!=` and so on. Then look at the following query:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">test</span> <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">AND</span> <span class="n">k2</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>With the conditions on K1 and k2, check that only the first column of Base contains K1 in the condition, so match the longest prefix index, test, explain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>|   0:OlapScanNode
+|      TABLE: test
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo
+|      PREDICATES: `k1` = 1, `k2` &gt; 3
+partitions =1 /1
+Rollup: test
+|      buckets=1/10
+|      cardinality=-1
+|      avgRowSize=0.0
+|      numNodes=0
+|      tuple ids: 0
+</pre></div>
+</div>
+<p>Look again at the following queries:</p>
+<p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">test</span> <span class="pre">WHERE</span> <span class="pre">k4</span> <span class="pre">=1</span> <span class="pre">AND</span> <span class="pre">k5</span> <span class="pre">&gt;</span> <span class="pre">3;</span></code></p>
+<p>With K4 and K5 conditions, check that the first column of rollup_index3 and rollup_index4 contains k4, but the second column of rollup_index3 contains k5, so the matching prefix index is the longest.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>|   0:OlapScanNode
+|      TABLE: test
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo
+|      PREDICATES: `k4` = 1, `k5` &gt; 3
+partitions =1 /1
+Rollup: Rollup -u index3
+|      buckets=10/10
+|      cardinality=-1
+|      avgRowSize=0.0
+|      numNodes=0
+|      tuple ids: 0
+</pre></div>
+</div>
+<p>Now we try to match the conditions on the column containing varchar, as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">test</span> <span class="pre">WHERE</span> <span class="pre">k9</span> <span class="pre">IN</span> <span class="pre">(&quot;xxx&quot;,</span> <span class="pre">&quot;yyyy&quot;)</span> <span class="pre">AND</span> <span class="pre">k1</span> <span class="pre">=</span> <span class="pre">10;</span></code></p>
+<p>There are K9 and K1 conditions. The first column of rollup_index1 and rollup_index2 contains k9. It is reasonable to choose either rollup here to hit the prefix index and randomly select the same one (because there are just 20 bytes in varchar, and the prefix index is truncated in less than 36 bytes). The current strategy here will continue to match k1, because the second rollup_index1 is listed as k1, so rollup_index1 is chosen, in fact, the latter K1 condition will not play an accelerating role. (If the condition outside the prefix index needs to accelerate the query, it can be accelerated by establishing a Bloom Filter filter. Typically for string types, because Doris has a Block level for columns, a Min/Max index for shaping and dates.) The following is the result of explain.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>|   0:OlapScanNode
+|      TABLE: test
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo
+|      PREDICATES: `k9` IN (&#39;xxx&#39;, &#39;yyyy&#39;), `k1` = 10
+partitions =1 /1
+Rollup: Rollup -u index1
+|      buckets=1/10
+|      cardinality=-1
+|      avgRowSize=0.0
+|      numNodes=0
+|      tuple ids: 0
+</pre></div>
+</div>
+<p>Finally, look at a query that can be hit by more than one Rollup:</p>
+<p>“Select * from test where K4 &lt; 1000 and K5 = 80 and K6 = 10000;”</p>
+<p>There are three conditions: k4, K5 and k6. The first three columns of rollup_index3 and rollup_index4 contain these three columns respectively. So the prefix index length matched by them is the same. Both can be selected. The current default strategy is to select a rollup created earlier. Here is rollup_index3.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>|   0:OlapScanNode
+|      TABLE: test
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo
+|      PREDICATES: `k4` &lt; 1000, `k5` = 80, `k6` &gt;= 10000.0
+partitions =1 /1
+Rollup: Rollup -u index3
+|      buckets=10/10
+|      cardinality=-1
+|      avgRowSize=0.0
+|      numNodes=0
+|      tuple ids: 0
+</pre></div>
+</div>
+<p>If you modify the above query slightly as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">test</span> <span class="pre">WHERE</span> <span class="pre">k4</span> <span class="pre">&lt;</span> <span class="pre">1000</span> <span class="pre">AND</span> <span class="pre">k5</span> <span class="pre">=</span> <span class="pre">80</span> <span class="pre">OR</span> <span class="pre">k6</span> <span class="pre">&gt;=</span> <span class="pre">10000;</span></code></p>
+<p>The query here cannot hit the prefix index. (Even any Min/Max in the Doris storage engine, the BloomFilter index doesn’t work.)</p>
+</div>
+<div class="section" id="aggregate-data">
+<h1>Aggregate data<a class="headerlink" href="#aggregate-data" title="Permalink to this headline">¶</a></h1>
+<p>Of course, the function of aggregated data is indispensable for general polymer views. Such materialized views are very helpful for aggregated queries or report queries. To hit the polymer views, the following prerequisites are needed:</p>
+<ol class="simple">
+<li>There is a separate Rollup for all columns involved in a query or subquery.</li>
+<li>If there is Join in a query or sub-query, the type of Join needs to be Inner join.</li>
+</ol>
+<p>The following are some types of aggregated queries that can hit Rollup.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>列类型 查询类型</th>
+<th>Sum</th>
+<th>Distinct/Count Distinct</th>
+<th>Min</th>
+<th>Max</th>
+<th>Ndv</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key: 124key; false 124true true 124true true true true 124true true true 124true true true true 124true true true true true true true</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>+ 124; Value (SUM) 124; False False False False False False False False False False False False False False False \</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>+ 124; value (replace) FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>+ 124; value (min) = 124; false = 124; true = 124; false = 124; false = 124; false = 124; false = 124; false = 124; false = 124;</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>+ 124; Value (Max) 124; False False False True False False False</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p>If the above conditions are met, there will be two stages in judging the hit of Rollup for the aggregation model:</p>
+<ol class="simple">
+<li>Firstly, the Rollup table with the longest index hit by prefix index is matched by conditions. See the index strategy above.</li>
+<li>Then compare the rows of Rollup and select the smallest Rollup.</li>
+</ol>
+<p>The following Base table and Rollup:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-------------+-------+--------------+------+-------+---------+-------+</span>
+<span class="o">|</span> <span class="n">IndexName</span>   <span class="o">|</span> <span class="n">Field</span> <span class="o">|</span> <span class="n">Type</span>         <span class="o">|</span> <span class="n">Null</span> <span class="o">|</span> <span class="n">Key</span>   <span class="o">|</span> <span class="n">Default</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
+<span class="o">+-------------+-------+--------------+------+-------+---------+-------+</span>
+<span class="o">|</span> <span class="n">test_rollup</span> <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">TINYINT</span>      <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">SMALLINT</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k3</span>    <span class="o">|</span> <span class="n">INT</span>          <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k4</span>    <span class="o">|</span> <span class="n">BIGINT</span>       <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k5</span>    <span class="o">|</span> <span class="n">DECIMAL</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k6</span>    <span class="o">|</span> <span class="n">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>      <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k7</span>    <span class="o">|</span> <span class="n">DATE</span>         <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k8</span>    <span class="o">|</span> <span class="n">DATETIME</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="n">Yes</span> <span class="mi">1244</span><span class="p">;</span> <span class="n">true</span> <span class="mi">124</span><span class="n">N</span> <span class="o">/</span><span class="n">A</span> <span class="mi">124</span><span class="n">R</span><span class="p">;</span> <span class="mi">124</span><span class="n">R</span> <span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="n">VARCHAR</span> <span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="mi">124</span><span class="n">R</span><span class="p">;</span> <span class="n">Yes</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k10</span>   <span class="o">|</span> <span class="n">DOUBLE</span>       <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span> <span class="n">MAX</span>   <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k11</span>   <span class="o">|</span> <span class="n">FLOAT</span>        <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span>       <span class="o">|</span>              <span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">rollup2</span>     <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">TINYINT</span>      <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">SMALLINT</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k3</span>    <span class="o">|</span> <span class="n">INT</span>          <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k10</span>   <span class="o">|</span> <span class="n">DOUBLE</span>       <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span> <span class="n">MAX</span>   <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k11</span>   <span class="o">|</span> <span class="n">FLOAT</span>        <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span>       <span class="o">|</span>              <span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">rollup1</span>     <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">TINYINT</span>      <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">SMALLINT</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k3</span>    <span class="o">|</span> <span class="n">INT</span>          <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k4</span>    <span class="o">|</span> <span class="n">BIGINT</span>       <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k5</span>    <span class="o">|</span> <span class="n">DECIMAL</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k10</span>   <span class="o">|</span> <span class="n">DOUBLE</span>       <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span> <span class="n">MAX</span>   <span class="o">|</span>
+<span class="o">|</span>             <span class="o">|</span> <span class="n">k11</span>   <span class="o">|</span> <span class="n">FLOAT</span>        <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
+<span class="o">+-------------+-------+--------------+------+-------+---------+-------+</span>
+</pre></div>
+</div>
+<p>See the following queries:</p>
+<p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">SUM(k11)</span> <span class="pre">FROM</span> <span class="pre">test_rollup</span> <span class="pre">WHERE</span> <span class="pre">k1</span> <span class="pre">=</span> <span class="pre">10</span> <span class="pre">AND</span> <span class="pre">k2</span> <span class="pre">&gt;</span> <span class="pre">200</span> <span class="pre">AND</span> <span class="pre">k3</span> <span class="pre">in</span> <span class="pre">(1,2,3);</span></code></p>
+<p>Firstly, it judges whether the query can hit the aggregated Rolup table. After checking the graph above, it is possible. Then the condition contains three conditions: k1, K2 and k3. The first three columns of test_rollup, rollup1 and rollup2 contain all the three conditions. So the prefix index length is the same. Then, it is obvious that the aggregation degree of rollup2 is the highest when comparing the number of rows. Row 2 is selected because of the minimum number of rows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>|   0:OlapScanNode                                          |
+|      TABLE: test_rollup                                   |
+PREAGGREGATION: ON {124}
+|      PREDICATES: `k1` = 10, `k2` &gt; 200, `k3` IN (1, 2, 3) |
+partitions =1 /1
+|      rollup: rollup2                                      |
+|      buckets=1/10                                         |
+|      cardinality=-1                                       |
+|      avgRowSize=0.0                                       |
+|      numNodes=0                                           |
+|      tuple ids: 0                                         |
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../administrator-guide/index.html" class="btn btn-neutral float-right" title="Administrator Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="data-model-rollup_EN.html" class="btn btn-neutral float-left" title="Data Model, ROLLUP and Prefix Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

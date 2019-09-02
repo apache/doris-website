@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Best Practices &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Data partition" href="data-partition_EN.html" />
+    <link rel="prev" title="Advanced Use Guide" href="advance-usage_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Getting started</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html">Guidelines for Basic Use</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html">Advanced Use Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Best Practices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tabulation">1 tabulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#schema-change">2 Schema Change</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html">Data partition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html">Data Model, ROLLUP and Prefix Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html">Noun Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Getting started</a> &raquo;</li>
+        
+      <li>Best Practices</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/getting-started/best-practice_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="best-practices">
+<h1>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="tabulation">
+<h2>1 tabulation<a class="headerlink" href="#tabulation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="data-model-selection">
+<h3>1.1 Data Model Selection<a class="headerlink" href="#data-model-selection" title="Permalink to this headline">¶</a></h3>
+<p>Doris data model is currently divided into three categories: AGGREGATE KEY, UNIQUE KEY, DUPLICATE KEY. Data in all three models are sorted by KEY.</p>
+<ol class="simple">
+<li>AGGREGATE KEY</li>
+</ol>
+<p>When AGGREGATE KEY is the same, old and new records are aggregated. The aggregation functions currently supported are SUM, MIN, MAX, REPLACE.</p>
+<p>AGGREGATE KEY model can aggregate data in advance and is suitable for reporting and multi-dimensional analysis business.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">site_visit</span>
+<span class="p">(</span>
+<span class="n">siteid</span>      <span class="n">INT</span><span class="p">,</span>
+<span class="n">City</span><span class="p">:</span> <span class="n">SMALLINT</span><span class="p">,</span>
+<span class="n">username</span> <span class="n">VARCHAR</span> <span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+<span class="n">pv</span> <span class="n">BIGINT</span>   <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">)</span>
+<span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>KEY UNIQUE</li>
+</ol>
+<p>When UNIQUE KEY is the same, the new record covers the old record. At present, UNIQUE KEY implements the same RPLACE aggregation method as GGREGATE KEY, and they are essentially the same. Suitable for analytical business with updated requirements.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">sales_order</span>
+<span class="p">(</span>
+<span class="n">orderid</span>     <span class="n">BIGINT</span><span class="p">,</span>
+<span class="n">status</span>      <span class="n">TINYINT</span><span class="p">,</span>
+<span class="n">username</span> <span class="n">VARCHAR</span> <span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+<span class="n">amount</span>      <span class="n">BIGINT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">)</span>
+<span class="n">KEY</span> <span class="p">(</span><span class="n">orderid</span><span class="p">)</span> <span class="n">UNIT</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">orderid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>DUPLICATE KEY</li>
+</ol>
+<p>Only sort columns are specified, and the same rows are not merged. It is suitable for the analysis business where data need not be aggregated in advance.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">session_data</span>
+<span class="p">(</span>
+<span class="n">visitorid</span> <span class="n">SMALLINT</span><span class="p">,</span>
+<span class="n">sessionid</span>   <span class="n">BIGINT</span><span class="p">,</span>
+<span class="n">visit</span> <span class="n">time</span> <span class="n">DATETIME</span><span class="p">,</span>
+<span class="n">City</span> <span class="n">CHAR</span> <span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+<span class="n">province</span>    <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+<span class="n">ip</span><span class="o">.</span> <span class="n">varchar</span> <span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+<span class="n">brower</span>      <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+<span class="n">url</span><span class="p">:</span> <span class="n">VARCHAR</span> <span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">DUPLICATE</span> <span class="n">KEY</span> <span class="p">(</span><span class="n">visitor</span> <span class="n">time</span><span class="p">,</span> <span class="n">session</span> <span class="n">time</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">sessionid</span><span class="p">,</span> <span class="n">visitorid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wide-table-vs-star-schema">
+<h3>1.2 Wide Table vs. Star Schema<a class="headerlink" href="#wide-table-vs-star-schema" title="Permalink to this headline">¶</a></h3>
+<p>In order to adapt to the front-end business, business side often does not distinguish dimension information from indicator information, but defines Schema as a wide table. For Doris, the performance of such wide gauges is often unsatisfactory:</p>
+<ul class="simple">
+<li>There are many fields in Schema, and there may be more key columns in the aggregation model. The number of columns that need to be sorted in the import process will increase.</li>
+<li>Dimensional information updates are reflected in the whole table, and the frequency of updates directly affects the efficiency of queries.</li>
+</ul>
+<p>In the process of using Star Schema, users are advised to use Star Schema to distinguish dimension tables from indicator tables as much as possible. Frequently updated dimension tables can also be placed in MySQL external tables. If there are only a few updates, they can be placed directly in Doris. When storing dimension tables in Doris, more copies of dimension tables can be set up to improve Join’s performance.</p>
+</div>
+<div class="section" id="partitions-and-barrels">
+<h3>1.4 Partitions and Barrels<a class="headerlink" href="#partitions-and-barrels" title="Permalink to this headline">¶</a></h3>
+<p>Doris supports two-level partitioned storage. The first layer is RANGE partition and the second layer is HASH bucket.</p>
+<ol class="simple">
+<li>RANGE分区(partition)</li>
+</ol>
+<p>The RANGE partition is used to divide data into different intervals, which can be logically understood as dividing the original table into multiple sub-tables. In business, most users will choose to partition on time, which has the following advantages:</p>
+<ul class="simple">
+<li>Differentiable heat and cold data</li>
+<li>Availability of Doris Hierarchical Storage (SSD + SATA)</li>
+<li>Delete data by partition more quickly</li>
+</ul>
+<ol class="simple">
+<li>HASH分桶(bucket)</li>
+</ol>
+<p>The data is divided into different buckets according to the hash value.</p>
+<ul class="simple">
+<li>It is suggested that columns with large differentiation should be used as buckets to avoid data skew.</li>
+<li>In order to facilitate data recovery, it is suggested that the size of a single bucket should not be too large and should be kept within 10GB. Therefore, the number of buckets should be considered reasonably when building tables or increasing partitions, among which different partitions can specify different buckets.</li>
+</ul>
+</div>
+<div class="section" id="sparse-index-and-bloom-filter">
+<h3>1.5 Sparse Index and Bloom Filter<a class="headerlink" href="#sparse-index-and-bloom-filter" title="Permalink to this headline">¶</a></h3>
+<p>Doris stores the data in an orderly manner, and builds a sparse index for Doris on the basis of ordered data. The index granularity is block (1024 rows).</p>
+<p>Sparse index chooses fixed length prefix in schema as index content, and Doris currently chooses 36 bytes prefix as index.</p>
+<ul class="simple">
+<li>When building tables, it is suggested that the common filter fields in queries should be placed in front of Schema. The more distinguishable the query fields are, the more frequent the query fields are.</li>
+<li>One particular feature of this is the varchar type field. The varchar type field can only be used as the last field of the sparse index. The index is truncated at varchar, so if varchar appears in front, the length of the index may be less than 36 bytes. Specifically, you can refer to [data model, ROLLUP and prefix index] (. / data-model-rollup. md).</li>
+<li>In addition to sparse index, Doris also provides bloomfilter index. Bloomfilter index has obvious filtering effect on columns with high discrimination. If you consider that varchar cannot be placed in a sparse index, you can create a bloomfilter index.</li>
+</ul>
+</div>
+<div class="section" id="physical-and-chemical-view-rollup">
+<h3>1.6 Physical and Chemical View (rollup)<a class="headerlink" href="#physical-and-chemical-view-rollup" title="Permalink to this headline">¶</a></h3>
+<p>Rollup can essentially be understood as a physical index of the original table. When creating Rollup, only some columns in Base Table can be selected as Schema. The order of fields in Schema can also be different from that in Base Table.</p>
+<p>Rollup can be considered in the following cases:</p>
+<ol class="simple">
+<li>Base Table 中数据聚合度不高。</li>
+</ol>
+<p>This is usually due to the fact that Base Table has more differentiated fields. At this point, you can consider selecting some columns and establishing Rollup.</p>
+<p>For the `site_visit’table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">site</span> <span class="o">-</span><span class="n">u</span> <span class="n">visit</span> <span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Siteid may lead to a low degree of data aggregation. If business parties often base their PV needs on city statistics, they can build a city-only, PV-based ollup:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">rollup_city</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">pv</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>The prefix index in Base Table cannot be hit</li>
+</ol>
+<p>Generally, the way Base Table is constructed cannot cover all query modes. At this point, you can consider adjusting the column order and establishing Rollup.</p>
+<p>Database Session</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span> <span class="o">-</span><span class="n">u</span> <span class="n">data</span> <span class="p">(</span><span class="n">visitorid</span><span class="p">,</span> <span class="n">sessionid</span><span class="p">,</span> <span class="n">visittime</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">province</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">browser</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In addition to visitorid analysis, there are Brower and province analysis cases, Rollup can be established separately.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">session_data</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">rollup_brower</span><span class="p">(</span><span class="n">brower</span><span class="p">,</span><span class="n">province</span><span class="p">,</span><span class="n">ip</span><span class="p">,</span><span class="n">url</span><span class="p">)</span> <span class="n">DUPLICATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">brower</span><span class="p">,</span><span class="n">province</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="schema-change">
+<h2>2 Schema Change<a class="headerlink" href="#schema-change" title="Permalink to this headline">¶</a></h2>
+<p>Doris中目前进行 Schema Change 的方式有三种：Sorted Schema Change，Direct Schema Change, Linked Schema Change。</p>
+<ol class="simple">
+<li>Sorted Schema Change</li>
+</ol>
+<p>The sorting of columns has been changed and the data needs to be reordered. For example, delete a column in a sorted column and reorder the fields.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">DROP</span> <span class="n">COLUMN</span> <span class="n">city</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>Direct Schema Change: There is no need to reorder, but there is a need to convert the data. For example, modify the type of column, add a column to the sparse index, etc.</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">MODIFY</span> <span class="n">COLUMN</span> <span class="n">username</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>Linked Schema Change: 无需转换数据，直接完成。例如加列操作。</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">click</span> <span class="n">bigint</span> <span class="n">SUM</span> <span class="n">default</span> <span class="s1">&#39;0&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Schema is recommended to be considered when creating tables so that Schema can be changed more quickly.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data-partition_EN.html" class="btn btn-neutral float-right" title="Data partition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="advance-usage_EN.html" class="btn btn-neutral float-left" title="Advanced Use Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>User Define Function &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Design Documents" href="../internal/index.html" />
+    <link rel="prev" title="Doris On ES" href="doris-on-es_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Extending Ability</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="doris-on-es_EN.html">Doris On ES</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">User Define Function</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#writing-udf-functions">Writing UDF functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compiling-udf-functions">Compiling UDF functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-udf-functions">Create UDF functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-udf">Using UDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#delete-udf-functions">Delete UDF functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Extending Ability</a> &raquo;</li>
+        
+      <li>User Define Function</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/extending-doris/user-defined-function_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="user-define-function">
+<h1>User Define Function<a class="headerlink" href="#user-define-function" title="Permalink to this headline">¶</a></h1>
+<p>Users can extend Doris’s capabilities through UDF mechanisms. Through this document, users can create their own UDF.</p>
+<div class="section" id="writing-udf-functions">
+<h2>Writing UDF functions<a class="headerlink" href="#writing-udf-functions" title="Permalink to this headline">¶</a></h2>
+<p>Before using UDF, users need to write their own UDF functions in Doris’s UDF framework. In the <code class="docutils literal notranslate"><span class="pre">be/src/udf_samples/udf_sample.h</span> <span class="pre">|</span> <span class="pre">cpp</span></code> file, it is a simple UDF Demo.</p>
+<p>Writing a UDF function requires the following steps.</p>
+<div class="section" id="writing-functions">
+<h3>Writing functions<a class="headerlink" href="#writing-functions" title="Permalink to this headline">¶</a></h3>
+<p>Create the corresponding header file, CPP file, and implement the logic you need in the CPP file. The corresponding relationship between the format of implementation function in CPP file and UDF.</p>
+<div class="section" id="non-variable-parameters">
+<h4>Non-variable parameters<a class="headerlink" href="#non-variable-parameters" title="Permalink to this headline">¶</a></h4>
+<p>For UDF with non-variable parameters, the corresponding relationship between them is very direct.
+For example, <code class="docutils literal notranslate"><span class="pre">INT</span> <span class="pre">MyADD'(INT,</span> <span class="pre">INT)</span> </code> UDF corresponds to <code class="docutils literal notranslate"><span class="pre">IntVal</span> <span class="pre">AddUdf(FunctionContext*</span> <span class="pre">context,</span> <span class="pre">const</span> <span class="pre">IntVal</span> <span class="pre">&amp;</span> <span class="pre">arg1,</span> <span class="pre">const</span> <span class="pre">IntVal</span> <span class="pre">&amp;</span> <span class="pre">arg2)</span></code>.</p>
+<ol class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">AddUdf</span></code> can be any name, as long as it is specified when UDF is created.</li>
+<li>The first parameter in the implementation function is always <code class="docutils literal notranslate"><span class="pre">FunctionContext*</span></code>. The implementer can obtain some query-related content and apply for some memory to be used through this structure. Specific interfaces can be defined in <code class="docutils literal notranslate"><span class="pre">udf/udf.h</span></code>.</li>
+<li>Implementing functions from the second parameter requires one-to-one correspondence with UDF parameters, such as <code class="docutils literal notranslate"><span class="pre">IntVal</span></code> corresponding to <code class="docutils literal notranslate"><span class="pre">INT</span></code> type. All types in this section are referenced by <code class="docutils literal notranslate"><span class="pre">const</span></code>.</li>
+<li>Return parameters should correspond to the type of UDF parameters.</li>
+</ol>
+</div>
+<div class="section" id="variable-parameters">
+<h4>Variable parameters<a class="headerlink" href="#variable-parameters" title="Permalink to this headline">¶</a></h4>
+<p>For variable parameters, see the following example, UDF <code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">md5sum</span> <span class="pre">(String,...)</span></code> corresponds to
+<code class="docutils literal notranslate"><span class="pre">StringVal</span> <span class="pre">md5sumUdf</span> <span class="pre">(FunctionContext</span> <span class="pre">*</span> <span class="pre">ctx,</span> <span class="pre">int</span> <span class="pre">num</span> <span class="pre">args,</span> <span class="pre">const</span> <span class="pre">StringVal</span> <span class="pre">*</span> <span class="pre">args)</span></code></p>
+<ol class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">md5sumUdf</span></code> can also be changed at will. It can be specified at the time of creation.</li>
+<li>The first parameter, like a non-variable parameter function, is passed in a <code class="docutils literal notranslate"><span class="pre">FunctionContext*</span></code>.</li>
+<li>The variable parameter part consists of two parts. First, an integer is passed in, which shows that there are several parameters. Later, an array of variable parameter parts is passed in.</li>
+</ol>
+</div>
+<div class="section" id="type-correspondence">
+<h4>Type correspondence<a class="headerlink" href="#type-correspondence" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>UDF Type</th>
+<th>Argument Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TinyInt</td>
+<td>TinyIntVal</td>
+</tr>
+<tr>
+<td>SmallInt</td>
+<td>SmallIntVal</td>
+</tr>
+<tr>
+<td>Int</td>
+<td>IntVal</td>
+</tr>
+<tr>
+<td>BigInt</td>
+<td>BigIntVal</td>
+</tr>
+<tr>
+<td>LargeInt</td>
+<td>LargeIntVal</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>FloatVal</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>DoubleVal</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>DateTimeVal</td>
+</tr>
+<tr>
+<td>Datetime</td>
+<td>DateTimeVal</td>
+</tr>
+<tr>
+<td>Char</td>
+<td>StringVal</td>
+</tr>
+<tr>
+<td>Varchar</td>
+<td>StringVal</td>
+</tr>
+<tr>
+<td>Decimal</td>
+<td>DecimalVal</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="section" id="compiling-udf-functions">
+<h2>Compiling UDF functions<a class="headerlink" href="#compiling-udf-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="compile-doris">
+<h3>Compile Doris<a class="headerlink" href="#compile-doris" title="Permalink to this headline">¶</a></h3>
+<p>Executing <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">build.sh</span></code> in the Doris root directory generates the corresponding <code class="docutils literal notranslate"><span class="pre">headers|libs</span></code> in <code class="docutils literal notranslate"><span class="pre">output/udf/</span></code></p>
+</div>
+<div class="section" id="edit-cmakelists-txt">
+<h3>Edit CMakeLists.txt<a class="headerlink" href="#edit-cmakelists-txt" title="Permalink to this headline">¶</a></h3>
+<p>Based on the <code class="docutils literal notranslate"><span class="pre">headers</span> <span class="pre">|</span> <span class="pre">libs</span></code> generated in the previous step, users can introduce the dependency using tools such as <code class="docutils literal notranslate"><span class="pre">CMakeLists</span></code>; in <code class="docutils literal notranslate"><span class="pre">CMakeLists</span></code>, dynamic libraries can be added by adding <code class="docutils literal notranslate"><span class="pre">-I|L</span></code> to <code class="docutils literal notranslate"><span class="pre">CMAKE_CXX_FLAGS</span></code>, respectively. For example, in <code class="docutils literal notranslate"><span class="pre">be/src/udf_samples/CMakeLists.txt</span></code>, a <code class="docutils literal notranslate"><span class="pre">udf</span> <span class="pre">sample</span></code> dynamic library is added using <code class="docutils literal notranslate"><span class="pre">add_library</span></code> (udfsample SHARED udf_sample.cpp). You need to write down all the source files involved later (no header files included).</p>
+</div>
+<div class="section" id="execute-compilation">
+<h3>Execute compilation<a class="headerlink" href="#execute-compilation" title="Permalink to this headline">¶</a></h3>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">build</span></code> directory under this directory and execute <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">../</span></code> generate <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> under <code class="docutils literal notranslate"><span class="pre">build</span></code>, and execute <code class="docutils literal notranslate"><span class="pre">make</span></code> to generate corresponding dynamic libraries.</p>
+</div>
+</div>
+<div class="section" id="create-udf-functions">
+<h2>Create UDF functions<a class="headerlink" href="#create-udf-functions" title="Permalink to this headline">¶</a></h2>
+<p>Through the above steps, you can get a dynamic library. You need to put this dynamic library in a location that can be accessed through the HTTP protocol. Then execute the create UDF function to create a UDF inside the Doris system. You need AMDIN privileges to do this.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="p">[</span><span class="n">AGGREGATE</span><span class="p">]</span> <span class="n">FUNCTION</span> 
+	<span class="n">name</span> <span class="p">([</span><span class="n">argtype</span><span class="p">][,</span><span class="o">...</span><span class="p">])</span>
+	<span class="p">[</span><span class="n">RETURNS</span><span class="p">]</span> <span class="n">rettype</span>
+	<span class="n">PROPERTIES</span> <span class="p">([</span><span class="s2">&quot;key&quot;</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">][,</span><span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Explain:</p>
+<ol class="simple">
+<li>In PROPERTIES, <code class="docutils literal notranslate"><span class="pre">symbol</span></code> denotes the corresponding symbol for the execution of the entry function, which must be set. You can get the corresponding symbol by the <code class="docutils literal notranslate"><span class="pre">nm</span></code> command, such as <code class="docutils literal notranslate"><span class="pre">nm</span> <span class="pre">libudfsample.so</span></code>, <code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">AddUdf</span></code>, <code class="docutils literal notranslate"><span class="pre">ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4</span></code>.</li>
+<li>In PROPERTIES, <code class="docutils literal notranslate"><span class="pre">object_file</span></code> denotes where to download to the corresponding dynamic library. This parameter must be set.</li>
+<li>name: A function belongs to a DB in the form of <code class="docutils literal notranslate"><span class="pre">dbName</span></code>. <code class="docutils literal notranslate"><span class="pre">funcName</span></code>. When <code class="docutils literal notranslate"><span class="pre">dbName</span></code> is not specified explicitly, the DB where the current session is located is used as <code class="docutils literal notranslate"><span class="pre">dbName</span></code>.</li>
+</ol>
+<p>For more details, see <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FUNCTION</span></code>.</p>
+</div>
+<div class="section" id="using-udf">
+<h2>Using UDF<a class="headerlink" href="#using-udf" title="Permalink to this headline">¶</a></h2>
+<p>Users using UDF/UDAF must have <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> privileges for the corresponding database.</p>
+<p>UDF is used in the same way as normal functions. The only difference is that the scope of built-in functions is global, while the scope of UDF is internal to DB. When the link session is inside the data, using the UDF name directly will find the corresponding UDF within the current DB. Otherwise, the user needs to display the database name of the specified UDF, such as <code class="docutils literal notranslate"><span class="pre">dbName</span></code>. <code class="docutils literal notranslate"><span class="pre">funcName</span></code>.</p>
+</div>
+<div class="section" id="delete-udf-functions">
+<h2>Delete UDF functions<a class="headerlink" href="#delete-udf-functions" title="Permalink to this headline">¶</a></h2>
+<p>When you no longer need UDF functions, you can delete a UDF function by using the following command, referring to <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">FUNCTION</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../internal/index.html" class="btn btn-neutral float-right" title="Design Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="doris-on-es_EN.html" class="btn btn-neutral float-left" title="Doris On ES" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

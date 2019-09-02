@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>基础使用指南 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="高级使用指南" href="advance-usage.html" />
+    <link rel="prev" title="开始使用" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">开始使用</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">基础使用指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">1 创建用户</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">2 数据表的创建与数据导入</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">3 数据的查询</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage.html">高级使用指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="best-practice.html">最佳实践</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-partition.html">数据划分</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data-model-rollup.html">数据模型、ROLLUP 及前缀索引</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup.html">Rollup 与查询</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="index.html">开始使用</a> &raquo;</li>
+        
+      <li>基础使用指南</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/getting-started/basic-usage.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>基础使用指南<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Doris 采用 MySQL 协议进行通信，用户可通过 MySQL client 或者 MySQL JDBC连接到 Doris 集群。选择 MySQL client 版本时建议采用5.1 之后的版本，因为 5.1 之前不能支持长度超过 16 个字符的用户名。本文以 MySQL client 为例，通过一个完整的流程向用户展示 Doris 的基本使用方法。</p>
+<div class="section" id="id2">
+<h2>1 创建用户<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="root">
+<h3>1.1 Root 用户登录与密码修改<a class="headerlink" href="#root" title="Permalink to this headline">¶</a></h3>
+<p>Doris 内置 root 和 admin 用户，密码默认都为空。启动完 Doris 程序之后，可以通过 root 或 admin 用户连接到 Doris 集群。
+使用下面命令即可登录 Doris：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">h</span> <span class="n">FE_HOST</span> <span class="o">-</span><span class="n">P9030</span> <span class="o">-</span><span class="n">uroot</span>
+</pre></div>
+</div>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">fe_host</span></code> 是任一 FE 节点的 ip 地址。<code class="docutils literal notranslate"><span class="pre">9030</span></code> 是 fe.conf 中的 query_port 配置。</div></blockquote>
+<p>登陆后，可以通过以下命令修改 root 密码</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">PASSWORD</span> <span class="n">FOR</span> <span class="s1">&#39;root&#39;</span> <span class="o">=</span> <span class="n">PASSWORD</span><span class="p">(</span><span class="s1">&#39;your_password&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>1.3 创建新用户<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>通过下面的命令创建一个普通用户。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">USER</span> <span class="s1">&#39;test&#39;</span> <span class="n">IDENTIFIED</span> <span class="n">BY</span> <span class="s1">&#39;test_passwd&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>后续登录时就可以通过下列连接命令登录。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">h</span> <span class="n">FE_HOST</span> <span class="o">-</span><span class="n">P9030</span> <span class="o">-</span><span class="n">utest</span> <span class="o">-</span><span class="n">ptest_passwd</span>
+</pre></div>
+</div>
+<blockquote>
+<div>新创建的普通用户默认没有任何权限。权限授予可以参考后面的权限授予。</div></blockquote>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>2 数据表的创建与数据导入<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>2.1 创建数据库<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>初始可以通过 root 或 admin 用户创建数据库：</p>
+<p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">DATABASE</span> <span class="pre">example_db;</span></code></p>
+<blockquote>
+<div>所有命令都可以使用 ‘HELP command;’ 查看到详细的语法帮助。如：<code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">DATABASE;</span></code></div></blockquote>
+<blockquote>
+<div>如果不清楚命令的全名，可以使用 “help 命令某一字段” 进行模糊查询。如键入’HELP CREATE’，可以匹配到 <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">USER</span></code> 等命令。</div></blockquote>
+<p>数据库创建完成之后，可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">DATABASES;</span></code> 查看数据库信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">DATABASES</span><span class="p">;</span>
+<span class="o">+--------------------+</span>
+<span class="o">|</span> <span class="n">Database</span>           <span class="o">|</span>
+<span class="o">+--------------------+</span>
+<span class="o">|</span> <span class="n">example_db</span>         <span class="o">|</span>
+<span class="o">|</span> <span class="n">information_schema</span> <span class="o">|</span>
+<span class="o">+--------------------+</span>
+<span class="mi">2</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>information_schema是为了兼容MySQL协议而存在，实际中信息可能不是很准确，所以关于具体数据库的信息建议通过直接查询相应数据库而获得。</p>
+</div>
+<div class="section" id="id6">
+<h3>2.2 账户授权<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>example_db 创建完成之后，可以通过 root/admin 账户将 example_db 读写权限授权给普通账户，如 test。授权之后采用 test 账户登录就可以操作 example_db 数据库了。</p>
+<p><code class="docutils literal notranslate"><span class="pre">GRANT</span> <span class="pre">ALL</span> <span class="pre">ON</span> <span class="pre">example_db</span> <span class="pre">TO</span> <span class="pre">test;</span></code></p>
+</div>
+<div class="section" id="id7">
+<h3>2.3 建表<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> 命令建立一个表(Table)。更多详细参数可以查看:</p>
+<p><code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">TABLE;</span></code></p>
+<p>首先切换数据库:</p>
+<p><code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">example_db;</span></code></p>
+<p>Doris支持支持单分区和复合分区两种建表方式。</p>
+<p>在复合分区中：</p>
+<ul class="simple">
+<li>第一级称为 Partition，即分区。用户可以指定某一维度列作为分区列（当前只支持整型和时间类型的列），并指定每个分区的取值范围。</li>
+<li>第二级称为 Distribution，即分桶。用户可以指定一个或多个维度列以及桶数对数据进行 HASH 分布。</li>
+</ul>
+<p>以下场景推荐使用复合分区</p>
+<ul class="simple">
+<li>有时间维度或类似带有有序值的维度，可以以这类维度列作为分区列。分区粒度可以根据导入频次、分区数据量等进行评估。</li>
+<li>历史数据删除需求：如有删除历史数据的需求（比如仅保留最近N 天的数据）。使用复合分区，可以通过删除历史分区来达到目的。也可以通过在指定分区内发送 DELETE 语句进行数据删除。</li>
+<li>解决数据倾斜问题：每个分区可以单独指定分桶数量。如按天分区，当每天的数据量差异很大时，可以通过指定分区的分桶数，合理划分不同分区的数据,分桶列建议选择区分度大的列。</li>
+</ul>
+<p>用户也可以不使用复合分区，即使用单分区。则数据只做 HASH 分布。</p>
+<p>下面以聚合模型为例，分别演示两种分区的建表语句。</p>
+<div class="section" id="id8">
+<h4>单分区<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p>建立一个名字为 table1 的逻辑表。分桶列为 siteid，桶数为 10。</p>
+<p>这个表的 schema 如下：</p>
+<ul class="simple">
+<li>siteid：类型是INT（4字节）, 默认值为10</li>
+<li>citycode：类型是SMALLINT（2字节）</li>
+<li>username：类型是VARCHAR, 最大长度为32, 默认值为空字符串</li>
+<li>pv：类型是BIGINT（8字节）, 默认值是0; 这是一个指标列, Doris内部会对指标列做聚合操作, 这个列的聚合方法是求和（SUM）</li>
+</ul>
+<p>建表语句如下:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">table1</span>
+<span class="p">(</span>
+    <span class="n">siteid</span> <span class="n">INT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+    <span class="n">citycode</span> <span class="n">SMALLINT</span><span class="p">,</span>
+    <span class="n">username</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">pv</span> <span class="n">BIGINT</span> <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">)</span>
+<span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">citycode</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span>
+<span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;replication_num&quot;</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h4>复合分区<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>建立一个名字为 table2 的逻辑表。</p>
+<p>这个表的 schema 如下：</p>
+<ul class="simple">
+<li>event_day：类型是DATE，无默认值</li>
+<li>siteid：类型是INT（4字节）, 默认值为10</li>
+<li>citycode：类型是SMALLINT（2字节）</li>
+<li>username：类型是VARCHAR, 最大长度为32, 默认值为空字符串</li>
+<li>pv：类型是BIGINT（8字节）, 默认值是0; 这是一个指标列, Doris 内部会对指标列做聚合操作, 这个列的聚合方法是求和（SUM）</li>
+</ul>
+<p>我们使用 event_day 列作为分区列，建立3个分区: p201706, p201707, p201708</p>
+<ul class="simple">
+<li>p201706：范围为 [最小值,     2017-07-01)</li>
+<li>p201707：范围为 [2017-07-01, 2017-08-01)</li>
+<li>p201708：范围为 [2017-08-01, 2017-09-01)</li>
+</ul>
+<blockquote>
+<div>注意区间为左闭右开。</div></blockquote>
+<p>每个分区使用 siteid 进行哈希分桶，桶数为10</p>
+<p>建表语句如下:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">table2</span>
+<span class="p">(</span>
+    <span class="n">event_day</span> <span class="n">DATE</span><span class="p">,</span>
+    <span class="n">siteid</span> <span class="n">INT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+    <span class="n">citycode</span> <span class="n">SMALLINT</span><span class="p">,</span>
+    <span class="n">username</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">pv</span> <span class="n">BIGINT</span> <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">)</span>
+<span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">event_day</span><span class="p">,</span> <span class="n">siteid</span><span class="p">,</span> <span class="n">citycode</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+<span class="n">PARTITION</span> <span class="n">BY</span> <span class="n">RANGE</span><span class="p">(</span><span class="n">event_day</span><span class="p">)</span>
+<span class="p">(</span>
+    <span class="n">PARTITION</span> <span class="n">p201706</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s1">&#39;2017-07-01&#39;</span><span class="p">),</span>
+    <span class="n">PARTITION</span> <span class="n">p201707</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s1">&#39;2017-08-01&#39;</span><span class="p">),</span>
+    <span class="n">PARTITION</span> <span class="n">p201708</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s1">&#39;2017-09-01&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span>
+<span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;replication_num&quot;</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>表建完之后，可以查看 example_db 中表的信息:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">TABLES</span><span class="p">;</span>
+<span class="o">+----------------------+</span>
+<span class="o">|</span> <span class="n">Tables_in_example_db</span> <span class="o">|</span>
+<span class="o">+----------------------+</span>
+<span class="o">|</span> <span class="n">table1</span>               <span class="o">|</span>
+<span class="o">|</span> <span class="n">table2</span>               <span class="o">|</span>
+<span class="o">+----------------------+</span>
+<span class="mi">2</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.01</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">DESC</span> <span class="n">table1</span><span class="p">;</span>
+<span class="o">+----------+-------------+------+-------+---------+-------+</span>
+<span class="o">|</span> <span class="n">Field</span>    <span class="o">|</span> <span class="n">Type</span>        <span class="o">|</span> <span class="n">Null</span> <span class="o">|</span> <span class="n">Key</span>   <span class="o">|</span> <span class="n">Default</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
+<span class="o">+----------+-------------+------+-------+---------+-------+</span>
+<span class="o">|</span> <span class="n">siteid</span>   <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="mi">10</span>      <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">citycode</span> <span class="o">|</span> <span class="n">smallint</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">pv</span>       <span class="o">|</span> <span class="n">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="mi">0</span>       <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
+<span class="o">+----------+-------------+------+-------+---------+-------+</span>
+<span class="mi">4</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">DESC</span> <span class="n">table2</span><span class="p">;</span>
+<span class="o">+-----------+-------------+------+-------+---------+-------+</span>
+<span class="o">|</span> <span class="n">Field</span>     <span class="o">|</span> <span class="n">Type</span>        <span class="o">|</span> <span class="n">Null</span> <span class="o">|</span> <span class="n">Key</span>   <span class="o">|</span> <span class="n">Default</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
+<span class="o">+-----------+-------------+------+-------+---------+-------+</span>
+<span class="o">|</span> <span class="n">event_day</span> <span class="o">|</span> <span class="n">date</span>        <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">siteid</span>    <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="mi">10</span>      <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">citycode</span>  <span class="o">|</span> <span class="n">smallint</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">username</span>  <span class="o">|</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">pv</span>        <span class="o">|</span> <span class="n">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="mi">0</span>       <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
+<span class="o">+-----------+-------------+------+-------+---------+-------+</span>
+<span class="mi">5</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>注意事项：</p>
+<ol class="simple">
+<li>上述表通过设置 replication_num 建的都是单副本的表，Doris建议用户采用默认的 3 副本设置，以保证高可用。</li>
+<li>可以对复合分区表动态的增删分区。详见 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span></code> 中 Partition 相关部分。</li>
+<li>数据导入可以导入指定的 Partition。详见 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">LOAD</span></code>。</li>
+<li>可以动态修改表的 Schema。</li>
+<li>可以对 Table 增加上卷表（Rollup）以提高查询性能，这部分可以参见高级使用指南关于 Rollup 的描述。</li>
+</ol>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>2.4 导入数据<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>Doris 支持多种数据导入方式。具体可以参阅数据导入文档。这里我们使用流式导入和 Broker 导入做示例。</p>
+<div class="section" id="id11">
+<h4>流式导入<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>流式导入通过 HTTP 协议向 Doris 传输数据，可以不依赖其他系统或组件直接导入本地数据。详细语法帮助可以参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">STREAM</span> <span class="pre">LOAD;</span></code>。</p>
+<p>示例1：以 “table1_20170707” 为 Label，使用本地文件 table1_data 导入 table1 表。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">test</span><span class="p">:</span><span class="n">test</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:table1_20170707&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;column_separator:,&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">table1_data</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">FE_HOST</span><span class="p">:</span><span class="mi">8030</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">example_db</span><span class="o">/</span><span class="n">table1</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ol class="simple">
+<li>FE_HOST 是任一 FE 所在节点 IP，8030 为 fe.conf 中的 http_port。</li>
+<li>可以使用任一 BE 的 IP，以及 be.conf 中的 webserver_port 左右连接目标进行导入。如：<code class="docutils literal notranslate"><span class="pre">BE_HOST:8040</span></code></li>
+</ol>
+</div></blockquote>
+<p>本地文件 <code class="docutils literal notranslate"><span class="pre">table1_data</span></code> 以 <code class="docutils literal notranslate"><span class="pre">,</span></code> 作为数据之间的分隔，具体内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">jim</span><span class="p">,</span><span class="mi">2</span>
+<span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">grace</span><span class="p">,</span><span class="mi">2</span>
+<span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">tom</span><span class="p">,</span><span class="mi">2</span>
+<span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">bush</span><span class="p">,</span><span class="mi">3</span>
+<span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">helen</span><span class="p">,</span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>示例2: 以 “table2_20170707” 为 Label，使用本地文件 table2_data 导入 table2 表。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">test</span><span class="p">:</span><span class="n">test</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:table2_20170707&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;column_separator:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">table2_data</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">8030</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">example_db</span><span class="o">/</span><span class="n">table2</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+<p>本地文件 <code class="docutils literal notranslate"><span class="pre">table2_data</span></code> 以 <code class="docutils literal notranslate"><span class="pre">\t</span></code> 作为数据之间的分隔，具体内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">03</span>  <span class="mi">1</span>   <span class="mi">1</span>   <span class="n">jim</span>   <span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">05</span>  <span class="mi">2</span>   <span class="mi">1</span>   <span class="n">grace</span> <span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span>  <span class="mi">3</span>   <span class="mi">2</span>   <span class="n">tom</span>   <span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">15</span>  <span class="mi">4</span>   <span class="mi">3</span>   <span class="n">bush</span>  <span class="mi">3</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span>  <span class="mi">5</span>   <span class="mi">3</span>   <span class="n">helen</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>注意事项：</p>
+<ol class="simple">
+<li>采用流式导入建议文件大小限制在 10GB 以内，过大的文件会导致失败重试代价变大。</li>
+<li>每一批导入数据都需要取一个 Label，Label 最好是一个和一批数据有关的字符串，方便阅读和管理。Doris 基于 Label 保证在一个Database 内，同一批数据只可导入成功一次。失败任务的 Label 可以重用。</li>
+<li>流式导入是同步命令。命令返回成功则表示数据已经导入，返回失败表示这批数据没有导入。</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="broker">
+<h4>Broker 导入<a class="headerlink" href="#broker" title="Permalink to this headline">¶</a></h4>
+<p>Broker 导入通过部署的 Broker 进程，读取外部存储上的数据进行导入。更多帮助请参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">BROKER</span> <span class="pre">LOAD;</span></code></p>
+<p>示例：以 “table1_20170708” 为 Label，将 HDFS 上的文件导入 table1 表</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LOAD</span> <span class="n">LABEL</span> <span class="n">table1_20170708</span>
+<span class="p">(</span>
+    <span class="n">DATA</span> <span class="n">INFILE</span><span class="p">(</span><span class="s2">&quot;hdfs://your.namenode.host:port/dir/table1_data&quot;</span><span class="p">)</span>
+    <span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">table1</span>
+<span class="p">)</span>
+<span class="n">WITH</span> <span class="n">BROKER</span> <span class="n">hdfs</span> 
+<span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span><span class="o">=</span><span class="s2">&quot;hdfs_user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="o">=</span><span class="s2">&quot;hdfs_password&quot;</span>
+<span class="p">)</span>
+<span class="n">PROPERTIES</span>
+<span class="p">(</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">=</span><span class="s2">&quot;3600&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_filter_ratio&quot;</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Broker 导入是异步命令。以上命令执行成功只表示提交任务成功。导入是否成功需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD;</span></code> 查看。如：</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABLE</span> <span class="pre">=</span> <span class="pre">&quot;table1_20170708&quot;;</span></code></p>
+<p>返回结果中，<code class="docutils literal notranslate"><span class="pre">State</span></code> 字段为 FINISHED 则表示导入成功。</p>
+<p>关于 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span></code> 的更多说明，可以参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">LOAD;</span></code></p>
+<p>异步的导入任务在结束前可以取消：</p>
+<p><code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL</span> <span class="pre">=</span> <span class="pre">&quot;table1_20170708&quot;;</span></code></p>
+</div>
+</div>
+</div>
+<div class="section" id="id12">
+<h2>3 数据的查询<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>3.1 简单查询<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>示例:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">table1</span> <span class="n">LIMIT</span> <span class="mi">3</span><span class="p">;</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span> <span class="n">siteid</span> <span class="o">|</span> <span class="n">citycode</span> <span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">pv</span>   <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span>      <span class="mi">2</span> <span class="o">|</span>        <span class="mi">1</span> <span class="o">|</span> <span class="s1">&#39;grace&#39;</span>  <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">5</span> <span class="o">|</span>        <span class="mi">3</span> <span class="o">|</span> <span class="s1">&#39;helen&#39;</span>  <span class="o">|</span>    <span class="mi">3</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">3</span> <span class="o">|</span>        <span class="mi">2</span> <span class="o">|</span> <span class="s1">&#39;tom&#39;</span>    <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="mi">5</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.01</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">table1</span> <span class="n">ORDER</span> <span class="n">BY</span> <span class="n">citycode</span><span class="p">;</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span> <span class="n">siteid</span> <span class="o">|</span> <span class="n">citycode</span> <span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">pv</span>   <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span>      <span class="mi">2</span> <span class="o">|</span>        <span class="mi">1</span> <span class="o">|</span> <span class="s1">&#39;grace&#39;</span>  <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">1</span> <span class="o">|</span>        <span class="mi">1</span> <span class="o">|</span> <span class="s1">&#39;jim&#39;</span>    <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">3</span> <span class="o">|</span>        <span class="mi">2</span> <span class="o">|</span> <span class="s1">&#39;tom&#39;</span>    <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">4</span> <span class="o">|</span>        <span class="mi">3</span> <span class="o">|</span> <span class="s1">&#39;bush&#39;</span>   <span class="o">|</span>    <span class="mi">3</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">5</span> <span class="o">|</span>        <span class="mi">3</span> <span class="o">|</span> <span class="s1">&#39;helen&#39;</span>  <span class="o">|</span>    <span class="mi">3</span> <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="mi">5</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.01</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="join">
+<h3>3.3 Join 查询<a class="headerlink" href="#join" title="Permalink to this headline">¶</a></h3>
+<p>示例:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL&gt; SELECT SUM(table1.pv) FROM table1 JOIN table2 WHERE table1.siteid = table2.siteid;
++--------------------+
+| sum(`table1`.`pv`) |
++--------------------+
+|                 12 |
++--------------------+
+1 row in set (0.20 sec)
+</pre></div>
+</div>
+</div>
+<div class="section" id="id14">
+<h3>3.4 子查询<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p>示例:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL&gt; SELECT SUM(pv) FROM table2 WHERE siteid IN (SELECT siteid FROM table1 WHERE siteid &gt; 2);
++-----------+
+| sum(`pv`) |
++-----------+
+|         8 |
++-----------+
+1 row in set (0.13 sec)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="advance-usage.html" class="btn btn-neutral float-right" title="高级使用指南" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="开始使用" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

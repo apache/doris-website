@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>备份与恢复 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Broker" href="broker.html" />
+    <link rel="prev" title="BE Tablet数据恢复工具" href="operation/tablet-restore-tool.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">备份与恢复</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">简要原理说明</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">最佳实践</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">重点说明</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">相关命令</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="index.html">操作手册</a> &raquo;</li>
+        
+      <li>备份与恢复</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/backup-restore.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>备份与恢复<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存储系统中。之后可以通过 恢复 命令，从远端存储系统中将数据恢复到任意 Doris 集群。通过这个功能，Doris 可以支持将数据定期的进行快照备份。也可以通过这个功能，在不同集群间进行数据迁移。</p>
+<p>该功能需要 Doris 版本 0.8.2+</p>
+<p>使用该功能，需要部署对应远端存储的 broker。如 BOS、HDFS 等。可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BROKER;</span></code> 查看当前部署的 broker。</p>
+<div class="section" id="id2">
+<h2>简要原理说明<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="backup">
+<h3>备份（Backup）<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h3>
+<p>备份操作是将指定表或分区的数据，直接以 Doris 存储的文件的形式，上传到远端仓库中进行存储。当用户提交 Backup 请求后，系统内部会做如下操作：</p>
+<ol>
+<li><p class="first">快照及快照上传</p>
+<p>快照阶段会对指定的表或分区数据文件进行快照。之后，备份都是对快照进行操作。在快照之后，对表进行的更改、导入等操作都不再影响备份的结果。快照只是对当前数据文件产生一个硬链，耗时很少。快照完成后，会开始对这些快照文件进行逐一上传。快照上传由各个 Backend 并发完成。</p>
+</li>
+<li><p class="first">元数据准备及上传</p>
+<p>数据文件快照上传完成后，Frontend 会首先将对应元数据写成本地文件，然后通过 broker 将本地元数据文件上传到远端仓库。完成最终备份作业。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="restore">
+<h3>恢复（Restore）<a class="headerlink" href="#restore" title="Permalink to this headline">¶</a></h3>
+<p>恢复操作需要指定一个远端仓库中已存在的备份，然后将这个备份的内容恢复到本地集群中。当用户提交 Restore 请求后，系统内部会做如下操作：</p>
+<ol>
+<li><p class="first">在本地创建对应的元数据</p>
+<p>这一步首先会在本地集群中，创建恢复对应的表分区等结构。创建完成后，该表可见，但是不可访问。</p>
+</li>
+<li><p class="first">本地snapshot</p>
+<p>这一步是将上一步创建的表做一个快照。这其实是一个空快照（因为刚创建的表是没有数据的），其目的主要是在 Backend 上产生对应的快照目录，用于之后接收从远端仓库下载的快照文件。</p>
+</li>
+<li><p class="first">下载快照</p>
+<p>远端仓库中的快照文件，会被下载到对应的上一步生成的快照目录中。这一步由各个 Backend 并发完成。</p>
+</li>
+<li><p class="first">生效快照</p>
+<p>快照下载完成后，我们要将各个快照映射为当前本地表的元数据。然后重新加载这些快照，使之生效，完成最终的恢复作业。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>最佳实践<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>备份<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>当前我们支持最小分区（Partition）粒度的全量备份（增量备份有可能在未来版本支持）。如果需要对数据进行定期备份，首先需要在建表时，合理的规划表的分区及分桶，比如按时间进行分区。然后在之后的运行过程中，按照分区粒度进行定期的数据备份。</p>
+</div>
+<div class="section" id="id5">
+<h3>数据迁移<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>用户可以先将数据备份到远端仓库，再通过远端仓库将数据恢复到另一个集群，完成数据迁移。因为数据备份是通过快照的形式完成的，所以，在备份作业的快照阶段之后的新的导入数据，是不会备份的。因此，在快照完成后，到恢复作业完成这期间，在原集群上导入的数据，都需要在新集群上同样导入一遍。</p>
+<p>建议在迁移完成后，对新旧两个集群并行导入一段时间。完成数据和业务正确性校验后，再将业务迁移到新的集群。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>重点说明<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>备份恢复相关的操作目前只允许拥有 ADMIN 权限的用户执行。</li>
+<li>一个 Database 内，只允许有一个正在执行的备份或恢复作业。</li>
+<li>备份和恢复都支持最小分区（Partition）级别的操作，当表的数据量很大时，建议按分区分别执行，以降低失败重试的代价。</li>
+<li>因为备份恢复操作，操作的都是实际的数据文件。所以当一个表的分片过多，或者一个分片有过多的小版本时，可能即使总数据量很小，依然需要备份或恢复很长时间。用户可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PARTITIONS</span> <span class="pre">FROM</span> <span class="pre">table_name;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">TABLET</span> <span class="pre">FROM</span> <span class="pre">table_name;</span></code> 来查看各个分区的分片数量，以及各个分片的文件版本数量，来预估作业执行时间。文件数量对作业执行的时间影响非常大，所以建议在建表时，合理规划分区分桶，以避免过多的分片。</li>
+<li>当通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKUP</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">RESTORE</span></code> 命令查看作业状态时。有可能会在 <code class="docutils literal notranslate"><span class="pre">TaskErrMsg</span></code> 一列中看到错误信息。但只要 <code class="docutils literal notranslate"><span class="pre">State</span></code> 列不为
+<code class="docutils literal notranslate"><span class="pre">CANCELLED</span></code>，则说明作业依然在继续。这些 Task 有可能会重试成功。当然，有些 Task 错误，也会直接导致作业失败。</li>
+<li>如果恢复作业是一次覆盖操作（指定恢复数据到已经存在的表或分区中），那么从恢复作业的 <code class="docutils literal notranslate"><span class="pre">COMMIT</span></code> 阶段开始，当前集群上被覆盖的数据有可能不能再被还原。此时如果恢复作业失败或被取消，有可能造成之前的数据已损坏且无法访问。这种情况下，只能通过再次执行恢复操作，并等待作业完成。因此，我们建议，如无必要，尽量不要使用覆盖的方式恢复数据，除非确认当前数据已不再使用。</li>
+</ol>
+</div>
+<div class="section" id="id7">
+<h2>相关命令<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>和备份恢复功能相关的命令如下。以下命令，都可以通过 mysql-client 连接 Doris 后，使用 <code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">cmd;</span></code> 的方式查看详细帮助。</p>
+<ol>
+<li><p class="first">CREATE REPOSITORY</p>
+<p>创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 <a class="reference internal" href="broker.html"><span class="doc">Broker文档</span></a></p>
+</li>
+<li><p class="first">BACKUP</p>
+<p>执行一次备份操作。</p>
+</li>
+<li><p class="first">SHOW BACKUP</p>
+<p>查看最近一次 backup 作业的执行情况，包括：</p>
+<ul class="simple">
+<li>JobId：本次备份作业的 id。</li>
+<li>SnapshotName：用户指定的本次备份作业的名称（Label）。</li>
+<li>DbName：备份作业对应的 Database。</li>
+<li>State：备份作业当前所在阶段：<ul>
+<li>PENDING：作业初始状态。</li>
+<li>SNAPSHOTING：正在进行快照操作。</li>
+<li>UPLOAD_SNAPSHOT：快照结束，准备上传。</li>
+<li>UPLOADING：正在上传快照。</li>
+<li>SAVE_META：正在本地生成元数据文件。</li>
+<li>UPLOAD_INFO：上传元数据文件和本次备份作业的信息。</li>
+<li>FINISHED：备份完成。</li>
+<li>CANCELLED：备份失败或被取消。</li>
+</ul>
+</li>
+<li>BackupObjs：本次备份涉及的表和分区的清单。</li>
+<li>CreateTime：作业创建时间。</li>
+<li>SnapshotFinishedTime：快照完成时间。</li>
+<li>UploadFinishedTime：快照上传完成时间。</li>
+<li>FinishedTime：本次作业完成时间。</li>
+<li>UnfinishedTasks：在 <code class="docutils literal notranslate"><span class="pre">SNAPSHOTTING</span></code>，<code class="docutils literal notranslate"><span class="pre">UPLOADING</span></code> 等阶段，会有多个子任务在同时进行，这里展示的当前阶段，未完成的子任务的 task id。</li>
+<li>TaskErrMsg：如果有子任务执行出错，这里会显示对应子任务的错误信息。</li>
+<li>Status：用于记录在整个作业过程中，可能出现的一些状态信息。</li>
+<li>Timeout：作业的超时时间，单位是秒。</li>
+</ul>
+</li>
+<li><p class="first">SHOW SNAPSHOT</p>
+<p>查看远端仓库中已存在的备份。</p>
+<ul class="simple">
+<li>Snapshot：备份时指定的该备份的名称（Label）。</li>
+<li>Timestamp：备份的时间戳。</li>
+<li>Status：该备份是否正常。</li>
+</ul>
+<p>如果在 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">SNAPSHOT</span></code> 后指定了 where 子句，则可以显示更详细的备份信息。</p>
+<ul class="simple">
+<li>Database：备份时对应的 Database。</li>
+<li>Details：展示了该备份完整的数据目录结构。</li>
+</ul>
+</li>
+<li><p class="first">RESTORE</p>
+<p>执行一次恢复操作。</p>
+</li>
+<li><p class="first">SHOW RESTORE</p>
+<p>查看最近一次 restore 作业的执行情况，包括：</p>
+<ul class="simple">
+<li>JobId：本次恢复作业的 id。</li>
+<li>Label：用户指定的仓库中备份的名称（Label）。</li>
+<li>Timestamp：用户指定的仓库中备份的时间戳。</li>
+<li>DbName：恢复作业对应的 Database。</li>
+<li>State：恢复作业当前所在阶段：<ul>
+<li>PENDING：作业初始状态。</li>
+<li>SNAPSHOTING：正在进行本地新建表的快照操作。</li>
+<li>DOWNLOAD：正在发送下载快照任务。</li>
+<li>DOWNLOADING：快照正在下载。</li>
+<li>COMMIT：准备生效已下载的快照。</li>
+<li>COMMITTING：正在生效已下载的快照。</li>
+<li>FINISHED：恢复完成。</li>
+<li>CANCELLED：恢复失败或被取消。</li>
+</ul>
+</li>
+<li>AllowLoad：恢复期间是否允许导入。</li>
+<li>ReplicationNum：恢复指定的副本数。</li>
+<li>RestoreObjs：本次恢复涉及的表和分区的清单。</li>
+<li>CreateTime：作业创建时间。</li>
+<li>MetaPreparedTime：本地元数据生成完成时间。</li>
+<li>SnapshotFinishedTime：本地快照完成时间。</li>
+<li>DownloadFinishedTime：远端快照下载完成时间。</li>
+<li>FinishedTime：本次作业完成时间。</li>
+<li>UnfinishedTasks：在 <code class="docutils literal notranslate"><span class="pre">SNAPSHOTTING</span></code>，<code class="docutils literal notranslate"><span class="pre">DOWNLOADING</span></code>, <code class="docutils literal notranslate"><span class="pre">COMMITTING</span></code> 等阶段，会有多个子任务在同时进行，这里展示的当前阶段，未完成的子任务的 task id。</li>
+<li>TaskErrMsg：如果有子任务执行出错，这里会显示对应子任务的错误信息。</li>
+<li>Status：用于记录在整个作业过程中，可能出现的一些状态信息。</li>
+<li>Timeout：作业的超时时间，单位是秒。</li>
+</ul>
+</li>
+<li><p class="first">CANCEL BACKUP</p>
+<p>取消当前正在执行的备份作业。</p>
+</li>
+<li><p class="first">CANCEL RESTORE</p>
+<p>取消当前正在执行的恢复作业。</p>
+</li>
+<li><p class="first">DROP REPOSITORY</p>
+<p>删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="broker.html" class="btn btn-neutral float-right" title="Broker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="operation/tablet-restore-tool.html" class="btn btn-neutral float-left" title="BE Tablet数据恢复工具" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

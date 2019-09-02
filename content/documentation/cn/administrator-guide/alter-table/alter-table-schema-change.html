@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Scheam Change &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="HTTP API" href="../http-actions/index.html" />
+    <link rel="prev" title="Rollup" href="alter-table-rollup.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">表结构变更</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="alter-table-rollup.html">Rollup</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Scheam Change</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">表结构变更</a> &raquo;</li>
+        
+      <li>Scheam Change</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/alter-table/alter-table-schema-change.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="scheam-change">
+<h1>Scheam Change<a class="headerlink" href="#scheam-change" title="Permalink to this headline">¶</a></h1>
+<p>用户可以通过 Scheam Change 操作来修改已存在表的 Schema。目前 Doris 支持以下几种修改:</p>
+<ul class="simple">
+<li>增加、删除列</li>
+<li>修改列类型</li>
+<li>调整列顺序</li>
+<li>增加、修改 Bloom Filter</li>
+</ul>
+<p>本文档主要介绍如何创建 Scheam Change 作业，以及进行 Scheam Change 的一些注意事项和常见问题。</p>
+<div class="section" id="id1">
+<h2>名词解释<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Base Table：基表。每一个表被创建时，都对应一个基表。</li>
+<li>Rollup：基于基表或者其他 Rollup 创建出来的上卷表。</li>
+<li>Index：物化索引。Rollup 或 Base Table 都被称为物化索引。</li>
+<li>Transaction：事务。每一个导入任务都是一个事务，每个事务有一个唯一递增的 Transaction ID。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>原理介绍<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>执行 Schema Change 的基本过程，是通过原 Index 的数据，生成一份新 Schema 的 Index 的数据。其中主要需要进行两部分数据转换，一是已存在的历史数据的转换，二是在 Schema Change 执行过程中，新到达的导入数据的转换。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----------+</span>
+<span class="o">|</span> <span class="n">Load</span> <span class="n">Job</span> <span class="o">|</span>
+<span class="o">+----+-----+</span>
+     <span class="o">|</span>
+     <span class="o">|</span> <span class="n">Load</span> <span class="n">job</span> <span class="n">generates</span> <span class="n">both</span> <span class="n">origin</span> <span class="ow">and</span> <span class="n">new</span> <span class="n">index</span> <span class="n">data</span>
+     <span class="o">|</span>
+     <span class="o">|</span>      <span class="o">+------------------+</span> <span class="o">+---------------+</span>
+     <span class="o">|</span>      <span class="o">|</span> <span class="n">Origin</span> <span class="n">Index</span>     <span class="o">|</span> <span class="o">|</span> <span class="n">Origin</span> <span class="n">Index</span>  <span class="o">|</span>
+     <span class="o">+------&gt;</span> <span class="n">New</span> <span class="n">Incoming</span> <span class="n">Data</span><span class="o">|</span> <span class="o">|</span> <span class="n">History</span> <span class="n">Data</span>  <span class="o">|</span>
+     <span class="o">|</span>      <span class="o">+------------------+</span> <span class="o">+------+--------+</span>
+     <span class="o">|</span>                                  <span class="o">|</span>
+     <span class="o">|</span>                                  <span class="o">|</span> <span class="n">Convert</span> <span class="n">history</span> <span class="n">data</span>
+     <span class="o">|</span>                                  <span class="o">|</span>
+     <span class="o">|</span>      <span class="o">+------------------+</span> <span class="o">+------</span><span class="n">v</span><span class="o">--------+</span>
+     <span class="o">|</span>      <span class="o">|</span> <span class="n">New</span> <span class="n">Index</span>        <span class="o">|</span> <span class="o">|</span> <span class="n">New</span> <span class="n">Index</span>     <span class="o">|</span>
+     <span class="o">+------&gt;</span> <span class="n">New</span> <span class="n">Incoming</span> <span class="n">Data</span><span class="o">|</span> <span class="o">|</span> <span class="n">History</span> <span class="n">Data</span>  <span class="o">|</span>
+            <span class="o">+------------------+</span> <span class="o">+---------------+</span>
+</pre></div>
+</div>
+<p>在开始转换历史数据之前，Doris 会获取一个最新的 Transaction ID。并等待这个 Transaction ID 之前的所有导入事务完成。这个 Transaction ID 成为分水岭。意思是，Doris 保证在分水岭之后的所有导入任务，都会同时为原 Index 和新 Index 生成数据。这样当历史数据转换完成后，可以保证新的 Index 中的数据是完整的。</p>
+</div>
+<div class="section" id="id3">
+<h2>创建作业<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>创建 Scheam Change 的具体语法可以查看帮助 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span></code> 中 Scheam Change 部分的说明。</p>
+<p>Scheam Change 的创建是一个异步过程，作业提交成功后，用户需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">COLUMN</span></code> 命令来查看作业进度。</p>
+</div>
+<div class="section" id="id4">
+<h2>查看作业<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">COLUMN</span></code> 可以查看当前正在执行或已经完成的 Schema Change 作业。当一次 Schema Change 作业涉及到多个 Index 时，该命令会显示多行，每行对应一个 Index。举例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="n">JobId</span><span class="p">:</span> <span class="mi">20021</span>
+    <span class="n">TableName</span><span class="p">:</span> <span class="n">tbl1</span>
+   <span class="n">CreateTime</span><span class="p">:</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">05</span> <span class="mi">23</span><span class="p">:</span><span class="mi">03</span><span class="p">:</span><span class="mi">13</span>
+   <span class="n">FinishTime</span><span class="p">:</span> <span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">05</span> <span class="mi">23</span><span class="p">:</span><span class="mi">03</span><span class="p">:</span><span class="mi">42</span>
+    <span class="n">IndexName</span><span class="p">:</span> <span class="n">tbl1</span>
+      <span class="n">IndexId</span><span class="p">:</span> <span class="mi">20022</span>
+<span class="n">OriginIndexId</span><span class="p">:</span> <span class="mi">20017</span>
+<span class="n">SchemaVersion</span><span class="p">:</span> <span class="mi">2</span><span class="p">:</span><span class="mi">792557838</span>
+<span class="n">TransactionId</span><span class="p">:</span> <span class="mi">10023</span>
+        <span class="n">State</span><span class="p">:</span> <span class="n">FINISHED</span>
+          <span class="n">Msg</span><span class="p">:</span>
+     <span class="n">Progress</span><span class="p">:</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>
+      <span class="n">Timeout</span><span class="p">:</span> <span class="mi">86400</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>JobId：每个 Schema Change 作业的唯一 ID。</li>
+<li>TableName：Schema Change 对应的基表的表名。</li>
+<li>CreateTime：作业创建时间。</li>
+<li>FinishedTime：作业结束时间。如未结束，则显示 “N/A”。</li>
+<li>IndexName： 本次修改所涉及的某一个 Index 的名称。</li>
+<li>IndexId：新的 Index 的唯一 ID。</li>
+<li>OriginIndexId：旧的 Index 的唯一 ID。</li>
+<li>SchemaVersion：以 M:N 的格式展示。其中 M 表示本次 Schema Change 变更的版本，N 表示对应的 Hash 值。每次 Schema Change，版本都会递增。</li>
+<li>TransactionId：转换历史数据的分水岭 transaction ID。</li>
+<li>State：作业所在阶段。<ul>
+<li>PENDING：作业在队列中等待被调度。</li>
+<li>WAITING_TXN：等待分水岭 transaction ID 之前的导入任务完成。</li>
+<li>RUNNING：历史数据转换中。</li>
+<li>FINISHED：作业成功。</li>
+<li>CANCELLED：作业失败。</li>
+</ul>
+</li>
+<li>Msg：如果作业失败，这里会显示失败信息。</li>
+<li>Progress：作业进度。只有在 RUNNING 状态才会显示进度。进度是以 M/N 的形式显示。其中 N 为 Schema Change 涉及的总副本数。M 为已完成历史数据转换的副本数。</li>
+<li>Timeout：作业超时时间。单位秒。</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>取消作业<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>在作业状态不为 FINISHED 或 CANCELLED 的情况下，可以通过以下命令取消 Schema Change 作业：</p>
+<p><code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">COLUMN</span> <span class="pre">FROM</span> <span class="pre">tbl_name;</span></code></p>
+</div>
+<div class="section" id="id6">
+<h2>最佳实践<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Schema Change 可以在一个作业中，对多个 Index 进行不同的修改。举例如下：</p>
+<p>源 Schema：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-----------+-------+------+------+------+---------+-------+</span>
+<span class="o">|</span> <span class="n">IndexName</span> <span class="o">|</span> <span class="n">Field</span> <span class="o">|</span> <span class="n">Type</span> <span class="o">|</span> <span class="n">Null</span> <span class="o">|</span> <span class="n">Key</span>  <span class="o">|</span> <span class="n">Default</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
+<span class="o">+-----------+-------+------+------+------+---------+-------+</span>
+<span class="o">|</span> <span class="n">tbl1</span>      <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k3</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>       <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">rollup2</span>   <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>       <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">rollup1</span>   <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">+-----------+-------+------+------+------+---------+-------+</span>
+</pre></div>
+</div>
+<p>可以通过以下命令给 rollup1 和 rollup2 都加入一列 k4，并且再给 rollup2 加入一列 k5：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">tbl1</span>
+<span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">k4</span> <span class="n">INT</span> <span class="n">default</span> <span class="s2">&quot;1&quot;</span> <span class="n">to</span> <span class="n">rollup1</span><span class="p">,</span>
+<span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">k4</span> <span class="n">INT</span> <span class="n">default</span> <span class="s2">&quot;1&quot;</span> <span class="n">to</span> <span class="n">rollup2</span><span class="p">,</span>
+<span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">k5</span> <span class="n">INT</span> <span class="n">default</span> <span class="s2">&quot;1&quot;</span> <span class="n">to</span> <span class="n">rollup2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>完成后，Schema 变为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-----------+-------+------+------+------+---------+-------+</span>
+<span class="o">|</span> <span class="n">IndexName</span> <span class="o">|</span> <span class="n">Field</span> <span class="o">|</span> <span class="n">Type</span> <span class="o">|</span> <span class="n">Null</span> <span class="o">|</span> <span class="n">Key</span>  <span class="o">|</span> <span class="n">Default</span> <span class="o">|</span> <span class="n">Extra</span> <span class="o">|</span>
+<span class="o">+-----------+-------+------+------+------+---------+-------+</span>
+<span class="o">|</span> <span class="n">tbl1</span>      <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k3</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k4</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k5</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>       <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">rollup2</span>   <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k4</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k5</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>       <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>      <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">rollup1</span>   <span class="o">|</span> <span class="n">k1</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k2</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">k4</span>    <span class="o">|</span> <span class="n">INT</span>  <span class="o">|</span> <span class="n">No</span>   <span class="o">|</span> <span class="n">true</span> <span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span>       <span class="o">|</span>
+<span class="o">+-----------+-------+------+------+------+---------+-------+</span>
+</pre></div>
+</div>
+<p>可以看到，Base 表 tbl1 也自动加入了 k4, k5 列。即给任意 rollup 增加的列，都会自动加入到 Base 表中。</p>
+<p>同时，不允许向 Rollup 中加入 Base 表已经存在的列。如果用户需要这样做，可以重新建立一个包含新增列的 Rollup，之后在删除原 Rollup。</p>
+</div>
+<div class="section" id="id7">
+<h2>注意事项<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">一张表在同一时间只能有一个 Schema Change 作业在运行。</p>
+</li>
+<li><p class="first">Schema Change 操作不阻塞导入和查询操作。</p>
+</li>
+<li><p class="first">分区列和分桶列不能修改。</p>
+</li>
+<li><p class="first">如果 Schema 中有 REPLACE 方式聚合的 value 列，则不允许删除 Key 列。</p>
+<p>如果删除 Key 列，Doris 无法决定 REPLACE 列的取值。</p>
+<p>Unique 数据模型表的所有非 Key 列都是 REPLACE 聚合方式。</p>
+</li>
+<li><p class="first">在新增聚合类型为 SUM 或者 REPLACE 的 value 列时，该列的默认值对历史数据没有含义。</p>
+<p>因为历史数据已经失去明细信息，所以默认值的取值并不能实际反映聚合后的取值。</p>
+</li>
+<li><p class="first">当修改列类型时，除 Type 以外的字段都需要按原列上的信息补全。</p>
+<p>如修改列 <code class="docutils literal notranslate"><span class="pre">k1</span> <span class="pre">INT</span> <span class="pre">SUM</span> <span class="pre">NULL</span> <span class="pre">DEFAULT</span> <span class="pre">&quot;1&quot;</span></code> 类型为 BIGINT，则需执行命令如下：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl1</span> <span class="pre">MODIFY</span> <span class="pre">COLUMN</span> <span class="pre">`k1</span> <span class="pre">BIGINT</span> <span class="pre">SUM</span> <span class="pre">NULL</span> <span class="pre">DEFAULT</span> <span class="pre">&quot;1&quot;;</span></code></p>
+<p>注意，除新的列类型外，如聚合方式，Nullable 属性，以及默认值都要按照原信息补全。</p>
+</li>
+<li><p class="first">不支持修改列名称、聚合类型、Nullable 属性、默认值以及列注释。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>常见问题<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Schema Change 的执行速度</p>
+<p>目前 Schema Change 执行速度按照最差效率估计约为 10MB/s。保守起见，用户可以根据这个速率来设置作业的超时时间。</p>
+</li>
+<li><p class="first">提交作业报错 <code class="docutils literal notranslate"><span class="pre">Table</span> <span class="pre">xxx</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">stable.</span> <span class="pre">...</span></code></p>
+<p>Schema Change 只有在表数据完整且非均衡状态下才可以开始。如果表的某些数据分片副本不完整，或者某些副本正在进行均衡操作，则提交会被拒绝。</p>
+<p>数据分片副本是否完整，可以通过以下命令查看：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ADMIN</span> <span class="pre">SHOW</span> <span class="pre">REPLICA</span> <span class="pre">STATUS</span> <span class="pre">FROM</span> <span class="pre">tbl</span> <span class="pre">WHERE</span> <span class="pre">STATUS</span> <span class="pre">!=</span> <span class="pre">&quot;OK&quot;;</span></code></p>
+<p>如果有返回结果，则说明有副本有问题。通常系统会自动修复这些问题，用户也可以通过以下命令优先修复这个表：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ADMIN</span> <span class="pre">REPAIR</span> <span class="pre">TABLE</span> <span class="pre">tbl1;</span></code></p>
+<p>用户可以通过以下命令查看是否有正在运行的均衡任务：</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">&quot;/cluster_balance/pending_tablets&quot;;</span></code></p>
+<p>可以等待均衡任务完成，或者通过以下命令临时禁止均衡操作：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ADMIN</span> <span class="pre">SET</span> <span class="pre">FRONTEND</span> <span class="pre">CONFIG</span> <span class="pre">(&quot;disable_balance&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;);</span></code></p>
+</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>相关配置<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe">
+<h3>FE 配置<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">alter_table_timeout_second</span></code>：作业默认超时时间，86400 秒。</li>
+</ul>
+</div>
+<div class="section" id="be">
+<h3>BE 配置<a class="headerlink" href="#be" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">alter_tablet_worker_count</span></code>：在 BE 端用于执行历史数据转换的线程数。默认为 3。如果希望加快 Schema Change 作业的速度，可以适当调大这个参数后重启 BE。但过多的转换线程可能会导致 IO 压力增加，影响其他操作。该线程和 Rollup 作业共用。</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../http-actions/index.html" class="btn btn-neutral float-right" title="HTTP API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="alter-table-rollup.html" class="btn btn-neutral float-left" title="Rollup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

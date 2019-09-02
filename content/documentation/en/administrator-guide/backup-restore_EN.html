@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Backup and Recovery &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Colocation Join" href="colocation-join_EN.html" />
+    <link rel="prev" title="Data replica management" href="operation/tablet-repair-and-balance_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Backup and Recovery</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#brief-principle-description">Brief Principle Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#highlights">Highlights</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#relevant-orders">Relevant orders</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Administrator Guide</a> &raquo;</li>
+        
+      <li>Backup and Recovery</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/backup-restore_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="backup-and-recovery">
+<h1>Backup and Recovery<a class="headerlink" href="#backup-and-recovery" title="Permalink to this headline">¶</a></h1>
+<p>Doris supports the backup of current data in the form of files to remote storage systems via broker. The data can then be restored from the remote storage system to any Doris cluster by the restore command. With this feature, Doris can support regular snapshot backups of data. It can also be used to migrate data between different clusters.</p>
+<p>This feature requires Doris version 0.8.2+</p>
+<p>Using this function, brokers corresponding to remote storage need to be deployed. Such as BOS, HDFS, etc. You can view the currently deployed broker through <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BROKER;</span></code></p>
+<div class="section" id="brief-principle-description">
+<h2>Brief Principle Description<a class="headerlink" href="#brief-principle-description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="backup">
+<h3>Backup<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h3>
+<p>The backup operation is to upload the data of the specified table or partition directly to the remote warehouse in the form of files stored by Doris for storage. When a user submits a Backup request, the following actions will be done within the system:</p>
+<ol>
+<li><p class="first">Snapshot and snapshot upload</p>
+<p>The snapshot phase takes a snapshot of the specified table or partition data file. Later, backups are all snapshots. After the snapshot, changes to tables, imports, and other operations no longer affect the results of the backup. Snapshots only produce a hard link to the current data file, which takes very little time. Once the snapshots are completed, they are uploaded one by one. Snapshot upload is done concurrently by each Backend.</p>
+</li>
+<li><p class="first">Metadata preparation and upload</p>
+<p>After the data file snapshot is uploaded, Frontend first writes the corresponding metadata to the local file, and then uploads the local metadata file to the remote warehouse through broker. Finish the final backup job.</p>
+</li>
+</ol>
+<p>###Restore</p>
+<p>Recovery operations need to specify a backup that already exists in a remote repository, and then restore the backup content to the local cluster. When a user submits a Restore request, the following actions will be done within the system:</p>
+<ol>
+<li><p class="first">Create corresponding metadata locally</p>
+<p>This step starts by creating structures such as restoring the corresponding table partitions in the local cluster. When created, the table is visible, but not accessible.</p>
+</li>
+<li><p class="first">Local snapshot</p>
+<p>This step is to take a snapshot of the table created in the previous step. This is actually an empty snapshot (because the tables just created have no data), and its main purpose is to generate the corresponding snapshot directory on the Backend for receiving the snapshot files downloaded from the remote repository later.</p>
+</li>
+<li><p class="first">Download snapshots</p>
+<p>The snapshot files in the remote warehouse are downloaded to the corresponding snapshot directory generated in the previous step. This step is done concurrently by each backend.</p>
+</li>
+<li><p class="first">Effective snapshot</p>
+<p>When the snapshot download is complete, we map each snapshot to the metadata of the current local table. These snapshots are then reloaded to take effect and complete the final recovery operation.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Backup<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>We currently support full backup at the minimum partition granularity (incremental backup may be supported in future versions). If data need to be backed up regularly, first of all, it is necessary to plan the partition and bucket allocation of tables reasonably, such as partitioning according to time. Then in the subsequent run process, periodic data backup is performed according to partition granularity.</p>
+</div>
+<div class="section" id="data-migration">
+<h3>Data migration<a class="headerlink" href="#data-migration" title="Permalink to this headline">¶</a></h3>
+<p>Users can first backup the data to the remote warehouse, and then restore the data to another cluster through the remote warehouse to complete data migration. Because data backup is done in the form of snapshots, new imported data after the snapshot phase of the backup job will not be backed up. Therefore, after the snapshot is completed, the data imported on the original cluster needs to be imported on the new cluster as well until the recovery job is completed.</p>
+<p>It is suggested that the new and old clusters be imported in parallel for a period of time after the migration is completed. After completing data and business correctness checks, the business is migrated to the new cluster.</p>
+</div>
+</div>
+<div class="section" id="highlights">
+<h2>Highlights<a class="headerlink" href="#highlights" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>Backup and recovery-related operations are currently only allowed to be performed by users with ADMIN privileges.</li>
+<li>Within a database, only one backup or recovery job is allowed to be performed.</li>
+<li>Both backup and recovery support the operation at the minimum partition level. When the table has a large amount of data, it is recommended to perform partition-by-partition to reduce the cost of failed retries.</li>
+<li>Because backup and recovery operations, the operation is the actual data files. So when there are too many fragments of a table or too many small versions of a fragment, it may take a long time to backup or restore even if the total amount of data is very small. Users can estimate job execution time by <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PARTITIONS</span> <span class="pre">FROM</span> <span class="pre">table_name;</span></code>, and <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">TABLET</span> <span class="pre">FROM</span> <span class="pre">table_name;</span></code>, viewing the number of partitions and the number of file versions of each partition. The number of files has a great impact on the execution time of the job, so it is suggested that the partition buckets should be planned reasonably in order to avoid excessive partitioning.</li>
+<li>When viewing the job status through <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKUP</span></code> or <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">RESTORE</span></code>. It is possible to see an error message in the <code class="docutils literal notranslate"><span class="pre">TaskErrMsg</span></code> column. But as long as the <code class="docutils literal notranslate"><span class="pre">State</span></code> column does not
+<code class="docutils literal notranslate"><span class="pre">CANCELLED</span></code>, that means the job is still going on. These Tasks may succeed in retrying. Of course, some Task errors can also directly lead to job failure.</li>
+<li>If the recovery operation is a coverage operation (specifying the recovery data to an existing table or partition), then starting from the <code class="docutils literal notranslate"><span class="pre">COMMIT</span></code> phase of the recovery operation, the data covered on the current cluster may not be restored. At this time, if the recovery operation fails or is cancelled, it may cause the previous data to be damaged and inaccessible. In this case, the recovery operation can only be performed again and wait for the job to complete. Therefore, we recommend that if it is not necessary, try not to use coverage to recover data unless it is confirmed that the current data is no longer in use.</li>
+</ol>
+</div>
+<div class="section" id="relevant-orders">
+<h2>Relevant orders<a class="headerlink" href="#relevant-orders" title="Permalink to this headline">¶</a></h2>
+<p>The commands related to the backup recovery function are as follows. The following commands, you can use `help cmd;’to view detailed help after connecting Doris through mysql-client.</p>
+<ol>
+<li><p class="first">CREATE REPOSITORY</p>
+<p>Create a remote warehouse Path for backup or recovery.</p>
+</li>
+<li><p class="first">BACKUP</p>
+<p>Perform a backup operation.</p>
+</li>
+<li><p class="first">SHOW BACKUP</p>
+<p>View the execution of the last backup job, including:</p>
+<ul class="simple">
+<li>JobId: ID of this backup job.</li>
+<li>SnapshotName: User-specified name of this backup job (Label).</li>
+<li>DbName: The database corresponding to the backup job.</li>
+<li>State: The current stage of the backup job:<ul>
+<li>PENDING: The initial state of the job.</li>
+<li>SNAPSHOTING: Snapshot operation is in progress.</li>
+<li>UPLOAD_SNAPSHOT: The snapshot is over and ready to upload.</li>
+<li>UPLOADING: Uploading snapshots.</li>
+<li>SAVE_META: Metadata files are being generated locally.</li>
+<li>UPLOAD_INFO: Upload metadata files and information for this backup job.</li>
+<li>FINISHED: The backup is complete.</li>
+<li>CANCELLED: Backup failed or cancelled.</li>
+</ul>
+</li>
+<li>Backup Objs: List of tables and partitions involved in this backup.</li>
+<li>CreateTime: Job creation time.</li>
+<li>Snapshot Finished Time: Snapshot completion time.</li>
+<li>Upload Finished Time: Snapshot upload completion time.</li>
+<li>FinishedTime: The completion time of this assignment.</li>
+<li>Unfinished Tasks: In the <code class="docutils literal notranslate"><span class="pre">SNAPSHOTTING',</span> </code>UPLOADING’and other stages, there will be multiple sub-tasks at the same time, the current stage shown here, the task ID of the unfinished sub-tasks.</li>
+<li>TaskErrMsg: If there is a sub-task execution error, the error message corresponding to the sub-task will be displayed here.</li>
+<li>Status: It is used to record some status information that may appear during the whole operation.</li>
+<li>Timeout: The timeout time of a job in seconds.</li>
+</ul>
+</li>
+<li><p class="first">SHOW SNAPSHOT</p>
+<p>View the backup that already exists in the remote warehouse.</p>
+<ul class="simple">
+<li>Snapshot: The name of the backup specified at the time of backup (Label).</li>
+<li>Timestamp: Backup timestamp.</li>
+<li>Status: Is the backup normal?</li>
+</ul>
+<p>If the where clause is specified after `SHOW SNAPSHOT’, more detailed backup information can be displayed.</p>
+<ul class="simple">
+<li>Database: The database corresponding to backup.</li>
+<li>Details: Shows the complete data directory structure of the backup.</li>
+</ul>
+</li>
+<li><p class="first">RESTOR</p>
+<p>Perform a recovery operation.</p>
+</li>
+<li><p class="first">SHOW RESTORE</p>
+<p>View the execution of the last restore job, including:</p>
+<ul class="simple">
+<li>JobId: ID of this resumption job.</li>
+<li>Label: The name of the backup in the user-specified warehouse (Label).</li>
+<li>Timestamp: The timestamp for backup in a user-specified warehouse.</li>
+<li>DbName: Restore the database corresponding to the job.</li>
+<li>State: The current stage of the recovery operation:<ul>
+<li>PENDING: The initial state of the job.</li>
+<li>SNAPSHOTING: A snapshot of a new local table is in progress.</li>
+<li>DOWNLOAD: The download snapshot task is being sent.</li>
+<li>DOWNLOADING: Snapshot is downloading.</li>
+<li>COMMIT: Prepare to take effect the downloaded snapshot.</li>
+<li>COMMITTING: The downloaded snapshot is in effect.</li>
+<li>FINISHED: Recovery is complete.</li>
+<li>CANCELLED: Recovery failed or cancelled.</li>
+</ul>
+</li>
+<li>AllowLoad: Is import allowed during recovery?</li>
+<li>ReplicationNum: Restores the specified number of copies.</li>
+<li>Restore Objs: List of tables and partitions involved in this recovery.</li>
+<li>CreateTime: Job creation time.</li>
+<li>MetaPreparedTime: Completion time of local metadata generation.</li>
+<li>Snapshot Finished Time: Local snapshot completion time.</li>
+<li>Download Finished Time: The download completion time of the remote snapshot.</li>
+<li>FinishedTime: The completion time of this assignment.</li>
+<li>Unfinished Tasks: In the <code class="docutils literal notranslate"><span class="pre">SNAPSHOTTING</span></code>, <code class="docutils literal notranslate"><span class="pre">DOWNLOADING</span></code>, <code class="docutils literal notranslate"><span class="pre">COMMITTING</span></code>, and other stages, there will be multiple sub-tasks at the same time, the current stage shown here, the task ID of the unfinished sub-tasks.</li>
+<li>TaskErrMsg: If there is a sub-task execution error, the error message corresponding to the sub-task will be displayed here.</li>
+<li>Status: It is used to record some status information that may appear during the whole operation.</li>
+<li>Timeout: The timeout time of a job in seconds.</li>
+</ul>
+</li>
+<li><p class="first">CANCEL BACKUP</p>
+<p>Cancel the backup job currently being performed.</p>
+</li>
+<li><p class="first">CANCEL RESTORE</p>
+<p>Cancel the recovery job currently being performed.</p>
+</li>
+<li><p class="first">DROP REPOSITORY</p>
+<p>Delete the created remote warehouse. Delete the warehouse, just delete the mapping of the warehouse in Doris, will not delete the actual warehouse data.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="colocation-join_EN.html" class="btn btn-neutral float-right" title="Colocation Join" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="operation/tablet-repair-and-balance_EN.html" class="btn btn-neutral float-left" title="Data replica management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

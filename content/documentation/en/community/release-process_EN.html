@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Publish of Apache Doris &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Subscribe to mailing lists" href="subscribe-mail-list_EN.html" />
+    <link rel="prev" title="Code Submission Guide" href="pull-request_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Apache Commnity</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gitter_EN.html">Gitter Manual</a></li>
+<li class="toctree-l3"><a class="reference internal" href="how-to-contribute_EN.html">Contribute to Doris</a></li>
+<li class="toctree-l3"><a class="reference internal" href="members_EN.html">PMC Members &amp; Committer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request_EN.html">Code Submission Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Publish of Apache Doris</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prepare-for-release">1. Prepare for release</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installation-and-configuration-of-signature-software-gnupg">2. Installation and configuration of signature software GnuPG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generating-new-signatures">3. Generating new signatures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#upload-signature-public-key">4. Upload signature public key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate-fingerprint-and-upload-it-to-apache-user-information">5. Generate fingerprint and upload it to Apache user information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generating-keys">6. Generating keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#packing-signature">7. Packing Signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#upload-signature-packages-and-keys-files-to-dev-svn">8. Upload signature packages and KEYS files to DEV SVN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#send-community-voting-emails">9. Send community voting emails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#email-result-after-the-vote-is-passed">10. Email Result after the vote is passed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#send-an-e-mail-to-general-incubator-apache-org-for-a-vote">11. Send an e-mail to general&#64;incubator.apache.org for a vote.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#email-result-to-general-incubator-apache-org">12. Email Result to general&#64;incubator.apache.org</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#upload-package-to-release">13. Upload package to release</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#send-announce-e-mail-to-general-incubator-apache-org">14. Send Announce e-mail to general&#64;incubator.apache.org</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#publish-links-on-doris-website-and-github">15. Publish links on Doris website and GitHub</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscribe-mail-list_EN.html">Subscribe to mailing lists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="verify-apache-release_EN.html">Verify Apache Release</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Apache Commnity</a> &raquo;</li>
+        
+      <li>Publish of Apache Doris</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/community/release-process_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="publish-of-apache-doris">
+<h1>Publish of Apache Doris<a class="headerlink" href="#publish-of-apache-doris" title="Permalink to this headline">¶</a></h1>
+<p>Apache publishing must be at least an IPMC member, a commiter with Apache mailboxes, a role called release manager.</p>
+<p>The general process of publication is as follows:</p>
+<ol class="simple">
+<li>Launching DISCUSS in the community;</li>
+<li>Preparing branches and tagging;</li>
+<li>Packing tag for signature;</li>
+<li>Upload the signature package to the DEV directory of Apache SVN</li>
+<li>Send community voting email</li>
+<li>Result e-mail after the vote is passed</li>
+<li>Send an email to general&#64;incubator.apache.org for a vote.</li>
+<li>Email Result to general&#64;incubator.apache.org</li>
+<li>Upload the signature package to the release directory of Apache SVN and generate relevant links</li>
+<li>Prepare release note and send Announce mail to general&#64;incubator.apache.org</li>
+<li>Publish download links on Doris website and GitHub</li>
+</ol>
+<p>Release manager needs Mr. A to sign his own public key before publishing and upload it to the public key server. Then he can use this public key to sign the package ready for publication.</p>
+<div class="section" id="prepare-for-release">
+<h2>1. Prepare for release<a class="headerlink" href="#prepare-for-release" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="launching-discuss-in-the-community">
+<h3>1.1 Launching DISCUSS in the Community<a class="headerlink" href="#launching-discuss-in-the-community" title="Permalink to this headline">¶</a></h3>
+<p>If you think you’ve fixed a lot of bugs and developed more important features, any IPMC member can initiate DISCUSS discussions to release a new version.
+An e-mail entitled [DISCUSS] x.y.z release can be launched to discuss within the community what bugs have been fixed and what features have been developed.
+If DISCUSS mail is supported, we can proceed to the next step.</p>
+</div>
+<div class="section" id="preparatory-branch">
+<h3>1.2 Preparatory Branch<a class="headerlink" href="#preparatory-branch" title="Permalink to this headline">¶</a></h3>
+<p>Before publishing, we need to build a new branch, which needs to be fully tested to make functions available, bug convergence, and important bugs repaired.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b branch-0.9
+</pre></div>
+</div>
+</div>
+<div class="section" id="dozen-tags">
+<h3>1.3 dozen Tags<a class="headerlink" href="#dozen-tags" title="Permalink to this headline">¶</a></h3>
+<p>When the above branches are stable, tags can be made on them.
+Remember to modify the <code class="docutils literal notranslate"><span class="pre">build_version</span></code> variable in <code class="docutils literal notranslate"><span class="pre">gensrc/script/gen_build_version.sh</span></code> when creating tags. For example, <code class="docutils literal notranslate"><span class="pre">build_version='0.10.0-release'.</span></code></p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout branch-0.9
+$ git tag -a 0.9.0-rc01 -m &quot;0.9.0 release candidate 01&quot;
+$ git push origin 0.9.0-rc01
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 165 bytes | 0 bytes/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To git@github.com:apache/incubator-doris.git
+ * [new tag]         0.9.0-rc01 -&gt; 0.9.0-rc01
+
+$ git tag
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="installation-and-configuration-of-signature-software-gnupg">
+<h2>2. Installation and configuration of signature software GnuPG<a class="headerlink" href="#installation-and-configuration-of-signature-software-gnupg" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gnupg">
+<h3>2.1 GnuPG<a class="headerlink" href="#gnupg" title="Permalink to this headline">¶</a></h3>
+<p>In 1991, programmer Phil Zimmermann developed the encryption software PGP to avoid government surveillance. This software is very useful, spread quickly, has become a necessary tool for many programmers. However, it is commercial software and cannot be used freely. So the Free Software Foundation decided to develop a replacement for PGP, called GnuPG. This is the origin of GPG.</p>
+</div>
+<div class="section" id="installation-configuration">
+<h3>2.2 Installation Configuration<a class="headerlink" href="#installation-configuration" title="Permalink to this headline">¶</a></h3>
+<p>CentOS installation command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">gnupg</span>
+</pre></div>
+</div>
+<p>After installation, the default configuration file gpg.conf will be placed in the home directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/.</span><span class="n">gnupg</span> <span class="o">/</span><span class="n">gpg</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>If this directory or file does not exist, you can create an empty file directly.
+Edit gpg.conf, modify or add KeyServer configuration:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">keyserver</span> <span class="n">hkp</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">keys</span><span class="o">.</span><span class="n">gnupg</span><span class="o">.</span><span class="n">net</span>
+</pre></div>
+</div>
+<p>Apache signature recommends SHA512, which can be done by configuring gpg.
+Edit gpg.conf and add the following three lines:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">personal</span><span class="o">-</span><span class="n">digest</span><span class="o">-</span><span class="n">preferences</span> <span class="n">SHA512</span>
+<span class="n">cert</span> <span class="o">-</span><span class="n">digest</span> <span class="o">-</span><span class="n">something</span> <span class="n">SHA512</span>
+<span class="n">default</span><span class="o">-</span><span class="n">preference</span><span class="o">-</span><span class="nb">list</span> <span class="n">SHA512</span> <span class="n">SHA384</span> <span class="n">SHA256</span> <span class="n">SHA224</span> <span class="n">AES256</span> <span class="n">AES192</span> <span class="n">AES</span> <span class="n">CAST5</span> <span class="n">ZLIB</span> <span class="n">BZIP2</span> <span class="n">ZIP</span> <span class="n">Uncompressed</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="generating-new-signatures">
+<h2>3. Generating new signatures<a class="headerlink" href="#generating-new-signatures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prepare-to-sign">
+<h3>3.1 Prepare to Sign<a class="headerlink" href="#prepare-to-sign" title="Permalink to this headline">¶</a></h3>
+<p>Recommended settings for generating new signatures:</p>
+<p>We must log in to user account directly through SecureCRT and other terminals. We can’t transfer it through Su - user or ssh. Otherwise, the password input box will not show up and make an error.</p>
+<p>Let’s first look at the version of GPG and whether it supports SHA512.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --version
+gpg (GnuPG) 2.0.22
+libgcrypt 1.5.3
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: ~/.gnupg
+Supported algorithms:
+Pubkey: RSA, ?, ?, ELG, DSA
+Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+        CAMELLIA128, CAMELLIA192, CAMELLIA256
+Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+Compression: Uncompressed, ZIP, ZLIB, BZIP2
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>3.2 Generating new signatures<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --gen-key
+gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 4096
+Requested keysize is 4096 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0)
+Key does not expire at all
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: xxx
+Name must be at least 5 characters long
+Real name: xxx-yyy
+Email address: xxx@apache.org
+Comment: xxx&#39;s key
+You selected this USER-ID:
+    &quot;xxx-yyy (xxx&#39;s key) &lt;xxx@apache.org&gt;&quot;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
+</pre></div>
+</div>
+<p>Real name needs to be consistent with the ID shown in ID. apache. org.
+Email address is apache’s mailbox.</p>
+</div>
+<div class="section" id="view-and-output">
+<h3>3.3 View and Output<a class="headerlink" href="#view-and-output" title="Permalink to this headline">¶</a></h3>
+<p>The first line shows the name of the public key file (pubring. gpg), the second line shows the public key characteristics (4096 bits, Hash string and generation time), the third line shows the “user ID”, and the fourth line shows the private key characteristics.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --list-keys
+/home/lide/.gnupg/pubring.gpg
+-----------------------------
+pub   4096R/33DBF2E0 2018-12-06
+uid                  xxx-yyy  (xxx&#39;s key) &lt;xxx@apache.org&gt;
+sub   4096R/0E8182E6 2018-12-06
+</pre></div>
+</div>
+<p>xxx-yy is the user ID.</p>
+<p>gpg –armor –output public-key.txt –export [用户ID]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --armor --output public-key.txt --export xxx-yyy
+$ cat public-key.txt
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG V2.0.22 (GNU /Linux)
+
+mQINBFwJEQ0BEACwqLluHfjBqD/RWZ4uoYxNYHlIzZvbvxAlwS2mn53BirLIU/G3
+9opMWNplvmK+3+gNlRlFpiZ7EvHsF/YJOAP59HmI2Z...
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="upload-signature-public-key">
+<h2>4. Upload signature public key<a class="headerlink" href="#upload-signature-public-key" title="Permalink to this headline">¶</a></h2>
+<p>Public key servers are servers that store users’public keys exclusively on the network. The send-keys parameter uploads the public key to the server.</p>
+<p>gpg –send-keys xxxx</p>
+<p>Where XXX is the last step – the string after pub in the list-keys result, as shown above: 33DBF2E0</p>
+<p>You can also upload the contents of the above public-key.txt through the following website:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">keys</span><span class="o">.</span><span class="n">gnupg</span><span class="o">.</span><span class="n">net</span>
+</pre></div>
+</div>
+<p>After successful upload, you can query the website and enter 0x33DBF2E0:</p>
+<p>http://keys.gnupg.net</p>
+<p>Queries on the site are delayed and may take an hour.</p>
+</div>
+<div class="section" id="generate-fingerprint-and-upload-it-to-apache-user-information">
+<h2>5. Generate fingerprint and upload it to Apache user information<a class="headerlink" href="#generate-fingerprint-and-upload-it-to-apache-user-information" title="Permalink to this headline">¶</a></h2>
+<p>Because the public key server has no checking mechanism, anyone can upload the public key in your name, so there is no way to guarantee the reliability of the public key on the server. Usually, you can publish a public key fingerprint on the website and let others check whether the downloaded public key is true or not.</p>
+<p>Fingerprint parameter generates public key fingerprints:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">fingerprint</span> <span class="p">[</span><span class="n">用户ID</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --fingerprint xxx-yyy
+pub   4096R/33DBF2E0 2018-12-06
+      Key fingerprint = 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0
+uid                  xxx-yyy (xxx&#39;s key) &lt;xxx@apache.org&gt;
+sub   4096R/0E8182E6 2018-12-06
+</pre></div>
+</div>
+<p>Paste the fingerprint above (i.e. 07AA E690 B01D 1A4B 469B 0BEF 5E29 CE39 33DB F2E0) into your user information:</p>
+<p>https://id.apache.org
+OpenPGP Public Key Primary Fingerprint:</p>
+</div>
+<div class="section" id="generating-keys">
+<h2>6. Generating keys<a class="headerlink" href="#generating-keys" title="Permalink to this headline">¶</a></h2>
+<p>Create a new file named KEYS and write it as follows (without any modification):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">file</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">PGP</span> <span class="n">keys</span> <span class="n">of</span> <span class="n">various</span> <span class="n">developers</span><span class="o">.</span>
+
+<span class="n">Users</span><span class="p">:</span> <span class="n">pgp</span> <span class="o">&lt;</span> <span class="n">KEYS</span>
+<span class="ow">or</span>
+       <span class="n">gpg</span> <span class="o">--</span><span class="kn">import</span> <span class="nn">KEYS</span>
+
+<span class="n">Developers</span><span class="p">:</span>
+    <span class="n">pgp</span> <span class="o">-</span><span class="n">kxa</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span> <span class="ow">and</span> <span class="n">append</span> <span class="n">it</span> <span class="n">to</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
+<span class="ow">or</span>
+    <span class="p">(</span><span class="n">pgpk</span> <span class="o">-</span><span class="n">ll</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">pgpk</span> <span class="o">-</span><span class="n">xa</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
+<span class="ow">or</span>
+    <span class="p">(</span><span class="n">gpg</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">sigs</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span>
+    <span class="o">&amp;&amp;</span> <span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">export</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Then the generation adds the signature information to write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">sigs</span> <span class="p">[</span><span class="n">User</span> <span class="n">ID</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">KEYS</span>
+</pre></div>
+</div>
+<p>Finally, the public key addition is imported:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">export</span> <span class="p">[</span><span class="n">User</span> <span class="n">ID</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">KEYS</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="packing-signature">
+<h2>7. Packing Signature<a class="headerlink" href="#packing-signature" title="Permalink to this headline">¶</a></h2>
+<p>The following steps also need to log into user accounts directly through terminals such as SecureCRT, and can not be transferred through Su - user or ssh, otherwise the password input box will not show and error will be reported.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout 0.9.0-rc01
+
+$ git archive --format=tar 0.9.0-rc01 --prefix=apache-doris-0.9.0-incubating-src/ | gzip &gt; apache-doris-0.9.0-incubating-src.tar.gz
+
+$ gpg -u xxx@apache.org --armor --output apache-doris-0.9.0-incubating-src.tar.gz.asc --detach-sign apache-doris-0.9.0-incubating-src.tar.gz
+
+$ gpg --verify apache-doris-0.9.0-incubating-src.tar.gz.asc apache-doris-0.9.0-incubating-src.tar.gz
+
+$ sha512sum apache-doris-0.9.0-incubating-src.tar.gz &gt; apache-doris-0.9.0-incubating-src.tar.gz.sha512
+
+$ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
+</pre></div>
+</div>
+</div>
+<div class="section" id="upload-signature-packages-and-keys-files-to-dev-svn">
+<h2>8. Upload signature packages and KEYS files to DEV SVN<a class="headerlink" href="#upload-signature-packages-and-keys-files-to-dev-svn" title="Permalink to this headline">¶</a></h2>
+<p>First, download the SVN library:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">svn</span> <span class="n">co</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>Organize all previous files into the following SVN paths</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>./doris/
+├── 0.9
+│   └── 0.9.0-rc1
+│       ├── apache-doris-0.9.0-incubating-src.tar.gz
+│       ├── apache-doris-0.9.0-incubating-src.tar.gz.asc
+│       ├── apache-doris-0.9.0-incubating-src.tar.gz.sha512
+│       └── KEYS
+</pre></div>
+</div>
+<p>Upload these files</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">svn</span> <span class="n">add</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc1</span>
+<span class="n">svn</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;Release Apache Doris (incubating) 0.9.0 rc1&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="send-community-voting-emails">
+<h2>9. Send community voting emails<a class="headerlink" href="#send-community-voting-emails" title="Permalink to this headline">¶</a></h2>
+<p>[VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hi</span> <span class="nb">all</span><span class="p">,</span>
+
+<span class="n">Please</span> <span class="n">review</span> <span class="ow">and</span> <span class="n">vote</span> <span class="n">on</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">rc01</span> <span class="n">release</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">release</span> <span class="n">candidate</span> <span class="n">has</span> <span class="n">been</span> <span class="n">tagged</span> <span class="ow">in</span> <span class="n">GitHub</span> <span class="k">as</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc01</span><span class="p">,</span> <span class="n">available</span>
+<span class="n">here</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">tag</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc01</span>
+
+<span class="o">=====</span> <span class="n">CHANGE</span> <span class="n">LOG</span> <span class="o">=====</span>
+
+<span class="n">New</span> <span class="n">Features</span><span class="p">:</span>
+<span class="o">....</span>
+
+<span class="o">======================</span>
+
+<span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span> <span class="n">who</span> <span class="n">has</span> <span class="n">contributed</span> <span class="n">to</span> <span class="n">this</span> <span class="n">release</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">artifacts</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">signature</span> <span class="ow">and</span> <span class="n">checksum</span><span class="p">)</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="n">this</span> <span class="n">release</span>
+<span class="n">candidate</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">here</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc1</span><span class="o">/</span>
+
+<span class="n">This</span> <span class="n">has</span> <span class="n">been</span> <span class="n">signed</span> <span class="k">with</span> <span class="n">PGP</span> <span class="n">key</span> <span class="mi">33</span><span class="n">DBF2E0</span><span class="p">,</span> <span class="n">corresponding</span> <span class="n">to</span>
+<span class="n">lide</span><span class="nd">@apache</span><span class="o">.</span><span class="n">org</span><span class="o">.</span>
+<span class="n">KEYS</span> <span class="n">file</span> <span class="ow">is</span> <span class="n">available</span> <span class="n">here</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="n">KEYS</span>
+<span class="n">It</span> <span class="ow">is</span> <span class="n">also</span> <span class="n">listed</span> <span class="n">here</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">people</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">keys</span><span class="o">/</span><span class="n">committer</span><span class="o">/</span><span class="n">lide</span><span class="o">.</span><span class="n">asc</span>
+
+<span class="n">To</span> <span class="n">verify</span> <span class="ow">and</span> <span class="n">build</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">refer</span> <span class="n">to</span> <span class="n">following</span> <span class="n">wiki</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">How</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">verify</span><span class="o">-</span><span class="n">Apache</span><span class="o">-</span><span class="n">Release</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">wiki</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">IncubatorReleaseChecklist</span>
+
+<span class="n">The</span> <span class="n">vote</span> <span class="n">will</span> <span class="n">be</span> <span class="nb">open</span> <span class="k">for</span> <span class="n">at</span> <span class="n">least</span> <span class="mi">72</span> <span class="n">hours</span><span class="o">.</span>
+<span class="p">[</span> <span class="p">]</span> <span class="o">+</span><span class="mi">1</span> <span class="n">Approve</span> <span class="n">the</span> <span class="n">release</span>
+<span class="p">[</span> <span class="p">]</span> <span class="o">+</span><span class="mi">0</span> <span class="n">No</span> <span class="n">opinion</span>
+<span class="p">[</span> <span class="p">]</span> <span class="o">-</span><span class="mi">1</span> <span class="n">Do</span> <span class="ow">not</span> <span class="n">release</span> <span class="n">this</span> <span class="n">package</span> <span class="n">because</span> <span class="o">...</span>
+
+<span class="n">Best</span> <span class="n">Regards</span><span class="p">,</span>
+<span class="n">xxx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="email-result-after-the-vote-is-passed">
+<h2>10. Email Result after the vote is passed<a class="headerlink" href="#email-result-after-the-vote-is-passed" title="Permalink to this headline">¶</a></h2>
+<p>[Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span><span class="p">,</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">vote</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">closed</span><span class="o">.</span>
+
+<span class="n">It</span> <span class="n">has</span> <span class="n">passed</span> <span class="k">with</span> <span class="mi">4</span> <span class="o">+</span><span class="mi">1</span> <span class="p">(</span><span class="n">binding</span><span class="p">)</span> <span class="n">votes</span> <span class="ow">and</span> <span class="n">no</span> <span class="mi">0</span> <span class="ow">or</span> <span class="o">-</span><span class="mi">1</span> <span class="n">votes</span><span class="o">.</span>
+
+<span class="n">Binding</span><span class="p">:</span>
+<span class="n">Zhao</span> <span class="n">Chun</span>
+<span class="o">+</span><span class="mi">1</span> <span class="n">xxx</span>
+<span class="o">+</span> <span class="mi">1</span> <span class="n">Li</span> <span class="n">Chaoyong</span>
+<span class="o">+</span><span class="mi">1</span> <span class="n">Mingyu</span> <span class="n">Chen</span>
+
+<span class="n">Best</span> <span class="n">Regards</span><span class="p">,</span>
+<span class="n">xxx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="send-an-e-mail-to-general-incubator-apache-org-for-a-vote">
+<h2>11. Send an e-mail to general&#64;incubator.apache.org for a vote.<a class="headerlink" href="#send-an-e-mail-to-general-incubator-apache-org-for-a-vote" title="Permalink to this headline">¶</a></h2>
+<p>[VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Hi all,
+
+Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
+
+Apache Doris is an MPP-based interactive SQL data warehousing for reporting and analysis.
+
+The Apache Doris community has voted on and approved this release:
+https://lists.apache.org/thread.html/d70f7c8a8ae448bf6680a15914646005c6483564464cfa15f4ddc2fc@%3Cdev.doris.apache.org%3E
+
+The vote result email thread:
+https://lists.apache.org/thread.html/64d229f0ba15d66adc83306bc8d7b7ccd5910ecb7e842718ce6a61da@%3Cdev.doris.apache.org%3E
+
+The release candidate has been tagged in GitHub as 0.9.0-rc01, available here:
+https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc01
+
+There is no CHANGE LOG file because this is the first release of Apache Doris.
+Thanks to everyone who has contributed to this release, and there is a simple release notes can be found here:
+https://github.com/apache/incubator-doris/issues/406
+
+The artifacts (source, signature and checksum) corresponding to this release candidate can be found here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc01/
+
+This has been signed with PGP key 33DBF2E0, corresponding to lide@apache.org.
+KEYS file is available here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS
+It is also listed here:
+https://people.apache.org/keys/committer/lide.asc
+
+The vote will be open for at least 72 hours.
+[ ] +1 Approve the release
+[ ] +0 No opinion
+[ ] -1 Do not release this package because ...
+
+To verify and build, you can refer to following instruction:
+
+Firstly, you must be install and start docker service, and then you could build Doris as following steps:
+
+Step1: Pull the docker image with Doris building environment
+$ docker pull apachedoris/doris-dev:build-env
+You can check it by listing images, its size is about 3.28GB.
+
+Step2: Run the Docker image
+You can run image directly:
+$ docker run -it apachedoris/doris-dev:build-env
+
+Step3: Download Doris source
+Now you should in docker environment, and you can download Doris source package.
+(If you have downloaded source and it is not in image, you can map its path to image in Step2.)
+$ wget https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc01/apache-doris-0.9.0.rc01-incubating-src.tar.gz
+
+Step4: Build Doris
+Now you can decompress and enter Doris source path and build Doris.
+$ tar zxvf apache-doris-0.9.0.rc01-incubating-src.tar.gz
+$ cd apache-doris-0.9.0.rc01-incubating-src
+$ sh build.sh
+
+Best Regards,
+xxx
+</pre></div>
+</div>
+<p>The threaded connection for mail can be found here:</p>
+<p><code class="docutils literal notranslate"><span class="pre">https://lists.apache.org/list.html?dev&#64;doris.apache.org</span></code></p>
+</div>
+<div class="section" id="email-result-to-general-incubator-apache-org">
+<h2>12. Email Result to general&#64;incubator.apache.org<a class="headerlink" href="#email-result-to-general-incubator-apache-org" title="Permalink to this headline">¶</a></h2>
+<p>[RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hi</span><span class="p">,</span>
+
+<span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">vote</span> <span class="k">for</span> <span class="n">releasing</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">rc01</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">closed</span><span class="o">.</span>
+
+<span class="n">It</span> <span class="n">has</span> <span class="n">passed</span> <span class="k">with</span> <span class="mi">4</span> <span class="o">+</span><span class="mi">1</span> <span class="p">(</span><span class="n">binding</span><span class="p">)</span> <span class="n">votes</span> <span class="ow">and</span> <span class="n">no</span> <span class="mi">0</span> <span class="ow">or</span> <span class="o">-</span><span class="mi">1</span> <span class="n">votes</span><span class="o">.</span>
+
+<span class="n">Binding</span><span class="p">:</span>
+<span class="o">+</span><span class="mi">1</span> <span class="n">Willem</span> <span class="n">Jiang</span>
+<span class="o">+</span><span class="mi">1</span> <span class="n">Justin</span> <span class="n">Mclean</span>
+<span class="o">+</span><span class="mi">1</span> <span class="n">ShaoFeng</span> <span class="n">Shi</span>
+<span class="o">+</span><span class="mi">1</span> <span class="n">Makoto</span> <span class="n">Yui</span>
+
+<span class="n">The</span> <span class="n">vote</span> <span class="n">thread</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">lists</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">thread</span><span class="o">.</span><span class="n">html</span><span class="o">/</span><span class="n">da05fdd8d84e35de527f27200b5690d7811a1e97d419d1ea66562130</span><span class="o">@%</span><span class="mi">3</span><span class="n">Cgeneral</span><span class="o">.</span><span class="n">incubator</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">%</span><span class="mi">3</span><span class="n">E</span>
+
+<span class="n">Best</span> <span class="n">Regards</span><span class="p">,</span>
+<span class="n">xxx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upload-package-to-release">
+<h2>13. Upload package to release<a class="headerlink" href="#upload-package-to-release" title="Permalink to this headline">¶</a></h2>
+<p>When the formal voting is successful, email [Result] first, and then prepare the release package.
+Copy the source package, signature file and hash file from the corresponding RC folder published under dev to another directory 0.9.0-incubating. Note that the file name does not need rcxx (rename, but do not recalculate signatures, hash can recalculate, the results will not change)</p>
+<p>KEYS files also need to be copied if they are first released. Then add to SVN release.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">release</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">/</span>
+
+<span class="n">Eventually</span> <span class="n">you</span> <span class="n">can</span> <span class="n">see</span> <span class="n">it</span> <span class="n">on</span> <span class="n">apache</span><span class="s1">&#39;s website:</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">/</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="send-announce-e-mail-to-general-incubator-apache-org">
+<h2>14. Send Announce e-mail to general&#64;incubator.apache.org<a class="headerlink" href="#send-announce-e-mail-to-general-incubator-apache-org" title="Permalink to this headline">¶</a></h2>
+<p>Title:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ANNOUNCE</span><span class="p">]</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="p">(</span><span class="n">incubating</span><span class="p">)</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span> <span class="n">Release</span>
+</pre></div>
+</div>
+<p>Send mail group:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">general</span><span class="nd">@incubator</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span> <span class="o">&lt;</span><span class="n">general</span><span class="nd">@incubator</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span> <span class="o">&gt;</span>
+<span class="n">dev</span><span class="nd">@doris</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span> <span class="o">&lt;</span><span class="n">dev</span><span class="nd">@doris</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span> <span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Mail text:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hi</span> <span class="n">All</span><span class="p">,</span>
+
+<span class="n">We</span> <span class="n">are</span> <span class="n">pleased</span> <span class="n">to</span> <span class="n">announce</span> <span class="n">the</span> <span class="n">release</span> <span class="n">of</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">.</span>
+
+<span class="n">Apache</span> <span class="n">Doris</span> <span class="p">(</span><span class="n">incubating</span><span class="p">)</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">MPP</span><span class="o">-</span><span class="n">based</span> <span class="n">interactive</span> <span class="n">SQL</span> <span class="n">data</span> <span class="n">warehousing</span> <span class="k">for</span> <span class="n">reporting</span> <span class="ow">and</span> <span class="n">analysis</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">release</span> <span class="ow">is</span> <span class="n">available</span> <span class="n">at</span><span class="p">:</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">doris</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">downloads</span><span class="o">.</span><span class="n">html</span>
+
+<span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span> <span class="n">who</span> <span class="n">has</span> <span class="n">contributed</span> <span class="n">to</span> <span class="n">this</span> <span class="n">release</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">release</span> <span class="n">note</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">here</span><span class="p">:</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">releases</span>
+
+<span class="n">Best</span> <span class="n">Regards</span><span class="p">,</span>
+
+<span class="n">On</span> <span class="n">behalf</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Doris</span> <span class="n">team</span><span class="p">,</span>
+<span class="n">xxx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="publish-links-on-doris-website-and-github">
+<h2>15. Publish links on Doris website and GitHub<a class="headerlink" href="#publish-links-on-doris-website-and-github" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-download-links">
+<h3>15.1 Create Download Links<a class="headerlink" href="#create-download-links" title="Permalink to this headline">¶</a></h3>
+<p>Download link:
+http://www.apache.org/dyn/closer.cgi?filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz&amp;action=download</p>
+<p>wget –trust-server-names “https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz”</p>
+<p>Original location:
+https://www.apache.org/dist/incubator/doris/0.9.0-incubating/</p>
+<p>http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz</p>
+<p>源码包（source package）:
+http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz</p>
+<p>ASC:
+http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc</p>
+<p>sha512:
+http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512</p>
+<p>KEYS:
+http://archive.apache.org /dist /incubator /doris /KEYS</p>
+<p>refer to: <a class="reference external" href="http://www.apache.org/dev/release-download-pages#closer">http://www.apache.org/dev/release-download-pages#closer</a></p>
+</div>
+<div class="section" id="prepare-release-note">
+<h3>15.2 Prepare release note<a class="headerlink" href="#prepare-release-note" title="Permalink to this headline">¶</a></h3>
+<p>The following two areas need to be modified:</p>
+<ol class="simple">
+<li>Github’s release page</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">tag</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc01</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>Doris Official Website Download Page</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">doris</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span> <span class="o">/</span><span class="n">downloads</span><span class="o">.</span><span class="n">html</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="subscribe-mail-list_EN.html" class="btn btn-neutral float-right" title="Subscribe to mailing lists" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pull-request_EN.html" class="btn btn-neutral float-left" title="Code Submission Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

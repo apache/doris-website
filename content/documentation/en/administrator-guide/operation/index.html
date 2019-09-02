@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Maintainence Operation &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Metadata Operations and Maintenance" href="metadata-operation_EN.html" />
+    <link rel="prev" title="RESTORE TABLET" href="../http-actions/restore-tablet_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Maintainence Operation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="metadata-operation_EN.html">Metadata Operations and Maintenance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="monitor-alert_EN.html">Monitoring and alarming</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi-tenant_EN.html">Multi-tenancy(Exprimental)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-meta-tool_EN.html">Tablet metadata management tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance_EN.html">Data replica management</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../index.html">Administrator Guide</a> &raquo;</li>
+        
+      <li>Maintainence Operation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/operation/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="maintainence-operation">
+<h1>Maintainence Operation<a class="headerlink" href="#maintainence-operation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="metadata-operation_EN.html">Metadata Operations and Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata-operation_EN.html#important-tips">Important tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata-operation_EN.html#metadata-catalog-structure">Metadata catalog structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata-operation_EN.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata-operation_EN.html#advanced-operations">Advanced Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata-operation_EN.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata-operation_EN.html#other-common-problems">Other common problems</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="monitor-alert_EN.html">Monitoring and alarming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="monitor-alert_EN.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monitor-alert_EN.html#monitoring-data">Monitoring data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monitor-alert_EN.html#monitoring-architecture">Monitoring Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monitor-alert_EN.html#start-building">Start building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monitor-alert_EN.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monitor-alert_EN.html#dashboard-update">Dashboard Update</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multi-tenant_EN.html">Multi-tenancy(Exprimental)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#design-principles">Design Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#main-ideas">Main Ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#design-scheme">Design scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#sql-interface">SQL interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-tenant_EN.html#detailed-design">Detailed design</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tablet-meta-tool_EN.html">Tablet metadata management tool</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tablet-meta-tool_EN.html#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-meta-tool_EN.html#operation">Operation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tablet-repair-and-balance_EN.html">Data replica management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#duplicate-status">Duplicate status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#replica-repair">Replica Repair</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#duplicate-equilibrium">Duplicate Equilibrium</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#resource-control">Resource control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#duplicate-status-view">Duplicate Status View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#viewing-cluster-load-and-scheduling-resources">Viewing Cluster Load and Scheduling Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#relevant-configuration-instructions">Relevant configuration instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tablet-repair-and-balance_EN.html#relevant-issues">Relevant issues</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metadata-operation_EN.html" class="btn btn-neutral float-right" title="Metadata Operations and Maintenance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../http-actions/restore-tablet_EN.html" class="btn btn-neutral float-left" title="RESTORE TABLET" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

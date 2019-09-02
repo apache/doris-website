@@ -1,0 +1,642 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Colocation Join &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Data export" href="export_manual_EN.html" />
+    <link rel="prev" title="Backup and Recovery" href="backup-restore_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Colocation Join</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#principle">Principle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#colocation-duplicate-balancing-and-repair">Colocation Duplicate Balancing and Repair</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#query">Query</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#advanced-operations">Advanced Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Administrator Guide</a> &raquo;</li>
+        
+      <li>Colocation Join</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/colocation-join_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="colocation-join">
+<h1>Colocation Join<a class="headerlink" href="#colocation-join" title="Permalink to this headline">¶</a></h1>
+<p>Colocation Join is a new feature introduced in Doris 0.9. The purpose of this paper is to provide local optimization for some Join queries to reduce data transmission time between nodes and speed up queries.</p>
+<p>The original design, implementation and effect can be referred to [ISSUE 245] (https://github.com/apache/incubator-doris/issues/245).</p>
+<p>The Colocation Join function has undergone a revision, and its design and use are slightly different from the original design. This document mainly introduces Colocation Join’s principle, implementation, usage and precautions.</p>
+<div class="section" id="noun-interpretation">
+<h2>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.</li>
+<li>BE: Backend, Doris’s back-end node. Responsible for query execution and data storage.</li>
+<li>Colocation Group (CG): A CG contains one or more tables. Tables within the same group have the same Colocation Group Schema and the same data fragmentation distribution.</li>
+<li>Colocation Group Schema (CGS): Used to describe table in a CG and general Schema information related to Colocation. Including bucket column type, bucket number and copy number.</li>
+</ul>
+</div>
+<div class="section" id="principle">
+<h2>Principle<a class="headerlink" href="#principle" title="Permalink to this headline">¶</a></h2>
+<p>The Colocation Join function is to make a CG of a set of tables with the same CGS. Ensure that the corresponding data fragments of these tables will fall on the same BE node. When tables in CG perform Join operations on bucket columns, local data Join can be directly performed to reduce data transmission time between nodes.</p>
+<p>The data of a table will eventually fall into a barrel according to the barrel column value Hash and the number of barrels modeled. Assuming that the number of buckets in a table is 8, there are eight buckets <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7]</span> </code>Buckets’. We call such a sequence a <code class="docutils literal notranslate"><span class="pre">Buckets</span> <span class="pre">Sequence</span></code>. Each Bucket has one or more Tablets. When a table is a single partitioned table, there is only one Tablet in a Bucket. If it is a multi-partition table, there will be more than one.</p>
+<p>In order for a table to have the same data distribution, the table in the same CG must ensure the following attributes are the same:</p>
+<ol>
+<li><p class="first">Barrel row and number of barrels</p>
+<p>Bucket column, that is, the column specified in `DISTRIBUTED BY HASH (col1, col2,…)’in the table building statement. Bucket columns determine which column values are used to Hash data from a table into different Tablets. Tables in the same CG must ensure that the type and number of barrel columns are identical, and the number of barrels is identical, so that the data fragmentation of multiple tables can be controlled one by one.</p>
+</li>
+<li><p class="first">Number of copies</p>
+<p>The number of copies of all partitions of all tables in the same CG must be the same. If inconsistent, there may be a copy of a Tablet, and there is no corresponding copy of other table fragments on the same BE.</p>
+</li>
+</ol>
+<p>Tables in the same CG do not require consistency in the number, scope, and type of partition columns.</p>
+<p>After fixing the number of bucket columns and buckets, the tables in the same CG will have the same Buckets Sequnce. The number of replicas determines the number of replicas of Tablets in each bucket, which BE they are stored on. Suppose that Buckets Sequnce is <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7]</span> </code>, and that BE nodes have <code class="docutils literal notranslate"><span class="pre">[A,</span> <span class="pre">B,</span> <span class="pre">C,</span> <span class="pre">D]</span> </code>4. A possible distribution of data is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span>
+<span class="o">|</span> <span class="mi">0</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">2</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">3</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">4</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">5</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">6</span> <span class="o">|</span> <span class="o">|</span> <span class="mi">7</span> <span class="o">|</span>
+<span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span>
+<span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span> <span class="o">|</span> <span class="n">A</span> <span class="o">|</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span>
+<span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span> <span class="o">+---+</span>
+</pre></div>
+</div>
+<p>The data of all tables in CG will be uniformly distributed according to the above rules, which ensures that the data with the same barrel column value are on the same BE node, and local data Join can be carried out.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="establishment-of-tables">
+<h3>Establishment of tables<a class="headerlink" href="#establishment-of-tables" title="Permalink to this headline">¶</a></h3>
+<p>When creating a table, you can specify the attribute <code class="docutils literal notranslate"><span class="pre">&quot;colocate_with&quot;=&quot;group_name&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">PROPERTIES</span></code>, which means that the table is a Colocation Join table and belongs to a specified Colocation Group.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">tbl</span> <span class="p">(</span><span class="n">k1</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v1</span> <span class="nb">int</span> <span class="nb">sum</span><span class="p">)</span>
+<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">k1</span><span class="p">)</span>
+<span class="n">BUCKETS</span> <span class="mi">8</span>
+<span class="n">PROPERTIES</span><span class="p">(</span>
+	<span class="s2">&quot;colocate_with&quot;</span> <span class="o">=</span> <span class="s2">&quot;group1&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>If the specified group does not exist, Doris automatically creates a group that contains only the current table. If the Group already exists, Doris checks whether the current table satisfies the Colocation Group Schema. If satisfied, the table is created and added to the Group. At the same time, tables create fragments and replicas based on existing data distribution rules in Groups.
+Group belongs to a database, and its name is unique in a database. Internal storage is the full name of Group <code class="docutils literal notranslate"><span class="pre">dbId_groupName</span></code>, but users only perceive groupName.</p>
+</div>
+<div class="section" id="delete-table">
+<h3>Delete table<a class="headerlink" href="#delete-table" title="Permalink to this headline">¶</a></h3>
+<p>When the last table in Group is deleted completely (deleting completely means deleting from the recycle bin). Usually, when a table is deleted by the <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TABLE</span></code> command, it will be deleted after the default one-day stay in the recycle bin, and the group will be deleted automatically.</p>
+</div>
+<div class="section" id="view-group">
+<h3>View Group<a class="headerlink" href="#view-group" title="Permalink to this headline">¶</a></h3>
+<p>The following command allows you to view the existing Group information in the cluster.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">PROC</span> <span class="s1">&#39;/colocation_group&#39;</span><span class="p">;</span>
+
+<span class="o">+-------------+--------------+--------------+------------+----------------+----------+----------+</span>
+<span class="o">|</span> <span class="n">GroupId</span>     <span class="o">|</span> <span class="n">GroupName</span>    <span class="o">|</span> <span class="n">TableIds</span>     <span class="o">|</span> <span class="n">BucketsNum</span> <span class="o">|</span> <span class="n">ReplicationNum</span> <span class="o">|</span> <span class="n">DistCols</span> <span class="o">|</span> <span class="n">IsStable</span> <span class="o">|</span>
+<span class="o">+-------------+--------------+--------------+------------+----------------+----------+----------+</span>
+<span class="o">|</span> <span class="mf">10005.10008</span> <span class="o">|</span> <span class="mi">10005</span><span class="n">_group1</span> <span class="o">|</span> <span class="mi">10007</span><span class="p">,</span> <span class="mi">10040</span> <span class="o">|</span> <span class="mi">10</span>         <span class="o">|</span> <span class="mi">3</span>              <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>  <span class="o">|</span> <span class="n">true</span>     <span class="o">|</span>
+<span class="o">+-------------+--------------+--------------+------------+----------------+----------+----------+</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>GroupId: The unique identity of a group’s entire cluster, with DB ID in the first half and group ID in the second half.</li>
+<li>GroupName: The full name of Group.</li>
+<li>Tablet Ids: The group contains a list of Tables’ID.</li>
+<li>Buckets Num: Number of barrels.</li>
+<li>Replication Num: Number of copies.</li>
+<li>DistCols: Distribution columns,</li>
+<li>IsStable: Is the group stable (for the definition of stability, see section `Collocation replica balancing and repair’).</li>
+</ul>
+<p>You can further view the data distribution of a group by following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">PROC</span> <span class="s1">&#39;/colocation_group/10005.10008&#39;</span><span class="p">;</span>
+
+<span class="o">+-------------+---------------------+</span>
+<span class="o">|</span> <span class="n">BucketIndex</span> <span class="o">|</span> <span class="n">BackendIds</span>          <span class="o">|</span>
+<span class="o">+-------------+---------------------+</span>
+<span class="o">|</span> <span class="mi">0</span>           <span class="o">|</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">1</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">2</span>           <span class="o">|</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">3</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">4</span>           <span class="o">|</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10003</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">5</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">6</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10001</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">7</span>           <span class="o">|</span> <span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">,</span> <span class="mi">10002</span> <span class="o">|</span>
+<span class="o">+-------------+---------------------+</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>BucketIndex: Subscript to the bucket sequence.</li>
+<li>Backend Ids: A list of BE node IDs where data fragments are located in buckets.</li>
+</ul>
+<blockquote>
+<div>The above commands require AMDIN privileges. Normal user view is not supported at this time.</div></blockquote>
+</div>
+<div class="section" id="modify-colocate-group">
+<h3>Modify Colocate Group<a class="headerlink" href="#modify-colocate-group" title="Permalink to this headline">¶</a></h3>
+<p>You can modify the Colocation Group property of a table that has been created. Examples:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl</span> <span class="pre">SET</span> <span class="pre">(&quot;colocate_with&quot;</span> <span class="pre">=</span> <span class="pre">&quot;group2&quot;);</span></code></p>
+<ul class="simple">
+<li>If the table has not previously specified a Group, the command checks the Schema and adds the table to the Group (if the Group does not exist, it will be created).</li>
+<li>If other groups are specified before the table, the command first removes the table from the original group and adds a new group (if the group does not exist, it will be created).</li>
+</ul>
+<p>You can also delete the Colocation attribute of a table by following commands:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl</span> <span class="pre">SET</span> <span class="pre">(&quot;colocate_with&quot;</span> <span class="pre">=</span> <span class="pre">&quot;&quot;);</span></code></p>
+</div>
+<div class="section" id="other-related-operations">
+<h3>Other related operations<a class="headerlink" href="#other-related-operations" title="Permalink to this headline">¶</a></h3>
+<p>When an ADD PARTITION is added to a table with a Colocation attribute and the number of copies is modified, Doris checks whether the modification violates the Colocation Group Schema and rejects it if it does.</p>
+</div>
+</div>
+<div class="section" id="colocation-duplicate-balancing-and-repair">
+<h2>Colocation Duplicate Balancing and Repair<a class="headerlink" href="#colocation-duplicate-balancing-and-repair" title="Permalink to this headline">¶</a></h2>
+<p>Copy distribution of Colocation tables needs to follow the distribution specified in Group, so it is different from common fragmentation in replica repair and balancing.</p>
+<p>Group itself has a Stable attribute, when Stable is true, which indicates that all fragments of the table in the current Group are not changing, and the Colocation feature can be used normally. When Stable is false, it indicates that some tables in Group are being repaired or migrated. At this time, Colocation Join of related tables will degenerate into ordinary Join.</p>
+<div class="section" id="replica-repair">
+<h3>Replica Repair<a class="headerlink" href="#replica-repair" title="Permalink to this headline">¶</a></h3>
+<p>Copies can only be stored on specified BE nodes. So when a BE is unavailable (downtime, Decommission, etc.), a new BE is needed to replace it. Doris will first look for the BE with the lowest load to replace it. After replacement, all data fragments on the old BE in the Bucket will be repaired. During the migration process, Group is marked Unstable.</p>
+</div>
+<div class="section" id="duplicate-equilibrium">
+<h3>Duplicate Equilibrium<a class="headerlink" href="#duplicate-equilibrium" title="Permalink to this headline">¶</a></h3>
+<p>Doris will try to distribute the fragments of the Collocation table evenly across all BE nodes. For the replica balancing of common tables, the granularity is single replica, that is to say, it is enough to find BE nodes with lower load for each replica alone. The equilibrium of the Colocation table is at the Bucket level, where all replicas within a Bucket migrate together. We adopt a simple equalization algorithm, which distributes Buckets Sequnce evenly on all BEs, regardless of the actual size of the replicas, but only according to the number of replicas. Specific algorithms can be referred to the code annotations in <code class="docutils literal notranslate"><span class="pre">ColocateTableBalancer.java</span></code>.</p>
+<blockquote>
+<div><p>Note 1: Current Colocation replica balancing and repair algorithms may not work well for heterogeneous deployed Oris clusters. The so-called heterogeneous deployment, that is, the BE node’s disk capacity, number, disk type (SSD and HDD) is inconsistent. In the case of heterogeneous deployment, small BE nodes and large BE nodes may store the same number of replicas.</p>
+<p>Note 2: When a group is in an Unstable state, the Join of the table in it will degenerate into a normal Join. At this time, the query performance of the cluster may be greatly reduced. If you do not want the system to balance automatically, you can set the FE configuration item <code class="docutils literal notranslate"><span class="pre">disable_colocate_balance</span></code> to prohibit automatic balancing. Then open it at the right time. (See Section <code class="docutils literal notranslate"><span class="pre">Advanced</span> <span class="pre">Operations</span></code> for details)</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="query">
+<h2>Query<a class="headerlink" href="#query" title="Permalink to this headline">¶</a></h2>
+<p>The Colocation table is queried in the same way as ordinary tables, and users do not need to perceive Colocation attributes. If the Group in which the Colocation table is located is in an Unstable state, it will automatically degenerate to a normal Join.</p>
+<p>Examples are given to illustrate:</p>
+<p>Table 1:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE `tbl1` (
+    `k1` date NOT NULL COMMENT &quot;&quot;,
+    `k2` int(11) NOT NULL COMMENT &quot;&quot;,
+    `v1` int(11) SUM NOT NULL COMMENT &quot;&quot;
+) ENGINE=OLAP
+AGGREGATE KEY(`k1`, `k2`)
+PARTITION BY RANGE(`k1`)
+(
+    PARTITION p1 VALUES LESS THAN (&#39;2019-05-31&#39;),
+    PARTITION p2 VALUES LESS THAN (&#39;2019-06-30&#39;)
+)
+DISTRIBUTED BY HASH(`k2`) BUCKETS 8
+PROPERTIES (
+    &quot;colocate_with&quot; = &quot;group1&quot;
+);
+</pre></div>
+</div>
+<p>Table 2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE `tbl2` (
+    `k1` datetime NOT NULL COMMENT &quot;&quot;,
+    `k2` int(11) NOT NULL COMMENT &quot;&quot;,
+    `v1` double SUM NOT NULL COMMENT &quot;&quot;
+) ENGINE=OLAP
+AGGREGATE KEY(`k1`, `k2`)
+DISTRIBUTED BY HASH(`k2`) BUCKETS 8
+PROPERTIES (
+    &quot;colocate_with&quot; = &quot;group1&quot;
+);
+</pre></div>
+</div>
+<p>View the query plan:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
+
++----------------------------------------------------+
+| Explain String                                     |
++----------------------------------------------------+
+| PLAN FRAGMENT 0                                    |
+|  OUTPUT EXPRS:`tbl1`.`k1` |                        |
+|   PARTITION: RANDOM                                |
+|                                                    |
+|   RESULT SINK                                      |
+|                                                    |
+|   2:HASH JOIN                                      |
+|   |  join op: INNER JOIN                           |
+|   |  hash predicates:                              |
+|   |  colocate: true                                |
+|   |    `tbl1`.`k2` = `tbl2`.`k2`                   |
+|   |  tuple ids: 0 1                                |
+|   |                                                |
+|   |----1:OlapScanNode                              |
+|   |       TABLE: tbl2                              |
+|   |       PREAGGREGATION: OFF. Reason: null        |
+|   |       partitions=0/1                           |
+|   |       rollup: null                             |
+|   |       buckets=0/0                              |
+|   |       cardinality=-1                           |
+|   |       avgRowSize=0.0                           |
+|   |       numNodes=0                               |
+|   |       tuple ids: 1                             |
+|   |                                                |
+|   0:OlapScanNode                                   |
+|      TABLE: tbl1                                   |
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo |
+|      partitions=0/2                                |
+|      rollup: null                                  |
+|      buckets=0/0                                   |
+|      cardinality=-1                                |
+|      avgRowSize=0.0                                |
+|      numNodes=0                                    |
+|      tuple ids: 0                                  |
++----------------------------------------------------+
+</pre></div>
+</div>
+<p>If Colocation Join works, the Hash Join Node will show <code class="docutils literal notranslate"><span class="pre">colocate:</span> <span class="pre">true</span></code>。</p>
+<p>If not, the query plan is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>+----------------------------------------------------+
+| Explain String                                     |
++----------------------------------------------------+
+| PLAN FRAGMENT 0                                    |
+|  OUTPUT EXPRS:`tbl1`.`k1` |                        |
+|   PARTITION: RANDOM                                |
+|                                                    |
+|   RESULT SINK                                      |
+|                                                    |
+|   2:HASH JOIN                                      |
+|   |  join op: INNER JOIN (BROADCAST)               |
+|   |  hash predicates:                              |
+|   |  colocate: false, reason: group is not stable  |
+|   |    `tbl1`.`k2` = `tbl2`.`k2`                   |
+|   |  tuple ids: 0 1                                |
+|   |                                                |
+|   |----3:EXCHANGE                                  |
+|   |       tuple ids: 1                             |
+|   |                                                |
+|   0:OlapScanNode                                   |
+|      TABLE: tbl1                                   |
+|      PREAGGREGATION: OFF. Reason: No AggregateInfo |
+|      partitions=0/2                                |
+|      rollup: null                                  |
+|      buckets=0/0                                   |
+|      cardinality=-1                                |
+|      avgRowSize=0.0                                |
+|      numNodes=0                                    |
+|      tuple ids: 0                                  |
+|                                                    |
+| PLAN FRAGMENT 1                                    |
+|  OUTPUT EXPRS:                                     |
+|   PARTITION: RANDOM                                |
+|                                                    |
+|   STREAM DATA SINK                                 |
+|     EXCHANGE ID: 03                                |
+|     UNPARTITIONED                                  |
+|                                                    |
+|   1:OlapScanNode                                   |
+|      TABLE: tbl2                                   |
+|      PREAGGREGATION: OFF. Reason: null             |
+|      partitions=0/1                                |
+|      rollup: null                                  |
+|      buckets=0/0                                   |
+|      cardinality=-1                                |
+|      avgRowSize=0.0                                |
+|      numNodes=0                                    |
+|      tuple ids: 1                                  |
++----------------------------------------------------+
+</pre></div>
+</div>
+<p>The HASH JOIN node displays the corresponding reason: <code class="docutils literal notranslate"><span class="pre">colocate:</span> <span class="pre">false,</span> <span class="pre">reason:</span> <span class="pre">group</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">stable</span></code>. At the same time, an EXCHANGE node will be generated.</p>
+</div>
+<div class="section" id="advanced-operations">
+<h2>Advanced Operations<a class="headerlink" href="#advanced-operations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe-configuration-item">
+<h3>FE Configuration Item<a class="headerlink" href="#fe-configuration-item" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>disable_colocate_relocate</li>
+</ul>
+<p>Whether to close Doris’s automatic Colocation replica repair. The default is false, i.e. not closed. This parameter only affects the replica repair of the Colocation table, but does not affect the normal table.</p>
+<ul class="simple">
+<li>disable_colocate_balance</li>
+</ul>
+<p>Whether to turn off automatic Colocation replica balancing for Doris. The default is false, i.e. not closed. This parameter only affects the replica balance of the Collocation table, but does not affect the common table.</p>
+<p>User can set these configurations at runtime. See <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ADMIN</span> <span class="pre">SHOW</span> <span class="pre">CONFIG;</span></code> and <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ADMIN</span> <span class="pre">SET</span> <span class="pre">CONFIG;</span></code>.</p>
+<ul class="simple">
+<li>disable_colocate_join</li>
+</ul>
+<p>Whether to turn off the Colocation Join function or not. In 0.10 and previous versions, the default is true, that is, closed. In a later version, it will default to false, that is, open.</p>
+<ul class="simple">
+<li>use_new_tablet_scheduler</li>
+</ul>
+<p>In 0.10 and previous versions, the new replica scheduling logic is incompatible with the Colocation Join function, so in 0.10 and previous versions, if <code class="docutils literal notranslate"><span class="pre">disable_colocate_join</span> <span class="pre">=</span> <span class="pre">false</span></code>, you need to set <code class="docutils literal notranslate"><span class="pre">use_new_tablet_scheduler</span> <span class="pre">=</span> <span class="pre">false</span></code>, that is, close the new replica scheduler. In later versions, <code class="docutils literal notranslate"><span class="pre">use_new_tablet_scheduler</span></code> will be equal to true.</p>
+<p>###HTTP Restful API</p>
+<p>Doris provides several HTTP Restful APIs related to Colocation Join for viewing and modifying Colocation Group.</p>
+<p>The API is implemented on the FE side and accessed using <code class="docutils literal notranslate"><span class="pre">fe_host:</span> <span class="pre">fe_http_port</span></code>. ADMIN privileges are required.</p>
+<ol>
+<li><p class="first">View all Colocation information for the cluster</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GET</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">colocate</span>
+
+<span class="n">Return</span> <span class="n">the</span> <span class="n">internal</span> <span class="n">Colocation</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">JSON</span> <span class="nb">format</span><span class="p">:</span>
+
+<span class="p">{</span>
+	<span class="s2">&quot;colocate_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s2">&quot;groupName2Id&quot;</span><span class="p">:</span> <span class="p">{</span>
+			<span class="s2">&quot;g1&quot;</span><span class="p">:</span> <span class="p">{</span>
+				<span class="s2">&quot;dbId&quot;</span><span class="p">:</span> <span class="mi">10005</span><span class="p">,</span>
+				<span class="s2">&quot;grpId&quot;</span><span class="p">:</span> <span class="mi">10008</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		<span class="s2">&quot;group2Tables&quot;</span><span class="p">:</span> <span class="p">{},</span>
+		<span class="s2">&quot;table2Group&quot;</span><span class="p">:</span> <span class="p">{</span>
+			<span class="s2">&quot;10007&quot;</span><span class="p">:</span> <span class="p">{</span>
+				<span class="s2">&quot;dbId&quot;</span><span class="p">:</span> <span class="mi">10005</span><span class="p">,</span>
+				<span class="s2">&quot;grpId&quot;</span><span class="p">:</span> <span class="mi">10008</span>
+			<span class="p">},</span>
+			<span class="s2">&quot;10040&quot;</span><span class="p">:</span> <span class="p">{</span>
+				<span class="s2">&quot;dbId&quot;</span><span class="p">:</span> <span class="mi">10005</span><span class="p">,</span>
+				<span class="s2">&quot;grpId&quot;</span><span class="p">:</span> <span class="mi">10008</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		<span class="s2">&quot;group2Schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+			<span class="s2">&quot;10005.10008&quot;</span><span class="p">:</span> <span class="p">{</span>
+				<span class="s2">&quot;groupId&quot;</span><span class="p">:</span> <span class="p">{</span>
+					<span class="s2">&quot;dbId&quot;</span><span class="p">:</span> <span class="mi">10005</span><span class="p">,</span>
+					<span class="s2">&quot;grpId&quot;</span><span class="p">:</span> <span class="mi">10008</span>
+				<span class="p">},</span>
+				<span class="s2">&quot;distributionColTypes&quot;</span><span class="p">:</span> <span class="p">[{</span>
+					<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;INT&quot;</span><span class="p">,</span>
+					<span class="s2">&quot;len&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+					<span class="s2">&quot;isAssignedStrLenInColDefinition&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+					<span class="s2">&quot;precision&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+					<span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="mi">0</span>
+				<span class="p">}],</span>
+				<span class="s2">&quot;bucketsNum&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+				<span class="s2">&quot;replicationNum&quot;</span><span class="p">:</span> <span class="mi">2</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+		<span class="s2">&quot;group2BackendsPerBucketSeq&quot;</span><span class="p">:</span> <span class="p">{</span>
+			<span class="s2">&quot;10005.10008&quot;</span><span class="p">:</span> <span class="p">[</span>
+				<span class="p">[</span><span class="mi">10004</span><span class="p">,</span> <span class="mi">10002</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10003</span><span class="p">,</span> <span class="mi">10002</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10003</span><span class="p">,</span> <span class="mi">10004</span><span class="p">],</span>
+				<span class="p">[</span><span class="mi">10002</span><span class="p">,</span> <span class="mi">10004</span><span class="p">]</span>
+			<span class="p">]</span>
+		<span class="p">},</span>
+		<span class="s2">&quot;unstableGroups&quot;</span><span class="p">:</span> <span class="p">[]</span>
+	<span class="p">},</span>
+	<span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Mark Group as Stable or Unstable</p>
+<ul>
+<li><p class="first">Mark as Stable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>POST /api/colocate/group_stable?db_id=10005&amp;group_id=10008
+
+Returns: 200
+</pre></div>
+</div>
+</li>
+<li><p class="first">Mark as Unstable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DELETE /api/colocate/group_stable?db_id=10005&amp;group_id=10008
+
+Returns: 200
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">Setting Data Distribution for Group</p>
+<p>The interface can force the number distribution of a group.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>POST /api/colocate/bucketseq?db_id=10005&amp;group_id= 10008
+
+Body:
+[[10004,10002],[10003,10002],[10002,10004],[10003,10002],[10002,10004],[10003,10002],[10003,10004],[10003,10004],[10003,10004],[10002,10004]]
+
+Returns: 200
+</pre></div>
+</div>
+<p>Body is a Buckets Sequence represented by a nested array and the ID of the BE where the fragments are distributed in each Bucket.</p>
+<p>Note that using this command, you may need to set the FE configuration <code class="docutils literal notranslate"><span class="pre">disable_colocate_relocate</span></code> and <code class="docutils literal notranslate"><span class="pre">disable_colocate_balance</span></code> to true. That is to shut down the system for automatic Colocation replica repair and balancing. Otherwise, it may be automatically reset by the system after modification.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="export_manual_EN.html" class="btn btn-neutral float-right" title="Data export" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="backup-restore_EN.html" class="btn btn-neutral float-left" title="Backup and Recovery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

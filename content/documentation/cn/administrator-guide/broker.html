@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Broker &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Colocation Join" href="colocation-join.html" />
+    <link rel="prev" title="备份与恢复" href="backup-restore.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Broker</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">支持的存储系统</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">需要 Broker 的操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Broker 信息</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="index.html">操作手册</a> &raquo;</li>
+        
+      <li>Broker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/broker.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="broker">
+<h1>Broker<a class="headerlink" href="#broker" title="Permalink to this headline">¶</a></h1>
+<p>Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录，如 HDFS、BOS 和 AFS 等。</p>
+<p>Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。</p>
+<p>Broker 仅作为一个数据通路，并不参与任何计算，因此仅需占用较少的内存。通常一个 Doris 系统中会部署一个或多个 Broker 进程。并且相同类型的 Broker 会组成一个组，并设定一个 <strong>名称（Broker name）</strong>。</p>
+<p>Broker 在 Doris 系统架构中的位置如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----+</span>   <span class="o">+----+</span>
+<span class="o">|</span> <span class="n">FE</span> <span class="o">|</span>   <span class="o">|</span> <span class="n">BE</span> <span class="o">|</span>
+<span class="o">+-^--+</span>   <span class="o">+--^-+</span>
+  <span class="o">|</span>         <span class="o">|</span>
+  <span class="o">|</span>         <span class="o">|</span>
+<span class="o">+-</span><span class="n">v</span><span class="o">---------</span><span class="n">v</span><span class="o">-+</span>
+<span class="o">|</span>   <span class="n">Broker</span>    <span class="o">|</span>
+<span class="o">+------^------+</span>
+       <span class="o">|</span>
+       <span class="o">|</span>
+<span class="o">+------</span><span class="n">v</span><span class="o">------+</span>
+<span class="o">|</span><span class="n">HDFS</span><span class="o">/</span><span class="n">BOS</span><span class="o">/</span><span class="n">AFS</span> <span class="o">|</span>
+<span class="o">+-------------+</span>
+</pre></div>
+</div>
+<p>本文档主要介绍 Broker 在访问不同远端存储时需要的参数，如连接信息、权限认证信息等等。</p>
+<div class="section" id="id1">
+<h2>支持的存储系统<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>不同的 Broker 类型支持不同的存储系统。</p>
+<ol class="simple">
+<li>社区版 HDFS<ul>
+<li>支持简单认证访问</li>
+<li>支持通过 kerberos 认证访问</li>
+<li>支持 HDFS HA 模式访问</li>
+</ul>
+</li>
+<li>百度 HDFS/AFS（开源版本不支持）<ul>
+<li>支持通过 ugi 简单认证访问</li>
+</ul>
+</li>
+<li>百度对象存储 BOS（开源版本不支持）<ul>
+<li>支持通过 AK/SK 认证访问</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h2>需要 Broker 的操作<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">Broker Load</p>
+<p>Broker Load 功能通过 Broker 进程读取远端存储上的文件数据并导入到 Doris 中。示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>LOAD LABEL example_db.label6
+(
+    DATA INFILE(&quot;bos://my_bucket/input/file&quot;)
+    INTO TABLE `my_table`
+)
+WITH BROKER &quot;broker_name&quot;
+(
+    &quot;bos_endpoint&quot; = &quot;http://bj.bcebos.com&quot;,
+    &quot;bos_accesskey&quot; = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+    &quot;bos_secret_accesskey&quot; = &quot;yyyyyyyyyyyyyyyyyyyy&quot;
+)
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">BROKER</span></code> 以及之后的 Property Map 用于提供 Broker 相关信息。</p>
+</li>
+<li><p class="first">数据导出（Export）</p>
+<p>Export 功能通过 Broker 进程，将 Doris 中存储的数据以文本的格式导出到远端存储的文件中。示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXPORT</span> <span class="n">TABLE</span> <span class="n">testTbl</span> 
+<span class="n">TO</span> <span class="s2">&quot;hdfs://hdfs_host:port/a/b/c&quot;</span> 
+<span class="n">WITH</span> <span class="n">BROKER</span> <span class="s2">&quot;broker_name&quot;</span> 
+<span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span> <span class="o">=</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;yyy&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">BROKER</span></code> 以及之后的 Property Map 用于提供 Broker 相关信息。</p>
+</li>
+<li><p class="first">创建用于备份恢复的仓库（Create Repository）</p>
+<p>当用户需要使用备份恢复功能时，需要先通过 <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">REPOSITORY</span></code> 命令创建一个 “仓库”，仓库元信息中记录了所使用的 Broker 以及相关信息。之后的备份恢复操作，会通过 Broker 将数据备份到这个仓库，或从这个仓库读取数据恢复到 Doris 中。示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE REPOSITORY `bos_repo`
+WITH BROKER `broker_name`
+ON LOCATION &quot;bos://doris_backup&quot;
+PROPERTIES
+(
+    &quot;bos_endpoint&quot; = &quot;http://gz.bcebos.com&quot;,
+    &quot;bos_accesskey&quot; = &quot;069fc2786e664e63a5f111111114ddbs22&quot;,
+    &quot;bos_secret_accesskey&quot; = &quot;70999999999999de274d59eaa980a&quot;
+);
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">BROKER</span></code> 以及之后的 Property Map 用于提供 Broker 相关信息。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h2>Broker 信息<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Broker 的信息包括 <strong>名称（Broker name）</strong> 和 <strong>认证信息</strong> 两部分。通常的语法格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WITH</span> <span class="n">BROKER</span> <span class="s2">&quot;broker_name&quot;</span> 
+<span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span> <span class="o">=</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;yyy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;other_prop&quot;</span> <span class="o">=</span> <span class="s2">&quot;prop_value&quot;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<div class="section" id="id4">
+<h3>名称<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>通常用户需要通过操作命令中的 <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">BROKER</span> <span class="pre">&quot;broker_name&quot;</span></code> 子句来指定一个已经存在的 Broker Name。Broker Name 是用户在通过 <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">BROKER</span></code> 命令添加 Broker 进程时指定的一个名称。一个名称通常对应一个或多个 Broker 进程。Doris 会根据名称选择可用的 Broker 进程。用户可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BROKER</span></code> 命令查看当前集群中已经存在的 Broker。</p>
+<p><strong>注：Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。</strong></p>
+</div>
+<div class="section" id="id5">
+<h3>认证信息<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>不同的 Broker 类型，以及不同的访问方式需要提供不同的认证信息。认证信息通常在 <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">BROKER</span> <span class="pre">&quot;broker_name&quot;</span></code> 之后的 Property Map 中以 Key-Value 的方式提供。</p>
+<div class="section" id="hdfs">
+<h4>社区版 HDFS<a class="headerlink" href="#hdfs" title="Permalink to this headline">¶</a></h4>
+<ol>
+<li><p class="first">简单认证</p>
+<p>简单认证即 Hadoop 配置 <code class="docutils literal notranslate"><span class="pre">hadoop.security.authentication</span></code> 为 <code class="docutils literal notranslate"><span class="pre">simple</span></code>。</p>
+<p>使用系统用户访问 HDFS。或者在 Broker 启动的环境变量中添加：<code class="docutils literal notranslate"><span class="pre">HADOOP_USER_NAME</span></code>。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>密码置空即可。</p>
+</li>
+<li><p class="first">Kerberos 认证</p>
+<p>该认证方式需提供以下信息：</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">hadoop.security.authentication</span></code>：指定认证方式为 kerberos。</li>
+<li><code class="docutils literal notranslate"><span class="pre">kerberos_principal</span></code>：指定 kerberos 的 principal。</li>
+<li><code class="docutils literal notranslate"><span class="pre">kerberos_keytab</span></code>：指定 kerberos 的 keytab 文件路径。该文件必须为 Broker 进程所在服务器上的文件的绝对路径。并且可以被 Broker 进程访问。</li>
+<li><code class="docutils literal notranslate"><span class="pre">kerberos_keytab_content</span></code>：指定 kerberos 中 keytab 文件内容经过 base64 编码之后的内容。这个跟 <code class="docutils literal notranslate"><span class="pre">kerberos_keytab</span></code> 配置二选一即可。</li>
+</ul>
+<p>示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;hadoop.security.authentication&quot;</span> <span class="o">=</span> <span class="s2">&quot;kerberos&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kerberos_principal&quot;</span> <span class="o">=</span> <span class="s2">&quot;doris@YOUR.COM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kerberos_keytab&quot;</span> <span class="o">=</span> <span class="s2">&quot;/home/doris/my.keytab&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;hadoop.security.authentication&quot;</span> <span class="o">=</span> <span class="s2">&quot;kerberos&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kerberos_principal&quot;</span> <span class="o">=</span> <span class="s2">&quot;doris@YOUR.COM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kerberos_keytab_content&quot;</span> <span class="o">=</span> <span class="s2">&quot;ASDOWHDLAWIDJHWLDKSALDJSDIWALD&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">HDFS HA 模式</p>
+<p>这个配置用于访问以 HA 模式部署的 HDFS 集群。</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">dfs.nameservices</span></code>：指定 hdfs 服务的名字，自定义，如：”dfs.nameservices” = “my_ha”。</li>
+<li><code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.xxx</span></code>：自定义 namenode 的名字,多个名字以逗号分隔。其中 xxx 为 <code class="docutils literal notranslate"><span class="pre">dfs.nameservices</span></code> 中自定义的名字，如 “dfs.ha.namenodes.my_ha” = “my_nn”。</li>
+<li><code class="docutils literal notranslate"><span class="pre">dfs.namenode.rpc-address.xxx.nn</span></code>：指定 namenode 的rpc地址信息。其中 nn 表示 <code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.xxx</span></code> 中配置的 namenode 的名字，如：”dfs.namenode.rpc-address.my_ha.my_nn” = “host:port”。</li>
+<li><code class="docutils literal notranslate"><span class="pre">dfs.client.failover.proxy.provider</span></code>：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。</li>
+</ul>
+<p>示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;dfs.nameservices&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_ha&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.ha.namenodes.my_ha&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_namenode1, my_namenode2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.namenode.rpc-address.my_ha.my_namenode1&quot;</span> <span class="o">=</span> <span class="s2">&quot;nn1_host:rpc_port&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.namenode.rpc-address.my_ha.my_namenode2&quot;</span> <span class="o">=</span> <span class="s2">&quot;nn2_host:rpc_port&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.client.failover.proxy.provider&quot;</span> <span class="o">=</span> <span class="s2">&quot;org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>HA 模式可以和前面两种认证方式组合，进行集群访问。如通过简单认证访问 HA HDFS：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="o">=</span><span class="s2">&quot;passwd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.nameservices&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_ha&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.ha.namenodes.my_ha&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_namenode1, my_namenode2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.namenode.rpc-address.my_ha.my_namenode1&quot;</span> <span class="o">=</span> <span class="s2">&quot;nn1_host:rpc_port&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.namenode.rpc-address.my_ha.my_namenode2&quot;</span> <span class="o">=</span> <span class="s2">&quot;nn2_host:rpc_port&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dfs.client.failover.proxy.provider&quot;</span> <span class="o">=</span> <span class="s2">&quot;org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="bos">
+<h4>百度对象存储 BOS<a class="headerlink" href="#bos" title="Permalink to this headline">¶</a></h4>
+<p><strong>（开源版本不支持）</strong></p>
+<ol>
+<li><p class="first">通过 AK/SK 访问</p>
+<ul class="simple">
+<li>AK/SK：Access Key 和 Secret Key。在百度云安全认证中心可以查看用户的 AK/SK。</li>
+<li>Region Endpoint：BOS 所在地区的 Endpoint：<ul>
+<li>华北-北京：http://bj.bcebos.com</li>
+<li>华北-保定：http://bd.bcebos.com</li>
+<li>华南-广州：http://gz.bcebos.com</li>
+<li>华东-苏州：http://sz.bcebos.com</li>
+</ul>
+</li>
+</ul>
+<p>示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;bos_endpoint&quot;</span> <span class="o">=</span> <span class="s2">&quot;http://bj.bcebos.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bos_accesskey&quot;</span> <span class="o">=</span> <span class="s2">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bos_secret_accesskey&quot;</span> <span class="o">=</span> <span class="s2">&quot;yyyyyyyyyyyyyyyyyyyyyyyyyy&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="hdfs-afs">
+<h4>百度 HDFS/AFS<a class="headerlink" href="#hdfs-afs" title="Permalink to this headline">¶</a></h4>
+<p><strong>（开源版本不支持）</strong></p>
+<p>百度 AFS 和 HDFS 仅支持使用 ugi 的简单认证访问。示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;passwd&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>其中 user 和 passwd 为 Hadoop 的 UGI 配置。</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="colocation-join.html" class="btn btn-neutral float-right" title="Colocation Join" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="backup-restore.html" class="btn btn-neutral float-left" title="备份与恢复" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>时区 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="扩展功能" href="../extending-doris/index.html" />
+    <link rel="prev" title="文件管理器" href="small-file-mgr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">时区</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">名词解释</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">基本概念</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">具体操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">使用限制</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="index.html">操作手册</a> &raquo;</li>
+        
+      <li>时区</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/time-zone.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>时区<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Doris 支持多时区设置</p>
+<div class="section" id="id2">
+<h2>名词解释<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
+<li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>基本概念<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Doris 内部存在多个时区相关参数</p>
+<ul class="simple">
+<li>system_time_zone :
+当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。</li>
+<li>time_zone :
+服务器当前时区，区分session级别和global级别</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>具体操作<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">show variables like ‘%time_zone%’</p>
+<p>查看当前时区相关配置</p>
+</li>
+<li><p class="first">SET time_zone = ‘Asia/Shanghai’</p>
+<p>该命令可以设置session级别的时区，连接断开后失效</p>
+</li>
+<li><p class="first">SET global time_zone = ‘Asia/Shanghai’</p>
+<p>该命令可以设置global级别的时区参数，fe会将参数持久化，连接断开后不失效</p>
+</li>
+</ol>
+<div class="section" id="id5">
+<h3>时区的影响<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>时区设置会影响对时区敏感的时间值的显示和存储。</p>
+<p>包括NOW()或CURTIME()等时间函数显示的值，也包括show load, show backends中的时间值。</p>
+<p>但不会影响create table 中时间类型分区列的less than值，也不会影响存储为date/datetime类型的值的显示。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>使用限制<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>时区值可以使用几种格式给出，不区分大小写:</p>
+<ul class="simple">
+<li>表示UTC偏移量的字符串，如’+10:00’或’-6:00’</li>
+<li>标准时区格式，如”Asia/Shanghai”、”America/Los_Angeles”</li>
+<li>不支持缩写时区格式，如”MET”、”CTT”。因为缩写时区在不同场景下存在歧义，不建议使用。</li>
+<li>为了兼容Doris，支持CST缩写时区，内部会将CST转移为”Asia/Shanghai”的中国标准时区</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../extending-doris/index.html" class="btn btn-neutral float-right" title="扩展功能" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="small-file-mgr.html" class="btn btn-neutral float-left" title="文件管理器" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Metadata Design Document &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SQL Manual" href="../sql-reference/index.html" />
+    <link rel="prev" title="Doris Storage File Format Optimization" href="doris_storage_optimization_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Design Documents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="doris_storage_optimization_EN.html">Doris Storage File Format Optimization</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Metadata Design Document</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#overall-architecture">Overall architecture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metadata-structure">Metadata structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-stream">Data stream</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-details">Implementation details</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Design Documents</a> &raquo;</li>
+        
+      <li>Metadata Design Document</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/internal/metadata-design_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="metadata-design-document">
+<h1>Metadata Design Document<a class="headerlink" href="#metadata-design-document" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="noun-interpretation">
+<h2>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE: Frontend, the front-end node of Doris. Mainly responsible for receiving and returning client requests, metadata, cluster management, query plan generation and so on.</li>
+<li>BE: Backend, the back-end node of Doris. Mainly responsible for data storage and management, query plan execution and other work.</li>
+<li>bdbje: [Oracle Berkeley DB Java Edition] (http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html). In Doris, we use bdbje to persist metadata operation logs and high availability of FE.</li>
+</ul>
+</div>
+<div class="section" id="overall-architecture">
+<h2>Overall architecture<a class="headerlink" href="#overall-architecture" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../../../_images/palo_architecture1.jpg" src="../../../_images/palo_architecture1.jpg" /></p>
+<p>As shown above, Doris’s overall architecture is divided into two layers. Multiple FEs form the first tier, providing lateral expansion and high availability of FE. Multiple BEs form the second layer, which is responsible for data storage and management. This paper mainly introduces the design and implementation of metadata in FE layer.</p>
+<ol class="simple">
+<li>FE 节点分为 follower 和 observer 两类。各个 FE 之间，通过 bdbje（<a class="reference external" href="http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/overview/index-093405.html">BerkeleyDB Java Edition</a>）进行 leader 选举，数据同步等工作。</li>
+<li>The follower node is elected, and one of the followers becomes the leader node, which is responsible for the writing of metadata. When the leader node goes down, other follower nodes re-elect a leader to ensure high availability of services.</li>
+<li>The observer node only synchronizes metadata from the leader node and does not participate in the election. It can be scaled horizontally to provide the extensibility of metadata reading services.</li>
+</ol>
+<blockquote>
+<div>Note: The concepts of follower and observer corresponding to bdbje are replica and observer. You may use both names below.</div></blockquote>
+</div>
+<div class="section" id="metadata-structure">
+<h2>Metadata structure<a class="headerlink" href="#metadata-structure" title="Permalink to this headline">¶</a></h2>
+<p>Doris’s metadata is in full memory. A complete metadata image is maintained in each FE memory. Within Baidu, a cluster of 2,500 tables and 1 million fragments (3 million copies) occupies only about 2GB of metadata in memory. (Of course, the memory overhead for querying intermediate objects and various job information needs to be estimated according to the actual situation. However, it still maintains a low memory overhead.</p>
+<p>At the same time, metadata is stored in the memory as a whole in a tree-like hierarchical structure. By adding auxiliary structure, metadata information at all levels can be accessed quickly.</p>
+<p>The following figure shows the contents stored in Doris meta-information.</p>
+<p><img alt="../../../_images/metadata_contents1.png" src="../../../_images/metadata_contents1.png" /></p>
+<p>As shown above, Doris’s metadata mainly stores four types of data:</p>
+<ol class="simple">
+<li>User data information. Including database, table Schema, fragmentation information, etc.</li>
+<li>All kinds of job information. For example, import jobs, Clone jobs, SchemaChange jobs, etc.</li>
+<li>User and permission information.</li>
+<li>Cluster and node information.</li>
+</ol>
+</div>
+<div class="section" id="data-stream">
+<h2>Data stream<a class="headerlink" href="#data-stream" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../../../_images/metadata_stream1.png" src="../../../_images/metadata_stream1.png" /></p>
+<p>The data flow of metadata is as follows:</p>
+<ol class="simple">
+<li>Only leader FE can write metadata. After modifying leader’s memory, the write operation serializes into a log and writes to bdbje in the form of key-value. The key is a continuous integer, and as log id, value is the serialized operation log.</li>
+<li>After the log is written to bdbje, bdbje copies the log to other non-leader FE nodes according to the policy (write most/write all). The non-leader FE node modifies its metadata memory image by playback of the log, and completes the synchronization with the metadata of the leader node.</li>
+<li>When the number of log bars of the leader node reaches the threshold (default 10W bars), the checkpoint thread is started. Checkpoint reads existing image files and subsequent logs and replays a new mirror copy of metadata in memory. The copy is then written to disk to form a new image. The reason for this is to regenerate a mirror copy instead of writing an existing image to an image, mainly considering that the write operation will be blocked during writing the image plus read lock. So every checkpoint takes up twice as much memory space.</li>
+<li>After the image file is generated, the leader node notifies other non-leader nodes that a new image has been generated. Non-leader actively pulls the latest image files through HTTP to replace the old local files.</li>
+<li>The logs in bdbje will be deleted regularly after the image is completed.</li>
+</ol>
+</div>
+<div class="section" id="implementation-details">
+<h2>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="metadata-catalogue">
+<h3>Metadata catalogue<a class="headerlink" href="#metadata-catalogue" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li>The metadata directory is specified by the FE configuration item `meta_dir’.</li>
+<li>Data storage directory for bdbje under <code class="docutils literal notranslate"><span class="pre">bdb/</span></code> directory.</li>
+<li>The storage directory for image files under the <code class="docutils literal notranslate"><span class="pre">image/</span></code> directory.</li>
+</ol>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">Image.[logid]</span></code>is the latest image file. The suffix <code class="docutils literal notranslate"><span class="pre">logid</span></code> indicates the ID of the last log contained in the image.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Image.ckpt</span></code> is the image file being written. If it is successfully written, it will be renamed <code class="docutils literal notranslate"><span class="pre">image.[logid]</span></code> and replaced with the original image file.</li>
+<li>The<code class="docutils literal notranslate"><span class="pre">cluster_id</span></code> is recorded in the <code class="docutils literal notranslate"><span class="pre">VERSION</span></code> file. <code class="docutils literal notranslate"><span class="pre">Cluster_id</span></code> uniquely identifies a Doris cluster. It is a 32-bit integer randomly generated at the first startup of leader. You can also specify a cluster ID through the Fe configuration item `cluster_id’.</li>
+<li>The role of FE itself recorded in the <code class="docutils literal notranslate"><span class="pre">ROLE</span></code> file. There are only <code class="docutils literal notranslate"><span class="pre">FOLLOWER</span></code> and <code class="docutils literal notranslate"><span class="pre">OBSERVER</span></code>. Where <code class="docutils literal notranslate"><span class="pre">FOLLOWER</span></code> denotes FE as an optional node. (Note: Even the leader node has a role of <code class="docutils literal notranslate"><span class="pre">FOLLOWER</span></code>)</li>
+</ul>
+</div>
+<div class="section" id="start-up-process">
+<h3>Start-up process<a class="headerlink" href="#start-up-process" title="Permalink to this headline">¶</a></h3>
+<ol>
+<li><p class="first">FE starts for the first time. If the startup script does not add any parameters, it will try to start as leader. You will eventually see <code class="docutils literal notranslate"><span class="pre">transfer</span> <span class="pre">from</span> <span class="pre">UNKNOWN</span> <span class="pre">to</span> <span class="pre">MASTER</span></code> in the FE startup log.</p>
+</li>
+<li><p class="first">FE starts for the first time. If the <code class="docutils literal notranslate"><span class="pre">-helper</span></code> parameter is specified in the startup script and points to the correct leader FE node, the FE first asks the leader node about its role (ROLE) and cluster_id through http. Then pull up the latest image file. After reading image file and generating metadata image, start bdbje and start bdbje log synchronization. After synchronization is completed, the log after image file in bdbje is replayed, and the final metadata image generation is completed.</p>
+<blockquote>
+<div><p>Note 1: When starting with the <code class="docutils literal notranslate"><span class="pre">-helper</span></code> parameter, you need to first add the FE through the leader through the MySQL command, otherwise, the start will report an error.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Note 2: <code class="docutils literal notranslate"><span class="pre">-helper</span></code> can point to any follower node, even if it is not leader.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Note 3: In the process of synchronization log, the Fe log will show <code class="docutils literal notranslate"><span class="pre">xxx</span> <span class="pre">detached</span></code>. At this time, the log pull is in progress, which is a normal phenomenon.</p>
+</div></blockquote>
+</li>
+<li><p class="first">FE is not the first startup. If the startup script does not add any parameters, it will determine its identity according to the ROLE information stored locally. At the same time, according to the cluster information stored in the local bdbje, the leader information is obtained. Then read the local image file and the log in bdbje to complete the metadata image generation. (If the roles recorded in the local ROLE are inconsistent with those recorded in bdbje, an error will be reported.)</p>
+</li>
+<li><p class="first">FE is not the first boot, and the <code class="docutils literal notranslate"><span class="pre">-helper</span></code> parameter is specified in the boot script. Just like the first process started, the leader role is asked first. But it will be compared with the ROLE stored by itself. If they are inconsistent, they will report errors.</p>
+</li>
+</ol>
+<div class="section" id="metadata-read-write-and-synchronization">
+<h4>Metadata Read-Write and Synchronization<a class="headerlink" href="#metadata-read-write-and-synchronization" title="Permalink to this headline">¶</a></h4>
+<ol>
+<li><p class="first">Users can use Mysql to connect any FE node to read and write metadata. If the connection is a non-leader node, the node forwards the write operation to the leader node. When the leader is successfully written, it returns a current and up-to-date log ID of the leader. Later, the non-leader node waits for the log ID it replays to be larger than the log ID it returns to the client before returning the message that the command succeeds. This approach guarantees Read-Your-Write semantics for any FE node.</p>
+<blockquote>
+<div><p>Note: Some non-write operations are also forwarded to leader for execution. For example, <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span></code> operation. Because these commands usually need to read the intermediate states of some jobs, which are not written to bdbje, there are no such intermediate states in the memory of the non-leader node. (FE’s direct metadata synchronization depends entirely on bdbje’s log playback. If a metadata modification operation does not write bdbje’s log, the result of the modification of the operation will not be seen in other non-leader nodes.)</p>
+</div></blockquote>
+</li>
+<li><p class="first">The leader node starts a TimePrinter thread. This thread periodically writes a key-value entry for the current time to bdbje. The remaining non-leader nodes read the recorded time in the log by playback and compare it with the local time. If the lag between the local time and the local time is found to be greater than the specified threshold (configuration item: <code class="docutils literal notranslate"><span class="pre">meta_delay_toleration_second</span></code>). If the write interval is half of the configuration item, the node will be in the <strong>unreadable</strong> state. This mechanism solves the problem that non-leader nodes still provide outdated metadata services after a long time of leader disconnection.</p>
+</li>
+<li><p class="first">The metadata of each FE only guarantees the final consistency. Normally, inconsistent window periods are only milliseconds. We guarantee the monotonous consistency of metadata access in the same session. But if the same client connects different FEs, metadata regression may occur. (But for batch update systems, this problem has little impact.)</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="downtime-recovery">
+<h3>Downtime recovery<a class="headerlink" href="#downtime-recovery" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li>When the leader node goes down, the rest of the followers will immediately elect a new leader node to provide services.</li>
+<li>Metadata cannot be written when most follower nodes are down. When metadata is not writable, if a write operation request occurs, the current process is that the <strong>FE process exits</strong>. This logic will be optimized in the future, and read services will still be provided in the non-writable state.</li>
+<li>The downtime of observer node will not affect the state of any other node. It also does not affect metadata reading and writing at other nodes.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../sql-reference/index.html" class="btn btn-neutral float-right" title="SQL Manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="doris_storage_optimization_EN.html" class="btn btn-neutral float-left" title="Doris Storage File Format Optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

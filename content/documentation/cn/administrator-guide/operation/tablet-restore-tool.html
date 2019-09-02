@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BE Tablet数据恢复工具 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="备份与恢复" href="../backup-restore.html" />
+    <link rel="prev" title="数据副本管理" href="tablet-repair-and-balance.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">运维操作</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="disk-capacity.html">磁盘空间管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metadata-operation.html">元数据运维</a></li>
+<li class="toctree-l4"><a class="reference internal" href="monitor-alert.html">监控和报警</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi-tenant.html">多租户(Experimental)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-meta-tool.html">Tablet 元数据管理工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance.html">数据副本管理</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">BE Tablet数据恢复工具</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">运维操作</a> &raquo;</li>
+        
+      <li>BE Tablet数据恢复工具</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/operation/tablet-restore-tool.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="be-tablet">
+<h1>BE Tablet数据恢复工具<a class="headerlink" href="#be-tablet" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>背景<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>用户在使用Doris的过程中，可能会发生因为一些误操作或者线上bug，导致一些有效的tablet被删除（包括元数据和数据）。为了防止在这些异常情况出现数据丢失，Doris提供了回收站机制，来保护用户数据。用户删除的tablet数据不会被直接删除，会被放在回收站中存储一段时间，在一段时间之后会有定时清理机制将过期的数据删除。回收站中的数据包括：tablet的data文件(.dat)，tablet的索引文件(.idx)和tablet的元数据文件(.hdr)。数据将会存放在如下格式的路径：</p>
+<p>/root_path/trash/time_label/tablet_id/schema_hash/</p>
+<p>其中， root path是用户配置的一块盘上be存储的根目录；
+trash：是回收站的目录
+time_label: 时间标签，为了回收站中数据目录的唯一性，同时记录数据时间，使用时间标签作为子目录</p>
+<p>当用户发现线上的数据被误删除，需要从回收站中恢复被删除的tablet，需要用到这个tablet数据恢复功能。BE提供http接口和restore_tablet_tool.sh脚本实现这个功能，支持单tablet操作（single mode）和批量操作模式（batch mode）。
+在single mode下，支持单个tablet的数据恢复。
+在batch mode下，支持批量tablet的数据恢复。</p>
+</div>
+<div class="section" id="id2">
+<h2>操作<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="single-mode">
+<h3>single mode<a class="headerlink" href="#single-mode" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="http">
+<h4>http请求方式<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h4>
+<p>BE中提供单个tablet数据恢复的http接口，接口如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="s2">&quot;http://localhost:8040/api/restore_tablet?tablet_id=11111\&amp;schema_hash=12345&quot;</span>
+</pre></div>
+</div>
+<p>成功的结果如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span> <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>失败的话，会返回相应的失败原因，一种可能的结果如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Failed&quot;</span><span class="p">,</span> <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;create link path failed&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h4>脚本方式<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>restore_tablet_tool.sh可用来实现单tablet数据恢复的功能。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sh</span> <span class="n">tools</span><span class="o">/</span><span class="n">restore_tablet_tool</span><span class="o">.</span><span class="n">sh</span> <span class="o">-</span><span class="n">b</span> <span class="s2">&quot;http://127.0.0.1:8040&quot;</span> <span class="o">-</span><span class="n">t</span> <span class="mi">12345</span> <span class="o">-</span><span class="n">s</span> <span class="mi">11111</span>
+<span class="n">sh</span> <span class="n">tools</span><span class="o">/</span><span class="n">restore_tablet_tool</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">backend</span> <span class="s2">&quot;http://127.0.0.1:8040&quot;</span> <span class="o">--</span><span class="n">tablet_id</span> <span class="mi">12345</span> <span class="o">--</span><span class="n">schema_hash</span> <span class="mi">11111</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="batch-mode">
+<h3>batch mode<a class="headerlink" href="#batch-mode" title="Permalink to this headline">¶</a></h3>
+<p>批量恢复模式用于实现恢复多个tablet数据的功能。使用的时候需要预先将恢复的tablet id和schema hash按照逗号分隔的格式放在一个文件中，一个tablet一行。
+格式如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">12345</span><span class="p">,</span><span class="mi">11111</span>
+<span class="mi">12346</span><span class="p">,</span><span class="mi">11111</span>
+<span class="mi">12347</span><span class="p">,</span><span class="mi">11111</span>
+</pre></div>
+</div>
+<p>然后如下的命令进行恢复(假设文件名为：tablets.txt)：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sh</span> <span class="n">restore_tablet_tool</span><span class="o">.</span><span class="n">sh</span> <span class="o">-</span><span class="n">b</span> <span class="s2">&quot;http://127.0.0.1:8040&quot;</span> <span class="o">-</span><span class="n">f</span> <span class="n">tablets</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">sh</span> <span class="n">restore_tablet_tool</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">backend</span> <span class="s2">&quot;http://127.0.0.1:8040&quot;</span> <span class="o">--</span><span class="n">file</span> <span class="n">tablets</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../backup-restore.html" class="btn btn-neutral float-right" title="备份与恢复" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tablet-repair-and-balance.html" class="btn btn-neutral float-left" title="数据副本管理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

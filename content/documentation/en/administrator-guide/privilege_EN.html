@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Authority Management &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="File Manager" href="small-file-mgr_EN.html" />
+    <link rel="prev" title="Data export" href="export_manual_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Authority Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-operations">Supported operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#permission-type">Permission type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#permission-hierarchy">Permission hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin-grant">ADMIN /GRANT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#some-explanations">Some explanations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Administrator Guide</a> &raquo;</li>
+        
+      <li>Authority Management</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/privilege_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="authority-management">
+<h1>Authority Management<a class="headerlink" href="#authority-management" title="Permalink to this headline">¶</a></h1>
+<p>Doris’s new privilege management system refers to Mysql’s privilege management mechanism, achieves table-level fine-grained privilege control, role-based privilege access control, and supports whitelist mechanism.</p>
+<div class="section" id="noun-interpretation">
+<h2>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">user_identity</p>
+<p>In a permission system, a user is identified as a User Identity. User ID consists of two parts: username and userhost. Username is a user name, which is composed of English upper and lower case. Userhost represents the IP from which the user link comes. User_identity is presented as username&#64;’userhost’, representing the username from userhost.</p>
+<p>Another expression of user_identity is username&#64;[‘domain’], where domain is the domain name, which can be resolved into a set of IPS by DNS BNS (Baidu Name Service). The final expression is a set of username&#64;’userhost’, so we use username&#64;’userhost’to represent it.</p>
+</li>
+<li><p class="first">Privilege</p>
+<p>The objects of permissions are nodes, databases or tables. Different permissions represent different operating permissions.</p>
+</li>
+<li><p class="first">Role</p>
+<p>Doris can create custom named roles. Roles can be seen as a set of permissions. When a newly created user can be assigned a role, the role’s permissions are automatically granted. Subsequent changes in the role’s permissions will also be reflected in all user permissions that belong to the role.</p>
+</li>
+<li><p class="first">user_property</p>
+<p>User attributes are directly attached to a user, not to a user identity. That is, both cmy&#64;’192.%’and cmy&#64;[‘domain’] have the same set of user attributes, which belong to user cmy, not cmy&#64;’192.%’ or cmy&#64;[‘domain’].</p>
+<p>User attributes include, but are not limited to, the maximum number of user connections, import cluster configuration, and so on.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="supported-operations">
+<h2>Supported operations<a class="headerlink" href="#supported-operations" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>Create users：CREATE USER</li>
+<li>Delete users: DROP USER</li>
+<li>Authorization: GRANT</li>
+<li>Withdrawal: REVOKE</li>
+<li>Create role：CREATE ROLE</li>
+<li>Delete Roles: DROP ROLE</li>
+<li>View current user privileges: SHOW GRANTS</li>
+<li>View all user privilegesSHOW ALL GRANTS;</li>
+<li>View the created roles: SHOW ROELS</li>
+<li>View user attributes: SHOW PROPERTY</li>
+</ol>
+<p>For detailed help with the above commands, you can use help + command to get help after connecting Doris through the MySQL client. For example <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">USER</span></code>.</p>
+</div>
+<div class="section" id="permission-type">
+<h2>Permission type<a class="headerlink" href="#permission-type" title="Permalink to this headline">¶</a></h2>
+<p>Doris currently supports the following permissions</p>
+<ol>
+<li><p class="first">Node_priv</p>
+<p>Nodes change permissions. Including FE, BE, BROKER node addition, deletion, offline operations. Currently, this permission can only be granted to Root users.</p>
+</li>
+<li><p class="first">Grant_priv</p>
+<p>Permissions change permissions. Allow the execution of operations including authorization, revocation, add/delete/change user/role, etc.</p>
+</li>
+<li><p class="first">Select_priv</p>
+<p>Read-only access to databases and tables.</p>
+</li>
+<li><p class="first">Load_priv</p>
+<p>Write permissions to databases and tables. Including Load, Insert, Delete and so on.</p>
+</li>
+<li><p class="first">Alter_priv</p>
+<p>Change permissions on databases and tables. It includes renaming libraries/tables, adding/deleting/changing columns, and adding/deleting partitions.</p>
+</li>
+<li><p class="first">Create_priv</p>
+<p>The right to create databases, tables, and views.</p>
+</li>
+<li><p class="first">Drop_priv</p>
+<p>Delete permissions for databases, tables, and views.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="permission-hierarchy">
+<h2>Permission hierarchy<a class="headerlink" href="#permission-hierarchy" title="Permalink to this headline">¶</a></h2>
+<p>At the same time, according to the scope of application of permissions, we divide them into three levels:</p>
+<ol class="simple">
+<li>GLOBAL LEVEL: Global permissions. That is, permissions on <code class="docutils literal notranslate"><span class="pre">*.*</span></code> granted by GRANT statements. The granted permissions apply to any table in any database.</li>
+<li>DATABASE LEVEL: Database-level permissions. That is, permissions on <code class="docutils literal notranslate"><span class="pre">db.*</span></code> granted by GRANT statements. The granted permissions apply to any table in the specified database.</li>
+<li>TABLE LEVEL: Table-level permissions. That is, permissions on <code class="docutils literal notranslate"><span class="pre">db.tbl</span></code> granted by GRANT statements. The permissions granted apply to the specified tables in the specified database.</li>
+</ol>
+</div>
+<div class="section" id="admin-grant">
+<h2>ADMIN /GRANT<a class="headerlink" href="#admin-grant" title="Permalink to this headline">¶</a></h2>
+<p>ADMIN_PRIV and GRANT_PRIV have the authority of <strong>“grant authority”</strong> at the same time, which is more special. The operations related to these two privileges are described here one by one.</p>
+<ol class="simple">
+<li>CREATE USER<ul>
+<li>Users with ADMIN or GRANT privileges at any level can create new users.</li>
+</ul>
+</li>
+<li>DROP USER<ul>
+<li>Only ADMIN privileges can delete users.</li>
+</ul>
+</li>
+<li>CREATE/DROP ROLE<ul>
+<li>Only ADMIN privileges can create roles.</li>
+</ul>
+</li>
+<li>GRANT /REVOKE<ul>
+<li>Users with ADMIN or GLOBAL GRANT privileges can grant or revoke the privileges of any user.</li>
+<li>Users with GRANT privileges at the DATABASE level can grant or revoke the privileges of any user on the specified database.</li>
+<li>Users with GRANT privileges at TABLE level can grant or revoke the privileges of any user on the specified tables in the specified database.</li>
+</ul>
+</li>
+<li>SET PASSWORD<ul>
+<li>Users with ADMIN or GLOBAL GRANT privileges can set any user’s password.</li>
+<li>Ordinary users can set their corresponding User Identity password. The corresponding User Identity can be viewed by <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">CURRENT_USER();</span></code>command.</li>
+<li>Users with GRANT privileges at non-GLOBAL level can not set the password of existing users, but can only specify the password when creating users.</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="some-explanations">
+<h2>Some explanations<a class="headerlink" href="#some-explanations" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">When Doris initializes, the following users and roles are automatically created:</p>
+<ol class="simple">
+<li>Operator role: This role has Node_priv and Admin_priv, i.e. all permissions for Doris. In a subsequent upgrade version, we may restrict the role’s permissions to Node_priv, which is to grant only node change permissions. To meet some cloud deployment requirements.</li>
+<li>admin role: This role has Admin_priv, which is all permissions except for node changes.</li>
+<li>root&#64;’%’: root user, which allows login from any node, with the role of operator.</li>
+<li>admin&#64;’%’: admin user, allowing login from any node, role admin.</li>
+</ol>
+</li>
+<li><p class="first">It is not supported to delete or change the permissions of default created roles or users.</p>
+</li>
+<li><p class="first">The user of the operator role has one and only one user. Users of admin roles can create multiple.</p>
+</li>
+<li><p class="first">Operational instructions for possible conflicts</p>
+<ol>
+<li><p class="first">Conflict between domain name and ip:</p>
+<p>Assume that the following users are created:</p>
+<p>CREATE USER cmy&#64;[‘domain’];</p>
+<p>And authorize:</p>
+<p>GRANT SELECT_PRIV ON *.* TO cmy&#64;[‘domain’]</p>
+<p>The domain is resolved into two ips: IP1 and IP2</p>
+<p>Let’s assume that we have a separate authorization for cmy&#64;’ip1’:</p>
+<p>GRANT ALTER_PRIV ON *.* TO cmy&#64;’ip1’;</p>
+<p>The permissions of CMY &#64;’ip1’will be changed to SELECT_PRIV, ALTER_PRIV. And when we change the permissions of cmy&#64;[‘domain’] again, cmy&#64;’ip1’ will not follow.</p>
+</li>
+<li><p class="first">duplicate IP conflicts:</p>
+<p>Assume that the following users are created:</p>
+<p>CREATE USER cmy&#64;’%’ IDENTIFIED BY “12345”;</p>
+<p>CREATE USER cmy&#64;’192.%’ IDENTIFIED BY “abcde”;</p>
+<p>In priority,’192.%’takes precedence over’%’, so when user CMY tries to login Doris with password ‘12345’ from 192.168.1.1, the machine will be rejected.</p>
+</li>
+</ol>
+</li>
+<li><p class="first">Forget passwords</p>
+<p>If you forget your password and cannot log in to Doris, you can log in to Doris without a password using the following command on the machine where the Doris FE node is located:</p>
+<p><code class="docutils literal notranslate"><span class="pre">mysql-client</span> <span class="pre">-h</span> <span class="pre">127.0.0.1</span> <span class="pre">-P</span> <span class="pre">query_port</span> <span class="pre">-uroot</span></code></p>
+<p>After login, the password can be reset through the SET PASSWORD command.</p>
+</li>
+<li><p class="first">No user can reset the password of the root user except the root user himself.</p>
+</li>
+<li><p class="first">ADMIN_PRIV permissions can only be granted or revoked at the GLOBAL level.</p>
+</li>
+<li><p class="first">Having GRANT_PRIV at GLOBAL level is actually equivalent to having ADMIN_PRIV, because GRANT_PRIV at this level has the right to grant arbitrary permissions, please use it carefully.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+<p>Here are some usage scenarios of Doris privilege system.</p>
+<ol>
+<li><p class="first">Scene 1</p>
+<p>The users of Doris cluster are divided into Admin, RD and Client. Administrators have all the rights of the whole cluster, mainly responsible for cluster building, node management and so on. The development engineer is responsible for business modeling, including database building, data import and modification. Users access different databases and tables to get data.</p>
+<p>In this scenario, ADMIN or GRANT privileges can be granted to administrators. Give RD CREATE, DROP, ALTER, LOAD, SELECT permissions to any or specified database tables. Give Client SELECT permission to any or specified database table. At the same time, it can also simplify the authorization of multiple users by creating different roles.</p>
+</li>
+<li><p class="first">Scene 2</p>
+<p>There are multiple services in a cluster, and each business may use one or more data. Each business needs to manage its own users. In this scenario. Administrator users can create a user with GRANT privileges at the DATABASE level for each database. The user can only authorize the specified database for the user.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="small-file-mgr_EN.html" class="btn btn-neutral float-right" title="File Manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="export_manual_EN.html" class="btn btn-neutral float-left" title="Data export" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

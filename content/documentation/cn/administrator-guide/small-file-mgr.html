@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>文件管理器 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="时区" href="time-zone.html" />
+    <link rel="prev" title="权限管理" href="privilege.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">文件管理器</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">名词解释</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">基本概念</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">具体操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">实现细节</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">使用限制</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">相关配置</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="index.html">操作手册</a> &raquo;</li>
+        
+      <li>文件管理器</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/small-file-mgr.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>文件管理器<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Doris 中的一些功能需要使用一些用户自定义的文件。比如用于访问外部数据源的公钥、密钥文件、证书文件等等。文件管理器提供这样一个功能，能够让用户预先上传这些文件并保存在 Doris 系统中，然后可以在其他命令中引用或访问。</p>
+<div class="section" id="id2">
+<h2>名词解释<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。</li>
+<li>BE：Backend，Doris 的后端节点。负责查询执行和数据存储。</li>
+<li>BDBJE：Oracle Berkeley DB Java Edition。FE 中用于持久化元数据的分布式嵌入式数据库。</li>
+<li>SmallFileMgr：文件管理器。负责创建并维护用户的文件。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>基本概念<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>文件是指用户创建并保存在 Doris 中的文件。</p>
+<p>一个文件由 <code class="docutils literal notranslate"><span class="pre">数据库名称（database）</span></code>、<code class="docutils literal notranslate"><span class="pre">分类（catalog）</span></code> 和 <code class="docutils literal notranslate"><span class="pre">文件名（file_name）</span></code> 共同定位。同时每个文件也有一个全局唯一的 id（file_id），作为系统内的标识。</p>
+<p>文件的创建和删除只能由拥有 <code class="docutils literal notranslate"><span class="pre">admin</span></code> 权限的用户进行操作。一个文件隶属于一个数据库。对某一数据库拥有访问权限（查询、导入、修改等等）的用户都可以使用该数据库下创建的文件。</p>
+</div>
+<div class="section" id="id4">
+<h2>具体操作<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>文件管理主要有三个命令：<code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FILE</span></code>，<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">FILE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">FILE</span></code>，分别为创建、查看和删除文件。这三个命令的具体语法可以通过连接到 Doris 后，执行 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">cmd;</span></code> 的方式查看帮助。</p>
+<ol>
+<li><p class="first">CREATE FILE</p>
+<p>在创建文件的命令中，用户必须提供以下信息：</p>
+<ul>
+<li><p class="first">file_name：文件名。用户自定义，在一个 catalog 内唯一即可。</p>
+</li>
+<li><p class="first">catalog：文件所属分类。用户自定义，在一个 database 内唯一即可。</p>
+<blockquote>
+<div><p>Doris 也有一些特殊的分类名称供特定的命令使用。</p>
+</div></blockquote>
+<blockquote>
+<div><ol class="simple">
+<li>kafka</li>
+</ol>
+</div></blockquote>
+<blockquote>
+<div><p>当在例行导入命令中指定数据源为 Kafka，并且需要引用到文件时，Doris 会默认从 catalog 名为 “kafka” 的分类中查找文件。</p>
+</div></blockquote>
+</li>
+<li><p class="first">url：文件的下载地址。目前仅支持无认证的 http 下载地址。该下载地址仅用于在执行创建文件命令时，从这个地址下载文件。当文件成功创建并保存在 Doris 中后，该地址将不再被使用。</p>
+</li>
+<li><p class="first">md5：可选项。文件的 MD5 值。如果用户提供该值，将在文件下载后进行 MD5 值的校验。校验失败则文件创建失败。</p>
+</li>
+</ul>
+<p>文件创建成功后，文件相关的信息将持久化在 Doris 中。用户可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">FILE</span></code> 命令查看已经创建成功的文件。</p>
+</li>
+<li><p class="first">SHOW FILE</p>
+<p>该命令可以查看已经创建成功的文件。具体操作见：<code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">FILE;</span></code></p>
+</li>
+<li><p class="first">DROP FILE</p>
+<p>该命令可以删除一个已经创建的文件。具体操作见：<code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">DROP</span> <span class="pre">FILE;</span></code></p>
+</li>
+</ol>
+</div>
+<div class="section" id="id5">
+<h2>实现细节<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>创建和删除文件<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>当用户执行 <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FILE</span></code> 命令后，FE 会从给定的 URL 下载文件。并将文件的内容以 Base64 编码的形式直接保存在 FE 的内存中。同时会将文件内容以及文件相关的元信息持久化在 BDBJE 中。所有被创建的文件，其元信息和文件内容都会常驻于 FE 的内存中。如果 FE 宕机重启，也会从 BDBJE 中加载元信息和文件内容到内存中。当文件被删除时，会直接从 FE 内存中删除相关信息，同时也从 BDBJE 中删除持久化的信息。</p>
+</div>
+<div class="section" id="id7">
+<h3>文件的使用<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>如果是 FE 端需要使用创建的文件，则 SmallFileMgr 会直接将 FE 内存中的数据保存为本地文件，存储在指定的目录中，并返回本地的文件路径供使用。</p>
+<p>如果是 BE 端需要使用创建的文件，BE 会通过 FE 的 http 接口 <code class="docutils literal notranslate"><span class="pre">/api/get_small_file</span></code> 将文件内容下载到 BE 上指定的目录中，供使用。同时，BE 也会在内存中记录当前已经下载过的文件的信息。当 BE 请求一个文件时，会先查看本地文件是否存在并校验。如果校验通过，则直接返回本地文件路径。如果校验失败，则会删除本地文件，重新从 FE 下载。当 BE 重启时，会预先加载本地的文件到内存中。</p>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>使用限制<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>因为文件元信息和内容都存储于 FE 的内存中。所以默认仅支持上传大小在 1MB 以内的文件。并且总文件数量限制为 100 个。可以通过下一小节介绍的配置项进行修改。</p>
+</div>
+<div class="section" id="id9">
+<h2>相关配置<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">FE 配置</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">small_file_dir</span></code>：用于存放上传文件的路径，默认为 FE 运行目录的 <code class="docutils literal notranslate"><span class="pre">small_files/</span></code> 目录下。</li>
+<li><code class="docutils literal notranslate"><span class="pre">max_small_file_size_bytes</span></code>：单个文件大小限制，单位为字节。默认为 1MB。大于该配置的文件创建将会被拒绝。</li>
+<li><code class="docutils literal notranslate"><span class="pre">max_small_file_number</span></code>：一个 Doris 集群支持的总文件数量。默认为 100。当创建的文件数超过这个值后，后续的创建将会被拒绝。</li>
+</ul>
+<blockquote>
+<div><p>如果需要上传更多文件或提高单个文件的大小限制，可以通过 <code class="docutils literal notranslate"><span class="pre">ADMIN</span> <span class="pre">SET</span> <span class="pre">CONFIG</span></code> 命令修改 <code class="docutils literal notranslate"><span class="pre">max_small_file_size_bytes</span></code> 和 <code class="docutils literal notranslate"><span class="pre">max_small_file_number</span></code> 参数。但文件数量和大小的增加，会导致 FE 内存使用量的增加。</p>
+</div></blockquote>
+</li>
+<li><p class="first">BE 配置</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">small_file_dir</span></code>：用于存放从 FE 下载的文件的路径，默认为 BE 运行目录的 <code class="docutils literal notranslate"><span class="pre">lib/small_files/</span></code> 目录下。</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="time-zone.html" class="btn btn-neutral float-right" title="时区" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="privilege.html" class="btn btn-neutral float-left" title="权限管理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

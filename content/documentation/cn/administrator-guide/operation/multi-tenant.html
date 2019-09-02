@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>多租户(Experimental) &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Tablet 元数据管理工具" href="tablet-meta-tool.html" />
+    <link rel="prev" title="监控和报警" href="monitor-alert.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">运维操作</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="disk-capacity.html">磁盘空间管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metadata-operation.html">元数据运维</a></li>
+<li class="toctree-l4"><a class="reference internal" href="monitor-alert.html">监控和报警</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">多租户(Experimental)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-meta-tool.html">Tablet 元数据管理工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance.html">数据副本管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-restore-tool.html">BE Tablet数据恢复工具</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">运维操作</a> &raquo;</li>
+        
+      <li>多租户(Experimental)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/operation/multi-tenant.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="experimental">
+<h1>多租户(Experimental)<a class="headerlink" href="#experimental" title="Permalink to this headline">¶</a></h1>
+<p>该功能为实验性质，暂不建议在生产环境使用。</p>
+<div class="section" id="id1">
+<h2>背景<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Doris 作为一款 PB 级别的在线报表与多维分析数据库，对外通过开放云提供云端的数据库服务，并且对于每个云上的客户都单独部署了一套物理集群。对内，一套物理集群部署了多个业务，对于隔离性要求比较高的业务单独搭建了集群。针对以上存在几点问题：</p>
+<ul class="simple">
+<li>部署多套物理集群维护代价大（升级、功能上线、bug修复）。</li>
+<li>一个用户的查询或者查询引起的bug经常会影响其他用户。</li>
+<li>实际生产环境单机只能部署一个BE进程。而多个BE可以更好的解决胖节点问题。并且对于join、聚合操作可以提供更高的并发度。</li>
+</ul>
+<p>综合以上三点，Doris需要新的多租户方案，既能做到较好的资源隔离和故障隔离，同时也能减少维护的代价，满足共有云和私有云的需求。</p>
+</div>
+<div class="section" id="id2">
+<h2>设计原则<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>使用简单</li>
+<li>开发代价小</li>
+<li>方便现有集群的迁移</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>名词解释<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE: Frontend，即 Doris 中用于元数据管理即查询规划的模块。</li>
+<li>BE: Backend，即 Doris 中用于存储和查询数据的模块。</li>
+<li>Master: FE 的一种角色。一个Doris集群只有一个Master，其他的FE为Observer或者Follower。</li>
+<li>instance：一个 BE 进程及时一个 instance。</li>
+<li>host：单个物理机</li>
+<li>cluster：即一个集群，由多个instance组成。</li>
+<li>租户：一个cluster属于一个租户。cluster和租户之间是一对一关系。</li>
+<li>database：一个用户创建的数据库</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>主要思路<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>一个host上部署多个BE的instance，在进程级别做资源隔离。</li>
+<li>多个instance形成一个cluster，一个cluster分配给一个业务独立的的租户。</li>
+<li>FE增加cluster这一级并负责cluster的管理。</li>
+<li>CPU,IO,内存等资源隔离采用cgroup。</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>设计方案<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>为了能够达到隔离的目的，引入了<strong>虚拟cluster</strong>的概念。</p>
+<ol class="simple">
+<li>cluster表示一个虚拟的集群，由多个BE的instance组成。多个cluster共享FE。</li>
+<li>一个host上可以启动多个instance。cluster创建时，选取任意指定数量的instance，组成一个cluster。</li>
+<li>创建cluster的同时，会创建一个名为superuser的账户，隶属于该cluster。superuser可以对cluster进行管理、创建数据库、分配权限等。</li>
+<li>Doris启动后，汇创建一个默认的cluster：default_cluster。如果用户不希望使用多cluster的功能，则会提供这个默认的cluster，并隐藏多cluster的其他操作细节。</li>
+</ol>
+<p>具体架构如下图：
+<img alt="../../../../_images/multi_tenant_arch.png" src="../../../../_images/multi_tenant_arch.png" /></p>
+</div>
+<div class="section" id="sql">
+<h2>SQL 接口<a class="headerlink" href="#sql" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">登录</p>
+<p>默认集群登录名： user_name&#64;default_cluster 或者 user_name</p>
+<p>自定义集群登录名：user_name&#64;cluster_name</p>
+<p><code class="docutils literal notranslate"><span class="pre">mysqlclient</span> <span class="pre">-h</span> <span class="pre">host</span> <span class="pre">-P</span> <span class="pre">port</span> <span class="pre">-u</span> <span class="pre">user_name&#64;cluster_name</span> <span class="pre">-p</span> <span class="pre">password</span></code></p>
+</li>
+<li><p class="first">添加、删除、下线（decommission）以及取消下线BE</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DROP</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;host:port&quot;</span></code></p>
+<p>强烈建议使用 DECOMMISSION 而不是 DROP 来删除 BACKEND。DECOMMISSION 操作会首先将需要下线节点上的数据拷贝到集群内其他instance上。之后，才会真正下线。</p>
+</li>
+<li><p class="first">创建集群，并指定superuser账户的密码</p>
+<p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">CLUSTER</span> <span class="pre">cluster_name</span> <span class="pre">PROPERTIES</span> <span class="pre">(&quot;instance_num&quot;</span> <span class="pre">=</span> <span class="pre">&quot;10&quot;)</span> <span class="pre">identified</span> <span class="pre">by</span> <span class="pre">&quot;password&quot;</span></code></p>
+</li>
+<li><p class="first">进入一个集群</p>
+<p><code class="docutils literal notranslate"><span class="pre">ENTER</span> <span class="pre">cluster_name</span></code></p>
+</li>
+<li><p class="first">集群扩容、缩容</p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">CLUSTER</span> <span class="pre">cluster_name</span> <span class="pre">PROPERTIES</span> <span class="pre">(&quot;instance_num&quot;</span> <span class="pre">=</span> <span class="pre">&quot;10&quot;)</span></code></p>
+<p>当指定的实例个数多于cluster现有be的个数，则为扩容，如果少于则为缩容。</p>
+</li>
+<li><p class="first">链接、迁移db</p>
+<p><code class="docutils literal notranslate"><span class="pre">LINK</span> <span class="pre">DATABASE</span> <span class="pre">src_cluster_name.db_name</span> <span class="pre">dest_cluster_name.db_name</span></code></p>
+<p>软链一个cluster的db到另外一个cluster的db ，对于需要临时访问其他cluster的db却不需要进行实际数据迁移的用户可以采用这种方式。</p>
+<p><code class="docutils literal notranslate"><span class="pre">MIGRATE</span> <span class="pre">DATABASE</span> <span class="pre">src_cluster_name.db_name</span> <span class="pre">dest_cluster_name.db_name</span></code></p>
+<p>如果需要对db进行跨cluster的迁移，在链接之后，执行migrate对数据进行实际的迁移。</p>
+<p>迁移不影响当前两个db的查询、导入等操作，这是一个异步的操作，可以通过<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">MIGRATIONS</span></code>查看迁移的进度。</p>
+</li>
+<li><p class="first">删除集群</p>
+<p><code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">CLUSTER</span> <span class="pre">cluster_name</span></code></p>
+<p>删除集群，要求先手动删除的集群内所有database。</p>
+</li>
+<li><p class="first">其他</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">CLUSTERS</span></code></p>
+<p>展示系统内已经创建的集群。只有root用户有该权限。</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKENDS</span></code></p>
+<p>查看集群内的BE instance。</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">MIGRATIONS</span></code></p>
+<p>展示当前正在进行的db迁移任务。执行完db的迁移后可以通过此命令查看迁移的进度。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>详细设计<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">命名空间隔离</p>
+<p>为了引入多租户，需要对系统内的cluster之间的命名空间进行隔离。</p>
+<p>Doris现有的元数据采用的是image + journal 的方式(元数据的设计见相关文档)。Doris会把涉及元数据的操作的记录为一个 journal （操作日志），然后定时的按照<strong>图1</strong>的方式写成image，加载的时候按照写入的顺序读即可。但是这样就带来一个问题已经写入的格式不容易修改，比如记录数据分布的元数据格式为：database+table+tablet+replica 嵌套，如果按照以往的方式要做cluster之间的命名空间隔离，则需要在database上增加一层cluster，内部元数据的层级变为:cluster+database+table+tablet+replica，如<strong>图2</strong>所示。但加一层带来的问题有：</p>
+<ul class="simple">
+<li>增加一层带来的元数据改动，不兼容，需要按照图2的方式cluster＋db＋table＋tablet＋replica层级写,这样就改变了以往的元数据组织方式，老版本的升级会比较麻烦，比较理想的方式是按照图3在现有元数据的格式下顺序写入cluster的元数据。</li>
+<li>代码里所有用到db、user等，都需要加一层cluster，一工作量大改动的地方多，层级深，多数代码都获取db，现有功能几乎都要改一遍，并且需要在db的锁的基础上嵌套一层cluster的锁。</li>
+</ul>
+<p><img alt="../../../../_images/palo_meta.png" src="../../../../_images/palo_meta.png" /></p>
+<p>综上这里采用了一种通过给db、user名加前缀的方式去隔离内部因为cluster之间db、user名字冲突的问题。</p>
+<p>如下，所有的sql输入涉及db名、user名的，都需要根据自己所在的cluster来拼写db、user的全名。</p>
+<p><img alt="../../../../_images/cluster_namaspace.png" src="../../../../_images/cluster_namaspace.png" /></p>
+<p>采用这种方式以上两个问题不再有。元数据的组织方式也比较简单。即采用<strong>图3</strong>每个cluster记录下属于自己cluster的db、user，以及节点即可。</p>
+</li>
+<li><p class="first">BE 节点管理</p>
+<p>每个cluster都有属于自己的一组instance，可以通过<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKENDS</span></code>查看，为了区分出instance属于哪个cluster以及使用情况，BE引入了多个状态：</p>
+<ul class="simple">
+<li>free：当一个BE节点被加入系统内，此时be不属于任何cluster的时候处于空闲状态</li>
+<li>using：当创建集群、或者扩容被选取到一个cluster内则处于使用中。</li>
+<li>cluster decommission：如果执行缩容量，则正在执行缩容的be处于此状态。结束后，be状态变为free。</li>
+<li>system decommission：be正在下线中。下线完成后，该be将会被永久删除。</li>
+</ul>
+<p>只有root用户可以通过<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">&quot;/backends&quot;</span></code>中cluster这一项查看集群内所有be的是否被使用。为空则为空闲，否则为使用中。<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">BACKENDS</span></code>只能看到所在cluster的节点。以下是be节点状态变化的示意图。</p>
+<p><img alt="../../../../_images/backend_state.png" src="../../../../_images/backend_state.png" /></p>
+</li>
+<li><p class="first">创建集群</p>
+<p>只有root用户可以创建一个cluster，并指定任意数量的BE instance。</p>
+<p>支持在相同机器上选取多个instance。选择instance的大致原则是：尽可能选取不同机器上的be并且使所有机器上使用的be数尽可能均匀。</p>
+<p>对于使用来讲，每一个user、db都属于一个cluster（root除外）。为了创建user、db，首先需要进入一个cluster。在创建cluster的时候系统会默认生成这个cluster的管理员，即superuser账户。superuser具有在所属cluster内创建db、user，以及查看be节点数的权限。所有的非root用户登录必须指定一个cluster，即<code class="docutils literal notranslate"><span class="pre">user_name&#64;cluster_name</span></code>。</p>
+<p>只有root用户可以通过<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">CLUSTER</span></code>查看系统内所有的cluster，并且可以通过&#64;不同的集群名来进入不同的cluster。对于除了root之外的用户cluster都是不可见的。</p>
+<p>为了兼容老版本Doris内置了一个名字叫做default_cluster的集群，这个名字在创建集群的时候不能使用。</p>
+<p><img alt="../../../../_images/user_authority.png" src="../../../../_images/user_authority.png" /></p>
+</li>
+<li><p class="first">集群扩容</p>
+<p>集群扩容的流程同创建集群。会优先选取不在集群之外的host上的BE instance。选取的原则同创建集群。</p>
+</li>
+<li><p class="first">集群缩容、CLUSTER DECOMMISSION</p>
+<p>用户可以通过设置 cluster 的 instance num 来进行集群缩容。</p>
+<p>集群的缩容会优先在BE instance 数量最多的 host 上选取 instance 进行下线。</p>
+<p>用户也可以直接使用 <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">CLUSTER</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span></code> 来指定BE，进行集群缩容。</p>
+</li>
+</ol>
+<p><img alt="../../../../_images/replica_recover.png" src="../../../../_images/replica_recover.png" /></p>
+<ol>
+<li><p class="first">建表</p>
+<p>为了保证高可用，每个分片的副本必需在不同的机器上。所以建表时，选择副本所在be的策略为在每个host上随机选取一个be。然后从这些be中随机选取所需副本数量的be。总体上做到每个机器上分片分布均匀。</p>
+<p>因此，加入需要创建一个3副本的分片，即使cluster包含3个或以上的instance，但是只有2个或以下的host，依然不能创建该分片。</p>
+</li>
+<li><p class="first">负载均衡</p>
+<p>负载均衡的粒度为cluster级别，cluster之间不做负载均衡。但是在计算负载是在host一级进行的，而一个host上可能存在多个不同cluster的BE instance。 cluster内，会通过每个host上所有分片数目、存储使用率计算负载，然后把负载高的机器上的分片往负载低的机器上拷贝（详见负载均衡相关文档）。</p>
+</li>
+<li><p class="first">LINK DATABASE（软链）</p>
+<p>多个集群之间可以通过软链的方式访问彼此的数据。链接的级别为不同cluster的db。</p>
+<p>通过在一个cluster内，添加需要访问的其他cluster的db的信息，来访问其他cluster中的db。</p>
+<p>当查询链接的db时，所使用的计算以及存储资源为源db所在cluster的资源。</p>
+<p>被软链的db不能在源cluster中删除。只有链接的db被删除后，才可以删除源db。而删除链接db，不会删除源db。</p>
+</li>
+<li><p class="first">MIGRATE DATABASE</p>
+<p>db可以在cluster之间进行物理迁移。</p>
+<p>要迁移db，必须先链接db。执行迁移后数据会迁移到链接的db所在的cluster，并且执行迁移后源db被删除，链接断开。</p>
+<p>数据的迁移，复用了负载均衡以及副本恢复中，复制数据的流程（详见负载均衡相关文档）。具体实现上，在执行<code class="docutils literal notranslate"><span class="pre">MIRAGTE</span></code>命令后，Doris会在元数据中，将源db的所有副本所属的cluster，修改为目的cluster。</p>
+<p>Doris会定期检查集群内机器之间是否均衡、副本是否齐全、是否有多余的副本。db的迁移即借用了这个流程，在检查副本齐全的时候同时检查副本所在的be是否属于该cluster，如果不属于，则记入要恢复的副本。并且副本多余要删除的时候会优先删除cluster外的副本，然后再按照现有的策略选择：宕机的be的副本-&gt;clone的副本-&gt;版本落后的副本-&gt;负载高的host上的副本，直到副本没有多余。</p>
+</li>
+</ol>
+<p><img alt="../../../../_images/cluster_link_and_migrate_db.png" src="../../../../_images/cluster_link_and_migrate_db.png" /></p>
+<ol class="simple">
+<li>BE的进程隔离</li>
+</ol>
+<p>为了实现be进程之间实际cpu、io以及内存的隔离，需要依赖于be的部署。部署的时候需要在外围配置cgroup，把要部署的be的进程都写入cgroup。如果要实现io的物理隔离各be配置的数据存放路径需要在不同磁盘上，这里不做过多的介绍。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tablet-meta-tool.html" class="btn btn-neutral float-right" title="Tablet 元数据管理工具" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="monitor-alert.html" class="btn btn-neutral float-left" title="监控和报警" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

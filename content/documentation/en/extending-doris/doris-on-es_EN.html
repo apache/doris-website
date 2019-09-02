@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Doris On ES &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="User Define Function" href="user-defined-function_EN.html" />
+    <link rel="prev" title="Extending Ability" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Extending Ability</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Doris On ES</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-use-it">How to use it</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#principle">Principle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#push-down-operations">Push-Down operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-notes">Other notes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="user-defined-function_EN.html">User Define Function</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Extending Ability</a> &raquo;</li>
+        
+      <li>Doris On ES</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/extending-doris/doris-on-es_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="doris-on-es">
+<h1>Doris On ES<a class="headerlink" href="#doris-on-es" title="Permalink to this headline">¶</a></h1>
+<p>Doris-On-ES combines Doris’s distributed query planning capability with ES (Elastic search)’s full-text search capability to provide a more complete OLAP scenario solution:</p>
+<ol class="simple">
+<li>Multi-index Distributed Join Query in ES</li>
+<li>Joint Query of Tables in Doris and ES, More Complex Full-Text Retrieval and Filtering</li>
+<li>Aggregated queries for fields of ES keyword type: suitable for frequent changes in index, tens of millions or more of single fragmented documents, and the cardinality of the field is very large</li>
+</ol>
+<p>This document mainly introduces the realization principle and usage of this function.</p>
+<div class="section" id="noun-interpretation">
+<h2>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.</li>
+<li>BE: Backend, Doris’s back-end node. Responsible for query execution and data storage.</li>
+<li>Elastic search (ES): The most popular open source distributed search engine.</li>
+<li>DataNode: The data storage and computing node of ES.</li>
+<li>MasterNode: The Master node of ES, which manages metadata, nodes, data distribution, etc.</li>
+<li>scroll: The built-in data set cursor feature of ES for streaming scanning and filtering of data.</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-it">
+<h2>How to use it<a class="headerlink" href="#how-to-use-it" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-appearance">
+<h3>Create appearance<a class="headerlink" href="#create-appearance" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE EXTERNAL TABLE `es_table` (
+  `id` bigint(20) COMMENT &quot;&quot;,
+  `k1` bigint(20) COMMENT &quot;&quot;,
+  `k2` datetime COMMENT &quot;&quot;,
+  `k3` varchar(20) COMMENT &quot;&quot;,
+  `k4` varchar(100) COMMENT &quot;&quot;,
+  `k5` float COMMENT &quot;&quot;
+) ENGINE=ELASTICSEARCH
+PARTITION BY RANGE(`id`)
+()
+PROPERTIES (
+&quot;host&quot; = &quot;http://192.168.0.1:8200,http://192.168.0.2:8200&quot;,
+&quot;user&quot; = &quot;root&quot;,
+&quot;password&quot; = &quot;root&quot;,
+&quot;index&quot; = &quot;tindex”,
+&quot;type&quot; = &quot;doc&quot;
+);
+</pre></div>
+</div>
+<p>Description of parameters:</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td>ES Cluster Connection Address, which can specify one or more, through which Doris obtains the share distribution information of ES version number and index</td>
+</tr>
+<tr>
+<td>User</td>
+<td>Open the user name of the ES cluster authenticated by basic, you need to ensure that the user has access to: / cluster / state / nodes / HTTP and other path permissions and read permissions for index</td>
+</tr>
+<tr>
+<td>Password</td>
+<td>corresponding user's password information</td>
+</tr>
+<tr>
+<td>The index name of the ES corresponding to the table in index</td>
+<td>Doris can be alias</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Specifies the type of index, defaulting to _doc</td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>Internal reservation, default to http</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="query">
+<h3>Query<a class="headerlink" href="#query" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="basic-conditions-filtration">
+<h4>Basic Conditions Filtration<a class="headerlink" href="#basic-conditions-filtration" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="n">k3</span> <span class="o">=</span><span class="s1">&#39;term&#39;</span> <span class="ow">or</span> <span class="n">k4</span> <span class="n">like</span> <span class="s1">&#39;fu*z_&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extended-esquery-sql-grammar">
+<h4>Extended esquery SQL grammar<a class="headerlink" href="#extended-esquery-sql-grammar" title="Permalink to this headline">¶</a></h4>
+<p>The first column name parameter of <code class="docutils literal notranslate"><span class="pre">esquery</span></code> is used to associate <code class="docutils literal notranslate"><span class="pre">index</span></code>, the second parameter is the JSON expression of the basic <code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">DSL</span></code>, and the curly bracket <code class="docutils literal notranslate"><span class="pre">{}</span></code> is used to include <code class="docutils literal notranslate"><span class="pre">root</span></code> of json. There is and can only be one key of json, such as mat. Ch, geo_shape, bool, etc.</p>
+<p>Match query:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">esquery</span><span class="p">(</span><span class="n">k4</span><span class="p">,</span> <span class="s1">&#39;{</span>
+        <span class="s2">&quot;match&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;k4&quot;</span><span class="p">:</span> <span class="s2">&quot;doris on elasticsearch&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span><span class="s1">&#39;);</span>
+</pre></div>
+</div>
+<p>Geo related queries:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">esquery</span><span class="p">(</span><span class="n">k4</span><span class="p">,</span> <span class="s1">&#39;{</span>
+      <span class="s2">&quot;geo_shape&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;envelope&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+                  <span class="p">[</span>
+                     <span class="mi">13</span><span class="p">,</span>
+                     <span class="mi">53</span>
+                  <span class="p">],</span>
+                  <span class="p">[</span>
+                     <span class="mi">14</span><span class="p">,</span>
+                     <span class="mi">52</span>
+                  <span class="p">]</span>
+               <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;relation&quot;</span><span class="p">:</span> <span class="s2">&quot;within&quot;</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">}</span><span class="s1">&#39;);</span>
+</pre></div>
+</div>
+<p>Bool query:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">es_table</span> <span class="n">where</span> <span class="n">esquery</span><span class="p">(</span><span class="n">k4</span><span class="p">,</span> <span class="s1">&#39; {</span>
+         <span class="s2">&quot;bool&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;must&quot;</span><span class="p">:</span> <span class="p">[</span>
+               <span class="p">{</span>
+                  <span class="s2">&quot;terms&quot;</span><span class="p">:</span> <span class="p">{</span>
+                     <span class="s2">&quot;k1&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">11</span><span class="p">,</span>
+                        <span class="mi">12</span>
+                     <span class="p">]</span>
+                  <span class="p">}</span>
+               <span class="p">},</span>
+               <span class="p">{</span>
+                  <span class="s2">&quot;terms&quot;</span><span class="p">:</span> <span class="p">{</span>
+                     <span class="s2">&quot;k2&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">100</span>
+                     <span class="p">]</span>
+                  <span class="p">}</span>
+               <span class="p">}</span>
+            <span class="p">]</span>
+         <span class="p">}</span>
+      <span class="p">}</span><span class="s1">&#39;);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="principle">
+<h2>Principle<a class="headerlink" href="#principle" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----------------------------------------------+</span>
+<span class="o">|</span>                                              <span class="o">|</span>
+<span class="o">|</span> <span class="n">Doris</span>      <span class="o">+------------------+</span>              <span class="o">|</span>
+<span class="o">|</span>            <span class="o">|</span>       <span class="n">FE</span>         <span class="o">+--------------+-------+</span>
+<span class="o">|</span>            <span class="o">|</span>                  <span class="o">|</span>  <span class="n">Request</span> <span class="n">Shard</span> <span class="n">Location</span>
+<span class="o">|</span>            <span class="o">+--+-------------+-+</span>              <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>               <span class="o">^</span>             <span class="o">^</span>                <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>               <span class="o">|</span>             <span class="o">|</span>                <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">+-------------------+</span> <span class="o">+------------------+</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span>            <span class="o">|</span>      <span class="o">|</span> <span class="o">|</span>    <span class="o">|</span>             <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+----------+----+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">+--+-----------+</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>      <span class="n">BE</span>       <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>      <span class="n">BE</span>      <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+---------------+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">+--------------+</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">+----------------------------------------------+</span>       <span class="o">|</span>
+   <span class="o">|</span>        <span class="o">|</span>          <span class="o">|</span> <span class="o">|</span>        <span class="o">|</span>         <span class="o">|</span>          <span class="o">|</span>
+   <span class="o">|</span>        <span class="o">|</span>          <span class="o">|</span> <span class="o">|</span>        <span class="o">|</span>         <span class="o">|</span>          <span class="o">|</span>
+   <span class="o">|</span>    <span class="n">HTTP</span> <span class="n">SCROLL</span>    <span class="o">|</span> <span class="o">|</span>    <span class="n">HTTP</span> <span class="n">SCROLL</span>   <span class="o">|</span>          <span class="o">|</span>
+<span class="o">+-----------+---------------------+------------+</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span>        <span class="n">v</span>          <span class="o">|</span> <span class="o">|</span>        <span class="n">v</span>         <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+------+--------+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">+------+-------+</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>               <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>              <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>   <span class="n">DataNode</span>    <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>   <span class="n">DataNode</span>   <span class="o">+&lt;-----------+</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>               <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>              <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>               <span class="o">+&lt;--------------------------------+</span>
+<span class="o">|</span>  <span class="o">|</span> <span class="o">+---------------+</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|--------------|</span> <span class="o">|</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>  <span class="o">+-------------------+</span> <span class="o">+------------------+</span>  <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>   <span class="n">Same</span> <span class="n">Physical</span> <span class="n">Node</span>                         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                                              <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">+-----------------------+</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>                       <span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>      <span class="n">MasterNode</span>       <span class="o">+&lt;-----------------+</span>
+<span class="o">|</span> <span class="n">ES</span>        <span class="o">|</span>                       <span class="o">|</span>          <span class="o">|</span>
+<span class="o">|</span>           <span class="o">+-----------------------+</span>          <span class="o">|</span>
+<span class="o">+----------------------------------------------+</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>After the ES appearance is created, FE requests the host specified by the table to obtain HTTP port information of all nodes and share distribution information of index. If the request fails, it will traverse the host list sequentially until it succeeds or fails completely.</li>
+<li>When querying, the query plan will be generated and sent to the corresponding BE node according to some node information obtained by FE and metadata information of index.</li>
+<li>The BE node requests locally deployed ES nodes in accordance with the <code class="docutils literal notranslate"><span class="pre">proximity</span> <span class="pre">principle</span></code>. The BE receives data concurrently from each fragment of ES index in the <code class="docutils literal notranslate"><span class="pre">HTTP</span> <span class="pre">Scroll</span></code> mode.</li>
+<li>After calculating the result, return it to client</li>
+</ol>
+</div>
+<div class="section" id="push-down-operations">
+<h2>Push-Down operations<a class="headerlink" href="#push-down-operations" title="Permalink to this headline">¶</a></h2>
+<p>An important function of <code class="docutils literal notranslate"><span class="pre">Doris</span> <span class="pre">On</span> <span class="pre">Elastic</span></code> search is to push down filtering conditions: push ES under filtering conditions, so that only data that really meets the conditions can be returned, which can significantly improve query performance and reduce the CPU, memory and IO utilization of Doris and Elastic search.</p>
+<p>The following operators are optimized to push down filters as follows:</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>SQL syntax</th>
+<th align="center">ES 5.x+ syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>=</td>
+<td align="center">term query</td>
+</tr>
+<tr>
+<td>in</td>
+<td align="center">terms query</td>
+</tr>
+<tr>
+<td>&gt; , &lt; , &gt;= , ⇐</td>
+<td align="center">range</td>
+</tr>
+<tr>
+<td>and</td>
+<td align="center">bool.filter</td>
+</tr>
+<tr>
+<td>or</td>
+<td align="center">bool.should</td>
+</tr>
+<tr>
+<td>not</td>
+<td align="center">bool.must_not</td>
+</tr>
+<tr>
+<td>not in</td>
+<td align="center">bool.must_not + terms</td>
+</tr>
+<tr>
+<td>esquery</td>
+<td align="center">ES Query DSL</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="other-notes">
+<h2>Other notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>ES Version Requirements</li>
+</ol>
+<p>The main version of ES is larger than 5. The scanning mode of ES data before 2. X and after 5. x is different. At present, the scanning mode of ES data after 5. x is supported.
+2. Does ES Cluster Support X-Pack Authentication</p>
+<p>Support all ES clusters using HTTP Basic authentication
+3. Some queries are much slower than requesting ES</p>
+<p>Yes, for example, query related to _count, etc., the ES internal will directly read the number of documents that meet the requirements of the relevant metadata, without the need to filter the real data.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user-defined-function_EN.html" class="btn btn-neutral float-right" title="User Define Function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Extending Ability" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

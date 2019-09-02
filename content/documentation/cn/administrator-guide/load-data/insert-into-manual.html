@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Insert Into &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="表结构变更" href="../alter-table/index.html" />
+    <link rel="prev" title="Routine Load" href="routine-load-manual.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">数据导入</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="load-manual.html">导入总览</a></li>
+<li class="toctree-l4"><a class="reference internal" href="broker-load-manual.html">Broker Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="stream-load-manual.html">Stream load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="routine-load-manual.html">Routine Load</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Insert Into</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">数据导入</a> &raquo;</li>
+        
+      <li>Insert Into</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/load-data/insert-into-manual.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="insert-into">
+<h1>Insert Into<a class="headerlink" href="#insert-into" title="Permalink to this headline">¶</a></h1>
+<p>Insert Into 语句的使用方式和 MySQL 等数据库中 Insert Into 语句的使用方式类似。但在 Doris 中，所有的数据写入都是一个独立的导入作业。所以这里将 Insert Into 也作为一种导入方式介绍。</p>
+<p>主要的 Insert Into 命令包含以下两种；</p>
+<ul class="simple">
+<li>INSERT INTO tbl SELECT …</li>
+<li>INSERT INTO tbl (col1, col2, …) VALUES (1, 2, …), (1,3, …);</li>
+</ul>
+<p>其中第二种命令仅用于 Demo，不要使用在测试或生产环境中。</p>
+<div class="section" id="id1">
+<h2>基本操作<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>创建导入<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Insert Into 命令需要通过 MySQL 协议提交，创建导入请求会同步返回导入结果。</p>
+<p>语法：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">partition_info</span><span class="p">]</span> <span class="p">[</span><span class="n">col_list</span><span class="p">]</span> <span class="p">[</span><span class="n">query_stmt</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUES</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>示例：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl2</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl3</span><span class="p">;</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">VALUES</span> <span class="p">(</span><span class="s2">&quot;qweasdzxcqweasdzxc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>下面主要介绍创建导入语句中使用到的参数：</p>
+<ul>
+<li><p class="first">partition_info</p>
+<p>导入表的目标分区，如果指定目标分区，则只会导入符合目标分区的数据。如果没有指定，则默认值为这张表的所有分区。</p>
+</li>
+<li><p class="first">col_list</p>
+<p>导入表的目标列，可以以任意的顺序存在。如果没有指定目标列，那么默认值是这张表的所有列。如果待表中的某个列没有存在目标列中，那么这个列需要有默认值，否则 Insert Into 就会执行失败。</p>
+<p>如果查询语句的结果列类型与目标列的类型不一致，那么会调用隐式类型转化，如果不能够进行转化，那么 Insert Into 语句会报语法解析错误。</p>
+</li>
+<li><p class="first">query_stmt</p>
+<p>通过一个查询语句，将查询语句的结果导入到 Doris 系统中的其他表。查询语句支持任意 Doris 支持的 SQL 查询语法。</p>
+</li>
+<li><p class="first">VALUES</p>
+<p>用户可以通过 VALUES 语法插入一条或者多条数据。</p>
+<p><em>注意：VALUES 方式仅适用于导入几条数据作为导入 DEMO 的情况，完全不适用于任何测试和生产环境。Doris 系统本身也不适合单条数据导入的场景。建议使用 INSERT INTO SELECT 的方式进行批量导入。</em></p>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>导入结果<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Insert Into 本身就是一个 SQL 命令，所以返回的行为同 SQL 命令的返回行为。</p>
+<p>如果导入失败，则返回语句执行失败。示例如下：</p>
+<p><code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000):</span> <span class="pre">all</span> <span class="pre">partitions</span> <span class="pre">have</span> <span class="pre">no</span> <span class="pre">load</span> <span class="pre">data.</span> <span class="pre">url:</span> <span class="pre">http://ip:port/api/_load_error_log?file=__shard_14/error_log_insert_stmt_f435264d82f342e4-a33764f5f0dfbf00_f435264d82f342e4_a33764f5f0dfbf00</span></code></p>
+<p>其中 url 可以用于查询错误的数据，具体见后面 <strong>查看错误行</strong> 小结。</p>
+<p>如果导入成功，则返回语句执行成功。示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>导入可能部分成功，则还会附加一个 Label 字段。示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;7d66c457-658b-4a3e-bdcf-8beee872ef2c&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>其中 affected 表示导入的行数。warning 表示失败的行数。用户需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL=&quot;xxx&quot;;</span></code> 命令，获取 url 查看错误行。</p>
+<p>如果没有任何数据，也会返回成功，且 affected 和 warning 都是 0。</p>
+<p>Label 是该 Insert Into 导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。Insert Into 的 Label 则是由系统生成的，用户可以拿着这个 Label 通过查询导入命令异步获取导入状态。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>相关系统配置<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe">
+<h3>FE 配置<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">timeout</p>
+<p>导入任务的超时时间(以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。</p>
+<p>目前 Insert Into 并不支持自定义导入的 timeout 时间，所有 Insert Into 导入的超时时间是统一的，默认的 timeout 时间为1小时。如果导入的源文件无法再规定时间内完成导入，则需要调整 FE 的参数<code class="docutils literal notranslate"><span class="pre">insert_load_default_timeout_second</span></code>。</p>
+<p>同时 Insert Into 语句收到 Session 变量 <code class="docutils literal notranslate"><span class="pre">query_timeout</span></code> 的限制。可以通过 <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">query_timeout</span> <span class="pre">=</span> <span class="pre">xxx;</span></code> 来增加超时时间，单位是秒。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="session">
+<h3>Session 变量<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">enable_insert_strict</p>
+<p>Insert Into 导入本身不能控制导入可容忍的错误率。用户只能通过 <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> 这个 Session 参数用来控制。</p>
+<p>当该参数设置为 false 时，表示至少有一条数据被正确导入，则返回成功。如果有失败数据，则还会返回一个 Label。</p>
+<p>当该参数设置为 false 时，表示如果有一条数据错误，则导入失败。</p>
+<p>默认为 false。可通过 <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_insert_strict</span> <span class="pre">=</span> <span class="pre">true;</span></code> 来设置。</p>
+</li>
+<li><p class="first">query_timeout</p>
+<p>Insert Into 本身也是一个 SQL 命令，因此 Insert Into 语句也受到 Session 变量 <code class="docutils literal notranslate"><span class="pre">query_timeout</span></code> 的限制。可以通过 <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">query_timeout</span> <span class="pre">=</span> <span class="pre">xxx;</span></code> 来增加超时时间，单位是秒。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>最佳实践<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>应用场景<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li>用户希望仅导入几条假数据，验证一下 Doris 系统的功能。此时适合使用 INSERT INTO VALUS 的语法。</li>
+<li>用户希望将已经在 Doris 表中的数据进行 ETL 转换并导入到一个新的 Doris 表中，此时适合使用 INSERT INTO SELECT 语法。</li>
+<li>用户可以创建一种外部表，如 MySQL 外部表映射一张 MySQL 系统中的表。或者创建 Broker 外部表来映射 HDFS 上的数据文件。然后通过 INSERT INTO SELECT 语法将外部表中的数据导入到 Doris 表中存储。</li>
+</ol>
+</div>
+<div class="section" id="id7">
+<h3>数据量<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>Insert Into 对数据量没有限制，大数据量导入也可以支持。但 Insert Into 有默认的超时时间，用户预估的导入数据量过大，就需要修改系统的 Insert Into 导入超时时间。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>导入数据量 = 36G 约≤ 3600s * 10M/s 
+其中 10M/s 是最大导入限速，用户需要根据当前集群情况计算出平均的导入速度来替换公式中的 10M/s
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>完整例子<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>用户有一张表 store_sales 在数据库 sales 中，用户又创建了一张表叫 bj_store_sales 也在数据库 sales 中，用户希望将 store_sales 中销售记录在 bj 的数据导入到这张新建的表 bj_store_sales 中。导入的数据量约为：10G。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>store_sales schema：
+(id, total, user_id, sale_timestamp, region)
+
+bj_store_sales schema:
+(id, total, user_id, sale_timestamp)
+</pre></div>
+</div>
+<p>集群情况：用户当前集群的平均导入速度约为 5M/s</p>
+<ul>
+<li><p class="first">Step1: 判断是否要修改 Insert Into 的默认超时时间</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">计算导入的大概时间</span>
+<span class="mi">10</span><span class="n">G</span> <span class="o">/</span> <span class="mi">5</span><span class="n">M</span><span class="o">/</span><span class="n">s</span> <span class="o">=</span> <span class="mi">2000</span><span class="n">s</span>
+
+<span class="n">修改</span> <span class="n">FE</span> <span class="n">配置</span>
+<span class="n">insert_load_default_timeout_second</span> <span class="o">=</span> <span class="mi">2000</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Step2：创建导入任务</p>
+<p>由于用户是希望将一张表中的数据做 ETL 并导入到目标表中，所以应该使用 Insert into query_stmt 方式导入。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">bj_store_sales</span> <span class="n">SELECT</span> <span class="nb">id</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">sale_timestamp</span> <span class="n">FROM</span> <span class="n">store_sales</span> <span class="n">where</span> <span class="n">region</span> <span class="o">=</span> <span class="s2">&quot;bj&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>常见问题<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">查看错误行</p>
+<p>由于 Insert Into 无法控制错误率，只能通过 <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> 设置为完全容忍错误数据或完全忽略错误数据。因此如果 <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> 设为 true，则 Insert Into 可能会失败。而如果 <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> 设为 false，则可能出现仅导入了部分合格数据的情况。</p>
+<p>当返回结果中提供了 url 字段时，可以通过以下命令查看错误行：</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WARNINGS</span> <span class="pre">ON</span> <span class="pre">&quot;url&quot;;</span></code></p>
+<p>示例：</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WARNINGS</span> <span class="pre">ON</span> <span class="pre">&quot;http://ip:port/api/_load_error_log?file=__shard_13/error_log_insert_stmt_d2cac0a0a16d482d-9041c949a4b71605_d2cac0a0a16d482d_9041c949a4b71605&quot;;</span></code></p>
+<p>错误的原因通常如：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等等。</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../alter-table/index.html" class="btn btn-neutral float-right" title="表结构变更" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="routine-load-manual.html" class="btn btn-neutral float-left" title="Routine Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

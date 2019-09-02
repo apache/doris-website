@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Metadata Operations and Maintenance &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Monitoring and alarming" href="monitor-alert_EN.html" />
+    <link rel="prev" title="Maintainence Operation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Maintainence Operation</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Metadata Operations and Maintenance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="monitor-alert_EN.html">Monitoring and alarming</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi-tenant_EN.html">Multi-tenancy(Exprimental)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-meta-tool_EN.html">Tablet metadata management tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance_EN.html">Data replica management</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../index.html">Administrator Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Maintainence Operation</a> &raquo;</li>
+        
+      <li>Metadata Operations and Maintenance</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/operation/metadata-operation_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="metadata-operations-and-maintenance">
+<h1>Metadata Operations and Maintenance<a class="headerlink" href="#metadata-operations-and-maintenance" title="Permalink to this headline">¶</a></h1>
+<p>This document focuses on how to manage Doris metadata in a real production environment. It includes the proposed deployment of FE nodes, some commonly used operational methods, and common error resolution methods.</p>
+<p>For the time being, read the <a class="reference internal" href="../../internal/metadata-design_EN.html"><span class="doc">Doris metadata design document</span></a> to understand how Doris metadata works.</p>
+<div class="section" id="important-tips">
+<h2>Important tips<a class="headerlink" href="#important-tips" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Current metadata design is not backward compatible. That is, if the new version has a new metadata structure change (you can see whether there is a new VERSION in the `FeMetaVersion. java’file in the FE code), it is usually impossible to roll back to the old version after upgrading to the new version. Therefore, before upgrading FE, be sure to test metadata compatibility according to the operations in the <a class="reference internal" href="../../installing/upgrade_EN.html"><span class="doc">Upgrade Document</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="metadata-catalog-structure">
+<h2>Metadata catalog structure<a class="headerlink" href="#metadata-catalog-structure" title="Permalink to this headline">¶</a></h2>
+<p>Let’s assume that the path of <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code> specified in fe.conf is <code class="docutils literal notranslate"><span class="pre">path/to/palo-meta</span></code>. In a normal Doris cluster, the directory structure of metadata should be as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/path/to/palo-meta/
+            |-- bdb/
+            |   |-- 00000000.jdb
+            |   |-- je.config.csv
+            |   |-- je.info.0
+            |   |-- je.info.0.lck
+            |   |-- je.lck
+            |   `-- je.stat.csv
+            `-- image/
+                |-- ROLE
+                |-- VERSION
+                `-- image.xxxx
+</pre></div>
+</div>
+<ol>
+<li><p class="first">bdb</p>
+<p>We use [bdbje] (https://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html) as a distributed kV system to store metadata journal. This BDB directory is equivalent to the “data directory” of bdbje.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">.jdb</span></code> suffix is the data file of bdbje. These data files will increase with the increasing number of metadata journals. When Doris regularly completes the image, the old log is deleted. So normally, the total size of these data files varies from several MB to several GB (depending on how Doris is used, such as import frequency). When the total size of the data file is larger than 10GB, you may need to wonder whether the image failed or the historical journals that failed to distribute the image could not be deleted.</p>
+<p><code class="docutils literal notranslate"><span class="pre">je.info.0</span></code> is the running log of bdbje. The time in this log is UTC + 0 time zone. We may fix this in a later version. From this log, you can also see how some bdbje works.</p>
+</li>
+<li><p class="first">image directory</p>
+<p>The image directory is used to store metadata mirrors generated regularly by Doris. Usually, you will see a <code class="docutils literal notranslate"><span class="pre">image.xxxxx</span></code> mirror file. Where <code class="docutils literal notranslate"><span class="pre">xxxxx</span></code> is a number. This number indicates that the image contains all metadata journal before <code class="docutils literal notranslate"><span class="pre">xxxx</span></code>. And the generation time of this file (viewed through <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-al</span></code>) is usually the generation time of the mirror.</p>
+<p>You may also see a <code class="docutils literal notranslate"><span class="pre">image.ckpt</span></code> file. This is a metadata mirror being generated. The <code class="docutils literal notranslate"><span class="pre">du</span> <span class="pre">-sh</span></code> command should show that the file size is increasing, indicating that the mirror content is being written to the file. When the mirror is written, it automatically renames itself to a new <code class="docutils literal notranslate"><span class="pre">image.xxxxx</span></code> and replaces the old image file.</p>
+<p>Only FE with a Master role will actively generate image files on a regular basis. After each generation, FE is pushed to other non-Master roles. When it is confirmed that all other FEs have received this image, Master FE deletes the metadata journal in bdbje. Therefore, if image generation fails or image push fails to other FEs, data in bdbje will accumulate.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ROLE</span></code> file records the type of FE (FOLLOWER or OBSERVER), which is a text file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VERSION</span></code> file records the cluster ID of the Doris cluster and the token used to access authentication between nodes, which is also a text file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ROLE</span></code> file and <code class="docutils literal notranslate"><span class="pre">VERSION</span></code> file may only exist at the same time, or they may not exist at the same time (e.g. at the first startup).</p>
+</li>
+</ol>
+</div>
+<div class="section" id="basic-operations">
+<h2>Basic operations<a class="headerlink" href="#basic-operations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="start-single-node-fe">
+<h3>Start single node FE<a class="headerlink" href="#start-single-node-fe" title="Permalink to this headline">¶</a></h3>
+<p>Single node FE is the most basic deployment mode. A complete Doris cluster requires at least one FE node. When there is only one FE node, the type of the node is Follower and the role is Master.</p>
+<ol>
+<li><p class="first">First start-up</p>
+<ol>
+<li><p class="first">Suppose the path of <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code> specified in fe.conf is <code class="docutils literal notranslate"><span class="pre">path/to/palo-meta</span></code>.</p>
+</li>
+<li><p class="first">Ensure that <code class="docutils literal notranslate"><span class="pre">path/to/palo-meta</span></code> already exists, that the permissions are correct and that the directory is empty.</p>
+</li>
+<li><p class="first">Start directly through <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">bin/start_fe.sh</span></code>.</p>
+</li>
+<li><p class="first">After booting, you should be able to see the following log in fe.log:</p>
+<ul class="simple">
+<li>Palo FE starting…</li>
+<li>image does not exist: /path/to/palo-meta/image/image.0</li>
+<li>transfer from INIT to UNKNOWN</li>
+<li>transfer from UNKNOWN to MASTER</li>
+<li>the very first time to open bdb, dbname is 1</li>
+<li>start fencing, epoch number is 1</li>
+<li>finish replay in xxx msec</li>
+<li>QE service start</li>
+<li>thrift server started</li>
+</ul>
+<p>The above logs are not necessarily strictly in this order, but they are basically similar.</p>
+</li>
+<li><p class="first">The first start-up of a single-node FE usually does not encounter problems. If you haven’t seen the above logs, generally speaking, you haven’t followed the document steps carefully, please read the relevant wiki carefully.</p>
+</li>
+</ol>
+</li>
+<li><p class="first">Restart</p>
+<ol>
+<li><p class="first">Stopped FE nodes can be restarted by using <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">bin/start_fe.sh</span></code>.</p>
+</li>
+<li><p class="first">After restarting, you should be able to see the following log in fe.log:</p>
+<ul class="simple">
+<li>Palo FE starting…</li>
+<li>finished to get cluster id: xxxx, role: FOLLOWER and node name: xxxx</li>
+<li>If no image has been generated before reboot, you will see:</li>
+<li>image does not exist: /path/to/palo-meta/image/image.0</li>
+<li>If an image is generated before the restart, you will see:</li>
+<li>start load image from /path/to/palo-meta/image/image.xxx. is ckpt: false</li>
+<li>finished load image in xxx ms</li>
+<li>transfer from INIT to UNKNOWN</li>
+<li>replayed journal id is xxxx, replay to journal id is yyyy</li>
+<li>transfer from UNKNOWN to MASTER</li>
+<li>finish replay in xxx msec</li>
+<li>master finish replay journal, can write now.</li>
+<li>begin to generate new image: image.xxxx</li>
+<li>start save image to /path/to/palo-meta/image/image.ckpt. is ckpt: true</li>
+<li>finished save image /path/to/palo-meta/image/image.ckpt in xxx ms. checksum is xxxx</li>
+<li>push image.xxx to other nodes. totally xx nodes, push successed xx nodes</li>
+<li>QE service start</li>
+<li>thrift server started</li>
+</ul>
+<p>The above logs are not necessarily strictly in this order, but they are basically similar.</p>
+</li>
+</ol>
+</li>
+<li><p class="first">Common problems</p>
+<p>For the deployment of single-node FE, start-stop usually does not encounter any problems. If you have any questions, please refer to the relevant Wiki and check your operation steps carefully.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="add-fe">
+<h3>Add FE<a class="headerlink" href="#add-fe" title="Permalink to this headline">¶</a></h3>
+<p>Adding FE processes is described in detail in the [Deployment and Upgrade Documents] (https://github.com/apache/incubator-doris/wiki/Doris-Deploy-%26-Upgrade) and will not be repeated. Here are some points for attention, as well as common problems.</p>
+<ol>
+<li><p class="first">Notes</p>
+<ul class="simple">
+<li>Before adding a new FE, make sure that the current Master FE runs properly (connection is normal, JVM is normal, image generation is normal, bdbje data directory is too large, etc.)</li>
+<li>The first time you start a new FE, you must make sure that the <code class="docutils literal notranslate"><span class="pre">-helper</span></code> parameter is added to point to Master FE. There is no need to add <code class="docutils literal notranslate"><span class="pre">-helper</span></code> when restarting. (If <code class="docutils literal notranslate"><span class="pre">-helper</span></code> is specified, FE will directly ask the helper node for its role. If not, FE will try to obtain information from <code class="docutils literal notranslate"><span class="pre">ROLE</span></code> and <code class="docutils literal notranslate"><span class="pre">VERSION</span></code> files in the <code class="docutils literal notranslate"><span class="pre">palo-meta/image/</span></code> directory.</li>
+<li>The first time you start a new FE, you must make sure that the <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code> of the FE is created, has correct permissions and is empty.</li>
+<li>Starting a new FE and executing the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">FOLLOWER/OBSERVER</span></code> statement adds FE to metadata in a sequence that is not required. If a new FE is started first and no statement is executed, the <code class="docutils literal notranslate"><span class="pre">current</span> <span class="pre">node</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">added</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">group.</span> <span class="pre">Please</span> <span class="pre">add</span> <span class="pre">it</span> <span class="pre">first.</span></code> in the new FE log. When the statement is executed, it enters the normal process.</li>
+<li>Make sure that after the previous FE is added successfully, the next FE is added.</li>
+<li>建议直接连接到 MASTER FE 执行 <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">FOLLOWER/OBSERVER</span></code> 语句。</li>
+</ul>
+</li>
+<li><p class="first">Common problems</p>
+<ol>
+<li><p class="first">this need is DETACHED</p>
+<p>When you first start a FE to be added, if the data in palo-meta/bdb on Master FE is large, you may see the words <code class="docutils literal notranslate"><span class="pre">this</span> <span class="pre">node</span> <span class="pre">is</span> <span class="pre">DETACHED</span></code>. in the FE log to be added. At this point, bdbje is copying data, and you can see that the <code class="docutils literal notranslate"><span class="pre">bdb/</span></code> directory of FE to be added is growing. This process usually takes several minutes (depending on the amount of data in bdbje). Later, there may be some bdbje-related error stack information in fe. log. If <code class="docutils literal notranslate"><span class="pre">QE</span> <span class="pre">service</span> <span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">thrift</span> <span class="pre">server</span> <span class="pre">start</span></code> are displayed in the final log, the start is usually successful. You can try to connect this FE via mysql-client. If these words do not appear, it may be the problem of bdbje replication log timeout. At this point, restarting the FE directly will usually solve the problem.</p>
+</li>
+<li><p class="first">Failure to add due to various reasons</p>
+<ul class="simple">
+<li>If OBSERVER is added, because OBSERVER-type FE does not participate in the majority of metadata writing, it can theoretically start and stop at will. Therefore, for the case of adding OBSERVER failure. The process of OBSERVER FE can be killed directly. After clearing the metadata directory of OBSERVER, add the process again.</li>
+<li>If FOLLOWER is added, because FOLLOWER is mostly written by participating metadata. So it is possible that FOLLOWER has joined the bdbje electoral team. If there are only two FOLLOWER nodes (including MASTER), then stopping one FE may cause another FE to quit because it cannot write most of the time. At this point, we should first delete the newly added FOLLOWER node from the metadata through the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DROP</span> <span class="pre">FOLLOWER</span></code> command, then kill the FOLLOWER process, empty the metadata and re-add the process.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="delete-fe">
+<h3>Delete FE<a class="headerlink" href="#delete-fe" title="Permalink to this headline">¶</a></h3>
+<p>The corresponding type of FE can be deleted by the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DROP</span> <span class="pre">FOLLOWER/OBSERVER</span></code> command. The following points should be noted:</p>
+<ul class="simple">
+<li>For OBSERVER type FE, direct DROP is enough, without risk.</li>
+<li>For FOLLOWER type FE. First, you should make sure that you start deleting an odd number of FOLLOWERs (three or more).<ol>
+<li>If the FE of non-MASTER role is deleted, it is recommended to connect to MASTER FE, execute DROP command, and then kill the process.</li>
+<li>If you want to delete MASTER FE, first confirm that there are odd FOLLOWER FE and it works properly. Then kill the MASTER FE process first. At this point, a FE will be elected MASTER. After confirming that the remaining FE is working properly, connect to the new MASTER FE and execute the DROP command to delete the old MASTER FE.</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="advanced-operations">
+<h2>Advanced Operations<a class="headerlink" href="#advanced-operations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="failure-recovery">
+<h3>Failure recovery<a class="headerlink" href="#failure-recovery" title="Permalink to this headline">¶</a></h3>
+<p>FE may fail to start bdbje and synchronize between FEs for some reasons. Phenomena include the inability to write metadata, the absence of MASTER, and so on. At this point, we need to manually restore the FE. The general principle of manual recovery of FE is to start a new MASTER through metadata in the current <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code>, and then add other FEs one by one. Please follow the following steps strictly:</p>
+<ol>
+<li><p class="first">First, stop all FE processes and all business access. Make sure that during metadata recovery, external access will not lead to other unexpected problems.</p>
+</li>
+<li><p class="first">Identify which FE node’s metadata is up-to-date:</p>
+<ul class="simple">
+<li>First of all, <strong>be sure to back up all FE’s <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code> directories first.</strong></li>
+<li>Usually, Master FE’s metadata is up to date. You can see the suffix of image.xxxx file in the <code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code> directory. The larger the number, the newer the metadata.</li>
+<li>Usually, by comparing all FOLLOWER FE image files, you can find the latest metadata.</li>
+<li>After that, we use the FE node with the latest metadata to recover.</li>
+<li>If using metadata of OBSERVER node to recover will be more troublesome, it is recommended to choose FOLLOWER node as far as possible.</li>
+</ul>
+</li>
+<li><p class="first">The following operations are performed on the FE nodes selected in step 2.</p>
+<ol class="simple">
+<li>If the node is an OBSERVER, first change the <code class="docutils literal notranslate"><span class="pre">role=OBSERVER</span></code> in the <code class="docutils literal notranslate"><span class="pre">meta_dir/image/ROLE</span></code> file to <code class="docutils literal notranslate"><span class="pre">role=FOLLOWER</span></code>. (Recovery from the OBSERVER node will be more cumbersome, first follow the steps here, followed by a separate description)</li>
+<li>Add configuration in fe.conf: <code class="docutils literal notranslate"><span class="pre">metadata_failure_recovery=true</span></code>.</li>
+<li>Run <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">bin/start_fe.sh</span></code> to start the FE</li>
+<li>If normal, the FE will start in the role of MASTER, similar to the description in the previous section <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">a</span> <span class="pre">single</span> <span class="pre">node</span> <span class="pre">FE</span></code>. You should see the words <code class="docutils literal notranslate"><span class="pre">transfer</span> <span class="pre">from</span> <span class="pre">XXXX</span> <span class="pre">to</span> <span class="pre">MASTER</span></code> in fe.log.</li>
+<li>After the start-up is completed, connect to the FE first, and execute some query imports to check whether normal access is possible. If the operation is not normal, it may be wrong. It is recommended to read the above steps carefully and try again with the metadata previously backed up. If not, the problem may be more serious.</li>
+<li>If successful, through the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">frontends;</span></code> command, you should see all the FEs you added before, and the current FE is master.</li>
+<li>Delete the <code class="docutils literal notranslate"><span class="pre">metadata_failure_recovery=true</span></code> configuration item in fe.conf, or set it to <code class="docutils literal notranslate"><span class="pre">false</span></code>, and restart the FE (<strong>Important</strong>).</li>
+</ol>
+<blockquote>
+<div><p>If you are recovering metadata from an OBSERVER node, after completing the above steps, you will find that the current FE role is OBSERVER, but <code class="docutils literal notranslate"><span class="pre">IsMaster</span></code> appears as <code class="docutils literal notranslate"><span class="pre">true</span></code>. This is because the “OBSERVER” seen here is recorded in Doris’s metadata, but whether it is master or not, is recorded in bdbje’s metadata. Because we recovered from an OBSERVER node, there was inconsistency. Please take the following steps to fix this problem (we will fix it in a later version):</p>
+</div></blockquote>
+<blockquote>
+<div><ol class="simple">
+<li>First, all FE nodes except this “OBSERVER” are DROPed out.</li>
+<li>A new FOLLOWER FE is added through the <code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">FOLLOWER</span></code> command, assuming that it is on hostA.</li>
+<li>Start a new FE on hostA and join the cluster by <code class="docutils literal notranslate"><span class="pre">helper</span></code>.</li>
+<li>After successful startup, you should see two FEs through the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">frontends;</span></code> statement, one is the previous OBSERVER, the other is the newly added FOLLOWER, and the OBSERVER is the master.</li>
+<li>After confirming that the new FOLLOWER is working properly, the new FOLLOWER metadata is used to perform a failure recovery operation again.</li>
+<li>The purpose of the above steps is to manufacture a metadata of FOLLOWER node artificially, and then use this metadata to restart fault recovery. This avoids inconsistencies in recovering metadata from OBSERVER.</li>
+</ol>
+</div></blockquote>
+<blockquote>
+<div><p>The meaning of <code class="docutils literal notranslate"><span class="pre">metadata_failure_recovery</span> <span class="pre">=</span> <span class="pre">true</span></code> is to empty the metadata of <code class="docutils literal notranslate"><span class="pre">bdbje</span></code>. In this way, bdbje will not contact other FEs before, but start as a separate FE. This parameter needs to be set to true only when restoring startup. After recovery, it must be set to false. Otherwise, once restarted, the metadata of bdbje will be emptied again, which will make other FEs unable to work properly.</p>
+</div></blockquote>
+</li>
+<li><p class="first">After the successful execution of step 3, we delete the previous FEs from the metadata by using the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DROP</span> <span class="pre">FOLLOWER/OBSERVER</span></code> command and add them again by adding new FEs.</p>
+</li>
+<li><p class="first">If the above operation is normal, it will be restored.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="fe-type-change">
+<h3>FE type change<a class="headerlink" href="#fe-type-change" title="Permalink to this headline">¶</a></h3>
+<p>If you need to change the existing FOLLOWER/OBSERVER type FE to OBSERVER/FOLLOWER type, please delete FE in the way described above, and then add the corresponding type FE.</p>
+</div>
+<div class="section" id="fe-migration">
+<h3>FE Migration<a class="headerlink" href="#fe-migration" title="Permalink to this headline">¶</a></h3>
+<p>If you need to migrate one FE from the current node to another, there are several scenarios.</p>
+<ol>
+<li><p class="first">FOLLOWER, or OBSERVER migration for non-MASTER nodes</p>
+<p>After adding a new FOLLOWER / OBSERVER directly, delete the old FOLLOWER / OBSERVER.</p>
+</li>
+<li><p class="first">Single-node MASTER migration</p>
+<p>When there is only one FE, refer to the <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">Recovery</span></code> section. Copy the palo-meta directory of FE to the new node and start the new MASTER in Step 3 of the <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">Recovery</span></code> section</p>
+</li>
+<li><p class="first">A set of FOLLOWER migrates from one set of nodes to another set of new nodes</p>
+<p>Deploy FE on the new node and add the new node first by adding FOLLOWER. The old nodes can be dropped by DROP one by one. In the process of DROP-by-DROP, MASTER automatically selects the new FOLLOWER node.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="replacement-of-fe-port">
+<h3>Replacement of FE port<a class="headerlink" href="#replacement-of-fe-port" title="Permalink to this headline">¶</a></h3>
+<p>FE currently has the following ports</p>
+<ul class="simple">
+<li>Ed_log_port: bdbje’s communication port</li>
+<li>http_port: http port, also used to push image</li>
+<li>rpc_port：FE 的 thrift server port</li>
+<li>query_port: Mysql connection port</li>
+</ul>
+<ol>
+<li><p class="first">edit_log_port</p>
+<p>If this port needs to be replaced, it needs to be restored with reference to the operations in the <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">Recovery</span></code> section. Because the port has been persisted into bdbje’s own metadata (also recorded in Doris’s own metadata), it is necessary to clear bdbje’s metadata by setting <code class="docutils literal notranslate"><span class="pre">metadata_failure_recovery=true</span></code>.</p>
+</li>
+<li><p class="first">http_port</p>
+<p>All FE http_ports must be consistent. So if you want to modify this port, all FEs need to be modified and restarted. Modifying this port will be more complex in the case of multiple FOLLOWER deployments (involving laying eggs and laying hens…), so this operation is not recommended. If necessary, follow the operation in the <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">Recovery</span></code> section directly.</p>
+</li>
+<li><p class="first">rpc_port</p>
+<p>After modifying the configuration, restart FE directly. Master FE informs BE of the new port through heartbeat. Only this port of Master FE will be used. However, it is still recommended that all FE ports be consistent.</p>
+</li>
+<li><p class="first">query_port</p>
+<p>After modifying the configuration, restart FE directly. This only affects mysql’s connection target.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+<p>The deployment recommendation of FE is described in the Installation and <a class="reference internal" href="../../installing/install-deploy_EN.html"><span class="doc">Deployment Document</span></a>. Here are some supplements.</p>
+<ul class="simple">
+<li><strong>If you don’t know the operation logic of FE metadata very well, or you don’t have enough experience in the operation and maintenance of FE metadata, we strongly recommend that only one FOLLOWER-type FE be deployed as MASTER in practice, and the other FEs are OBSERVER, which can reduce many complex operation and maintenance problems.</strong> Don’t worry too much about the failure of MASTER single point to write metadata. First, if you configure it properly, FE as a java process is very difficult to hang up. Secondly, if the MASTER disk is damaged (the probability is very low), we can also use the metadata on OBSERVER to recover manually through <code class="docutils literal notranslate"><span class="pre">fault</span> <span class="pre">recovery</span></code>.</li>
+<li>The JVM of the FE process must ensure sufficient memory. We <strong>strongly recommend</strong> that FE’s JVM memory should be at least 10GB and 32GB to 64GB. And deploy monitoring to monitor JVM memory usage. Because if OOM occurs in FE, metadata writing may fail, resulting in some failures that <strong>cannot recover</strong>!</li>
+<li>FE nodes should have enough disk space to prevent the excessive metadata from causing insufficient disk space. At the same time, FE logs also take up more than a dozen gigabytes of disk space.</li>
+</ul>
+</div>
+<div class="section" id="other-common-problems">
+<h2>Other common problems<a class="headerlink" href="#other-common-problems" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">fe.log 中一直滚动 <code class="docutils literal notranslate"><span class="pre">meta</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">date.</span> <span class="pre">current</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">synchronized</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">has</span> <span class="pre">log:</span> <span class="pre">xxx,</span> <span class="pre">fe</span> <span class="pre">type:</span> <span class="pre">xxx</span></code></p>
+<p>This is usually because the FE cannot elect Master. For example, if three FOLLOWERs are configured, but only one FOLLOWER is started, this FOLLOWER will cause this problem. Usually, just start the remaining FOLLOWER. If the problem has not been solved after the start-up, manual recovery may be required in accordance with the way in the <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">Recovery</span></code> section.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">Clock</span> <span class="pre">delta:</span> <span class="pre">xxxx</span> <span class="pre">ms.</span> <span class="pre">between</span> <span class="pre">Feeder:</span> <span class="pre">xxxx</span> <span class="pre">and</span> <span class="pre">this</span> <span class="pre">Replica</span> <span class="pre">exceeds</span> <span class="pre">max</span> <span class="pre">permissible</span> <span class="pre">delta:</span> <span class="pre">xxxx</span> <span class="pre">ms.</span></code></p>
+<p>Bdbje requires that clock errors between nodes should not exceed a certain threshold. If exceeded, the node will exit abnormally. The default threshold is 5000ms, which is controlled by FE parameter `max_bdbje_clock_delta_ms’, and can be modified as appropriate. But we suggest using NTP and other clock synchronization methods to ensure the clock synchronization of Doris cluster hosts.</p>
+</li>
+<li><p class="first">Mirror files in the <code class="docutils literal notranslate"><span class="pre">image/</span></code> directory have not been updated for a long time</p>
+<p>Master FE generates a mirror file by default for every 50,000 metadata journal. In a frequently used cluster, a new image file is usually generated every half to several days. If you find that the image file has not been updated for a long time (for example, more than a week), you can see the reasons in sequence as follows:</p>
+<ol class="simple">
+<li>Search for <code class="docutils literal notranslate"><span class="pre">memory</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">enough</span> <span class="pre">to</span> <span class="pre">do</span> <span class="pre">checkpoint.</span> <span class="pre">Committed</span> <span class="pre">memroy</span> <span class="pre">XXXX</span> <span class="pre">Bytes,</span> <span class="pre">used</span> <span class="pre">memory</span> <span class="pre">XXXX</span> <span class="pre">Bytes.</span> </code> in the fe.log of Master FE. If found, it indicates that the current FE’s JVM memory is insufficient for image generation (usually we need to reserve half of the FE memory for image generation). Then you need to add JVM memory and restart FE before you can observe. Each time Master FE restarts, a new image is generated directly. This restart method can also be used to actively generate new images. Note that if there are multiple FOLLOWER deployments, then when you restart the current Master FE, another FOLLOWER FE will become MASTER, and subsequent image generation will be the responsibility of the new Master. Therefore, you may need to modify the JVM memory configuration of all FOLLOWER FE.</li>
+<li>Search for <code class="docutils literal notranslate"><span class="pre">begin</span> <span class="pre">to</span> <span class="pre">generate</span> <span class="pre">new</span> <span class="pre">image:</span> <span class="pre">image.xxxx</span></code> in the fe.log of Master FE. If it is found, then the image is generated. Check the subsequent log of this thread, and if <code class="docutils literal notranslate"><span class="pre">checkpoint</span> <span class="pre">finished</span> <span class="pre">save</span> <span class="pre">image.xxxx</span></code> appears, the image is written successfully. If <code class="docutils literal notranslate"><span class="pre">Exception</span> <span class="pre">when</span> <span class="pre">generating</span> <span class="pre">new</span> <span class="pre">image</span> <span class="pre">file</span></code> occurs, the generation fails and specific error messages need to be viewed.</li>
+</ol>
+</li>
+<li><p class="first">The size of the <code class="docutils literal notranslate"><span class="pre">bdb/</span></code> directory is very large, reaching several Gs or more.</p>
+<p>The BDB directory will remain large for some time after eliminating the error that the new image cannot be generated. Maybe it’s because Master FE failed to push image. You can search <code class="docutils literal notranslate"><span class="pre">push</span> <span class="pre">image.XXXX</span> <span class="pre">to</span> <span class="pre">other</span> <span class="pre">nodes.</span> <span class="pre">totally</span> <span class="pre">XX</span> <span class="pre">nodes,</span> <span class="pre">push</span> <span class="pre">successed</span> <span class="pre">YY</span> <span class="pre">nodes</span></code> in the fe. log of Master FE. If YY is smaller than xx, then some FEs are not pushed successfully. You can see the specific error <code class="docutils literal notranslate"><span class="pre">Exception</span> <span class="pre">when</span> <span class="pre">pushing</span> <span class="pre">image</span> <span class="pre">file.url</span> <span class="pre">=</span> <span class="pre">xxx</span></code> in the fe. log.</p>
+<p>At the same time, you can add the configuration in the FE configuration file: <code class="docutils literal notranslate"><span class="pre">edit_log_roll_num</span> <span class="pre">=</span> <span class="pre">xxxx</span></code>. This parameter sets the number of metadata journals and makes an image once. The default is 50000. This number can be reduced appropriately to make images more frequent, thus speeding up the deletion of old journals.</p>
+</li>
+<li><p class="first">FOLLOWER FE hangs up one after another</p>
+<p>Because Doris’s metadata adopts the majority writing strategy, that is, a metadata journal must be written to at least a number of FOLLOWER FEs (for example, three FOLLOWERs, two must be written successfully) before it can be considered successful. If the write fails, the FE process exits on its own initiative. So suppose there are three FOLLOWERs: A, B and C. C hangs up first, and then B hangs up, then A will hang up. So as described in the <code class="docutils literal notranslate"><span class="pre">Best</span> <span class="pre">Practices</span> </code>section, if you don’t have extensive experience in metadata operations and maintenance, it’s not recommended to deploy multiple FOLLOWERs.</p>
+</li>
+<li><p class="first">fe.log 中出现 <code class="docutils literal notranslate"><span class="pre">get</span> <span class="pre">exception</span> <span class="pre">when</span> <span class="pre">try</span> <span class="pre">to</span> <span class="pre">close</span> <span class="pre">previously</span> <span class="pre">opened</span> <span class="pre">bdb</span> <span class="pre">database.</span> <span class="pre">ignore</span> <span class="pre">it</span></code></p>
+<p>If there is the word <code class="docutils literal notranslate"><span class="pre">ignore</span> <span class="pre">it</span></code> behind it, there is usually no need to deal with it. If you are interested, you can search for this error in <code class="docutils literal notranslate"><span class="pre">BDBEnvironment.java</span></code>, and see the annotations.</p>
+</li>
+<li><p class="first">From <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">frontends;</span></code> Look, the <code class="docutils literal notranslate"><span class="pre">Join</span></code> of a FE is listed as <code class="docutils literal notranslate"><span class="pre">true</span></code>, but actually the FE is abnormal.</p>
+<p>Through <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">frontends;</span></code> see the <code class="docutils literal notranslate"><span class="pre">Join</span></code> information. If the column is <code class="docutils literal notranslate"><span class="pre">true</span></code>, it only means that the FE <strong>has joined the</strong> cluster. It does not mean that it still exists normally in the cluster. If <code class="docutils literal notranslate"><span class="pre">false</span></code>, it means that the FE <strong>has never joined the</strong> cluster.</p>
+</li>
+<li><p class="first">Configuration of FE <code class="docutils literal notranslate"><span class="pre">master_sync_policy</span></code>, <code class="docutils literal notranslate"><span class="pre">replica_sync_policy</span></code>, and <code class="docutils literal notranslate"><span class="pre">txn_rollback_limit.</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">master_sync_policy</span></code> is used to specify whether fsync (), <code class="docutils literal notranslate"><span class="pre">replica_sync_policy</span></code> is called when Leader FE writes metadata log, and <code class="docutils literal notranslate"><span class="pre">replica_sync_policy</span></code> is used to specify whether other Follower FE calls fsync () when FE HA deploys synchronous metadata. In earlier versions of Oris, these two parameters defaulted to <code class="docutils literal notranslate"><span class="pre">WRITE_NO_SYNC</span></code>, i.e., fsync () was not called. In the latest version of Oris, the default has been changed to <code class="docutils literal notranslate"><span class="pre">SYNC</span></code>, that is, fsync () is called. Calling fsync () significantly reduces the efficiency of metadata disk writing. In some environments, IOPS may drop to several hundred and the latency increases to 2-3ms (but it’s still enough for Doris metadata manipulation). Therefore, we recommend the following configuration:</p>
+<ol class="simple">
+<li>For a single Follower FE deployment, <code class="docutils literal notranslate"><span class="pre">master_sync_policy</span></code> is set to <code class="docutils literal notranslate"><span class="pre">SYNC</span></code>, which prevents the loss of metadata due to the downtime of the FE system.</li>
+<li>For multi-Follower FE deployment, we can set <code class="docutils literal notranslate"><span class="pre">master_sync_policy</span></code> and <code class="docutils literal notranslate"><span class="pre">replica_sync_policy</span></code> to <code class="docutils literal notranslate"><span class="pre">WRITE_NO_SYNC</span></code>, because we think that the probability of simultaneous outage of multiple systems is very low.</li>
+</ol>
+<p>If <code class="docutils literal notranslate"><span class="pre">master_sync_policy</span></code> is set to <code class="docutils literal notranslate"><span class="pre">WRITE_NO_SYNC</span></code> in a single Follower FE deployment, then a FE system outage may occur, resulting in loss of metadata. At this point, if other Observer FE attempts to restart, it may report an error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Node</span> <span class="n">xxx</span> <span class="n">must</span> <span class="n">rollback</span> <span class="n">xx</span> <span class="n">total</span> <span class="n">commits</span><span class="p">(</span><span class="n">numPassedDurableCommits</span> <span class="n">of</span> <span class="n">which</span> <span class="n">were</span> <span class="n">durable</span><span class="p">)</span> <span class="n">to</span> <span class="n">the</span> <span class="n">earliest</span> <span class="n">point</span> <span class="n">indicated</span> <span class="n">by</span> <span class="n">transaction</span> <span class="n">xxxx</span> <span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">rejoin</span> <span class="n">the</span> <span class="n">replication</span> <span class="n">group</span><span class="p">,</span> <span class="n">but</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">rollback</span> <span class="n">limit</span> <span class="n">of</span> <span class="n">xxx</span> <span class="n">prohibits</span> <span class="n">this</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>This means that some transactions that have been persisted need to be rolled back, but the number of entries exceeds the upper limit. Here our default upper limit is 100, which can be changed by setting <code class="docutils literal notranslate"><span class="pre">txn_rollback_limit</span></code>. This operation is only used to attempt to start FE normally, but lost metadata cannot be recovered.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="monitor-alert_EN.html" class="btn btn-neutral float-right" title="Monitoring and alarming" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Maintainence Operation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

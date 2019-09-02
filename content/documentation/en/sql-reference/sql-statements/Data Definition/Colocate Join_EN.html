@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Colocate Join &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="DROP DATABASE" href="DROP DATABASE_EN.html" />
+    <link rel="prev" title="CREATE VIEW" href="CREATE VIEW_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL Functions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">DDL Statements</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">Account Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Administration/index.html">Administration</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Data Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Manipulation/index.html">Data Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">Data Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">Utility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL Manual</a> &raquo;</li>
+        
+          <li><a href="../index.html">DDL Statements</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Definition</a> &raquo;</li>
+        
+      <li>Colocate Join</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Data Definition/Colocate Join_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="colocate-join">
+<h1>Colocate Join<a class="headerlink" href="#colocate-join" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Colocate/Local Join means that when multiple nodes are Join, there is no data movement and network transmission, and each node is only Join locally.
+The premise of Join locally is to import data from the same Join Key into a fixed node according to the same rules.</p>
+<p>1 How To Use:</p>
+<p>Simply add the property colocate_with when building a table. The value of colocate_with can be set to any one of the same set of colocate tables.
+However, you need to ensure that tables in the colocate_with attribute are created first.</p>
+<p>If you need to Colocate Join table t1 and t2, you can build tables according to the following statements:</p>
+<p>CREATE TABLE <code class="docutils literal notranslate"><span class="pre">t1</span></code> (
+<code class="docutils literal notranslate"><span class="pre">id</span></code> int(11) COMMENT “”,
+‘value <code class="docutils literal notranslate"> <span class="pre">varchar</span> <span class="pre">(8)</span> <span class="pre">COMMENT</span> <span class="pre">&quot;&quot;</span> <span class="pre">)</span> <span class="pre">ENGINE=OLAP</span> <span class="pre">DUPLICATE</span> <span class="pre">KEY(</span></code>id<code class="docutils literal notranslate"><span class="pre">)</span> <span class="pre">DISTRIBUTED</span> <span class="pre">BY</span> <span class="pre">HASH(</span></code>id`) BUCKETS 10
+PROPERTIES (
+“colocate_with” = “t1”
+);</p>
+<p>CREATE TABLE <code class="docutils literal notranslate"><span class="pre">t2</span></code> (
+<code class="docutils literal notranslate"><span class="pre">id</span></code> int(11) COMMENT “”,
+‘value <code class="docutils literal notranslate"> <span class="pre">varchar</span> <span class="pre">(8)</span> <span class="pre">COMMENT</span> <span class="pre">&quot;&quot;</span> <span class="pre">)</span> <span class="pre">ENGINE=OLAP</span> <span class="pre">DUPLICATE</span> <span class="pre">KEY(</span></code>id<code class="docutils literal notranslate"><span class="pre">)</span> <span class="pre">DISTRIBUTED</span> <span class="pre">BY</span> <span class="pre">HASH(</span></code>id`) BUCKETS 10
+PROPERTIES (
+“colocate_with” = “t1”
+);</p>
+<p>2 Colocate Join 目前的限制:</p>
+<ol class="simple">
+<li>Colcoate Table must be an OLAP-type table</li>
+<li>The BUCKET number of tables with the same colocate_with attribute must be the same</li>
+<li>The number of copies of tables with the same colocate_with attribute must be the same</li>
+<li>Data types of DISTRIBUTTED Columns for tables with the same colocate_with attribute must be the same</li>
+</ol>
+<p>3 Colocate Join’s applicable scenario:</p>
+<p>Colocate Join is well suited for scenarios where tables are bucketed according to the same field and high frequency according to the same field Join.</p>
+<p>4 FAQ:</p>
+<p>Q: 支持多张表进行Colocate Join 吗?</p>
+<p>A: 25903;. 25345</p>
+<p>Q: Do you support Colocate table and normal table Join?</p>
+<p>A: 25903;. 25345</p>
+<p>Q: Does the Colocate table support Join with non-bucket Key?</p>
+<p>A: Support: Join that does not meet Colocate Join criteria will use Shuffle Join or Broadcast Join</p>
+<p>Q: How do you determine that Join is executed according to Colocate Join?</p>
+<p>A: The child node of Hash Join in the result of explain is Colocate Join if it is OlapScanNode directly without Exchange Node.</p>
+<p>Q: How to modify the colocate_with attribute?</p>
+<p>A: ALTER TABLE example_db.my_table set (“colocate_with”=”target_table”);</p>
+<p>Q: 229144; colcoate join?</p>
+<p>A: set disable_colocate_join = true; 就可以禁用Colocate Join，查询时就会使用Shuffle Join 和Broadcast Join</p>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<p>COLOCATE, JOIN, CREATE TABLE</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DROP DATABASE_EN.html" class="btn btn-neutral float-right" title="DROP DATABASE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CREATE VIEW_EN.html" class="btn btn-neutral float-left" title="CREATE VIEW" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

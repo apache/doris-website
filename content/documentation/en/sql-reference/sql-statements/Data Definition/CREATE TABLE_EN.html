@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CREATE TABLE &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="CREATE VIEW" href="CREATE VIEW_EN.html" />
+    <link rel="prev" title="CREATE REPOSITORY" href="CREATE REPOSITORY_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL Functions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">DDL Statements</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">Account Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Administration/index.html">Administration</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Data Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Manipulation/index.html">Data Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">Data Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">Utility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL Manual</a> &raquo;</li>
+        
+          <li><a href="../index.html">DDL Statements</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Definition</a> &raquo;</li>
+        
+      <li>CREATE TABLE</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Data Definition/CREATE TABLE_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="create-table">
+<h1>CREATE TABLE<a class="headerlink" href="#create-table" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p>CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
+(column_definition1[, column_definition2, …])
+[ENGINE = [olap|mysql|broker]]
+[key_desc]
+[partition_desc]
+[distribution_desc]
+[PROPERTIES (“key”=”value”, …)];
+[BROKER PROPERTIES (“key”=”value”, …)];</p>
+<ol>
+<li><p class="first">column_definition</p>
+<p>Syntax:</p>
+<p>col_name col_type [agg_type] [NULL | NOT NULL] [DEFAULT “default_value”]</p>
+<p>Explain:
+col_name: Name of column
+col_type: Type of column</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">TINYINT</span><span class="p">(</span><span class="mi">1</span> <span class="n">Byte</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">7</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">7</span> <span class="o">-</span> <span class="mi">1</span>
+ <span class="n">SMALLINT</span><span class="p">(</span><span class="mi">2</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">15</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">15</span> <span class="o">-</span> <span class="mi">1</span>
+ <span class="n">INT</span><span class="p">(</span><span class="mi">4</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">31</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">31</span> <span class="o">-</span> <span class="mi">1</span>
+ <span class="n">BIGINT</span><span class="p">(</span><span class="mi">8</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">63</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">63</span> <span class="o">-</span> <span class="mi">1</span>
+ <span class="n">LARGEINT</span><span class="p">(</span><span class="mi">16</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">127</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">127</span> <span class="o">-</span> <span class="mi">1</span>
+ <span class="n">FLOAT</span><span class="p">(</span><span class="mi">4</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Support</span> <span class="n">scientific</span> <span class="n">notation</span>
+ <span class="n">DOUBLE</span><span class="p">(</span><span class="mi">12</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Support</span> <span class="n">scientific</span> <span class="n">notation</span>
+ <span class="n">DECIMAL</span><span class="p">[(</span><span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">)]</span> <span class="p">(</span><span class="mi">40</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Default</span> <span class="ow">is</span> <span class="n">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+     <span class="n">precision</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">27</span>
+     <span class="n">scale</span><span class="p">:</span> <span class="mi">0</span> <span class="o">~</span> <span class="mi">9</span>
+     <span class="n">integer</span> <span class="n">part</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">18</span>
+     <span class="n">fractional</span> <span class="n">part</span><span class="p">:</span> <span class="mi">0</span> <span class="o">~</span> <span class="mi">9</span>
+     <span class="n">Not</span> <span class="n">support</span> <span class="n">scientific</span> <span class="n">notation</span>
+ <span class="n">DATE</span><span class="p">(</span><span class="mi">3</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="mi">1900</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span>
+ <span class="n">DATETIME</span><span class="p">(</span><span class="mi">8</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">Range</span><span class="p">:</span> <span class="mi">1900</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span> <span class="mi">23</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">59</span>
+ <span class="n">CHAR</span><span class="p">[(</span><span class="n">length</span><span class="p">)]</span>
+     <span class="n">Fixed</span> <span class="n">length</span> <span class="n">string</span><span class="o">.</span> <span class="n">Range</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mf">255.</span> <span class="n">Default</span><span class="p">:</span> <span class="mi">1</span>
+ <span class="n">VARCHAR</span><span class="p">[(</span><span class="n">length</span><span class="p">)]</span>
+     <span class="n">Variable</span> <span class="n">length</span> <span class="n">string</span><span class="o">.</span> <span class="n">Range</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">65533</span>
+ <span class="n">HLL</span> <span class="p">(</span><span class="mi">1</span><span class="o">~</span><span class="mi">16385</span> <span class="n">Bytes</span><span class="p">)</span>
+     <span class="n">HLLL</span> <span class="n">tpye</span><span class="p">,</span> <span class="n">No</span> <span class="n">need</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">length</span><span class="o">.</span>
+     <span class="n">This</span> <span class="nb">type</span> <span class="n">can</span> <span class="n">only</span> <span class="n">be</span> <span class="n">queried</span> <span class="n">by</span> <span class="n">hll_union_agg</span><span class="p">,</span> <span class="n">hll_cardinality</span><span class="p">,</span> <span class="n">hll_hash</span> <span class="n">functions</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>agg_type: Aggregation type. If not specified, the column is key column. Otherwise, the column is value column.
+SUM、MAX、MIN、REPLACE、HLL_UNION(Only for HLL type), BITMAP_UNION(Type should be VARCHAR(0))</p>
+<p>Allow NULL: Default is NOT NULL. NULL value should be represented as <code class="docutils literal notranslate"><span class="pre">\N</span></code> in load source file.</p>
+<p>Notice:The origin value of BITMAP_UNION column should be TINYINT, SMALLINT, INT.</p>
+</li>
+<li><p class="first">ENGINE type</p>
+<p>Default is olap. Options are: olap, mysql, broker</p>
+<ol>
+<li><p class="first">For mysql, properties should include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROPERTIES</span> <span class="p">(</span>
+    <span class="s2">&quot;host&quot;</span> <span class="o">=</span> <span class="s2">&quot;mysql_server_host&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span> <span class="o">=</span> <span class="s2">&quot;mysql_server_port&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user&quot;</span> <span class="o">=</span> <span class="s2">&quot;your_user_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;your_password&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;database&quot;</span> <span class="o">=</span> <span class="s2">&quot;database_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;table&quot;</span> <span class="o">=</span> <span class="s2">&quot;table_name&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Notice:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="s2">&quot;table_name&quot;</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">real</span> <span class="n">table</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">MySQL</span> <span class="n">database</span><span class="o">.</span>
+ <span class="n">table_name</span> <span class="ow">in</span> <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">stmt</span> <span class="ow">is</span> <span class="n">table</span> <span class="ow">is</span> <span class="n">Doris</span><span class="o">.</span> <span class="n">They</span> <span class="n">can</span> <span class="n">be</span> <span class="n">different</span> <span class="ow">or</span> <span class="n">same</span><span class="o">.</span>
+
+ <span class="n">MySQL</span> <span class="n">table</span> <span class="n">created</span> <span class="ow">in</span> <span class="n">Doris</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">accessing</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">MySQL</span> <span class="n">database</span><span class="o">.</span>
+ <span class="n">Doris</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">maintain</span> <span class="ow">and</span> <span class="n">store</span> <span class="nb">any</span> <span class="n">data</span> <span class="kn">from</span> <span class="nn">MySQL</span> <span class="n">table</span><span class="o">.</span>
+</pre></div>
+</div>
+<ol>
+<li><p class="first">For broker, properties should include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROPERTIES</span> <span class="p">(</span>
+    <span class="s2">&quot;broker_name&quot;</span> <span class="o">=</span> <span class="s2">&quot;broker_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;path&quot;</span> <span class="o">=</span> <span class="s2">&quot;file_path1[,file_path2]&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;column_separator&quot;</span> <span class="o">=</span> <span class="s2">&quot;value_separator&quot;</span>
+    <span class="s2">&quot;line_delimiter&quot;</span> <span class="o">=</span> <span class="s2">&quot;value_delimiter&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BROKER</span> <span class="n">PROPERTIES</span><span class="p">(</span>
+    <span class="s2">&quot;username&quot;</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;password&quot;</span> <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For different broker, the broker properties are different</p>
+</li>
+</ol>
+<p>Notice:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">Files</span> <span class="n">name</span> <span class="ow">in</span> <span class="s2">&quot;path&quot;</span> <span class="ow">is</span> <span class="n">separated</span> <span class="n">by</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span> <span class="n">If</span> <span class="n">file</span> <span class="n">name</span> <span class="n">includes</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">use</span> <span class="s2">&quot;</span><span class="si">%2c</span><span class="s2">&quot;</span> <span class="n">instead</span><span class="o">.</span> <span class="n">If</span> <span class="n">file</span> <span class="n">name</span> <span class="n">includes</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="n">use</span> <span class="s2">&quot;%25&quot;</span> <span class="n">instead</span><span class="o">.</span>
+
+ <span class="n">Support</span> <span class="n">CSV</span> <span class="ow">and</span> <span class="n">Parquet</span><span class="o">.</span> <span class="n">Support</span> <span class="n">GZ</span><span class="p">,</span> <span class="n">BZ2</span><span class="p">,</span> <span class="n">LZ4</span><span class="p">,</span> <span class="n">LZO</span><span class="p">(</span><span class="n">LZOP</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">key_desc</p>
+<p>Syntax:
+key_type(k1[,k2 …])</p>
+<p>Explain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">Data</span> <span class="ow">is</span> <span class="n">orderd</span> <span class="n">by</span> <span class="n">specified</span> <span class="n">key</span> <span class="n">columns</span><span class="o">.</span> <span class="n">And</span> <span class="n">has</span> <span class="n">different</span> <span class="n">behaviors</span> <span class="k">for</span> <span class="n">different</span> <span class="n">key</span> <span class="n">desc</span><span class="o">.</span>
+
+     <span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">:</span>
+
+             <span class="n">value</span> <span class="n">columns</span> <span class="n">will</span> <span class="n">be</span> <span class="n">aggregated</span> <span class="ow">is</span> <span class="n">key</span> <span class="n">columns</span> <span class="n">are</span> <span class="n">same</span><span class="o">.</span>
+
+     <span class="n">UNIQUE</span> <span class="n">KEY</span><span class="p">:</span>
+
+             <span class="n">The</span> <span class="n">new</span> <span class="n">incoming</span> <span class="n">rows</span> <span class="n">will</span> <span class="n">replace</span> <span class="n">the</span> <span class="n">old</span> <span class="n">rows</span> <span class="k">if</span> <span class="n">key</span> <span class="n">columns</span> <span class="n">are</span> <span class="n">same</span><span class="o">.</span>
+
+     <span class="n">DUPLICATE</span> <span class="n">KEY</span><span class="p">:</span>
+
+             <span class="n">All</span> <span class="n">incoming</span> <span class="n">rows</span> <span class="n">will</span> <span class="n">be</span> <span class="n">saved</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>NOTICE:
+Except for AGGREGATE KEY, no need to specify aggregation type for value columns.</p>
+</li>
+<li><p class="first">partition_desc</p>
+<ol class="simple">
+<li>Range partition</li>
+</ol>
+<p>Syntex:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> ```
+ PARTITION BY RANGE (k1, k2, ...)
+ (
+ PARTITION partition_name VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
+ PARTITION partition_name VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
+ ...
+ )
+ ```
+</pre></div>
+</div>
+<p>Explain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="mi">1</span><span class="p">)</span> <span class="n">Partition</span> <span class="n">name</span> <span class="n">only</span> <span class="n">support</span> <span class="p">[</span><span class="n">A</span><span class="o">-</span><span class="n">z0</span><span class="o">-</span><span class="mi">9</span><span class="n">_</span><span class="p">]</span>
+ <span class="mi">2</span><span class="p">)</span> <span class="n">Partition</span> <span class="n">key</span> <span class="n">column</span><span class="s1">&#39;s type should be:</span>
+     <span class="n">TINYINT</span><span class="p">,</span> <span class="n">SMALLINT</span><span class="p">,</span> <span class="n">INT</span><span class="p">,</span> <span class="n">BIGINT</span><span class="p">,</span> <span class="n">LARGEINT</span><span class="p">,</span> <span class="n">DATE</span><span class="p">,</span> <span class="n">DATETIME</span>
+ <span class="mi">3</span><span class="p">)</span> <span class="n">The</span> <span class="nb">range</span> <span class="ow">is</span> <span class="p">[</span><span class="n">closed</span><span class="p">,</span> <span class="nb">open</span><span class="p">)</span><span class="o">.</span> <span class="n">And</span> <span class="n">the</span> <span class="n">lower</span> <span class="n">bound</span> <span class="n">of</span> <span class="n">first</span> <span class="n">partition</span> <span class="ow">is</span> <span class="n">MIN</span> <span class="n">VALUE</span> <span class="n">of</span> <span class="n">specifed</span> <span class="n">column</span> <span class="nb">type</span><span class="o">.</span>
+ <span class="mi">4</span><span class="p">)</span> <span class="n">NULL</span> <span class="n">values</span> <span class="n">should</span> <span class="n">be</span> <span class="n">save</span> <span class="ow">in</span> <span class="n">partition</span> <span class="n">which</span> <span class="n">includes</span> <span class="n">MIN</span> <span class="n">VALUE</span><span class="o">.</span>
+ <span class="mi">5</span><span class="p">)</span> <span class="n">Support</span> <span class="n">multi</span> <span class="n">partition</span> <span class="n">columns</span><span class="p">,</span> <span class="n">the</span> <span class="n">the</span> <span class="n">default</span> <span class="n">partition</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">MIN</span> <span class="n">VALUE</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">distribution_desc</p>
+<ol class="simple">
+<li>Hash
+Syntax:
+DISTRIBUTED BY HASH (k1[,k2 …]) [BUCKETS num]
+Explain:
+The default buckets is 10.</li>
+</ol>
+</li>
+<li><p class="first">PROPERTIES</p>
+<ol>
+<li><p class="first">If ENGINE type is olap. User can specify storage medium, cooldown time and replication number:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROPERTIES</span> <span class="p">(</span>
+    <span class="s2">&quot;storage_medium&quot;</span> <span class="o">=</span> <span class="s2">&quot;[SSD|HDD]&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;storage_cooldown_time&quot;</span> <span class="o">=</span> <span class="s2">&quot;yyyy-MM-dd HH:mm:ss&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;replication_num&quot;</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>storage_medium:         SSD or HDD
+storage_cooldown_time:  If storage_medium is SSD, data will be automatically moved to HDD when timeout.
+Default is 7 days.
+Format: “yyyy-MM-dd HH:mm:ss”
+replication_num:        Replication number of a partition. Default is 3.</p>
+<p>If table is not range partitions. This property takes on Table level. Or it will takes on Partition level.</p>
+<p>User can specify different properties for different partition by <code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">PARTITION</span></code> or <code class="docutils literal notranslate"><span class="pre">MODIFY</span> <span class="pre">PARTITION</span></code> statements.</p>
+</li>
+<li><p class="first">If Engine type is olap, user can set bloom filter index for column.</p>
+<p>Bloom filter index will be used when query contains <code class="docutils literal notranslate"><span class="pre">IN</span></code> or <code class="docutils literal notranslate"><span class="pre">EQUAL</span></code>.
+Bloom filter index support key columns with type except TINYINT FLOAT DOUBLE, also support value with REPLACE aggregation type.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROPERTIES</span> <span class="p">(</span>
+    <span class="s2">&quot;bloom_filter_columns&quot;</span><span class="o">=</span><span class="s2">&quot;k1,k2,k3&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For Colocation Join:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROPERTIES</span> <span class="p">(</span>
+    <span class="s2">&quot;colocate_with&quot;</span><span class="o">=</span><span class="s2">&quot;table1&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. Create an olap table, distributed by hash, with aggregation type.
+
+    ```
+    CREATE TABLE example_db.table_hash
+    (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+    v1 CHAR(10) REPLACE,
+    v2 INT SUM
+    )
+    ENGINE=olap
+    AGGREGATE KEY(k1, k2)
+    DISTRIBUTED BY HASH(k1) BUCKETS 32
+    PROPERTIES (&quot;storage_type&quot;=&quot;column&quot;);
+    ```
+    
+2. Create an olap table, distributed by hash, with aggregation type. Also set storage medium and cooldown time.
+
+    ```
+    CREATE TABLE example_db.table_hash
+    (
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048) REPLACE,
+    v2 SMALLINT SUM DEFAULT &quot;10&quot;
+    )
+    ENGINE=olap
+    UNIQUE KEY(k1, k2)
+    DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+    PROPERTIES(
+    &quot;storage_type&quot;=&quot;column&quot;, 
+    &quot;storage_medium&quot; = &quot;SSD&quot;,
+    &quot;storage_cooldown_time&quot; = &quot;2015-06-04 00:00:00&quot;
+    );
+
+3. Create an olap table, with range partitioned, distributed by hash.
+
+    ```
+    CREATE TABLE example_db.table_range
+    (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    v1 VARCHAR(2048),
+    v2 DATETIME DEFAULT &quot;2014-02-04 15:36:00&quot;
+    )
+    ENGINE=olap
+    DUPLICATE KEY(k1, k2, k3)
+    PARTITION BY RANGE (k1)
+    (
+    PARTITION p1 VALUES LESS THAN (&quot;2014-01-01&quot;),
+    PARTITION p2 VALUES LESS THAN (&quot;2014-06-01&quot;),
+    PARTITION p3 VALUES LESS THAN (&quot;2014-12-01&quot;)
+    )
+    DISTRIBUTED BY HASH(k2) BUCKETS 32
+    PROPERTIES(
+    &quot;storage_medium&quot; = &quot;SSD&quot;, &quot;storage_cooldown_time&quot; = &quot;2015-06-04 00:00:00&quot;
+    );
+    ```
+    
+    Explain: 
+    This statement will create 3 partitions:
+
+    ```
+    ( {    MIN     },   {&quot;2014-01-01&quot;} )
+    [ {&quot;2014-01-01&quot;},   {&quot;2014-06-01&quot;} )
+    [ {&quot;2014-06-01&quot;},   {&quot;2014-12-01&quot;} )
+    ``` 
+    
+    Data outside these ranges will not be loaded.
+
+4. Create a mysql table
+
+    ```
+    CREATE TABLE example_db.table_mysql
+    (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    k4 VARCHAR(2048),
+    k5 DATETIME
+    )
+    ENGINE=mysql
+    PROPERTIES
+    (
+    &quot;host&quot; = &quot;127.0.0.1&quot;,
+    &quot;port&quot; = &quot;8239&quot;,
+    &quot;user&quot; = &quot;mysql_user&quot;,
+    &quot;password&quot; = &quot;mysql_passwd&quot;,
+    &quot;database&quot; = &quot;mysql_db_test&quot;,
+    &quot;table&quot; = &quot;mysql_table_test&quot;
+    );
+    ```
+    
+5. Create a broker table, with file on HDFS, line delimit by &quot;|&quot;, column separated by &quot;\n&quot;
+
+    ```
+    CREATE EXTERNAL TABLE example_db.table_broker (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    k4 VARCHAR(2048),
+    k5 DATETIME
+    )
+    ENGINE=broker
+    PROPERTIES (
+    &quot;broker_name&quot; = &quot;hdfs&quot;,
+    &quot;path&quot; = &quot;hdfs://hdfs_host:hdfs_port/data1,hdfs://hdfs_host:hdfs_port/data2,hdfs://hdfs_host:hdfs_port/data3%2c4&quot;,
+    &quot;column_separator&quot; = &quot;|&quot;,
+    &quot;line_delimiter&quot; = &quot;\n&quot;
+    )
+    BROKER PROPERTIES (
+    &quot;username&quot; = &quot;hdfs_user&quot;,
+    &quot;password&quot; = &quot;hdfs_password&quot;
+    );
+    ```
+
+6. Create table will HLL column
+
+    ```
+    CREATE TABLE example_db.example_table
+    (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+    v1 HLL HLL_UNION,
+    v2 HLL HLL_UNION
+    )
+    ENGINE=olap
+    AGGREGATE KEY(k1, k2)
+    DISTRIBUTED BY HASH(k1) BUCKETS 32;
+    ```
+
+7. Create a table will BITMAP_UNION column
+
+    ```
+    CREATE TABLE example_db.example_table
+    (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+    v1 VARCHAR(0) BITMAP_UNION,  // 注意:  bitmap_union的varchar长度需要指定为0
+    v2 VARCHAR(0) BITMAP_UNION
+    )
+    ENGINE=olap
+    AGGREGATE KEY(k1, k2)
+    DISTRIBUTED BY HASH(k1) BUCKETS 32;
+    ```
+
+8. Create 2 colocate join table.
+
+    ```
+    CREATE TABLE `t1` (
+    `id` int(11) COMMENT &quot;&quot;,
+    `value` varchar(8) COMMENT &quot;&quot;
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 10
+    PROPERTIES (
+    &quot;colocate_with&quot; = &quot;group1&quot;
+    );
+
+    CREATE TABLE `t2` (
+    `id` int(11) COMMENT &quot;&quot;,
+    `value` varchar(8) COMMENT &quot;&quot;
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 10
+    PROPERTIES (
+    &quot;colocate_with&quot; = &quot;group1&quot;
+    );
+    ```
+
+9. Create a broker table, with file on BOS.
+
+    ```
+    CREATE EXTERNAL TABLE example_db.table_broker (
+    k1 DATE
+    )
+    ENGINE=broker
+    PROPERTIES (
+    &quot;broker_name&quot; = &quot;bos&quot;,
+    &quot;path&quot; = &quot;bos://my_bucket/input/file&quot;,
+    )
+    BROKER PROPERTIES (
+      &quot;bos_endpoint&quot; = &quot;http://bj.bcebos.com&quot;,
+      &quot;bos_accesskey&quot; = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+      &quot;bos_secret_accesskey&quot;=&quot;yyyyyyyyyyyyyyyyyyyy&quot;
+    );
+    ```
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span><span class="p">,</span><span class="n">TABLE</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CREATE VIEW_EN.html" class="btn btn-neutral float-right" title="CREATE VIEW" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CREATE REPOSITORY_EN.html" class="btn btn-neutral float-left" title="CREATE REPOSITORY" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

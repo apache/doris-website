@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Verify Apache Release &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="prev" title="Subscribe to mailing lists" href="subscribe-mail-list_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Apache Commnity</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gitter_EN.html">Gitter Manual</a></li>
+<li class="toctree-l3"><a class="reference internal" href="how-to-contribute_EN.html">Contribute to Doris</a></li>
+<li class="toctree-l3"><a class="reference internal" href="members_EN.html">PMC Members &amp; Committer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request_EN.html">Code Submission Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-process_EN.html">Publish of Apache Doris</a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscribe-mail-list_EN.html">Subscribe to mailing lists</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Verify Apache Release</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#download-source-package-signature-file-hash-file-and-keys">1. Download source package, signature file, hash file and KEYS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#verify-signature-and-hash">2. Verify signature and hash</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#verify-license-header">3. Verify license header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#verify-building">4. Verify building</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">English</a> &raquo;</li>
+        
+          <li><a href="index.html">Apache Commnity</a> &raquo;</li>
+        
+      <li>Verify Apache Release</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/community/verify-apache-release_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="verify-apache-release">
+<h1>Verify Apache Release<a class="headerlink" href="#verify-apache-release" title="Permalink to this headline">¶</a></h1>
+<p>To verify the release, following checklist can used to reference:</p>
+<ol class="simple">
+<li>[ ] Download links are valid.</li>
+<li>[ ] Checksums and PGP signatures are valid.</li>
+<li>[ ] DISCLAIMER is included.</li>
+<li>[ ] Source code artifacts have correct names matching the current release.</li>
+<li>[ ] LICENSE and NOTICE files are correct for the repository.</li>
+<li>[ ] All files have license headers if necessary.</li>
+<li>[ ] No compiled archives bundled in source archive.</li>
+<li>[ ] Building is OK.</li>
+</ol>
+<div class="section" id="download-source-package-signature-file-hash-file-and-keys">
+<h2>1. Download source package, signature file, hash file and KEYS<a class="headerlink" href="#download-source-package-signature-file-hash-file-and-keys" title="Permalink to this headline">¶</a></h2>
+<p>Download all artifacts, take 0.9.0-incubating-rc01 as an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">rc01</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.</span><span class="n">rc01</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">rc01</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.</span><span class="n">rc01</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="o">.</span><span class="n">sha512</span>
+
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">rc01</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.</span><span class="n">rc01</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="o">.</span><span class="n">asc</span>
+
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="n">KEYS</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="verify-signature-and-hash">
+<h2>2. Verify signature and hash<a class="headerlink" href="#verify-signature-and-hash" title="Permalink to this headline">¶</a></h2>
+<p>GnuPG is recommended, which can install by yum install gnupg or apt-get install gnupg.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="kn">import</span> <span class="nn">KEYS</span>
+<span class="n">gpg</span> <span class="o">--</span><span class="n">verify</span> <span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.</span><span class="n">rc01</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="o">.</span><span class="n">asc</span> <span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.</span><span class="n">rc01</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">sha512sum</span> <span class="o">--</span><span class="n">check</span> <span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.9</span><span class="o">.</span><span class="mf">0.</span><span class="n">rc01</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="o">.</span><span class="n">sha512</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="verify-license-header">
+<h2>3. Verify license header<a class="headerlink" href="#verify-license-header" title="Permalink to this headline">¶</a></h2>
+<p>Apache RAT is recommended to verify license headder, which can dowload as following command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mirrors</span><span class="o">.</span><span class="n">tuna</span><span class="o">.</span><span class="n">tsinghua</span><span class="o">.</span><span class="n">edu</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">apache</span><span class="o">//</span><span class="n">creadur</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">rat</span><span class="o">-</span><span class="mf">0.12</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">rat</span><span class="o">-</span><span class="mf">0.12</span><span class="o">-</span><span class="nb">bin</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">zxvf</span> <span class="n">apache</span> <span class="o">-</span><span class="n">rat</span> <span class="o">-</span><span class="mf">0.12</span> <span class="o">-</span><span class="nb">bin</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+<p>Given your source dir is apache-doris-0.9.0.rc01-incubating-src, you can check with following command.
+It will output a file list which don’t include ASF license header, and these files used other licenses.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">jdk</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span>  <span class="o">-</span><span class="n">jar</span> <span class="n">apache</span><span class="o">-</span><span class="n">rat</span><span class="o">-</span><span class="mf">0.12</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">rat</span><span class="o">-</span><span class="mf">0.12</span><span class="o">.</span><span class="n">jar</span> <span class="o">-</span><span class="n">a</span> <span class="o">-</span><span class="n">d</span> <span class="n">apache</span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">src</span> <span class="o">-</span><span class="n">e</span> <span class="o">*.</span><span class="n">md</span> <span class="o">*.</span><span class="n">MD</span> <span class="o">.</span><span class="n">gitignore</span> <span class="o">.</span><span class="n">gitmodules</span> <span class="o">.</span><span class="n">travis</span><span class="o">.</span><span class="n">yml</span> <span class="n">manifest</span> <span class="o">**</span><span class="n">vendor</span><span class="o">**</span> <span class="o">**</span><span class="n">licenses</span><span class="o">**</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">File</span><span class="p">:</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;test_data&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;gutil&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;json&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;patch&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;xml&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;conf&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;svg&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="verify-building">
+<h2>4. Verify building<a class="headerlink" href="#verify-building" title="Permalink to this headline">¶</a></h2>
+<p>Firstly, you must be install and start docker service.</p>
+<p>And then you could build Doris as following steps:</p>
+<div class="section" id="step1-pull-the-docker-image-with-doris-building-environment">
+<h3>Step1: Pull the docker image with Doris building environment<a class="headerlink" href="#step1-pull-the-docker-image-with-doris-building-environment" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker pull apachedoris/doris-dev:build-env
+</pre></div>
+</div>
+<p>You can check it by listing images, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker images
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+apachedoris/doris-dev   build-env           f8bc5d4024e0        21 hours ago        3.28GB
+</pre></div>
+</div>
+</div>
+<div class="section" id="step2-run-the-docker-image">
+<h3>Step2: Run the Docker image<a class="headerlink" href="#step2-run-the-docker-image" title="Permalink to this headline">¶</a></h3>
+<p>You can run image directyly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker run -it apachedoris/doris-dev:build-env
+</pre></div>
+</div>
+</div>
+<div class="section" id="step3-download-doris-source">
+<h3>Step3: Download Doris source<a class="headerlink" href="#step3-download-doris-source" title="Permalink to this headline">¶</a></h3>
+<p>Now you should in docker environment, and you can download Doris source by release package or by git clone in image.
+(If you have downloaded source and it is not in image, you can map its path to image in Step2.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ wget https://dist.apache.org/repos/dist/dev/incubator/doris/xxx.tar.gz
+</pre></div>
+</div>
+</div>
+<div class="section" id="step4-build-doris">
+<h3>Step4: Build Doris<a class="headerlink" href="#step4-build-doris" title="Permalink to this headline">¶</a></h3>
+<p>Now you can enter Doris source path and build Doris.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd incubator-doris
+$ sh build.sh
+</pre></div>
+</div>
+<p>After successfully building, it will install binary files in the directory output/.</p>
+<p>For more detail, you can refer to README.md in source package.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="subscribe-mail-list_EN.html" class="btn btn-neutral float-left" title="Subscribe to mailing lists" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

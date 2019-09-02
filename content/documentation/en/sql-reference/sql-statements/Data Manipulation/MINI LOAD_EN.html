@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MINI LOAD &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="MULTI LOAD" href="MULTI LOAD_EN.html" />
+    <link rel="prev" title="LOAD" href="LOAD_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL Functions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">DDL Statements</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">Account Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Administration/index.html">Administration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Definition/index.html">Data Definition</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Data Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">Data Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">Utility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../../index.html">SQL Manual</a> &raquo;</li>
+        
+          <li><a href="../index.html">DDL Statements</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Manipulation</a> &raquo;</li>
+        
+      <li>MINI LOAD</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Data Manipulation/MINI LOAD_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mini-load">
+<h1>MINI LOAD<a class="headerlink" href="#mini-load" title="Permalink to this headline">¶</a></h1>
+<p>Description</p>
+<p>MINI LOAD and STEAM LOAD are implemented in exactly the same way. MINI LOAD is a subset of STREAM LOAD in import support.
+Subsequent imports of new features will only be supported in STEAM LOAD, MINI LOAD will no longer add features. It is suggested that STREAM LOAD be used instead. Please use HELP STREAM LOAD.</p>
+<p>MINI LOAD is imported through HTTP protocol. Users can import without relying on Hadoop or Mysql client.
+The user describes the import through HTTP protocol, and the data is streamed into Doris in the process of receiving http requests. After the ** import job is completed, the ** returns to the user the imported results.</p>
+<ul class="simple">
+<li>Note: In order to be compatible with the old version of mini load usage habits, users can still view the import results through the’SHOW LOAD’command.</li>
+</ul>
+<p>Grammar:
+Import:</p>
+<p>curl –location-trusted -u user:passwd -T data.file http://host:port/api/{db}/{table}/_load?label=xxx</p>
+<p>View import information</p>
+<p>curl -u user:passwd http://host:port/api/{db}/_load_info?label=xxx</p>
+<p>HTTP Protocol Specification</p>
+<p>Privilege Authentication Currently Doris uses the Basic mode of HTTP for privilege authentication. So you need to specify a username and password when importing
+This way is to pass the password in plaintext, and does not support encrypted transmission for the time being.</p>
+<p>Expect Doris needs to send an HTTP request with the’Expect’header information,’100-continue’.
+Why? Because we need to redirect the request, we have to transfer the data content before.
+This can avoid causing multiple data transmission, thereby improving efficiency.</p>
+<p>Content-Length Doris needs to send a request with the header’Content-Length’. If the content ratio is sent
+‘Content-Length’is less, so Doris believes that if there is a transmission problem, the submission task fails.
+NOTE: If you send more data than’Content-Length’, Doris reads only’Content-Length’.
+Length content and import</p>
+<p>Description of parameters:</p>
+<p>User: User is user_name if the user is in default_cluster. Otherwise, it is user_name&#64;cluster_name.</p>
+<p>Label: The label used to specify this batch of imports for later job queries, etc.
+This parameter must be passed in.</p>
+<p>Columns: Used to describe the corresponding column name in the import file.
+If it is not passed in, the column order in the file is considered to be the same as the order in which the table is built.
+The specified method is comma-separated, such as columns = k1, k2, k3, K4</p>
+<p>Column_separator: Used to specify the separator between columns, default is’ t’
+NOTE: Url encoding is required, for example
+If you need to specify’ t’as a separator, you should pass in’column_separator=% 09’
+If you need to specify’x01’as a delimiter, you should pass in’column_separator=% 01’
+If you need to specify’,’as a separator, you should pass in’column_separator=% 2c’</p>
+<p>Max_filter_ratio: Used to specify the maximum percentage allowed to filter irregular data, default is 0, not allowed to filter
+Custom specification should be as follows:’max_filter_ratio = 0.2’, meaning that 20% error rate is allowed.</p>
+<p>Timeout: Specifies the timeout time of the load job in seconds. When the load execution time exceeds this threshold, it is automatically cancelled. The default timeout time is 86400 seconds.
+It is recommended to specify a timeout time of less than 86400 seconds.</p>
+<p>Hll: Used to specify the corresponding relationship between the HLL columns in the data and the tables, the columns in the tables and the columns specified in the data.
+(If columns are not specified, the columns of the data column surface can also be other non-HLL columns in the table.) By “partition”
+Specify multiple HLL columns using “:” splitting, for example:’hll1, cuid: hll2, device’</p>
+<p>NOTE:</p>
+<ol class="simple">
+<li>This method of importing is currently completed on a single machine, so it is not suitable to import a large amount of data.
+It is recommended that the amount of data imported should not exceed 1 GB.</li>
+<li>Currently, it is not possible to submit multiple files in the form of <code class="docutils literal notranslate"><span class="pre">curl-T',</span> </code>{file1, file2}’, because curl splits them into multiple files.
+Request sent, multiple requests can not share a label number, so it can not be used</li>
+<li>Miniload is imported in exactly the same way as streaming. It returns the results synchronously to users after the import of streaming is completed.
+Although the information of mini load can be found in subsequent queries, it can not be operated on. The queries are only compatible with the old ways of use.</li>
+<li>When importing from the curl command line, you need to add escape before &amp; or the parameter information will be lost.</li>
+</ol>
+<p>‘35;’35; example</p>
+<ol class="simple">
+<li>Import the data from the local file’testData’into the table of’testTbl’ in the database’testDb’(the user is in defalut_cluster)
+curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123</li>
+<li>Import the data from the local file’testData’into the table of’testTbl’ in the database’testDb’(the user is in test_cluster). The timeout time is 3600 seconds.
+curl –location-trusted -u root&#64;test_cluster:root -T testData http://fe.host:port/api/testDb/testTbl/_load?label=123&amp;timeout=3600</li>
+<li>Import data from the local file’testData’into the’testTbl’ table in the database’testDb’, allowing a 20% error rate (the user is in defalut_cluster)
+curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2</li>
+<li>Import the data from the local file’testData’into the table’testTbl’ in the database’testDb’, allowing a 20% error rate, and specify the column name of the file (the user is in defalut_cluster)
+curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2&amp;columns=k1,k2,k3</li>
+<li>Import in streaming mode (user is in defalut_cluster)
+seq 1 10 | awk ‘{OFS=”\t”}{print $1, $1 * 10}’ | curl –location-trusted -u root -T - http://host:port/api/testDb/testTbl/_load?label=123</li>
+<li>Import tables containing HLL columns, which can be columns in tables or columns in data to generate HLL columns (users are in defalut_cluster)</li>
+</ol>
+<p>curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2
+&amp;hll=hll_column1,tmp_k4:hll_column2,tmp_k5&amp;columns=k1,k2,k3,tmp_k4,tmp_k5</p>
+<ol class="simple">
+<li>View imports after submission</li>
+</ol>
+<p>curl -u root http://host:port/api/testDb/_load_info?label=123</p>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<p>MINI, LOAD</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="MULTI LOAD_EN.html" class="btn btn-neutral float-right" title="MULTI LOAD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="LOAD_EN.html" class="btn btn-neutral float-left" title="LOAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

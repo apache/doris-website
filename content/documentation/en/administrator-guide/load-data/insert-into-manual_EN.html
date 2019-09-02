@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Insert Into &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="HTTP API" href="../http-actions/index.html" />
+    <link rel="prev" title="Routine Load" href="routine-load-manual_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Load Data</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="load-manual_EN.html">Introduction Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="broker-load-manual_EN.html">Broker Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="stream-load-manual_EN.html">Stream load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="routine-load-manual_EN.html">Routine Load</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Insert Into</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../index.html">Administrator Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Load Data</a> &raquo;</li>
+        
+      <li>Insert Into</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/load-data/insert-into-manual_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="insert-into">
+<h1>Insert Into<a class="headerlink" href="#insert-into" title="Permalink to this headline">¶</a></h1>
+<p>The use of Insert Into statements is similar to that of Insert Into statements in databases such as MySQL. But in Doris, all data writing is a separate import job. So Insert Into is also introduced here as an import method.</p>
+<p>The main Insert Into command contains the following two kinds;</p>
+<ul class="simple">
+<li>INSERT INTO tbl SELECT …</li>
+<li>INSERT INTO tbl (col1, col2, …) VALUES (1, 2, …), (1,3, …);</li>
+</ul>
+<p>The second command is for Demo only, not in a test or production environment.</p>
+<div class="section" id="basic-operations">
+<h2>Basic operations<a class="headerlink" href="#basic-operations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-a-load">
+<h3>Create a Load<a class="headerlink" href="#create-a-load" title="Permalink to this headline">¶</a></h3>
+<p>The Insert Into command needs to be submitted through MySQL protocol. Creating an import request returns the import result synchronously.</p>
+<p>Grammar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">partition_info</span><span class="p">]</span> <span class="p">[</span><span class="n">col_list</span><span class="p">]</span> <span class="p">[</span><span class="n">query_stmt</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUES</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl2</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl3</span><span class="p">;</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">VALUES</span> <span class="p">(</span><span class="s2">&quot;qweasdzxcqweasdzxc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The following is a brief introduction to the parameters used in creating import statements:</p>
+<ul>
+<li><p class="first">partition_info</p>
+<p>Import the target partition of the table. If the target partition is specified, only the data that matches the target partition will be imported. If not specified, the default value is all partitions of the table.</p>
+</li>
+<li><p class="first">col_list</p>
+<p>The target column of the import table can exist in any order. If no target column is specified, the default value is all columns in this table. If a column in the table does not exist in the target column, the column needs a default value, otherwise Insert Into will fail.</p>
+<p>If the result column type of the query statement is inconsistent with the type of the target column, an implicit type conversion is invoked. If the conversion is not possible, the Insert Into statement will report a parsing error.</p>
+</li>
+<li><p class="first">query_stmt</p>
+<p>Through a query statement, the results of the query statement are imported into other tables in Doris system. Query statements support any SQL query syntax supported by Doris.</p>
+</li>
+<li><p class="first">VALUES</p>
+<p>Users can insert one or more data through VALUES grammar.</p>
+<p><em>Note: VALUES is only suitable for importing several pieces of data as DEMO. It is totally unsuitable for any test and production environment. Doris system itself is not suitable for single data import scenarios. It is recommended to use INSERT INTO SELECT for batch import.</em></p>
+</li>
+</ul>
+</div>
+<div class="section" id="load-results">
+<h3>Load results<a class="headerlink" href="#load-results" title="Permalink to this headline">¶</a></h3>
+<p>Insert Into itself is an SQL command, so the return behavior is the same as the return behavior of the SQL command.</p>
+<p>If the import fails, the return statement fails to execute. If the import succeeds, the return statement executes successfully and a Label field is appended.</p>
+<p>Label is the identifier of the Insert Into import job. Each import job has a unique Label inside a single database. Insert Into’s Label is generated by the system. Users can use the Label to asynchronously obtain the import status by querying the import command.</p>
+</div>
+</div>
+<div class="section" id="relevant-system-configuration">
+<h2>Relevant System Configuration<a class="headerlink" href="#relevant-system-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe-configuration">
+<h3>FE configuration<a class="headerlink" href="#fe-configuration" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">time out</p>
+<p>The timeout time of the import task (in seconds) will be cancelled by the system if the import task is not completed within the set timeout time, and will become CANCELLED.</p>
+<p>At present, Insert Into does not support custom import timeout time. All Insert Into imports have a uniform timeout time. The default timeout time is 1 hour. If the imported source file cannot complete the import within the specified time, the parameter <code class="docutils literal notranslate"><span class="pre">insert_load_default_timeout_second</span></code> of FE needs to be adjusted.</p>
+<p>At the same time, the Insert Into statement receives the restriction of the Session variable <code class="docutils literal notranslate"><span class="pre">query_timeout</span></code>. You can increase the timeout time by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">query_timeout</span> <span class="pre">=</span> <span class="pre">xxx;</span></code> in seconds.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="session">
+<h3>Session 变量<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">enable_insert_strict</p>
+<p>The Insert Into import itself cannot control the tolerable error rate of the import. Users can only use the Session parameter <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code>. When this parameter is set to false, it indicates that at least one data has been imported correctly, and then it returns successfully. When this parameter is set to false, the import fails if there is a data error. The default is false. It can be set by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_insert_strict</span> <span class="pre">=</span> <span class="pre">true;</span></code>.</p>
+</li>
+<li><p class="first">query u timeout</p>
+<p>Insert Into itself is also an SQL command, so the Insert Into statement is also restricted by the Session variable <code class="docutils literal notranslate"><span class="pre">query_timeout</span></code>. You can increase the timeout time by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">query_timeout</span> <span class="pre">=</span> <span class="pre">xxx;</span></code> in seconds.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="application-scenarios">
+<h3>Application scenarios<a class="headerlink" href="#application-scenarios" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li>Users want to import only a few false data to verify the functionality of Doris system. The grammar of INSERT INTO VALUS is suitable at this time.</li>
+<li>Users want to convert the data already in the Doris table into ETL and import it into a new Doris table, which is suitable for using INSERT INTO SELECT grammar.</li>
+<li>Users can create an external table, such as MySQL external table mapping a table in MySQL system. Or create Broker external tables to map data files on HDFS. Then the data from the external table is imported into the Doris table for storage through the INSERT INTO SELECT grammar.</li>
+</ol>
+</div>
+<div class="section" id="data-volume">
+<h3>Data volume<a class="headerlink" href="#data-volume" title="Permalink to this headline">¶</a></h3>
+<p>Insert Into has no limitation on the amount of data, and large data imports can also be supported. However, Insert Into has a default timeout time, and the amount of imported data estimated by users is too large, so it is necessary to modify the system’s Insert Into import timeout time.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Import</span> <span class="n">data</span> <span class="n">volume</span> <span class="o">=</span> <span class="mi">36</span><span class="n">G</span> <span class="ow">or</span> <span class="n">less</span> <span class="n">than</span> <span class="mi">3600</span><span class="n">s</span><span class="o">*</span><span class="mi">10</span><span class="n">M</span><span class="o">/</span><span class="n">s</span>
+<span class="n">Among</span> <span class="n">them</span><span class="p">,</span> <span class="mi">10</span><span class="n">M</span><span class="o">/</span><span class="n">s</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">maximum</span> <span class="kn">import</span> <span class="nn">speed</span> <span class="n">limit</span><span class="o">.</span> <span class="n">Users</span> <span class="n">need</span> <span class="n">to</span> <span class="n">calculate</span> <span class="n">the</span> <span class="n">average</span> <span class="kn">import</span> <span class="nn">speed</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="n">current</span> <span class="n">cluster</span> <span class="n">situation</span> <span class="n">to</span> <span class="n">replace</span> <span class="mi">10</span><span class="n">M</span><span class="o">/</span><span class="n">s</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">formula</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="complete-examples">
+<h3>Complete examples<a class="headerlink" href="#complete-examples" title="Permalink to this headline">¶</a></h3>
+<p>Users have a table store sales in the database sales. Users create a table called bj store sales in the database sales. Users want to import the data recorded in the store sales into the new table bj store sales. The amount of data imported is about 10G.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">large</span> <span class="n">sales</span> <span class="n">scheme</span>
+<span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">sale_timestamp</span><span class="p">,</span> <span class="n">region</span><span class="p">)</span>
+
+<span class="n">Order</span> <span class="n">large</span> <span class="n">sales</span> <span class="n">schedule</span><span class="p">:</span>
+<span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">sale_timestamp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Cluster situation: The average import speed of current user cluster is about 5M/s</p>
+<ul>
+<li><p class="first">Step1: Determine whether you want to modify the default timeout of Insert Into</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Calculate</span> <span class="n">the</span> <span class="n">approximate</span> <span class="n">time</span> <span class="n">of</span> <span class="kn">import</span>
+<span class="mi">10</span><span class="n">G</span> <span class="o">/</span> <span class="mi">5</span><span class="n">M</span> <span class="o">/</span><span class="n">s</span> <span class="o">=</span> <span class="mi">2000</span><span class="n">s</span>
+
+<span class="n">Modify</span> <span class="n">FE</span> <span class="n">configuration</span>
+<span class="n">insert_load_default_timeout_second</span> <span class="o">=</span> <span class="mi">2000</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Step2: Create Import Tasks</p>
+<p>Since users want to ETL data from a table and import it into the target table, they should use the Insert in query\stmt mode to import it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">bj_store_sales</span> <span class="n">SELECT</span> <span class="nb">id</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">sale_timestamp</span> <span class="n">FROM</span> <span class="n">store_sales</span> <span class="n">where</span> <span class="n">region</span> <span class="o">=</span> <span class="s2">&quot;bj&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="common-questions">
+<h2>Common Questions<a class="headerlink" href="#common-questions" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">View the wrong line</p>
+<p>Because Insert Into can’t control the error rate, it can only tolerate or ignore the error data completely by <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code>. So if <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> is set to true, Insert Into may fail. If <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> is set to false, then only some qualified data may be imported. However, in either case, Doris is currently unable to provide the ability to view substandard data rows. Therefore, the user cannot view the specific import error through the Insert Into statement.</p>
+<p>The causes of errors are usually: source data column length exceeds destination data column length, column type mismatch, partition mismatch, column order mismatch, etc. When it’s still impossible to check for problems. At present, it is only recommended that the SELECT command in the Insert Into statement be run to export the data to a file, and then import the file through Stream load to see the specific errors.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../http-actions/index.html" class="btn btn-neutral float-right" title="HTTP API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="routine-load-manual_EN.html" class="btn btn-neutral float-left" title="Routine Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
