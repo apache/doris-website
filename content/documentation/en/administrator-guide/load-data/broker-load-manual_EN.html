@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
@@ -261,6 +262,7 @@
     <span class="p">[</span><span class="n">COLUMNS</span> <span class="n">TERMINATED</span> <span class="n">BY</span> <span class="n">separator</span> <span class="p">]</span>
     <span class="p">[(</span><span class="n">col1</span><span class="p">,</span> <span class="o">...</span><span class="p">)]</span>
     <span class="p">[</span><span class="n">SET</span> <span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">f1</span><span class="p">(</span><span class="n">xx</span><span class="p">),</span> <span class="n">k2</span><span class="o">=</span><span class="n">f2</span><span class="p">(</span><span class="n">xx</span><span class="p">))]</span>
+    <span class="p">[</span><span class="n">WHERE</span> <span class="n">predicate</span><span class="p">]</span>
 
 <span class="o">*</span> <span class="n">broker_properties</span><span class="p">:</span> 
 
@@ -283,6 +285,7 @@
     <span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">tbl2</span>
     <span class="n">COLUMNS</span> <span class="n">TERMINATED</span> <span class="n">BY</span> <span class="s2">&quot;,&quot;</span>
     <span class="p">(</span><span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">)</span>
+    <span class="n">where</span> <span class="n">col1</span> <span class="o">&gt;</span> <span class="mi">1</span>
 <span class="p">)</span>
 <span class="n">WITH</span> <span class="n">BROKER</span> <span class="s1">&#39;broker&#39;</span>
 <span class="p">(</span>
@@ -315,6 +318,11 @@
 </li>
 <li><p class="first">partition</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">data_desc</span></code>, you can specify the partition information of the table to be imported, but it will not be imported if the data to be imported does not belong to the specified partition. At the same time, data that does not specify a Partition is considered error data.</p>
+</li>
+<li><p class="first">where predicate</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  The where statement in ```data_desc``` is responsible for filtering the data that has been transformed. The unselected rows which is filtered by where predicate will not be calculated in ```max_filter_ratio``` . If there are more then one where predicate of the same table , the multi where predicate will be merged from different ```data_desc``` and the policy is AND. 
+</pre></div>
+</div>
 </li>
 </ul>
 </div>
@@ -478,6 +486,7 @@
  LoadStartTime: 2019-07-27 11:46:44
 LoadFinishTime: 2019-07-27 11:50:16
            URL: http://192.168.1.1:8040/api/_load_error_log?file=__shard_4/error_log_insert_stmt_4bb00753932c491a-a6da6e2725415317_4bb00753932c491a_a6da6e2725415317
+    JobDetails: {&quot;ScannedRows&quot;:28133395,&quot;TaskNumber&quot;:1,&quot;FileNumber&quot;:1,&quot;FileSize&quot;:200000}
 </pre></div>
 </div>
 <p>The following is mainly about the significance of viewing the parameters in the return result set of the import command:</p>
@@ -503,7 +512,7 @@ LoadFinishTime: 2019-07-27 11:50:16
 <p>Types of import tasks. The type value of Broker load is only BROKER.</p>
 </li>
 <li><p class="first">Etlinfo</p>
-<p>It mainly shows the imported data quantity indicators <code class="docutils literal notranslate"><span class="pre">dpp.norm.ALL</span></code> and <code class="docutils literal notranslate"><span class="pre">dpp.abnorm.ALL</span></code>. Users can verify that the error rate of the current import task exceeds max_filter_ratio based on these two indicators.</p>
+<p>It mainly shows the imported data quantity indicators <code class="docutils literal notranslate"><span class="pre">unselected.rows</span></code>, <code class="docutils literal notranslate"><span class="pre">dpp.norm.ALL</span></code> and <code class="docutils literal notranslate"><span class="pre">dpp.abnorm.ALL</span></code>. The first value shows the rows which has been filtered by where predicate. Users can verify that the error rate of the current import task exceeds max_filter_ratio based on these two indicators.</p>
 </li>
 <li><p class="first">TaskInfo</p>
 <p>It mainly shows the current import task parameters, that is, the user-specified import task parameters when creating the Broker load import task, including <code class="docutils literal notranslate"><span class="pre">cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span></code>, and <code class="docutils literal notranslate"><span class="pre">max_filter_ratio</span></code>.</p>

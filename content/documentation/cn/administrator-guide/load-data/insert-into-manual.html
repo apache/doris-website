@@ -203,11 +203,11 @@
 <h3>创建导入<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Insert Into 命令需要通过 MySQL 协议提交，创建导入请求会同步返回导入结果。</p>
 <p>语法：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">partition_info</span><span class="p">]</span> <span class="p">[</span><span class="n">col_list</span><span class="p">]</span> <span class="p">[</span><span class="n">query_stmt</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUES</span><span class="p">];</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label</span><span class="p">]</span> <span class="p">[</span><span class="n">partition_info</span><span class="p">]</span> <span class="p">[</span><span class="n">col_list</span><span class="p">]</span> <span class="p">[</span><span class="n">query_stmt</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUES</span><span class="p">];</span>
 </pre></div>
 </div>
 <p>示例：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl2</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl3</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl2</span> <span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label1</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl3</span><span class="p">;</span>
 <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">VALUES</span> <span class="p">(</span><span class="s2">&quot;qweasdzxcqweasdzxc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -228,6 +228,13 @@
 <p><em>注意：VALUES 方式仅适用于导入几条数据作为导入 DEMO 的情况，完全不适用于任何测试和生产环境。Doris 系统本身也不适合单条数据导入的场景。建议使用 INSERT INTO SELECT 的方式进行批量导入。</em></p>
 </li>
 </ul>
+<ul>
+<li><p class="first">WITH LABEL</p>
+<p>INSERT 操作作为一个导入任务，也可以指定一个 label。如果不指定，则系统会自动指定一个 UUID 作为 label。</p>
+<p>该功能需要 0.11+ 版本。</p>
+<p><em>注意：建议指定 Label 而不是由系统自动分配。如果由系统自动分配，但在 Insert Into 语句执行过程中，因网络错误导致连接断开等，则无法得知 Insert Into 是否成功。而如果指定 Label，则可以再次通过 Label 查看任务结果。</em></p>
+</li>
+</ul>
 </div>
 <div class="section" id="id3">
 <h3>导入结果<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
@@ -239,9 +246,18 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>导入可能部分成功，则还会附加一个 Label 字段。示例如下：</p>
+<p>如果用户指定了 Label，则会也会返回 Label</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;user_specified_label&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>导入可能部分成功，则会附加 Label 字段。示例如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
 <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;7d66c457-658b-4a3e-bdcf-8beee872ef2c&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;user_specified_label&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>其中 affected 表示导入的行数。warning 表示失败的行数。用户需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL=&quot;xxx&quot;;</span></code> 命令，获取 url 查看错误行。</p>
@@ -317,7 +333,7 @@ bj_store_sales schema:
 </li>
 <li><p class="first">Step2：创建导入任务</p>
 <p>由于用户是希望将一张表中的数据做 ETL 并导入到目标表中，所以应该使用 Insert into query_stmt 方式导入。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">bj_store_sales</span> <span class="n">SELECT</span> <span class="nb">id</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">sale_timestamp</span> <span class="n">FROM</span> <span class="n">store_sales</span> <span class="n">where</span> <span class="n">region</span> <span class="o">=</span> <span class="s2">&quot;bj&quot;</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INSERT INTO bj_store_sales WITH LABEL `label` SELECT id, total, user_id, sale_timestamp FROM store_sales where region = &quot;bj&quot;;
 </pre></div>
 </div>
 </li>

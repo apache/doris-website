@@ -421,7 +421,12 @@ rename 支持对以下名称进行修改：
     PROPERTIES (&quot;bloom_filter_columns&quot;=&quot;k1,k2,k3&quot;);
 
 12. 修改表的Colocate 属性
-    ALTER TABLE example_db.my_table set (&quot;colocate_with&quot;=&quot;t1&quot;);
+
+    ALTER TABLE example_db.my_table set (&quot;colocate_with&quot; = &quot;t1&quot;);
+
+13. 将表的分桶方式由 Random Distribution 改为 Hash Distribution
+
+    ALTER TABLE example_db.my_table set (&quot;distribution_type&quot; = &quot;hash&quot;);
     
 [rename]
 1. 将名为 table1 的表修改为 table2

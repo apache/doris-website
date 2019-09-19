@@ -393,6 +393,7 @@ columns: tmp_c1, tmp_c2, c1 = year(tmp_c1), c2 = mouth(tmp_c2)
     <span class="s2">&quot;TxnId&quot;</span><span class="p">:</span> <span class="mi">1003</span><span class="p">,</span>
     <span class="s2">&quot;Label&quot;</span><span class="p">:</span> <span class="s2">&quot;b6f3bc78-0d2c-45d9-9e4c-faa0a0149bee&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ExistingJobStatus&quot;</span><span class="p">:</span> <span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">optional</span>
     <span class="s2">&quot;Message&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NumberTotalRows&quot;</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span>
     <span class="s2">&quot;NumberLoadedRows&quot;</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span>
@@ -415,6 +416,9 @@ columns: tmp_c1, tmp_c2, c1 = year(tmp_c1), c2 = mouth(tmp_c2)
 <p>“Publish Timeout”：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试。</p>
 <p>“Label Already Exists”：Label 重复，需更换 Label。</p>
 <p>“Fail”：导入失败。</p>
+</li>
+<li><p class="first">ExistingJobStatus：已存在的 Label 对应的导入作业的状态。</p>
+<p>这个字段只有在当 Status 为 “Label Already Exists” 是才会显示。用户可以通过这个状态，知晓已存在 Label 对应的导入作业的状态。”RUNNING” 表示作业还在执行，”FINISHED” 表示作业成功。</p>
 </li>
 <li><p class="first">Message：导入错误信息。</p>
 </li>

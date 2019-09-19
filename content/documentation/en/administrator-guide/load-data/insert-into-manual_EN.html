@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
@@ -200,11 +201,11 @@
 <h3>Create a Load<a class="headerlink" href="#create-a-load" title="Permalink to this headline">¶</a></h3>
 <p>The Insert Into command needs to be submitted through MySQL protocol. Creating an import request returns the import result synchronously.</p>
 <p>Grammar:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">partition_info</span><span class="p">]</span> <span class="p">[</span><span class="n">col_list</span><span class="p">]</span> <span class="p">[</span><span class="n">query_stmt</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUES</span><span class="p">];</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label</span><span class="p">]</span> <span class="p">[</span><span class="n">partition_info</span><span class="p">]</span> <span class="p">[</span><span class="n">col_list</span><span class="p">]</span> <span class="p">[</span><span class="n">query_stmt</span><span class="p">]</span> <span class="p">[</span><span class="n">VALUES</span><span class="p">];</span>
 </pre></div>
 </div>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl2</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl3</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl2</span> <span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label1</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl3</span><span class="p">;</span>
 <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">VALUES</span> <span class="p">(</span><span class="s2">&quot;qweasdzxcqweasdzxc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -225,11 +226,42 @@
 <p><em>Note: VALUES is only suitable for importing several pieces of data as DEMO. It is totally unsuitable for any test and production environment. Doris system itself is not suitable for single data import scenarios. It is recommended to use INSERT INTO SELECT for batch import.</em></p>
 </li>
 </ul>
+<ul>
+<li><p class="first">WITH LABEL</p>
+<p>INSERT as a load job, it can also be with a label. If not with a label, Doris will use a UUID as label.</p>
+<p>This feature needs Doris version 0.11+.</p>
+<p><em>Note: It is recommended that Label be specified rather than automatically allocated by the system. If the system allocates automatically, but during the execution of the Insert Into statement, the connection is disconnected due to network errors, etc., then it is impossible to know whether Insert Into is successful. If you specify Label, you can view the task results again through Label.</em></p>
+</li>
+</ul>
 </div>
 <div class="section" id="load-results">
 <h3>Load results<a class="headerlink" href="#load-results" title="Permalink to this headline">¶</a></h3>
 <p>Insert Into itself is an SQL command, so the return behavior is the same as the return behavior of the SQL command.</p>
-<p>If the import fails, the return statement fails to execute. If the import succeeds, the return statement executes successfully and a Label field is appended.</p>
+<p>If the load fails, the error will be returned. Examples are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ERROR 1064 (HY000): All partitions have no load data. url: http://ip:port/api/_load_error_log?File=_shard_14/error_log_insert_stmt_f435264d82f342e4-a33764f5f0dfbf00_f4364d82f342e4_a764f344e4_a764f5f5f0df0df0dbf00
+</pre></div>
+</div>
+<p>Where URL can be used to query the wrong data, see the following <strong>view error line</strong> summary.</p>
+<p>If the load succeeds, the success will be returned. Examples are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the user specifies Label, the label will be returned as well.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="n">label</span><span class="s1">&#39;:&#39;</span><span class="n">user_specified_label</span><span class="s1">&#39;}</span>
+</pre></div>
+</div>
+<p>If the load may be partially successful, the Label field is appended. Examples are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="n">label</span><span class="s1">&#39;:&#39;</span><span class="mi">7</span><span class="n">d66c457</span><span class="o">-</span><span class="mi">658</span><span class="n">b</span><span class="o">-</span><span class="mi">4</span><span class="n">a3e</span><span class="o">-</span><span class="n">bdcf</span><span class="o">-</span><span class="mi">8</span><span class="n">beee872ef2c</span><span class="s1">&#39;}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="n">label</span><span class="s1">&#39;:&#39;</span><span class="n">user_specified_label</span><span class="s1">&#39;}</span>
+</pre></div>
+</div>
+<p>Where affected represents the number of rows loaded. Warning denotes the number of rows that failed. Users need to view the wrong line through <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL='xxx';</span></code> command, and get url to view the errors.</p>
+<p>If there is no data, it will return success, and both affected and warning are 0.</p>
 <p>Label is the identifier of the Insert Into import job. Each import job has a unique Label inside a single database. Insert Into’s Label is generated by the system. Users can use the Label to asynchronously obtain the import status by querying the import command.</p>
 </div>
 </div>
@@ -245,8 +277,8 @@
 </li>
 </ul>
 </div>
-<div class="section" id="session">
-<h3>Session 变量<a class="headerlink" href="#session" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="session-variables">
+<h3>Session Variables<a class="headerlink" href="#session-variables" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">enable_insert_strict</p>
 <p>The Insert Into import itself cannot control the tolerable error rate of the import. Users can only use the Session parameter <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code>. When this parameter is set to false, it indicates that at least one data has been imported correctly, and then it returns successfully. When this parameter is set to false, the import fails if there is a data error. The default is false. It can be set by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_insert_strict</span> <span class="pre">=</span> <span class="pre">true;</span></code>.</p>

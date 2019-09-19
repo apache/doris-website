@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Parameters &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>INSERT &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="Data Types" href="../Data Types/index.html" />
-    <link rel="prev" title="BROKER LOAD" href="broker_load_EN.html" /> 
+    <link rel="prev" title="STREAM LOAD" href="STREAM LOAD_EN.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -161,7 +161,7 @@
         
           <li><a href="index.html">Data Manipulation</a> &raquo;</li>
         
-      <li>Parameters</li>
+      <li>INSERT</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -182,30 +182,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p>“35; INSERT
-Description
-‘35;’35;’ 35; Syntax</p>
+  <div class="section" id="insert">
+<h1>INSERT<a class="headerlink" href="#insert" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">table_name</span>
-<span class="p">[</span><span class="n">PARTICIPATION</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="p">[</span> <span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label</span><span class="p">]</span>
+<span class="p">[</span> <span class="n">PARTICIPATION</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
 <span class="p">[</span> <span class="p">(</span><span class="n">column</span> <span class="p">[,</span> <span class="o">...</span><span class="p">])</span> <span class="p">]</span>
-<span class="p">[</span> \<span class="p">[</span> <span class="n">hint</span> <span class="p">[,</span> <span class="o">...</span><span class="p">]</span> \<span class="p">]</span> <span class="p">]</span>
+<span class="p">[</span> <span class="p">[</span> <span class="n">hint</span> <span class="p">[,</span> <span class="o">...</span><span class="p">]</span> <span class="p">]</span> <span class="p">]</span>
 <span class="p">{</span> <span class="n">VALUES</span> <span class="p">(</span> <span class="p">{</span> <span class="n">expression</span> <span class="o">|</span> <span class="n">DEFAULT</span> <span class="p">}</span> <span class="p">[,</span> <span class="o">...</span><span class="p">]</span> <span class="p">)</span> <span class="p">[,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="n">query</span> <span class="p">}</span>
 </pre></div>
 </div>
+</div>
 <div class="section" id="parameters">
-<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>tablet_name: Target table for importing data. It can be in the form of `db_name. table_name’.</p>
-<p>partition_names: Specifies that the partition to be imported must be a partition that exists in `table_name’, with multiple partition names separated by commas</p>
-<p>column_name: The specified destination column must be a column that exists in `table_name’.</p>
-<p>expression: The corresponding expression that needs to be assigned to a column</p>
+<div><p>tablet_name: Target table for loading data. It can be in the form of <code class="docutils literal notranslate"><span class="pre">db_name.table_name</span></code>.</p>
+<p>label: Specifies a label for Insert job.</p>
+<p>partition_names: Specifies the partitions to be loaded, with multiple partition names separated by commas. The partitions must exist in <code class="docutils literal notranslate"><span class="pre">table_name</span></code>,</p>
+<p>column_name: The specified destination columns must be columns that exists in <code class="docutils literal notranslate"><span class="pre">table_name</span></code>.</p>
+<p>expression: The corresponding expression that needs to be assigned to a column.</p>
 <p>DEFAULT: Let the corresponding columns use default values</p>
 <p>query: A common query whose results are written to the target</p>
-<p>hint: Indicators used to indicate <code class="docutils literal notranslate"><span class="pre">INSERT'execution.</span> </code> Both streaming <code class="docutils literal notranslate"><span class="pre">and</span> <span class="pre">default</span> <span class="pre">non</span> </code>streaming’methods use synchronization to complete <code class="docutils literal notranslate"><span class="pre">INSERT'</span> <span class="pre">statement</span> <span class="pre">execution</span> <span class="pre">The</span> <span class="pre">non</span> </code>streaming’mode returns a label after execution to facilitate users to query the imported status through `SHOW LOAD’.</p>
+<p>hint: Indicators used to indicate <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> execution. <code class="docutils literal notranslate"><span class="pre">Both</span> <span class="pre">streaming</span></code>and default non <code class="docutils literal notranslate"><span class="pre">streaming'methods</span> <span class="pre">use</span> <span class="pre">synchronization</span> <span class="pre">to</span> <span class="pre">complete</span> </code>INSERT’ statement execution
+The non <code class="docutils literal notranslate"><span class="pre">streaming'mode</span> <span class="pre">returns</span> <span class="pre">a</span> <span class="pre">label</span> <span class="pre">after</span> <span class="pre">execution</span> <span class="pre">to</span> <span class="pre">facilitate</span> <span class="pre">users</span> <span class="pre">to</span> <span class="pre">query</span> <span class="pre">the</span> <span class="pre">imported</span> <span class="pre">status</span> <span class="pre">through</span> </code>SHOW LOAD’.</p>
 </div></blockquote>
-<p>‘35;’35;’ 35; Note</p>
+</div>
+<div class="section" id="note">
+<h3>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h3>
 <p>When the <code class="docutils literal notranslate"><span class="pre">INSERT'statement</span> <span class="pre">is</span> <span class="pre">currently</span> <span class="pre">executed,</span> <span class="pre">the</span> <span class="pre">default</span> <span class="pre">behavior</span> <span class="pre">for</span> <span class="pre">data</span> <span class="pre">that</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">conform</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">target</span> <span class="pre">table</span> <span class="pre">is</span> <span class="pre">filtering,</span> <span class="pre">such</span> <span class="pre">as</span> <span class="pre">string</span> <span class="pre">length.</span> <span class="pre">However,</span> <span class="pre">for</span> <span class="pre">business</span> <span class="pre">scenarios</span> <span class="pre">where</span> <span class="pre">data</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">filtered,</span> <span class="pre">the</span> <span class="pre">session</span> <span class="pre">variable</span> </code>enable_insert_strict’can be set to <code class="docutils literal notranslate"><span class="pre">true'</span> <span class="pre">to</span> <span class="pre">ensure</span> <span class="pre">that</span> </code>INSERT’will not be successfully executed when data is filtered out.</p>
-<p>‘35;’35; example</p>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">The</span> <span class="pre">test</span></code>table contains two columns <code class="docutils literal notranslate"><span class="pre">c1',</span> </code>c2’.</p>
 <ol class="simple">
 <li>Import a row of data into the `test’table</li>
@@ -229,23 +241,24 @@ The third and fourth statements express the same meaning, using the default valu
 </div>
 <p>The effect of the first and second statements is the same, and two data are imported into the <code class="docutils literal notranslate"><span class="pre">test'table</span> <span class="pre">at</span> <span class="pre">one</span> <span class="pre">time.</span> <span class="pre">The</span> <span class="pre">effect</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">third</span> <span class="pre">and</span> <span class="pre">fourth</span> <span class="pre">statements</span> <span class="pre">is</span> <span class="pre">known,</span> <span class="pre">using</span> <span class="pre">the</span> <span class="pre">default</span> <span class="pre">value</span> <span class="pre">of</span> <span class="pre">the</span> </code>c2’column to import two data into the `test’ table.</p>
 <ol class="simple">
-<li>Return results of importing a query statement synchronously into the `test’table</li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">test</span> <span class="p">[</span><span class="n">streaming</span><span class="p">]</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">test2</span>
-<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">test</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span> <span class="p">[</span><span class="n">streaming</span><span class="p">]</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">test2</span>
-</pre></div>
-</div>
-<ol class="simple">
-<li>Import an asynchronous query result into the `test’table</li>
+<li>Insert into table <code class="docutils literal notranslate"><span class="pre">test</span></code> with a query stmt.</li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">test</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">test2</span>
 <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">test</span> <span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">test2</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li>Insert into table <code class="docutils literal notranslate"><span class="pre">test</span></code> with specified label</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INSERT INTO test WITH LABEL `label1` SELECT * FROM test2;
+INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 </pre></div>
 </div>
 <p>Asynchronous imports are, in fact, encapsulated asynchronously by a synchronous import. Filling in streaming is as efficient as not filling in * execution.</p>
 <p>Since Doris used to import asynchronously, in order to be compatible with the old usage habits, the <code class="docutils literal notranslate"><span class="pre">INSERT'statement</span> <span class="pre">without</span> <span class="pre">streaming</span> <span class="pre">will</span> <span class="pre">still</span> <span class="pre">return</span> <span class="pre">a</span> <span class="pre">label.</span> <span class="pre">Users</span> <span class="pre">need</span> <span class="pre">to</span> <span class="pre">view</span> <span class="pre">the</span> <span class="pre">status</span> <span class="pre">of</span> <span class="pre">the</span> </code>label’ import job through the `SHOW LOAD command.
 ##keyword
 INSERT</p>
+</div>
 </div>
 
 
@@ -259,7 +272,7 @@ INSERT</p>
         <a href="../Data Types/index.html" class="btn btn-neutral float-right" title="Data Types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="broker_load_EN.html" class="btn btn-neutral float-left" title="BROKER LOAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="STREAM LOAD_EN.html" class="btn btn-neutral float-left" title="STREAM LOAD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

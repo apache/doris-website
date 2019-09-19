@@ -424,7 +424,9 @@ PROPERTIES (“bloom_filter_columns”=”k1,k2,k3”);</p>
 <ol class="simple">
 <li>Modify the Colocate property of the table
 ALTER TABLE example_db.my_table set (“colocate_with”=”t1”);</li>
+<li>Change the Distribution type from Random to Hash</li>
 </ol>
+<p>ALTER TABLE example_db.my_table set (“distribution_type” = “hash”);</p>
 <p>[Rename]</p>
 <ol class="simple">
 <li>Modify the table named Table 1 to table2

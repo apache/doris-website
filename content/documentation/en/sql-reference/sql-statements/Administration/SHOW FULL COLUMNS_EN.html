@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SHOW FRONTENDS &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>SHOW FULL COLUMNS &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="SHOW FULL COLUMNS" href="SHOW FULL COLUMNS_EN.html" />
-    <link rel="prev" title="SHOW FILE" href="SHOW FILE_EN.html" /> 
+    <link rel="next" title="SHOW MIGRATIONS" href="SHOW MIGRATIONS_EN.html" />
+    <link rel="prev" title="SHOW FRONTENDS" href="SHOW FRONTENDS_EN.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -161,14 +161,14 @@
         
           <li><a href="index.html">Administration</a> &raquo;</li>
         
-      <li>SHOW FRONTENDS</li>
+      <li>SHOW FULL COLUMNS</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Administration/SHOW FRONTENDS_EN.md" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Administration/SHOW FULL COLUMNS_EN.md" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -182,27 +182,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="show-frontends">
-<h1>SHOW FRONTENDS<a class="headerlink" href="#show-frontends" title="Permalink to this headline">¶</a></h1>
-</div>
+  <div class="section" id="show-full-columns">
+<h1>SHOW FULL COLUMNS<a class="headerlink" href="#show-full-columns" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
-<h1>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h1>
-<p>This statement is used to view FE nodes
-Grammar:
-SHOW FRONTENDS;</p>
-<p>Explain:</p>
-<ol class="simple">
-<li>name denotes the name of the FE node in bdbje.</li>
-<li>Join is true to indicate that the node has joined the cluster. But it doesn’t mean that it’s still in the cluster (it may be out of touch)</li>
-<li>Alive indicates whether the node survives.</li>
-<li>Replayed Journal Id represents the maximum metadata log ID that the node has currently replayed.</li>
-<li>LastHeartbeat is the latest heartbeat.</li>
-<li>IsHelper indicates whether the node is a helper node in bdbje.</li>
-<li>ErrMsg is used to display error messages when the heartbeat fails.</li>
-</ol>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>This statement is used to view some information about columns of a table.
+
+Syntax：
+    SHOW FULL COLUMNS FROM tbl;
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">View</span> <span class="n">the</span> <span class="n">column</span> <span class="n">information</span> <span class="n">of</span> <span class="n">specified</span> <span class="n">table</span>
+
+    <span class="n">SHOW</span> <span class="n">FULL</span> <span class="n">COLUMNS</span> <span class="n">FROM</span> <span class="n">tbl</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="keyword">
 <h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
-<p>SHOW, FRONTENDS</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span><span class="p">,</span><span class="n">FULL</span><span class="p">,</span><span class="n">COLUMNS</span>    
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -214,10 +217,10 @@ SHOW FRONTENDS;</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="SHOW FULL COLUMNS_EN.html" class="btn btn-neutral float-right" title="SHOW FULL COLUMNS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="SHOW MIGRATIONS_EN.html" class="btn btn-neutral float-right" title="SHOW MIGRATIONS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="SHOW FILE_EN.html" class="btn btn-neutral float-left" title="SHOW FILE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="SHOW FRONTENDS_EN.html" class="btn btn-neutral float-left" title="SHOW FRONTENDS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

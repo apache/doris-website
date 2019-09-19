@@ -188,14 +188,17 @@
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="syntax">
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<p>CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
-(column_definition1[, column_definition2, …])
-[ENGINE = [olap|mysql|broker]]
-[key_desc]
-[partition_desc]
-[distribution_desc]
-[PROPERTIES (“key”=”value”, …)];
-[BROKER PROPERTIES (“key”=”value”, …)];</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="p">[</span><span class="n">EXTERNAL</span><span class="p">]</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">IF</span> <span class="n">NOT</span> <span class="n">EXISTS</span><span class="p">]</span> <span class="p">[</span><span class="n">database</span><span class="o">.</span><span class="p">]</span><span class="n">table_name</span>
+<span class="p">(</span><span class="n">column_definition1</span><span class="p">[,</span> <span class="n">column_definition2</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+<span class="p">[</span><span class="n">ENGINE</span> <span class="o">=</span> <span class="p">[</span><span class="n">olap</span><span class="o">|</span><span class="n">mysql</span><span class="o">|</span><span class="n">broker</span><span class="p">]]</span>
+<span class="p">[</span><span class="n">key_desc</span><span class="p">]</span>
+<span class="p">[</span><span class="n">COMMENT</span> <span class="s2">&quot;table comment&quot;</span><span class="p">]</span>
+<span class="p">[</span><span class="n">partition_desc</span><span class="p">]</span>
+<span class="p">[</span><span class="n">distribution_desc</span><span class="p">]</span>
+<span class="p">[</span><span class="n">PROPERTIES</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)]</span>
+<span class="p">[</span><span class="n">BROKER</span> <span class="n">PROPERTIES</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)];</span>
+</pre></div>
+</div>
 <ol>
 <li><p class="first">column_definition</p>
 <p>Syntax:</p>
@@ -217,7 +220,7 @@ col_type: Type of column</p>
      <span class="n">Support</span> <span class="n">scientific</span> <span class="n">notation</span>
  <span class="n">DOUBLE</span><span class="p">(</span><span class="mi">12</span> <span class="n">Bytes</span><span class="p">)</span>
      <span class="n">Support</span> <span class="n">scientific</span> <span class="n">notation</span>
- <span class="n">DECIMAL</span><span class="p">[(</span><span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">)]</span> <span class="p">(</span><span class="mi">40</span> <span class="n">Bytes</span><span class="p">)</span>
+ <span class="n">DECIMAL</span><span class="p">[(</span><span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">)]</span> <span class="p">(</span><span class="mi">16</span> <span class="n">Bytes</span><span class="p">)</span>
      <span class="n">Default</span> <span class="ow">is</span> <span class="n">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
      <span class="n">precision</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">27</span>
      <span class="n">scale</span><span class="p">:</span> <span class="mi">0</span> <span class="o">~</span> <span class="mi">9</span>
@@ -401,6 +404,7 @@ Bloom filter index support key columns with type except TINYINT FLOAT DOUBLE, al
     )
     ENGINE=olap
     AGGREGATE KEY(k1, k2)
+    COMMENT &quot;my first doris table&quot;
     DISTRIBUTED BY HASH(k1) BUCKETS 32
     PROPERTIES (&quot;storage_type&quot;=&quot;column&quot;);
     ```

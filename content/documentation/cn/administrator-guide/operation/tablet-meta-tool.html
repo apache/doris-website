@@ -224,7 +224,7 @@
 <h4>离线<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <p>基于 meta_tool 工具获取某个盘上的 Tablet Meta。</p>
 <p>命令：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">get_header</span> <span class="o">--</span><span class="n">tablet_id</span><span class="o">=</span><span class="n">xxx</span> <span class="o">--</span><span class="n">schema_hash</span><span class="o">=</span><span class="n">xxx</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">get_meta</span> <span class="o">--</span><span class="n">tablet_id</span><span class="o">=</span><span class="n">xxx</span> <span class="o">--</span><span class="n">schema_hash</span><span class="o">=</span><span class="n">xxx</span>
 </pre></div>
 </div>
 <blockquote>
@@ -236,7 +236,7 @@
 <h3>加载 header<a class="headerlink" href="#header" title="Permalink to this headline">¶</a></h3>
 <p>加载 header 的功能是为了完成实现 tablet 人工迁移而提供的。该功能是基于 json 格式的 Tablet Meta 实现的，所以如果涉及 shard 字段、version 信息的更改，可以直接在 Tablet Meta 的 json 内容中更改。然后使用以下的命令进行加载。</p>
 <p>命令：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">load_header</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">json_header_path</span><span class="o">=</span><span class="n">path</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">load_meta</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">json_header_path</span><span class="o">=</span><span class="n">path</span>
 </pre></div>
 </div>
 </div>
@@ -244,7 +244,7 @@
 <h3>删除 header<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>为了实现从某个 be 的某个盘中删除某个 tablet 的功能。</p>
 <p>命令:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>./lib/meta_tool --operation=delete_header --root_path=/path/to/root_path --tablet_id=xxx --schema_hash=xxx`
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">delete_meta</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">tablet_id</span><span class="o">=</span><span class="n">xxx</span> <span class="o">--</span><span class="n">schema_hash</span><span class="o">=</span><span class="n">xxx</span>
 </pre></div>
 </div>
 </div>
@@ -252,7 +252,7 @@
 <h3>展示 pb 格式的 TabletMeta<a class="headerlink" href="#pb-tabletmeta" title="Permalink to this headline">¶</a></h3>
 <p>这个命令是为了查看旧的基于文件的管理的PB格式的 Tablet Meta，以 json 的格式展示 Tablet Meta。</p>
 <p>命令：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">show_header</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">pb_header_path</span><span class="o">=</span><span class="n">path</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">show_meta</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">pb_header_path</span><span class="o">=</span><span class="n">path</span>
 </pre></div>
 </div>
 </div>

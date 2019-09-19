@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
@@ -219,7 +220,7 @@
 <h4>Offline<a class="headerlink" href="#offline" title="Permalink to this headline">¶</a></h4>
 <p>Get Tablet Meta on a disk based on the meta\ tool tool.</p>
 <p>Order:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">get_header</span> <span class="o">--</span><span class="n">tablet_id</span><span class="o">=</span><span class="n">xxx</span> <span class="o">--</span><span class="n">schema_hash</span><span class="o">=</span><span class="n">xxx</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">get_meta</span> <span class="o">--</span><span class="n">tablet_id</span><span class="o">=</span><span class="n">xxx</span> <span class="o">--</span><span class="n">schema_hash</span><span class="o">=</span><span class="n">xxx</span>
 </pre></div>
 </div>
 <blockquote>
@@ -231,7 +232,7 @@
 <h3>Load header<a class="headerlink" href="#load-header" title="Permalink to this headline">¶</a></h3>
 <p>The function of loading header is provided to realize manual migration of tablet. This function is based on Tablet Meta in JSON format, so if changes in the shard field and version information are involved, they can be changed directly in the JSON content of Tablet Meta. Then use the following commands to load.</p>
 <p>Order:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">load_header</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">json_header_path</span><span class="o">=</span><span class="n">path</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">load_meta</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">json_header_path</span><span class="o">=</span><span class="n">path</span>
 </pre></div>
 </div>
 </div>
@@ -239,7 +240,7 @@
 <h3>Delete header<a class="headerlink" href="#delete-header" title="Permalink to this headline">¶</a></h3>
 <p>In order to realize the function of deleting a tablet from a disk of a be.</p>
 <p>Order:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>./lib/meta_tool --operation=delete_header --root_path=/path/to/root_path --tablet_id=xxx --schema_hash=xxx`
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>./lib/meta_tool --operation=delete_meta --root_path=/path/to/root_path --tablet_id=xxx --schema_hash=xxx`
 </pre></div>
 </div>
 </div>
@@ -247,7 +248,7 @@
 <h3>TabletMeta in Pb format<a class="headerlink" href="#tabletmeta-in-pb-format" title="Permalink to this headline">¶</a></h3>
 <p>This command is to view the old file-based management PB format Tablet Meta, and to display Tablet Meta in JSON format.</p>
 <p>Order:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">show_header</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">pb_header_path</span><span class="o">=</span><span class="n">path</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">meta_tool</span> <span class="o">--</span><span class="n">operation</span><span class="o">=</span><span class="n">show_meta</span> <span class="o">--</span><span class="n">root_path</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">root_path</span> <span class="o">--</span><span class="n">pb_header_path</span><span class="o">=</span><span class="n">path</span>
 </pre></div>
 </div>
 </div>

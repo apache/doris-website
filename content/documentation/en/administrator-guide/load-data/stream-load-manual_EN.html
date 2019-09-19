@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
@@ -292,6 +293,7 @@ The format is: - H &quot;key1: value1&quot;
     <span class="s2">&quot;TxnId&quot;</span><span class="p">:</span> <span class="mi">1003</span><span class="p">,</span>
     <span class="s2">&quot;Label&quot;</span><span class="p">:</span> <span class="s2">&quot;b6f3bc78-0d2c-45d9-9e4c-faa0a0149bee&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ExistingJobStatus&quot;</span><span class="p">:</span> <span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">optional</span>
     <span class="s2">&quot;Message&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NumberTotalRows&quot;</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span>
     <span class="s2">&quot;NumberLoadedRows&quot;</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span>
@@ -314,6 +316,9 @@ The format is: - H &quot;key1: value1&quot;
 <p>“Publish Timeout”: This state also indicates that the import has been completed, except that the data may be delayed and visible without retrying.</p>
 <p>“Label Already Exists”：Label 重复，需更换 Label。</p>
 <p>“Fail”: Import failed.</p>
+</li>
+<li><p class="first">ExistingJobStatus: The state of the load job corresponding to the existing Label.</p>
+<p>This field is displayed only when the status is “Label Already Exists”. The user can know the status of the load job corresponding to Label through this state. “RUNNING” means that the job is still executing, and “FINISHED” means that the job is successful.</p>
 </li>
 <li><p class="first">Message: Import error messages.</p>
 </li>

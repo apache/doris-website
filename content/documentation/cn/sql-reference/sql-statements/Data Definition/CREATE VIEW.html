@@ -189,7 +189,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于创建一个逻辑视图
 语法：
     CREATE VIEW [IF NOT EXISTS]
-    [db_name.]view_name (column1[, column2, ...])
+    [db_name.]view_name
+    (column1[ COMMENT &quot;col comment&quot;][, column2, ...])
     AS query_stmt
     
 说明：
@@ -201,7 +202,22 @@
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">在</span> <span class="n">example_db</span> <span class="n">上创建视图</span> <span class="n">example_view</span>
+
     <span class="n">CREATE</span> <span class="n">VIEW</span> <span class="n">example_db</span><span class="o">.</span><span class="n">example_view</span> <span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">)</span>
+    <span class="n">AS</span>
+    <span class="n">SELECT</span> <span class="n">c1</span> <span class="k">as</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="n">FROM</span> <span class="n">example_table</span>
+    <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">20160112</span> <span class="n">GROUP</span> <span class="n">BY</span> <span class="n">k1</span><span class="p">,</span><span class="n">k2</span><span class="p">,</span><span class="n">k3</span><span class="p">;</span>
+    
+<span class="mf">2.</span> <span class="n">创建一个包含</span> <span class="n">comment</span> <span class="n">的</span> <span class="n">view</span>
+
+    <span class="n">CREATE</span> <span class="n">VIEW</span> <span class="n">example_db</span><span class="o">.</span><span class="n">example_view</span>
+    <span class="p">(</span>
+        <span class="n">k1</span> <span class="n">COMMENT</span> <span class="s2">&quot;first key&quot;</span><span class="p">,</span>
+        <span class="n">k2</span> <span class="n">COMMENT</span> <span class="s2">&quot;second key&quot;</span><span class="p">,</span>
+        <span class="n">k3</span> <span class="n">COMMENT</span> <span class="s2">&quot;third key&quot;</span><span class="p">,</span>
+        <span class="n">v1</span> <span class="n">COMMENT</span> <span class="s2">&quot;first value&quot;</span>
+    <span class="p">)</span>
+    <span class="n">COMMENT</span> <span class="s2">&quot;my first view&quot;</span>
     <span class="n">AS</span>
     <span class="n">SELECT</span> <span class="n">c1</span> <span class="k">as</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">SUM</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="n">FROM</span> <span class="n">example_table</span>
     <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">20160112</span> <span class="n">GROUP</span> <span class="n">BY</span> <span class="n">k1</span><span class="p">,</span><span class="n">k2</span><span class="p">,</span><span class="n">k3</span><span class="p">;</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SHOW FRONTENDS &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>SHOW TABLE STATUS &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="SHOW FULL COLUMNS" href="SHOW FULL COLUMNS_EN.html" />
-    <link rel="prev" title="SHOW FILE" href="SHOW FILE_EN.html" /> 
+    <link rel="next" title="DDL" href="../Data Definition/index.html" />
+    <link rel="prev" title="SHOW MIGRATIONS" href="SHOW MIGRATIONS.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,29 +85,29 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL Manual</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL Functions</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../index.html">DDL Statements</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">Account Management</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="index.html">Administration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../Data Definition/index.html">Data Definition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../Data Manipulation/index.html">Data Manipulation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">Data Types</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">Utility</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">SQL 手册</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../sql-functions/index.html">SQL 函数</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">语法帮助</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../Account Management/index.html">用户账户管理</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">集群管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Definition/index.html">DDL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Manipulation/index.html">DML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Data Types/index.html">数据类型</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Utility/index.html">辅助命令</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../en/index.html">English</a></li>
 </ul>
 
             
@@ -153,22 +153,22 @@
     
       <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../../../index.html">English</a> &raquo;</li>
+          <li><a href="../../../index.html">中文</a> &raquo;</li>
         
-          <li><a href="../../index.html">SQL Manual</a> &raquo;</li>
+          <li><a href="../../index.html">SQL 手册</a> &raquo;</li>
         
-          <li><a href="../index.html">DDL Statements</a> &raquo;</li>
+          <li><a href="../index.html">语法帮助</a> &raquo;</li>
         
-          <li><a href="index.html">Administration</a> &raquo;</li>
+          <li><a href="index.html">集群管理</a> &raquo;</li>
         
-      <li>SHOW FRONTENDS</li>
+      <li>SHOW TABLE STATUS</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/sql-reference/sql-statements/Administration/SHOW FRONTENDS_EN.md" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/sql-reference/sql-statements/Administration/SHOW TABLE STATUS.md" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -182,27 +182,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="show-frontends">
-<h1>SHOW FRONTENDS<a class="headerlink" href="#show-frontends" title="Permalink to this headline">¶</a></h1>
-</div>
+  <div class="section" id="show-table-status">
+<h1>SHOW TABLE STATUS<a class="headerlink" href="#show-table-status" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
-<h1>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h1>
-<p>This statement is used to view FE nodes
-Grammar:
-SHOW FRONTENDS;</p>
-<p>Explain:</p>
-<ol class="simple">
-<li>name denotes the name of the FE node in bdbje.</li>
-<li>Join is true to indicate that the node has joined the cluster. But it doesn’t mean that it’s still in the cluster (it may be out of touch)</li>
-<li>Alive indicates whether the node survives.</li>
-<li>Replayed Journal Id represents the maximum metadata log ID that the node has currently replayed.</li>
-<li>LastHeartbeat is the latest heartbeat.</li>
-<li>IsHelper indicates whether the node is a helper node in bdbje.</li>
-<li>ErrMsg is used to display error messages when the heartbeat fails.</li>
-</ol>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于查看 Table 的一些信息。
+语法：
+    SHOW TABLE STATUS
+    [FROM db] [LIKE &quot;pattern&quot;]
+    
+说明：
+    1. 该语句主要用于兼容 MySQL 语法，目前仅显示 Comment 等少量信息
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 查看当前数据库下所有表的信息
+
+    SHOW TABLE STATUS;
+    
+2. 查看指定数据库下，名称包含 example 的表的信息
+
+    SHOW TABLE STATUS FROM db LIKE &quot;%example%&quot;;
+</pre></div>
+</div>
+</div>
 <div class="section" id="keyword">
 <h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
-<p>SHOW, FRONTENDS</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span><span class="p">,</span><span class="n">TABLE</span><span class="p">,</span><span class="n">STATUS</span>    
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -214,10 +224,10 @@ SHOW FRONTENDS;</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="SHOW FULL COLUMNS_EN.html" class="btn btn-neutral float-right" title="SHOW FULL COLUMNS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../Data Definition/index.html" class="btn btn-neutral float-right" title="DDL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="SHOW FILE_EN.html" class="btn btn-neutral float-left" title="SHOW FILE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="SHOW MIGRATIONS.html" class="btn btn-neutral float-left" title="SHOW MIGRATIONS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
