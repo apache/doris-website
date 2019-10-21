@@ -105,6 +105,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -317,16 +318,17 @@ key_type(k1[,k2 …])</p>
 <p>NOTICE:
 Except for AGGREGATE KEY, no need to specify aggregation type for value columns.</p>
 </li>
-<li><p class="first">partition_desc</p>
+<li><p class="first">partition_desc
+Partition has two ways to use:</p>
 <ol class="simple">
-<li>Range partition</li>
+<li>LESS THAN</li>
 </ol>
 <p>Syntex:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span> ```
  PARTITION BY RANGE (k1, k2, ...)
  (
- PARTITION partition_name VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
- PARTITION partition_name VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
+ PARTITION partition_name1 VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...),
+ PARTITION partition_name2 VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
  ...
  )
  ```
@@ -341,6 +343,21 @@ Except for AGGREGATE KEY, no need to specify aggregation type for value columns.
  <span class="mi">5</span><span class="p">)</span> <span class="n">Support</span> <span class="n">multi</span> <span class="n">partition</span> <span class="n">columns</span><span class="p">,</span> <span class="n">the</span> <span class="n">the</span> <span class="n">default</span> <span class="n">partition</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">MIN</span> <span class="n">VALUE</span><span class="o">.</span>
 </pre></div>
 </div>
+<p>2）Fixed Range
+Syntex:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> ```
+ PARTITION BY RANGE (k1, k2, k3, ...)
+ (
+ PARTITION partition_name1 VALUES [(&quot;k1-lower1&quot;, &quot;k2-lower1&quot;, &quot;k3-lower1&quot;,...), (&quot;k1-upper1&quot;, &quot;k2-upper1&quot;, &quot;k3-upper1&quot;, ...)),
+ PARTITION partition_name2 VALUES [(&quot;k1-lower1-2&quot;, &quot;k2-lower1-2&quot;, ...), (&quot;k1-upper1-2&quot;, MAXVALUE, ))
+ &quot;k3-upper1-2&quot;, ...
+ )
+ ```
+</pre></div>
+</div>
+<p>Explain:
+1）The Fixed Range is more flexible than the LESS THAN, and the left and right intervals are completely determined by the user.
+2）Others are consistent with LESS THAN.</p>
 </li>
 <li><p class="first">distribution_desc</p>
 <ol class="simple">
@@ -429,7 +446,7 @@ Bloom filter index support key columns with type except TINYINT FLOAT DOUBLE, al
     );
 
 3. Create an olap table, with range partitioned, distributed by hash.
-
+1) LESS THAN
     ```
     CREATE TABLE example_db.table_range
     (
@@ -463,6 +480,27 @@ Bloom filter index support key columns with type except TINYINT FLOAT DOUBLE, al
     ``` 
     
     Data outside these ranges will not be loaded.
+
+2) Fixed Range
+    CREATE TABLE table_range
+    (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    v1 VARCHAR(2048),
+    v2 DATETIME DEFAULT &quot;2014-02-04 15:36:00&quot;
+    )
+    ENGINE=olap
+    DUPLICATE KEY(k1, k2, k3)
+    PARTITION BY RANGE (k1, k2, k3)
+    (
+    PARTITION p1 VALUES [(&quot;2014-01-01&quot;, &quot;10&quot;, &quot;200&quot;), (&quot;2014-01-01&quot;, &quot;20&quot;, &quot;300&quot;)),
+    PARTITION p2 VALUES [(&quot;2014-06-01&quot;, &quot;100&quot;, &quot;200&quot;), (&quot;2014-07-01&quot;, &quot;100&quot;, &quot;300&quot;))
+    )
+    DISTRIBUTED BY HASH(k2) BUCKETS 32
+    PROPERTIES(
+    &quot;storage_medium&quot; = &quot;SSD&quot;
+    );
 
 4. Create a mysql table
 

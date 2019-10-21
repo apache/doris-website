@@ -104,6 +104,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -301,6 +302,10 @@ FROM data_source
 
         是否开启严格模式，默认为开启。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。指定方式为 &quot;strict_mode&quot; = &quot;true&quot;
 
+    5. timezone
+        
+        指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。
+
 5. data_source
 
     数据源的类型。当前支持：
@@ -346,6 +351,7 @@ FROM data_source
 
                 &quot;kafka_partitions&quot; = &quot;0,1,2,3&quot;,
                 &quot;kafka_offsets&quot; = &quot;101,0,OFFSET_BEGINNING,OFFSET_END&quot; 
+                
         4. property
 
             指定自定义kafka参数。
@@ -398,7 +404,27 @@ FROM data_source
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。导入任务为严格模式。
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定group.id和client.id，并且自动默认消费所有分区，且从末尾（OFFSET_END）开始订阅
+
+    CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+    COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100)
+    PROPERTIES
+    (
+        &quot;desired_concurrent_number&quot;=&quot;3&quot;,
+        &quot;max_batch_interval&quot; = &quot;20&quot;,
+        &quot;max_batch_rows&quot; = &quot;300000&quot;,
+        &quot;max_batch_size&quot; = &quot;209715200&quot;,
+        &quot;strict_mode&quot; = &quot;false&quot;
+    )
+    FROM KAFKA
+    (
+        &quot;kafka_broker_list&quot; = &quot;broker1:9092,broker2:9092,broker3:9092&quot;,
+        &quot;kafka_topic&quot; = &quot;my_topic&quot;,
+        &quot;property.group.id&quot; = &quot;xxx&quot;,
+        &quot;property.client.id&quot; = &quot;xxx&quot;
+    );
+
+2. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。导入任务为严格模式。
 
     CREATE ROUTINE LOAD example_db.test1 ON example_tbl
     COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
@@ -419,7 +445,7 @@ FROM data_source
         &quot;kafka_offsets&quot; = &quot;101,0,0,200&quot;
     );
 
-2. 通过 SSL 认证方式，从 Kafka 集群导入数据。同时设置 client.id 参数。导入任务为非严格模式
+3. 通过 SSL 认证方式，从 Kafka 集群导入数据。同时设置 client.id 参数。导入任务为非严格模式，时区为 Africa/Abidjan
 
     CREATE ROUTINE LOAD example_db.test1 ON example_tbl
     COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
@@ -430,7 +456,8 @@ FROM data_source
         &quot;max_batch_interval&quot; = &quot;20&quot;,
         &quot;max_batch_rows&quot; = &quot;300000&quot;,
         &quot;max_batch_size&quot; = &quot;209715200&quot;,
-        &quot;strict_mode&quot; = &quot;false&quot;
+        &quot;strict_mode&quot; = &quot;false&quot;,
+        &quot;timezone&quot; = &quot;Africa/Abidjan&quot;
     )
     FROM KAFKA
     (

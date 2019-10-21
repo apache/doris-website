@@ -105,6 +105,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -332,10 +333,8 @@ WITH BROKER broker_name
 
     max_filter_ratio: Data ratio of maximum tolerance filterable (data irregularity, etc.). Default zero tolerance.
 
-    exc_mem_limit: Sets the upper memory limit for import. The default is 2G, per byte. This is the upper memory limit for a single BE node.
-
-    A load may be distributed over multiple BEs. Let&#39;s assume that 1GB data needs up to 5GB of memory for processing at a single node. Suppose 1GB files are distributed over two nodes, then theoretically, each node needs 2.5GB of memory. Then the parameter can be set to 268454560, or 2.5GB.
-
+    exc_mem_limit: Memory limit. Default is 2GB. Unit is Bytes.
+    
     strict_mode: Whether the data is strictly restricted. The default is true.
 
     timezone: Specify time zones for functions affected by time zones, such as strftime/alignment_timestamp/from_unixtime, etc. See the documentation for details. If not specified, use the &quot;Asia/Shanghai&quot; time zone.
@@ -491,9 +490,9 @@ WITH BROKER broker_name
 
 7. Load data into tables containing HLL columns, which can be columns in tables or columns in data
 
-    If there are three columns in the table (id, v1, v2). The V1 and V2 columns are HLL columns. The imported source file has three columns. Then (column_list) declares that the first column is id, and the second and third columns are temporarily named k1, k2.
+    If there are three columns in the table (id, v1, v2, v3). The V1 and V2 columns are HLL columns. The imported source file has three columns. Then (column_list) declares that the first column is id, and the second and third columns are temporarily named k1, k2.
 
-    In SET, the HLL column in the table must be specifically declared hll_hash. The V1 column in the table is equal to the hll_hash (k1) column in the original data.        
+    In SET, the HLL column in the table must be specifically declared hll_hash. The V1 column in the table is equal to the hll_hash (k1) column in the original data.The v3 column in the table does not have a corresponding value in the original data, and empty_hll is used to supplement the default value.
 
     LOAD LABEL example_db.label7
     (
@@ -504,7 +503,8 @@ WITH BROKER broker_name
     (id, k1, k2)
     SET (
       v1 = hll_hash(k1),
-      v2 = hll_hash(k2)
+      v2 = hll_hash(k2),
+      v3 = empty_hll()
     )
     )
     WITH BROKER hdfs (&quot;username&quot;=&quot;hdfs_user&quot;, &quot;password&quot;=&quot;hdfs_password&quot;);

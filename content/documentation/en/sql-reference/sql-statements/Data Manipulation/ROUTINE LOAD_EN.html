@@ -105,6 +105,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -185,211 +186,284 @@
   <div class="section" id="routine-load">
 <h1>ROUTINE LOAD<a class="headerlink" href="#routine-load" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>Routine Load enables users to submit a permanent import task and import data into Doris by constantly reading data from a specified data source.
-Currently only support importing text format (CSV) data from Kakfa through unauthenticated or SSL authentication.</p>
-<p>Grammar:</p>
-<p>CREATE ROUTINE LOAD [db.]job_name ON tbl_name
-[load_properties]
-[job_properties]
-FROM data_source
-[data source properties]</p>
-<ol class="simple">
-<li>[db.]job_name</li>
-</ol>
-<p>The name of the import job, in the same database, can only have one job running with the same name.</p>
-<ol class="simple">
-<li>tbl name</li>
-</ol>
-<p>Specifies the name of the table to be imported.</p>
-<ol class="simple">
-<li>load_properties</li>
-</ol>
-<p>Used to describe imported data. Grammar:</p>
-<p>[Swing separator],
-[columns_mapping],
-[where_predicates],
-[partitions]</p>
-<p>One Column U separator:</p>
+<h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Routine Load function allows users to submit a resident load task, and continuously load data into Doris by continuously reading data from the specified data source. Currently, only text data format (CSV) data is loaded from Kakfa by means of no authentication or SSL authentication.</p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">ROUTINE</span> <span class="n">LOAD</span> <span class="p">[</span><span class="n">db</span><span class="o">.</span><span class="p">]</span><span class="n">job_name</span> <span class="n">ON</span> <span class="n">tbl_name</span>
+<span class="p">[</span><span class="n">load_properties</span><span class="p">]</span>
+<span class="p">[</span><span class="n">job_properties</span><span class="p">]</span>
+<span class="n">FROM</span> <span class="n">data_source</span>
+<span class="p">[</span><span class="n">data_source_properties</span><span class="p">]</span>
+</pre></div>
+</div>
+<ol>
+<li><p class="first">[db.]job_name</p>
+<p>The name of the load job, in the same database, only one job can run with the same name.</p>
+</li>
+<li><p class="first">tbl_name</p>
+<p>Specifies the name of the table that needs to be loaded.</p>
+</li>
+<li><p class="first">load_properties</p>
+<p>Used to describe the load data. grammar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">column_separator</span><span class="p">],</span>
+<span class="p">[</span><span class="n">columns_mapping</span><span class="p">],</span>
+<span class="p">[</span><span class="n">where_predicates</span><span class="p">],</span>
+<span class="p">[</span><span class="n">partitions</span><span class="p">]</span>
+</pre></div>
+</div>
+<ol>
+<li><p class="first">column_separator:</p>
 <p>Specify column separators, such as:</p>
-<p>COLUMNS TERMINATED BY “,”</p>
-<p>Default: t</p>
-<ol class="simple">
-<li>columns_mapping:</li>
+<p><code class="docutils literal notranslate"><span class="pre">COLUMNS</span> <span class="pre">TERMINATED</span> <span class="pre">BY</span> <span class="pre">&quot;,&quot;</span></code></p>
+<p>The default is: <code class="docutils literal notranslate"><span class="pre">\t</span></code></p>
+</li>
+<li><p class="first">columns_mapping:</p>
+<p>Specifies the mapping of columns in the source data and defines how the derived columns are generated.</p>
+<ol>
+<li><p class="first">Map column:</p>
+<p>Specify in order, which columns in the source data correspond to which columns in the destination table. For columns that you want to skip, you can specify a column name that does not exist.</p>
+<p>Suppose the destination table has three columns k1, k2, v1. The source data has 4 columns, of which columns 1, 2, and 4 correspond to k2, k1, and v1, respectively. Write as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">COLUMNS</span> <span class="pre">(k2,</span> <span class="pre">k1,</span> <span class="pre">xxx,</span> <span class="pre">v1)</span></code></p>
+<p>Where xxx is a column that does not exist and is used to skip the third column in the source data.</p>
+</li>
+<li><p class="first">Derived columns:</p>
+<p>A column represented in the form of col_name = expr, which we call a derived column. That is, the value of the corresponding column in the destination table is calculated by expr.</p>
+<p>Derived columns are usually arranged after the mapped column. Although this is not mandatory, Doris always parses the mapped columns first and then parses the derived columns.</p>
+<p>Following an example, assume that the destination table also has column 4, v2, which is generated by the sum of k1 and k2. You can write as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">COLUMNS</span> <span class="pre">(k2,</span> <span class="pre">k1,</span> <span class="pre">xxx,</span> <span class="pre">v1,</span> <span class="pre">v2</span> <span class="pre">=</span> <span class="pre">k1</span> <span class="pre">+</span> <span class="pre">k2);</span></code></p>
+</li>
 </ol>
-<p>Specifies the mapping relationship of columns in source data and defines how derivative columns are generated.</p>
-<ol class="simple">
-<li>Mapping column:</li>
+</li>
+<li><p class="first">where_predicates</p>
+<p>Used to specify filter criteria to filter out unwanted columns. Filter columns can be either mapped columns or derived columns.</p>
+<p>For example, if we only want to load a column with k1 greater than 100 and k2 equal to 1000, we would write as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">k1</span> <span class="pre">&gt;</span> <span class="pre">100</span> <span class="pre">and</span> <span class="pre">k2</span> <span class="pre">=</span> <span class="pre">1000</span></code></p>
+</li>
+<li><p class="first">partitions</p>
+<p>Specifies which partitions of the load destination table. If not specified, it will be automatically loaded into the corresponding partition.</p>
+<p>Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">PARTITION(p1,</span> <span class="pre">p2,</span> <span class="pre">p3)</span></code></p>
+</li>
 </ol>
-<p>Specify in sequence which columns in the source data correspond to those in the destination table. For columns you want to skip, you can specify a column name that does not exist.
-Assume that the destination table has three columns k1, k2, v1. Source data has four columns, of which columns 1, 2 and 4 correspond to k2, K1 and v1, respectively. Written as follows:</p>
-<p>COLUMNS (k2, k1, xxx, v1)</p>
-<p>XXX is a non-existent column used to skip the third column in the source data.</p>
+</li>
+<li><p class="first">job_properties</p>
+<p>A generic parameter that specifies a routine load job.</p>
+<p>syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROPERTIES</span> <span class="p">(</span>
+    <span class="s2">&quot;key1&quot;</span> <span class="o">=</span> <span class="s2">&quot;val1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;key2&quot;</span> <span class="o">=</span> <span class="s2">&quot;val2&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Currently we support the following parameters:</p>
+<ol>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">desired_concurrent_number</span></code></p>
+<p>The degree of concurrency desired. A routine load job is split into multiple subtasks. This parameter specifies how many tasks can be executed simultaneously in a job. Must be greater than 0. The default is 3.</p>
+<p>This concurrency is not the actual concurrency. The actual concurrency will be considered by the number of nodes in the cluster, the load, and the data source.</p>
+<p>example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;desired_concurrent_number&quot;</span> <span class="pre">=</span> <span class="pre">&quot;3&quot;</span></code></p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">max_batch_interval/max_batch_rows/max_batch_size</span></code></p>
+<p>These three parameters represent:</p>
 <ol class="simple">
-<li>Derivative column:</li>
+<li>The maximum execution time of each subtask, in seconds. The range is 5 to 60. The default is 10.</li>
+<li>The maximum number of rows read per subtask. Must be greater than or equal to 200,000. The default is 200000.</li>
+<li>The maximum number of bytes read per subtask. The unit is byte and the range is 100MB to 1GB. The default is 100MB.</li>
 </ol>
-<p>Columns in the form of col_name = expr are called derived columns. That is to say, it supports calculating the values of the corresponding columns in the destination table by expr.
-Derivative columns are usually arranged after the mapping column. Although this is not mandatory, Doris always parses the mapping column first and then the derived column.
-Following an example, suppose that the destination table also has the fourth column v2, which is generated by the sum of K1 and k2. It can be written as follows:</p>
-<p>COLUMNS (k2, k1, xxx, v1, v2 = k1 + k2);</p>
-<ol class="simple">
-<li>where_predicates</li>
+<p>These three parameters are used to control the execution time and throughput of a subtask. When either one reaches the threshold, the task ends.</p>
+<p>example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;max_batch_interval&quot;</span> <span class="o">=</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
+<span class="s2">&quot;max_batch_rows&quot;</span> <span class="o">=</span> <span class="s2">&quot;300000&quot;</span><span class="p">,</span>
+<span class="s2">&quot;max_batch_size&quot;</span> <span class="o">=</span> <span class="s2">&quot;209715200&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">max_error_number</span></code></p>
+<p>The maximum number of error lines allowed in the sampling window. Must be greater than or equal to 0. The default is 0, which means that no error lines are allowed.</p>
+<p>The sampling window is max_batch_rows * 10. That is, if the number of error lines is greater than max_error_number in the sampling window, the routine job will be suspended, and manual intervention is required to check the data quality problem.</p>
+<p>Lines that are filtered by the where condition are not counted as error lines.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">strict_mode</span></code></p>
+<p>Whether to enable strict mode, the default is on. If turned on, the column type transformation of non-null raw data is filtered if the result is NULL. Specified as “strict_mode” = “true”</p>
+</li>
+<li><p class="first">timezone</p>
+<p>Specifies the time zone in which the job will be loaded. The default by using session variable’s timezone. This parameter affects all function results related to the time zone involved in the load.</p>
+</li>
 </ol>
-<p>Used to specify filtering conditions to filter out unnecessary columns. The filter column can be a mapping column or a derived column.
-For example, if we only want to import columns with K1 greater than 100 and K2 equal to 1000, we write as follows:</p>
-<p>WHERE k1 &gt; 100 and k2 = 1000</p>
-<p>Four Division</p>
-<p>Specify which partitions to import into the destination table. If not specified, it is automatically imported into the corresponding partition.
-Examples:</p>
-<p>Segmentation (P1, P2, P3)</p>
-<ol class="simple">
-<li>job_properties</li>
-</ol>
-<p>General parameters used to specify routine import jobs.
-Grammar:</p>
-<p>PROPERTIES (
-“key1” = “val1”,
-“key2” = “val2”
-)</p>
-<p>At present, we support the following parameters:</p>
-<ol class="simple">
-<li>desired_concurrent_number</li>
-</ol>
-<p>Expected concurrency. A routine import job is divided into multiple subtasks. This parameter specifies how many tasks a job can perform simultaneously. Must be greater than 0. The default is 3.
-This concurrency degree is not the actual concurrency degree. The actual concurrency degree will be considered comprehensively by the node number, load and data source of the cluster.
-Example:</p>
-<p>“desired_concurrent_number” = “3”</p>
-<ol class="simple">
-<li>max_batch_interval/max_batch_rows/max_batch_size</li>
-</ol>
-<p>These three parameters are respectively expressed as follows:</p>
-<ol class="simple">
-<li>Maximum execution time per sub-task in seconds. The range is 5 to 60. The default is 10.</li>
-<li>The maximum number of rows read by each subtask. Must be greater than or equal to 200000. The default is 2000.</li>
-<li>The maximum number of bytes read by each subtask. Units are bytes, ranging from 100MB to 1GB. The default is 100MB.</li>
-</ol>
-<p>These three parameters are used to control the execution time and processing capacity of a subtask. When any one reaches the threshold, the task ends.
-Example:</p>
-<p>“max_batch_interval” = “20”,
-“max_batch_rows” = “300000”,
-“max_batch_size” = “209715200”</p>
-<p>Three The biggest mistake</p>
-<p>The maximum number of error lines allowed in the sampling window. Must be greater than or equal to 0. The default is 0, that is, no error lines are allowed.
-The sampling window is max_batch_rows* 10. That is, if the number of error lines is greater than max_error_number in the sampling window, routine jobs will be suspended, and manual intervention is needed to check data quality.
-Rows filtered by where conditions are not incorrect rows.</p>
-<p>Five. data source</p>
-<p>Types of data sources. Current support:</p>
+</li>
+<li><p class="first">data_source</p>
+<p>The type of data source. Current support:</p>
 <p>KAFKA</p>
-<p>Six. data source properties</p>
-<p>Specify information about the data source.
-Grammar:</p>
-<p>(
-“key1” = “val1”,
-“key2” = “val2”
-)</p>
-<p>One. KAFKA -25968;<code class="docutils literal notranslate"> <span class="pre">25454;</span></code>28304;</p>
-<p>One. Kafka -u broker list</p>
-<p>Kafka’s broker connection information. The format is ip: host. Multiple brokers are separated by commas.
-Examples:</p>
-<p>“broker list”= “broker1:9092,broker2:9092”</p>
-<p>Two Kafkato Pitch</p>
-<p>Specify the topic of Kafka to subscribe to.
-Examples:</p>
-<p>“coffee topic” =”my topic”</p>
-<p>Three Kafka score/Kafka offset printing</p>
-<p>Specify the Kafka partition to be subscribed to and the corresponding initial offset for each partition.</p>
-<p>Offset can specify a specific offset from greater than or equal to 0, or:</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">data_source_properties</span></code></p>
+<p>Specify information about the data source.</p>
+<p>syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="s2">&quot;key1&quot;</span> <span class="o">=</span> <span class="s2">&quot;val1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;key2&quot;</span> <span class="o">=</span> <span class="s2">&quot;val2&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ol>
+<li><p class="first">KAFKA data source</p>
+<p><code class="docutils literal notranslate"><span class="pre">Kafka_broker_list</span></code></p>
+<p>Kafka’s broker connection information. The format is ip:host. Multiple brokare separated by commas.</p>
+<p>Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;kafka_broker_list&quot;</span> <span class="pre">=</span> <span class="pre">&quot;broker1:9092,broker2:9092&quot;</span></code></p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">kafka_topic</span></code></p>
+<p>Specify the topic of Kafka to subscribe to.</p>
+<p>Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;kafka_topic&quot;</span> <span class="pre">=</span> <span class="pre">&quot;my_topic&quot;</span></code></p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">kafka_partitions/kafka_offsets</span></code></p>
+<p>Specify the kafka partition to be subscribed to, and the corresponding star offset for each partition.</p>
+<p>Offset can specify a specific offset from 0 or greater, or:</p>
 <ol class="simple">
-<li>OFFSET_BEGINNING: Subscribe from a location with data.</li>
+<li>OFFSET_BEGINNING: Subscribe from the location where the data is avaie.</li>
+<li>OFFSET_END: ​​Subscribe from the end.</li>
+</ol>
+<p>If not specified, all partitions under topic are subscribed by default fromSET_END.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;kafka_partitions&quot;</span> <span class="o">=</span> <span class="s2">&quot;0,1,2,3&quot;</span><span class="p">,</span>
+<span class="s2">&quot;kafka_offsets&quot;</span> <span class="o">=</span> <span class="s2">&quot;101,0,OFFSET_BEGINNING,OFFSET_END&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">property</p>
+<p>Specify custom kafka parameters.</p>
+<p>The function is equivalent to the “–property” parameter in the kafka shel</p>
+<p>When the value of the parameter is a file, you need to add the keyword: “FILbefore the value.</p>
+<p>For information on how to create a file, see “HELP CREATE FILE;”</p>
+<p>For more supported custom parameters, see the configuration items on the nt side in the official CONFIGURATION documentation for librdkafka.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;property.client.id&quot;</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span><span class="p">,</span>
+<span class="s2">&quot;property.ssl.ca.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:ca.pem&quot;</span>
+</pre></div>
+</div>
+<ol>
+<li><p class="first">When connecting to Kafka using SSL, you need to specify the follg parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;property.security.protocol&quot;</span> <span class="o">=</span> <span class="s2">&quot;ssl&quot;</span><span class="p">,</span>
+<span class="s2">&quot;property.ssl.ca.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:ca.pem&quot;</span><span class="p">,</span>
+<span class="s2">&quot;property.ssl.certificate.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:client.pem&quot;</span><span class="p">,</span>
+<span class="s2">&quot;property.ssl.key.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:client.key&quot;</span><span class="p">,</span>
+<span class="s2">&quot;property.ssl.key.password&quot;</span> <span class="o">=</span> <span class="s2">&quot;abcdefg&quot;</span>
+</pre></div>
+</div>
+<p>among them:</p>
+<p>“property.security.protocol” and “property.ssl.ca.location” are requ to indicate the connection method is SSL and the location of the CA certate.</p>
+<p>If the client authentication is enabled on the Kafka server, you alsod to set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;property.ssl.certificate.location&quot;</span>
+<span class="s2">&quot;property.ssl.key.location&quot;</span>
+<span class="s2">&quot;property.ssl.key.password&quot;</span>
+</pre></div>
+</div>
+<p>Used to specify the public key of the client, the private key, and the word of the private key.</p>
+</li>
+<li><p class="first">Specify the default starting offset for kafka partition</p>
+<p>If kafka_partitions/kafka_offsets is not specified, all partitions are umed by default, and you can specify kafka_default_offsets to specify the star offset. The default is OFFSET_END, which starts at the end of the substion.</p>
+<p>Values:</p>
+<ol class="simple">
+<li>OFFSET_BEGINNING: Subscribe from the location where the data is avaie.</li>
 <li>OFFSET_END: Subscribe from the end.</li>
 </ol>
-<p>If not specified, all partitions under topic are subscribed by default from OFFSET_END.
-Examples:</p>
-<p>“kafka partitions” =”0,1,2,3”,
-“Kafka\ xED”= “101.0, ofset\ xEnd”</p>
-<ol class="simple">
-<li>property</li>
+<p>Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;property.kafka_default_offsets&quot;</span> <span class="pre">=</span> <span class="pre">&quot;OFFSET_BEGINNING&quot;</span></code></p>
+</li>
 </ol>
-<p>Specify custom Kafka parameters.
-The function is equivalent to the “- property” parameter in the Kafka shell.
-When the value of a parameter is a file, you need to add the keyword “FILE:” before the value.
-For how to create a file, see “HELP CREATE FILE;”
-For more support for custom parameters, see the client-side configuration item in the official CONFIGURATION document of librdkafka.</p>
-<p>Examples:
-“property.client.id” = “12345”,
-“property.ssl.ca.location” =”FILE:ca.pem”</p>
-<p>When connecting Kafka with SSL, you need to specify the following parameters:</p>
-<p>“property.security.protocol” = “ssl”,
-“property.ssl.ca.location” =”FILE:ca.pem”,
-“property.ssl.certificate.location” =”FILE:client.pem”,
-“property.ssl.key.location” =”FILE:client.key”,
-“property.ssl.key.password” = “abcdefg”</p>
-<p>Among them:
-Property. security. protocol and property. ssl. ca. location are required to specify the connection mode is SSL and the location of CA certificates.</p>
-<p>If the client authentication is enabled on the Kafka server side, the following settings are required:</p>
-<p>“property.ssl.certificate.location”
-“property.ssl.key.location”
-“property.ssl.key.password”</p>
-<p>The passwords used to specify the public key, private key and private key of the client, respectively.</p>
-<ol class="simple">
-<li>Import data format sample</li>
+</li>
 </ol>
-<p>Integer classes (TINYINT/SMALLINT/INT/BIGINT/LARGEINT): 1,1000,1234
-Floating Point Class (FLOAT/DOUBLE/DECIMAL): 1.1, 0.23, 356
-Date class (DATE/DATETIME): 2017-10-03, 2017-06-13 12:34:03.
-String class (CHAR/VARCHAR) (without quotation marks): I am a student, a
-NULL value: N</p>
+</li>
+<li><p class="first">load data format sample</p>
+<p>Integer class (TINYINT/SMALLINT/INT/BIGINT/LARGEINT): 1, 1000, 1234</p>
+<p>Floating point class (FLOAT/DOUBLE/DECIMAL): 1.1, 0.23, .356
+&nbsp;
+&nbsp;   Date class (DATE/DATETIME): 2017-10-03, 2017-06-13 12:34:03.</p>
+<p>String class (CHAR/VARCHAR) (without quotes): I am a student, a</p>
+<p>NULL value: \N</p>
+</li>
+</ol>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li>Create a Kafka routine import task named test 1 for example_tbl of example_db.</li>
+<ol>
+<li><p class="first">Create a Kafka routine load task named test1 for the example_tbl of example_db. Specify group.id and client.id, and automatically consume all partitions by default, with subscriptions starting at the end (OFFSET_END)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">ROUTINE</span> <span class="n">LOAD</span> <span class="n">example_db</span><span class="o">.</span><span class="n">test1</span> <span class="n">ON</span> <span class="n">example_tbl</span>
+<span class="n">COLUMNS</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">PROPERTIES</span>
+<span class="p">(</span>
+    <span class="s2">&quot;desired_concurrent_number&quot;</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_interval&quot;</span> <span class="o">=</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_rows&quot;</span> <span class="o">=</span> <span class="s2">&quot;300000&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_size&quot;</span> <span class="o">=</span> <span class="s2">&quot;209715200&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;strict_mode&quot;</span> <span class="o">=</span> <span class="s2">&quot;false&quot;</span>
+<span class="p">)</span>
+<span class="n">FROM</span> <span class="n">KAFKA</span>
+<span class="p">(</span>
+    <span class="s2">&quot;kafka_broker_list&quot;</span> <span class="o">=</span> <span class="s2">&quot;broker1:9092,broker2:9092,broker3:9092&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka_topic&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_topic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.group.id&quot;</span> <span class="o">=</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.client.id&quot;</span> <span class="o">=</span> <span class="s2">&quot;xxx&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a Kafka routine load task named test1 for the example_tbl of example_db. The load task is in strict mode.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">ROUTINE</span> <span class="n">LOAD</span> <span class="n">example_db</span><span class="o">.</span><span class="n">test1</span> <span class="n">ON</span> <span class="n">example_tbl</span>
+<span class="n">COLUMNS</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+<span class="n">WHERE</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">k2</span> <span class="n">like</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">oris%&quot;</span>
+<span class="n">PROPERTIES</span>
+<span class="p">(</span>
+    <span class="s2">&quot;desired_concurrent_number&quot;</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_interval&quot;</span> <span class="o">=</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_rows&quot;</span> <span class="o">=</span> <span class="s2">&quot;300000&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_size&quot;</span> <span class="o">=</span> <span class="s2">&quot;209715200&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;strict_mode&quot;</span> <span class="o">=</span> <span class="s2">&quot;false&quot;</span>
+<span class="p">)</span>
+<span class="n">FROM</span> <span class="n">KAFKA</span>
+<span class="p">(</span>
+    <span class="s2">&quot;kafka_broker_list&quot;</span> <span class="o">=</span> <span class="s2">&quot;broker1:9092,broker2:9092,broker3:9092&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka_topic&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_topic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka_partitions&quot;</span> <span class="o">=</span> <span class="s2">&quot;0,1,2,3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka_offsets&quot;</span> <span class="o">=</span> <span class="s2">&quot;101,0,0,200&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">load data from Kafka clusters via SSL authentication. Also set the client.id parameter. The load task is in non-strict mode and the time zone is Africa/Abidjan</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">ROUTINE</span> <span class="n">LOAD</span> <span class="n">example_db</span><span class="o">.</span><span class="n">test1</span> <span class="n">ON</span> <span class="n">example_tbl</span>
+<span class="n">COLUMNS</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+<span class="n">WHERE</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">k2</span> <span class="n">like</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">oris%&quot;</span>
+<span class="n">PROPERTIES</span>
+<span class="p">(</span>
+    <span class="s2">&quot;desired_concurrent_number&quot;</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_interval&quot;</span> <span class="o">=</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_rows&quot;</span> <span class="o">=</span> <span class="s2">&quot;300000&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_batch_size&quot;</span> <span class="o">=</span> <span class="s2">&quot;209715200&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;strict_mode&quot;</span> <span class="o">=</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;timezone&quot;</span> <span class="o">=</span> <span class="s2">&quot;Africa/Abidjan&quot;</span>
+<span class="p">)</span>
+<span class="n">FROM</span> <span class="n">KAFKA</span>
+<span class="p">(</span>
+    <span class="s2">&quot;kafka_broker_list&quot;</span> <span class="o">=</span> <span class="s2">&quot;broker1:9092,broker2:9092,broker3:9092&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka_topic&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_topic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.security.protocol&quot;</span> <span class="o">=</span> <span class="s2">&quot;ssl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.ssl.ca.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:ca.pem&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.ssl.certificate.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:client.pem&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.ssl.key.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:client.key&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.ssl.key.password&quot;</span> <span class="o">=</span> <span class="s2">&quot;abcdefg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;property.client.id&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_client_id&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
 </ol>
-<p>CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-COLUMNS (k1, k2, k3, v1, v2, v3 = k1 *100),
-WHERE k1 &gt; 100 and k2 like “%doris%”
-PROPERTIES
-(
-“desired_concurrent_number”=”3”,
-“max_batch_interval” = “20”,
-“max_batch_rows” = “300000”,
-“max_batch_size” = “209715200”
-)
-FROM KAFKA
-(
-“broker list”= “broker1:9092,broker2:9092,broker3:9092”,
-“kafu topic” =”my topic”,
-“kafka partitions” =”0,1,2,3”,
-“kafka_offsets” = “101,0,0,200”
-);</p>
-<ol class="simple">
-<li>Import data from Kafka cluster through SSL authentication. Set the client. ID parameter at the same time.</li>
-</ol>
-<p>CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-COLUMNS (k1, k2, k3, v1, v2, v3 = k1 *100),
-WHERE k1 &gt; 100 and k2 like “%doris%”
-PROPERTIES
-(
-“desired_concurrent_number”=”3”,
-“max_batch_interval” = “20”,
-“max_batch_rows” = “300000”,
-“max_batch_size” = “209715200”
-)
-FROM KAFKA
-(
-“broker list”= “broker1:9092,broker2:9092,broker3:9092”,
-“kafu topic” =”my topic”,
-“property.security.protocol” = “ssl”,
-“property.ssl.ca.location” =”FILE:ca.pem”,
-“property.ssl.certificate.location” =”FILE:client.pem”,
-“property.ssl.key.location” =”FILE:client.key”,
-“property.ssl.key.password” = “abcdefg”,
-“property.client.id” = “my_client_id”
-);</p>
 </div>
 <div class="section" id="keyword">
 <h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
-<p>CREATE,ROUTINE,LOAD</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span><span class="p">,</span> <span class="n">ROUTINE</span><span class="p">,</span> <span class="n">LOAD</span>
+</pre></div>
+</div>
 </div>
 </div>
 

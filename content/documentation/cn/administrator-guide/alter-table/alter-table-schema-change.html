@@ -109,6 +109,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -345,7 +346,7 @@
 </li>
 <li><p class="first">当修改列类型时，除 Type 以外的字段都需要按原列上的信息补全。</p>
 <p>如修改列 <code class="docutils literal notranslate"><span class="pre">k1</span> <span class="pre">INT</span> <span class="pre">SUM</span> <span class="pre">NULL</span> <span class="pre">DEFAULT</span> <span class="pre">&quot;1&quot;</span></code> 类型为 BIGINT，则需执行命令如下：</p>
-<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl1</span> <span class="pre">MODIFY</span> <span class="pre">COLUMN</span> <span class="pre">`k1</span> <span class="pre">BIGINT</span> <span class="pre">SUM</span> <span class="pre">NULL</span> <span class="pre">DEFAULT</span> <span class="pre">&quot;1&quot;;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">tbl1</span> <span class="pre">MODIFY</span> <span class="pre">COLUMN</span> <span class="pre">`k1`</span> <span class="pre">BIGINT</span> <span class="pre">SUM</span> <span class="pre">NULL</span> <span class="pre">DEFAULT</span> <span class="pre">&quot;1&quot;;</span></code></p>
 <p>注意，除新的列类型外，如聚合方式，Nullable 属性，以及默认值都要按照原信息补全。</p>
 </li>
 <li><p class="first">不支持修改列名称、聚合类型、Nullable 属性、默认值以及列注释。</p>

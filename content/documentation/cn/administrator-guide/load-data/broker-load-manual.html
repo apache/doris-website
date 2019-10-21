@@ -112,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -359,8 +360,7 @@
 <p>原始文件的行数 = <code class="docutils literal notranslate"><span class="pre">dpp.abnorm.ALL</span> <span class="pre">+</span> <span class="pre">dpp.norm.ALL</span></code></p>
 </li>
 <li><p class="first">exec_mem_limit</p>
-<p>导入任务的内存使用上限。当导入任务使用的内存超过设定上限时，导入任务会被 CANCEL。默认为 2G，单位为字节。</p>
-<p>当导入出现 <code class="docutils literal notranslate"><span class="pre">Memory</span> <span class="pre">exceed</span> <span class="pre">limit</span></code> 错误时，可以适当调整这个参数，如调整为 4G、8G 等。</p>
+<p>导入内存限制。默认是 2GB。单位为字节。</p>
 </li>
 <li><p class="first">strict_mode</p>
 <p>Broker load 导入可以开启 strict mode 模式。开启方式为 <code class="docutils literal notranslate"><span class="pre">properties</span> <span class="pre">(&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;)</span></code> 。默认的 strict mode 为开启。</p>

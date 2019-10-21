@@ -112,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -248,7 +249,7 @@
 </div>
 <div class="section" id="id4">
 <h3>创建例行导入任务<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<p>创建例行导入任务的的详细语法可以连接到 Doris 后，执行 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 查看语法帮助。这里主要详细介绍，创建作业时的注意事项。</p>
+<p>创建例行导入任务的的详细语法可以连接到 Doris 后，执行 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 查看语法帮助。这里主要详细介绍，创建作业时的注意事项。</p>
 <ul>
 <li><p class="first">columns_mapping</p>
 <p><code class="docutils literal notranslate"><span class="pre">columns_mapping</span></code> 主要用于指定表结构和 message 中的列映射关系，以及一些列的转换。如果不指定，Doris 会默认 message 中的列和表结构的列按顺序一一对应。虽然在正常情况下，如果源数据正好一一对应，则不指定也可以进行正常的数据导入。但是我们依然强烈建议用户<strong>显式的指定列映射关系</strong>。这样当表结构发生变化（比如增加一个 nullable 的列），或者源文件发生变化（比如增加了一列）时，导入任务依然可以继续进行。否则，当发生上述变动后，因为列映射关系不再一一对应，导入将报错。</p>

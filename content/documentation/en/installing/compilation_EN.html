@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -248,8 +249,10 @@ $ git clone https://github.com/apache/incubator-doris.git
 <p>You can try to compile Doris directly in your own Linux environment.</p>
 <ol>
 <li><p class="first">System Dependence</p>
-<p><code class="docutils literal notranslate"><span class="pre">GCC</span> <span class="pre">5.3.1+,</span> <span class="pre">Oracle</span> <span class="pre">JDK</span> <span class="pre">1.8+,</span> <span class="pre">Python</span> <span class="pre">2.7+,</span> <span class="pre">Apache</span> <span class="pre">Maven</span> <span class="pre">3.5+,</span> <span class="pre">CMake</span> <span class="pre">3.4.3+</span></code></p>
-<p>After installation, set environment variables <code class="docutils literal notranslate"><span class="pre">PATH',</span> </code>JAVA_HOME’, etc.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GCC</span> <span class="pre">5.3.1+,</span> <span class="pre">Oracle</span> <span class="pre">JDK</span> <span class="pre">1.8+,</span> <span class="pre">Python</span> <span class="pre">2.7+,</span> <span class="pre">Apache</span> <span class="pre">Maven</span> <span class="pre">3.5+,</span> <span class="pre">CMake</span> <span class="pre">3.11+</span></code></p>
+<p>If you are using Ubuntu 16.04 or newer, you can use the following command to install the dependencies</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">build-essential</span> <span class="pre">openjdk-8-jdk</span> <span class="pre">maven</span> <span class="pre">cmake</span> <span class="pre">byacc</span> <span class="pre">flex</span> <span class="pre">automake</span> <span class="pre">libtool-bin</span> <span class="pre">bison</span> <span class="pre">binutils-dev</span> <span class="pre">libiberty-dev</span></code></p>
+<p>After installation, set environment variables <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, <code class="docutils literal notranslate"><span class="pre">JAVA_HOME</span></code>, etc.</p>
 </li>
 <li><p class="first">Compile Doris</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sh build.sh

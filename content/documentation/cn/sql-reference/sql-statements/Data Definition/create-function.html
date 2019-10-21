@@ -104,6 +104,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -220,6 +221,10 @@
       &quot;finalize_fn&quot;: 聚合函数获取最后结果的函数签名。对于聚合函数是可选项，如果没有指定，将会使用默认的获取结果函数
 
       &quot;md5&quot;: 函数动态链接库的MD5值，用于校验下载的内容是否正确。此选项是可选项
+
+      &quot;prepare_fn&quot;: 自定义函数的prepare函数的函数签名，用于从动态库里面找到prepare函数入口。此选项对于自定义函数是可选项
+
+      &quot;close_fn&quot;: 自定义函数的close函数的函数签名，用于从动态库里面找到close函数入口。此选项对于自定义函数是可选项
 </pre></div>
 </div>
 </div></blockquote>
@@ -229,18 +234,26 @@
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li>创建一个自定义标量函数</li>
-</ol>
+<ol>
+<li><p class="first">创建一个自定义标量函数</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">FUNCTION</span> <span class="n">my_add</span><span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="n">INT</span><span class="p">)</span> <span class="n">RETURNS</span> <span class="n">INT</span> <span class="n">PROPERTIES</span> <span class="p">(</span>
-    <span class="s2">&quot;symbol&quot;</span> <span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;object_file&quot;</span> <span class="o">=</span> <span class="s2">&quot;http://host:port/libmyadd.so&quot;</span>
+	<span class="s2">&quot;symbol&quot;</span> <span class="o">=</span> 	<span class="s2">&quot;_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;object_file&quot;</span> <span class="o">=</span> <span class="s2">&quot;http://host:port/libmyadd.so&quot;</span>
 <span class="p">);</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>创建一个自定义聚合函数</li>
-</ol>
+</li>
+<li><p class="first">创建一个有prepare/close函数的自定义标量函数</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">FUNCTION</span> <span class="n">my_add</span><span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="n">INT</span><span class="p">)</span> <span class="n">RETURNS</span> <span class="n">INT</span> <span class="n">PROPERTIES</span> <span class="p">(</span>
+	<span class="s2">&quot;symbol&quot;</span> <span class="o">=</span> 	<span class="s2">&quot;_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;prepare_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf14AddUdf_prepareEPNS_15FunctionContextENS0_18FunctionStateScopeE&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;close_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf12AddUdf_closeEPNS_15FunctionContextENS0_18FunctionStateScopeE&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;object_file&quot;</span> <span class="o">=</span> <span class="s2">&quot;http://host:port/libmyadd.so&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">创建一个自定义聚合函数</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">AGGREGATE</span> <span class="n">FUNCTION</span> <span class="n">my_count</span> <span class="p">(</span><span class="n">BIGINT</span><span class="p">)</span> <span class="n">RETURNS</span> <span class="n">BIGINT</span> <span class="n">PROPERTIES</span> <span class="p">(</span>
     <span class="s2">&quot;init_fn&quot;</span><span class="o">=</span><span class="s2">&quot;_ZN9doris_udf9CountInitEPNS_15FunctionContextEPNS_9BigIntValE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;update_fn&quot;</span><span class="o">=</span><span class="s2">&quot;_ZN9doris_udf11CountUpdateEPNS_15FunctionContextERKNS_6IntValEPNS_9BigIntValE&quot;</span><span class="p">,</span>
@@ -250,6 +263,8 @@
 <span class="p">);</span>
 </pre></div>
 </div>
+</li>
+</ol>
 </div>
 <div class="section" id="keyword">
 <h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>

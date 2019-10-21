@@ -104,6 +104,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -279,6 +280,9 @@ NOTE:
     seq 1 10 | awk &#39;{OFS=&quot;\t&quot;}{print $1, $1 * 10}&#39; | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_load?label=123
 
 6. 导入含有HLL列的表，可以是表中的列或者数据中的列用于生成HLL列（用户是defalut_cluster中的
+
+    curl --location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123\&amp;max_filter_ratio=0.2
+          \&amp;columns=k1,k2,k3\&amp;hll=hll_column1,k1:hll_column2,k2
 
     curl --location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123\&amp;max_filter_ratio=0.2
           \&amp;hll=hll_column1,tmp_k4:hll_column2,tmp_k5\&amp;columns=k1,k2,k3,tmp_k4,tmp_k5

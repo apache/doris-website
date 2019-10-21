@@ -104,6 +104,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -298,12 +299,13 @@
         除AGGREGATE KEY外，其他key_type在建表时，value列不需要指定聚合类型。
 
 4. partition_desc
-    1) Range 分区
+    partition描述有两种使用方式
+    1) LESS THAN 
     语法：
         PARTITION BY RANGE (k1, k2, ...)
         (
-        PARTITION partition_name VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
-        PARTITION partition_name VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
+        PARTITION partition_name1 VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...),
+        PARTITION partition_name2 VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
         ...
         )
     说明：
@@ -318,6 +320,18 @@
     注意：
         1) 分区一般用于时间维度的数据管理
         2) 有数据回溯需求的，可以考虑首个分区为空分区，以便后续增加分区
+        
+    2）Fixed Range
+    语法：
+        PARTITION BY RANGE (k1, k2, k3, ...)
+        (
+        PARTITION partition_name1 VALUES [(&quot;k1-lower1&quot;, &quot;k2-lower1&quot;, &quot;k3-lower1&quot;,...), (&quot;k1-upper1&quot;, &quot;k2-upper1&quot;, &quot;k3-upper1&quot;, ...)),
+        PARTITION partition_name2 VALUES [(&quot;k1-lower1-2&quot;, &quot;k2-lower1-2&quot;, ...), (&quot;k1-upper1-2&quot;, MAXVALUE, ))
+        &quot;k3-upper1-2&quot;, ...
+        )
+    说明：
+        1）Fixed Range比LESS THAN相对灵活些，左右区间完全由用户自己确定
+        2）其他与LESS THAN保持同步
 
 5. distribution_desc
     1) Hash 分桶
@@ -403,8 +417,10 @@
     &quot;storage_cooldown_time&quot; = &quot;2015-06-04 00:00:00&quot;
     );
 
-3. 创建一个 olap 表，使用 Key Range 分区，使用Hash分桶，默认使用列存，
+3. 创建一个 olap 表，使用 Range 分区，使用Hash分桶，默认使用列存，
    相同key的记录同时存在，设置初始存储介质和冷却时间
+   
+1）LESS THAN
     CREATE TABLE example_db.table_range
     (
     k1 DATE,
@@ -433,6 +449,27 @@
     [ {&quot;2014-06-01&quot;},   {&quot;2014-12-01&quot;} )
     
     不在这些分区范围内的数据将视为非法数据被过滤
+    
+2) Fixed Range
+    CREATE TABLE table_range
+    (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    v1 VARCHAR(2048),
+    v2 DATETIME DEFAULT &quot;2014-02-04 15:36:00&quot;
+    )
+    ENGINE=olap
+    DUPLICATE KEY(k1, k2, k3)
+    PARTITION BY RANGE (k1, k2, k3)
+    (
+    PARTITION p1 VALUES [(&quot;2014-01-01&quot;, &quot;10&quot;, &quot;200&quot;), (&quot;2014-01-01&quot;, &quot;20&quot;, &quot;300&quot;)),
+    PARTITION p2 VALUES [(&quot;2014-06-01&quot;, &quot;100&quot;, &quot;200&quot;), (&quot;2014-07-01&quot;, &quot;100&quot;, &quot;300&quot;))
+    )
+    DISTRIBUTED BY HASH(k2) BUCKETS 32
+    PROPERTIES(
+    &quot;storage_medium&quot; = &quot;SSD&quot;
+    );
 
 4. 创建一个 mysql 表
     CREATE TABLE example_db.table_mysql

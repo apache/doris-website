@@ -93,6 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="internal/index.html">Design Documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -283,24 +284,25 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l3"><a class="reference internal" href="getting-started/best-practice_EN.html#schema-change">2 Schema Change</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/data-partition_EN.html">Data partition</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="getting-started/data-partition_EN.html#basic-concepts">Basic concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/data-partition_EN.html">Data Partition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/data-partition_EN.html#basic-concepts">Basic Concepts</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#row-column">Row &amp; Column</a></li>
+<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#tablet-partition">Tablet &amp; Partition</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="getting-started/data-partition_EN.html#id1">Data partition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/data-partition_EN.html#data-division">Data division</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#column-definition">Column Definition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#zoning-and-bucketing">Zoning and Bucketing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#partitioning-and-binning">Partitioning and binning</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="getting-started/data-partition_EN.html#multi-column-partition">Multi-column partition</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#properties">PROPERTIES</a></li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#engine">ENGINE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#others">Others</a></li>
+<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#other">Other</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="getting-started/data-partition_EN.html#common-questions">Common Questions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#common-problems-in-table-building-operation">Common problems in table building operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/data-partition_EN.html#common-problem">common problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="getting-started/data-partition_EN.html#build-table-operations-faq">Build Table Operations FAQ</a></li>
 </ul>
 </li>
 </ul>
@@ -515,6 +517,26 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer-guide/index.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer-guide/debug-tool.html">Debug Tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer-guide/debug-tool.html#preparing">Preparing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer-guide/debug-tool.html#memory">Memory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#log">Log</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#heap-profile">HEAP PROFILE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#pprof-remote-server">pprof remote server</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#lsan">LSAN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#asan">ASAN</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="developer-guide/debug-tool.html#cpu">CPU</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#pprof">pprof</a></li>
+<li class="toctree-l4"><a class="reference internal" href="developer-guide/debug-tool.html#perf-flamegragh">perf + flamegragh</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="community/index.html">Apache Commnity</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="community/gitter_EN.html">Gitter Manual</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="community/gitter_EN.html#gitter-introduction">Gitter introduction</a></li>

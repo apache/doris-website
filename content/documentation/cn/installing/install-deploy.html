@@ -103,6 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -357,7 +358,7 @@
 <td>heartbeat_service_port</td>
 <td>9050</td>
 <td>FE --&gt; BE</td>
-<td>BE 上心跳服务端口（thrift），用户接收来自 FE 的心跳</td>
+<td>BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳</td>
 </tr>
 <tr>
 <td>BE</td>
@@ -644,6 +645,14 @@
 <p>出现这个问题的主要原因是：当用户通过 <code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">BACKEND</span></code> 语句添加 BE 后，FE 会识别该语句中指定的是 hostname 还是 IP。如果是 hostname，则 FE 会自动将其转换为 IP 地址并存储到元数据中。当 BE 在汇报任务完成信息时，会携带自己的 IP 地址。而如果 FE 发现 BE 汇报的 IP 地址和元数据中不一致时，就会出现如上错误。</p>
 <p>这个错误的解决方法：1）分别在 FE 和 BE 设置 <strong>priority_network</strong> 参数。通常 FE 和 BE 都处于一个网段，所以该参数设置为相同即可。2）在 <code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">BACKEND</span></code> 语句中直接填写 BE 正确的 IP 地址而不是 hostname，以避免 FE 获取到错误的 IP 地址。</p>
 </div></blockquote>
+</li>
+<li><p class="first">BE 进程文件句柄数</p>
+<p>BE进程文件句柄数，受min_file_descriptor_number/max_file_descriptor_number两个参数控制。</p>
+<p>如果不在[min_file_descriptor_number, max_file_descriptor_number]区间内，BE进程启动会出错，可以使用ulimit进行设置。</p>
+<p>min_file_descriptor_number的默认值为65536。</p>
+<p>max_file_descriptor_number的默认值为131072.</p>
+<p>举例而言：ulimit -n 65536; 表示将文件句柄设成65536。</p>
+<p>启动BE进程之后，可以通过 cat /proc/$pid/limits 查看进程实际生效的句柄数</p>
 </li>
 </ol>
 </div>

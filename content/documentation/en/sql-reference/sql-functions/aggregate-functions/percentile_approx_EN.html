@@ -104,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../sql-statements/index.html">DDL Statements</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -187,8 +188,9 @@
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="syntax">
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">PERCENTILE_APPROX(expr,</span> <span class="pre">DOUBLE</span> <span class="pre">p)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PERCENTILE_APPROX(expr,</span> <span class="pre">DOUBLE</span> <span class="pre">p[,</span> <span class="pre">DOUBLE</span> <span class="pre">compression])</span></code></p>
 <p>Return the approximation of the point p, where the value of P is between 0 and 1.</p>
+<p>Compression param is optional and can be setted to a value in the range of (0, 10000). The bigger compression you set, the more precise result and more time cost you will get. If it is not setted or not setted in the correct range, PERCENTILE_APPROX function will run with a default compression param of 10000.</p>
 <p>This function uses fixed size memory, so less memory can be used for columns with high cardinality, and can be used to calculate statistics such as tp99.</p>
 </div>
 </div>
@@ -199,6 +201,12 @@
 | table    | percentile_approx(`cost_time`, 0.99) |
 +----------+--------------------------------------+
 | test     |                                54.22 |
++----------+--------------------------------------+
+MySQL &gt; select `table`, percentile_approx(cost_time,0.99, 100) from log_statis group by `table`;
++---------------------+---------------------------+
+| table    | percentile_approx(`cost_time`, 0.99, 100) |
++----------+--------------------------------------+
+| test     |                                54.21 |
 +----------+--------------------------------------+
 ##keyword
 PERCENTILE_APPROX,PERCENTILE,APPROX

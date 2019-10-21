@@ -111,6 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -246,7 +247,7 @@
 </div>
 <div class="section" id="create-routine-import-tasks">
 <h3>Create routine import tasks<a class="headerlink" href="#create-routine-import-tasks" title="Permalink to this headline">¶</a></h3>
-<p>After creating a detailed grammar for routine import tasks, you can connect to Doris and execute <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD';</span> </code>Check grammar help. Here is a detailed description of the creation of the job note.</p>
+<p>After creating a detailed grammar for routine import tasks, you can connect to Doris and execute <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD';</span> </code>Check grammar help. Here is a detailed description of the creation of the job note.</p>
 <ul>
 <li><p class="first">columns_mapping</p>
 <p><code class="docutils literal notranslate"><span class="pre">colum_mapping</span></code> is mainly used to specify table structure and column mapping relationships in message, as well as transformation of some columns. If not specified, Doris defaults that columns in message and columns in table structure correspond one by one in order. Although under normal circumstances, if the source data is exactly one-to-one correspondence, it is not specified that normal data import can also be carried out. However, we strongly recommend that users <strong>explicitly specify column mapping relationships</strong>. In this way, when the table structure changes (such as adding a nullable column) or the source file changes (such as adding a column), the import task can continue. Otherwise, when the above changes occur, the import will report an error because the column mapping relationship no longer corresponds one to one.</p>

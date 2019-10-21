@@ -105,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -256,8 +257,6 @@ PROPERTIES
 <ul>
 <li><p class="first">Partition 列可以指定一列或多列。分区类必须为 KEY 列。多列分区的使用方式在后面 <strong>多列分区</strong> 小结介绍。</p>
 </li>
-<li><p class="first">Partition 的区间界限是左闭右开。比如如上示例，如果想在 p201702 存储所有2月份的数据，则分区值需要输入 “2017-03-01”，即范围为：[2017-02-01, 2017-03-01)。</p>
-</li>
 <li><p class="first">不论分区列是什么类型，在写分区值时，都需要加双引号。</p>
 </li>
 <li><p class="first">分区列通常为时间列，以方便的管理新旧数据。</p>
@@ -265,7 +264,10 @@ PROPERTIES
 <li><p class="first">分区数量理论上没有上限。</p>
 </li>
 <li><p class="first">当不使用 Partition 建表时，系统会自动生成一个和表名同名的，全值范围的 Partition。该 Partition 对用户不可见，并且不可删改。</p>
-<p>这里举例说明，当分区在进行增删操作时，分区范围的变化情况。</p>
+</li>
+<li><p class="first">Partition 支持通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">LESS</span> <span class="pre">THAN</span> <span class="pre">(...)</span></code> 仅指定上界，系统会将前一个分区的上界作为该分区的下界，生成一个左闭右开的区间。通过，也支持通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">[...)</span></code> 指定同时指定上下界，生成一个左闭右开的区间。</p>
+</li>
+<li><p class="first">通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">[...)</span></code> 同是指定上下界比较容易理解。这里举例说明，当使用 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">LESS</span> <span class="pre">THAN</span> <span class="pre">(...)</span></code> 语句进行分区的增删操作时，分区范围的变化情况：</p>
 <ul>
 <li><p class="first">如上示例，当建表完成后，会自动生成如下3个分区：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p201701</span><span class="p">:</span> <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
@@ -283,9 +285,9 @@ PROPERTIES
 </div>
 </li>
 <li><p class="first">此时我们删除分区 p201703，则分区结果如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">p201701</span><span class="p">:</span> <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">p201702</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">p201705</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p201701</span><span class="p">:</span> <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<span class="n">p201702</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<span class="n">p201705</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
 </pre></div>
 </div>
 <blockquote>
@@ -293,16 +295,16 @@ PROPERTIES
 </div></blockquote>
 </li>
 <li><p class="first">继续删除分区 p201702，分区结果如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* p201701: [MIN_VALUE,  2017-02-01)
-* p201705: [2017-04-01, 2017-06-01)
-* 空洞范围变为：[2017-02-01, 2017-04-01)
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>p201701: [MIN_VALUE,  2017-02-01)
+p201705: [2017-04-01, 2017-06-01)
+空洞范围变为：[2017-02-01, 2017-04-01)
 </pre></div>
 </div>
 </li>
 <li><p class="first">现在增加一个分区 p201702new VALUES LESS THAN (“2017-03-01”)，分区结果如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">p201701</span><span class="p">:</span>    <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">p201702new</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">p201705</span><span class="p">:</span>    <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p201701</span><span class="p">:</span>    <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<span class="n">p201702new</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<span class="n">p201705</span><span class="p">:</span>    <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
 </pre></div>
 </div>
 <blockquote>
@@ -310,9 +312,9 @@ PROPERTIES
 </div></blockquote>
 </li>
 <li><p class="first">现在删除分区 p201701，并添加分区 p201612 VALUES LESS THAN (“2017-01-01”)，分区结果如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">p201612</span><span class="p">:</span>    <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">p201702new</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">p201705</span><span class="p">:</span>    <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span> 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p201612</span><span class="p">:</span>    <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<span class="n">p201702new</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
+<span class="n">p201705</span><span class="p">:</span>    <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span> 
 </pre></div>
 </div>
 <blockquote>
@@ -322,8 +324,8 @@ PROPERTIES
 </ul>
 </li>
 </ul>
-<p>综上，分区的删除不会改变已存在分区的范围。删除分区可能出现空洞。增加分区时，分区的下界紧接上一个分区的上界。
-不可添加范围重叠的分区。</p>
+<p>综上，分区的删除不会改变已存在分区的范围。删除分区可能出现空洞。通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">LESS</span> <span class="pre">THAN</span></code> 语句增加分区时，分区的下界紧接上一个分区的上界。</p>
+<p>不可添加范围重叠的分区。</p>
 </li>
 <li><p class="first">Bucket</p>
 <ul class="simple">

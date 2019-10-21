@@ -105,6 +105,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -188,10 +189,10 @@
 <div class="section" id="syntax">
 <h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="p">[</span><span class="n">AGGREGATE</span><span class="p">]</span> <span class="n">FUNCTION</span> <span class="n">function_name</span>
-<span class="p">(</span><span class="n">angry</span> <span class="nb">type</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
-<span class="n">RETURNS</span> <span class="n">ret_type</span>
-<span class="p">[</span><span class="n">INTERMEDIATE</span> <span class="n">inter_type</span><span class="p">]</span>
-<span class="p">[</span><span class="n">PROPERTIES</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span> <span class="p">[,</span> <span class="o">...</span><span class="p">])</span> <span class="p">]</span>
+	<span class="p">(</span><span class="n">angry</span> <span class="nb">type</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+	<span class="n">RETURNS</span> <span class="n">ret_type</span>
+	<span class="p">[</span><span class="n">INTERMEDIATE</span> <span class="n">inter_type</span><span class="p">]</span>
+	<span class="p">[</span><span class="n">PROPERTIES</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span> <span class="p">[,</span> <span class="o">...</span><span class="p">])</span> <span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -199,10 +200,10 @@
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">AGGREGATE</span></code>: If this is the case, it means that the created function is an aggregate function, otherwise it is a scalar function.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Function_name':</span> <span class="pre">To</span> <span class="pre">create</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">function,</span> <span class="pre">you</span> <span class="pre">can</span> <span class="pre">include</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">database.</span> <span class="pre">For</span> <span class="pre">example:</span></code>db1.my_func’.</p>
-<p><code class="docutils literal notranslate"><span class="pre">arg_type':</span> <span class="pre">The</span> <span class="pre">parameter</span> <span class="pre">type</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">function</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">type</span> <span class="pre">defined</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">table</span> <span class="pre">building.</span> <span class="pre">Variable-length</span> <span class="pre">parameters</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">represented</span> <span class="pre">by</span></code>,…’. If it is a variable-length type, the type of the variable-length part of the parameters is the same as the last non-variable-length parameter type.</p>
-<p>` ret_type’: Function return type.</p>
-<p>` Inter_type’: A data type used to represent the intermediate stage of an aggregate function.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Function_name</span></code>: To create the name of the function, you can include the name of the database. For example: `db1.my_func’.</p>
+<p><code class="docutils literal notranslate"><span class="pre">arg_type':</span> <span class="pre">The</span> <span class="pre">parameter</span> <span class="pre">type</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">function</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">type</span> <span class="pre">defined</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">table</span> <span class="pre">building.</span> <span class="pre">Variable-length</span> <span class="pre">parameters</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">represented</span> <span class="pre">by</span></code>,…`. If it is a variable-length type, the type of the variable-length part of the parameters is the same as the last non-variable-length parameter type.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ret_type</span></code>: Function return type.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Inter_type</span></code>: A data type used to represent the intermediate stage of an aggregate function.</p>
 <p><code class="docutils literal notranslate"><span class="pre">properties</span></code>: Used to set properties related to this function. Properties that can be set include</p>
 <p>“Object_file”: Custom function dynamic library URL path, currently only supports HTTP/HTTPS protocol, this path needs to remain valid throughout the life cycle of the function. This option is mandatory</p>
 <p>“symbol”: Function signature of scalar functions for finding function entries from dynamic libraries. This option is mandatory for scalar functions</p>
@@ -212,33 +213,45 @@
 <p>“serialize_fn”: Serialized function signature of aggregate function. For aggregation functions, it is optional, and if not specified, the default serialization function will be used</p>
 <p>“finalize_fn”: A function signature that aggregates functions to obtain the final result. For aggregation functions, it is optional. If not specified, the default fetch result function will be used.</p>
 <p>“md5”: The MD5 value of the function dynamic link library, which is used to verify that the downloaded content is correct. This option is optional</p>
+<p>“prepare_fn”: Function signature of the prepare function for finding the entry from the dynamic library. This option is optional for custom functions</p>
+<p>“close_fn”: Function signature of the close function for finding the entry from the dynamic library. This option is optional for custom functions</p>
 </div></blockquote>
-<p>This statement creates a custom function. Executing this command requires that the user have `ADMIN’privileges.</p>
-<p>If the `function_name’contains the database name, the custom function will be created in the corresponding database, otherwise the function will be created in the database where the current session is located. The name and parameters of the new function cannot be the same as functions already existing in the current namespace, otherwise the creation will fail. But only with the same name and different parameters can the creation be successful.</p>
+<p>This statement creates a custom function. Executing this command requires that the user have <code class="docutils literal notranslate"><span class="pre">ADMIN</span></code> privileges.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">function_name</span></code> contains the database name, the custom function will be created in the corresponding database, otherwise the function will be created in the database where the current session is located. The name and parameters of the new function cannot be the same as functions already existing in the current namespace, otherwise the creation will fail. But only with the same name and different parameters can the creation be successful.</p>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li>Create a custom scalar function</li>
-</ol>
+<ol>
+<li><p class="first">Create a custom scalar function</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">FUNCTION</span> <span class="n">my_add</span><span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="n">INT</span><span class="p">)</span> <span class="n">RETURNS</span> <span class="n">INT</span> <span class="n">PROPERTIES</span> <span class="p">(</span>
-<span class="s2">&quot;Symbol&quot;</span><span class="o">=</span><span class="s2">&quot;&quot;</span>\\\\\\\\ <span class="n">zn9doris</span>\\\ <span class="n">udf6addudfepns</span>\\ <span class="n">FunctionContexterkns</span>\\ <span class="n">INTVales</span> <span class="mi">4</span>\<span class="p">,</span>
-<span class="s2">&quot;object file&quot;</span> <span class="o">=</span><span class="s2">&quot;http://host:port /libmyadd.so&quot;</span>
+	<span class="s2">&quot;symbol&quot;</span> <span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;object_file&quot;</span> <span class="o">=</span><span class="s2">&quot;http://host:port/libmyadd.so&quot;</span>
 <span class="p">);</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>Create a custom aggregation function</li>
-</ol>
+</li>
+<li><p class="first">Create a custom scalar function with prepare/close functions</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">FUNCTION</span> <span class="n">my_add</span><span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="n">INT</span><span class="p">)</span> <span class="n">RETURNS</span> <span class="n">INT</span> <span class="n">PROPERTIES</span> <span class="p">(</span>
+	<span class="s2">&quot;symbol&quot;</span> <span class="o">=</span> 	<span class="s2">&quot;_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;prepare_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf14AddUdf_prepareEPNS_15FunctionContextENS0_18FunctionStateScopeE&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;close_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf12AddUdf_closeEPNS_15FunctionContextENS0_18FunctionStateScopeE&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;object_file&quot;</span> <span class="o">=</span> <span class="s2">&quot;http://host:port/libmyadd.so&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a custom aggregation function</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">AGGREGATE</span> <span class="n">FUNCTION</span> <span class="n">my_count</span> <span class="p">(</span><span class="n">BIGINT</span><span class="p">)</span> <span class="n">RETURNS</span> <span class="n">BIGINT</span> <span class="n">PROPERTIES</span> <span class="p">(</span>
-<span class="s2">&quot;init u fn&quot;</span><span class="o">=</span> <span class="s2">&quot;ZN9doris, udf9CountInitEPNS -u 15FunctionContextEPNS, u 9BigIntValE&quot;</span><span class="p">,</span>
-<span class="s2">&quot;Update  fn&quot;</span> <span class="o">=</span> <span class="s2">&quot; zn9doris \ udf11Countupdateepns \ \ FunctionContexterkns \ Intvalepns  bigintvale&quot;</span><span class="p">,</span>
-<span class="s2">&quot;Merge fn&quot;</span><span class="o">=</span><span class="s2">&quot;\ zn9doris</span><span class="se">\\</span><span class="s2"> udf10CountMergeepns\ \ FunctionContexterkns\ Bigintvaleps2</span><span class="se">\\\\\\\\\\\\\</span>
-<span class="s2">&quot;</span><span class="n">Finalize</span> \ <span class="n">fn</span><span class="s2">&quot; = &quot;</span>\ <span class="n">zn9doris</span> \ <span class="n">udf13Count</span> <span class="n">Finalizepns</span> \\ <span class="n">FunctionContexterkns</span> \ <span class="n">Bigintvale</span><span class="s2">&quot;,</span>
-<span class="s2">&quot;object&quot;</span> <span class="n">file</span> <span class="o">=</span><span class="s2">&quot;http://host:port /libudasample.so&quot;</span>
+	<span class="s2">&quot;init_fn&quot;</span><span class="o">=</span> <span class="s2">&quot;_ZN9doris_udf6AddUdfEPNS_15FunctionContextERKNS_6IntValES4_&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;update_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;zn9dorisudf11CountupdateepnsFunctionContexterknsIntvalepnsbigintvale&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;merge_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;zn9dorisudf10CountMergeepnsFunctionContexterknsBigintvaleps2</span>
+	<span class="s2">&quot;finalize_fn&quot;</span> <span class="o">=</span> <span class="s2">&quot;zn9dorisudf13CountFinalizepnsFunctionContexterknsBigintvale&quot;</span><span class="p">,</span>
+	<span class="s2">&quot;object_file&quot;</span> <span class="o">=</span> <span class="s2">&quot;http://host:port/libudasample.so&quot;</span>
 <span class="p">);</span>
 </pre></div>
 </div>
+</li>
+</ol>
 <p>##keyword
 CREATE,FUNCTION</p>
 </div>

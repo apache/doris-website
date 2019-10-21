@@ -105,6 +105,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -237,23 +238,30 @@ Although the information of mini load can be found in subsequent queries, it can
 <li>When importing from the curl command line, you need to add escape before &amp; or the parameter information will be lost.</li>
 </ol>
 <p>‘35;’35; example</p>
-<ol class="simple">
-<li>Import the data from the local file’testData’into the table of’testTbl’ in the database’testDb’(the user is in defalut_cluster)
-curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123</li>
-<li>Import the data from the local file’testData’into the table of’testTbl’ in the database’testDb’(the user is in test_cluster). The timeout time is 3600 seconds.
-curl –location-trusted -u root&#64;test_cluster:root -T testData http://fe.host:port/api/testDb/testTbl/_load?label=123&amp;timeout=3600</li>
-<li>Import data from the local file’testData’into the’testTbl’ table in the database’testDb’, allowing a 20% error rate (the user is in defalut_cluster)
-curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2</li>
-<li>Import the data from the local file’testData’into the table’testTbl’ in the database’testDb’, allowing a 20% error rate, and specify the column name of the file (the user is in defalut_cluster)
-curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2&amp;columns=k1,k2,k3</li>
-<li>Import in streaming mode (user is in defalut_cluster)
-seq 1 10 | awk ‘{OFS=”\t”}{print $1, $1 * 10}’ | curl –location-trusted -u root -T - http://host:port/api/testDb/testTbl/_load?label=123</li>
-<li>Import tables containing HLL columns, which can be columns in tables or columns in data to generate HLL columns (users are in defalut_cluster)</li>
-</ol>
+<ol>
+<li><p class="first">Import the data from the local file’testData’into the table of’testTbl’ in the database’testDb’(the user is in defalut_cluster)
+curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123</p>
+</li>
+<li><p class="first">Import the data from the local file’testData’into the table of’testTbl’ in the database’testDb’(the user is in test_cluster). The timeout time is 3600 seconds.
+curl –location-trusted -u root&#64;test_cluster:root -T testData http://fe.host:port/api/testDb/testTbl/_load?label=123&amp;timeout=3600</p>
+</li>
+<li><p class="first">Import data from the local file’testData’into the’testTbl’ table in the database’testDb’, allowing a 20% error rate (the user is in defalut_cluster)
+curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2</p>
+</li>
+<li><p class="first">Import the data from the local file’testData’into the table’testTbl’ in the database’testDb’, allowing a 20% error rate, and specify the column name of the file (the user is in defalut_cluster)
+curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2&amp;columns=k1,k2,k3</p>
+</li>
+<li><p class="first">Import in streaming mode (user is in defalut_cluster)
+seq 1 10 | awk ‘{OFS=”\t”}{print $1, $1 * 10}’ | curl –location-trusted -u root -T - http://host:port/api/testDb/testTbl/_load?label=123</p>
+</li>
+<li><p class="first">Import tables containing HLL columns, which can be columns in tables or columns in data to generate HLL columns (users are in defalut_cluster)</p>
+<p>curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2&amp;hll=hll_column1,k1:hll_column2,k2
+&amp;columns=k1,k2,k3</p>
 <p>curl –location-trusted -u root -T testData http://host:port/api/testDb/testTbl/_load?label=123&amp;max_filter_ratio=0.2
 &amp;hll=hll_column1,tmp_k4:hll_column2,tmp_k5&amp;columns=k1,k2,k3,tmp_k4,tmp_k5</p>
-<ol class="simple">
-<li>View imports after submission</li>
+</li>
+<li><p class="first">View imports after submission</p>
+</li>
 </ol>
 <p>curl -u root http://host:port/api/testDb/_load_info?label=123</p>
 <div class="section" id="keyword">

@@ -105,6 +105,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">Developer Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache Commnity</a></li>
 </ul>
 </li>
@@ -199,11 +200,13 @@ This function is an aggregation function that aggregates HLL type fields and ret
 This function is used to estimate the cardinality of a single HLL sequence</p>
 <p>HLL_HASH(column_name)
 Generate HLL column types for insert or import, see the instructions for the use of imports</p>
+<p>EMPTY_HLL()
+Generate empty HLL column types for insert or import, see the instructions for the use of imports</p>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li>First create a table with HLL columns
+<ol>
+<li><p class="first">First create a table with HLL columns
 create table test(
 dt date,
 id int,
@@ -212,16 +215,22 @@ Province of char (10),
 The char (1),
 the European Union,
 European Union
-distributed by hash(id) buckets 32;</li>
-<li>Import data. See help curl for the way you import it.</li>
-</ol>
-<p>A. Generate HLL columns using columns in tables
-curl –location-trusted -uname:password -T data http://host/api/test_db/test/_load?label=load_1&amp;hll=set1,id:set2,name</p>
-<p>B. Generate HLL columns using a column in the data
-curl –location-trusted -uname:password -T data http://host/api/test_db/test/_load?label=load_1&amp;hll=set1,cuid:set2,os
-&amp;columns=dt,id,name,province,sex,cuid,os</p>
-<ol class="simple">
-<li>There are three common ways of aggregating data: (without aggregating the base table directly, the speed may be similar to that of using NDV directly)</li>
+distributed by hash(id) buckets 32;</p>
+</li>
+<li><p class="first">Import data. See help curl for the way you import it.</p>
+<p>A. Generate HLL columns using columns in tables</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">uname</span><span class="p">:</span><span class="n">password</span> <span class="o">-</span><span class="n">T</span> <span class="n">data</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:load_1&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;columns:dt, id, name, province, os, set1=hll_hash(id), set2=hll_hash(name)&quot;</span>
+     <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">test_db</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+<p>B. Generate HLL columns using a column in the data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">uname</span><span class="p">:</span><span class="n">password</span> <span class="o">-</span><span class="n">T</span> <span class="n">data</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:load_1&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;columns:dt, id, name, province, sex, cuid, os, set1=hll_hash(cuid), set2=hll_hash(os)&quot;</span>
+     <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">test_db</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">There are three common ways of aggregating data: (without aggregating the base table directly, the speed may be similar to that of using NDV directly)</p>
+</li>
 </ol>
 <p>A. Create a rollup that allows HLL columns to generate aggregation.
 alter table test add rollup test_rollup(dt, set1);</p>

@@ -103,6 +103,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer-guide/index.html">开发者手册</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../community/index.html">Apache 社区</a></li>
 </ul>
 </li>
@@ -187,8 +188,10 @@
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="syntax">
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">PERCENTILE_APPROX(expr,</span> <span class="pre">DOUBLE</span> <span class="pre">p)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PERCENTILE_APPROX(expr,</span> <span class="pre">DOUBLE</span> <span class="pre">p[,</span> <span class="pre">DOUBLE</span> <span class="pre">compression])</span></code></p>
 <p>返回第p个百分位点的近似值，p的值介于0到1之间</p>
+<p>compression参数是可选项，可设置范围是(0, 10000)，值越大，精度越高，内存消耗越大，计算耗时越长。
+compression参数未指定或设置的值在(0, 10000)范围外，以10000的默认值运行</p>
 <p>该函数使用固定大小的内存，因此对于高基数的列可以使用更少的内存，可用于计算tp99等统计值</p>
 </div>
 </div>
@@ -199,6 +202,13 @@
 | table    | percentile_approx(`cost_time`, 0.99) |
 +----------+--------------------------------------+
 | test     |                                54.22 |
++----------+--------------------------------------+
+
+MySQL &gt; select `table`, percentile_approx(cost_time,0.99, 100) from log_statis group by `table`;
++---------------------+---------------------------+
+| table    | percentile_approx(`cost_time`, 0.99, 100) |
++----------+--------------------------------------+
+| test     |                                54.21 |
 +----------+--------------------------------------+
 ##keyword
 PERCENTILE_APPROX,PERCENTILE,APPROX
