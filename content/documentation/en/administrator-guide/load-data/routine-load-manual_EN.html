@@ -100,11 +100,14 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../session-variables_EN.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode_EN.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
@@ -187,19 +190,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="routine-load">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="routine-load">
 <h1>Routine Load<a class="headerlink" href="#routine-load" title="Permalink to this headline">¶</a></h1>
-<p>Routine Load provides users with a function to automatically import data from a specified data source.</p>
-<p>This document mainly introduces the realization principle, usage and best practices of this function.</p>
-<div class="section" id="noun-interpretation">
-<h2>Noun Interpretation<a class="headerlink" href="#noun-interpretation" title="Permalink to this headline">¶</a></h2>
+<p>The Routine Load feature provides users with a way to automatically load data from a specified data source.</p>
+<p>This document describes the implementation principles, usage, and best practices of this feature.</p>
+<div class="section" id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.</li>
-<li>BE: Backend, Doris’s back-end node. Responsible for query execution and data storage.</li>
-<li>Routine LoadJob: A routine import job submitted by the user.</li>
-<li>Job Scheduler: Import job scheduler routinely for scheduling and splitting a Routine LoadJob into multiple Tasks.</li>
-<li>Task：RoutineLoadJob 被 JobScheduler 根据规则拆分的子任务。</li>
-<li>Task Scheduler: Task Scheduler. It is used to schedule the execution of Task.</li>
+<li>BE: Backend, the backend node of Doris. Responsible for query execution and data storage.</li>
+<li>RoutineLoadJob: A routine load job submitted by the user.</li>
+<li>JobScheduler: A routine load job scheduler for scheduling and dividing a RoutineLoadJob into multiple Tasks.</li>
+<li>Task: RoutineLoadJob is divided by JobScheduler according to the rules.</li>
+<li>TaskScheduler: Task Scheduler. Used to schedule the execution of a Task.</li>
 </ul>
 </div>
 <div class="section" id="principle">
@@ -228,159 +248,270 @@
  <span class="o">+------+</span>   <span class="o">+------+</span>   <span class="o">+------+</span>
 </pre></div>
 </div>
-<p>As shown above, Client submits a routine import job to FE.</p>
-<p>FE splits an import job into several Tasks through Job Scheduler. Each Task is responsible for importing a specified portion of the data. Task is assigned by Task Scheduler to execute on the specified BE.</p>
-<p>On BE, a Task is considered a common import task, which is imported through the import mechanism of Stream Load. After importing, report to FE.</p>
-<p>Job Scheduler in FE continues to generate subsequent new Tasks based on the results reported, or retries failed Tasks.</p>
-<p>The whole routine import job completes the data uninterrupted import by continuously generating new Tasks.</p>
+<p>As shown above, the client submits a routine load job to FE.</p>
+<p>FE splits an load job into several Tasks via JobScheduler. Each Task is responsible for loading a specified portion of the data. The Task is assigned by the TaskScheduler to the specified BE.</p>
+<p>On the BE, a Task is treated as a normal load task and loaded via the Stream Load load mechanism. After the load is complete, report to FE.</p>
+<p>The JobScheduler in the FE continues to generate subsequent new Tasks based on the reported results, or retry the failed Task.</p>
+<p>The entire routine load job completes the uninterrupted load of data by continuously generating new Tasks.</p>
 </div>
 <div class="section" id="kafka-routine-load">
-<h2>Kafka routine load<a class="headerlink" href="#kafka-routine-load" title="Permalink to this headline">¶</a></h2>
-<p>Currently we only support routine imports from Kafka systems. This section details Kafka’s routine introduction usage and best practices.</p>
-<div class="section" id="use-restrictions">
-<h3>Use restrictions<a class="headerlink" href="#use-restrictions" title="Permalink to this headline">¶</a></h3>
+<h2>Kafka Routine load<a class="headerlink" href="#kafka-routine-load" title="Permalink to this headline">¶</a></h2>
+<p>Currently we only support routine load from the Kafka system. This section details Kafka’s routine use and best practices.</p>
+<div class="section" id="usage-restrictions">
+<h3>Usage restrictions<a class="headerlink" href="#usage-restrictions" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
-<li>Supporting unauthenticated Kafka access and the Kafka cluster authenticated by SSL.</li>
-<li>The supported message format is CSV text format. Each message is a line, and line end <strong>does not contain</strong> newline characters.</li>
-<li>Only Kafka version 0.10.0.0 (including) is supported.</li>
+<li>Support unauthenticated Kafka access and Kafka clusters certified by SSL.</li>
+<li>The supported message format is csv text format. Each message is a line, and the end of the line does not contain a ** line break.</li>
+<li>Only Kafka 0.10.0.0 or above is supported.</li>
 </ol>
 </div>
-<div class="section" id="create-routine-import-tasks">
-<h3>Create routine import tasks<a class="headerlink" href="#create-routine-import-tasks" title="Permalink to this headline">¶</a></h3>
-<p>After creating a detailed grammar for routine import tasks, you can connect to Doris and execute <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD';</span> </code>Check grammar help. Here is a detailed description of the creation of the job note.</p>
+<div class="section" id="create-a-routine-load-task">
+<h3>Create a routine load task<a class="headerlink" href="#create-a-routine-load-task" title="Permalink to this headline">¶</a></h3>
+<p>The detailed syntax for creating a routine load task can be connected to Doris and execute <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> to see the syntax help. Here is a detailed description of the precautions when creating a job.</p>
 <ul>
 <li><p class="first">columns_mapping</p>
-<p><code class="docutils literal notranslate"><span class="pre">colum_mapping</span></code> is mainly used to specify table structure and column mapping relationships in message, as well as transformation of some columns. If not specified, Doris defaults that columns in message and columns in table structure correspond one by one in order. Although under normal circumstances, if the source data is exactly one-to-one correspondence, it is not specified that normal data import can also be carried out. However, we strongly recommend that users <strong>explicitly specify column mapping relationships</strong>. In this way, when the table structure changes (such as adding a nullable column) or the source file changes (such as adding a column), the import task can continue. Otherwise, when the above changes occur, the import will report an error because the column mapping relationship no longer corresponds one to one.</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">columns_mapping</span></code>, we can also use some built-in functions to convert columns. But you need to pay attention to the actual column types corresponding to the function parameters. Examples are given to illustrate:</p>
-<p>Assume that the user needs to import a table containing only <code class="docutils literal notranslate"><span class="pre">k1</span></code> columns of <code class="docutils literal notranslate"><span class="pre">int</span></code> type. And the null value in the source file needs to be converted to 0. This function can be implemented through the <code class="docutils literal notranslate"><span class="pre">ifnull</span></code> function. The correct way to use it is as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">columns_mapping</span></code> is mainly used to specify the column structure of the table structure and message, as well as the conversion of some columns. If not specified, Doris will default to the columns in the message and the columns of the table structure in a one-to-one correspondence. Although under normal circumstances, if the source data is exactly one-to-one, normal data load can be performed without specifying. However, we still strongly recommend that users ** explicitly specify column mappings**. This way, when the table structure changes (such as adding a nullable column), or the source file changes (such as adding a column), the load task can continue. Otherwise, after the above changes occur, the load will report an error because the column mapping relationship is no longer one-to-one.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">columns_mapping</span></code> we can also use some built-in functions for column conversion. But you need to pay attention to the actual column type corresponding to the function parameters. for example:</p>
+<p>Suppose the user needs to load a table containing only a column of <code class="docutils literal notranslate"><span class="pre">k1</span></code> with a column type of <code class="docutils literal notranslate"><span class="pre">int</span></code>. And you need to convert the null value in the source file to 0. This feature can be implemented with the <code class="docutils literal notranslate"><span class="pre">ifnull</span></code> function. The correct way to use is as follows:</p>
 <p><code class="docutils literal notranslate"><span class="pre">COLUMNS</span> <span class="pre">(xx,</span> <span class="pre">k1=ifnull(xx,</span> <span class="pre">&quot;3&quot;))</span></code></p>
-<p>Note that we use <code class="docutils literal notranslate"><span class="pre">3</span></code> instead of <code class="docutils literal notranslate"><span class="pre">3</span></code>, although the type of <code class="docutils literal notranslate"><span class="pre">k1</span></code> is <code class="docutils literal notranslate"><span class="pre">int</span></code>. Because the column types in the source data are <code class="docutils literal notranslate"><span class="pre">varchar</span></code> for the import task, the <code class="docutils literal notranslate"><span class="pre">xx</span></code> virtual column types here are also <code class="docutils literal notranslate"><span class="pre">varchar</span></code>. So we need to use <code class="docutils literal notranslate"><span class="pre">3</span></code> for matching, otherwise <code class="docutils literal notranslate"><span class="pre">ifnull</span></code> function can not find the function signature with parameter <code class="docutils literal notranslate"><span class="pre">(varchar,</span> <span class="pre">int)</span></code>, and there will be an error.</p>
-<p>Another example is to assume that the user needs to import a table containing only <code class="docutils literal notranslate"><span class="pre">k1</span></code> columns of <code class="docutils literal notranslate"><span class="pre">int</span></code> type. And the corresponding columns in the source file need to be processed: the negative number is converted to positive, and the positive number is multiplied by 100. This function can be implemented by the <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">when</span></code> function, which should be correctly written as follows:</p>
+<p>Note that we use <code class="docutils literal notranslate"><span class="pre">&quot;3&quot;</span></code> instead of <code class="docutils literal notranslate"><span class="pre">3</span></code>, although <code class="docutils literal notranslate"><span class="pre">k1</span></code> is of type <code class="docutils literal notranslate"><span class="pre">int</span></code>. Because the column type in the source data is <code class="docutils literal notranslate"><span class="pre">varchar</span></code> for the load task, the <code class="docutils literal notranslate"><span class="pre">xx</span></code> virtual column is also of type <code class="docutils literal notranslate"><span class="pre">varchar</span></code>. So we need to use <code class="docutils literal notranslate"><span class="pre">&quot;3&quot;</span></code> to match the match, otherwise the <code class="docutils literal notranslate"><span class="pre">ifnull</span></code> function can’t find the function signature with the parameter <code class="docutils literal notranslate"><span class="pre">(varchar,</span> <span class="pre">int)</span></code>, and an error will occur.</p>
+<p>As another example, suppose the user needs to load a table containing only a column of <code class="docutils literal notranslate"><span class="pre">k1</span></code> with a column type of <code class="docutils literal notranslate"><span class="pre">int</span></code>. And you need to process the corresponding column in the source file: convert the negative number to a positive number and the positive number to 100. This function can be implemented with the <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">when</span></code> function. The correct wording should be as follows:</p>
 <p><code class="docutils literal notranslate"><span class="pre">COLUMNS</span> <span class="pre">(xx,</span> <span class="pre">case</span> <span class="pre">when</span> <span class="pre">xx</span> <span class="pre">&lt;</span> <span class="pre">0</span> <span class="pre">than</span> <span class="pre">cast(-xx</span> <span class="pre">as</span> <span class="pre">varchar)</span> <span class="pre">else</span> <span class="pre">cast((xx</span> <span class="pre">+</span> <span class="pre">'100')</span> <span class="pre">as</span> <span class="pre">varchar)</span> <span class="pre">end)</span></code></p>
-<p>Note that we need to convert all the parameters in `case when’to varchar in order to get the desired results.</p>
+<p>Note that we need to convert all the parameters in <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">when</span></code> to varchar in order to get the desired result.</p>
 </li>
 <li><p class="first">where_predicates</p>
-<p>The column type in <code class="docutils literal notranslate"><span class="pre">where_predicates</span></code> is already the actual column type, so there is no need to force the conversion to varchar type as `columns_mapping’. Write according to the actual column type.</p>
+<p>The type of the column in <code class="docutils literal notranslate"><span class="pre">where_predicates</span></code> is already the actual column type, so there is no need to cast to the varchar type as <code class="docutils literal notranslate"><span class="pre">columns_mapping</span></code>. Write according to the actual column type.</p>
 </li>
 <li><p class="first">desired_concurrent_number</p>
-<p><code class="docutils literal notranslate"><span class="pre">desired_concurrent_number</span></code> is used to specify the expected concurrency of a routine job. That is, how many tasks are executed simultaneously for a job at most. For Kafka import, the current actual concurrency calculation is as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">desired_concurrent_number</span></code> is used to specify the degree of concurrency expected for a routine job. That is, a job, at most how many tasks are executing at the same time. For Kafka load, the current actual concurrency is calculated as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Min</span><span class="p">(</span><span class="n">partition</span> <span class="n">num</span><span class="p">,</span> <span class="n">desired_concurrent_number</span><span class="p">,</span> <span class="n">alive_backend_num</span><span class="p">,</span> <span class="n">Config</span><span class="o">.</span><span class="n">max_routine_load_task_concurrrent_num</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where <code class="docutils literal notranslate"><span class="pre">Config.max_routine_load_task_concurrent_num</span></code> is a default maximum concurrency limit for the system. This is a FE configuration, which can be adjusted by reconfiguration. The default is 5.</p>
-<p>The partition num refers to the number of partitions subscribed to Kafka topic. <code class="docutils literal notranslate"> <span class="pre">alive_backend_num</span></code> is the current normal number of BE nodes.</p>
+<p>Where <code class="docutils literal notranslate"><span class="pre">Config.max_routine_load_task_concurrrent_num</span></code> is a default maximum concurrency limit for the system. This is a FE configuration that can be adjusted by changing the configuration. The default is 5.</p>
+<p>Where partition num refers to the number of partitions for the Kafka topic subscribed to. <code class="docutils literal notranslate"><span class="pre">alive_backend_num</span></code> is the current number of normal BE nodes.</p>
 </li>
 <li><p class="first">max_batch_interval/max_batch_rows/max_batch_size</p>
-<p>These three parameters are used to control the execution time of a single task. If any of these thresholds is reached, the task ends. Where <code class="docutils literal notranslate"><span class="pre">max_batch_rows</span></code> is used to record the number of data rows read from Kafka. <code class="docutils literal notranslate"> <span class="pre">Max_batch_size</span></code> is used to record the amount of data read from Kafka in bytes. At present, the consumption rate of a task is about 5-10MB/s.</p>
-<p>Assuming a row of data is 500B, the user wants a task every 100MB or 10 seconds. The expected processing time of 100MB is 10-20 seconds, and the corresponding number of rows is about 200,000 rows. A reasonable configuration is:</p>
+<p>These three parameters are used to control the execution time of a single task. If any of the thresholds is reached, the task ends. Where <code class="docutils literal notranslate"><span class="pre">max_batch_rows</span></code> is used to record the number of rows of data read from Kafka. <code class="docutils literal notranslate"><span class="pre">max_batch_size</span></code> is used to record the amount of data read from Kafka in bytes. The current consumption rate for a task is approximately 5-10MB/s.</p>
+<p>So assume a row of data 500B, the user wants to be a task every 100MB or 10 seconds. The expected processing time for 100MB is 10-20 seconds, and the corresponding number of rows is about 200000 rows. Then a reasonable configuration is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;max_batch_interval&quot;</span> <span class="o">=</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
 <span class="s2">&quot;max_batch_rows&quot;</span> <span class="o">=</span> <span class="s2">&quot;200000&quot;</span><span class="p">,</span>
 <span class="s2">&quot;max_batch_size&quot;</span> <span class="o">=</span> <span class="s2">&quot;104857600&quot;</span>
 </pre></div>
 </div>
-<p>The parameters in the examples above are also default parameters for these configurations.</p>
+<p>The parameters in the above example are also the default parameters for these configurations.</p>
 </li>
 <li><p class="first">max_error_number</p>
-<p><code class="docutils literal notranslate"> <span class="pre">max_error_number</span></code> is used to control the error rate. When the error rate is too high, the job will be automatically suspended. Because the whole job is oriented to data flow, and because of the boundless nature of data flow, we can not calculate the error rate through an error ratio like other import tasks. Therefore, a new computing method is provided to calculate the error ratio in the data stream.</p>
-<p>We set up a sampling window. The size of the window is <code class="docutils literal notranslate"><span class="pre">max_batch_rows</span> <span class="pre">*</span> <span class="pre">10</span></code>. In a sampling window, if the number of error lines exceeds <code class="docutils literal notranslate"><span class="pre">max_error_number</span></code>, the job is suspended. If it does not exceed, the next window starts to recalculate the number of erroneous rows.</p>
-<p>Let’s assume <code class="docutils literal notranslate"><span class="pre">max_batch_rows</span></code> is 200,000, and the window size is 2,000,000. Let <code class="docutils literal notranslate"><span class="pre">max_error_number</span></code> be 20,000, that is, 20,000 erroneous actions per 2,000,000 lines expected by the user. That is, the error rate is 1%. But because not every batch of tasks consumes 200,000 rows, the actual range of windows is [2000000, 2200000], that is, 10% statistical error.</p>
-<p>Error rows do not include rows filtered through where conditions. But it includes rows that do not have partitions in the corresponding Doris table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">max_error_number</span></code> is used to control the error rate. When the error rate is too high, the job will automatically pause. Because the entire job is stream-oriented, and because of the borderless nature of the data stream, we can’t calculate the error rate with an error ratio like other load tasks. So here is a new way of calculating to calculate the proportion of errors in the data stream.</p>
+<p>We have set up a sampling window. The size of the window is <code class="docutils literal notranslate"><span class="pre">max_batch_rows</span> <span class="pre">*</span> <span class="pre">10</span></code>. Within a sampling window, if the number of error lines exceeds <code class="docutils literal notranslate"><span class="pre">max_error_number</span></code>, the job is suspended. If it is not exceeded, the next window restarts counting the number of error lines.</p>
+<p>We assume that <code class="docutils literal notranslate"><span class="pre">max_batch_rows</span></code> is 200000 and the window size is 2000000. Let <code class="docutils literal notranslate"><span class="pre">max_error_number</span></code> be 20000, that is, the user expects an error behavior of 20000 for every 2000000 lines. That is, the error rate is 1%. But because not every batch of tasks consumes 200000 rows, the actual range of the window is [2000000, 2200000], which is 10% statistical error.</p>
+<p>The error line does not include rows that are filtered out by the where condition. But include rows that do not have a partition in the corresponding Doris table.</p>
 </li>
 <li><p class="first">data_source_properties</p>
-<p><code class="docutils literal notranslate"> <span class="pre">Data_source_properties</span></code> can specify consumption specific Kakfa partition. If not specified, all partitions of the topic subscribed are consumed by default.</p>
-<p>Note that when partition is explicitly specified, the import job will no longer dynamically detect changes in Kafka partition. If not specified, the consumption partition will be dynamically adjusted according to the change of Kafka partition.</p>
+<p>The specific Kakfa partition can be specified in <code class="docutils literal notranslate"><span class="pre">data_source_properties</span></code>. If not specified, all partitions of the subscribed topic are consumed by default.</p>
+<p>Note that when partition is explicitly specified, the load job will no longer dynamically detect changes to Kafka partition. If not specified, the partitions that need to be consumed are dynamically adjusted based on changes in the kafka partition.</p>
+</li>
+<li><p class="first">strict_mode</p>
+<p>Routine load load can turn on strict mode mode. The way to open it is to add <code class="docutils literal notranslate"><span class="pre">&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;</span></code> to job_properties. The default strict mode is on.</p>
+<p>The strict mode mode means strict filtering of column type conversions during the load process. The strict filtering strategy is as follows:</p>
+<ol class="simple">
+<li>For column type conversion, if strict mode is true, the wrong data will be filtered. The error data here refers to the fact that the original data is not null, and the result is a null value after participating in the column type conversion.</li>
+<li>When a loaded column is generated by a function transformation, strict mode has no effect on it.</li>
+<li>For a column type loaded with a range limit, if the original data can pass the type conversion normally, but cannot pass the range limit, strict mode will not affect it. For example, if the type is decimal(1,0) and the original data is 10, it is eligible for type conversion but not for column declarations. This data strict has no effect on it.</li>
+</ol>
 </li>
 </ul>
-<div class="section" id="accessing-the-kafka-cluster-of-ssl-authentication">
-<h4>Accessing the Kafka Cluster of SSL Authentication<a class="headerlink" href="#accessing-the-kafka-cluster-of-ssl-authentication" title="Permalink to this headline">¶</a></h4>
-<p>Accessing the Kafka cluster for SSL authentication requires the user to provide a certificate file (ca.pem) to authenticate the Kafka Broker public key. If the Kafka cluster opens client authentication at the same time, the client’s public key (client. pem), key file (client. key), and key password are also required. The required files need to be uploaded to Doris by the <code class="docutils literal notranslate"><span class="pre">CREAE</span> <span class="pre">FILE</span></code> command,** and the catalog name is <code class="docutils literal notranslate"><span class="pre">kafka</span></code>**. The specific help of the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FILE</span></code> command can be found in `HELP CREATE FILE;’. An example is given here:</p>
+<div class="section" id="strict-mode-and-load-relationship-of-source-data">
+<h4>strict mode and load relationship of source data<a class="headerlink" href="#strict-mode-and-load-relationship-of-source-data" title="Permalink to this headline">¶</a></h4>
+<p>Here is an example of a column type of TinyInt.</p>
+<blockquote>
+<div>Note: When a column in a table allows a null value to be loaded</div></blockquote>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>source data</th>
+<th>source data example</th>
+<th>string to int</th>
+<th>strict_mode</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>null</td>
+<td>\N</td>
+<td>N/A</td>
+<td>true or false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa or 2000</td>
+<td>NULL</td>
+<td>true</td>
+<td>invalid data(filtered)</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa</td>
+<td>NULL</td>
+<td>false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>1</td>
+<td>1</td>
+<td>true or false</td>
+<td>correct data</td>
+</tr>
+</tbody>
+</table><p>Here the column type is Decimal(1,0)</p>
+<blockquote>
+<div>Note: When a column in a table allows a null value to be loaded</div></blockquote>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>source data</th>
+<th>source data example</th>
+<th>string to int</th>
+<th>strict_mode</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>null</td>
+<td>\N</td>
+<td>N/A</td>
+<td>true or false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa</td>
+<td>NULL</td>
+<td>true</td>
+<td>invalid data(filtered)</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>aaa</td>
+<td>NULL</td>
+<td>false</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>not null</td>
+<td>1 or 10</td>
+<td>1</td>
+<td>true or false</td>
+<td>correct data</td>
+</tr>
+</tbody>
+</table><blockquote>
+<div>Note: 10 Although it is a value that is out of range, because its type meets the requirements of decimal, strict mode has no effect on it. 10 will eventually be filtered in other ETL processing flows. But it will not be filtered by strict mode.</div></blockquote>
+</div>
+<div class="section" id="accessing-ssl-certified-kafka-clusters">
+<h4>Accessing SSL-certified Kafka clusters<a class="headerlink" href="#accessing-ssl-certified-kafka-clusters" title="Permalink to this headline">¶</a></h4>
+<p>Accessing the SSL-certified Kafka cluster requires the user to provide a certificate file (ca.pem) for authenticating the Kafka Broker public key. If the Kafka cluster has both client authentication enabled, you will also need to provide the client’s public key (client.pem), key file (client.key), and key password. The files needed here need to be uploaded to Doris via the <code class="docutils literal notranslate"><span class="pre">CREAE</span> <span class="pre">FILE</span></code> command, ** and the catalog name is <code class="docutils literal notranslate"><span class="pre">kafka</span></code>**. See <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">FILE;</span></code> for specific help on the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">FILE</span></code> command. Here is an example:</p>
 <ol>
-<li><p class="first">Upload files</p>
+<li><p class="first">Upload file</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">FILE</span> <span class="s2">&quot;ca.pem&quot;</span> <span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;url&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://example_url/kafka-key/ca.pem&quot;</span><span class="p">,</span> <span class="s2">&quot;catalog&quot;</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span><span class="p">);</span>
 <span class="n">CREATE</span> <span class="n">FILE</span> <span class="s2">&quot;client.key&quot;</span> <span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;url&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://example_urlkafka-key/client.key&quot;</span><span class="p">,</span> <span class="s2">&quot;catalog&quot;</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span><span class="p">);</span>
 <span class="n">CREATE</span> <span class="n">FILE</span> <span class="s2">&quot;client.pem&quot;</span> <span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;url&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://example_url/kafka-key/client.pem&quot;</span><span class="p">,</span> <span class="s2">&quot;catalog&quot;</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Create routine import jobs</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">ROUTINE</span> <span class="n">LOAD</span> <span class="n">db1</span><span class="o">.</span><span class="n">job1</span> <span class="n">on</span> <span class="n">tbl1</span>
-<span class="n">PROPERTIES</span>
-<span class="p">(</span>
-    <span class="s2">&quot;desired_concurrent_number&quot;</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
-<span class="p">)</span>
-<span class="n">FROM</span> <span class="n">KAFKA</span>
-<span class="p">(</span>
-    <span class="s2">&quot;kafka_broker_list&quot;</span><span class="o">=</span> <span class="s2">&quot;broker1:9091,broker2:9091&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;kafka_topic&quot;</span> <span class="o">=</span> <span class="s2">&quot;my_topic&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;property.security.protocol&quot;</span> <span class="o">=</span> <span class="s2">&quot;ssl&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;property.ssl.ca.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:ca.pem&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;property.ssl.certificate.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:client.pem&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;property.ssl.key.location&quot;</span> <span class="o">=</span> <span class="s2">&quot;FILE:client.key&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;property.ssl.key.password&quot;</span> <span class="o">=</span> <span class="s2">&quot;abcdefg&quot;</span>
-<span class="p">);</span>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+2. Create a routine load job
+
+    ```
+    CREATE ROUTINE LOAD db1.job1 on tbl1
+    PROPERTIES
+    (
+        &quot;desired_concurrent_number&quot;=&quot;1&quot;
+    )
+    FROM KAFKA
+    (
+        &quot;kafka_broker_list&quot;= &quot;broker1:9091,broker2:9091&quot;,
+        &quot;kafka_topic&quot; = &quot;my_topic&quot;,
+        &quot;property.security.protocol&quot; = &quot;ssl&quot;,
+        &quot;property.ssl.ca.location&quot; = &quot;FILE:ca.pem&quot;,
+        &quot;property.ssl.certificate.location&quot; = &quot;FILE:client.pem&quot;,
+        &quot;property.ssl.key.location&quot; = &quot;FILE:client.key&quot;,
+        &quot;property.ssl.key.password&quot; = &quot;abcdefg&quot;
+    );
+    ```
+
+&gt; Doris accesses Kafka clusters via Kafka&#39;s C++ API `librdkafka`. The parameters supported by `librdkafka` can be found.
+&gt;
+&gt; `https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md`
+
+### Viewing the status of the load job
+
+Specific commands and examples for viewing the status of the ** job** can be viewed with the `HELP SHOW ROUTINE LOAD;` command.
+
+Specific commands and examples for viewing the **Task** status can be viewed with the `HELP SHOW ROUTINE LOAD TASK;` command.
+
+You can only view tasks that are currently running, and tasks that have ended and are not started cannot be viewed.
+
+### Job Control
+
+The user can control the stop, pause and restart of the job by the three commands `STOP/PAUSE/RESUME`. You can view help and examples with the three commands `HELP STOP ROUTINE LOAD;`, `HELP PAUSE ROUTINE LOAD;` and `HELP RESUME ROUTINE LOAD;`.
+
+## other instructions
+
+1. The relationship between a routine load job and an ALTER TABLE operation
+
+    * Routine load does not block SCHEMA CHANGE and ROLLUP operations. Note, however, that if the column mappings are not matched after SCHEMA CHANGE is completed, the job&#39;s erroneous data will spike and eventually cause the job to pause. It is recommended to reduce this type of problem by explicitly specifying column mappings in routine load jobs and by adding Nullable columns or columns with Default values.
+    * Deleting a Partition of a table may cause the loaded data to fail to find the corresponding Partition and the job will be paused.
+
+2. Relationship between routine load jobs and other load jobs (LOAD, DELETE, INSERT)
+
+    * Routine load does not conflict with other LOAD jobs and INSERT operations.
+    * When performing a DELETE operation, the corresponding table partition cannot have any load tasks being executed. Therefore, before performing the DELETE operation, you may need to pause the routine load job and wait for the delivered task to complete before you can execute DELETE.
+
+3. Relationship between routine load jobs and DROP DATABASE/TABLE operations
+
+    When the corresponding database or table is deleted, the job will automatically CANCEL.
+
+4. The relationship between the kafka type routine load job and kafka topic
+
+    When the user creates a routine load declaration, the `kafka_topic` does not exist in the kafka cluster.
+
+    * If the broker of the user kafka cluster has `auto.create.topics.enable = true` set, `kafka_topic` will be automatically created first, and the number of partitions created automatically will be in the kafka cluster** of the user side. The broker is configured with `num.partitions`. The routine job will continue to read the data of the topic continuously.
+    * If the broker of the user kafka cluster has `auto.create.topics.enable = false` set, topic will not be created automatically, and the routine will be paused before any data is read, with the status `PAUSED`.
+
+    So, if the user wants to be automatically created by the routine when the kafka topic does not exist, just set the broker in the kafka cluster** of the user&#39;s side to set auto.create.topics.enable = true` .
+
+## Related parameters
+
+Some system configuration parameters can affect the use of routine loads.
+
+1. max\_routine\_load\_task\_concurrent\_num
+
+    The FE configuration item, which defaults to 5, can be modified at runtime. This parameter limits the maximum number of subtask concurrency for a routine load job. It is recommended to maintain the default value. If the setting is too large, it may cause too many concurrent tasks and occupy cluster resources.
+
+2. max\_routine_load\_task\_num\_per\_be
+
+    The FE configuration item, which defaults to 5, can be modified at runtime. This parameter limits the number of subtasks that can be executed concurrently by each BE node. It is recommended to maintain the default value. If the setting is too large, it may cause too many concurrent tasks and occupy cluster resources.
+
+3. max\_routine\_load\_job\_num
+    
+    The FE configuration item, which defaults to 100, can be modified at runtime. This parameter limits the total number of routine load jobs, including NEED_SCHEDULED, RUNNING, PAUSE. After the overtime, you cannot submit a new assignment.
+
+4. max\_consumer\_num\_per\_group
+
+    BE configuration item, the default is 3. This parameter indicates that up to several consumers are generated in a subtask for data consumption. For a Kafka data source, a consumer may consume one or more kafka partitions. Suppose a task needs to consume 6 kafka partitions, it will generate 3 consumers, and each consumer consumes 2 partitions. If there are only 2 partitions, only 2 consumers will be generated, and each consumer will consume 1 partition.
+
+5. push\_write\_mbytes\_per\_sec
+
+    BE configuration item. The default is 10, which is 10MB/s. This parameter is to load common parameters, not limited to routine load jobs. This parameter limits the speed at which loaded data is written to disk. For high-performance storage devices such as SSDs, this speed limit can be appropriately increased.
 </pre></div>
 </div>
-</li>
-</ol>
-<blockquote>
-<div><p>Doris accesses the Kafka cluster through Kafka’s C++ API <code class="docutils literal notranslate"><span class="pre">librdkafka</span></code>. The parameters supported by <code class="docutils literal notranslate"><span class="pre">librdkafka</span></code> can be consulted</p>
-<p><code class="docutils literal notranslate"><span class="pre">https://github.com</span> <span class="pre">/edenhill</span> <span class="pre">/librdkafka</span> <span class="pre">/blob</span> <span class="pre">/master</span> <span class="pre">/CONFIGURATION.md</span> </code></p>
-</div></blockquote>
 </div>
 </div>
-<div class="section" id="view-the-status-of-import-jobs">
-<h3>View the status of import jobs<a class="headerlink" href="#view-the-status-of-import-jobs" title="Permalink to this headline">¶</a></h3>
-<p>Specific commands and examples for viewing the status of ** job ** can be viewed through <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code>commands.</p>
-<p>Specific commands and examples for viewing the running status of ** tasks ** can be viewed through <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD</span> <span class="pre">TASK;</span></code>commands.</p>
-<p>You can only view tasks that are currently running. Tasks that have ended or not started cannot be viewed.</p>
-</div>
-<div class="section" id="job-control">
-<h3>Job Control<a class="headerlink" href="#job-control" title="Permalink to this headline">¶</a></h3>
-<p>用户可以通过 <code class="docutils literal notranslate"><span class="pre">STOP/PAUSE/RESUME</span></code> 三个命令来控制作业的停止，暂停和重启。可以通过 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">STOP</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code>, <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">PAUSE</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">RESUME</span> <span class="pre">ROUTINE</span> <span class="pre">LOAD;</span></code> 三个命令查看帮助和示例。</p>
-</div>
-</div>
-<div class="section" id="other-notes">
-<h2>Other notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h2>
-<ol>
-<li><p class="first">The relationship between routine import operations and ALTER TABLE operations</p>
-<ul class="simple">
-<li>Routine imports do not block SCHEMA CHANGE and ROLLUP operations. But note that if SCHEMA CHANGE is completed, the column mapping relationship does not match, which will lead to a sharp increase in error data for jobs and eventually to job pause. It is recommended that such problems be reduced by explicitly specifying column mapping relationships in routine import operations and by adding Nullable columns or columns with Default values.</li>
-<li>Deleting the Partition of a table may cause the imported data to fail to find the corresponding Partition and the job to pause.</li>
-</ul>
-</li>
-<li><p class="first">Relations between routine import jobs and other import jobs (LOAD, DELETE, INSERT)</p>
-<ul class="simple">
-<li>Routine imports do not conflict with other LOAD and INSERT operations.</li>
-<li>When performing a DELETE operation, the corresponding table partition cannot have any import tasks being performed. Therefore, before performing the DELETE operation, it may be necessary to suspend the routine import operation and wait for the task that has been issued to complete before DELETE can be executed.</li>
-</ul>
-</li>
-<li><p class="first">The relationship between routine import jobs and DROP DATABASE/TABLE operations</p>
-<p>When the corresponding database or table is deleted from the routine import, the job will automatically CANCEL.</p>
-</li>
-<li><p class="first">The relationship between Kafka type routine import and Kafka topic</p>
-<p>When the `kafka_topic’of the user creating the routine import declaration does not exist in the Kafka cluster.</p>
-<ul class="simple">
-<li>If the broker of user Kafka cluster sets <code class="docutils literal notranslate"><span class="pre">auto.create.topics.enable</span> <span class="pre">=</span> <span class="pre">true</span></code>, then <code class="docutils literal notranslate"><span class="pre">kafka_topic</span></code> will be created automatically first. The number of partitions created automatically is determined by the broker configuration <code class="docutils literal notranslate"><span class="pre">num.partitions</span></code> in <strong>user’s Kafka cluster</strong>. Routine jobs will read the topic data regularly and continuously.</li>
-<li>If the broker of the user Kafka cluster sets <code class="docutils literal notranslate"><span class="pre">auto.create.topics.enable</span> <span class="pre">=</span> <span class="pre">false</span></code>, topic will not be created automatically, and routine jobs will be suspended before any data is read, in the state of <code class="docutils literal notranslate"><span class="pre">PAUSED</span></code>.</li>
-</ul>
-<p>So, if users want to be created automatically by routine jobs when Kafka topic does not exist, they just need to set <code class="docutils literal notranslate"><span class="pre">auto.create.topics.enable</span> <span class="pre">=</span> <span class="pre">true</span></code> to the broker in <strong>user’s Kafka cluster</strong>.</p>
-</li>
-</ol>
-</div>
-<div class="section" id="relevant-parameters">
-<h2>Relevant parameters<a class="headerlink" href="#relevant-parameters" title="Permalink to this headline">¶</a></h2>
-<p>Some system configuration parameters affect the use of routine imports.</p>
-<ol>
-<li><p class="first">max_routine_load_task_concurrent_num</p>
-<p>FE configuration item, default 5, can be modified at run time. This parameter limits the maximum number of subtasks concurrently imported routinely. It is recommended that the default values be maintained. Setting too large may lead to too many concurrent tasks and occupy cluster resources.</p>
-</li>
-<li><p class="first">max_consumer_num_per_group</p>
-<p>BE configuration item, default 3. This parameter represents the maximum number of consumers generated in a sub-task for data consumption. For Kafka data sources, a consumer may consume one or more Kafka partitions. Assuming that a task needs to consume six Kafka partitions, three consumers will be generated, and each consumer consumes two partitions. If there are only two partitions, only two consumers will be generated, and each consumer consumes one partition.</p>
-</li>
-<li><p class="first">push_write_mbytes_per_sec</p>
-<p>BE configuration item. The default is 10, or 10MB/s. This parameter is a general import parameter and is not limited to routine import operations. This parameter limits the speed at which imported data is written to disk. For high performance storage devices such as SSD, this speed limit can be increased appropriately.</p>
-</li>
-</ol>
 </div>
 </div>
 
@@ -413,7 +544,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

@@ -183,7 +183,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="create-table">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="create-table">
 <h1>CREATE TABLE<a class="headerlink" href="#create-table" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -237,10 +254,17 @@
                         HLL (1~16385个字节)
                             hll列类型，不需要指定长度和默认值、长度根据数据的聚合
                             程度系统内控制，并且HLL列只能通过配套的hll_union_agg、Hll_cardinality、hll_hash进行查询或使用
+                        BITMAP
+                            bitmap 列类型，不需要指定长度和默认值
+                            BITMAP 列只能通过配套的 BITMAP_UNION、BITMAP_COUNT、TO_BITMAP 进行查询或使用
                             
     agg_type：聚合类型，如果不指定，则该列为 key 列。否则，该列为 value 列
-                        SUM、MAX、MIN、REPLACE、HLL_UNION(仅用于HLL列，为HLL独有的聚合方式)、BITMAP_UNION(列类型需要定义为VARCHAR(20))
-                        该类型只对聚合模型(key_desc的type为AGGREGATE KEY)有用，其它模型不需要指定这个。
+                        
+                        * SUM、MAX、MIN、REPLACE
+                        * HLL_UNION(仅用于HLL列，为HLL独有的聚合方式)、
+                        * BITMAP_UNION(仅用于 BITMAP 列，为 BITMAP 独有的聚合方式)、
+                        * REPLACE_IF_NOT_NULL：这个聚合类型的含义是当且仅当新导入数据是非NULL值时才会发生替换行为，如果新导入的数据是NULL，那么Doris仍然会保留原值。注意：如果用户在建表时REPLACE_IF_NOT_NULL列指定了NOT NULL，那么Doris仍然会将其转化为NULL，不会向用户报错。用户可以借助这个类型完成部分列导入的功能。
+                        *该类型只对聚合模型(key_desc的type为AGGREGATE KEY)有用，其它模型不需要指定这个。
 
     是否允许为NULL: 默认不允许为 NULL。NULL 值在导入数据中用 \N 来表示
 
@@ -529,8 +553,8 @@
     (
     k1 TINYINT,
     k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
-    v1 VARCHAR(0) BITMAP_UNION,  // 注意： bitmap_union的varchar长度需要指定为0
-    v2 VARCHAR(0) BITMAP_UNION
+    v1 BITMAP BITMAP_UNION,
+    v2 BITMAP BITMAP_UNION
     )
     ENGINE=olap
     AGGREGATE KEY(k1, k2)
@@ -612,7 +636,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

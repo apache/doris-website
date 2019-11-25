@@ -93,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
 <li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config/index.html">配置文件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Broker</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id1">支持的存储系统</a></li>
@@ -103,7 +104,9 @@
 <li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
 </ul>
 </li>
@@ -185,7 +188,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="broker">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="broker">
 <h1>Broker<a class="headerlink" href="#broker" title="Permalink to this headline">¶</a></h1>
 <p>Broker 是 Doris 集群中一种可选进程，主要用于支持 Doris 读写远端存储上的文件和目录，如 HDFS、BOS 和 AFS 等。</p>
 <p>Broker 通过提供一个 RPC 服务端口来提供服务，是一个无状态的 Java 进程，负责为远端存储的读写操作封装一些类 POSIX 的文件操作，如 open，pread，pwrite 等等。除此之外，Broker 不记录任何其他信息，所以包括远端存储的连接信息、文件信息、权限信息等等，都需要通过参数在 RPC 调用中传递给 Broker 进程，才能使得 Broker 能够正确读写文件。</p>
@@ -439,7 +459,7 @@ PROPERTIES
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

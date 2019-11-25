@@ -182,13 +182,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="concat">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="concat">
 <h1>concat<a class="headerlink" href="#concat" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="syntax">
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<p>‘VARCHAR concat (VARCHAR,…)’</p>
+<p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span> <span class="pre">concat</span> <span class="pre">(VARCHAR,...)</span></code></p>
 <p>Connect multiple strings and return NULL if any of the parameters is NULL</p>
 </div>
 </div>
@@ -196,23 +213,23 @@
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">);</span>
 <span class="o">+------------------+</span>
-<span class="o">*</span><span class="mi">124</span><span class="n">concat</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="mi">1244</span><span class="p">;</span>
+<span class="o">|</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+------------------+</span>
-<span class="mf">1.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span>
+<span class="o">|</span> <span class="n">ab</span>               <span class="o">|</span>
 <span class="o">+------------------+</span>
 
 <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">);</span>
 <span class="o">+-----------------------+</span>
-<span class="mi">124</span><span class="n">concat</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="mi">1244</span><span class="p">;</span>
+<span class="o">|</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+-----------------------+</span>
-<span class="mf">1.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.</span>
+<span class="o">|</span> <span class="n">abc</span>                   <span class="o">|</span>
 <span class="o">+-----------------------+</span>
 
-<span class="n">mysql</span> <span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">);</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">concat</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">);</span>
 <span class="o">+------------------------+</span>
-<span class="mi">124</span><span class="n">concat</span> <span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">NULL</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="o">|</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+------------------------+</span>
-<span class="n">No</span><span class="o">.</span> <span class="n">No</span><span class="o">.</span> <span class="n">No</span><span class="o">.</span>
+<span class="o">|</span> <span class="n">NULL</span>                   <span class="o">|</span>
 <span class="o">+------------------------+</span>
 </pre></div>
 </div>
@@ -250,7 +267,7 @@ CONCAT</p>
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

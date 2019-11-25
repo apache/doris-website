@@ -99,12 +99,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">配置文件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
 </ul>
 </li>
@@ -188,7 +191,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="get-log-file">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="get-log-file">
 <h1>get_log_file<a class="headerlink" href="#get-log-file" title="Permalink to this headline">¶</a></h1>
 <p>用户可以通过该 HTTP 接口获取 FE 的日志文件。</p>
 <div class="section" id="id1">
@@ -212,7 +232,7 @@
 <ol>
 <li><p class="first">获取对应类型的日志文件列表</p>
 <p>示例：</p>
-<p><code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">-X</span> <span class="pre">HEAD</span> <span class="pre">-uuser:passwd</span> <span class="pre">http://fe_host:http_port/api/get_log_file?type=fe.audit.log</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">-v</span> <span class="pre">-X</span> <span class="pre">HEAD</span> <span class="pre">-uuser:passwd</span> <span class="pre">http://fe_host:http_port/api/get_log_file?type=fe.audit.log</span></code></p>
 <p>返回结果：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">OK</span>
 <span class="n">file_infos</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fe.audit.log&quot;</span><span class="p">:</span><span class="mi">24759</span><span class="p">,</span><span class="s2">&quot;fe.audit.log.20190528.1&quot;</span><span class="p">:</span><span class="mi">132934</span><span class="p">}</span>
@@ -267,7 +287,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

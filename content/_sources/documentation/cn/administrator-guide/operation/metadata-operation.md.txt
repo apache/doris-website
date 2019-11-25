@@ -1,3 +1,22 @@
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 # 元数据运维
 
 本文档主要介绍在实际生产环境中，如何对 Doris 的元数据进行管理。包括 FE 节点建议的部署方式、一些常用的操作方法、以及常见错误的解决方法。
@@ -232,7 +251,26 @@ FE 目前有以下几个端口
 
     修改配置后，直接重启 FE 即可。这个只影响到 mysql 的连接目标。
 
-    
+
+### 从 FE 内存中恢复元数据
+
+在某些极端情况下，磁盘上 image 文件可能会损坏，但是内存中的元数据是完好的，此时我们可以先从内存中 dump 出元数据，再替换掉磁盘上的 image 文件，来恢复元数据，整个**不停查询服务**的操作步骤如下：
+1. 集群停止所有 Load,Create,Alter 操作
+2. 执行以下命令，从 Master FE 内存中 dump 出元数据：(下面称为 image_mem)
+```
+curl -u $root_user:$password http://$master_hostname:8410/dump
+```
+3. 用 image_mem 文件替换掉 OBSERVER FE 节点上`meta_dir/image`目录下的 image 文件，重启 OBSERVER FE 节点，
+验证 image_mem 文件的完整性和正确性（可以在 FE Web 页面查看 DB 和 Table 的元数据是否正常，查看fe.log 是否有异常，是否在正常 replayed journal）
+4. 依次用 image_mem 文件替换掉 FOLLOWER FE 节点上`meta_dir/image`目录下的 image 文件，重启 FOLLOWER FE 节点，
+确认元数据和查询服务都正常
+5. 用 image_mem 文件替换掉 Master FE 节点上`meta_dir/image`目录下的 image 文件，重启 Master FE 节点，
+确认 FE Master 切换正常， Master FE 节点可以通过 checkpoint 正常生成新的 image 文件
+6. 集群恢复所有 Load,Create,Alter 操作
+
+**注意：如果 Image 文件很大，整个操作过程耗时可能会很长，所以在此期间，要确保 Master FE 不会通过 checkpoint 生成新的 image 文件。
+当观察到 Master FE 节点上 `meta_dir/image`目录下的 `image.ckpt` 文件快和 `image.xxx` 文件一样大时，可以直接删除掉`image.ckpt` 文件。**
+
 ## 最佳实践
 
 FE 的部署推荐，在 [安装与部署文档](../../installing/install-deploy.md) 中有介绍，这里再做一些补充。

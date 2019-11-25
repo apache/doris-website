@@ -182,7 +182,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="regexp-replace">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="regexp-replace">
 <h1>regexp_replace<a class="headerlink" href="#regexp-replace" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -194,19 +211,19 @@
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mysql&gt; SELECT regexp_replace(&#39;a b c&#39;, &quot; &quot;, &quot;-&quot;);
-+-----------------------------------+
-| regexp_replace(&#39;a b c&#39;, &#39; &#39;, &#39;-&#39;) |
-+-----------------------------------+
-A -b -c `124;
-+-----------------------------------+
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">regexp_replace</span><span class="p">(</span><span class="s1">&#39;a b c&#39;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">);</span>
+<span class="o">+-----------------------------------+</span>
+<span class="o">|</span> <span class="n">regexp_replace</span><span class="p">(</span><span class="s1">&#39;a b c&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+-----------------------------------+</span>
+<span class="o">|</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">c</span>                             <span class="o">|</span>
+<span class="o">+-----------------------------------+</span>
 
-mysql&gt; SELECT regexp_replace(&#39;a b c&#39;,&#39;(b)&#39;,&#39;&lt;\\1&gt;&#39;);
-+----------------------------------------+
-Replace (&#39;a b c&#39;,&#39;(b)&#39;,&#39;&lt;\1 &gt;&#39;) regexp;
-+----------------------------------------+
-A &lt;b &gt;c {1244}
-+----------------------------------------+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">regexp_replace</span><span class="p">(</span><span class="s1">&#39;a b c&#39;</span><span class="p">,</span><span class="s1">&#39;(b)&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;</span><span class="se">\\</span><span class="s1">1&gt;&#39;</span><span class="p">);</span>
+<span class="o">+----------------------------------------+</span>
+<span class="o">|</span> <span class="n">regexp_replace</span><span class="p">(</span><span class="s1">&#39;a b c&#39;</span><span class="p">,</span> <span class="s1">&#39;(b)&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;</span><span class="se">\1</span><span class="s1">&gt;&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+----------------------------------------+</span>
+<span class="o">|</span> <span class="n">a</span> <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span> <span class="n">c</span>                                <span class="o">|</span>
+<span class="o">+----------------------------------------+</span>
 </pre></div>
 </div>
 <p>##keyword
@@ -243,7 +260,7 @@ REGEXP_REPLACE,REGEXP,REPLACE</p>
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

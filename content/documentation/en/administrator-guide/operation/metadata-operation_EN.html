@@ -100,11 +100,14 @@
 <li class="toctree-l4"><a class="reference internal" href="tablet-repair-and-balance_EN.html">Data replica management</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../session-variables_EN.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode_EN.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
@@ -187,7 +190,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="metadata-operations-and-maintenance">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="metadata-operations-and-maintenance">
 <h1>Metadata Operations and Maintenance<a class="headerlink" href="#metadata-operations-and-maintenance" title="Permalink to this headline">¶</a></h1>
 <p>This document focuses on how to manage Doris metadata in a real production environment. It includes the proposed deployment of FE nodes, some commonly used operational methods, and common error resolution methods.</p>
 <p>For the time being, read the <a class="reference internal" href="../../internal/metadata-design_EN.html"><span class="doc">Doris metadata design document</span></a> to understand how Doris metadata works.</p>
@@ -431,6 +451,24 @@
 </li>
 </ol>
 </div>
+<div class="section" id="recover-metadata-from-fe-memory">
+<h3>Recover metadata from FE memory<a class="headerlink" href="#recover-metadata-from-fe-memory" title="Permalink to this headline">¶</a></h3>
+<p>In some extreme cases, the image file on the disk may be damaged, but the metadata in the memory is intact. At this point, we can dump the metadata from the memory and replace the image file on the disk to recover the metadata. the entire non-stop query service operation steps are as follows:</p>
+<ol class="simple">
+<li>Stop all Load, Create, Alter operations.</li>
+<li>Execute the following command to dump metadata from the Master FE memory: (hereafter called image_mem)</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -u $root_user:$password http://$master_hostname:8410/dump
+</pre></div>
+</div>
+<ol class="simple">
+<li>Replace the image file in the <code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code> directory on the OBSERVER FE node with the image_mem file, restart the OBSERVER FE node, and verify the integrity and correctness of the image_mem file. You can check whether the DB and Table metadata are normal on the FE Web page, whether there is an exception in <code class="docutils literal notranslate"><span class="pre">fe.log</span></code>, whether it is in a normal replayed jour.</li>
+<li>Replace the image file in the <code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code> directory on the FOLLOWER FE node with the image_mem file in turn, restart the FOLLOWER FE node, and confirm that the metadata and query services are normal.</li>
+<li>Replace the image file in the <code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code> directory on the Master FE node with the image_mem file, restart the Master FE node, and then confirm that the FE Master switch is normal and The Master FE node can generate a new image file through checkpoint.</li>
+<li>Recover all Load, Create, Alter operations.</li>
+</ol>
+<p><strong>Note: If the Image file is large, the entire process can take a long time, so during this time, make sure Master FE does not generate a new image file via checkpoint. When the image.ckpt file in the meta_dir/image directory on the Master FE node is observed to be as large as the image.xxx file, the image.ckpt file can be deleted directly.</strong></p>
+</div>
 </div>
 <div class="section" id="best-practices">
 <h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
@@ -515,7 +553,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

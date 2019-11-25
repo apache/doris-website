@@ -182,7 +182,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="percentile-approx">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="percentile-approx">
 <h1>PERCENTILE_APPROX<a class="headerlink" href="#percentile-approx" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -190,7 +207,7 @@
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">PERCENTILE_APPROX(expr,</span> <span class="pre">DOUBLE</span> <span class="pre">p[,</span> <span class="pre">DOUBLE</span> <span class="pre">compression])</span></code></p>
 <p>Return the approximation of the point p, where the value of P is between 0 and 1.</p>
-<p>Compression param is optional and can be setted to a value in the range of (0, 10000). The bigger compression you set, the more precise result and more time cost you will get. If it is not setted or not setted in the correct range, PERCENTILE_APPROX function will run with a default compression param of 10000.</p>
+<p>Compression param is optional and can be setted to a value in the range of [2048, 10000]. The bigger compression you set, the more precise result and more time cost you will get. If it is not setted or not setted in the correct range, PERCENTILE_APPROX function will run with a default compression param of 10000.</p>
 <p>This function uses fixed size memory, so less memory can be used for columns with high cardinality, and can be used to calculate statistics such as tp99.</p>
 </div>
 </div>
@@ -202,16 +219,17 @@
 +----------+--------------------------------------+
 | test     |                                54.22 |
 +----------+--------------------------------------+
-MySQL &gt; select `table`, percentile_approx(cost_time,0.99, 100) from log_statis group by `table`;
+
+MySQL &gt; select `table`, percentile_approx(cost_time,0.99, 4096) from log_statis group by `table`;
 +---------------------+---------------------------+
-| table    | percentile_approx(`cost_time`, 0.99, 100) |
+| table    | percentile_approx(`cost_time`, 0.99, 4096.0) |
 +----------+--------------------------------------+
 | test     |                                54.21 |
 +----------+--------------------------------------+
-##keyword
-PERCENTILE_APPROX,PERCENTILE,APPROX
 </pre></div>
 </div>
+<p>##keyword
+PERCENTILE_APPROX,PERCENTILE,APPROX</p>
 </div>
 </div>
 
@@ -244,7 +262,7 @@ PERCENTILE_APPROX,PERCENTILE,APPROX
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

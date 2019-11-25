@@ -182,7 +182,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p>#BITMAP</p>
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><p>#BITMAP</p>
 <div class="section" id="description">
 <h1>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="syntax">
@@ -192,6 +209,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">BITMAP_COUNT(expr)</span></code> : 计算Bitmap中不同值的个数</p>
 <p><code class="docutils literal notranslate"><span class="pre">BITMAP_UNION_INT(expr)</span></code> : 计算TINYINT,SMALLINT和INT类型的列中不同值的个数，返回值和
 COUNT(DISTINCT expr)相同</p>
+<p><code class="docutils literal notranslate"><span class="pre">BITMAP_EMPTY()</span></code>: 生成空Bitmap列，用于insert或导入的时填充默认值</p>
 <p>注意：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. TO_BITMAP 函数输入的类型必须是TINYINT,SMALLINT,INT
 2. BITMAP_UNION函数的参数目前仅支持： 
@@ -226,7 +244,7 @@ mysql&gt; select bitmap_union_int (id2) from bitmap_udaf;
 
 CREATE TABLE `bitmap_test` (
   `id` int(11) NULL COMMENT &quot;&quot;,
-  `id2` varchar(0) bitmap_union NULL  // 注意： bitmap_union的varchar长度需要指定为0
+  `id2` bitmap bitmap_union NULL
 ) ENGINE=OLAP
 AGGREGATE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 10;
@@ -242,7 +260,7 @@ mysql&gt; select bitmap_count(bitmap_union(id2)) from bitmap_test;
 </div>
 <div class="section" id="keyword">
 <h1>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h1>
-<p>BITMAP,BITMAP_COUNT,BITMAP_UNION,BITMAP_UNION_INT,TO_BITMAP</p>
+<p>BITMAP,BITMAP_COUNT,BITMAP_EMPTY,BITMAP_UNION,BITMAP_UNION_INT,TO_BITMAP</p>
 </div>
 
 
@@ -274,7 +292,7 @@ mysql&gt; select bitmap_count(bitmap_union(id2)) from bitmap_test;
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

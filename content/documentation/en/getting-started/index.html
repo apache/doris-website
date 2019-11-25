@@ -94,9 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html">Best Practices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html">Data Partition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html">Data Model, ROLLUP and Prefix Index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html">Noun Interpretation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html">Rollup and query</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
@@ -195,6 +193,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="basic-usage_EN.html#import-data">2.4 Import data</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="basic-usage_EN.html#flow-in">Flow-in</a></li>
+<li class="toctree-l4"><a class="reference internal" href="basic-usage_EN.html#broker-load">Broker Load</a></li>
 </ul>
 </li>
 </ul>
@@ -213,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="advance-usage_EN.html#query-of-data-table">2 Query of Data Table</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#memory-limitation">2.1 Memory Limitation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#query-timeout">2.2 Query timeout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#broadcast-shuffle-join">2.3 Broadcast/Shuffle Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="advance-usage_EN.html#query-retry-and-high-availability">2.4 Query Retry and High Availability</a></li>
 </ul>
 </li>
@@ -284,9 +284,12 @@
 <li class="toctree-l2"><a class="reference internal" href="data-model-rollup_EN.html#suggestions-for-choosing-data-model">Suggestions for Choosing Data Model</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html">Noun Interpretation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hit-the-rollup_EN.html">Rollup and query</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hit-the-rollup_EN.html#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -320,7 +323,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

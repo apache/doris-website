@@ -102,12 +102,15 @@
 <li class="toctree-l4"><a class="reference internal" href="tablet-restore-tool.html">BE Tablet数据恢复工具</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">配置文件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
 </ul>
 </li>
@@ -191,7 +194,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="id1">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="id1">
 <h1>元数据运维<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>本文档主要介绍在实际生产环境中，如何对 Doris 的元数据进行管理。包括 FE 节点建议的部署方式、一些常用的操作方法、以及常见错误的解决方法。</p>
 <p>在阅读本文当前，请先阅读 <a class="reference internal" href="../../internal/metadata-design.html"><span class="doc">Doris 元数据设计文档</span></a> 了解 Doris 元数据的工作原理。</p>
@@ -439,9 +459,31 @@
 </li>
 </ol>
 </div>
-</div>
 <div class="section" id="id12">
-<h2>最佳实践<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<h3>从 FE 内存中恢复元数据<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>在某些极端情况下，磁盘上 image 文件可能会损坏，但是内存中的元数据是完好的，此时我们可以先从内存中 dump 出元数据，再替换掉磁盘上的 image 文件，来恢复元数据，整个<strong>不停查询服务</strong>的操作步骤如下：</p>
+<ol class="simple">
+<li>集群停止所有 Load,Create,Alter 操作</li>
+<li>执行以下命令，从 Master FE 内存中 dump 出元数据：(下面称为 image_mem)</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -u $root_user:$password http://$master_hostname:8410/dump
+</pre></div>
+</div>
+<ol class="simple">
+<li>用 image_mem 文件替换掉 OBSERVER FE 节点上<code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code>目录下的 image 文件，重启 OBSERVER FE 节点，
+验证 image_mem 文件的完整性和正确性（可以在 FE Web 页面查看 DB 和 Table 的元数据是否正常，查看fe.log 是否有异常，是否在正常 replayed journal）</li>
+<li>依次用 image_mem 文件替换掉 FOLLOWER FE 节点上<code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code>目录下的 image 文件，重启 FOLLOWER FE 节点，
+确认元数据和查询服务都正常</li>
+<li>用 image_mem 文件替换掉 Master FE 节点上<code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code>目录下的 image 文件，重启 Master FE 节点，
+确认 FE Master 切换正常， Master FE 节点可以通过 checkpoint 正常生成新的 image 文件</li>
+<li>集群恢复所有 Load,Create,Alter 操作</li>
+</ol>
+<p><strong>注意：如果 Image 文件很大，整个操作过程耗时可能会很长，所以在此期间，要确保 Master FE 不会通过 checkpoint 生成新的 image 文件。
+当观察到 Master FE 节点上 <code class="docutils literal notranslate"><span class="pre">meta_dir/image</span></code>目录下的 <code class="docutils literal notranslate"><span class="pre">image.ckpt</span></code> 文件快和 <code class="docutils literal notranslate"><span class="pre">image.xxx</span></code> 文件一样大时，可以直接删除掉<code class="docutils literal notranslate"><span class="pre">image.ckpt</span></code> 文件。</strong></p>
+</div>
+</div>
+<div class="section" id="id13">
+<h2>最佳实践<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <p>FE 的部署推荐，在 <a class="reference internal" href="../../installing/install-deploy.html"><span class="doc">安装与部署文档</span></a> 中有介绍，这里再做一些补充。</p>
 <ul class="simple">
 <li><strong>如果你并不十分了解 FE 元数据的运行逻辑，或者没有足够 FE 元数据的运维经验，我们强烈建议在实际使用中，只部署一个 FOLLOWER 类型的 FE 作为 MASTER，其余 FE 都是 OBSERVER，这样可以减少很多复杂的运维问题！</strong> 不用过于担心 MASTER 单点故障导致无法进行元数据写操作。首先，如果你配置合理，FE 作为 java 进程很难挂掉。其次，如果 MASTER 磁盘损坏（概率非常低），我们也可以用 OBSERVER 上的元数据，通过 <code class="docutils literal notranslate"><span class="pre">故障恢复</span></code> 的方式手动恢复。</li>
@@ -449,8 +491,8 @@
 <li>FE 所在节点要有足够的磁盘空间，以防止元数据过大导致磁盘空间不足。同时 FE 日志也会占用十几G 的磁盘空间。</li>
 </ul>
 </div>
-<div class="section" id="id13">
-<h2>其他常见问题<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id14">
+<h2>其他常见问题<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <ol>
 <li><p class="first">fe.log 中一直滚动 <code class="docutils literal notranslate"><span class="pre">meta</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">date.</span> <span class="pre">current</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">synchronized</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">has</span> <span class="pre">log:</span> <span class="pre">xxx,</span> <span class="pre">fe</span> <span class="pre">type:</span> <span class="pre">xxx</span></code></p>
 <p>这个通常是因为 FE 无法选举出 Master。比如配置了 3 个 FOLLOWER，但是只启动了一个 FOLLOWER，则这个 FOLLOWER 会出现这个问题。通常，只要把剩余的 FOLLOWER 启动起来就可以了。如果启动起来后，仍然没有解决问题，那么可能需要按照 <code class="docutils literal notranslate"><span class="pre">故障恢复</span></code> 一节中的方式，手动进行恢复。</p>
@@ -523,7 +565,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

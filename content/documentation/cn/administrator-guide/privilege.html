@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="文件管理器" href="small-file-mgr.html" />
+    <link rel="next" title="变量" href="session-variables.html" />
     <link rel="prev" title="数据导出" href="export-manual.html" /> 
 </head>
 
@@ -93,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
 <li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config/index.html">配置文件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
@@ -107,7 +108,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#id7">最佳实践</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
 </ul>
 </li>
@@ -189,7 +192,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="id1">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="id1">
 <h1>权限管理<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>Doris 新的权限管理系统参照了 Mysql 的权限管理机制，做到了表级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。</p>
 <div class="section" id="id2">
@@ -364,7 +384,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="small-file-mgr.html" class="btn btn-neutral float-right" title="文件管理器" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="session-variables.html" class="btn btn-neutral float-right" title="变量" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="export-manual.html" class="btn btn-neutral float-left" title="数据导出" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -385,7 +405,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

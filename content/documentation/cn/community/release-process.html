@@ -99,21 +99,10 @@
 <li class="toctree-l3"><a class="reference internal" href="members.html">PMC Members &amp; Committer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pull-request.html">代码提交指南</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Apache Doris 发布流程</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1">1. 准备发布</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gnupg">2. 签名软件 GnuPG 的安装配置</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id5">3. 生成新的签名</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id9">4. 上传签名公钥</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fingerprint-apache">5. 生成 fingerprint 并上传到 apache 用户信息中</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#keys">6. 生成 keys</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id10">7. 打包签名</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#keys-dev-svn">8. 上传签名的软件包和 KEYS 文件到 DEV svn</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id11">9. 发社区投票邮件</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#result">10. 投票通过后，发 Result 邮件</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#general-incubator-apache-org">11. 发邮件到 general&#64;incubator.apache.org 进行投票</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#result-general-incubator-apache-org">12. 发 Result 邮件到 general&#64;incubator.apache.org</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#package-release">13. 上传 package 到 release</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#announce-general-incubator-apache-org">14. 发 Announce 邮件到 general&#64;incubator.apache.org</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#doris-github">15. 在 Doris 官网和 github 发布链接</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">准备环境</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">准备发布</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">社区发布投票流程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">完成发布流程</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="subscribe-mail-list.html">订阅邮件列表</a></li>
@@ -193,67 +182,71 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="apache-doris">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="apache-doris">
 <h1>Apache Doris 发布流程<a class="headerlink" href="#apache-doris" title="Permalink to this headline">¶</a></h1>
 <p>Apache 的发布必须至少是 IPMC 成员，拥有 apache 邮箱的commiter，这个角色叫做 release manager。</p>
 <p>发布的大致流程如下：</p>
 <ol class="simple">
-<li>在社区发起 DISCUSS;</li>
-<li>准备分支和打 tag;</li>
-<li>将 tag 打包签名；</li>
-<li>上传签名的软件包到 Apache SVN 的 DEV 目录</li>
-<li>发社区投票邮件</li>
-<li>投票通过后，发 Result 邮件</li>
-<li>发邮件到 general&#64;incubator.apache.org 进行投票</li>
+<li>环境准备</li>
+<li>发布准备<ol>
+<li>社区发起 DISCUSS 并与社区交流具体发布计划</li>
+<li>创建分支用于发布</li>
+<li>清理 issue</li>
+<li>将必要的 Patch 合并到发布的分支</li>
+</ol>
+</li>
+<li>社区发布投票流程<ol>
+<li>将 tag 打包，签名并上传到<a class="reference external" href="https://dist.apache.org/repos/dist/dev/incubator/doris">Apache Dev svn 仓库</a></li>
+<li>在 <a class="reference external" href="dev&#64;doris.apache.org">Doris 社区</a>发起投票</li>
+<li>投票通过后，在Doris社区发 Result 邮件</li>
+<li>在 <a class="reference external" href="general&#64;incubator.apache.org">Incubator 社区</a> 发起新一轮投票</li>
 <li>发 Result 邮件到 general&#64;incubator.apache.org</li>
-<li>上传签名的软件包到 Apache SVN 的 release 目录，并生成相关链接</li>
+</ol>
+</li>
+<li>完成工作<ol>
+<li>上传签名的软件包到 <a class="reference external" href="https://dist.apache.org/repos/dist/release/incubator/doris">Apache release repo</a>，并生成相关链接</li>
 <li>准备 release note 并发 Announce 邮件到 general&#64;incubator.apache.org</li>
 <li>在 Doris 官网和 github 发布下载链接</li>
 </ol>
-<p>Release manager 在发布前需要先生成自己的签名公钥，并上传到公钥服务器，之后就可以用这个公钥对准备发布的软件包进行签名。</p>
+</li>
+</ol>
 <div class="section" id="id1">
-<h2>1. 准备发布<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="discuss">
-<h3>1.1 在社区发起 DISCUSS<a class="headerlink" href="#discuss" title="Permalink to this headline">¶</a></h3>
-<p>如果觉得已经修复了很多bug，开发了比较重要的 feature，任何 IPMC 成员都可以发起 DISCUSS 讨论发布新版本。
-可以发起一个标题为 [DISCUSS] x.y.z release 的邮件，在社区内部进行讨论，说明已经修复了哪些bug，开发了哪些 features。
-如果 DISCUSS 邮件得到大家支持就可以进行下一步。</p>
-</div>
-<div class="section" id="id2">
-<h3>1.2 准备分支<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>发布前需要先新建一个分支，这个分支要进行比较充分的测试，使得功能可用，bug收敛，重要bug都得到修复。</p>
-<p>例如：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b branch-0.9
-</pre></div>
-</div>
-</div>
-<div class="section" id="tag">
-<h3>1.3 打 tag<a class="headerlink" href="#tag" title="Permalink to this headline">¶</a></h3>
-<p>当上述分支已经比较稳定后，就可以在此分支上打 tag。
-记得在创建 tag 时，修改 <code class="docutils literal notranslate"><span class="pre">gensrc/script/gen_build_version.sh</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">build_version</span></code> 变量。如 <code class="docutils literal notranslate"><span class="pre">build_version=&quot;0.10.0-release&quot;</span></code></p>
-<p>例如：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout branch-0.9
-$ git tag -a 0.9.0-rc01 -m &quot;0.9.0 release candidate 01&quot;
-$ git push origin 0.9.0-rc01
-Counting objects: 1, done.
-Writing objects: 100% (1/1), 165 bytes | 0 bytes/s, done.
-Total 1 (delta 0), reused 0 (delta 0)
-To git@github.com:apache/incubator-doris.git
- * [new tag]         0.9.0-rc01 -&gt; 0.9.0-rc01
-
-$ git tag
-</pre></div>
-</div>
-</div>
-</div>
+<h2>准备环境<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>如果这是你第一次发布，那么你需要在你的环境中准备如下工具</p>
+<ol class="simple">
+<li>release signing https://www.apache.org/dev/release-signing.html</li>
+<li>gpg https://www.apache.org/dev/openpgp.html</li>
+<li>svn https://www.apache.org/dev/openpgp.html</li>
+</ol>
+<div class="section" id="gpg-key">
+<h3>准备gpg key<a class="headerlink" href="#gpg-key" title="Permalink to this headline">¶</a></h3>
+<p>Release manager 在发布前需要先生成自己的签名公钥，并上传到公钥服务器，之后就可以用这个公钥对准备发布的软件包进行签名。
+如果在<a class="reference external" href="https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS">KEY</a>里已经存在了你的KEY，那么你可以跳过这个步骤了。</p>
 <div class="section" id="gnupg">
-<h2>2. 签名软件 GnuPG 的安装配置<a class="headerlink" href="#gnupg" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>2.1 GnuPG<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>1991年，程序员Phil Zimmermann为了避开政府监视，开发了加密软件PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个PGP的替代品，取名为GnuPG。这就是GPG的由来。</p>
+<h4>签名软件 GnuPG 的安装配置<a class="headerlink" href="#gnupg" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id2">
+<h5>GnuPG<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h5>
+<p>1991年，程序员 Phil Zimmermann 为了避开政府监视，开发了加密软件PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个PGP的替代品，取名为GnuPG。这就是GPG的由来。</p>
 </div>
-<div class="section" id="id4">
-<h3>2.2 安装配置<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h5>安装配置<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h5>
 <p>CentOS 安装命令：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">gnupg</span>
 </pre></div>
@@ -276,10 +269,10 @@ $ git tag
 </div>
 </div>
 </div>
+<div class="section" id="id4">
+<h4>生成新的签名<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <div class="section" id="id5">
-<h2>3. 生成新的签名<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id6">
-<h3>3.1 准备签名<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h5>准备签名<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h5>
 <p>推荐的生成新签名的设置：</p>
 <p>这里必须通过 SecureCRT 等终端直接登录用户账户，不能通过 su - user 或者 ssh 转，否则密码输入 box 会显示不出来而报错。</p>
 <p>先看下 gpg 的 version 以及是否支持 SHA512.</p>
@@ -301,8 +294,8 @@ Compression: Uncompressed, ZIP, ZLIB, BZIP2
 </pre></div>
 </div>
 </div>
-<div class="section" id="id7">
-<h3>3.2 生成新的签名<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h5>生成新的签名<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h5>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --gen-key
 gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
@@ -343,8 +336,8 @@ Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
 <p>其中 Real name 需保持和 id.apache.org 中显示的 id 一致。
 Email address 为 apache 的邮箱。</p>
 </div>
-<div class="section" id="id8">
-<h3>3.3 查看和输出<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h5>查看和输出<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h5>
 <p>第一行显示公钥文件名（pubring.gpg），第二行显示公钥特征（4096位，Hash字符串和生成时间），第三行显示”用户ID”，第四行显示私钥特征。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --list-keys
 /home/lide/.gnupg/pubring.gpg
@@ -355,7 +348,9 @@ sub   4096R/0E8182E6 2018-12-06
 </pre></div>
 </div>
 <p>其中 xxx-yyy 就是用户ID。</p>
-<p>gpg –armor –output public-key.txt –export [用户ID]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">output</span> <span class="n">public</span><span class="o">-</span><span class="n">key</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">export</span> <span class="p">[</span><span class="n">用户ID</span><span class="p">]</span>
+</pre></div>
+</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --armor --output public-key.txt --export xxx-yyy
 $ cat public-key.txt
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -367,21 +362,19 @@ mQINBFwJEQ0BEACwqLluHfjBqD/RWZ4uoYxNYHlIzZvbvxAlwS2mn53BirLIU/G3
 </div>
 </div>
 </div>
-<div class="section" id="id9">
-<h2>4. 上传签名公钥<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h4>上传签名公钥<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
 <p>公钥服务器是网络上专门储存用户公钥的服务器。send-keys 参数可以将公钥上传到服务器。</p>
-<p>gpg –send-keys xxxx</p>
-<p>其中 xxxx 为上一步 –list-keys 结果中 pub 后面的字符串，如上为：33DBF2E0</p>
-<p>也可以通过下面的网址上传上述 public-key.txt 的内容：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">keys</span><span class="o">.</span><span class="n">gnupg</span><span class="o">.</span><span class="n">net</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">send</span><span class="o">-</span><span class="n">keys</span> <span class="n">xxxx</span>
 </pre></div>
 </div>
-<p>上传成功之后，可以通过查询这个网站，输入 0x33DBF2E0 查询：</p>
-<p>http://keys.gnupg.net</p>
+<p>其中 xxxx 为上一步 <code class="docutils literal notranslate"><span class="pre">--list-keys</span></code> 结果中 pub 后面的字符串，如上为：33DBF2E0</p>
+<p>也可以通过<a class="reference external" href="https://keys.gnupg.net">网站</a>上传上述 public-key.txt 的内容：</p>
+<p>上传成功之后，可以通过查询这个<a class="reference external" href="https://keys.gnupg.net">网站</a>，输入 0x33DBF2E0 查询：</p>
 <p>该网站查询有延迟，可能需要等1个小时。</p>
 </div>
 <div class="section" id="fingerprint-apache">
-<h2>5. 生成 fingerprint 并上传到 apache 用户信息中<a class="headerlink" href="#fingerprint-apache" title="Permalink to this headline">¶</a></h2>
+<h4>生成 fingerprint 并上传到 apache 用户信息中<a class="headerlink" href="#fingerprint-apache" title="Permalink to this headline">¶</a></h4>
 <p>由于公钥服务器没有检查机制，任何人都可以用你的名义上传公钥，所以没有办法保证服务器上的公钥的可靠性。通常，你可以在网站上公布一个公钥指纹，让其他人核对下载到的公钥是否为真。</p>
 <p>fingerprint参数生成公钥指纹：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">fingerprint</span> <span class="p">[</span><span class="n">用户ID</span><span class="p">]</span>
@@ -395,38 +388,69 @@ sub   4096R/0E8182E6 2018-12-06
 </pre></div>
 </div>
 <p>将上面的 fingerprint （即 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0）粘贴到自己的用户信息中：</p>
-<p>https://id.apache.org
-OpenPGP Public Key Primary Fingerprint:</p>
+<p>https://id.apache.org</p>
+<p>OpenPGP Public Key Primary Fingerprint:</p>
 </div>
 <div class="section" id="keys">
-<h2>6. 生成 keys<a class="headerlink" href="#keys" title="Permalink to this headline">¶</a></h2>
-<p>新建一个名为 KEYS 的文件，写入如下内容（无需做任何修改）：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">file</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">PGP</span> <span class="n">keys</span> <span class="n">of</span> <span class="n">various</span> <span class="n">developers</span><span class="o">.</span>
-
-<span class="n">Users</span><span class="p">:</span> <span class="n">pgp</span> <span class="o">&lt;</span> <span class="n">KEYS</span>
-<span class="ow">or</span>
-       <span class="n">gpg</span> <span class="o">--</span><span class="kn">import</span> <span class="nn">KEYS</span>
-
-<span class="n">Developers</span><span class="p">:</span>
-    <span class="n">pgp</span> <span class="o">-</span><span class="n">kxa</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span> <span class="ow">and</span> <span class="n">append</span> <span class="n">it</span> <span class="n">to</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
-<span class="ow">or</span>
-    <span class="p">(</span><span class="n">pgpk</span> <span class="o">-</span><span class="n">ll</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">pgpk</span> <span class="o">-</span><span class="n">xa</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
-<span class="ow">or</span>
-    <span class="p">(</span><span class="n">gpg</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">sigs</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span>
-    <span class="o">&amp;&amp;</span> <span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">export</span> <span class="o">&lt;</span><span class="n">your</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
+<h4>生成 keys<a class="headerlink" href="#keys" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>svn co //dist.apache.org/repos/dist/dev/incubator/doris/
+# edit doris/KEY file
+gpg --list-sigs [用户 ID] &gt;&gt; doris/KEYS
+gpg --armor --export [用户 ID] &gt;&gt; doris/KEYS
+svn ci --username $ASF_USERNAME --password &quot;$ASF_PASSWORD&quot; -m&quot;Update KEYS&quot;
 </pre></div>
 </div>
-<p>然后生成将 签名信息追加写入：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">sigs</span> <span class="p">[</span><span class="n">用户</span> <span class="n">ID</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">KEYS</span>
-</pre></div>
 </div>
-<p>最后，将 public key 追加导入：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">export</span> <span class="p">[</span><span class="n">用户</span> <span class="n">ID</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">KEYS</span>
-</pre></div>
 </div>
+</div>
+<div class="section" id="id9">
+<h2>准备发布<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="discuss">
+<h3>在社区发起 DISCUSS<a class="headerlink" href="#discuss" title="Permalink to this headline">¶</a></h3>
+<p>如果觉得已经修复了很多bug，开发了比较重要的 feature，任何 IPMC 成员都可以发起 DISCUSS 讨论发布新版本。
+可以发起一个标题为 [DISCUSS] x.y.z release 的邮件，在社区内部进行讨论，说明已经修复了哪些bug，开发了哪些 features。
+如果 DISCUSS 邮件得到大家支持就可以进行下一步。</p>
 </div>
 <div class="section" id="id10">
-<h2>7. 打包签名<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<h3>准备分支<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>发布前需要先新建一个分支。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b branch-0.9
+</pre></div>
+</div>
+<p>这个分支要进行比较充分的测试，使得功能可用，bug收敛，重要bug都得到修复。
+这个过程需要等待社区，看看是否有必要的patch需要在这个版本合入，如果有，需要把它 cherry-pick 到发布分支。</p>
+</div>
+<div class="section" id="issue">
+<h3>清理issue<a class="headerlink" href="#issue" title="Permalink to this headline">¶</a></h3>
+<p>将属于这个版本的所有 issue 都过一遍，关闭已经完成的，如果没法完成的，推迟到更晚的版本。</p>
+</div>
+<div class="section" id="patch">
+<h3>合并必要的Patch<a class="headerlink" href="#patch" title="Permalink to this headline">¶</a></h3>
+<p>在发布等待过程中，可能会有比较重要的Patch合入，如果社区有人说要有重要的Bug需要合入，那么 Release Manager 需要评估并将重要的Patch合入到发布分支中。</p>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>社区发布投票流程<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tag">
+<h3>打 tag<a class="headerlink" href="#tag" title="Permalink to this headline">¶</a></h3>
+<p>当上述分支已经比较稳定后，就可以在此分支上打 tag。
+记得在创建 tag 时，修改 <code class="docutils literal notranslate"><span class="pre">gensrc/script/gen_build_version.sh</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">build_version</span></code> 变量。如 <code class="docutils literal notranslate"><span class="pre">build_version=&quot;0.10.0-release&quot;</span></code></p>
+<p>例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout branch-0.9
+$ git tag -a 0.9.0-rc01 -m &quot;0.9.0 release candidate 01&quot;
+$ git push origin 0.9.0-rc01
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 165 bytes | 0 bytes/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To git@github.com:apache/incubator-doris.git
+ * [new tag]         0.9.0-rc01 -&gt; 0.9.0-rc01
+
+$ git tag
+</pre></div>
+</div>
+</div>
+<div class="section" id="id12">
+<h3>打包、签名上传<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <p>如下步骤，也需要通过 SecureCRT 等终端直接登录用户账户，不能通过 su - user 或者 ssh 转，否则密码输入 box 会显示不出来而报错。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout 0.9.0-rc01
 
@@ -441,76 +465,89 @@ $ sha512sum apache-doris-0.9.0-incubating-src.tar.gz &gt; apache-doris-0.9.0-inc
 $ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
 </pre></div>
 </div>
-</div>
-<div class="section" id="keys-dev-svn">
-<h2>8. 上传签名的软件包和 KEYS 文件到 DEV svn<a class="headerlink" href="#keys-dev-svn" title="Permalink to this headline">¶</a></h2>
-<p>首先，下载 svn 库：</p>
+<p>然后将打包的内容上传到svn仓库中，首先下载 svn 库：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">svn</span> <span class="n">co</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span>
 </pre></div>
 </div>
 <p>将之前得到的全部文件组织成以下svn路径</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>./doris/
-├── 0.9
-│   └── 0.9.0-rc1
-│       ├── apache-doris-0.9.0-incubating-src.tar.gz
-│       ├── apache-doris-0.9.0-incubating-src.tar.gz.asc
-│       ├── apache-doris-0.9.0-incubating-src.tar.gz.sha512
-│       └── KEYS
+|-- 0.11.0-rc1
+|   |-- apache-doris-0.11.0-incubating-src.tar.gz
+|   |-- apache-doris-0.11.0-incubating-src.tar.gz.asc
+|   `-- apache-doris-0.11.0-incubating-src.tar.gz.sha512
+`-- KEYS
 </pre></div>
 </div>
 <p>上传这些文件</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">svn</span> <span class="n">add</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc1</span>
-<span class="n">svn</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;Release Apache Doris (incubating) 0.9.0 rc1&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">svn</span> <span class="n">add</span> <span class="mf">0.11</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc1</span>
+<span class="n">svn</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;Add 0.11.0-rc1&quot;</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id11">
-<h2>9. 发社区投票邮件<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>发社区投票邮件<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>[VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hi</span> <span class="nb">all</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Hi all,
 
-<span class="n">Please</span> <span class="n">review</span> <span class="ow">and</span> <span class="n">vote</span> <span class="n">on</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">-</span><span class="n">rc01</span> <span class="n">release</span><span class="o">.</span>
+Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
 
-<span class="n">The</span> <span class="n">release</span> <span class="n">candidate</span> <span class="n">has</span> <span class="n">been</span> <span class="n">tagged</span> <span class="ow">in</span> <span class="n">GitHub</span> <span class="k">as</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc01</span><span class="p">,</span> <span class="n">available</span>
-<span class="n">here</span><span class="p">:</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">tag</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc01</span>
+The release candidate has been tagged in GitHub as 0.9.0-rc01, available
+here:
+https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc01
 
-<span class="o">=====</span> <span class="n">CHANGE</span> <span class="n">LOG</span> <span class="o">=====</span>
+Release Notes are here:
+https://github.com/apache/incubator-doris/issues/1891
 
-<span class="n">New</span> <span class="n">Features</span><span class="p">:</span>
-<span class="o">....</span>
+Thanks to everyone who has contributed to this release.
 
-<span class="o">======================</span>
+The artifacts (source, signature and checksum) corresponding to this release
+candidate can be found here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc1/
 
-<span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span> <span class="n">who</span> <span class="n">has</span> <span class="n">contributed</span> <span class="n">to</span> <span class="n">this</span> <span class="n">release</span><span class="o">.</span>
+This has been signed with PGP key 33DBF2E0, corresponding to
+lide@apache.org.
+KEYS file is available here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS
+It is also listed here:
+https://people.apache.org/keys/committer/lide.asc
 
-<span class="n">The</span> <span class="n">artifacts</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">signature</span> <span class="ow">and</span> <span class="n">checksum</span><span class="p">)</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="n">this</span> <span class="n">release</span>
-<span class="n">candidate</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">here</span><span class="p">:</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="mf">0.9</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc1</span><span class="o">/</span>
+To verify and build, you can refer to following wiki:
+https://github.com/apache/incubator-doris/wiki/How-to-verify-Apache-Release
+https://wiki.apache.org/incubator/IncubatorReleaseChecklist
 
-<span class="n">This</span> <span class="n">has</span> <span class="n">been</span> <span class="n">signed</span> <span class="k">with</span> <span class="n">PGP</span> <span class="n">key</span> <span class="mi">33</span><span class="n">DBF2E0</span><span class="p">,</span> <span class="n">corresponding</span> <span class="n">to</span>
-<span class="n">lide</span><span class="nd">@apache</span><span class="o">.</span><span class="n">org</span><span class="o">.</span>
-<span class="n">KEYS</span> <span class="n">file</span> <span class="ow">is</span> <span class="n">available</span> <span class="n">here</span><span class="p">:</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dist</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="n">KEYS</span>
-<span class="n">It</span> <span class="ow">is</span> <span class="n">also</span> <span class="n">listed</span> <span class="n">here</span><span class="p">:</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">people</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">keys</span><span class="o">/</span><span class="n">committer</span><span class="o">/</span><span class="n">lide</span><span class="o">.</span><span class="n">asc</span>
+The vote will be open for at least 72 hours.
+[ ] +1 Approve the release
+[ ] +0 No opinion
+[ ] -1 Do not release this package because ...
 
-<span class="n">To</span> <span class="n">verify</span> <span class="ow">and</span> <span class="n">build</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">refer</span> <span class="n">to</span> <span class="n">following</span> <span class="n">wiki</span><span class="p">:</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">How</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">verify</span><span class="o">-</span><span class="n">Apache</span><span class="o">-</span><span class="n">Release</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">wiki</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">incubator</span><span class="o">/</span><span class="n">IncubatorReleaseChecklist</span>
+Best Regards,
+xxx
 
-<span class="n">The</span> <span class="n">vote</span> <span class="n">will</span> <span class="n">be</span> <span class="nb">open</span> <span class="k">for</span> <span class="n">at</span> <span class="n">least</span> <span class="mi">72</span> <span class="n">hours</span><span class="o">.</span>
-<span class="p">[</span> <span class="p">]</span> <span class="o">+</span><span class="mi">1</span> <span class="n">Approve</span> <span class="n">the</span> <span class="n">release</span>
-<span class="p">[</span> <span class="p">]</span> <span class="o">+</span><span class="mi">0</span> <span class="n">No</span> <span class="n">opinion</span>
-<span class="p">[</span> <span class="p">]</span> <span class="o">-</span><span class="mi">1</span> <span class="n">Do</span> <span class="ow">not</span> <span class="n">release</span> <span class="n">this</span> <span class="n">package</span> <span class="n">because</span> <span class="o">...</span>
+----
+DISCLAIMER-WIP: 
+Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), 
+sponsored by the Apache Incubator. Incubation is required of all newly accepted projects 
+until a further review indicates that the infrastructure, communications, and decision 
+making process have stabilized in a manner consistent with other successful ASF projects. 
+While incubation status is not necessarily a reflection of the completeness or stability 
+of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
-<span class="n">Best</span> <span class="n">Regards</span><span class="p">,</span>
-<span class="n">xxx</span>
+Some of the incubating project’s releases may not be fully compliant with ASF policy. For 
+example, releases may have incomplete or un-reviewed licensing conditions. What follows is 
+a list of known issues the project is currently aware of (note that this list, by definition, 
+is likely to be incomplete): 
+
+ * Releases may have incomplete licensing conditions
+
+If you are planning to incorporate this work into your product/project, please be aware that
+you will need to conduct a thorough licensing review to determine the overall implications of 
+including this work. For the current status of this project through the Apache Incubator 
+visit: https://incubator.apache.org/projects/doris.html
 </pre></div>
 </div>
 </div>
 <div class="section" id="result">
-<h2>10. 投票通过后，发 Result 邮件<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h2>
+<h3>投票通过后，发 Result 邮件<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h3>
 <p>[Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span><span class="p">,</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">vote</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">closed</span><span class="o">.</span>
 
@@ -528,7 +565,7 @@ $ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
 </div>
 </div>
 <div class="section" id="general-incubator-apache-org">
-<h2>11. 发邮件到 general&#64;incubator.apache.org 进行投票<a class="headerlink" href="#general-incubator-apache-org" title="Permalink to this headline">¶</a></h2>
+<h3>发邮件到 general&#64;incubator.apache.org 进行投票<a class="headerlink" href="#general-incubator-apache-org" title="Permalink to this headline">¶</a></h3>
 <p>[VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Hi all,
 
@@ -588,13 +625,34 @@ $ sh build.sh
 
 Best Regards,
 xxx
+
+----
+DISCLAIMER-WIP: 
+Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), 
+sponsored by the Apache Incubator. Incubation is required of all newly accepted projects 
+until a further review indicates that the infrastructure, communications, and decision 
+making process have stabilized in a manner consistent with other successful ASF projects. 
+While incubation status is not necessarily a reflection of the completeness or stability 
+of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+Some of the incubating project’s releases may not be fully compliant with ASF policy. For 
+example, releases may have incomplete or un-reviewed licensing conditions. What follows is 
+a list of known issues the project is currently aware of (note that this list, by definition, 
+is likely to be incomplete): 
+
+ * Releases may have incomplete licensing conditions
+
+If you are planning to incorporate this work into your product/project, please be aware that
+you will need to conduct a thorough licensing review to determine the overall implications of 
+including this work. For the current status of this project through the Apache Incubator 
+visit: https://incubator.apache.org/projects/doris.html
 </pre></div>
 </div>
 <p>邮件的 thread 连接可以在这里找到：</p>
 <p><code class="docutils literal notranslate"><span class="pre">https://lists.apache.org/list.html?dev&#64;doris.apache.org</span></code></p>
 </div>
 <div class="section" id="result-general-incubator-apache-org">
-<h2>12. 发 Result 邮件到 general&#64;incubator.apache.org<a class="headerlink" href="#result-general-incubator-apache-org" title="Permalink to this headline">¶</a></h2>
+<h3>发 Result 邮件到 general&#64;incubator.apache.org<a class="headerlink" href="#result-general-incubator-apache-org" title="Permalink to this headline">¶</a></h3>
 <p>[RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hi</span><span class="p">,</span>
 
@@ -616,8 +674,11 @@ xxx
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="id14">
+<h2>完成发布流程<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="package-release">
-<h2>13. 上传 package 到 release<a class="headerlink" href="#package-release" title="Permalink to this headline">¶</a></h2>
+<h3>上传 package 到 release<a class="headerlink" href="#package-release" title="Permalink to this headline">¶</a></h3>
 <p>当正式发布投票成功后，先发[Result]邮件，然后就准备 release package。
 将之前在dev下发布的对应rc文件夹下的源码包、签名文件和hash文件拷贝到另一个目录 0.9.0-incubating，注意文件名字中不要rcxx (可以rename，但不要重新计算签名，hash可以重新计算，结果不会变)</p>
 <p>第一次发布的话 KEYS 文件也需要拷贝过来。然后add到svn release 下。</p>
@@ -630,7 +691,7 @@ http://www.apache.org/dist/incubator/doris/0.9.0-incubating/
 </div>
 </div>
 <div class="section" id="announce-general-incubator-apache-org">
-<h2>14. 发 Announce 邮件到 general&#64;incubator.apache.org<a class="headerlink" href="#announce-general-incubator-apache-org" title="Permalink to this headline">¶</a></h2>
+<h3>发 Announce 邮件到 general&#64;incubator.apache.org<a class="headerlink" href="#announce-general-incubator-apache-org" title="Permalink to this headline">¶</a></h3>
 <p>Title:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ANNOUNCE</span><span class="p">]</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="p">(</span><span class="n">incubating</span><span class="p">)</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span> <span class="n">Release</span>
 </pre></div>
@@ -641,29 +702,50 @@ http://www.apache.org/dist/incubator/doris/0.9.0-incubating/
 </pre></div>
 </div>
 <p>邮件正文：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hi</span> <span class="n">All</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Hi All,
 
-<span class="n">We</span> <span class="n">are</span> <span class="n">pleased</span> <span class="n">to</span> <span class="n">announce</span> <span class="n">the</span> <span class="n">release</span> <span class="n">of</span> <span class="n">Apache</span> <span class="n">Doris</span> <span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">incubating</span><span class="o">.</span>
+We are pleased to announce the release of Apache Doris 0.9.0-incubating.
 
-<span class="n">Apache</span> <span class="n">Doris</span> <span class="p">(</span><span class="n">incubating</span><span class="p">)</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">MPP</span><span class="o">-</span><span class="n">based</span> <span class="n">interactive</span> <span class="n">SQL</span> <span class="n">data</span> <span class="n">warehousing</span> <span class="k">for</span> <span class="n">reporting</span> <span class="ow">and</span> <span class="n">analysis</span><span class="o">.</span>
+Apache Doris (incubating) is an MPP-based interactive SQL data warehousing for reporting and analysis.
 
-<span class="n">The</span> <span class="n">release</span> <span class="ow">is</span> <span class="n">available</span> <span class="n">at</span><span class="p">:</span>
-<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">doris</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">downloads</span><span class="o">.</span><span class="n">html</span>
+The release is available at:
+http://doris.apache.org/downloads.html
 
-<span class="n">Thanks</span> <span class="n">to</span> <span class="n">everyone</span> <span class="n">who</span> <span class="n">has</span> <span class="n">contributed</span> <span class="n">to</span> <span class="n">this</span> <span class="n">release</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">release</span> <span class="n">note</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">here</span><span class="p">:</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">releases</span>
+Thanks to everyone who has contributed to this release, and the release note can be found here:
+https://github.com/apache/incubator-doris/releases
 
-<span class="n">Best</span> <span class="n">Regards</span><span class="p">,</span>
+Best Regards,
 
-<span class="n">On</span> <span class="n">behalf</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Doris</span> <span class="n">team</span><span class="p">,</span>
-<span class="n">xxx</span>
+On behalf of the Doris team,
+xxx
+
+----
+DISCLAIMER-WIP: 
+Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), 
+sponsored by the Apache Incubator. Incubation is required of all newly accepted projects 
+until a further review indicates that the infrastructure, communications, and decision 
+making process have stabilized in a manner consistent with other successful ASF projects. 
+While incubation status is not necessarily a reflection of the completeness or stability 
+of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+Some of the incubating project’s releases may not be fully compliant with ASF policy. For 
+example, releases may have incomplete or un-reviewed licensing conditions. What follows is 
+a list of known issues the project is currently aware of (note that this list, by definition, 
+is likely to be incomplete): 
+
+ * Releases may have incomplete licensing conditions
+
+If you are planning to incorporate this work into your product/project, please be aware that
+you will need to conduct a thorough licensing review to determine the overall implications of 
+including this work. For the current status of this project through the Apache Incubator 
+visit: https://incubator.apache.org/projects/doris.html
 </pre></div>
 </div>
 </div>
 <div class="section" id="doris-github">
-<h2>15. 在 Doris 官网和 github 发布链接<a class="headerlink" href="#doris-github" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id12">
-<h3>15.1 创建下载链接<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<h3>在 Doris 官网和 github 发布链接<a class="headerlink" href="#doris-github" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h4>创建下载链接<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
 <p>下载链接：
 http://www.apache.org/dyn/closer.cgi?filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz&amp;action=download</p>
 <p>wget –trust-server-names “https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz”</p>
@@ -681,7 +763,7 @@ http://archive.apache.org/dist/incubator/doris/KEYS</p>
 <p>refer to: <a class="reference external" href="http://www.apache.org/dev/release-download-pages#closer">http://www.apache.org/dev/release-download-pages#closer</a></p>
 </div>
 <div class="section" id="release-note">
-<h3>15.2 准备 release note<a class="headerlink" href="#release-note" title="Permalink to this headline">¶</a></h3>
+<h4>准备 release note<a class="headerlink" href="#release-note" title="Permalink to this headline">¶</a></h4>
 <p>需要修改如下两个地方：</p>
 <p>1、Github 的 release 页面</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">tag</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">rc01</span>
@@ -690,6 +772,7 @@ http://archive.apache.org/dist/incubator/doris/KEYS</p>
 <p>2、Doris 官网下载页面</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">doris</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">downloads</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -724,7 +807,7 @@ http://archive.apache.org/dist/incubator/doris/KEYS</p>
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

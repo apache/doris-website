@@ -183,7 +183,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="stream-load">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="stream-load">
 <h1>STREAM LOAD<a class="headerlink" href="#stream-load" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -277,14 +294,14 @@
 <li><p class="first">load using streaming mode (user is in defalut_cluster)</p>
 <p><code class="docutils literal notranslate"><span class="pre">Seq</span> <span class="pre">1</span> <span class="pre">10</span> <span class="pre">|</span> <span class="pre">awk</span> <span class="pre">'{OFS=&quot;\t&quot;}{print</span> <span class="pre">$1,</span> <span class="pre">$1</span> <span class="pre">*</span> <span class="pre">10}'</span> <span class="pre">|</span> <span class="pre">curl</span> <span class="pre">--location-trusted</span> <span class="pre">-u</span> <span class="pre">root</span> <span class="pre">-T</span> <span class="pre">-</span> <span class="pre">http://host:port/api/testDb/testTbl/_stream_load</span></code></p>
 </li>
-<li><p class="first">load a table with HLL columns, which can be columns in the table or columns in the data used to generate HLL columns,you can also use empty_hll to supplement columns that are not in the data</p>
-<p><code class="docutils literal notranslate"><span class="pre">Curl</span> <span class="pre">--location-trusted</span> <span class="pre">-u</span> <span class="pre">root</span> <span class="pre">-H</span> <span class="pre">&quot;columns:</span> <span class="pre">k1,</span> <span class="pre">k2,</span> <span class="pre">v1=hll_hash(k1),</span> <span class="pre">v2=empty_hll()&quot;</span> <span class="pre">-T</span> <span class="pre">testData</span> <span class="pre">http://host:port/api/testDb/testTbl/_stream_load</span></code></p>
+<li><p class="first">load a table with HLL columns, which can be columns in the table or columns in the data used to generate HLL columns,you can also use hll_empty to supplement columns that are not in the data</p>
+<p><code class="docutils literal notranslate"><span class="pre">Curl</span> <span class="pre">--location-trusted</span> <span class="pre">-u</span> <span class="pre">root</span> <span class="pre">-H</span> <span class="pre">&quot;columns:</span> <span class="pre">k1,</span> <span class="pre">k2,</span> <span class="pre">v1=hll_hash(k1),</span> <span class="pre">v2=hll_empty()&quot;</span> <span class="pre">-T</span> <span class="pre">testData</span> <span class="pre">http://host:port/api/testDb/testTbl/_stream_load</span></code></p>
 </li>
 <li><p class="first">load data for strict mode filtering and set the time zone to Africa/Abidjan</p>
 <p><code class="docutils literal notranslate"><span class="pre">Curl</span> <span class="pre">--location-trusted</span> <span class="pre">-u</span> <span class="pre">root</span> <span class="pre">-H</span> <span class="pre">&quot;strict_mode:</span> <span class="pre">true&quot;</span> <span class="pre">-H</span> <span class="pre">&quot;timezone:</span> <span class="pre">Africa/Abidjan&quot;</span> <span class="pre">-T</span> <span class="pre">testData</span> <span class="pre">http://host:port/api/testDb/testTbl/_stream_load</span></code></p>
 </li>
-<li><p class="first">load a table with an aggregate model of <code class="docutils literal notranslate"><span class="pre">BITMAP_UNION</span></code>, either a column in the table or a column in the data to generate a <code class="docutils literal notranslate"><span class="pre">BITMAP_UNION</span></code> column</p>
-<p><code class="docutils literal notranslate"><span class="pre">Curl</span> <span class="pre">--location-trusted</span> <span class="pre">-u</span> <span class="pre">root</span> <span class="pre">-H</span> <span class="pre">&quot;columns:</span> <span class="pre">k1,</span> <span class="pre">k2,</span> <span class="pre">v1=to_bitmap(k1)&quot;</span> <span class="pre">-T</span> <span class="pre">testData</span> <span class="pre">http://host:port/api/testDb/testTbl/_stream_load</span></code></p>
+<li><p class="first">load a table with BITMAP columns, which can be columns in the table or a column in the data used to generate BITMAP columns, you can also use bitmap_empty to supplement columns that are not in the data</p>
+<p><code class="docutils literal notranslate"><span class="pre">Curl</span> <span class="pre">--location-trusted</span> <span class="pre">-u</span> <span class="pre">root</span> <span class="pre">-H</span> <span class="pre">&quot;columns:</span> <span class="pre">k1,</span> <span class="pre">k2,</span> <span class="pre">v1=to_bitmap(k1),</span> <span class="pre">v2=bitmap_empty()&quot;</span> <span class="pre">-T</span> <span class="pre">testData</span> <span class="pre">http://host:port/api/testDb/testTbl/_stream_load</span></code></p>
 </li>
 </ol>
 </div>
@@ -325,7 +342,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

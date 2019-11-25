@@ -100,12 +100,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">配置文件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
 </ul>
 </li>
@@ -189,7 +192,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="routine-load">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="routine-load">
 <h1>Routine Load<a class="headerlink" href="#routine-load" title="Permalink to this headline">¶</a></h1>
 <p>例行导入（Routine Load）功能为用户提供了一种自动从指定数据源进行数据导入的功能。</p>
 <p>本文档主要介绍该功能的实现原理、使用方式以及最佳实践。</p>
@@ -474,20 +494,19 @@
 <p>一些系统配置参数会影响例行导入的使用。</p>
 <ol>
 <li><p class="first">max_routine_load_task_concurrent_num</p>
-<p>FE 配置项，默认为 5，可以运行时修改。该参数限制了一个例行导入最大的子任务并发数。建议维持默认值。设置过大，可能导致同时并发的任务数过多，占用集群资源。</p>
+<p>FE 配置项，默认为 5，可以运行时修改。该参数限制了一个例行导入作业最大的子任务并发数。建议维持默认值。设置过大，可能导致同时并发的任务数过多，占用集群资源。</p>
+</li>
+<li><p class="first">max_routine_load_task_num_per_be</p>
+<p>FE 配置项，默认为5，可以运行时修改。该参数限制了每个 BE 节点最多并发执行的子任务个数。建议维持默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。</p>
+</li>
+<li><p class="first">max_routine_load_job_num</p>
+<p>FE 配置项，默认为100，可以运行时修改。该参数限制的例行导入作业的总数，包括 NEED_SCHEDULED, RUNNING, PAUSE 这些状态。超过后，不能在提交新的作业。</p>
 </li>
 <li><p class="first">max_consumer_num_per_group</p>
 <p>BE 配置项，默认为 3。该参数表示一个子任务中最多生成几个 consumer 进行数据消费。对于 Kafka 数据源，一个 consumer 可能消费一个或多个 kafka partition。假设一个任务需要消费 6 个 kafka partition，则会生成 3 个 consumer，每个 consumer 消费 2 个 partition。如果只有 2 个 partition，则只会生成 2 个 consumer，每个 consumer 消费 1 个 partition。</p>
 </li>
 <li><p class="first">push_write_mbytes_per_sec</p>
 <p>BE 配置项。默认为 10，即 10MB/s。该参数为导入通用参数，不限于例行导入作业。该参数限制了导入数据写入磁盘的速度。对于 SSD 等高性能存储设备，可以适当增加这个限速。</p>
-</li>
-<li><p class="first">max_concurrent_task_num_per_be</p>
-<p>FE 配置项，默认为10，可以运行时修改。该参数限制了每个 BE 节点最多并发执行的子任务个数。建议维持默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。</p>
-<ul class="simple">
-<li>如果用户发现许多 Routine load job 都处在 NEED_SCHEDULER 的状态，则说明整个集群的子任务并发数饱和了。</li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">整个集群的子任务的并发数</span> <span class="pre">=</span> <span class="pre">BE</span> <span class="pre">的个数</span> <span class="pre">*</span> <span class="pre">max_concurrent_task_num_per_be</span></code> 这种情况下，首先确定是否所有 RUNNING 中的 job 可以被精简，比如暂停或停止掉已经无用的 job。其次，可以考虑修改这个参数，用于扩大整个集群的子任务并发数。</p>
 </li>
 </ol>
 </div>
@@ -522,7 +541,7 @@
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

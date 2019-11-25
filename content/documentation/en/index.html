@@ -249,6 +249,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 </li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/basic-usage_EN.html#import-data">2.4 Import data</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="getting-started/basic-usage_EN.html#flow-in">Flow-in</a></li>
+<li class="toctree-l5"><a class="reference internal" href="getting-started/basic-usage_EN.html#broker-load">Broker Load</a></li>
 </ul>
 </li>
 </ul>
@@ -267,6 +268,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l3"><a class="reference internal" href="getting-started/advance-usage_EN.html#query-of-data-table">2 Query of Data Table</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/advance-usage_EN.html#memory-limitation">2.1 Memory Limitation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/advance-usage_EN.html#query-timeout">2.2 Query timeout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="getting-started/advance-usage_EN.html#broadcast-shuffle-join">2.3 Broadcast/Shuffle Join</a></li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/advance-usage_EN.html#query-retry-and-high-availability">2.4 Query Retry and High Availability</a></li>
 </ul>
 </li>
@@ -338,9 +340,12 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l3"><a class="reference internal" href="getting-started/data-model-rollup_EN.html#suggestions-for-choosing-data-model">Suggestions for Choosing Data Model</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html">Noun Interpretation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html#index">Index</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html">Rollup and query</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html#noun-interpretation">Noun Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html#index">Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="administrator-guide/index.html">Administrator Guide</a><ul>
@@ -411,6 +416,15 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/privilege_EN.html#best-practices">Best Practices</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="administrator-guide/session-variables_EN.html">Variable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/session-variables_EN.html#variable-setting-and-viewing">Variable setting and viewing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/session-variables_EN.html#view">View</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/session-variables_EN.html#settings">Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/session-variables_EN.html#supported-variables">Supported variables</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="administrator-guide/small-file-mgr_EN.html">File Manager</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/small-file-mgr_EN.html#noun-interpretation">Noun Interpretation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/small-file-mgr_EN.html#basic-concepts">Basic concepts</a></li>
@@ -422,6 +436,14 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 </li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/small-file-mgr_EN.html#use-restrictions">Use restrictions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/small-file-mgr_EN.html#relevant-configuration">Relevant configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="administrator-guide/sql-mode_EN.html">SQL MODE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/sql-mode_EN.html#sql-mode-introduction">Sql mode introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/sql-mode_EN.html#theory">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/sql-mode_EN.html#operation">Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/sql-mode_EN.html#supported-mode">supported mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/sql-mode_EN.html#combine-mode">combine mode</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="administrator-guide/time-zone_EN.html">Time zone</a><ul>
@@ -599,37 +621,51 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="community/release-process_EN.html">Publish of Apache Doris</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#prepare-for-release">1. Prepare for release</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#launching-discuss-in-the-community">1.1 Launching DISCUSS in the Community</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#preparatory-branch">1.2 Preparatory Branch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#dozen-tags">1.3 dozen Tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#prepare-setup">prepare setup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#preparing-gpg-key">preparing gpg key</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#installation-and-configuration-of-signature-software-gnupg">Installation and configuration of signature software GnuPG</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="community/release-process_EN.html#gnupg">GnuPG</a></li>
+<li class="toctree-l6"><a class="reference internal" href="community/release-process_EN.html#installation-configuration">Installation Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#installation-and-configuration-of-signature-software-gnupg">2. Installation and configuration of signature software GnuPG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#gnupg">2.1 GnuPG</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#installation-configuration">2.2 Installation Configuration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#generating-new-signatures">Generating new signatures</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="community/release-process_EN.html#prepare-to-sign">Prepare to Sign</a></li>
+<li class="toctree-l6"><a class="reference internal" href="community/release-process_EN.html#id1">Generating new signatures</a></li>
+<li class="toctree-l6"><a class="reference internal" href="community/release-process_EN.html#view-and-output">View and Output</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#generating-new-signatures">3. Generating new signatures</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#prepare-to-sign">3.1 Prepare to Sign</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#id1">3.2 Generating new signatures</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#view-and-output">3.3 View and Output</a></li>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#upload-signature-public-key">Upload signature public key</a></li>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#generate-fingerprint-and-upload-it-to-apache-user-information">Generate fingerprint and upload it to Apache user information</a></li>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#generating-keys">Generating keys</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#upload-signature-public-key">4. Upload signature public key</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#generate-fingerprint-and-upload-it-to-apache-user-information">5. Generate fingerprint and upload it to Apache user information</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#generating-keys">6. Generating keys</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#packing-signature">7. Packing Signature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#upload-signature-packages-and-keys-files-to-dev-svn">8. Upload signature packages and KEYS files to DEV SVN</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#send-community-voting-emails">9. Send community voting emails</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#email-result-after-the-vote-is-passed">10. Email Result after the vote is passed</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#send-an-e-mail-to-general-incubator-apache-org-for-a-vote">11. Send an e-mail to general&#64;incubator.apache.org for a vote.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#email-result-to-general-incubator-apache-org">12. Email Result to general&#64;incubator.apache.org</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#upload-package-to-release">13. Upload package to release</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#send-announce-e-mail-to-general-incubator-apache-org">14. Send Announce e-mail to general&#64;incubator.apache.org</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#publish-links-on-doris-website-and-github">15. Publish links on Doris website and GitHub</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#create-download-links">15.1 Create Download Links</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#prepare-release-note">15.2 Prepare release note</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#prepare-for-release">Prepare for release</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#launching-discuss-in-the-community">Launching DISCUSS in the Community</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#preparatory-branch">Preparatory Branch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#clean-up-issue">clean up issue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#merge-necessary-patches">Merge necessary patches</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#running-the-voting-process-for-a-release">Running the voting process for a release</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#dozen-tags">dozen Tags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#packing-signature">Packing Signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#upload-signature-packages-and-keys-files-to-dev-svn">Upload signature packages and KEYS files to DEV SVN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#send-community-voting-emails">Send community voting emails</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#email-result-after-the-vote-is-passed">Email Result after the vote is passed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#send-an-e-mail-to-general-incubator-apache-org-for-a-vote">Send an e-mail to general&#64;incubator.apache.org for a vote.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#email-result-to-general-incubator-apache-org">Email Result to general&#64;incubator.apache.org</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="community/release-process_EN.html#finalizing-release">Finalizing release</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#upload-package-to-release">Upload package to release</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#send-announce-e-mail-to-general-incubator-apache-org">Send Announce e-mail to general&#64;incubator.apache.org</a></li>
+<li class="toctree-l4"><a class="reference internal" href="community/release-process_EN.html#publish-links-on-doris-website-and-github">Publish links on Doris website and GitHub</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#create-download-links">Create Download Links</a></li>
+<li class="toctree-l5"><a class="reference internal" href="community/release-process_EN.html#prepare-release-note">Prepare release note</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -690,7 +726,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

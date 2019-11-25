@@ -180,7 +180,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="id1">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="id1">
 <h1>数据划分<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>本文档主要介绍 Doris 的建表和数据划分，以及建表操作中可能遇到的问题和解决方法。</p>
 <div class="section" id="id2">
@@ -215,7 +232,7 @@
     `last_visit_date` DATETIME REPLACE DEFAULT &quot;1970-01-01 00:00:00&quot; COMMENT &quot;用户最后一次访问时间&quot;,
     `cost` BIGINT SUM DEFAULT &quot;0&quot; COMMENT &quot;用户总消费&quot;,
     `max_dwell_time` INT MAX DEFAULT &quot;0&quot; COMMENT &quot;用户最大停留时间&quot;,
-    `min_dwell_time` INT MIN DEFAULT &quot;99999&quot; COMMENT &quot;用户最小停留时间&quot;,
+    `min_dwell_time` INT MIN DEFAULT &quot;99999&quot; COMMENT &quot;用户最小停留时间&quot;
 )
 ENGINE=olap
 AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
@@ -482,7 +499,7 @@ p201705: [2017-04-01, 2017-06-01)
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

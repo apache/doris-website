@@ -182,13 +182,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="get-json-int">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="get-json-int">
 <h1>get_json_int<a class="headerlink" href="#get-json-int" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="syntax">
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<p>‘I don’t get you int (VARCHAR is on, VARCHAR is on the path)</p>
+<p>`INT get_json_int(VARCHAR json_str, VARCHAR json_path)</p>
 <p>Parse and retrieve the integer content of the specified path in the JSON string.
 Where json_path must start with the $symbol and use. as the path splitter. If the path contains…, double quotation marks can be used to surround it.
 Use [] to denote array subscripts, starting at 0.
@@ -201,20 +218,20 @@ If the json_string format is incorrect, or the json_path format is incorrect, or
 <ol class="simple">
 <li>Get the value of key as “k1”</li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mysql &gt; SELECT get json u int (&#39;{&quot;k1&quot;:1, &quot;k2&quot;:&quot;2&quot;}, &quot;$.k1&quot;);
-+--------------------------------------------+
-Get it on int (&#39;{&quot;k1&quot;:1, &quot;k2&quot;:&quot;2&quot;},&#39;$.k1&#39;) 124s;
-+--------------------------------------------+
-|                                          1 |
-+--------------------------------------------+
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">get_json_int</span><span class="p">(</span><span class="s1">&#39;{&quot;k1&quot;:1, &quot;k2&quot;:&quot;2&quot;}&#39;</span><span class="p">,</span> <span class="s2">&quot;$.k1&quot;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------+</span>
+<span class="o">|</span> <span class="n">get_json_int</span><span class="p">(</span><span class="s1">&#39;{&quot;k1&quot;:1, &quot;k2&quot;:&quot;2&quot;}&#39;</span><span class="p">,</span> <span class="s1">&#39;$.k1&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
+<span class="o">|</span>                                          <span class="mi">1</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
 </pre></div>
 </div>
 <ol class="simple">
 <li>Get the second element of the array whose key is “my. key”</li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">get</span> <span class="n">u</span> <span class="n">json</span> <span class="n">u</span> <span class="nb">int</span> <span class="p">(</span><span class="s1">&#39;{&quot;k1&quot;:&quot;v1&quot;, &quot;my.key&quot;:[1, 2, 3]}&#39;</span><span class="p">,</span><span class="s1">&#39;$&quot;my.key&quot;[1]);</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">get_json_int</span><span class="p">(</span><span class="s1">&#39;{&quot;k1&quot;:&quot;v1&quot;, &quot;my.key&quot;:[1, 2, 3]}&#39;</span><span class="p">,</span> <span class="s1">&#39;$.&quot;my.key&quot;[1]&#39;</span><span class="p">);</span>
 <span class="o">+------------------------------------------------------------------+</span>
-<span class="n">Get</span> <span class="n">me</span> <span class="n">on</span> <span class="nb">int</span> <span class="p">(</span><span class="s1">&#39;{&quot;k1&quot;:&quot;v1&quot;, &quot;my.key&quot;:[1, 2, 3]}&#39;</span><span class="p">,</span><span class="s1">&#39;$&quot;my.key&quot;[1]])&#39;</span><span class="mi">124</span><span class="p">;</span>
+<span class="o">|</span> <span class="n">get_json_int</span><span class="p">(</span><span class="s1">&#39;{&quot;k1&quot;:&quot;v1&quot;, &quot;my.key&quot;:[1, 2, 3]}&#39;</span><span class="p">,</span> <span class="s1">&#39;$.&quot;my.key&quot;[1]&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+------------------------------------------------------------------+</span>
 <span class="o">|</span>                                                                <span class="mi">2</span> <span class="o">|</span>
 <span class="o">+------------------------------------------------------------------+</span>
@@ -223,9 +240,9 @@ Get it on int (&#39;{&quot;k1&quot;:1, &quot;k2&quot;:&quot;2&quot;},&#39;$.k1&#
 <ol class="simple">
 <li>Get the first element in an array whose secondary path is k1. key - &gt; K2</li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">get</span> <span class="n">u</span> <span class="n">json</span> <span class="n">u</span> <span class="nb">int</span> <span class="p">(</span><span class="s1">&#39;{&quot;k1.key&quot;:{&quot;k2&quot;:[1, 2]}&#39;</span><span class="p">,</span><span class="s1">&#39;$&quot;k1.key&quot;.k2 [0]&#39;</span><span class="p">);</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">get_json_int</span><span class="p">(</span><span class="s1">&#39;{&quot;k1.key&quot;:{&quot;k2&quot;:[1, 2]}}&#39;</span><span class="p">,</span> <span class="s1">&#39;$.&quot;k1.key&quot;.k2[0]&#39;</span><span class="p">);</span>
 <span class="o">+--------------------------------------------------------------+</span>
-<span class="n">Get</span> <span class="n">me</span> <span class="n">on</span> <span class="nb">int</span> <span class="p">(</span><span class="s1">&#39;{&quot;k1.key&quot;:{&quot;k2&quot;:[1, 2]}&#39;</span><span class="p">,</span><span class="s1">&#39;$&quot;k1.key&quot;.k2 [0]) 1244;</span>
+<span class="o">|</span> <span class="n">get_json_int</span><span class="p">(</span><span class="s1">&#39;{&quot;k1.key&quot;:{&quot;k2&quot;:[1, 2]}}&#39;</span><span class="p">,</span> <span class="s1">&#39;$.&quot;k1.key&quot;.k2[0]&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+--------------------------------------------------------------+</span>
 <span class="o">|</span>                                                            <span class="mi">1</span> <span class="o">|</span>
 <span class="o">+--------------------------------------------------------------+</span>
@@ -265,7 +282,7 @@ GET_JSON_INT,GET,JSON,INT</p>
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

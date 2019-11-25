@@ -99,9 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="best-practice_EN.html">Best Practices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data-partition_EN.html">Data Partition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data-model-rollup_EN.html">Data Model, ROLLUP and Prefix Index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html">Noun Interpretation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#index">Index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html#aggregate-data">Aggregate data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit-the-rollup_EN.html">Rollup and query</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
@@ -182,7 +180,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="guidelines-for-basic-use">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="guidelines-for-basic-use">
 <h1>Guidelines for Basic Use<a class="headerlink" href="#guidelines-for-basic-use" title="Permalink to this headline">¶</a></h1>
 <p>Doris uses MySQL protocol to communicate. Users can connect to Doris cluster through MySQL client or MySQL JDBC. When selecting the MySQL client version, it is recommended to use the version after 5.1, because user names of more than 16 characters can not be supported before 5.1. This paper takes MySQL client as an example to show users the basic usage of Doris through a complete process.</p>
 <div class="section" id="create-users">
@@ -276,10 +291,10 @@ Use the following command to log in to Doris:</p>
 <p>The TABLE statement is as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">table1</span>
 <span class="p">(</span>
-<span class="n">siteid</span> <span class="n">INT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
-<span class="n">citycode</span> <span class="n">SMALLINT</span><span class="p">,</span>
-<span class="n">Username</span> <span class="n">VARCHAR</span> <span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">DEFAULT</span><span class="s1">&#39;,</span>
-<span class="n">pv</span> <span class="n">BIGINT</span> <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">siteid</span> <span class="n">INT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+    <span class="n">citycode</span> <span class="n">SMALLINT</span><span class="p">,</span>
+    <span class="n">username</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">pv</span> <span class="n">BIGINT</span> <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
 <span class="p">)</span>
 <span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">citycode</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
 <span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span>
@@ -310,18 +325,18 @@ Use the following command to log in to Doris:</p>
 <p>The TABLE statement is as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">table2</span>
 <span class="p">(</span>
-<span class="n">event</span> <span class="o">/</span><span class="n">day</span> <span class="n">DATE</span><span class="p">,</span>
-<span class="n">siteid</span> <span class="n">INT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
-<span class="n">citycode</span> <span class="n">SMALLINT</span><span class="p">,</span>
-<span class="n">Username</span> <span class="n">VARCHAR</span> <span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">DEFAULT</span><span class="s1">&#39;,</span>
-<span class="n">pv</span> <span class="n">BIGINT</span> <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">event_day</span> <span class="n">DATE</span><span class="p">,</span>
+    <span class="n">siteid</span> <span class="n">INT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+    <span class="n">citycode</span> <span class="n">SMALLINT</span><span class="p">,</span>
+    <span class="n">username</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">pv</span> <span class="n">BIGINT</span> <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
 <span class="p">)</span>
 <span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">event_day</span><span class="p">,</span> <span class="n">siteid</span><span class="p">,</span> <span class="n">citycode</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
 <span class="n">PARTITION</span> <span class="n">BY</span> <span class="n">RANGE</span><span class="p">(</span><span class="n">event_day</span><span class="p">)</span>
 <span class="p">(</span>
-<span class="n">The</span> <span class="n">distribution</span> <span class="n">value</span> <span class="n">of</span> <span class="n">P201706</span> <span class="n">was</span> <span class="n">lower</span> <span class="n">than</span> <span class="n">that</span> <span class="n">of</span> <span class="p">(</span><span class="s2">&quot;2017-07-01&quot;</span><span class="p">)</span><span class="o">.</span>
-<span class="n">The</span> <span class="n">segmentation</span> <span class="n">value</span> <span class="n">of</span> <span class="n">P201707</span> <span class="ow">is</span> <span class="n">lower</span> <span class="n">than</span> <span class="n">that</span> <span class="n">of</span> <span class="p">(</span><span class="s2">&quot;2017-08-01&quot;</span><span class="p">)</span><span class="o">.</span>
-<span class="n">The</span> <span class="n">segmentation</span> <span class="n">value</span> <span class="n">of</span> <span class="n">P201708</span> <span class="ow">is</span> <span class="n">lower</span> <span class="n">than</span> <span class="n">that</span> <span class="n">of</span> <span class="p">(</span><span class="s2">&quot;2017-09-01&quot;</span><span class="p">)</span><span class="o">.</span>
+    <span class="n">PARTITION</span> <span class="n">p201706</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s1">&#39;2017-07-01&#39;</span><span class="p">),</span>
+    <span class="n">PARTITION</span> <span class="n">p201707</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s1">&#39;2017-08-01&#39;</span><span class="p">),</span>
+    <span class="n">PARTITION</span> <span class="n">p201708</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s1">&#39;2017-09-01&#39;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span>
 <span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;replication_num&quot;</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">);</span>
@@ -330,7 +345,7 @@ Use the following command to log in to Doris:</p>
 <p>After the table is built, you can view the information of the table in example_db:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">TABLES</span><span class="p">;</span>
 <span class="o">+----------------------+</span>
-<span class="mf">1.1</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.1</span><span class="o">.</span><span class="mf">2.1</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span><span class="mf">2.2</span><span class="o">.</span>
+<span class="o">|</span> <span class="n">Tables_in_example_db</span> <span class="o">|</span>
 <span class="o">+----------------------+</span>
 <span class="o">|</span> <span class="n">table1</span>               <span class="o">|</span>
 <span class="o">|</span> <span class="n">table2</span>               <span class="o">|</span>
@@ -343,8 +358,8 @@ Use the following command to log in to Doris:</p>
 <span class="o">+----------+-------------+------+-------+---------+-------+</span>
 <span class="o">|</span> <span class="n">siteid</span>   <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="mi">10</span>      <span class="o">|</span>       <span class="o">|</span>
 <span class="o">|</span> <span class="n">citycode</span> <span class="o">|</span> <span class="n">smallint</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
-<span class="s2">&quot;124s; username&quot;</span><span class="mi">124</span><span class="n">s</span><span class="p">;</span> <span class="n">varchar</span> <span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="s2">&quot;124s; Yes&quot;</span><span class="mi">124</span><span class="n">s</span><span class="p">;</span> <span class="n">true</span> <span class="s2">&quot;124s;&quot;</span><span class="mi">124</span><span class="n">s</span><span class="p">;</span> <span class="s2">&quot;124s;</span>
-<span class="o">+</span> <span class="mi">124</span><span class="p">;</span> <span class="n">PV</span> <span class="o">=</span> <span class="mi">124</span><span class="p">;</span> <span class="n">Bigint</span> <span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="n">Yes</span> <span class="kc">False</span> <span class="mi">0</span> <span class="n">Sum</span>
+<span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">pv</span>       <span class="o">|</span> <span class="n">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="mi">0</span>       <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
 <span class="o">+----------+-------------+------+-------+---------+-------+</span>
 <span class="mi">4</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
 
@@ -355,8 +370,8 @@ Use the following command to log in to Doris:</p>
 <span class="o">|</span> <span class="n">event_day</span> <span class="o">|</span> <span class="n">date</span>        <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
 <span class="o">|</span> <span class="n">siteid</span>    <span class="o">|</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>     <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="mi">10</span>      <span class="o">|</span>       <span class="o">|</span>
 <span class="o">|</span> <span class="n">citycode</span>  <span class="o">|</span> <span class="n">smallint</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>     <span class="o">|</span>       <span class="o">|</span>
-<span class="s2">&quot;124s; username&quot;</span><span class="mi">124</span><span class="n">s</span><span class="p">;</span> <span class="n">varchar</span> <span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="s2">&quot;124s; Yes&quot;</span><span class="mi">124</span><span class="n">s</span><span class="p">;</span> <span class="n">true</span> <span class="s2">&quot;124s;&quot;</span><span class="mi">124</span><span class="n">s</span><span class="p">;</span> <span class="s2">&quot;124s;</span>
-<span class="o">+</span> <span class="mi">124</span><span class="p">;</span> <span class="n">PV</span> <span class="o">=</span> <span class="mi">124</span><span class="p">;</span> <span class="n">Bigint</span> <span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="n">Yes</span> <span class="kc">False</span> <span class="mi">0</span> <span class="n">Sum</span>
+<span class="o">|</span> <span class="n">username</span>  <span class="o">|</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">true</span>  <span class="o">|</span>         <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">pv</span>        <span class="o">|</span> <span class="n">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="o">|</span> <span class="n">Yes</span>  <span class="o">|</span> <span class="n">false</span> <span class="o">|</span> <span class="mi">0</span>       <span class="o">|</span> <span class="n">SUM</span>   <span class="o">|</span>
 <span class="o">+-----------+-------------+------+-------+---------+-------+</span>
 <span class="mi">5</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
 </pre></div>
@@ -365,7 +380,7 @@ Use the following command to log in to Doris:</p>
 <div><p>Notes:</p>
 <ol class="simple">
 <li>By setting replication_num, the above tables are all single-copy tables. Doris recommends that users adopt the default three-copy settings to ensure high availability.</li>
-<li>Composite partition tables can be added or deleted dynamically. See the Partition section in `HELP ALTER TABLE’.</li>
+<li>Composite partition tables can be added or deleted dynamically. See the Partition section in <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span></code>.</li>
 <li>Data import can import the specified Partition. See `HELP LOAD’.</li>
 <li>Schema of table can be dynamically modified.</li>
 <li>Rollup can be added to Table to improve query performance. This section can be referred to the description of Rollup in Advanced Usage Guide.</li>
@@ -389,7 +404,7 @@ Use the following command to log in to Doris:</p>
 <li>You can use the IP of any BE and the webserver_port in be.conf to connect the target left and right for import. For example: <code class="docutils literal notranslate"><span class="pre">BE_HOST:8040</span></code></li>
 </ol>
 </div></blockquote>
-<p>The local file <code class="docutils literal notranslate"><span class="pre">table1_data'takes</span> </code>, `as the separation between data, and the specific contents are as follows:</p>
+<p>The local file <code class="docutils literal notranslate"><span class="pre">table1_data</span></code> takes <code class="docutils literal notranslate"><span class="pre">,</span></code> as the separation between data, and the specific contents are as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Jim</span><span class="p">,</span><span class="mi">2</span>
 <span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">grace</span><span class="p">,</span><span class="mi">2</span>
 <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">tom</span><span class="p">,</span><span class="mi">2</span>
@@ -402,11 +417,11 @@ Use the following command to log in to Doris:</p>
 </pre></div>
 </div>
 <p>The local file <code class="docutils literal notranslate"><span class="pre">table2_data'is</span> <span class="pre">separated</span> <span class="pre">by</span> </code>t’. The details are as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2017</span> <span class="o">-</span><span class="mi">07</span> <span class="o">-</span><span class="mi">03</span><span class="p">:</span> <span class="mi">1</span><span class="n">st</span> <span class="n">Jim</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">03</span>  <span class="mi">1</span>   <span class="mi">1</span>   <span class="n">jim</span>   <span class="mi">2</span>
 <span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">05</span>  <span class="mi">2</span>   <span class="mi">1</span>   <span class="n">grace</span> <span class="mi">2</span>
-<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">123</span> <span class="mi">2</span> <span class="n">Tom</span> <span class="mi">2</span>
-<span class="mi">2017</span> <span class="o">-</span><span class="mi">07</span> <span class="o">-</span><span class="mi">15</span> <span class="mi">4</span> <span class="mi">3</span> <span class="s1">&#39;bush&#39;</span> <span class="mi">3</span>
-<span class="mi">2017</span> <span class="o">-</span><span class="mi">07</span> <span class="o">-</span><span class="mi">12</span> <span class="mi">5</span> <span class="mi">3</span> <span class="s1">&#39;helen 3</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span>  <span class="mi">3</span>   <span class="mi">2</span>   <span class="n">tom</span>   <span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">15</span>  <span class="mi">4</span>   <span class="mi">3</span>   <span class="n">bush</span>  <span class="mi">3</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span>  <span class="mi">5</span>   <span class="mi">3</span>   <span class="n">helen</span> <span class="mi">3</span>
 </pre></div>
 </div>
 <blockquote>
@@ -417,23 +432,25 @@ Use the following command to log in to Doris:</p>
 <li>Streaming imports are synchronous commands. The successful return of the command indicates that the data has been imported, and the failure of the return indicates that the batch of data has not been imported.</li>
 </ol>
 </div></blockquote>
-<p>‘35;’35;’ 35;’35; Broker’235488;’</p>
-<p>Broker imports import data from external storage through deployed Broker processes. For more help, see <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">BROKER</span> <span class="pre">LOAD;'</span></code></p>
+</div>
+<div class="section" id="broker-load">
+<h4>Broker Load<a class="headerlink" href="#broker-load" title="Permalink to this headline">¶</a></h4>
+<p>Broker imports import data from external storage through deployed Broker processes. For more help, see <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">BROKER</span> <span class="pre">LOAD;</span></code></p>
 <p>Example: Import files on HDFS into table1 table with “table1_20170708” as Label</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LOAD</span> <span class="n">LABEL</span> <span class="n">table1_20170708</span>
 <span class="p">(</span>
-<span class="n">DATA</span> <span class="n">INFILE</span><span class="p">(</span><span class="s2">&quot;hdfs://your.namenode.host:port/dir/table1_data&quot;</span><span class="p">)</span>
-<span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">table1</span>
+    <span class="n">DATA</span> <span class="n">INFILE</span><span class="p">(</span><span class="s2">&quot;hdfs://your.namenode.host:port/dir/table1_data&quot;</span><span class="p">)</span>
+    <span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">table1</span>
 <span class="p">)</span>
-<span class="n">WITH</span> <span class="n">BROKER</span> <span class="n">hdfs</span>
+<span class="n">WITH</span> <span class="n">BROKER</span> <span class="n">hdfs</span> 
 <span class="p">(</span>
-<span class="s2">&quot;Username&quot;</span> <span class="o">=</span> <span class="s2">&quot;HDFS</span><span class="se">\\</span><span class="s2"> user&quot;</span>
-<span class="s2">&quot;password&quot;</span><span class="o">=</span><span class="s2">&quot;hdfs_password&quot;</span>
+    <span class="s2">&quot;username&quot;</span><span class="o">=</span><span class="s2">&quot;hdfs_user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="o">=</span><span class="s2">&quot;hdfs_password&quot;</span>
 <span class="p">)</span>
 <span class="n">PROPERTIES</span>
 <span class="p">(</span>
-<span class="n">Timeout</span> <span class="o">=</span><span class="s2">&quot;3600&quot;</span><span class="p">,</span>
-<span class="s2">&quot;max_filter_ratio&quot;</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">=</span><span class="s2">&quot;3600&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_filter_ratio&quot;</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span>
 <span class="p">);</span>
 </pre></div>
 </div>
@@ -442,7 +459,7 @@ Use the following command to log in to Doris:</p>
 <p>In the return result, FINISHED in the `State’field indicates that the import was successful.</p>
 <p>关于 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span></code> 的更多说明，可以参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">LOAD;</span></code></p>
 <p>Asynchronous import tasks can be cancelled before the end:</p>
-<p>‘CANCEL LOAD WHERE LABEL =”Table 1’u 201708”;`</p>
+<p><code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL</span> <span class="pre">=</span> <span class="pre">&quot;table1_20170708&quot;;</span></code></p>
 </div>
 </div>
 </div>
@@ -451,27 +468,27 @@ Use the following command to log in to Doris:</p>
 <div class="section" id="simple-query">
 <h3>3.1 Simple Query<a class="headerlink" href="#simple-query" title="Permalink to this headline">¶</a></h3>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL&gt; SELECT * FROM table1 LIMIT 3;
-+--------+----------+----------+------+
-| siteid | citycode | username | pv   |
-+--------+----------+----------+------+
-1244; 2 *1244; 1 *1244;&#39;grace &#39;1242 *1244;
-|      5 |        3 | &#39;helen&#39;  |    3 |
-124; 3 $124; 2 `124tom &#39;&quot;124; 2 `1244;
-+--------+----------+----------+------+
-5 rows in set (0.01 sec)
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">table1</span> <span class="n">LIMIT</span> <span class="mi">3</span><span class="p">;</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span> <span class="n">siteid</span> <span class="o">|</span> <span class="n">citycode</span> <span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">pv</span>   <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span>      <span class="mi">2</span> <span class="o">|</span>        <span class="mi">1</span> <span class="o">|</span> <span class="s1">&#39;grace&#39;</span>  <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">5</span> <span class="o">|</span>        <span class="mi">3</span> <span class="o">|</span> <span class="s1">&#39;helen&#39;</span>  <span class="o">|</span>    <span class="mi">3</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">3</span> <span class="o">|</span>        <span class="mi">2</span> <span class="o">|</span> <span class="s1">&#39;tom&#39;</span>    <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="mi">5</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.01</span> <span class="n">sec</span><span class="p">)</span>
 
-MySQL&gt; SELECT * FROM table1 ORDER BY citycode;
-+--------+----------+----------+------+
-| siteid | citycode | username | pv   |
-+--------+----------+----------+------+
-1244; 2 *1244; 1 *1244;&#39;grace &#39;1242 *1244;
-|      1 |        1 | &#39;jim&#39;    |    2 |
-124; 3 $124; 2 `124tom &#39;&quot;124; 2 `1244;
-1244; 4 *1243 *124bush &quot;; 3 *1244;
-|      5 |        3 | &#39;helen&#39;  |    3 |
-+--------+----------+----------+------+
-5 rows in set (0.01 sec)
+<span class="n">MySQL</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">table1</span> <span class="n">ORDER</span> <span class="n">BY</span> <span class="n">citycode</span><span class="p">;</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span> <span class="n">siteid</span> <span class="o">|</span> <span class="n">citycode</span> <span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">pv</span>   <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="o">|</span>      <span class="mi">2</span> <span class="o">|</span>        <span class="mi">1</span> <span class="o">|</span> <span class="s1">&#39;grace&#39;</span>  <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">1</span> <span class="o">|</span>        <span class="mi">1</span> <span class="o">|</span> <span class="s1">&#39;jim&#39;</span>    <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">3</span> <span class="o">|</span>        <span class="mi">2</span> <span class="o">|</span> <span class="s1">&#39;tom&#39;</span>    <span class="o">|</span>    <span class="mi">2</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">4</span> <span class="o">|</span>        <span class="mi">3</span> <span class="o">|</span> <span class="s1">&#39;bush&#39;</span>   <span class="o">|</span>    <span class="mi">3</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="mi">5</span> <span class="o">|</span>        <span class="mi">3</span> <span class="o">|</span> <span class="s1">&#39;helen&#39;</span>  <span class="o">|</span>    <span class="mi">3</span> <span class="o">|</span>
+<span class="o">+--------+----------+----------+------+</span>
+<span class="mi">5</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.01</span> <span class="n">sec</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -480,7 +497,7 @@ MySQL&gt; SELECT * FROM table1 ORDER BY citycode;
 <p>Examples:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL&gt; SELECT SUM(table1.pv) FROM table1 JOIN table2 WHERE table1.siteid = table2.siteid;
 +--------------------+
-+ 124; Sum (`Table1&#39;`PV `124);
+| sum(`table1`.`pv`) |
 +--------------------+
 |                 12 |
 +--------------------+
@@ -493,7 +510,7 @@ MySQL&gt; SELECT * FROM table1 ORDER BY citycode;
 <p>Examples:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MySQL&gt; SELECT SUM(pv) FROM table2 WHERE siteid IN (SELECT siteid FROM table1 WHERE siteid &gt; 2);
 +-----------+
-+ 124; Sum (`PV&#39;) 124;
+| sum(`pv`) |
 +-----------+
 |         8 |
 +-----------+
@@ -533,7 +550,7 @@ MySQL&gt; SELECT * FROM table1 ORDER BY citycode;
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

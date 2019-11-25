@@ -182,7 +182,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="st-contains">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="st-contains">
 <h1>`ST_Contains’<a class="headerlink" href="#st-contains" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -194,23 +211,24 @@
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MYSQL</span> <span class="o">&gt;</span> <span class="n">Select</span> <span class="n">ST</span> <span class="o">^</span> <span class="n">U</span> <span class="n">contains</span> <span class="p">(</span><span class="n">ST</span> <span class="o">^</span> <span class="n">U</span> <span class="n">Polygon</span> <span class="p">(</span><span class="s2">&quot;Polygon ((0, 10, 10, 10, 10, 10, 0, 10, 0, 0, 0))), ST ^ UPOint (5, 5));</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">ST_Contains</span><span class="p">(</span><span class="n">ST_Polygon</span><span class="p">(</span><span class="s2">&quot;POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))&quot;</span><span class="p">),</span> <span class="n">ST_Point</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">));</span>
 <span class="o">+----------------------------------------------------------------------------------------+</span>
-<span class="o">+</span> <span class="mi">124</span><span class="p">;</span> <span class="n">ST</span> <span class="o">=</span> <span class="n">U</span> <span class="n">Contains</span> <span class="p">(</span><span class="n">ST</span> <span class="o">=</span> <span class="n">U</span> <span class="n">Polygon</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))),</span> <span class="n">ST</span> <span class="o">=</span> <span class="n">UPoint</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span> <span class="mi">124</span><span class="s1">&#39;;</span>
+<span class="o">|</span> <span class="n">st_contains</span><span class="p">(</span><span class="n">st_polygon</span><span class="p">(</span><span class="s1">&#39;POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))&#39;</span><span class="p">),</span> <span class="n">st_point</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span> <span class="o">|</span>
 <span class="o">+----------------------------------------------------------------------------------------+</span>
 <span class="o">|</span>                                                                                      <span class="mi">1</span> <span class="o">|</span>
 <span class="o">+----------------------------------------------------------------------------------------+</span>
 
-<span class="n">MYSQL</span> <span class="o">&gt;</span> <span class="n">Select</span> <span class="n">St</span> <span class="o">^</span> <span class="n">U</span> <span class="n">contains</span> <span class="p">(</span><span class="n">ST</span> <span class="o">^</span> <span class="n">U</span> <span class="n">Polygon</span> <span class="p">(</span><span class="s2">&quot;Polygon ((0, 10, 10, 10, 10, 10, 0, 10, 0, 0, 0))), St ^ UPOINT (50, 50));</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">ST_Contains</span><span class="p">(</span><span class="n">ST_Polygon</span><span class="p">(</span><span class="s2">&quot;POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))&quot;</span><span class="p">),</span> <span class="n">ST_Point</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">));</span>
 <span class="o">+------------------------------------------------------------------------------------------+</span>
-<span class="o">+</span> <span class="mi">124</span><span class="p">;</span> <span class="n">ST</span> <span class="o">=</span> <span class="n">U</span> <span class="n">Contains</span> <span class="p">(</span><span class="n">ST</span> <span class="o">=</span> <span class="n">U</span> <span class="n">Polygon</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))),</span> <span class="n">ST</span> <span class="o">=</span> <span class="n">UPoint</span> <span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">))</span> <span class="mi">124</span>
+<span class="o">|</span> <span class="n">st_contains</span><span class="p">(</span><span class="n">st_polygon</span><span class="p">(</span><span class="s1">&#39;POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))&#39;</span><span class="p">),</span> <span class="n">st_point</span><span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">))</span> <span class="o">|</span>
 <span class="o">+------------------------------------------------------------------------------------------+</span>
 <span class="o">|</span>                                                                                        <span class="mi">0</span> <span class="o">|</span>
 <span class="o">+------------------------------------------------------------------------------------------+</span>
 </pre></div>
 </div>
 <p>##keyword
-ST_CONTAINS,ST,CONTAINS</p>
+ST_CONTAINS,ST,CONTAINS
+w</p>
 </div>
 </div>
 
@@ -243,7 +261,7 @@ ST_CONTAINS,ST,CONTAINS</p>
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>

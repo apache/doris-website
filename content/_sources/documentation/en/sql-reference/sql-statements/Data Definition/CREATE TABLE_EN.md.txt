@@ -1,3 +1,22 @@
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 # CREATE TABLE
 ## description
 
@@ -53,11 +72,18 @@
         VARCHAR[(length)]
             Variable length string. Range: 1 ~ 65533
         HLL (1~16385 Bytes)
-            HLLL tpye, No need to specify length.
+            HLL tpye, No need to specify length.
             This type can only be queried by hll_union_agg, hll_cardinality, hll_hash functions.
+        BITMAP
+            BITMAP type, No need to specify length.
+            This type can only be queried by BITMAP_UNION、BITMAP_COUNT、TO_BITMAP functions.
                             
     agg_type: Aggregation type. If not specified, the column is key column. Otherwise, the column is value column.
-        SUM、MAX、MIN、REPLACE、HLL_UNION(Only for HLL type), BITMAP_UNION(Type should be VARCHAR(0))
+    
+        * SUM、MAX、MIN、REPLACE
+        * HLL_UNION: Only for HLL type
+        * REPLACE_IF_NOT_NULL: The meaning of this aggregation type is that substitution will occur if and only if the newly imported data is a non-null value. If the newly imported data is null, Doris will still retain the original value. Note: if NOT NULL is specified in the REPLACE_IF_NOT_NULL column when the user creates the table, Doris will convert it to NULL and will not report an error to the user. Users can leverage this aggregate type to achieve importing some of columns.
+        * BITMAP_UNION: Only for BITMAP type
 
     Allow NULL: Default is NOT NULL. NULL value should be represented as `\N` in load source file.
 
@@ -388,8 +414,8 @@
         (
         k1 TINYINT,
         k2 DECIMAL(10, 2) DEFAULT "10.5",
-        v1 VARCHAR(0) BITMAP_UNION,  // 注意:  bitmap_union的varchar长度需要指定为0
-        v2 VARCHAR(0) BITMAP_UNION
+        v1 BITMAP BITMAP_UNION,
+        v2 BITMAP BITMAP_UNION
         )
         ENGINE=olap
         AGGREGATE KEY(k1, k2)

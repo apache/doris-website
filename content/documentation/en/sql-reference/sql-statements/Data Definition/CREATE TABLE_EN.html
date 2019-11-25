@@ -183,7 +183,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="create-table">
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="create-table">
 <h1>CREATE TABLE<a class="headerlink" href="#create-table" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -207,42 +224,50 @@
 <p>Explain:
 col_name: Name of column
 col_type: Type of column</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">TINYINT</span><span class="p">(</span><span class="mi">1</span> <span class="n">Byte</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">7</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">7</span> <span class="o">-</span> <span class="mi">1</span>
- <span class="n">SMALLINT</span><span class="p">(</span><span class="mi">2</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">15</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">15</span> <span class="o">-</span> <span class="mi">1</span>
- <span class="n">INT</span><span class="p">(</span><span class="mi">4</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">31</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">31</span> <span class="o">-</span> <span class="mi">1</span>
- <span class="n">BIGINT</span><span class="p">(</span><span class="mi">8</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">63</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">63</span> <span class="o">-</span> <span class="mi">1</span>
- <span class="n">LARGEINT</span><span class="p">(</span><span class="mi">16</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="o">^</span><span class="mi">127</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">2</span><span class="o">^</span><span class="mi">127</span> <span class="o">-</span> <span class="mi">1</span>
- <span class="n">FLOAT</span><span class="p">(</span><span class="mi">4</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Support</span> <span class="n">scientific</span> <span class="n">notation</span>
- <span class="n">DOUBLE</span><span class="p">(</span><span class="mi">12</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Support</span> <span class="n">scientific</span> <span class="n">notation</span>
- <span class="n">DECIMAL</span><span class="p">[(</span><span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">)]</span> <span class="p">(</span><span class="mi">16</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Default</span> <span class="ow">is</span> <span class="n">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-     <span class="n">precision</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">27</span>
-     <span class="n">scale</span><span class="p">:</span> <span class="mi">0</span> <span class="o">~</span> <span class="mi">9</span>
-     <span class="n">integer</span> <span class="n">part</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">18</span>
-     <span class="n">fractional</span> <span class="n">part</span><span class="p">:</span> <span class="mi">0</span> <span class="o">~</span> <span class="mi">9</span>
-     <span class="n">Not</span> <span class="n">support</span> <span class="n">scientific</span> <span class="n">notation</span>
- <span class="n">DATE</span><span class="p">(</span><span class="mi">3</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="mi">1900</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span>
- <span class="n">DATETIME</span><span class="p">(</span><span class="mi">8</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">Range</span><span class="p">:</span> <span class="mi">1900</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span> <span class="mi">23</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">59</span>
- <span class="n">CHAR</span><span class="p">[(</span><span class="n">length</span><span class="p">)]</span>
-     <span class="n">Fixed</span> <span class="n">length</span> <span class="n">string</span><span class="o">.</span> <span class="n">Range</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mf">255.</span> <span class="n">Default</span><span class="p">:</span> <span class="mi">1</span>
- <span class="n">VARCHAR</span><span class="p">[(</span><span class="n">length</span><span class="p">)]</span>
-     <span class="n">Variable</span> <span class="n">length</span> <span class="n">string</span><span class="o">.</span> <span class="n">Range</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mi">65533</span>
- <span class="n">HLL</span> <span class="p">(</span><span class="mi">1</span><span class="o">~</span><span class="mi">16385</span> <span class="n">Bytes</span><span class="p">)</span>
-     <span class="n">HLLL</span> <span class="n">tpye</span><span class="p">,</span> <span class="n">No</span> <span class="n">need</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">length</span><span class="o">.</span>
-     <span class="n">This</span> <span class="nb">type</span> <span class="n">can</span> <span class="n">only</span> <span class="n">be</span> <span class="n">queried</span> <span class="n">by</span> <span class="n">hll_union_agg</span><span class="p">,</span> <span class="n">hll_cardinality</span><span class="p">,</span> <span class="n">hll_hash</span> <span class="n">functions</span><span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> TINYINT(1 Byte)
+     Range: -2^7 + 1 ~ 2^7 - 1
+ SMALLINT(2 Bytes)
+     Range: -2^15 + 1 ~ 2^15 - 1
+ INT(4 Bytes)
+     Range: -2^31 + 1 ~ 2^31 - 1
+ BIGINT(8 Bytes)
+     Range: -2^63 + 1 ~ 2^63 - 1
+ LARGEINT(16 Bytes)
+     Range: -2^127 + 1 ~ 2^127 - 1
+ FLOAT(4 Bytes)
+     Support scientific notation
+ DOUBLE(12 Bytes)
+     Support scientific notation
+ DECIMAL[(precision, scale)] (16 Bytes)
+     Default is DECIMAL(10, 0)
+     precision: 1 ~ 27
+     scale: 0 ~ 9
+     integer part: 1 ~ 18
+     fractional part: 0 ~ 9
+     Not support scientific notation
+ DATE(3 Bytes)
+     Range: 1900-01-01 ~ 9999-12-31
+ DATETIME(8 Bytes)
+     Range: 1900-01-01 00:00:00 ~ 9999-12-31 23:59:59
+ CHAR[(length)]
+     Fixed length string. Range: 1 ~ 255. Default: 1
+ VARCHAR[(length)]
+     Variable length string. Range: 1 ~ 65533
+ HLL (1~16385 Bytes)
+     HLL tpye, No need to specify length.
+     This type can only be queried by hll_union_agg, hll_cardinality, hll_hash functions.
+ BITMAP
+     BITMAP type, No need to specify length.
+     This type can only be queried by BITMAP_UNION、BITMAP_COUNT、TO_BITMAP functions.
 </pre></div>
 </div>
-<p>agg_type: Aggregation type. If not specified, the column is key column. Otherwise, the column is value column.
-SUM、MAX、MIN、REPLACE、HLL_UNION(Only for HLL type), BITMAP_UNION(Type should be VARCHAR(0))</p>
+<p>agg_type: Aggregation type. If not specified, the column is key column. Otherwise, the column is value column.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> * SUM、MAX、MIN、REPLACE
+ * HLL_UNION: Only for HLL type
+ * REPLACE_IF_NOT_NULL: The meaning of this aggregation type is that substitution will occur if and only if the newly imported data is a non-null value. If the newly imported data is null, Doris will still retain the original value. Note: if NOT NULL is specified in the REPLACE_IF_NOT_NULL column when the user creates the table, Doris will convert it to NULL and will not report an error to the user. Users can leverage this aggregate type to achieve importing some of columns.
+ * BITMAP_UNION: Only for BITMAP type
+</pre></div>
+</div>
 <p>Allow NULL: Default is NOT NULL. NULL value should be represented as <code class="docutils literal notranslate"><span class="pre">\N</span></code> in load source file.</p>
 <p>Notice:The origin value of BITMAP_UNION column should be TINYINT, SMALLINT, INT.</p>
 </li>
@@ -570,8 +595,8 @@ Bloom filter index support key columns with type except TINYINT FLOAT DOUBLE, al
     (
     k1 TINYINT,
     k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
-    v1 VARCHAR(0) BITMAP_UNION,  // 注意:  bitmap_union的varchar长度需要指定为0
-    v2 VARCHAR(0) BITMAP_UNION
+    v1 BITMAP BITMAP_UNION,
+    v2 BITMAP BITMAP_UNION
     )
     ENGINE=olap
     AGGREGATE KEY(k1, k2)
@@ -659,7 +684,7 @@ Bloom filter index support key columns with type except TINYINT FLOAT DOUBLE, al
     <p></p>
     <p>
 
-        Apache Doris is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the name of Apache TLP sponsor. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
 
     </p>
 </div>
