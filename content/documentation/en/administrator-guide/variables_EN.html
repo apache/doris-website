@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="File Manager" href="small-file-mgr_EN.html" />
-    <link rel="prev" title="Authority Management" href="privilege_EN.html" /> 
+    <link rel="next" title="Extending Ability" href="../extending-doris/index.html" />
+    <link rel="prev" title="Time zone" href="time-zone_EN.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,14 +98,14 @@
 <li class="toctree-l3"><a class="reference internal" href="colocation-join_EN.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-mode_EN.html">SQL MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time-zone_EN.html">Time zone</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Variable</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#variable-setting-and-viewing">Variable setting and viewing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#supported-variables">Supported variables</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="small-file-mgr_EN.html">File Manager</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sql-mode_EN.html">SQL MODE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="time-zone_EN.html">Time zone</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
@@ -171,7 +171,7 @@
         
             
             
-              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/session-variables_EN.md" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/variables_EN.md" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -229,13 +229,9 @@ under the License.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">GLOBAL</span> <span class="n">exec_mem_limit</span> <span class="o">=</span> <span class="mi">137438953472</span>
 </pre></div>
 </div>
-<p>At the same time, variable settings also support constant expressions. Such as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">exec_mem_limit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span>
-<span class="n">SET</span> <span class="n">forward_to_master</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">);</span>
-</pre></div>
-</div>
 <blockquote>
-<div>Note 1: Only ADMIN users can set variable at global-level.</div></blockquote>
+<div>Note 1: Only ADMIN users can set variable at global-level.
+Note 2: Global-level variables do not affect variable values in the current session, only variables in new sessions.</div></blockquote>
 <p>Variables that support global-level setting include:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">time_zone</span></code></li>
@@ -246,8 +242,13 @@ under the License.
 <li><code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">batch_size</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">parallel_exchange_instance_num</span></code></li>
 </ul>
+<p>At the same time, variable settings also support constant expressions. Such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">exec_mem_limit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span>
+<span class="n">SET</span> <span class="n">forward_to_master</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="supported-variables">
@@ -352,6 +353,11 @@ Used for compatibility with MySQL clients. No practical effect.</p>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">license</span></code></p>
 <p>Show Doris’s license. No other effect.</p>
 </li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">load_mem_limit</span></code></p>
+<p>Used to specify the memory limit of the load operation. The default is 0, which means that this variable is not used, and <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code> is used as the memory limit for the load operation.</p>
+<p>This variable is usually used for INSERT operations. Because the INSERT operation has both query and load part. If the user does not set this variable, the respective memory limits of the query and load part are <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>. Otherwise, the memory of query part of INSERT is limited to <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>, and the load part is limited to<code class="docutils literal notranslate"> <span class="pre">load_mem_limit</span></code>.</p>
+<p>For other load methods, such as BROKER LOAD, STREAM LOAD, the memory limit still uses <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>.</p>
+</li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">lower_case_table_names</span></code></p>
 <p>Used for compatibility with MySQL clients. Cannot be set. Table names in current Doris are case sensitive by default.</p>
 </li>
@@ -370,7 +376,7 @@ Used for compatibility with MySQL clients. No practical effect.</p>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">parallel_exchange_instance_num</span></code></p>
 <p>Used to set the number of exchange nodes used by an upper node to receive data from the lower node in the execution plan. The default is -1, which means that the number of exchange nodes is equal to the number of execution instances of the lower nodes (default behavior). When the setting is greater than 0 and less than the number of execution instances of the lower node, the number of exchange nodes is equal to the set value.</p>
 <p>In a distributed query execution plan, the upper node usually has one or more exchange nodes for receiving data from the execution instances of the lower nodes on different BEs. Usually the number of exchange nodes is equal to the number of execution instances of the lower nodes.</p>
-<p>This value can be set if the user needs to reduce the number of exchange nodes of the upper node.</p>
+<p>In some aggregate query scenarios, if the amount of data to be scanned at the bottom is large, but the amount of data after aggregation is small, you can try to modify this variable to a smaller value, which can reduce the resource overhead of such queries. Such as the scenario of aggregation query on the DUPLICATE KEY data model.</p>
 </li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></p>
 <p>For the scan node, set its number of instances to execute on each BE node. The default is 1.</p>
@@ -428,10 +434,10 @@ Used for compatibility with MySQL clients. No practical effect.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="small-file-mgr_EN.html" class="btn btn-neutral float-right" title="File Manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../extending-doris/index.html" class="btn btn-neutral float-right" title="Extending Ability" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="privilege_EN.html" class="btn btn-neutral float-left" title="Authority Management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="time-zone_EN.html" class="btn btn-neutral float-left" title="Time zone" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

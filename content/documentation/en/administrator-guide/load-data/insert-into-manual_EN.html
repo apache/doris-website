@@ -105,10 +105,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../session-variables_EN.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode_EN.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables_EN.html">Variable</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
@@ -302,7 +302,7 @@ under the License.
 <h3>Session Variables<a class="headerlink" href="#session-variables" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">enable_insert_strict</p>
-<p>The Insert Into import itself cannot control the tolerable error rate of the import. Users can only use the Session parameter <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code>. When this parameter is set to false, it indicates that at least one data has been imported correctly, and then it returns successfully. When this parameter is set to false, the import fails if there is a data error. The default is false. It can be set by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_insert_strict</span> <span class="pre">=</span> <span class="pre">true;</span></code>.</p>
+<p>The Insert Into import itself cannot control the tolerable error rate of the import. Users can only use the Session parameter <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code>. When this parameter is set to false, it indicates that at least one data has been imported correctly, and then it returns successfully. When this parameter is set to true, the import fails if there is a data error. The default is false. It can be set by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_insert_strict</span> <span class="pre">=</span> <span class="pre">true;</span></code>.</p>
 </li>
 <li><p class="first">query u timeout</p>
 <p>Insert Into itself is also an SQL command, so the Insert Into statement is also restricted by the Session variable <code class="docutils literal notranslate"><span class="pre">query_timeout</span></code>. You can increase the timeout time by <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">query_timeout</span> <span class="pre">=</span> <span class="pre">xxx;</span></code> in seconds.</p>

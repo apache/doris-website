@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="文件管理器" href="small-file-mgr.html" />
-    <link rel="prev" title="权限管理" href="privilege.html" /> 
+    <link rel="next" title="扩展功能" href="../extending-doris/index.html" />
+    <link rel="prev" title="时区" href="time-zone.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -99,14 +99,14 @@
 <li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-mode.html">SQL MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">变量</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id2">变量设置与查看</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id5">支持的变量</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sql-mode.html">SQL MODE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">扩展功能</a></li>
@@ -173,7 +173,7 @@
         
             
             
-              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/session-variables.md" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/variables.md" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -231,13 +231,9 @@ under the License.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">GLOBAL</span> <span class="n">exec_mem_limit</span> <span class="o">=</span> <span class="mi">137438953472</span>
 </pre></div>
 </div>
-<p>同时，变量设置也支持常量表达式。如：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">exec_mem_limit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span>
-<span class="n">SET</span> <span class="n">forward_to_master</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">);</span>
-</pre></div>
-</div>
 <blockquote>
-<div>注1：只有 ADMIN 用户可以设置变量的全局生效。</div></blockquote>
+<div>注1：只有 ADMIN 用户可以设置变量的全局生效。
+注2：全局生效的变量不影响当前会话的变量值，仅影响新的会话中的变量。</div></blockquote>
 <p>支持全局生效的变量包括：</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">time_zone</span></code></li>
@@ -248,8 +244,13 @@ under the License.
 <li><code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">batch_size</span></code></li>
 <li><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">parallel_exchange_instance_num</span></code></li>
 </ul>
+<p>同时，变量设置也支持常量表达式。如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SET</span> <span class="n">exec_mem_limit</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span>
+<span class="n">SET</span> <span class="n">forward_to_master</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="id5">
@@ -353,6 +354,11 @@ under the License.
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">license</span></code></p>
 <p>显示 Doris 的 License。无其他作用。</p>
 </li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">load_mem_limit</span></code></p>
+<p>用于指定导入操作的内存限制。默认为 0，即表示不使用该变量，而采用 <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code> 作为导入操作的内存限制。</p>
+<p>这个变量仅用于 INSERT 操作。因为 INSERT 操作设计查询和导入两个部分，如果用户不设置此变量，则查询和导入操作各自的内存限制均为 <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>。否则，INSERT 的查询部分内存限制为 <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>，而导入部分限制为 <code class="docutils literal notranslate"><span class="pre">load_mem_limit</span></code>。</p>
+<p>其他导入方式，如 BROKER LOAD，STREAM LOAD 的内存限制依然使用 <code class="docutils literal notranslate"><span class="pre">exec_mem_limit</span></code>。</p>
+</li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">lower_case_table_names</span></code></p>
 <p>用于兼容 MySQL 客户端。不可设置。当前 Doris 中的表名默认为大小写敏感。</p>
 </li>
@@ -371,7 +377,7 @@ under the License.
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">parallel_exchange_instance_num</span></code></p>
 <p>用于设置执行计划中，一个上层节点接收下层节点数据所使用的 exchange node 数量。默认为 -1，即表示 exchange node 数量等于下层节点执行实例的个数（默认行为）。当设置大于0，并且小于下层节点执行实例的个数，则 exchange node 数量等于设置值。</p>
 <p>在一个分布式的查询执行计划中，上层节点通常有一个或多个 exchange node 用于接收来自下层节点在不同 BE 上的执行实例的数据。通常 exchange node 数量等于下层节点执行实例数量。</p>
-<p>如果用户需要减少上层节点的 exchange node 数量，可以设置该值。</p>
+<p>在一些聚合查询场景下，如果底层需要扫描的数据量较大，但聚合之后的数据量很小，则可以尝试修改此变量为一个较小的值，可以降低此类查询的资源开销。如在 DUPLICATE KEY 明细模型上进行聚合查询的场景。</p>
 </li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></p>
 <p>针对扫描节点，设置其在每个 BE 节点上，执行实例的个数。默认为 1。</p>
@@ -429,10 +435,10 @@ under the License.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="small-file-mgr.html" class="btn btn-neutral float-right" title="文件管理器" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../extending-doris/index.html" class="btn btn-neutral float-right" title="扩展功能" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="privilege.html" class="btn btn-neutral float-left" title="权限管理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="time-zone.html" class="btn btn-neutral float-left" title="时区" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -105,10 +105,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../session-variables_EN.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode_EN.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables_EN.html">Variable</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
@@ -311,7 +311,7 @@ under the License.
 <p>Note that when partition is explicitly specified, the load job will no longer dynamically detect changes to Kafka partition. If not specified, the partitions that need to be consumed are dynamically adjusted based on changes in the kafka partition.</p>
 </li>
 <li><p class="first">strict_mode</p>
-<p>Routine load load can turn on strict mode mode. The way to open it is to add <code class="docutils literal notranslate"><span class="pre">&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;</span></code> to job_properties. The default strict mode is on.</p>
+<p>Routine load load can turn on strict mode mode. The way to open it is to add <code class="docutils literal notranslate"><span class="pre">&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;</span></code> to job_properties. The default strict mode is off.</p>
 <p>The strict mode mode means strict filtering of column type conversions during the load process. The strict filtering strategy is as follows:</p>
 <ol class="simple">
 <li>For column type conversion, if strict mode is true, the wrong data will be filtered. The error data here refers to the fact that the original data is not null, and the result is a null value after participating in the column type conversion.</li>

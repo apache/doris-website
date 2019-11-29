@@ -106,10 +106,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables.html">变量</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
@@ -313,7 +313,7 @@ under the License.
 <p>注意，当显式的指定了 partition，则导入作业不会再动态的检测 Kafka partition 的变化。如果没有指定，则会根据 kafka partition 的变化，动态调整需要消费的 partition。</p>
 </li>
 <li><p class="first">strict_mode</p>
-<p>Routine load 导入可以开启 strict mode 模式。开启方式为在 job_properties 中增加 <code class="docutils literal notranslate"><span class="pre">&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;</span></code> 。默认的 strict mode 为开启。</p>
+<p>Routine load 导入可以开启 strict mode 模式。开启方式为在 job_properties 中增加 <code class="docutils literal notranslate"><span class="pre">&quot;strict_mode&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;</span></code> 。默认的 strict mode 为关闭。</p>
 <p>strict mode 模式的意思是：对于导入过程中的列类型转换进行严格过滤。严格过滤的策略如下：</p>
 <ol class="simple">
 <li>对于列类型转换来说，如果 strict mode 为true，则错误的数据将被 filter。这里的错误数据是指：原始数据并不为空值，在参与列类型转换后结果为空值的这一类数据。</li>

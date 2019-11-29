@@ -106,10 +106,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../session-variables.html">变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables.html">变量</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
@@ -304,7 +304,7 @@ under the License.
 <li><p class="first">enable_insert_strict</p>
 <p>Insert Into 导入本身不能控制导入可容忍的错误率。用户只能通过 <code class="docutils literal notranslate"><span class="pre">enable_insert_strict</span></code> 这个 Session 参数用来控制。</p>
 <p>当该参数设置为 false 时，表示至少有一条数据被正确导入，则返回成功。如果有失败数据，则还会返回一个 Label。</p>
-<p>当该参数设置为 false 时，表示如果有一条数据错误，则导入失败。</p>
+<p>当该参数设置为 true 时，表示如果有一条数据错误，则导入失败。</p>
 <p>默认为 false。可通过 <code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">enable_insert_strict</span> <span class="pre">=</span> <span class="pre">true;</span></code> 来设置。</p>
 </li>
 <li><p class="first">query_timeout</p>

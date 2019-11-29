@@ -207,7 +207,7 @@ under the License.
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">DATETIME</span> <span class="pre">FROM_UNIXTIME(INT</span> <span class="pre">unix_timestamp[,</span> <span class="pre">VARCHAR</span> <span class="pre">string_format])</span></code></p>
 <p>将 unix 时间戳转化位对应的 time 格式，返回的格式由 <code class="docutils literal notranslate"><span class="pre">string_format</span></code> 指定</p>
-<p>默认为 yyyy-MM-dd HH:mm:ss</p>
+<p>默认为 yyyy-MM-dd HH:mm:ss ,也支持date_format中的format格式</p>
 <p>传入的是整形，返回的是字符串类型</p>
 <p>目前 <code class="docutils literal notranslate"><span class="pre">string_format</span></code> 支持格式：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>%Y：年。例：2014，1900
@@ -231,6 +231,13 @@ under the License.
 <span class="o">+---------------------------+</span>
 <span class="o">|</span> <span class="mi">2007</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">19</span>       <span class="o">|</span>
 <span class="o">+---------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="mi">1196440219</span><span class="p">,</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="mi">1196440219</span><span class="p">,</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------------+</span>
+<span class="o">|</span> <span class="mi">2007</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">19</span>                              <span class="o">|</span>
+<span class="o">+--------------------------------------------------+</span>
 
 <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="mi">1196440219</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">);</span>
 <span class="o">+-----------------------------------------+</span>
