@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="HTTP API" href="../http-actions/index.html" />
+    <link rel="next" title="Schema Change" href="../alter-table/index.html" />
     <link rel="prev" title="Routine Load" href="routine-load-manual_EN.html" /> 
 </head>
 
@@ -98,11 +98,14 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Insert Into</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">Schema Change</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../config/index.html">Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker_EN.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition_EN.html">Dynamic Partition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
@@ -230,6 +233,18 @@ under the License.
 <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">VALUES</span> <span class="p">(</span><span class="s2">&quot;qweasdzxcqweasdzxc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
+<p><strong>Notice</strong></p>
+<p>When using <code class="docutils literal notranslate"><span class="pre">CTE(Common</span> <span class="pre">Table</span> <span class="pre">Expressions)</span></code> as the query part of insert operation, the <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">LABEL</span></code> or column list part must be specified.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label1</span>
+<span class="n">WITH</span> <span class="n">cte1</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl1</span><span class="p">),</span> <span class="n">cte2</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl2</span><span class="p">)</span>
+<span class="n">SELECT</span> <span class="n">k1</span> <span class="n">FROM</span> <span class="n">cte1</span> <span class="n">JOIN</span> <span class="n">cte2</span> <span class="n">WHERE</span> <span class="n">cte1</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="p">(</span><span class="n">k1</span><span class="p">)</span>
+<span class="n">WITH</span> <span class="n">cte1</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl1</span><span class="p">),</span> <span class="n">cte2</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl2</span><span class="p">)</span>
+<span class="n">SELECT</span> <span class="n">k1</span> <span class="n">FROM</span> <span class="n">cte1</span> <span class="n">JOIN</span> <span class="n">cte2</span> <span class="n">WHERE</span> <span class="n">cte1</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>The following is a brief introduction to the parameters used in creating import statements:</p>
 <ul>
 <li><p class="first">partition_info</p>
@@ -257,33 +272,86 @@ under the License.
 </div>
 <div class="section" id="load-results">
 <h3>Load results<a class="headerlink" href="#load-results" title="Permalink to this headline">¶</a></h3>
-<p>Insert Into itself is an SQL command, so the return behavior is the same as the return behavior of the SQL command.</p>
-<p>If the load fails, the error will be returned. Examples are as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ERROR 1064 (HY000): All partitions have no load data. url: http://ip:port/api/_load_error_log?File=_shard_14/error_log_insert_stmt_f435264d82f342e4-a33764f5f0dfbf00_f4364d82f342e4_a764f344e4_a764f5f5f0df0df0dbf00
+<p>Insert Into itself is a SQL command, and the return result is divided into the following types according to the different execution results:</p>
+<ol>
+<li><p class="first">Result set is empty</p>
+<p>If the result set of the insert corresponding SELECT statement is empty, it is returned as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">empty_tbl</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.02</span> <span class="n">sec</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where URL can be used to query the wrong data, see the following <strong>view error line</strong> summary.</p>
-<p>If the load succeeds, the success will be returned. Examples are as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
+<p><code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code> indicates successful execution. <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">rows</span> <span class="pre">affected</span></code> means that no data was loaded.</p>
+</li>
+<li><p class="first">The result set is not empty</p>
+<p>In the case where the result set is not empty. The returned results are divided into the following situations:</p>
+<ol>
+<li><p class="first">Insert is successful and data is visible:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">4</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.38</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;insert_8510c568-9eda-4173-9e36-6adc7d35291c&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="k">with</span> <span class="n">label</span> <span class="n">my_label1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">4</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.38</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;my_label1&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">2</span> <span class="n">rows</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">2</span> <span class="n">warnings</span> <span class="p">(</span><span class="mf">0.31</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;insert_f0747f0e-7a35-46e2-affa-13a235f4020d&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">2</span> <span class="n">rows</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">2</span> <span class="n">warnings</span> <span class="p">(</span><span class="mf">0.31</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;insert_f0747f0e-7a35-46e2-affa-13a235f4020d&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;committed&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>If the user specifies Label, the label will be returned as well.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
-<span class="p">{</span><span class="n">label</span><span class="s1">&#39;:&#39;</span><span class="n">user_specified_label</span><span class="s1">&#39;}</span>
+<p><code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code> indicates successful execution. <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">rows</span> <span class="pre">affected</span></code> means that a total of 4 rows of data were imported. <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">warnings</span></code> indicates the number of lines to be filtered.</p>
+<p>Also returns a json string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;my_label1&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;insert_f0747f0e-7a35-46e2-affa-13a235f4020d&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;committed&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;my_label1&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span> <span class="s1">&#39;4005&#39;</span><span class="p">,</span> <span class="s1">&#39;err&#39;</span><span class="p">:</span> <span class="s1">&#39;some other error&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>If the load may be partially successful, the Label field is appended. Examples are as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
-<span class="p">{</span><span class="n">label</span><span class="s1">&#39;:&#39;</span><span class="mi">7</span><span class="n">d66c457</span><span class="o">-</span><span class="mi">658</span><span class="n">b</span><span class="o">-</span><span class="mi">4</span><span class="n">a3e</span><span class="o">-</span><span class="n">bdcf</span><span class="o">-</span><span class="mi">8</span><span class="n">beee872ef2c</span><span class="s1">&#39;}</span>
+<p><code class="docutils literal notranslate"><span class="pre">label</span></code> is a user-specified label or an automatically generated label. Label is the ID of this Insert Into load job. Each load job has a label that is unique within a single database.</p>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> indicates whether the loaded data is visible. If visible, show <code class="docutils literal notranslate"><span class="pre">visible</span></code>, if not, show<code class="docutils literal notranslate"> <span class="pre">committed</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">txnId</span></code> is the id of the load transaction corresponding to this insert.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">err</span></code> field displays some other unexpected errors.</p>
+<p>When user need to view the filtered rows, the user can use the following statement</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">show</span> <span class="n">load</span> <span class="n">where</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;xxx&quot;</span><span class="p">;</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
-<span class="p">{</span><span class="n">label</span><span class="s1">&#39;:&#39;</span><span class="n">user_specified_label</span><span class="s1">&#39;}</span>
+<p>The URL in the returned result can be used to query the wrong data. For details, see the following <strong>View Error Lines</strong> Summary.
+&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>“Data is not visible” is a temporary status, this batch of data must be visible eventually</strong></p>
+<p>You can view the visible status of this batch of data with the following statement:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">show</span> <span class="n">transaction</span> <span class="n">where</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">4005</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Where affected represents the number of rows loaded. Warning denotes the number of rows that failed. Users need to view the wrong line through <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL='xxx';</span></code> command, and get url to view the errors.</p>
-<p>If there is no data, it will return success, and both affected and warning are 0.</p>
-<p>Label is the identifier of the Insert Into import job. Each import job has a unique Label inside a single database. Insert Into’s Label is generated by the system. Users can use the Label to asynchronously obtain the import status by querying the import command.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">TransactionStatus</span></code> column in the returned result is <code class="docutils literal notranslate"><span class="pre">visible</span></code>, the data is visible.</p>
+</li>
+<li><p class="first">Insert fails</p>
+<p>Execution failure indicates that no data was successfully loaded, and returns as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mysql&gt; insert into tbl1 select * from tbl2 where k1 = &quot;a&quot;;
+ERROR 1064 (HY000): all partitions have no load data. Url: http://10.74.167.16:8042/api/_load_error_log?file=__shard_2/error_log_insert_stmt_ba8bb9e158e4879-ae8de8507c0bf8a2_ba8bb9e158e4879_ae8de850e8de850
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000):</span> <span class="pre">all</span> <span class="pre">partitions</span> <span class="pre">have</span> <span class="pre">no</span> <span class="pre">load</span> <span class="pre">data</span></code> shows the reason for the failure. The latter url can be used to query the wrong data. For details, see the following <strong>View Error Lines</strong> Summary.</p>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>In summary, the correct processing logic for the results returned by the insert operation should be:</strong></p>
+<ol class="simple">
+<li>If the returned result is <code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000)</span></code>, it means that the import failed.</li>
+<li>If the returned result is <code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code>, it means the execution was successful.<ol>
+<li>If <code class="docutils literal notranslate"><span class="pre">rows</span> <span class="pre">affected</span></code> is 0, the result set is empty and no data is loaded.</li>
+<li>If <code class="docutils literal notranslate"><span class="pre">rows</span> <span class="pre">affected</span></code> is greater than 0:<ol>
+<li>If <code class="docutils literal notranslate"><span class="pre">status</span></code> is<code class="docutils literal notranslate"> <span class="pre">committed</span></code>, the data is not yet visible. You need to check the status through the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">transaction</span></code> statement until <code class="docutils literal notranslate"><span class="pre">visible</span></code>.</li>
+<li>If <code class="docutils literal notranslate"><span class="pre">status</span></code> is<code class="docutils literal notranslate"> <span class="pre">visible</span></code>, the data is loaded successfully.</li>
+</ol>
+</li>
+<li>If <code class="docutils literal notranslate"><span class="pre">warnings</span></code> is greater than 0, it means that some data is filtered. You can get the url through the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">load</span></code> statement to see the filtered rows.</li>
+</ol>
+</li>
+</ol>
 </div>
 </div>
 <div class="section" id="relevant-system-configuration">
@@ -377,7 +445,7 @@ under the License.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../http-actions/index.html" class="btn btn-neutral float-right" title="HTTP API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../alter-table/index.html" class="btn btn-neutral float-right" title="Schema Change" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="routine-load-manual_EN.html" class="btn btn-neutral float-left" title="Routine Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

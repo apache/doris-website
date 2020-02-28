@@ -205,17 +205,22 @@ under the License.
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>Syntax:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DROP USER &#39;user_name&#39;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DROP USER &#39;user_identity&#39;
 
-DROP USER 命令会删除一个 palo 用户。这里 Doris 不支持删除指定的 user_identity。当删除一个指定用户后，该用户所对应的所有 user_identity 都会被删除。比如之前通过 CREATE USER 语句创建了 jack@&#39;192.%&#39; 以及 jack@[&#39;domain&#39;] 两个用户，则在执行 DROP USER &#39;jack&#39; 后，jack@&#39;192.%&#39; 以及 jack@[&#39;domain&#39;] 都将被删除。
+`user_identity`:
+
+    user@&#39;host&#39;
+    user@[&#39;domain&#39;]
+
+删除指定的 user identitiy.
 </pre></div>
 </div>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <ol>
-<li><p class="first">删除用户 jack</p>
-<p>DROP USER ‘jack’</p>
+<li><p class="first">删除用户 jack&#64;’192.%’</p>
+<p>DROP USER ‘jack’&#64;’192.%’</p>
 </li>
 </ol>
 </div>

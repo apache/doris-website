@@ -91,6 +91,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">表结构变更</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="alter-table-bitmap-index.html">Bitmap 索引</a></li>
+<li class="toctree-l4"><a class="reference internal" href="alter-table-bitmap-index.html#id2">原理介绍</a></li>
 <li class="toctree-l4"><a class="reference internal" href="alter-table-rollup.html">Rollup</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Scheam Change</a></li>
 </ul>
@@ -101,6 +103,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -214,6 +217,7 @@ under the License.
 <li>修改列类型</li>
 <li>调整列顺序</li>
 <li>增加、修改 Bloom Filter</li>
+<li>增加、删除 bitmap index</li>
 </ul>
 <p>本文档主要介绍如何创建 Scheam Change 作业，以及进行 Scheam Change 的一些注意事项和常见问题。</p>
 <div class="section" id="id1">
@@ -346,7 +350,7 @@ under the License.
 </pre></div>
 </div>
 <p>可以看到，Base 表 tbl1 也自动加入了 k4, k5 列。即给任意 rollup 增加的列，都会自动加入到 Base 表中。</p>
-<p>同时，不允许向 Rollup 中加入 Base 表已经存在的列。如果用户需要这样做，可以重新建立一个包含新增列的 Rollup，之后在删除原 Rollup。</p>
+<p>同时，不允许向 Rollup 中加入 Base 表已经存在的列。如果用户需要这样做，可以重新建立一个包含新增列的 Rollup，之后再删除原 Rollup。</p>
 </div>
 <div class="section" id="id7">
 <h2>注意事项<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>

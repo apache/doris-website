@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bitmap Index &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Rollup" href="alter-table-rollup_EN.html" />
+    <link rel="prev" title="Schema Change" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Schema Change</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Bitmap Index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="alter-table-rollup_EN.html">Rollup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="alter-table-schema-change_EN.html">Scheam Change</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker_EN.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition_EN.html">Dynamic Partition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode_EN.html">SQL MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables_EN.html">Variable</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">Developer Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../index.html">Administrator Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Schema Change</a> &raquo;</li>
+        
+      <li>Bitmap Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/alter-table/alter-table-bitmap-index_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="bitmap-index">
+<h1>Bitmap Index<a class="headerlink" href="#bitmap-index" title="Permalink to this headline">¶</a></h1>
+<p>Users can speed up queries by creating a bitmap index
+This document focuses on how to create an index job, as well as some considerations and frequently asked questions when creating an index.</p>
+<div class="section" id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>bitmap index：a fast data structure that speeds up queries</li>
+</ul>
+</div>
+<div class="section" id="basic-principles">
+<h2>Basic Principles<a class="headerlink" href="#basic-principles" title="Permalink to this headline">¶</a></h2>
+<p>Creating and droping index is essentially a schema change job. For details, please refer to
+[Schema Change](alter-table-schema-change_EN.md#Basic Principles)。</p>
+</div>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
+<p>There are two forms of index creation and modification related syntax, one is integrated with alter table statement, and the other is using separate
+create/drop index syntax</p>
+<ol>
+<li><p class="first">Create Index</p>
+<p>Please refer to <a class="reference external" href="../../sql-reference/sql-statements/Data%20Definition/CREATE%20INDEX_EN">CREATE INDEX</a>
+or <a class="reference external" href="../../sql-reference/sql-statements/Data%20Definition/ALTER%20TABLE_EN.md#description">ALTER TABLE</a>,
+You can also specify a bitmap index when creating a table，Please refer to <a class="reference external" href="../../sql-reference/sql-statements/Data%20Definition/CREATE%20TABLE_EN">CREATE TABLE</a></p>
+</li>
+<li><p class="first">Show Index</p>
+<p>Please refer to <a class="reference external" href="../../sql-reference/sql-statements/Administration/SHOW%20INDEX_EN">SHOW INDEX</a></p>
+</li>
+<li><p class="first">Drop Index</p>
+<p>Please refer to <a class="reference external" href="../../sql-reference/sql-statements/Data%20Definition/DROP%20INDEX_EN">DROP INDEX</a> or <a class="reference external" href="../../sql-reference/sql-statements/Data%20Definition/ALTER%20TABLE_EN.md#description">ALTER TABLE
+</a></p>
+</li>
+</ol>
+</div>
+<div class="section" id="create-job">
+<h2>Create Job<a class="headerlink" href="#create-job" title="Permalink to this headline">¶</a></h2>
+<p>Please refer to [Scheam Change](alter-table-schema-change_EN.md#Create Job)</p>
+</div>
+<div class="section" id="view-job">
+<h2>View Job<a class="headerlink" href="#view-job" title="Permalink to this headline">¶</a></h2>
+<p>Please refer to [Scheam Change](alter-table-schema-change_EN.md#View Job)</p>
+</div>
+<div class="section" id="cancel-job">
+<h2>Cancel Job<a class="headerlink" href="#cancel-job" title="Permalink to this headline">¶</a></h2>
+<p>Please refer to [Scheam Change](alter-table-schema-change_EN.md#Cancel Job)</p>
+</div>
+<div class="section" id="notice">
+<h2>Notice<a class="headerlink" href="#notice" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Currently only index of bitmap type is supported.</p>
+</li>
+<li><p class="first">The bitmap index is only created on a single column.</p>
+</li>
+<li><p class="first">Bitmap indexes can be applied to all columns of the <code class="docutils literal notranslate"><span class="pre">Duplicate</span></code> data model and key columns of the <code class="docutils literal notranslate"><span class="pre">Aggregate</span></code> and <code class="docutils literal notranslate"><span class="pre">Uniq</span></code> models.</p>
+</li>
+<li><p class="first">The data types supported by bitmap indexes are as follows:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">TINYINT</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">SMALLINT</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">INT</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">UNSIGNEDINT</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">BIGINT</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">CHAR</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">VARCHAE</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">DATE</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">DATETIME</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">LARGEINT</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">DECIMAL</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">BOOL</span></code></li>
+</ul>
+</li>
+<li><p class="first">The bitmap index takes effect only in segmentV2. You need to add the following configuration to the configuration file of be</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">default_rowset_type</span><span class="o">=</span><span class="n">BETA</span>
+<span class="n">compaction_rowset_type</span><span class="o">=</span><span class="n">BETA</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="alter-table-rollup_EN.html" class="btn btn-neutral float-right" title="Rollup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Schema Change" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

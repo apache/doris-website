@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Gitter 使用指南" href="gitter.html" />
-    <link rel="prev" title="调试工具" href="../developer-guide/debug-tool.html" /> 
+    <link rel="prev" title="代码格式化" href="../developer-guide/format-code.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -201,16 +201,39 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pull-request.html">代码提交指南</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pull-request.html#fork">1. Fork仓库</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pull-request.html#git">2. 配置git和提交修改</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pull-request.html#pr">3. 创建PR</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id2">（1）新建 PR</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id3">（2）准备分支</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pull-request.html#commit-message">（3）填写 Commit Message</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id4">（4）完成创建</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pull-request.html#git">2. 配置git和提交修改</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id2">（1）将代码克隆到本地：</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#apache-incubator-doris-upstream">（2）将 apache/incubator-doris 添加为本地仓库的远程分支 upstream：</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id3">（3）检查远程仓库设置：</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id4">（4）新建分支以便在分支上做修改：</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id5">（5）提交代码到远程分支：</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pull-request.html#id5">4. 冲突解决</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pull-request.html#id6">5. 一个例子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pull-request.html#pr">3. 创建PR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id6">（1）新建 PR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id7">（2）准备分支</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#commit-message">（3）填写 Commit Message</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id8">（4）完成创建</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pull-request.html#id9">4. 冲突解决</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id10">（1）切换至主分支</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id11">（2）同步远端主分支至本地</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#fix">（3）切换回刚才的分支（假设分支名为fix）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#rebase">（4）进行rebase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pull-request.html#id12">5. 一个例子</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#upstream-fetch">（1）对于已经配置好 upstream 的本地分支 fetch 到最新代码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id13">（2）进行rebase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#repo">（3）检查看是否有别人提交未同步到自己 repo 的提交</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id14">（4）合并其他人提交的代码到自己的 repo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id15">（5）新建分支，准备开发</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#id16">（6）代码修改完成后，准备提交</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#message">（7）填写 message 并提交到本地的新建分支上</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pull-request.html#github-repo">（8）将分支推到 GitHub 远端自己的 repo 中</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-process.html">Apache Doris 发布流程</a><ul>
@@ -298,7 +321,7 @@
         <a href="gitter.html" class="btn btn-neutral float-right" title="Gitter 使用指南" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../developer-guide/debug-tool.html" class="btn btn-neutral float-left" title="调试工具" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../developer-guide/format-code.html" class="btn btn-neutral float-left" title="代码格式化" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

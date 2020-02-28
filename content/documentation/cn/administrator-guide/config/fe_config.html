@@ -100,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -211,6 +212,12 @@ under the License.
 <h2>brpc_max_body_size<a class="headerlink" href="#brpc-max-body-size" title="Permalink to this headline">¶</a></h2>
 <p>这个配置主要用来修改 brpc 的参数 max_body_size ，默认配置是 64M。一般发生在 multi distinct + 无 group by + 超过1T 数据量的情况下。尤其如果发现查询卡死，且 BE 出现类似 body_size is too large 的字样。</p>
 <p>由于这是一个 brpc 的配置，用户也可以在运行中直接修改该参数。通过访问 http://host:brpc_port/flags 修改。</p>
+</div>
+<div class="section" id="max-running-txn-num-per-db">
+<h2>max_running_txn_num_per_db<a class="headerlink" href="#max-running-txn-num-per-db" title="Permalink to this headline">¶</a></h2>
+<p>这个配置主要是用来控制同一个 db 的并发导入个数的，默认配置是100。当导入的并发执行的个数超过这个配置的值的时候，同步执行的导入就会失败比如 stream load。异步执行的导入就会一直处在 pending 状态比如 broker load。</p>
+<p>一般来说不推荐更改这个并发数。如果当前导入并发超过这个值，则需要先检查是否单个导入任务过慢，或者小文件太多没有合并后导入的问题。</p>
+<p>报错信息比如：current running txns on db xxx is xx, larger than limit xx。就属于这类问题。</p>
 </div>
 </div>
 

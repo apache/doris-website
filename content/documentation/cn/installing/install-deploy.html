@@ -358,13 +358,6 @@ under the License.
 </tr>
 <tr>
 <td>BE</td>
-<td>be_rpc_port</td>
-<td>9070</td>
-<td>BE &lt;--&gt; BE</td>
-<td>BE 之间 rpc 使用的端口</td>
-</tr>
-<tr>
-<td>BE</td>
 <td>webserver_port</td>
 <td>8040</td>
 <td>BE &lt;--&gt; BE</td>
@@ -425,7 +418,6 @@ under the License.
 <ol class="simple">
 <li>当部署多个 FE 实例时，要保证 FE 的 http_port 配置相同。</li>
 <li>部署前请确保各个端口在应有方向上的访问权限。</li>
-<li>brpc_port 在 0.8.2 版本后替代了 be_rpc_port</li>
 </ol>
 </div></blockquote>
 </div>
@@ -458,7 +450,7 @@ under the License.
 <li><p class="first">配置 FE</p>
 <ol class="simple">
 <li>配置文件为 conf/fe.conf。其中注意：<code class="docutils literal notranslate"><span class="pre">meta_dir</span></code>：元数据存放位置。默认在 fe/palo-meta/ 下。需<strong>手动创建</strong>该目录。</li>
-<li>fe.conf 中 JAVA_OPTS 默认 java 最大堆内存为 2GB，建议生产环境调整至 8G 以上。</li>
+<li>fe.conf 中 JAVA_OPTS 默认 java 最大堆内存为 4GB，建议生产环境调整至 8G 以上。</li>
 </ol>
 </li>
 <li><p class="first">启动FE</p>
@@ -602,7 +594,7 @@ under the License.
 <li>该命令是一个异步操作。执行后，可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">'/backends';</span></code> 看到该 BE 节点的 isDecommission 状态为 true。表示该节点正在进行下线。</li>
 <li>该命令<strong>不一定执行成功</strong>。比如剩余 BE 存储空间不足以容纳下线 BE 上的数据，或者剩余机器数量不满足最小副本数时，该命令都无法完成，并且 BE 会一直处于 isDecommission 为 true 的状态。</li>
 <li>DECOMMISSION 的进度，可以通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">'/backends';</span></code> 中的 TabletNum 查看，如果正在进行，TabletNum 将不断减少。</li>
-<li>该操作可以通过:<code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;be_host:be_heartbeat_service_port&quot;;</span></code>命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡</li>
+<li>该操作可以通过:<code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;be_host:be_heartbeat_service_port&quot;;</span></code>命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡</li>
 </ol>
 </div></blockquote>
 <p><strong>对于多租户部署环境下，BE 节点的扩容和缩容，请参阅 <a class="reference internal" href="../administrator-guide/operation/multi-tenant.html"><span class="doc">多租户设计文档</span></a>。</strong></p>

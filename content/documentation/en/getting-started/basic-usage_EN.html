@@ -384,6 +384,7 @@ Use the following command to log in to Doris:</p>
 <li>Data import can import the specified Partition. See `HELP LOAD’.</li>
 <li>Schema of table can be dynamically modified.</li>
 <li>Rollup can be added to Table to improve query performance. This section can be referred to the description of Rollup in Advanced Usage Guide.</li>
+<li>The default value of Null property for column is true, which may result in poor scan performance.</li>
 </ol>
 </div></blockquote>
 </div>
@@ -457,7 +458,7 @@ Use the following command to log in to Doris:</p>
 <p>Broker imports are asynchronous commands. Successful execution of the above commands only indicates successful submission of tasks. Successful imports need to be checked through `SHOW LOAD;’ Such as:</p>
 <p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABLE</span> <span class="pre">=</span> <span class="pre">&quot;table1_20170708&quot;;</span></code></p>
 <p>In the return result, FINISHED in the `State’field indicates that the import was successful.</p>
-<p>关于 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span></code> 的更多说明，可以参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">LOAD;</span></code></p>
+<p>For more instructions on <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span></code>, see<code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">LOAD;</span></code></p>
 <p>Asynchronous import tasks can be cancelled before the end:</p>
 <p><code class="docutils literal notranslate"><span class="pre">CANCEL</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL</span> <span class="pre">=</span> <span class="pre">&quot;table1_20170708&quot;;</span></code></p>
 </div>

@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">Schema Change</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">Configuration</a><ul class="current">
@@ -98,7 +99,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker_EN.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition_EN.html">Dynamic Partition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
@@ -209,6 +212,12 @@ under the License.
 <h2>brpc_max_body_size<a class="headerlink" href="#brpc-max-body-size" title="Permalink to this headline">¶</a></h2>
 <p>This configuration is mainly used to modify the parameter max_body_size of brpc. The default configuration is 64M. It usually occurs in multi distinct + no group by + exceeds 1t data. In particular, if you find that the query is stuck, and be appears the word “body size is too large” in log.</p>
 <p>Because this is a brpc configuration, users can also directly modify this parameter on-the-fly by visiting <code class="docutils literal notranslate"><span class="pre">http://host:brpc_port/flags</span></code></p>
+</div>
+<div class="section" id="max-running-txn-num-per-db">
+<h2>max_running_txn_num_per_db<a class="headerlink" href="#max-running-txn-num-per-db" title="Permalink to this headline">¶</a></h2>
+<p>This configuration is mainly used to control the number of concurrent load job in the same db. The default configuration is 100. When the number of concurrent load job exceeds the configured value, the load which is synchronously executed will fail, such as stream load. The load which is asynchronously will always be in a pending state such as broker load.</p>
+<p>It is generally not recommended to change this property. If the current load concurrency exceeds this value, you need to first check if a single load job is too slow, or if there are too many small files, there is no problem of load after merging those small files.</p>
+<p>Error information such as: current running txns on db xxx is xx, larger than limit xx. The above info is related by this property.</p>
 </div>
 </div>
 

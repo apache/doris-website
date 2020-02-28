@@ -104,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -227,7 +228,7 @@ under the License.
 <div class="section" id="id3">
 <h2>导入方式<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>为适配不同的数据导入需求，Doris 系统提供了5种不同的导入方式。每种导入方式支持不同的数据源，存在不同的使用方式（异步，同步）。</p>
-<p>所有导入方式都支持 csv 数据格式。其中 Broker load 还支持 parquet 数据格式。</p>
+<p>所有导入方式都支持 csv 数据格式。其中 Broker load 还支持 parquet 和 orc 数据格式。</p>
 <p>每个导入方式的说明请参阅单个导入方式的操作手册。</p>
 <ul>
 <li><p class="first">Broker load</p>
@@ -279,8 +280,8 @@ under the License.
 <div class="section" id="label">
 <h3>Label 和 原子性<a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h3>
 <p>Doris 对所有导入方式提供原子性保证。既保证同一个导入作业内的数据，原子生效。不会出现仅导入部分数据的情况。</p>
-<p>同时，每一个导入作业都有一个由用户指定或者系统自动生成的 Label。Label 在一个 Database 内唯一。当一个 Label 对应的导入作业成功够，不可在重复使用该 Label 提交导入作业。如果 Label 对应的导入作业失败，则可以重复使用。</p>
-<p>用户可以通过 Label 机制，来保证 Label 对应的数据最多被导入一次，级 At-Most-Once 语义。</p>
+<p>同时，每一个导入作业都有一个由用户指定或者系统自动生成的 Label。Label 在一个 Database 内唯一。当一个 Label 对应的导入作业成功后，不可再重复使用该 Label 提交导入作业。如果 Label 对应的导入作业失败，则可以重复使用。</p>
+<p>用户可以通过 Label 机制，来保证 Label 对应的数据最多被导入一次，即At-Most-Once 语义。</p>
 </div>
 </div>
 <div class="section" id="id6">
@@ -288,7 +289,7 @@ under the License.
 <p>Doris 目前的导入方式分为两类，同步和异步。如果是外部程序接入 Doris 的导入功能，需要判断使用导入方式是哪类再确定接入逻辑。</p>
 <div class="section" id="id7">
 <h3>同步<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<p>同步导入方式既用户创建导入任务，Doris 同步执行导入，执行完成后返回用户导入结果。用户可直接根据创建导入任务命令返回的结果同步判断导入是否成功。</p>
+<p>同步导入方式即用户创建导入任务，Doris 同步执行导入，执行完成后返回用户导入结果。用户可直接根据创建导入任务命令返回的结果同步判断导入是否成功。</p>
 <p>同步类型的导入方式有: <strong>Stream load</strong>，<strong>Insert</strong>。</p>
 <p>操作步骤：</p>
 <ol class="simple">
@@ -300,7 +301,7 @@ under the License.
 </div>
 <div class="section" id="id8">
 <h3>异步<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p>异步导入方式既用户创建导入任务后，Doris 直接返回创建成功。<strong>创建成功不代表数据已经导入</strong>。导入任务会被异步执行，用户在创建成功后，需要通过轮询的方式发送查看命令查看导入作业的状态。如果创建失败，则可以根据失败信息，判断是否需要再次创建。</p>
+<p>异步导入方式即用户创建导入任务后，Doris 直接返回创建成功。<strong>创建成功不代表数据已经导入</strong>。导入任务会被异步执行，用户在创建成功后，需要通过轮询的方式发送查看命令查看导入作业的状态。如果创建失败，则可以根据失败信息，判断是否需要再次创建。</p>
 <p>异步类型的导入方式有：<strong>Broker load</strong>，<strong>Multi load</strong>。</p>
 <p>操作步骤：</p>
 <ol class="simple">
@@ -332,7 +333,6 @@ under the License.
 <li>确定导入方式的类型：导入方式为同步或异步。比如 Broker load 为异步导入方式，则外部系统在提交创建导入后，必须调用查看导入命令，根据查看导入命令的结果来判断导入是否成功。</li>
 <li>制定 Label 生成策略：Label 生成策略需满足，每一批次数据唯一且固定的原则。这样 Doris 就可以保证 At-Most-Once。</li>
 <li>程序自身保证 At-Least-Once：外部系统需要保证自身的 At-Least-Once，这样就可以保证导入流程的 Exactly-Once。</li>
-<li></li>
 </ol>
 </div>
 <div class="section" id="id12">
@@ -373,7 +373,7 @@ under the License.
 </ul>
 <ul>
 <li><p class="first">load_process_max_memory_limit_bytes 和 load_process_max_memory_limit_percent</p>
-<p>这两个参数，限制了单个 Backend 上，可用于导入任务的内存上限。分别是最大内存和最大内存百分比。<code class="docutils literal notranslate"><span class="pre">load_process_max_memory_limit_percent</span></code> 默认为 80%，该值为 <code class="docutils literal notranslate"><span class="pre">mem_limit</span></code> 配置的 80%。即假设物理内存为 M，则默认导入内存限制为 M * 80% * 80%。</p>
+<p>这两个参数，限制了单个 Backend 上，可用于导入任务的内存上限。分别是最大内存和最大内存百分比。<code class="docutils literal notranslate"><span class="pre">load_process_max_memory_limit_percent</span></code> 默认为 80，表示对 Backend 总内存限制的百分比（总内存限制 <code class="docutils literal notranslate"><span class="pre">mem_limit</span></code> 默认为 80%，表示对物理内存的百分比）。即假设物理内存为 M，则默认导入内存限制为 M * 80% * 80%。</p>
 <p><code class="docutils literal notranslate"><span class="pre">load_process_max_memory_limit_bytes</span></code> 默认为 100GB。系统会在两个参数中取较小者，作为最终的 Backend 导入内存使用上限。</p>
 </li>
 </ul>

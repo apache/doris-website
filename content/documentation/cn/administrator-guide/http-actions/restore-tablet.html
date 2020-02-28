@@ -93,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">HTTP API</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="cancel-label.html">CANCEL LABEL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compaction-action.html">Compaction Action</a></li>
 <li class="toctree-l4"><a class="reference internal" href="fe-get-log-file.html">get_log_file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="get-label-state.html">GET LABEL STATE</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">RESTORE TABLET</a></li>
@@ -103,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -226,7 +228,9 @@ URI: http://be_host:be_http_port/api/restore_tablet?tablet_id=xxx&amp;schema_has
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="s2">&quot;http://hostname:8088/api/restore_tablet?tablet_id=123456\&amp;schema_hash=1111111&quot;</span>
 </pre></div>
 </div>
-<p>##keyword</p>
+</div>
+<div class="section" id="keyword">
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RESTORE</span><span class="p">,</span><span class="n">TABLET</span><span class="p">,</span><span class="n">RESTORE</span><span class="p">,</span><span class="n">TABLET</span>
 </pre></div>
 </div>

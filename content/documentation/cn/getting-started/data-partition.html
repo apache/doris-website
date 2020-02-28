@@ -284,7 +284,7 @@ PROPERTIES
 </li>
 <li><p class="first">Partition 支持通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">LESS</span> <span class="pre">THAN</span> <span class="pre">(...)</span></code> 仅指定上界，系统会将前一个分区的上界作为该分区的下界，生成一个左闭右开的区间。通过，也支持通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">[...)</span></code> 指定同时指定上下界，生成一个左闭右开的区间。</p>
 </li>
-<li><p class="first">通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">[...)</span></code> 同是指定上下界比较容易理解。这里举例说明，当使用 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">LESS</span> <span class="pre">THAN</span> <span class="pre">(...)</span></code> 语句进行分区的增删操作时，分区范围的变化情况：</p>
+<li><p class="first">通过 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">[...)</span></code> 同时指定上下界比较容易理解。这里举例说明，当使用 <code class="docutils literal notranslate"><span class="pre">VALUES</span> <span class="pre">LESS</span> <span class="pre">THAN</span> <span class="pre">(...)</span></code> 语句进行分区的增删操作时，分区范围的变化情况：</p>
 <ul>
 <li><p class="first">如上示例，当建表完成后，会自动生成如下3个分区：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p201701</span><span class="p">:</span> <span class="p">[</span><span class="n">MIN_VALUE</span><span class="p">,</span>  <span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span><span class="p">)</span>
@@ -450,7 +450,7 @@ p201705: [2017-04-01, 2017-06-01)
 <p>Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创建失败时，可能会报这个错误。即使不使用 Partition，当建表出现问题时，也会报 <code class="docutils literal notranslate"><span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">create</span> <span class="pre">partition</span></code>，因为如前文所述，Doris 会为没有指定 Partition 的表创建一个不可更改的默认的 Partition。</p>
 <p>当遇到这个错误是，通常是 BE 在创建数据分片时遇到了问题。可以参照以下步骤排查：</p>
 <ol class="simple">
-<li>在 fe.log 中，查找对应时间点的 <code class="docutils literal notranslate"><span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">create</span> <span class="pre">partition</span></code> 日志。在该日志中，会出现一系列类似 <code class="docutils literal notranslate"><span class="pre">{10001-10010}</span></code> 字样的数字对儿。数字对儿的第一个数字表示 Backend ID，第二个数字表示 Tablet ID。如上这个数字对，表示 ID 为 10001 的 Backend 上，创建 ID 为 10010 的 Tablet 失败了。</li>
+<li>在 fe.log 中，查找对应时间点的 <code class="docutils literal notranslate"><span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">create</span> <span class="pre">partition</span></code> 日志。在该日志中，会出现一系列类似 <code class="docutils literal notranslate"><span class="pre">{10001-10010}</span></code> 字样的数字对。数字对的第一个数字表示 Backend ID，第二个数字表示 Tablet ID。如上这个数字对，表示 ID 为 10001 的 Backend 上，创建 ID 为 10010 的 Tablet 失败了。</li>
 <li>前往对应 Backend 的 be.INFO 日志，查找对应时间段内，tablet id 相关的日志，可以找到错误信息。</li>
 <li>以下罗列一些常见的 tablet 创建失败错误，包括但不限于：<ul>
 <li>BE 没有收到相关 task，此时无法在 be.INFO 中找到 tablet id 相关日志。或者 BE 创建成功，但汇报失败。以上问题，请参阅 [部署与升级文档] 检查 FE 和 BE 的连通性。</li>
@@ -459,7 +459,7 @@ p201705: [2017-04-01, 2017-06-01)
 </ul>
 </li>
 </ol>
-<p>也可以通过在 fe.conf 中设置 <code class="docutils literal notranslate"><span class="pre">tablet_create_timeout_second=xxx</span></code> 来延长超时时间。默认是2秒。</p>
+<p>如果创建数据分片时超时，也可以通过在 fe.conf 中设置 <code class="docutils literal notranslate"><span class="pre">tablet_create_timeout_second=xxx</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">max_create_table_timeout_second=xxx</span></code> 来延长超时时间。其中 <code class="docutils literal notranslate"><span class="pre">tablet_create_timeout_second</span></code> 默认是1秒, <code class="docutils literal notranslate"><span class="pre">max_create_table_timeout_second</span></code> 默认是60秒，总体的超时时间为min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second);</p>
 </li>
 <li><p class="first">建表命令长时间不返回结果。</p>
 <p>Doris 的建表命令是同步命令。该命令的超时时间目前设置的比较简单，即（tablet num * replication num）秒。如果创建较多的数据分片，并且其中有分片创建失败，则可能导致等待较长超时后，才会返回错误。</p>

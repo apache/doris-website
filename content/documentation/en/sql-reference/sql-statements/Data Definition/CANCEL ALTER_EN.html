@@ -214,6 +214,12 @@ FROM db_name.table_name</li>
 Grammar:
 CANCEL ALTER TABLE ROLLUP
 FROM db_name.table_name</li>
+<li>batch cancel rollup by job id
+Grammar:
+CANCEL ALTER TABLE ROLLUP
+FROM db_name.table_name (jobid,…)
+Note:
+Batch cancel rollup job is a async operation, use <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">alter</span> <span class="pre">table</span> <span class="pre">rollup</span></code> to see whether it executes successfully</li>
 <li>OTHER CLUSTER
 Grammar:
 (To be realized…</li>
@@ -232,6 +238,12 @@ FROM example_db.my_table;</li>
 <li>撤销 my_table 下的 ADD ROLLUP 操作。
 CANCEL ALTER TABLE ROLLUP
 FROM example_db.my_table;</li>
+</ol>
+<p>[CANCEL ALTER TABLE ROLLUP]</p>
+<ol class="simple">
+<li>cancel rollup alter job by job id
+CANCEL ALTER TABLE ROLLUP
+FROM example_db.my_table (12801,12802);</li>
 </ol>
 </div>
 <div class="section" id="keyword">

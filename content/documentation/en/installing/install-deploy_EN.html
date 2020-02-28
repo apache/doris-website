@@ -359,13 +359,6 @@ Before reading this document, compile Doris according to the compiled document.<
 </tr>
 <tr>
 <td>BE</td>
-<td>be_rpc_port</td>
-<td>9070</td>
-<td>BE &lt; - &gt; BE</td>
-<td>port used by RPC between BE</td>
-</tr>
-<tr>
-<td>BE</td>
 <td>webserver_port</td>
 <td>8040</td>
 <td>BE &lt;--&gt; BE</td>
@@ -426,7 +419,6 @@ Before reading this document, compile Doris according to the compiled document.<
 <ol class="simple">
 <li>When deploying multiple FE instances, make sure that the http port configuration of FE is the same.</li>
 <li>Make sure that each port has access in its proper direction before deployment.</li>
-<li>brpc port replaced be rpc_port after version 0.8.2</li>
 </ol>
 </div></blockquote>
 </div>
@@ -459,7 +451,7 @@ Before reading this document, compile Doris according to the compiled document.<
 <li><p class="first">Configure FE</p>
 <ol class="simple">
 <li>The configuration file is conf/fe.conf. Note: <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code>: Metadata storage location. The default is fe/palo-meta/. The directory needs to be <strong>created manually</strong> by.</li>
-<li>JAVA_OPTS in fe.conf defaults to a maximum heap memory of 2GB for java, and it is recommended that the production environment be adjusted to more than 8G.</li>
+<li>JAVA_OPTS in fe.conf defaults to a maximum heap memory of 4GB for java, and it is recommended that the production environment be adjusted to more than 8G.</li>
 </ol>
 </li>
 <li><p class="first">Start FE</p>

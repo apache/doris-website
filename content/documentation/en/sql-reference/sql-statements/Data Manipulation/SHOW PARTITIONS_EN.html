@@ -206,7 +206,10 @@ under the License.
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>This statement is used to display partition information
 Grammar:
-SHOW PARTITIONS FROM [db_name.]table_name [PARTITION partition_name];</p>
+SHOW PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT];
+Explain:
+Support filter with following columns: PartitionId,PartitionName,State,Buckets,ReplicationNum,
+LastConsistencyCheckTime</p>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
@@ -214,7 +217,9 @@ SHOW PARTITIONS FROM [db_name.]table_name [PARTITION partition_name];</p>
 <li>Display partition information for the specified table below the specified DB
 SHOW PARTITIONS FROM example_db.table_name;</li>
 <li>Display information about the specified partition of the specified table below the specified DB
-SHOW PARTITIONS FROM example_db.table_name PARTITION p1;</li>
+SHOW PARTITIONS FROM example_db.table_name WHERE PartitionName = “p1”;</li>
+<li>Display information about the newest partition of the specified table below the specified DB
+SHOW PARTITIONS FROM example_db.table_name ORDER BY PartitionId DESC LIMIT 1;</li>
 </ol>
 </div>
 <div class="section" id="keyword">

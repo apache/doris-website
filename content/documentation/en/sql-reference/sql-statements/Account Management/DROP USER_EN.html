@@ -205,19 +205,30 @@ under the License.
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>Syntax:</p>
-<p>DROP USER ‘user_name’</p>
-<p>The DROP USER command deletes a Palo user. Doris does not support deleting the specified user_identity here. When a specified user is deleted, all user_identities corresponding to that user are deleted. For example, two users, Jack &#64;’192%’and Jack &#64;[‘domain’] were created through the CREATE USER statement. After DROP USER’jack’ was executed, Jack &#64;’192%’and Jack &#64;[‘domain’] would be deleted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DROP USER &#39;user_identity&#39;
+
+`user_identity`:
+
+    user@&#39;host&#39;
+    user@[&#39;domain&#39;]
+
+Drop a specified user identity.
+</pre></div>
+</div>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li>Delete user jack</li>
+<ol>
+<li><p class="first">Delete user jack&#64;’192.%’</p>
+<p>DROP USER ‘jack’&#64;’192.%’</p>
+</li>
 </ol>
-<p>DROP USER ‘jack’</p>
 </div>
 <div class="section" id="keyword">
 <h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
-<p>DROP, USER</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DROP</span><span class="p">,</span> <span class="n">USER</span>
+</pre></div>
+</div>
 </div>
 </div>
 

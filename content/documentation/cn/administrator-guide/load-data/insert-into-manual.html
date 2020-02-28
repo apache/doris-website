@@ -104,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -232,6 +233,17 @@ under the License.
 <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">VALUES</span> <span class="p">(</span><span class="s2">&quot;qweasdzxcqweasdzxc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
+<p><strong>注意</strong></p>
+<p>当需要使用 <code class="docutils literal notranslate"><span class="pre">CTE(Common</span> <span class="pre">Table</span> <span class="pre">Expressions)</span></code> 作为 insert 操作中的查询部分时，必须指定 <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">LABEL</span></code> 和 column list 部分。示例</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="n">WITH</span> <span class="n">LABEL</span> <span class="n">label1</span>
+<span class="n">WITH</span> <span class="n">cte1</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl1</span><span class="p">),</span> <span class="n">cte2</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl2</span><span class="p">)</span>
+<span class="n">SELECT</span> <span class="n">k1</span> <span class="n">FROM</span> <span class="n">cte1</span> <span class="n">JOIN</span> <span class="n">cte2</span> <span class="n">WHERE</span> <span class="n">cte1</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl1</span> <span class="p">(</span><span class="n">k1</span><span class="p">)</span>
+<span class="n">WITH</span> <span class="n">cte1</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl1</span><span class="p">),</span> <span class="n">cte2</span> <span class="n">AS</span> <span class="p">(</span><span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">tbl2</span><span class="p">)</span>
+<span class="n">SELECT</span> <span class="n">k1</span> <span class="n">FROM</span> <span class="n">cte1</span> <span class="n">JOIN</span> <span class="n">cte2</span> <span class="n">WHERE</span> <span class="n">cte1</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>下面主要介绍创建导入语句中使用到的参数：</p>
 <ul>
 <li><p class="first">partition_info</p>
@@ -259,31 +271,85 @@ under the License.
 </div>
 <div class="section" id="id3">
 <h3>导入结果<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>Insert Into 本身就是一个 SQL 命令，所以返回的行为同 SQL 命令的返回行为。</p>
-<p>如果导入失败，则返回语句执行失败。示例如下：</p>
-<p><code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000):</span> <span class="pre">all</span> <span class="pre">partitions</span> <span class="pre">have</span> <span class="pre">no</span> <span class="pre">load</span> <span class="pre">data.</span> <span class="pre">url:</span> <span class="pre">http://ip:port/api/_load_error_log?file=__shard_14/error_log_insert_stmt_f435264d82f342e4-a33764f5f0dfbf00_f435264d82f342e4_a33764f5f0dfbf00</span></code></p>
-<p>其中 url 可以用于查询错误的数据，具体见后面 <strong>查看错误行</strong> 小结。</p>
-<p>如果导入成功，则返回语句执行成功。示例如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
+<p>Insert Into 本身就是一个 SQL 命令，其返回结果会根据执行结果的不同，分为以下几种：</p>
+<ol>
+<li><p class="first">结果集为空</p>
+<p>如果 insert 对应 select 语句的结果集为空，则返回如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">empty_tbl</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.02</span> <span class="n">sec</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>如果用户指定了 Label，则会也会返回 Label</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">0</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.22</span> <span class="n">sec</span><span class="p">)</span>
-<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;user_specified_label&#39;</span><span class="p">}</span>
+<p><code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code> 表示执行成功。<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">rows</span> <span class="pre">affected</span></code> 表示没有数据被导入。</p>
+</li>
+<li><p class="first">结果集不为空</p>
+<p>在结果集不为空的情况下。返回结果分为如下几种情况：</p>
+<ol>
+<li><p class="first">Insert 执行成功并可见：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">4</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.38</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;insert_8510c568-9eda-4173-9e36-6adc7d35291c&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="k">with</span> <span class="n">label</span> <span class="n">my_label1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">4</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.38</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;my_label1&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">2</span> <span class="n">rows</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">2</span> <span class="n">warnings</span> <span class="p">(</span><span class="mf">0.31</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;insert_f0747f0e-7a35-46e2-affa-13a235f4020d&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">insert</span> <span class="n">into</span> <span class="n">tbl1</span> <span class="n">select</span> <span class="o">*</span> <span class="kn">from</span> <span class="nn">tbl2</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">2</span> <span class="n">rows</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">2</span> <span class="n">warnings</span> <span class="p">(</span><span class="mf">0.31</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;insert_f0747f0e-7a35-46e2-affa-13a235f4020d&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;committed&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>导入可能部分成功，则会附加 Label 字段。示例如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
-<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;7d66c457-658b-4a3e-bdcf-8beee872ef2c&#39;</span><span class="p">}</span>
+<p><code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code> 表示执行成功。<code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">rows</span> <span class="pre">affected</span></code> 表示总共有4行数据被导入。<code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">warnings</span></code> 表示被过滤的行数。</p>
+<p>同时会返回一个 json 串：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;my_label1&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;insert_f0747f0e-7a35-46e2-affa-13a235f4020d&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;committed&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;my_label1&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;visible&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">,</span> <span class="s1">&#39;err&#39;</span><span class="p">:</span><span class="s1">&#39;some other error&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">100</span> <span class="n">row</span> <span class="n">affected</span><span class="p">,</span> <span class="mi">1</span> <span class="n">warning</span> <span class="p">(</span><span class="mf">0.23</span> <span class="n">sec</span><span class="p">)</span>
-<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;user_specified_label&#39;</span><span class="p">}</span>
+<p><code class="docutils literal notranslate"><span class="pre">label</span></code> 为用户指定的 label 或自动生成的 label。Label 是该 Insert Into 导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。</p>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> 表示导入数据是否可见。如果可见，显示 <code class="docutils literal notranslate"><span class="pre">visible</span></code>，如果不可见，显示 <code class="docutils literal notranslate"><span class="pre">committed</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">txnId</span></code> 为这个 insert 对应的导入事务的 id。</p>
+<p><code class="docutils literal notranslate"><span class="pre">err</span></code> 字段会显示一些其他非预期错误。</p>
+<p>当需要查看被过滤的行时，用户可以通过如下语句</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">show</span> <span class="n">load</span> <span class="n">where</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;xxx&quot;</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>其中 affected 表示导入的行数。warning 表示失败的行数。用户需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">LOAD</span> <span class="pre">WHERE</span> <span class="pre">LABEL=&quot;xxx&quot;;</span></code> 命令，获取 url 查看错误行。</p>
-<p>如果没有任何数据，也会返回成功，且 affected 和 warning 都是 0。</p>
-<p>Label 是该 Insert Into 导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。Insert Into 的 Label 则是由系统生成的，用户可以拿着这个 Label 通过查询导入命令异步获取导入状态。</p>
+<p>返回结果中的 URL 可以用于查询错误的数据，具体见后面 <strong>查看错误行</strong> 小结。</p>
+<p><strong>数据不可见是一个临时状态，这批数据最终是一定可见的</strong></p>
+<p>可以通过如下语句查看这批数据的可见状态：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">show</span> <span class="n">transaction</span> <span class="n">where</span> <span class="nb">id</span><span class="o">=</span><span class="mi">4005</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>返回结果中的 <code class="docutils literal notranslate"><span class="pre">TransactionStatus</span></code> 列如果为 <code class="docutils literal notranslate"><span class="pre">visible</span></code>，则表述数据可见。</p>
+</li>
+<li><p class="first">Insert 执行失败</p>
+<p>执行失败表示没有任何数据被成功导入，并返回如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mysql&gt; insert into tbl1 select * from tbl2 where k1 = &quot;a&quot;;
+ERROR 1064 (HY000): all partitions have no load data. url: http://10.74.167.16:8042/api/_load_error_log?file=__shard_2/error_log_insert_stmt_ba8bb9e158e4879-ae8de8507c0bf8a2_ba8bb9e158e4879_ae8de8507c0bf8a2
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000):</span> <span class="pre">all</span> <span class="pre">partitions</span> <span class="pre">have</span> <span class="pre">no</span> <span class="pre">load</span> <span class="pre">data</span></code> 显示失败原因。后面的 url 可以用于查询错误的数据，具体见后面 <strong>查看错误行</strong> 小结。</p>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>综上，对于 insert 操作返回结果的正确处理逻辑应为：</strong></p>
+<ol class="simple">
+<li>如果返回结果为 <code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000)</span></code>，则表示导入失败。</li>
+<li>如果返回结果为 <code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code>，则表示执行成功。<ol>
+<li>如果 <code class="docutils literal notranslate"><span class="pre">rows</span> <span class="pre">affected</span></code> 为 0，表示结果集为空，没有数据被导入。</li>
+<li>如果 <code class="docutils literal notranslate"><span class="pre">rows</span> <span class="pre">affected</span></code> 大于 0：<ol>
+<li>如果 <code class="docutils literal notranslate"><span class="pre">status</span></code> 为 <code class="docutils literal notranslate"><span class="pre">committed</span></code>，表示数据还不可见。需要通过 <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">transaction</span></code> 语句查看状态直到 <code class="docutils literal notranslate"><span class="pre">visible</span></code></li>
+<li>如果 <code class="docutils literal notranslate"><span class="pre">status</span></code> 为 <code class="docutils literal notranslate"><span class="pre">visible</span></code>，表示数据导入成功。</li>
+</ol>
+</li>
+<li>如果 <code class="docutils literal notranslate"><span class="pre">warnings</span></code> 大于 0，表示有数据被过滤，可以通过 <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">load</span></code> 语句获取 url 查看被过滤的行。</li>
+</ol>
+</li>
+</ol>
 </div>
 </div>
 <div class="section" id="id4">

@@ -91,11 +91,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Administrator Guide</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="load-data/index.html">Load Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">Schema Change</a></li>
 <li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="operation/index.html">Maintainence Operation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="config/index.html">Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="broker_EN.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dynamic-partition_EN.html">Dynamic Partition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="small-file-mgr_EN.html">File Manager</a></li>
@@ -381,7 +384,7 @@ Used for compatibility with MySQL clients. No practical effect.</p>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">parallel_fragment_exec_instance_num</span></code></p>
 <p>For the scan node, set its number of instances to execute on each BE node. The default is 1.</p>
 <p>A query plan typically produces a set of scan ranges, the range of data that needs to be scanned. These data are distributed across multiple BE nodes. A BE node will have one or more scan ranges. By default, a set of scan ranges for each BE node is processed by only one execution instance. When the machine resources are abundant, you can increase the variable and let more execution instances process a set of scan ranges at the same time, thus improving query efficiency.</p>
-<p>Modifying this parameter is only helpful for improving the efficiency of the scan node. Larger values ​​may consume more machine resources such as CPU, memory, and disk IO.</p>
+<p>The number of scan instances determines the number of other execution nodes in the upper layer, such as aggregate nodes and join nodes. Therefore, it is equivalent to increasing the concurrency of the entire query plan execution. Modifying this parameter will help improve the efficiency of large queries, but larger values will consume more machine resources, such as CPU, memory, and disk IO.</p>
 </li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">query_cache_size</span></code></p>
 <p>Used for compatibility with MySQL clients. No practical effect.</p>
@@ -421,6 +424,12 @@ Used for compatibility with MySQL clients. No practical effect.</p>
 </li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">wait_timeout</span></code></p>
 <p>The length of the connection used to set up an idle connection. When an idle connection does not interact with Doris for that length of time, Doris will actively disconnect the link. The default is 8 hours, in seconds.</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">default_rowset_type</span></code></p>
+<p>Used for setting the default storage format of Backends storage engine. Valid options: alpha/beta</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">use_v2_rollup</span></code></p>
+<p>Used to control the sql query to use segment v2 rollup index to get data. This variable is only used for validation when upgrading to segment v2 feature. Otherwise, not recommended to use.</p>
 </li>
 </ul>
 </div>

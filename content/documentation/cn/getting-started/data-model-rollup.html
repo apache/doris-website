@@ -290,15 +290,15 @@ under the License.
 </table><p>如果转换成建表语句则如下（省略建表语句中的 Partition 和 Distribution 信息）</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
 (
-	`user_id` LARGEINT NOT NULL COMMENT &quot;用户id&quot;,
-	`date` DATE NOT NULL COMMENT &quot;数据灌入日期时间&quot;,
-	`city` VARCHAR(20) COMMENT &quot;用户所在城市&quot;,
-	`age` SMALLINT COMMENT &quot;用户年龄&quot;,
-	`sex` TINYINT COMMENT &quot;用户性别&quot;,
-	`last_visit_date` DATETIME REPLACE DEFAULT &quot;1970-01-01 00:00:00&quot; COMMENT &quot;用户最后一次访问时间&quot;,
-	`cost` BIGINT SUM DEFAULT &quot;0&quot; COMMENT &quot;用户总消费&quot;,
-	`max_dwell_time` INT MAX DEFAULT &quot;0&quot; COMMENT &quot;用户最大停留时间&quot;,
-	`min_dwell_time` INT MIN DEFAULT &quot;99999&quot; COMMENT &quot;用户最小停留时间&quot;,
+    `user_id` LARGEINT NOT NULL COMMENT &quot;用户id&quot;,
+    `date` DATE NOT NULL COMMENT &quot;数据灌入日期时间&quot;,
+    `city` VARCHAR(20) COMMENT &quot;用户所在城市&quot;,
+    `age` SMALLINT COMMENT &quot;用户年龄&quot;,
+    `sex` TINYINT COMMENT &quot;用户性别&quot;,
+    `last_visit_date` DATETIME REPLACE DEFAULT &quot;1970-01-01 00:00:00&quot; COMMENT &quot;用户最后一次访问时间&quot;,
+    `cost` BIGINT SUM DEFAULT &quot;0&quot; COMMENT &quot;用户总消费&quot;,
+    `max_dwell_time` INT MAX DEFAULT &quot;0&quot; COMMENT &quot;用户最大停留时间&quot;,
+    `min_dwell_time` INT MIN DEFAULT &quot;99999&quot; COMMENT &quot;用户最小停留时间&quot;,
 )
 AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
 ... /* 省略 Partition 和 Distribution 信息 */
@@ -1128,14 +1128,14 @@ AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
 </table><p>这是一个典型的用户基础信息表。这类数据没有聚合需求，只需保证主键唯一性。（这里的主键为 user_id + username）。那么我们的建表语句如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
 (
-	`user_id` LARGEINT NOT NULL COMMENT &quot;用户id&quot;,
-	`username` VARCHAR(50) NOT NULL COMMENT &quot;用户昵称&quot;,
-	`city` VARCHAR(20) COMMENT &quot;用户所在城市&quot;,
-	`age` SMALLINT COMMENT &quot;用户年龄&quot;,
-	`sex` TINYINT COMMENT &quot;用户性别&quot;,
-	`phone` LARGEINT COMMENT &quot;用户电话&quot;,
-	`address` VARCHAR(500) COMMENT &quot;用户地址&quot;,
-	`register_time` DATETIME COMMENT &quot;用户注册时间&quot;
+    `user_id` LARGEINT NOT NULL COMMENT &quot;用户id&quot;,
+    `username` VARCHAR(50) NOT NULL COMMENT &quot;用户昵称&quot;,
+    `city` VARCHAR(20) COMMENT &quot;用户所在城市&quot;,
+    `age` SMALLINT COMMENT &quot;用户年龄&quot;,
+    `sex` TINYINT COMMENT &quot;用户性别&quot;,
+    `phone` LARGEINT COMMENT &quot;用户电话&quot;,
+    `address` VARCHAR(500) COMMENT &quot;用户地址&quot;,
+    `register_time` DATETIME COMMENT &quot;用户注册时间&quot;
 )
 UNIQUE KEY(`user_id`, `user_name`)
 ... /* 省略 Partition 和 Distribution 信息 */
@@ -1205,14 +1205,14 @@ UNIQUE KEY(`user_id`, `user_name`)
 </table><p>及建表语句：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
 (
-	`user_id` LARGEINT NOT NULL COMMENT &quot;用户id&quot;,
-	`username` VARCHAR(50) NOT NULL COMMENT &quot;用户昵称&quot;,
-	`city` VARCHAR(20) REPLACE COMMENT &quot;用户所在城市&quot;,
-	`age` SMALLINT REPLACE COMMENT &quot;用户年龄&quot;,
-	`sex` TINYINT REPLACE COMMENT &quot;用户性别&quot;,
-	`phone` LARGEINT REPLACE COMMENT &quot;用户电话&quot;,
-	`address` VARCHAR(500) REPLACE COMMENT &quot;用户地址&quot;,
-	`register_time` DATETIME REPLACE COMMENT &quot;用户注册时间&quot;
+    `user_id` LARGEINT NOT NULL COMMENT &quot;用户id&quot;,
+    `username` VARCHAR(50) NOT NULL COMMENT &quot;用户昵称&quot;,
+    `city` VARCHAR(20) REPLACE COMMENT &quot;用户所在城市&quot;,
+    `age` SMALLINT REPLACE COMMENT &quot;用户年龄&quot;,
+    `sex` TINYINT REPLACE COMMENT &quot;用户性别&quot;,
+    `phone` LARGEINT REPLACE COMMENT &quot;用户电话&quot;,
+    `address` VARCHAR(500) REPLACE COMMENT &quot;用户地址&quot;,
+    `register_time` DATETIME REPLACE COMMENT &quot;用户注册时间&quot;
 )
 AGGREGATE KEY(`user_id`, `user_name`)
 ... /* 省略 Partition 和 Distribution 信息 */
@@ -1274,12 +1274,12 @@ AGGREGATE KEY(`user_id`, `user_name`)
 </table><p>建表语句如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
 (
-	`timestamp` DATETIME NOT NULL COMMENT &quot;日志时间&quot;,
-	`type` INT NOT NULL COMMENT &quot;日志类型&quot;,
-	`error_code` INT COMMENT &quot;错误码&quot;,
-	`error_msg` VARCHAR(1024) COMMENT &quot;错误详细信息&quot;,
-	`op_id` BIGINT COMMENT &quot;负责人id&quot;,
-	`op_time` DATETIME COMMENT &quot;处理时间&quot;
+    `timestamp` DATETIME NOT NULL COMMENT &quot;日志时间&quot;,
+    `type` INT NOT NULL COMMENT &quot;日志类型&quot;,
+    `error_code` INT COMMENT &quot;错误码&quot;,
+    `error_msg` VARCHAR(1024) COMMENT &quot;错误详细信息&quot;,
+    `op_id` BIGINT COMMENT &quot;负责人id&quot;,
+    `op_time` DATETIME COMMENT &quot;处理时间&quot;
 )
 DUPLICATE KEY(`timestamp`, `type`)
 ... /* 省略 Partition 和 Distribution 信息 */

@@ -102,6 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
@@ -354,12 +355,28 @@ PROPERTIES
 <span class="p">)</span>
 </pre></div>
 </div>
+<p>如果采用Kerberos认证方式，则部署Broker进程的时候需要<a class="reference external" href="https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html">krb5.conf</a>文件，
+krb5.conf文件包含Kerberos的配置信息，通常，您应该将krb5.conf文件安装在目录/etc中。您可以通过设置环境变量KRB5_CONFIG覆盖默认位置。
+krb5.conf文件的内容示例如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">libdefaults</span><span class="p">]</span>
+    <span class="n">default_realm</span> <span class="o">=</span> <span class="n">DORIS</span><span class="o">.</span><span class="n">HADOOP</span>
+    <span class="n">default_tkt_enctypes</span> <span class="o">=</span> <span class="n">des3</span><span class="o">-</span><span class="n">hmac</span><span class="o">-</span><span class="n">sha1</span> <span class="n">des</span><span class="o">-</span><span class="n">cbc</span><span class="o">-</span><span class="n">crc</span>
+    <span class="n">default_tgs_enctypes</span> <span class="o">=</span> <span class="n">des3</span><span class="o">-</span><span class="n">hmac</span><span class="o">-</span><span class="n">sha1</span> <span class="n">des</span><span class="o">-</span><span class="n">cbc</span><span class="o">-</span><span class="n">crc</span>
+    <span class="n">dns_lookup_kdc</span> <span class="o">=</span> <span class="n">true</span>
+    <span class="n">dns_lookup_realm</span> <span class="o">=</span> <span class="n">false</span>
+
+<span class="p">[</span><span class="n">realms</span><span class="p">]</span>
+    <span class="n">DORIS</span><span class="o">.</span><span class="n">HADOOP</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">kdc</span> <span class="o">=</span> <span class="n">kerberos</span><span class="o">-</span><span class="n">doris</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">service</span><span class="p">:</span><span class="mi">7005</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
 </li>
 <li><p class="first">HDFS HA 模式</p>
 <p>这个配置用于访问以 HA 模式部署的 HDFS 集群。</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">dfs.nameservices</span></code>：指定 hdfs 服务的名字，自定义，如：”dfs.nameservices” = “my_ha”。</li>
-<li><code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.xxx</span></code>：自定义 namenode 的名字,多个名字以逗号分隔。其中 xxx 为 <code class="docutils literal notranslate"><span class="pre">dfs.nameservices</span></code> 中自定义的名字，如 “dfs.ha.namenodes.my_ha” = “my_nn”。</li>
+<li><code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.xxx</span></code>：自定义 namenode 的名字,多个名字以逗号分隔。其中 xxx 为 <code class="docutils literal notranslate"><span class="pre">dfs.nameservices</span></code> 中自定义的名字，如： “dfs.ha.namenodes.my_ha” = “my_nn”。</li>
 <li><code class="docutils literal notranslate"><span class="pre">dfs.namenode.rpc-address.xxx.nn</span></code>：指定 namenode 的rpc地址信息。其中 nn 表示 <code class="docutils literal notranslate"><span class="pre">dfs.ha.namenodes.xxx</span></code> 中配置的 namenode 的名字，如：”dfs.namenode.rpc-address.my_ha.my_nn” = “host:port”。</li>
 <li><code class="docutils literal notranslate"><span class="pre">dfs.client.failover.proxy.provider</span></code>：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。</li>
 </ul>
@@ -385,6 +402,7 @@ PROPERTIES
 <span class="p">)</span>
 </pre></div>
 </div>
+<p>关于HDFS集群的配置可以写入hdfs-site.xml文件中，用户使用Broker进程读取HDFS集群的信息时，只需要填写集群的文件路径名和认证信息即可。</p>
 </li>
 </ol>
 </div>

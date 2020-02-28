@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>description &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>BITMAP &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -98,6 +98,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../spatial-functions/index.html">地理位置函数</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../string-functions/index.html">字符串函数</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="index.html">聚合函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bitmap-functions/index.html">bitmap函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../hash-functions/index.html">Hash函数</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../sql-statements/index.html">语法帮助</a></li>
@@ -161,7 +163,7 @@
         
           <li><a href="index.html">聚合函数</a> &raquo;</li>
         
-      <li>description</li>
+      <li>BITMAP</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -199,68 +201,106 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
---><p>#BITMAP</p>
-<div class="section" id="description">
-<h1>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">TO_BITMAP(expr)</span></code> : 将TINYINT,SMALLINT和INT类型的列转为Bitmap</p>
-<p><code class="docutils literal notranslate"><span class="pre">BITMAP_UNION(expr)</span></code> : 计算两个Bitmap的并集，返回值是序列化后的Bitmap值</p>
-<p><code class="docutils literal notranslate"><span class="pre">BITMAP_COUNT(expr)</span></code> : 计算Bitmap中不同值的个数</p>
-<p><code class="docutils literal notranslate"><span class="pre">BITMAP_UNION_INT(expr)</span></code> : 计算TINYINT,SMALLINT和INT类型的列中不同值的个数，返回值和
-COUNT(DISTINCT expr)相同</p>
-<p><code class="docutils literal notranslate"><span class="pre">BITMAP_EMPTY()</span></code>: 生成空Bitmap列，用于insert或导入的时填充默认值</p>
-<p>注意：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. TO_BITMAP 函数输入的类型必须是TINYINT,SMALLINT,INT
-2. BITMAP_UNION函数的参数目前仅支持： 
-	- 聚合模型中聚合类型为BITMAP_UNION的列
-	- TO_BITMAP 函数
+--><div class="section" id="bitmap">
+<h1>BITMAP<a class="headerlink" href="#bitmap" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="create-table">
+<h2>Create table<a class="headerlink" href="#create-table" title="Permalink to this headline">¶</a></h2>
+<p>建表时需要使用聚合模型，数据类型是 bitmap , 聚合函数是 bitmap_union</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE `pv_bitmap` (
+  `dt` int(11) NULL COMMENT &quot;&quot;,
+  `page` varchar(10) NULL COMMENT &quot;&quot;,
+  `user_id` bitmap BITMAP_UNION NULL COMMENT &quot;&quot;
+) ENGINE=OLAP
+AGGREGATE KEY(`dt`, `page`)
+COMMENT &quot;OLAP&quot;
+DISTRIBUTED BY HASH(`dt`) BUCKETS 2;
+</pre></div>
+</div>
+<p>注：当数据量很大时，最好为高频率的 bitmap_union 查询建立对应的 rollup 表</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">pv_bitmap</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">pv</span> <span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">user_id</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="data-load">
+<h2>Data Load<a class="headerlink" href="#data-load" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">TO_BITMAP(expr)</span></code> : 将 0 ~ 18446744073709551615 的 unsigned bigint 转为 bitmap</p>
+<p><code class="docutils literal notranslate"><span class="pre">BITMAP_EMPTY()</span></code>: 生成空 bitmap 列，用于 insert 或导入的时填充默认值</p>
+<p><code class="docutils literal notranslate"><span class="pre">BITMAP_HASH(expr)</span></code>: 将任意类型的列通过 Hash 的方式转为 bitmap</p>
+<div class="section" id="stream-load">
+<h3>Stream Load<a class="headerlink" href="#stream-load" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">data</span> <span class="o">|</span> <span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">user</span><span class="p">:</span><span class="n">passwd</span> <span class="o">-</span><span class="n">T</span> <span class="o">-</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;columns: dt,page,user_id, user_id=to_bitmap(user_id)&quot;</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="mi">8410</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">testDb</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">data</span> <span class="o">|</span> <span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">user</span><span class="p">:</span><span class="n">passwd</span> <span class="o">-</span><span class="n">T</span> <span class="o">-</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;columns: dt,page,user_id, user_id=bitmap_hash(user_id)&quot;</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="mi">8410</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">testDb</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">data</span> <span class="o">|</span> <span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">user</span><span class="p">:</span><span class="n">passwd</span> <span class="o">-</span><span class="n">T</span> <span class="o">-</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;columns: dt,page,user_id, user_id=bitmap_empty()&quot;</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="mi">8410</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">testDb</span><span class="o">/</span><span class="n">_stream_load</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="insert-into">
+<h3>Insert Into<a class="headerlink" href="#insert-into" title="Permalink to this headline">¶</a></h3>
+<p>id2 的列类型是 bitmap</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="n">into</span> <span class="n">bitmap_table1</span> <span class="n">select</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id2</span> <span class="kn">from</span> <span class="nn">bitmap_table2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>id2 的列类型是 bitmap</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">bitmap_table1</span> <span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">id2</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="mi">1001</span><span class="p">,</span> <span class="n">to_bitmap</span><span class="p">(</span><span class="mi">1000</span><span class="p">)),</span> <span class="p">(</span><span class="mi">1001</span><span class="p">,</span> <span class="n">to_bitmap</span><span class="p">(</span><span class="mi">2000</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>id2 的列类型是 bitmap</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="n">into</span> <span class="n">bitmap_table1</span> <span class="n">select</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bitmap_union</span><span class="p">(</span><span class="n">id2</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">bitmap_table2</span> <span class="n">group</span> <span class="n">by</span> <span class="nb">id</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>id2 的列类型是 int</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="n">into</span> <span class="n">bitmap_table1</span> <span class="n">select</span> <span class="nb">id</span><span class="p">,</span> <span class="n">to_bitmap</span><span class="p">(</span><span class="n">id2</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">table</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>id2 的列类型是 String</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="n">into</span> <span class="n">bitmap_table1</span> <span class="n">select</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bitmap_hash</span><span class="p">(</span><span class="n">id_string</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">table</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="data-query">
+<h2>Data Query<a class="headerlink" href="#data-query" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">BITMAP_UNION(expr)</span></code> : 计算输入 Bitmap 的并集，返回新的bitmap</p>
+<p><code class="docutils literal notranslate"><span class="pre">BITMAP_UNION_COUNT(expr)</span></code>: 计算输入 Bitmap 的并集，返回其基数，和 BITMAP_COUNT(BITMAP_UNION(expr)) 等价。目前推荐优先使用 BITMAP_UNION_COUNT ，其性能优于 BITMAP_COUNT(BITMAP_UNION(expr))</p>
+<p><code class="docutils literal notranslate"><span class="pre">BITMAP_UNION_INT(expr)</span></code> : 计算 TINYINT,SMALLINT 和 INT 类型的列中不同值的个数，返回值和
+COUNT(DISTINCT expr) 相同</p>
+<p><code class="docutils literal notranslate"><span class="pre">INTERSECT_COUNT(bitmap_column_to_count,</span> <span class="pre">filter_column,</span> <span class="pre">filter_values</span> <span class="pre">...)</span></code> : 计算满足
+filter_column 过滤条件的多个 bitmap 的交集的基数值。
+bitmap_column_to_count 是 bitmap 类型的列，filter_column 是变化的维度列，filter_values 是维度取值列表</p>
 </div>
 <div class="section" id="example">
-<h1>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CREATE TABLE `bitmap_udaf` (
-  `id` int(11) NULL COMMENT &quot;&quot;,
-  `id2` int(11)
-) ENGINE=OLAP
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 10;
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>下面的 SQL 以上面的 pv_bitmap table 为例：</p>
+<p>计算 user_id 的去重值：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">bitmap_union_count</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">pv_bitmap</span><span class="p">;</span>
 
-mysql&gt; select bitmap_count(bitmap_union(to_bitmap(id2))) from bitmap_udaf;
-+----------------------------------------------+
-| bitmap_count(bitmap_union(to_bitmap(`id2`))) |
-+----------------------------------------------+
-|                                            6 |
-+----------------------------------------------+
-
-mysql&gt; select bitmap_union_int (id2) from bitmap_udaf;
-+-------------------------+
-| bitmap_union_int(`id2`) |
-+-------------------------+
-|                       6 |
-+-------------------------+
-
-CREATE TABLE `bitmap_test` (
-  `id` int(11) NULL COMMENT &quot;&quot;,
-  `id2` bitmap bitmap_union NULL
-) ENGINE=OLAP
-AGGREGATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 10;
-
-mysql&gt; select bitmap_count(bitmap_union(id2)) from bitmap_test;
-+-----------------------------------+
-| bitmap_count(bitmap_union(`id2`)) |
-+-----------------------------------+
-|                                 8 |
-+-----------------------------------+
+<span class="n">select</span> <span class="n">bitmap_count</span><span class="p">(</span><span class="n">bitmap_union</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">pv_bitmap</span><span class="p">;</span>
 </pre></div>
+</div>
+<p>计算 id 的去重值：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">bitmap_union_int</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">pv_bitmap</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>计算 user_id 的 留存:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">intersect_count</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="s1">&#39;meituan&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">meituan_uv</span><span class="p">,</span>
+<span class="n">intersect_count</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="s1">&#39;waimai&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">waimai_uv</span><span class="p">,</span>
+<span class="n">intersect_count</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="s1">&#39;meituan&#39;</span><span class="p">,</span> <span class="s1">&#39;waimai&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">retention</span> <span class="o">//</span><span class="n">在</span> <span class="s1">&#39;meituan&#39;</span> <span class="n">和</span> <span class="s1">&#39;waimai&#39;</span> <span class="n">两个页面都出现的用户数</span>
+<span class="kn">from</span> <span class="nn">pv_bitmap</span>
+<span class="n">where</span> <span class="n">page</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;meituan&#39;</span><span class="p">,</span> <span class="s1">&#39;waimai&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="keyword">
-<h1>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h1>
-<p>BITMAP,BITMAP_COUNT,BITMAP_EMPTY,BITMAP_UNION,BITMAP_UNION_INT,TO_BITMAP</p>
+<h2>keyword<a class="headerlink" href="#keyword" title="Permalink to this headline">¶</a></h2>
+<p>BITMAP,BITMAP_COUNT,BITMAP_EMPTY,BITMAP_UNION,BITMAP_UNION_INT,TO_BITMAP,BITMAP_UNION_COUNT,INTERSECT_COUNT</p>
+</div>
 </div>
 
 

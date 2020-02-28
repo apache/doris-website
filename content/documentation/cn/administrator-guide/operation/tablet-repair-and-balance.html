@@ -106,6 +106,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -381,7 +382,7 @@ under the License.
 </div>
 <div class="section" id="id8">
 <h2>副本均衡<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
-<p>Doris 会自动进行集群内的副本均衡。均衡的主要思想，是对某些分片，先在低负载的节点上创建一个副本，然后再删除这些分片在高负载节点上的副本。同时，因为不同存储介质的存在，在同一个集群内的不同 BE 节点上，可能存在或不存在一种或两种存储介质。我们要求存储介质为 A 的分片在均衡后，尽量依然存储在存储介质 A 中。所以我们根据存储介质，对集群的 BE 节点进行划分。然后针对不同的存储介质的 BE 节点集合，进行负载均衡调度。</p>
+<p>Doris 会自动进行集群内的副本均衡。均衡的主要思想，是对某些分片，先在低负载的节点上创建一个副本，然后再删除这些分片在高负载节点上的副本。同时，因为不同存储介质的存在，在同一个集群内的不同 BE 节点上，可能存在一种或两种存储介质。我们要求存储介质为 A 的分片在均衡后，尽量依然存储在存储介质 A 中。所以我们根据存储介质，对集群的 BE 节点进行划分。然后针对不同的存储介质的 BE 节点集合，进行负载均衡调度。</p>
 <p>同样，副本均衡会保证不会将同一个 Tablet 的副本部署在同一个 host 的 BE 上。</p>
 <div class="section" id="be">
 <h3>BE 节点负载<a class="headerlink" href="#be" title="Permalink to this headline">¶</a></h3>
@@ -630,14 +631,14 @@ under the License.
 </li>
 <li><p class="first">优先修复查看</p>
 <p>以下命令，可以查看通过 <code class="docutils literal notranslate"><span class="pre">ADMIN</span> <span class="pre">REPAIR</span> <span class="pre">TABLE</span></code> 命令设置的优先修复的表或分区。</p>
-<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">'/cluster_balance/priority_repair'</span></code>;</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">'/cluster_balance/priority_repair'；</span></code></p>
 <p>其中 <code class="docutils literal notranslate"><span class="pre">RemainingTimeMs</span></code> 表示，这些优先修复的内容，将在这个时间后，被自动移出优先修复队列。以防止优先修复一直失败导致资源被占用。</p>
 </li>
 </ol>
 <div class="section" id="id15">
 <h3>调度器统计状态查看<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>我们收集了 TabletChecker 和 TabletScheduler 在运行过程中的一些统计信息，可以通过以下命令查看：</p>
-<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">'/cluster_balance/sched_stat'</span></code>;</p>
+<p><code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">PROC</span> <span class="pre">'/cluster_balance/sched_stat'；</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+---------------------------------------------------+-------------+</span>
 <span class="o">|</span> <span class="n">Item</span>                                              <span class="o">|</span> <span class="n">Value</span>       <span class="o">|</span>
 <span class="o">+---------------------------------------------------+-------------+</span>
@@ -722,7 +723,7 @@ under the License.
 </ul>
 </li>
 <li>balance_load_score_threshold<ul>
-<li>说明：集群均衡的阈值。默认为 0.1，即 10%。当一个 BE 节点的 load core，不高于或不低于平均 load core 的 10% 时，我们认为这个节点是均衡的。如果想让集群负载更加平均，可以适当调低这个参数。</li>
+<li>说明：集群均衡的阈值。默认为 0.1，即 10%。当一个 BE 节点的 load score，不高于或不低于平均 load score 的 10% 时，我们认为这个节点是均衡的。如果想让集群负载更加平均，可以适当调低这个参数。</li>
 <li>默认值：0.1</li>
 <li>重要性：中</li>
 </ul>

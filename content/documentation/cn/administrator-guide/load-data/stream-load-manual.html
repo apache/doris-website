@@ -104,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -250,8 +251,7 @@ under the License.
 <p>用户也可以通过其他 HTTP client 进行操作。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl --location-trusted -u user:passwd [-H &quot;&quot;...] -T data.file -XPUT http://fe_host:http_port/api/{db}/{table}/_stream_load
 
-Header 中支持如下属性：
-label， column_separator， columns， where， max_filter_ratio， partitions
+Header 中支持属性见下面的 ‘导入任务参数’ 说明 
 格式为: -H &quot;key1:value1&quot;
 </pre></div>
 </div>
@@ -298,7 +298,7 @@ label， column_separator， columns， where， max_filter_ratio， partitions
 columns: c2,c1
 
 表达式变换例子：原始文件有两列，目标表也有两列（c1,c2）但是原始文件的两列均需要经过函数变换才能对应目标表的两列，则写法如下：
-columns: tmp_c1, tmp_c2, c1 = year(tmp_c1), c2 = mouth(tmp_c2)
+columns: tmp_c1, tmp_c2, c1 = year(tmp_c1), c2 = month(tmp_c2)
 其中 tmp_*是一个占位符，代表的是原始文件中的两个原始列。
 </pre></div>
 </div>
@@ -476,7 +476,7 @@ columns: tmp_c1, tmp_c2, c1 = year(tmp_c1), c2 = mouth(tmp_c2)
 <ul>
 <li><p class="first">stream_load_default_timeout_second</p>
 <p>导入任务的超时时间(以秒为单位)，导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。</p>
-<p>默认的 timeout 时间为 600 秒。如果导入的源文件无法再规定时间内完成导入，用户可以在 stream load 请求中设置单独的超时时间。</p>
+<p>默认的 timeout 时间为 600 秒。如果导入的源文件无法在规定时间内完成导入，用户可以在 stream load 请求中设置单独的超时时间。</p>
 <p>或者调整 FE 的参数<code class="docutils literal notranslate"><span class="pre">stream_load_default_timeout_second</span></code> 来设置全局的默认超时时间。</p>
 </li>
 </ul>

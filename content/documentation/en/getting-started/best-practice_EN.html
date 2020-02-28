@@ -203,9 +203,7 @@ under the License.
 <div class="section" id="data-model-selection">
 <h3>1.1 Data Model Selection<a class="headerlink" href="#data-model-selection" title="Permalink to this headline">¶</a></h3>
 <p>Doris data model is currently divided into three categories: AGGREGATE KEY, UNIQUE KEY, DUPLICATE KEY. Data in all three models are sorted by KEY.</p>
-<ol class="simple">
-<li>AGGREGATE KEY</li>
-</ol>
+<p>1.1.1. AGGREGATE KEY</p>
 <p>When AGGREGATE KEY is the same, old and new records are aggregated. The aggregation functions currently supported are SUM, MIN, MAX, REPLACE.</p>
 <p>AGGREGATE KEY model can aggregate data in advance and is suitable for reporting and multi-dimensional analysis business.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">site_visit</span>
@@ -219,9 +217,7 @@ under the License.
 <span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>KEY UNIQUE</li>
-</ol>
+<p>1.1.2. KEY UNIQUE</p>
 <p>When UNIQUE KEY is the same, the new record covers the old record. At present, UNIQUE KEY implements the same RPLACE aggregation method as GGREGATE KEY, and they are essentially the same. Suitable for analytical business with updated requirements.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">sales_order</span>
 <span class="p">(</span>
@@ -234,9 +230,7 @@ under the License.
 <span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">orderid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>DUPLICATE KEY</li>
-</ol>
+<p>1.1.3. DUPLICATE KEY</p>
 <p>Only sort columns are specified, and the same rows are not merged. It is suitable for the analysis business where data need not be aggregated in advance.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">session_data</span>
 <span class="p">(</span>
@@ -264,20 +258,16 @@ under the License.
 <p>In the process of using Star Schema, users are advised to use Star Schema to distinguish dimension tables from indicator tables as much as possible. Frequently updated dimension tables can also be placed in MySQL external tables. If there are only a few updates, they can be placed directly in Doris. When storing dimension tables in Doris, more copies of dimension tables can be set up to improve Join’s performance.</p>
 </div>
 <div class="section" id="partitions-and-barrels">
-<h3>1.4 Partitions and Barrels<a class="headerlink" href="#partitions-and-barrels" title="Permalink to this headline">¶</a></h3>
+<h3>1.3 Partitions and Barrels<a class="headerlink" href="#partitions-and-barrels" title="Permalink to this headline">¶</a></h3>
 <p>Doris supports two-level partitioned storage. The first layer is RANGE partition and the second layer is HASH bucket.</p>
-<ol class="simple">
-<li>RANGE分区(partition)</li>
-</ol>
+<p>1.3.1. RANGE分区(partition)</p>
 <p>The RANGE partition is used to divide data into different intervals, which can be logically understood as dividing the original table into multiple sub-tables. In business, most users will choose to partition on time, which has the following advantages:</p>
 <ul class="simple">
 <li>Differentiable heat and cold data</li>
 <li>Availability of Doris Hierarchical Storage (SSD + SATA)</li>
 <li>Delete data by partition more quickly</li>
 </ul>
-<ol class="simple">
-<li>HASH分桶(bucket)</li>
-</ol>
+<p>1.3.2. HASH分桶(bucket)</p>
 <p>The data is divided into different buckets according to the hash value.</p>
 <ul class="simple">
 <li>It is suggested that columns with large differentiation should be used as buckets to avoid data skew.</li>
@@ -285,7 +275,7 @@ under the License.
 </ul>
 </div>
 <div class="section" id="sparse-index-and-bloom-filter">
-<h3>1.5 Sparse Index and Bloom Filter<a class="headerlink" href="#sparse-index-and-bloom-filter" title="Permalink to this headline">¶</a></h3>
+<h3>1.4 Sparse Index and Bloom Filter<a class="headerlink" href="#sparse-index-and-bloom-filter" title="Permalink to this headline">¶</a></h3>
 <p>Doris stores the data in an orderly manner, and builds a sparse index for Doris on the basis of ordered data. The index granularity is block (1024 rows).</p>
 <p>Sparse index chooses fixed length prefix in schema as index content, and Doris currently chooses 36 bytes prefix as index.</p>
 <ul class="simple">
@@ -295,12 +285,10 @@ under the License.
 </ul>
 </div>
 <div class="section" id="physical-and-chemical-view-rollup">
-<h3>1.6 Physical and Chemical View (rollup)<a class="headerlink" href="#physical-and-chemical-view-rollup" title="Permalink to this headline">¶</a></h3>
+<h3>1.5 Physical and Chemical View (rollup)<a class="headerlink" href="#physical-and-chemical-view-rollup" title="Permalink to this headline">¶</a></h3>
 <p>Rollup can essentially be understood as a physical index of the original table. When creating Rollup, only some columns in Base Table can be selected as Schema. The order of fields in Schema can also be different from that in Base Table.</p>
 <p>Rollup can be considered in the following cases:</p>
-<ol class="simple">
-<li>Base Table 中数据聚合度不高。</li>
-</ol>
+<p>1.5.1. Base Table 中数据聚合度不高。</p>
 <p>This is usually due to the fact that Base Table has more differentiated fields. At this point, you can consider selecting some columns and establishing Rollup.</p>
 <p>For the `site_visit’table:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">site</span> <span class="o">-</span><span class="n">u</span> <span class="n">visit</span> <span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
@@ -310,9 +298,7 @@ under the License.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">rollup_city</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">pv</span><span class="p">);</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>The prefix index in Base Table cannot be hit</li>
-</ol>
+<p>1.5.2. The prefix index in Base Table cannot be hit</p>
 <p>Generally, the way Base Table is constructed cannot cover all query modes. At this point, you can consider adjusting the column order and establishing Rollup.</p>
 <p>Database Session</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session</span> <span class="o">-</span><span class="n">u</span> <span class="n">data</span> <span class="p">(</span><span class="n">visitorid</span><span class="p">,</span> <span class="n">sessionid</span><span class="p">,</span> <span class="n">visittime</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">province</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">browser</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
@@ -327,22 +313,17 @@ under the License.
 <div class="section" id="schema-change">
 <h2>2 Schema Change<a class="headerlink" href="#schema-change" title="Permalink to this headline">¶</a></h2>
 <p>Doris中目前进行 Schema Change 的方式有三种：Sorted Schema Change，Direct Schema Change, Linked Schema Change。</p>
-<ol class="simple">
-<li>Sorted Schema Change</li>
-</ol>
+<p>2.1. Sorted Schema Change</p>
 <p>The sorting of columns has been changed and the data needs to be reordered. For example, delete a column in a sorted column and reorder the fields.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">DROP</span> <span class="n">COLUMN</span> <span class="n">city</span><span class="p">;</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>Direct Schema Change: There is no need to reorder, but there is a need to convert the data. For example, modify the type of column, add a column to the sparse index, etc.</li>
-</ol>
+<p>2.2. Direct Schema Change: There is no need to reorder, but there is a need to convert the data. For example, modify
+the type of column, add a column to the sparse index, etc.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">MODIFY</span> <span class="n">COLUMN</span> <span class="n">username</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>Linked Schema Change: 无需转换数据，直接完成。例如加列操作。</li>
-</ol>
+<p>2.3. Linked Schema Change: 无需转换数据，直接完成。例如加列操作。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">click</span> <span class="n">bigint</span> <span class="n">SUM</span> <span class="n">default</span> <span class="s1">&#39;0&#39;</span><span class="p">;</span>
 </pre></div>
 </div>

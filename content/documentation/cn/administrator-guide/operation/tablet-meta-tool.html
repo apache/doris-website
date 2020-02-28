@@ -106,6 +106,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
@@ -218,7 +219,7 @@ under the License.
 <p>在最新版本的代码中，我们在 BE 端引入了 RocksDB，用于存储 tablet 的元信息，以解决之前通过 header 文件的方式存储元信息，带来的各种功能和性能方面的问题。当前每一个数据目录（root_path），都会有一个对应的 RocksDB 实例，其中以 key-value 的方式，存放对应 root_path 上的所有 tablet 的元数据。</p>
 <p>为了方便进行这些元数据的维护，我们提供了在线的 http 接口方式和离线的 meta_tool 工具以完成相关的管理操作。</p>
 <p>其中 http 接口仅用于在线的查看 tablet 的元数据，可以在 BE 进程运行的状态下使用。</p>
-<p>而 meta_tool 工具则仅用于离线的各类元数据管理操作，必须先停止BE进城后，才可使用。</p>
+<p>而 meta_tool 工具则仅用于离线的各类元数据管理操作，必须先停止BE进程后，才可使用。</p>
 <p>meta_tool 工具存放在 BE 的 lib/ 目录下。</p>
 </div>
 <div class="section" id="id2">

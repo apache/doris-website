@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Apache 社区" href="../community/index.html" />
+    <link rel="next" title="代码格式化" href="format-code.html" />
     <link rel="prev" title="开发者手册" href="index.html" /> 
 </head>
 
@@ -99,6 +99,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#cpu">CPU</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="format-code.html">代码格式化</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
@@ -374,7 +375,7 @@ Total: 1296.4 MB
 </div>
 <div class="section" id="perf-flamegragh">
 <h3>perf + flamegragh<a class="headerlink" href="#perf-flamegragh" title="Permalink to this headline">¶</a></h3>
-<p>这个是相当通用的一种CPU分析方式，相比于<code class="docutils literal notranslate"><span class="pre">pprof</span></code>，这中方式必须要求能够登陆到分析对象的物理机上。但是相比于pprof只能定时采点，perf是能够通过不同的事件来完成堆栈信息采集的。具体的的使用方式如下：</p>
+<p>这个是相当通用的一种CPU分析方式，相比于<code class="docutils literal notranslate"><span class="pre">pprof</span></code>，这种方式必须要求能够登陆到分析对象的物理机上。但是相比于pprof只能定时采点，perf是能够通过不同的事件来完成堆栈信息采集的。具体的的使用方式如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">perf</span> <span class="n">record</span> <span class="o">-</span><span class="n">g</span> <span class="o">-</span><span class="n">p</span> <span class="n">be_pid</span> <span class="o">--</span> <span class="n">sleep</span> <span class="mi">60</span>
 </pre></div>
 </div>
@@ -402,7 +403,7 @@ Total: 1296.4 MB
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../community/index.html" class="btn btn-neutral float-right" title="Apache 社区" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="format-code.html" class="btn btn-neutral float-right" title="代码格式化" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="开发者手册" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

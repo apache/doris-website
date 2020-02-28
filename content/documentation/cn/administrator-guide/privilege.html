@@ -97,6 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="backup-restore.html">备份与恢复</a></li>
 <li class="toctree-l3"><a class="reference internal" href="broker.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">权限管理</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id2">名词解释</a></li>
@@ -217,7 +218,7 @@ under the License.
 <ol>
 <li><p class="first">用户标识 user_identity</p>
 <p>在权限系统中，一个用户被识别为一个 User Identity（用户标识）。用户标识由两部分组成：username 和 userhost。其中 username 为用户名，由英文大小写组成。userhost 表示该用户链接来自的 IP。user_identity 以 username&#64;’userhost’ 的方式呈现，表示来自 userhost 的 username。</p>
-<p>user_identity 的另一种表现方式为 username&#64;[‘domain’]，其中 domain 为域名，可以通过 DNS 会 BNS（百度名字服务）解析为一组 ip。最终表现为一组 username&#64;’userhost’，所以后面我们统一使用 username&#64;’userhost’ 来表示。</p>
+<p>user_identity 的另一种表现方式为 username&#64;[‘domain’]，其中 domain 为域名，可以通过 DNS 或 BNS（百度名字服务）解析为一组 ip。最终表现为一组 username&#64;’userhost’，所以后面我们统一使用 username&#64;’userhost’ 来表示。</p>
 </li>
 <li><p class="first">权限 Privilege</p>
 <p>权限作用的对象是节点、数据库或表。不同的权限代表不同的操作许可。</p>
@@ -242,7 +243,7 @@ under the License.
 <li>删除角色：DROP ROLE</li>
 <li>查看当前用户权限：SHOW GRANTS</li>
 <li>查看所有用户权限：SHOW ALL GRANTS</li>
-<li>查看已创建的角色：SHOW ROELS</li>
+<li>查看已创建的角色：SHOW ROLES</li>
 <li>查看用户属性：SHOW PROPERTY</li>
 </ol>
 <p>关于以上命令的详细帮助，可以通过 mysql 客户端连接 Doris 后，使用 help + command 获取帮助。如 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">CREATE</span> <span class="pre">USER</span></code>。</p>
@@ -285,7 +286,7 @@ under the License.
 </div>
 <div class="section" id="admin-grant">
 <h2>ADMIN/GRANT 权限说明<a class="headerlink" href="#admin-grant" title="Permalink to this headline">¶</a></h2>
-<p>ADMIN_PRIV 和 GRANT_PRIV 权限同时拥有**“授予权限”**的权限，较为特殊。这里对和这两个权限相关的操作逐一说明。</p>
+<p>ADMIN_PRIV 和 GRANT_PRIV 权限同时拥有<strong>授予权限</strong>的权限，较为特殊。这里对和这两个权限相关的操作逐一说明。</p>
 <ol class="simple">
 <li>CREATE USER<ul>
 <li>拥有 ADMIN 权限，或任意层级的 GRANT 权限的用户可以创建新用户。</li>
@@ -359,6 +360,11 @@ under the License.
 </li>
 <li><p class="first">拥有 GLOBAL 层级 GRANT_PRIV 其实等同于拥有 ADMIN_PRIV，因为该层级的 GRANT_PRIV 有授予任意权限的权限，请谨慎使用。</p>
 </li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">current_user()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">user()</span></code></p>
+<p>用户可以通过 <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">current_user();</span></code> 和 <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">user();</span></code> 分别查看 <code class="docutils literal notranslate"><span class="pre">current_user</span></code> 和 <code class="docutils literal notranslate"><span class="pre">user</span></code>。其中 <code class="docutils literal notranslate"><span class="pre">current_user</span></code> 表示当前用户是以哪种身份通过认证系统的，而 <code class="docutils literal notranslate"><span class="pre">user</span></code> 则是用户当前实际的 <code class="docutils literal notranslate"><span class="pre">user_identity</span></code>。举例说明：</p>
+<p>假设创建了 <code class="docutils literal notranslate"><span class="pre">user1&#64;'192.%'</span></code> 这个用户，然后以为来自 192.168.10.1 的用户 user1 登陆了系统，则此时的 <code class="docutils literal notranslate"><span class="pre">current_user</span></code> 为 <code class="docutils literal notranslate"><span class="pre">user1&#64;'192.%'</span></code>，而 <code class="docutils literal notranslate"><span class="pre">user</span></code> 为 <code class="docutils literal notranslate"><span class="pre">user1&#64;'192.168.10.1'</span></code>。</p>
+<p>所有的权限都是赋予某一个 <code class="docutils literal notranslate"><span class="pre">current_user</span></code> 的，真实用户拥有对应的 <code class="docutils literal notranslate"><span class="pre">current_user</span></code> 的所有权限。</p>
+</li>
 </ol>
 </div>
 <div class="section" id="id7">
@@ -371,6 +377,9 @@ under the License.
 </li>
 <li><p class="first">场景二</p>
 <p>一个集群内有多个业务，每个业务可能使用一个或多个数据。每个业务需要管理自己的用户。在这种场景下。管理员用户可以为每个数据库创建一个拥有 DATABASE 层级 GRANT 权限的用户。该用户仅可以对用户进行指定的数据库的授权。</p>
+</li>
+<li><p class="first">黑名单</p>
+<p>Doris 本身不支持黑名单，只有白名单功能，但我们可以通过某些方式来模拟黑名单。假设先创建了名为 <code class="docutils literal notranslate"><span class="pre">user&#64;'192.%'</span></code> 的用户，表示允许来自 <code class="docutils literal notranslate"><span class="pre">192.*</span></code> 的用户登录。此时如果想禁止来自 <code class="docutils literal notranslate"><span class="pre">192.168.10.1</span></code> 的用户登录。则可以再创建一个用户 <code class="docutils literal notranslate"><span class="pre">cmy&#64;'192.168.10.1'</span></code> 的用户，并设置一个新的密码。因为 <code class="docutils literal notranslate"><span class="pre">192.168.10.1</span></code> 的优先级高于 <code class="docutils literal notranslate"><span class="pre">192.%</span></code>，所以来自 <code class="docutils literal notranslate"><span class="pre">192.168.10.1</span></code> 将不能再使用旧密码进行登录。</p>
 </li>
 </ol>
 </div>

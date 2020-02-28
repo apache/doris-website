@@ -206,17 +206,22 @@ under the License.
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于展示分区信息
 语法：
-    SHOW PARTITIONS FROM [db_name.]table_name [PARTITION partition_name];
+    SHOW PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT];
+说明:
+    支持PartitionId,PartitionName,State,Buckets,ReplicationNum,LastConsistencyCheckTime等列的过滤 
 </pre></div>
 </div>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">展示指定</span> <span class="n">db</span> <span class="n">的下指定表的分区信息</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">展示指定db下指定表的所有分区信息</span>
     <span class="n">SHOW</span> <span class="n">PARTITIONS</span> <span class="n">FROM</span> <span class="n">example_db</span><span class="o">.</span><span class="n">table_name</span><span class="p">;</span>
     
-<span class="mf">1.</span> <span class="n">展示指定</span> <span class="n">db</span> <span class="n">的下指定表的指定分区的信息</span>
-    <span class="n">SHOW</span> <span class="n">PARTITIONS</span> <span class="n">FROM</span> <span class="n">example_db</span><span class="o">.</span><span class="n">table_name</span> <span class="n">PARTITION</span> <span class="n">p1</span><span class="p">;</span>
+<span class="mf">2.</span><span class="n">展示指定db下指定表的指定分区的信息</span>
+    <span class="n">SHOW</span> <span class="n">PARTITIONS</span> <span class="n">FROM</span> <span class="n">example_db</span><span class="o">.</span><span class="n">table_name</span> <span class="n">WHERE</span> <span class="n">PartitionName</span> <span class="o">=</span> <span class="s2">&quot;p1&quot;</span><span class="p">;</span>
+
+<span class="mf">3.</span><span class="n">展示指定db下指定表的最新分区的信息</span>        
+    <span class="n">SHOW</span> <span class="n">PARTITIONS</span> <span class="n">FROM</span> <span class="n">example_db</span><span class="o">.</span><span class="n">table_name</span> <span class="n">ORDER</span> <span class="n">BY</span> <span class="n">PartitionId</span> <span class="n">DESC</span> <span class="n">LIMIT</span> <span class="mi">1</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>

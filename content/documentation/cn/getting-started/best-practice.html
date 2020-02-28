@@ -203,55 +203,60 @@ under the License.
 <div class="section" id="id3">
 <h3>1.1 数据模型选择<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>Doris 数据模型上目前分为三类: AGGREGATE KEY, UNIQUE KEY, DUPLICATE KEY。三种模型中数据都是按KEY进行排序。</p>
-<ol>
-<li><p class="first">AGGREGATE KEY</p>
-<p>AGGREGATE KEY相同时，新旧记录进行聚合，目前支持的聚合函数有SUM, MIN, MAX, REPLACE。</p>
-<p>AGGREGATE KEY模型可以提前聚合数据, 适合报表和多维分析业务。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">site_visit</span>
-<span class="p">(</span>
-    <span class="n">siteid</span>      <span class="n">INT</span><span class="p">,</span>
-    <span class="n">city</span>        <span class="n">SMALLINT</span><span class="p">,</span>
-    <span class="n">username</span>    <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
-    <span class="n">pv</span> <span class="n">BIGINT</span>   <span class="n">SUM</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
-<span class="p">)</span>
-<span class="n">AGGREGATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
-<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">siteid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+<p>1.1.1 AGGREGATE KEY</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>AGGREGATE KEY相同时，新旧记录进行聚合，目前支持的聚合函数有SUM, MIN, MAX, REPLACE。
+
+AGGREGATE KEY模型可以提前聚合数据, 适合报表和多维分析业务。
+
+```
+CREATE TABLE site_visit
+(
+    siteid      INT,
+    city        SMALLINT,
+    username    VARCHAR(32),
+    pv BIGINT   SUM DEFAULT &#39;0&#39;
+)
+AGGREGATE KEY(siteid, city, username)
+DISTRIBUTED BY HASH(siteid) BUCKETS 10;
+```
 </pre></div>
 </div>
-</li>
-<li><p class="first">UNIQUE KEY</p>
-<p>UNIQUE KEY 相同时，新记录覆盖旧记录。目前 UNIQUE KEY 实现上和 AGGREGATE KEY 的 REPLACE 聚合方法一样，二者本质上相同。适用于有更新需求的分析业务。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">sales_order</span>
-<span class="p">(</span>
-    <span class="n">orderid</span>     <span class="n">BIGINT</span><span class="p">,</span>
-    <span class="n">status</span>      <span class="n">TINYINT</span><span class="p">,</span>
-    <span class="n">username</span>    <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
-    <span class="n">amount</span>      <span class="n">BIGINT</span> <span class="n">DEFAULT</span> <span class="s1">&#39;0&#39;</span>
-<span class="p">)</span>
-<span class="n">UNIQUE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">orderid</span><span class="p">)</span>
-<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">orderid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+<p>1.1.2. UNIQUE KEY</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>UNIQUE KEY 相同时，新记录覆盖旧记录。目前 UNIQUE KEY 实现上和 AGGREGATE KEY 的 REPLACE 聚合方法一样，二者本质上相同。适用于有更新需求的分析业务。
+
+```
+CREATE TABLE sales_order
+(
+    orderid     BIGINT,
+    status      TINYINT,
+    username    VARCHAR(32),
+    amount      BIGINT DEFAULT &#39;0&#39;
+)
+UNIQUE KEY(orderid)
+DISTRIBUTED BY HASH(orderid) BUCKETS 10;
+```
 </pre></div>
 </div>
-</li>
-<li><p class="first">DUPLICATE KEY</p>
-<p>只指定排序列，相同的行不会合并。适用于数据无需提前聚合的分析业务。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">session_data</span>
-<span class="p">(</span>
-    <span class="n">visitorid</span>   <span class="n">SMALLINT</span><span class="p">,</span>
-    <span class="n">sessionid</span>   <span class="n">BIGINT</span><span class="p">,</span>
-    <span class="n">visittime</span>   <span class="n">DATETIME</span><span class="p">,</span>
-    <span class="n">city</span>        <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
-    <span class="n">province</span>    <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
-    <span class="n">ip</span>          <span class="n">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
-    <span class="n">brower</span>      <span class="n">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
-    <span class="n">url</span>         <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">DUPLICATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">visitorid</span><span class="p">,</span> <span class="n">sessionid</span><span class="p">)</span>
-<span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">sessionid</span><span class="p">,</span> <span class="n">visitorid</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">10</span><span class="p">;</span>
+<p>1.1.3. DUPLICATE KEY</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>只指定排序列，相同的行不会合并。适用于数据无需提前聚合的分析业务。
+
+```
+CREATE TABLE session_data
+(
+    visitorid   SMALLINT,
+    sessionid   BIGINT,
+    visittime   DATETIME,
+    city        CHAR(20),
+    province    CHAR(20),
+    ip          varchar(32),
+    brower      CHAR(20),
+    url         VARCHAR(1024)
+)
+DUPLICATE KEY(visitorid, sessionid)
+DISTRIBUTED BY HASH(sessionid, visitorid) BUCKETS 10;
+```
 </pre></div>
 </div>
-</li>
-</ol>
 </div>
 <div class="section" id="star-schema">
 <h3>1.2 大宽表与 Star Schema<a class="headerlink" href="#star-schema" title="Permalink to this headline">¶</a></h3>
@@ -263,28 +268,26 @@ under the License.
 <p>使用过程中，建议用户尽量使用 Star Schema 区分维度表和指标表。频繁更新的维度表也可以放在 MySQL 外部表中。而如果只有少量更新, 可以直接放在 Doris 中。在 Doris 中存储维度表时，可对维度表设置更多的副本，提升 Join 的性能。</p>
 </div>
 <div class="section" id="id4">
-<h3>1.4 分区和分桶<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>1.3 分区和分桶<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>Doris 支持两级分区存储, 第一层为 RANGE 分区(partition), 第二层为 HASH 分桶(bucket)。</p>
-<ol>
-<li><p class="first">RANGE分区(partition)</p>
-<p>RANGE分区用于将数据划分成不同区间, 逻辑上可以理解为将原始表划分成了多个子表。业务上，多数用户会选择采用按时间进行partition, 让时间进行partition有以下好处：</p>
-<ul class="simple">
-<li>可区分冷热数据</li>
-<li>可用上Doris分级存储(SSD + SATA)的功能</li>
-<li>按分区删除数据时，更加迅速</li>
-</ul>
-</li>
-<li><p class="first">HASH分桶(bucket)</p>
-<p>根据hash值将数据划分成不同的 bucket。</p>
-<ul class="simple">
-<li>建议采用区分度大的列做分桶, 避免出现数据倾斜</li>
-<li>为方便数据恢复, 建议单个 bucket 的 size 不要太大, 保持在 10GB 以内, 所以建表或增加 partition 时请合理考虑 bucket 数目, 其中不同 partition 可指定不同的 buckets 数。</li>
-</ul>
-</li>
-</ol>
+<p>1.3.1. RANGE分区(partition)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>RANGE分区用于将数据划分成不同区间, 逻辑上可以理解为将原始表划分成了多个子表。业务上，多数用户会选择采用按时间进行partition, 让时间进行partition有以下好处：
+
+* 可区分冷热数据
+* 可用上Doris分级存储(SSD + SATA)的功能
+* 按分区删除数据时，更加迅速
+</pre></div>
+</div>
+<p>1.3.2. HASH分桶(bucket)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>根据hash值将数据划分成不同的 bucket。
+
+* 建议采用区分度大的列做分桶, 避免出现数据倾斜
+* 为方便数据恢复, 建议单个 bucket 的 size 不要太大, 保持在 10GB 以内, 所以建表或增加 partition 时请合理考虑 bucket 数目, 其中不同 partition 可指定不同的 buckets 数。
+</pre></div>
+</div>
 </div>
 <div class="section" id="bloom-filter">
-<h3>1.5 稀疏索引和 Bloom Filter<a class="headerlink" href="#bloom-filter" title="Permalink to this headline">¶</a></h3>
+<h3>1.4 稀疏索引和 Bloom Filter<a class="headerlink" href="#bloom-filter" title="Permalink to this headline">¶</a></h3>
 <p>Doris对数据进行有序存储, 在数据有序的基础上为其建立稀疏索引,索引粒度为 block(1024行)。</p>
 <p>稀疏索引选取 schema 中固定长度的前缀作为索引内容, 目前 Doris 选取 36 个字节的前缀作为索引。</p>
 <ul class="simple">
@@ -294,12 +297,10 @@ under the License.
 </ul>
 </div>
 <div class="section" id="rollup">
-<h3>1.6 物化视图(rollup)<a class="headerlink" href="#rollup" title="Permalink to this headline">¶</a></h3>
+<h3>1.5 物化视图(rollup)<a class="headerlink" href="#rollup" title="Permalink to this headline">¶</a></h3>
 <p>Rollup 本质上可以理解为原始表(Base Table)的一个物化索引。建立 Rollup 时可只选取 Base Table 中的部分列作为 Schema。Schema 中的字段顺序也可与 Base Table 不同。</p>
 <p>下列情形可以考虑建立 Rollup：</p>
-<ol class="simple">
-<li>Base Table 中数据聚合度不高。</li>
-</ol>
+<p>1.5.1. Base Table 中数据聚合度不高。</p>
 <p>这一般是因 Base Table 有区分度比较大的字段而导致。此时可以考虑选取部分列，建立 Rollup。</p>
 <p>如对于 <code class="docutils literal notranslate"><span class="pre">site_visit</span></code> 表：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">site_visit</span><span class="p">(</span><span class="n">siteid</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
@@ -309,9 +310,7 @@ under the License.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">rollup_city</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">pv</span><span class="p">);</span>
 </pre></div>
 </div>
-<ol class="simple">
-<li>Base Table 中的前缀索引无法命中</li>
-</ol>
+<p>1.5.2. Base Table 中的前缀索引无法命中</p>
 <p>这一般是 Base Table 的建表方式无法覆盖所有的查询模式。此时可以考虑调整列顺序，建立 Rollup。</p>
 <p>如对于 session_data 表：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session_data</span><span class="p">(</span><span class="n">visitorid</span><span class="p">,</span> <span class="n">sessionid</span><span class="p">,</span> <span class="n">visittime</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">province</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">brower</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
@@ -326,24 +325,26 @@ under the License.
 <div class="section" id="schema-change">
 <h2>2 Schema Change<a class="headerlink" href="#schema-change" title="Permalink to this headline">¶</a></h2>
 <p>Doris中目前进行 Schema Change 的方式有三种：Sorted Schema Change，Direct Schema Change, Linked Schema Change。</p>
-<ol>
-<li><p class="first">Sorted Schema Change</p>
-<p>改变了列的排序方式，需对数据进行重新排序。例如删除排序列中的一列, 字段重排序。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">DROP</span> <span class="n">COLUMN</span> <span class="n">city</span><span class="p">;</span>
+<p>2.1. Sorted Schema Change</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>改变了列的排序方式，需对数据进行重新排序。例如删除排序列中的一列, 字段重排序。
+
+```
+ALTER TABLE site_visit DROP COLUMN city;
+```
 </pre></div>
 </div>
-</li>
-<li><p class="first">Direct Schema Change: 无需重新排序，但是需要对数据做一次转换。例如修改列的类型，在稀疏索引中加一列等。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">MODIFY</span> <span class="n">COLUMN</span> <span class="n">username</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+<p>2.2. Direct Schema Change: 无需重新排序，但是需要对数据做一次转换。例如修改列的类型，在稀疏索引中加一列等。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```
+ALTER TABLE site_visit MODIFY COLUMN username varchar(64);
+```
 </pre></div>
 </div>
-</li>
-<li><p class="first">Linked Schema Change: 无需转换数据，直接完成。例如加列操作。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">site_visit</span> <span class="n">ADD</span> <span class="n">COLUMN</span> <span class="n">click</span> <span class="n">bigint</span> <span class="n">SUM</span> <span class="n">default</span> <span class="s1">&#39;0&#39;</span><span class="p">;</span>
+<p>2.3. Linked Schema Change: 无需转换数据，直接完成。例如加列操作。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```
+ALTER TABLE site_visit ADD COLUMN click bigint SUM default &#39;0&#39;;
+```
 </pre></div>
 </div>
-</li>
-</ol>
 <p>建表时建议考虑好 Schema，这样在进行 Schema Change 时可以加快速度。</p>
 </div>
 </div>

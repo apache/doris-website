@@ -101,8 +101,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#fork">1. Fork仓库</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#git">2. 配置git和提交修改</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pr">3. 创建PR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id5">4. 冲突解决</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id6">5. 一个例子</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">4. 冲突解决</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">5. 一个例子</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="release-process.html">Apache Doris 发布流程</a></li>
@@ -210,18 +210,23 @@ under the License.
 </div>
 <div class="section" id="git">
 <h2>2. 配置git和提交修改<a class="headerlink" href="#git" title="Permalink to this headline">¶</a></h2>
-<p>####（1）将代码克隆到本地：</p>
+<div class="section" id="id2">
+<h3>（1）将代码克隆到本地：<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/&lt;</span><span class="n">your_github_name</span><span class="o">&gt;/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 <p>注意：请将 &lt;your_github_name&gt; 替换为您的 github 名字。</p>
 <p>clone 完成后，origin 会默认指向 github 上的远程 fork 地址。</p>
-<p>####（2）将 apache/incubator-doris 添加为本地仓库的远程分支 upstream：</p>
+</div>
+<div class="section" id="apache-incubator-doris-upstream">
+<h3>（2）将 apache/incubator-doris 添加为本地仓库的远程分支 upstream：<a class="headerlink" href="#apache-incubator-doris-upstream" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span>  <span class="n">incubator</span><span class="o">-</span><span class="n">doris</span>
 <span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">upstream</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
-<p>####（3）检查远程仓库设置：</p>
+</div>
+<div class="section" id="id3">
+<h3>（3）检查远程仓库设置：<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">remote</span> <span class="o">-</span><span class="n">v</span>
 <span class="n">origin</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/&lt;</span><span class="n">your_github_name</span><span class="o">&gt;/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">.</span><span class="n">git</span> <span class="p">(</span><span class="n">fetch</span><span class="p">)</span>
 <span class="n">origin</span>    <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/&lt;</span><span class="n">your_github_name</span><span class="o">&gt;/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">.</span><span class="n">git</span> <span class="p">(</span><span class="n">push</span><span class="p">)</span>
@@ -229,28 +234,33 @@ under the License.
 <span class="n">upstream</span>  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">doris</span><span class="o">.</span><span class="n">git</span> <span class="p">(</span><span class="n">push</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>####（4）新建分支以便在分支上做修改：</p>
+</div>
+<div class="section" id="id4">
+<h3>（4）新建分支以便在分支上做修改：<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">your_branch_name</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>注意： &lt;your_branch_name&gt; 为您自定义的分支名字。</p>
 <p>创建完成后可进行代码更改。</p>
-<p>####（5）提交代码到远程分支：</p>
+</div>
+<div class="section" id="id5">
+<h3>（5）提交代码到远程分支：<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">a</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;&lt;you_commit_message&gt;&quot;</span>
 <span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="o">&lt;</span><span class="n">your_branch_name</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>更多 git 使用方法请访问：<a class="reference external" href="https://www.atlassian.com/git/tutorials/setting-up-a-repository">git 使用</a>，这里不赘述。</p>
 </div>
+</div>
 <div class="section" id="pr">
 <h2>3. 创建PR<a class="headerlink" href="#pr" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
-<h3>（1）新建 PR<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>（1）新建 PR<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>在浏览器切换到自己的 github 页面，切换分支到提交的分支 &lt;your_branch_name&gt; ，点击 <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">pull</span> <span class="pre">request</span></code> 按钮进行创建，如下图所示：</p>
 <p><img alt="../../../_images/new-pr.png" src="../../../_images/new-pr.png" />new PR</p>
 </div>
-<div class="section" id="id3">
-<h3>（2）准备分支<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>（2）准备分支<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>这时候，会出现 <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">pull</span> <span class="pre">request</span></code> 按钮，如果没有请检查是否正确选择了分支，也可以点击 “compare across forks” 重新选择 repo 和分支。</p>
 <p><img alt="../../../_images/create-pr.png" src="../../../_images/create-pr.png" />create PR</p>
 </div>
@@ -270,29 +280,36 @@ under the License.
 <p>更详细的内容请参考 <a class="reference external" href="https://chris.beams.io/posts/git-commit">https://chris.beams.io/posts/git-commit</a></p>
 <p><img alt="../../../_images/create-pr2.png" src="../../../_images/create-pr2.png" />create PR</p>
 </div>
-<div class="section" id="id4">
-<h3>（4）完成创建<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>（4）完成创建<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>创建成功后，您可以看到 Doris 项目需要 review，您可以等待我们 review 和合入，您也可以直接联系我们。</p>
 <p><img alt="../../../_images/create-pr3.png" src="../../../_images/create-pr3.png" />create PR</p>
 <p>至此，您的PR创建完成，更多关于 PR 请阅读 <a class="reference external" href="https://help.github.com/categories/collaborating-with-issues-and-pull-requests/">collaborating-with-issues-and-pull-requests</a> 。</p>
 </div>
 </div>
-<div class="section" id="id5">
-<h2>4. 冲突解决<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h2>4. 冲突解决<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <p>提交PR时的代码冲突一般是由于多人编辑同一个文件引起的，解决冲突主要通过以下步骤即可：</p>
-<p>####（1）切换至主分支</p>
+<div class="section" id="id10">
+<h3>（1）切换至主分支<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">master</span>
 </pre></div>
 </div>
-<p>####（2）同步远端主分支至本地</p>
+</div>
+<div class="section" id="id11">
+<h3>（2）同步远端主分支至本地<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">pull</span> <span class="n">upstream</span> <span class="n">master</span>
 </pre></div>
 </div>
-<p>####（3）切换回刚才的分支（假设分支名为fix）</p>
+</div>
+<div class="section" id="fix">
+<h3>（3）切换回刚才的分支（假设分支名为fix）<a class="headerlink" href="#fix" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">fix</span>
 </pre></div>
 </div>
-<p>####（4）进行rebase</p>
+</div>
+<div class="section" id="rebase">
+<h3>（4）进行rebase<a class="headerlink" href="#rebase" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">rebase</span> <span class="o">-</span><span class="n">i</span> <span class="n">master</span>
 </pre></div>
 </div>
@@ -306,9 +323,11 @@ under the License.
 </pre></div>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>5. 一个例子<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<p>####（1）对于已经配置好 upstream 的本地分支 fetch 到最新代码</p>
+</div>
+<div class="section" id="id12">
+<h2>5. 一个例子<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="upstream-fetch">
+<h3>（1）对于已经配置好 upstream 的本地分支 fetch 到最新代码<a class="headerlink" href="#upstream-fetch" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git branch
 * master
 
@@ -322,13 +341,17 @@ From https://github.com/apache/incubator-doris
    9c36200..0c4edc2  master     -&gt; upstream/master
 </pre></div>
 </div>
-<p>####（2）进行rebase</p>
+</div>
+<div class="section" id="id13">
+<h3>（2）进行rebase<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git rebase upstream/master  
 First, rewinding head to replay your work on top of it...
 Fast-forwarded master to upstream/master.
 </pre></div>
 </div>
-<p>####（3）检查看是否有别人提交未同步到自己 repo 的提交</p>
+</div>
+<div class="section" id="repo">
+<h3>（3）检查看是否有别人提交未同步到自己 repo 的提交<a class="headerlink" href="#repo" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git status
 # On branch master
 # Your branch is ahead of &#39;origin/master&#39; by 8 commits.
@@ -340,7 +363,9 @@ Fast-forwarded master to upstream/master.
 nothing added to commit but untracked files present (use &quot;git add&quot; to track)
 </pre></div>
 </div>
-<p>####（4）合并其他人提交的代码到自己的 repo</p>
+</div>
+<div class="section" id="id14">
+<h3>（4）合并其他人提交的代码到自己的 repo<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git push origin master
 Counting objects: 195, done.
 Delta compression using up to 32 threads.
@@ -352,7 +377,9 @@ To https://lide-reed:fc35ff925bd8fd6629be3f6412bacee99d4e5f97@github.com/lide-re
    9c36200..0c4edc2  master -&gt; master
 </pre></div>
 </div>
-<p>####（5）新建分支，准备开发</p>
+</div>
+<div class="section" id="id15">
+<h3>（5）新建分支，准备开发<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b my_branch
 Switched to a new branch &#39;my_branch&#39;
 
@@ -361,17 +388,23 @@ $ git branch
 * my_branch
 </pre></div>
 </div>
-<p>####（6）代码修改完成后，准备提交</p>
+</div>
+<div class="section" id="id16">
+<h3>（6）代码修改完成后，准备提交<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git add -u
 </pre></div>
 </div>
-<p>####（7）填写 message 并提交到本地的新建分支上</p>
+</div>
+<div class="section" id="message">
+<h3>（7）填写 message 并提交到本地的新建分支上<a class="headerlink" href="#message" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git commit -m &quot;Fix a typo&quot;
 [my_branch 55e0ba2] Fix a typo
  1 files changed, 2 insertions(+), 2 deletions(-)
 </pre></div>
 </div>
-<p>####（8）将分支推到 GitHub 远端自己的 repo 中</p>
+</div>
+<div class="section" id="github-repo">
+<h3>（8）将分支推到 GitHub 远端自己的 repo 中<a class="headerlink" href="#github-repo" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git push origin my_branch
 Counting objects: 11, done.
 Delta compression using up to 32 threads.
@@ -388,6 +421,7 @@ To https://lide-reed:fc35ff925bd8fd6629be3f6412bacee99d4e5f97@github.com/lide-re
 </pre></div>
 </div>
 <p>至此，就可以按照前面的流程进行创建 PR 了。</p>
+</div>
 </div>
 </div>
 

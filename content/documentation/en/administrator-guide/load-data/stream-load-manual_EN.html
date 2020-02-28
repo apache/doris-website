@@ -98,11 +98,14 @@
 <li class="toctree-l4"><a class="reference internal" href="insert-into-manual_EN.html">Insert Into</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">Schema Change</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../config/index.html">Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker_EN.html">Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition_EN.html">Dynamic Partition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
@@ -246,11 +249,10 @@ under the License.
 <h3>Create a Load<a class="headerlink" href="#create-a-load" title="Permalink to this headline">¶</a></h3>
 <p>Stream load submits and transfers data through HTTP protocol. Here, the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command shows how to submit an import.</p>
 <p>Users can also operate through other HTTP clients.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl --location-trusted -u user:passwd [-H &quot;&quot;...] -T data.file -XPUT http://fe_host:http_port/api/{db}/{table}/_stream_load
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">user</span><span class="p">:</span><span class="n">passwd</span> <span class="p">[</span><span class="o">-</span><span class="n">H</span> <span class="s2">&quot;&quot;</span><span class="o">...</span><span class="p">]</span> <span class="o">-</span><span class="n">T</span> <span class="n">data</span><span class="o">.</span><span class="n">file</span> <span class="o">-</span><span class="n">XPUT</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">fe_host</span><span class="p">:</span><span class="n">http_port</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="p">{</span><span class="n">db</span><span class="p">}</span><span class="o">/</span><span class="p">{</span><span class="n">table</span><span class="p">}</span><span class="o">/</span><span class="n">_stream_load</span>
 
-The following attributes are supported in Header:
-label， column_separator， columns， where， max_filter_ratio， partitions
-The format is: - H &quot;key1: value1&quot;
+<span class="n">The</span> <span class="n">properties</span> <span class="n">supported</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">header</span> <span class="n">are</span> <span class="n">described</span> <span class="ow">in</span> <span class="s2">&quot;Load Parameters&quot;</span> <span class="n">below</span>
+<span class="n">The</span> <span class="nb">format</span> <span class="ow">is</span><span class="p">:</span> <span class="o">-</span> <span class="n">H</span> <span class="s2">&quot;key1: value1&quot;</span>
 </pre></div>
 </div>
 <p>Examples:</p>
@@ -266,8 +268,8 @@ The format is: - H &quot;key1: value1&quot;
 </li>
 </ul>
 </div>
-<div class="section" id="import-task-parameters">
-<h4>Import Task Parameters<a class="headerlink" href="#import-task-parameters" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="load-parameters">
+<h4>Load Parameters<a class="headerlink" href="#load-parameters" title="Permalink to this headline">¶</a></h4>
 <p>Stream load uses HTTP protocol, so all parameters related to import tasks are set in the header. The significance of some parameters of the import task parameters of Stream load is mainly introduced below.</p>
 <ul>
 <li><p class="first">label</p>
@@ -338,7 +340,7 @@ The format is: - H &quot;key1: value1&quot;
 <li><p class="first">Status: Import completion status.</p>
 <p>“Success”: Indicates successful import.</p>
 <p>“Publish Timeout”: This state also indicates that the import has been completed, except that the data may be delayed and visible without retrying.</p>
-<p>“Label Already Exists”：Label 重复，需更换 Label。</p>
+<p>“Label Already Exists”：Label duplicate, need to be replaced Label.</p>
 <p>“Fail”: Import failed.</p>
 </li>
 <li><p class="first">ExistingJobStatus: The state of the load job corresponding to the existing Label.</p>
