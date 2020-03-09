@@ -86,15 +86,16 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../downloads/index.html">下载</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">数据导入</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">表结构变更</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Bitmap 索引</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id2">原理介绍</a></li>
 <li class="toctree-l4"><a class="reference internal" href="alter-table-rollup.html">Rollup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="alter-table-schema-change.html">Scheam Change</a></li>
+<li class="toctree-l4"><a class="reference internal" href="alter-table-temp-partition.html">临时分区</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
@@ -219,10 +220,10 @@ under the License.
 <li>bitmap index：位图索引，是一种快速数据结构，能够加快查询速度</li>
 </ul>
 </div>
-</div>
 <div class="section" id="id2">
-<h1>原理介绍<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<h2>原理介绍<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>创建和删除本质上是一个 schema change 的作业，具体细节可以参照 <a class="reference internal" href="alter-table-schema-change.html"><span class="doc">Schema Change</span></a>。</p>
+</div>
 <div class="section" id="id3">
 <h2>语法<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>index 创建和修改相关语法有两种形式，一种集成与 alter table 语句中，另一种是使用单独的

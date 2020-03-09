@@ -86,6 +86,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">下载</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
@@ -207,11 +208,12 @@ under the License.
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="syntax">
 <h3>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">INT</span> <span class="pre">UNIX_TIMESTAMP(),</span> <span class="pre">UNIX_TIMESTAMP(DATETIME</span> <span class="pre">date)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">INT</span> <span class="pre">UNIX_TIMESTAMP(),</span> <span class="pre">UNIX_TIMESTAMP(DATETIME</span> <span class="pre">date),</span> <span class="pre">UNIX_TIMESTAMP(DATETIME</span> <span class="pre">date,</span> <span class="pre">STRING</span> <span class="pre">fmt),</span></code></p>
 <p>将 Date 或者 Datetime 类型转化为 unix 时间戳。</p>
 <p>如果没有参数，则是将当前的时间转化为时间戳。</p>
 <p>参数需要是 Date 或者 Datetime 类型。</p>
 <p>对于在 1970-01-01 00:00:00 之前或 2038-01-19 03:14:07 之后的时间，该函数将返回 0。</p>
+<p>Format 的格式请参阅 <code class="docutils literal notranslate"><span class="pre">date_format</span></code> 函数的格式说明。</p>
 <p>该函数受时区影响。</p>
 </div>
 </div>
@@ -227,6 +229,20 @@ under the License.
 <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30:19&#39;</span><span class="p">);</span>
 <span class="o">+---------------------------------------+</span>
 <span class="o">|</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30:19&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span>                            <span class="mi">1196389819</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30-19&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i</span><span class="s1">-</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30-19&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span>                            <span class="mi">1196389819</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30%3A19&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i%%</span><span class="s1">3A</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30%3A19&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+---------------------------------------+</span>
 <span class="o">|</span>                            <span class="mi">1196389819</span> <span class="o">|</span>
 <span class="o">+---------------------------------------+</span>

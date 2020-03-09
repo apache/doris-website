@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
@@ -221,6 +222,13 @@ under the License.
 <span class="o">|</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">12</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">56</span>                                     <span class="o">|</span>
 <span class="o">+---------------------------------------------------------+</span>
 
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;2014-12-21 12:34%3A56&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i%%</span><span class="s1">3A</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;2014-12-21 12:34%3A56&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i%%</span><span class="s1">3A</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------------------------+</span>
+<span class="o">|</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">12</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">56</span>                                          <span class="o">|</span>
+<span class="o">+--------------------------------------------------------------+</span>
+
 <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;200442 Monday&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%X</span><span class="s1">%V %W&#39;</span><span class="p">);</span>
 <span class="o">+-----------------------------------------+</span>
 <span class="o">|</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;200442 Monday&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%X</span><span class="s1">%V %W&#39;</span><span class="p">)</span> <span class="o">|</span>
@@ -229,8 +237,10 @@ under the License.
 <span class="o">+-----------------------------------------+</span>
 </pre></div>
 </div>
-<p>##keyword
-STR_TO_DATE,STR,TO,DATE</p>
+<p>##keyword</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STR_TO_DATE</span><span class="p">,</span><span class="n">STR</span><span class="p">,</span><span class="n">TO</span><span class="p">,</span><span class="n">DATE</span>
+</pre></div>
+</div>
 </div>
 </div>
 

@@ -86,8 +86,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
@@ -248,45 +249,7 @@ It will output a file list which don’t include ASF license header, and these f
 </div>
 <div class="section" id="verify-building">
 <h2>4. Verify building<a class="headerlink" href="#verify-building" title="Permalink to this headline">¶</a></h2>
-<p>Firstly, you must be install and start docker service.</p>
-<p>And then you could build Doris as following steps:</p>
-<div class="section" id="step1-pull-the-docker-image-with-doris-building-environment">
-<h3>Step1: Pull the docker image with Doris building environment<a class="headerlink" href="#step1-pull-the-docker-image-with-doris-building-environment" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker pull apachedoris/doris-dev:build-env
-</pre></div>
-</div>
-<p>You can check it by listing images, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker images
-REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
-apachedoris/doris-dev   build-env           f8bc5d4024e0        21 hours ago        3.28GB
-</pre></div>
-</div>
-</div>
-<div class="section" id="step2-run-the-docker-image">
-<h3>Step2: Run the Docker image<a class="headerlink" href="#step2-run-the-docker-image" title="Permalink to this headline">¶</a></h3>
-<p>You can run image directyly:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker run -it apachedoris/doris-dev:build-env
-</pre></div>
-</div>
-</div>
-<div class="section" id="step3-download-doris-source">
-<h3>Step3: Download Doris source<a class="headerlink" href="#step3-download-doris-source" title="Permalink to this headline">¶</a></h3>
-<p>Now you should in docker environment, and you can download Doris source by release package or by git clone in image.
-(If you have downloaded source and it is not in image, you can map its path to image in Step2.)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ wget https://dist.apache.org/repos/dist/dev/incubator/doris/xxx.tar.gz
-</pre></div>
-</div>
-</div>
-<div class="section" id="step4-build-doris">
-<h3>Step4: Build Doris<a class="headerlink" href="#step4-build-doris" title="Permalink to this headline">¶</a></h3>
-<p>Now you can enter Doris source path and build Doris.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd incubator-doris
-$ sh build.sh
-</pre></div>
-</div>
-<p>After successfully building, it will install binary files in the directory output/.</p>
-<p>For more detail, you can refer to README.md in source package.</p>
-</div>
+<p>To compile the Doris, please read <a class="reference external" href="../installing/compilation_EN.html">Compilation</a></p>
 </div>
 </div>
 

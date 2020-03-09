@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
@@ -580,6 +581,29 @@ WITH BROKER broker_name
     INTO TABLE `my_table`
     where k1 &gt; k2
     );
+
+11. Extract date partition fields in file paths, and date time include %3A (in hdfs path, all &#39;:&#39; will be replaced by &#39;%3A&#39;)
+
+    Assume we have files:
+
+    /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
+    /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
+
+    Table schema is:
+    data_time DATETIME,
+    k2        INT,
+    k3        INT
+
+    LOAD LABEL example_db.label12
+    (
+     DATA INFILE(&quot;hdfs://host:port/user/data/*/test.txt&quot;) 
+     INTO TABLE `tbl12`
+     COLUMNS TERMINATED BY &quot;,&quot;
+     (k2,k3)
+     COLUMNS FROM PATH AS (data_time)
+     SET (data_time=str_to_date(data_time, &#39;%Y-%m-%d %H%%3A%i%%3A%s&#39;))
+    ) 
+    WITH BROKER &quot;hdfs&quot; (&quot;username&quot;=&quot;user&quot;, &quot;password&quot;=&quot;pass&quot;);
 </pre></div>
 </div>
 </div>

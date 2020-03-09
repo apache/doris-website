@@ -87,7 +87,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="index.html">Compilation and deployment</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Compilation and Deployment</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="compilation_EN.html">Compilation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Installation and deployment</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#software-and-hardware-requirements">Software and hardware requirements</a></li>
@@ -99,7 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="upgrade_EN.html">Cluster upgrade</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
@@ -155,7 +156,7 @@
         
           <li><a href="../index.html">English</a> &raquo;</li>
         
-          <li><a href="index.html">Compilation and deployment</a> &raquo;</li>
+          <li><a href="index.html">Compilation and Deployment</a> &raquo;</li>
         
       <li>Installation and deployment</li>
     
@@ -429,8 +430,8 @@ Before reading this document, compile Doris according to the compiled document.<
 <p><code class="docutils literal notranslate"><span class="pre">priority_networks=10.1.3.0/24</span></code></p>
 <p>This is a representation of [CIDR] (https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing). FE or BE will find the matching IP based on this configuration item as their own local IP.</p>
 <p><strong>Note</strong>: When priority networks is configured and FE or BE is started, only the correct IP binding of FE or BE is ensured. In ADD BACKEND or ADD FRONTEND statements, you also need to specify IP matching priority networks configuration, otherwise the cluster cannot be established. Give an example:</p>
-<p>BE is configured as <code class="docutils literal notranslate"><span class="pre">priority_networks</span> <span class="pre">=</span> <span class="pre">10.1.3.0/24'.</span></code></p>
-<p>但是在 ADD BACKEND 时使用的是：<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">BACKEND</span> <span class="pre">&quot;192.168.0.1:9050&quot;;</span></code></p>
+<p>BE is configured as <code class="docutils literal notranslate"><span class="pre">priority_networks</span> <span class="pre">=</span> <span class="pre">10.1.3.0/24'.</span></code>.</p>
+<p>When you want to ADD BACKEND use ：<code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">BACKEND</span> <span class="pre">&quot;192.168.0.1:9050&quot;;</span></code></p>
 <p>Then FE and BE will not be able to communicate properly.</p>
 <p>At this point, DROP must remove the BE that added errors and re-use the correct IP to perform ADD BACKEND.</p>
 <p>FE is the same.</p>
@@ -586,10 +587,10 @@ Before reading this document, compile Doris according to the compiled document.<
 <p>The DROP statement is as follows:</p>
 <p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DROP</span> <span class="pre">BACKEND</span> <span class="pre">&quot;be_host:be_heartbeat_service_port&quot;;</span></code></p>
 <p><strong>Note: DROP BACKEND will delete the BE directly and the data on it will not be recovered!!! So we strongly do not recommend DROP BACKEND to delete BE nodes. When you use this statement, there will be corresponding error-proof operation hints.</strong></p>
-<p>DECOMMISSION 语句如下：</p>
+<p>DECOMMISSION clause：</p>
 <p><code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">DECOMMISSION</span> <span class="pre">BACKEND</span> <span class="pre">&quot;be_host:be_heartbeat_service_port&quot;;</span></code></p>
 <blockquote>
-<div><p>DECOMMISSION 命令说明：</p>
+<div><p>DECOMMISSION notes:</p>
 <ol class="simple">
 <li>This command is used to safely delete BE nodes. After the command is issued, Doris attempts to migrate the data on the BE to other BE nodes, and when all data is migrated, Doris automatically deletes the node.</li>
 <li>The command is an asynchronous operation. After execution, you can see that the BE node’s isDecommission status is true through ``SHOW PROC ‘/backends’;` Indicates that the node is offline.</li>

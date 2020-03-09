@@ -86,6 +86,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">下载</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
@@ -243,6 +244,7 @@ under the License.
 <p>%x | 年，其中的星期一是周的第一天，4 位，与 %v 使用</p>
 <p>%Y | 年，4 位</p>
 <p>%y | 年，2 位</p>
+<p>%% | 用于表示 %</p>
 </div>
 </div>
 <div class="section" id="example">
@@ -288,6 +290,13 @@ under the License.
 <span class="o">+------------------------------------------+</span>
 <span class="o">|</span> <span class="mi">01</span>                                       <span class="o">|</span>
 <span class="o">+------------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">date_format</span><span class="p">(</span><span class="s1">&#39;2006-06-01&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%%%d</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------+</span>
+<span class="o">|</span> <span class="n">date_format</span><span class="p">(</span><span class="s1">&#39;2006-06-01 00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%%%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
+<span class="o">|</span> <span class="o">%</span><span class="mi">01</span>                                        <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
 </pre></div>
 </div>
 </div>

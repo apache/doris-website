@@ -86,6 +86,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">下载</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
@@ -220,6 +221,13 @@ under the License.
 <span class="o">+---------------------------------------------------------+</span>
 <span class="o">|</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">12</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">56</span>                                     <span class="o">|</span>
 <span class="o">+---------------------------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;2014-12-21 12:34%3A56&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i%%</span><span class="s1">3A</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;2014-12-21 12:34%3A56&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i%%</span><span class="s1">3A</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------------------------+</span>
+<span class="o">|</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">21</span> <span class="mi">12</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">56</span>                                          <span class="o">|</span>
+<span class="o">+--------------------------------------------------------------+</span>
 
 <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">str_to_date</span><span class="p">(</span><span class="s1">&#39;200442 Monday&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%X</span><span class="s1">%V %W&#39;</span><span class="p">);</span>
 <span class="o">+-----------------------------------------+</span>

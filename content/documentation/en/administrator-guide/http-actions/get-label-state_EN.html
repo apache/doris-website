@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">Schema Change</a></li>
@@ -214,27 +215,26 @@ under the License.
 <h1>GET LABEL STATE<a class="headerlink" href="#get-label-state" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>NAME:
-    get_label_state: get label&#39;s state
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span><span class="p">:</span>
+    <span class="n">get_label_state</span><span class="p">:</span> <span class="n">get</span> <span class="n">label</span><span class="s1">&#39;s state</span>
     
-SYNOPSIS
-    curl -u user:passwd http://host:port/api/{db}/{label}/_state
+<span class="n">SYNOPSIS</span>
+    <span class="n">curl</span> <span class="o">-</span><span class="n">u</span> <span class="n">user</span><span class="p">:</span><span class="n">passwd</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="n">port</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="p">{</span><span class="n">db</span><span class="p">}</span><span class="o">/</span><span class="p">{</span><span class="n">label</span><span class="p">}</span><span class="o">/</span><span class="n">_state</span>
 
-DESCRIPTION
+<span class="n">DESCRIPTION</span>
 
-    Check the status of a transaction
+    <span class="n">Check</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">a</span> <span class="n">transaction</span>
     
-RETURN VALUES
+<span class="n">RETURN</span> <span class="n">VALUES</span>
 
-    Return of JSON format string of the status of specified transaction:
-    执行完毕后，会以Json格式返回这次导入的相关内容。当前包括一下字段
-    Label: The specified label.
-    Status: Success or not of this request.
-    Message: Error messages
-    State: 
-       UNKNOWN/PREPARE/COMMITTED/VISIBLE/ABORTED
+    <span class="n">Return</span> <span class="n">of</span> <span class="n">JSON</span> <span class="nb">format</span> <span class="n">string</span> <span class="n">of</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">specified</span> <span class="n">transaction</span><span class="p">:</span>
+    <span class="n">Label</span><span class="p">:</span> <span class="n">The</span> <span class="n">specified</span> <span class="n">label</span><span class="o">.</span>
+    <span class="n">Status</span><span class="p">:</span> <span class="n">Success</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">of</span> <span class="n">this</span> <span class="n">request</span><span class="o">.</span>
+    <span class="n">Message</span><span class="p">:</span> <span class="n">Error</span> <span class="n">messages</span>
+    <span class="n">State</span><span class="p">:</span> 
+       <span class="n">UNKNOWN</span><span class="o">/</span><span class="n">PREPARE</span><span class="o">/</span><span class="n">COMMITTED</span><span class="o">/</span><span class="n">VISIBLE</span><span class="o">/</span><span class="n">ABORTED</span>
     
-ERRORS
+<span class="n">ERRORS</span>
 </pre></div>
 </div>
 </div>

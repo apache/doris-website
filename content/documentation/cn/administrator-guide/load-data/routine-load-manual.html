@@ -86,6 +86,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../downloads/index.html">下载</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
@@ -193,7 +194,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <!-- 
+  <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -508,6 +509,12 @@ under the License.
 </li>
 <li><p class="first">push_write_mbytes_per_sec</p>
 <p>BE 配置项。默认为 10，即 10MB/s。该参数为导入通用参数，不限于例行导入作业。该参数限制了导入数据写入磁盘的速度。对于 SSD 等高性能存储设备，可以适当增加这个限速。</p>
+</li>
+<li><p class="first">max_tolerable_backend_down_num
+FE 配置项，默认值是0。在满足某些条件下，Doris可PAUSED的任务重新调度，即变成RUNNING。该参数为0代表只有所有BE节点是alive状态才允许重新调度。</p>
+</li>
+<li><p class="first">period_of_auto_resume_min
+FE 配置项，默认是5分钟。Doris重新调度，只会在5分钟这个周期内，最多尝试3次. 如果3次都失败则锁定当前任务，后续不在进行调度。但可通过人为干预，进行手动恢复。</p>
 </li>
 </ol>
 </div>

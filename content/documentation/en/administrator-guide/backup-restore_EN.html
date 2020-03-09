@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Administrator Guide</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="load-data/index.html">Load Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">Schema Change</a></li>
@@ -225,7 +226,9 @@ under the License.
 <p>After the data file snapshot is uploaded, Frontend first writes the corresponding metadata to the local file, and then uploads the local metadata file to the remote warehouse through broker. Finish the final backup job.</p>
 </li>
 </ol>
-<p>###Restore</p>
+</div>
+<div class="section" id="restore">
+<h3>Restore<a class="headerlink" href="#restore" title="Permalink to this headline">¶</a></h3>
 <p>Recovery operations need to specify a backup that already exists in a remote repository, and then restore the backup content to the local cluster. When a user submits a Restore request, the following actions will be done within the system:</p>
 <ol>
 <li><p class="first">Create corresponding metadata locally</p>

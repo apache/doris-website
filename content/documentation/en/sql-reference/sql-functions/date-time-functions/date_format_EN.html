@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
@@ -243,6 +244,7 @@ Currently supports a string with a maximum 128 bytes and returns NULL if the len
 <p>% X | year, of which Monday is the first day of the week, 4 places, and% V</p>
 <p>% Y | Year, 4</p>
 <p>% Y | Year, 2</p>
+<p>%%  | Represent %</p>
 </div>
 </div>
 <div class="section" id="example">
@@ -288,6 +290,13 @@ Currently supports a string with a maximum 128 bytes and returns NULL if the len
 <span class="o">+------------------------------------------+</span>
 <span class="o">|</span> <span class="mi">01</span>                                       <span class="o">|</span>
 <span class="o">+------------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">date_format</span><span class="p">(</span><span class="s1">&#39;2006-06-01&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%%%d</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+--------------------------------------------+</span>
+<span class="o">|</span> <span class="n">date_format</span><span class="p">(</span><span class="s1">&#39;2006-06-01 00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%%%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
+<span class="o">|</span> <span class="o">%</span><span class="mi">01</span>                                        <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
 </pre></div>
 </div>
 <p>##keyword

@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../load-data/index.html">Load Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">Schema Change</a></li>
@@ -330,7 +331,7 @@ under the License.
 <li>The first time you start a new FE, you must make sure that the <code class="docutils literal notranslate"><span class="pre">meta_dir</span></code> of the FE is created, has correct permissions and is empty.</li>
 <li>Starting a new FE and executing the <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">FOLLOWER/OBSERVER</span></code> statement adds FE to metadata in a sequence that is not required. If a new FE is started first and no statement is executed, the <code class="docutils literal notranslate"><span class="pre">current</span> <span class="pre">node</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">added</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">group.</span> <span class="pre">Please</span> <span class="pre">add</span> <span class="pre">it</span> <span class="pre">first.</span></code> in the new FE log. When the statement is executed, it enters the normal process.</li>
 <li>Make sure that after the previous FE is added successfully, the next FE is added.</li>
-<li>建议直接连接到 MASTER FE 执行 <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">FOLLOWER/OBSERVER</span></code> 语句。</li>
+<li>Connect to  MASTER FE and execute <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span> <span class="pre">FOLLOWER/OBSERVER</span></code> claus。</li>
 </ul>
 </li>
 <li><p class="first">Common problems</p>
@@ -485,7 +486,7 @@ under the License.
 <div class="section" id="other-common-problems">
 <h2>Other common problems<a class="headerlink" href="#other-common-problems" title="Permalink to this headline">¶</a></h2>
 <ol>
-<li><p class="first">fe.log 中一直滚动 <code class="docutils literal notranslate"><span class="pre">meta</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">date.</span> <span class="pre">current</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">synchronized</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">has</span> <span class="pre">log:</span> <span class="pre">xxx,</span> <span class="pre">fe</span> <span class="pre">type:</span> <span class="pre">xxx</span></code></p>
+<li><p class="first">Output <code class="docutils literal notranslate"><span class="pre">meta</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">date.</span> <span class="pre">current</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">synchronized</span> <span class="pre">time:</span> <span class="pre">xxx,</span> <span class="pre">has</span> <span class="pre">log:</span> <span class="pre">xxx,</span> <span class="pre">fe</span> <span class="pre">type:</span> <span class="pre">xxx</span></code> in fe.log</p>
 <p>This is usually because the FE cannot elect Master. For example, if three FOLLOWERs are configured, but only one FOLLOWER is started, this FOLLOWER will cause this problem. Usually, just start the remaining FOLLOWER. If the problem has not been solved after the start-up, manual recovery may be required in accordance with the way in the <code class="docutils literal notranslate"><span class="pre">Failure</span> <span class="pre">Recovery</span></code> section.</p>
 </li>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">Clock</span> <span class="pre">delta:</span> <span class="pre">xxxx</span> <span class="pre">ms.</span> <span class="pre">between</span> <span class="pre">Feeder:</span> <span class="pre">xxxx</span> <span class="pre">and</span> <span class="pre">this</span> <span class="pre">Replica</span> <span class="pre">exceeds</span> <span class="pre">max</span> <span class="pre">permissible</span> <span class="pre">delta:</span> <span class="pre">xxxx</span> <span class="pre">ms.</span></code></p>

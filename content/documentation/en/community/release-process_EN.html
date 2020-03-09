@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/index.html">Design Documents</a></li>
@@ -349,7 +350,7 @@ sub   4096R/0E8182E6 2018-12-06
 </pre></div>
 </div>
 <p>xxx-yy is the user ID.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">output</span> <span class="n">public</span><span class="o">-</span><span class="n">key</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">export</span> <span class="p">[</span><span class="n">用户ID</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">armor</span> <span class="o">--</span><span class="n">output</span> <span class="n">public</span><span class="o">-</span><span class="n">key</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">export</span> <span class="p">[</span><span class="n">UserID</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --armor --output public-key.txt --export xxx-yyy
@@ -382,7 +383,7 @@ mQINBFwJEQ0BEACwqLluHfjBqD/RWZ4uoYxNYHlIzZvbvxAlwS2mn53BirLIU/G3
 <h4>Generate fingerprint and upload it to Apache user information<a class="headerlink" href="#generate-fingerprint-and-upload-it-to-apache-user-information" title="Permalink to this headline">¶</a></h4>
 <p>Because the public key server has no checking mechanism, anyone can upload the public key in your name, so there is no way to guarantee the reliability of the public key on the server. Usually, you can publish a public key fingerprint on the website and let others check whether the downloaded public key is true or not.</p>
 <p>Fingerprint parameter generates public key fingerprints:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">fingerprint</span> <span class="p">[</span><span class="n">用户ID</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">fingerprint</span> <span class="p">[</span><span class="n">UserID</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gpg --fingerprint xxx-yyy
@@ -764,7 +765,7 @@ http://www.apache.org/dyn/closer.cgi?filename=incubator/doris/0.9.0-incubating/a
 <p>Original location:
 https://www.apache.org/dist/incubator/doris/0.9.0-incubating/</p>
 <p>http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz</p>
-<p>源码包（source package）:
+<p>Source package:
 http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz</p>
 <p>ASC:
 http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc</p>

@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">English</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../internal/index.html">Design Documents</a></li>
@@ -212,6 +213,7 @@ under the License.
 <p>If there are no parameters, the current time is converted into a timestamp.</p>
 <p>The parameter needs to be Date or Datetime type.</p>
 <p>Any date before 1970-01-01 00:00:00 or after 2038-01-19 03:14:07 will return 0.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">date_format</span></code> function to get Format explanation.</p>
 <p>This function is affected by time zone.</p>
 </div>
 </div>
@@ -227,6 +229,20 @@ under the License.
 <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30:19&#39;</span><span class="p">);</span>
 <span class="o">+---------------------------------------+</span>
 <span class="o">|</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30:19&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span>                            <span class="mi">1196389819</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30-19&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i</span><span class="s1">-</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30-19&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span>                            <span class="mi">1196389819</span> <span class="o">|</span>
+<span class="o">+---------------------------------------+</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30%3A19&#39;</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:</span><span class="si">%i%%</span><span class="s1">3A</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">+---------------------------------------+</span>
+<span class="o">|</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2007-11-30 10:30%3A19&#39;</span><span class="p">)</span> <span class="o">|</span>
 <span class="o">+---------------------------------------+</span>
 <span class="o">|</span>                            <span class="mi">1196389819</span> <span class="o">|</span>
 <span class="o">+---------------------------------------+</span>

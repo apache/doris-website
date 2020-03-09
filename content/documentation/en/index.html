@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Compilation and deployment" href="installing/index.html" />
-    <link rel="prev" title="Verify Apache Release" href="../cn/community/verify-apache-release.html" /> 
+    <link rel="next" title="Downloads" href="downloads/index.html" />
+    <link rel="prev" title="验证 Apache 发布版本" href="../cn/community/verify-apache-release.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,8 +87,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../cn/index.html">中文</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">English</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installing/index.html">Compilation and deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/index.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending-doris/index.html">Extending Ability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="internal/index.html">Design Documents</a></li>
@@ -170,7 +171,11 @@ So please help us to improve the quality of English documents.
 You can simply click “Edit on Github” at right top of a page, and edit the document on Github, then make a pull request directly.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installing/index.html">Compilation and deployment</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="downloads/index.html">Downloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="downloads/downloads_EN.html">Downloads</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installing/index.html">Compilation and Deployment</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installing/compilation_EN.html">Compilation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="installing/compilation_EN.html#developing-mirror-compilation-using-docker-recommended">Developing mirror compilation using Docker (recommended)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="installing/compilation_EN.html#use-off-the-shelf-mirrors">Use off-the-shelf mirrors</a></li>
@@ -232,7 +237,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="getting-started/index.html">Getting started</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started/index.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/basic-usage_EN.html">Guidelines for Basic Use</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="getting-started/basic-usage_EN.html#create-users">1 Create Users</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/basic-usage_EN.html#root-user-logon-and-password-modification">1.1 Root User Logon and Password Modification</a></li>
@@ -278,7 +283,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l3"><a class="reference internal" href="getting-started/best-practice_EN.html#tabulation">1 tabulation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/best-practice_EN.html#data-model-selection">1.1 Data Model Selection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/best-practice_EN.html#wide-table-vs-star-schema">1.2 Wide Table vs. Star Schema</a></li>
-<li class="toctree-l4"><a class="reference internal" href="getting-started/best-practice_EN.html#partitions-and-barrels">1.3 Partitions and Barrels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="getting-started/best-practice_EN.html#partitioning-and-bucketing">1.3 Partitioning and Bucketing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/best-practice_EN.html#sparse-index-and-bloom-filter">1.4 Sparse Index and Bloom Filter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="getting-started/best-practice_EN.html#physical-and-chemical-view-rollup">1.5 Physical and Chemical View (rollup)</a></li>
 </ul>
@@ -352,6 +357,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l2"><a class="reference internal" href="administrator-guide/backup-restore_EN.html">Backup and Recovery</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/backup-restore_EN.html#brief-principle-description">Brief Principle Description</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="administrator-guide/backup-restore_EN.html#backup">Backup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/backup-restore_EN.html#restore">Restore</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/backup-restore_EN.html#best-practices">Best Practices</a><ul>
@@ -765,13 +771,7 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
 <li class="toctree-l3"><a class="reference internal" href="community/verify-apache-release_EN.html#download-source-package-signature-file-hash-file-and-keys">1. Download source package, signature file, hash file and KEYS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="community/verify-apache-release_EN.html#verify-signature-and-hash">2. Verify signature and hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="community/verify-apache-release_EN.html#verify-license-header">3. Verify license header</a></li>
-<li class="toctree-l3"><a class="reference internal" href="community/verify-apache-release_EN.html#verify-building">4. Verify building</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="community/verify-apache-release_EN.html#step1-pull-the-docker-image-with-doris-building-environment">Step1: Pull the docker image with Doris building environment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/verify-apache-release_EN.html#step2-run-the-docker-image">Step2: Run the Docker image</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/verify-apache-release_EN.html#step3-download-doris-source">Step3: Download Doris source</a></li>
-<li class="toctree-l4"><a class="reference internal" href="community/verify-apache-release_EN.html#step4-build-doris">Step4: Build Doris</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="community/verify-apache-release_EN.html#verify-building">4. Verify building</a></li>
 </ul>
 </li>
 </ul>
@@ -788,10 +788,10 @@ You can simply click “Edit on Github” at right top of a page, and edit the d
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installing/index.html" class="btn btn-neutral float-right" title="Compilation and deployment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="downloads/index.html" class="btn btn-neutral float-right" title="Downloads" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../cn/community/verify-apache-release.html" class="btn btn-neutral float-left" title="Verify Apache Release" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../cn/community/verify-apache-release.html" class="btn btn-neutral float-left" title="验证 Apache 发布版本" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

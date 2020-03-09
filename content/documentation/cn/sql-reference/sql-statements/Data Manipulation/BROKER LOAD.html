@@ -86,6 +86,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../downloads/index.html">下载</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../installing/index.html">编译与部署</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../administrator-guide/index.html">操作手册</a></li>
@@ -212,6 +213,7 @@ under the License.
 2. Baidu AFS：百度内部的 afs，仅限于百度内部使用。
 3. Baidu Object Storage(BOS)：百度对象存储。仅限百度内部用户、公有云用户或其他可以访问 BOS 的用户使用。
 4. Apache HDFS：社区版本 hdfs。
+5. Amazon S3：Amazon对象存储。
 </pre></div>
 </div>
 <p>语法：</p>
@@ -329,6 +331,13 @@ WITH BROKER broker_name
         dfs.namenode.rpc-address.xxx.nn：指定 namenode 的rpc地址信息。其中 nn 表示 dfs.ha.namenodes.xxx 中配置的 namenode 的名字，如：&quot;dfs.namenode.rpc-address.my_ha.my_nn&quot; = &quot;host:port&quot;
         dfs.client.failover.proxy.provider：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider
 
+    4. Amazon S3
+
+        需提供：
+        fs.s3a.access.key：AmazonS3的access key
+        fs.s3a.secret.key：AmazonS3的secret key
+        fs.s3a.endpoint：AmazonS3的endpoint 
+    
 4. opt_properties
 
     用于指定一些特殊参数。
@@ -561,6 +570,45 @@ WITH BROKER broker_name
     INTO TABLE `my_table`
     where k1 &gt; k2
     )
+
+11. 从 AmazonS3 导入Parquet文件中数据，指定 FORMAT 为parquet，默认是通过文件后缀判断：
+    
+    LOAD LABEL example_db.label11
+    (
+    DATA INFILE(&quot;s3a://my_bucket/input/file&quot;)
+    INTO TABLE `my_table`
+    FORMAT AS &quot;parquet&quot;
+    (k1, k2, k3)
+    )
+    WITH BROKER my_s3a_broker
+    (
+    &quot;fs.s3a.access.key&quot; = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+    &quot;fs.s3a.secret.key&quot; = &quot;yyyyyyyyyyyyyyyyyyyy&quot;,
+    &quot;fs.s3a.endpoint&quot; = &quot;s3.amazonaws.com&quot;
+    )
+
+12. 提取文件路径中的时间分区字段，并且时间包含 %3A (在 hdfs 路径中，不允许有 &#39;:&#39;，所有 &#39;:&#39; 会由 %3A 替换)
+
+    假设有如下文件：
+
+    /user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
+    /user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
+
+    表结构为：
+    data_time DATETIME,
+    k2        INT,
+    k3        INT
+
+    LOAD LABEL example_db.label12
+    (
+     DATA INFILE(&quot;hdfs://host:port/user/data/*/test.txt&quot;) 
+     INTO TABLE `tbl12`
+     COLUMNS TERMINATED BY &quot;,&quot;
+     (k2,k3)
+     COLUMNS FROM PATH AS (data_time)
+     SET (data_time=str_to_date(data_time, &#39;%Y-%m-%d %H%%3A%i%%3A%s&#39;))
+    ) 
+    WITH BROKER &quot;hdfs&quot; (&quot;username&quot;=&quot;user&quot;, &quot;password&quot;=&quot;pass&quot;);
 </pre></div>
 </div>
 </div>
