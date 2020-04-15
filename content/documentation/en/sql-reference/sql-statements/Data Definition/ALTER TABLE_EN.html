@@ -256,6 +256,8 @@ Rollup supports the following ways to create:
         ADD ROLLUP rollup_name (column_name1, column_name2, ...)
         [FROM from_index_name]
         [PROPERTIES (&quot;key&quot;=&quot;value&quot;, ...)]
+
+        properties: Support setting timeout time, the default timeout time is 1 day.
     example:
         ADD ROLLUP r1(col1,col2) from r0
 1.2 Batch create rollup index
@@ -423,6 +425,12 @@ Bitmap index supports the following modifications:
     <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">example_rollup_index2</span> <span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">v1</span><span class="p">)</span>
     <span class="n">FROM</span> <span class="n">example_rollup_index</span><span class="p">;</span>
 
+<span class="mf">3.</span> <span class="n">Create</span> <span class="n">index</span><span class="p">:</span> <span class="n">example_rollup_index3</span><span class="p">,</span> <span class="n">based</span> <span class="n">on</span> <span class="n">base</span> <span class="n">index</span> <span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">),</span> <span class="n">custom</span> <span class="n">rollup</span> <span class="n">timeout</span> <span class="n">time</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">hour</span><span class="o">.</span>
+    
+    <span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">example_db</span><span class="o">.</span><span class="n">my_table</span>
+    <span class="n">ADD</span> <span class="n">ROLLUP</span> <span class="n">example_rollup_index</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">)</span>
+    <span class="n">PROPERTIES</span><span class="p">(</span><span class="s2">&quot;storage_type&quot;</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="s2">&quot;timeout&quot;</span> <span class="o">=</span> <span class="s2">&quot;3600&quot;</span><span class="p">);</span>
+
 <span class="mf">3.</span> <span class="n">Delete</span> <span class="n">index</span><span class="p">:</span> <span class="n">example_rollup_index2</span>
     <span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">example_db</span><span class="o">.</span><span class="n">my_table</span>
     <span class="n">DROP</span> <span class="n">ROLLUP</span> <span class="n">example_rollup_index2</span><span class="p">;</span>
@@ -534,7 +542,24 @@ Bitmap index supports the following modifications:
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

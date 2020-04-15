@@ -92,6 +92,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">操作手册</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="load-data/index.html">数据导入</a></li>
 <li class="toctree-l3"><a class="reference internal" href="alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="materialized-view/index.html">物化视图</a></li>
 <li class="toctree-l3"><a class="reference internal" href="http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="operation/index.html">运维操作</a></li>
 <li class="toctree-l3"><a class="reference internal" href="config/index.html">配置文件</a></li>
@@ -102,11 +103,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#id2">名词解释</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3">原理</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id4">使用方式</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id10">高级操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">高级操作</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment-v2-usage.html">Doris Segment V2上线和试用手册</a></li>
 <li class="toctree-l3"><a class="reference internal" href="small-file-mgr.html">文件管理器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="time-zone.html">时区</a></li>
@@ -212,7 +214,7 @@ under the License.
 <h1>动态分区<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>动态分区是在 Doris 0.12 版本中引入的新功能。旨在对表级别的分区实现生命周期管理(TTL)，减少用户的使用负担。</p>
 <p>最初的设计、实现和效果可以参阅 <a class="reference external" href="https://github.com/apache/incubator-doris/issues/2262">ISSUE 2262</a>。</p>
-<p>目前实现了动态添加分区的功能，下一个版本会支持动态删除分区的功能。</p>
+<p>目前实现了动态添加分区及动态删除分区的功能。</p>
 <div class="section" id="id2">
 <h2>名词解释<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -223,13 +225,22 @@ under the License.
 <div class="section" id="id3">
 <h2>原理<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>在某些使用场景下，用户会将表按照天进行分区划分，每天定时执行例行任务，这时需要使用方手动管理分区，否则可能由于使用方没有创建分区导致数据导入失败，这给使用方带来了额外的维护成本。</p>
-<p>在实现方式上, FE会启动一个后台线程，根据fe.conf中<code class="docutils literal notranslate"><span class="pre">dynamic_partition_enable</span></code> 及 <code class="docutils literal notranslate"><span class="pre">dynamic_partition_check_interval_seconds</span></code>参数决定该线程是否启动以及该线程的调度频率.</p>
-<p>建表时，在properties中指定dynamic_partition属性，FE首先对动态分区属性进行解析，校验输入参数的合法性，然后将对应的属性持久化到FE的元数据中，并将该表注册到动态分区列表中，后台线程会根据配置参数定期对动态分区列表进行扫描，读取表的动态分区属性，执行添加分区的任务，每次的调度信息会保留在FE的内存中，可以通过<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">DYNAMIC</span> <span class="pre">PARTITION</span> <span class="pre">TABLES</span></code>查看调度任务是否成功，如果存在分区创建失败，会将失败信息输出。</p>
+<p>在实现方式上, FE会启动一个后台线程，根据fe.conf中<code class="docutils literal notranslate"><span class="pre">dynamic_partition_enable</span></code> 及 <code class="docutils literal notranslate"><span class="pre">dynamic_partition_check_interval_seconds</span></code>参数决定该线程是否启动以及该线程的调度频率。每次调度时，会在注册表中读取动态分区表的属性，并根据动态分区属性动态添加及删除分区。</p>
+<p>建表时，在properties中指定dynamic_partition属性，FE首先对动态分区属性进行解析，校验输入参数的合法性，然后将对应的属性持久化到FE的元数据中，并将该表注册到动态分区列表中，后台线程会根据配置参数定期对动态分区列表进行扫描，读取表的动态分区属性，执行添加分区及删除分区的任务，每次的调度信息会保留在FE的内存中（重启后则丢失），可以通过<code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">DYNAMIC</span> <span class="pre">PARTITION</span> <span class="pre">TABLES</span></code>查看调度任务是否成功，如果存在分区创建或删除失败，会将失败信息输出。</p>
 </div>
 <div class="section" id="id4">
 <h2>使用方式<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id5">
-<h3>建表<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>动态分区属性参数说明:<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_partition.enable</span></code>: 是否开启动态分区特性，可指定为 <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> 或 <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>。如果不填写，默认为 <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_partition.time_unit</span></code>: 动态分区调度的单位，可指定为 <code class="docutils literal notranslate"><span class="pre">DAY</span></code> <code class="docutils literal notranslate"><span class="pre">WEEK</span></code> <code class="docutils literal notranslate"><span class="pre">MONTH</span></code>，当指定为 <code class="docutils literal notranslate"><span class="pre">DAY</span></code> 时，动态创建的分区名后缀格式为<code class="docutils literal notranslate"><span class="pre">yyyyMMdd</span></code>，例如<code class="docutils literal notranslate"><span class="pre">20200325</span></code>。当指定为 <code class="docutils literal notranslate"><span class="pre">WEEK</span></code> 时，动态创建的分区名后缀格式为<code class="docutils literal notranslate"><span class="pre">yyyy_ww</span></code>即当前日期属于这一年的第几周，例如 <code class="docutils literal notranslate"><span class="pre">2020-03-25</span></code> 创建的分区名后缀为 <code class="docutils literal notranslate"><span class="pre">2020_13</span></code>, 表明目前为2020年第13周。当指定为 <code class="docutils literal notranslate"><span class="pre">MONTH</span></code> 时，动态创建的分区名后缀格式为 <code class="docutils literal notranslate"><span class="pre">yyyyMM</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">202003</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_partition.start</span></code>: 动态分区的开始时间, 以当天为基准，超过该时间范围的分区将会被删除。如果不填写，则默认为<code class="docutils literal notranslate"><span class="pre">Integer.MIN_VALUE</span></code> 即 <code class="docutils literal notranslate"><span class="pre">-2147483648</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_partition.end</span></code>: 动态分区的结束时间, 以当天为基准，会提前创建N个单位的分区范围。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_partition.prefix</span></code>: 动态创建的分区名前缀。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_partition.buckets</span></code>: 动态创建的分区所对应的分桶数量。</p>
+</div>
+<div class="section" id="id6">
+<h3>建表<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>建表时，可以在 <code class="docutils literal notranslate"><span class="pre">PROPERTIES</span></code> 中指定以下<code class="docutils literal notranslate"><span class="pre">dynamic_partition</span></code>属性，表示这个表是一个动态分区表。</p>
 <p>示例：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">example_db</span><span class="o">.</span><span class="n">dynamic_partition</span>
@@ -244,64 +255,69 @@ under the License.
 <span class="n">DUPLICATE</span> <span class="n">KEY</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">)</span>
 <span class="n">PARTITION</span> <span class="n">BY</span> <span class="n">RANGE</span> <span class="p">(</span><span class="n">k1</span><span class="p">)</span>
 <span class="p">(</span>
-<span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2014-01-01&quot;</span><span class="p">),</span>
-<span class="n">PARTITION</span> <span class="n">p2</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2014-06-01&quot;</span><span class="p">),</span>
-<span class="n">PARTITION</span> <span class="n">p3</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2014-12-01&quot;</span><span class="p">)</span>
+<span class="n">PARTITION</span> <span class="n">p20200321</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2020-03-22&quot;</span><span class="p">),</span>
+<span class="n">PARTITION</span> <span class="n">p20200322</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2020-03-23&quot;</span><span class="p">),</span>
+<span class="n">PARTITION</span> <span class="n">p20200323</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2020-03-24&quot;</span><span class="p">),</span>
+<span class="n">PARTITION</span> <span class="n">p20200324</span> <span class="n">VALUES</span> <span class="n">LESS</span> <span class="n">THAN</span> <span class="p">(</span><span class="s2">&quot;2020-03-25&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">DISTRIBUTED</span> <span class="n">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">k2</span><span class="p">)</span> <span class="n">BUCKETS</span> <span class="mi">32</span>
 <span class="n">PROPERTIES</span><span class="p">(</span>
 <span class="s2">&quot;storage_medium&quot;</span> <span class="o">=</span> <span class="s2">&quot;SSD&quot;</span><span class="p">,</span>
-<span class="s2">&quot;dynamic_partition.enable&quot;</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
+<span class="s2">&quot;dynamic_partition.enable&quot;</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
 <span class="s2">&quot;dynamic_partition.time_unit&quot;</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span><span class="p">,</span>
+<span class="s2">&quot;dynamic_partition.start&quot;</span> <span class="o">=</span> <span class="s2">&quot;-3&quot;</span><span class="p">,</span>
 <span class="s2">&quot;dynamic_partition.end&quot;</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
 <span class="s2">&quot;dynamic_partition.prefix&quot;</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span>
 <span class="s2">&quot;dynamic_partition.buckets&quot;</span> <span class="o">=</span> <span class="s2">&quot;32&quot;</span>
  <span class="p">);</span>
 </pre></div>
 </div>
-<p>创建一张动态分区表，指定开启动态分区特性，以当天为2020-01-08为例，在每次调度时，会提前创建今天以及以后3天的4个分区(若分区已存在则会忽略)，分区名根据指定前缀分别为<code class="docutils literal notranslate"><span class="pre">p20200108</span></code> <code class="docutils literal notranslate"><span class="pre">p20200109</span></code> <code class="docutils literal notranslate"><span class="pre">p20200110</span></code> <code class="docutils literal notranslate"><span class="pre">p20200111</span></code>,每个分区的分桶数量为32，每个分区的范围如下:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[types: [DATE]; keys: [2020-01-08]; ‥types: [DATE]; keys: [2020-01-09]; )
-[types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10]; )
-[types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11]; )
-[types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12]; )
+<p>创建一张动态分区表，指定开启动态分区特性，以当天为2020-03-25为例，在每次调度时，会删除分区上界小于 <code class="docutils literal notranslate"><span class="pre">2020-03-22</span></code> 的分区，为了避免删除非动态创建的分区，动态删除分区只会删除分区名符合动态创建分区规则的分区，例如分区名为a1, 则即使分区范围在待删除的分区范围内，也不会被删除。同时在调度时会提前创建今天以及以后3天（总共4天）的分区(若分区已存在则会忽略)，分区名根据指定前缀分别为<code class="docutils literal notranslate"><span class="pre">p20200325</span></code> <code class="docutils literal notranslate"><span class="pre">p20200326</span></code> <code class="docutils literal notranslate"><span class="pre">p20200327</span></code> <code class="docutils literal notranslate"><span class="pre">p20200328</span></code>,每个分区的分桶数量为32。同时会删除 <code class="docutils literal notranslate"><span class="pre">p20200321</span></code> 的分区，最终的分区范围如下:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[types: [DATE]; keys: [2020-03-22]; ‥types: [DATE]; keys: [2020-03-23]; )
+[types: [DATE]; keys: [2020-03-23]; ‥types: [DATE]; keys: [2020-03-24]; )
+[types: [DATE]; keys: [2020-03-24]; ‥types: [DATE]; keys: [2020-03-25]; )
+[types: [DATE]; keys: [2020-03-25]; ‥types: [DATE]; keys: [2020-03-26]; )
+[types: [DATE]; keys: [2020-03-26]; ‥types: [DATE]; keys: [2020-03-27]; )
+[types: [DATE]; keys: [2020-03-27]; ‥types: [DATE]; keys: [2020-03-28]; )
+[types: [DATE]; keys: [2020-03-28]; ‥types: [DATE]; keys: [2020-03-29]; )
 </pre></div>
 </div>
 </div>
-<div class="section" id="id6">
-<h3>开启动态分区功能<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>开启动态分区功能<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
-<li>首先需要在fe.conf中设置<code class="docutils literal notranslate"><span class="pre">dynamic_partition_enable=true</span></code>，可以在集群启动时通过修改配置文件指定，也可以在运行时通过http接口动态修改,修改方法查看高级操作部分</li>
+<li>首先需要在fe.conf中设置<code class="docutils literal notranslate"><span class="pre">dynamic_partition_enable=true</span></code>，可以在集群启动时通过修改配置文件指定，或者通过MySQL连接后使用命令行 <code class="docutils literal notranslate"><span class="pre">ADMIN</span> <span class="pre">SET</span> <span class="pre">FRONTEND</span> <span class="pre">CONFIG</span> <span class="pre">(&quot;dynamic_partition_enable&quot;</span> <span class="pre">=</span> <span class="pre">&quot;true&quot;)</span></code>修改，也可以在运行时通过http接口动态修改,修改方法查看高级操作部分</li>
 <li>如果需要对0.12版本之前的表添加动态分区属性，则需要通过以下命令修改表的属性</li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">dynamic_partition</span> <span class="nb">set</span> <span class="p">(</span><span class="s2">&quot;dynamic_partition.enable&quot;</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;dynamic_partition.time_unit&quot;</span> <span class="o">=</span> <span class="s2">&quot;DAY&quot;</span><span class="p">,</span> <span class="s2">&quot;dynamic_partition.end&quot;</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;dynamic_partition.prefix&quot;</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;dynamic_partition.buckets&quot;</span> <span class="o">=</span> <span class="s2">&quot;32&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id7">
-<h3>停止动态分区功能<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>停止动态分区功能<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>如果需要对集群中所有动态分区表停止动态分区功能，则需要在fe.conf中设置<code class="docutils literal notranslate"><span class="pre">dynamic_partition_enable=false</span></code></p>
 <p>如果需要对指定表停止动态分区功能，则可以通过以下命令修改表的属性</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">dynamic_partition</span> <span class="nb">set</span> <span class="p">(</span><span class="s2">&quot;dynamic_partition.enable&quot;</span> <span class="o">=</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="id8">
-<h3>修改动态分区属性<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p>通过如下命令可以修改动态分区的属性</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">dynamic_partition</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;key&quot;</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">dynamic_partition</span> <span class="n">SET</span> <span class="p">(</span><span class="s2">&quot;dynamic_partition.enable&quot;</span> <span class="o">=</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="id9">
-<h3>查看动态分区表调度情况<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3>修改动态分区属性<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>通过如下命令可以修改动态分区的属性</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ALTER</span> <span class="n">TABLE</span> <span class="n">dynamic_partition</span> <span class="n">SET</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>查看动态分区表调度情况<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>通过以下命令可以进一步查看动态分区表的调度情况：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">DYNAMIC</span> <span class="n">PARTITION</span> <span class="n">TABLES</span><span class="p">;</span>
 
-<span class="o">+-------------------+--------+----------+------+--------+---------+---------------------+---------------------+--------+------+</span>
-<span class="o">|</span> <span class="n">TableName</span>         <span class="o">|</span> <span class="n">Enable</span> <span class="o">|</span> <span class="n">TimeUnit</span> <span class="o">|</span> <span class="n">End</span>  <span class="o">|</span> <span class="n">Prefix</span> <span class="o">|</span> <span class="n">Buckets</span> <span class="o">|</span> <span class="n">LastUpdateTime</span>      <span class="o">|</span> <span class="n">LastSchedulerTime</span>   <span class="o">|</span> <span class="n">State</span>  <span class="o">|</span> <span class="n">Msg</span>  <span class="o">|</span>
-<span class="o">+-------------------+--------+----------+------+--------+---------+---------------------+---------------------+--------+------+</span>
-<span class="o">|</span> <span class="n">dynamic_partition</span> <span class="o">|</span> <span class="n">true</span>   <span class="o">|</span> <span class="n">DAY</span>      <span class="o">|</span> <span class="mi">3</span>    <span class="o">|</span> <span class="n">p</span>      <span class="o">|</span> <span class="mi">32</span>      <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">08</span> <span class="mi">20</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">09</span> <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">08</span> <span class="mi">20</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">34</span> <span class="o">|</span> <span class="n">NORMAL</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>  <span class="o">|</span>
-<span class="o">+-------------------+--------+----------+------+--------+---------+---------------------+---------------------+--------+------+</span>
+<span class="o">+-------------------+--------+----------+-------+------+--------+---------+---------------------+---------------------+--------+------------------------+----------------------+</span>
+<span class="o">|</span> <span class="n">TableName</span>         <span class="o">|</span> <span class="n">Enable</span> <span class="o">|</span> <span class="n">TimeUnit</span> <span class="o">|</span> <span class="n">Start</span> <span class="o">|</span> <span class="n">End</span>  <span class="o">|</span> <span class="n">Prefix</span> <span class="o">|</span> <span class="n">Buckets</span> <span class="o">|</span> <span class="n">LastUpdateTime</span>      <span class="o">|</span> <span class="n">LastSchedulerTime</span>   <span class="o">|</span> <span class="n">State</span>  <span class="o">|</span> <span class="n">LastCreatePartitionMsg</span> <span class="o">|</span> <span class="n">LastDropPartitionMsg</span> <span class="o">|</span>
+<span class="o">+-------------------+--------+----------+-------+------+--------+---------+---------------------+---------------------+--------+------------------------+----------------------+</span>
+<span class="o">|</span> <span class="n">dynamic_partition</span> <span class="o">|</span> <span class="n">true</span>   <span class="o">|</span> <span class="n">DAY</span>      <span class="o">|</span> <span class="o">-</span><span class="mi">3</span>    <span class="o">|</span> <span class="mi">3</span>    <span class="o">|</span> <span class="n">p</span>      <span class="o">|</span> <span class="mi">32</span>      <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">12</span> <span class="mi">17</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">47</span> <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">12</span> <span class="mi">17</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">52</span> <span class="o">|</span> <span class="n">NORMAL</span> <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>                    <span class="o">|</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span>                  <span class="o">|</span>
+<span class="o">+-------------------+--------+----------+-------+------+--------+---------+---------------------+---------------------+--------+------------------------+----------------------+</span>
 <span class="mi">1</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -309,12 +325,13 @@ under the License.
 <li>LastUpdateTime: 最后一次修改动态分区属性的时间</li>
 <li>LastSchedulerTime:   最后一次执行动态分区调度的时间</li>
 <li>State:    最后一次执行动态分区调度的状态</li>
-<li>Msg:  最后一次执行动态分区调度的错误信息</li>
+<li>LastCreatePartitionMsg:  最后一次执行动态添加分区调度的错误信息</li>
+<li>LastDropPartitionMsg:  最后一次执行动态删除分区调度的错误信息</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id10">
-<h2>高级操作<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2>高级操作<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="fe">
 <h3>FE 配置项<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h3>
 <ul>
@@ -375,7 +392,24 @@ under the License.
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

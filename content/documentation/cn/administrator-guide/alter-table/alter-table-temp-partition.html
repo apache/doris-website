@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="HTTP API" href="../http-actions/index.html" />
-    <link rel="prev" title="Scheam Change" href="alter-table-schema-change.html" /> 
+    <link rel="next" title="物化视图" href="../materialized-view/index.html" />
+    <link rel="prev" title="Schema Change" href="alter-table-schema-change.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,10 +94,11 @@
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">表结构变更</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="alter-table-bitmap-index.html">Bitmap 索引</a></li>
 <li class="toctree-l4"><a class="reference internal" href="alter-table-rollup.html">Rollup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="alter-table-schema-change.html">Scheam Change</a></li>
+<li class="toctree-l4"><a class="reference internal" href="alter-table-schema-change.html">Schema Change</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">临时分区</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../materialized-view/index.html">物化视图</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../config/index.html">配置文件</a></li>
@@ -107,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../segment-v2-usage.html">Doris Segment V2上线和试用手册</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
@@ -326,15 +328,56 @@ under the License.
 </div>
 </div>
 <div class="section" id="id7">
-<h2>临时分区的导入<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
-<p>（TODO）</p>
+<h2>临时分区的导入和查询<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>用户可以将数据导入到临时分区，也可以指定临时分区进行查询。</p>
+<ol>
+<li><p class="first">导入临时分区</p>
+<p>根据导入方式的不同，指定导入临时分区的语法稍有差别。这里通过示例进行简单说明</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl</span> <span class="n">TEMPORARY</span> <span class="n">PARTITION</span><span class="p">(</span><span class="n">tp1</span><span class="p">,</span> <span class="n">tp2</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="n">SELECT</span> <span class="o">....</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span><span class="p">:</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:123&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;temporary_partition: tp1, tp2, ...&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">testData</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="n">port</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">testDb</span><span class="o">/</span><span class="n">testTbl</span><span class="o">/</span><span class="n">_stream_load</span>    
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>LOAD LABEL example_db.label1
+(
+DATA INFILE(&quot;hdfs://hdfs_host:hdfs_port/user/palo/data/input/file&quot;)
+INTO TABLE `my_table`
+TEMPORARY PARTITION (tp1, tp2, ...)
+...
+)
+WITH BROKER hdfs (&quot;username&quot;=&quot;hdfs_user&quot;, &quot;password&quot;=&quot;hdfs_password&quot;);
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">ROUTINE</span> <span class="n">LOAD</span> <span class="n">example_db</span><span class="o">.</span><span class="n">test1</span> <span class="n">ON</span> <span class="n">example_tbl</span>
+<span class="n">COLUMNS</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">k3</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+<span class="n">TEMPORARY</span> <span class="n">PARTITIONS</span><span class="p">(</span><span class="n">tp1</span><span class="p">,</span> <span class="n">tp2</span><span class="p">,</span> <span class="o">...</span><span class="p">),</span>
+<span class="n">WHERE</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">100</span>
+<span class="n">PROPERTIES</span>
+<span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">FROM</span> <span class="n">KAFKA</span>
+<span class="p">(</span><span class="o">...</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">查询临时分区</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="o">...</span> <span class="n">FROM</span>
+<span class="n">tbl1</span> <span class="n">TEMPORARY</span> <span class="n">PARTITION</span><span class="p">(</span><span class="n">tp1</span><span class="p">,</span> <span class="n">tp2</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">JOIN</span>
+<span class="n">tbl2</span> <span class="n">TEMPORARY</span> <span class="n">PARTITION</span><span class="p">(</span><span class="n">tp1</span><span class="p">,</span> <span class="n">tp2</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">ON</span> <span class="o">...</span>
+<span class="n">WHERE</span> <span class="o">...</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
 </div>
 <div class="section" id="id8">
 <h2>和其他操作的关系<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="drop">
 <h3>DROP<a class="headerlink" href="#drop" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>使用 Drop 操作直接删除数据库或表后，可以通过 Recover 命令恢复数据库或表（限定时间内），同时，对应的临时分区也会被一同恢复。</li>
+<li>使用 Drop 操作直接删除数据库或表后，可以通过 Recover 命令恢复数据库或表（限定时间内），但临时分区不会被恢复。</li>
 <li>使用 Alter 命令删除正式分区后，可以通过 Recover 命令恢复分区（限定时间内）。操作正式分区和临时分区无关。</li>
 <li>使用 Alter 命令删除临时分区后，无法通过 Recover 命令恢复临时分区。</li>
 </ul>
@@ -375,14 +418,31 @@ under the License.
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../http-actions/index.html" class="btn btn-neutral float-right" title="HTTP API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../materialized-view/index.html" class="btn btn-neutral float-right" title="物化视图" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="alter-table-schema-change.html" class="btn btn-neutral float-left" title="Scheam Change" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="alter-table-schema-change.html" class="btn btn-neutral float-left" title="Schema Change" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

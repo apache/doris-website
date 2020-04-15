@@ -415,15 +415,15 @@ under the License.
 </pre></div>
 </div>
 <p>示例2: 以 “table2_20170707” 为 Label，使用本地文件 table2_data 导入 table2 表。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">test</span><span class="p">:</span><span class="n">test</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:table2_20170707&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;column_separator:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">table2_data</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">8030</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">example_db</span><span class="o">/</span><span class="n">table2</span><span class="o">/</span><span class="n">_stream_load</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">test</span><span class="p">:</span><span class="n">test</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:table2_20170707&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;column_separator:|&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">table1_data</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">8030</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">example_db</span><span class="o">/</span><span class="n">table2</span><span class="o">/</span><span class="n">_stream_load</span>
 </pre></div>
 </div>
-<p>本地文件 <code class="docutils literal notranslate"><span class="pre">table2_data</span></code> 以 <code class="docutils literal notranslate"><span class="pre">\t</span></code> 作为数据之间的分隔，具体内容如下：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">03</span>  <span class="mi">1</span>   <span class="mi">1</span>   <span class="n">jim</span>   <span class="mi">2</span>
-<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">05</span>  <span class="mi">2</span>   <span class="mi">1</span>   <span class="n">grace</span> <span class="mi">2</span>
-<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span>  <span class="mi">3</span>   <span class="mi">2</span>   <span class="n">tom</span>   <span class="mi">2</span>
-<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">15</span>  <span class="mi">4</span>   <span class="mi">3</span>   <span class="n">bush</span>  <span class="mi">3</span>
-<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span>  <span class="mi">5</span>   <span class="mi">3</span>   <span class="n">helen</span> <span class="mi">3</span>
+<p>本地文件 <code class="docutils literal notranslate"><span class="pre">table2_data</span></code> 以 <code class="docutils literal notranslate"><span class="pre">|</span></code> 作为数据之间的分隔，具体内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">03</span><span class="o">|</span><span class="mi">1</span><span class="o">|</span><span class="mi">1</span><span class="o">|</span><span class="n">jim</span><span class="o">|</span><span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">05</span><span class="o">|</span><span class="mi">2</span><span class="o">|</span><span class="mi">1</span><span class="o">|</span><span class="n">grace</span><span class="o">|</span><span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span><span class="o">|</span><span class="mi">3</span><span class="o">|</span><span class="mi">2</span><span class="o">|</span><span class="n">tom</span><span class="o">|</span><span class="mi">2</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">15</span><span class="o">|</span><span class="mi">4</span><span class="o">|</span><span class="mi">3</span><span class="o">|</span><span class="n">bush</span><span class="o">|</span><span class="mi">3</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">12</span><span class="o">|</span><span class="mi">5</span><span class="o">|</span><span class="mi">3</span><span class="o">|</span><span class="n">helen</span><span class="o">|</span><span class="mi">3</span>
 </pre></div>
 </div>
 <blockquote>
@@ -527,7 +527,24 @@ under the License.
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

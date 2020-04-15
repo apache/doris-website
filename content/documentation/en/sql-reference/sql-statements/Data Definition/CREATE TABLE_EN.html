@@ -249,9 +249,9 @@ col_type: Type of column</p>
         <span class="n">fractional</span> <span class="n">part</span><span class="p">:</span> <span class="mi">0</span> <span class="o">~</span> <span class="mi">9</span>
         <span class="n">Not</span> <span class="n">support</span> <span class="n">scientific</span> <span class="n">notation</span>
     <span class="n">DATE</span><span class="p">(</span><span class="mi">3</span> <span class="n">Bytes</span><span class="p">)</span>
-        <span class="n">Range</span><span class="p">:</span> <span class="mi">1900</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span>
+        <span class="n">Range</span><span class="p">:</span> <span class="mi">0000</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span>
     <span class="n">DATETIME</span><span class="p">(</span><span class="mi">8</span> <span class="n">Bytes</span><span class="p">)</span>
-        <span class="n">Range</span><span class="p">:</span> <span class="mi">1900</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span> <span class="mi">23</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">59</span>
+        <span class="n">Range</span><span class="p">:</span> <span class="mi">0000</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="o">~</span> <span class="mi">9999</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31</span> <span class="mi">23</span><span class="p">:</span><span class="mi">59</span><span class="p">:</span><span class="mi">59</span>
     <span class="n">CHAR</span><span class="p">[(</span><span class="n">length</span><span class="p">)]</span>
         <span class="n">Fixed</span> <span class="n">length</span> <span class="n">string</span><span class="o">.</span> <span class="n">Range</span><span class="p">:</span> <span class="mi">1</span> <span class="o">~</span> <span class="mf">255.</span> <span class="n">Default</span><span class="p">:</span> <span class="mi">1</span>
     <span class="n">VARCHAR</span><span class="p">[(</span><span class="n">length</span><span class="p">)]</span>
@@ -388,7 +388,7 @@ The default buckets is 10.</li>
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>storage_medium:         SSD or HDD
+<p>storage_medium:         SSD or HDD, The default initial storage media can be specified by <code class="docutils literal notranslate"><span class="pre">default_storage_medium=</span> <span class="pre">XXX</span></code> in the fe configuration file <code class="docutils literal notranslate"><span class="pre">fe.conf</span></code>, or, if not, by default, HDD.
 storage_cooldown_time:  If storage_medium is SSD, data will be automatically moved to HDD   when timeout.
 Default is 7 days.
 Format: “yyyy-MM-dd HH:mm:ss”
@@ -760,7 +760,24 @@ PROPERTIES (
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

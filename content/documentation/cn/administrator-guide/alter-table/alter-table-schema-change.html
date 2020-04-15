@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scheam Change &mdash; Doris Documentations 0.11.0 documentation</title>
+  <title>Schema Change &mdash; Doris Documentations 0.11.0 documentation</title>
   
 
   
@@ -94,10 +94,11 @@
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">表结构变更</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="alter-table-bitmap-index.html">Bitmap 索引</a></li>
 <li class="toctree-l4"><a class="reference internal" href="alter-table-rollup.html">Rollup</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Scheam Change</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Schema Change</a></li>
 <li class="toctree-l4"><a class="reference internal" href="alter-table-temp-partition.html">临时分区</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../materialized-view/index.html">物化视图</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../config/index.html">配置文件</a></li>
@@ -107,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../segment-v2-usage.html">Doris Segment V2上线和试用手册</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
@@ -172,7 +174,7 @@
         
           <li><a href="index.html">表结构变更</a> &raquo;</li>
         
-      <li>Scheam Change</li>
+      <li>Schema Change</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -210,9 +212,9 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
---><div class="section" id="scheam-change">
-<h1>Scheam Change<a class="headerlink" href="#scheam-change" title="Permalink to this headline">¶</a></h1>
-<p>用户可以通过 Scheam Change 操作来修改已存在表的 Schema。目前 Doris 支持以下几种修改:</p>
+--><div class="section" id="schema-change">
+<h1>Schema Change<a class="headerlink" href="#schema-change" title="Permalink to this headline">¶</a></h1>
+<p>用户可以通过 Schema Change 操作来修改已存在表的 Schema。目前 Doris 支持以下几种修改:</p>
 <ul class="simple">
 <li>增加、删除列</li>
 <li>修改列类型</li>
@@ -220,7 +222,7 @@ under the License.
 <li>增加、修改 Bloom Filter</li>
 <li>增加、删除 bitmap index</li>
 </ul>
-<p>本文档主要介绍如何创建 Scheam Change 作业，以及进行 Scheam Change 的一些注意事项和常见问题。</p>
+<p>本文档主要介绍如何创建 Schema Change 作业，以及进行 Schema Change 的一些注意事项和常见问题。</p>
 <div class="section" id="id1">
 <h2>名词解释<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -256,8 +258,8 @@ under the License.
 </div>
 <div class="section" id="id3">
 <h2>创建作业<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>创建 Scheam Change 的具体语法可以查看帮助 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span></code> 中 Scheam Change 部分的说明。</p>
-<p>Scheam Change 的创建是一个异步过程，作业提交成功后，用户需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">COLUMN</span></code> 命令来查看作业进度。</p>
+<p>创建 Schema Change 的具体语法可以查看帮助 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span></code> 中 Schema Change 部分的说明。</p>
+<p>Schema Change 的创建是一个异步过程，作业提交成功后，用户需要通过 <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">COLUMN</span></code> 命令来查看作业进度。</p>
 </div>
 <div class="section" id="id4">
 <h2>查看作业<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
@@ -418,7 +420,24 @@ under the License.
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Doris On ES" href="doris-on-es_EN.html" />
+    <link rel="next" title="Audit log plugin" href="audit-plugin_EN.html" />
     <link rel="prev" title="Variable" href="../administrator-guide/variables_EN.html" /> 
 </head>
 
@@ -92,7 +92,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">Administrator Guide</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Extending Ability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin_EN.html">Audit log plugin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="doris-on-es_EN.html">Doris On ES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html">Plugin Development Manual</a></li>
 <li class="toctree-l3"><a class="reference internal" href="user-defined-function_EN.html">User Define Function</a></li>
 </ul>
 </li>
@@ -174,6 +176,16 @@
 <h1>Extending Ability<a class="headerlink" href="#extending-ability" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="audit-plugin_EN.html">Audit log plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="audit-plugin_EN.html#compile-configure-and-deploy">Compile, Configure and Deploy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin_EN.html#compile">Compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin_EN.html#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin_EN.html#deployment">Deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin_EN.html#installation">Installation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="doris-on-es_EN.html">Doris On ES</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es_EN.html#noun-interpretation">Noun Interpretation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es_EN.html#how-to-use-it">How to use it</a><ul>
@@ -188,6 +200,22 @@
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es_EN.html#principle">Principle</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es_EN.html#push-down-operations">Push-Down operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es_EN.html#other-notes">Other notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugin-development-manual_EN.html">Plugin Development Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual_EN.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual_EN.html#plugin">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual_EN.html#write-a-plugin">Write A Plugin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html#create-module">Create module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html#add-zip-xml">Add zip.xml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html#update-pom-xml">Update pom.xml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html#implement-plugin">Implement plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html#compile">Compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual_EN.html#other-way">Other way</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual_EN.html#deploy">Deploy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual_EN.html#install-and-uninstall">Install and Uninstall</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user-defined-function_EN.html">User Define Function</a><ul>
@@ -219,11 +247,28 @@
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="doris-on-es_EN.html" class="btn btn-neutral float-right" title="Doris On ES" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="audit-plugin_EN.html" class="btn btn-neutral float-right" title="Audit log plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../administrator-guide/variables_EN.html" class="btn btn-neutral float-left" title="Variable" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

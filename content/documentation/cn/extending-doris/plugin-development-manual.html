@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>插件开发手册 &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="User Define Function" href="user-defined-function.html" />
+    <link rel="prev" title="Doris On ES" href="doris-on-es.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../downloads/index.html">下载</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">操作手册</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">扩展功能</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin.html">审计日志插件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="doris-on-es.html">Doris On ES</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">插件开发手册</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">介绍</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">插件组成</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">编写一个插件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">部署</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">安装和卸载插件</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="user-defined-function.html">User Define Function</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/index.html">开发者手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="index.html">扩展功能</a> &raquo;</li>
+        
+      <li>插件开发手册</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/extending-doris/plugin-development-manual.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="id1">
+<h1>插件开发手册<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>介绍<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Doris 支持动态加载插件。用户可以通过开发自己的插件来扩展Doris的功能。这个手册主要介绍如何开发、编译和部署 Frontend 端的插件。</p>
+<p><code class="docutils literal notranslate"><span class="pre">fe_plugins</span></code> 目录是 FE 插件的根模块。这个根模块统一管理插件所需的依赖。添加一个新的插件，相当于在这个根模块添加一个子模块。</p>
+</div>
+<div class="section" id="id3">
+<h2>插件组成<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>一个FE的插件可以使一个<strong>zip压缩包</strong>或者是一个<strong>目录</strong>。其内容至少包含两个文件：<code class="docutils literal notranslate"><span class="pre">plugin.properties</span></code> 和 <code class="docutils literal notranslate"><span class="pre">.jar</span></code> 文件。<code class="docutils literal notranslate"><span class="pre">plugin.properties</span></code>用于描述插件信息。</p>
+<p>文件结构如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># plugin .zip</span>
+<span class="n">auditodemo</span><span class="o">.</span><span class="n">zip</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">plugin</span><span class="o">.</span><span class="n">properties</span>
+    <span class="o">-</span><span class="n">auditdemo</span><span class="o">.</span><span class="n">jar</span>
+    <span class="o">-</span><span class="n">xxx</span><span class="o">.</span><span class="n">config</span>
+    <span class="o">-</span><span class="n">data</span><span class="o">/</span>
+    <span class="o">-</span><span class="n">test_data</span><span class="o">/</span>
+
+<span class="c1"># plugin local directory</span>
+<span class="n">auditodemo</span><span class="o">/</span><span class="p">:</span>
+    <span class="o">-</span><span class="n">plugin</span><span class="o">.</span><span class="n">properties</span>
+    <span class="o">-</span><span class="n">auditdemo</span><span class="o">.</span><span class="n">jar</span>
+    <span class="o">-</span><span class="n">xxx</span><span class="o">.</span><span class="n">config</span>
+    <span class="o">-</span><span class="n">data</span><span class="o">/</span>
+    <span class="o">-</span><span class="n">test_data</span><span class="o">/</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">plugin.properties</span></code> 内容示例:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">### required:</span>
+<span class="c1">#</span>
+<span class="c1"># the plugin name</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">audit_plugin_demo</span>
+<span class="c1">#</span>
+<span class="c1"># the plugin type</span>
+<span class="nb">type</span> <span class="o">=</span> <span class="n">AUDIT</span>
+<span class="c1">#</span>
+<span class="c1"># simple summary of the plugin</span>
+<span class="n">description</span> <span class="o">=</span> <span class="n">just</span> <span class="k">for</span> <span class="n">test</span>
+<span class="c1">#</span>
+<span class="c1"># Doris&#39;s version, like: 0.11.0</span>
+<span class="n">version</span> <span class="o">=</span> <span class="mf">0.11</span><span class="o">.</span><span class="mi">0</span>
+
+<span class="c1">### FE-Plugin optional:</span>
+<span class="c1">#</span>
+<span class="c1"># version of java the code is built against</span>
+<span class="c1"># use the command &quot;java -version&quot; value, like 1.8.0, 9.0.1, 13.0.4</span>
+<span class="n">java</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="mf">1.8</span><span class="o">.</span><span class="mi">31</span>
+<span class="c1">#</span>
+<span class="c1"># the name of the class to load, fully-qualified.</span>
+<span class="n">classname</span> <span class="o">=</span> <span class="n">AuditPluginDemo</span>
+
+<span class="c1">### BE-Plugin optional:</span>
+<span class="c1"># the name of the so to load</span>
+<span class="n">soName</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">so</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>编写一个插件<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>插件的开发环境依赖Doris的开发编译环境。所以请先确保Doris的编译开发环境运行正常。</p>
+<div class="section" id="id5">
+<h3>创建一个模块<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>我们可以通过以下命令在 <code class="docutils literal notranslate"><span class="pre">fe_plugins</span></code> 目录创建一个子模块用户实现创建和创建工程。其中 <code class="docutils literal notranslate"><span class="pre">doris-fe-test</span></code> 为插件名称。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mvn</span> <span class="n">archetype</span><span class="p">:</span> <span class="n">generate</span> <span class="o">-</span><span class="n">DarchetypeCatalog</span> <span class="o">=</span> <span class="n">internal</span> <span class="o">-</span><span class="n">DgroupId</span> <span class="o">=</span> <span class="n">org</span><span class="o">.</span><span class="n">apache</span> <span class="o">-</span><span class="n">DartifactId</span> <span class="o">=</span> <span class="n">doris</span><span class="o">-</span><span class="n">fe</span><span class="o">-</span><span class="n">test</span> <span class="o">-</span><span class="n">DinteractiveMode</span> <span class="o">=</span> <span class="n">false</span>
+</pre></div>
+</div>
+<p>这个命令会创建一个新的 maven 工程，并且自动向 <code class="docutils literal notranslate"><span class="pre">fe_plugins/pom.xml</span></code> 中添加一个子模块：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">.....</span>
+    <span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">doris</span><span class="o">-</span><span class="n">fe</span><span class="o">-</span><span class="n">plugins</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">packaging</span><span class="o">&gt;</span><span class="n">pom</span><span class="o">&lt;/</span><span class="n">packaging</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="mf">1.0</span><span class="o">-</span><span class="n">SNAPSHOT</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">modules</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="n">auditdemo</span><span class="o">&lt;/</span><span class="n">module</span><span class="o">&gt;</span>
+        <span class="c1"># new plugin module</span>
+        <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="n">doris</span><span class="o">-</span><span class="n">fe</span><span class="o">-</span><span class="n">test</span><span class="o">&lt;/</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">modules</span><span class="o">&gt;</span>
+    <span class="o">.....</span>
+</pre></div>
+</div>
+<p>新的工程目录结构如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="n">fe</span><span class="o">-</span><span class="n">test</span><span class="o">/</span>
+<span class="o">-</span><span class="n">pom</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">-</span><span class="n">src</span><span class="o">/</span>
+    <span class="o">----</span> <span class="n">main</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">org</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span>
+    <span class="o">-------</span> <span class="n">App</span><span class="o">.</span><span class="n">java</span> <span class="c1"># mvn auto generate, ignore</span>
+    <span class="o">----</span> <span class="n">test</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">org</span><span class="o">/</span><span class="n">apache</span>
+</pre></div>
+</div>
+<p>接下来我们在 <code class="docutils literal notranslate"><span class="pre">main</span></code> 目录下添加一个 <code class="docutils literal notranslate"><span class="pre">assembly</span></code> 目录来存放 <code class="docutils literal notranslate"><span class="pre">plugin.properties</span></code> 和 <code class="docutils literal notranslate"><span class="pre">zip.xml</span></code>。最终的工程目录结构如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">doris</span><span class="o">-</span><span class="n">fe</span><span class="o">-</span><span class="n">test</span><span class="o">/</span>
+<span class="o">-</span><span class="n">pom</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">-</span><span class="n">src</span><span class="o">/</span>
+<span class="o">----</span> <span class="n">main</span><span class="o">/</span>
+<span class="o">------</span> <span class="n">assembly</span><span class="o">/</span>
+<span class="o">--------</span> <span class="n">plugin</span><span class="o">.</span><span class="n">properties</span>
+<span class="o">--------</span> <span class="nb">zip</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">------</span> <span class="n">java</span><span class="o">/</span><span class="n">org</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span>
+<span class="o">--------</span><span class="n">App</span><span class="o">.</span><span class="n">java</span> <span class="c1"># mvn auto generate, ignore</span>
+<span class="o">----</span> <span class="n">test</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">org</span><span class="o">/</span><span class="n">apache</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="zip-xml">
+<h3>添加 zip.xml<a class="headerlink" href="#zip-xml" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">zip.xml</span></code> 用于描述最终生成的 zip 压缩包中的文件内容。（如 .jar file, plugin.properties 等等）</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;assembly&gt;
+    &lt;id&gt;plugin&lt;/id&gt;
+    &lt;formats&gt;
+        &lt;format&gt;zip&lt;/format&gt;
+    &lt;/formats&gt;
+    &lt;!-IMPORTANT: must be false-&gt;
+    &lt;includeBaseDirectory&gt;false&lt;/includeBaseDirectory&gt;
+    &lt;fileSets&gt;
+        &lt;fileSet&gt;
+            &lt;directory&gt;target&lt;/directory&gt;
+            &lt;includes&gt;
+                &lt;include&gt;*.jar&lt;/include&gt;
+            &lt;/ ncludes&gt;
+            &lt;outputDirectory&gt;/&lt;/outputDirectory&gt;
+        &lt;/fileSet&gt;
+
+        &lt;fileSet&gt;
+            &lt;directory&gt;src/main/assembly&lt;/directory&gt;
+            &lt;includes&gt;
+                &lt;include&gt;plugin.properties&lt;/include&gt;
+            &lt;/includes&gt;
+            &lt;outputDirectory&gt;/&lt;/outputDirectory&gt;
+        &lt;/fileSet&gt;
+    &lt;/fileSets&gt;
+&lt;/assembly&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="pom-xml">
+<h3>更新 pom.xml<a class="headerlink" href="#pom-xml" title="Permalink to this headline">¶</a></h3>
+<p>接下来我们需要更新子模块的 <code class="docutils literal notranslate"><span class="pre">pom.xml</span></code> 文件，添加 doris-fe 依赖：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.apache&lt;/groupId&gt;
+        &lt;artifactId&gt;doris-fe-plugins&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;artifactId&gt;auditloader&lt;/artifactId&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache&lt;/groupId&gt;
+            &lt;artifactId&gt;doris-fe&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- other dependencies --&gt;
+        &lt;dependency&gt;
+            ...
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;finalName&gt;auditloader&lt;/finalName&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+                &lt;version&gt;2.4.1&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;appendAssemblyId&gt;false&lt;/appendAssemblyId&gt;
+                    &lt;descriptors&gt;
+                        &lt;descriptor&gt;src/main/assembly/zip.xml&lt;/descriptor&gt;
+                    &lt;/descriptors&gt;
+                &lt;/configuration&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;make-assembly&lt;/id&gt;
+                        &lt;phase&gt;package&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;single&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>实现插件<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>之后我们就可以开始愉快的进行插件功能的开发啦。插件需要实现 <code class="docutils literal notranslate"><span class="pre">Plugin</span></code> 接口。具体可以参阅 Doris 自带的 <code class="docutils literal notranslate"><span class="pre">auditdemo</span></code> 插件示例代码。</p>
+</div>
+<div class="section" id="id7">
+<h3>编译<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>在编译插件之前，需要先执行 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">build.sh</span> <span class="pre">--fe</span></code> 进行 Doris FE 代码的编译，并确保编译成功。</p>
+<p>之后，执行 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">build_plugin.sh</span></code> 编译所有插件。最终的产出会存放在 <code class="docutils literal notranslate"><span class="pre">fe_plugins/output</span></code> 目录中。</p>
+<p>或者也可以执行 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">build_plugin.sh</span> <span class="pre">--plugin</span> <span class="pre">your_plugin_name</span></code> 来仅编译指定的插件。</p>
+</div>
+<div class="section" id="id8">
+<h3>另一种开发方式<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>您可以直接通过修改自带的 <code class="docutils literal notranslate"><span class="pre">auditdemo</span></code> 插件示例代码进行开发。</p>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>部署<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>插件可以通过以下三种方式部署。</p>
+<ul class="simple">
+<li>将 <code class="docutils literal notranslate"><span class="pre">.zip</span></code> 文件放在 Http 或 Https 服务器上。如：<code class="docutils literal notranslate"><span class="pre">http://xxx.xxxxxx.com/data/plugin.zip</span></code>, Doris 会下载这个文件。</li>
+<li>本地 <code class="docutils literal notranslate"><span class="pre">.zip</span></code> 文件。 如：<code class="docutils literal notranslate"><span class="pre">/home/work/data/plugin.zip</span></code>。需要在所有 FE 和 BE 节点部署。</li>
+<li>本地目录。如：<code class="docutils literal notranslate"><span class="pre">/home/work/data/plugin/</span></code>。这个相当于 <code class="docutils literal notranslate"><span class="pre">.zip</span></code> 文件解压后的目录。需要在所有 FE 和 BE 节点部署。</li>
+</ul>
+<p>注意：需保证部署路径在整个插件生命周期内有效。</p>
+</div>
+<div class="section" id="id10">
+<h2>安装和卸载插件<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>通过如下命令安装和卸载插件。更多帮助请参阅 <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">INSTALL</span> <span class="pre">PLUGIN;</span></code> <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">IUNNSTALL</span> <span class="pre">PLUGIN;</span></code> <code class="docutils literal notranslate"><span class="pre">HELP</span> <span class="pre">SHOW</span> <span class="pre">PLUGINS;</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">install</span> <span class="n">plugin</span> <span class="kn">from</span> <span class="s2">&quot;/home/users/seaven/auditdemo.zip&quot;</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.09</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">plugins</span>\<span class="n">G</span>
+<span class="o">***************************</span> <span class="mf">1.</span> <span class="n">row</span> <span class="o">***************************</span>
+       <span class="n">Name</span><span class="p">:</span> <span class="n">auditloader</span>
+       <span class="n">Type</span><span class="p">:</span> <span class="n">AUDIT</span>
+<span class="n">Description</span><span class="p">:</span> <span class="n">load</span> <span class="n">audit</span> <span class="n">log</span> <span class="n">to</span> <span class="n">olap</span> <span class="n">load</span><span class="p">,</span> <span class="ow">and</span> <span class="n">user</span> <span class="n">can</span> <span class="n">view</span> <span class="n">the</span> <span class="n">statistic</span> <span class="n">of</span> <span class="n">queries</span>
+    <span class="n">Version</span><span class="p">:</span> <span class="mf">0.12</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">JavaVersion</span><span class="p">:</span> <span class="mf">1.8</span><span class="o">.</span><span class="mi">31</span>
+  <span class="n">ClassName</span><span class="p">:</span> <span class="n">AuditLoaderPlugin</span>
+     <span class="n">SoName</span><span class="p">:</span> <span class="n">NULL</span>
+    <span class="n">Sources</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cmy</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">doris</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">fe_plugins</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">auditloader</span><span class="o">.</span><span class="n">zip</span>
+     <span class="n">Status</span><span class="p">:</span> <span class="n">INSTALLED</span>
+<span class="o">***************************</span> <span class="mf">2.</span> <span class="n">row</span> <span class="o">***************************</span>
+       <span class="n">Name</span><span class="p">:</span> <span class="n">AuditLogBuilder</span>
+       <span class="n">Type</span><span class="p">:</span> <span class="n">AUDIT</span>
+<span class="n">Description</span><span class="p">:</span> <span class="n">builtin</span> <span class="n">audit</span> <span class="n">logger</span>
+    <span class="n">Version</span><span class="p">:</span> <span class="mf">0.12</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">JavaVersion</span><span class="p">:</span> <span class="mf">1.8</span><span class="o">.</span><span class="mi">31</span>
+  <span class="n">ClassName</span><span class="p">:</span> <span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">doris</span><span class="o">.</span><span class="n">qe</span><span class="o">.</span><span class="n">AuditLogBuilder</span>
+     <span class="n">SoName</span><span class="p">:</span> <span class="n">NULL</span>
+    <span class="n">Sources</span><span class="p">:</span> <span class="n">Builtin</span>
+     <span class="n">Status</span><span class="p">:</span> <span class="n">INSTALLED</span>
+<span class="mi">2</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">uninstall</span> <span class="n">plugin</span> <span class="n">auditloader</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.05</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">plugins</span><span class="p">;</span>
+<span class="n">Empty</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user-defined-function.html" class="btn btn-neutral float-right" title="User Define Function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="doris-on-es.html" class="btn btn-neutral float-left" title="Doris On ES" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

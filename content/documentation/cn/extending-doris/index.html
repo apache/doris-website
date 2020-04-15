@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Doris On ES" href="doris-on-es.html" />
+    <link rel="next" title="审计日志插件" href="audit-plugin.html" />
     <link rel="prev" title="变量" href="../administrator-guide/variables.html" /> 
 </head>
 
@@ -91,7 +91,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../getting-started/index.html">开始使用</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administrator-guide/index.html">操作手册</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">扩展功能</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin.html">审计日志插件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="doris-on-es.html">Doris On ES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html">插件开发手册</a></li>
 <li class="toctree-l3"><a class="reference internal" href="user-defined-function.html">User Define Function</a></li>
 </ul>
 </li>
@@ -174,6 +176,16 @@
 <h1>扩展功能<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="audit-plugin.html">审计日志插件</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="audit-plugin.html#id2">编译、配置和部署</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin.html#id3">编译</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin.html#id4">配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin.html#id5">部署</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audit-plugin.html#id6">安装</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="doris-on-es.html">Doris On ES</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es.html#id1">名词解释</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es.html#id2">如何使用</a><ul>
@@ -188,6 +200,22 @@
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es.html#id6">原理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es.html#push-down-operations">Push-Down operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doris-on-es.html#id7">其他说明</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugin-development-manual.html">插件开发手册</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual.html#id2">介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual.html#id3">插件组成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual.html#id4">编写一个插件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html#id5">创建一个模块</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html#zip-xml">添加 zip.xml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html#pom-xml">更新 pom.xml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html#id6">实现插件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html#id7">编译</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plugin-development-manual.html#id8">另一种开发方式</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual.html#id9">部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugin-development-manual.html#id10">安装和卸载插件</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user-defined-function.html">User Define Function</a><ul>
@@ -219,11 +247,28 @@
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="doris-on-es.html" class="btn btn-neutral float-right" title="Doris On ES" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="audit-plugin.html" class="btn btn-neutral float-right" title="审计日志插件" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../administrator-guide/variables.html" class="btn btn-neutral float-left" title="变量" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

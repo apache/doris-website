@@ -450,7 +450,7 @@ under the License.
 </li>
 <li><p class="first">配置 FE</p>
 <ol class="simple">
-<li>配置文件为 conf/fe.conf。其中注意：<code class="docutils literal notranslate"><span class="pre">meta_dir</span></code>：元数据存放位置。默认在 fe/palo-meta/ 下。需<strong>手动创建</strong>该目录。</li>
+<li>配置文件为 conf/fe.conf。其中注意：<code class="docutils literal notranslate"><span class="pre">meta_dir</span></code>：元数据存放位置。默认在 fe/doris-meta/ 下。需<strong>手动创建</strong>该目录。</li>
 <li>fe.conf 中 JAVA_OPTS 默认 java 最大堆内存为 4GB，建议生产环境调整至 8G 以上。</li>
 </ol>
 </li>
@@ -469,7 +469,7 @@ under the License.
 <p>将源码编译生成的 output 下的 be 文件夹拷贝到 BE 的节点的指定部署路径下。</p>
 </li>
 <li><p class="first">修改所有 BE 的配置</p>
-<p>修改 be/conf/be.conf。主要是配置 <code class="docutils literal notranslate"><span class="pre">storage_root_path</span></code>：数据存放目录，使用 <code class="docutils literal notranslate"><span class="pre">;</span></code> 分隔（最后一个目录后不要加 <code class="docutils literal notranslate"><span class="pre">;</span></code>），其它可以采用默认值。</p>
+<p>修改 be/conf/be.conf。主要是配置 <code class="docutils literal notranslate"><span class="pre">storage_root_path</span></code>：数据存放目录。默认在be/storage下，需要<strong>手动创建</strong>该目录。多个路径之间使用 <code class="docutils literal notranslate"><span class="pre">;</span></code> 分隔（最后一个目录后不要加 <code class="docutils literal notranslate"><span class="pre">;</span></code>）。</p>
 </li>
 <li><p class="first">在 FE 中添加所有 BE 节点</p>
 <p>BE 节点需要先在 FE 中添加，才可加入集群。可以使用 mysql-client 连接到 FE：</p>
@@ -540,6 +540,7 @@ under the License.
 <p>其中 host 为 Follower 或 Observer 所在节点 ip，port 为其配置文件 fe.conf 中的 edit_log_port。</p>
 <p>配置及启动 Follower 或 Observer。Follower 和 Observer 的配置同 Leader 的配置。第一次启动时，需执行以下命令：</p>
 <p><code class="docutils literal notranslate"><span class="pre">./bin/start_fe.sh</span> <span class="pre">--helper</span> <span class="pre">host:port</span> <span class="pre">--daemon</span></code></p>
+<p>其中 host 为 Leader 所在节点 ip, port 为 Leader 的配置文件 fe.conf 中的 edit_log_port。–helper 参数仅在 follower 和 observer 第一次启动时才需要。</p>
 <p>查看 Follower 或 Observer 运行状态。使用 mysql-client 连接到任一已启动的 FE，并执行：SHOW PROC ‘/frontends’; 可以查看当前已加入集群的 FE 及其对应角色。</p>
 <blockquote>
 <div><p>FE 扩容注意事项：</p>
@@ -644,7 +645,7 @@ under the License.
 </li>
 <li><p class="first">Doris 各节点认证机制</p>
 <p>除了 Master FE 以外，其余角色节点（Follower FE，Observer FE，Backend），都需要通过 <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">SYSTEM</span> <span class="pre">ADD</span></code> 语句先注册到集群，然后才能加入集群。</p>
-<p>Master FE 在第一次启动时，会在 palo-meta/image/VERSION 文件中生成一个 cluster_id。</p>
+<p>Master FE 在第一次启动时，会在 doris-meta/image/VERSION 文件中生成一个 cluster_id。</p>
 <p>FE 在第一次加入集群时，会首先从 Master FE 获取这个文件。之后每次 FE 之间的重新连接（FE 重启），都会校验自身 cluster id 是否与已存在的其它 FE 的 cluster id 相同。如果不同，则该 FE 会自动退出。</p>
 <p>BE 在第一次接收到 Master FE 的心跳时，会从心跳中获取到 cluster id，并记录到数据目录的 <code class="docutils literal notranslate"><span class="pre">cluster_id</span></code> 文件中。之后的每次心跳都会比对 FE 发来的 cluster id。如果 cluster id 不相等，则 BE 会拒绝响应 FE 的心跳。</p>
 <p>心跳中同时会包含 Master FE 的 ip。当 FE 切主时，新的 Master FE 会携带自身的 ip 发送心跳给 BE，BE 会更新自身保存的 Master FE 的 ip。</p>
@@ -673,7 +674,24 @@ under the License.
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

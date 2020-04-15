@@ -411,14 +411,15 @@
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id2">名词解释</a></li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id3">原理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id4">使用方式</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id5">建表</a></li>
-<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id6">开启动态分区功能</a></li>
-<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id7">停止动态分区功能</a></li>
-<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id8">修改动态分区属性</a></li>
-<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id9">查看动态分区表调度情况</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id5">动态分区属性参数说明:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id6">建表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id7">开启动态分区功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id8">停止动态分区功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id9">修改动态分区属性</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id10">查看动态分区表调度情况</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id10">高级操作</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/dynamic-partition.html#id11">高级操作</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#fe">FE 配置项</a></li>
 <li class="toctree-l4"><a class="reference internal" href="administrator-guide/dynamic-partition.html#http-restful-api">HTTP Restful API</a></li>
 </ul>
@@ -454,6 +455,16 @@
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/privilege.html#admin-grant">ADMIN/GRANT 权限说明</a></li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/privilege.html#id6">一些说明</a></li>
 <li class="toctree-l3"><a class="reference internal" href="administrator-guide/privilege.html#id7">最佳实践</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="administrator-guide/segment-v2-usage.html">Doris Segment V2上线和试用手册</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/segment-v2-usage.html#id1">背景</a></li>
+<li class="toctree-l3"><a class="reference internal" href="administrator-guide/segment-v2-usage.html#id2">上线</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/segment-v2-usage.html#id3">上线验证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/segment-v2-usage.html#segment-v2">全量开启segment v2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="administrator-guide/segment-v2-usage.html#segment-v1v2">转化segment v1格式为v2</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="administrator-guide/small-file-mgr.html">文件管理器</a><ul>
@@ -500,6 +511,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="extending-doris/index.html">扩展功能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extending-doris/audit-plugin.html">审计日志插件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extending-doris/audit-plugin.html#id2">编译、配置和部署</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/audit-plugin.html#id3">编译</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/audit-plugin.html#id4">配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/audit-plugin.html#id5">部署</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/audit-plugin.html#id6">安装</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="extending-doris/doris-on-es.html">Doris On ES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="extending-doris/doris-on-es.html#id1">名词解释</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extending-doris/doris-on-es.html#id2">如何使用</a><ul>
@@ -514,6 +535,22 @@
 <li class="toctree-l3"><a class="reference internal" href="extending-doris/doris-on-es.html#id6">原理</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extending-doris/doris-on-es.html#push-down-operations">Push-Down operations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="extending-doris/doris-on-es.html#id7">其他说明</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extending-doris/plugin-development-manual.html">插件开发手册</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id2">介绍</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id3">插件组成</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id4">编写一个插件</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id5">创建一个模块</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/plugin-development-manual.html#zip-xml">添加 zip.xml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/plugin-development-manual.html#pom-xml">更新 pom.xml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id6">实现插件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id7">编译</a></li>
+<li class="toctree-l4"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id8">另一种开发方式</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id9">部署</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extending-doris/plugin-development-manual.html#id10">安装和卸载插件</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="extending-doris/user-defined-function.html">User Define Function</a><ul>
@@ -800,7 +837,24 @@
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       

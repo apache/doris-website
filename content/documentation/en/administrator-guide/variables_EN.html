@@ -432,6 +432,9 @@ Used for compatibility with MySQL clients. No practical effect.</p>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">use_v2_rollup</span></code></p>
 <p>Used to control the sql query to use segment v2 rollup index to get data. This variable is only used for validation when upgrading to segment v2 feature. Otherwise, not recommended to use.</p>
 </li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">rewrite_count_distinct_to_bitmap_hll</span></code></p>
+<p>Whether to rewrite count distinct queries of bitmap and HLL types as bitmap_union_count and hll_union_agg.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -440,7 +443,24 @@ Used for compatibility with MySQL clients. No practical effect.</p>
            </div>
            
           </div>
-          <footer>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
