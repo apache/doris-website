@@ -108,7 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../segment-v2-usage.html">Doris Segment V2上线和试用手册</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../segment-v2-usage.html">Segment V2 升级手册</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
@@ -336,7 +336,7 @@ under the License.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">tbl</span> <span class="n">TEMPORARY</span> <span class="n">PARTITION</span><span class="p">(</span><span class="n">tp1</span><span class="p">,</span> <span class="n">tp2</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="n">SELECT</span> <span class="o">....</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span><span class="p">:</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:123&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;temporary_partition: tp1, tp2, ...&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">testData</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="n">port</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">testDb</span><span class="o">/</span><span class="n">testTbl</span><span class="o">/</span><span class="n">_stream_load</span>    
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">--</span><span class="n">location</span><span class="o">-</span><span class="n">trusted</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span><span class="p">:</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;label:123&quot;</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;temporary_partitions: tp1, tp2, ...&quot;</span> <span class="o">-</span><span class="n">T</span> <span class="n">testData</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">:</span><span class="n">port</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">testDb</span><span class="o">/</span><span class="n">testTbl</span><span class="o">/</span><span class="n">_stream_load</span>    
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>LOAD LABEL example_db.label1

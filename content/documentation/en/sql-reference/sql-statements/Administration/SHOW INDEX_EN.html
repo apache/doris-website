@@ -205,9 +205,13 @@ under the License.
 <h1>SHOW INDEX<a class="headerlink" href="#show-index" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>This statement is used to show all index(only bitmap index in current version) of a table
-语法：
-    SHOW INDEX[ES] FROM [db_name.]table_name;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">statement</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">show</span> <span class="nb">all</span> <span class="n">index</span><span class="p">(</span><span class="n">only</span> <span class="n">bitmap</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">current</span> <span class="n">version</span><span class="p">)</span> <span class="n">of</span> <span class="n">a</span> <span class="n">table</span>
+<span class="n">Grammar</span><span class="p">:</span>
+    <span class="n">SHOW</span> <span class="n">INDEX</span><span class="p">[</span><span class="n">ES</span><span class="p">]</span> <span class="n">FROM</span> <span class="p">[</span><span class="n">db_name</span><span class="o">.</span><span class="p">]</span><span class="n">table_name</span> <span class="p">[</span><span class="n">FROM</span> <span class="n">database</span><span class="p">];</span>
+    
+    <span class="n">OR</span>
+
+    <span class="n">SHOW</span> <span class="n">KEY</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="n">FROM</span> <span class="p">[</span><span class="n">db_name</span><span class="o">.</span><span class="p">]</span><span class="n">table_name</span> <span class="p">[</span><span class="n">FROM</span> <span class="n">database</span><span class="p">];</span>
 </pre></div>
 </div>
 </div>

@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Delete &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Schema Change" href="../alter-table/index.html" />
+    <link rel="prev" title="Insert Into" href="insert-into-manual_EN.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../cn/index.html">中文</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">English</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../downloads/index.html">Downloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">Compilation and Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Administrator Guide</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Load Data</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="load-manual_EN.html">Introduction Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="broker-load-manual_EN.html">Broker Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="stream-load-manual_EN.html">Stream load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="routine-load-manual_EN.html">Routine Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="insert-into-manual_EN.html">Insert Into</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">Schema Change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../operation/index.html">Maintainence Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore_EN.html">Backup and Recovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker_EN.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join_EN.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition_EN.html">Dynamic Partition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export_manual_EN.html">Data export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege_EN.html">Authority Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr_EN.html">File Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode_EN.html">SQL MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone_EN.html">Time zone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables_EN.html">Variable</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">Extending Ability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">Design Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">Developer Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache Commnity</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">English</a> &raquo;</li>
+        
+          <li><a href="../index.html">Administrator Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Load Data</a> &raquo;</li>
+        
+      <li>Delete</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/en/administrator-guide/load-data/delete-manual_EN.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="delete">
+<h1>Delete<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h1>
+<p>Unlike other import methods, delete is a synchronization process. Similar to insert into, all delete operations are an independent import job in Doris. Generally, delete statements need to specify tables, partitions and delete conditions to tell which data to be deleted, and the data on base index and rollup index will be deleted at the same time.</p>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
+<p>The delete statement’s syntax is as follows：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="n">FROM</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">PARTITION</span> <span class="n">partition_name</span><span class="p">]</span>
+<span class="n">WHERE</span>
+<span class="n">column_name1</span> <span class="n">op</span> <span class="n">value</span><span class="p">[</span> <span class="n">AND</span> <span class="n">column_name2</span> <span class="n">op</span> <span class="n">value</span> <span class="o">...</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>example 1：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="n">FROM</span> <span class="n">my_table</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>example 2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="n">FROM</span> <span class="n">my_table</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="n">AND</span> <span class="n">k2</span> <span class="o">=</span> <span class="s2">&quot;abc&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The following describes the parameters used in the delete statement:</p>
+<ul>
+<li><p class="first">PARTITION</p>
+<p>The target partition of the delete statement. If not specified, the table must be a single partition table, otherwise it cannot be deleted</p>
+</li>
+<li><p class="first">WHERE</p>
+<p>The conditiona of the delete statement. All delete statements must specify a where condition.</p>
+</li>
+</ul>
+<p>说明：</p>
+<ol class="simple">
+<li>The type of <code class="docutils literal notranslate"><span class="pre">OP</span></code> in the WHERE condition can only include <code class="docutils literal notranslate"><span class="pre">=,</span> <span class="pre">&gt;,</span> <span class="pre">&lt;,</span> <span class="pre">&gt;</span> <span class="pre">=,</span> <span class="pre">&lt;</span> <span class="pre">=,!=</span></code>. Currently, where key in (value1, Value2, value3) mode is not supported yet, may be added this support later.</li>
+<li>The column in the WHERE condition can only be the <code class="docutils literal notranslate"><span class="pre">key</span></code> column.</li>
+<li>Cannot delete when the <code class="docutils literal notranslate"><span class="pre">key</span></code> column does not exist in any rollup table.</li>
+<li>Each condition in WHERE condition can only be realated by <code class="docutils literal notranslate"><span class="pre">and</span></code>. If you want <code class="docutils literal notranslate"><span class="pre">or</span></code>, you are suggested to write these conditions into two delete statements.</li>
+<li>If the specified table is a range partitioned table, <code class="docutils literal notranslate"><span class="pre">PARTITION</span></code> must be specified unless the table is a single partition table,.</li>
+<li>Unlike the insert into command, delete statement cannot specify <code class="docutils literal notranslate"><span class="pre">label</span></code> manually. You can view the concept of <code class="docutils literal notranslate"><span class="pre">label</span></code> in [Insert Into] (./insert-into-manual.md)</li>
+</ol>
+</div>
+<div class="section" id="delete-result">
+<h2>Delete Result<a class="headerlink" href="#delete-result" title="Permalink to this headline">¶</a></h2>
+<p>The delete command is an SQL command, and the returned results are synchronous. It can be divided into the following types:</p>
+<ol>
+<li><p class="first">Successful visible</p>
+<p>If delete completes successfully and is visible, the following results will be returned, <code class="docutils literal notranslate"><span class="pre">query</span> <span class="pre">OK</span></code> indicates success.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.04</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;VISIBLE&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Submitted successfully, but not visible</p>
+<p>The transaction submission of Doris is divided into two steps: submission and publish version. Only after the publish version step is completed, the result will be visible to the user. If it has been submitted successfully, then it can be considered that the publish version step will eventually success. Doris will try to wait for publishing for a period of time after submitting. If it has timed out, even if the publishing version has not been completed, it will return to the user in priority and prompt the user that the submission has been completed but not visible. If delete has been committed and executed, but has not been published and visible, the following results will be returned.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.04</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;VISIBLE&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">,</span> <span class="s1">&#39;err&#39;</span><span class="p">:</span><span class="s1">&#39;delete job is committed but may be taking effect later&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>The result will return a JSON string at the same time:</p>
+<p><code class="docutils literal notranslate"><span class="pre">affected</span> <span class="pre">rows</span></code>: Indicates the row affected by this deletion. Since the deletion of Doris is currently a logical deletion, the value is always 0.</p>
+<p><code class="docutils literal notranslate"><span class="pre">label</span></code>: The label generated automatically to be the signature of the delete jobs. Each job has a unique label within a single database.</p>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code>: Indicates whether the data deletion is visible. If it is visible, <code class="docutils literal notranslate"><span class="pre">visible</span></code> will be displayed. If it is not visible, <code class="docutils literal notranslate"><span class="pre">committed</span></code> will be displayed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">txnId</span></code>: The transaction ID corresponding to the delete job</p>
+<p><code class="docutils literal notranslate"><span class="pre">err</span></code>: Field will display some details of this deletion</p>
+</li>
+<li><p class="first">Commit failed, transaction cancelled</p>
+<p>If the delete statement is not submitted successfully, it will be automatically aborted by Doris and the following results will be returned</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">partition</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">;</span>
+<span class="n">ERROR</span> <span class="mi">1064</span> <span class="p">(</span><span class="n">HY000</span><span class="p">):</span> <span class="n">errCode</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">detailMessage</span> <span class="o">=</span> <span class="p">{</span><span class="n">错误原因</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>example：</p>
+<p>A timeout deletion will return the timeout and unfinished replicas displayed as <code class="docutils literal notranslate"> <span class="pre">(tablet</span> <span class="pre">=</span> <span class="pre">replica)</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">partition</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">;</span>
+<span class="n">ERROR</span> <span class="mi">1064</span> <span class="p">(</span><span class="n">HY000</span><span class="p">):</span> <span class="n">errCode</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">detailMessage</span> <span class="o">=</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">delete</span> <span class="n">replicas</span> <span class="kn">from</span> <span class="nn">job</span><span class="p">:</span> <span class="mi">4005</span><span class="p">,</span> <span class="n">Unfinished</span> <span class="n">replicas</span><span class="p">:</span><span class="mi">10000</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span> <span class="mi">10001</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span> <span class="mi">10002</span><span class="o">=</span><span class="mi">60000</span>
+</pre></div>
+</div>
+<p><strong>The correct processing logic for the returned results of the delete operation is as follows:</strong></p>
+<ol class="simple">
+<li>If <code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">1064</span> <span class="pre">(HY000)</span></code> is returned, deletion fails</li>
+<li>If the returned result is <code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code>, the deletion is successful<ol>
+<li>If <code class="docutils literal notranslate"><span class="pre">status</span></code> is <code class="docutils literal notranslate"><span class="pre">committed</span></code>, the data deletion is committed and will be eventually invisible. Users can wait for a while and then use the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">delete</span></code> command to view the results.</li>
+<li>If <code class="docutils literal notranslate"><span class="pre">status</span></code> is <code class="docutils literal notranslate"><span class="pre">visible</span></code>, the data have been deleted successfully.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="relevant-configuration">
+<h2>Relevant Configuration<a class="headerlink" href="#relevant-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe-configuration">
+<h3>FE configuration<a class="headerlink" href="#fe-configuration" title="Permalink to this headline">¶</a></h3>
+<p><strong>TIMEOUT configuration</strong></p>
+<p>In general, Doris’s deletion timeout is limited from 30 seconds to 5 minutes. The specific time can be adjusted through the following configuration items</p>
+<ul>
+<li><p class="first">tablet_delete_timeout_second</p>
+<p>The timeout of delete itself can be elastically changed by the number of tablets in the specified partition. This configuration represents the average timeout contributed by a tablet. The default value is 2.</p>
+<p>Assuming that there are 5 tablets under the specified partition for this deletion, the timeout time available for the deletion is 10 seconds. Because the minimum timeout is 30 seconds which is higher than former timeout time, the final timeout is 30 seconds.</p>
+</li>
+<li><p class="first">load_straggler_wait_second</p>
+<p>If the user estimates a large amount of data, so that the upper limit of 5 minutes is insufficient, the user can adjust the upper limit of timeout through this item, and the default value is 300.</p>
+<p><strong>The specific calculation rule of timeout(seconds)</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">TIMEOUT</span> <span class="pre">=</span> <span class="pre">MIN(load_straggler_wait_second,</span> <span class="pre">MAX(30,</span> <span class="pre">tablet_delete_timeout_second</span> <span class="pre">*</span> <span class="pre">tablet_num))</span></code></p>
+</li>
+<li><p class="first">query_timeout</p>
+<p>Because delete itself is an SQL command, the deletion statement is also limited by the session variables, and the timeout is also affected by the session value <code class="docutils literal notranslate"><span class="pre">query'timeout</span></code>. You can increase the value by <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">query'timeout</span> <span class="pre">=</span> <span class="pre">xxx</span></code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="show-delete-history">
+<h2>Show delete history<a class="headerlink" href="#show-delete-history" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">The user can view the deletion completed in history through the show delete statement.</p>
+<p>Syntax</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">DELETE</span> <span class="p">[</span><span class="n">FROM</span> <span class="n">db_name</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_db</span><span class="p">;</span>
+<span class="o">+-----------+---------------+---------------------+-----------------+----------+</span>
+<span class="o">|</span> <span class="n">TableName</span> <span class="o">|</span> <span class="n">PartitionName</span> <span class="o">|</span> <span class="n">CreateTime</span>          <span class="o">|</span> <span class="n">DeleteCondition</span> <span class="o">|</span> <span class="n">State</span>    <span class="o">|</span>
+<span class="o">+-----------+---------------+---------------------+-----------------+----------+</span>
+<span class="o">|</span> <span class="n">empty_tbl</span> <span class="o">|</span> <span class="n">p3</span>            <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">15</span> <span class="mi">23</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="o">|</span> <span class="n">k1</span> <span class="n">EQ</span> <span class="s2">&quot;1&quot;</span>       <span class="o">|</span> <span class="n">FINISHED</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">test_tbl</span>  <span class="o">|</span> <span class="n">p4</span>            <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">15</span> <span class="mi">23</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">53</span> <span class="o">|</span> <span class="n">k1</span> <span class="n">GT</span> <span class="s2">&quot;80&quot;</span>      <span class="o">|</span> <span class="n">FINISHED</span> <span class="o">|</span>
+<span class="o">+-----------+---------------+---------------------+-----------------+----------+</span>
+<span class="mi">2</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../alter-table/index.html" class="btn btn-neutral float-right" title="Schema Change" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="insert-into-manual_EN.html" class="btn btn-neutral float-left" title="Insert Into" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

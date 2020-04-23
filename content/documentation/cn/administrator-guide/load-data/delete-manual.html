@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Delete &mdash; Doris Documentations 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="表结构变更" href="../alter-table/index.html" />
+    <link rel="prev" title="Insert Into" href="insert-into-manual.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Doris Documentations
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">中文</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../downloads/index.html">下载</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installing/index.html">编译与部署</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">开始使用</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">操作手册</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">数据导入</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="load-manual.html">导入总览</a></li>
+<li class="toctree-l4"><a class="reference internal" href="broker-load-manual.html">Broker Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="stream-load-manual.html">Stream load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="routine-load-manual.html">Routine Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="insert-into-manual.html">Insert Into</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Delete</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../alter-table/index.html">表结构变更</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../materialized-view/index.html">物化视图</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-actions/index.html">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../operation/index.html">运维操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../config/index.html">配置文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../backup-restore.html">备份与恢复</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../broker.html">Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../colocation-join.html">Colocation Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dynamic-partition.html">动态分区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../export-manual.html">数据导出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privilege.html">权限管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../segment-v2-usage.html">Segment V2 升级手册</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../small-file-mgr.html">文件管理器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-mode.html">SQL MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time-zone.html">时区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variables.html">变量</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending-doris/index.html">扩展功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/index.html">设计文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sql-reference/index.html">SQL 手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developer-guide/index.html">开发者手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../community/index.html">Apache 社区</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/index.html">English</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Doris Documentations</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">中文</a> &raquo;</li>
+        
+          <li><a href="../index.html">操作手册</a> &raquo;</li>
+        
+          <li><a href="index.html">数据导入</a> &raquo;</li>
+        
+      <li>Delete</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/apache/incubator-doris/blob/master/docs/documentation/cn/administrator-guide/load-data/delete-manual.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--><div class="section" id="delete">
+<h1>Delete<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h1>
+<p>Delete不同于其他导入方式，它是一个同步过程。和Insert into相似，所有的Delete操作在Doris中是一个独立的导入作业，一般Delete语句需要指定表和分区以及删除的条件来筛选要删除的数据，并将会同时删除base表和rollup表的数据。</p>
+<div class="section" id="id1">
+<h2>语法<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>主要的Delete语法如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="n">FROM</span> <span class="n">table_name</span> <span class="p">[</span><span class="n">PARTITION</span> <span class="n">partition_name</span><span class="p">]</span>
+<span class="n">WHERE</span>
+<span class="n">column_name1</span> <span class="n">op</span> <span class="n">value</span><span class="p">[</span> <span class="n">AND</span> <span class="n">column_name2</span> <span class="n">op</span> <span class="n">value</span> <span class="o">...</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>示例1：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="n">FROM</span> <span class="n">my_table</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>示例2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DELETE</span> <span class="n">FROM</span> <span class="n">my_table</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">WHERE</span> <span class="n">k1</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="n">AND</span> <span class="n">k2</span> <span class="o">=</span> <span class="s2">&quot;abc&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>下面介绍删除语句中使用到的参数：</p>
+<ul>
+<li><p class="first">PARTITION</p>
+<p>Delete语句的目标分区，若未指定，则此表必须为单分区表，否则无法delete</p>
+</li>
+<li><p class="first">WHERE</p>
+<p>Delete语句的条件语句，所有删除语句都必须指定WHERE语句</p>
+</li>
+</ul>
+<p>说明：</p>
+<ol class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">Where</span></code>语句中的op的类型可包括<code class="docutils literal notranslate"><span class="pre">=,&gt;,&lt;,&gt;=,&lt;=,!=</span></code>，目前暂时不支持 where key in (value1, value2, value3) 的方式选定范围，后续将加上此功能。</li>
+<li><code class="docutils literal notranslate"><span class="pre">Where</span></code>语句中的列只能是<code class="docutils literal notranslate"><span class="pre">key</span></code>列</li>
+<li>当选定的<code class="docutils literal notranslate"><span class="pre">key</span></code>列不存在某个rollup表内时，无法进行delete</li>
+<li>条件语句中各个条件只能是<code class="docutils literal notranslate"><span class="pre">and</span></code>关系，如希望达成<code class="docutils literal notranslate"><span class="pre">or</span></code>可将条件分别写入两个delete语句中</li>
+<li>如果指定表为RANGE分区表，则必须指定 <code class="docutils literal notranslate"><span class="pre">PARTITION</span></code>。如果是单分区表，可以不指定。</li>
+<li>不同于Insert into命令，delete不能手动指定<code class="docutils literal notranslate"><span class="pre">label</span></code>，有关label的概念可以查看[Insert Into文档] (./insert-into-manual.md)</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h2>返回结果<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Delete命令是一个SQL命令，返回结果是同步的，分为以下几种：</p>
+<ol>
+<li><p class="first">执行成功</p>
+<p>如果Delete顺利执行完成并可见，将返回下列结果，<code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code>表示成功</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.04</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;VISIBLE&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">提交成功，但未可见</p>
+<p>Doris的事务提交分为两步：提交和发布版本，只有完成了发布版本步骤，结果才对用户是可见的。若已经提交成功了，那么就可以认为最终一定会发布成功，Doris会尝试在提交完后等待发布一段时间，如果超时后即使发布版本还未完成也会优先返回给用户，提示用户提交已经完成。若如果Delete已经提交并执行，但是仍未发布版本和可见，将返回下列结果</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">PARTITION</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.04</span> <span class="n">sec</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;delete_e7830c72-eb14-4cb9-bbb6-eebd4511d251&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;VISIBLE&#39;</span><span class="p">,</span> <span class="s1">&#39;txnId&#39;</span><span class="p">:</span><span class="s1">&#39;4005&#39;</span><span class="p">,</span> <span class="s1">&#39;err&#39;</span><span class="p">:</span><span class="s1">&#39;delete job is committed but may be taking effect later&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>结果会同时返回一个json字符串：</p>
+<p><code class="docutils literal notranslate"><span class="pre">affected</span> <span class="pre">rows</span></code>表示此次删除影响的行，由于Doris的删除目前是逻辑删除，因此对于这个值是恒为0。</p>
+<p><code class="docutils literal notranslate"><span class="pre">label</span></code>为自动生成的 label，是该导入作业的标识。每个导入作业，都有一个在单 database 内部唯一的 Label。</p>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code>表示数据删除是否可见，如果可见，显示<code class="docutils literal notranslate"><span class="pre">VISIBLE</span></code>，如果不可见,显示<code class="docutils literal notranslate"><span class="pre">COMMITTED</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">txnId</span></code>为这个Delete job对应的事务id</p>
+<p><code class="docutils literal notranslate"><span class="pre">err</span></code>字段会显示一些本次删除的详细信息</p>
+</li>
+<li><p class="first">提交失败，事务取消</p>
+<p>如果Delete语句没有提交成功，将会被Doris自动中止，返回下列结果</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">partition</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">;</span>
+<span class="n">ERROR</span> <span class="mi">1064</span> <span class="p">(</span><span class="n">HY000</span><span class="p">):</span> <span class="n">errCode</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">detailMessage</span> <span class="o">=</span> <span class="p">{</span><span class="n">错误原因</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>示例：</p>
+<p>比如说一个超时的删除，将会返回timeout时间和未完成的<code class="docutils literal notranslate"><span class="pre">(tablet=replica)</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_tbl</span> <span class="n">partition</span> <span class="n">p1</span> <span class="n">where</span> <span class="n">k1</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">;</span>
+<span class="n">ERROR</span> <span class="mi">1064</span> <span class="p">(</span><span class="n">HY000</span><span class="p">):</span> <span class="n">errCode</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">detailMessage</span> <span class="o">=</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">delete</span> <span class="n">replicas</span> <span class="kn">from</span> <span class="nn">job</span><span class="p">:</span> <span class="mi">4005</span><span class="p">,</span> <span class="n">Unfinished</span> <span class="n">replicas</span><span class="p">:</span><span class="mi">10000</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span> <span class="mi">10001</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span> <span class="mi">10002</span><span class="o">=</span><span class="mi">60000</span>
+</pre></div>
+</div>
+<p><strong>综上，对于Delete操作返回结果的正确处理逻辑为：</strong></p>
+<ol class="simple">
+<li>如果返回结果为<code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">1064</span> <span class="pre">(HY000)</span></code>，则表示删除失败</li>
+<li>如果返回结果为<code class="docutils literal notranslate"><span class="pre">Query</span> <span class="pre">OK</span></code>，则表示删除执行成功<ol>
+<li>如果<code class="docutils literal notranslate"><span class="pre">status</span></code>为<code class="docutils literal notranslate"><span class="pre">COMMITTED</span></code>，表示数据仍不可见，用户可以稍等一段时间再用<code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">delete</span></code>命令查看结果</li>
+<li>如果<code class="docutils literal notranslate"><span class="pre">status</span></code>为<code class="docutils literal notranslate"><span class="pre">VISIBLE</span></code>，表示数据删除成功。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h2>可配置项<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fe">
+<h3>FE配置<a class="headerlink" href="#fe" title="Permalink to this headline">¶</a></h3>
+<p><strong>TIMEOUT配置</strong></p>
+<p>总体来说，Doris的删除作业的超时时间限制在30秒到5分钟时间内，具体时间可通过下面配置项调整</p>
+<ul>
+<li><p class="first">tablet_delete_timeout_second</p>
+<p>delete自身的超时时间是可受指定分区下tablet的数量弹性改变的，此项配置为平均一个tablet所贡献的timeout时间，默认值为2。</p>
+<p>假设此次删除所指定分区下有5个tablet，那么可提供给delete的timeout时间为10秒，由于低于最低超时时间30秒，因此最终超时时间为30秒。</p>
+</li>
+<li><p class="first">load_straggler_wait_second</p>
+<p>如果用户预估的数据量确实比较大，使得5分钟的上限不足时，用户可以通过此项调整timeout上限，默认值为300。</p>
+<p><strong>TIMEOUT的具体计算规则为(秒)</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">TIMEOUT</span> <span class="pre">=</span> <span class="pre">MIN(load_straggler_wait_second,</span> <span class="pre">MAX(30,</span> <span class="pre">tablet_delete_timeout_second</span> <span class="pre">*</span> <span class="pre">tablet_num))</span></code></p>
+</li>
+<li><p class="first">query_timeout</p>
+<p>因为delete本身是一个SQL命令，因此删除语句也会受session限制，timeout还受Session中的<code class="docutils literal notranslate"><span class="pre">query_timeout</span></code>值影响，可以通过<code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">query_timeout</span> <span class="pre">=</span> <span class="pre">xxx</span></code>来增加超时时间，单位是秒。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>查看历史记录<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p class="first">用户可以通过show delete语句查看历史上已执行完成的删除记录</p>
+<p>语法</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">DELETE</span> <span class="p">[</span><span class="n">FROM</span> <span class="n">db_name</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>示例</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">delete</span> <span class="kn">from</span> <span class="nn">test_db</span><span class="p">;</span>
+<span class="o">+-----------+---------------+---------------------+-----------------+----------+</span>
+<span class="o">|</span> <span class="n">TableName</span> <span class="o">|</span> <span class="n">PartitionName</span> <span class="o">|</span> <span class="n">CreateTime</span>          <span class="o">|</span> <span class="n">DeleteCondition</span> <span class="o">|</span> <span class="n">State</span>    <span class="o">|</span>
+<span class="o">+-----------+---------------+---------------------+-----------------+----------+</span>
+<span class="o">|</span> <span class="n">empty_tbl</span> <span class="o">|</span> <span class="n">p3</span>            <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">15</span> <span class="mi">23</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">35</span> <span class="o">|</span> <span class="n">k1</span> <span class="n">EQ</span> <span class="s2">&quot;1&quot;</span>       <span class="o">|</span> <span class="n">FINISHED</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">test_tbl</span>  <span class="o">|</span> <span class="n">p4</span>            <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">15</span> <span class="mi">23</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">53</span> <span class="o">|</span> <span class="n">k1</span> <span class="n">GT</span> <span class="s2">&quot;80&quot;</span>      <span class="o">|</span> <span class="n">FINISHED</span> <span class="o">|</span>
+<span class="o">+-----------+---------------+---------------------+-----------------+----------+</span>
+<span class="mi">2</span> <span class="n">rows</span> <span class="ow">in</span> <span class="nb">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../alter-table/index.html" class="btn btn-neutral float-right" title="表结构变更" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="insert-into-manual.html" class="btn btn-neutral float-left" title="Insert Into" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Doris(Incubating)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+<div role="contentinfo">
+    <p></p>
+    <p>
+
+        Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+
+    </p>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

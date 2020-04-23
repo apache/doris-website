@@ -422,9 +422,10 @@ FROM data_source
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定group.id和client.id，并且自动默认消费所有分区，且从末尾（OFFSET_END）开始订阅
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅
 
     CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+    COLUMNS TERMINATED BY &quot;,&quot;,
     COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100)
     PROPERTIES
     (
@@ -439,7 +440,8 @@ FROM data_source
         &quot;kafka_broker_list&quot; = &quot;broker1:9092,broker2:9092,broker3:9092&quot;,
         &quot;kafka_topic&quot; = &quot;my_topic&quot;,
         &quot;property.group.id&quot; = &quot;xxx&quot;,
-        &quot;property.client.id&quot; = &quot;xxx&quot;
+        &quot;property.client.id&quot; = &quot;xxx&quot;,
+        &quot;property.kafka_default_offsets&quot; = &quot;OFFSET_BEGINNING&quot;
     );
 
 2. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。导入任务为严格模式。

@@ -205,24 +205,24 @@ under the License.
 <h1>SHOW DATA<a class="headerlink" href="#show-data" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于展示数据量
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>该语句用于展示数据量和副本数量
 语法：
     SHOW DATA [FROM db_name[.table_name]];
     
 说明：
-    1. 如果不指定 FROM 子句，使用展示当前 db 下细分到各个 table 的数据量
-    2. 如果指定 FROM 子句，则展示 table 下细分到各个 index 的数据量
+    1. 如果不指定 FROM 子句，使用展示当前 db 下细分到各个 table 的数据量和副本数量
+    2. 如果指定 FROM 子句，则展示 table 下细分到各个 index 的数据量和副本数量
     3. 如果想查看各个 Partition 的大小，请参阅 help show partitions
 </pre></div>
 </div>
 </div>
 <div class="section" id="example">
 <h2>example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">展示默认</span> <span class="n">db</span> <span class="n">的各个</span> <span class="n">table</span> <span class="n">的数据量及汇总数据量</span>
-    <span class="n">SHOW</span> <span class="n">DATA</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. 展示默认 db 的各个 table 的数据量，副本数量，汇总数据量和汇总副本数量。
+    SHOW DATA;
     
-<span class="mf">2.</span> <span class="n">展示指定</span> <span class="n">db</span> <span class="n">的下指定表的细分数据量</span>
-    <span class="n">SHOW</span> <span class="n">DATA</span> <span class="n">FROM</span> <span class="n">example_db</span><span class="o">.</span><span class="n">table_name</span><span class="p">;</span>
+2. 展示指定 db 的下指定表的细分数据量和副本数量
+    SHOW DATA FROM example_db.table_name;
 </pre></div>
 </div>
 </div>
