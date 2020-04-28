@@ -1,0 +1,46 @@
+{
+  "en": [
+    {
+      "text": "Versions",
+      "items": [
+        {
+          "text": "master",
+          "link": "/../master/en/installing/compilation.html",
+          "target": "_blank"
+        },
+        {
+          "text": "branch-0.12",
+          "link": "/../branch-0.12/en/installing/compilation.html",
+          "target": "_blank"
+        },
+        {
+          "text": "branch-0.11",
+          "link": "/../branch-0.11/en/installing/compilation.html",
+          "target": "_blank"
+        }
+      ]
+    }
+  ],
+  "zh-CN": [
+    {
+      "text": "版本",
+      "items": [
+        {
+          "text": "master",
+          "link": "/../master/zh-CN/installing/compilation.html",
+          "target": "_blank"
+        },
+        {
+          "text": "branch-0.12",
+          "link": "/../branch-0.12/zh-CN/installing/compilation.html",
+          "target": "_blank"
+        },
+        {
+          "text": "branch-0.11",
+          "link": "/../branch-0.11/zh-CN/installing/compilation.html",
+          "target": "_blank"
+        }
+      ]
+    }
+  ]
+}
