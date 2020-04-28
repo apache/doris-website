@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Apache Doris 发布流程 | Apache Doris</title>
+    <meta name="generator" content="VuePress 1.4.1">
+    
+    <meta name="description" content="Apache Doris">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileColor" content="#000000">
+    <link rel="preload" href="/branch-0.11/assets/css/0.styles.2f8495b2.css" as="style"><link rel="preload" href="/branch-0.11/assets/js/app.82e90dc2.js" as="script"><link rel="preload" href="/branch-0.11/assets/js/4.af2e6818.js" as="script"><link rel="preload" href="/branch-0.11/assets/js/3.7820216c.js" as="script"><link rel="preload" href="/branch-0.11/assets/js/262.dbe93bbe.js" as="script"><link rel="prefetch" href="/branch-0.11/assets/js/10.9854a603.js"><link rel="prefetch" href="/branch-0.11/assets/js/100.7173c1b9.js"><link rel="prefetch" href="/branch-0.11/assets/js/101.748d79ae.js"><link rel="prefetch" href="/branch-0.11/assets/js/102.db617ce1.js"><link rel="prefetch" href="/branch-0.11/assets/js/103.4f0db538.js"><link rel="prefetch" href="/branch-0.11/assets/js/104.8af74057.js"><link rel="prefetch" href="/branch-0.11/assets/js/105.925ec2a8.js"><link rel="prefetch" href="/branch-0.11/assets/js/106.4a67e8c9.js"><link rel="prefetch" href="/branch-0.11/assets/js/107.14ff560e.js"><link rel="prefetch" href="/branch-0.11/assets/js/108.63ea5950.js"><link rel="prefetch" href="/branch-0.11/assets/js/109.937fbb6f.js"><link rel="prefetch" href="/branch-0.11/assets/js/11.7da19e79.js"><link rel="prefetch" href="/branch-0.11/assets/js/110.be933daa.js"><link rel="prefetch" href="/branch-0.11/assets/js/111.038234bc.js"><link rel="prefetch" href="/branch-0.11/assets/js/112.962c10f7.js"><link rel="prefetch" href="/branch-0.11/assets/js/113.aca2f8df.js"><link rel="prefetch" href="/branch-0.11/assets/js/114.e63ef585.js"><link rel="prefetch" href="/branch-0.11/assets/js/115.1158a47e.js"><link rel="prefetch" href="/branch-0.11/assets/js/116.4af0442c.js"><link rel="prefetch" href="/branch-0.11/assets/js/117.a1a7971d.js"><link rel="prefetch" href="/branch-0.11/assets/js/118.7e399492.js"><link rel="prefetch" href="/branch-0.11/assets/js/119.9bd1b6b8.js"><link rel="prefetch" href="/branch-0.11/assets/js/12.cded106e.js"><link rel="prefetch" href="/branch-0.11/assets/js/120.7bf494ce.js"><link rel="prefetch" href="/branch-0.11/assets/js/121.15600794.js"><link rel="prefetch" href="/branch-0.11/assets/js/122.58553703.js"><link rel="prefetch" href="/branch-0.11/assets/js/123.b9a6f598.js"><link rel="prefetch" href="/branch-0.11/assets/js/124.b9cf6263.js"><link rel="prefetch" href="/branch-0.11/assets/js/125.7ab6047d.js"><link rel="prefetch" href="/branch-0.11/assets/js/126.6683fd46.js"><link rel="prefetch" href="/branch-0.11/assets/js/127.39d82d66.js"><link rel="prefetch" href="/branch-0.11/assets/js/128.5805cd71.js"><link rel="prefetch" href="/branch-0.11/assets/js/129.8c9944f1.js"><link rel="prefetch" href="/branch-0.11/assets/js/13.e91aa314.js"><link rel="prefetch" href="/branch-0.11/assets/js/130.375e13b0.js"><link rel="prefetch" href="/branch-0.11/assets/js/131.51766a42.js"><link rel="prefetch" href="/branch-0.11/assets/js/132.7a952d61.js"><link rel="prefetch" href="/branch-0.11/assets/js/133.996ddd35.js"><link rel="prefetch" href="/branch-0.11/assets/js/134.ddfc4692.js"><link rel="prefetch" href="/branch-0.11/assets/js/135.581cf7a7.js"><link rel="prefetch" href="/branch-0.11/assets/js/136.622dadfc.js"><link rel="prefetch" href="/branch-0.11/assets/js/137.ed35f2ba.js"><link rel="prefetch" href="/branch-0.11/assets/js/138.c9ae8f4d.js"><link rel="prefetch" href="/branch-0.11/assets/js/139.9e57eb26.js"><link rel="prefetch" href="/branch-0.11/assets/js/14.25b3877a.js"><link rel="prefetch" href="/branch-0.11/assets/js/140.4b339a16.js"><link rel="prefetch" href="/branch-0.11/assets/js/141.0fcff1e7.js"><link rel="prefetch" href="/branch-0.11/assets/js/142.096f9edb.js"><link rel="prefetch" href="/branch-0.11/assets/js/143.db8cf33e.js"><link rel="prefetch" href="/branch-0.11/assets/js/144.0c7fd02f.js"><link rel="prefetch" href="/branch-0.11/assets/js/145.223f3408.js"><link rel="prefetch" href="/branch-0.11/assets/js/146.a97ff8a4.js"><link rel="prefetch" href="/branch-0.11/assets/js/147.63550679.js"><link rel="prefetch" href="/branch-0.11/assets/js/148.ccfa208d.js"><link rel="prefetch" href="/branch-0.11/assets/js/149.d5bc2c93.js"><link rel="prefetch" href="/branch-0.11/assets/js/15.d8ab4537.js"><link rel="prefetch" href="/branch-0.11/assets/js/150.d6b16b61.js"><link rel="prefetch" href="/branch-0.11/assets/js/151.c948f430.js"><link rel="prefetch" href="/branch-0.11/assets/js/152.9770b165.js"><link rel="prefetch" href="/branch-0.11/assets/js/153.f76bded0.js"><link rel="prefetch" href="/branch-0.11/assets/js/154.268822dd.js"><link rel="prefetch" href="/branch-0.11/assets/js/155.b02e3e2c.js"><link rel="prefetch" href="/branch-0.11/assets/js/156.daf744bd.js"><link rel="prefetch" href="/branch-0.11/assets/js/157.1d6c3202.js"><link rel="prefetch" href="/branch-0.11/assets/js/158.54a4000e.js"><link rel="prefetch" href="/branch-0.11/assets/js/159.7e404ca6.js"><link rel="prefetch" href="/branch-0.11/assets/js/16.59d946ee.js"><link rel="prefetch" href="/branch-0.11/assets/js/160.d13cd36f.js"><link rel="prefetch" href="/branch-0.11/assets/js/161.6d803ecc.js"><link rel="prefetch" href="/branch-0.11/assets/js/162.c3cf9dbe.js"><link rel="prefetch" href="/branch-0.11/assets/js/163.fd7733dc.js"><link rel="prefetch" href="/branch-0.11/assets/js/164.ff3c2690.js"><link rel="prefetch" href="/branch-0.11/assets/js/165.741a53f9.js"><link rel="prefetch" href="/branch-0.11/assets/js/166.f8d7a95b.js"><link rel="prefetch" href="/branch-0.11/assets/js/167.ed415fa2.js"><link rel="prefetch" href="/branch-0.11/assets/js/168.d6e47a8d.js"><link rel="prefetch" href="/branch-0.11/assets/js/169.ad0890c5.js"><link rel="prefetch" href="/branch-0.11/assets/js/17.64c271af.js"><link rel="prefetch" href="/branch-0.11/assets/js/170.91632f83.js"><link rel="prefetch" href="/branch-0.11/assets/js/171.0a3e9fbd.js"><link rel="prefetch" href="/branch-0.11/assets/js/172.3077ea7a.js"><link rel="prefetch" href="/branch-0.11/assets/js/173.00d728be.js"><link rel="prefetch" href="/branch-0.11/assets/js/174.8738dd78.js"><link rel="prefetch" href="/branch-0.11/assets/js/175.8d2ec949.js"><link rel="prefetch" href="/branch-0.11/assets/js/176.9a38f022.js"><link rel="prefetch" href="/branch-0.11/assets/js/177.6a803640.js"><link rel="prefetch" href="/branch-0.11/assets/js/178.e812862d.js"><link rel="prefetch" href="/branch-0.11/assets/js/179.c29e8bc2.js"><link rel="prefetch" href="/branch-0.11/assets/js/18.0007022a.js"><link rel="prefetch" href="/branch-0.11/assets/js/180.06d3ab04.js"><link rel="prefetch" href="/branch-0.11/assets/js/181.5db1bb4a.js"><link rel="prefetch" href="/branch-0.11/assets/js/182.eb41a71f.js"><link rel="prefetch" href="/branch-0.11/assets/js/183.4cc138bc.js"><link rel="prefetch" href="/branch-0.11/assets/js/184.8dba4cab.js"><link rel="prefetch" href="/branch-0.11/assets/js/185.f0c8a14e.js"><link rel="prefetch" href="/branch-0.11/assets/js/186.0d8bf278.js"><link rel="prefetch" href="/branch-0.11/assets/js/187.b598198d.js"><link rel="prefetch" href="/branch-0.11/assets/js/188.b7a8dee7.js"><link rel="prefetch" href="/branch-0.11/assets/js/189.6ecd80c8.js"><link rel="prefetch" href="/branch-0.11/assets/js/19.7d9029ba.js"><link rel="prefetch" href="/branch-0.11/assets/js/190.94c5a512.js"><link rel="prefetch" href="/branch-0.11/assets/js/191.247e87ab.js"><link rel="prefetch" href="/branch-0.11/assets/js/192.0205b750.js"><link rel="prefetch" href="/branch-0.11/assets/js/193.a7ab3484.js"><link rel="prefetch" href="/branch-0.11/assets/js/194.ee951866.js"><link rel="prefetch" href="/branch-0.11/assets/js/195.4e357b74.js"><link rel="prefetch" href="/branch-0.11/assets/js/196.7e8a4234.js"><link rel="prefetch" href="/branch-0.11/assets/js/197.e505ab6e.js"><link rel="prefetch" href="/branch-0.11/assets/js/198.15ce8866.js"><link rel="prefetch" href="/branch-0.11/assets/js/199.bf505102.js"><link rel="prefetch" href="/branch-0.11/assets/js/20.986e34aa.js"><link rel="prefetch" href="/branch-0.11/assets/js/200.8161438d.js"><link rel="prefetch" href="/branch-0.11/assets/js/201.c03ff1ae.js"><link rel="prefetch" href="/branch-0.11/assets/js/202.302e23a5.js"><link rel="prefetch" href="/branch-0.11/assets/js/203.76a413b8.js"><link rel="prefetch" href="/branch-0.11/assets/js/204.1d757a97.js"><link rel="prefetch" href="/branch-0.11/assets/js/205.46632dbc.js"><link rel="prefetch" href="/branch-0.11/assets/js/206.f1f2fed7.js"><link rel="prefetch" href="/branch-0.11/assets/js/207.5d2c0f6c.js"><link rel="prefetch" href="/branch-0.11/assets/js/208.c749b17e.js"><link rel="prefetch" href="/branch-0.11/assets/js/209.4af6b8e9.js"><link rel="prefetch" href="/branch-0.11/assets/js/21.56adc690.js"><link rel="prefetch" href="/branch-0.11/assets/js/210.728df82b.js"><link rel="prefetch" href="/branch-0.11/assets/js/211.004ec0b5.js"><link rel="prefetch" href="/branch-0.11/assets/js/212.d4957962.js"><link rel="prefetch" href="/branch-0.11/assets/js/213.cc9f8b49.js"><link rel="prefetch" href="/branch-0.11/assets/js/214.217846fd.js"><link rel="prefetch" href="/branch-0.11/assets/js/215.5a1df165.js"><link rel="prefetch" href="/branch-0.11/assets/js/216.38941d81.js"><link rel="prefetch" href="/branch-0.11/assets/js/217.ebe0d732.js"><link rel="prefetch" href="/branch-0.11/assets/js/218.a22a422b.js"><link rel="prefetch" href="/branch-0.11/assets/js/219.29488059.js"><link rel="prefetch" href="/branch-0.11/assets/js/22.531261fc.js"><link rel="prefetch" href="/branch-0.11/assets/js/220.3572617f.js"><link rel="prefetch" href="/branch-0.11/assets/js/221.0f3ef088.js"><link rel="prefetch" href="/branch-0.11/assets/js/222.03ae1b54.js"><link rel="prefetch" href="/branch-0.11/assets/js/223.cb5959e6.js"><link rel="prefetch" href="/branch-0.11/assets/js/224.773084ea.js"><link rel="prefetch" href="/branch-0.11/assets/js/225.4eadf2f6.js"><link rel="prefetch" href="/branch-0.11/assets/js/226.8f5c1228.js"><link rel="prefetch" href="/branch-0.11/assets/js/227.2de07b71.js"><link rel="prefetch" href="/branch-0.11/assets/js/228.7228d763.js"><link rel="prefetch" href="/branch-0.11/assets/js/229.0d7bd601.js"><link rel="prefetch" href="/branch-0.11/assets/js/23.c69d09f0.js"><link rel="prefetch" href="/branch-0.11/assets/js/230.faed9f7e.js"><link rel="prefetch" href="/branch-0.11/assets/js/231.d756175d.js"><link rel="prefetch" href="/branch-0.11/assets/js/232.271a32ee.js"><link rel="prefetch" href="/branch-0.11/assets/js/233.5f44b86d.js"><link rel="prefetch" href="/branch-0.11/assets/js/234.53b429ac.js"><link rel="prefetch" href="/branch-0.11/assets/js/235.8536b164.js"><link rel="prefetch" href="/branch-0.11/assets/js/236.7ff8e34b.js"><link rel="prefetch" href="/branch-0.11/assets/js/237.e3a12f9c.js"><link rel="prefetch" href="/branch-0.11/assets/js/238.877292bd.js"><link rel="prefetch" href="/branch-0.11/assets/js/239.2cf4da30.js"><link rel="prefetch" href="/branch-0.11/assets/js/24.4296b038.js"><link rel="prefetch" href="/branch-0.11/assets/js/240.f1a41a9f.js"><link rel="prefetch" href="/branch-0.11/assets/js/241.8098bae2.js"><link rel="prefetch" href="/branch-0.11/assets/js/242.58ad4fd7.js"><link rel="prefetch" href="/branch-0.11/assets/js/243.a04b5f8f.js"><link rel="prefetch" href="/branch-0.11/assets/js/244.c5adb3e7.js"><link rel="prefetch" href="/branch-0.11/assets/js/245.48266e54.js"><link rel="prefetch" href="/branch-0.11/assets/js/246.9e73d2a3.js"><link rel="prefetch" href="/branch-0.11/assets/js/247.a2e0262c.js"><link rel="prefetch" href="/branch-0.11/assets/js/248.cc957acd.js"><link rel="prefetch" href="/branch-0.11/assets/js/249.10f06607.js"><link rel="prefetch" href="/branch-0.11/assets/js/25.c7c1503a.js"><link rel="prefetch" href="/branch-0.11/assets/js/250.c0d06864.js"><link rel="prefetch" href="/branch-0.11/assets/js/251.63252275.js"><link rel="prefetch" href="/branch-0.11/assets/js/252.ef19fa13.js"><link rel="prefetch" href="/branch-0.11/assets/js/253.5fc7402e.js"><link rel="prefetch" href="/branch-0.11/assets/js/254.36f8314a.js"><link rel="prefetch" href="/branch-0.11/assets/js/255.a54e0fac.js"><link rel="prefetch" href="/branch-0.11/assets/js/256.d2a75c06.js"><link rel="prefetch" href="/branch-0.11/assets/js/257.e635c54a.js"><link rel="prefetch" href="/branch-0.11/assets/js/258.c6e6b91b.js"><link rel="prefetch" href="/branch-0.11/assets/js/259.5c579c99.js"><link rel="prefetch" href="/branch-0.11/assets/js/26.a5f22b5f.js"><link rel="prefetch" href="/branch-0.11/assets/js/260.95be60ad.js"><link rel="prefetch" href="/branch-0.11/assets/js/261.a70efe31.js"><link rel="prefetch" href="/branch-0.11/assets/js/263.75c0d95e.js"><link rel="prefetch" href="/branch-0.11/assets/js/264.1bc91143.js"><link rel="prefetch" href="/branch-0.11/assets/js/265.75739e8a.js"><link rel="prefetch" href="/branch-0.11/assets/js/266.91937e08.js"><link rel="prefetch" href="/branch-0.11/assets/js/267.fd67f4e3.js"><link rel="prefetch" href="/branch-0.11/assets/js/268.09f2f3f5.js"><link rel="prefetch" href="/branch-0.11/assets/js/269.47a6e4a0.js"><link rel="prefetch" href="/branch-0.11/assets/js/27.8d255e49.js"><link rel="prefetch" href="/branch-0.11/assets/js/270.48ebf426.js"><link rel="prefetch" href="/branch-0.11/assets/js/271.c8c21396.js"><link rel="prefetch" href="/branch-0.11/assets/js/272.b739351a.js"><link rel="prefetch" href="/branch-0.11/assets/js/273.5e7643ea.js"><link rel="prefetch" href="/branch-0.11/assets/js/274.1e590160.js"><link rel="prefetch" href="/branch-0.11/assets/js/275.d474d336.js"><link rel="prefetch" href="/branch-0.11/assets/js/276.8a7e05bc.js"><link rel="prefetch" href="/branch-0.11/assets/js/277.14bef916.js"><link rel="prefetch" href="/branch-0.11/assets/js/278.80f0edd9.js"><link rel="prefetch" href="/branch-0.11/assets/js/279.dae65e47.js"><link rel="prefetch" href="/branch-0.11/assets/js/28.355771ab.js"><link rel="prefetch" href="/branch-0.11/assets/js/280.f4458603.js"><link rel="prefetch" href="/branch-0.11/assets/js/281.26fd5ace.js"><link rel="prefetch" href="/branch-0.11/assets/js/282.f37146d8.js"><link rel="prefetch" href="/branch-0.11/assets/js/283.7dc21f15.js"><link rel="prefetch" href="/branch-0.11/assets/js/284.320b5bbb.js"><link rel="prefetch" href="/branch-0.11/assets/js/285.cd3d7972.js"><link rel="prefetch" href="/branch-0.11/assets/js/286.667f0222.js"><link rel="prefetch" href="/branch-0.11/assets/js/287.708084fb.js"><link rel="prefetch" href="/branch-0.11/assets/js/288.e8514e2b.js"><link rel="prefetch" href="/branch-0.11/assets/js/289.1f3b0952.js"><link rel="prefetch" href="/branch-0.11/assets/js/29.76145b7a.js"><link rel="prefetch" href="/branch-0.11/assets/js/290.c276e52d.js"><link rel="prefetch" href="/branch-0.11/assets/js/291.d64951f0.js"><link rel="prefetch" href="/branch-0.11/assets/js/292.46063f3f.js"><link rel="prefetch" href="/branch-0.11/assets/js/293.968903ba.js"><link rel="prefetch" href="/branch-0.11/assets/js/294.0e3131f9.js"><link rel="prefetch" href="/branch-0.11/assets/js/295.dd75982d.js"><link rel="prefetch" href="/branch-0.11/assets/js/296.3c64983d.js"><link rel="prefetch" href="/branch-0.11/assets/js/297.fe69846a.js"><link rel="prefetch" href="/branch-0.11/assets/js/298.aae34112.js"><link rel="prefetch" href="/branch-0.11/assets/js/299.70e98fe1.js"><link rel="prefetch" href="/branch-0.11/assets/js/30.148fd4b3.js"><link rel="prefetch" href="/branch-0.11/assets/js/300.8c830656.js"><link rel="prefetch" href="/branch-0.11/assets/js/301.bea2e95e.js"><link rel="prefetch" href="/branch-0.11/assets/js/302.1a4f0a3d.js"><link rel="prefetch" href="/branch-0.11/assets/js/303.13245883.js"><link rel="prefetch" href="/branch-0.11/assets/js/304.8c483706.js"><link rel="prefetch" href="/branch-0.11/assets/js/305.81d90d36.js"><link rel="prefetch" href="/branch-0.11/assets/js/306.1e54a6a2.js"><link rel="prefetch" href="/branch-0.11/assets/js/307.c37e6728.js"><link rel="prefetch" href="/branch-0.11/assets/js/308.ed17484f.js"><link rel="prefetch" href="/branch-0.11/assets/js/309.d1a3519f.js"><link rel="prefetch" href="/branch-0.11/assets/js/31.c476a977.js"><link rel="prefetch" href="/branch-0.11/assets/js/310.777594b5.js"><link rel="prefetch" href="/branch-0.11/assets/js/311.d5e8c026.js"><link rel="prefetch" href="/branch-0.11/assets/js/312.190014f1.js"><link rel="prefetch" href="/branch-0.11/assets/js/313.93c384e1.js"><link rel="prefetch" href="/branch-0.11/assets/js/314.457dbcbb.js"><link rel="prefetch" href="/branch-0.11/assets/js/315.9b822b78.js"><link rel="prefetch" href="/branch-0.11/assets/js/316.2b35d83c.js"><link rel="prefetch" href="/branch-0.11/assets/js/317.65d56319.js"><link rel="prefetch" href="/branch-0.11/assets/js/318.93fd0800.js"><link rel="prefetch" href="/branch-0.11/assets/js/319.b9ffa5d9.js"><link rel="prefetch" href="/branch-0.11/assets/js/32.1e24f982.js"><link rel="prefetch" href="/branch-0.11/assets/js/320.9ca5a064.js"><link rel="prefetch" href="/branch-0.11/assets/js/321.4d9c4c37.js"><link rel="prefetch" href="/branch-0.11/assets/js/322.ad7eaac1.js"><link rel="prefetch" href="/branch-0.11/assets/js/323.c094be8c.js"><link rel="prefetch" href="/branch-0.11/assets/js/324.5765a080.js"><link rel="prefetch" href="/branch-0.11/assets/js/325.1bd8c185.js"><link rel="prefetch" href="/branch-0.11/assets/js/326.ed67c48c.js"><link rel="prefetch" href="/branch-0.11/assets/js/327.c21c83f1.js"><link rel="prefetch" href="/branch-0.11/assets/js/328.3d20761f.js"><link rel="prefetch" href="/branch-0.11/assets/js/329.f227de93.js"><link rel="prefetch" href="/branch-0.11/assets/js/33.03cc634d.js"><link rel="prefetch" href="/branch-0.11/assets/js/330.ee00cafb.js"><link rel="prefetch" href="/branch-0.11/assets/js/331.9538e09e.js"><link rel="prefetch" href="/branch-0.11/assets/js/332.3dcd3ea6.js"><link rel="prefetch" href="/branch-0.11/assets/js/333.1aa1e1a9.js"><link rel="prefetch" href="/branch-0.11/assets/js/334.0bf1014f.js"><link rel="prefetch" href="/branch-0.11/assets/js/335.2202e7ff.js"><link rel="prefetch" href="/branch-0.11/assets/js/336.77937462.js"><link rel="prefetch" href="/branch-0.11/assets/js/337.212431a4.js"><link rel="prefetch" href="/branch-0.11/assets/js/338.ef28673c.js"><link rel="prefetch" href="/branch-0.11/assets/js/339.521e71d9.js"><link rel="prefetch" href="/branch-0.11/assets/js/34.16ed5838.js"><link rel="prefetch" href="/branch-0.11/assets/js/340.6b2a5f91.js"><link rel="prefetch" href="/branch-0.11/assets/js/341.a83ea5c9.js"><link rel="prefetch" href="/branch-0.11/assets/js/342.aaf3a887.js"><link rel="prefetch" href="/branch-0.11/assets/js/343.32ca8626.js"><link rel="prefetch" href="/branch-0.11/assets/js/344.cd31411f.js"><link rel="prefetch" href="/branch-0.11/assets/js/345.6aae5b63.js"><link rel="prefetch" href="/branch-0.11/assets/js/346.fc7fe63c.js"><link rel="prefetch" href="/branch-0.11/assets/js/347.19ad3da4.js"><link rel="prefetch" href="/branch-0.11/assets/js/348.82be6d21.js"><link rel="prefetch" href="/branch-0.11/assets/js/349.8f98386d.js"><link rel="prefetch" href="/branch-0.11/assets/js/35.ab72764b.js"><link rel="prefetch" href="/branch-0.11/assets/js/350.4e1f9054.js"><link rel="prefetch" href="/branch-0.11/assets/js/351.3c77479e.js"><link rel="prefetch" href="/branch-0.11/assets/js/352.63cfd8c4.js"><link rel="prefetch" href="/branch-0.11/assets/js/353.3d99e180.js"><link rel="prefetch" href="/branch-0.11/assets/js/354.65f8a234.js"><link rel="prefetch" href="/branch-0.11/assets/js/355.dfbe2953.js"><link rel="prefetch" href="/branch-0.11/assets/js/356.ad22e2a7.js"><link rel="prefetch" href="/branch-0.11/assets/js/357.8e2bb3d1.js"><link rel="prefetch" href="/branch-0.11/assets/js/358.c8836aab.js"><link rel="prefetch" href="/branch-0.11/assets/js/359.50f7f124.js"><link rel="prefetch" href="/branch-0.11/assets/js/36.817be99f.js"><link rel="prefetch" href="/branch-0.11/assets/js/360.fb5c687a.js"><link rel="prefetch" href="/branch-0.11/assets/js/361.53f3991d.js"><link rel="prefetch" href="/branch-0.11/assets/js/362.9ecb4eaa.js"><link rel="prefetch" href="/branch-0.11/assets/js/363.50be9b53.js"><link rel="prefetch" href="/branch-0.11/assets/js/364.f7f0badc.js"><link rel="prefetch" href="/branch-0.11/assets/js/365.bf422a2b.js"><link rel="prefetch" href="/branch-0.11/assets/js/366.9064d72b.js"><link rel="prefetch" href="/branch-0.11/assets/js/367.3fb7b528.js"><link rel="prefetch" href="/branch-0.11/assets/js/368.06344c8d.js"><link rel="prefetch" href="/branch-0.11/assets/js/369.2566f8c3.js"><link rel="prefetch" href="/branch-0.11/assets/js/37.0d230b55.js"><link rel="prefetch" href="/branch-0.11/assets/js/370.dafc8b28.js"><link rel="prefetch" href="/branch-0.11/assets/js/371.48a50f44.js"><link rel="prefetch" href="/branch-0.11/assets/js/372.41d4201a.js"><link rel="prefetch" href="/branch-0.11/assets/js/373.8da91393.js"><link rel="prefetch" href="/branch-0.11/assets/js/374.f92b2691.js"><link rel="prefetch" href="/branch-0.11/assets/js/375.aed29c68.js"><link rel="prefetch" href="/branch-0.11/assets/js/376.2acf1e79.js"><link rel="prefetch" href="/branch-0.11/assets/js/377.19197d05.js"><link rel="prefetch" href="/branch-0.11/assets/js/378.f07c4da4.js"><link rel="prefetch" href="/branch-0.11/assets/js/379.957fac20.js"><link rel="prefetch" href="/branch-0.11/assets/js/38.93c1a30b.js"><link rel="prefetch" href="/branch-0.11/assets/js/380.387054bf.js"><link rel="prefetch" href="/branch-0.11/assets/js/381.50ab3412.js"><link rel="prefetch" href="/branch-0.11/assets/js/382.775421b0.js"><link rel="prefetch" href="/branch-0.11/assets/js/383.27bbb252.js"><link rel="prefetch" href="/branch-0.11/assets/js/384.e1b696c6.js"><link rel="prefetch" href="/branch-0.11/assets/js/385.aa8b7abd.js"><link rel="prefetch" href="/branch-0.11/assets/js/386.9434685d.js"><link rel="prefetch" href="/branch-0.11/assets/js/387.acbd77ba.js"><link rel="prefetch" href="/branch-0.11/assets/js/388.138ccdd9.js"><link rel="prefetch" href="/branch-0.11/assets/js/389.d1339038.js"><link rel="prefetch" href="/branch-0.11/assets/js/39.fb3ac7c1.js"><link rel="prefetch" href="/branch-0.11/assets/js/390.d5b0d999.js"><link rel="prefetch" href="/branch-0.11/assets/js/391.81911865.js"><link rel="prefetch" href="/branch-0.11/assets/js/392.659b3b85.js"><link rel="prefetch" href="/branch-0.11/assets/js/393.5a682425.js"><link rel="prefetch" href="/branch-0.11/assets/js/394.519d2d31.js"><link rel="prefetch" href="/branch-0.11/assets/js/395.0b4619c5.js"><link rel="prefetch" href="/branch-0.11/assets/js/396.1eab1b22.js"><link rel="prefetch" href="/branch-0.11/assets/js/397.d181f1e7.js"><link rel="prefetch" href="/branch-0.11/assets/js/398.7ae5d06a.js"><link rel="prefetch" href="/branch-0.11/assets/js/399.13b8ce89.js"><link rel="prefetch" href="/branch-0.11/assets/js/40.85c68630.js"><link rel="prefetch" href="/branch-0.11/assets/js/400.b1526a48.js"><link rel="prefetch" href="/branch-0.11/assets/js/401.340f8e32.js"><link rel="prefetch" href="/branch-0.11/assets/js/402.65f7548a.js"><link rel="prefetch" href="/branch-0.11/assets/js/403.7b50a7d0.js"><link rel="prefetch" href="/branch-0.11/assets/js/404.98c256b4.js"><link rel="prefetch" href="/branch-0.11/assets/js/405.b1a13525.js"><link rel="prefetch" href="/branch-0.11/assets/js/406.c8f59def.js"><link rel="prefetch" href="/branch-0.11/assets/js/407.c5568ddb.js"><link rel="prefetch" href="/branch-0.11/assets/js/408.9886a2af.js"><link rel="prefetch" href="/branch-0.11/assets/js/409.3c7a845f.js"><link rel="prefetch" href="/branch-0.11/assets/js/41.e63f0aa1.js"><link rel="prefetch" href="/branch-0.11/assets/js/410.2801ddaf.js"><link rel="prefetch" href="/branch-0.11/assets/js/411.7da11824.js"><link rel="prefetch" href="/branch-0.11/assets/js/412.71062fb1.js"><link rel="prefetch" href="/branch-0.11/assets/js/413.cd55bd98.js"><link rel="prefetch" href="/branch-0.11/assets/js/414.9930cc2d.js"><link rel="prefetch" href="/branch-0.11/assets/js/415.aee37944.js"><link rel="prefetch" href="/branch-0.11/assets/js/416.ebd04168.js"><link rel="prefetch" href="/branch-0.11/assets/js/417.5d0be271.js"><link rel="prefetch" href="/branch-0.11/assets/js/418.99b792ff.js"><link rel="prefetch" href="/branch-0.11/assets/js/419.f7a288ed.js"><link rel="prefetch" href="/branch-0.11/assets/js/42.0541922e.js"><link rel="prefetch" href="/branch-0.11/assets/js/420.bf96f41c.js"><link rel="prefetch" href="/branch-0.11/assets/js/421.3a41b99b.js"><link rel="prefetch" href="/branch-0.11/assets/js/422.d8ea7386.js"><link rel="prefetch" href="/branch-0.11/assets/js/423.c1163ea4.js"><link rel="prefetch" href="/branch-0.11/assets/js/424.e12f4fc5.js"><link rel="prefetch" href="/branch-0.11/assets/js/425.5bc1636e.js"><link rel="prefetch" href="/branch-0.11/assets/js/426.13e88466.js"><link rel="prefetch" href="/branch-0.11/assets/js/427.5411bc7b.js"><link rel="prefetch" href="/branch-0.11/assets/js/428.2928d03a.js"><link rel="prefetch" href="/branch-0.11/assets/js/429.60c12a6a.js"><link rel="prefetch" href="/branch-0.11/assets/js/43.f595d674.js"><link rel="prefetch" href="/branch-0.11/assets/js/430.ca5e0058.js"><link rel="prefetch" href="/branch-0.11/assets/js/431.6708d811.js"><link rel="prefetch" href="/branch-0.11/assets/js/432.4de7b1c0.js"><link rel="prefetch" href="/branch-0.11/assets/js/433.7ae2a8e5.js"><link rel="prefetch" href="/branch-0.11/assets/js/434.6efdf249.js"><link rel="prefetch" href="/branch-0.11/assets/js/435.5f8dc6a7.js"><link rel="prefetch" href="/branch-0.11/assets/js/436.1d62e7a7.js"><link rel="prefetch" href="/branch-0.11/assets/js/437.79d954b4.js"><link rel="prefetch" href="/branch-0.11/assets/js/438.176e82a3.js"><link rel="prefetch" href="/branch-0.11/assets/js/439.46a09108.js"><link rel="prefetch" href="/branch-0.11/assets/js/44.9c0544d4.js"><link rel="prefetch" href="/branch-0.11/assets/js/440.7e45f3cb.js"><link rel="prefetch" href="/branch-0.11/assets/js/441.992394e6.js"><link rel="prefetch" href="/branch-0.11/assets/js/442.d944d35f.js"><link rel="prefetch" href="/branch-0.11/assets/js/443.3bfec27f.js"><link rel="prefetch" href="/branch-0.11/assets/js/444.e7d8721b.js"><link rel="prefetch" href="/branch-0.11/assets/js/445.a3182083.js"><link rel="prefetch" href="/branch-0.11/assets/js/446.5fd9d76a.js"><link rel="prefetch" href="/branch-0.11/assets/js/447.db2214bd.js"><link rel="prefetch" href="/branch-0.11/assets/js/448.6533e184.js"><link rel="prefetch" href="/branch-0.11/assets/js/449.79528464.js"><link rel="prefetch" href="/branch-0.11/assets/js/45.d0f2dab6.js"><link rel="prefetch" href="/branch-0.11/assets/js/450.c8d486c8.js"><link rel="prefetch" href="/branch-0.11/assets/js/451.f268d3cd.js"><link rel="prefetch" href="/branch-0.11/assets/js/452.2a1c75a5.js"><link rel="prefetch" href="/branch-0.11/assets/js/453.59e6b1c2.js"><link rel="prefetch" href="/branch-0.11/assets/js/46.7c1f0fac.js"><link rel="prefetch" href="/branch-0.11/assets/js/47.678fd629.js"><link rel="prefetch" href="/branch-0.11/assets/js/48.0048e371.js"><link rel="prefetch" href="/branch-0.11/assets/js/49.a4b96884.js"><link rel="prefetch" href="/branch-0.11/assets/js/5.2b8724e0.js"><link rel="prefetch" href="/branch-0.11/assets/js/50.b4c681c1.js"><link rel="prefetch" href="/branch-0.11/assets/js/51.5ac58d91.js"><link rel="prefetch" href="/branch-0.11/assets/js/52.ca79cb5a.js"><link rel="prefetch" href="/branch-0.11/assets/js/53.3d0466d8.js"><link rel="prefetch" href="/branch-0.11/assets/js/54.e41844d3.js"><link rel="prefetch" href="/branch-0.11/assets/js/55.36a2324d.js"><link rel="prefetch" href="/branch-0.11/assets/js/56.cc964e85.js"><link rel="prefetch" href="/branch-0.11/assets/js/57.fb0b4404.js"><link rel="prefetch" href="/branch-0.11/assets/js/58.00106e0f.js"><link rel="prefetch" href="/branch-0.11/assets/js/59.77a96df1.js"><link rel="prefetch" href="/branch-0.11/assets/js/6.6b35b286.js"><link rel="prefetch" href="/branch-0.11/assets/js/60.4c5900ec.js"><link rel="prefetch" href="/branch-0.11/assets/js/61.31ee49a5.js"><link rel="prefetch" href="/branch-0.11/assets/js/62.d32cdd80.js"><link rel="prefetch" href="/branch-0.11/assets/js/63.fee0ead3.js"><link rel="prefetch" href="/branch-0.11/assets/js/64.97519d49.js"><link rel="prefetch" href="/branch-0.11/assets/js/65.5fb31f43.js"><link rel="prefetch" href="/branch-0.11/assets/js/66.1d9fd0b1.js"><link rel="prefetch" href="/branch-0.11/assets/js/67.54bc4784.js"><link rel="prefetch" href="/branch-0.11/assets/js/68.9864c505.js"><link rel="prefetch" href="/branch-0.11/assets/js/69.96e64289.js"><link rel="prefetch" href="/branch-0.11/assets/js/7.d3b9cd26.js"><link rel="prefetch" href="/branch-0.11/assets/js/70.a0573ab9.js"><link rel="prefetch" href="/branch-0.11/assets/js/71.ae49143c.js"><link rel="prefetch" href="/branch-0.11/assets/js/72.ca0fc1bb.js"><link rel="prefetch" href="/branch-0.11/assets/js/73.e68786a0.js"><link rel="prefetch" href="/branch-0.11/assets/js/74.0ffaa19b.js"><link rel="prefetch" href="/branch-0.11/assets/js/75.7a637ae1.js"><link rel="prefetch" href="/branch-0.11/assets/js/76.ea9d5d6c.js"><link rel="prefetch" href="/branch-0.11/assets/js/77.b6c25cb6.js"><link rel="prefetch" href="/branch-0.11/assets/js/78.6a9b8474.js"><link rel="prefetch" href="/branch-0.11/assets/js/79.9ba6ac6a.js"><link rel="prefetch" href="/branch-0.11/assets/js/8.33ad97a5.js"><link rel="prefetch" href="/branch-0.11/assets/js/80.44581423.js"><link rel="prefetch" href="/branch-0.11/assets/js/81.c138d89e.js"><link rel="prefetch" href="/branch-0.11/assets/js/82.395104e3.js"><link rel="prefetch" href="/branch-0.11/assets/js/83.09b4f5cd.js"><link rel="prefetch" href="/branch-0.11/assets/js/84.48f61346.js"><link rel="prefetch" href="/branch-0.11/assets/js/85.9d0fe35c.js"><link rel="prefetch" href="/branch-0.11/assets/js/86.dc1e03c9.js"><link rel="prefetch" href="/branch-0.11/assets/js/87.6b9b1e76.js"><link rel="prefetch" href="/branch-0.11/assets/js/88.18c11282.js"><link rel="prefetch" href="/branch-0.11/assets/js/89.2451e294.js"><link rel="prefetch" href="/branch-0.11/assets/js/9.0e456c57.js"><link rel="prefetch" href="/branch-0.11/assets/js/90.6d457523.js"><link rel="prefetch" href="/branch-0.11/assets/js/91.b72dba6a.js"><link rel="prefetch" href="/branch-0.11/assets/js/92.a43ca0a0.js"><link rel="prefetch" href="/branch-0.11/assets/js/93.2c9eb571.js"><link rel="prefetch" href="/branch-0.11/assets/js/94.f7a1e3cf.js"><link rel="prefetch" href="/branch-0.11/assets/js/95.2886a234.js"><link rel="prefetch" href="/branch-0.11/assets/js/96.6301559f.js"><link rel="prefetch" href="/branch-0.11/assets/js/97.c2de7e8b.js"><link rel="prefetch" href="/branch-0.11/assets/js/98.eabcd2ba.js"><link rel="prefetch" href="/branch-0.11/assets/js/99.f268a232.js"><link rel="prefetch" href="/branch-0.11/assets/js/vendors~docsearch.4e4574f6.js">
+    <link rel="stylesheet" href="/branch-0.11/assets/css/0.styles.2f8495b2.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/branch-0.11/zh-CN/" class="home-link router-link-active"><img src="/branch-0.11/images/doris-logo-only.png" alt="Apache Doris" class="logo"> <span class="site-name can-hide">Apache Doris</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <div class="can-hide"><!----></div></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><div><!----></div>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>编译与部署</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>开始使用</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>操作手册</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>扩展功能</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>设计文档</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>SQL 手册</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Apache 社区</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/branch-0.11/zh-CN/community/gitter.html" class="sidebar-link">Gitter 使用指南</a></li><li><a href="/branch-0.11/zh-CN/community/how-to-contribute.html" class="sidebar-link">为 Doris 做贡献</a></li><li><a href="/branch-0.11/zh-CN/community/members.html" class="sidebar-link">PMC Members &amp; Committer</a></li><li><a href="/branch-0.11/zh-CN/community/pull-request.html" class="sidebar-link">代码提交指南</a></li><li><a href="/branch-0.11/zh-CN/community/release-process.html" class="active sidebar-link">Apache Doris 发布流程</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_1-准备发布" class="sidebar-link">1. 准备发布</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_2-签名软件-gnupg-的安装配置" class="sidebar-link">2. 签名软件 GnuPG 的安装配置</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_3-生成新的签名" class="sidebar-link">3. 生成新的签名</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_4-上传签名公钥" class="sidebar-link">4. 上传签名公钥</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_5-生成-fingerprint-并上传到-apache-用户信息中" class="sidebar-link">5. 生成 fingerprint 并上传到 apache 用户信息中</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_6-生成-keys" class="sidebar-link">6. 生成 keys</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_7-打包签名" class="sidebar-link">7. 打包签名</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_8-上传签名的软件包和-keys-文件到-dev-svn" class="sidebar-link">8. 上传签名的软件包和 KEYS 文件到 DEV svn</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_9-发社区投票邮件" class="sidebar-link">9. 发社区投票邮件</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_10-投票通过后，发-result-邮件" class="sidebar-link">10. 投票通过后，发 Result 邮件</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_11-发邮件到-general-incubator-apache-org-进行投票" class="sidebar-link">11. 发邮件到 general@incubator.apache.org 进行投票</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_12-发-result-邮件到-general-incubator-apache-org" class="sidebar-link">12. 发 Result 邮件到 general@incubator.apache.org</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_13-上传-package-到-release" class="sidebar-link">13. 上传 package 到 release</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_14-发-announce-邮件到-general-incubator-apache-org" class="sidebar-link">14. 发 Announce 邮件到 general@incubator.apache.org</a></li><li class="sidebar-sub-header"><a href="/branch-0.11/zh-CN/community/release-process.html#_15-在-doris-官网和-github-发布链接" class="sidebar-link">15. 在 Doris 官网和 github 发布链接</a></li></ul></li><li><a href="/branch-0.11/zh-CN/community/subscribe-mail-list.html" class="sidebar-link">订阅邮件列表</a></li><li><a href="/branch-0.11/zh-CN/community/verify-apache-release.html" class="sidebar-link">Verify Apache Release</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="apache-doris-发布流程"><a href="#apache-doris-发布流程" class="header-anchor">#</a> Apache Doris 发布流程</h1> <p>Apache 的发布必须至少是 IPMC 成员，拥有 apache 邮箱的commiter，这个角色叫做 release manager。</p> <p>发布的大致流程如下：</p> <ol><li>在社区发起 DISCUSS;</li> <li>准备分支和打 tag;</li> <li>将 tag 打包签名；</li> <li>上传签名的软件包到 Apache SVN 的 DEV 目录</li> <li>发社区投票邮件</li> <li>投票通过后，发 Result 邮件</li> <li>发邮件到 general@incubator.apache.org 进行投票</li> <li>发 Result 邮件到 general@incubator.apache.org</li> <li>上传签名的软件包到 Apache SVN 的 release 目录，并生成相关链接</li> <li>准备 release note 并发 Announce 邮件到 general@incubator.apache.org</li> <li>在 Doris 官网和 github 发布下载链接</li></ol> <p>Release manager 在发布前需要先生成自己的签名公钥，并上传到公钥服务器，之后就可以用这个公钥对准备发布的软件包进行签名。</p> <h2 id="_1-准备发布"><a href="#_1-准备发布" class="header-anchor">#</a> 1. 准备发布</h2> <h3 id="_1-1-在社区发起-discuss"><a href="#_1-1-在社区发起-discuss" class="header-anchor">#</a> 1.1 在社区发起 DISCUSS</h3> <p>如果觉得已经修复了很多bug，开发了比较重要的 feature，任何 IPMC 成员都可以发起 DISCUSS 讨论发布新版本。
+可以发起一个标题为 [DISCUSS] x.y.z release 的邮件，在社区内部进行讨论，说明已经修复了哪些bug，开发了哪些 features。
+如果 DISCUSS 邮件得到大家支持就可以进行下一步。</p> <h3 id="_1-2-准备分支"><a href="#_1-2-准备分支" class="header-anchor">#</a> 1.2 准备分支</h3> <p>发布前需要先新建一个分支，这个分支要进行比较充分的测试，使得功能可用，bug收敛，重要bug都得到修复。</p> <p>例如：</p> <div class="language- extra-class"><pre class="language-text"><code>$ git checkout -b branch-0.9
+
+</code></pre></div><h3 id="_1-3-打-tag"><a href="#_1-3-打-tag" class="header-anchor">#</a> 1.3 打 tag</h3> <p>当上述分支已经比较稳定后，就可以在此分支上打 tag。
+记得在创建 tag 时，修改 <code>gensrc/script/gen_build_version.sh</code> 中的 <code>build_version</code> 变量。如 <code>build_version=&quot;0.10.0-release&quot;</code></p> <p>例如：</p> <div class="language- extra-class"><pre class="language-text"><code>$ git checkout branch-0.9
+$ git tag -a 0.9.0-rc01 -m &quot;0.9.0 release candidate 01&quot;
+$ git push origin 0.9.0-rc01
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 165 bytes | 0 bytes/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To git@github.com:apache/incubator-doris.git
+ * [new tag]         0.9.0-rc01 -&gt; 0.9.0-rc01
+
+$ git tag
+</code></pre></div><h2 id="_2-签名软件-gnupg-的安装配置"><a href="#_2-签名软件-gnupg-的安装配置" class="header-anchor">#</a> 2. 签名软件 GnuPG 的安装配置</h2> <h3 id="_2-1-gnupg"><a href="#_2-1-gnupg" class="header-anchor">#</a> 2.1 GnuPG</h3> <p>1991年，程序员Phil Zimmermann为了避开政府监视，开发了加密软件PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个PGP的替代品，取名为GnuPG。这就是GPG的由来。</p> <h3 id="_2-2-安装配置"><a href="#_2-2-安装配置" class="header-anchor">#</a> 2.2 安装配置</h3> <p>CentOS 安装命令：</p> <div class="language- extra-class"><pre class="language-text"><code>yum install gnupg
+</code></pre></div><p>安装完成后，默认配置文件 gpg.conf 会放在 home 目录下。</p> <div class="language- extra-class"><pre class="language-text"><code>~/.gnupg/gpg.conf
+</code></pre></div><p>如果不存在这个目录或文件，可以直接创建一个空文件。
+编辑gpg.conf, 修改或者增加 keyserver 配置：</p> <div class="language- extra-class"><pre class="language-text"><code>keyserver hkp://keys.gnupg.net
+</code></pre></div><p>Apache 签名推荐 SHA512， 可以通过配置 gpg 完成。
+编辑gpg.conf, 增加下面的三行：</p> <div class="language- extra-class"><pre class="language-text"><code>personal-digest-preferences SHA512
+cert-digest-algo SHA512
+default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
+</code></pre></div><h2 id="_3-生成新的签名"><a href="#_3-生成新的签名" class="header-anchor">#</a> 3. 生成新的签名</h2> <h3 id="_3-1-准备签名"><a href="#_3-1-准备签名" class="header-anchor">#</a> 3.1 准备签名</h3> <p>推荐的生成新签名的设置：</p> <p>这里必须通过 SecureCRT 等终端直接登录用户账户，不能通过 su - user 或者 ssh 转，否则密码输入 box 会显示不出来而报错。</p> <p>先看下 gpg 的 version 以及是否支持 SHA512.</p> <div class="language- extra-class"><pre class="language-text"><code>$ gpg --version
+gpg (GnuPG) 2.0.22
+libgcrypt 1.5.3
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: ~/.gnupg
+Supported algorithms:
+Pubkey: RSA, ?, ?, ELG, DSA
+Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+        CAMELLIA128, CAMELLIA192, CAMELLIA256
+Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+Compression: Uncompressed, ZIP, ZLIB, BZIP2
+</code></pre></div><h3 id="_3-2-生成新的签名"><a href="#_3-2-生成新的签名" class="header-anchor">#</a> 3.2 生成新的签名</h3> <div class="language- extra-class"><pre class="language-text"><code>$ gpg --gen-key
+gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 4096
+Requested keysize is 4096 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0)
+Key does not expire at all
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: xxx
+Name must be at least 5 characters long
+Real name: xxx-yyy
+Email address: xxx@apache.org
+Comment: xxx's key
+You selected this USER-ID:
+    &quot;xxx-yyy (xxx's key) &lt;xxx@apache.org&gt;&quot;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
+</code></pre></div><p>其中 Real name 需保持和 id.apache.org 中显示的 id 一致。
+Email address 为 apache 的邮箱。</p> <h3 id="_3-3-查看和输出"><a href="#_3-3-查看和输出" class="header-anchor">#</a> 3.3 查看和输出</h3> <p>第一行显示公钥文件名（pubring.gpg），第二行显示公钥特征（4096位，Hash字符串和生成时间），第三行显示&quot;用户ID&quot;，第四行显示私钥特征。</p> <div class="language- extra-class"><pre class="language-text"><code>$ gpg --list-keys
+/home/lide/.gnupg/pubring.gpg
+-----------------------------
+pub   4096R/33DBF2E0 2018-12-06
+uid                  xxx-yyy  (xxx's key) &lt;xxx@apache.org&gt;
+sub   4096R/0E8182E6 2018-12-06
+</code></pre></div><p>其中 xxx-yyy 就是用户ID。</p> <p>gpg --armor --output public-key.txt --export [用户ID]</p> <div class="language- extra-class"><pre class="language-text"><code>$ gpg --armor --output public-key.txt --export xxx-yyy
+$ cat public-key.txt
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+mQINBFwJEQ0BEACwqLluHfjBqD/RWZ4uoYxNYHlIzZvbvxAlwS2mn53BirLIU/G3
+9opMWNplvmK+3+gNlRlFpiZ7EvHsF/YJOAP59HmI2Z...
+</code></pre></div><h2 id="_4-上传签名公钥"><a href="#_4-上传签名公钥" class="header-anchor">#</a> 4. 上传签名公钥</h2> <p>公钥服务器是网络上专门储存用户公钥的服务器。send-keys 参数可以将公钥上传到服务器。</p> <p>gpg --send-keys xxxx</p> <p>其中 xxxx 为上一步 --list-keys 结果中 pub 后面的字符串，如上为：33DBF2E0</p> <p>也可以通过下面的网址上传上述 public-key.txt 的内容：</p> <div class="language- extra-class"><pre class="language-text"><code>http://keys.gnupg.net
+</code></pre></div><p>上传成功之后，可以通过查询这个网站，输入 0x33DBF2E0 查询：</p> <p>http://keys.gnupg.net</p> <p>该网站查询有延迟，可能需要等1个小时。</p> <h2 id="_5-生成-fingerprint-并上传到-apache-用户信息中"><a href="#_5-生成-fingerprint-并上传到-apache-用户信息中" class="header-anchor">#</a> 5. 生成 fingerprint 并上传到 apache 用户信息中</h2> <p>由于公钥服务器没有检查机制，任何人都可以用你的名义上传公钥，所以没有办法保证服务器上的公钥的可靠性。通常，你可以在网站上公布一个公钥指纹，让其他人核对下载到的公钥是否为真。</p> <p>fingerprint参数生成公钥指纹：</p> <div class="language- extra-class"><pre class="language-text"><code>gpg --fingerprint [用户ID]
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>$ gpg --fingerprint xxx-yyy
+pub   4096R/33DBF2E0 2018-12-06
+      Key fingerprint = 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0
+uid                  xxx-yyy (xxx's key) &lt;xxx@apache.org&gt;
+sub   4096R/0E8182E6 2018-12-06
+</code></pre></div><p>将上面的 fingerprint （即 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0）粘贴到自己的用户信息中：</p> <p>https://id.apache.org
+OpenPGP Public Key Primary Fingerprint:</p> <h2 id="_6-生成-keys"><a href="#_6-生成-keys" class="header-anchor">#</a> 6. 生成 keys</h2> <p>新建一个名为 KEYS 的文件，写入如下内容（无需做任何修改）：</p> <div class="language- extra-class"><pre class="language-text"><code>This file contains the PGP keys of various developers.
+
+Users: pgp &lt; KEYS
+or
+       gpg --import KEYS
+
+Developers:
+    pgp -kxa &lt;your name&gt; and append it to this file.
+or
+    (pgpk -ll &lt;your name&gt; &amp;&amp; pgpk -xa &lt;your name&gt;) &gt;&gt; this file.
+or
+    (gpg --list-sigs &lt;your name&gt;
+    &amp;&amp; gpg --armor --export &lt;your name&gt;) &gt;&gt; this file.
+</code></pre></div><p>然后生成将 签名信息追加写入：</p> <div class="language- extra-class"><pre class="language-text"><code>gpg --list-sigs [用户 ID] &gt;&gt; KEYS
+</code></pre></div><p>最后，将 public key 追加导入：</p> <div class="language- extra-class"><pre class="language-text"><code>gpg --armor --export [用户 ID] &gt;&gt; KEYS
+</code></pre></div><h2 id="_7-打包签名"><a href="#_7-打包签名" class="header-anchor">#</a> 7. 打包签名</h2> <p>如下步骤，也需要通过 SecureCRT 等终端直接登录用户账户，不能通过 su - user 或者 ssh 转，否则密码输入 box 会显示不出来而报错。</p> <div class="language- extra-class"><pre class="language-text"><code>$ git checkout 0.9.0-rc01
+
+$ git archive --format=tar 0.9.0-rc01 --prefix=apache-doris-0.9.0-incubating-src/ | gzip &gt; apache-doris-0.9.0-incubating-src.tar.gz
+
+$ gpg -u xxx@apache.org --armor --output apache-doris-0.9.0-incubating-src.tar.gz.asc --detach-sign apache-doris-0.9.0-incubating-src.tar.gz
+
+$ gpg --verify apache-doris-0.9.0-incubating-src.tar.gz.asc apache-doris-0.9.0-incubating-src.tar.gz
+
+$ sha512sum apache-doris-0.9.0-incubating-src.tar.gz &gt; apache-doris-0.9.0-incubating-src.tar.gz.sha512
+
+$ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
+</code></pre></div><h2 id="_8-上传签名的软件包和-keys-文件到-dev-svn"><a href="#_8-上传签名的软件包和-keys-文件到-dev-svn" class="header-anchor">#</a> 8. 上传签名的软件包和 KEYS 文件到 DEV svn</h2> <p>首先，下载 svn 库：</p> <div class="language- extra-class"><pre class="language-text"><code>svn co https://dist.apache.org/repos/dist/dev/incubator/doris/
+</code></pre></div><p>将之前得到的全部文件组织成以下svn路径</p> <div class="language- extra-class"><pre class="language-text"><code>./doris/
+├── 0.9
+│   └── 0.9.0-rc1
+│       ├── apache-doris-0.9.0-incubating-src.tar.gz
+│       ├── apache-doris-0.9.0-incubating-src.tar.gz.asc
+│       ├── apache-doris-0.9.0-incubating-src.tar.gz.sha512
+│       └── KEYS
+</code></pre></div><p>上传这些文件</p> <div class="language- extra-class"><pre class="language-text"><code>svn add 0.9.0-rc1
+svn commit -m &quot;Release Apache Doris (incubating) 0.9.0 rc1&quot;
+</code></pre></div><h2 id="_9-发社区投票邮件"><a href="#_9-发社区投票邮件" class="header-anchor">#</a> 9. 发社区投票邮件</h2> <p>[VOTE] Release Apache Doris 0.9.0-incubating-rc01</p> <div class="language- extra-class"><pre class="language-text"><code>Hi all,
+
+Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
+
+The release candidate has been tagged in GitHub as 0.9.0-rc01, available
+here:
+https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc01
+
+===== CHANGE LOG =====
+
+New Features:
+....
+
+======================
+
+Thanks to everyone who has contributed to this release.
+
+The artifacts (source, signature and checksum) corresponding to this release
+candidate can be found here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc1/
+
+This has been signed with PGP key 33DBF2E0, corresponding to
+lide@apache.org.
+KEYS file is available here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS
+It is also listed here:
+https://people.apache.org/keys/committer/lide.asc
+
+To verify and build, you can refer to following wiki:
+https://github.com/apache/incubator-doris/wiki/How-to-verify-Apache-Release
+https://wiki.apache.org/incubator/IncubatorReleaseChecklist
+
+The vote will be open for at least 72 hours.
+[ ] +1 Approve the release
+[ ] +0 No opinion
+[ ] -1 Do not release this package because ...
+
+Best Regards,
+xxx
+</code></pre></div><h2 id="_10-投票通过后，发-result-邮件"><a href="#_10-投票通过后，发-result-邮件" class="header-anchor">#</a> 10. 投票通过后，发 Result 邮件</h2> <p>[Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01</p> <div class="language- extra-class"><pre class="language-text"><code>Thanks to everyone, and this vote is now closed.
+
+It has passed with 4 +1 (binding) votes and no 0 or -1 votes.
+
+Binding:
++1 Zhao Chun
++1 xxx
++1 Li Chaoyong
++1 Mingyu Chen
+
+Best Regards,
+xxx
+
+</code></pre></div><h2 id="_11-发邮件到-general-incubator-apache-org-进行投票"><a href="#_11-发邮件到-general-incubator-apache-org-进行投票" class="header-anchor">#</a> 11. 发邮件到 general@incubator.apache.org 进行投票</h2> <p>[VOTE] Release Apache Doris 0.9.0-incubating-rc01</p> <div class="language- extra-class"><pre class="language-text"><code>Hi all,
+
+Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
+
+Apache Doris is an MPP-based interactive SQL data warehousing for reporting and analysis.
+
+The Apache Doris community has voted on and approved this release:
+https://lists.apache.org/thread.html/d70f7c8a8ae448bf6680a15914646005c6483564464cfa15f4ddc2fc@%3Cdev.doris.apache.org%3E
+
+The vote result email thread:
+https://lists.apache.org/thread.html/64d229f0ba15d66adc83306bc8d7b7ccd5910ecb7e842718ce6a61da@%3Cdev.doris.apache.org%3E
+
+The release candidate has been tagged in GitHub as 0.9.0-rc01, available here:
+https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc01
+
+There is no CHANGE LOG file because this is the first release of Apache Doris.
+Thanks to everyone who has contributed to this release, and there is a simple release notes can be found here:
+https://github.com/apache/incubator-doris/issues/406
+
+The artifacts (source, signature and checksum) corresponding to this release candidate can be found here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc01/
+
+This has been signed with PGP key 33DBF2E0, corresponding to lide@apache.org.
+KEYS file is available here:
+https://dist.apache.org/repos/dist/dev/incubator/doris/KEYS
+It is also listed here:
+https://people.apache.org/keys/committer/lide.asc
+
+The vote will be open for at least 72 hours.
+[ ] +1 Approve the release
+[ ] +0 No opinion
+[ ] -1 Do not release this package because ...
+
+To verify and build, you can refer to following instruction:
+
+Firstly, you must be install and start docker service, and then you could build Doris as following steps:
+
+Step1: Pull the docker image with Doris building environment
+$ docker pull apachedoris/doris-dev:build-env
+You can check it by listing images, its size is about 3.28GB.
+
+Step2: Run the Docker image
+You can run image directly:
+$ docker run -it apachedoris/doris-dev:build-env
+
+Step3: Download Doris source
+Now you should in docker environment, and you can download Doris source package.
+(If you have downloaded source and it is not in image, you can map its path to image in Step2.)
+$ wget https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc01/apache-doris-0.9.0.rc01-incubating-src.tar.gz
+
+Step4: Build Doris
+Now you can decompress and enter Doris source path and build Doris.
+$ tar zxvf apache-doris-0.9.0.rc01-incubating-src.tar.gz
+$ cd apache-doris-0.9.0.rc01-incubating-src
+$ sh build.sh
+
+Best Regards,
+xxx
+</code></pre></div><p>邮件的 thread 连接可以在这里找到：</p> <p><code>https://lists.apache.org/list.html?dev@doris.apache.org</code></p> <h2 id="_12-发-result-邮件到-general-incubator-apache-org"><a href="#_12-发-result-邮件到-general-incubator-apache-org" class="header-anchor">#</a> 12. 发 Result 邮件到 general@incubator.apache.org</h2> <p>[RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01</p> <div class="language- extra-class"><pre class="language-text"><code>Hi,
+
+Thanks to everyone, and the vote for releasing Apache Doris 0.9.0-incubating-rc01 is now closed.
+
+It has passed with 4 +1 (binding) votes and no 0 or -1 votes.
+
+Binding:
++1 Willem Jiang
++1 Justin Mclean
++1 ShaoFeng Shi
++1 Makoto Yui
+
+The vote thread:
+https://lists.apache.org/thread.html/da05fdd8d84e35de527f27200b5690d7811a1e97d419d1ea66562130@%3Cgeneral.incubator.apache.org%3E
+
+Best Regards,
+xxx
+</code></pre></div><h2 id="_13-上传-package-到-release"><a href="#_13-上传-package-到-release" class="header-anchor">#</a> 13. 上传 package 到 release</h2> <p>当正式发布投票成功后，先发[Result]邮件，然后就准备 release package。
+将之前在dev下发布的对应rc文件夹下的源码包、签名文件和hash文件拷贝到另一个目录 0.9.0-incubating，注意文件名字中不要rcxx (可以rename，但不要重新计算签名，hash可以重新计算，结果不会变)</p> <p>第一次发布的话 KEYS 文件也需要拷贝过来。然后add到svn release 下。</p> <div class="language- extra-class"><pre class="language-text"><code>
+https://dist.apache.org/repos/dist/release/incubator/doris/0.9.0-incubating/
+
+最终能在 apache 官网看到：
+http://www.apache.org/dist/incubator/doris/0.9.0-incubating/
+
+</code></pre></div><h2 id="_14-发-announce-邮件到-general-incubator-apache-org"><a href="#_14-发-announce-邮件到-general-incubator-apache-org" class="header-anchor">#</a> 14. 发 Announce 邮件到 general@incubator.apache.org</h2> <p>Title:</p> <div class="language- extra-class"><pre class="language-text"><code>[ANNOUNCE] Apache Doris (incubating) 0.9.0 Release
+</code></pre></div><p>发送邮件组：</p> <div class="language- extra-class"><pre class="language-text"><code>general@incubator.apache.org &lt;general@incubator.apache.org&gt;
+dev@doris.apache.org &lt;dev@doris.apache.org&gt;
+</code></pre></div><p>邮件正文：</p> <div class="language- extra-class"><pre class="language-text"><code>Hi All,
+
+We are pleased to announce the release of Apache Doris 0.9.0-incubating.
+
+Apache Doris (incubating) is an MPP-based interactive SQL data warehousing for reporting and analysis.
+
+The release is available at:
+http://doris.apache.org/downloads.html
+
+Thanks to everyone who has contributed to this release, and the release note can be found here:
+https://github.com/apache/incubator-doris/releases
+
+Best Regards,
+
+On behalf of the Doris team,
+xxx
+</code></pre></div><h2 id="_15-在-doris-官网和-github-发布链接"><a href="#_15-在-doris-官网和-github-发布链接" class="header-anchor">#</a> 15. 在 Doris 官网和 github 发布链接</h2> <h3 id="_15-1-创建下载链接"><a href="#_15-1-创建下载链接" class="header-anchor">#</a> 15.1 创建下载链接</h3> <p>下载链接：
+http://www.apache.org/dyn/closer.cgi?filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz&amp;action=download</p> <p>wget --trust-server-names &quot;https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&amp;filename=incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz&quot;</p> <p>原始位置:
+https://www.apache.org/dist/incubator/doris/0.9.0-incubating/</p> <p>http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz</p> <p>源码包（source package）:
+http://www.apache.org/dyn/closer.cgi/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz</p> <p>ASC:
+http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.asc</p> <p>sha512:
+http://archive.apache.org/dist/incubator/doris/0.9.0-incubating/apache-doris-0.9.0-incubating-src.tar.gz.sha512</p> <p>KEYS:
+http://archive.apache.org/dist/incubator/doris/KEYS</p> <p>refer to: <a href="http://www.apache.org/dev/release-download-pages#closer" target="_blank" rel="noopener noreferrer">http://www.apache.org/dev/release-download-pages#closer<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <h3 id="_15-2-准备-release-note"><a href="#_15-2-准备-release-note" class="header-anchor">#</a> 15.2 准备 release note</h3> <p>需要修改如下两个地方：</p> <p>1、Github 的 release 页面</p> <div class="language- extra-class"><pre class="language-text"><code>https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc01
+</code></pre></div><p>2、Doris 官网下载页面</p> <div class="language- extra-class"><pre class="language-text"><code>http://doris.apache.org/downloads.html
+</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/apache/incubator-doris/edit/branch-0.11/docs/zh-CN/community/release-process.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">2020-4-28 12:02:05</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/branch-0.11/zh-CN/community/pull-request.html" class="prev">
+        代码提交指南
+      </a></span> <span class="next"><a href="/branch-0.11/zh-CN/community/subscribe-mail-list.html">
+        订阅邮件列表
+      </a>
+      →
+    </span></p></div> <footer><div class="footer-wrapper"><br> <span class="footer-text">© Copyright 2020, Apache Doris(Incubating)</span> <br> <span class="footer-text">
+  Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.</span></div></footer></main></div><div class="global-ui"></div></div>
+    <script src="/branch-0.11/assets/js/app.82e90dc2.js" defer></script><script src="/branch-0.11/assets/js/4.af2e6818.js" defer></script><script src="/branch-0.11/assets/js/3.7820216c.js" defer></script><script src="/branch-0.11/assets/js/262.dbe93bbe.js" defer></script>
+  </body>
+</html>
