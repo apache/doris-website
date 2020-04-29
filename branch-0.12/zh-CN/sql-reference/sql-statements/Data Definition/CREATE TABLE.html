@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CREATE TABLE | Apache Doris</title>
+    <meta name="generator" content="VuePress 1.4.1">
+    
+    <meta name="description" content="Apache Doris">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileColor" content="#000000">
+    <link rel="preload" href="/branch-0.12/assets/css/0.styles.772b3911.css" as="style"><link rel="preload" href="/branch-0.12/assets/js/app.7a501a5a.js" as="script"><link rel="preload" href="/branch-0.12/assets/js/4.af2e6818.js" as="script"><link rel="preload" href="/branch-0.12/assets/js/3.7820216c.js" as="script"><link rel="preload" href="/branch-0.12/assets/js/472.ae4bf152.js" as="script"><link rel="prefetch" href="/branch-0.12/assets/js/10.e563bb65.js"><link rel="prefetch" href="/branch-0.12/assets/js/100.ab62d3f7.js"><link rel="prefetch" href="/branch-0.12/assets/js/101.3d2f5bde.js"><link rel="prefetch" href="/branch-0.12/assets/js/102.8a8c3619.js"><link rel="prefetch" href="/branch-0.12/assets/js/103.a2d51bdc.js"><link rel="prefetch" href="/branch-0.12/assets/js/104.3e290da1.js"><link rel="prefetch" href="/branch-0.12/assets/js/105.2d26dbe4.js"><link rel="prefetch" href="/branch-0.12/assets/js/106.b0370e78.js"><link rel="prefetch" href="/branch-0.12/assets/js/107.94a13c57.js"><link rel="prefetch" href="/branch-0.12/assets/js/108.61603c68.js"><link rel="prefetch" href="/branch-0.12/assets/js/109.dfa92f5c.js"><link rel="prefetch" href="/branch-0.12/assets/js/11.e91b9af5.js"><link rel="prefetch" href="/branch-0.12/assets/js/110.bb650e38.js"><link rel="prefetch" href="/branch-0.12/assets/js/111.2a7d6c3f.js"><link rel="prefetch" href="/branch-0.12/assets/js/112.005cc119.js"><link rel="prefetch" href="/branch-0.12/assets/js/113.988dac2b.js"><link rel="prefetch" href="/branch-0.12/assets/js/114.88f6fd49.js"><link rel="prefetch" href="/branch-0.12/assets/js/115.94590d6d.js"><link rel="prefetch" href="/branch-0.12/assets/js/116.2a6f3d64.js"><link rel="prefetch" href="/branch-0.12/assets/js/117.5c259148.js"><link rel="prefetch" href="/branch-0.12/assets/js/118.52c1fd3a.js"><link rel="prefetch" href="/branch-0.12/assets/js/119.56cf1e16.js"><link rel="prefetch" href="/branch-0.12/assets/js/12.7cb2fea1.js"><link rel="prefetch" href="/branch-0.12/assets/js/120.8d9f6a73.js"><link rel="prefetch" href="/branch-0.12/assets/js/121.d8eae209.js"><link rel="prefetch" href="/branch-0.12/assets/js/122.6840389a.js"><link rel="prefetch" href="/branch-0.12/assets/js/123.0dcf6e0a.js"><link rel="prefetch" href="/branch-0.12/assets/js/124.e1d9fcc9.js"><link rel="prefetch" href="/branch-0.12/assets/js/125.88359ae6.js"><link rel="prefetch" href="/branch-0.12/assets/js/126.4c8d79d8.js"><link rel="prefetch" href="/branch-0.12/assets/js/127.c26d8920.js"><link rel="prefetch" href="/branch-0.12/assets/js/128.fcdb727e.js"><link rel="prefetch" href="/branch-0.12/assets/js/129.c52086a7.js"><link rel="prefetch" href="/branch-0.12/assets/js/13.8c0f6cd7.js"><link rel="prefetch" href="/branch-0.12/assets/js/130.27b3a636.js"><link rel="prefetch" href="/branch-0.12/assets/js/131.ab6a4acc.js"><link rel="prefetch" href="/branch-0.12/assets/js/132.29ac5dff.js"><link rel="prefetch" href="/branch-0.12/assets/js/133.2ed399c3.js"><link rel="prefetch" href="/branch-0.12/assets/js/134.b41f7e23.js"><link rel="prefetch" href="/branch-0.12/assets/js/135.2d683102.js"><link rel="prefetch" href="/branch-0.12/assets/js/136.94cde9f3.js"><link rel="prefetch" href="/branch-0.12/assets/js/137.4756aa61.js"><link rel="prefetch" href="/branch-0.12/assets/js/138.63085121.js"><link rel="prefetch" href="/branch-0.12/assets/js/139.8e4ecd41.js"><link rel="prefetch" href="/branch-0.12/assets/js/14.28795dd5.js"><link rel="prefetch" href="/branch-0.12/assets/js/140.44bfaa54.js"><link rel="prefetch" href="/branch-0.12/assets/js/141.fa750666.js"><link rel="prefetch" href="/branch-0.12/assets/js/142.97d3f353.js"><link rel="prefetch" href="/branch-0.12/assets/js/143.5c1ae655.js"><link rel="prefetch" href="/branch-0.12/assets/js/144.f57e1174.js"><link rel="prefetch" href="/branch-0.12/assets/js/145.1dc5122a.js"><link rel="prefetch" href="/branch-0.12/assets/js/146.546add7f.js"><link rel="prefetch" href="/branch-0.12/assets/js/147.d375f065.js"><link rel="prefetch" href="/branch-0.12/assets/js/148.8322a551.js"><link rel="prefetch" href="/branch-0.12/assets/js/149.5cb35b78.js"><link rel="prefetch" href="/branch-0.12/assets/js/15.c3d23f8a.js"><link rel="prefetch" href="/branch-0.12/assets/js/150.83d0a09b.js"><link rel="prefetch" href="/branch-0.12/assets/js/151.502976dc.js"><link rel="prefetch" href="/branch-0.12/assets/js/152.6115d503.js"><link rel="prefetch" href="/branch-0.12/assets/js/153.dffff080.js"><link rel="prefetch" href="/branch-0.12/assets/js/154.0c268372.js"><link rel="prefetch" href="/branch-0.12/assets/js/155.f173586e.js"><link rel="prefetch" href="/branch-0.12/assets/js/156.3ee792b9.js"><link rel="prefetch" href="/branch-0.12/assets/js/157.0cb7eec9.js"><link rel="prefetch" href="/branch-0.12/assets/js/158.3cf25927.js"><link rel="prefetch" href="/branch-0.12/assets/js/159.80990b80.js"><link rel="prefetch" href="/branch-0.12/assets/js/16.9b1003b3.js"><link rel="prefetch" href="/branch-0.12/assets/js/160.1def2ae0.js"><link rel="prefetch" href="/branch-0.12/assets/js/161.783eb520.js"><link rel="prefetch" href="/branch-0.12/assets/js/162.6bf77b7b.js"><link rel="prefetch" href="/branch-0.12/assets/js/163.228c0c70.js"><link rel="prefetch" href="/branch-0.12/assets/js/164.17b23e92.js"><link rel="prefetch" href="/branch-0.12/assets/js/165.bffb902f.js"><link rel="prefetch" href="/branch-0.12/assets/js/166.f535e64e.js"><link rel="prefetch" href="/branch-0.12/assets/js/167.20d73e14.js"><link rel="prefetch" href="/branch-0.12/assets/js/168.d5889c88.js"><link rel="prefetch" href="/branch-0.12/assets/js/169.a7e813b3.js"><link rel="prefetch" href="/branch-0.12/assets/js/17.de07095e.js"><link rel="prefetch" href="/branch-0.12/assets/js/170.cd87176a.js"><link rel="prefetch" href="/branch-0.12/assets/js/171.d37f7cd4.js"><link rel="prefetch" href="/branch-0.12/assets/js/172.c866b634.js"><link rel="prefetch" href="/branch-0.12/assets/js/173.477542ac.js"><link rel="prefetch" href="/branch-0.12/assets/js/174.c34c51c9.js"><link rel="prefetch" href="/branch-0.12/assets/js/175.c44721f1.js"><link rel="prefetch" href="/branch-0.12/assets/js/176.2b0ce744.js"><link rel="prefetch" href="/branch-0.12/assets/js/177.04744484.js"><link rel="prefetch" href="/branch-0.12/assets/js/178.e78abb47.js"><link rel="prefetch" href="/branch-0.12/assets/js/179.dde1d1a6.js"><link rel="prefetch" href="/branch-0.12/assets/js/18.fd4e734e.js"><link rel="prefetch" href="/branch-0.12/assets/js/180.25d51399.js"><link rel="prefetch" href="/branch-0.12/assets/js/181.2aa7aa6d.js"><link rel="prefetch" href="/branch-0.12/assets/js/182.35990f40.js"><link rel="prefetch" href="/branch-0.12/assets/js/183.c22bafe3.js"><link rel="prefetch" href="/branch-0.12/assets/js/184.7cf29d22.js"><link rel="prefetch" href="/branch-0.12/assets/js/185.80ff17cd.js"><link rel="prefetch" href="/branch-0.12/assets/js/186.de5883ef.js"><link rel="prefetch" href="/branch-0.12/assets/js/187.c4717fc3.js"><link rel="prefetch" href="/branch-0.12/assets/js/188.9c77a848.js"><link rel="prefetch" href="/branch-0.12/assets/js/189.4495ee11.js"><link rel="prefetch" href="/branch-0.12/assets/js/19.1eb9006e.js"><link rel="prefetch" href="/branch-0.12/assets/js/190.ce4fc247.js"><link rel="prefetch" href="/branch-0.12/assets/js/191.84deaa9e.js"><link rel="prefetch" href="/branch-0.12/assets/js/192.2563690c.js"><link rel="prefetch" href="/branch-0.12/assets/js/193.5abf0c44.js"><link rel="prefetch" href="/branch-0.12/assets/js/194.47d2c5f3.js"><link rel="prefetch" href="/branch-0.12/assets/js/195.7b75ab51.js"><link rel="prefetch" href="/branch-0.12/assets/js/196.85950ea5.js"><link rel="prefetch" href="/branch-0.12/assets/js/197.080fb6f0.js"><link rel="prefetch" href="/branch-0.12/assets/js/198.8f545cdc.js"><link rel="prefetch" href="/branch-0.12/assets/js/199.199f27ab.js"><link rel="prefetch" href="/branch-0.12/assets/js/20.0e145e1d.js"><link rel="prefetch" href="/branch-0.12/assets/js/200.400551e2.js"><link rel="prefetch" href="/branch-0.12/assets/js/201.62977638.js"><link rel="prefetch" href="/branch-0.12/assets/js/202.a87da1c8.js"><link rel="prefetch" href="/branch-0.12/assets/js/203.86ac4943.js"><link rel="prefetch" href="/branch-0.12/assets/js/204.c6900ed1.js"><link rel="prefetch" href="/branch-0.12/assets/js/205.ce60ac94.js"><link rel="prefetch" href="/branch-0.12/assets/js/206.5ee79168.js"><link rel="prefetch" href="/branch-0.12/assets/js/207.4c337196.js"><link rel="prefetch" href="/branch-0.12/assets/js/208.3088c30b.js"><link rel="prefetch" href="/branch-0.12/assets/js/209.58ec32de.js"><link rel="prefetch" href="/branch-0.12/assets/js/21.5dfbfabd.js"><link rel="prefetch" href="/branch-0.12/assets/js/210.0681cd6d.js"><link rel="prefetch" href="/branch-0.12/assets/js/211.e03f2d32.js"><link rel="prefetch" href="/branch-0.12/assets/js/212.58227c98.js"><link rel="prefetch" href="/branch-0.12/assets/js/213.439b5def.js"><link rel="prefetch" href="/branch-0.12/assets/js/214.805abde3.js"><link rel="prefetch" href="/branch-0.12/assets/js/215.4cad43c8.js"><link rel="prefetch" href="/branch-0.12/assets/js/216.12e8a2c9.js"><link rel="prefetch" href="/branch-0.12/assets/js/217.fd9044d5.js"><link rel="prefetch" href="/branch-0.12/assets/js/218.5da36d23.js"><link rel="prefetch" href="/branch-0.12/assets/js/219.b45f5551.js"><link rel="prefetch" href="/branch-0.12/assets/js/22.0e0d0b79.js"><link rel="prefetch" href="/branch-0.12/assets/js/220.b2ff6282.js"><link rel="prefetch" href="/branch-0.12/assets/js/221.db3d7c80.js"><link rel="prefetch" href="/branch-0.12/assets/js/222.4a306a8b.js"><link rel="prefetch" href="/branch-0.12/assets/js/223.a9e9c406.js"><link rel="prefetch" href="/branch-0.12/assets/js/224.9734a46f.js"><link rel="prefetch" href="/branch-0.12/assets/js/225.4b266ca5.js"><link rel="prefetch" href="/branch-0.12/assets/js/226.63320e10.js"><link rel="prefetch" href="/branch-0.12/assets/js/227.502c96b4.js"><link rel="prefetch" href="/branch-0.12/assets/js/228.eeaa3a7e.js"><link rel="prefetch" href="/branch-0.12/assets/js/229.f6e717c1.js"><link rel="prefetch" href="/branch-0.12/assets/js/23.84261262.js"><link rel="prefetch" href="/branch-0.12/assets/js/230.6adaf57d.js"><link rel="prefetch" href="/branch-0.12/assets/js/231.1ace2859.js"><link rel="prefetch" href="/branch-0.12/assets/js/232.49920bd1.js"><link rel="prefetch" href="/branch-0.12/assets/js/233.fc1827df.js"><link rel="prefetch" href="/branch-0.12/assets/js/234.04177563.js"><link rel="prefetch" href="/branch-0.12/assets/js/235.3b930af9.js"><link rel="prefetch" href="/branch-0.12/assets/js/236.269d8f70.js"><link rel="prefetch" href="/branch-0.12/assets/js/237.a53f81a4.js"><link rel="prefetch" href="/branch-0.12/assets/js/238.39e55022.js"><link rel="prefetch" href="/branch-0.12/assets/js/239.39c37154.js"><link rel="prefetch" href="/branch-0.12/assets/js/24.aa08efdf.js"><link rel="prefetch" href="/branch-0.12/assets/js/240.bfffc872.js"><link rel="prefetch" href="/branch-0.12/assets/js/241.35e8bf4e.js"><link rel="prefetch" href="/branch-0.12/assets/js/242.da4ff7b3.js"><link rel="prefetch" href="/branch-0.12/assets/js/243.3fb955a4.js"><link rel="prefetch" href="/branch-0.12/assets/js/244.799ca7a6.js"><link rel="prefetch" href="/branch-0.12/assets/js/245.35c01320.js"><link rel="prefetch" href="/branch-0.12/assets/js/246.63026042.js"><link rel="prefetch" href="/branch-0.12/assets/js/247.bf77027e.js"><link rel="prefetch" href="/branch-0.12/assets/js/248.0bd40517.js"><link rel="prefetch" href="/branch-0.12/assets/js/249.dbe72227.js"><link rel="prefetch" href="/branch-0.12/assets/js/25.b82322af.js"><link rel="prefetch" href="/branch-0.12/assets/js/250.369ab431.js"><link rel="prefetch" href="/branch-0.12/assets/js/251.3253836c.js"><link rel="prefetch" href="/branch-0.12/assets/js/252.3876f459.js"><link rel="prefetch" href="/branch-0.12/assets/js/253.878b831d.js"><link rel="prefetch" href="/branch-0.12/assets/js/254.bb72a6d3.js"><link rel="prefetch" href="/branch-0.12/assets/js/255.a7dc828a.js"><link rel="prefetch" href="/branch-0.12/assets/js/256.018587bc.js"><link rel="prefetch" href="/branch-0.12/assets/js/257.0fd11f72.js"><link rel="prefetch" href="/branch-0.12/assets/js/258.222e4e1e.js"><link rel="prefetch" href="/branch-0.12/assets/js/259.434a948e.js"><link rel="prefetch" href="/branch-0.12/assets/js/26.2409593a.js"><link rel="prefetch" href="/branch-0.12/assets/js/260.5fa54d50.js"><link rel="prefetch" href="/branch-0.12/assets/js/261.de6563d1.js"><link rel="prefetch" href="/branch-0.12/assets/js/262.3ddbb241.js"><link rel="prefetch" href="/branch-0.12/assets/js/263.e6922e50.js"><link rel="prefetch" href="/branch-0.12/assets/js/264.2e5a30c5.js"><link rel="prefetch" href="/branch-0.12/assets/js/265.28656d8a.js"><link rel="prefetch" href="/branch-0.12/assets/js/266.0ade29a7.js"><link rel="prefetch" href="/branch-0.12/assets/js/267.0d1402fa.js"><link rel="prefetch" href="/branch-0.12/assets/js/268.abc93562.js"><link rel="prefetch" href="/branch-0.12/assets/js/269.bacb36e1.js"><link rel="prefetch" href="/branch-0.12/assets/js/27.a7cca1d2.js"><link rel="prefetch" href="/branch-0.12/assets/js/270.ffb0d3d8.js"><link rel="prefetch" href="/branch-0.12/assets/js/271.d912ec2c.js"><link rel="prefetch" href="/branch-0.12/assets/js/272.936df757.js"><link rel="prefetch" href="/branch-0.12/assets/js/273.b156d941.js"><link rel="prefetch" href="/branch-0.12/assets/js/274.3a9f5774.js"><link rel="prefetch" href="/branch-0.12/assets/js/275.0fe1e9df.js"><link rel="prefetch" href="/branch-0.12/assets/js/276.f419071e.js"><link rel="prefetch" href="/branch-0.12/assets/js/277.ecec72a9.js"><link rel="prefetch" href="/branch-0.12/assets/js/278.5ad773c2.js"><link rel="prefetch" href="/branch-0.12/assets/js/279.696b07f2.js"><link rel="prefetch" href="/branch-0.12/assets/js/28.a2011b86.js"><link rel="prefetch" href="/branch-0.12/assets/js/280.6226f2bb.js"><link rel="prefetch" href="/branch-0.12/assets/js/281.838f70c1.js"><link rel="prefetch" href="/branch-0.12/assets/js/282.65a2278b.js"><link rel="prefetch" href="/branch-0.12/assets/js/283.24d3a680.js"><link rel="prefetch" href="/branch-0.12/assets/js/284.7a7cc8b9.js"><link rel="prefetch" href="/branch-0.12/assets/js/285.89d98f49.js"><link rel="prefetch" href="/branch-0.12/assets/js/286.b692a3a7.js"><link rel="prefetch" href="/branch-0.12/assets/js/287.48a728d1.js"><link rel="prefetch" href="/branch-0.12/assets/js/288.f28e763f.js"><link rel="prefetch" href="/branch-0.12/assets/js/289.c6275ae8.js"><link rel="prefetch" href="/branch-0.12/assets/js/29.d92cecc7.js"><link rel="prefetch" href="/branch-0.12/assets/js/290.2f178590.js"><link rel="prefetch" href="/branch-0.12/assets/js/291.123b8328.js"><link rel="prefetch" href="/branch-0.12/assets/js/292.9c3e63e2.js"><link rel="prefetch" href="/branch-0.12/assets/js/293.f9ed3acb.js"><link rel="prefetch" href="/branch-0.12/assets/js/294.abb08a4b.js"><link rel="prefetch" href="/branch-0.12/assets/js/295.9029b73a.js"><link rel="prefetch" href="/branch-0.12/assets/js/296.385095f1.js"><link rel="prefetch" href="/branch-0.12/assets/js/297.61af46a5.js"><link rel="prefetch" href="/branch-0.12/assets/js/298.238b136f.js"><link rel="prefetch" href="/branch-0.12/assets/js/299.c632052e.js"><link rel="prefetch" href="/branch-0.12/assets/js/30.d8cd5979.js"><link rel="prefetch" href="/branch-0.12/assets/js/300.08bf7ff6.js"><link rel="prefetch" href="/branch-0.12/assets/js/301.997f4ea2.js"><link rel="prefetch" href="/branch-0.12/assets/js/302.1f6013ea.js"><link rel="prefetch" href="/branch-0.12/assets/js/303.e2955877.js"><link rel="prefetch" href="/branch-0.12/assets/js/304.3948feb8.js"><link rel="prefetch" href="/branch-0.12/assets/js/305.ca58a118.js"><link rel="prefetch" href="/branch-0.12/assets/js/306.7afa635f.js"><link rel="prefetch" href="/branch-0.12/assets/js/307.0d88d091.js"><link rel="prefetch" href="/branch-0.12/assets/js/308.ea1f4678.js"><link rel="prefetch" href="/branch-0.12/assets/js/309.d18cb5c8.js"><link rel="prefetch" href="/branch-0.12/assets/js/31.e48242ca.js"><link rel="prefetch" href="/branch-0.12/assets/js/310.a70facfa.js"><link rel="prefetch" href="/branch-0.12/assets/js/311.781770cd.js"><link rel="prefetch" href="/branch-0.12/assets/js/312.b2809e8f.js"><link rel="prefetch" href="/branch-0.12/assets/js/313.66a03104.js"><link rel="prefetch" href="/branch-0.12/assets/js/314.b22a759c.js"><link rel="prefetch" href="/branch-0.12/assets/js/315.ff481c30.js"><link rel="prefetch" href="/branch-0.12/assets/js/316.66503883.js"><link rel="prefetch" href="/branch-0.12/assets/js/317.ce7ba320.js"><link rel="prefetch" href="/branch-0.12/assets/js/318.350c51eb.js"><link rel="prefetch" href="/branch-0.12/assets/js/319.3fdf7264.js"><link rel="prefetch" href="/branch-0.12/assets/js/32.971660fe.js"><link rel="prefetch" href="/branch-0.12/assets/js/320.fea31333.js"><link rel="prefetch" href="/branch-0.12/assets/js/321.824160aa.js"><link rel="prefetch" href="/branch-0.12/assets/js/322.aa16e139.js"><link rel="prefetch" href="/branch-0.12/assets/js/323.69e606b5.js"><link rel="prefetch" href="/branch-0.12/assets/js/324.c82adbd9.js"><link rel="prefetch" href="/branch-0.12/assets/js/325.5a00f104.js"><link rel="prefetch" href="/branch-0.12/assets/js/326.49c7e89c.js"><link rel="prefetch" href="/branch-0.12/assets/js/327.abac3a3d.js"><link rel="prefetch" href="/branch-0.12/assets/js/328.4c58c4f2.js"><link rel="prefetch" href="/branch-0.12/assets/js/329.36aecb09.js"><link rel="prefetch" href="/branch-0.12/assets/js/33.3a4b4791.js"><link rel="prefetch" href="/branch-0.12/assets/js/330.50ce470c.js"><link rel="prefetch" href="/branch-0.12/assets/js/331.c592f46d.js"><link rel="prefetch" href="/branch-0.12/assets/js/332.2fe79672.js"><link rel="prefetch" href="/branch-0.12/assets/js/333.b1ba6ea3.js"><link rel="prefetch" href="/branch-0.12/assets/js/334.fdb2bc2d.js"><link rel="prefetch" href="/branch-0.12/assets/js/335.f9a88795.js"><link rel="prefetch" href="/branch-0.12/assets/js/336.a2c13e95.js"><link rel="prefetch" href="/branch-0.12/assets/js/337.37e7b7cd.js"><link rel="prefetch" href="/branch-0.12/assets/js/338.79a2a390.js"><link rel="prefetch" href="/branch-0.12/assets/js/339.4af40552.js"><link rel="prefetch" href="/branch-0.12/assets/js/34.ccd893e6.js"><link rel="prefetch" href="/branch-0.12/assets/js/340.ad4cb7c4.js"><link rel="prefetch" href="/branch-0.12/assets/js/341.2ba705bc.js"><link rel="prefetch" href="/branch-0.12/assets/js/342.7a72e259.js"><link rel="prefetch" href="/branch-0.12/assets/js/343.782b45e9.js"><link rel="prefetch" href="/branch-0.12/assets/js/344.f4357925.js"><link rel="prefetch" href="/branch-0.12/assets/js/345.ef059eaa.js"><link rel="prefetch" href="/branch-0.12/assets/js/346.e5a34d9d.js"><link rel="prefetch" href="/branch-0.12/assets/js/347.0fa4196f.js"><link rel="prefetch" href="/branch-0.12/assets/js/348.40c4d1f0.js"><link rel="prefetch" href="/branch-0.12/assets/js/349.a3e15eac.js"><link rel="prefetch" href="/branch-0.12/assets/js/35.090e8d3f.js"><link rel="prefetch" href="/branch-0.12/assets/js/350.50fea35d.js"><link rel="prefetch" href="/branch-0.12/assets/js/351.18bcf84b.js"><link rel="prefetch" href="/branch-0.12/assets/js/352.7eb1361f.js"><link rel="prefetch" href="/branch-0.12/assets/js/353.6cf66d98.js"><link rel="prefetch" href="/branch-0.12/assets/js/354.b9c05a05.js"><link rel="prefetch" href="/branch-0.12/assets/js/355.6728e9e1.js"><link rel="prefetch" href="/branch-0.12/assets/js/356.89402693.js"><link rel="prefetch" href="/branch-0.12/assets/js/357.019f4422.js"><link rel="prefetch" href="/branch-0.12/assets/js/358.ac63dd5d.js"><link rel="prefetch" href="/branch-0.12/assets/js/359.9c05f9a1.js"><link rel="prefetch" href="/branch-0.12/assets/js/36.6e57ba20.js"><link rel="prefetch" href="/branch-0.12/assets/js/360.9182a3b7.js"><link rel="prefetch" href="/branch-0.12/assets/js/361.4557aca0.js"><link rel="prefetch" href="/branch-0.12/assets/js/362.285ae67c.js"><link rel="prefetch" href="/branch-0.12/assets/js/363.bf4f21b6.js"><link rel="prefetch" href="/branch-0.12/assets/js/364.a06e916c.js"><link rel="prefetch" href="/branch-0.12/assets/js/365.60aac7a2.js"><link rel="prefetch" href="/branch-0.12/assets/js/366.8d90a91c.js"><link rel="prefetch" href="/branch-0.12/assets/js/367.554558c1.js"><link rel="prefetch" href="/branch-0.12/assets/js/368.2330014f.js"><link rel="prefetch" href="/branch-0.12/assets/js/369.809adb2f.js"><link rel="prefetch" href="/branch-0.12/assets/js/37.c6b2dddf.js"><link rel="prefetch" href="/branch-0.12/assets/js/370.56d15338.js"><link rel="prefetch" href="/branch-0.12/assets/js/371.b656cc6f.js"><link rel="prefetch" href="/branch-0.12/assets/js/372.4435e57d.js"><link rel="prefetch" href="/branch-0.12/assets/js/373.ce531a45.js"><link rel="prefetch" href="/branch-0.12/assets/js/374.c4ecf2a7.js"><link rel="prefetch" href="/branch-0.12/assets/js/375.df5f4fdd.js"><link rel="prefetch" href="/branch-0.12/assets/js/376.ce70e48f.js"><link rel="prefetch" href="/branch-0.12/assets/js/377.4cf5685f.js"><link rel="prefetch" href="/branch-0.12/assets/js/378.ed40f96d.js"><link rel="prefetch" href="/branch-0.12/assets/js/379.b509933a.js"><link rel="prefetch" href="/branch-0.12/assets/js/38.da2a89b5.js"><link rel="prefetch" href="/branch-0.12/assets/js/380.10f81670.js"><link rel="prefetch" href="/branch-0.12/assets/js/381.233f9a21.js"><link rel="prefetch" href="/branch-0.12/assets/js/382.8323cada.js"><link rel="prefetch" href="/branch-0.12/assets/js/383.b3188926.js"><link rel="prefetch" href="/branch-0.12/assets/js/384.0bc5a98b.js"><link rel="prefetch" href="/branch-0.12/assets/js/385.d7649f9d.js"><link rel="prefetch" href="/branch-0.12/assets/js/386.7e5534cd.js"><link rel="prefetch" href="/branch-0.12/assets/js/387.c9d74509.js"><link rel="prefetch" href="/branch-0.12/assets/js/388.9cd4e833.js"><link rel="prefetch" href="/branch-0.12/assets/js/389.ce8aa78b.js"><link rel="prefetch" href="/branch-0.12/assets/js/39.58145b0f.js"><link rel="prefetch" href="/branch-0.12/assets/js/390.86ed1432.js"><link rel="prefetch" href="/branch-0.12/assets/js/391.e7ca3e26.js"><link rel="prefetch" href="/branch-0.12/assets/js/392.1b0e6e15.js"><link rel="prefetch" href="/branch-0.12/assets/js/393.7c1d70e5.js"><link rel="prefetch" href="/branch-0.12/assets/js/394.64cfb1b7.js"><link rel="prefetch" href="/branch-0.12/assets/js/395.296c2a8d.js"><link rel="prefetch" href="/branch-0.12/assets/js/396.c5fe04b2.js"><link rel="prefetch" href="/branch-0.12/assets/js/397.7fd28042.js"><link rel="prefetch" href="/branch-0.12/assets/js/398.58a25743.js"><link rel="prefetch" href="/branch-0.12/assets/js/399.9cf5df42.js"><link rel="prefetch" href="/branch-0.12/assets/js/40.37322c03.js"><link rel="prefetch" href="/branch-0.12/assets/js/400.4e34b55c.js"><link rel="prefetch" href="/branch-0.12/assets/js/401.d8e5e5e1.js"><link rel="prefetch" href="/branch-0.12/assets/js/402.0cffda27.js"><link rel="prefetch" href="/branch-0.12/assets/js/403.526a0f90.js"><link rel="prefetch" href="/branch-0.12/assets/js/404.fc708dfe.js"><link rel="prefetch" href="/branch-0.12/assets/js/405.431c1d94.js"><link rel="prefetch" href="/branch-0.12/assets/js/406.98f02182.js"><link rel="prefetch" href="/branch-0.12/assets/js/407.e3bc9d95.js"><link rel="prefetch" href="/branch-0.12/assets/js/408.43387a49.js"><link rel="prefetch" href="/branch-0.12/assets/js/409.2dc147d5.js"><link rel="prefetch" href="/branch-0.12/assets/js/41.cd938162.js"><link rel="prefetch" href="/branch-0.12/assets/js/410.d49404d4.js"><link rel="prefetch" href="/branch-0.12/assets/js/411.19fda2d9.js"><link rel="prefetch" href="/branch-0.12/assets/js/412.9cc5cec7.js"><link rel="prefetch" href="/branch-0.12/assets/js/413.9197d33e.js"><link rel="prefetch" href="/branch-0.12/assets/js/414.76a4bf7c.js"><link rel="prefetch" href="/branch-0.12/assets/js/415.1f1bdf33.js"><link rel="prefetch" href="/branch-0.12/assets/js/416.0b7bec9d.js"><link rel="prefetch" href="/branch-0.12/assets/js/417.ff3c22c2.js"><link rel="prefetch" href="/branch-0.12/assets/js/418.46dd7851.js"><link rel="prefetch" href="/branch-0.12/assets/js/419.f7e9a460.js"><link rel="prefetch" href="/branch-0.12/assets/js/42.e1fc72e5.js"><link rel="prefetch" href="/branch-0.12/assets/js/420.c69c9703.js"><link rel="prefetch" href="/branch-0.12/assets/js/421.abeb42bc.js"><link rel="prefetch" href="/branch-0.12/assets/js/422.f850095c.js"><link rel="prefetch" href="/branch-0.12/assets/js/423.b1b686e7.js"><link rel="prefetch" href="/branch-0.12/assets/js/424.77ae216f.js"><link rel="prefetch" href="/branch-0.12/assets/js/425.79e2a5c7.js"><link rel="prefetch" href="/branch-0.12/assets/js/426.4983f11c.js"><link rel="prefetch" href="/branch-0.12/assets/js/427.bd81e3f9.js"><link rel="prefetch" href="/branch-0.12/assets/js/428.f9c64cd3.js"><link rel="prefetch" href="/branch-0.12/assets/js/429.9e8a2bc8.js"><link rel="prefetch" href="/branch-0.12/assets/js/43.d4a88016.js"><link rel="prefetch" href="/branch-0.12/assets/js/430.6489db21.js"><link rel="prefetch" href="/branch-0.12/assets/js/431.3162f3ec.js"><link rel="prefetch" href="/branch-0.12/assets/js/432.dcc0d6ee.js"><link rel="prefetch" href="/branch-0.12/assets/js/433.04579368.js"><link rel="prefetch" href="/branch-0.12/assets/js/434.0c490e64.js"><link rel="prefetch" href="/branch-0.12/assets/js/435.4451b568.js"><link rel="prefetch" href="/branch-0.12/assets/js/436.e5254787.js"><link rel="prefetch" href="/branch-0.12/assets/js/437.d9c97bb7.js"><link rel="prefetch" href="/branch-0.12/assets/js/438.deb1f3f1.js"><link rel="prefetch" href="/branch-0.12/assets/js/439.46543ad9.js"><link rel="prefetch" href="/branch-0.12/assets/js/44.28d2efd2.js"><link rel="prefetch" href="/branch-0.12/assets/js/440.7f5cef48.js"><link rel="prefetch" href="/branch-0.12/assets/js/441.94f42a3b.js"><link rel="prefetch" href="/branch-0.12/assets/js/442.6a9bbe22.js"><link rel="prefetch" href="/branch-0.12/assets/js/443.e99ca2ac.js"><link rel="prefetch" href="/branch-0.12/assets/js/444.a0f85557.js"><link rel="prefetch" href="/branch-0.12/assets/js/445.d65c193c.js"><link rel="prefetch" href="/branch-0.12/assets/js/446.a09af0ca.js"><link rel="prefetch" href="/branch-0.12/assets/js/447.9e285d75.js"><link rel="prefetch" href="/branch-0.12/assets/js/448.4aafd761.js"><link rel="prefetch" href="/branch-0.12/assets/js/449.8b6628b2.js"><link rel="prefetch" href="/branch-0.12/assets/js/45.913dda09.js"><link rel="prefetch" href="/branch-0.12/assets/js/450.3a65d06b.js"><link rel="prefetch" href="/branch-0.12/assets/js/451.e7419fd0.js"><link rel="prefetch" href="/branch-0.12/assets/js/452.7eba7056.js"><link rel="prefetch" href="/branch-0.12/assets/js/453.bf061a0c.js"><link rel="prefetch" href="/branch-0.12/assets/js/454.536e421e.js"><link rel="prefetch" href="/branch-0.12/assets/js/455.58a8a795.js"><link rel="prefetch" href="/branch-0.12/assets/js/456.d86780d7.js"><link rel="prefetch" href="/branch-0.12/assets/js/457.72d81b2e.js"><link rel="prefetch" href="/branch-0.12/assets/js/458.e3046ed0.js"><link rel="prefetch" href="/branch-0.12/assets/js/459.8e76e7e3.js"><link rel="prefetch" href="/branch-0.12/assets/js/46.a03f651d.js"><link rel="prefetch" href="/branch-0.12/assets/js/460.1b2a0d82.js"><link rel="prefetch" href="/branch-0.12/assets/js/461.9634d0f6.js"><link rel="prefetch" href="/branch-0.12/assets/js/462.f76daae0.js"><link rel="prefetch" href="/branch-0.12/assets/js/463.a3560d49.js"><link rel="prefetch" href="/branch-0.12/assets/js/464.16eb1791.js"><link rel="prefetch" href="/branch-0.12/assets/js/465.516f82c7.js"><link rel="prefetch" href="/branch-0.12/assets/js/466.93e9f774.js"><link rel="prefetch" href="/branch-0.12/assets/js/467.9ed60fcd.js"><link rel="prefetch" href="/branch-0.12/assets/js/468.378002c4.js"><link rel="prefetch" href="/branch-0.12/assets/js/469.83a81605.js"><link rel="prefetch" href="/branch-0.12/assets/js/47.f931791b.js"><link rel="prefetch" href="/branch-0.12/assets/js/470.5810eda1.js"><link rel="prefetch" href="/branch-0.12/assets/js/471.599f934d.js"><link rel="prefetch" href="/branch-0.12/assets/js/473.a6e1367f.js"><link rel="prefetch" href="/branch-0.12/assets/js/474.6f8fbfae.js"><link rel="prefetch" href="/branch-0.12/assets/js/475.c573ae45.js"><link rel="prefetch" href="/branch-0.12/assets/js/476.17d92b91.js"><link rel="prefetch" href="/branch-0.12/assets/js/477.03abcb11.js"><link rel="prefetch" href="/branch-0.12/assets/js/478.1a301561.js"><link rel="prefetch" href="/branch-0.12/assets/js/479.1b5ef1b3.js"><link rel="prefetch" href="/branch-0.12/assets/js/48.e69adbfb.js"><link rel="prefetch" href="/branch-0.12/assets/js/480.ee5dec65.js"><link rel="prefetch" href="/branch-0.12/assets/js/481.9c2075d4.js"><link rel="prefetch" href="/branch-0.12/assets/js/482.a8a3dcd2.js"><link rel="prefetch" href="/branch-0.12/assets/js/483.5143af7b.js"><link rel="prefetch" href="/branch-0.12/assets/js/484.b8752a64.js"><link rel="prefetch" href="/branch-0.12/assets/js/485.dfb3a76f.js"><link rel="prefetch" href="/branch-0.12/assets/js/486.bbf6126b.js"><link rel="prefetch" href="/branch-0.12/assets/js/487.b08655aa.js"><link rel="prefetch" href="/branch-0.12/assets/js/488.8d278c4b.js"><link rel="prefetch" href="/branch-0.12/assets/js/489.cce03790.js"><link rel="prefetch" href="/branch-0.12/assets/js/49.8c6650c3.js"><link rel="prefetch" href="/branch-0.12/assets/js/490.0ae36b90.js"><link rel="prefetch" href="/branch-0.12/assets/js/491.c23916e0.js"><link rel="prefetch" href="/branch-0.12/assets/js/492.c0c99ff3.js"><link rel="prefetch" href="/branch-0.12/assets/js/493.96420f52.js"><link rel="prefetch" href="/branch-0.12/assets/js/494.d8310953.js"><link rel="prefetch" href="/branch-0.12/assets/js/495.338ec80e.js"><link rel="prefetch" href="/branch-0.12/assets/js/496.a244a328.js"><link rel="prefetch" href="/branch-0.12/assets/js/497.71d744db.js"><link rel="prefetch" href="/branch-0.12/assets/js/498.025f549d.js"><link rel="prefetch" href="/branch-0.12/assets/js/499.031c07d4.js"><link rel="prefetch" href="/branch-0.12/assets/js/5.c0a9cc59.js"><link rel="prefetch" href="/branch-0.12/assets/js/50.465f29ec.js"><link rel="prefetch" href="/branch-0.12/assets/js/500.4008f2cf.js"><link rel="prefetch" href="/branch-0.12/assets/js/501.baf7e281.js"><link rel="prefetch" href="/branch-0.12/assets/js/502.cf46027e.js"><link rel="prefetch" href="/branch-0.12/assets/js/503.1aa4185b.js"><link rel="prefetch" href="/branch-0.12/assets/js/504.c514ed40.js"><link rel="prefetch" href="/branch-0.12/assets/js/505.57e62104.js"><link rel="prefetch" href="/branch-0.12/assets/js/506.24eb0086.js"><link rel="prefetch" href="/branch-0.12/assets/js/507.5316a273.js"><link rel="prefetch" href="/branch-0.12/assets/js/508.59267975.js"><link rel="prefetch" href="/branch-0.12/assets/js/509.e4ad576c.js"><link rel="prefetch" href="/branch-0.12/assets/js/51.72e4b3f4.js"><link rel="prefetch" href="/branch-0.12/assets/js/510.9e3fdd61.js"><link rel="prefetch" href="/branch-0.12/assets/js/511.2851593d.js"><link rel="prefetch" href="/branch-0.12/assets/js/512.9586ff84.js"><link rel="prefetch" href="/branch-0.12/assets/js/513.8632812d.js"><link rel="prefetch" href="/branch-0.12/assets/js/514.8ab6c521.js"><link rel="prefetch" href="/branch-0.12/assets/js/515.7a7fab2c.js"><link rel="prefetch" href="/branch-0.12/assets/js/516.4f191377.js"><link rel="prefetch" href="/branch-0.12/assets/js/517.a9b6ef4a.js"><link rel="prefetch" href="/branch-0.12/assets/js/518.55e0ebfe.js"><link rel="prefetch" href="/branch-0.12/assets/js/519.59258e6e.js"><link rel="prefetch" href="/branch-0.12/assets/js/52.6d5bbcca.js"><link rel="prefetch" href="/branch-0.12/assets/js/520.f7ab7d96.js"><link rel="prefetch" href="/branch-0.12/assets/js/521.e7b4eb5d.js"><link rel="prefetch" href="/branch-0.12/assets/js/522.fe343364.js"><link rel="prefetch" href="/branch-0.12/assets/js/523.9316bfd2.js"><link rel="prefetch" href="/branch-0.12/assets/js/524.037ecfe8.js"><link rel="prefetch" href="/branch-0.12/assets/js/525.3093faf7.js"><link rel="prefetch" href="/branch-0.12/assets/js/526.4d8cb9c3.js"><link rel="prefetch" href="/branch-0.12/assets/js/527.ecb492ac.js"><link rel="prefetch" href="/branch-0.12/assets/js/528.5d116868.js"><link rel="prefetch" href="/branch-0.12/assets/js/529.e3ae39ef.js"><link rel="prefetch" href="/branch-0.12/assets/js/53.e98930db.js"><link rel="prefetch" href="/branch-0.12/assets/js/530.f46dfe59.js"><link rel="prefetch" href="/branch-0.12/assets/js/531.8cca03d6.js"><link rel="prefetch" href="/branch-0.12/assets/js/532.b1292107.js"><link rel="prefetch" href="/branch-0.12/assets/js/533.45f0c3ce.js"><link rel="prefetch" href="/branch-0.12/assets/js/534.2fcaa48f.js"><link rel="prefetch" href="/branch-0.12/assets/js/54.8962c3a4.js"><link rel="prefetch" href="/branch-0.12/assets/js/55.9f12e7b8.js"><link rel="prefetch" href="/branch-0.12/assets/js/56.0819b58b.js"><link rel="prefetch" href="/branch-0.12/assets/js/57.a7fd6f83.js"><link rel="prefetch" href="/branch-0.12/assets/js/58.b094d0ab.js"><link rel="prefetch" href="/branch-0.12/assets/js/59.e221568d.js"><link rel="prefetch" href="/branch-0.12/assets/js/6.6b35b286.js"><link rel="prefetch" href="/branch-0.12/assets/js/60.709d812d.js"><link rel="prefetch" href="/branch-0.12/assets/js/61.92452eb2.js"><link rel="prefetch" href="/branch-0.12/assets/js/62.f04742d4.js"><link rel="prefetch" href="/branch-0.12/assets/js/63.5b1ec018.js"><link rel="prefetch" href="/branch-0.12/assets/js/64.8339fd73.js"><link rel="prefetch" href="/branch-0.12/assets/js/65.5a5403b6.js"><link rel="prefetch" href="/branch-0.12/assets/js/66.d4819135.js"><link rel="prefetch" href="/branch-0.12/assets/js/67.d665353b.js"><link rel="prefetch" href="/branch-0.12/assets/js/68.4b85144c.js"><link rel="prefetch" href="/branch-0.12/assets/js/69.0bc021ed.js"><link rel="prefetch" href="/branch-0.12/assets/js/7.d3b9cd26.js"><link rel="prefetch" href="/branch-0.12/assets/js/70.a12955c8.js"><link rel="prefetch" href="/branch-0.12/assets/js/71.c55f6e67.js"><link rel="prefetch" href="/branch-0.12/assets/js/72.0f238f5c.js"><link rel="prefetch" href="/branch-0.12/assets/js/73.51ad68e8.js"><link rel="prefetch" href="/branch-0.12/assets/js/74.bab9aebf.js"><link rel="prefetch" href="/branch-0.12/assets/js/75.c5c0f28e.js"><link rel="prefetch" href="/branch-0.12/assets/js/76.4d3e7caa.js"><link rel="prefetch" href="/branch-0.12/assets/js/77.56f34d07.js"><link rel="prefetch" href="/branch-0.12/assets/js/78.577fc9e4.js"><link rel="prefetch" href="/branch-0.12/assets/js/79.e842e97f.js"><link rel="prefetch" href="/branch-0.12/assets/js/8.9e2a8377.js"><link rel="prefetch" href="/branch-0.12/assets/js/80.9144da65.js"><link rel="prefetch" href="/branch-0.12/assets/js/81.c4e7108b.js"><link rel="prefetch" href="/branch-0.12/assets/js/82.1f11d5d6.js"><link rel="prefetch" href="/branch-0.12/assets/js/83.2d36e84e.js"><link rel="prefetch" href="/branch-0.12/assets/js/84.3c32c683.js"><link rel="prefetch" href="/branch-0.12/assets/js/85.998ca771.js"><link rel="prefetch" href="/branch-0.12/assets/js/86.85bdf631.js"><link rel="prefetch" href="/branch-0.12/assets/js/87.4c4799d3.js"><link rel="prefetch" href="/branch-0.12/assets/js/88.d2d1f7a7.js"><link rel="prefetch" href="/branch-0.12/assets/js/89.ec20db5c.js"><link rel="prefetch" href="/branch-0.12/assets/js/9.fa0d8336.js"><link rel="prefetch" href="/branch-0.12/assets/js/90.5e4ebdb3.js"><link rel="prefetch" href="/branch-0.12/assets/js/91.5ff472f3.js"><link rel="prefetch" href="/branch-0.12/assets/js/92.11e7021a.js"><link rel="prefetch" href="/branch-0.12/assets/js/93.7b77fbfe.js"><link rel="prefetch" href="/branch-0.12/assets/js/94.caf64213.js"><link rel="prefetch" href="/branch-0.12/assets/js/95.bf20793e.js"><link rel="prefetch" href="/branch-0.12/assets/js/96.02cab7b2.js"><link rel="prefetch" href="/branch-0.12/assets/js/97.0853d9e6.js"><link rel="prefetch" href="/branch-0.12/assets/js/98.bba0f5f8.js"><link rel="prefetch" href="/branch-0.12/assets/js/99.60fa314d.js"><link rel="prefetch" href="/branch-0.12/assets/js/vendors~docsearch.4e4574f6.js">
+    <link rel="stylesheet" href="/branch-0.12/assets/css/0.styles.772b3911.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/branch-0.12/zh-CN/" class="home-link router-link-active"><img src="/branch-0.12/images/doris-logo-only.png" alt="Apache Doris" class="logo"> <span class="site-name can-hide">Apache Doris</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <div class="can-hide"><!----></div></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><div><!----></div>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>下载</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>编译与部署</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>开始使用</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>操作手册</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>扩展功能</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>设计文档</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>SQL 手册</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>SQL 函数</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>语法帮助</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-2"><p class="sidebar-heading"><span>用户账户管理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-2"><p class="sidebar-heading"><span>集群管理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-2"><p class="sidebar-heading open"><span>DDL</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/ALTER DATABASE.html" class="sidebar-link">ALTER DATABASE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/ALTER TABLE.html" class="sidebar-link">ALTER TABLE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/ALTER VIEW.html" class="sidebar-link">ALTER VIEW</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/BACKUP.html" class="sidebar-link">BACKUP</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CANCEL ALTER.html" class="sidebar-link">CANCEL ALTER</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CANCEL BACKUP.html" class="sidebar-link">CANCEL BACKUP</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CANCEL RESTORE.html" class="sidebar-link">CANCEL RESTORE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE DATABASE.html" class="sidebar-link">CREATE DATABASE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE INDEX.html" class="sidebar-link">CREATE INDEX</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE MATERIALIZED VIEW.html" class="sidebar-link">CREATE MATERIALIZED VIEW</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE REPOSITORY.html" class="sidebar-link">CREATE REPOSITORY</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE TABLE.html" class="active sidebar-link">CREATE TABLE</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE TABLE.html#description" class="sidebar-link">description</a></li><li class="sidebar-sub-header"><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE TABLE.html#example" class="sidebar-link">example</a></li></ul></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE VIEW.html" class="sidebar-link">CREATE VIEW</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/create-function.html" class="sidebar-link">CREATE FUNCTION</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/DROP DATABASE.html" class="sidebar-link">DROP DATABASE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/DROP INDEX.html" class="sidebar-link">DROP INDEX</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/DROP MATERIALIZED VIEW.html" class="sidebar-link">DROP MATERIALIZED VIEW</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/DROP REPOSITORY.html" class="sidebar-link">DROP REPOSITORY</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/DROP TABLE.html" class="sidebar-link">DROP TABLE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/DROP VIEW.html" class="sidebar-link">DROP VIEW</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/drop-function.html" class="sidebar-link">DROP FUNCTION</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/HLL.html" class="sidebar-link">HLL</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/RECOVER.html" class="sidebar-link">RECOVER</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/RESTORE.html" class="sidebar-link">RESTORE</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/show-functions.html" class="sidebar-link">SHOW FUNCTIONS</a></li><li><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/TRUNCATE TABLE.html" class="sidebar-link">TRUNCATE TABLE</a></li></ul></section></li><li><section class="sidebar-group collapsable is-sub-group depth-2"><p class="sidebar-heading"><span>DML</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-2"><p class="sidebar-heading"><span>数据类型</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-2"><p class="sidebar-heading"><span>辅助命令</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>开发者手册</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Apache 社区</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="create-table"><a href="#create-table" class="header-anchor">#</a> CREATE TABLE</h1> <h2 id="description"><a href="#description" class="header-anchor">#</a> description</h2> <p>该语句用于创建 table。
+语法：</p> <div class="language- extra-class"><pre class="language-text"><code>    CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
+    (column_definition1[, column_definition2, ...]
+    [, index_definition1[, ndex_definition12,]])
+    [ENGINE = [olap|mysql|broker]]
+    [key_desc]
+    [COMMENT &quot;table comment&quot;];
+    [partition_desc]
+    [distribution_desc]
+    [rollup_index]
+    [PROPERTIES (&quot;key&quot;=&quot;value&quot;, ...)]
+    [BROKER PROPERTIES (&quot;key&quot;=&quot;value&quot;, ...)]
+</code></pre></div><ol><li><p>column_definition
+语法：
+<code>col_name col_type [agg_type] [NULL | NOT NULL] [DEFAULT &quot;default_value&quot;]</code></p> <p>说明：
+col_name：列名称
+col_type：列类型</p> <div class="language- extra-class"><pre class="language-text"><code>    TINYINT（1字节）
+        范围：-2^7 + 1 ~ 2^7 - 1
+    SMALLINT（2字节）
+        范围：-2^15 + 1 ~ 2^15 - 1
+    INT（4字节）
+        范围：-2^31 + 1 ~ 2^31 - 1
+    BIGINT（8字节）
+        范围：-2^63 + 1 ~ 2^63 - 1
+    LARGEINT（16字节）
+        范围：-2^127 + 1 ~ 2^127 - 1
+    FLOAT（4字节）
+        支持科学计数法
+    DOUBLE（12字节）
+        支持科学计数法
+    DECIMAL[(precision, scale)] (16字节)
+        保证精度的小数类型。默认是 DECIMAL(10, 0)
+        precision: 1 ~ 27
+        scale: 0 ~ 9
+        其中整数部分为 1 ~ 18
+        不支持科学计数法
+    DATE（3字节）
+        范围：0000-01-01 ~ 9999-12-31
+    DATETIME（8字节）
+        范围：0000-01-01 00:00:00 ~ 9999-12-31 23:59:59
+    CHAR[(length)]
+        定长字符串。长度范围：1 ~ 255。默认为1
+    VARCHAR[(length)]
+        变长字符串。长度范围：1 ~ 65533
+    HLL (1~16385个字节)
+        hll列类型，不需要指定长度和默认值、长度根据数据的聚合
+        程度系统内控制，并且HLL列只能通过配套的hll_union_agg、Hll_cardinality、hll_hash进行查询或使用
+    BITMAP
+        bitmap列类型，不需要指定长度和默认值。表示整型的集合，元素最大支持到2^64 - 1
+</code></pre></div><p>agg_type：聚合类型，如果不指定，则该列为 key 列。否则，该列为 value 列
+* SUM、MAX、MIN、REPLACE
+* HLL_UNION(仅用于HLL列，为HLL独有的聚合方式)、
+* BITMAP_UNION(仅用于 BITMAP 列，为 BITMAP 独有的聚合方式)、
+* REPLACE_IF_NOT_NULL：这个聚合类型的含义是当且仅当新导入数据是非NULL值时会发生替换行为，如果新导入的数据是NULL，那么Doris仍然会保留原值。注意：如果用在建表时REPLACE_IF_NOT_NULL列指定了NOT NULL，那么Doris仍然会将其转化NULL，不会向用户报错。用户可以借助这个类型完成部分列导入的功能。
+* 该类型只对聚合模型(key_desc的type为AGGREGATE KEY)有用，其它模型不需要指这个。</p> <p>是否允许为NULL: 默认不允许为 NULL。NULL 值在导入数据中用 \N 来表示</p> <p>注意：
+BITMAP_UNION聚合类型列在导入时的原始数据类型必须是TINYINT,SMALLINT,INT,BIGINT。</p></li> <li><p>index_definition
+语法：
+<code>INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] COMMENT 'xxxxxx'</code>
+说明：
+index_name：索引名称
+col_name：列名
+注意：
+当前仅支持BITMAP索引， BITMAP索引仅支持应用于单列</p></li> <li><p>ENGINE 类型
+默认为 olap。可选 mysql, broker</p> <ol><li>如果是 mysql，则需要在 properties 提供以下信息：</li></ol></li></ol> <div class="language- extra-class"><pre class="language-text"><code>    PROPERTIES (
+        &quot;host&quot; = &quot;mysql_server_host&quot;,
+        &quot;port&quot; = &quot;mysql_server_port&quot;,
+        &quot;user&quot; = &quot;your_user_name&quot;,
+        &quot;password&quot; = &quot;your_password&quot;,
+        &quot;database&quot; = &quot;database_name&quot;,
+        &quot;table&quot; = &quot;table_name&quot;
+        )
+</code></pre></div><div class="language- extra-class"><pre><code>注意：
+    &quot;table&quot; 条目中的 &quot;table_name&quot; 是 mysql 中的真实表名。
+    而 CREATE TABLE 语句中的 table_name 是该 mysql 表在 Palo 中的名字，可以不同。
+
+在 Palo 创建 mysql 表的目的是可以通过 Palo 访问 mysql 数据库。
+    而 Palo 本身并不维护、存储任何 mysql 数据。
+1) 如果是 broker，表示表的访问需要通过指定的broker, 需要在 properties 提供以下信息：
+    ```
+    PROPERTIES (
+    &quot;broker_name&quot; = &quot;broker_name&quot;,
+    &quot;path&quot; = &quot;file_path1[,file_path2]&quot;,
+    &quot;column_separator&quot; = &quot;value_separator&quot;
+    &quot;line_delimiter&quot; = &quot;value_delimiter&quot;
+    )
+    ```
+    另外还需要提供Broker需要的Property信息，通过BROKER PROPERTIES来传递，例如HDFS需要传入
+    ```
+    BROKER PROPERTIES(
+        &quot;username&quot; = &quot;name&quot;,
+        &quot;password&quot; = &quot;password&quot;
+    )
+    ```
+    这个根据不同的Broker类型，需要传入的内容也不相同
+注意：
+    &quot;path&quot; 中如果有多个文件，用逗号[,]分割。如果文件名中包含逗号，那么使用 %2c 来替代。如果文件名中包含 %，使用 %25 代替
+    现在文件内容格式支持CSV，支持GZ，BZ2，LZ4，LZO(LZOP) 压缩格式。
+</code></pre></div><ol><li><p>key_desc
+语法：
+<code>key_type(k1[,k2 ...])</code>
+说明：
+数据按照指定的key列进行排序，且根据不同的key_type具有不同特性。
+key_type支持一下类型：
+AGGREGATE KEY:key列相同的记录，value列按照指定的聚合类型进行聚合，
+适合报表、多维分析等业务场景。
+UNIQUE KEY:key列相同的记录，value列按导入顺序进行覆盖，
+适合按key列进行增删改查的点查询业务。
+DUPLICATE KEY:key列相同的记录，同时存在于Palo中，
+适合存储明细数据或者数据无聚合特性的业务场景。
+默认为DUPLICATE KEY，key列为列定义中前36个字节, 如果前36个字节的列数小于3，将使用前三列。
+注意：
+除AGGREGATE KEY外，其他key_type在建表时，value列不需要指定聚合类型。</p></li> <li><p>partition_desc
+partition描述有两种使用方式</p> <ol><li><p>LESS THAN
+语法：</p> <div class="language- extra-class"><pre class="language-text"><code>    PARTITION BY RANGE (k1, k2, ...)
+    (
+    PARTITION partition_name1 VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...),
+    PARTITION partition_name2 VALUES LESS THAN MAXVALUE|(&quot;value1&quot;, &quot;value2&quot;, ...)
+    ...
+    )
+</code></pre></div><p>说明：
+使用指定的 key 列和指定的数值范围进行分区。
+1) 分区名称仅支持字母开头，字母、数字和下划线组成
+2) 目前仅支持以下类型的列作为 Range 分区列，且只能指定一个分区列
+TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME
+3) 分区为左闭右开区间，首个分区的左边界为做最小值
+4) NULL 值只会存放在包含最小值的分区中。当包含最小值的分区被删除后，NULL 值将无法导入。
+5) 可以指定一列或多列作为分区列。如果分区值缺省，则会默认填充最小值。</p> <p>注意：
+1) 分区一般用于时间维度的数据管理
+2) 有数据回溯需求的，可以考虑首个分区为空分区，以便后续增加分区</p></li></ol> <p>2）Fixed Range
+语法：
+<code>PARTITION BY RANGE (k1, k2, k3, ...) ( PARTITION partition_name1 VALUES [(&quot;k1-lower1&quot;, &quot;k2-lower1&quot;, &quot;k3-lower1&quot;,...), (&quot;k1-upper1&quot;, &quot;k2-upper1&quot;, &quot;k3-upper1&quot;, ...)), PARTITION partition_name2 VALUES [(&quot;k1-lower1-2&quot;, &quot;k2-lower1-2&quot;, ...), (&quot;k1-upper1-2&quot;, MAXVALUE, )) &quot;k3-upper1-2&quot;, ... )</code>
+说明：
+1）Fixed Range比LESS THAN相对灵活些，左右区间完全由用户自己确定
+2）其他与LESS THAN保持同步</p></li> <li><p>distribution_desc
+1) Hash 分桶
+语法：
+<code>DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]</code>
+说明：
+使用指定的 key 列进行哈希分桶。默认分区数为10</p> <p>建议:建议使用Hash分桶方式</p></li> <li><p>PROPERTIES</p> <ol><li>如果 ENGINE 类型为 olap
+可以在 properties 设置该表数据的初始存储介质、存储到期时间和副本数。</li></ol> <div class="language- extra-class"><pre class="language-text"><code>   PROPERTIES (
+       &quot;storage_medium&quot; = &quot;[SSD|HDD]&quot;,
+       [&quot;storage_cooldown_time&quot; = &quot;yyyy-MM-dd HH:mm:ss&quot;],
+       [&quot;replication_num&quot; = &quot;3&quot;]
+       )
+</code></pre></div><div class="language- extra-class"><pre><code>storage_medium：        用于指定该分区的初始存储介质，可选择 SSD 或 HDD。默认初始存储介质可通过fe的配置文件 `fe.conf` 中指定 `default_storage_medium=xxx`，如果没有指定，则默认为 HDD。
+    storage_cooldown_time： 当设置存储介质为 SSD 时，指定该分区在 SSD 上的存储到期时间。
+                            默认存放 30 天。
+                            格式为：&quot;yyyy-MM-dd HH:mm:ss&quot;
+    replication_num:        指定分区的副本数。默认为 3
+
+当表为单分区表时，这些属性为表的属性。
+    当表为两级分区时，这些属性为附属于每一个分区。
+    如果希望不同分区有不同属性。可以通过 ADD PARTITION 或 MODIFY PARTITION 进行操作
+</code></pre></div><p>2 如果 Engine 类型为 olap, 可以指定某列使用 bloom filter 索引
+bloom filter 索引仅适用于查询条件为 in 和 equal 的情况，该列的值越分散效果越好
+目前只支持以下情况的列:除了 TINYINT FLOAT DOUBLE 类型以外的 key 列及聚合方法为 REPLACE 的 value 列</p></li></ol> <div class="language- extra-class"><pre class="language-text"><code>       PROPERTIES (
+           &quot;bloom_filter_columns&quot;=&quot;k1,k2,k3&quot;
+           )
+</code></pre></div><div class="language- extra-class"><pre><code>3) 如果希望使用 Colocate Join 特性，需要在 properties 中指定
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>       PROPERTIES (
+           &quot;colocate_with&quot;=&quot;table1&quot;
+           )
+</code></pre></div><div class="language- extra-class"><pre><code>4) 如果希望使用动态分区特性，需要在properties 中指定
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>      PROPERTIES (
+          &quot;dynamic_partition.enable&quot; = &quot;true|false&quot;,
+          &quot;dynamic_partition.time_unit&quot; = &quot;DAY|WEEK|MONTH&quot;,
+          &quot;dynamic_partition.start&quot; = &quot;${integer_value}&quot;,
+          &quot;dynamic_partitoin.end&quot; = &quot;${integer_value}&quot;,
+          &quot;dynamic_partition.prefix&quot; = &quot;${string_value}&quot;,
+          &quot;dynamic_partition.buckets&quot; = &quot;${integer_value}
+</code></pre></div><div class="language- extra-class"><pre><code>dynamic_partition.enable: 用于指定表级别的动态分区功能是否开启。默认为 true。
+dynamic_partition.time_unit: 用于指定动态添加分区的时间单位，可选择为DAY（天），WEEK(周)，MONTH（月）
+dynamic_partition.start: 用于指定向前删除多少个分区。值必须小于0。默认为 Integer.MIN_VALUE。
+dynamic_partition.end: 用于指定提前创建的分区数量。值必须大于0。
+dynamic_partition.prefix: 用于指定创建的分区名前缀，例如分区名前缀为p，则自动创建分区名为p20200108
+dynamic_partition.buckets: 用于指定自动创建的分区分桶数量
+
+5) 建表时可以批量创建多个 Rollup
+语法：
+```
+    ROLLUP (rollup_name (column_name1, column_name2, ...)
+           [FROM from_index_name]
+            [PROPERTIES (&quot;key&quot;=&quot;value&quot;, ...)],...)
+```
+
+6) 如果希望使用 内存表 特性，需要在 properties 中指定
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>        PROPERTIES (
+           &quot;in_memory&quot;=&quot;true&quot;
+        )   
+</code></pre></div><div class="language- extra-class"><pre><code>当 in_memory 属性为 true 时，Doris会尽可能将该表的数据和索引Cache到BE 内存中
+</code></pre></div><h2 id="example"><a href="#example" class="header-anchor">#</a> example</h2> <ol><li><p>创建一个 olap 表，使用 HASH 分桶，使用列存，相同key的记录进行聚合</p> <div class="language- extra-class"><pre class="language-text"><code>CREATE TABLE example_db.table_hash
+(
+k1 TINYINT,
+k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+v1 CHAR(10) REPLACE,
+v2 INT SUM
+)
+ENGINE=olap
+AGGREGATE KEY(k1, k2)
+COMMENT &quot;my first doris table&quot;
+DISTRIBUTED BY HASH(k1) BUCKETS 32
+PROPERTIES (&quot;storage_type&quot;=&quot;column&quot;);
+</code></pre></div></li> <li><p>创建一个 olap 表，使用 Hash 分桶，使用列存，相同key的记录进行覆盖，
+设置初始存储介质和冷却时间</p> <div class="language- extra-class"><pre class="language-text"><code> CREATE TABLE example_db.table_hash
+ (
+ k1 BIGINT,
+ k2 LARGEINT,
+ v1 VARCHAR(2048) REPLACE,
+ v2 SMALLINT SUM DEFAULT &quot;10&quot;
+ )
+ ENGINE=olap
+ UNIQUE KEY(k1, k2)
+ DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+ PROPERTIES(
+ &quot;storage_type&quot;=&quot;column&quot;，
+ &quot;storage_medium&quot; = &quot;SSD&quot;,
+ &quot;storage_cooldown_time&quot; = &quot;2015-06-04 00:00:00&quot;
+ );
+</code></pre></div></li> <li><p>创建一个 olap 表，使用 Range 分区，使用Hash分桶，默认使用列存，
+相同key的记录同时存在，设置初始存储介质和冷却时间</p> <p>1）LESS THAN</p> <div class="language- extra-class"><pre class="language-text"><code>CREATE TABLE example_db.table_range
+(
+k1 DATE,
+k2 INT,
+k3 SMALLINT,
+v1 VARCHAR(2048),
+v2 DATETIME DEFAULT &quot;2014-02-04 15:36:00&quot;
+)
+ENGINE=olap
+DUPLICATE KEY(k1, k2, k3)
+PARTITION BY RANGE (k1)
+(
+PARTITION p1 VALUES LESS THAN (&quot;2014-01-01&quot;),
+PARTITION p2 VALUES LESS THAN (&quot;2014-06-01&quot;),
+PARTITION p3 VALUES LESS THAN (&quot;2014-12-01&quot;)
+)
+DISTRIBUTED BY HASH(k2) BUCKETS 32
+PROPERTIES(
+&quot;storage_medium&quot; = &quot;SSD&quot;, &quot;storage_cooldown_time&quot; = &quot;2015-06-04 00:00:00&quot;
+);
+</code></pre></div><p>说明：
+这个语句会将数据划分成如下3个分区：</p> <div class="language- extra-class"><pre class="language-text"><code>( {    MIN     },   {&quot;2014-01-01&quot;} )
+[ {&quot;2014-01-01&quot;},   {&quot;2014-06-01&quot;} )
+[ {&quot;2014-06-01&quot;},   {&quot;2014-12-01&quot;} )
+</code></pre></div><p>不在这些分区范围内的数据将视为非法数据被过滤</p> <ol start="2"><li>Fixed Range</li></ol> <div class="language- extra-class"><pre class="language-text"><code>CREATE TABLE table_range
+(
+k1 DATE,
+k2 INT,
+k3 SMALLINT,
+v1 VARCHAR(2048),
+v2 DATETIME DEFAULT &quot;2014-02-04 15:36:00&quot;
+)
+ENGINE=olap
+DUPLICATE KEY(k1, k2, k3)
+PARTITION BY RANGE (k1, k2, k3)
+(
+PARTITION p1 VALUES [(&quot;2014-01-01&quot;, &quot;10&quot;, &quot;200&quot;), (&quot;2014-01-01&quot;, &quot;20&quot;, &quot;300&quot;)),
+PARTITION p2 VALUES [(&quot;2014-06-01&quot;, &quot;100&quot;, &quot;200&quot;), (&quot;2014-07-01&quot;, &quot;100&quot;, &quot;300&quot;))
+)
+DISTRIBUTED BY HASH(k2) BUCKETS 32
+PROPERTIES(
+&quot;storage_medium&quot; = &quot;SSD&quot;
+);
+</code></pre></div></li> <li><p>创建一个 mysql 表</p></li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE example_db.table_mysql
+    (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    k4 VARCHAR(2048),
+    k5 DATETIME
+    )
+    ENGINE=mysql
+    PROPERTIES
+    (
+    &quot;host&quot; = &quot;127.0.0.1&quot;,
+    &quot;port&quot; = &quot;8239&quot;,
+    &quot;user&quot; = &quot;mysql_user&quot;,
+    &quot;password&quot; = &quot;mysql_passwd&quot;,
+    &quot;database&quot; = &quot;mysql_db_test&quot;,
+    &quot;table&quot; = &quot;mysql_table_test&quot;
+    )
+</code></pre></div><ol start="5"><li>创建一个数据文件存储在HDFS上的 broker 外部表, 数据使用 &quot;|&quot; 分割，&quot;\n&quot; 换行</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE EXTERNAL TABLE example_db.table_broker (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    k4 VARCHAR(2048),
+    k5 DATETIME
+    )
+    ENGINE=broker
+    PROPERTIES (
+    &quot;broker_name&quot; = &quot;hdfs&quot;,
+    &quot;path&quot; = &quot;hdfs://hdfs_host:hdfs_port/data1,hdfs://hdfs_host:hdfs_port/data2,hdfs://hdfs_host:hdfs_port/data3%2c4&quot;,
+    &quot;column_separator&quot; = &quot;|&quot;,
+    &quot;line_delimiter&quot; = &quot;\n&quot;
+    )
+    BROKER PROPERTIES (
+    &quot;username&quot; = &quot;hdfs_user&quot;,
+    &quot;password&quot; = &quot;hdfs_password&quot;
+    )
+</code></pre></div><ol start="6"><li>创建一张含有HLL列的表</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE example_db.example_table
+    (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+    v1 HLL HLL_UNION,
+    v2 HLL HLL_UNION
+    )
+    ENGINE=olap
+    AGGREGATE KEY(k1, k2)
+    DISTRIBUTED BY HASH(k1) BUCKETS 32
+    PROPERTIES (&quot;storage_type&quot;=&quot;column&quot;);
+</code></pre></div><ol start="7"><li>创建一张含有BITMAP_UNION聚合类型的表（v1和v2列的原始数据类型必须是TINYINT,SMALLINT,INT）</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE example_db.example_table
+    (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+    v1 BITMAP BITMAP_UNION,
+    v2 BITMAP BITMAP_UNION
+    )
+    ENGINE=olap
+    AGGREGATE KEY(k1, k2)
+    DISTRIBUTED BY HASH(k1) BUCKETS 32
+    PROPERTIES (&quot;storage_type&quot;=&quot;column&quot;);
+</code></pre></div><ol start="8"><li>创建两张支持Colocat Join的表t1 和t2</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE `t1` (
+    `id` int(11) COMMENT &quot;&quot;,
+    `value` varchar(8) COMMENT &quot;&quot;
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 10
+    PROPERTIES (
+    &quot;colocate_with&quot; = &quot;t1&quot;
+    );
+
+    CREATE TABLE `t2` (
+    `id` int(11) COMMENT &quot;&quot;,
+    `value` varchar(8) COMMENT &quot;&quot;
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 10
+    PROPERTIES (
+    &quot;colocate_with&quot; = &quot;t1&quot;
+    );
+</code></pre></div><ol start="9"><li>创建一个数据文件存储在BOS上的 broker 外部表</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE EXTERNAL TABLE example_db.table_broker (
+    k1 DATE
+    )
+    ENGINE=broker
+    PROPERTIES (
+    &quot;broker_name&quot; = &quot;bos&quot;,
+    &quot;path&quot; = &quot;bos://my_bucket/input/file&quot;,
+    )
+    BROKER PROPERTIES (
+      &quot;bos_endpoint&quot; = &quot;http://bj.bcebos.com&quot;,
+      &quot;bos_accesskey&quot; = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+      &quot;bos_secret_accesskey&quot;=&quot;yyyyyyyyyyyyyyyyyyyy&quot;
+    )
+</code></pre></div><ol start="10"><li>创建一个带有bitmap 索引的表</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE example_db.table_hash
+    (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+    v1 CHAR(10) REPLACE,
+    v2 INT SUM,
+    INDEX k1_idx (k1) USING BITMAP COMMENT 'xxxxxx'
+    )
+    ENGINE=olap
+    AGGREGATE KEY(k1, k2)
+    COMMENT &quot;my first doris table&quot;
+    DISTRIBUTED BY HASH(k1) BUCKETS 32
+    PROPERTIES (&quot;storage_type&quot;=&quot;column&quot;);
+</code></pre></div><ol start="11"><li>创建一个动态分区表(需要在FE配置中开启动态分区功能)，该表每天提前创建3天的分区，并删除3天前的分区。例如今天为<code>2020-01-08</code>，则会创建分区名为<code>p20200108</code>, <code>p20200109</code>, <code>p20200110</code>, <code>p20200111</code>的分区. 分区范围分别为:</li></ol> <div class="language- extra-class"><pre class="language-text"><code>[types: [DATE]; keys: [2020-01-08]; ‥types: [DATE]; keys: [2020-01-09]; )
+[types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10]; )
+[types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11]; )
+[types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12]; )
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE example_db.dynamic_partition
+    (
+    k1 DATE,
+    k2 INT,
+    k3 SMALLINT,
+    v1 VARCHAR(2048),
+    v2 DATETIME DEFAULT &quot;2014-02-04 15:36:00&quot;
+    )
+    ENGINE=olap
+    DUPLICATE KEY(k1, k2, k3)
+    PARTITION BY RANGE (k1)
+    (
+    PARTITION p1 VALUES LESS THAN (&quot;2014-01-01&quot;),
+    PARTITION p2 VALUES LESS THAN (&quot;2014-06-01&quot;),
+    PARTITION p3 VALUES LESS THAN (&quot;2014-12-01&quot;)
+    )
+    DISTRIBUTED BY HASH(k2) BUCKETS 32
+    PROPERTIES(
+    &quot;storage_medium&quot; = &quot;SSD&quot;,
+    &quot;dynamic_partition.time_unit&quot; = &quot;DAY&quot;,
+    &quot;dynamic_partition.start&quot; = &quot;-3&quot;,
+    &quot;dynamic_partition.end&quot; = &quot;3&quot;,
+    &quot;dynamic_partition.prefix&quot; = &quot;p&quot;,
+    &quot;dynamic_partition.buckets&quot; = &quot;32&quot;
+     );
+</code></pre></div><ol start="12"><li>Create a table with rollup index</li></ol> <div class="language- extra-class"><pre class="language-text"><code>    CREATE TABLE example_db.rolup_index_table
+    (
+        event_day DATE,
+        siteid INT DEFAULT '10',
+        citycode SMALLINT,
+        username VARCHAR(32) DEFAULT '',
+        pv BIGINT SUM DEFAULT '0'
+    )
+    AGGREGATE KEY(event_day, siteid, citycode, username)
+    DISTRIBUTED BY HASH(siteid) BUCKETS 10
+    rollup (
+    r1(event_day,siteid),
+    r2(event_day,citycode),
+    r3(event_day)
+    )
+    PROPERTIES(&quot;replication_num&quot; = &quot;3&quot;);
+    
+13. 创建一个内存表
+
+</code></pre></div><div class="language- extra-class"><pre><code>CREATE TABLE example_db.table_hash
+(
+k1 TINYINT,
+k2 DECIMAL(10, 2) DEFAULT &quot;10.5&quot;,
+v1 CHAR(10) REPLACE,
+v2 INT SUM,
+INDEX k1_idx (k1) USING BITMAP COMMENT 'xxxxxx'
+)
+ENGINE=olap
+AGGREGATE KEY(k1, k2)
+COMMENT &quot;my first doris table&quot;
+DISTRIBUTED BY HASH(k1) BUCKETS 32
+PROPERTIES (&quot;in_memory&quot;=&quot;true&quot;);
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>
+## keyword
+
+    CREATE,TABLE
+</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/apache/incubator-doris/edit/branch-0.12/docs/zh-CN/sql-reference/sql-statements/Data Definition/CREATE TABLE.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">2020-4-29 01:13:44</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE REPOSITORY.html" class="prev">
+        CREATE REPOSITORY
+      </a></span> <span class="next"><a href="/branch-0.12/zh-CN/sql-reference/sql-statements/Data Definition/CREATE VIEW.html">
+        CREATE VIEW
+      </a>
+      →
+    </span></p></div> <footer><div class="footer-wrapper"><br> <span class="footer-text">© Copyright 2020, Apache Doris(Incubating)</span> <br> <span class="footer-text">
+  Apache Doris(incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.</span></div></footer></main></div><div class="global-ui"></div></div>
+    <script src="/branch-0.12/assets/js/app.7a501a5a.js" defer></script><script src="/branch-0.12/assets/js/4.af2e6818.js" defer></script><script src="/branch-0.12/assets/js/3.7820216c.js" defer></script><script src="/branch-0.12/assets/js/472.ae4bf152.js" defer></script>
+  </body>
+</html>
