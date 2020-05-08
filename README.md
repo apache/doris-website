@@ -26,9 +26,9 @@ The only working branch for this repository is `asf-site`. And it's mostly updat
 Navigate to 
 [https://doris.apache.org](https://doris.apache.org) 
 or
-[http://doris.incubator.apache.org](http://doris.incubator.apache.org)
+[https://doris.incubator.apache.org](https://doris.incubator.apache.org)
 
-## More detail
+## For More detail
 
 Please refer to [incubator-doris](https://github.com/apache/incubator-doris/blob/master/docs/README.md).
 
