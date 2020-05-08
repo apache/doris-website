@@ -21,6 +21,15 @@ under the License.
 
 The only working branch for this repository is `asf-site`. And it's mostly updated by travis' autobuild.
 
-For more details, please refer to [incubator-doris](https://github.com/apache/incubator-doris/blob/master/docs/README.md).
+## View the website
+
+Navigate to 
+[https://doris.apache.org](https://doris.apache.org) 
+or
+[http://doris.incubator.apache.org](http://doris.incubator.apache.org)
+
+## More detail
+
+Please refer to [incubator-doris](https://github.com/apache/incubator-doris/blob/master/docs/README.md).
 
 
