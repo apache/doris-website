@@ -9,6 +9,11 @@
           "target": "_blank"
         },
         {
+          "text": "branch-0.13",
+          "link": "/../branch-0.13/en/installing/compilation.html",
+          "target": "_blank"
+        },
+        {
           "text": "branch-0.12",
           "link": "/../branch-0.12/en/installing/compilation.html",
           "target": "_blank"
@@ -28,6 +33,11 @@
         {
           "text": "master",
           "link": "/../master/zh-CN/installing/compilation.html",
+          "target": "_blank"
+        },
+        {
+          "text": "branch-0.13",
+          "link": "/../branch-0.13/zh-CN/installing/compilation.html",
           "target": "_blank"
         },
         {
