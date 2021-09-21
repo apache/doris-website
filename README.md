@@ -17,19 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris Document Website
+# Doris document website
 
-The only working branch for this repository is `asf-site`. And it's mostly updated by travis' autobuild.
+The only working branch for this repository is `asf-site`, and it's mostly updated by travis' autobuild.
 
 ## View the website
 
-Navigate to 
+To view the website, navigate to 
 [https://doris.apache.org](https://doris.apache.org) 
 or
 [https://doris.incubator.apache.org](https://doris.incubator.apache.org)
 
-## For More detail
+## For more details
 
-Please refer to [incubator-doris](https://github.com/apache/incubator-doris/blob/master/docs/README.md).
+For more details about Dorirs, refer to [incubator-doris](https://github.com/apache/incubator-doris/blob/master/docs/README.md).
 
 
