@@ -23,10 +23,10 @@ jobs:
     - name: Build
       run: |
         git clone https://github.com/apache/incubator-doris.git incubator-doris
-        cd incubator-doris/docs && npm install
+        cd incubator-doris/docs #&& npm install
         export BRANCH=${{ github.event.inputs.branch }}
         mkdir -p .vuepress/dist/a.txt
-        ls .vuepress/dist/
+        ls .vuepress/dist/ && pwd
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
