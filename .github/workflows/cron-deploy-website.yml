@@ -1,12 +1,8 @@
-name: Manual Deploy
+name: Cron Deploy
 
 on: 
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Specify the branch name'
-        required: true
-        default: 'master'
+  schedule:
+    - cron: '0 1 * * *'
 
 jobs:
   build-and-deploy:
@@ -23,12 +19,11 @@ jobs:
     - name: Build
       run: |
         git clone https://github.com/apache/incubator-doris.git incubator-doris
-        git checkout ${{ github.event.inputs.branch }}
-        export DORIS_COMMIT=`git rev-parse HEAD`
-        export BRANCH=${{ github.event.inputs.branch }}
+        export BRANCH=master
         cd incubator-doris/docs && npm install && npm run build
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
+        export DORIS_COMMIT=`git rev-parse HEAD`
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
@@ -36,8 +31,8 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: asf-site
         publish_dir: ./incubator-doris/docs/.vuepress/dist
-        destination_dir: ${{ github.event.inputs.branch }}
+        destination_dir: master
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+        commit_message: 'Automated deployment with doris branch master@${{ env.DORIS_COMMIT }}'
 

@@ -1,0 +1,43 @@
+name: Manual Deploy
+
+on: 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Specify the branch name'
+        required: true
+        default: 'master'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.16.1
+
+    - name: Build
+      run: |
+        git clone https://github.com/apache/incubator-doris.git incubator-doris
+        git checkout ${{ github.event.inputs.branch }}
+        export BRANCH=${{ github.event.inputs.branch }}
+        cd incubator-doris/docs && npm install && npm run build
+        touch .vuepress/dist/.dummy
+        ls .vuepress/dist/
+        export DORIS_COMMIT=`git rev-parse HEAD`
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: asf-site
+        publish_dir: ./incubator-doris/docs/.vuepress/dist
+        destination_dir: ${{ github.event.inputs.branch }}
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+

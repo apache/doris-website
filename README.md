@@ -19,7 +19,19 @@ under the License.
 
 # Doris document website
 
-The only working branch for this repository is `asf-site`, and it's mostly updated by travis' autobuild.
+This repo is for [Apache Doris(Incubating) website](https://doris.apache.org)
+
+And it use Github Action to automatically sync content from [Apache Doris(Incubating) Code Repo](https://github.com/apache/incubator-doris)
+
+There are 2 Github Actions:
+
+1. cron-deploy-website.yml
+
+    It will sync at 01:00 AM everyday from Doris's master branch.
+
+2. manual-deploy-website.yml
+
+    It can only be triggered manually, and you can specify the branch name you want to sync.
 
 ## View the website
 
