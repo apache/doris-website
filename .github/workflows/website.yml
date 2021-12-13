@@ -16,3 +16,8 @@ jobs:
     - name: Build
       run: |
         echo "ok"
+        git clone https://github.com/apache/incubator-doris.git incubator-doris
+        cd docs && npm install
+        export BRANCH=master
+        npm run build
+        ls .vuepress/dist/
