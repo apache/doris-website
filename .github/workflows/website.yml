@@ -27,6 +27,7 @@ jobs:
         export BRANCH=${{ github.event.inputs.branch }}
         mkdir -p .vuepress/dist/
         touch .vuepress/dist/a.txt
+        touch .vuepress/dist/.a.txt
         ls .vuepress/dist/ && cd .vuepress/dist/ && pwd
 
     - name: Deploy
