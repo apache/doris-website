@@ -26,7 +26,7 @@ jobs:
         cd incubator-doris/docs #&& npm install
         export BRANCH=${{ github.event.inputs.branch }}
         mkdir -p .vuepress/dist/a.txt
-        ls .vuepress/dist/ && pwd
+        ls .vuepress/dist/ && cd .vuepress/dist/ && pwd
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
