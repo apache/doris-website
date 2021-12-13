@@ -23,12 +23,12 @@ jobs:
     - name: Build
       run: |
         git clone https://github.com/apache/incubator-doris.git incubator-doris
-        cd incubator-doris/docs #&& npm install
+        git checkout ${{ github.event.inputs.branch }}
+        export DORIS_COMMIT=`git rev-parse HEAD`
         export BRANCH=${{ github.event.inputs.branch }}
-        mkdir -p .vuepress/dist/
-        touch .vuepress/dist/a.txt
-        touch .vuepress/dist/.a.txt
-        ls .vuepress/dist/ && cd .vuepress/dist/ && pwd
+        cd incubator-doris/docs && npm install && npm run build
+        touch .vuepress/dist/.dummy
+        ls .vuepress/dist/
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
@@ -36,8 +36,8 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: asf-site
         publish_dir: ./incubator-doris/docs/.vuepress/dist
-        destination_dir: test
+        destination_dir: ${{ github.event.inputs.branch }}
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'Automated deployment:'
+        commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
 
