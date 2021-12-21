@@ -25,7 +25,9 @@ jobs:
         git clone https://github.com/apache/incubator-doris.git incubator-doris
         git checkout ${{ github.event.inputs.branch }}
         export BRANCH=${{ github.event.inputs.branch }}
-        echo "cmy $BRANCH"
+        cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/article/articles/
+        cp -R blogs/en/ incubator-doris/docs/en/article/articles/
+        cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
         cd incubator-doris/docs && npm install && npm run build
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
