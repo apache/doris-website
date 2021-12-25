@@ -28,7 +28,9 @@ jobs:
         cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/article/articles/
         cp -R blogs/en/ incubator-doris/docs/en/article/articles/
         cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
-        cd incubator-doris/docs && npm install && npm run build
+        cd incubator-doris/docs
+        find ./ -name "*.md" -exec sed -i -e 's/!\[\(.*\)\][(]\(.*\)[)]/<img \:src=\"$withBase\('\''\2'\''\)\" alt=\"\1\">/g' {} \;
+        npm install && npm run build
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
         export DORIS_COMMIT=`git rev-parse HEAD`
