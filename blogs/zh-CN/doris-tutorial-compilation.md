@@ -30,8 +30,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris 全平台保姆级Docker编译安装部署教程（Win|Mac|Linux）- 编译版
-
 本教程的目的，是针对对Docker容器化技术知之甚少甚至一无所知，但又想尝试部署当下最火热的MPP-OLAP数据库Apache Doris玩耍的同学，或者公司有新的技术架构需求，想部署测试环境进行测试性能、简单搭建的伙伴，全文尽量使用简练白话文增强可阅读性。
 
 本教程始于「用啥系统可以编译啊」、「部署的集群怎么配置」、「Docker是啥」、「安装Docker及基本操作」等疑问，终于「Doris如何编译」、「Doris快速部署」等话题，全文数千字，实战时间3-5小时左右。
@@ -41,6 +39,8 @@ under the License.
 最终想要达到的标准是，哪怕你全程不想看任何的文字描述，只需要依次复制代码框里的代码，在指定的地方粘贴并执行，即可完成Apache Doris的编译及部署工作！
 
 本教程将会分为两部分，已经通过三平台分别测试，均成功编译及部署~
+
+[[toc]]
 
 ## 1 部署流程
 
@@ -116,7 +116,7 @@ Docker版本：20.10.11
 
 3. 下载安装，Docker Tools初始化好后左下角Docker Logo所在的色块变绿色即代表初始化成功
 
-   ![image-20211221194520114](images/blogs/doris-tutorial-compilation/image-20211221194520114.png)
+   ![image-20211221194520114](/images/blogs/doris-tutorial-compilation/image-20211221194520114.png)
 
 4. Contalners/Apps Tab里会有一个代码块，写着
 
@@ -160,43 +160,43 @@ Docker版本：20.10.11
 
 1. 新建虚拟机
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195227111.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195227111.png)
 
 2. 选择高级
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195250005.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195250005.png)
 
 3. 在安装系统来源时选择-稍后安装
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195340120.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195340120.png)
 
 4. 在选择系统时选择Linux-CentOS 7 64位
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195424420.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195424420.png)
 
 5. 处理器选大一些，最好4内核总数以上（内核数量决定了编译速度）
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195548551.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195548551.png)
 
 6. 内存也稍微大一些，4G-8G以上
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195624113.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195624113.png)
 
 7. 选择NAT网络模式
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195653102.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195653102.png)
 
 8. 容量随意，50GB以上即可
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221200029323.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221200029323.png)
 
 9. 创建好以后选择 编辑虚拟机设置
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221200137725.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221200137725.png)
 
 10. 设置系统ISO映射文件
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221200346916.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221200346916.png)
 
 11. 开启虚拟机，安装系统即可
 
@@ -206,37 +206,37 @@ Docker版本：20.10.11
 
 1. 点击`编辑菜单`，点击`虚拟网络编辑器`
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203204574.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203204574.png)
 
 2. 点击更改设置
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203243631.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203243631.png)
 
 3. 照图进行勾选，然后设置子网IP地址段，第四段为0
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203405005.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203405005.png)
 
 4. 然后点击NAT设置，修改网关IP，要注意，无论网关IP还是虚拟机IP，都要符合子网IP地址段的标准，也就是说，其他的IP地址设置，前三段要和子网IP一致
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203712731.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203712731.png)
 
 5. 全部确定及应用
 
 6. 打开你宿主机（本电脑）的`网络和Internet`
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203847192.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203847192.png)
 
 7. 右键编辑 `VMnet8`网卡，打开属性
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203955970.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203955970.png)
 
 8. 选择IPv4协议，点击属性
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221204030083.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221204030083.png)
 
 9. 修改里面的项目
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221204116846.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221204116846.png)
 
    其中注意
 
@@ -254,7 +254,7 @@ Docker版本：20.10.11
    vi /etc/sysconfig/network-scripts/ifcfg-ens33 #最后这个是你的网卡名，根据个人情况更改
    ```
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221202312977.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221202312977.png)
 
    保留和新增如下项：
 
@@ -277,7 +277,7 @@ Docker版本：20.10.11
    service network restart
    ```
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221204709603.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221204709603.png)
 
    然后分别ping一下网关、宿主机IP及外网
 
@@ -441,7 +441,7 @@ Docker是一个开源的应用容器引擎，让开发者可以打包他们的�
 docker pull apache/incubator-doris:build-env-for-0.15.0 #这是0.15.0版本
 ```
 
-![](images/blogs/doris-tutorial-compilation/image-20211221190909871.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221190909871.png)
 
 - 拉取成功后，查看镜像列表，看是否已成功拉取
 
@@ -451,7 +451,7 @@ docker images
 
 - 如有下图圈红镜像，则证明镜像下载成功
 
-![](images/blogs/doris-tutorial-compilation/image-20211221190954677.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221190954677.png)
 
 - 如已成功拉取，运行run命令，进入Docker镜像
 
@@ -479,7 +479,7 @@ docker run --name apache-doris-0.15.0 -it -v /root/.m2:/root/.m2 -v /opt/doris:/
 
 执行以后出现如下命令头，则代表已成功进入镜像
 
-![](images/blogs/doris-tutorial-compilation/image-20211220181157554.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220181157554.png)
 
 #### 4.1.2 指定JDK版本（按需执行）
 
@@ -487,7 +487,7 @@ docker run --name apache-doris-0.15.0 -it -v /root/.m2:/root/.m2 -v /opt/doris:/
 
 在我们拉取下的官方编译环境镜像中，其实给了两套JDK供我们选择，一套是JDK8、一套JDK11，默认使用的是JDK11，所以我们按需进行修改。
 
-![](images/blogs/doris-tutorial-compilation/image-20211221120403558.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221120403558.png)
 
 假如你希望以及后续工作都使用JDK8的话，请依次执行以下代码修改JDK版本
 
@@ -498,7 +498,7 @@ alternatives --set javac java-1.8.0-openjdk.x86_64
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 ```
 
-![](images/blogs/doris-tutorial-compilation/image-20211221120445833.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221120445833.png)
 
 假如你希望以后使用的是JDK11，那要么你一开始就不要执行任何操作，因为默认就是JDK11，如果执行了以上切换JDK8命令，又想切回来，那就用如下命令切换到JDK11
 
@@ -509,7 +509,7 @@ alternatives --set javac java-11-openjdk.x86_64
 export JAVA_HOME=/usr/lib/jvm/java-11
 ```
 
-![](images/blogs/doris-tutorial-compilation/image-20211221120543215.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221120543215.png)
 
 #### 4.1.3 编译Doris
 
@@ -551,7 +551,7 @@ sh build.sh
 
 假如拉取下的Doris编译环境的Docker版本是`build-env-1.4.2`或者`build-env-for-0.15.0`（版本可通过`4.1.1`章节所述，在CentOS系统下使用`docker images`命令进行查看）
 
-![](images/blogs/doris-tutorial-compilation/image-20211220182911446.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220182911446.png)
 
 则第一次编译的时候要使用如下命令，这是因为1.4.2 版本镜像升级了 `thrift(0.9 -> 0.13)`，需要通过 --clean 命令强制使用新版本的 `thrift` 生成代码文件，否则会出现不兼容的代码。
 
@@ -561,17 +561,17 @@ sh build.sh --clean --be --fe --ui -j2
 
 接下来，可以去做其他事情了，教程测试机器是使用`2C 4G 8M`进行编译，耗时**两小时**，期间如发现出现如下图，且运行速度超慢，属正常现象，该节点勿持续进行其他动作，静待完成即可，以免发生莫名错误。
 
-![](images/blogs/doris-tutorial-compilation/image-20211220162256154.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220162256154.png)
 
 出现以下报文，则证明编译成功
 
-![](images/blogs/doris-tutorial-compilation/image-20211220184120563.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220184120563.png)
 
 ##### 4.1.3.3 偶现错误
 
 编译最后出现了Failed，代表编译失败了，错误信息为
 
-![](images/blogs/doris-tutorial-compilation/image-20211220183806318.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220183806318.png)
 
 其中主要描述为：`ninja: build stopped: subcommand failed.`
 
@@ -591,7 +591,7 @@ sh build.sh -j2
 
 编译成功后，在`apache-doris-0.15.0-incubating-src`目录（如无其他操作，则为当前目录）下会生成`output`文件夹
 
-![](images/blogs/doris-tutorial-compilation/image-20211220184756120.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220184756120.png)
 
 执行查看目录命令，查看该文件夹内容
 
@@ -603,15 +603,15 @@ ll output
 
 - Linux云服务器：
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221201459225.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221201459225.png)
 
 - Win平台
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221201650493.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221201650493.png)
 
 - MacOS平台
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221201751774.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221201751774.png)
 
 至此，编译步骤全部完成且成功~
 
@@ -625,7 +625,7 @@ docker cp 容器名:要拷贝的文件在容器里面的路径 要拷贝到宿�
 
 需要注意，这里的容器名是**在宿主机**执行`docker ps`命令后，得到的当前正在运行的Docker容器的名字
 
-![](images/blogs/doris-tutorial-compilation/image-20211220192355582.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220192355582.png)
 
 ```shell
 # 例如

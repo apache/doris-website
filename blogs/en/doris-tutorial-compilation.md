@@ -31,8 +31,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris Docker Compilation Installation and Deployment Tutorial (Win|Mac|Linux) - Compilation
-
 This tutorial is intended for students who know little or nothing about Docker containerization technology, but want to try to deploy the hottest MPP-OLAP database Apache Doris for fun, or companies with new technical architecture needs, want to deploy a test environment for testing performance, simple build partners, the full text to try to use concise vernacular to enhance readability.
 
 The tutorial starts with questions such as "What system can you compile with?", "How to configure the deployed cluster", "What is Docker", "Installing Docker and basic operations", and finally "How to compile Doris", "Doris quick deployment", etc. The full text is several thousand words, with a practical time of about 3-5 hours.
@@ -44,6 +42,8 @@ The final standard you want to achieve is that even if you do not want to read a
 This tutorial will be divided into two parts, which have been tested on three platforms and successfully compiled and deployed~
 
 Translated with www.DeepL.com/Translator (free version)
+
+[[toc]]
 
 ## 1 Deployment process
 
@@ -119,7 +119,7 @@ Docker version: 20.10.11
 
 3. Download and install Docker Tools, after the initialization of Docker Tools, the color block of Docker Logo in the lower left corner turns green, which means the initialization is successful.
 
-   ![image-20211221194520114](images/blogs/doris-tutorial-compilation/image-20211221194520114.png)
+   ![image-20211221194520114](/images/blogs/doris-tutorial-compilation/image-20211221194520114.png)
 
 4. There will be a code block in the Contalners/Apps Tab that says
 
@@ -163,43 +163,43 @@ Because it is very tedious, will increase a lot of work, and there are many no c
 
 1. Create a new virtual machine
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195227111.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195227111.png)
 
 2. Select Advanced
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195250005.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195250005.png)
 
 3. Select -Install Later when installing system sources
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195340120.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195340120.png)
 
 4. Select Linux-CentOS 7 64-bit when choosing a system
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195424420.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195424420.png)
 
 5. choose a larger processor, preferably more than 4 total cores (the number of cores determines the compilation speed)
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195548551.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195548551.png)
 
 6. slightly more memory too, more than 4G-8G
 
-    ! [](images/blogs/doris-tutorial-compilation/image-20211221195624113.png)
+    ! [](/images/blogs/doris-tutorial-compilation/image-20211221195624113.png)
 
 7. Select NAT network mode
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221195653102.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221195653102.png)
 
 8. Capacity is optional, 50GB or more is fine
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221200029323.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221200029323.png)
 
 9. Once created, select Edit Virtual Machine Settings
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221200137725.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221200137725.png)
 
 10. Set the system ISO mapping file
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221200346916.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221200346916.png)
 
 11. Start the virtual machine and install the system
 
@@ -209,37 +209,37 @@ First you need to configure the virtual network on the VM
 
 1. Click `Edit Menu`, click `Virtual Network Editor`
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203204574.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203204574.png)
 
 2. Click Change Settings
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203243631.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203243631.png)
 
 3. Check the box as shown, then set the subnet IP address segment, the fourth segment is 0
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203405005.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203405005.png)
 
 4. Then click on NAT settings and modify the gateway IP. Note that both the gateway IP and the virtual machine IP should match the criteria of the subnet IP address segment, that is, the other IP address settings, the first three segments should be consistent with the subnet IP
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203712731.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203712731.png)
 
 5. All OK and apply
 
 6. open the `Network and Internet` of your host computer (this computer)
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203847192.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203847192.png)
 
 7. Right-click to edit the `VMnet8` network card and open the properties
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221203955970.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221203955970.png)
 
 8. Select the IPv4 protocol and click Properties
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221204030083.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221204030083.png)
 
 9. Modify the items inside
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221204116846.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221204116846.png)
 
    Note that
 
@@ -257,7 +257,7 @@ After installing the virtual machine, log into the system and do the following t
    vi /etc/sysconfig/network-scripts/ifcfg-ens33 #The last one is your network card name, change it according to your personal situation
    ```
 
-   ![](images/blogs/doris-tutorial-compilation/image-20211221202312977.png)
+   ![](/images/blogs/doris-tutorial-compilation/image-20211221202312977.png)
 
    Keep and add the following entries.
 
@@ -280,7 +280,7 @@ After installing the virtual machine, log into the system and do the following t
    service network restart
    ```
 
-   ![](images/blogs/doris-tutorial-compilation/image-20211221204709603.png)
+   ![](/images/blogs/doris-tutorial-compilation/image-20211221204709603.png)
 
    Then ping the gateway, the host IP and the external network respectively
 
@@ -444,7 +444,7 @@ In the previous step, we have successfully deployed the Docker component on `Cen
 docker pull apache/incubator-doris:build-env-for-0.15.0 #This is version 0.15.0
 ```
 
-![](images/blogs/doris-tutorial-compilation/image-20211221190909871.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221190909871.png)
 
 - After a successful pull, check the list of mirrors to see if they were successfully pulled
 
@@ -454,7 +454,7 @@ docker images
 
 - If there is a red image circled below, the image is downloaded successfully
 
-![](images/blogs/doris-tutorial-compilation/image-20211221190954677.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221190954677.png)
 
 - If the pull is successful, run the run command and enter the Docker image
 
@@ -482,7 +482,7 @@ docker run --name apache-doris-0.15.0 -it -v /root/.m2:/root/.m2 -v /opt/doris:/
 
 If the following command header appears after execution, the mirror has been successfully entered
 
-![](images/blogs/doris-tutorial-compilation/image-20211220181157554.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220181157554.png)
 
 #### 4.1.2 Specifying the JDK version (on-demand)
 
@@ -490,7 +490,7 @@ After completing pulling and entering the image, this next step is quite importa
 
 In the official compiled environment image we pull down, we are actually given two sets of JDKs to choose from, one for JDK8 and one for JDK11, the default is JDK11, so we modify it as needed.
 
-![](images/blogs/doris-tutorial-compilation/image-20211221120403558.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221120403558.png)
 
 If you want to use JDK8 for your subsequent work, please execute the following code in order to change the JDK version
 
@@ -501,7 +501,7 @@ alternatives --set javac java-1.8.0-openjdk.x86_64
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 ```
 
-![](images/blogs/doris-tutorial-compilation/image-20211221120445833.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221120445833.png)
 
 If you want to use JDK11 in the future, then either you should not perform any operation in the first place, because the default is JDK11. If you perform the above command to switch to JDK8 and want to cut back, then use the following command to switch to JDK11
 
@@ -512,7 +512,7 @@ alternatives --set javac java-11-openjdk.x86_64
 export JAVA_HOME=/usr/lib/jvm/java-11
 ```
 
-![](images/blogs/doris-tutorial-compilation/image-20211221120543215.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211221120543215.png)
 
 #### 4.1.3 Compiling Doris
 
@@ -554,7 +554,7 @@ sh build.sh
 
 If the Docker version of the pulled Doris build environment is `build-env-1.4.2` or `build-env-for-0.15.0` (the version can be checked with the `docker images` command under CentOS as described in section `4.1.1`)
 
-![](images/blogs/doris-tutorial-compilation/image-20211220182911446.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220182911446.png)
 
 This is because the 1.4.2 image has been upgraded to ``thrift(0.9 -> 0.13)`, and you need to force the new version of ``thrift` to generate the code file with the --clean command, otherwise incompatible code will appear.
 
@@ -564,17 +564,17 @@ sh build.sh --clean --be --fe --ui -j2
 
 Next, you can go do other things, the tutorial test machine is using `2C 4G 8M` to compile, taking **two hours**, during the period if you find the following chart, and run super slow, is normal, the node do not continue to carry out other actions, just wait for the completion, so as not to occur inexplicable errors.
 
-![](images/blogs/doris-tutorial-compilation/image-20211220162256154.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220162256154.png)
 
 The following message will prove that the compilation was successful
 
-![](images/blogs/doris-tutorial-compilation/image-20211220184120563.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220184120563.png)
 
 ##### 4.1.3.3 Occasional error
 
 The compilation ended up with Failed, which means that the compilation failed with the error message
 
-![](images/blogs/doris-tutorial-compilation/image-20211220183806318.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220183806318.png)
 
 where the main description is: `ninja: build stopped: subcommand failed.`
 
@@ -594,7 +594,7 @@ If you still get the error, you need to reset the server system and start the co
 
 After successful compilation, the `output` folder will be created in the `apache-doris-0.15.0-incubating-src` directory (or the current directory if nothing else is done)
 
-![](images/blogs/doris-tutorial-compilation/image-20211220184756120.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220184756120.png)
 
 Execute the view directory command to see the contents of this folder
 
@@ -606,15 +606,15 @@ The following folders need to be in the directory for the compilation to be succ
 
 - Linux cloud server.
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221201459225.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221201459225.png)
 
 - Win platform
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221201650493.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221201650493.png)
 
 - MacOS platform
 
-    ![](images/blogs/doris-tutorial-compilation/image-20211221201751774.png)
+    ![](/images/blogs/doris-tutorial-compilation/image-20211221201751774.png)
 
 At this point, all compilation steps are complete and successful~
 
@@ -628,7 +628,7 @@ docker cp container name: the path of the file to be copied inside the container
 
 Note that the container name here is the name of the currently running Docker container after executing the ``docker ps`` command **on the host**
 
-![](images/blogs/doris-tutorial-compilation/image-20211220192355582.png)
+![](/images/blogs/doris-tutorial-compilation/image-20211220192355582.png)
 
 ```shell
 # For example
