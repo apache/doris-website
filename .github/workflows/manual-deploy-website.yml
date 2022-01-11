@@ -27,7 +27,10 @@ jobs:
         cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/article/articles/
         cp -R blogs/en/ incubator-doris/docs/en/article/articles/
         cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
-        cd incubator-doris/docs
+        cd incubator-doris/
+        git fetch
+        git checkout -b ${{ github.event.inputs.branch }} remotes/origin/${{ github.event.inputs.branch }}
+        cd docs/
         find ./ -name "*.md" -exec sed -i -e 's/!\[\(.*\)\][(]\(.*\)[)]/<img \:src=\"$withBase\('\''\2'\''\)\" alt=\"\1\">/g' {} \;
         sed -i 's/en\///g' .vuepress/config.js 
         sed -i "s/BUILDING_BRANCH\.length > 0/BUILDING_BRANCH\.length > 0 \&\& BUILDING_BRANCH !== 'master'/g" .vuepress/config.js
