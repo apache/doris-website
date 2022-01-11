@@ -25,19 +25,26 @@ jobs:
         cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
         cd incubator-doris/docs
         find ./ -name "*.md" -exec sed -i -e 's/!\[\(.*\)\][(]\(.*\)[)]/<img \:src=\"$withBase\('\''\2'\''\)\" alt=\"\1\">/g' {} \;
+        sed -i 's/en\///g' .vuepress/config.js
+        sed -i "s/BUILDING_BRANCH\.length > 0/BUILDING_BRANCH\.length > 0 \&\& BUILDING_BRANCH !== 'master'/g" .vuepress/config.js
+        sed -i 's/en\///g' en/README.md
+        mv en/* ./
         npm install && npm run build
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: asf-site
-        publish_dir: ./incubator-doris/docs/.vuepress/dist
-        destination_dir: master
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'Automated deployment with doris branch master@${{ env.DORIS_COMMIT }}'
+    - name: Deploy Master
+      if: ${{ github.event.inputs.branch == 'master' }}
+      run: |
+        git fetch
+        git checkout -b asf-site remotes/origin/asf-site
+        /bin/bash remove-non-reserved-dir.sh
+        cp -r incubator-doris/docs/.vuepress/dist/* ./
+        rm -rf incubator-doris/
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Automated deployment with doris master"
+        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/incubator-doris-website.git" asf-site:asf-site
 
