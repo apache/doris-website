@@ -35,7 +35,6 @@ jobs:
         export DORIS_COMMIT=`git rev-parse HEAD`
 
     - name: Deploy Master
-      if: ${{ github.event.inputs.branch == 'master' }}
       run: |
         git fetch
         git checkout -b asf-site remotes/origin/asf-site
