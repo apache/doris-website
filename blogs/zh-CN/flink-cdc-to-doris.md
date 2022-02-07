@@ -90,9 +90,9 @@ Flink Doris Connector 是 doris 社区为了方便用户使用 Flink 读写Doris
 目前Flink doris connector目前控制入库通过两个参数：
 
 1. sink.batch.size	：每多少条写入一次，默认100条
-2. sink.batch.interval ：每个多少秒写入一下，默认1秒
+2. sink.batch.interval ：每隔多少秒写入一下，默认1秒
 
-这两参数同时起作用，那个条件先到就触发写doris表操作，
+这两参数同时起作用，哪个条件先到就触发写doris表操作，
 
 **注意：**
 
