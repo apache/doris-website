@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Apache Doris存储层设计之存储结构设计解析",
+    "title": "Apache Doris存储层设计(一)之存储结构设计解析",
     "description": "本文主要通过阅读 Doris BE 模块代码，详细分析了 Doris BE 模块存储层的实现原理，阐述和解密 Doris 高效的写入、查询能力背后的核心技术。其中包括 Doris 列存的设计、索引设计、数据读写流程、Compaction 流程、Tablet 和 Rowset 的版本管理、数据备份等功能.",
     "date": "2022-05-20",
-    "metaTitle": "Apache Doris存储层设计之存储结构设计解析",
+    "metaTitle": "Apache Doris存储层设计(一)之存储结构设计解析",
     "isArticle": true,
     "language": "zh-CN",
     "author": "ApacheDoris",
@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 存储层设计之存储结构设计解析
+# 存储层设计(一)之存储结构设计解析
 
 ## 1. 整体介绍
 

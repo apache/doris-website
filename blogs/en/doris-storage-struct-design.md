@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Analysis of storage structure design of Apache Doris storage layer design",
+    "title": "Analysis of storage structure design one of Apache Doris storage layer design",
     "description": "This article mainly analyzes the implementation principle of the storage layer of the Doris BE module by reading the code of the Doris BE module, and expounds and decrypts the core technology behind the efficient writing and query capabilities of Doris. It includes Doris column storage design, index design, data read and write process, Compaction process, version management of Tablet and Rowset, data backup and other functions.",
     "date": "2022-05-20",
-    "metaTitle": "Analysis of storage structure design of Apache Doris storage layer design",
+    "metaTitle": "Analysis of storage structure design one of Apache Doris storage layer design",
     "isArticle": true,
     "language": "en",
     "author": "ApacheDoris",
@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Analysis of storage structure design of Apache Doris storage layer design
+# Analysis of storage structure design one of Apache Doris storage layer design
 
 ## 1. Overall introduction
 

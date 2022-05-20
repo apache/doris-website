@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Analysis of write process and delete process of Apache Doris storage layer design",
+    "title": "Apache Doris storage layer design two write process, delete process analysis",
     "description": "This article introduces in detail the internal implementation process of the Doris system during the data writing process, as well as the implementation process of Doris's conditional deletion of data and batch deletion by key.",
     "date": "2022-05-20",
-    "metaTitle": "Analysis of write process and delete process of Apache Doris storage layer design",
+    "metaTitle": "Apache Doris storage layer design two write process, delete process analysis",
     "isArticle": true,
     "language": "en",
     "author": "ApacheDoris",
@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris storage layer design write process, delete process analysis
+# Apache Doris storage layer design two write process, delete process analysis
 
 ## 1. Overall introduction
 

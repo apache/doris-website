@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Apache Doris 存储层设计之写入流程、删除流程分析",
+    "title": "Apache Doris 存储层设计(二)之写入流程、删除流程分析",
     "description": "文章详细介绍了数据写入过程中 Doris 系统内部实现流程，以及 Doris 对数据按条件删除和按 key 批量删除的实现流程.",
     "date": "2022-05-20",
-    "metaTitle": "Apache Doris 存储层设计之写入流程、删除流程分析",
+    "metaTitle": "Apache Doris 存储层设计(二)之写入流程、删除流程分析",
     "isArticle": true,
     "language": "zh-CN",
     "author": "ApacheDoris",
@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris 存储层设计之写入流程、删除流程分析
+# Apache Doris 存储层设计(二)之写入流程、删除流程分析
 
 ## 1. 整体介绍
 
