@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris 存储层设计(二)之写入流程、删除流程分析
+
 
 ## 1. 整体介绍
 

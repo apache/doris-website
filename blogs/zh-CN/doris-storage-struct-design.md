@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 存储层设计(一)之存储结构设计解析
+
 
 ## 1. 整体介绍
 

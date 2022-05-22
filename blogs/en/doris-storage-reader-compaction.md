@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris storage layer design three reading process, Compaction process analysis
+
 
 ## 1 Overall introduction
 

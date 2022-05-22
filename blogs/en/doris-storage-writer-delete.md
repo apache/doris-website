@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris storage layer design two write process, delete process analysis
+
 
 ## 1. Overall introduction
 

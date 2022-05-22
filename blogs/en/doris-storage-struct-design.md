@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Analysis of storage structure design one of Apache Doris storage layer design
+
 
 ## 1. Overall introduction
 
