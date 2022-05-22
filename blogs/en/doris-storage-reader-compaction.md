@@ -5,7 +5,7 @@
     "date": "2022-05-20",
     "metaTitle": "Apache Doris storage layer design three reading process, Compaction process analysis",
     "isArticle": true,
-    "language": "zh-CN",
+    "language": "en",
     "author": "ApacheDoris",
     "layout": "Article",
     "sidebar": false
