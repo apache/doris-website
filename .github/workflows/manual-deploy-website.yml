@@ -36,6 +36,8 @@ jobs:
         sed -i "s/BUILDING_BRANCH\.length > 0/BUILDING_BRANCH\.length > 0 \&\& BUILDING_BRANCH !== 'master'/g" .vuepress/config.js
         sed -i 's/en\///g' en/README.md
         mv en/* ./
+        npm install -g increase-memory-limit
+        increase-memory-limit
         export NODE_OPTIONS="--max-old-space-size=4096" && npm install && npm run build
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
