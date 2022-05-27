@@ -30,6 +30,8 @@ jobs:
         sed -i 's/en\///g' en/README.md
         mv en/* ./
         npm install && npm run build
+        npm install -g increase-memory-limit
+        increase-memory-limit
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
         export DORIS_COMMIT=`git rev-parse HEAD`
