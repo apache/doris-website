@@ -9,7 +9,7 @@
     "author": "苏奕嘉",
     "layout": "Article",
     "sidebar": true,
-    "categories": "PracticalCases"
+    "zhCategories": "PracticalCases"
 }
 ---
 <!--

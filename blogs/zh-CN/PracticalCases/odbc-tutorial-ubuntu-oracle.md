@@ -9,7 +9,7 @@
     "author": "张家锋",
     "layout": "Article",
     "sidebar": true,
-    "categories": "PracticalCases"
+    "zhCategories": "PracticalCases"
 }
 ---
 

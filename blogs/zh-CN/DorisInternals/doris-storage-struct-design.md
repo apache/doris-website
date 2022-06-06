@@ -9,7 +9,7 @@
   "author": "ApacheDoris",
   "layout": "Article",
   "sidebar": false,
-  "categories": "DorisInternals",
+  "zhCategories": "DorisInternals",
 }
 ---
 

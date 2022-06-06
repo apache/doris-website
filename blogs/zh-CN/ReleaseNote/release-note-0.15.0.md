@@ -9,7 +9,7 @@
     "author": "鲁志敬",
     "layout": "Article",
     "sidebar": true,
-    "categories": "ReleaseNote"
+    "zhCategories": "ReleaseNote"
 }
 ---
 
