@@ -65,18 +65,35 @@ To write a blog file, you must first include following information in the header
 | date | - | Blog date |
 | author | - | Blog author |
 | metaTitle | - | The title displayed by the browser when browsing the article |
-| language | en/zn-CN | language |
-| layout | Article | Layout of the components |
-| sidebar | false | Hide the sidebar |
-| isArticle | true | Whether it is an article, do not modify by default |
+| language | en/zh-CN | language |
+| categories | DorisInternals/DorisWeekly/PracticalCases/ReleaseNote | Just required in en language |
+| zhCategories | DorisInternals/DorisWeekly/PracticalCases/ReleaseNote | Just required in zh-CN language |
 
 >**Attention**
 >
 >The title, description, date, author, and metaTitle field values are filled in by the blog writer, and the other fields are fixed values.
 >
 >language: en, zh-CN
+>
+>There are four categories of blogs: DorisInternals,DorisWeekly,PracticalCases,ReleaseNote. 
 
-File header example：
+Blog file header example of en language：
+
+```json
+---
+{
+    "title": "This is title",
+    "description": "This is description",
+    "date": "2021-11-03",
+    "author": "Alex",
+    "metaTitle": "article",
+    "language": "en",
+    "categories": "DorisInternals"
+}
+---
+```
+
+Blog file header example of zh-CN language：
 
 ```json
 ---
@@ -87,9 +104,7 @@ File header example：
     "author": "Alex",
     "metaTitle": "article",
     "language": "zh-CN",
-    "layout": "Article",
-    "sidebar": false
-    "isArticle":true
+    "zhCategories": "DorisInternals"
 }
 ---
 ```
@@ -122,6 +137,33 @@ Finally, write the content of the blog body.
 After the blog file is written, put it in the corresponding directory. The Chinese language directory is: `blogs/zh-CN/`，The directory corresponding to the English language is：`blogs/en/`.
 
 All images in the blog should be placed in certain directory. For example, your blog file named: `doris-article1.md`, and you need to create a directory `blogs/images/blogs/datax-article1/`, and put all images in this directory.
+
+## How to create a version of the document
+The document consists of two parts: markdown file and sidebar js file. The following uses version 1.0 as an example:
+
+First of all, create a directory named 1.0, and then create an en/ directory and a zh-CN/ directory in 1.0 directory. Finally，put the English and Chinese Markdown files into the en/ and zh-CN/ directory.
+```
+|   |—— 1.0
+|   |—— en
+|   |   |—— admin-manual 
+│   │   |—— advanced
+        ...
+|   |—— zh-CN
+|   |   |—— admin-manual 
+│   │   |—— advanced   
+        ...
+```
+
+Put the 1.0 version sidebar js files into the sidebar/en/ and sidebar/zh-CN/.
+```
+|   |—— sidebar
+|   |—— en
+|   |   |—— 1.0.js
+        ...
+|   |—— zh-CN
+|   |   |—— 1.0.js
+        ...
+```
 
 ## About Doris
 
