@@ -24,21 +24,29 @@ jobs:
       run: |
         git clone https://github.com/apache/incubator-doris.git incubator-doris
         export BRANCH=${{ github.event.inputs.branch }}
-        cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/article/articles/
-        cp -R blogs/en/ incubator-doris/docs/en/article/articles/
+        cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/blogs/
+        cp -R blogs/en/ incubator-doris/docs/en/blogs/
         cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
+        cp -R 0.15/zh-CN/ incubator-doris/docs/zh-CN/0.15/
+        cp -R 0.15/en/ incubator-doris/docs/en/0.15/
+        cp -R 1.0/zh-CN/ incubator-doris/docs/zh-CN/1.0/
+        cp -R 1.0/en/ incubator-doris/docs/en/1.0/
+        cp -R versions.json incubator-doris/docs/.vuepress/public/
+        cp -R sidebar/zh-CN/* incubator-doris/docs/.vuepress/sidebar/zh-CN/
+        cp -R sidebar/en/* incubator-doris/docs/.vuepress/sidebar/en/
         cd incubator-doris/
         git fetch
-        if [ "${{ github.event.inputs.branch }}"x != "master"x ]; then git checkout -b ${{ github.event.inputs.branch }} remotes/origin/${{ github.event.inputs.branch }}; fi
         cd docs/
         find ./ -name "*.md" -exec sed -i -e 's/!\[\(.*\)\][(]\(.*\)[)]/<img \:src=\"$withBase\('\''\2'\''\)\" alt=\"\1\">/g' {} \;
-        sed -i 's/en\///g' .vuepress/config.js 
+        sed -i 's/en\///g' .vuepress/config.js
+        sed -i 's/en\///g' .vuepress/theme/index.js
         sed -i "s/BUILDING_BRANCH\.length > 0/BUILDING_BRANCH\.length > 0 \&\& BUILDING_BRANCH !== 'master'/g" .vuepress/config.js
         sed -i 's/en\///g' en/README.md
         mv en/* ./
+        mv .vuepress/sidebar/en/* .vuepress/sidebar/
         npm install -g increase-memory-limit
         increase-memory-limit
-        export NODE_OPTIONS="--max-old-space-size=6144" && npm install && npm run build
+        export NODE_OPTIONS="--max-old-space-size=9144" && npm install && npm run build
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
         export DORIS_COMMIT=`git rev-parse HEAD`
