@@ -20,9 +20,6 @@ jobs:
       run: |
         git clone https://github.com/apache/incubator-doris.git incubator-doris
         export BRANCH=master
-        export ALGOLIA_API_KEY=b2d5b814db43536017c701c9c19b29bf
-        export ALGOLIA_INDEX_NAME=apache-doris
-        export ALGOLIA_APP_ID=UUKF60R98F
         cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/blogs/
         cp -R blogs/en/ incubator-doris/docs/en/blogs/
         cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
