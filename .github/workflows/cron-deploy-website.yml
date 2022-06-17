@@ -18,15 +18,15 @@ jobs:
 
     - name: Build
       run: |
-        git clone https://github.com/apache/incubator-doris.git incubator-doris
+        git clone https://github.com/apache/doris.git doris
         export BRANCH=master
-        cp -R blogs/zh-CN/ incubator-doris/docs/zh-CN/blogs/
-        cp -R blogs/en/ incubator-doris/docs/en/blogs/
-        cp -R blogs/images/blogs/ incubator-doris/docs/.vuepress/public/images/
-        cp -R versions.json incubator-doris/docs/.vuepress/public/
-        cp -R sidebar/zh-CN/* incubator-doris/docs/.vuepress/sidebar/zh-CN/
-        cp -R sidebar/en/* incubator-doris/docs/.vuepress/sidebar/en/
-        cd incubator-doris/
+        cp -R blogs/zh-CN/ doris/docs/zh-CN/blogs/
+        cp -R blogs/en/ doris/docs/en/blogs/
+        cp -R blogs/images/blogs/ doris/docs/.vuepress/public/images/
+        cp -R versions.json doris/docs/.vuepress/public/
+        cp -R sidebar/zh-CN/* doris/docs/.vuepress/sidebar/zh-CN/
+        cp -R sidebar/en/* doris/docs/.vuepress/sidebar/en/
+        cd doris/
         git fetch
         cd docs/
         find ./ -name "*.md" -exec sed -i -e 's/!\[\(.*\)\][(]\(.*\)[)]/<img \:src=\"$withBase\('\''\2'\''\)\" alt=\"\1\">/g' {} \;
@@ -48,11 +48,11 @@ jobs:
         git fetch
         git checkout -b asf-site remotes/origin/asf-site
         /bin/bash remove-non-reserved-dir.sh
-        cp -r incubator-doris/docs/.vuepress/dist/* ./
-        rm -rf incubator-doris/
+        cp -r doris/docs/.vuepress/dist/* ./
+        rm -rf doris/
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add .
         git commit -m "Automated deployment with doris master"
-        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/incubator-doris-website.git" asf-site:asf-site
+        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
 
