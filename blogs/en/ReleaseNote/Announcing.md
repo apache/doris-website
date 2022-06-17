@@ -9,7 +9,7 @@
     "author": "morningman",
     "layout": "Article",
     "sidebar": true,
-    "categories": "DorisWeekly"
+    "categories": "ReleaseNote"
 }
 
 ---
