@@ -70,7 +70,7 @@ Apache Doris 后续将开展更多富有挑战且有意义的工作，包括新�
 
 **Apache Doris GitHub：**
 
-[https://github.com/apache/incubator-doris](https://github.com/apache/incubator-doris)
+[doris](https://github.com/apache/doris)
 
 **Apache Doris website:**
 

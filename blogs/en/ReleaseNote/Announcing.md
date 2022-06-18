@@ -70,7 +70,7 @@ Once again, we sincerely thank all contributors who participated in the construc
 
 **Apache Doris GitHub：**
 
-[https://github.com/apache/incubator-doris](https://github.com/apache/incubator-doris)
+[doris](https://github.com/apache/doris)
 
 **Apache Doris website:**
 
