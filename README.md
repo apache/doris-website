@@ -19,9 +19,9 @@ under the License.
 
 # Doris document website
 
-This repo is for [Apache Doris(Incubating) website](https://doris.apache.org)
+This repo is for [Apache Doris Website](https://doris.apache.org)
 
-And it use Github Action to automatically sync content from [Apache Doris(Incubating) Code Repo](https://github.com/apache/incubator-doris)
+And it use Github Action to automatically sync content from [Apache Doris Code Repo](https://github.com/apache/doris)
 
 There are 2 Github Actions:
 
@@ -38,7 +38,7 @@ There are 2 Github Actions:
 To view the website, navigate to 
 [https://doris.apache.org](https://doris.apache.org) 
 or
-[https://doris.incubator.apache.org](https://doris.incubator.apache.org)
+[https://doris.apache.org](https://doris.apache.org)
 
 ## How to share a blog
 
@@ -167,6 +167,6 @@ Put the 1.0 version sidebar js files into the sidebar/en/ and sidebar/zh-CN/.
 
 ## About Doris
 
-For more details about Doris, refer to [incubator-doris](https://github.com/apache/incubator-doris/blob/master/docs/README.md).
+For more details about Doris, refer to [doris](https://github.com/apache/doris/blob/master/docs/README.md).
 
 
