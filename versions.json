@@ -5,6 +5,10 @@
           "link": "/docs/get-starting/get-starting.html"
         },
         {
+          "text": "1.1",
+          "link": "/1.1/installing/compilation.html"
+        },
+        {
           "text": "1.0",
           "link": "/1.0/installing/compilation.html"
         },
@@ -18,6 +22,10 @@
           "text": "master",
           "link": "/zh-CN/docs/get-starting/get-starting.html"
         },
+        {
+          "text": "1.1",
+          "link": "/zh-CN/1.1/installing/compilation.html"
+        },        
         {
           "text": "1.0",
           "link": "/zh-CN/1.0/installing/compilation.html"
