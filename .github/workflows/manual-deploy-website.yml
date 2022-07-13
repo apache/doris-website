@@ -31,6 +31,8 @@ jobs:
         cp -R 0.15/en/ doris/docs/en/0.15/
         cp -R 1.0/zh-CN/ doris/docs/zh-CN/1.0/
         cp -R 1.0/en/ doris/docs/en/1.0/
+        cp -R 1.1/zh-CN/ doris/docs/zh-CN/1.1/
+        cp -R 1.1/en/ doris/docs/en/1.1/
         cp -R versions.json doris/docs/.vuepress/public/
         cp -R sidebar/zh-CN/* doris/docs/.vuepress/sidebar/zh-CN/
         cp -R sidebar/en/* doris/docs/.vuepress/sidebar/en/
