@@ -306,6 +306,12 @@ distribution_info
 
         `"function_column.sequence_type" ='Date'`
 
+    * `compression`
+
+        The default compression method for Doris tables is LZ4. After version 1.1, it is supported to specify the compression method as ZSTD to obtain a higher compression ratio.
+
+        `"compression"="zstd"`
+
     * Dynamic partition related
 
         The relevant parameters of dynamic partition are as follows:

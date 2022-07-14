@@ -307,6 +307,12 @@ distribution_info
 
         `"function_column.sequence_type" = 'Date'`
 
+    * `compression`
+
+        Doris 表的默认压缩方式是 LZ4。1.1版本后，支持将压缩方式指定为ZSTD以获得更高的压缩比。
+
+        `"compression"="zstd"`
+
     * 动态分区相关
 
         动态分区相关参数如下：
