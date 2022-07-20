@@ -1,0 +1,102 @@
+.theme-doc-sidebar-container {
+    background-color: var(--global-colors-background);
+    border-right: none !important;
+    clip-path: none !important;
+
+    @media (min-width: 997px) {
+        .sidebar {
+            z-index: 100;
+        }
+    }
+}
+
+.navbar-sidebar {
+    .menu__list-item {
+        .menu__link--active:not(.menu__link--sublist) {
+            background-color: transparent;
+        }
+    }
+}
+
+
+.theme-doc-sidebar-menu {
+    padding: 0.5rem;
+
+    .menu__list-item {
+        .menu__link {
+            font-size: var(--global-font-size-medium);
+            font-weight: 500;
+            color: var(--global-colors-charade);
+            padding: 0.5rem 0.5rem 0.5rem var(--global-gutter);
+
+            &--active:not(.menu__link--sublist) {
+                color: var(--ifm-color-primary);
+            }
+        }
+
+        >.menu__link {
+            &:hover {
+                color: var(--ifm-color-primary);
+            }
+        }
+    }
+
+
+    .menu__list-item-collapsible {
+        .menu__link--sublist-caret {
+            &:after {
+                background-size: 1.5rem;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                margin-top: -0.625rem;
+
+                @media screen and (max-width: 996px) {
+                    position: static;
+                    margin-top: 0;
+                }
+            }
+        }
+
+        .menu__caret {
+            &::before {
+                background-size: 1.5rem;
+            }
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+
+        &--active {
+            background-color: transparent;
+        }
+
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    .menu__list {
+        .menu__link {
+            font-size: var(--global-font-size-small);
+            color: var(--global-colors-text);
+
+            &:hover {
+                color: var(--ifm-color-primary);
+
+                &:not(.menu__link--active) {
+                    background-color: transparent;
+                }
+            }
+        }
+
+
+        .theme-doc-sidebar-item-link {
+            .menu__link--active {
+                color: var(--ifm-color-primary);
+            }
+        }
+
+    }
+}

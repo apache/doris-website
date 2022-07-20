@@ -1,0 +1,183 @@
+.download {
+    margin: 3rem 0;
+
+    a {
+        transition: all .3s;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .page-column {
+        padding: 1.875rem 0;
+    }
+
+    .maven {
+        .page-column-title {
+            font-size: 1.5rem;
+        }
+    }
+
+    &-box {
+        padding: 3.125rem;
+        box-shadow: 10px 12px 38px rgba(33, 39, 116, 0.07);
+        border-radius: 4px;
+        background-color: var(--global-colors-white);
+
+        .download-type {
+            display: flex;
+            align-items: center;
+
+            &+.download-type {
+                margin-top: 1rem;
+            }
+
+            label {
+                font-size: var(--global-font-size-default);
+                font-weight: 600;
+                color: var(--global-colors-text-primary);
+                margin-right: 2.125rem;
+                flex-shrink: 0;
+                width: 9.0625rem;
+            }
+
+            .tabs-radio {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                border-radius: 2px;
+
+                .radio {
+                    border: var(--ifm-color-primary) solid 1px;
+                    flex: 1;
+                    text-align: center;
+                    font-size: var(--global-font-size-medium);
+                    color: var(--global-colors-text-primary);
+                    height: 3.125rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+
+                    &.disabled {
+                        background-color: var(--global-colors-background);
+                        cursor: not-allowed;
+                        border-color: var(--global-colors-split);
+                        color: var(--global-colors-text);
+                    }
+
+                    &.checked {
+                        background-color: var(--ifm-color-primary);
+                        color: var(--global-colors-white);
+                    }
+
+                    &+.radio {
+                        margin-left: -1px;
+                    }
+
+                    .inner {
+                        margin: 0.3125rem 0.625rem;
+                        background-color: #F7FAFF;
+                        width: 100%;
+                        color: var(--ifm-color-primary);
+                    }
+                }
+            }
+        }
+
+        .intr {
+            margin-left: 11.1875rem;
+            margin-top: 0.3125rem;
+            color: #556986;
+            font-size: var(--global-font-size-smaller);
+            line-height: 1.5;
+
+            code {
+                border-radius: 0.125rem;
+                border-width: 1px;
+                padding: 0.125rem 0.3125rem;
+                margin: 0 0.3125rem;
+            }
+        }
+    }
+
+    @media screen and (max-width: 996px) {
+        &-box {
+            padding: 0;
+            box-shadow: none;
+
+            .download-type {
+                flex-direction: column;
+                align-items: flex-start;
+
+                .tabs-radio {
+                    width: 100%;
+                }
+            }
+
+            .intr {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .table-content {
+        .content {
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            display: table;
+            margin-bottom: 0;
+
+            thead {
+                tr {
+                    background-color: #F7FAFF;
+                    border-bottom: none;
+                    border-top: none;
+
+                    th {
+                        font-size: var(--global-font-size-default);
+                        color: var(--global-colors-text-primary);
+                        font-weight: 700;
+                        border-color: #DBE4F3;
+                        line-height: 1.9;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            tbody {
+                tr {
+                    td {
+                        border-color: #DBE4F3;
+                        font-size: var(--global-font-size-medium);
+                        white-space: nowrap;
+
+                        a+a {
+                            margin-left: 1.25rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        .more {
+            margin-top: 2.5rem;
+
+            @media screen and (max-width: 996px) {
+                margin-top: 1.5rem;
+            }
+        }
+    }
+
+    .verify {
+        font-size: var(--global-font-size-smaller);
+
+        .page-column {
+            line-height: 1.8;
+        }
+    }
+}

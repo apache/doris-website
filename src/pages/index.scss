@@ -1,0 +1,213 @@
+.news-section {
+    background-color: #F6F8FF;
+
+    .news-wrap {
+        height: 5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .news-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .news-icon {
+                display: inline-flex;
+                width: 1.7rem;
+                height: 1.7rem;
+                background: url(@site/static/images/icon/news-icon.png) no-repeat center;
+                background-size: contain;
+                margin-right: 1rem;
+            }
+
+            .news-content {
+                color: var(--global-colors-text-primary);
+                cursor: pointer;
+
+                &:hover {
+                    color: var(--ifm-color-primary);
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+.apache-doris {
+    .more {
+        margin-top: 2.5rem;
+    }
+}
+
+.core-features {
+    display: flex;
+    justify-content: center;
+
+    .row {
+
+        .col:nth-child(5),
+        .col:nth-child(6) {
+            .core-feature-item {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .core-feature-item {
+        display: flex;
+        margin-bottom: 5rem;
+        padding: 0 0.3125rem;
+
+        .core-feature-img {
+            width: 6.25rem;
+            height: 6.25rem;
+        }
+
+        .core-feature-content {
+            margin-left: 1.6rem;
+
+            .core-feature-title {
+                font-size: 1.25rem;
+                font-weight: 500;
+                color: var(--global-colors-text-black);
+                text-align: left;
+            }
+
+            .core-feature-subtitle {
+                font-size: var(--global-font-size-small);
+                line-height: 1.5;
+                color: var(--global-colors-text);
+                text-align: left;
+            }
+        }
+    }
+}
+
+.communitys {
+    .community-item {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+            box-shadow: 10px 14px 40px rgba(195, 203, 235, 0.2);
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .community-img {
+            width: 4rem;
+            height: 4rem;
+        }
+
+        .community-title {
+            font-size: 1.25rem;
+            color: var(--global-colors-text-primary);
+            margin-top: 1.5rem;
+            font-weight: 500;
+        }
+    }
+}
+
+.ready-start-wrap {
+    background: url('@site/static/images/start-bg.png') no-repeat center;
+    background-size: cover;
+    height: 15rem;
+    padding-top: 2rem;
+
+    .start-title {
+        text-align: center;
+        color: var(--global-colors-white);
+        font-size: 2.6rem;
+    }
+
+    .start-buttons {
+        display: flex;
+        justify-content: center;
+
+        .start-btn {
+            color: var(--global-colors-white);
+            min-width: 8.75rem;
+            padding: 0.5625rem 1.7rem;
+            text-align: center;
+            font-size: var(--global-font-size-default);
+            border-radius: 4px;
+            margin-top: 1.3rem;
+            cursor: pointer;
+            text-decoration: none;
+
+            &.download-btn {
+                background-color: var(--global-colors-white);
+                color: var(--ifm-color-primary);
+            }
+
+            &.docs-btn {
+                border: 1px solid var(--global-colors-white);
+                margin-left: 1.2rem;
+            }
+        }
+
+    }
+}
+
+
+.ready-start {
+    margin-bottom: 5rem;
+    margin-top: -3rem;
+}
+
+@media (max-width: 996px) {
+    .core-features {
+        display: flex;
+        flex-wrap: wrap;
+
+        .core-feature-title {
+            white-space: nowrap;
+        }
+
+        .row {
+            .col:nth-child(5) {
+                .core-feature-item {
+                    margin-bottom: 3rem;
+                }
+            }
+        }
+
+        .core-feature-item {
+            margin-bottom: 3rem;
+        }
+    }
+
+    .page-column {
+        .communitys {
+            .col {
+                &+.col {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+
+    .communitys {
+        .col {
+            --ifm-col-width: 50%;
+        }
+
+        .community-item {
+            margin-bottom: 0;
+        }
+    }
+
+    .ready-start-wrap {
+        .start-title {
+            font-size: 2rem;
+        }
+    }
+
+}

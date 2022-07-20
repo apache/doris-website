@@ -1,0 +1,31 @@
+.more {
+    text-align: center;
+    position: relative;
+
+    a {
+        position: relative;
+        cursor: pointer;
+        color: var(--ifm-color-primary);
+        font-size: var(--global-font-size-medium);
+        display: inline-flex;
+        align-items: center;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        svg {
+            margin-left: 0.625rem;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+    }
+}
+
+@media (max-width: 996px) {
+    .more {
+        a {
+            font-size: 1.2rem;
+        }
+    }
+}

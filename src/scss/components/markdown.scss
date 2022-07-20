@@ -1,0 +1,67 @@
+.markdown {
+    color: #4c4e4d;
+    font-weight: 200;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: var(--global-colors-text-primary);
+        margin-bottom: 0.3125rem;
+        font-weight: 500;
+    }
+
+    h1,
+    h1:first-child {
+        --ifm-h1-font-size: 1.875rem;
+    }
+
+    h2 {
+        --ifm-h2-font-size: 1.5rem;
+    }
+
+    h3 {
+        --ifm-h3-font-size: 1.25rem;
+    }
+
+
+    code {
+        border-radius: 4px;
+        background-color: var(--global-colors-background);
+        border: none;
+        padding: 0.125rem 0.3125rem;
+    }
+
+    pre {
+        code {
+            padding: 0.625rem;
+        }
+    }
+
+    table thead tr {
+        background-color: var(--global-colors-background);
+    }
+
+    table tr {
+        border-bottom: none;
+        background-color: var(--global-colors-white);
+        font-size: var(--global-font-size-small);
+    }
+
+    table th,
+    table td {
+        padding: 0.375rem 0.8125rem;
+    }
+}
+
+.theme-doc-markdown {
+    header {
+        margin-top: 1rem;
+
+        &+h1 {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,55 @@
+.page-column {
+    padding: 6.25rem 0;
+    font-size: 1.25rem;
+    color: var(--global-colors-text-primary);
+    line-height: 2.0;
+
+    &.left {
+        text-align: left;
+
+        .page-column-title {
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    &.center {
+        text-align: center;
+
+        .page-column-title {
+            margin-bottom: 3.75rem;
+        }
+    }
+
+    &.right {
+        text-align: right;
+
+        .page-column-title {
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    &.has-footer {
+        padding-bottom: 2.5rem;
+    }
+
+    &-title {
+        text-align: inherit;
+        margin-bottom: 3.75rem;
+        color: var(--global-colors-text-primary);
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 996px) {
+    .page-column {
+        &-title {
+            font-size: var(--global-font-size-larger)
+        }
+
+        .col {
+            &+.col {
+                margin-top: 1rem;
+            }
+        }
+    }
+}

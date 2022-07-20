@@ -1,0 +1,40 @@
+.icon-language {
+  vertical-align: text-bottom;
+  margin-right: 0.3125rem;
+}
+
+.locale-box {
+  display: flex;
+  align-items: center;
+
+  >a {
+    position: relative;
+    padding: 0 1rem;
+    color: var(--global-colors-text-primary);
+    font-size: var(--global-font-size-medium);
+
+    &.dropdown__link--active {
+      background-color: transparent;
+      color: var(--ifm-color-primary);
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &+a {
+
+      &::before {
+        content: '';
+        display: block;
+        width: 2px;
+        height: 0.75rem;
+        background-color: var(--global-colors-text-primary);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+      }
+    }
+  }
+}

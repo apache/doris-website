@@ -1,0 +1,33 @@
+.docs-wrapper {
+    .versions {
+        opacity: 1;
+    }
+}
+
+.plugin-id-community {
+    .versions {
+        opacity: 0;
+    }
+
+    .doc-search {
+        display: none;
+    }
+}
+
+@media (max-width: 996px) {
+    .theme-doc-toc-mobile {
+        display: none;
+    }
+
+    .docs-wrapper {
+        .versions {
+            opacity: 0;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    :root {
+        --ifm-font-size-base: 12px;
+    }
+}

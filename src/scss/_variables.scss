@@ -1,0 +1,70 @@
+html[lang="zh-CN"] {
+    --ifm-font-family-base: 'Noto Sans SC',
+        'Source Sans Pro',
+        'Helvetica Neue',
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+html[lang="en"] {
+    --ifm-font-family-base: 'Montserrat',
+        'Source Sans Pro',
+        'Helvetica Neue',
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+:root {
+    --ifm-color-primary: #444fd9;
+    --ifm-color-primary-dark: #2c39d4;
+    --ifm-color-primary-darker: #2935c9;
+    --ifm-color-primary-darkest: #222ba6;
+    --ifm-color-primary-light: #5c65de;
+    --ifm-color-primary-lighter: #6870e0;
+    --ifm-color-primary-lightest: #8b92e7;
+    --ifm-h1-font-size: 2rem;
+    --ifm-h2-font-size: 1.5rem;
+    --ifm-h3-font-size: 1rem;
+    --ifm-navbar-search-input-icon: url('data:image/svg+xml;utf8,<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"><path d="M11 2.5C15.6945 2.5 19.5 6.3055 19.5 11C19.5 13.0175 18.797 14.871 17.623 16.3285C17.7199 16.3471 17.8089 16.3945 17.8785 16.4645L21.0605 19.6465C21.1542 19.7403 21.2069 19.8674 21.2069 20C21.2069 20.1326 21.1542 20.2597 21.0605 20.3535L20.3535 21.0605C20.2597 21.1542 20.1326 21.2069 20 21.2069C19.8674 21.2069 19.7403 21.1542 19.6465 21.0605L16.4645 17.8785C16.3945 17.8088 16.3468 17.7199 16.3275 17.623C14.8191 18.8405 12.9384 19.5032 11 19.5C6.3055 19.5 2.5 15.6945 2.5 11C2.5 6.3055 6.3055 2.5 11 2.5ZM11 4.5C7.41 4.5 4.5 7.41 4.5 11C4.5 14.59 7.41 17.5 11 17.5C14.59 17.5 17.5 14.59 17.5 11C17.5 7.41 14.59 4.5 11 4.5Z" /></svg>');
+    --ifm-navbar-item-padding-vertical: 0.4rem;
+    --ifm-navbar-height: 5rem;
+    --ifm-menu-color-background-active: #E4E8EE;
+
+    --ifm-blockquote-color: #63646D;
+
+    --global-gutter: 1.5625rem;
+
+    --global-colors-text-black: #162033;
+    --global-colors-text-primary: #232D3E;
+    --global-colors-text: #63646D;
+    --global-colors-background: #F5F7FA;
+    --global-colors-split: #DADDE1;
+    --global-colors-white: #FFFFFF;
+
+    --search-local-modal-background: var(--global-colors-white);
+    --search-local-modal-shadow: 0px 0px 30px rgba(201, 217, 233, 0.5);
+    --search-local-hit-shadow: none;
+    --search-local-hit-height: 4rem;
+
+    --global-shadow-primary: rgba(0, 0, 0, 0.1);
+
+    --global-font-size-huge: 4rem;
+    --global-font-size-big: 3rem;
+    --global-font-size-larger: 2rem;
+    --global-font-size-large: 1.5rem;
+    --global-font-size-default: 1.125rem;
+    --global-font-size-medium: 1rem;
+    --global-font-size-small: 0.875rem;
+    --global-font-size-smaller: 0.75rem;
+
+    --global-mobile-nav-button-size: 2.5rem;
+
+    --global-border-radius: 6px;
+
+    --global-header-height: 5rem;
+    --global-sidebar-width: 20rem;
+    --doc-sidebar-width: 20rem !important;
+
+}

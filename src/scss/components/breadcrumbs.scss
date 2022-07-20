@@ -1,0 +1,49 @@
+.theme-doc-breadcrumbs {
+    margin-bottom: 1.875rem !important;
+
+    @media (max-width: 996px) {
+        margin-bottom: 1.1rem !important;
+    }
+
+    .breadcrumbs {
+        &__item {
+            &:first-child {
+
+                &:before {
+                    content: '';
+                    display: block;
+                    width: 2rem;
+                    height: 2rem;
+                    position: absolute;
+                    z-index: 1;
+
+                }
+            }
+
+            .breadcrumbs__link {
+                background: transparent;
+                padding-left: 0;
+                padding-right: 0;
+
+                @media (max-width: 996px) {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 0;
+                    vertical-align: middle;
+
+                    >svg {
+                        top: -1px;
+                    }
+                }
+            }
+
+            @media (max-width: 996px) {
+                &:not(:last-child) {
+                    &::after {
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+    }
+}

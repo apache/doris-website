@@ -1,0 +1,138 @@
+{
+  "version.label": {
+    "message": "0.15",
+    "description": "The label for version 0.15"
+  },
+  "sidebar.docs.category.Compilation and Deployment": {
+    "message": "编译与部署",
+    "description": "The label for category Compilation and Deployment in sidebar docs"
+  },
+  "sidebar.docs.category.Getting Started": {
+    "message": "开始使用",
+    "description": "The label for category Getting Started in sidebar docs"
+  },
+  "sidebar.docs.category.Administrator Guide": {
+    "message": "操作手册",
+    "description": "The label for category Administrator Guide in sidebar docs"
+  },
+  "sidebar.docs.category.Load Data": {
+    "message": "数据导入",
+    "description": "The label for category Load Data in sidebar docs"
+  },
+  "sidebar.docs.category.Schema Change": {
+    "message": "表结构变更",
+    "description": "The label for category Schema Change in sidebar docs"
+  },
+  "sidebar.docs.category.HTTP API": {
+    "message": "HTTP API",
+    "description": "The label for category HTTP API in sidebar docs"
+  },
+  "sidebar.docs.category.FE": {
+    "message": "FE",
+    "description": "The label for category FE in sidebar docs"
+  },
+  "sidebar.docs.category.MANAGER": {
+    "message": "MANAGER",
+    "description": "The label for category MANAGER in sidebar docs"
+  },
+  "sidebar.docs.category.Maintainence Operation": {
+    "message": "运维操作",
+    "description": "The label for category Maintainence Operation in sidebar docs"
+  },
+  "sidebar.docs.category.Metrics": {
+    "message": "监控项",
+    "description": "The label for category Metrics in sidebar docs"
+  },
+  "sidebar.docs.category.Configuration": {
+    "message": "配置文件",
+    "description": "The label for category Configuration in sidebar docs"
+  },
+  "sidebar.docs.category.Block Rule": {
+    "message": "拦截规则",
+    "description": "The label for category Block Rule in sidebar docs"
+  },
+  "sidebar.docs.category.Benchmark & Bast Practices": {
+    "message": "性能测试和最佳实践",
+    "description": "The label for category Benchmark & Bast Practices in sidebar docs"
+  },
+  "sidebar.docs.category.Extending Ability": {
+    "message": "扩展功能",
+    "description": "The label for category Extending Ability in sidebar docs"
+  },
+  "sidebar.docs.category.UDF": {
+    "message": "UDF",
+    "description": "The label for category UDF in sidebar docs"
+  },
+  "sidebar.docs.category.Users contribute UDF": {
+    "message": "用户贡献的 UDF",
+    "description": "The label for category Users contribute UDF in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Manual": {
+    "message": "SQL 手册",
+    "description": "The label for category SQL Manual in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Functions": {
+    "message": "SQL 函数",
+    "description": "The label for category SQL Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Date Time Functions": {
+    "message": "日期函数",
+    "description": "The label for category Date Time Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Sptial Functions": {
+    "message": "地理位置函数",
+    "description": "The label for category Sptial Functions in sidebar docs"
+  },
+  "sidebar.docs.category.String Functions": {
+    "message": "字符串函数",
+    "description": "The label for category String Functions in sidebar docs"
+  },
+  "sidebar.docs.category.fuzzy match": {
+    "message": "模糊匹配",
+    "description": "The label for category fuzzy match in sidebar docs"
+  },
+  "sidebar.docs.category.regular match": {
+    "message": "正则匹配",
+    "description": "The label for category regular match in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregate Functions": {
+    "message": "聚合函数",
+    "description": "The label for category Aggregate Functions in sidebar docs"
+  },
+  "sidebar.docs.category.bitmap functions": {
+    "message": "bitmap函数",
+    "description": "The label for category bitmap functions in sidebar docs"
+  },
+  "sidebar.docs.category.Hash Functions": {
+    "message": "Hash函数",
+    "description": "The label for category Hash Functions in sidebar docs"
+  },
+  "sidebar.docs.category.DDL Statements": {
+    "message": "语法帮助",
+    "description": "The label for category DDL Statements in sidebar docs"
+  },
+  "sidebar.docs.category.Account Management": {
+    "message": "用户账户管理",
+    "description": "The label for category Account Management in sidebar docs"
+  },
+  "sidebar.docs.category.Administration": {
+    "message": "集群管理",
+    "description": "The label for category Administration in sidebar docs"
+  },
+  "sidebar.docs.category.Data Definition": {
+    "message": "DDL",
+    "description": "The label for category Data Definition in sidebar docs"
+  },
+  "sidebar.docs.category.Data Manipulation": {
+    "message": "DML",
+    "description": "The label for category Data Manipulation in sidebar docs"
+  },
+  "sidebar.docs.category.Data Types": {
+    "message": "数据类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Utility": {
+    "message": "辅助命令",
+    "description": "The label for category Utility in sidebar docs"
+  }
+}

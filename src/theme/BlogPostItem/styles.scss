@@ -1,0 +1,29 @@
+.blog-article-content {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+
+  .blog-post-title {
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-info {
+    margin-bottom: 2rem;
+  }
+}
+
+/**
+  Blog post title should be smaller on smaller devices
+**/
+@media (max-width: 576px) {
+  .blog-post-title {
+    font-size: 2rem;
+  }
+}
+
+.blog-post-data {
+  font-size: 0.9rem;
+}
+
+.blog-post-details-full {
+  flex-direction: column;
+}

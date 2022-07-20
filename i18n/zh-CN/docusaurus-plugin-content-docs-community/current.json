@@ -1,0 +1,22 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.community.category.How to Contribute": {
+    "message": "贡献指南",
+    "description": "The label for category How to Contribute in sidebar community"
+  },
+  "sidebar.community.category.Release Process & Verification": {
+    "message": "版本发布与校验",
+    "description": "The label for category Release Process & Verification in sidebar community"
+  },
+  "sidebar.community.category.Design Documents": {
+    "message": "设计文档",
+    "description": "The label for category Design Documents in sidebar community"
+  },
+  "sidebar.community.category.Developer Guide": {
+    "message": "开发者手册",
+    "description": "The label for category Developer Guide in sidebar community"
+  }
+}
