@@ -82,7 +82,7 @@ const config = {
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
                 },
-                googleAnalytics: {
+                gtag: {
                     trackingID: 'G-DT7W9E9722',
                     anonymizeIP: true,
                 },
