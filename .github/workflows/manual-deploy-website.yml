@@ -20,8 +20,7 @@ jobs:
       with:
         node-version: 16.14.0
 
-
-- name: Build
+    - name: Build
       run: |
         npm install -g yarn
         yarn && yarn build
