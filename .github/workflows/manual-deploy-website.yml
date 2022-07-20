@@ -30,6 +30,7 @@ jobs:
     - name: Deploy website
       if: ${{ github.event.inputs.branch == 'master' }}
       run: |
+        git config --global http.postBuffer 524288000
         git fetch
         git checkout -b asf-site remotes/origin/asf-site
         cp -r build/* ./
