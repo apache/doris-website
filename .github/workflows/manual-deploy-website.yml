@@ -35,7 +35,7 @@ jobs:
         git checkout -b asf-site remotes/origin/asf-site
         cp -r build/* ./
         rm -rf build/
-	rm -rf .docusaurus
+        rm -rf .docusaurus
         rm -rf node_modules
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
