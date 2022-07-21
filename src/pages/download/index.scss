@@ -54,7 +54,7 @@
                     text-align: center;
                     font-size: var(--global-font-size-medium);
                     color: var(--global-colors-text-primary);
-                    height: 3.125rem;
+                    min-height: 3.125rem;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -110,6 +110,10 @@
             .download-type {
                 flex-direction: column;
                 align-items: flex-start;
+
+                label {
+                    width: 100%;
+                }
 
                 .tabs-radio {
                     width: 100%;
