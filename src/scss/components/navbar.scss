@@ -117,18 +117,20 @@
         }
 
         .header-right-button-github {
-            width: 2.25rem;
+            min-width: 2.25rem;
+            padding-left: 2.25rem;
             height: 2.25rem;
-            background: url('@site/static/images/icon/github.svg') no-repeat center;
+            background: url('@site/static/images/icon/github.svg') no-repeat left center;
             background-size: contain;
-            text-indent: -9999px;
+            position: relative;
 
             &:hover {
                 opacity: .8;
             }
         }
 
-        > :last-child {
+
+        .navbar-search {
             display: none;
         }
 
@@ -197,8 +199,66 @@
             }
         }
     }
-}
 
+    .navbar-download-mobile {
+        display: none;
+    }
+
+    .github-btn {
+
+        .gh-text {
+            display: none;
+        }
+
+        .gh-btn {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .gh-count {
+            font-size: 12px;
+            color: var(--global-colors-text-primary);
+            padding: 0.3rem 0.5rem;
+            border-radius: 2px;
+            line-height: 1.2;
+            text-decoration: none;
+            pointer-events: none;
+            background-color: #F0F1FC;
+            margin-top: 0.4rem;
+            position: relative;
+            margin-left: 0.3rem;
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        .gh-count:before,
+        .gh-count:after {
+            content: "";
+            position: absolute;
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+        }
+
+        .gh-count:before {
+            top: 50%;
+            left: -10px;
+            margin-top: -5px;
+            border: 5px solid transparent;
+            border-right-color: #F0F1FC;
+        }
+
+    }
+
+
+}
 
 
 @media screen and (max-width: 996px) {
@@ -296,8 +356,16 @@
                 border: none;
             }
 
-            >div:last-child {
+            .navbar-search {
                 display: block;
+            }
+
+            .navbar-download-mobile {
+                display: none;
+            }
+
+            .github-btn-desktop {
+                display: none;
             }
         }
 
@@ -310,6 +378,41 @@
 
         .locale-box {
             display: none;
+        }
+
+        .navbar-download-mobile {
+            display: block;
+        }
+
+        .navbar-download-desktop {
+            display: none;
+        }
+    }
+
+    .desktop.github-btn {
+        display: none;
+    }
+
+    .github-btn-mobile {
+        min-width: 2.25rem;
+        padding-left: 2.25rem;
+        height: 2.25rem;
+        background: url('@site/static/images/icon/github.svg') no-repeat left center;
+        background-size: contain;
+        position: relative;
+        display: flex;
+        margin-top: 0.5rem;
+        margin-left: -0.2rem;
+
+        &:hover {
+            opacity: .8;
+        }
+
+        .github-btn {
+            .gh-count {
+                margin-top: 0.2rem;
+                margin-left: 0.5rem;
+            }
         }
     }
 
