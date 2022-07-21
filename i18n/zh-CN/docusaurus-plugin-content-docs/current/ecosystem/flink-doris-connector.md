@@ -361,6 +361,8 @@ source.sinkTo(builder.build());
 | sink.enable-delete               | TRUE               | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能(Doris0.15+版本默认开启)，只支持 Unique 模型。 |
 | sink.enable-2pc                  | TRUE               | N        | 是否开启两阶段提交(2pc)，默认为true，保证Exactly-Once语义。关于两阶段提交可参考[这里](../data-operate/import/import-way/stream-load-manual.md)。 |
 
+
+
 ## Doris 和 Flink 列类型映射关系
 
 | Doris Type | Flink Type                       |
@@ -436,7 +438,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 ### 常见问题
 
-1. Bitmap类型写入
+1. **Bitmap类型写入**
 
 ```sql
 CREATE TABLE bitmap_sink (
@@ -454,3 +456,7 @@ WITH (
   'sink.properties.columns' = 'dt,page,user_id,user_id=to_bitmap(user_id)'
 )
 ```
+2. **errCode = 2, detailMessage = Label [label_0_1] has already been used, relate to txn [19650]**
+
+Exactly-Once场景下，Flink Job重启时必须从最新的Checkpoint/Savepoint启动，否则会报如上错误。
+不要求Exactly-Once时，也可通过关闭2PC提交（sink.enable-2pc=false） 或更换不同的sink.label-prefix解决。
