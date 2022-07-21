@@ -298,6 +298,12 @@ distribution_info
 
         `"in_memory" = "true"`
 
+    * compression
+
+        The default compression method for Doris tables is LZ4. After version 1.1, it is supported to specify the compression method as ZSTD to obtain a higher compression ratio.
+
+        "compression"="zstd"
+
     * `function_column.sequence_type`
 
         When using the UNIQUE KEY model, you can specify a sequence column. When the KEY columns are the same, REPLACE will be performed according to the sequence column (the larger value replaces the smaller value, otherwise it cannot be replaced)

@@ -298,6 +298,11 @@ distribution_info
         这个属性设置成 `true`, Doris 会尽量将该表的数据块缓存在存储引擎的 PageCache 中，已减少磁盘IO。但这个属性不会保证数据块常驻在内存中，仅作为一种尽力而为的标识。
 
         `"in_memory" = "true"`
+    *  `compression`
+
+        Doris 表的默认压缩方式是 LZ4。1.1版本后，支持将压缩方式指定为ZSTD以获得更高的压缩比。
+
+        "compression"="zstd"
 
     * `function_column.sequence_type`
 
