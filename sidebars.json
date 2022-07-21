@@ -742,8 +742,7 @@
                                 "sql-manual/sql-reference/Data-Types/SMALLINT",
                                 "sql-manual/sql-reference/Data-Types/STRING",
                                 "sql-manual/sql-reference/Data-Types/TINYINT",
-                                "sql-manual/sql-reference/Data-Types/VARCHAR",
-                                "sql-manual/sql-reference/Data-Types/ARRAY"
+                                "sql-manual/sql-reference/Data-Types/VARCHAR"
                             ]
                         },
                         {
