@@ -489,15 +489,6 @@
                                 "sql-manual/sql-functions/window-functions/WINDOW-FUNCTION-NTILE"
                             ]
                         },
-                        {
-                            "type": "category",
-                            "label": "Array Functions",
-                            "items": [
-                                "sql-manual/sql-functions/array-functions/array_contains",
-                                "sql-manual/sql-functions/array-functions/array_position",
-                                "sql-manual/sql-functions/array-functions/element_at"
-                            ]
-                        },
                         "sql-manual/sql-functions/cast",
                         "sql-manual/sql-functions/digital-masking"
                     ]
