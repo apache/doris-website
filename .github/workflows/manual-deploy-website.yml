@@ -33,6 +33,7 @@ jobs:
         git config --global http.postBuffer 524288000
         git fetch
         git checkout -b asf-site remotes/origin/asf-site
+        /bin/bash remove-non-reserved-dir.sh
         cp -r build/* ./
         rm -rf build/
         rm -rf .docusaurus
