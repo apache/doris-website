@@ -509,5 +509,8 @@
   },
   "sotry.summary.xiaomi": {
     "message": "Apache Doris 在小米得到了广泛的使用，目前已经服务了数十个业务，并形成了一套以 Apache Doris 为核心的数据生态。"
+  },
+  "navbar.download": {
+    "message": "下载"
   }
 }
