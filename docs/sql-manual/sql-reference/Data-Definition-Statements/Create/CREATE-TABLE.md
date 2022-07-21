@@ -124,14 +124,14 @@ distribution_info
             1. The user specifies a fixed value, such as:
 
             ```SQL
-            	k1 INT DEFAULT '1',
-                k2 CHAR(10) DEFAULT 'aaaa'
+            k1 INT DEFAULT '1',
+            k2 CHAR(10) DEFAULT 'aaaa'
             ```
             2. Keywords are provided by the system. Currently, the following keywords are supported: 
             
             ```SQL
-                // This keyword is used only for DATETIME type. If the value is missing, the system assigns the current timestamp.
-                dt DATETIME DEFAULT CURRENT_TIMESTAMP
+            // This keyword is used only for DATETIME type. If the value is missing, the system assigns the current timestamp.
+            dt DATETIME DEFAULT CURRENT_TIMESTAMP
             ```
 
         Example:

@@ -124,14 +124,14 @@ distribution_info
             1. 用户指定固定值，如：
 
             ```SQL
-            	k1 INT DEFAULT '1',
-                k2 CHAR(10) DEFAULT 'aaaa'
+            k1 INT DEFAULT '1',
+            k2 CHAR(10) DEFAULT 'aaaa'
             ```
             2. 系统提供的关键字，目前支持以下关键字：
             
             ```SQL
-                // 只用于DATETIME类型，导入数据缺失该值时系统将赋予当前时间
-                dt DATETIME DEFAULT CURRENT_TIMESTAMP
+            // 只用于DATETIME类型，导入数据缺失该值时系统将赋予当前时间
+            dt DATETIME DEFAULT CURRENT_TIMESTAMP
             ```
 
         
