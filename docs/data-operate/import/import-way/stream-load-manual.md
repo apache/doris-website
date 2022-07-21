@@ -216,7 +216,7 @@ The number of rows in the original file = `dpp.abnorm.ALL + dpp.norm.ALL`
       "status": "Success",
       "msg": "transaction [18037] abort successfully."
   }
-   ```
+  ```
 
 ### Return results
 
@@ -297,6 +297,12 @@ The following main explanations are given for the Stream load import result para
 ### Cancel Load
 
 Users can't cancel Stream load manually. Stream load will be cancelled automatically by the system after a timeout or import error.
+
+### View Stream Load
+
+Users can view completed stream load tasks through `show stream load`.
+
+By default, BE does not record Stream Load records. If you want to view the records that need to be enabled on BE `enable_stream_load_record=true`, you need to restart BE here
 
 ## Relevant System Configuration
 
