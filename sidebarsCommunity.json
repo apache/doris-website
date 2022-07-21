@@ -53,7 +53,8 @@
                 "developer-guide/cpp-diagnostic-code",
                 "developer-guide/how-to-share-blogs",
                 "developer-guide/bitmap-hll-file-format",
-                "developer-guide/github-checks"
+                "developer-guide/github-checks",
+                "developer-guide/regression-testing"
             ]
         }
     ]
