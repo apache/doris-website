@@ -214,8 +214,7 @@
                     "items": [
                         "ecosystem/udf/native-user-defined-function",
                         "ecosystem/udf/remote-user-defined-function",
-                        "ecosystem/udf/contribute-udf",
-                        "ecosystem/udf/java-user-defined-function"
+                        "ecosystem/udf/contribute-udf"
                     ]
                 }
             ]
