@@ -187,6 +187,7 @@
                 "ecosystem/spark-doris-connector",
                 "ecosystem/datax",
                 "ecosystem/logstash",
+                "ecosystem/cloudcanal",
                 {
                     "type": "category",
                     "label": "Doris Manager",
