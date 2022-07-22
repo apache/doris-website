@@ -112,7 +112,7 @@ sh gen-ssb-data.sh -s 100 -c 100
     
 ## 查询测试
 
-SSB 测试集共 4 组 14 个 SQL。查询语句在 [queries/](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/queries) 目录下。 
+SSB 测试集共 4 组 14 个 SQL。查询语句在  [queries/](https://github.com/apache/doris/tree/branch-0.15/tools/ssb-tools/queries) 目录下。 
 
 ## 测试报告
 

@@ -112,7 +112,7 @@ Under the `-s 100` parameter, the generated data set size is:
 
 ## Query test
 
-There are 4 groups of 14 SQL in the SSB test set. The query statement is in the [queries/](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/queries) directory.
+There are 4 groups of 14 SQL in the SSB test set. The query statement is in the [queries/](https://github.com/apache/doris/tree/branch-0.15/tools/ssb-tools/queries) directory.
 
 ## testing report
 

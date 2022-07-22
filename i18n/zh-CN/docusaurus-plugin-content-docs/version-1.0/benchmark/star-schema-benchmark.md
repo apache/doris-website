@@ -87,9 +87,9 @@ sh gen-ssb-data.sh -s 100 -c 100
         在调用导入脚本前，需要将 FE 的 ip 端口等信息写在 `doris-cluster.conf` 文件中。
         
         文件位置和 `load-dimension-data.sh` 平级。
-   
+      
         文件内容包括 FE 的 ip，HTTP 端口，用户名，密码以及待导入数据的 DB 名称：
-   
+      
         ```
         export FE_HOST="xxx"
         export FE_HTTP_PORT="8030"
@@ -128,7 +128,7 @@ sh gen-ssb-data.sh -s 100 -c 100
     
 ## 查询测试
 
-SSB 测试集共 4 组 14 个 SQL。查询语句在 [queries/](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/queries) 目录下。 
+SSB 测试集共 4 组 14 个 SQL。查询语句在 [queries/](https://github.com/apache/doris/tree/dev-1.0.0/tools/ssb-tools/queries) 目录下。 
 
 ## 测试报告
 
