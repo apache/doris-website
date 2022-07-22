@@ -9,10 +9,9 @@
         },
         {
             "type": "category",
-            "label": "Doris Architecture",
+            "label": "Doris Introduction",
             "items": [
-                "summary/basic-summary",
-                "summary/system-architecture"
+                "summary/basic-summary"
             ]
         },
         {

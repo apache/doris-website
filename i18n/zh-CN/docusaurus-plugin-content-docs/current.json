@@ -8,7 +8,7 @@
     "description": "The label for category Getting Started in sidebar docs"
   },
   "sidebar.docs.category.Doris Architecture": {
-    "message": "Doris 架构",
+    "message": "Doris 介绍",
     "description": "The label for category Doris Architecture in sidebar docs"
   },
   "sidebar.docs.category.Install And Deploy": {
