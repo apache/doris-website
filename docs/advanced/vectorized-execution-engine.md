@@ -1,6 +1,6 @@
 ---
 {
-    "title": "[Experimental] Vectorized Execution Engine",
+    "title": "Vectorized Execution Engine",
     "language": "en"
 }
 ---

@@ -114,8 +114,16 @@
         {
             "type": "category",
             "label": "Advanced Usage",
-            "items": [
+            "items": [    
                 "advanced/materialized-view",
+                "advanced/vectorized-execution-engine",
+                "advanced/broker",
+                "advanced/resource",
+                "advanced/orthogonal-bitmap-manual",
+                "advanced/using-hll",
+                "advanced/variables",
+                "advanced/time-zone",
+                "advanced/small-file-mgr",
                 {
                     "type": "category",
                     "label": "Alter Table",
@@ -149,14 +157,6 @@
                         "advanced/cache/partition-cache"
                     ]
                 },
-                "advanced/vectorized-execution-engine",
-                "advanced/broker",
-                "advanced/resource",
-                "advanced/orthogonal-bitmap-manual",
-                "advanced/using-hll",
-                "advanced/variables",
-                "advanced/time-zone",
-                "advanced/small-file-mgr",
                 {
                     "type": "category",
                     "label": "Best Practice",

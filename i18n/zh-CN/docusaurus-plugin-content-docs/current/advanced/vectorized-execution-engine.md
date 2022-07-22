@@ -1,6 +1,6 @@
 ---
 {
-    "title": "[Experimental] 向量化执行引擎",
+    "title": "向量化执行引擎",
     "language": "zh-CN"
 }
 ---
