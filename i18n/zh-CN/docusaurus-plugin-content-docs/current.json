@@ -7,7 +7,7 @@
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
   },
-  "sidebar.docs.category.Doris Architecture": {
+  "sidebar.docs.category.Doris Introduction": {
     "message": "Doris 介绍",
     "description": "The label for category Doris Architecture in sidebar docs"
   },
