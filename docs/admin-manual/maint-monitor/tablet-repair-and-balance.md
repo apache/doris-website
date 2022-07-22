@@ -267,34 +267,36 @@ Duplicate status view mainly looks at the status of the duplicate, as well as th
 
 1. Global state checking
 
-	Through `SHOW PROC'/ statistic'; `commands can view the replica status of the entire cluster.
+  Through `SHOW PROC'/cluster_health/tablet_health'; `commands can view the replica status of the entire cluster.
 
-    ```
-	+----------+-----------------------------+----------+--------------+----------+-----------+------------+--------------------+-----------------------+
-	| DbId     | DbName                      | TableNum | PartitionNum | IndexNum | TabletNum | ReplicaNum | UnhealthyTabletNum | InconsistentTabletNum |
-	+----------+-----------------------------+----------+--------------+----------+-----------+------------+--------------------+-----------------------+
-	| 35153636 | default_cluster:DF_Newrisk  | 3        | 3            | 3        | 96        | 288        | 0                  | 0                     |
-	| 48297972 | default_cluster:PaperData   | 0        | 0            | 0        | 0         | 0          | 0                  | 0                     |
-	| 5909381  | default_cluster:UM_TEST     | 7        | 7            | 10       | 320       | 960        | 1                  | 0                     |
-	| Total    | 240                         | 10       | 10           | 13       | 416       | 1248       | 1                  | 0                     |
-	+----------+-----------------------------+----------+--------------+----------+-----------+------------+--------------------+-----------------------+
-    ```
+   ```
+      +-------+--------------------------------+-----------+------------+-------------------+----------------------+----------------------+--------------+----------------------------+-------------------------+-------------------+---------------------+----------------------+----------------------+------------------+-----------------------------+-----------------+-------------+------------+
+      | DbId  | DbName                         | TabletNum | HealthyNum | ReplicaMissingNum | VersionIncompleteNum | ReplicaRelocatingNum | RedundantNum | ReplicaMissingInClusterNum | ReplicaMissingForTagNum | ForceRedundantNum | ColocateMismatchNum | ColocateRedundantNum | NeedFurtherRepairNum | UnrecoverableNum | ReplicaCompactionTooSlowNum | InconsistentNum | OversizeNum | CloningNum |
+      +-------+--------------------------------+-----------+------------+-------------------+----------------------+----------------------+--------------+----------------------------+-------------------------+-------------------+---------------------+----------------------+----------------------+------------------+-----------------------------+-----------------+-------------+------------+
+      | 10005 | default_cluster:doris_audit_db | 84        | 84         | 0                 | 0                    | 0                    | 0            | 0                          | 0                       | 0                 | 0                   | 0                    | 0                    | 0                | 0                           | 0               | 0           | 0          |
+      | 13402 | default_cluster:ssb1           | 709       | 708        | 1                 | 0                    | 0                    | 0            | 0                          | 0                       | 0                 | 0                   | 0                    | 0                    | 0                | 0                           | 0               | 0           | 0          |
+      | 10108 | default_cluster:tpch1          | 278       | 278        | 0                 | 0                    | 0                    | 0            | 0                          | 0                       | 0                 | 0                   | 0                    | 0                    | 0                | 0                           | 0               | 0           | 0          |
+      | Total | 3                              | 1071      | 1070       | 1                 | 0                    | 0                    | 0            | 0                          | 0                       | 0                 | 0                   | 0                    | 0                    | 0                | 0                           | 0               | 0           | 0          |
+      +-------+--------------------------------+-----------+------------+-------------------+----------------------+----------------------+--------------+----------------------------+-------------------------+-------------------+---------------------+----------------------+----------------------+------------------+-----------------------------+-----------------+-------------+------------+
+   ```
 
-	The `UnhealthyTabletNum` column shows how many Tablets are in an unhealthy state in the corresponding database. `The Inconsistent Tablet Num` column shows how many Tablets are in an inconsistent replica state in the corresponding database. The last `Total` line counts the entire cluster. Normally `Unhealth Tablet Num` and `Inconsistent Tablet Num` should be 0. If it's not zero, you can further see which Tablets are there. As shown in the figure above, one table in the UM_TEST database is not healthy, you can use the following command to see which one is.
+  The `HealthyNum` column shows how many Tablets are in a healthy state in the corresponding database. `ReplicaCompactionTooSlowNum` column shows how many Tablets are in a too many versions state in the corresponding database, `InconsistentNum` column shows how many Tablets are in an inconsistent replica state in the corresponding database. The last `Total` line counts the entire cluster. Normally `TabletNum` and `HealthyNum` should be equal. If it's not equal, you can further see which Tablets are there. As shown in the figure above, one table in the ssb1 database is not healthy, you can use the following command to see which one is.
 
-	`SHOW PROC '/statistic/5909381';`
+  ```sql
+  SHOW PROC '/cluster_health/tablet_health/13402';
+  ```
 
-	Among them `5909381'is the corresponding DbId.
+  Among them `13402`  is the corresponding DbId.
 
-    ```
-	+------------------+---------------------+
-	| UnhealthyTablets | InconsistentTablets |
-	+------------------+---------------------+
-	| [40467980]       | []                  |
-	+------------------+---------------------+
-    ```
+   ```
+  +-----------------------+--------------------------+--------------------------+------------------+--------------------------------+-----------------------------+-----------------------+-------------------------+--------------------------+--------------------------+----------------------+---------------------------------+---------------------+-----------------+
+  | ReplicaMissingTablets | VersionIncompleteTablets | ReplicaRelocatingTablets | RedundantTablets | ReplicaMissingInClusterTablets | ReplicaMissingForTagTablets | ForceRedundantTablets | ColocateMismatchTablets | ColocateRedundantTablets | NeedFurtherRepairTablets | UnrecoverableTablets | ReplicaCompactionTooSlowTablets | InconsistentTablets | OversizeTablets |
+  +-----------------------+--------------------------+--------------------------+------------------+--------------------------------+-----------------------------+-----------------------+-------------------------+--------------------------+--------------------------+----------------------+---------------------------------+---------------------+-----------------+
+  | 14679                 |                          |                          |                  |                                |                             |                       |                         |                          |                          |                      |                                 |                     |                 |
+  +-----------------------+--------------------------+--------------------------+------------------+--------------------------------+-----------------------------+-----------------------+-------------------------+--------------------------+--------------------------+----------------------+---------------------------------+---------------------+-----------------+
+   ```
 
-	The figure above shows the specific unhealthy Tablet ID (40467980). Later we'll show you how to view the status of each copy of a specific Tablet.
+  The figure above shows the specific unhealthy Tablet ID (14679). Later we'll show you how to view the status of each copy of a specific Tablet.
 
 2. Table (partition) level status checking
 
@@ -765,6 +767,7 @@ This section describes how to control and manage the progress of replica repair 
 
     This operation may cause some import tasks to fail during balancing (requiring a retry), but it will speed up balancing significantly.
     
+
 Overall, when we need to bring the cluster back to a normal state quickly, consider handling it along the following lines.
 
 1. find the tablet that is causing the highly optimal task to report an error and set the problematic copy to bad.
