@@ -561,7 +561,7 @@ distribution_info
 
 ### Best Practice
 
-#### Partitioning and bucketing
+#### **1. Partitioning and bucketing**
 
 A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../data-table/data-partition.md) document.
 
@@ -571,11 +571,11 @@ At the same time, partitioning columns and bucketing columns cannot be changed a
 
 Therefore, it is recommended to confirm the usage method to build the table reasonably before building the table.
 
-#### Dynamic Partition
+#### **2. Dynamic Partition**
 
 The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../advanced/partition/dynamic-partition.md) document for more help.
 
-#### Materialized View
+#### **3. Materialized View**
 
 Users can create multiple materialized views (ROLLUP) while building a table. Materialized views can also be added after the table is built. It is convenient for users to create all materialized views at one time by writing in the table creation statement.
 
@@ -585,12 +585,12 @@ If you add a materialized view in the subsequent use process, if there is data i
 
 For the introduction of materialized views, please refer to the document [materialized views](../../../../advanced/materialized-view.md).
 
-#### Index
+#### **4. Index**
 
 Users can create indexes on multiple columns while building a table. Indexes can also be added after the table is built.
 
 If you add an index in the subsequent use process, if there is data in the table, you need to rewrite all the data, so the creation time of the index depends on the current data volume.
 
-#### in_memory property
+#### **5. in_memory property**
 
 The `"in_memory" = "true"` attribute was specified when the table was created. Doris will try to cache the data blocks of the table in the PageCache of the storage engine, which has reduced disk IO. However, this attribute does not guarantee that the data block is permanently resident in memory, and is only used as a best-effort identification.
