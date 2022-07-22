@@ -1,6 +1,6 @@
 ---
 {
-    "title": "prefix index",
+    "title": "Prefix Index",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BloomFilter index",
+    "title": "BloomFilter Index",
     "language": "en"
 }
 ---
