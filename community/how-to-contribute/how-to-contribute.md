@@ -38,7 +38,7 @@ Any questions, you can contact us to get timely answers, including Wechat, Gitte
 
 For the first time in Doris community, you can:
 
-* Follow [Doris Github](https://github.com/apache/incubator-doris)
+* Follow [Doris Github](https://github.com/apache/doris)
 * Subscribe to our [mailing list](./subscribe-mail-list.md);
 * Join Doris Wechat Group (add WeChat-ID: morningman-cmy, note: join Doris Group) and ask questions at any time.
 * Enter Doris's [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-11jb8gesh-7IukzSrdea6mqoG0HB4gZg)
@@ -47,17 +47,17 @@ Learn the development trends of Doris project in time and give your opinions on 
 
 ## Doris's code and documentation
 
-As you can see from [GitHub](https://github.com/apache/incubator-doris), Apache Doris (incubating) code base mainly consists of three parts: Frontend (FE), Backend (BE) and Broker (to support file reading on external storage systems such as HDFS). Documents are mainly the wiki on Doris website and GitHub, as well as the online help manual when running Doris. Details of these components can be found in the following table:
+As you can see from [GitHub](https://github.com/apache/doris), Apache Doris (incubating) code base mainly consists of three parts: Frontend (FE), Backend (BE) and Broker (to support file reading on external storage systems such as HDFS). Documents are mainly the wiki on Doris website and GitHub, as well as the online help manual when running Doris. Details of these components can be found in the following table:
 
 | Component Name | Component Description | Related Language|
 |--------|----------------------------|----------|
-| [Frontend daemon (FE)](https://github.com/apache/incubator-doris) | consists of a query coordinator and a metadata manager | Java|
-| [Backend daemon (BE)](https://github.com/apache/incubator-doris) | Responsible for storing data and executing query fragments | C++|
-| [Broker](https://github.com/apache/incubator-doris) | Read HDFS data to Doris | Java|
-| [Website](https://github.com/apache/incubator-doris-website) | Doris Website | Markdown |
-| [Manager](https://github.com/apache/incubator-doris-manager) | Doris Manager | Java |
-| [Flink-Connector](https://github.com/apache/incubator-doris-flink-connector) | Doris Flink Connector | Java |
-| [Spark-Connector](https://github.com/apache/incubator-doris-spark-connector) | Doris Spark Connector | Java |
+| [Frontend daemon (FE)](https://github.com/apache/doris) | consists of a query coordinator and a metadata manager | Java|
+| [Backend daemon (BE)](https://github.com/apache/doris) | Responsible for storing data and executing query fragments | C++|
+| [Broker](https://github.com/apache/doris) | Read HDFS data to Doris | Java|
+| [Website](https://github.com/apache/doris-website) | Doris Website | Markdown |
+| [Manager](https://github.com/apache/doris-manager) | Doris Manager | Java |
+| [Flink-Connector](https://github.com/apache/doris-flink-connector) | Doris Flink Connector | Java |
+| [Spark-Connector](https://github.com/apache/doris-spark-connector) | Doris Spark Connector | Java |
 | Doris Runtime Help Document | Online Help Manual at Doris Runtime | Markdown|
 
 ## Improving documentation
@@ -68,11 +68,11 @@ Browse the document, you can deepen your understanding of Doris, can also help y
 
 If you are interested in improving the quality of documents, whether it is revising the address of a page, correcting a link, and writing a better introductory document, we are very welcome!
 
-Most of our documents are written in markdown format, and you can modify and submit document changes directly through `docs/` in [GitHub](https://github.com/apache/incubator-doris). If you submit code changes, you can refer to [Pull Request](./pull-request.md).
+Most of our documents are written in markdown format, and you can modify and submit document changes directly through `docs/` in [GitHub](https://github.com/apache/doris). If you submit code changes, you can refer to [Pull Request](./pull-request.md).
 
 ## If a Bug or problem is found
 
-If a Bug or problem is found, you can directly raise a new Issue through GitHub's [Issues](https://github.com/apache/incubator-doris/issues/new/choose), and we will have someone deal with it regularly.
+If a Bug or problem is found, you can directly raise a new Issue through GitHub's [Issues](https://github.com/apache/doris/issues/new/choose), and we will have someone deal with it regularly.
 
 You can also fix it yourself by reading the analysis code (of course, it's better to talk to us before that, maybe someone has fixed the same problem) and submit a [Pull Request](./pull-request.md).
 

@@ -26,11 +26,11 @@ under the License.
 
 # Code Submission Guide
 
-[Pull Request (PR)](https://help.github.com/articles/about-pull-requests/) can be easily submitted on [Github](https://github.com/apache/incubator-doris). The PR method of Doris project is described below.
+[Pull Request (PR)](https://help.github.com/articles/about-pull-requests/) can be easily submitted on [Github](https://github.com/apache/doris). The PR method of Doris project is described below.
 
 ## Fork Repository
 
-Go to the [github page](https://github.com/apache/incubator-doris) of apache/incubator-doris , and click the button `Fork` in the upper right corner for Fork.
+Go to the [github page](https://github.com/apache/doris) of apache/incubator-doris , and click the button `Fork` in the upper right corner for Fork.
 
 ![Fork](/images/fork-repo.png)
 
@@ -39,7 +39,7 @@ Go to the [github page](https://github.com/apache/incubator-doris) of apache/inc
 #### (1) Clone the code locally:
 
 ```
-git clone https://github.com/<your_github_name>/incubator-doris.git
+git clone https://github.com/<your_github_name>/doris.git
 ```
 
 Note: Please replace your GitHub name with your yourgithubname.
