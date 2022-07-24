@@ -109,7 +109,7 @@ For how to write Commit Message, here are some Tips:
 
 For more details, see <https://chris.beams.io/posts/git-commit>.
 
-![create PR](/images/create-pr2.png)
+![create PR](/images/create-pr.png)
 
 #### (4) Complete the creation
 After successful creation, you can see that Doris project needs review, you can wait for us to review and join, you can also contact us directly.

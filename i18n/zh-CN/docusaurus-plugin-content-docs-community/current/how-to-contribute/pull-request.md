@@ -109,7 +109,7 @@ git push origin <your_branch_name>
 
 更详细的内容请参考 <https://chris.beams.io/posts/git-commit>
 
-![create PR](/images/create-pr2.png)
+![create PR](/images/create-pr.png)
 
 #### （4）完成创建
 创建成功后，您可以看到 Doris 项目需要 review，您可以等待我们 review 和合入，您也可以直接联系我们。
