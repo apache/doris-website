@@ -33,7 +33,7 @@ under the License.
 * IntelliJ IDEA
 * Maven (Optional, IDEA shipped embedded Maven3)
 
-1. Git clone codebase from https://github.com/apache/incubator-doris.git
+1. Git clone codebase from https://github.com/apache/doris.git
 
 
 2. Use IntelliJ IDEA to open the code root directory

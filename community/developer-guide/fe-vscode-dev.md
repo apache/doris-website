@@ -37,7 +37,7 @@ Some developers are building FE development environment on a development machine
 
 ## Download code for compilation
 
-1. https://github.com/apache/incubator-doris.git Download the doris source code
+1. https://github.com/apache/doris.git Download the doris source code
 
 2. use VSCode to open the code `/fe` directory
 

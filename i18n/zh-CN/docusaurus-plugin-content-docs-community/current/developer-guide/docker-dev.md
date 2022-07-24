@@ -112,7 +112,7 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 ```bash
 su <your user>
 mkdir code && cd code
-git clone https://github.com/apache/incubator-doris.git
+git clone https://github.com/apache/doris.git
 ```
 
 ## 编译

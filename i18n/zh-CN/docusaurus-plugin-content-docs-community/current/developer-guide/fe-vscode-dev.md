@@ -37,7 +37,7 @@ under the License.
 
 ## 下载代码编译
 
-1. 从 https://github.com/apache/incubator-doris.git 下载源码到本地
+1. 从 https://github.com/apache/doris.git 下载源码到本地
 
 2. 使用 VSCode 打开代码 `/fe` 目录
 

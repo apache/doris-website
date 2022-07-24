@@ -30,14 +30,14 @@ under the License.
 
 JDK1.8+, IntelliJ IDEA
 
-1. 从 https://github.com/apache/incubator-doris.git 下载源码到本地
+1. 从 https://github.com/apache/doris.git 下载源码到本地
 
 2. 使用IntelliJ IDEA 打开代码根目录
 
 3. 如果仅进行fe开发而没有编译过thirdparty，则需要安装thrift，并将thrift 复制或者连接到 `thirdparty/installed/bin` 目录下
 
         安装 `thrift` 0.13.0 版本(注意：`Doris` 0.15 和最新的版本基于 `thrift` 0.13.0 构建, 之前的版本依然使用`thrift` 0.9.3 构建)
-
+    
         Windows: 
            1. 下载：`http://archive.apache.org/dist/thrift/0.13.0/thrift-0.13.0.exe`
            2. 拷贝：将文件拷贝至 `./thirdparty/installed/bin`
