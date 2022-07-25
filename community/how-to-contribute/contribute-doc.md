@@ -31,7 +31,7 @@ Here we mainly introduce how to modify and contribute to Doris' documents.
 
 How to submit your document modification, please refer to
 
-[Contribute to Doris](./how-to-contribute)
+[Contribute to Doris](./)
 
 [Code Submission Guidelines](./pull-request)
 

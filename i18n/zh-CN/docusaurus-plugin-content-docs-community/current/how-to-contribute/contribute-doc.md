@@ -32,7 +32,7 @@ under the License.
 
 怎么去提交你的文档修改，请参照
 
-[为 Doris 做贡献](./how-to-contribute)
+[为 Doris 做贡献](./)
 
 [代码提交指南](./pull-request)
 
