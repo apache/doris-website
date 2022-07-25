@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data import things and atomicity",
+    "title": "Import transactions and atomicity",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Data import things and atomicity
+# Import transactions and atomicity
 
 All import operations in Doris have atomicity guarantees, that is, the data in an import job either all succeed or all fail. It will not happen that only part of the data is imported successfully.
 

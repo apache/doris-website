@@ -129,11 +129,11 @@ under the License.
    
    >**注意:**
    >
-   >如果你是第一次使用 `build-env-for-0.15.0` 或之后的版本，第一次编译的时候要使用如下命令：
+   >如果你是第一次使用 `build-env-for-0.15.0` 或 `incubator-doris:build-env-for-1.0.0` 的版本，第一次编译的时候要使用如下命令：
    >
-   > `sh build.sh --clean --be --fe --ui --broker`
-   > `build-env-for-1.0.0` 及之后的版本，使用如下命令：
-   > `sh build --clean --be --fe --broker`
+   > `sh build.sh --clean --be --fe --ui`
+   > `build-env-ldb-toolchain-latest` 及之后的版本，使用如下命令：
+   > `sh build --clean --be --fe`
    >
    > 这是因为 build-env-for-0.15.0 版本镜像升级了 thrift(0.9 -> 0.13)，需要通过 --clean 命令强制使用新版本的 thrift 生成代码文件，否则会出现不兼容的代码。
    
@@ -201,8 +201,8 @@ under the License.
 
     ```
    $ cat /proc/cpuinfo | grep avx2
-    ```
-    
+   ```
+   
     支持则使用下面命令进行编译
 
    ```
