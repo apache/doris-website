@@ -30,7 +30,7 @@ under the License.
 
 ## Fork Repository
 
-Go to the [github page](https://github.com/apache/doris) of apache/incubator-doris , and click the button `Fork` in the upper right corner for Fork.
+Go to the [github page](https://github.com/apache/doris) of apache/doris , and click the button `Fork` in the upper right corner for Fork.
 
 ![Fork](/images/fork-repo.png)
 
@@ -46,10 +46,10 @@ Note: Please replace your GitHub name with your yourgithubname.
 
 When clone is completed, origin defaults to the remote fork address on github.
 
-#### (2) Add apache/incubator-doris to the remote branch upstream of the local warehouse:
+#### (2) Add apache/doris to the remote branch upstream of the local warehouse:
 
 ```
-cd  incubator-doris
+cd  doris
 git remote add upstream https://github.com/apache/doris.git
 ```
 
