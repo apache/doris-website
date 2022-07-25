@@ -105,6 +105,12 @@ ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES (
 ALTER TABLE example_db.my_table MODIFY DISTRIBUTION DISTRIBUTED BY HASH(k1) BUCKETS 50;
 ```
 
+9. Change the bucketing mode of the table from Hash Distribution to Random Distribution
+
+```
+ALTER TABLE example_db.my_table set ("distribution_type" = "random");
+```
+
 9. Modify table comments
 
 ```sql

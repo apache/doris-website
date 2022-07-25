@@ -105,6 +105,12 @@ ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES (
 ALTER TABLE example_db.my_table MODIFY DISTRIBUTION DISTRIBUTED BY HASH(k1) BUCKETS 50;
 ```
 
+9. 将表的分桶方式由 Hash Distribution 改为 Random Distribution
+
+```sql
+ALTER TABLE example_db.my_table set ("distribution_type" = "random");
+```
+
 9. 修改表注释
 
 ```sql
