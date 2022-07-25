@@ -31,7 +31,7 @@ under the License.
 
 - [使用 Docker 开发镜像编译](/docs/install/source-install/compilation)
 - [部署](/docs/install/install-deploy)
-- [VSCode Be 开发调试](../be-vscode-dev)
+- [VSCode Be 开发调试](./be-vscode-dev)
 
 ## 环境准备
 
