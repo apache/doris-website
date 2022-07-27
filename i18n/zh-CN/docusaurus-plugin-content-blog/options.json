@@ -4,7 +4,7 @@
     "description": "The title for the blog used in SEO"
   },
   "description": {
-    "message": "博客！",
+    "message": "Apache Doris 博客",
     "description": "The description for the blog used in SEO"
   },
   "sidebar.title": {

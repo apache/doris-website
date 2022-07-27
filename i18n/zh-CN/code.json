@@ -512,5 +512,14 @@
   },
   "navbar.download": {
     "message": "下载"
+  },
+  "homepage.title": {
+    "message": "首页"
+  },
+  "download.title": {
+    "message": "下载"
+  },
+  "users.title": {
+    "message": "用户"
   }
 }

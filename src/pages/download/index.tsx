@@ -1,7 +1,7 @@
 import Layout from '../../theme/Layout';
 import React, { useEffect, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate from '@docusaurus/Translate';
+import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
@@ -69,8 +69,11 @@ export default function Download(): JSX.Element {
     }, [version]);
     return (
         <Layout
-            title="Download"
-            description="A modern, high-performance and real-time analvtical database."
+            title={translate({ id: 'download.title', message: 'Download' })}
+            description={translate({
+                id: 'homepage.banner.subTitle',
+                message: 'An easy-to-use, high-performance and unified analytical database',
+            })}
             wrapperClassName="download"
         >
             <section className="quick-download">
@@ -92,7 +95,9 @@ export default function Download(): JSX.Element {
                             <div className="tabs-radio">
                                 {BINARY_VERSION.map(item => (
                                     <div
-                                        className={clsx('radio', { checked: version === item.value })}
+                                        className={clsx('radio', {
+                                            checked: version === item.value,
+                                        })}
                                         key={item.value}
                                         onClick={() => changeVersion(item.value)}
                                     >
