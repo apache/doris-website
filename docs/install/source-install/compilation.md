@@ -137,7 +137,7 @@ This document focuses on how to code Doris through source code.
     >
     > `build-env-ldb-toolchain-latest` and later, use the following command:
     >
-    > ` sh build --clean --be --fe`
+    > ` sh build.sh --clean --be --fe`
     >
     > This is because from build-env-for-0.15.0, we upgraded thrift (0.9 -> 0.13), you need to use the --clean command to force the use of the new version of thrift to generate code files, otherwise incompatible code will appear.
    
