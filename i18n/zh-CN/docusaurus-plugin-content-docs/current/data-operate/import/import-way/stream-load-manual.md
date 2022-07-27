@@ -142,7 +142,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
   导入任务指定的过滤条件。Stream load 支持对原始数据指定 where 语句进行过滤。被过滤的数据将不会被导入，也不会参与 filter ratio 的计算，但会被计入`num_rows_unselected`。
 
-- partition
+- Partitions
 
   待导入表的 Partition 信息，如果待导入数据不属于指定的 Partition 则不会被导入。这些数据将计入 `dpp.abnorm.ALL`
 

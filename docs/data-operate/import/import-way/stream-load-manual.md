@@ -141,9 +141,9 @@ The number of rows in the original file = `dpp.abnorm.ALL + dpp.norm.ALL`
 
     Import the filter conditions specified by the task. Stream load supports filtering of where statements specified for raw data. The filtered data will not be imported or participated in the calculation of filter ratio, but will be counted as `num_rows_unselected`.
 
-+ partition
++ partitions
 
-    Partition information for tables to be imported will not be imported if the data to be imported does not belong to the specified Partition. These data will be included in `dpp.abnorm.ALL`.
+    Partitions information for tables to be imported will not be imported if the data to be imported does not belong to the specified Partition. These data will be included in `dpp.abnorm.ALL`.
 
 + columns
 
