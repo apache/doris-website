@@ -18,5 +18,9 @@
   "sidebar.community.category.Developer Guide": {
     "message": "开发者手册",
     "description": "The label for category Developer Guide in sidebar community"
+  },
+  "sidebar.community.link.Doris Improvement Proposals": {
+    "message": "改进建议",
+    "description": "The label for Doris Improvement Proposals in sidebar community"
   }
 }
