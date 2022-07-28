@@ -916,6 +916,7 @@
             "label": "Release notes",
             "items": [
                 "releasenotes/release-1.1.0"
+                "releasenotes/release-1.1.1"
             ]
         }
     ]
