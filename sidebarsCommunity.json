@@ -57,6 +57,11 @@
                 "developer-guide/github-checks",
                 "developer-guide/regression-testing"
             ]
+        },
+        {
+            "type": "link",
+            "href": "https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals",
+            "label" : "Doris Wiki"
         }
     ]
 }
