@@ -101,7 +101,7 @@ export const ALL_RELEASE = [
     {
         version: '1.1.0 ( latest )',
         date: '2022-07-14',
-        note: 'https://github.com/apache/doris/issues/9949',
+        note: 'https://doris.apache.org/docs/releasenotes/release-1.1.0',
         download: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
     },
     {
