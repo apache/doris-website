@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ADMIN DIAGNOSE TABLET",
+    "title": "ADMIN-DIAGNOSE-TABLET",
     "language": "en"
 }
 ---
