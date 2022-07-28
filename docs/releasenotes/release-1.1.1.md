@@ -58,4 +58,21 @@ One rowset multi segments in uniq key compaction, segments rows will be merged i
 
 ### Some segment fault cases during query.
 
-[#10961](https://github.com/apache/doris/pull/10961) [#10954](https://github.com/apache/doris/pull/10954) [#10962](https://github.com/apache/doris/pull/10962)
+[#10961](https://github.com/apache/doris/pull/10961) 
+[#10954](https://github.com/apache/doris/pull/10954) 
+[#10962](https://github.com/apache/doris/pull/10962)
+
+# Thanks
+
+Thanks to everyone who has contributed to this release:
+
+```
+@jacktengg
+@mrhhsg
+@xinyiZzz
+@yixiutt
+@starocean999
+@morrySnow
+@morningman
+@HappenLee
+```
