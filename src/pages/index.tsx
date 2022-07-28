@@ -138,7 +138,13 @@ export default function Home(): JSX.Element {
         },
     ];
     return (
-        <Layout title="Home" description="A modern, high-performance and real-time analvtical database.">
+        <Layout
+            title={translate({ id: 'homepage.title', message: 'Home' })}
+            description={translate({
+                id: 'homepage.banner.subTitle',
+                message: 'An easy-to-use, high-performance and unified analytical database',
+            })}
+        >
             <PageBanner {...banner}></PageBanner>
             <section className="news-section">
                 <div className="container">

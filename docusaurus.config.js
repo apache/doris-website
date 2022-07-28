@@ -74,7 +74,7 @@ const config = {
         },
         blog: {
           blogTitle: "Blog",
-          blogDescription: "blog",
+          blogDescription: "Apache Doris Blog",
           postsPerPage: "ALL",
           blogSidebarCount: 0,
           showReadingTime: false,

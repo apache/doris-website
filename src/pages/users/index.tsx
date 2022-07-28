@@ -1,7 +1,7 @@
 import Layout from '../../theme/Layout';
 import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate from '@docusaurus/Translate';
+import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
 import More from '@site/src/components/More/index';
@@ -48,7 +48,13 @@ const storyList = [
 export default function Users(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
     return (
-        <Layout title="Users" description="A modern, high-performance and real-time analvtical database.">
+        <Layout
+            title={translate({ id: 'users.title', message: 'Users' })}
+            description={translate({
+                id: 'homepage.banner.subTitle',
+                message: 'An easy-to-use, high-performance and unified analytical database',
+            })}
+        >
             <section className="users-wall">
                 <PageColumn
                     align="left"
