@@ -61,7 +61,7 @@
         {
             "type": "link",
             "href": "https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals",
-            "label" : "Doris Improvement Proposals"
+            "label" : "Improvement Proposals"
         }
     ]
 }
