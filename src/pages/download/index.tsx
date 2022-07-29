@@ -20,8 +20,8 @@ import {
 import More from '@site/src/components/More';
 
 const BINARY_VERSION = [
-    { label: '1.1.0 ( latest )', value: VersionEnum.Latest },
-    { label: '1.0.0', value: VersionEnum.Prev },
+    { label: '1.1.1 ( latest )', value: VersionEnum.Latest },
+    { label: '1.1.0', value: VersionEnum.Prev },
 ];
 const CPU = [
     { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
@@ -45,11 +45,10 @@ export default function Download(): JSX.Element {
         setVersion(val);
     };
     const changeCPU = (val: string) => {
-        if (version === VersionEnum.Prev && val !== CPUEnum.IntelAvx2) return;
         setCPU(val);
     };
     const changeJDK = (val: string) => {
-        if (version === VersionEnum.Prev && val !== JDKEnum.JDK8) return;
+        if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
         setJDK(val);
     };
 
@@ -117,7 +116,6 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: cpu === item.value,
-                                            disabled: version === VersionEnum.Prev && item.value !== CPUEnum.IntelAvx2,
                                         })}
                                         key={item.value}
                                         onClick={() => changeCPU(item.value)}
@@ -138,7 +136,7 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: jdk === item.value,
-                                            disabled: version === VersionEnum.Prev && item.value !== JDKEnum.JDK8,
+                                            disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
                                         })}
                                         key={item.value}
                                         onClick={() => changeJDK(item.value)}
@@ -187,7 +185,7 @@ export default function Download(): JSX.Element {
                     footer={
                         <More
                             text={<Translate id="download.release.more">More</Translate>}
-                            link="https://dist.apache.org/repos/dist/release/doris/"
+                            link="https://archive.apache.org/dist/doris/"
                         />
                     }
                 >
