@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Release 1.1.0",
+    "title": "Release 1.1.1",
     "language": "zh-CN"
 }
 ---
