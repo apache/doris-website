@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'How Flink's real-time writes to Apache Doris ensure both high throughput and low latency',
+    'title': "How Flink's real-time writes to Apache Doris ensure both high throughput and low latency",
     'summary': "With the increasing demand for real-time analysis, the timeliness of data is becoming more and more important to the refined operation of enterprises. With the massive data, real-time data warehouse plays an irreplaceable role in effectively digging out valuable information, quickly obtaining data feedback, helping companies make faster decisions and better product iterations.",
     'date': '2022-07-29',
     'author': 'Apache Doris',
