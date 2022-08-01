@@ -7,7 +7,7 @@ import Link from '@docusaurus/Link';
 import More from '@site/src/components/More/index';
 import PageColumn from '@site/src/components/PageColumn';
 
-const arr = new Array(30).fill('');
+const arr = new Array(31).fill('');
 const usersWalls = arr.map((item, index) => require(`@site/static/images/icon/u${index + 1}.png`).default);
 
 const storyList = [
