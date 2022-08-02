@@ -199,7 +199,7 @@ Worker thread pool is not set by default, set according to your needs
 
 ### jetty_server_max_http_post_size
 
-Default：100 * 1024 * 1024  （100MB）
+Default：`100 * 1024 * 1024`  （100MB）
 
 This is the maximum number of bytes of the file uploaded by the put or post method, the default value: 100MB
 
@@ -811,7 +811,7 @@ MasterOnly：true
 
 ### max_bytes_per_broker_scanner
 
-Default：3 * 1024 * 1024 * 1024L  （3G）
+Default：`3 * 1024 * 1024 * 1024L`  （3G）
 
 IsMutable：true
 
@@ -827,7 +827,7 @@ if set to false, auth check will be disable, in case some goes wrong with the ne
 
 ### tablet_stat_update_interval_second
 
-Default：300，（5min）
+Default：300（5min）
 
 update interval of tablet stat , All frontends will get tablet stat from all backends at each interval
 
@@ -866,7 +866,7 @@ MasterOnly：true
 
 ### storage_min_left_capacity_bytes
 
-Default： 2 * 1024 * 1024 * 1024  (2GB)
+Default： `2 * 1024 * 1024 * 1024`  (2GB)
 
 IsMutable：true
 
@@ -896,7 +896,7 @@ Default：/lib/hadoop-client/hadoop/bin/hadoop
 
 ### dpp_bytes_per_reduce
 
-Default：100 * 1024 * 1024L;   // 100M
+Default：`100 * 1024 * 1024L` (100M)
 
 ### dpp_default_cluster
 
@@ -1001,7 +1001,7 @@ Maximal number of connections per FE.
 
 ### check_consistency_default_timeout_second
 
-Default：600 （10分钟）
+Default：600 （10 minutes）
 
 IsMutable：true
 
@@ -1112,7 +1112,7 @@ After dropping database(table/partition), you can recover it by using RECOVER st
 
 ### storage_cooldown_second
 
-Default：30 * 24 * 3600L  （30day）
+Default：·30 * 24 * 3600L·  （30 days）
 
 When create a table(or partition), you can specify its storage medium(HDD or SSD). If set to SSD, this specifies the default duration that tablets will stay on SSD.  After that, tablets will be moved to HDD automatically.  You can set storage cooldown time in CREATE TABLE stmt.
 
@@ -1124,7 +1124,7 @@ When create a table(or partition), you can specify its storage medium(HDD or SSD
 
 ### max_backend_down_time_second
 
-Default：3600  （1hour）
+Default：3600  （1 hour）
 
 IsMutable：true
 
@@ -1134,7 +1134,7 @@ If a backend is down for *max_backend_down_time_second*, a BACKEND_DOWN event wi
 
 ### alter_table_timeout_second
 
-Default：86400   （1day）
+Default：86400   （1 day）
 
 IsMutable：true
 
@@ -1200,7 +1200,7 @@ HIGH priority clone job's delay trigger time.
 
 ### clone_normal_priority_delay_second 
 
-Default：300 （5min）
+Default：300 （5 minutes）
 
 IsMutable：true
 
@@ -1210,7 +1210,7 @@ NORMAL priority clone job's delay trigger time
 
 ### clone_low_priority_delay_second
 
-Default：600 （10min）
+Default：600 （10 minutes）
 
 IsMutable：true
 
@@ -1231,7 +1231,7 @@ Concurrency of LOW priority clone jobs.  Concurrency of High priority clone jobs
 
 ### clone_job_timeout_second
 
-Default：7200  (2小时)
+Default：7200  (2 hours)
 
 IsMutable：true
 
@@ -1241,7 +1241,7 @@ Default timeout of a single clone job. Set long enough to fit your replica size.
 
 ### clone_checker_interval_second
 
-Default：300 （5min）
+Default：300 （5 minutes）
 
 Clone checker's running interval
 
@@ -1364,7 +1364,7 @@ Default spark home dir
 
 ### spark_load_default_timeout_second
 
-Default：86400  (1天)
+Default：86400  (1 day)
 
 IsMutable：true
 
@@ -1380,7 +1380,7 @@ Default spark dpp version
 
 ### hadoop_load_default_timeout_second
 
-Default：86400 * 3   (3天)
+Default：86400 * 3   (3 days)
 
 IsMutable：true
 
@@ -1400,7 +1400,7 @@ Min stream load timeout applicable to all type of load
 
 ### max_stream_load_timeout_second
 
-Default：259200 （3天）
+Default：259200 （3 days）
 
 IsMutable：true
 
@@ -1410,7 +1410,7 @@ This configuration is specifically used to limit timeout setting for stream load
 
 ### max_load_timeout_second
 
-Default：259200 （3天）
+Default：259200 （3 days）
 
 IsMutable：true
 
@@ -1450,7 +1450,7 @@ Default non-streaming mini load timeout
 
 ### broker_load_default_timeout_second
 
-Default：14400   （4 hour）
+Default：14400   （4 hours）
 
 IsMutable：true
 
@@ -1623,7 +1623,7 @@ node(FE or BE) will be considered belonging to the same Palo cluster if they hav
 
 ### auth_token
 
-Default：空
+Default：empty
 
 Cluster token used for internal authentication.
 
@@ -1800,7 +1800,7 @@ Master FE sync policy of bdbje. If you only deploy one Follower FE, set this to 
 
 ### meta_delay_toleration_second
 
-Default：300 （5分钟）
+Default：300 （5 minutes）
 
 Non-master FE will stop offering service  if meta data delay gap exceeds *meta_delay_toleration_second*
 
@@ -1933,7 +1933,7 @@ Slow query contains all queries which cost exceed *qe_slow_log_ms*
 
 ### qe_slow_log_ms
 
-Default：5000 （5秒）
+Default：5000 （5 seconds）
 
 If the response time of a query exceed this threshold, it will be recorded in audit log as slow_query.
 
@@ -1974,7 +1974,7 @@ Whether the plug-in is enabled, enabled by default
 
 ### label_keep_max_second
 
-Default：3 * 24 * 3600  (3day)
+Default：`3 * 24 * 3600`  (3 days)
 
 IsMutable：true
 
@@ -1986,7 +1986,7 @@ In the case of high concurrent writes, if there is a large backlog of jobs and c
 
 ### streaming_label_keep_max_second
 
-Default：43200 （12 hour）
+Default：43200 （12 hours）
 
 IsMutable：true
 
@@ -1996,7 +1996,7 @@ For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD
 
 ### history_job_keep_max_second
 
-Default：7 * 24 * 3600   （7 day）
+Default：7 * 24 * 3600   （7 days）
 
 IsMutable：true
 
@@ -2006,13 +2006,13 @@ The max keep time of some kind of jobs. like schema change job and rollup job.
 
 ### label_clean_interval_second
 
-Default：4 * 3600  （4 hour）
+Default：4 * 3600  （4 hours）
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
 
 ### delete_info_keep_max_second
 
-Default：3 * 24 * 3600  (3day)
+Default：3 * 24 * 3600  (3 days)
 
 IsMutable：true
 
@@ -2104,7 +2104,7 @@ The valid ratio threshold of the difference between the version count of the slo
 
 ### min_bytes_indicate_replica_too_large
 
-Default: 2 * 1024 * 1024 * 1024 (2G)
+Default: `2 * 1024 * 1024 * 1024` (2G)
 
 Dynamically configured: true
 
@@ -2146,7 +2146,7 @@ Whether it is a configuration item unique to the Master FE node: true
 
 The minimum data size required to commit a transaction. If the data size received by Fe is smaller than it, it will continue to wait for the next batch of data until the time exceeds `sync_commit_interval_second`. The default value is 15MB, if you want to modify this configuration, please make sure this value is less than the product of `canal.instance.memory.buffer.size` and `canal.instance.memory.buffer.memunit` on the canal side (default 16MB), otherwise Before the ack, Fe will try to obtain data that is larger than the store space, causing the store queue to block until it times out.
 
-Default: 15*1024*1024 (15M)
+Default: `15*1024*1024` (15M)
 
 Is it possible to configure dynamically: true
 
