@@ -23,6 +23,7 @@ jobs:
     - name: Build
       run: |
         npm install -g yarn
+        yarn cache clean
         yarn && yarn build
         touch build/.dummy
         ls build

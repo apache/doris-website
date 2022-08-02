@@ -803,7 +803,7 @@ FE 会在每隔 es_state_sync_interval_secs 调用 es api 获取 es 索引分片
 
 ### `max_bytes_per_broker_scanner`
 
-默认值：3 * 1024 * 1024 * 1024L  （3G）
+默认值：`3 * 1024 * 1024 * 1024L`  （3G）
 
 是否可以动态配置：true
 
