@@ -186,7 +186,7 @@ Stream Load 由于使用的是 HTTP 协议，所以所有导入任务有关的�
 
   默认的两阶段批量事务提交为关闭。
 
-  > **开启方式：** 在be.conf中配置`disable_stream_load_2pc=false`（重启生效） 并且 在 HEADER 中声明 `two_phase_commit=true` 。 
+  > **开启方式：** 在be.conf中配置`disable_stream_load_2pc=false` 并且 在 HEADER 中声明 `two_phase_commit=true` 。 
   
   示例：
   

@@ -175,7 +175,7 @@ The number of rows in the original file = `dpp.abnorm.ALL + dpp.norm.ALL`
 
   The default two-phase bulk transaction commit is off.
 
-  > **Open method:** Configure `disable_stream_load_2pc=false` in be.conf (restart takes effect) and declare `two_phase_commit=true` in HEADER.
+  > **Open method:** Configure `disable_stream_load_2pc=false` in be.conf and declare `two_phase_commit=true` in HEADER.
 
   Example：
 
