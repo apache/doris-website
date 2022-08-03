@@ -34,7 +34,7 @@ under the License.
 
 结果(整数)的单位由unit参数给出。interval的单位由unit参数给出，它应该是下列值之一: 
                    
-SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, or YEAR。
+SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR。
 
 ### example
 
@@ -64,4 +64,5 @@ MySQL> SELECT TIMESTAMPDIFF(MINUTE,'2003-02-01','2003-05-01 12:05:55');
 
 ```
 ### keywords
-TIMESTAMPDIFF
+
+    TIMESTAMPDIFF

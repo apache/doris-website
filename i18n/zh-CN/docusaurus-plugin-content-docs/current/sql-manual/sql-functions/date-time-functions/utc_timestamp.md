@@ -31,9 +31,7 @@ under the License.
 `DATETIME UTC_TIMESTAMP()`
 
 
-返回当前UTC日期和时间在 "YYYY-MM-DD HH:MM:SS" 或
-
-"YYYYMMDDHHMMSS"格式的一个值
+返回当前UTC日期和时间在 "YYYY-MM-DD HH:MM:SS" 或 "YYYYMMDDHHMMSS" 格式的一个值
 
 根据该函数是否用在字符串或数字语境中
 

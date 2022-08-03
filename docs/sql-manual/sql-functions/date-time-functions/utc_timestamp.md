@@ -31,9 +31,7 @@ under the License.
 `DATETIME UTC_TIMESTAMP()`
 
 
-Returns the current UTC date and time in "YYYY-MM-DD HH: MM: SS" or
-
-A Value of "YYYYMMDDHMMSS" Format
+Returns the current UTC date and time in "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS" Format
 
 Depending on whether the function is used in a string or numeric context
 
