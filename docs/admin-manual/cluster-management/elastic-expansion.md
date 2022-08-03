@@ -51,6 +51,16 @@ FE is divided into three roles: Leader, Follower and Observer. By default, a clu
 
 The first FE to start automatically becomes Leader. On this basis, several Followers and Observers can be added.
 
+#### Configure and start Follower or Observer.
+
+ Follower and Observer are configured with Leader. The following commands need to be executed at the first startup:
+
+`bin/start_fe.sh --helper host:edit_log_port --daemon`
+
+The host is the node IP of Leader, and the edit\_log\_port in Lead's configuration file fe.conf. The --helper is only required when follower/observer is first startup.
+
+#### Add Follower or Observer to the cluster
+
 Add Follower or Observer. Connect to the started FE using mysql-client and execute:
 
 `ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port";`
@@ -60,12 +70,6 @@ or
 `ALTER SYSTEM ADD OBSERVER "observer_host:edit_log_port";`
 
 The follower\_host and observer\_host is the node IP of Follower or Observer, and the edit\_log\_port in its configuration file fe.conf.
-
-Configure and start Follower or Observer. Follower and Observer are configured with Leader. The following commands need to be executed at the first startup:
-
-`bin/start_fe.sh --helper host:edit_log_port --daemon`
-
-The host is the node IP of Leader, and the edit\_log\_port in Lead's configuration file fe.conf. The --helper is only required when follower/observer is first startup.
 
 View the status of Follower or Observer. Connect to any booted FE using mysql-client and execute:
 

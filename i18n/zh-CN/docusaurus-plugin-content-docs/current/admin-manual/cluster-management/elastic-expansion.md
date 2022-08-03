@@ -51,6 +51,18 @@ FE 分为 Leader，Follower 和 Observer 三种角色。 默认一个集群，�
 
 第一个启动的 FE 自动成为 Leader。在此基础上，可以添加若干 Follower 和 Observer。
 
+#### 配置及启动 Follower 或 Observer
+
+这里 Follower 和 Observer 的配置同 Leader 的配置。
+
+首先第一次启动时，需执行以下命令：
+
+`./bin/start_fe.sh --helper leader_fe_host:edit_log_port --daemon`
+
+其中 leader\_fe\_host 为 Leader 所在节点 ip, edit\_log\_port 在 Leader 的配置文件 fe.conf 中。--helper 参数仅在 follower 和 observer 第一次启动时才需要。
+
+#### 将 Follower 或 Observer 加入到集群
+
 添加 Follower 或 Observer。使用 mysql-client 连接到已启动的 FE，并执行：
 
 `ALTER SYSTEM ADD FOLLOWER "follower_host:edit_log_port";`
@@ -60,12 +72,6 @@ FE 分为 Leader，Follower 和 Observer 三种角色。 默认一个集群，�
 `ALTER SYSTEM ADD OBSERVER "observer_host:edit_log_port";`
 
 其中 follower\_host和observer\_host 为 Follower 或 Observer 所在节点 ip，edit\_log\_port 在其配置文件 fe.conf 中。
-
-配置及启动 Follower 或 Observer。Follower 和 Observer 的配置同 Leader 的配置。第一次启动时，需执行以下命令：
-
-`./bin/start_fe.sh --helper leader_fe_host:edit_log_port --daemon`
-
-其中 leader\_fe\_host 为 Leader 所在节点 ip, edit\_log\_port 在 Leader 的配置文件 fe.conf 中。--helper 参数仅在 follower 和 observer 第一次启动时才需要。
 
 查看 Follower 或 Observer 运行状态。使用 mysql-client 连接到任一已启动的 FE，并执行：SHOW PROC '/frontends'; 可以查看当前已加入集群的 FE 及其对应角色。
 
