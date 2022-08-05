@@ -30,7 +30,7 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - uses: taixw2/deploy-aliyun-oss@v1
+    - uses: taixw2/deploy-aliyun-oss@1
       with:
         # aliyun config
         endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
