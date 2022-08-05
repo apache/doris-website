@@ -28,23 +28,8 @@ jobs:
         touch build/.dummy
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
-    - name: Deploy website
-      if: ${{ github.event.inputs.branch == 'master' }}
-      run: |
-        git config --global http.postBuffer 524288000
-        git fetch
-        git checkout -b asf-site remotes/origin/asf-site
-        /bin/bash remove-non-reserved-dir.sh
-        cp -r build/* ./
-        rm -rf build/
-        rm -rf .docusaurus
-        rm -rf node_modules
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "Automated deployment with doris master"
-        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
-    - name: upload files to OSS
+
+    - name: Upload files to OSS
       uses: Menci/upload-to-oss@beta-v1
       with:
         # Use Access Key
@@ -67,12 +52,25 @@ jobs:
               "Cache-Control": `public, max-age=${filename.endsWith(".html") ? 60 : 604800}`
             }
           )
-
-        # Upload ALL other files before uploading HTML files
         delay-html-file-upload: true
-
-        # Prevent deleting missing remote files compared to local (defaults to `false`)
         no-delete-remote-files: true
+
+    - name: Deploy website
+      if: ${{ github.event.inputs.branch == 'master' }}
+      run: |
+        git config --global http.postBuffer 524288000
+        git fetch
+        git checkout -b asf-site remotes/origin/asf-site
+        /bin/bash remove-non-reserved-dir.sh
+        cp -r build/** ./
+        rm -rf build/
+        rm -rf .docusaurus
+        rm -rf node_modules
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Automated deployment with doris master"
+        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
 
     - name: Deploy Branch
       if: ${{ github.event.inputs.branch != 'master' }}
