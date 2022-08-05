@@ -30,31 +30,17 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - name: Upload files to Aliyun OSS (incremental)
-      uses: Menci/upload-to-oss@beta-v3
+    - uses: taixw2/deploy-aliyun-oss@v1
       with:
-        # Use Access Key
+        # aliyun config
+        endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
         access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
         access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-        # Or use STS Token
-        # security-token: ${{ secrets.ALIYUN_SECURITY_TOKEN }}
-
         bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-        endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-
-        # Upload the built website files in "dist" directory to remote "my-website/" prefix
-        local-path: ./
-        remote-path: test
-
-        # Set some headers (JS function or just in JSON)
-        headers: |
-          filename => (
-            {
-              "Cache-Control": `public, max-age=${filename.endsWith(".html") ? 60 : 604800}`
-            }
-          )
-        delay-html-file-upload: true
-        no-delete-remote-files: true
+        secure: true
+        # deploy config
+        entry: ./** # glob pattern
+        remote-dir: test
 
     - name: Deploy website
       if: ${{ github.event.inputs.branch == 'master' }}
