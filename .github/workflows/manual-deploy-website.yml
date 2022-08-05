@@ -35,15 +35,41 @@ jobs:
         git fetch
         git checkout -b asf-site remotes/origin/asf-site
         /bin/bash remove-non-reserved-dir.sh
-        cp -r build/* ./
-        rm -rf build/
-        rm -rf .docusaurus
-        rm -rf node_modules
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
+        cd build
         git add .
         git commit -m "Automated deployment with doris master"
         git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
+    - name: upload files to OSS
+      uses: Menci/upload-to-oss@beta-v1
+      with:
+        # Use Access Key
+        access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+        access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+        # Or use STS Token
+        # security-token: ${{ secrets.ALIYUN_SECURITY_TOKEN }}
+
+        bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+        endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+
+        # Upload the built website files in "dist" directory to remote "my-website/" prefix
+        local-path: ./build
+        remote-path: test
+
+        # Set some headers (JS function or just in JSON)
+        headers: |
+          filename => (
+            {
+              "Cache-Control": `public, max-age=${filename.endsWith(".html") ? 60 : 604800}`
+            }
+          )
+
+        # Upload ALL other files before uploading HTML files
+        delay-html-file-upload: true
+
+        # Prevent deleting missing remote files compared to local (defaults to `false`)
+        no-delete-remote-files: true
     - name: Deploy Branch
       if: ${{ github.event.inputs.branch != 'master' }}
       uses: peaceiris/actions-gh-pages@v3
