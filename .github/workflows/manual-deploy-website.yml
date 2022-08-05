@@ -30,8 +30,8 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - name: Upload files to OSS
-      uses: Menci/upload-to-oss@beta-v1
+    - name: Upload files to Aliyun OSS (incremental)
+      uses: Menci/upload-to-oss@beta-v3
       with:
         # Use Access Key
         access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
