@@ -1,11 +1,11 @@
 import Layout from '../../theme/Layout';
-import React from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate, { translate } from '@docusaurus/Translate';
-import './index.scss';
 import Link from '@docusaurus/Link';
 import More from '@site/src/components/More/index';
 import PageColumn from '@site/src/components/PageColumn';
+import React from 'react';
+import Translate, { translate } from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import './index.scss';
 
 const arr = new Array(30).fill('');
 const usersWalls = arr.map((item, index) => require(`@site/static/images/icon/u${index + 1}.png`).default);
@@ -56,6 +56,7 @@ export default function Users(): JSX.Element {
             })}
         >
             <section className="users-wall">
+                PWA UPDATE TESTS
                 <PageColumn
                     align="left"
                     title={

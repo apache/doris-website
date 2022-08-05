@@ -52,7 +52,7 @@ const config = {
                 debug: true,
                 offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString', 'mobile'],
                 injectManifestConfig: {
-                    globPatterns: ['**/*.{json,pdf,docx,xlsx}'],
+                    globPatterns: ['**/*.{json,pdf,docx,xlsx,html,css,js,png,svg,ico,ico,jpg,jpeg}'],
                 },
                 pwaHead: [
                     {
