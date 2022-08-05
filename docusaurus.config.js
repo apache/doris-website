@@ -49,11 +49,11 @@ const config = {
         [
             '@docusaurus/plugin-pwa',
             {
-                debug: true,
+                debug: false,
                 offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString', 'mobile'],
-                injectManifestConfig: {
-                    globPatterns: ['**/*.{json,pdf,docx,xlsx,html,css,js,png,svg,ico,ico,jpg,jpeg}'],
-                },
+                // injectManifestConfig: {
+                //     globPatterns: ['**/*.{json,pdf,docx,xlsx,html,css,js,png,svg,ico,jpg,jpeg}'],
+                // },
                 pwaHead: [
                     {
                         tagName: 'link',
