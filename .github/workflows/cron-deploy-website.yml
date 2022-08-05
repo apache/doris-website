@@ -7,6 +7,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: Production
     steps:
     - name: Checkout
       uses: actions/checkout@master
@@ -42,6 +43,16 @@ jobs:
         touch .vuepress/dist/.dummy
         ls .vuepress/dist/
         export DORIS_COMMIT=`git rev-parse HEAD`
+
+    - name: upload files to OSS
+      uses: fangbinwei/aliyun-oss-website-action@v1
+      with:
+          accessKeyId: ${{ secrets.ACCESS_KEY_ID }}
+          accessKeySecret: ${{ secrets.ACCESS_KEY_SECRET }}
+          bucket: doris-website
+          # use your own endpoint
+          endpoint: oss-cn-hangzhou.aliyuncs.com
+          folder: test
 
     - name: Deploy Master
       run: |
