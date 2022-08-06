@@ -29,15 +29,26 @@ jobs:
         touch build/.dummy
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
-    - name: upload files to OSS
-      uses: fangbinwei/aliyun-oss-website-action@v1
+
+    - name: Upload to oss
+      id: upload_to_oss
+      uses: yinlinyang/ali-oss-utils@1.0.1
       with:
-          accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          # use your own endpoint
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          folder: ./
+        access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+        access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+        endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+        bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+        source: ./
+        target: test
+    # - name: upload files to OSS
+    #   uses: fangbinwei/aliyun-oss-website-action@v1
+    #   with:
+    #       accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+    #       accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+    #       bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+    #       # use your own endpoint
+    #       endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+    #       folder: ./
 
     - name: Deploy website
       if: ${{ github.event.inputs.branch == 'master' }}
