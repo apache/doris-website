@@ -1,7 +1,7 @@
 import Layout from '../../theme/Layout';
 import React, { useEffect, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate from '@docusaurus/Translate';
+import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
@@ -20,8 +20,8 @@ import {
 import More from '@site/src/components/More';
 
 const BINARY_VERSION = [
-    { label: '1.1.0 ( latest )', value: VersionEnum.Latest },
-    { label: '1.0.0', value: VersionEnum.Prev },
+    { label: '1.1.1 ( latest )', value: VersionEnum.Latest },
+    { label: '1.1.0', value: VersionEnum.Prev },
 ];
 const CPU = [
     { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
@@ -45,11 +45,10 @@ export default function Download(): JSX.Element {
         setVersion(val);
     };
     const changeCPU = (val: string) => {
-        if (version === VersionEnum.Prev && val !== CPUEnum.IntelAvx2) return;
         setCPU(val);
     };
     const changeJDK = (val: string) => {
-        if (version === VersionEnum.Prev && val !== JDKEnum.JDK8) return;
+        if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
         setJDK(val);
     };
 
@@ -69,8 +68,11 @@ export default function Download(): JSX.Element {
     }, [version]);
     return (
         <Layout
-            title="Download"
-            description="A modern, high-performance and real-time analvtical database."
+            title={translate({ id: 'download.title', message: 'Download' })}
+            description={translate({
+                id: 'homepage.banner.subTitle',
+                message: 'An easy-to-use, high-performance and unified analytical database',
+            })}
             wrapperClassName="download"
         >
             <section className="quick-download">
@@ -92,7 +94,9 @@ export default function Download(): JSX.Element {
                             <div className="tabs-radio">
                                 {BINARY_VERSION.map(item => (
                                     <div
-                                        className={clsx('radio', { checked: version === item.value })}
+                                        className={clsx('radio', {
+                                            checked: version === item.value,
+                                        })}
                                         key={item.value}
                                         onClick={() => changeVersion(item.value)}
                                     >
@@ -112,7 +116,6 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: cpu === item.value,
-                                            disabled: version === VersionEnum.Prev && item.value !== CPUEnum.IntelAvx2,
                                         })}
                                         key={item.value}
                                         onClick={() => changeCPU(item.value)}
@@ -133,7 +136,7 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: jdk === item.value,
-                                            disabled: version === VersionEnum.Prev && item.value !== JDKEnum.JDK8,
+                                            disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
                                         })}
                                         key={item.value}
                                         onClick={() => changeJDK(item.value)}
@@ -182,7 +185,7 @@ export default function Download(): JSX.Element {
                     footer={
                         <More
                             text={<Translate id="download.release.more">More</Translate>}
-                            link="https://dist.apache.org/repos/dist/release/doris/"
+                            link="https://archive.apache.org/dist/doris/"
                         />
                     }
                 >

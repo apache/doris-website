@@ -10,8 +10,38 @@ export interface DownloadLinkProps {
 
 export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
     {
+        label: 'apache-doris-1.1.1-bin-x64.tar.gz',
+        id: '1.1.1-intel-avx2-jdk8',
+        links: {
+            source: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz',
+            signature:
+                'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.asc',
+            sha512: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.sha512',
+        },
+    },
+    {
+        label: 'apache-doris-1.1.1-bin-x64-noavx2.tar.gz',
+        id: '1.1.1-intel-noavx2-jdk8',
+        links: {
+            source: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz',
+            signature:
+                'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.asc',
+            sha512: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.sha512',
+        },
+    },
+    {
+        label: 'apache-doris-1.1.1-bin-arm64.tar.gz',
+        id: '1.1.1-arm-jdk8',
+        links: {
+            source: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz',
+            signature:
+                'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.asc',
+            sha512: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.sha512',
+        },
+    },
+    {
         label: 'apache-doris-1.1.0-bin-x64-jdk8.tar.gz',
-        id: '1.1-intel-avx2-jdk8',
+        id: '1.1.0-intel-avx2-jdk8',
         links: {
             source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk8.tar.gz',
             signature:
@@ -21,7 +51,7 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
     },
     {
         label: 'apache-doris-1.1.0-bin-x64-jdk11.tar.gz',
-        id: '1.1-intel-avx2-jdk11',
+        id: '1.1.0-intel-avx2-jdk11',
         links: {
             source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk11.tar.gz',
             signature:
@@ -31,7 +61,7 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
     },
     {
         label: 'apache-doris-1.1.0-bin-x64-noavx2-jdk8.tar.gz',
-        id: '1.1-intel-noavx2-jdk8',
+        id: '1.1.0-intel-noavx2-jdk8',
         links: {
             source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk8.tar.gz',
             signature:
@@ -41,7 +71,7 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
     },
     {
         label: 'apache-doris-1.1.0-bin-x64-noavx2-jdk11.tar.gz',
-        id: '1.1-intel-noavx2-jdk11',
+        id: '1.1.0-intel-noavx2-jdk11',
         links: {
             source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk11.tar.gz',
             signature:
@@ -51,7 +81,7 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
     },
     {
         label: 'apache-doris-1.1.0-bin-arm64-jdk8.tar.gz',
-        id: '1.1-arm-jdk8',
+        id: '1.1.0-arm-jdk8',
         links: {
             source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk8.tar.gz',
             signature:
@@ -61,7 +91,7 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
     },
     {
         label: 'apache-doris-1.1.0-bin-arm64-jdk11.tar.gz',
-        id: '1.1-arm-jdk11',
+        id: '1.1.0-arm-jdk11',
         links: {
             source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk11.tar.gz',
             signature:
@@ -69,21 +99,11 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
             sha512: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk11.tar.gz.sha512',
         },
     },
-    {
-        label: 'apache-doris-1.0.0-bin-x64-jdk8.tar.gz',
-        id: '1.0-intel-avx2-jdk8',
-        links: {
-            source: 'https://archive.apache.org/dist/doris/1.0/1.0.0-incubating/apache-doris-1.0.0-incubating-bin.tar.gz',
-            signature:
-                'https://archive.apache.org/dist/doris/1.0/1.0.0-incubating/apache-doris-1.0.0-incubating-bin.tar.gz.asc',
-            sha512: 'https://archive.apache.org/dist/doris/1.0/1.0.0-incubating/apache-doris-1.0.0-incubating-bin.tar.gz.sha512',
-        },
-    },
 ];
 
 export enum VersionEnum {
-    Latest = '1.1',
-    Prev = '1.0',
+    Latest = '1.1.1',
+    Prev = '1.1.0',
 }
 
 export enum CPUEnum {
@@ -99,9 +119,15 @@ export enum JDKEnum {
 
 export const ALL_RELEASE = [
     {
-        version: '1.1.0 ( latest )',
+        version: '1.1.1 ( latest )',
+        date: '2022-07-29',
+        note: '/docs/releasenotes/release-1.1.1',
+        download: 'https://archive.apache.org/dist/doris/1.1/1.1.1-rc03/',
+    },
+    {
+        version: '1.1.0',
         date: '2022-07-14',
-        note: 'https://github.com/apache/doris/issues/9949',
+        note: '/docs/releasenotes/release-1.1.0',
         download: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
     },
     {

@@ -539,6 +539,7 @@
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-BITMAP",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN",
+                                        "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COMMENT",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME",
@@ -646,6 +647,7 @@
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-CONFIG",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-REPLICA-DISTRIBUTION",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-REPLICA-STATUS",
+                                "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-DIAGNOSE-TABLET",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ENABLE-FEATURE",
                                 "sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN",
                                 "sql-manual/sql-reference/Database-Administration-Statements/KILL",
@@ -908,6 +910,14 @@
             "items": [
                 "benchmark/ssb",
                 "benchmark/tpch"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Release notes",
+            "items": [
+                "releasenotes/release-1.1.0",
+                "releasenotes/release-1.1.1"
             ]
         }
     ]
