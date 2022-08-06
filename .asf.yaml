@@ -41,5 +41,5 @@ github:
     squash:  true
     merge:   false
     rebase:  false
-  notifications:
-    pullrequests_status:  commits@doris.apache.org
+notifications:
+  pullrequests_status:  commits@doris.apache.org
