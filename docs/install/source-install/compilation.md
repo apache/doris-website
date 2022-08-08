@@ -184,28 +184,7 @@ You can try to compile Doris directly in your own Linux environment.
        ln -s /usr/bin/gcc-11 /usr/bin/gcc
        sudo apt-get install autoconf automake libtool autopoint
        ```
-        If you are using CentOS you can use the following command to install the dependencies
-
-       ```
-       sudo yum groupinstall 'Development Tools' && sudo yum install maven cmake byacc flex automake libtool bison binutils-devel zip unzip ncurses-devel curl git wget python2 glibc-static libstdc++-static java-1.8.0-openjdk
-       sudo yum install centos-release-scl
-       sudo yum install devtoolset-10
-       scl enable devtoolset-10 bash
-       ```
-       If devtoolset-10 is not found in current repo. Oracle has already rebuilt the devtoolset-10 packages. You can use this repo file:
-       ```
-       [ol7_software_collections]
-       name=Software Collection packages for Oracle Linux 7 ($basearch)
-       baseurl=http://yum.oracle.com/repo/OracleLinux/OL7/SoftwareCollections/$basearch/
-       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
-       gpgcheck=1
-       enabled=1
-       ```
-       After installation, set environment variables `PATH`, `JAVA_HOME`, etc.
-       > nit: you can find the jdk install directory by using command `alternatives --list`
-
-       Doris 0.14.0 will use gcc7 env to compile.
-
+    
 2. Compile Doris
 
    Compiling with the Docker development image, check whether the avx2 instruction is supported before compiling

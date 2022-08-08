@@ -112,7 +112,7 @@ Export's detailed commands can be passed through `HELP EXPORT;` Examples are as 
 EXPORT TABLE db1.tbl1 
 PARTITION (p1,p2)
 [WHERE [expr]]
-TO "bos://bj-test-cmy/export/" 
+TO "hdfs://bj-test-cmy/export/" 
 PROPERTIES
 (
     "label"="mylabel",
