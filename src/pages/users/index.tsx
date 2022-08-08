@@ -56,7 +56,6 @@ export default function Users(): JSX.Element {
             })}
         >
             <section className="users-wall">
-                PWA UPDATE TESTS
                 <PageColumn
                     align="left"
                     title={

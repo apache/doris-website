@@ -44,15 +44,15 @@ jobs:
         ls .vuepress/dist/
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - name: upload files to OSS
+    - name: Upload files to OSS
       uses: fangbinwei/aliyun-oss-website-action@v1
       with:
-          accessKeyId: ${{ secrets.ACCESS_KEY_ID }}
-          accessKeySecret: ${{ secrets.ACCESS_KEY_SECRET }}
-          bucket: doris-website
+          accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
           # use your own endpoint
-          endpoint: oss-cn-hangzhou.aliyuncs.com
-          folder: test
+          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+          folder: build
 
     - name: Deploy Master
       run: |
