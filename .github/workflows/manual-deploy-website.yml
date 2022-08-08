@@ -38,7 +38,7 @@ jobs:
           bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
           # use your own endpoint
           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          folder: ./
+          folder: build
     # - name: upload files to OSS
     #   uses: fangbinwei/aliyun-oss-website-action@v1
     #   with:
