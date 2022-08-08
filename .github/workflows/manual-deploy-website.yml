@@ -30,16 +30,15 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - name: Upload to oss
-      id: upload_to_oss
-      uses: yinlinyang/ali-oss-utils@1.0.1
+    - name: Upload files to OSS
+      uses: fangbinwei/aliyun-oss-website-action@v1
       with:
-        access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-        access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-        endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-        bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-        source: ./
-        target: test
+          accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+          # use your own endpoint
+          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+          folder: ./
     # - name: upload files to OSS
     #   uses: fangbinwei/aliyun-oss-website-action@v1
     #   with:
