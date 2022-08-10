@@ -4,8 +4,6 @@
 const versions = require('./versions.json');
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const showAllVersions = true;
-const { ssrTemplate } = require('./config/ssrTemplate');
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -48,7 +46,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         [
             '@docusaurus/plugin-pwa',
             {
@@ -117,8 +114,7 @@ const config = {
                     lastVersion: 'current',
                     versions: {
                         current: {
-                            banner: 'none',
-                            label: '1.1',
+                            label: '1,1',
                             path: '',
                         },
                         '1.0': {
@@ -160,6 +156,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
+                docsDir: ['docs', 'community'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
             },
@@ -172,7 +169,7 @@ const config = {
                 title: '',
                 logo: {
                     alt: 'Doris',
-                    src: 'https://cdn.selectdb.com/images/logo.svg',
+                    src: 'images/logo.svg',
                 },
                 items: [
                     { to: '/', label: 'Home', position: 'left', exact: true },
@@ -200,12 +197,12 @@ const config = {
                         type: 'localeDropdown',
                         position: 'right',
                     },
-                    // {
-                    //     href: 'https://github.com/apache/doris',
-                    //     className: 'header-right-button-github',
-                    //     position: 'right',
-                    //     label: 'GitHub',
-                    // },
+                    //   {
+                    //     href: "https://github.com/apache/doris",
+                    //     className: "header-right-button-github",
+                    //     position: "right",
+                    //     label: "GitHub",
+                    //   },
                     {
                         href: '/download',
                         className: 'header-right-button-primary navbar-download-mobile',
@@ -277,15 +274,14 @@ const config = {
             colorMode: {
                 disableSwitch: true,
             },
-            // metadata: [
-            //     {
-            //         name: 'viewport',
-            //         content:
-            //             'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
-            //     },
-            // ],
+            metadata: [
+                {
+                    name: 'viewport',
+                    content:
+                        'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
+                },
+            ],
         }),
-    ssrTemplate,
 };
 
 module.exports = config;
