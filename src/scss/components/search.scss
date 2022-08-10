@@ -1,7 +1,7 @@
-.dropdownMenu_qbY6 {
+.dropdownMenu_jUzS {
     padding: 0;
 
-    .suggestion_fB_2 {
+    .suggestion_HjS8 {
         padding: 0 1.5rem;
 
         &.cursor_eG29 {
@@ -12,20 +12,20 @@
             }
         }
 
-        .hitIcon_a7Zy {
+        .hitIcon_fVnR {
             display: none;
         }
 
-        .hitTitle_vyVt {
+        .hitTitle_LImS {
             font-size: var(--global-font-size-medium);
         }
 
-        .hitPath_ieM4 {
+        .hitPath_zaD7 {
             font-size: var(--global-font-size-small);
             color: rgba(35, 45, 62, 0.7);
         }
 
-        .hitAction_NqkB {
+        .hitAction__La6 {
             svg {
                 display: none;
 
@@ -42,9 +42,13 @@
         }
     }
 
-    .hitFooter_E9YW a {
+    .hitFooter_QvWT a {
         text-decoration: none;
         color: rgba(35, 45, 62, 0.6);
+
+        &:hover {
+            color: var(--ifm-color-primary);
+        }
     }
 
 }
