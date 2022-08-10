@@ -210,13 +210,12 @@ See the section on `lower_case_table_names` variables in [Variables](../advanced
     Note: you do not need to add the suffix to either HDD or SSD disk directories. You only need to set the medium parameter
 
     `storage_root_path=/home/disk1/doris,medium:hdd;/home/disk2/doris,medium:ssd`
-      
+  
     **instructions**
-      
-
+  
     * 1./home/disk1/doris,medium:hdd   The storage medium is HDD;
     * 2./home/disk2/doris,medium:ssd    The storage medium is SSD;
-
+  
 * BE webserver_port configuration
 
 	If the Be componet is installed in hadoop cluster , need to change configuration `webserver_port=8040`  to avoid port used.

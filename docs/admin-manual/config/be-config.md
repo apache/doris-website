@@ -1165,16 +1165,16 @@ Shard size of StoragePageCache, the value must be power of two. It's recommended
 
 * Description: data root path, separate by ';'.you can specify the storage medium of each root path, HDD or SSD. you can add capacity limit at the end of each root path, separate by ','
 
-    eg.1: `storage_root_path=/home/disk1/doris.HDD,50;/home/disk2/doris.SSD,1;/home/disk2/doris`
+    eg.1: `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD;/home/disk2/doris`
 
-    * 1./home/disk1/doris.HDD,50, indicates capacity limit is 50GB, HDD;
-    * 2./home/disk2/doris.SSD,1, indicates capacity limit is 1GB, SSD;
-    * 3./home/disk2/doris, indicates capacity limit is disk capacity, HDD(default)
+    * /home/disk1/doris.HDD : The storage medium is HDD;
+    * /home/disk2/doris.SSD : The storage medium is SSD;
+    * /home/disk2/doris : The storage medium is HDD HDD(default)
     
-    eg.2: `storage_root_path=/home/disk1/doris,medium:hdd,capacity:50;/home/disk2/doris,medium:ssd,capacity:50`
+    eg.2: `storage_root_path=/home/disk1/doris,medium:hdd;/home/disk2/doris,medium:ssd`
     
-    * 1./home/disk1/doris,medium:hdd,capacity:10，capacity limit is 10GB, HDD;
-    * 2./home/disk2/doris,medium:ssd,capacity:50，capacity limit is 50GB, SSD;
+    * /home/disk1/doris,medium:hdd   The storage medium is HDD;
+    * /home/disk2/doris,medium:ssd    The storage medium is SSD;
 
 * Default: ${DORIS_HOME}
 
