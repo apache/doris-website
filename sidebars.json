@@ -185,6 +185,7 @@
                 "ecosystem/audit-plugin",
                 "ecosystem/flink-doris-connector",
                 "ecosystem/spark-doris-connector",
+                "ecosystem/mysql-to-doris",
                 "ecosystem/datax",
                 "ecosystem/logstash",
                 "ecosystem/cloudcanal",
