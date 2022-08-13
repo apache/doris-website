@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Data Model, ROLLUP and Prefix Index
+# Data Model
 
 This document describes Doris's data model, ROLLUP and prefix index concepts at the logical level to help users better use Doris to cope with different business scenarios.
 
