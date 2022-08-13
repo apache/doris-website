@@ -117,6 +117,9 @@ const config = {
                             label: '1.1',
                             path: '',
                         },
+                        'dev': {
+                            banner: 'none',
+                        },
                         '1.0': {
                             banner: 'none',
                         },
