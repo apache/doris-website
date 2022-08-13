@@ -27,9 +27,9 @@ jobs:
         mkdir versioned_docs/version-dev/
         cp -R doris/docs/en/docs/* versioned_docs/version-dev/
         cp -R doris/docs/sidebars.json versioned_sidebars/version-dev-sidebars.json
-        mkdir i18n/zh-CN/docusaurus-plugin-content-docs/dev
-        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/dev/
-        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/
+        mkdir i18n/zh-CN/docusaurus-plugin-content-docs/devversion-dev
+        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-dev/
+        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-dev.json
         cp -R doris/docs/en/community .
         cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
 
