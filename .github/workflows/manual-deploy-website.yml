@@ -33,7 +33,7 @@ jobs:
         cp -R doris/docs/en/community .
         cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
 
-        cp -R doris/docs/images/* static/images/
+        cp -R doris/docs/images static/
         npm install -g yarn
         yarn cache clean
         yarn && yarn build
