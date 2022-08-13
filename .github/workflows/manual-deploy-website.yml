@@ -22,6 +22,18 @@ jobs:
 
     - name: Build
       run: |
+        git clone https://github.com/apache/doris.git
+        cp -R doris/docs/sidebarsCommunity.json .
+        mkdir versioned_docs/version-dev/
+        cp -R doris/docs/en/docs/* versioned_docs/version-dev/
+        cp -R doris/docs/sidebars.json versioned_sidebars/version-dev-sidebars.json
+        mkdir i18n/zh-CN/docusaurus-plugin-content-docs/dev
+        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/dev/
+        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/
+        cp -R doris/docs/en/community .
+        cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
+
+        cp -R doris/docs/images/* static/images/
         npm install -g yarn
         yarn cache clean
         yarn && yarn build
@@ -39,6 +51,9 @@ jobs:
         rm -rf build/
         rm -rf .docusaurus
         rm -rf node_modules
+        rm -rf doris
+        rm -rf versioned_docs/version-dev/
+        rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/dev/
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add .
