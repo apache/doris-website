@@ -502,8 +502,11 @@ select NULL, NULL, sum(k3) from t;
 
 在 GroupByClause 类中为了将 GROUPING_ID 加到 groupingExprs 表达式列表中，需要创建 virtual SlotRef, 相应的，需要对这个 slot 创建一个 tuple, 叫 GROUPING_ID Tuple。
 
-对于 RepeatNode 这个执行计划，其输入是子节点的所有 tuple， 输出的 tuple 除了 repeat 子节点的数据外，还需要填写 GROUPING_ID 和其他grouping，grouping_id 对应的虚拟列，因此。
+对于 RepeatNode 这个执行计划，其输入是子节点的所有 tuple， 输出的 tuple 除了 repeat 子节点的数据外，还需要填写 GROUPING_ID 和其他grouping，grouping_id 对应的虚拟列。
 
+#### 3.3.3 表达式和函数替换
+group子句表达式拓展：`expr -> if(bitand(pos, grouping_id)=0, expr, null)`
+grouping_id函数：`grouping_id() -> grouping_id(grouping_id)`
 
 ### 3.4 BE 查询执行阶段
 
