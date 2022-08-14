@@ -36,8 +36,6 @@ There are 2 Github Actions:
 ## View the website
 
 To view the website, navigate to 
-[https://doris.apache.org](https://doris.apache.org) 
-or
 [https://doris.apache.org](https://doris.apache.org)
 
 ## How to deploy your own Doris Website by Vercel

@@ -114,15 +114,18 @@ const config = {
                     lastVersion: 'current',
                     versions: {
                         current: {
-                            label: '1,1',
+                            label: '1.1',
                             path: '',
                         },
                         '1.0': {
                             banner: 'none',
                         },
-                        0.15: {
+                        '0.15': {
                             banner: 'none',
                         },
+                        'dev': {
+                            banner: 'none',
+                        }
                     },
                     sidebarPath: require.resolve('./sidebars.json'),
                     onlyIncludeVersions:
