@@ -230,7 +230,7 @@ MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 ```
 
-在这次导入的数据中，因sequence column的值（也就是modify_date中的值）中'22020-02-23'为最大值，所以keyword列中最终保留了b。
+在这次导入的数据中，因sequence column的值（也就是modify_date中的值）中'2020-02-23'为最大值，所以keyword列中最终保留了b。
 再尝试导入如下数据
 
 ```text
