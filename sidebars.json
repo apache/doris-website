@@ -378,7 +378,6 @@
                                 "sql-manual/sql-functions/bitmap-functions/bitmap_or",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap_and_count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap_or_count",
-                                "sql-manual/sql-functions/bitmap-functions/bitmap_xor",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap_xor_count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap_not",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap_and_not",
