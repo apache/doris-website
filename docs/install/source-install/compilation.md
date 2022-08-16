@@ -59,7 +59,7 @@ This document focuses on how to code Doris through source code.
 | apache/incubator-doris:build-env-latest | before [0efef1b](https://github.com/apache/doris/commit/0efef1b332300887ee0473f9df9bdd9d7297d824) | |
 | apache/doris:build-env-for-1.0.0| | 1.0.0 |
 | apache/doris:build-env-for-1.1.0| | 1.1.0 |
-| apache/doris:build-env-ldb-toolchain-latest | trunk | trunk |
+| apache/doris:build-env-ldb-toolchain-latest | trunk |  |
 
 **note**:
 
@@ -133,11 +133,15 @@ This document focuses on how to code Doris through source code.
     >
     > If you are using `build-env-for-0.15.0` or  `build-env-for-1.0.0` for the first time, use the following command when compiling:
     >
-    > `sh build.sh --clean --be --fe --ui`
+    >```
+    >sh build.sh --clean --be --fe --ui
+    >```
     >
     > `build-env-ldb-toolchain-latest` and later, use the following command:
     >
-    > ` sh build.sh --clean --be --fe`
+    >```
+    >sh build.sh --clean --be --fe
+    >```
     >
     > This is because from build-env-for-0.15.0, we upgraded thrift (0.9 -> 0.13), you need to use the --clean command to force the use of the new version of thrift to generate code files, otherwise incompatible code will appear.
    
@@ -229,6 +233,13 @@ You can try to compile Doris directly in your own Linux environment.
          ```
 
          REPOSITORY_URL contains all third-party library source code packages and their historical versions.
+
+3. `fatal error: Killed signal terminated program ...`
+
+   If you encounter the above error when compiling with a Docker image, it may be that the memory allocated to the image is insufficient（The default memory size allocated by Docker is 2GB, and the peak memory usage during compilation is greater than 2GB).
+
+   Try to increase the allocated memory of the image appropriately, 4GB ~ 8GB is recommended.
+
 
 ## Special statement
 
