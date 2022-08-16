@@ -131,12 +131,6 @@ export const ALL_RELEASE = [
         download: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
     },
     {
-        version: '1.0.0',
-        date: '2022-04-18',
-        note: 'https://github.com/apache/doris/issues/8549',
-        download: 'https://archive.apache.org/dist/doris/1.0/1.0.0-incubating/',
-    },
-    {
         version: '0.15.0',
         date: '2021-11-29',
         note: 'https://github.com/apache/doris/issues/6806',

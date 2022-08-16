@@ -117,15 +117,12 @@ const config = {
                             label: '1.1',
                             path: '',
                         },
-                        '1.0': {
+                        0.15: {
                             banner: 'none',
                         },
-                        '0.15': {
+                        dev: {
                             banner: 'none',
                         },
-                        'dev': {
-                            banner: 'none',
-                        }
                     },
                     sidebarPath: require.resolve('./sidebars.json'),
                     onlyIncludeVersions:
