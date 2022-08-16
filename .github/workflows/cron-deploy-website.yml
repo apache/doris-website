@@ -45,6 +45,7 @@ jobs:
         rm -rf .docusaurus
         rm -rf node_modules
         rm -rf doris
+        rm -rf yarn.lock
         rm -rf versioned_docs/version-dev/
         rm -rf versioned_docs/version_sidebars/
         rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-dev/
