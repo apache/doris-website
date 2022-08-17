@@ -13,30 +13,30 @@ export const DOWNLOAD_LINKS: DownloadLinkProps[] = [
         label: 'apache-doris-1.1.1-bin-x64.tar.gz',
         id: '1.1.1-intel-avx2-jdk8',
         links: {
-            source: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz',
+            source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz',
             signature:
-                'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.asc',
-            sha512: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.sha512',
+                'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.asc',
+            sha512: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.sha512',
         },
     },
     {
         label: 'apache-doris-1.1.1-bin-x64-noavx2.tar.gz',
         id: '1.1.1-intel-noavx2-jdk8',
         links: {
-            source: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz',
+            source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz',
             signature:
-                'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.asc',
-            sha512: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.sha512',
+                'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.asc',
+            sha512: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.sha512',
         },
     },
     {
         label: 'apache-doris-1.1.1-bin-arm64.tar.gz',
         id: '1.1.1-arm-jdk8',
         links: {
-            source: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz',
+            source: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz',
             signature:
-                'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.asc',
-            sha512: 'https://dist.apache.org/repos/dist/release/doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.sha512',
+                'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.asc',
+            sha512: 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.sha512',
         },
     },
     {
