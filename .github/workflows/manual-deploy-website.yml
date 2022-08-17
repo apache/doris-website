@@ -40,7 +40,7 @@ jobs:
         export DORIS_COMMIT=`git rev-parse HEAD`
 
     - name: Upload files to OSS
-      uses: .github/actions/aliyun-oss-website-action
+      uses: ./.github/actions/aliyun-oss-website-action
       with:
           accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
