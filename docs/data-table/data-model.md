@@ -26,7 +26,7 @@ under the License.
 
 # Data Model
 
-This document describes Doris's data model, ROLLUP and prefix index concepts at the logical level to help users better use Doris to cope with different business scenarios.
+This document describes Doris's data model,at the logical level to help users better use Doris to cope with different business scenarios.
 
 ## Basic concepts
 
@@ -38,7 +38,7 @@ Columns can be divided into two categories: Key and Value. From a business persp
 Doris's data model is divided into three main categories:
 
 * Aggregate
-* Uniq
+* Unique
 * Duplicate
 
 Let's introduce them separately.
@@ -234,9 +234,9 @@ Data aggregation occurs in Doris in the following three stages:
 
 Data may be aggregated to varying degrees at different times. For example, when a batch of data is just imported, it may not be aggregated with the existing data. But for users, user**can only query aggregated data**. That is, different degrees of aggregation are transparent to user queries. Users should always assume that data exists in terms of the degree of aggregation that **ultimately completes**, and **should not assume that some aggregation has not yet occurred**. (See the section **Limitations of the aggregation model** for more details.)
 
-## Uniq Model
+## Unique Model
 
-In some multi-dimensional analysis scenarios, users are more concerned with how to ensure the uniqueness of Key, that is, how to obtain the Primary Key uniqueness constraint. Therefore, we introduce Uniq's data model. This model is essentially a special case of aggregation model and a simplified representation of table structure. Let's give an example.
+In some multi-dimensional analysis scenarios, users are more concerned with how to ensure the uniqueness of Key, that is, how to obtain the Primary Key uniqueness constraint. Therefore, we introduce Unique data model. This model is essentially a special case of aggregation model and a simplified representation of table structure. Let's give an example.
 
 |ColumnName|Type|IsKey|Comment|
 |---|---|---|---|
@@ -303,7 +303,7 @@ PROPERTIES (
 );
 ```
 
-That is to say, Uniq model can be completely replaced by REPLACE in aggregation model. Its internal implementation and data storage are exactly the same. No further examples will be given here.
+That is to say, Unique model can be completely replaced by REPLACE in aggregation model. Its internal implementation and data storage are exactly the same. No further examples will be given here.
 
 ## Duplicate Model
 
@@ -336,14 +336,14 @@ PROPERTIES (
 );
 ```
 
-This data model is different from Aggregate and Uniq models. Data is stored entirely in accordance with the data in the imported file, without any aggregation. Even if the two rows of data are identical, they will be retained.
-The DUPLICATE KEY specified in the table building statement is only used to specify which columns the underlying data is sorted according to. (The more appropriate name should be "Sorted Column", where the name "DUPLICATE KEY" is used to specify the data model used. For more explanations of "Sorted Column", see the section **Prefix Index**.) On the choice of DUPLICATE KEY, we recommend that the first 2-4 columns be selected appropriately.
+This data model is different from Aggregate and Unique models. Data is stored entirely in accordance with the data in the imported file, without any aggregation. Even if the two rows of data are identical, they will be retained.
+The DUPLICATE KEY specified in the table building statement is only used to specify which columns the underlying data is sorted according to. (The more appropriate name should be "Sorted Column", where the name "DUPLICATE KEY" is used to specify the data model used. For more explanations of "Sorted Column", see the section [Prefix Index](./index/prefix-index.md)) On the choice of DUPLICATE KEY, we recommend that the first 2-4 columns be selected appropriately.
 
-This data model is suitable for storing raw data without aggregation requirements and primary key uniqueness constraints. For more usage scenarios, see the **Limitations of the Aggregation Model** section.
+This data model is suitable for storing raw data without aggregation requirements and primary key uniqueness constraints. For more usage scenarios, see the [Limitations of the Aggregation Model](./data-model.md#limitations-of-aggregation-model) section.
 
 ## Limitations of aggregation model
 
-Here we introduce the limitations of Aggregate model (including Uniq model).
+Here we introduce the limitations of Aggregate model (including Unique model).
 
 In the aggregation model, what the model presents is the aggregated data. That is to say, any data that has not yet been aggregated (for example, two different imported batches) must be presented in some way to ensure consistency. Let's give an example.
 
@@ -385,7 +385,9 @@ We add aggregation operator to query engine to ensure data consistency.
 
 In addition, on the aggregate column (Value), when executing aggregate class queries that are inconsistent with aggregate types, attention should be paid to semantics. For example, in the example above, we execute the following queries:
 
-`SELECT MIN(cost) FROM table;`
+```
+SELECT MIN(cost) FROM table;
+```
 
 The result is 5, not 1.
 
@@ -393,7 +395,9 @@ At the same time, this consistency guarantee will greatly reduce the query effic
 
 Let's take the most basic count (*) query as an example:
 
-`SELECT COUNT(*) FROM table;`
+```
+SELECT COUNT(*) FROM table;
+```
 
 In other databases, such queries return results quickly. Because in the implementation, we can get the query result by counting rows at the time of import and saving count statistics information, or by scanning only a column of data to get count value at the time of query, with very little overhead. But in Doris's aggregation model, the overhead of this query is **very large**.
 
@@ -425,9 +429,9 @@ Because the final aggregation result is:
 
 So `select count (*) from table;` The correct result should be **4**. But if we only scan the `user_id`column and add query aggregation, the final result is **3** (10001, 10002, 10003). If aggregated without queries, the result is **5** (a total of five rows in two batches). It can be seen that both results are wrong.
 
-In order to get the correct result, we must read the data of `user_id` and `date`, and **together with aggregate** when querying, to return the correct result of **4**. That is to say, in the count (*) query, Doris must scan all AGGREGATE KEY columns (here are `user_id` and `date`) and aggregate them to get the semantically correct results. When aggregated columns are large, count (*) queries need to scan a large amount of data.
+In order to get the correct result, we must read the data of `user_id` and `date`, and **together with aggregate** when querying, to return the correct result of **4**. That is to say, in the `count (*)` query, Doris must scan all AGGREGATE KEY columns (here are `user_id` and `date`) and aggregate them to get the semantically correct results. When aggregated columns are large, `count (*)` queries need to scan a large amount of data.
 
-Therefore, when there are frequent count (*) queries in the business, we recommend that users simulate count (*) by adding a column with a value of 1 and aggregation type of SUM. As the table structure in the previous example, we modify it as follows:
+Therefore, when there are frequent `count (*)` queries in the business, we recommend that users simulate `count (*)` by adding a column with a value of 1 and aggregation type of SUM. As the table structure in the previous example, we modify it as follows:
 
 |ColumnName|Type|AggregationType|Comment|
 |---|---|---|---|
@@ -442,15 +446,15 @@ Another way is to **change the aggregation type of the count column above to REP
 
 ### Duplicate Model
 
-Duplicate model has no limitation of aggregation model. Because the model does not involve aggregate semantics, when doing count (*) query, we can get the correct semantics by choosing a column of queries arbitrarily.
+Duplicate model has no limitation of aggregation model. Because the model does not involve aggregate semantics, when doing `count (*)` query, we can get the correct semantics by choosing a column of queries arbitrarily.
 
 ## Suggestions for Choosing Data Model
 
 Because the data model was established when the table was built, and **could not be modified. Therefore, it is very important to select an appropriate data model**.
 
-1. Aggregate model can greatly reduce the amount of data scanned and the amount of query computation by pre-aggregation. It is very suitable for report query scenarios with fixed patterns. But this model is not very friendly for count (*) queries. At the same time, because the aggregation method on the Value column is fixed, semantic correctness should be considered in other types of aggregation queries.
+1. Aggregate model can greatly reduce the amount of data scanned and the amount of query computation by pre-aggregation. It is very suitable for report query scenarios with fixed patterns. But this model is not very friendly for `count (*)` queries. At the same time, because the aggregation method on the Value column is fixed, semantic correctness should be considered in other types of aggregation queries.
 
-2. Uniq model guarantees the uniqueness of primary key for scenarios requiring unique primary key constraints. However, the query advantage brought by pre-aggregation such as ROLLUP cannot be exploited (because the essence is REPLACE, there is no such aggregation as SUM).
+2. Unique model guarantees the uniqueness of primary key for scenarios requiring unique primary key constraints. However, the query advantage brought by pre-aggregation such as ROLLUP cannot be exploited (because the essence is REPLACE, there is no such aggregation as SUM).
 
    > **[Note]** The Unique model only supports the entire row update. If the user needs unique key with partial update (such as loading multiple source tables into one doris table), you can consider using the Aggregate model, setting the aggregate type of the non-primary key columns to REPLACE_IF_NOT_NULL. For detail, please refer to [CREATE TABLE Manual](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)
 

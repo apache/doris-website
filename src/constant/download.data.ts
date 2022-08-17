@@ -131,12 +131,6 @@ export const ALL_RELEASE = [
         download: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
     },
     {
-        version: '1.0.0',
-        date: '2022-04-18',
-        note: 'https://github.com/apache/doris/issues/8549',
-        download: 'https://archive.apache.org/dist/doris/1.0/1.0.0-incubating/',
-    },
-    {
         version: '0.15.0',
         date: '2021-11-29',
         note: 'https://github.com/apache/doris/issues/6806',
@@ -158,6 +152,15 @@ export const ALL_RELEASE = [
 
 export const FLINK_CONNECTOR = [
     {
+        version: '1.2.0',
+        date: '2022-08-15',
+        flink: '1.15',
+        scala: '2.12, 2.11',
+        doris: '1.0+',
+        download: 'https://dist.apache.org/repos/dist/release/doris/flink-connector/1.2.0/',
+        github: 'https://github.com/apache/doris-flink-connector',
+    },
+    {
         version: '1.1.0',
         date: '2022-07-11',
         flink: '1.14',
@@ -170,7 +173,7 @@ export const FLINK_CONNECTOR = [
         version: '1.0.3',
         date: '2021-03-18',
         flink: '1.14, 1.13, 1.12, 1.11',
-        scala: '2.12',
+        scala: '2.12, 2.11',
         doris: '0.15+',
         download: 'https://dist.apache.org/repos/dist/release/doris/flink-connector/1.0.3/',
         github: 'https://github.com/apache/doris-flink-connector',
