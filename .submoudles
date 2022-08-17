@@ -1,0 +1,3 @@
+[submodule ".github/actions/aliyun-oss-website-action"]
+	path = .github/actions/aliyun-oss-website-action
+	url = https://github.com/fangbinwei/aliyun-oss-website-action.git
