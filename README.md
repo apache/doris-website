@@ -38,6 +38,9 @@ There are 2 Github Actions:
 To view the website, navigate to 
 [https://doris.apache.org](https://doris.apache.org)
 
+## How to deploy your own Doris Website by Vercel
+[How to deploy your own Doris Website by Vercel](./repo-docs/How-to-deploy-your-own-website-by-Vercel.md)
+
 ## Run & Build Website
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
@@ -357,6 +360,9 @@ Directory structure description:
 
 
 ## 修改文档（中文版）
+
+### 通过托管服务 Vercel 部署自己的 Doris Website 站点
+[通过托管服务 Vercel 部署自己的 Doris Website 站点](./repo-docs/How-to-deploy-your-own-website-by-Vercel.md).
 
 ### website目录结构
 
