@@ -236,7 +236,7 @@ For a complete parameter comparison table, please go to [Profile parameter analy
 - create database
 
    ```mysql
-   CREATE DATABASE database name;
+   CREATE DATABASE database_name;
    ````
 
    > For more detailed syntax and best practices used by Create-DataBase, see [Create-Database](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-DATABASE) command manual.

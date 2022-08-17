@@ -468,6 +468,7 @@ FE 将查询计划拆分成为 Fragment 下发到 BE 进行任务执行。BE 在
      > 1. FE_HOST 是任一 FE 所在节点 IP，8030 为 fe.conf 中的 http_port。
      > 2. 可以使用任一 BE 的 IP，以及 be.conf 中的 webserver_port 进行导入。如：`BE_HOST:8040`
      > 3. example_db 是你导入表所在的数据库
+     
      本地文件 `table1_data` 以 `,` 作为数据之间的分隔，具体内容如下：
 
      ```text
