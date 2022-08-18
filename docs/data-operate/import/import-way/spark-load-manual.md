@@ -132,7 +132,7 @@ In the existing Doris import process, the data structure of global dictionary is
 
 ## Hive Bitmap UDF
 
-Spark supports loading hive-generated bitmap data directly into Doris
+Spark supports loading hive-generated bitmap data directly into Doris, see [hive-bitmap-udf documentation](../../../ecosystem/external-table/hive-bitmap-udf)
 
 ## Basic operation
 
@@ -284,21 +284,17 @@ You can use the `USAGE_PRIV` permission is given to a user or a role, and the ro
 
 GRANT USAGE_PRIV ON RESOURCE "spark0" TO "user0"@"%";
 
-
 -- Grant permission to the spark0 resource to role ROLE0
 
 GRANT USAGE_PRIV ON RESOURCE "spark0" TO ROLE "role0";
-
 
 -- Grant permission to all resources to user user0
 
 GRANT USAGE_PRIV ON RESOURCE * TO "user0"@"%";
 
-
 -- Grant permission to all resources to role ROLE0
 
 GRANT USAGE_PRIV ON RESOURCE * TO ROLE "role0";
-
 
 -- Revoke the spark0 resource permission of user user0
 
@@ -553,6 +549,8 @@ PROPERTIES
     "timeout" = "3600"
 );
 ````
+
+
 
 You can view the details syntax about creating load by input `help spark load`. This paper mainly introduces the parameter meaning and precautions in the creation and load syntax of spark load.
 
