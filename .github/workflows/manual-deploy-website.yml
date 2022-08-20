@@ -15,6 +15,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
+      with:
+          persist-credentials: false
+          submodules: recursive
 
     - name: Use Node.js
       uses: actions/setup-node@v1
