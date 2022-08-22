@@ -74,7 +74,7 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add .
         git commit -m "Automated deployment with doris master"
-        git push --verbose "https://$GITHUB_TOKEN@github.com/apache/doris-website.git" asf-site:asf-site
+        git push --verbose "https://$GITHUB_TOKEN@github.com/jeffreys-cat/doris-website.git" asf-site:asf-site
         
     - name: Deploy Branch
       if: ${{ github.event.inputs.branch != 'master' }}
