@@ -1,4 +1,4 @@
-name: Manual Deploy
+name: Manual Deploy Upload OSS
 
 on: 
   workflow_dispatch:
@@ -11,9 +11,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: Production
     steps:
     - name: Checkout
       uses: actions/checkout@master
+      with:
+          persist-credentials: false
+          submodules: recursive
 
     - name: Use Node.js
       uses: actions/setup-node@v1
@@ -37,6 +41,17 @@ jobs:
         touch build/.dummy
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
+
+    - name: Upload files to OSS
+      uses: ./.github/actions/aliyun-oss-website-action
+      with:
+          accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+          # use your own endpoint
+          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+          folder: build
+
     - name: Deploy website
       if: ${{ github.event.inputs.branch == 'master' }}
       run: |
@@ -58,6 +73,7 @@ jobs:
         git add .
         git commit -m "Automated deployment with doris master"
         git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
+        
     - name: Deploy Branch
       if: ${{ github.event.inputs.branch != 'master' }}
       uses: peaceiris/actions-gh-pages@v3
