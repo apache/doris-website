@@ -2,16 +2,16 @@
     "docs": [
         {
             "type": "category",
-            "label": "Getting Started",
+            "label": "Doris Introduction",
             "items": [
-                "get-starting/get-starting"
+                "summary/basic-summary"
             ]
         },
         {
             "type": "category",
-            "label": "Doris Introduction",
+            "label": "Getting Started",
             "items": [
-                "summary/basic-summary"
+                "get-starting/get-starting"
             ]
         },
         {
