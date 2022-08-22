@@ -169,7 +169,7 @@ export default function Download(): JSX.Element {
                                 If the CPU does not support the avx2 instruction set, select the no avx2 version. You
                                 can check whether it is supported by
                             </Translate>
-                            <code>cat /proc/cpu info</code>
+                            <code>cat /proc/cpuinfo</code>
                             <Translate id="download.quick.download.intr.suffix">
                                 . The avx2 instruction will improve the computational efficiency of data structures such
                                 as bloom filter.
