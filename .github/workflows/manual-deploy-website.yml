@@ -7,7 +7,9 @@ on:
         description: 'Specify the branch name'
         required: true
         default: 'master'
-
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -72,13 +74,13 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add .
         git commit -m "Automated deployment with doris master"
-        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
+        git push --verbose "https://$GITHUB_TOKEN@github.com/apache/doris-website.git" asf-site:asf-site
         
     - name: Deploy Branch
       if: ${{ github.event.inputs.branch != 'master' }}
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: $GITHUB_TOKEN
         publish_branch: asf-site
         publish_dir: ./build
         destination_dir: ${{ github.event.inputs.branch }}
