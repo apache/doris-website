@@ -21,7 +21,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get Started</Translate>,
-            link: '/docs/get-starting/',
+            link: '/docs/summary/basic-summary',
             type: 'ghost',
         },
         {
@@ -243,7 +243,7 @@ export default function Home(): JSX.Element {
                             <Link className="start-btn download-btn" to="/download">
                                 <Translate id="homepage.start.downloadButton">Download</Translate>
                             </Link>
-                            <Link className="start-btn docs-btn" to="/docs/get-starting/">
+                            <Link className="start-btn docs-btn" to="/docs/summary/basic-summary">
                                 <Translate id="homepage.start.docsButton">Go to docs</Translate>
                             </Link>
                         </div>
