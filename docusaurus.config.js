@@ -177,8 +177,8 @@ const config = {
                         type: 'doc',
                         position: 'left',
                         label: 'Docs',
-                        docId: 'get-starting/get-starting',
-                        to: '/get-starting',
+                        docId: 'summary/basic-summary',
+                        to: '/basic-summary',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
                     {
