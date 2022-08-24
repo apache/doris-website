@@ -39,6 +39,8 @@ jobs:
         yarn cache clean
         yarn && yarn build
         touch build/.dummy
+        cp .asf-site.yaml ./build/.asf.yaml
+        cp versions.json ./build/
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
