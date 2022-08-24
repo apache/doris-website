@@ -37,15 +37,14 @@
                 "data-table/data-model",
                 "data-table/data-partition",
                 "data-table/basic-usage",
-                "data-table/advance-usage",
                 "data-table/hit-the-rollup",
                 "data-table/best-practice",
                 {
                     "type": "category",
                     "label": "Index",
                     "items": [
-                        "data-table/index/bloomfilter",
                         "data-table/index/prefix-index",
+                        "data-table/index/bloomfilter",
                         "data-table/index/bitmap-index"
                     ]
                 }
