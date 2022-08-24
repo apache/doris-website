@@ -35,8 +35,11 @@ jobs:
         yarn cache clean
         yarn && yarn build
         touch build/.dummy
+        cp .asf-site.yaml ./build/.asf.yaml
+        cp versions.json ./build/
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
+
     - name: Upload files to OSS
       uses: ./.github/actions/aliyun-oss-website-action
       with:
@@ -46,28 +49,19 @@ jobs:
           # use your own endpoint
           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
           folder: build
-                  
-    - name: Deploy website
+
+    - name: Deploy Website
       if: ${{ github.event.inputs.branch == 'master' }}
-      run: |
-        git config --global http.postBuffer 524288000
-        git fetch
-        git checkout -b asf-site remotes/origin/asf-site
-        /bin/bash remove-non-reserved-dir.sh
-        cp -r build/* ./
-        rm -rf build/
-        rm -rf .docusaurus
-        rm -rf node_modules
-        rm -rf doris
-        rm -rf yarn.lock
-        rm -rf versioned_docs/
-        rm -rf versioned_sidebars
-        rm -rf i18n/
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "Automated deployment with doris master"
-        git push --verbose "https://${{ secrets.GITHUB_TOKEN }}@github.com/apache/doris-website.git" asf-site:asf-site
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ github.token }}
+        publish_branch: asf-site
+        publish_dir: ./build
+        destination_dir: ./
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+
     - name: Deploy Branch
       if: ${{ github.event.inputs.branch != 'master' }}
       uses: peaceiris/actions-gh-pages@v3
