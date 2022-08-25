@@ -38,10 +38,21 @@ jobs:
 
     - name: Build
       run: |
+        git clone https://github.com/apache/doris.git
+        mkdir versioned_docs/version-dev/
+        cp -R doris/docs/en/docs/* versioned_docs/version-dev/
+        cp -R doris/docs/sidebars.json versioned_sidebars/version-dev-sidebars.json
+        mkdir i18n/zh-CN/docusaurus-plugin-content-docs/version-dev
+        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-dev/
+        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-dev.json
+
+        cp -R doris/docs/images static/
         npm install -g yarn
         yarn cache clean
         yarn && yarn build
         touch build/.dummy
+        cp .asf-site.yaml ./build/.asf.yaml
+        cp versions.json ./build/
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
     
