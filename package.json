@@ -12,6 +12,7 @@
         "clear": "docusaurus clear",
         "serve": "docusaurus serve",
         "build:zip": "rm -rf portal.zip && zip -r portal.zip build/**",
+        "generatePDF": "npx vitpress-generate-pdf -buildDirPath='./build/'  --firstDocPath='/docs/summary/basic-summary/' --paginationSelector='.pagination-nav__link--next' --contentSelector='article' --coverImage='https://cdn.selectdb.com/images/doris-logo-512.png' --coverTitle='Apache Doris 1.1 (English)' --outputPDFFilename='Apache Doris 1.1 (English).pdf'",
         "write-translations": "docusaurus write-translations --locale zh-CN",
         "write-heading-ids": "docusaurus write-heading-ids",
         "typecheck": "tsc"
@@ -28,7 +29,8 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-github-button": "^0.1.11",
-        "sass": "^1.53.0"
+        "sass": "^1.53.0",
+        "vitpress-generate-pdf": "^1.1.0"
     },
     "devDependencies": {
         "@docusaurus/module-type-aliases": "^2.0.0-beta.21",
