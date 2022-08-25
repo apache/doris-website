@@ -1,23 +1,23 @@
-import Layout from '../../theme/Layout';
-import React, { useEffect, useState } from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate, { translate } from '@docusaurus/Translate';
-import './index.scss';
-import Link from '@docusaurus/Link';
-import PageColumn from '@site/src/components/PageColumn';
-import CodeBlock from '@theme/CodeBlock';
 import clsx from 'clsx';
+import CodeBlock from '@theme/CodeBlock';
+import Layout from '../../theme/Layout';
+import Link from '@docusaurus/Link';
+import More from '@site/src/components/More';
+import PageColumn from '@site/src/components/PageColumn';
+import React, { useEffect, useState } from 'react';
+import Translate, { translate } from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import './index.scss';
 import {
     CPUEnum,
     DownloadLinkProps,
-    DOWNLOAD_LINKS,
     JDKEnum,
     VersionEnum,
-    ALL_RELEASE,
-    FLINK_CONNECTOR,
-    SPARK_CONNECTOR,
+    getAllDownloadLinks,
+    getAllFlinkConnectorDownloadLinks,
+    getAllSparkConnectorDownloadLinks,
+    getAllRelease,
 } from '@site/src/constant/download.data';
-import More from '@site/src/components/More';
 
 const BINARY_VERSION = [
     { label: '1.1.1 ( latest )', value: VersionEnum.Latest },
@@ -34,12 +34,19 @@ const JDK = [
 ];
 
 export default function Download(): JSX.Element {
-    const { siteConfig } = useDocusaurusContext();
+    const {
+        siteConfig,
+        i18n: { currentLocale, locales, localeConfigs },
+    } = useDocusaurusContext();
 
     const [version, setVersion] = useState<string>(VersionEnum.Latest);
     const [cpu, setCPU] = useState<string>(CPUEnum.IntelAvx2);
     const [jdk, setJDK] = useState<string>(JDKEnum.JDK8);
     const [current, setCurrent] = useState<DownloadLinkProps>();
+
+    const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(currentLocale);
+    const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(currentLocale);
+    const ALL_RELEASE = getAllRelease(currentLocale);
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -54,7 +61,7 @@ export default function Download(): JSX.Element {
 
     const getDownloadLinks = () => {
         const text = `${version}-${cpu}-${jdk}`;
-        const linkObj = DOWNLOAD_LINKS.find(item => item.id === text);
+        const linkObj = getAllDownloadLinks(currentLocale).find(item => item.id === text);
         setCurrent(linkObj);
     };
 
