@@ -113,16 +113,7 @@
         {
             "type": "category",
             "label": "Advanced Usage",
-            "items": [    
-                "advanced/materialized-view",
-                "advanced/vectorized-execution-engine",
-                "advanced/broker",
-                "advanced/resource",
-                "advanced/orthogonal-bitmap-manual",
-                "advanced/using-hll",
-                "advanced/variables",
-                "advanced/time-zone",
-                "advanced/small-file-mgr",
+            "items": [  
                 {
                     "type": "category",
                     "label": "Alter Table",
@@ -130,13 +121,20 @@
                         "advanced/alter-table/schema-change",
                         "advanced/alter-table/replace-table"
                     ]
-                },
+                }, 
                 {
                     "type": "category",
                     "label": "Doris Partition",
                     "items": [
                         "advanced/partition/dynamic-partition",
                         "advanced/partition/table-temp-partition"
+                    ]
+                }, 
+                {
+                    "type": "category",
+                    "label": "Date Cache",
+                    "items": [
+                        "advanced/cache/partition-cache"
                     ]
                 },
                 {
@@ -149,13 +147,8 @@
                         "advanced/join-optimization/doris-join-optimization"
                     ]
                 },
-                {
-                    "type": "category",
-                    "label": "Date Cache",
-                    "items": [
-                        "advanced/cache/partition-cache"
-                    ]
-                },
+                "advanced/materialized-view",
+                "advanced/broker",
                 {
                     "type": "category",
                     "label": "Best Practice",
@@ -164,7 +157,13 @@
                         "advanced/best-practice/import-analysis",
                         "advanced/best-practice/debug-log"
                     ]
-                }
+                },  
+                "advanced/resource",
+                "advanced/orthogonal-bitmap-manual",
+                "advanced/using-hll",
+                "advanced/variables",
+                "advanced/time-zone",
+                "advanced/small-file-mgr"
             ]
         },
         {
