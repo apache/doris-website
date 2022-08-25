@@ -44,6 +44,16 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
+    - name: Generate PDF
+      run: |
+        npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/docs/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 1.1 (English)" --outputPDFFilename="Apache Doris 1.1 (English).pdf"
+        npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/docs/dev/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris Dev (English)" --outputPDFFilename="Apache Doris Dev (English).pdf"
+        npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/docs/0.15/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 0.15 (English)" --outputPDFFilename="Apache Doris 0.15 (English).pdf"
+        npx vitpress-generate-pdf -buildDirPath="./build/"  --firstDocPath="/zh-CN/docs/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 1.1 (中文)" --outputPDFFilename="Apache Doris 1.1 (中文).pdf"
+        npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/zh-CN/docs/dev/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris Dev (中文)" --outputPDFFilename="Apache Doris Dev (中文).pdf"
+        npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/zh-CN/docs/0.15/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 0.15 (中文)" --outputPDFFilename="Apache Doris 0.15 (中文).pdf"
+        cp *.pdf ./build/assets/files/
+
     - name: Upload files to OSS
       uses: ./.github/actions/aliyun-oss-website-action
       with:
