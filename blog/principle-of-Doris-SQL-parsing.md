@@ -146,7 +146,7 @@ For example, a query of select type will be converted into analyze() of the sub-
 **For query type SQL, Analyze will performs several important steps:**
 
 - **Metadata identification and parsing**： Identify and parse metadata such as Cluster, Database, Table, Column, etc. involved in SQL, and determine which columns, tables, databases, and clusters need to be calculated.
-- 
+
 - **SQL correctness check**：such as the window function cannot DISTINCT, whether the projection column is ambiguous, the where statement cannot contain grouping operations, etc.
 
 - **Rewrite SQL simply**：for example, expand select * to select all columns, convert count distinct to bitmap or hll function, etc.
