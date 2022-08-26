@@ -30,6 +30,18 @@ jobs:
       with:
           persist-credentials: false
           submodules: recursive
+          
+    - name: Add Chinese Fonts
+      run: |
+          sudo apt-get install ttf-mscorefonts-installer
+          sudo apt-get install fontconfig
+          fc-list :lang=zh
+          ls -lh /usr/share/fonts/
+          cp -rf ./static/fonts/* /usr/share/fonts/
+          mkfontscale
+          mkfontdir
+          fc-cache
+          fc-list :lang=zh
 
     - name: Use Node.js
       uses: actions/setup-node@v1
