@@ -1,6 +1,6 @@
 ---
 {
-    "title": "get\\_log\\_file",
+    "title": "get_log_file",
     "language": "en"
 }
 ---
