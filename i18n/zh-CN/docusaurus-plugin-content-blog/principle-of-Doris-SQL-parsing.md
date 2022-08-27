@@ -48,12 +48,10 @@ SQL解析在这篇文章中指的是**将一条sql语句经过一系列的解析
 
 这个过程包括以下四个步骤：词法分析，语法分析，生成逻辑计划，生成物理计划。 如图1所示：
 
-<div align=center>
-<img alt="图 1 SQL解析的流程" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_1_cn.png"/>
-</div>
- <p align="center">图 1 SQL解析的流程</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_1_cn.png)
 
 ## 2.1 词法分析
+
 词法分析主要负责将字符串形式的sql识别成一个个token，为语法分析做准备。
 ```undefined
 select ......  from ...... where ....... group by ..... order by ......
@@ -70,17 +68,13 @@ SQL 的 Token 可以分为如下几类：
 ## 2.2 语法分析
 语法分析主要负责根据语法规则，将词法分析生成的token转成抽象语法树（Abstract Syntax Tree），如图2所示。
 
-<div align=center>
-<img alt=">图 2 抽象语法树示例" width="60%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_2_cn.png"/>
-</div>
-<p align="center">图 2 抽象语法树示例</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_2_cn.png)
+
 
 ## 2.3 逻辑计划
 逻辑计划负责将抽象语法树转成代数关系。代数关系是一棵算子树，每个节点代表一种对数据的计算方式，整棵树代表了数据的计算方式以及流动方向，如图3所示。
-<div align=center>
-<img alt="图3 关系代数示例" width="20%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_3_cn.png"/>
-</div>
- <p align="center">图3 关系代数示例</p>
+
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_3_cn.png)
 
 ## 2.4 物理计划
 物理计划是在逻辑计划的基础上，根据机器的分布，数据的分布，决定去哪些机器上执行哪些计算操作。
@@ -101,10 +95,7 @@ Doris SQL解析具体包括了五个步骤：词法分析，语法分析，生�
 
 具体代码实现上包含以下五个步骤：Parse, Analyze, SinglePlan, DistributedPlan, Schedule。
 
-<div align=center>
-<img alt="图4 系统总体架构图" width="40%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_4_cn.png"/>
-</div>
- <p align="center">图4 系统总体架构图</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_4_cn.png)
 
 如图4所示，Parse阶段本文不详细讲，Analyze负责对AST进行前期的一些处理，SinglePlan根据AST进行优化生成单机查询计划，DistributedPlan将单机的查询计划拆成分布式的查询计划，Schedule阶段负责决定查询计划下发到哪些机器上执行。
 
@@ -112,10 +103,7 @@ Doris SQL解析具体包括了五个步骤：词法分析，语法分析，生�
 
 图5展示了一个简单的查询SQL在Doris的解析实现
 
-<div align=center>
-<img alt="图5 查询sql在Doris中的解析过程" width="50%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_5_cn.png"/>
-</div>
- <p align="center">图5 查询sql在Doris中的解析过程</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_5_cn.png)
 
 # 5 Parse阶段
 词法分析采用jflex技术，语法分析采用java cup parser技术，最后生成抽象语法树（Abstract Syntax Tree）AST，这些都是现有的、成熟的技术，在这里不进行详细介绍。
@@ -126,10 +114,7 @@ SelectStmt结构包含了SelectList，FromClause，WhereClause，GroupByClause�
 
 AST中所有结构都是由基本结构表达式Expr通过多种组合而成，如图6所示。
 
-<div align=center>
-<img alt="图6 Doris中抽象语法树AST的实现" width="60%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_6_cn.png"/>
-</div>
- <p align="center">图6 Doris中抽象语法树AST的实现</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_6_cn.png)
 
 # 6 Analyze阶段
 Analyze主要是对Parse阶段生成的抽象语法树AST进行一些前期的处理和语义分析，为生成单机逻辑计划做准备。
@@ -163,10 +148,7 @@ Analyze主要是对Parse阶段生成的抽象语法树AST进行一些前期的�
 
 如图7所示，ScanNode代表着对一个表的扫描操作，将一个表的数据读出来。HashJoinNode代表着join操作，小表在内存中构建哈希表，遍历大表找到连接键相同的值。Project表示投影操作，代表着最后需要输出的列，图7表示只用输出citycode这一列。
 
-<div align=center>
-<img alt="图7 单机逻辑计划示例" width="50%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_7_cn.png"/>
-</div>
- <p align="center">图7 单机逻辑计划示例</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_7_cn.png)
 
 如果不进行优化，生成的关系代数下发到存储中执行的代价非常高。
 
@@ -178,10 +160,7 @@ select a.siteid, a.pv from table1 a join table2 b on a.siteid = b.siteid where a
 
 Doris在生成代数关系时，进行了大量的优化，将投影列和查询条件尽可能放到扫描操作时执行。
 
-<div align=center>
-<img alt="图8 未优化的关系代数" width="20%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_8_cn.png"/>
-</div>
- <p align="center">图8 未优化的关系代数</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_8_cn.png)
 
 **具体来说这个阶段主要做了如下几项工作：**
 
@@ -201,10 +180,7 @@ Doris在生成代数关系时，进行了大量的优化，将投影列和查询
 
 图9展示了优化的示例，Doris是在生成关系代数的过程中优化，边生成边优化。
 
-<div align=center>
-<img alt="图9 单机查询计划优化的过程" width="100%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_9_cn.png"/>
-</div>
- <p align="center">图9 单机查询计划优化的过程</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_9_cn.png)
 
 # 8 生成分布式Plan阶段
 
@@ -226,10 +202,7 @@ Doris在生成代数关系时，进行了大量的优化，将投影列和查询
 
 **bucket shuffle join**：当join key是分桶key，并且只涉及到一个分区时，就会优先采用bucket shuffle join算法。由于分桶本身就代表了数据的一种切分方式，所以可以利用这一特点，只需将右表对左表的分桶数hash取模，这样只需网络传输一份右表数据，极大减少了数据的网络传输，如图10所示。
 
-<div align=center>
-<img alt="图10 bucket shuffle join示例" width="40%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_10_cn.png"/>
-</div>
- <p align="center">图10 bucket shuffle join示例</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_10_cn.png)
 
 如图11展示了带有HashJoinNode的单机逻辑计划创建分布式逻辑计划的核心流程。
 
@@ -249,17 +222,11 @@ Doris在生成代数关系时，进行了大量的优化，将投影列和查询
 
 - 如果使用hash partition join，左表和右边的数据都要切分，需要将左右节点都拆分出去，分别创建left ExchangeNode, right ExchangeNode，HashJoinNode指定左右节点为left ExchangeNode和 right ExchangeNode。单独创建一个PlanFragment，指定RootPlanNode为这个HashJoinNode。最后指定leftFragment, rightFragment的数据发送目的地为left ExchangeNode, right ExchangeNode。
 
-<div align=center>
-<img alt="图 11 HashJoinNode创建分布式逻辑计划核心流程" width="50%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_11_cn.png"/>
-</div>
- <p align="center">图 11 HashJoinNode创建分布式逻辑计划核心流程</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_11_cn.png)
 
 图12是两个表的join操作转换成PlanFragment树之后的示例，一共生成了3个PlanFragment。最终数据的输出通过ResultSinkNode节点。
 
-<div align=center>
-<img alt="图12 从单机计划到分布式计划" width="50%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_12_cn.png"/>
-</div>
- <p align="center">图12 从单机计划到分布式计划</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_12_cn.png)
 
 # 9 Schedule阶段
 
@@ -289,10 +256,8 @@ Doris在生成代数关系时，进行了大量的优化，将投影列和查询
 
 **e. to thrift阶段**：根据所有PlanFragment的FInstanceExecParam创建rpc请求，然后下发到BE端执行。这样一个完整的SQL解析过程完成了。
 
-<div align=center>
-<img alt="图13 创建分布式物理计划核心流程" width="60%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_13_cn.png"/>
-</div>
- <p align="center">图13 创建分布式物理计划核心流程</p>
+
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_13_cn.png)
 
 如图14所示是一个简单示例，图中的PlanFrament包含了一个ScanNode，ScanNode扫描3个tablet，每个tablet有2副本，集群假设有2台host。
 
@@ -300,10 +265,7 @@ computeScanRangeAssignment阶段确定了需要扫描replica 1,3,5,8,10,12，其
 
 如果全局并发度设置为1时，则创建2个实例FInstanceExecParam，下发到host1和host2上去执行，如果如果全局并发度设置为3，这个host1上创建3个实例FInstanceExecParam，host2上创建3个实例FInstanceExecParam，每个实例扫描一个replica，相当于发起6个rpc请求。
 
-<div align=center>
-<img alt="图14 生成物理计划的过程" width="60%" src="../../../static/images/blogs/principle-of-Doris-SQL-parsing/Figure_14_cn.png"/>
-</div>
- <p align="center">图14 生成物理计划的过程</p>
+![](/images/blogs/principle-of-Doris-SQL-parsing/Figure_14_cn.png)
 
 # 10 总结
 本文首先简单介绍了Doris，然后介绍SQL解析的通用流程：词法分析，语法分析，生成逻辑计划，生成物理计划，接着从总体上介绍了Doris在SQL解析这块的总体架构，最后详细讲解了Parse，Analyze，SinglePlan，DistributedPlan，Schedule等5个过程，从算法原理和代码实现上进行了深入的讲解。
