@@ -69,6 +69,12 @@ JDK1.8+, IntelliJ IDEA
     ```
     cd fe && mvn clean install -DskipTests
     ```
+    
+    如果是mac m1版，则执行：
+   
+    ```
+    mvn clean install -DskipTests -Dos.arch=x86_64
+    ```
 
 或者通过图形界面运行 maven 命令生成
 
