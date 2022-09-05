@@ -9,8 +9,8 @@ module.exports = function (context, options) {
                     ...config.output,
                     publicPath:
                         context.i18n.currentLocale === 'en'
-                            ? 'https://cdn.selectdb.com/'
-                            : 'https://cdn.selectdb.com/zh-CN/',
+                            ? 'https://cdn-tencent.selectdb.com/'
+                            : 'https://cdn-tencent.selectdb.com/zh-CN/',
                 },
             };
         },

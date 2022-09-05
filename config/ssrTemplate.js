@@ -13,10 +13,10 @@ module.exports = {
       <%~ metaAttribute %>
     <% }); %>
     <% it.stylesheets.forEach((stylesheet) => { %>
-      <link rel="stylesheet" href="<%= 'https://cdn.selectdb.com' %><%= it.baseUrl %><%= stylesheet %>" />
+      <link rel="stylesheet" href="<%= 'https://cdn-tencent.selectdb.com' %><%= it.baseUrl %><%= stylesheet %>" />
     <% }); %>
     <% it.scripts.forEach((script) => { %>
-      <link rel="preload" href="<%= 'https://cdn.selectdb.com' %><%= it.baseUrl %><%= script %>" as="script">
+      <link rel="preload" href="<%= 'https://cdn-tencent.selectdb.com' %><%= it.baseUrl %><%= script %>" as="script">
     <% }); %>
   </head>
   <body <%~ it.bodyAttributes %>>
@@ -25,7 +25,7 @@ module.exports = {
       <%~ it.appHtml %>
     </div>
     <% it.scripts.forEach((script) => { %>
-      <script src="<%= 'https://cdn.selectdb.com' %><%= it.baseUrl %><%= script %>"></script>
+      <script src="<%= 'https://cdn-tencent.selectdb.com' %><%= it.baseUrl %><%= script %>"></script>
     <% }); %>
     <%~ it.postBodyTags %>
   </body>
