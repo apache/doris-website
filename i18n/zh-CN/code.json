@@ -521,5 +521,20 @@
   },
   "users.title": {
     "message": "用户"
+  },
+  "documentation.feedback": {
+    "message": "问题反馈"
+  },
+  "theme.PwaReloadPopup.info": {
+    "message": "有可用的新版本",
+    "description": "The text for PWA reload popup"
+  },
+  "theme.PwaReloadPopup.refreshButtonText": {
+    "message": "刷新",
+    "description": "The text for PWA reload button"
+  },
+  "theme.PwaReloadPopup.closeButtonAriaLabel": {
+    "message": "关闭",
+    "description": "The ARIA label for close button of PWA reload popup"
   }
 }

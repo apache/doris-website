@@ -132,6 +132,13 @@ const config = {
                         process.env.NODE_ENV === 'development' && !showAllVersions
                             ? ['current']
                             : ['current', ...versions],
+                    editUrl: ({ locale, versionDocsDirPath, docPath }) => {
+                        if (versionDocsDirPath === 'versioned_docs/version-dev') {
+                            return `https://github.com/apache/doris/edit/master/docs/${locale}/docs/${docPath}`;
+                        }
+                    },
+                    showLastUpdateAuthor: false,
+                    showLastUpdateTime: false,
                 },
                 blog: {
                     blogTitle: 'Blog',
@@ -171,7 +178,7 @@ const config = {
                 title: '',
                 logo: {
                     alt: 'Doris',
-                    src: 'https://cdn.selectdb.com/images/logo.svg',
+                    src: 'https://cdn-tencent.selectdb.com/images/logo.svg',
                 },
                 items: [
                     { to: '/', label: 'Home', position: 'left', exact: true },

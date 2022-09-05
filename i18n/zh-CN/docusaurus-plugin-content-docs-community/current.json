@@ -21,6 +21,6 @@
   },
   "sidebar.community.link.Improvement Proposals": {
     "message": "改进建议",
-    "description": "The label for Doris Improvement Proposals in sidebar community"
+    "description": "The label for link Improvement Proposals in sidebar community, linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
   }
 }
