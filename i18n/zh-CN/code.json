@@ -522,6 +522,15 @@
   "users.title": {
     "message": "用户"
   },
+  "sitemap.title": {
+    "message": "学习路径"
+  },
+  "sitemap.subTitle": {
+    "message": ""
+  },
+  "sitemap.page.title": {
+    "message": "Leaning Path"
+  },
   "documentation.feedback": {
     "message": "问题反馈"
   },
@@ -536,5 +545,218 @@
   "theme.PwaReloadPopup.closeButtonAriaLabel": {
     "message": "关闭",
     "description": "The ARIA label for close button of PWA reload popup"
+  },
+  "Introduction to Apache Doris": {
+    "message": "Apache Doris 总体介绍"
+  },
+  "Get Started": {
+    "message": "快速开始"
+  },
+  "Installation and deployment": {
+    "message": "安装部署"
+  },
+  "Compilation": {
+    "message": "源码编译"
+  },
+  "Table Design": {
+    "message": "数据表设计"
+  },
+  "Data Model": {
+    "message": "数据模型"
+  },
+  "Data Partition": {
+    "message": "数据划分"
+  },
+  "Guidelines for Creating Table": {
+    "message": "建表指南"
+  },
+  "Rollup and Query": {
+    "message": "Rollup与查询"
+  },
+  "Practices of Creating Table": {
+    "message": "建表实践"
+  },
+  "Index": {
+    "message": "索引"
+  },
+  "Data Import": {
+    "message": "数据导入"
+  },
+  "Import Overview": {
+    "message": "导入总览"
+  },
+  "Import Local Data": {
+    "message": "导入本地数据"
+  },
+  "Import External Storage Data": {
+    "message": "导入外部存储数据"
+  },
+  "Subscribe Kafka Data": {
+    "message": "订阅 Kafka 日志"
+  },
+  "Synchronize Data Through External Table": {
+    "message": "通过外部表同步数据"
+  },
+  "Data Export": {
+    "message": "数据导出"
+  },
+  "Export Data": {
+    "message": "导出数据"
+  },
+  "Export Query Result": {
+    "message": "导出查询结果集"
+  },
+  "Export Table Structure or Data": {
+    "message": "导出表结构或数据"
+  },
+  "Data Backup": {
+    "message": "数据备份"
+  },
+  "Update and Delete": {
+    "message": "数据更新及删除"
+  },
+  "Update": {
+    "message": "数据更新"
+  },
+  "Delete": {
+    "message": "删除操作"
+  },
+  "Batch Delete": {
+    "message": "批量删除"
+  },
+  "Sequence Column": {
+    "message": "Sequence 列"
+  },
+  "Advanced Usage": {
+    "message": "进阶使用"
+  },
+  "Schema Change": {
+    "message": "表结构变更"
+  },
+  "Dynamic Partition": {
+    "message": "动态分区"
+  },
+  "Data Cache": {
+    "message": "数据缓存"
+  },
+  "Join Optimization": {
+    "message": "Join 优化"
+  },
+  "Materialized view": {
+    "message": "物化视图"
+  },
+  "BITMAP Precise De-duplication": {
+    "message": "BITMAP 精确去重"
+  },
+  "HLL ApproximateDe-duplication": {
+    "message": "HLL 近似去重"
+  },
+  "Variables": {
+    "message": "变量"
+  },
+  "Time Zone": {
+    "message": "时区"
+  },
+  "File Manager": {
+    "message": "文件管理器"
+  },
+  "Ecosystem": {
+    "message": "生态拓展"
+  },
+  "Doris on ES": {
+    "message": "Doris on ES"
+  },
+  "Doris on Hudi": {
+    "message": "Doris on Hudi"
+  },
+  "Doris on Iceberg": {
+    "message": "Doris on Iceberg"
+  },
+  "Doris on Hive": {
+    "message": "Doris on Hive"
+  },
+  "Doris on ODBC": {
+    "message": "Doris on ODBC"
+  },
+  "Spark Doris Connector": {
+    "message": "Spark Doris Connector"
+  },
+  "Flink Doris Connector": {
+    "message": "Flink Doris Connector"
+  },
+  "Seatunnel Connector": {
+    "message": "Seatunnel Connector"
+  },
+  "DataX doriswriter": {
+    "message": "DataX doriswriter"
+  },
+  "UDF": {
+    "message": "UDF"
+  },
+  "Audit log plugin": {
+    "message": "审计日记插件"
+  },
+  "SQL Manual": {
+    "message": "SQL 手册"
+  },
+  "SQL Function": {
+    "message": "SQL 函数"
+  },
+  "DDL": {
+    "message": "DDL"
+  },
+  "DML": {
+    "message": "DML"
+  },
+  "Data Types": {
+    "message": "数据类型"
+  },
+  "Utility": {
+    "message": "辅助命令"
+  },
+  "Cluster Management": {
+    "message": "集群管理"
+  },
+  "Cluster Upgrade": {
+    "message": "集群升级"
+  },
+  "Elastic scaling": {
+    "message": "弹性扩缩容"
+  },
+  "Statistics of query execution": {
+    "message": "查询分析"
+  },
+  "Maintenance and Monitor": {
+    "message": "监控报警"
+  },
+  "Metadata Operation": {
+    "message": "元数据运维"
+  },
+  "Error Code": {
+    "message": "错误码"
+  },
+  "Config": {
+    "message": "配置管理"
+  },
+  "Authority Management": {
+    "message": "权限管理"
+  },
+  "Multi-tenancy": {
+    "message": "多租户与资源管理"
+  },
+  "FAQ": {
+    "message": "常见问题"
+  },
+  "FAQs of Operation and Maintenance": {
+    "message": "运维常见问题"
+  },
+  "FAQs of Data Operation": {
+    "message": "数据操作问题"
+  },
+  "SQL FAQs": {
+    "message": "SQL 问题"
+  },
+  "sitemap.page.subTitle": {
+    "message": "从这里开启您的 Apache Doris 之旅，与 Apache Doris 一起发现无限可能"
   }
 }

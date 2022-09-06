@@ -1,0 +1,104 @@
+.sitemap {
+    .page-column {
+        padding-top: 4rem;
+    }
+}
+
+.sitemap-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+    line-height: 1.6;
+    margin-top: 4rem;
+
+    .sitemap-item {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-bottom: 1.25rem;
+
+        &:first-child .sitemap-icon:after {
+            top: 50%;
+        }
+
+        &:last-child .sitemap-icon:after {
+            bottom: 50%;
+        }
+
+        .sitemap-title {
+            font-size: 1.25rem;
+            width: 14rem;
+        }
+
+        .sitemap-icon {
+            padding: 0 3rem;
+            display: flex;
+            align-items: center;
+
+            img {
+                width: 2.6rem;
+                height: 2.6rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            &:after {
+                content: '';
+                border-left: 1px solid #F0F1FC;
+                position: absolute;
+                left: 18.3rem;
+                top: 0;
+                bottom: 0;
+            }
+        }
+
+        .sitemap-paths {
+            flex: 1;
+            border: 1px solid #E6E8FB;
+            color: #252734;
+            font-size: 1rem;
+            padding: 1.25rem 0.8rem;
+
+            .path-link {
+                display: inline-block;
+                width: 33.333%;
+                padding: 0 0.5rem;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                line-height: 2;
+                color: #484954;
+                text-decoration: none;
+
+                &:hover {
+                    color: #444FD9;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 996px) {
+    .sitemap-list {
+        .sitemap-item {
+            .sitemap-title {
+                width: 7rem;
+                padding-right: 0.4rem;
+                word-break: break-word;
+            }
+
+            .sitemap-icon {
+                display: none;
+            }
+
+            .sitemap-paths {
+                padding: 0.6rem;
+
+                .path-link {
+                    width: 50%;
+                }
+            }
+        }
+    }
+
+}
