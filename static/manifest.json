@@ -4,8 +4,8 @@
     "theme_color": "#FFFFFF",
     "background_color": "#FFFFFF",
     "display": "standalone",
-    "scope": "./",
-    "start_url": "./index.html",
+    "scope": "https://doris.apache.org",
+    "start_url": "https://doris.apache.org",
     "related_applications": [
         {
             "platform": "webapp",
