@@ -40,7 +40,6 @@ function EditMetaRow({ editUrl, lastUpdatedAt, lastUpdatedBy, formattedLastUpdat
 export default function DocItemFooter(props) {
     const { content: DocContent } = props;
     const { metadata } = DocContent;
-    console.log(metadata);
     const { editUrl, lastUpdatedAt, formattedLastUpdatedAt, lastUpdatedBy, tags } = metadata;
     const canDisplayTagsRow = tags.length > 0;
     const canDisplayEditMetaRow = !!(editUrl || lastUpdatedAt || lastUpdatedBy);
