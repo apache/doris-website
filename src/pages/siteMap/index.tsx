@@ -328,7 +328,7 @@ export default function SiteMap(): JSX.Element {
                     align="left"
                     title={
                         <Translate id="sitemap.page.title" description="">
-                            Leaning Path
+                            Learning Path
                         </Translate>
                     }
                     subTitle={
