@@ -531,6 +531,9 @@
   "sitemap.page.title": {
     "message": "Leaning Path"
   },
+  "documentation.feedback": {
+    "message": "问题反馈"
+  },
   "theme.PwaReloadPopup.info": {
     "message": "有可用的新版本",
     "description": "The text for PWA reload popup"
