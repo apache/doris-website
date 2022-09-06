@@ -64,14 +64,18 @@ Parameter Description:
     ```sql
     CREATE SQL_BLOCK_RULE test_rule
     PROPERTIES(
-    "sql"="select \\* from order_analysis;",
+    "sql"="select \\* from order_analysis",
     "global"="false",
     "enable"="true"
     );
     ````
 
+    >Notes:
+    >
+    >That the sql statement here does not end with a semicolon
+    
     When we execute the sql we just defined in the rule, an exception error will be returned. The example is as follows:
-
+    
     ```sql
     select * from order_analysis;
     ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: order_analysis_rule
