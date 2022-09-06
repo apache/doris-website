@@ -224,7 +224,7 @@ const config = {
                             },
                             {
                                 label: 'Docs',
-                                href: '/docs/get-starting',
+                                href: '/sitemap',
                             },
                         ],
                     },

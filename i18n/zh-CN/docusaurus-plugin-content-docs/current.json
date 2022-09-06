@@ -9,7 +9,7 @@
   },
   "sidebar.docs.category.Doris Introduction": {
     "message": "Doris 介绍",
-    "description": "The label for category Doris Architecture in sidebar docs"
+    "description": "The label for category Doris Introduction in sidebar docs"
   },
   "sidebar.docs.category.Install And Deploy": {
     "message": "安装部署",
@@ -270,5 +270,9 @@
   "sidebar.docs.category.Benchmark": {
     "message": "性能测试",
     "description": "The label for category Benchmark in sidebar docs"
+  },
+  "sidebar.docs.category.Release notes": {
+    "message": "Release notes",
+    "description": "The label for category Release notes in sidebar docs"
   }
 }

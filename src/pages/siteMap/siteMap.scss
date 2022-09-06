@@ -1,8 +1,15 @@
+.sitemap {
+    .page-column {
+        padding-top: 4rem;
+    }
+}
+
 .sitemap-list {
     display: flex;
     flex-direction: column;
     padding: 0 1rem;
     line-height: 1.6;
+    margin-top: 4rem;
 
     .sitemap-item {
         display: flex;
@@ -48,18 +55,50 @@
         .sitemap-paths {
             flex: 1;
             border: 1px solid #E6E8FB;
-            color: var(--ifm-color-primary);
+            color: #252734;
             font-size: 1rem;
             padding: 1.25rem 0.8rem;
 
             .path-link {
                 display: inline-block;
-                width: 25%;
+                width: 33.333%;
+                padding: 0 0.5rem;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 line-height: 2;
+                color: #484954;
+                text-decoration: none;
+
+                &:hover {
+                    color: #444FD9;
+                }
             }
         }
     }
+}
+
+@media (max-width: 996px) {
+    .sitemap-list {
+        .sitemap-item {
+            .sitemap-title {
+                width: 7rem;
+                padding-right: 0.4rem;
+                word-break: break-word;
+            }
+
+            .sitemap-icon {
+                display: none;
+            }
+
+            .sitemap-paths {
+                padding: 0.6rem;
+
+                .path-link {
+                    width: 50%;
+                }
+            }
+        }
+    }
+
 }
