@@ -313,7 +313,7 @@ const sitemapList = [
         ],
     },
 ];
-export default function SiteMap(): JSX.Element {
+export default function Learning(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
     return (
         <Layout

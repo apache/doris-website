@@ -21,7 +21,7 @@ function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
             <div className="doc-search">
                 <SearchBar />
             </div>
-            <Link to="/sitemap" className="learning-path">
+            <Link to="/learning" className="learning-path">
                 <Translate id="sitemap.page.title" description="">
                     Learning Path
                 </Translate>
