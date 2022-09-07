@@ -4,7 +4,7 @@
     "theme_color": "#FFFFFF",
     "background_color": "#FFFFFF",
     "display": "standalone",
-    "scope": "https://doris.apache.org",
+    "scope": "/",
     "start_url": "https://doris.apache.org",
     "related_applications": [
         {
