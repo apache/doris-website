@@ -6,6 +6,8 @@ import SearchBar from '@theme/SearchBar';
 import CollapseButton from '@theme/DocSidebar/Desktop/CollapseButton';
 import Content from '@theme/DocSidebar/Desktop/Content';
 import './styles.scss';
+import Link from '@docusaurus/Link';
+import Translate from '@docusaurus/Translate';
 function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
     const {
         navbar: { hideOnScroll },
@@ -19,6 +21,11 @@ function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
             <div className="doc-search">
                 <SearchBar />
             </div>
+            <Link to="/sitemap" className="learning-path">
+                <Translate id="sitemap.page.title" description="">
+                    Learning Path
+                </Translate>
+            </Link>
             <Content path={path} sidebar={sidebar} />
             {hideable && <CollapseButton onClick={onCollapse} />}
         </div>

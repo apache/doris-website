@@ -9,7 +9,7 @@ import PageColumn from '@site/src/components/PageColumn';
 
 const sitemapList = [
     {
-        title: 'Get Started',
+        title: <Translate>Get Started</Translate>,
         icon: require('@site/static/images/sitemap/sitemap-start.png').default,
         list: [
             {

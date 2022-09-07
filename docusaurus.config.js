@@ -183,11 +183,9 @@ const config = {
                 items: [
                     { to: '/', label: 'Home', position: 'left', exact: true },
                     {
-                        type: 'doc',
                         position: 'left',
                         label: 'Docs',
-                        docId: 'summary/basic-summary',
-                        to: '/basic-summary',
+                        to: '/sitemap',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
                     {
