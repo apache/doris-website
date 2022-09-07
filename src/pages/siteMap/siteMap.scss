@@ -1,6 +1,6 @@
 .sitemap {
     .page-column {
-        padding-top: 4rem;
+        padding-top: 3rem;
     }
 }
 
@@ -9,7 +9,7 @@
     flex-direction: column;
     padding: 0 1rem;
     line-height: 1.6;
-    margin-top: 4rem;
+    margin-top: 3rem;
 
     .sitemap-item {
         display: flex;
@@ -26,8 +26,8 @@
         }
 
         .sitemap-title {
-            font-size: 1.25rem;
-            width: 14rem;
+            font-size: 1.2rem;
+            width: 12rem;
         }
 
         .sitemap-icon {
@@ -46,7 +46,7 @@
                 content: '';
                 border-left: 1px solid #F0F1FC;
                 position: absolute;
-                left: 18.3rem;
+                left: 16.3rem;
                 top: 0;
                 bottom: 0;
             }
@@ -57,7 +57,7 @@
             border: 1px solid #E6E8FB;
             color: #252734;
             font-size: 1rem;
-            padding: 1.25rem 0.8rem;
+            padding: 0.8rem 0.8rem;
 
             .path-link {
                 display: inline-block;

@@ -41,6 +41,18 @@
 .sidebar-logo {
   display: none;
 }
+.learning-path {
+  padding: 0.8rem 1rem 0.5rem 2.5rem;
+  margin-bottom: -1.3rem;
+  color: var(--global-colors-text-primary);
+  text-decoration: none;
+  position: relative;
+  background-color: var(--global-colors-background);
+  z-index: 1;
+  &:hover {
+    text-decoration: none;
+  }
+}
 
 .doc-search {
   margin: 0.9375rem 0.9375rem 0;
