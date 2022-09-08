@@ -7,6 +7,8 @@ const showAllVersions = true;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 
+console.log(process.env);
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Apache Doris',
@@ -52,7 +54,7 @@ const config = {
         [
             '@docusaurus/plugin-pwa',
             {
-                debug: false,
+                debug: true,
                 offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString', 'mobile'],
                 injectManifestConfig: {
                     globPatterns: ['**/*.{json,pdf,docx,xlsx,html,css,js,png,svg,ico,jpg,jpeg}'],

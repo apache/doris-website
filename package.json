@@ -6,7 +6,7 @@
         "docusaurus": "docusaurus",
         "start": "docusaurus start",
         "start:zh-CN": "docusaurus start --locale zh-CN",
-        "build": "docusaurus build",
+        "build": "PWA_SERVICE_WORKER_URL=https://doris.apache.org docusaurus build",
         "swizzle": "docusaurus swizzle",
         "deploy": "docusaurus deploy",
         "clear": "docusaurus clear",
