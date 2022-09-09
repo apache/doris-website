@@ -412,7 +412,6 @@
                                 "sql-manual/sql-functions/conditional-functions/coalesce",
                                 "sql-manual/sql-functions/conditional-functions/if",
                                 "sql-manual/sql-functions/conditional-functions/ifnull",
-                                "sql-manual/sql-functions/conditional-functions/nvl",
                                 "sql-manual/sql-functions/conditional-functions/nullif"
                             ]
                         },
