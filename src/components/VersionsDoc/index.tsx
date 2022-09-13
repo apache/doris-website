@@ -12,7 +12,7 @@ export default function VersionsDoc(props): JSX.Element {
         if (versionsPluginData) {
             const versionsData = versionsPluginData.versions;
             if (Array.isArray(versionsData) && versionsData.length > 0) {
-                return versionsData[0].split(',');
+                return versionsData;
             }
         }
         return []
@@ -24,7 +24,6 @@ export default function VersionsDoc(props): JSX.Element {
     }
 
     const buildVersions = getBuildVersions(versionsPluginData)
-
     return (
         <div className={clsx('versions-tag')}>
             {isShowVersionContent(buildVersions) && (
