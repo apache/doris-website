@@ -1,0 +1,23 @@
+
+.versions-tag {
+    position: relative;
+    &:before {
+        content: '';
+        position: absolute;
+        left: -0.7rem;
+        top: 0.5rem;
+        bottom: 0.5rem;
+        border-left: 2px solid var(--ifm-color-primary);
+        opacity: 0.2;
+    }
+    .version-sub {
+        line-height: 1.4;
+        padding: 4px 12px;
+        font-size: 75%;
+        white-space: nowrap;
+        position: relative;
+        left: -1rem;
+        top: -0.2rem;
+        color: var(--ifm-color-primary);
+    }
+}

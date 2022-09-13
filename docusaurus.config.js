@@ -6,6 +6,7 @@ const lightCodeTheme = require('prism-react-renderer/themes/github');
 const showAllVersions = true;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
+const versionsPlugin = require('./config/versions-plugin')
 
 console.log(process.env);
 
@@ -40,6 +41,7 @@ const config = {
     projectName: 'doris', // Usually your repo name.
     plugins: [
         'docusaurus-plugin-sass',
+        versionsPlugin,
         [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
