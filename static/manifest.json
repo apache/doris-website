@@ -5,7 +5,7 @@
     "background_color": "#FFFFFF",
     "display": "standalone",
     "scope": "/",
-    "start_url": "https://doris.apache.org",
+    "start_url": "./index.html",
     "related_applications": [
         {
             "platform": "webapp",
