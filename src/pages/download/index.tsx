@@ -136,7 +136,7 @@ export default function Download(): JSX.Element {
                                 ))}
                             </div>
                         </div>
-                        <div className="download-type">
+                        {/* <div className="download-type">
                             <label>
                                 <Translate id="download.jdk.version" description="JDK Version">
                                     JDK Version
@@ -157,7 +157,7 @@ export default function Download(): JSX.Element {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                         <div className="download-type">
                             <label>
                                 <Translate id="download.download.link" description="Download">
