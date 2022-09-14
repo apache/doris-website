@@ -191,7 +191,7 @@ export default function Download(): JSX.Element {
                         </div>
                         <div className="intr tips">
                             <Translate id="download.quick.download.version.tips">
-                                The apache-doris-1.1.1-bin-x86-noavx2 version is not currently available for download,
+                                The apache-doris-1.1.2-bin-x86-noavx2 version is not currently available for download,
                                 we will update it soon.
                             </Translate>
                         </div>
