@@ -315,7 +315,7 @@
     "message": "Doris 团队"
   },
   "homepage.news": {
-    "message": "2022.7.14，Apache Doris 1.1 版本正式发布",
+    "message": "2022.9.13，Apache Doris 1.1.2 版本正式发布",
     "description": "The label for the link to homepage news"
   },
   "homepage.what": {

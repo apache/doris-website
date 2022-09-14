@@ -151,9 +151,9 @@ export default function Home(): JSX.Element {
                     <div className="news-wrap">
                         <div className="news-item">
                             <span className="news-icon"></span>
-                            <Link to="/blog/1.1%20Release" className="news-content">
+                            <Link to="/blog/release-1.1.2" className="news-content">
                                 <Translate id="homepage.news" description="The label for the link to homepage news">
-                                    2022.7.14, Apache Doris version 1.1 is officially released
+                                    2022.9.13, Apache Doris 1.1.2 is officially released
                                 </Translate>
                             </Link>
                         </div>
