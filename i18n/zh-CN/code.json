@@ -758,5 +758,8 @@
   },
   "sitemap.page.subTitle": {
     "message": "从这里开启您的 Apache Doris 之旅，与 Apache Doris 一起发现无限可能"
+  },
+  "download.quick.download.version.tips": {
+    "message": "apache-doris-1.1.1-bin-x86-noavx2 版本暂不提供下载，我们会在进行更新。"
   }
 }
