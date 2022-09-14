@@ -76,6 +76,10 @@
                     &+.radio {
                         margin-left: -1px;
                     }
+                    & + .disabled{
+                        border-left: none;
+                        margin-left: 0;
+                    }
 
                     .inner {
                         margin: 0.3125rem;
@@ -103,6 +107,18 @@
                 border-width: 1px;
                 padding: 0.125rem 0.3125rem;
                 margin: 0 0.3125rem;
+            }
+
+            &.tips{
+                margin-top: 0.625rem;
+                position: relative;
+                padding-left: 0.625rem;
+                &::after{
+                    content: '*';
+                    position: absolute;
+                    left: 0;
+                    top: 0.1875rem;
+                }
             }
         }
     }

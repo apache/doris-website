@@ -52,6 +52,7 @@ export default function Download(): JSX.Element {
         setVersion(val);
     };
     const changeCPU = (val: string) => {
+        if (version === VersionEnum.Latest && val === CPUEnum.IntelNoAvx2) return;
         setCPU(val);
     };
     const changeJDK = (val: string) => {
@@ -124,6 +125,8 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: cpu === item.value,
+                                            disabled:
+                                                version === VersionEnum.Latest && item.value === CPUEnum.IntelNoAvx2,
                                         })}
                                         key={item.value}
                                         onClick={() => changeCPU(item.value)}
@@ -184,6 +187,12 @@ export default function Download(): JSX.Element {
                             <Translate id="download.quick.download.intr.suffix">
                                 . The avx2 instruction will improve the computational efficiency of data structures such
                                 as bloom filter.
+                            </Translate>
+                        </div>
+                        <div className="intr tips">
+                            <Translate id="download.quick.download.version.tips">
+                                The apache-doris-1.1.1-bin-x86-noavx2 version is not currently available for download,
+                                we will update it soon.
                             </Translate>
                         </div>
                     </div>

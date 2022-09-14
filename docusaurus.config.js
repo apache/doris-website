@@ -3,7 +3,7 @@
 // @ts-ignore
 const versions = require('./versions.json');
 const lightCodeTheme = require('prism-react-renderer/themes/github');
-const showAllVersions = true;
+const showAllVersions = false;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
