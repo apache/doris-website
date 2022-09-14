@@ -20,8 +20,8 @@ import {
 } from '@site/src/constant/download.data';
 
 const BINARY_VERSION = [
-    { label: '1.1.1 ( latest )', value: VersionEnum.Latest },
-    { label: '1.1.0', value: VersionEnum.Prev },
+    { label: '1.1.2 ( latest )', value: VersionEnum.Latest },
+    { label: '1.1.1', value: VersionEnum.Prev },
 ];
 const CPU = [
     { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
@@ -55,7 +55,8 @@ export default function Download(): JSX.Element {
         setCPU(val);
     };
     const changeJDK = (val: string) => {
-        if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
+        // if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
+        if (val !== JDKEnum.JDK8) return;
         setJDK(val);
     };
 
@@ -143,7 +144,8 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: jdk === item.value,
-                                            disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
+                                            // disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
+                                            disabled: item.value !== JDKEnum.JDK8,
                                         })}
                                         key={item.value}
                                         onClick={() => changeJDK(item.value)}
@@ -161,13 +163,15 @@ export default function Download(): JSX.Element {
                             </label>
                             <div className="tabs-radio">
                                 <div className="radio">
-                                    <div className="inner">
-                                        <Link to={current?.links.source}>{current?.label}</Link>
-                                        <span> ( </span>
-                                        <Link to={current?.links.signature}>asc</Link>,{' '}
-                                        <Link to={current?.links.sha512}>sha512</Link>
-                                        <span> )</span>
-                                    </div>
+                                    {current?.items.map(item => (
+                                        <div className="inner" key={item.label}>
+                                            <Link to={item?.links.source}>{item?.label}</Link>
+                                            <span> ( </span>
+                                            <Link to={item?.links.signature}>asc</Link>,{' '}
+                                            <Link to={item?.links.sha512}>sha512</Link>
+                                            <span> )</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

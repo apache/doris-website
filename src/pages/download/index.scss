@@ -56,6 +56,7 @@
                     color: var(--global-colors-text-primary);
                     min-height: 3.125rem;
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
@@ -77,10 +78,14 @@
                     }
 
                     .inner {
-                        margin: 0.3125rem 0.625rem;
+                        margin: 0.3125rem;
                         background-color: #F7FAFF;
-                        width: 100%;
+                        width: calc(100% - 0.625rem);
                         color: var(--ifm-color-primary);
+
+                        & + .inner{
+                            margin-top: 0;
+                        }
                     }
                 }
             }
