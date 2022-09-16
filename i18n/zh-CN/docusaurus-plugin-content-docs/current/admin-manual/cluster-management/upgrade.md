@@ -111,7 +111,7 @@ Doris 可以通过滚动升级的方式，平滑进行升级。建议按照以�
 **非法的回滚操作可能导致数据丢失和损坏。**
 
 ## 升级中涉及到内容的介绍文档
-1. [Doris 元数据设计文档](../../../../docusaurus-plugin-content-docs-community/current/design/metadata-design.md) 
+1. [Doris 元数据设计文档](../../../../docusaurus-plugin-content-docs-community/current/design/metadata-design) 
 2. [元数据运维](../../admin-manual/maint-monitor/metadata-operation.md) 
 3. [数据副本管理](../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
 4. [安装部署文档](../../install/install-deploy.md)

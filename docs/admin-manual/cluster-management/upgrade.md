@@ -97,7 +97,7 @@ Doris can upgrade smoothly by rolling upgrades. The following steps are recommen
 ## Upgrade preparation
 
 1. After data validation, the new version of BE and FE binary files are distributed to their respective directories.
-2. Usually small version upgrade, BE only needs to upgrade doris_be; FE only needs to upgrade doris-fe.jar(which was doris-fe.jar in previous versions). If it is a large version upgrade, you may need to upgrade other files (including but not limited to bin / , lib / etc.) If you are not sure whether you need to replace other files, it is recommended to replace all of them.
+2. Usually small version upgrade, BE only needs to upgrade doris_be; FE only needs to upgrade doris-fe.jar(which was palo-fe.jar in previous versions). If it is a large version upgrade, you may need to upgrade other files (including but not limited to bin / , lib / etc.) If you are not sure whether you need to replace other files, it is recommended to replace all of them.
 
 ## rolling upgrade
 
@@ -113,7 +113,7 @@ Therefore, it is recommended to upgrade some nodes and observe the business oper
 **Illegal rollback operation may cause data loss and damage.** 
 
 ## Documentation
-1. [Doris metadata design document](../../../community/design/metadata-design.md) 
+1. [Doris metadata design document](../../../community/design/metadata-design) 
 2. [Metadata Operations and Maintenance](../../admin-manual/maint-monitor/metadata-operation.md) 
 3. [Data replica management](../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
 4. [Installation Deployment Document](../../install/install-deploy.md)
