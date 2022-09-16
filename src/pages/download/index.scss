@@ -56,6 +56,7 @@
                     color: var(--global-colors-text-primary);
                     min-height: 3.125rem;
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
@@ -75,12 +76,20 @@
                     &+.radio {
                         margin-left: -1px;
                     }
+                    & + .disabled{
+                        border-left: none;
+                        margin-left: 0;
+                    }
 
                     .inner {
-                        margin: 0.3125rem 0.625rem;
+                        margin: 0.3125rem;
                         background-color: #F7FAFF;
-                        width: 100%;
+                        width: calc(100% - 0.625rem);
                         color: var(--ifm-color-primary);
+
+                        & + .inner{
+                            margin-top: 0;
+                        }
                     }
                 }
             }
@@ -98,6 +107,18 @@
                 border-width: 1px;
                 padding: 0.125rem 0.3125rem;
                 margin: 0 0.3125rem;
+            }
+
+            &.tips{
+                margin-top: 0.625rem;
+                position: relative;
+                padding-left: 0.625rem;
+                &::after{
+                    content: '*';
+                    position: absolute;
+                    left: 0;
+                    top: 0.1875rem;
+                }
             }
         }
     }
