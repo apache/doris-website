@@ -76,12 +76,6 @@ under the License.
    ```
    mvn clean install -DskipTests
    ```
-
-   If it's MAC M1, run following command
-
-    ```
-    mvn clean install -DskipTests -Dos.arch=x86_64
-    ```
    
    You can also use IDE embedded GUI tools to run maven command to generate sources
 

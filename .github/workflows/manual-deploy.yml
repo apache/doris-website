@@ -34,6 +34,10 @@ jobs:
         cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-dev/
         cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-dev.json
 
+        cp -R doris/docs/en/community/* community/
+        cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
+        cp -R doris/docs/sidebarsCommunity.json .
+
         cp -R doris/docs/images static/
         npm install -g yarn
         yarn cache clean

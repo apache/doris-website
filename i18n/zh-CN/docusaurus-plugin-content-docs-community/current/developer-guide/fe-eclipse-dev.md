@@ -38,7 +38,7 @@ FE 模块需要部分生成代码，如 Thrift、Protobuf, jflex, cup 等框架�
 
 #### windows下开发获取生成代码步骤
 
-1. 在 Linux 下， 进入 fe 目录下执行以下命令：
+1. 在 Linux 下， 进入 `fe 目录下执行以下命令：
 
    ```
    mvn  generate-sources
