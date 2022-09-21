@@ -1,10 +1,10 @@
 ---
 {
-'title': 'Doris Stream Load原理解析',
-'summary': "Stream Load是Doris用户最常用的数据导入方式之一，它是一种同步的导入方式, 允许用户通过Http访问的方式批量地将数据导入Doris，并返回数据导入的结果。",
+'title': 'Doris Stream Load Principle Analysis',
+'summary': "Stream Load, one of the most commonly used data import methods for Doris users, is a synchronous import method. It allows users to import data into Doris in batch through HTTP access and returns the results of data import.",
 'date': '2022-09-08',
 'author': 'Apache Doris',
-'tags': ['技术解析'],
+'tags': ['Tech Sharing'],
 }
 ---
 
@@ -48,33 +48,33 @@ In the Coordinator BE, all HTTP requests, including Stream Load requests, are pr
 
 The complete execution process of Stream Load is shown in Figure 2:
 
-（1）The user submits the HTTP request of Stream Load to the FE (the user can also directly submit the HTTP request of Stream Load to the Coordinator BE).
+(1)The user submits the HTTP request of Stream Load to the FE (the user can also directly submit the HTTP request of Stream Load to the Coordinator BE).
 
-（2）FE, after receiving the Stream Load request submitted by the user, will perform HTTP Header parsing (including the library, table, Label and other information imported by parsing data), and then perform user authentication. If the HTTP Header is successfully resolved and the user authentication passes, the FE will forward the HTTP request of Stream Load to a BE node, which will be the Coordinator of this Stream Load. Otherwise, the FE will directly return the failure information of Stream Load to the user.
+(2)FE, after receiving the Stream Load request submitted by the user, will perform HTTP Header parsing (including the library, table, Label and other information imported by parsing data), and then perform user authentication. If the HTTP Header is successfully resolved and the user authentication passes, the FE will forward the HTTP request of Stream Load to a BE node, which will be the Coordinator of this Stream Load. Otherwise, the FE will directly return the failure information of Stream Load to the user.
 
-（3）After receiving the HTTP request from Stream Load, the Coordinator BE will first perform HTTP Header parsing and data verification, including the file format of the parsed data, the size of the data body, the HTTP timeout, and user authentication. If the Header data verification fails, the Stream Load failure information will be directly returned to the user.
+(3)After receiving the HTTP request from Stream Load, the Coordinator BE will first perform HTTP Header parsing and data verification, including the file format of the parsed data, the size of the data body, the HTTP timeout, and user authentication. If the Header data verification fails, the Stream Load failure information will be directly returned to the user.
 
-（4）After the HTTP Header data verification is passed, the Coordinator BE will send a Begin Transaction request to the FE through Thrift RPC.
+(4)After the HTTP Header data verification is passed, the Coordinator BE will send a Begin Transaction request to the FE through Thrift RPC.
 
-（5）After the FE receives the Begin Transaction request sent by the Coordinator BE, it will start a transaction and return the Transaction ID to the Coordinator BE.
+(5)After the FE receives the Begin Transaction request sent by the Coordinator BE, it will start a transaction and return the Transaction ID to the Coordinator BE.
 
-（6）After the Coordinator BE receives the Begin Transaction success information, it will send a request to get the import plan to the FE through Thrift RPC.
+(6)After the Coordinator BE receives the Begin Transaction success information, it will send a request to get the import plan to the FE through Thrift RPC.
 
-（7）After receiving the request for obtaining the import plan sent by the Coordinator BE, the FE will generate the import plan for the Stream Load task and return it to the Coordinator BE.
+(7)After receiving the request for obtaining the import plan sent by the Coordinator BE, the FE will generate the import plan for the Stream Load task and return it to the Coordinator BE.
 
-（8）After receiving the import plan, the Coordinator BE starts to execute the import plan, including receiving the real-time data from HTTP and distributing the real-time data to other Executor BE through BRPC.
+(8)After receiving the import plan, the Coordinator BE starts to execute the import plan, including receiving the real-time data from HTTP and distributing the real-time data to other Executor BE through BRPC.
 
-（9）After receiving the real-time data distributed by the Coordinator BE, the Executor BE is responsible for writing the data to the storage layer.
+(9)After receiving the real-time data distributed by the Coordinator BE, the Executor BE is responsible for writing the data to the storage layer.
 
-（10）After the Executor BE completes data writing, the Coordinator BE sends a Commit Transaction request to the FE through Thrift RPC.
+(10)After the Executor BE completes data writing, the Coordinator BE sends a Commit Transaction request to the FE through Thrift RPC.
 
-（11）After receiving the Commit Transaction request sent by the Coordinator BE, the FE will commit transaction, send the Publish Version task to the Executor BE, and wait for the Executor BE to execute the Publish Version.
+(11)After receiving the Commit Transaction request sent by the Coordinator BE, the FE will commit transaction, send the Publish Version task to the Executor BE, and wait for the Executor BE to execute the Publish Version.
 
-（12）The Executor BE asynchronously executes the Publish Version to change the Rowset generated by data import into a visible data version.
+(12)The Executor BE asynchronously executes the Publish Version to change the Rowset generated by data import into a visible data version.
 
-（13）After the Publish Version completes normally or the execution timeout, the FE returns the results of the Commit Transaction and the Publish Version to the Coordinator BE.
+(13)After the Publish Version completes normally or the execution timeout, the FE returns the results of the Commit Transaction and the Publish Version to the Coordinator BE.
 
-（14）The Coordinator BE returns the final result of Stream Load to the user.
+(14)The Coordinator BE returns the final result of Stream Load to the user.
 
 <div align=center>
 <img alt=">Figure 2 The complete execution process of Stream Load" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_2_en.png"/> 
