@@ -48,33 +48,33 @@ Doris的导入（Load）功能就是将用户的原始数据导入到 Doris表�
 
 Stream Load完整执行流程如图2所示：
 
-（1）用户提交Stream Load的Http请求到FE（用户也可以直接提交Stream Load的Http请求到Coordinator BE）。
+(1)用户提交Stream Load的Http请求到FE（用户也可以直接提交Stream Load的Http请求到Coordinator BE）。
 
-（2）FE接收到用户提交的Stream Load请求后，会进行Http的Header解析（其中包括解析数据导入的库、表、Label等信息），然后进行用户鉴权。如果Http的Header解析成功并且用户鉴权通过，FE会将Stream Load的Http请求转发到一台BE节点，该BE节点将作为本次Stream Load的Coordinator；否则，FE会直接向用户返回Stream Load的失败信息。
+(2)FE接收到用户提交的Stream Load请求后，会进行Http的Header解析（其中包括解析数据导入的库、表、Label等信息），然后进行用户鉴权。如果Http的Header解析成功并且用户鉴权通过，FE会将Stream Load的Http请求转发到一台BE节点，该BE节点将作为本次Stream Load的Coordinator；否则，FE会直接向用户返回Stream Load的失败信息。
 
-（3）Coordinator BE接收到Stream Load的Http请求后，会首先进行Http的Header解析和数据校验，其中包括解析数据的文件格式、数据body的大小、Http超时时间、进行用户鉴权等。如果Header数据校验失败，会直接向用户返回Stream Load的失败信息。
+(3)Coordinator BE接收到Stream Load的Http请求后，会首先进行Http的Header解析和数据校验，其中包括解析数据的文件格式、数据body的大小、Http超时时间、进行用户鉴权等。如果Header数据校验失败，会直接向用户返回Stream Load的失败信息。
 
-（4）Http Header数据校验通过之后，Coordinator BE会通过Thrift RPC向FE发送Begin Transaction的请求。
+(4)Http Header数据校验通过之后，Coordinator BE会通过Thrift RPC向FE发送Begin Transaction的请求。
 
-（5）FE收到Coordinator BE发送的Begin Transaction的请求之后，会开启一个事务，并向Coordinator BE返回Transaction Id。
+(5)FE收到Coordinator BE发送的Begin Transaction的请求之后，会开启一个事务，并向Coordinator BE返回Transaction Id。
 
-（6）Coordinator BE收到Begin Transaction成功信息之后，会通过Thrift RPC向 FE发送获取导入计划的请求。
+(6)Coordinator BE收到Begin Transaction成功信息之后，会通过Thrift RPC向 FE发送获取导入计划的请求。
 
-（7）FE收到Coordinator BE发送的获取导入计划的请求之后，会为Stream Load任务生成导入计划，并返回给Coordinator BE。
+(7)FE收到Coordinator BE发送的获取导入计划的请求之后，会为Stream Load任务生成导入计划，并返回给Coordinator BE。
 
-（8）Coordinator BE接收到导入计划之后，开始执行导入计划，其中包括接收Http传来的实时数据以及将实时数据通过BRPC分发到其他Executor BE。
+(8)Coordinator BE接收到导入计划之后，开始执行导入计划，其中包括接收Http传来的实时数据以及将实时数据通过BRPC分发到其他Executor BE。
 
-（9）Executor BE接收到Coordinator BE分发的实时数据之后，负责将数据写入存储层。
+(9)Executor BE接收到Coordinator BE分发的实时数据之后，负责将数据写入存储层。
 
-（10）Executor BE完成数据写入之后，Coordinator BE通过Thrift RPC 向FE发送Commit Transaction的请求。
+(10)Executor BE完成数据写入之后，Coordinator BE通过Thrift RPC 向FE发送Commit Transaction的请求。
 
-（11）FE收到Coordinator BE发送的Commit Transaction的请求之后，会对事务进行提交， 并向Executor BE发送 Publish Version的任务，同时等待Executor BE执行Publish Version完成。
+(11)FE收到Coordinator BE发送的Commit Transaction的请求之后，会对事务进行提交， 并向Executor BE发送 Publish Version的任务，同时等待Executor BE执行Publish Version完成。
 
-（12）Executor BE异步执行Publish Version，将数据导入生成的Rowset变为可见数据版本。
+(12)Executor BE异步执行Publish Version，将数据导入生成的Rowset变为可见数据版本。
 
-（13）Publish Version正常完成或执行超时之后，FE向Coordinator BE返回Commit Transaction和Publish Version的结果。
+(13)Publish Version正常完成或执行超时之后，FE向Coordinator BE返回Commit Transaction和Publish Version的结果。
 
-（14）Coordinator BE向用户返回Stream Load的最终结果。
+(14)Coordinator BE向用户返回Stream Load的最终结果。
 
 <div align=center>
 <img alt=">图 2 Stream Load完整执行流程图" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_2_cn.png"/> 
