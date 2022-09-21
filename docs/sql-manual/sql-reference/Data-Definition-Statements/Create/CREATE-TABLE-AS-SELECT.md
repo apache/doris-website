@@ -54,6 +54,7 @@ illustrate:
 - The user needs to have`SELECT`permission for the source table and`CREATE`permission for the target database
 - After a table is created, data is imported. If the import fails, the table is deleted
 - You can specify the key type. The default key type is `Duplicate Key`
+- The key column and partition bucket column will not be inherited. It is recommended to specify by yourself. If not, create a table based on the default key column and bucket column.
 
 ### Example
 
