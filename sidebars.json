@@ -489,8 +489,7 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-json-array",
-                                "sql-manual/sql-functions/table-functions/outer-combinator",
-                                "sql-manual/sql-functions/table-functions/numbers"
+                                "sql-manual/sql-functions/table-functions/outer-combinator"
                             ]
                         },
                         {
