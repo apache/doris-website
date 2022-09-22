@@ -1,7 +1,7 @@
 ---
 {
-    "title": "utc_timestamp",
-    "language": "en"
+    "title": "hours_sub",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## hours_sub
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME HOURS_SUB(DATETIME date, INT hours)`
 
+从日期时间或日期减去指定小时数
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+参数 date 可以是 DATETIME 或者 DATE 类型，返回类型为 DATETIME。
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select hours_sub("2020-02-02 02:02:02", 1);
++-------------------------------------+
+| hours_sub('2020-02-02 02:02:02', 1) |
++-------------------------------------+
+| 2020-02-02 01:02:02                 |
++-------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    HOURS_SUB

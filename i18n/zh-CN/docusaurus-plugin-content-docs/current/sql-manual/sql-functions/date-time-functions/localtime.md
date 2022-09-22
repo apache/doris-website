@@ -1,11 +1,11 @@
 ---
 {
-    "title": "utc_timestamp",
-    "language": "en"
+    "title": "localtime,localtimestamp",
+    "language": "zh-CN"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,26 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## localtime,localtimestamp
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME localtime()`
+`DATETIME localtimestamp()`
 
+获得当前的时间，以Datetime类型返回
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
-
-### example
+### Example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select localtime();
++---------------------+
+| localtime()         |
++---------------------+
+| 2022-09-22 17:30:23 |
++---------------------+
+
+mysql> select localtimestamp();
++---------------------+
+| localtimestamp()    |
++---------------------+
+| 2022-09-22 17:30:29 |
++---------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    localtime,localtimestamp

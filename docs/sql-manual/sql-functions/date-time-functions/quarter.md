@@ -1,11 +1,11 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "quarter",
     "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,26 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## quarter
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`INT quarter(DATETIME date)`
 
+Returns the quarter to which the specified date belongs, as an INT
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
-
-### example
+### Example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select quarter('2022-09-22 17:00:00');
++--------------------------------+
+| quarter('2022-09-22 17:00:00') |
++--------------------------------+
+|                              3 |
++--------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    quarter

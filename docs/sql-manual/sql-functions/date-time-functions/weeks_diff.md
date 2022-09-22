@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "weeks_diff",
     "language": "en"
 }
 ---
@@ -24,26 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## weeks_diff
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`INT weeks_diff(DATETIME enddate, DATETIME startdate)`
 
-
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+The difference between the start time and the end time is weeks
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select weeks_diff('2020-12-25','2020-10-25');
++----------------------------------------------------------+
+| weeks_diff('2020-12-25 00:00:00', '2020-10-25 00:00:00') |
++----------------------------------------------------------+
+|                                                        8 |
++----------------------------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    weeks_diff

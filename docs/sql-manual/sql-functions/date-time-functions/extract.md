@@ -1,11 +1,11 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "extract",
     "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,26 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## extract
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`INT extract(unit FROM DATETIME)`
 
+Extract DATETIME The value of a specified unit. The unit can be year, day, hour, minute, or second
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
-
-### example
+### Example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select extract(year from '2022-09-22 17:01:30') as year,
+    -> extract(month from '2022-09-22 17:01:30') as month,
+    -> extract(day from '2022-09-22 17:01:30') as day,
+    -> extract(hour from '2022-09-22 17:01:30') as hour,
+    -> extract(minute from '2022-09-22 17:01:30') as minute,
+    -> extract(second from '2022-09-22 17:01:30') as second;
++------+-------+------+------+--------+--------+
+| year | month | day  | hour | minute | second |
++------+-------+------+------+--------+--------+
+| 2022 |     9 |   22 |   17 |      1 |     30 |
++------+-------+------+------+--------+--------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    extract

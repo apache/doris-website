@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "seconds_add",
     "language": "en"
 }
 ---
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## seconds_add
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME SECONDS_ADD(DATETIME date, INT seconds)`
 
+ADD a specified number of seconds from a datetime or date
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select seconds_add("2020-02-02 02:02:02", 1);
++---------------------------------------+
+| seconds_add('2020-02-02 02:02:02', 1) |
++---------------------------------------+
+| 2020-02-02 02:02:03                   |
++---------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    SECONDS_ADD
