@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "years_diff",
     "language": "en"
 }
 ---
@@ -24,26 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## years_diff
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`INT years_diff(DATETIME enddate, DATETIME startdate)`
 
-
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+The difference between the start time and the end time is several years
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select years_diff('2020-12-25','2019-10-25');
++----------------------------------------------------------+
+| years_diff('2020-12-25 00:00:00', '2019-10-25 00:00:00') |
++----------------------------------------------------------+
+|                                                        1 |
++----------------------------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    years_diff

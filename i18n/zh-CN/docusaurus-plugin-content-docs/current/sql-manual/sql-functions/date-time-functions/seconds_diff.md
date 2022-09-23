@@ -1,7 +1,7 @@
 ---
 {
-    "title": "utc_timestamp",
-    "language": "en"
+    "title": "seconds_diff",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,26 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## seconds_diff
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`INT seconds_diff(DATETIME enddate, DATETIME startdate)`
 
-
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+开始时间到结束时间相差几秒
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select seconds_diff('2020-12-25 22:00:00','2020-12-25 21:00:00');
++------------------------------------------------------------+
+| seconds_diff('2020-12-25 22:00:00', '2020-12-25 21:00:00') |
++------------------------------------------------------------+
+|                                                       3600 |
++------------------------------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    seconds_diff

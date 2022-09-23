@@ -1,7 +1,7 @@
 ---
 {
-    "title": "utc_timestamp",
-    "language": "en"
+    "title": "years_add",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## years_add
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME YEARS_ADD(DATETIME date, INT years)`
 
+从日期加上指定年数
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select years_add("2020-01-31 02:02:02", 1);
++-------------------------------------+
+| years_add('2020-01-31 02:02:02', 1) |
++-------------------------------------+
+| 2021-01-31 02:02:02                 |
++-------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    YEARS_ADD

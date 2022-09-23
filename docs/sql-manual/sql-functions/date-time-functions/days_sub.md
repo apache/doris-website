@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "days_sub",
     "language": "en"
 }
 ---
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## days_sub
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME DAYS_SUB(DATETIME date, INT days)`
 
+Subtract a specified number of days from a datetime or date
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select days_sub("2020-02-02 02:02:02", 1);
++------------------------------------+
+| days_sub('2020-02-02 02:02:02', 1) |
++------------------------------------+
+| 2020-02-01 02:02:02                |
++------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    DAYS_SUB

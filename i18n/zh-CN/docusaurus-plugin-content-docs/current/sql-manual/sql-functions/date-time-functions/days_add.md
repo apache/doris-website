@@ -1,7 +1,7 @@
 ---
 {
-    "title": "utc_timestamp",
-    "language": "en"
+    "title": "days_add",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## days_add
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME DAYS_ADD(DATETIME date, INT days)`
 
+从日期时间或日期加上指定天数
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+参数 date 可以是 DATETIME 或者 DATE 类型，返回类型与参数 date 的类型一致。
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select days_add(to_date("2020-02-02 02:02:02"), 1);
++---------------------------------------------+
+| days_add(to_date('2020-02-02 02:02:02'), 1) |
++---------------------------------------------+
+| 2020-02-03                                  |
++---------------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    DAYS_ADD

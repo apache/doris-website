@@ -1,11 +1,11 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "year_floor",
     "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,26 +24,25 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## year_floor
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME year_floor(DATETIME date)`
 
+Rounding down the specified time, reserving the field level to years, returns the DATETIME type
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
-
-### example
+### Example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select year_floor('2022-09-22 17:00:00');
++-----------------------------------+
+| year_floor('2022-09-22 17:00:00') |
++-----------------------------------+
+| 2022-01-01 00:00:00               |
++-----------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    year_floor

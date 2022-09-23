@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "seconds_sub",
     "language": "en"
 }
 ---
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## seconds_sub
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME SECONDS_SUB(DATETIME date, INT seconds)`
 
+Subtracts a specified number of seconds from a datetime or date
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+The parameter date can be DATETIME or DATE, and the return type is DATETIME.
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select seconds_sub("2020-01-01 00:00:00", 1);
++---------------------------------------+
+| seconds_sub('2020-01-01 00:00:00', 1) |
++---------------------------------------+
+| 2019-12-31 23:59:59                   |
++---------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    SECONDS_SUB

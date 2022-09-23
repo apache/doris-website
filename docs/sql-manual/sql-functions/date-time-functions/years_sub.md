@@ -1,6 +1,6 @@
 ---
 {
-    "title": "utc_timestamp",
+    "title": "years_sub",
     "language": "en"
 }
 ---
@@ -24,26 +24,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## utc_timestamp
-### Description
+## years_sub
+### description
 #### Syntax
 
-`DATETIME UTC_TIMESTAMP()`
+`DATETIME YEARS_SUB(DATETIME date, INT years)`
 
+Subtracts a specified number of years from a datetime or date
 
-Returns a value of the current UTC date and time in the format of  "YYYY-MM-DD HH: MM: SS" or "YYYYMMDDHMMSS".
-
-Depending on whether the function is used in a string or numeric context
+The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
 
 ### example
 
 ```
-mysql> select utc_timestamp(),utc_timestamp() + 1;
-+---------------------+---------------------+
-| utc_timestamp()     | utc_timestamp() + 1 |
-+---------------------+---------------------+
-| 2019-07-10 12:31:18 |      20190710123119 |
-+---------------------+---------------------+
+mysql> select years_sub("2020-02-02 02:02:02", 1);
++-------------------------------------+
+| years_sub('2020-02-02 02:02:02', 1) |
++-------------------------------------+
+| 2019-02-02 02:02:02                 |
++-------------------------------------+
 ```
+
 ### keywords
-UTC_TIMESTAMP,UTC,TIMESTAMP
+
+    YEARS_SUB
