@@ -1,6 +1,6 @@
 ---
 {
-    "title": "money_format",
+    "title": "parse_url",
     "language": "zh-CN"
 }
 ---
@@ -24,38 +24,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## money_format
+## parse_url
 ### description
 #### Syntax
 
-`VARCHAR money_format(Number)`
+`VARCHAR  parse_url(VARCHAR url, VARCHAR  name)`
 
 
-将数字按照货币格式输出，整数部分每隔3位用逗号分隔，小数部分保留2位
-
-### example
+在url解析出name对应的字段，name可选项为：'PROTOCOL', 'HOST', 'PATH', 'REF', 'AUTHORITY', 'FILE', 'USERINFO', 'PORT', 'QUERY'，将结果返回。
 
 ```
-mysql> select money_format(17014116);
-+------------------------+
-| money_format(17014116) |
-+------------------------+
-| 17,014,116.00          |
-+------------------------+
-
-mysql> select money_format(1123.456);
-+------------------------+
-| money_format(1123.456) |
-+------------------------+
-| 1,123.46               |
-+------------------------+
-
-mysql> select money_format(1123.4);
-+----------------------+
-| money_format(1123.4) |
-+----------------------+
-| 1,123.40             |
-+----------------------+
+mysql> SELECT parse_url ('https://doris.apache.org/', 'HOST');
++------------------------------------------------+
+| parse_url('https://doris.apache.org/', 'HOST') |
++------------------------------------------------+
+| doris.apache.org                               |
++------------------------------------------------+
 ```
+
 ### keywords
-    MONEY_FORMAT,MONEY,FORMAT
+    PARSE URL

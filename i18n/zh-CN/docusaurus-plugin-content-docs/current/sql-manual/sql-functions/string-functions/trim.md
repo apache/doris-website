@@ -1,6 +1,6 @@
 ---
 {
-    "title": "money_format",
+    "title": "trim",
     "language": "zh-CN"
 }
 ---
@@ -24,38 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## money_format
+## trim
 ### description
 #### Syntax
 
-`VARCHAR money_format(Number)`
+`VARCHAR ltrim(VARCHAR str)`
 
 
-将数字按照货币格式输出，整数部分每隔3位用逗号分隔，小数部分保留2位
+将参数 str 中右侧和左侧开始部分连续出现的空格去掉
 
 ### example
 
 ```
-mysql> select money_format(17014116);
-+------------------------+
-| money_format(17014116) |
-+------------------------+
-| 17,014,116.00          |
-+------------------------+
-
-mysql> select money_format(1123.456);
-+------------------------+
-| money_format(1123.456) |
-+------------------------+
-| 1,123.46               |
-+------------------------+
-
-mysql> select money_format(1123.4);
-+----------------------+
-| money_format(1123.4) |
-+----------------------+
-| 1,123.40             |
-+----------------------+
+mysql> SELECT trim('   ab d   ') str;
++------+
+| str  |
++------+
+| ab d |
++------+
 ```
 ### keywords
-    MONEY_FORMAT,MONEY,FORMAT
+    TRIM
