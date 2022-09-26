@@ -7,7 +7,6 @@
     'tags': ['Best Practice'],
 }
 ---
-
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -27,10 +26,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 # Background
 
-In order to improve the query performance of the Xiaomi growth analysis platform and reduce the operation and maintenance costs, Xiaomi Group introduced Apache Doris in September 2019. In the past two and a half years, **Apache Doris has been widely used in Xiaomi Group,** **such as business growth analytic platform, realtime dashboards for all business groups,  finance analysis, user profile analysis, advertising reports, A/B testing platform and so on.** This article will share the best practice of Apache Doris in Xiaomi Group. 
+In order to improve the query performance of the Xiaomi growth analysis platform and reduce the operation and maintenance costs, Xiaomi Group introduced Apache Doris in September 2019. In the past two and a half years, **Apache Doris has been widely used in Xiaomi Group,** **such as business growth analytic platform, realtime dashboards for all business groups,  finance analysis, user profile analysis, advertising reports, A/B testing platform and so on.** This article will share the best practice of Apache Doris in Xiaomi Group.
 
 # Business Practice
 
@@ -59,19 +57,14 @@ Xiaomi has many high-frequency, high-concurrency, near-real-time import business
 **In response to this problem of Compaction, we first start from the business side and guide users through the following aspects:**
 
 - Set reasonable partitions and buckets for tables to avoid generating too many data fragments.
-
 - Standardize the user's data import operation, reduce the frequency of data import, increase the amount of data imported in a single time, and reduce the pressure of Compaction.
-
 - Avoid using delete operations too much.The delete operation will generate a delete version under the relevant data shard in the storage layer.The Cumulative Compaction task will be truncated when the delete version is encountered. This task can only merge the data version after the Cumulative Point and before the delete version, move the Cumulative Point to the delete version, and hand over the delete version to the subsequent Base Compaction task. to process. If you use the delete operation too much, too many delete versions will be generated under the Tablet, which will cause the Cumulative Compaction task to slow down the progress of version merging. Using the delete operation does not actually delete the data from the disk, but records the deletion conditions in the delete version. When the data is queried, the deleted data will be filtered out by Merge-On-Read. Only the delete version is merged by the Base Compaction task. After that, the data to be deleted by the delete operation can be cleared from the disk as expired data with the Stale Rowset. If you need to delete the data of an entire partition, you can use the truncated partition operation instead of the delete operation.
 
 **Second, we tuned Compaction from the operation and maintenance side:**
 
 - According to different business scenarios, different Compaction parameters (Compaction strategy, number of threads, etc.) are configured for different clusters.
-
 - Appropriately lowers the priority of the Base Compaction task and increases the priority of the Cumulative Compaction task, because the Base Compaction task takes a long time to execute and has serious write amplification problems, while the Cumulative Compaction task executes faster and can quickly merge a large number of small versions.
-
 - Version backlog alarm, dynamic adjustment of Compaction parameters.When the Compaction Producer produces Compaction tasks, it will update the corresponding metric.It records the value of the largest Compaction Score on the BE node. You can check the trend of this indicator through Grafana to determine whether there is a version backlog. In addition, we have added a Version backlog alert.In order to facilitate the adjustment of Compaction parameters, we have optimized the code level to support dynamic adjustment of the Compaction strategy and the number of Compaction threads at runtime, avoiding the need to restart the process when adjusting the Compaction parameters.
-
 - Supports manual triggering of the Compaction task of the specified Table and data shards under the specified Partition, and improves the Compaction priority of the specified Table and data shards under the specified Partition.
 
 # Monitoring and Alarm Management
@@ -80,17 +73,39 @@ Xiaomi has many high-frequency, high-concurrency, near-real-time import business
 
 Prometheus will regularly pull Metrics metrics from Doris's FE and BE and display them in the Grafana monitoring panel.The service metadata based on QingZhou Warehouse will be automatically registered in Zookeeper, and Prometheus will regularly pull the latest cluster metadata information from Zookeeper and display it dynamically in the Grafana monitoring panel.（Qingzhou Data Warehouse is a data warehouse constructed by the Qingzhou platform based on the operation data of Xiaomi's full-scale big data service. It consists of 2 base tables and 30+ dimension tables.Covers the whole process data such as resources, server cmdb, cost, process status and so on when big data components are running）We have also added statistics and display boards for common troubleshooting data such as Doris large query list, real-time write data volume, data import transaction numbers, etc. in Grafana.In Grafana, we also added statistics and display boards for common troubleshooting data such as the Doris big query list, the amount of real-time data written, and the number of data import transactions, so that alarms can be linked. When the cluster is abnormal, Doris' operation and maintenance students can locate the cause of the cluster failure in the shortest time.
 
-## 02  Falcon 
+**Xiaomi's optmization practice for Apache Doris**
+
+While applying Apache Doris to solve business problems, we also discovered some optimization items in Apache Doris. Therefore, after communicating with the community, we began to deeply participate in community development. While solving our own problems, we also timely fed back the important features developed to Apache Doris. Community, including Stream Load two-phase commit (2PC), single-copy data import, Compaction memory limit, etc.
+
+### ************Stream Load Two-phase commit (2PC)************
+
+**Problems encountered are as follows :**
+
+During the process , some abnormal conditions may cause the following problems:
+
+Repeated import of Flink data : Flink handles fault tolerance and implements EOS through the periodic checkpoint mechanism, and implements end-to-end EOS including external storage through primary key or two-phase commit. Before Doris-Flink-Connector 1.1, UNIQUE KEY tables implemented EOS through unique keys, and non-UNIQUE KEY tables did not support EOS
+
+Partial import of Spark SQL data  **:** The process of finding data from Hive tables through SparkSQL and writing them to Doris tables requires the use of the Spark Doris Connector component, which writes the data queried in Hive into Doris through multiple Stream Load tasks. When an exception occurs, some data will be imported successfully and some data will fail.
+
+**Stream Load two-phase commit design**
+
+The above two problems can be solved by importing and supporting two-stage submission. After the first stage is completed, ensure that the data is not lost and the data is invisible. This can ensure that the submission will be successful when the second stage is initiated, and it can also ensure that when the second stage is initiated to cancel must be successful.
+
+**Write transactions in Doris are divided into three steps:**
+
+1. Start a transaction on FE with a status of Prepare;
+2. data is written to BE;
+3. When most replicas are successfully written, the transaction is committed, the status becomes Committed, and the FE issues the Publish Version task to the BE to make the data visible immediately.
+
+## 02  Falcon
 
 Falcon is a monitoring and alarm system widely used inside Xiaomi.Because Doris provides a relatively complete metrics interface, which can easily provide monitoring functions based on Prometheus and Grafana, we only use Falcon's alarm function in the Doris service.For different levels of faults in Doris, we define alarms as three levels of P0, P1 and P2:
 
 - P2 alarm (alarm level is low): single node failure alarm.When a single node indicator or process status is abnormal, an alarm is generally issued as a P2 level.The alarm information is sent to the members of the alarm group in the form of Xiaomi Office messages.(Xiaomi Office is a privatized deployment product of ByteDance Feishu in Xiaomi, and its functions are similar to Feishu.)
-
 - P1 alarm (alarm level is higher):In a short period of time (within 3 minutes), the cluster will issue a P1 level alarm if there are short-term exceptions such as increased query delay and abnormal writing,etc.The alarm information is sent to the members of the alarm group in the form of Xiaomi Office messages.P1 level alarms require Oncall engineers to respond and provide feedback.
-
 - P0 alarm (alarm level is high):In a long period of time (more than 3 minutes), the cluster will issue a P0 level alarm if there are exceptions such as increased query delay and abnormal writing,etc.Alarm information is sent in the form of Xiaomi office messages and phone alarms.P0 level alarm requires Oncall engineers to respond within 1 minute and coordinate resources for failure recovery and review preparation.
 
-## 03  Cloud-Doris 
+## 03  Cloud-Doris
 
 cloud-Doris is a data collection component developed by Xiaomi for the internal Doris service. Its main capability is to detect the availability of the Doris service and collect the cluster indicator data of internal concern.For example, Cloud-Doris can periodically simulate users reading and writing to the Doris system to detect the availability of services.If the cluster has abnormal availability, it will be alerted through Falcon.Collect user's read and write data, and then generate user bill.Collect information such as table-level data volume, unhealthy copies, and oversized Tablets, and send alarms to abnormal information through Falcon.
 
