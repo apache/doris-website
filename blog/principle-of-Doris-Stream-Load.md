@@ -41,10 +41,8 @@ The user submits the HTTP request of Stream Load to the FE, and the FE will forw
 
 In the Coordinator BE, all HTTP requests, including Stream Load requests, are processed through a thread pool. A Stream Load task is uniquely identified by the imported Label. The principle block diagram of Stream Load is shown in Figure 1.
 
-<div align=center>
-<img alt=">Figure 1 The principle block diagram of Stream Load" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_1_en.png"/> 
-</div>
-<p align="center">Figure 1 The principle block diagram of Stream Load</p>              
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_1_en.png)
+           
 
 The complete execution process of Stream Load is shown in Figure 2:
 
@@ -76,19 +74,12 @@ The complete execution process of Stream Load is shown in Figure 2:
 
 (14)The Coordinator BE returns the final result of Stream Load to the user.
 
-<div align=center>
-<img alt=">Figure 2 The complete execution process of Stream Load" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_2_en.png"/> 
-</div>
-<p align="center">Figure 2 The complete execution process of Stream Load</p>  
-
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_2_en.png)
 # 2 Transaction Management
 
 Doris ensures the atomicity of data import through Transaction. One Stream Load task corresponds to one transaction. The FE is responsible for the transaction management of Stream Load. The FE receives the Thrift RPC transaction request sent by the Coordinator BE node through the FrontendService. Transaction request types include Begin Transaction, Commit Transaction and Rollback Transaction. The transaction states of Doris include PREPARE, COMMITTED, VISIBLE, and ABORTED. The status flow process of the Stream Load transaction is shown in Figure 3.
 
-<div align=center>
-<img alt=">Figure 3 The status flow process of the Stream Load transaction" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_3_en.png"/> 
-</div>
-<p align="center">Figure 3 The status flow process of the Stream Load transaction</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_3_en.png)
 
 The Coordinator BE node will send a Begin Transaction request to the FE before data import. The FE will check whether the label requested by the Begin Transaction already exists. If the label does not exist in the system, it will open a new transaction for the current label, assign a Transaction ID to the transaction, and set the transaction status to PREPARE, then returns the Transaction ID and the success information of the Begin Transaction to the Coordinator BE. Otherwise, this transaction may be a repeated data import. The FE returns the Begin Transaction failure message to the Coordinator BE, and the Stream Load task exits.
 
@@ -105,40 +96,25 @@ After importing the execution plan and submitting it to the thread pool of Fragm
 
 The PlanFragmentExecutor executes a specific import plan process, which consists of three stages: Prepare, Open, and Close. In the Prepare stage, the import execution plan from the FE is mainly analyzed; In the Open stage, BrokerScanNode and OlapTableSink will be opened. BrokerScanNode is responsible for reading the real-time data of one Batch at a time, and OlapTableSink is responsible for calling BRPC to send the data of each Batch to other Executor BE nodes; In the Close stage, it is responsible for waiting for the data import to end and closing the BrokerScanNode and OlapTableSink. The import execution plan of Stream Load is shown in Figure 4.
 
-<div align=center>
-<img alt=">Figure 4 The import execution plan of Stream Load" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_4_en.png"/> 
-</div>
-<p align="center">Figure 4 The import execution plan of Stream Load</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_4_en.png)
 
 OlapTableSink is responsible for the data distribution of the Stream Load task. Tables in Doris may have Rollup or Materialized view. Each Table and its Rollup and Materialized view are called an Index. In the process of data distribution, the IndexChannel will maintain a data distribution channel of the Index. The Tablet under the Index may have multiple replicas and are distributed on different BE nodes. The NodeChannel will maintain the data distribution channel of an Executor BE node under the IndexChannel. Therefore, the OlapTableSink contains multiple IndexChannel, and each NodeChannel contains multiple NodeChannel, as shown in Figure 5.
 
-<div align=center>
-<img alt=">Figure 5 The Data distribution channel for Stream Load task" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_5_en.png"/> 
-</div>
-<p align="center">Figure 5 The Data distribution channel for Stream Load task</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_5_en.png)
 
 When OlapTableSink distributes data, it will read the data Batch obtained by BrokerScanNode row by row, and add the data row to the IndexChannel of each Index. The Partition and Tablet of the data row can be determined according to the PartitionKey and DistributionKey, and then the corresponding Tablet of the data row in other Index can be calculated according to the order of the Tablet in the Partition. Each Tablet may have multiple replicas distributed on different BE nodes. Therefore, in the IndexChannel, each data row will be added to the NodeChannel corresponding to each replica of its Tablet. Each NodeChannel has a send queue. When the new data rows in NodeChannel accumulate to a certain size, they will be added to the send queue as a data Batch. There will be a fixed thread in OlapTableSink to train each NodeChannel under each IndexChannel in turn, and call BRPC to send a data Batch in the sending queue to the corresponding Executor BE. The data distribution process of the Stream Load task is shown in Figure 6.
 
-<div align=center>
-<img alt=">Figure 6 The data distribution process of the Stream Load task" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_6_en.png"/> 
-</div>
-<p align="center">Figure 6 The data distribution process of the Stream Load task</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_6_en.png)
 
 # 4 **Data Write**
 
 After receiving the data Batch sent by the Coordinator BE, the BRPC server of the Executor BE will submit the data writing task to the thread pool for asynchronous execution. In Doris BE, data is written to the storage layer in a hierarchical manner. Each Stream Load task corresponds to a LoadChannel on each Executor BE. The LoadChannel maintains the data writing channel of a Stream Load task and is responsible for the data writing of a Stream Load task on the current Executor BE node, LoadChannel can write the data of a Stream Load task in the current BE node to the storage layer in batches until the Stream Load task is completed. Each LoadChannel is uniquely identified by the load ID, and all LoadChannel on the BE node are managed by LoadChannelMgr. The Table corresponding to a Stream Load task may have multiple Index. Each Index corresponds to a TabletsChannel, which is uniquely identified by the Index ID. Therefore, there will be multiple TabletsChannel under each LoadChannel. The TabletsChannel maintains an Index data writing channel, which is responsible for managing the data writing of all the Tablet under the Index. The TabletsChannel will read the data Batch row by row and write it to the corresponding Tablet through the DeltaWriter. The DeltaWriter maintains a data writing channel of a Tablet, which is uniquely identified by the Tablet ID. it is responsible for receiving the data import of a single Tablet and writing the data into the MemTable corresponding to the tablet. When the MemTable is full, the data in the MemTable will be flushed to the disk and Segment files will be generated. MemTable adopts the data structure of SkipList to temporarily store the data in memory. SkipList will sort the data rows according to the Key of Schema. In addition, if the data model is Aggregate or Unique, MemTable will aggregate data rows with the same Key. The data write channel of the Stream Load task is shown in Figure 7.
 
-<div align=center>
-<img alt=">Figure 7 The data write channel of the Stream Load task" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_7_en.png"/> 
-</div>
-<p align="center">Figure 7 The data write channel of the Stream Load task</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_7_en.png)
 
 The Flush operation of MemTable is performed asynchronously by MemtableFlushExecutor. After the MemTable Flush task is submitted to the thread pool, a new MemTable will be generated to receive the subsequent data writing of the current Tablet. When the MemtableFlushExecutor performs data Flush, the RowsetWriter will read out all the data in the MemTable and write out multiple Segment files through the SegmentWriter. The size of each Segment file is no more than 256MB. For a Tablet, each Stream Load task will generate a newRowset. The generated Rowset can contain multiple Segment files. The data writing process of the Stream Load task is shown in Figure 8.
 
-<div align=center>
-<img alt=">Figure 8 The data writing process of the Stream Load task" width="80%" src="../static/images/blogs/principle-of-Doris-Stream-Load/Figure_8_en.png"/> 
-</div>
-<p align="center">Figure 8 The data writing process of the Stream Load task</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_8_en.png)
 
 The TxnManager on the Executor BE node is responsible for transaction management of Tablet level data import. When the Delta Writer is initialized, the PrepareTransaction will be executed to add the data write transaction of the corresponding Tablet in the current Stream Load task to the TxnManager for management. When the data write Tablet is completed and the DeltaWriter is closed, the Commit Transaction will be executed to add the new Rowset generated by the data import to the TxnManager for management. Note that the TxnManager here is only responsible for the transactions on a single BE, while the transaction management in the FE is responsible for the overall import of transactions.
 

@@ -41,10 +41,7 @@ Doris的导入（Load）功能就是将用户的原始数据导入到 Doris表�
 
 在Coordinator BE中，通过一个线程池来处理所有的Http请求，其中包括Stream Load请求。一次Stream Load任务通过导入的Label唯一标识。Stream Load的原理框图如图1所示。
 
-<div align=center>
-<img alt=">图 1 Stream Load的原理框图" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_1_cn.png"/> 
-</div>
-<p align="center">图 1 Stream Load的原理框图</p>              
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_1_en.png)
 
 Stream Load完整执行流程如图2所示：
 
@@ -76,19 +73,13 @@ Stream Load完整执行流程如图2所示：
 
 (14)Coordinator BE向用户返回Stream Load的最终结果。
 
-<div align=center>
-<img alt=">图 2 Stream Load完整执行流程图" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_2_cn.png"/> 
-</div>
-<p align="center">图 2 Stream Load完整执行流程图</p>  
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_2_en.png)
 
 # 2 事务管理
 
 Doris通过事务（Transaction）来保证数据导入的原子性，一次Stream Load任务对应一个事务。Stream Load的事务管理由FE负责，FE通过FrontendService接收Coordinator BE节点发送来的Thrift RPC事务请求，事务请求类型包括Begin Transaction、Commit Transaction和Rollback Transaction。Doris的事务状态包括：PREPARE、COMMITTED、VISIBLE和ABORTED。Stream Load事务的状态流转过程如图3所示。
 
-<div align=center>
-<img alt=">图 3 Stream Load事务的状态流转图" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_3_cn.png"/> 
-</div>
-<p align="center">图 3 Stream Load事务的状态流转图</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_3_en.png)
 
 数据导入开始之前，Coordinator BE节点会向FE发送Begin Transaction请求，FE会检查本次Begin Transaction请求的label是否已经存在，如果label在系统中不存在，则会为当前label开启一个新的事务，并为事务分配Transaction Id，同时将事务状态设置为PREPARE，然后将Transaction Id以及Begin Transaction成功的信息返回给Coordinator BE；否则，本次事务可能是一次重复的数据导入，FE向Coordinator BE返回Begin Transaction失败的信息，Stream Load任务退出。
 
@@ -105,40 +96,25 @@ FE会有一个单独的线程对Commit成功的Transaction执行Publish Version�
 
 PlanFragmentExecutor执行一个具体的导入计划过程由Prepare、Open和Close三个阶段组成。在Prepare阶段，主要对来自FE的导入执行计划进行解析；在Open阶段，会打开BrokerScanNode和OlapTableSink，BrokerScanNode负责每次读取一个Batch的实时数据，OlapTableSink负责调用BRPC将每一个Batch的数据发送到其他Executor BE节点；在Close阶段，负责等待数据导入结束，并关闭BrokerScanNode和OlapTableSink。Stream Load的导入执行计划如图4所示。
 
-<div align=center>
-<img alt=">图 4 Stream Load的导入执行计划" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_4_cn.png"/> 
-</div>
-<p align="center">图 4 Stream Load的导入执行计划</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_4_en.png)
 
 OlapTableSink负责Stream Load任务的数据分发。Doris中的Table可能会有Rollup或物化视图，每一个Table及其Rollup、物化视图都称为一个Index。数据分发过程中，IndexChannel会维护一个Index的数据分发通道，Index下的Tablet可能会有多个副本（Replica），并分布在不同的BE节点上，NodeChannel会在IndexChannel下维护一个Executor BE节点的数据分发通道，因此，OlapTableSink下包含多个IndexChannel，每一个IndexChannel下包含多个NodeChannel，如图5所示。
 
-<div align=center>
-<img alt=">图 5 Stream Load任务的数据分发通道" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_5_cn.png"/> 
-</div>
-<p align="center">图 5 Stream Load任务的数据分发通道</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_5_en.png)
 
 OlapTableSink分发数据时，会逐行读取BrokerScanNode获取到的数据Batch，并将数据行添加到每一个Index的IndexChannel中。可以根据 PartitionKey和DistributionKey确定数据行所在的Partition和Tablet，进而根据Tablet在Partition中的顺序计算出数据行在其他Index中对应的Tablet。每一个Tablet可能会有多个副本，并分布在不同的BE节点上，因此，在IndexChannel中会将每一个数据行添加到其所在Tablet的每一个副本对应的NodeChannel中。每一个NodeChannel中都会有一个发送队列，当NodeChannel中新增的数据行累积到一定的大小就会作为一个数据Batch被添加到发送队列中。OlapTableSink中会有一个固定的线程依次轮训每一个IndexChannel下的每一个NodeChannel，并调用BRPC将发送队列中的一个数据Batch发送到对应的Executor BE上。Stream Load任务的数据分发过程如图6所示。
 
-<div align=center>
-<img alt=">图 6 Stream Load任务的数据分发过程" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_6_cn.png"/> 
-</div>
-<p align="center">图 6 Stream Load任务的数据分发过程</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_6_en.png)
 
 # 4 **数据写入**
 
 Executor BE的BRPC server接收到Coordinator BE发送来的数据Batch之后，会将数据写入任务提交到线程池来异步执行。在Doris的BE中，数据采用分层的方式写入存储层，每一个Stream Load任务在每个Executor BE上都对应一个LoadChannel，LoadChannel维护一次Stream Load任务的数据写入通道，负责一次Stream Load任务在当前Executor BE节点的数据写入，LoadChannel可以将一次Stream Load任务在当前BE节点的数据分批写入存储层，直到Stream Load任务完成。每一个LoadChannel由Load Id唯一标识，BE节点上的所有LoadChannel由LoadChannelMgr进行管理。一次Stream Load任务对应的Table可能会有多个Index，每一个Index对应一个TabletsChannel，由Index Id唯一标识，因此，每一个LoadChannel下会有多个TabletsChannel。TabletsChannel维护一个Index的数据写入通道，负责管理Index下所有Tablet的数据写入，TabletsChannel会逐行读取数据Batch并通过DeltaWriter写入对应的Tablet中。DeltaWriter维护一个Tablet的数据写入通道，由Tablet Id唯一标识，负责接收单个Tablet的数据导入，并将数据写入Tablet对应的MemTable中，当MemTable写满之后，会将MemTable里的数据刷写（Flush）到磁盘并生成一个个Segment文件。MemTable采用SkipList的数据结构，将数据暂时保存在内存中，SkipList会按照Schema的Key对数据行进行排序，另外，如果数据模型为Aggregate或Unique，MemTable会对具有相同Key的数据行进行聚合。Stream Load任务的数据写入通道如图7所示。
 
-<div align=center>
-<img alt=">图 7 Stream Load任务的数据写入通道" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_7_cn.png"/> 
-</div>
-<p align="center">图 7 Stream Load任务的数据写入通道</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_7_en.png)
 
 MemTable的刷写操作由MemtableFlushExecutor异步执行，当MemTable的刷写任务提交到线程池之后，会生成一个新的MemTable来接收当前Tablet的后续数据写入。MemtableFlushExecutor执行数据刷写时，RowsetWriter会读出MemTable中的所有数据，并通过SegmentWriter刷写出多个Segment文件，每个Segment文件大小不超过256MB。对于一个Tablet，每次Stream Load任务都会生成一个新的Rowset，生成的Rowset中可以包含多个Segment文件。Stream Load任务的数据写入过程如图8所示。
 
-<div align=center>
-<img alt=">图 8 Stream Load任务的数据写入过程" width="80%" src="../../../static/images/blogs/principle-of-Doris-Stream-Load/Figure_8_cn.png"/> 
-</div>
-<p align="center">图 8 Stream Load任务的数据写入过程</p> 
+![](/images/blogs/principle-of-Doris-Stream-Load/Figure_8_en.png)
 
 Executor BE节点上的TxnManager负责Tablet级别数据导入的事务管理，DeltaWriter初始化时，会执行Prepare Transaction将对应Tablet在本次Stream Load任务中的数据写入事务添加到TxnManager中进行管理；数据写入Tablet完成并关闭DeltaWriter时，会执行Commit Transaction将数据导入生成的新的Rowset添加到TxnManager中进行管理。注意，这里的TxnManager只是负责单个BE上的事务，而FE中的事务管理是负责整体导入事务的。
 
