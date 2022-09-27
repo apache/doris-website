@@ -628,3 +628,5 @@ Directory structure description:
 4. 图片
 
    所有图片都在 `static/images `目录下面
+
+5. 开启 PR Build check
