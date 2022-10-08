@@ -130,7 +130,7 @@ CREATE DATABASE example_db;
 >    SHOW CREATE ROUTINE LOAD
 > ```
 
-数据库创建完成之后，可以通过 [SHOW DATABASES](../sql-manual/sql-reference/Show-Statements/SHOW-DATABASES.md) 查看数据库信息。
+数据库创建完成之后，可以通过 [SHOW DATABASES](../sql-manual/sql-reference/Show-Statements/SHOW-DATABASES) 查看数据库信息。
 
 ```sql
 mysql> SHOW DATABASES;
@@ -679,7 +679,7 @@ mysql> select sum(table1.pv) from table1 join [shuffle] table2 where table1.site
 
 当部署多个 FE 节点时，用户可以在多个 FE 之上部署负载均衡层来实现 Doris 的高可用。
 
-具体安装部署及使用方式请参照 [负载均衡](../admin-manual/cluster-management/load-balancing.md)
+具体安装部署及使用方式请参照 [负载均衡](../admin-manual/cluster-management/load-balancing)
 
 ## 数据更新和删除
 
