@@ -73,8 +73,8 @@ The user manual needs to include: UDF function definition description, applicabl
 
     ```
     ├── docs
-    │   └── zh-CN
-    │       └──extending-doris
+    │         └── zh-CN
+    │             └──extending-doris
     │          └──udf
     │            └──contrib
     │              ├── udf-simple-manual.md
@@ -83,8 +83,8 @@ The user manual needs to include: UDF function definition description, applicabl
 
     ```
     ├── docs
-    │   └── en
-    │       └──extending-doris
+    │         └── en
+    │             └──extending-doris
     │          └──udf
     │            └──contrib
     │              ├── udf-simple-manual.md
