@@ -32,7 +32,7 @@ ALTER TABLE ROLLUP
 
 ### Description
 
-This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER](../../Show-Statements/SHOW-ALTER.md) command to view the progress.
+This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER](../../Show-Statements/SHOW-ALTER) command to view the progress.
 
 grammar:
 
@@ -68,7 +68,7 @@ Notice:
 
 - If from_index_name is not specified, it will be created from base index by default
 - Columns in rollup table must be columns already in from_index
-- In properties, the storage format can be specified. For details, see [CREATE TABLE](../Create/CREATE-TABLE                         )
+- In properties, the storage format can be specified. For details, see [CREATE TABLE](../Create/CREATE-TABLE)
 
 3. Delete rollup index
 
