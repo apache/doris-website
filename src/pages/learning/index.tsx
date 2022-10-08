@@ -182,7 +182,7 @@ const sitemapList = [
         list: [
             {
                 title: <Translate>Doris on ES</Translate>,
-                link: 'https://doris.apache.orgdocs/dev/ecosystem/external-table/doris-on-es',
+                link: '/docs/dev/ecosystem/external-table/doris-on-es',
             },
             {
                 title: <Translate>Doris on Hudi</Translate>,
