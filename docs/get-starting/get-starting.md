@@ -53,7 +53,7 @@ Go to the `apache-doris-x.x.x/fe` directory
 cd apache-doris-x.x.x/fe
 ```
 
-Modify the FE configuration file `conf/fe.conf`, here we mainly modify two parameters: `priority_networks` and `meta_dir`, if you need more optimized configuration, please refer to [FE parameter configuration](... /admin-manual/config/fe-config) for instructions on how to adjust them.
+Modify the FE configuration file `conf/fe.conf`, here we mainly modify two parameters: `priority_networks` and `meta_dir`, if you need more optimized configuration, please refer to [FE parameter configuration](../admin-manual/config/fe-config) for instructions on how to adjust them.
 
 1. add priority_networks parameter
 
@@ -112,7 +112,7 @@ You can see the following screen, which indicates that the FE has started succes
 
 #### Connect FE
 
-We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-) glibc2.12-x86_64.tar.gz)
+We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)
 
 Unzip the MySQL client you just downloaded and you can find the `mysql` command line tool in the `bin/` directory. Then execute the following command to connect to Doris.
 
@@ -175,7 +175,7 @@ Go to the `apache-doris-x.x.x/be` directory
 cd apache-doris-x.x.x/be
 ```
 
-Modify the BE configuration file `conf/be.conf`, here we mainly modify two parameters: `priority_networks` and `storage_root`, if you need more optimized configuration, please refer to [BE parameter configuration](... /admin-manual/config/be-config) instructions to make adjustments.
+Modify the BE configuration file `conf/be.conf`, here we mainly modify two parameters: `priority_networks` and `storage_root`, if you need more optimized configuration, please refer to [BE parameter configuration](../admin-manual/config/be-config) instructions to make adjustments.
 
 1. Add priority_networks parameter
 
