@@ -53,7 +53,7 @@ Go to the `apache-doris-x.x.x/fe` directory
 cd apache-doris-x.x.x/fe
 ```
 
-Modify the FE configuration file `conf/fe.conf`, here we mainly modify two parameters: `priority_networks` and `meta_dir`, if you need more optimized configuration, please refer to [FE parameter configuration](... /admin-manual/config/fe-config) for instructions on how to adjust them.
+Modify the FE configuration file `conf/fe.conf`, here we mainly modify two parameters: `priority_networks` and `meta_dir`, if you need more optimized configuration, please refer to [FE parameter configuration](../admin-manual/config/fe-config) for instructions on how to adjust them.
 
 1. add priority_networks parameter
 
@@ -112,7 +112,7 @@ You can see the following screen, which indicates that the FE has started succes
 
 #### Connect FE
 
-We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-) glibc2.12-x86_64.tar.gz)
+We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)
 
 Unzip the MySQL client you just downloaded and you can find the `mysql` command line tool in the `bin/` directory. Then execute the following command to connect to Doris.
 
@@ -122,7 +122,7 @@ mysql -uroot -P9030 -h127.0.0.1
 
 >Note: 
 >
->1. The root user used here is the default user built into doris, and is also the super administrator user, see [Rights Management](...) /admin-manual/privilege-ldap/user-privilege)
+>1. The root user used here is the default user built into doris, and is also the super administrator user, see [Rights Management](../admin-manual/privilege-ldap/user-privilege)
 >2. -P: Here is our query port to connect to Doris, the default port is 9030, which corresponds to `query_port` in fe.conf
 >3. -h: Here is the IP address of the FE we are connecting to, if your client and FE are installed on the same node you can use 127.0.0.1, this is also provided by Doris if you forget the root password, you can connect directly to the login without the password in this way and reset the root password
 
@@ -175,7 +175,7 @@ Go to the `apache-doris-x.x.x/be` directory
 cd apache-doris-x.x.x/be
 ```
 
-Modify the BE configuration file `conf/be.conf`, here we mainly modify two parameters: `priority_networks` and `storage_root`, if you need more optimized configuration, please refer to [BE parameter configuration](... /admin-manual/config/be-config) instructions to make adjustments.
+Modify the BE configuration file `conf/be.conf`, here we mainly modify two parameters: `priority_networks` and `storage_root`, if you need more optimized configuration, please refer to [BE parameter configuration](../admin-manual/config/be-config) instructions to make adjustments.
 
 1. Add priority_networks parameter
 
