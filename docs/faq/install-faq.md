@@ -83,7 +83,7 @@ Here we provide 3 ways to solve this problem:
 
 3. Manually migrate data using the API
 
-   Doris provides [HTTP API](../admin-manual/http-actions/tablet-migration-action.md), which can manually specify the migration of data shards on one disk to another disk.
+   Doris provides [HTTP API](../admin-manual/http-actions/tablet-migration-action), which can manually specify the migration of data shards on one disk to another disk.
 
 ### Q5. How to read FE/BE logs correctly?
 
@@ -154,10 +154,6 @@ In many cases, we need to troubleshoot problems through logs. The format and vie
    3. Check whether there are logs beginning with F in be.INFO.
 
       Logs starting with F are Fatal logs. For example, F0916 , indicating the Fatal log on September 16th. Fatal logs usually indicate a program assertion error, and an assertion error will directly cause the process to exit (indicating a bug in the program). Welcome to the WeChat group, github discussion or dev mail group for help.
-
-   4. Minidump(removed)
-
-      Mindump is a function added after Doris version 0.15. For details, please refer to [document](https://doris.apache.org/zh-CN/developer-guide/minidump.html).
 
 2. FE
 
