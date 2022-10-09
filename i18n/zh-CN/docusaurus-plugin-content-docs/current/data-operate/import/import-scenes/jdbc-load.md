@@ -35,7 +35,7 @@ INSERT 语句的使用方式和 MySQL 等数据库中 INSERT 语句的使用方�
 * INSERT INTO table VALUES(...)
 ```
 
-这里我们仅介绍第二种方式。关于 INSERT 命令的详细说明，请参阅 [INSERT](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) 命令文档。
+这里我们仅介绍第二种方式。关于 INSERT 命令的详细说明，请参阅 [INSERT](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT) 命令文档。
 
 ## 单次写入
 
