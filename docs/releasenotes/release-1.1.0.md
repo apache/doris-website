@@ -42,9 +42,7 @@ BE binary file has been renamed from palo_be to doris_be . Please pay attention 
 
 The storage format of earlier versions of Apache Doris was Segment V1. In version 0.12, we had implemented Segment V2 as a new storage format, which introduced Bitmap indexes, memory tables, page cache, dictionary compression, delayed materialization and many other features. Starting from version 0.13, the default storage format for newly created tables is Segment V2, while maintaining compatibility with the Segment V1 format.
 
-In order to ensure the maintainability of the code structure and reduce the additional learning and development costs caused by redundant historical codes, we have decided to no longer support the Segment v1 storage format from the next version. It is expected that this part of the code will be deleted in the Apache Doris 1.2 version, and all users who are still using the Segment V1 storage format must complete the data format conversion in version 1.1. Please refer to the following link for the operation manual:
-
-[https://doris.apache.org/zh-CN/docs/1.0/administrator-guide/segment-v2-usage](https://doris.apache.org/zh-CN/docs/1.0/administrator-guide/segment-v2-usage)
+In order to ensure the maintainability of the code structure and reduce the additional learning and development costs caused by redundant historical codes, we have decided to no longer support the Segment v1 storage format from the next version. It is expected that this part of the code will be deleted in the Apache Doris 1.2 version.
 
 ### Normal Upgrade
 
