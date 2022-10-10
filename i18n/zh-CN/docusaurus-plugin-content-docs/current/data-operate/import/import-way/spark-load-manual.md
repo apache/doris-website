@@ -409,7 +409,7 @@ PROPERTIES
 );
 ```
 
-示例3：上游数据源是 hive binary 类型情况
+示例3：上游数据源是 hive binary 类型情况，hive bitmap使用可参考[hive-bitmap-udf](../../../ecosystem/external-table/hive-bitmap-udf)
 
 ```sql
 step 1:新建 hive 外部表
