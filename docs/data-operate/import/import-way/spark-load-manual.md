@@ -441,7 +441,7 @@ PROPERTIES
 
 ```
 
-Example 3: when the upstream data source is hive binary type table,You can refer to the use of hive bitmap [hive-bitmap-udf](../../../ecosystem/external-table/hive-bitmap-udf) .
+Example 3: when the upstream data source is hive binary type table .
 
 ```sql
 step 1: create hive external table
@@ -600,7 +600,7 @@ The data type applicable to the aggregate column of the doris table is bitmap ty
 
 There is no need to build a global dictionary, just specify the corresponding field in the load command, the format is: ```doris field name=binary_bitmap (hive table field name)```
 
-Similarly, the binary (bitmap) type of data import is currently only supported when the upstream data source is a hive table.
+Similarly, the binary (bitmap) type of data import is currently only supported when the upstream data source is a hive table,You can refer to the use of hive bitmap [hive-bitmap-udf](../../../ecosystem/external-table/hive-bitmap-udf)
 
 ### Show Load
 
