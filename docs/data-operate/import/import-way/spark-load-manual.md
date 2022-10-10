@@ -441,7 +441,7 @@ PROPERTIES
 
 ```
 
-Example 3: when the upstream data source is hive binary type table
+Example 3: when the upstream data source is hive binary type table,You can refer to the use of hive bitmap [hive-bitmap-udf](../../../ecosystem/external-table/hive-bitmap-udf) .
 
 ```sql
 step 1: create hive external table
