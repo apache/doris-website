@@ -542,7 +542,6 @@
                                 "sql-manual/sql-functions/window-functions/WINDOW-FUNCTION-FIRST-VALUE",
                                 "sql-manual/sql-functions/window-functions/WINDOW-FUNCTION-LAST-VALUE",
                                 "sql-manual/sql-functions/window-functions/WINDOW-FUNCTION-ROW-NUMBER",
-                                "sql-manual/sql-functions/window-functions/WINDOW-FUNCTION-NTILE",
                                 "sql-manual/sql-functions/window-functions/WINDOW-FUNCTION-WINDOW-FUNNEL"
                             ]
                         },
