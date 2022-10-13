@@ -978,7 +978,8 @@
             "items": [
                 "releasenotes/release-1.1.0",
                 "releasenotes/release-1.1.1",
-                "releasenotes/release-1.1.2"
+                "releasenotes/release-1.1.2",
+                "releasenotes/release-1.1.3"
             ]
         }
     ]
