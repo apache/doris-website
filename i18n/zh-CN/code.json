@@ -315,7 +315,7 @@
     "message": "Doris 团队"
   },
   "homepage.news": {
-    "message": "2022.7.14，Apache Doris 1.1 版本正式发布",
+    "message": "2022.9.13，Apache Doris 1.1.2 版本正式发布",
     "description": "The label for the link to homepage news"
   },
   "homepage.what": {
@@ -758,5 +758,8 @@
   },
   "sitemap.page.subTitle": {
     "message": "从这里开启您的 Apache Doris 之旅，与 Apache Doris 一起发现无限可能"
+  },
+  "download.quick.download.version.tips": {
+    "message": "apache-doris-1.1.2-bin-x86-noavx2 版本暂不提供下载，我们会在进行更新。"
   }
 }

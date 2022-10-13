@@ -46,7 +46,7 @@ function Footer() {
                             </div>
                             <div className="social">
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1co4h0c90-Kfu5MUgaTi4n~lAwNXfbuQ"
+                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1h153f1ar-sTJB_QahY1SHvZdtPFoIOQ"
                                     title="slack"
                                     className="item"
                                 >

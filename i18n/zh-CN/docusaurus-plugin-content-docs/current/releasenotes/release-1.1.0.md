@@ -42,10 +42,8 @@ BE 二进制文件从原有的 palo_be 更名为 doris_be ，如果您以前依�
 
 Apache Doris 早期版本的存储格式为 Segment V1，在 0.12 版本中我们实现了新的存储格式 Segment V2 ，引入了 Bitmap 索引、内存表、Page Cache、字典压缩以及延迟物化等诸多特性。从 0.13 版本开始，新建表的默认存储格式为 Segment V2，与此同时也保留了对 Segment V1 格式的兼容。
 
-为了保证代码结构的可维护性、降低冗余历史代码带来的额外学习及开发成本，我们决定从下一个版本起不再支持 Segment v1 存储格式，预计在 Apache Doris 1.2 版本中将删除这部分代码，还请所有仍在使用 Segment V1 存储格式的用户务必在 1.1 版本中完成数据格式的转换，操作手册请参考以下链接：
+为了保证代码结构的可维护性、降低冗余历史代码带来的额外学习及开发成本，我们决定从下一个版本起不再支持 Segment v1 存储格式，预计在 Apache Doris 1.2 版本中将删除这部分代码。
 
-[https://doris.apache.org/zh-CN/docs/1.0/administrator-guide/segment-v2-usage
-](https://doris.apache.org/zh-CN/docs/1.0/administrator-guide/segment-v2-usage)
 
 ### 正常升级
 

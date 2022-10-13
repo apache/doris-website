@@ -28,7 +28,7 @@ under the License.
 
 ### Description
 
-该命令用于创建一张表。本文档主语介绍创建 Doris 自维护的表的语法。外部表语法请参阅 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md)文档。
+该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法。外部表语法请参阅 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md)文档。
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table
@@ -40,7 +40,7 @@ CREATE TABLE [IF NOT EXISTS] [database.]table
 [keys_type]
 [table_comment]
 [partition_info]
-distribution_info
+distribution_desc
 [rollup_list]
 [properties]
 [extra_properties]
@@ -91,8 +91,6 @@ distribution_info
                 定长字符串。长度范围：1 ~ 255。默认为1
             VARCHAR[(length)]
                 变长字符串。长度范围：1 ~ 65533。默认为1
-            STRING
-                变长字符串。最大（默认）支持1048576 字节（1MB）。String类型的长度还受 be 配置  `string_type_length_soft_limit_bytes`, 实际能存储的最大长度 取两者最小值，String类型只能用在value 列，不能用在 key 列和分区 分桶列
             HLL (1~16385个字节)
                 HyperLogLog 列类型，不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
                 必须配合 HLL_UNION 聚合类型使用。
@@ -126,14 +124,14 @@ distribution_info
             1. 用户指定固定值，如：
 
             ```SQL
-            k1 INT DEFAULT '1',
-            k2 CHAR(10) DEFAULT 'aaaa'
+            	k1 INT DEFAULT '1',
+                k2 CHAR(10) DEFAULT 'aaaa'
             ```
             2. 系统提供的关键字，目前支持以下关键字：
             
             ```SQL
-            // 只用于DATETIME类型，导入数据缺失该值时系统将赋予当前时间
-            dt DATETIME DEFAULT CURRENT_TIMESTAMP
+                // 只用于DATETIME类型，导入数据缺失该值时系统将赋予当前时间
+                dt DATETIME DEFAULT CURRENT_TIMESTAMP
             ```
 
         
@@ -231,16 +229,10 @@ distribution_info
 
 * `distribution_desc`
   
-    1. Hash 分桶 语法： `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]` 
+    定义数据分桶方式。
 
-       说明： 使用指定的 key 列进行哈希分桶。 
+    `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]`
 
-    1. Random 分桶 语法： `DISTRIBUTED BY RANDOM [BUCKETS num]` 
-
-    ​       说明： 使用随机数进行分桶
-  
-    建议: 当没有合适的key做哈希分桶使得表的数据均匀分布的时候，建议使用RANDOM分桶方式。
-  
 * `rollup_list`
 
     建表的同时可以创建多个物化视图（ROLLUP）。
@@ -306,22 +298,37 @@ distribution_info
         这个属性设置成 `true`, Doris 会尽量将该表的数据块缓存在存储引擎的 PageCache 中，已减少磁盘IO。但这个属性不会保证数据块常驻在内存中，仅作为一种尽力而为的标识。
 
         `"in_memory" = "true"`
-    *  `compression`
+
+    * `compression`
 
         Doris 表的默认压缩方式是 LZ4。1.1版本后，支持将压缩方式指定为ZSTD以获得更高的压缩比。
 
-        "compression"="zstd"
+        `"compression"="zstd"`
 
     * `function_column.sequence_type`
 
         当使用 UNIQUE KEY 模型时，可以指定一个sequence列，当KEY列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
         这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
-
+    
         `"function_column.sequence_type" = 'Date'`
+    
+    * `light_schema_change`
+
+        Doris默认不使用light schema change优化。如果想使用该优化需要指定为true。
+    
+        `"light_schema_change" = 'true'`
+    
+    * `disable_auto_compaction`
+
+        是否对这个表禁用自动compaction。
+
+        如果这个属性设置成 `true`, 后台的自动compaction进程会跳过这个表的所有tablet。
+
+        `"disable_auto_compaction" = "false"`
 
     * 动态分区相关
-
+    
         动态分区相关参数如下：
     
         * `dynamic_partition.enable`: 用于指定表级别的动态分区功能是否开启。默认为 true。
@@ -333,9 +340,9 @@ distribution_info
         * `dynamic_partition.create_history_partition`: 是否创建历史分区。
         * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
         * `dynamic_partition.reserved_history_periods`: 用于指定保留的历史分区的时间段。
-
+    
     * 数据排序相关
-
+    
         数据排序相关参数如下:
     
         * `data_sort.sort_type`: 数据排序使用的方法，目前支持两种：lexical/z-order，默认是lexical
@@ -542,8 +549,8 @@ distribution_info
     PROPERTIES (
         "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
     );
-
-
+    ```
+    ```sql
     CREATE TABLE example_db.dynamic_partition
     (
         k1 DATE,
@@ -570,7 +577,7 @@ distribution_info
 
 ### Best Practice
 
-#### **1. 分区和分桶**
+#### 分区和分桶
 
 一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../data-table/data-partition.md) 文档。
 
@@ -580,11 +587,11 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 所以建议在建表前，先确认使用方式来进行合理的建表。
 
-#### **2. 动态分区**
+#### 动态分区
 
 动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../advanced/partition/dynamic-partition.md) 文档查看更多帮助。
 
-#### **3. 物化视图**
+#### 物化视图
 
 用户可以在建表的同时创建多个物化视图（ROLLUP）。物化视图也可以在建表之后添加。写在建表语句中可以方便用户一次性创建所有物化视图。
 
@@ -594,12 +601,12 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 关于物化视图的介绍，请参阅文档 [物化视图](../../../../advanced/materialized-view.md)。
 
-#### **4. 索引**
+#### 索引
 
 用户可以在建表的同时创建多个列的索引。索引也可以在建表之后再添加。
 
 如果在之后的使用过程中添加索引，如果表中已有数据，则需要重写所有数据，因此索引的创建时间取决于当前数据量。
 
-#### **5. in_memory 属性**
+#### in_memory 属性
 
 当建表时指定了 `"in_memory" = "true"` 属性。则 Doris 会尽量将该表的数据块缓存在存储引擎的 PageCache 中，已减少磁盘IO。但这个属性不会保证数据块常驻在内存中，仅作为一种尽力而为的标识。

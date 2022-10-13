@@ -111,36 +111,6 @@ PROPERTIES ("key"="value", ...);
    - charset: 数据库链接的编码信息
    - 另外还支持每个ODBC Driver 实现自定义的参数，参见对应ODBC Driver 的说明
 
-3. 创建 S3 resource
-
-   ```sql
-   CREATE RESOURCE "remote_s3"
-   PROPERTIES
-   (
-   	"type" = "s3",
-   	"s3_endpoint" = "http://bj.s3.com",
-   	"s3_region" = "bj",
-   	"s3_root_path" = "/path/to/root",
-   	"s3_access_key" = "bbb",
-   	"s3_secret_key" = "aaaa",
-   	"s3_max_connections" = "50",
-   	"s3_request_timeout_ms" = "3000",
-   	"s3_connection_timeout_ms" = "1000"
-   );
-   ```
-
-   S3 相关参数如下：
-   - 必需参数
-       - s3_endpoint：s3 endpoint
-       - s3_region：s3 region
-       - s3_root_path：s3 根目录
-       - s3_access_key：s3 access key
-       - s3_secret_key：s3 secret key
-   - 可选参数
-       - s3_max_connections：s3 最大连接数量，默认为 50
-       - s3_request_timeout_ms：s3 请求超时时间，单位毫秒，默认为 3000
-       - s3_connection_timeout_ms：s3 连接超时时间，单位毫秒，默认为 1000
-
 ### Keywords
 
     CREATE, RESOURCE

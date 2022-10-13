@@ -32,7 +32,11 @@ BACKUP
 
 ### Description
 
-该语句用于备份指定数据库下的数据。该命令为异步操作。提交成功后，需通过 SHOW BACKUP 命令查看进度。仅支持备份 OLAP 类型的表。
+该语句用于备份指定数据库下的数据。该命令为异步操作。
+
+仅 root 或 superuser 用户可以创建仓库。
+
+提交成功后，需通过 SHOW BACKUP 命令查看进度。仅支持备份 OLAP 类型的表。
 
 语法：
 
@@ -142,6 +146,8 @@ PROPERTIES
     "use_path_style" = "true"
 );
 ```
+
+
 
 ### Keywords
 
