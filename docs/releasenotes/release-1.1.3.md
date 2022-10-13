@@ -26,7 +26,6 @@ under the License.
 
 
 In this release, Doris Team has fixed more than 80 issues or performance improvement since 1.1.2. This release is a bugfix release on 1.1 and all users are encouraged to upgrade to this release.
-Translated with www.DeepL.com/Translator (free version)
 
 
 # Features
