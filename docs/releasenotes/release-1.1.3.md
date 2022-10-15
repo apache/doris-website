@@ -72,8 +72,21 @@ In this release, Doris Team has fixed more than 80 issues or performance improve
 
 - BE core when load data using broker with md5sum()/sm3sum(). [#13009](https://github.com/apache/doris/pull/13009)
 
-# Behavior Changes
+# Upgrade Notes
 
-Disable PageCache and ChunkAllocator by default to reduce memory usage. User could enable this by `changing disable_storage_page_cache` and chunk_reserved_bytes_limit.
+PageCache and ChunkAllocator are disabled by default to reduce memory usage and can be re-enabled by modifying the configuration items `disable_storage_page_cache` and `chunk_reserved_bytes_limit`.
 
+Storage Page Cache and Chunk Allocator cache user data chunks and memory preallocation, respectively.
+
+These two functions take up a certain percentage of memory and are not freed. This part of memory cannot be flexibly allocated, which may lead to insufficient memory for other tasks in some scenarios, affecting system stability and availability. Therefore, we disabled these two features by default in version 1.1.3.
+
+However, in some latency-sensitive reporting scenarios, turning off this feature may lead to increased query latency. If you are worried about the impact of this feature on your business after upgrade, you can add the following parameters to be.conf to keep the same behavior as the previous version.
+
+```
+disable_storage_page_cache=false
+chunk_reserved_bytes_limit=10%
+```
+
+* ``disable_storage_page_cache``: Whether to disable Storage Page Cache. version 1.1.2 (inclusive), the default is false, i.e., on. version 1.1.3 defaults to true, i.e., off.
+* `chunk_reserved_bytes_limit`: Chunk allocator reserved memory size. 1.1.2 (and earlier), the default is 10% of the overall memory. 1.1.3 version default is 209715200 (200MB).
 

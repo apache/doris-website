@@ -72,6 +72,20 @@ under the License.
 
 - 修复了在加密函数下使用 Broker 导入数据时 BE 可能发生 Core 的问题。 [#13009](https://github.com/apache/doris/pull/13009)
 
-# 其他
+# 升级说明
 
 默认情况下禁用 PageCache 和 ChunkAllocator 以减少内存使用，用户可以通过修改配置项 `disable_storage_page_cache` 和 `chunk_reserved_bytes_limit` 来重新启用。
+
+Storage Page Cache 和 Chunk Allocator 分别缓存用户数据块和内存预分配。
+
+这两个功能会占用一定比例的内存，并且不会释放。 这部分内存占用无法灵活调配，导致在某些场景下，因这部分内存占用而导致其他任务内存不足，影响系统稳定性和可用性。因此我们在 1.1.3 版本中默认关闭了这两个功能。
+
+但在某些延迟敏感的报表场景下，关闭该功能可能会导致查询延迟增加。如用户担心升级后该功能对业务造成影响，可以通过在 be.conf 中增加以下参数以保持和之前版本行为一致。
+
+```
+disable_storage_page_cache=false
+chunk_reserved_bytes_limit=10%
+```
+
+* `disable_storage_page_cache`：是否关闭 Storage Page Cache。 1.1.2（含）之前的版本，默认是false，即打开。1.1.3 版本默认为 true，即关闭。
+* `chunk_reserved_bytes_limit`：Chunk allocator 预留内存大小。1.1.2（含）之前的版本，默认是整体内存的 10%。1.1.3 版本默认为 209715200（200MB）。

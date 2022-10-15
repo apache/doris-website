@@ -74,24 +74,6 @@ Doris can upgrade smoothly by rolling upgrades. The following steps are recommen
     ```
     The metadata directory to be backed up is  `doris-meta/`
 
-3. **important! ! Upgrade 1.1.3 Caution**
-
-    Storage Page Cache and Chunk Allocator need to be disabled by default.
-
-    Storage Page Cache and Chunk Allocator cache user data blocks and memory preallocation, respectively.
-
-    These two functions take up a certain percentage of memory and will not be released. This part of memory cannot be flexibly allocated, which leads to insufficient memory for other tasks due to this part of memory occupation in some scenarios, affecting system stability and availability. Therefore, we disabled these two features by default in version 1.1.3.
-
-    However, in some latency-sensitive reporting scenarios, turning off this feature may lead to increased query latency. If you are worried about the impact of this feature on your business after upgrade, you can add the following parameters to be.conf to keep the same behavior as the previous version.
-
-    ```
-    disable_storage_page_cache=false
-    chunk_reserved_bytes_limit=10%
-    ```
-
-    * ``disable_storage_page_cache``: Whether to disable Storage Page Cache. version 1.1.2 (inclusive), the default is false, i.e., on. version 1.1.3 defaults to true, i.e., off.
-    * `chunk_reserved_bytes_limit`: Chunk allocator reserved memory size. 1.1.2 (and earlier), the default is 10% of the overall memory. 1.1.3 version default is 209715200 (200MB).
-
 ## Test the correctness of BE upgrade
 
 1. Arbitrarily select a BE node and deploy the latest doris_be binary file.

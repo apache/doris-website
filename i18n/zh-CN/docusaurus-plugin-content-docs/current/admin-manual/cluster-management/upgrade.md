@@ -73,24 +73,6 @@ Doris 可以通过滚动升级的方式，平滑进行升级。建议按照以�
         ```
       需要备份的元数据目录为 `doris-meta/`
 
-3. **升级 1.1.3 注意事项**
-
-    需要默认关闭 Storage Page Cache 和 Chunk Allocator
-
-    Storage Page Cache 和 Chunk Allocator 分别缓存用户数据块和内存预分配。
-
-    这两个功能会占用一定比例的内存，并且不会释放。 这部分内存占用无法灵活调配，导致在某些场景下，因这部分内存占用而导致其他任务内存不足，影响系统稳定性和可用性。因此我们在 1.1.3 版本中默认关闭了这两个功能。
-
-    但在某些延迟敏感的报表场景下，关闭该功能可能会导致查询延迟增加。如用户担心升级后该功能对业务造成影响，可以通过在 be.conf 中增加以下参数以保持和之前版本行为一致。
-
-    ```
-    disable_storage_page_cache=false
-    chunk_reserved_bytes_limit=10%
-    ```
-
-    * `disable_storage_page_cache`：是否关闭 Storage Page Cache。 1.1.2（含）之前的版本，默认是false，即打开。1.1.3 版本默认为 true，即关闭。
-    * `chunk_reserved_bytes_limit`：Chunk allocator 预留内存大小。1.1.2（含）之前的版本，默认是整体内存的 10%。1.1.3 版本默认为 209715200（200MB）。
-
 ## 测试 BE 升级正确性
 
 1. 任意选择一个 BE 节点，部署最新的 doris_be 二进制文件。
