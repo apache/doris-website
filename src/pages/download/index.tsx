@@ -20,8 +20,8 @@ import {
 } from '@site/src/constant/download.data';
 
 const BINARY_VERSION = [
-    { label: '1.1.2 ( latest )', value: VersionEnum.Latest },
-    { label: '1.1.1', value: VersionEnum.Prev },
+    { label: '1.1.3 ( latest )', value: VersionEnum.Latest },
+    { label: '1.1.2', value: VersionEnum.Prev },
 ];
 const CPU = [
     { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
@@ -52,7 +52,6 @@ export default function Download(): JSX.Element {
         setVersion(val);
     };
     const changeCPU = (val: string) => {
-        if (version === VersionEnum.Latest && val === CPUEnum.IntelNoAvx2) return;
         setCPU(val);
     };
     const changeJDK = (val: string) => {
@@ -125,8 +124,6 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: cpu === item.value,
-                                            disabled:
-                                                version === VersionEnum.Latest && item.value === CPUEnum.IntelNoAvx2,
                                         })}
                                         key={item.value}
                                         onClick={() => changeCPU(item.value)}
@@ -189,12 +186,12 @@ export default function Download(): JSX.Element {
                                 as bloom filter.
                             </Translate>
                         </div>
-                        <div className="intr tips">
+                        {/* <div className="intr tips">
                             <Translate id="download.quick.download.version.tips">
                                 The apache-doris-1.1.2-bin-x86-noavx2 version is not currently available for download,
                                 we will update it soon.
                             </Translate>
-                        </div>
+                        </div> */}
                     </div>
                 </PageColumn>
             </section>
