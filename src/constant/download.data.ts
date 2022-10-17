@@ -27,6 +27,70 @@ export function getAllDownloadLinks(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? APACHE_LINK : CHINA_MIRROR_LINK;
     return [
         {
+            id: '1.1.3-intel-avx2-jdk8',
+            items: [
+                {
+                    label: 'apache-doris-fe-1.1.3-bin.tar.gz',
+                    links: {
+                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-1.1.3-bin-x86_64.tar.gz',
+                    links: {
+                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64.tar.gz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
+            id: '1.1.3-intel-noavx2-jdk8',
+            items: [
+                {
+                    label: 'apache-doris-fe-1.1.3-bin.tar.gz',
+                    links: {
+                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz',
+                    links: {
+                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
+            id: '1.1.3-arm-jdk8',
+            items: [
+                {
+                    label: 'apache-doris-fe-1.1.3-bin.tar.gz',
+                    links: {
+                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-1.1.3-bin-arm.tar.gz',
+                    links: {
+                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-arm.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-arm.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-arm.tar.gz.sha512`,
+                    },
+                },
+            ],
+        },
+
+        {
             id: '1.1.2-intel-avx2-jdk8',
             items: [
                 {
@@ -89,99 +153,6 @@ export function getAllDownloadLinks(locale: string) {
                 },
             ],
         },
-        {
-            id: '1.1.1-intel-avx2-jdk8',
-            items: [
-                {
-                    label: 'apache-doris-1.1.1-bin-x64.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86.tar.gz.sha512`,
-                    },
-                },
-            ],
-        },
-        {
-            id: '1.1.1-intel-noavx2-jdk8',
-            items: [
-                {
-                    label: 'apache-doris-1.1.1-bin-x64-noavx2.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-x86-noavx2.tar.gz.sha512`,
-                    },
-                },
-            ],
-        },
-        {
-            id: '1.1.1-arm-jdk8',
-            items: [
-                {
-                    label: 'apache-doris-1.1.1-bin-arm64.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.1-rc03/apache-doris-1.1.1-bin-arm.tar.gz.sha512`,
-                    },
-                },
-            ],
-        },
-        // {
-        //     label: 'apache-doris-1.1.0-bin-x64-jdk8.tar.gz',
-        //     id: '1.1.0-intel-avx2-jdk8',
-        //     links: {
-        //         source: `${sources}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk8.tar.gz`,
-        //         signature: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk8.tar.gz.asc`,
-        //         sha512: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk8.tar.gz.sha512`,
-        //     },
-        // },
-        // {
-        //     label: 'apache-doris-1.1.0-bin-x64-jdk11.tar.gz',
-        //     id: '1.1.0-intel-avx2-jdk11',
-        //     links: {
-        //         source: `${sources}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk11.tar.gz`,
-        //         signature: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk11.tar.gz.asc`,
-        //         sha512: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-jdk11.tar.gz.sha512`,
-        //     },
-        // },
-        // {
-        //     label: 'apache-doris-1.1.0-bin-x64-noavx2-jdk8.tar.gz',
-        //     id: '1.1.0-intel-noavx2-jdk8',
-        //     links: {
-        //         source: `${sources}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk8.tar.gz`,
-        //         signature: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk8.tar.gz.asc`,
-        //         sha512: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk8.tar.gz.sha512`,
-        //     },
-        // },
-        // {
-        //     label: 'apache-doris-1.1.0-bin-x64-noavx2-jdk11.tar.gz',
-        //     id: '1.1.0-intel-noavx2-jdk11',
-        //     links: {
-        //         source: `${sources}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk11.tar.gz`,
-        //         signature: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk11.tar.gz.asc`,
-        //         sha512: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-x86-noavx2-jdk11.tar.gz.sha512`,
-        //     },
-        // },
-        // {
-        //     label: 'apache-doris-1.1.0-bin-arm64-jdk8.tar.gz',
-        //     id: '1.1.0-arm-jdk8',
-        //     links: {
-        //         source: `${sources}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk8.tar.gz`,
-        //         signature: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk8.tar.gz.asc`,
-        //         sha512: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk8.tar.gz.sha512`,
-        //     },
-        // },
-        // {
-        //     label: 'apache-doris-1.1.0-bin-arm64-jdk11.tar.gz',
-        //     id: '1.1.0-arm-jdk11',
-        //     links: {
-        //         source: `${sources}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk11.tar.gz`,
-        //         signature: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk11.tar.gz.asc`,
-        //         sha512: `${APACHE_LINK}doris/1.1/1.1.0-rc05/apache-doris-1.1.0-bin-arm-jdk11.tar.gz.sha512`,
-        //     },
-        // },
     ];
 }
 
@@ -245,7 +216,13 @@ export function getAllRelease(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
     return [
         {
-            version: '1.1.2 ( latest )',
+            version: '1.1.3 ( latest )',
+            date: '2022-10-17',
+            note: '/docs/releasenotes/release-1.1.3',
+            download: `${sources}doris/1.1/1.1.3-rc02/`,
+        },
+        {
+            version: '1.1.2',
             date: '2022-09-13',
             note: '/docs/releasenotes/release-1.1.2',
             download: `${sources}doris/1.1/1.1.2-rc05/`,
@@ -284,8 +261,8 @@ export function getAllRelease(locale: string) {
 }
 
 export enum VersionEnum {
-    Latest = '1.1.2',
-    Prev = '1.1.1',
+    Latest = '1.1.3',
+    Prev = '1.1.2',
 }
 
 export enum CPUEnum {
