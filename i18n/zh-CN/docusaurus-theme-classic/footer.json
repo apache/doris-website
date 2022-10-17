@@ -13,7 +13,7 @@
   },
   "link.item.label.Docs": {
     "message": "文档",
-    "description": "The label of footer link with label=Docs linking to /docs/get-starting"
+    "description": "The label of footer link with label=Docs linking to /learning"
   },
   "link.item.label.Foundation": {
     "message": "基金会",
