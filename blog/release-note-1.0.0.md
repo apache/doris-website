@@ -3,7 +3,7 @@
     'title': '[Release Note] Apache Doris(Incubating) 1.0.0 Release',
     'summary': '[Release Note] Apache Doris(Incubating) 1.0.0 Release',
     'date': '2022-04-18',
-    'author': 'Luzhijing',
+    'author': 'Apache Doris',
     'tags': ['Release Notes'],
 }
 ---

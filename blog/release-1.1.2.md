@@ -3,7 +3,7 @@
     'title': 'Apache Doris announced the official release of version 1.1.2',
     'summary': 'Dear community, we are pleased to announce that we have officially released Apache Doris 1.1.2 on September 13, 2022! This release is a hotfix version of 1.1.1',
     'date': '2022-09-13',
-    'author': 'Luzhijing',
+    'author': 'Apache Doris',
     'tags': ['Release Notes'],
 }
 ---

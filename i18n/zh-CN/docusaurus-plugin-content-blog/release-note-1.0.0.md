@@ -3,7 +3,7 @@
     'title': '[Doris 发版通告] Apache Doris(Incubating) 1.0.0 Release',
     'summary': '[Doris 发版通告] Apache Doris(Incubating) 1.0.0 Release',
     'date': '2022-04-18',
-    'author': 'Luzhijing',
+    'author': 'Apache Doris',
     'tags': ['版本发布'],
 }
 ---

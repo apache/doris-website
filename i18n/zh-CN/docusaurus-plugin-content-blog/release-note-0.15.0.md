@@ -3,7 +3,7 @@
     'title': '[Doris 发版通告] Apache Doris(Incubating) 0.15.0 Release',
     'summary': '[Doris 发版通告] Apache Doris(Incubating) 0.15.0 Release',
     'date': '2021-11-29',
-    'author': 'Luzhijing',
+    'author': 'Apache Doris',
     'tags': ['版本发布'],
 }
 ---
@@ -65,7 +65,7 @@ under the License.
 * 支持 Flink-Doris-Connector 。
 * 支持 DataX doriswriter 插件。
 * Spark-Doris-Connector 支持数据写入 Doris 。
- 
+
 
 ## 功能优化 
 
@@ -118,7 +118,7 @@ under the License.
 * 支持直接通过 libhdfs3 库访问 HDFS 进行数据的导入导出，而不需要 Broker 进程。
 * select into outfile 功能支持导出 Parquet 文件格式，并支持并行导出。
 * ODBC 外表支持 SQLServer。 
- 
+
 ## 致谢  
 
 Apache Doris(incubating) 0.15.0 Release 版本的发布离不开所有社区用户的支持，在此向所有参与版本设计、开发、测试、讨论的社区贡献者们表示感谢，他们分别是：
