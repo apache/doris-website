@@ -199,7 +199,7 @@ sh ./load-tpch-data.sh
 
 ### 7.5 检查导入数据
 
-执行下面的 SQL 语句检查导入的数据量上 上面的数据量是一致。
+执行下面的 SQL 语句检查导入的数据与上面的数据量是一致。
 
 ```sql
 select count(*)  from  lineitem;
