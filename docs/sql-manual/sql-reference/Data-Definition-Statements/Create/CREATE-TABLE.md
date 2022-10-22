@@ -232,6 +232,8 @@ distribution_desc
 
     `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]`
 
+    Suggestion: It is recommended to use random bucketing when there is no suitable key for hash bucketing to make the data of the table evenly distributed. 
+
 * `rollup_list`
 
     Multiple materialized views (ROLLUP) can be created at the same time as the table is built.

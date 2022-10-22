@@ -233,6 +233,8 @@ distribution_desc
 
     `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]`
 
+  建议: 当没有合适的key做哈希分桶使得表的数据均匀分布的时候，建议使用RANDOM分桶方式。
+  
 * `rollup_list`
 
     建表的同时可以创建多个物化视图（ROLLUP）。
