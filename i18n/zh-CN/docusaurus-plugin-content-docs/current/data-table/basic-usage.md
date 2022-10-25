@@ -165,7 +165,7 @@ mysql> USE example_db;
 Database changed
 ```
 
-Doris支持[复合分区和单分区](./data-partition)两种建表方式。下面以聚合模型为例，分别演示如何创建两种分区的数据表。
+Doris支持[复合分区和单分区](../data-partition)两种建表方式。下面以聚合模型为例，分别演示如何创建两种分区的数据表。
 
 #### 单分区
 

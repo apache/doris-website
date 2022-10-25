@@ -78,7 +78,7 @@ Under the `-s 100` parameter, the generated data set size is:
 
 3. Build a table
 
-    Copy the table creation statement in [create-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/create-tables.sql) and execute it in Doris.
+    Copy the table creation statement in [create-tables.sql](https://github.com/apache/doris/tree/master/tools/ssb-tools/create-tables.sql) and execute it in Doris.
 
 4. Import data
 
@@ -116,7 +116,7 @@ There are 4 groups of 14 SQL in the SSB test set. The query statement is in the 
 
 ## testing report
 
-The following test report is based on Doris [branch-0.15](https://github.com/apache/incubator-doris/tree/branch-0.15) branch code test, for reference only. (Update time: October 25, 2021)
+The following test report is based on Doris [branch-0.15](https://github.com/apache/doris/tree/branch-0.15) branch code test, for reference only. (Update time: October 25, 2021)
 
 1. Hardware environment
 

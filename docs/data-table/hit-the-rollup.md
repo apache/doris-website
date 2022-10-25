@@ -44,7 +44,7 @@ Because Uniq is only a special case of the Aggregate model, we do not distinguis
 
 Example 1: Get the total consumption per user
 
-Following [Data Model Aggregate Model](./data-model.md) in the **Aggregate Model** section, the Base table structure is as follows:
+Following [Data Model Aggregate Model](../data-model.md) in the **Aggregate Model** section, the Base table structure is as follows:
 
 | ColumnName        | Type         | AggregationType | Comment                                |
 |-------------------| ------------ | --------------- | -------------------------------------- |

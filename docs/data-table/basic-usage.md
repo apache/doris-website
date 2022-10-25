@@ -142,7 +142,7 @@ mysql> USE example_db;
 Database changed
 ```
 
-Doris supports [composite partition and single partition](./data-partition)  two table building methods. The following takes the aggregation model as an example to demonstrate how to create two partitioned data tables.
+Doris supports [composite partition and single partition](../data-partition)  two table building methods. The following takes the aggregation model as an example to demonstrate how to create two partitioned data tables.
 
 #### Single partition
 

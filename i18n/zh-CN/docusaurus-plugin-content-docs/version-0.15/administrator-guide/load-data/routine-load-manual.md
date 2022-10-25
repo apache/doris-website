@@ -242,7 +242,7 @@ FE 中的 JobScheduler 根据汇报结果，继续生成后续新的 Task，或�
 
 ### 修改作业属性
 
-用户可以修改已经创建的作业。具体说明可以通过 `HELP ALTER ROUTINE LOAD;` 命令查看。或参阅 [ALTER ROUTINE LOAD](../../sql-reference/sql-statements/Data-Manipulation/alter-routine-load)。
+用户可以修改已经创建的作业。具体说明可以通过 `HELP ALTER ROUTINE LOAD;` 命令查看。或参阅 [ALTER ROUTINE LOAD](../../../sql-reference/sql-statements/Data-Manipulation/alter-routine-load)。
 
 ### 作业控制
 
