@@ -36,7 +36,7 @@ under the License.
 
 ## 环境准备
 
-请先参照 [官方文档](https://doris.apache.org/docs/0.15/installing/install-deploy/) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE，1 BE）。
+请先参照 [官方文档](https://doris.apache.org/zh-CN/docs/0.15/installing/install-deploy/) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE，1 BE）。
 
 以下文档中涉及的的脚本都存放在 Doris 代码库的 `tools/ssb-tools/` 下。
 
