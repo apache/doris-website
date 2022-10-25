@@ -121,10 +121,7 @@ Doris的cumulative compaction每次会在cumulative point之后选择相邻的�
 2. Doris会通过计算promotion size来决定是否要对一个rowset执行Promotion。根据base rowset（start version为0）的大小计算tablet当前的promotion_size：
    <font color=#15A9CA><center><b><i>promotion_size = base_rowset_size * ratio</b></i></center></font>
    其中，ratio值可以通过cumulative_size_based_promotion_ratio配置，默认值为0.05。promotion_size被限定在cumulative_size_based_promotion_size_mbytes（默认值为1024MB）与cumulative_size_based_promotion_min_size_mbytes（默认值为64MB）之间，promotion size的计算流程如图3-2所示。
-   <div align=center>
-   <img alt="图3-2 promotion size的计算流程图" width="80%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_3-2_cn.png"/>
-   </div>
-    <p align="center">图3-2 promotion size的计算流程图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_3-2_cn.png")
 3. 从base rowset开始，依次遍历每一个rowset，当遇到以下情况，则停止遍历，更新tablet的cumulative point：
    1. 当前rowset与前一个rowset之间出现版本缺失，则更新cumulative point为前一个rowset的end_version+1；
    2. 当前rowset不是数据删除版本，同时当前rowset没有发生过版本合并，或当前rowset中的segment文件之间存在overlapping，则更新cumulative point为当前rowset的start_version；
