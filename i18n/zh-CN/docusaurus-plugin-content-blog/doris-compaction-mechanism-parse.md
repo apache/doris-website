@@ -96,10 +96,7 @@ Doris也提供了http接口，支持手动触发单个tablet的cumulative compac
 # 3 Cumulative Compaction
 Doris的cumulative compaction每次会在cumulative point之后选择相邻的数个rowset进行合并，主要包含5个步骤，分别是计算cumulative point、生成candidate rowsets、选择input rowsets、执行rowsets合并以及更新cumulative point，如图3-1。其中，前面三个步骤属于compaction preparation阶段，后面两个步骤属于compaction execution阶段。
 
-<div align=center>
-<img alt="图3-1 cumulative compaction执行流程图" width="80%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_3-1_cn.png"/>
-</div>
- <p align="center">图3-1 cumulative compaction执行流程图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_3-1_cn.png")
 
 目前可供选择的cumulative compaction策略有两种：num_based cumulative compaction和size_based cumulative compaction。cumulative compaction的策略选择可以通过参数cumulative_compaction_policy进行配置（默认为size_based）。num_based cumulative compaction是基于rowset的文件数量进行compaction的选择，该策略会在后面的版本中被丢弃。Size_based cumulative compaction策略通过计算每个rowset的大小来决定compaction的选择，可以显著地减少写放大的系数。
 
