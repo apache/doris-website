@@ -40,10 +40,7 @@ Doris的存储引擎通过类似LSM的数据结构提供快速的数据导入支
 
 每一个rowset都对应一个版本信息，表示当前rowset的版本范围，版本信息中包含了两个字段first和second，first表示当前rowset的起始版本（start version），second表示当前rowset的结束版本（end version），如图1-1所示。每一次数据导入都会生成一个新的数据版本，保存在一个rowset中。未发生过compaction的rowset的版本信息中first字段和second字段相等；执行compaction时，相邻的多个rowset会进行合并，生成一个版本范围更大的rowset，合并生成的rowset的版本信息会包含合并前的所有rowset的版本信息。
 
-<div align=center>
-<img alt="图1-1 rowset版本" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_1-1.png"/>
-</div>
- <p align="center">图1-1 rowset版本</p>
+![图1-1 rowset版本](/images/blogs/doris-compaction-mechanism-parse/Figure_1-1.png")
 
 Compaction分为两种类型：base compaction和cumulative compaction。其中cumulative compaction则主要负责将多个最新导入的rowset合并成较大的rowset，而base compaction会将cumulative compaction产生的rowset合入到start version为0的基线数据版本（Base Rowset）中，是一种开销较大的compaction操作。这两种compaction的边界通过cumulative point来确定。base compaction会将cumulative point之前的所有rowset进行合并，cumulative compaction会在cumulative point之后选择相邻的数个rowset进行合并，如图1-2所示。
 
