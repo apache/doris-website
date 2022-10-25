@@ -113,7 +113,7 @@ Therefore, it is recommended to upgrade some nodes and observe the business oper
 **Illegal rollback operation may cause data loss and damage.** 
 
 ## Documentation
-1. [Doris metadata design document](../../../community/design/metadata-design) 
+1. [Doris metadata design document](/community/design/metadata-design) 
 2. [Metadata Operations and Maintenance](../../admin-manual/maint-monitor/metadata-operation.md) 
 3. [Data replica management](../../admin-manual/maint-monitor/tablet-repair-and-balance.md)
 4. [Installation Deployment Document](../../install/install-deploy.md)
