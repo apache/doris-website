@@ -103,11 +103,11 @@ Initially, a database can be created through root or admin users:
 CREATE DATABASE example_db;
 ```
 
-> All commands can use `HELP` command to see detailed grammar help. For example: `HELP CREATE DATABASE;'`.You can also refer to the official website [SHOW CREATE DATABASE](../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-DATABASE.md) command manual.
+> All commands can use `HELP` command to see detailed grammar help. For example: `HELP CREATE DATABASE;'`.You can also refer to the official website [SHOW CREATE DATABASE](/sql-manual/sql-reference/Show-Statements/SHOW-CREATE-DATABASE.md) command manual.
 >
 > If you don't know the full name of the command, you can use "help command a field" for fuzzy query. If you type `HELP CREATE`, you can match commands like `CREATE DATABASE', `CREATE TABLE', `CREATE USER', etc.
 
-After the database is created, you can view the database information through [SHOW DATABASES](../sql-manual/sql-reference/Show-Statements/SHOW-DATABASES.md).
+After the database is created, you can view the database information through [SHOW DATABASES](/sql-manual/sql-reference/Show-Statements/SHOW-DATABASES).
 
 ```sql
 MySQL> SHOW DATABASES;

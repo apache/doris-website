@@ -128,7 +128,7 @@ This document mainly introduces how to import data stored in AWS S3. It also sup
 Other cloud storage systems can find relevant information compatible with S3 in corresponding documents
 
 ### Start Loading
-Like [Broker Load](../../../data-operate/import/import-way/broker-load-manual)  just replace `WITH BROKER broker_name ()` with
+Like [Broker Load](/data-operate/import/import-way/broker-load-manual)  just replace `WITH BROKER broker_name ()` with
 ```
     WITH S3
     (
