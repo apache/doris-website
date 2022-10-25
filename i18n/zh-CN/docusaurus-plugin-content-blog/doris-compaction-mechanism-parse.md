@@ -195,10 +195,7 @@ Doris的base compaction会将cumulative point之前的所有rowset进行合并�
 
    如果当前tablet上一次成功执行base compaction的时间距离当前时刻超过指定的时间间隔（通过base_compaction_interval_seconds_since_last_operation配置，默认值为86400秒，即1天），则当前tablet满足base compaction的执行条件；否则，当前tablet不满足base compaction的执行条件，本次base compaction任务结束。
 
-<div align=center>
-   <img alt="图4-2 检查base compaction执行条件的流程图" width="60%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_4-2_cn.png"/>
-   </div>
-    <p align="center">图4-2 检查base compaction执行条件的流程图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_4-2_cn.png")
 
 ## 4.3 执行rowsets合并
 将input rowsets中的所有rowset进行合并，生成一个output rowset。与cumulative compaction过程中执行rowsets合并的流程相同，不再赘述。值得一提的是，base compaction过程中会将delete操作删除的数据行真正地删除。
