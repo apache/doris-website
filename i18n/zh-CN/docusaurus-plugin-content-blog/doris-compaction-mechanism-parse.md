@@ -87,10 +87,7 @@ Compaction任务可以概括为两个阶段：compaction preparation和compactio
 
 在Doris中，compaction任务的preparation阶段在permits request之前执行，从tablet中选出需要进行版本合并的rowsets，通过需要合并的segment文件数量计算compaction permits。compaction任务的execution阶段会真正在线程池中执行，进行版本的合并，如图2-4所示。
 
-<div align=center>
-<img alt="图2-4 compaction任务的提交执行示意图" width="70%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_2-4.png"/>
-</div>
- <p align="center">图2-4 compaction任务的提交执行示意图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_2-4.png")
 
 Compaction任务提交到线程池之后，可能会在线程池的等待队列中等待较长的时间都没有被调度，当前tablet在这期间可能发生过clone操作，导致compaction preparation阶段选出的需要进行版本合并的rowset发生了改变，因此，在compaction execution阶段一开始需要判断任务等待调度期间tablet是否发生过clone操作，如果发生过clone操作，则本次compaction任务退出，否则，正常执行rowsets的合并。
 
