@@ -3,11 +3,10 @@
 // @ts-ignore
 const versions = require('./versions.json');
 const lightCodeTheme = require('prism-react-renderer/themes/github');
-const showAllVersions = true;
+const showAllVersions = false;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
-
-console.log(process.env);
+const versionsPlugin = require('./config/versions-plugin');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -40,6 +39,7 @@ const config = {
     projectName: 'doris', // Usually your repo name.
     plugins: [
         'docusaurus-plugin-sass',
+        versionsPlugin,
         [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
@@ -54,7 +54,7 @@ const config = {
         [
             '@docusaurus/plugin-pwa',
             {
-                debug: true,
+                debug: false,
                 offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString', 'mobile'],
                 injectManifestConfig: {
                     globPatterns: ['**/*.{json,pdf,docx,xlsx,html,css,js,png,svg,ico,jpg,jpeg}'],

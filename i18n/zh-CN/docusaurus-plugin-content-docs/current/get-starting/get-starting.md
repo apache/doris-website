@@ -195,7 +195,7 @@ priority_networks=172.23.16.0/24
 
 
 ```
-storage_root=/path/your/data_dir
+storage_root_path=/path/your/data_dir
 ```
 
 >注意：
@@ -324,7 +324,7 @@ PROPERTIES (
 curl  --location-trusted -u root: -T test.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/expamle_tbl/_stream_load
 ```
 
-- -T test.csv : 这里使我们刚才保存的数据文件，如果路径不一样，请指定完整路径
+- -T test.csv : 这里是我们刚才保存的数据文件，如果路径不一样，请指定完整路径
 - -u root :  这里是用户名密码，我们使用默认用户root，密码是空
 - 127.0.0.1:8030 : 分别是 fe 的 ip 和 http_port
 

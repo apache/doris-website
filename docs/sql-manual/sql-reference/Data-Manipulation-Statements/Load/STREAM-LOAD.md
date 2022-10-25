@@ -53,19 +53,19 @@ In addition, it is best for users to set the content of the Expect Header field 
 Parameter introduction:
         Users can pass in import parameters through the Header part of HTTP
 
-1. label: The label imported once, the data of the same label cannot be imported multiple times. Users can avoid the problem of duplicate data import by specifying Label.
+1. `label`: The label imported once, the data of the same label cannot be imported multiple times. Users can avoid the problem of duplicate data import by specifying Label.
 
    Currently, Doris retains the most recent successful label within 30 minutes.
 
-2. column_separator: used to specify the column separator in the import file, the default is \t. If it is an invisible character, you need to add \x as a prefix and use hexadecimal to represent the separator.
+2. `column_separator`: used to specify the column separator in the import file, the default is \t. If it is an invisible character, you need to add \x as a prefix and use hexadecimal to represent the separator.
 
     For example, the separator \x01 of the hive file needs to be specified as -H "column_separator:\x01".
 
     You can use a combination of multiple characters as column separators.
 
-3. line_delimiter: used to specify the newline character in the imported file, the default is \n. Combinations of multiple characters can be used as newlines.
+3. `line_delimiter`: used to specify the newline character in the imported file, the default is \n. Combinations of multiple characters can be used as newlines.
 
-4. columns: used to specify the correspondence between the columns in the import file and the columns in the table. If the column in the source file corresponds exactly to the content in the table, then there is no need to specify the content of this field.
+4. `columns`: used to specify the correspondence between the columns in the import file and the columns in the table. If the column in the source file corresponds exactly to the content in the table, then there is no need to specify the content of this field.
 
    If the source file does not correspond to the table schema, then this field is required for some data conversion. There are two forms of column, one is directly corresponding to the field in the imported file, which is directly represented by the field name;
 
@@ -81,82 +81,84 @@ Parameter introduction:
 
     Then you can specify -H "columns: col, year = year(col), month=month(col), day=day(col)" to complete the import
 
-5. where: used to extract part of the data. If the user needs to filter out the unnecessary data, he can achieve this by setting this option.
+5. `where`: used to extract part of the data. If the user needs to filter out the unnecessary data, he can achieve this by setting this option.
 
    Example 1: Only import data greater than k1 column equal to 20180601, then you can specify -H "where: k1 = 20180601" when importing
 
-6. max_filter_ratio: The maximum tolerable data ratio that can be filtered (for reasons such as data irregularity). Zero tolerance by default. Data irregularities do not include rows filtered out by where conditions.
+6. `max_filter_ratio`: The maximum tolerable data ratio that can be filtered (for reasons such as data irregularity). Zero tolerance by default. Data irregularities do not include rows filtered out by where conditions.
 
-7. partitions: used to specify the partition designed for this import. If the user can determine the partition corresponding to the data, it is recommended to specify this item. Data that does not satisfy these partitions will be filtered out.
+7. `partitions`: used to specify the partition designed for this import. If the user can determine the partition corresponding to the data, it is recommended to specify this item. Data that does not satisfy these partitions will be filtered out.
 
    For example, specify import to p1, p2 partition, -H "partitions: p1, p2"
 
-8. timeout: Specify the import timeout. in seconds. The default is 600 seconds. The setting range is from 1 second to 259200 seconds.
+8. `timeout`: Specify the import timeout. in seconds. The default is 600 seconds. The setting range is from 1 second to 259200 seconds.
 
-9. strict_mode: The user specifies whether to enable strict mode for this import. The default is off. The enable mode is -H "strict_mode: true".
+9. `strict_mode`: The user specifies whether to enable strict mode for this import. The default is off. The enable mode is -H "strict_mode: true".
 
-10. timezone: Specify the time zone used for this import. The default is Dongba District. This parameter affects the results of all time zone-related functions involved in the import.
+10. `timezone`: Specify the time zone used for this import. The default is Dongba District. This parameter affects the results of all time zone-related functions involved in the import.
 
-11. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+11. `exec_mem_limit`: Import memory limit. Default is 2GB. The unit is bytes.
 
-12. format: Specify the import data format, the default is csv, and csv_with_names(filter out the first row of your csv file), csv_with_names_and_types(filter out the first two lines of your csv file), json format are supported.
+12. `format`: Specify the import data format, the default is csv, and csv_with_names(filter out the first row of your csv file), csv_with_names_and_types(filter out the first two lines of your csv file), json format are supported.
 
-13. jsonpaths: The way of importing json is divided into: simple mode and matching mode.
+13. `jsonpaths`: The way of importing json is divided into: simple mode and matching mode.
 
-    Simple mode: The simple mode is not set the jsonpaths parameter. In this mode, the json data is required to be an object type, for example:
+      Simple mode: The simple mode is not set the jsonpaths parameter. In this mode, the json data is required to be an object type, for example:
 
-       ````
-    {"k1":1, "k2":2, "k3":"hello"}, where k1, k2, k3 are column names.
-       ````
+         ````
+      {"k1":1, "k2":2, "k3":"hello"}, where k1, k2, k3 are column names.
+         ````
 
-    Matching mode: It is relatively complex for json data and needs to match the corresponding value through the jsonpaths parameter.
+      Matching mode: It is relatively complex for json data and needs to match the corresponding value through the jsonpaths parameter.
 
-14. strip_outer_array: Boolean type, true indicates that the json data starts with an array object and flattens the array object, the default value is false. E.g:
+14. `strip_outer_array`: Boolean type, true indicates that the json data starts with an array object and flattens the array object, the default value is false. E.g:
 
-       ````
-        [
-         {"k1" : 1, "v1" : 2},
-         {"k1" : 3, "v1" : 4}
-        ]
-        When strip_outer_array is true, the final import into doris will generate two rows of data.
-       ````
+         ````
+          [
+           {"k1" : 1, "v1" : 2},
+           {"k1" : 3, "v1" : 4}
+          ]
+          When strip_outer_array is true, the final import into doris will generate two rows of data.
+         ````
 
-15. json_root: json_root is a valid jsonpath string, used to specify the root node of the json document, the default value is "".
+15. `json_root`: json_root is a valid jsonpath string, used to specify the root node of the json document, the default value is "".
 
-16. merge_type: The merge type of data, which supports three types: APPEND, DELETE, and MERGE. Among them, APPEND is the default value, which means that this batch of data needs to be appended to the existing data, and DELETE means to delete all the data with the same key as this batch of data. Line, the MERGE semantics need to be used in conjunction with the delete condition, which means that the data that meets the delete condition is processed according to the DELETE semantics and the rest is processed according to the APPEND semantics, for example: `-H "merge_type: MERGE" -H "delete: flag=1"`
+16. `merge_type`: The merge type of data, which supports three types: APPEND, DELETE, and MERGE. Among them, APPEND is the default value, which means that this batch of data needs to be appended to the existing data, and DELETE means to delete all the data with the same key as this batch of data. Line, the MERGE semantics need to be used in conjunction with the delete condition, which means that the data that meets the delete condition is processed according to the DELETE semantics and the rest is processed according to the APPEND semantics, for example: `-H "merge_type: MERGE" -H "delete: flag=1"`
 
-17. delete: Only meaningful under MERGE, indicating the deletion condition of the data
-        function_column.sequence_col: Only applicable to UNIQUE_KEYS. Under the same key column, ensure that the value column is REPLACEed according to the source_sequence column. The source_sequence can be a column in the data source or a column in the table structure.
+17. `delete`: Only meaningful under MERGE, indicating the deletion condition of the data
+          function_column.sequence_col: Only applicable to UNIQUE_KEYS. Under the same key column, ensure that the value column is REPLACEed according to the source_sequence column. The source_sequence can be a column in the data source or a column in the table structure.
 
-18. fuzzy_parse: Boolean type, true means that json will be parsed with the schema of the first row. Enabling this option can improve the efficiency of json import, but requires that the order of the keys of all json objects is the same as the first row, the default is false, only use in json format
+18. `fuzzy_parse`: Boolean type, true means that json will be parsed with the schema of the first row. Enabling this option can improve the efficiency of json import, but requires that the order of the keys of all json objects is the same as the first row, the default is false, only use in json format
 
-19. num_as_string: Boolean type, true means that when parsing json data, the numeric type will be converted to a string, and then imported without losing precision.
+19. `num_as_string`: Boolean type, true means that when parsing json data, the numeric type will be converted to a string, and then imported without losing precision.
 
-20. read_json_by_line: Boolean type, true to support reading one json object per line, the default value is false.
+20. `read_json_by_line`: Boolean type, true to support reading one json object per line, the default value is false.
 
-21. send_batch_parallelism: Integer, used to set the parallelism of sending batch data. If the value of parallelism exceeds `max_send_batch_parallelism_per_job` in the BE configuration, the BE as a coordination point will use the value of `max_send_batch_parallelism_per_job`.
+21. `send_batch_parallelism`: Integer, used to set the parallelism of sending batch data. If the value of parallelism exceeds `max_send_batch_parallelism_per_job` in the BE configuration, the BE as a coordination point will use the value of `max_send_batch_parallelism_per_job`.
 
-    RETURN VALUES
-        After the import is complete, the related content of this import will be returned in Json format. Currently includes the following fields
-        Status: Import the last status.
-            Success: Indicates that the import is successful and the data is already visible;
-            Publish Timeout: Indicates that the import job has been successfully committed, but is not immediately visible for some reason. The user can consider the import to be successful and not have to retry the import
-            Label Already Exists: Indicates that the Label has been occupied by other jobs. It may be imported successfully or it may be being imported.
-            The user needs to determine the subsequent operation through the get label state command
-            Others: The import failed, the user can specify the Label to retry the job
-        Message: Detailed description of the import status. On failure, the specific failure reason is returned.
-        NumberTotalRows: The total number of rows read from the data stream
-        NumberLoadedRows: The number of data rows imported this time, only valid in Success
-        NumberFilteredRows: The number of rows filtered out by this import, that is, the number of rows with unqualified data quality
-        NumberUnselectedRows: This import, the number of rows filtered out by the where condition
-        LoadBytes: The size of the source file data imported this time
-        LoadTimeMs: The time taken for this import
-        BeginTxnTimeMs: The time it takes to request Fe to start a transaction, in milliseconds.
-        StreamLoadPutTimeMs: The time it takes to request Fe to obtain the execution plan for importing data, in milliseconds.
-        ReadDataTimeMs: Time spent reading data, in milliseconds.
-        WriteDataTimeMs: The time taken to perform the write data operation, in milliseconds.
-        CommitAndPublishTimeMs: The time it takes to submit a request to Fe and publish the transaction, in milliseconds.
-        ErrorURL: The specific content of the filtered data, only the first 1000 items are retained
+22. `load_to_single_tablet` :  Boolean type, True means that one task can only load data to one tablet in the corresponding partition at a time. The default value is false. The number of tasks for the job depends on the overall concurrency. This parameter can only be set when loading data into the OLAP table with random partition. 
+
+RETURN VALUES
+         After the import is complete, the related content of this import will be returned in Json format. Currently includes the following fields
+         Status: Import the last status.
+             Success: Indicates that the import is successful and the data is already visible;
+             Publish Timeout: Indicates that the import job has been successfully committed, but is not immediately visible for some reason. The user can consider the import to be successful and not have to retry the import
+             Label Already Exists: Indicates that the Label has been occupied by other jobs. It may be imported successfully or it may be being imported.
+             The user needs to determine the subsequent operation through the get label state command
+             Others: The import failed, the user can specify the Label to retry the job
+         Message: Detailed description of the import status. On failure, the specific failure reason is returned.
+         NumberTotalRows: The total number of rows read from the data stream
+         NumberLoadedRows: The number of data rows imported this time, only valid in Success
+         NumberFilteredRows: The number of rows filtered out by this import, that is, the number of rows with unqualified data quality
+         NumberUnselectedRows: This import, the number of rows filtered out by the where condition
+         LoadBytes: The size of the source file data imported this time
+         LoadTimeMs: The time taken for this import
+         BeginTxnTimeMs: The time it takes to request Fe to start a transaction, in milliseconds.
+         StreamLoadPutTimeMs: The time it takes to request Fe to obtain the execution plan for importing data, in milliseconds.
+         ReadDataTimeMs: Time spent reading data, in milliseconds.
+         WriteDataTimeMs: The time taken to perform the write data operation, in milliseconds.
+         CommitAndPublishTimeMs: The time it takes to submit a request to Fe and publish the transaction, in milliseconds.
+         ErrorURL: The specific content of the filtered data, only the first 1000 items are retained
 
 ERRORS:
         Import error details can be viewed with the following statement:
@@ -416,21 +418,21 @@ curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "fu
 
 4. Label, import transaction, multi-table atomicity
 
-   All import tasks in Doris are atomic. And the import of multiple tables in the same import task can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that the data imported is not lost or heavy. For details, see the [Import Transactions and Atomicity](../../../data-operate/import/import-scenes/load-atomicity.md) documentation.
+   All import tasks in Doris are atomic. And the import of multiple tables in the same import task can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that the data imported is not lost or heavy. For details, see the [Import Transactions and Atomicity](../../../../../data-operate/import/import-scenes/load-atomicity) documentation.
 
 5. Column mapping, derived columns and filtering
 
-   Doris can support very rich column transformation and filtering operations in import statements. Most built-in functions and UDFs are supported. For how to use this function correctly, please refer to the [Column Mapping, Conversion and Filtering](../../../data-operate/import/import-scenes/load-data-convert.md) document.
+   Doris can support very rich column transformation and filtering operations in import statements. Most built-in functions and UDFs are supported. For how to use this function correctly, please refer to the [Column Mapping, Conversion and Filtering](../../../../../data-operate/import/import-scenes/load-data-convert) document.
 
 6. Error data filtering
 
-   Doris' import tasks can tolerate a portion of malformed data. The tolerance ratio is set via `max_filter_ratio`. The default is 0, which means that the entire import task will fail when there is an error data. If the user wants to ignore some problematic data rows, the secondary parameter can be set to a value between 0 and 1, and Doris will automatically skip the rows with incorrect data format.
+   Doris import tasks can tolerate a portion of malformed data. The tolerance ratio is set via `max_filter_ratio`. The default is 0, which means that the entire import task will fail when there is an error data. If the user wants to ignore some problematic data rows, the secondary parameter can be set to a value between 0 and 1, and Doris will automatically skip the rows with incorrect data format.
 
-   For some calculation methods of the tolerance rate, please refer to the [Column Mapping, Conversion and Filtering](../../../data-operate/import/import-scenes/load-data-convert.md) document.
+   For some calculation methods of the tolerance rate, please refer to the [Column Mapping, Conversion and Filtering](../../../../../data-operate/import/import-scenes/load-data-convert) document.
 
 7. Strict Mode
 
-   The `strict_mode` attribute is used to set whether the import task runs in strict mode. The format affects the results of column mapping, transformation, and filtering. For a detailed description of strict mode, see the [strict mode](../../../data-operate/import/import-scenes/load-strict-mode.md) documentation.
+   The `strict_mode` attribute is used to set whether the import task runs in strict mode. The format affects the results of column mapping, transformation, and filtering. For a detailed description of strict mode, see the [strict mode](../../../../../data-operate/import/import-scenes/load-strict-mode) documentation.
 
 8. Timeout
 

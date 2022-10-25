@@ -32,7 +32,7 @@ ALTER TABLE ROLLUP
 
 ### Description
 
-This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER](../../Show-Statements/SHOW-ALTER.md) command to view the progress.
+This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation, and the task is returned when the task is submitted successfully. After that, you can use the [SHOW ALTER](/docs/sql-manual/sql-reference/Show-Statements/SHOW-ALTER) command to view the progress.
 
 grammar:
 
@@ -52,6 +52,8 @@ ADD ROLLUP rollup_name (column_name1, column_name2, ...)
 [PROPERTIES ("key"="value", ...)]
 ```
 
+properties: Support setting timeout time, the default timeout time is 1 day.
+
 2. Create rollup indexes in batches
 
 grammar:
@@ -66,7 +68,7 @@ Notice:
 
 - If from_index_name is not specified, it will be created from base index by default
 - Columns in rollup table must be columns already in from_index
-- In properties, the storage format can be specified. For details, see [CREATE TABLE](../Create/CREATE-TABLE.html#create-table)
+- In properties, the storage format can be specified. For details, see [CREATE TABLE](/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)
 
 3. Delete rollup index
 
@@ -120,7 +122,16 @@ ALTER TABLE example_db.my_table
 DROP ROLLUP example_rollup_index2;
 ```
 
-### Keywords
+5. Batch Delete rollup index
+
+```sql
+ALTER TABLE example_db.my_table
+DROP ROLLUP example_rollup_index2,example_rollup_index3;
+```
+
+### 
+
+4. Keywords
 
 ```text
 ALTER, TABLE, ROLLUP, ALTER TABLE

@@ -36,7 +36,7 @@ This document mainly introduces how to pass the preliminary performance test of 
 
 ## Environmental preparation
 
-Please refer to the [official document](http://doris.incubator.apache.org/master/en/installing/install-deploy.html) to install and deploy Doris to obtain a normal running Doris cluster ( Contain at least 1 FE, 1 BE).
+Please refer to the [official document](https://doris.apache.org/docs/0.15/installing/install-deploy/) to install and deploy Doris to obtain a normal running Doris cluster ( Contain at least 1 FE, 1 BE).
 
 The scripts involved in the following documents are all stored under `tools/ssb-tools/` in the Doris code base.
 
@@ -78,7 +78,7 @@ Under the `-s 100` parameter, the generated data set size is:
 
 3. Build a table
 
-    Copy the table creation statement in [create-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/create-tables.sql) and execute it in Doris.
+    Copy the table creation statement in [create-tables.sql](https://github.com/apache/doris/tree/master/tools/ssb-tools/create-tables.sql) and execute it in Doris.
 
 4. Import data
 
@@ -116,7 +116,7 @@ There are 4 groups of 14 SQL in the SSB test set. The query statement is in the 
 
 ## testing report
 
-The following test report is based on Doris [branch-0.15](https://github.com/apache/incubator-doris/tree/branch-0.15) branch code test, for reference only. (Update time: October 25, 2021)
+The following test report is based on Doris [branch-0.15](https://github.com/apache/doris/tree/branch-0.15) branch code test, for reference only. (Update time: October 25, 2021)
 
 1. Hardware environment
 
@@ -162,4 +162,4 @@ The following test report is based on Doris [branch-0.15](https://github.com/apa
     >
     > Note 4: Parallelism means query concurrency, which is set by `set parallel_fragment_exec_instance_num=8`.
     >
-    > Note 5: Runtime Filter Mode is the type of Runtime Filter, set by `set runtime_filter_type="BLOOM_FILTER"`. ([Runtime Filter](http://doris.incubator.apache.org/master/en/administrator-guide/runtime-filter.html) function has a significant effect on the SSB test set. Because in this test set, The data from the right table of Join can filter the left table very well. You can try to turn off this function through `set runtime_filter_mode=off` to see the change in query latency.)
+    > Note 5: Runtime Filter Mode is the type of Runtime Filter, set by `set runtime_filter_type="BLOOM_FILTER"`. ([Runtime Filter](https://doris.apache.org/docs/0.15/administrator-guide/runtime-filter/) function has a significant effect on the SSB test set. Because in this test set, The data from the right table of Join can filter the left table very well. You can try to turn off this function through `set runtime_filter_mode=off` to see the change in query latency.)

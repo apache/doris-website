@@ -40,7 +40,7 @@ CREATE TABLE [IF NOT EXISTS] [database.]table
 [keys_type]
 [table_comment]
 [partition_info]
-distribution_info
+distribution_desc
 [rollup_list]
 [properties]
 [extra_properties]
@@ -91,8 +91,6 @@ distribution_info
                 Fixed-length character string. Length range: 1 ~ 255. Default is 1
             VARCHAR[(length)]
                 Variable length character string. Length range: 1 ~ 65533. Default is 1
-            STRING (M)
-                Variable length character string. Max legnth(default) is 1048576(1MB). The length of the String type is also limited by the configuration string_type_length_soft_limit_bytes of be, the actual maximum length that can be stored take the minimum value of both, the String type can only be used in the value column, not in the key column and the partition and bucket columns
             HLL (1~16385 bytes)
                 HyperLogLog column type, do not need to specify the length and default value. The length is controlled within the system according to the degree of data aggregation.
                 Must be used with HLL_UNION aggregation type.
@@ -126,14 +124,14 @@ distribution_info
             1. The user specifies a fixed value, such as:
 
             ```SQL
-            k1 INT DEFAULT '1',
-            k2 CHAR(10) DEFAULT 'aaaa'
+            	k1 INT DEFAULT '1',
+                k2 CHAR(10) DEFAULT 'aaaa'
             ```
             2. Keywords are provided by the system. Currently, the following keywords are supported: 
             
             ```SQL
-            // This keyword is used only for DATETIME type. If the value is missing, the system assigns the current timestamp.
-            dt DATETIME DEFAULT CURRENT_TIMESTAMP
+                // This keyword is used only for DATETIME type. If the value is missing, the system assigns the current timestamp.
+                dt DATETIME DEFAULT CURRENT_TIMESTAMP
             ```
 
         Example:
@@ -230,9 +228,13 @@ distribution_info
 
 * `distribution_desc`
 
+    Define the data bucketing method.
+
     1. Hash Syntax: `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]` Explain: Hash bucketing using the specified key column.
-    2. Random Syntax: `DISTRIBUTED BY RANDOM [BUCKETS num]` Explain: Use random numbers for bucketing. Suggestion: It is recommended to use random bucketing when there is no suitable key for hash bucketing to make the data of the table evenly distributed.
-    
+    2. Random Syntax: `DISTRIBUTED BY RANDOM [BUCKETS num]` Explain: Use random numbers for bucketing.
+
+    Suggestion: It is recommended to use random bucketing when there is no suitable key for hash bucketing to make the data of the table evenly distributed. 
+
 * `rollup_list`
 
     Multiple materialized views (ROLLUP) can be created at the same time as the table is built.
@@ -299,12 +301,6 @@ distribution_info
 
         `"in_memory" = "true"`
 
-    * compression
-
-        The default compression method for Doris tables is LZ4. After version 1.1, it is supported to specify the compression method as ZSTD to obtain a higher compression ratio.
-
-        "compression"="zstd"
-
     * `function_column.sequence_type`
 
         When using the UNIQUE KEY model, you can specify a sequence column. When the KEY columns are the same, REPLACE will be performed according to the sequence column (the larger value replaces the smaller value, otherwise it cannot be replaced)
@@ -313,8 +309,28 @@ distribution_info
 
         `"function_column.sequence_type" ='Date'`
 
-    * Dynamic partition related
+    * `compression`
 
+        The default compression method for Doris tables is LZ4. After version 1.1, it is supported to specify the compression method as ZSTD to obtain a higher compression ratio.
+    
+        `"compression"="zstd"`
+
+    * `light_schema_change`
+
+        Doris would not use light schema change optimization by default. It is supported to turn on the optimization by set the property as true.
+    
+        `"light_schema_change"="true"`
+    
+    * `disable_auto_compaction`
+
+        Whether to disable automatic compaction for this table.
+
+        If this property is set to 'true', the background automatic compaction process will skip all the tables of this table.
+
+        `"disable_auto_compaction" = "false"`
+    
+    * Dynamic partition related
+    
         The relevant parameters of dynamic partition are as follows:
     
         * `dynamic_partition.enable`: Used to specify whether the dynamic partition function at the table level is enabled. The default is true.
@@ -328,12 +344,11 @@ distribution_info
         * `dynamic_partition.reserved_history_periods`: Used to specify the range of reserved history periods.
     
     * Data Sort Info
-      
+    
         The relevant parameters of data sort info are as follows:
-        
+    
         * `data_sort.sort_type`: the method of data sorting, options: z-order/lexical, default is lexical
         * `data_sort.col_num`:  the first few columns to sort, col_num muster less than total key counts
-    
 ### Example
 
 1. Create a detailed model table
@@ -536,7 +551,8 @@ distribution_info
     PROPERTIES (
         "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
     );
-    
+    ```
+    ```sql
     CREATE TABLE example_db.dynamic_partition
     (
     	k1 DATE,
@@ -555,6 +571,7 @@ distribution_info
         "dynamic_partition.buckets" = "32",
         "dynamic_partition."replication_allocation" = "tag.location.group_a:3"
      );
+    ```
 
 ### Keywords
 
@@ -562,7 +579,7 @@ distribution_info
 
 ### Best Practice
 
-#### **1. Partitioning and bucketing**
+#### Partitioning and bucketing
 
 A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../data-table/data-partition.md) document.
 
@@ -572,11 +589,11 @@ At the same time, partitioning columns and bucketing columns cannot be changed a
 
 Therefore, it is recommended to confirm the usage method to build the table reasonably before building the table.
 
-#### **2. Dynamic Partition**
+#### Dynamic Partition
 
 The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../advanced/partition/dynamic-partition.md) document for more help.
 
-#### **3. Materialized View**
+#### Materialized View
 
 Users can create multiple materialized views (ROLLUP) while building a table. Materialized views can also be added after the table is built. It is convenient for users to create all materialized views at one time by writing in the table creation statement.
 
@@ -586,12 +603,12 @@ If you add a materialized view in the subsequent use process, if there is data i
 
 For the introduction of materialized views, please refer to the document [materialized views](../../../../advanced/materialized-view.md).
 
-#### **4. Index**
+#### Index
 
 Users can create indexes on multiple columns while building a table. Indexes can also be added after the table is built.
 
 If you add an index in the subsequent use process, if there is data in the table, you need to rewrite all the data, so the creation time of the index depends on the current data volume.
 
-#### **5. in_memory property**
+#### in_memory property
 
 The `"in_memory" = "true"` attribute was specified when the table was created. Doris will try to cache the data blocks of the table in the PageCache of the storage engine, which has reduced disk IO. However, this attribute does not guarantee that the data block is permanently resident in memory, and is only used as a best-effort identification.

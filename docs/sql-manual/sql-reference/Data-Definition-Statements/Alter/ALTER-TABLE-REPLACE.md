@@ -5,7 +5,7 @@
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -32,19 +32,46 @@ ALTER TABLE REPLACE
 
 ### Description
 
-This statement is used to modify the attributes of the schema of the existing table. The syntax is basically similar to [ALTER TABLE CULUMN](ALTER-TABLE-COLUMN.md).
+Atomic substitution of two tables. This operation applies only to OLAP tables.
 
 ```sql
-ALTER TABLE [database.]table MODIFY NEW_COLUMN_INFO REPLACE OLD_COLUMN_INFO ;
+ALTER TABLE [db.]tbl1 REPLACE WITH TABLE tbl2
+[PROPERTIES('swap' = 'true')];
 ```
+
+Replace table tbl1 with table tbl2.
+
+If the `swap` parameter is `true`, the data in the table named `tbl1` will be the data in the original table named `tbl2` after the replacement. The data in the table named `tbl2` is the data in the original `tbl1` table. That is, two tables of data have been swapped.
+
+If the `swap` parameter is `false`, the data in the `tbl1` table will be the data in the `tbl2` table after the replacement. The table named `tbl2` is deleted.
+
+#### Theory
+
+The replace table function actually turns the following set of operations into an atomic operation.
+
+If you want to replace table A with table B and `swap` is `true`, do the following:
+
+1. Rename table B as table A.
+2. Rename table A as table B.
+
+If `swap` is `false`, do as follows:
+
+1. Delete table A.
+2. Rename table B as table A.
+
+#### Notice
+1. The default `swap` parameter is `true`. That is, a table replacement operation is equivalent to an exchange of data between two tables.
+2. If the `swap` parameter is set to false, the replaced table (table A) will be deleted and cannot be restored.
+3. The replacement operation can only occur between two OLAP tables and does not check whether the table structure of the two tables is consistent.
+4. The original permission Settings are not changed. Because the permission check is based on the table name.
 
 ### Example
 
-1. Modify the maximum length of the val1 column of base index. The original val1 is (val1 VARCHAR(32) REPLACE DEFAULT "abc")
+1. Swap `tbl1` with `tbl2` without deleting the `tbl1` table
 
 ```sql
-ALTER TABLE example_db.my_table
-MODIFY COLUMN val1 VARCHAR(64) REPLACE DEFAULT "abc";
+ALTER TABLE tbl1 REPLACE WITH TABLE tbl2
+    [PROPERTIES('swap' = 'true')];
 ```
 
 ### Keywords
@@ -54,4 +81,6 @@ ALTER, TABLE, REPLACE, ALTER TABLE
 ```
 
 ### Best Practice
+1. Atomic overlay write operations
 
+  In some cases, the user wants to be able to rewrite the data of a certain table, but if this is done by deleting first and then importing, there will be a period of time in between when the data cannot be viewed. In this case, the user can first use the `CREATE TABLE LIKE` statement to create a new table with the same structure, import the new data into the new table, and then replace the old table atomically through a replace operation to achieve the goal. For partition-level atomic override write operations, see the [Temporary Partitioning document](../../../../advanced/partition/table-temp-partition.md)

@@ -36,7 +36,7 @@ under the License.
 
 ## 环境准备
 
-请先参照 [官方文档](http://doris.incubator.apache.org/master/zh-CN/installing/install-deploy.html) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE，1 BE）。
+请先参照 [官方文档](https://doris.apache.org/zh-CN/docs/0.15/installing/install-deploy/) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE，1 BE）。
 
 以下文档中涉及的的脚本都存放在 Doris 代码库的 `tools/ssb-tools/` 下。
 
@@ -78,7 +78,7 @@ sh gen-ssb-data.sh -s 100 -c 100
 
 3. 建表
 
-    复制 [create-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/create-tables.sql) 中的建表语句，在 Doris 中执行。
+    复制 [create-tables.sql](https://github.com/apache/doris/tree/master/tools/ssb-tools/create-tables.sql) 中的建表语句，在 Doris 中执行。
 
 4. 导入数据
 
@@ -116,7 +116,7 @@ SSB 测试集共 4 组 14 个 SQL。查询语句在  [queries/](https://github.c
 
 ## 测试报告
 
-以下测试报告基于 Doris [branch-0.15](https://github.com/apache/incubator-doris/tree/branch-0.15) 分支代码测试，仅供参考。（更新时间：2021年10月25号）
+以下测试报告基于 Doris [branch-0.15](https://github.com/apache/doris/tree/branch-0.15) 分支代码测试，仅供参考。（更新时间：2021年10月25号）
 
 1. 硬件环境
 
@@ -162,5 +162,5 @@ SSB 测试集共 4 组 14 个 SQL。查询语句在  [queries/](https://github.c
     >
     > 注4：Parallelism 表示查询并发度，通过 `set parallel_fragment_exec_instance_num=8` 设置。
     >
-    > 注5：Runtime Filter Mode 是 Runtime Filter 的类型，通过 `set runtime_filter_type="BLOOM_FILTER"` 设置。（[Runtime Filter](http://doris.incubator.apache.org/master/zh-CN/administrator-guide/runtime-filter.html) 功能对 SSB 测试集效果显著。因为该测试集中，Join 算子右表的数据可以对左表起到很好的过滤作用。你可以尝试通过 `set runtime_filter_mode=off` 关闭该功能，看看查询延迟的变化。）
+    > 注5：Runtime Filter Mode 是 Runtime Filter 的类型，通过 `set runtime_filter_type="BLOOM_FILTER"` 设置。（[Runtime Filter](https://doris.apache.org/zh-CN/docs/0.15/administrator-guide/runtime-filter/) 功能对 SSB 测试集效果显著。因为该测试集中，Join 算子右表的数据可以对左表起到很好的过滤作用。你可以尝试通过 `set runtime_filter_mode=off` 关闭该功能，看看查询延迟的变化。）
 

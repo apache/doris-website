@@ -20,8 +20,8 @@ import {
 } from '@site/src/constant/download.data';
 
 const BINARY_VERSION = [
-    { label: '1.1.1 ( latest )', value: VersionEnum.Latest },
-    { label: '1.1.0', value: VersionEnum.Prev },
+    { label: '1.1.3 ( latest )', value: VersionEnum.Latest },
+    { label: '1.1.2', value: VersionEnum.Prev },
 ];
 const CPU = [
     { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
@@ -55,7 +55,8 @@ export default function Download(): JSX.Element {
         setCPU(val);
     };
     const changeJDK = (val: string) => {
-        if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
+        // if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
+        if (val !== JDKEnum.JDK8) return;
         setJDK(val);
     };
 
@@ -132,7 +133,7 @@ export default function Download(): JSX.Element {
                                 ))}
                             </div>
                         </div>
-                        <div className="download-type">
+                        {/* <div className="download-type">
                             <label>
                                 <Translate id="download.jdk.version" description="JDK Version">
                                     JDK Version
@@ -143,7 +144,8 @@ export default function Download(): JSX.Element {
                                     <div
                                         className={clsx('radio', {
                                             checked: jdk === item.value,
-                                            disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
+                                            // disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
+                                            disabled: item.value !== JDKEnum.JDK8,
                                         })}
                                         key={item.value}
                                         onClick={() => changeJDK(item.value)}
@@ -152,7 +154,7 @@ export default function Download(): JSX.Element {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                         <div className="download-type">
                             <label>
                                 <Translate id="download.download.link" description="Download">
@@ -161,13 +163,15 @@ export default function Download(): JSX.Element {
                             </label>
                             <div className="tabs-radio">
                                 <div className="radio">
-                                    <div className="inner">
-                                        <Link to={current?.links.source}>{current?.label}</Link>
-                                        <span> ( </span>
-                                        <Link to={current?.links.signature}>asc</Link>,{' '}
-                                        <Link to={current?.links.sha512}>sha512</Link>
-                                        <span> )</span>
-                                    </div>
+                                    {current?.items.map(item => (
+                                        <div className="inner" key={item.label}>
+                                            <Link to={item?.links.source}>{item?.label}</Link>
+                                            <span> ( </span>
+                                            <Link to={item?.links.signature}>asc</Link>,{' '}
+                                            <Link to={item?.links.sha512}>sha512</Link>
+                                            <span> )</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -182,6 +186,12 @@ export default function Download(): JSX.Element {
                                 as bloom filter.
                             </Translate>
                         </div>
+                        {/* <div className="intr tips">
+                            <Translate id="download.quick.download.version.tips">
+                                The apache-doris-1.1.2-bin-x86-noavx2 version is not currently available for download,
+                                we will update it soon.
+                            </Translate>
+                        </div> */}
                     </div>
                 </PageColumn>
             </section>

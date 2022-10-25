@@ -3,7 +3,7 @@
     'title': '[Release Note] Apache Doris(Incubating) 0.15.0 Release',
     'summary': '[Release Note] Apache Doris(Incubating) 0.15.0 Release',
     'date': '2021-11-29',
-    'author': 'Luzhijing',
+    'author': 'Apache Doris',
     'tags': ['Release Notes'],
 }
 ---
@@ -63,7 +63,7 @@ It can be enabled via the session variable `set enable_cost_based_join_reorder=t
 * Support Flink-Doris-Connector.
 * Support for DataX doriswriter plugin.
 * Spark-Doris-Connector support for data writing to Doris.
- 
+
 ## Feature Optimization 
 
 ### Query

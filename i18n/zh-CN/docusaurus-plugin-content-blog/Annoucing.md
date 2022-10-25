@@ -71,4 +71,4 @@ Apache Doris 后续将开展更多富有挑战且有意义的工作，包括新�
 
 **See How to subscribe:**
 
-[http://doris.apache.org/community/subscribe-mail-list.html](http://doris.apache.org/community/subscribe-mail-list.html)
+[https://doris.apache.org/zh-CN/community/subscribe-mail-list](https://doris.apache.org/zh-CN/community/subscribe-mail-list/)

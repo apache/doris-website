@@ -445,7 +445,7 @@ BaseCompaction触发条件之一：Singleton文件大小限制，100MB
 ### `doris_max_scan_key_num`
 
 * 类型：int
-* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../advanced/variables.md) 中 `max_scan_key_num` 的说明。
+* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../../advanced/variables) 中 `max_scan_key_num` 的说明。
 * 默认值：1024
 
 当在高并发场景下发下并发度无法提升时，可以尝试降低该数值并观察影响。
@@ -1316,6 +1316,8 @@ tablet状态缓存的更新间隔，单位：秒
 
 在远程BE 中打开tablet writer的 rpc 超时。 操作时间短，可设置短超时时间
 
+导入过程中，发送一个 Batch（1024行）的 RPC 超时时间。默认 60 秒。因为该 RPC 可能涉及多个 分片内存块的写盘操作，所以可能会因为写盘导致 RPC 超时，可以适当调整这个超时时间来减少超时错误（如 send batch fail 错误）。同时，如果调大 write_buffer_size 配置，也需要适当调大这个参数。
+
 ### `tablet_writer_ignore_eovercrowded`
 
 * 类型：bool
@@ -1441,6 +1443,8 @@ webserver默认工作线程数
 默认值：104857600
 
 刷写前缓冲区的大小
+
+导入数据在 BE 上会先写入到一个内存块，当这个内存块达到阈值后才会写回磁盘。默认大小是 100MB。过小的阈值可能导致 BE 上存在大量的小文件。可以适当提高这个阈值减少文件数量。但过大的阈值可能导致 RPC 超时。
 
 ### `zone_map_row_num_threshold`
 

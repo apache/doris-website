@@ -14,7 +14,7 @@ to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License. You may obtain a copy of the License at
 
-  http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
@@ -73,8 +73,8 @@ The user manual needs to include: UDF function definition description, applicabl
 
     ```
     ├── docs
-    │   └── zh-CN
-    │       └──extending-doris
+    │         └── zh-CN
+    │             └──extending-doris
     │          └──udf
     │            └──contrib
     │              ├── udf-simple-manual.md
@@ -83,8 +83,8 @@ The user manual needs to include: UDF function definition description, applicabl
 
     ```
     ├── docs
-    │   └── en
-    │       └──extending-doris
+    │         └── en
+    │             └──extending-doris
     │          └──udf
     │            └──contrib
     │              ├── udf-simple-manual.md
@@ -119,6 +119,6 @@ The user manual needs to include: UDF function definition description, applicabl
 
 ## Contribute UDF to the community
 
-When you meet the conditions and prepare the code, you can contribute UDF to the Doris community after the document. Simply submit the request (PR) on [Github](https://github.com/apache/incubator-doris). See the specific submission method: [Pull Request (PR)](https://help.github.com/articles/about-pull-requests/).
+When you meet the conditions and prepare the code, you can contribute UDF to the Doris community after the document. Simply submit the request (PR) on [Github](https://github.com/apache/doris). See the specific submission method: [Pull Request (PR)](https://help.github.com/articles/about-pull-requests/).
 
-Finally, when the PR assessment is passed and merged. Congratulations, your UDF becomes a third-party UDF supported by Doris. You can check it out in the ecological expansion section of [Doris official website](/en)~.
+Finally, when the PR assessment is passed and merged. Congratulations, your UDF becomes a third-party UDF supported by Doris. You can check it out in the ecological expansion section of [Doris official website](/)~.

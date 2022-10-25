@@ -59,12 +59,6 @@ PROPERTIES ("key"="value", ...);
 illustrate：
 - PROPERTIES has such keys:
     1. storage_resource：storage resource name for policy
-    2. cooldown_datetime：cool down time for tablet, can't be set with cooldown_ttl.
-    3. cooldown_ttl：hot data stay time. The time cost between the time of tablet created and
-            the time of migrated to cold data, formatted as：
-        1d：1 day
-        1h：1 hour
-        50000: 50000 second
 
 ### Example
 
@@ -92,24 +86,6 @@ illustrate：
    ```sql
    select * from (select * from table1 where c1 = 'a' and c2 = 'b' or c3 = 'c' or c4 = 'd')
    ```
-
-2. Create policy for storage
-    1. Create policy on cooldown_datetime
-    ```sql
-    CREATE STORAGE POLICY testPolicy
-    PROPERTIES(
-      "storage_resource" = "s3",
-      "cooldown_datetime" = "2022-06-08 00:00:00"
-    );
-    ```
-    2. Create policy on cooldown_ttl
-    ```sql
-    CREATE STORAGE POLICY testPolicy
-    PROPERTIES(
-      "storage_resource" = "s3",
-      "cooldown_ttl" = "1d"
-    );
-    ```
 
 ### Keywords
 

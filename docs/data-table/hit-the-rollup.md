@@ -185,7 +185,7 @@ However, in order to hit Rollup, certain conditions need to be met, and the valu
 
 ### Index
 
-Doris's prefix index has been introduced in the previous query practice, that is, Doris will generate the first 36 bytes in the Base/Rollup table separately in the underlying storage engine (with varchar type, the prefix index may be less than 36 bytes, varchar will truncate the prefix index, and use up to 20 bytes of varchar). A sorted sparse index data (data is also sorted, positioned by index, and then searched by dichotomy in the data), and then matched each Base/Rollup prefix index according to the conditions in the query, and selected a Base/Rollup that matched the longest prefix index.
+The prefix index was described earlier in [prefix-index](./index/prefix-index.md), Doris takes the first 36 bytes of the Base/Rollup table (a varchar type may result in a prefix index of less than 36 bytes; a varchar truncates the prefix index and uses up to 20 bytes of the varchar ) generates a separate sorted sparse indexed data in the underlying storage engine (the data is also sorted, indexed, and then does a dichotomous lookup in the data), and then matches the prefix index of each Base/Rollup based on the conditions in the query, and selects the Base/Rollup with the longest matching prefix index.
 
 ```
 		---> matching from left to right

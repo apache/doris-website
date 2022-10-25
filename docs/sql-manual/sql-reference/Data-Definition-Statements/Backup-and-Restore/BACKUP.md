@@ -34,6 +34,8 @@ BACKUP
 
 This statement is used to back up the data under the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the SHOW BACKUP command. Only backing up tables of type OLAP is supported.
 
+ Only root or superuser users can create repositories.
+
 grammar:
 
 ```sql
@@ -86,7 +88,20 @@ TO example_repo
 EXCLUDE (example_tbl);
 ```
 
-4. Create a repository named s3_repo to link cloud storage directly without going through the broker.
+4. Create a warehouse named hdfs_repo, rely on Baidu hdfs broker "hdfs_broker", the data root directory is: hdfs://hadoop-name-node:54310/path/to/repo/
+
+```
+CREATE REPOSITORY `hdfs_repo`
+WITH BROKER `hdfs_broker`
+ON LOCATION "hdfs://hadoop-name-node:54310/path/to/repo/"
+PROPERTIES
+(
+    "username" = "user",
+    "password" = "password"
+);
+```
+
+5. Create a repository named s3_repo to link cloud storage directly without going through the broker.
 
 ```
 CREATE REPOSITORY `s3_repo`
@@ -101,7 +116,7 @@ PROPERTIES
 );
 ```
 
-5. Create a repository named hdfs_repo to link HDFS directly without going through the broker.
+6. Create a repository named hdfs_repo to link HDFS directly without going through the broker.
 
 ```
 CREATE REPOSITORY `hdfs_repo`
@@ -114,7 +129,7 @@ PROPERTIES
 );
 ```
 
-6. Create a repository named minio_repo to link minio storage directly through the s3 protocol.
+7. Create a repository named minio_repo to link minio storage directly through the s3 protocol.
 
 ```
 CREATE REPOSITORY `minio_repo`
