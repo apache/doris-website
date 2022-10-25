@@ -77,10 +77,7 @@ producer生产出的compaction任务需要提交给compaction线程池执行。�
 
 系统维持一定数量的compaction permits（通过参数total_permits_for_compaction_score配置），每一个compaction任务提交给线程池之前都需要向系统申请permits（permits request），只有获得系统分配的permits之后任务才能被提交给compaction线程池，compaction任务在线程池中执行结束之后需要将自己持有permits归还给系统（permits release）。如果系统当前剩余的可分配的compaction permits数量小于本次compaction任务需要的permits数量，则本次任务提交会被阻塞（compaction任务提交是串行执行的，其他需要提交的任务也会被阻塞），直到有其他compaction任务执行结束并释放permits，使得系统有足够数量的permits分配给当前compaction任务。如果某一个compaction任务需要的permits数量超过系统维持的permits总数，则允许当线程池中所有的任务都执行结束之后，将该compaction任务提交给线程池执行。
 
-<div align=center>
-<img alt="图2-2 compaction任务提交的permission机制" width="60%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_2-2.png"/>
-</div>
- <p align="center">图2-2 compaction任务提交的permission机制</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_2-2.png")
 
 Doris中单个compaction任务执行过程中的内存使用量与本次compaction任务合并的segment文件数量有关。一个rowset会包含多个segment文件，而一个compaction任务可能包含多个rowset。因此，使用compaction任务中需要合并的segment文件数量作为compaction任务的permits。通过调整系统维持的compaction permits总量可以对BE节点compaction的内存使用量进行调节。
 
