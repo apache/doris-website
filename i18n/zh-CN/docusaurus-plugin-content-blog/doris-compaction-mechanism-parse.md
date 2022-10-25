@@ -51,10 +51,7 @@ Compaction分为两种类型：base compaction和cumulative compaction。其中c
 ## 2.1 “生产者-消费者”模式
 Compaction机制要解决的第一个问题，就是如何选取合适的Tablet进行Compaction。Doris的compaction机制采用“生产者-消费者”（producer-consumer）模式，由producer线程持续生产compaction任务，并将生产出的compaction任务提交给compaction线程池进行消费执行，如图2-1所示。
 
-<div align=center>
-<img alt="图2-1 compaction机制的“生产者-消费者”模式示意图" width="70%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_2-1.png"/>
-</div>
- <p align="center">图2-1 compaction机制的“生产者-消费者”模式示意图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_2-1.png")
 
 Doris BE启动时，会在后台启动一个compaction producer线程，同时会创建一个compaction线程池。producer线程持续地生产compaction任务。
 
