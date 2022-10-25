@@ -34,7 +34,7 @@ There are two types of analysis requirements that UDF can meet: UDF and UDAF. UD
 
 This document mainly describes how to write a custom UDF function and how to use it in Doris.
 
-If users use the UDF function and extend Doris' function analysis, and want to contribute their own UDF functions back to the Doris community for other users, please see the document [Contribute UDF](../contribute_udf).
+If users use the UDF function and extend Doris' function analysis, and want to contribute their own UDF functions back to the Doris community for other users, please see the document [Contribute UDF](https://doris.apache.org/zh-CN/docs/0.15/extending-doris/udf/contribute-udf).
 
 ## Writing UDF functions
 

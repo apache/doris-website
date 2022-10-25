@@ -32,7 +32,7 @@ ALTER TABLE ROLLUP
 
 ### Description
 
-该语句用于对已有 table 进行 rollup 进行修改操作。rollup 是异步操作，任务提交成功则返回，之后可使用[SHOW ALTER](../../Show-Statements/SHOW-ALTER) 命令查看进度。
+该语句用于对已有 table 进行 rollup 进行修改操作。rollup 是异步操作，任务提交成功则返回，之后可使用[SHOW ALTER](/sql-manual/sql-reference/Show-Statements/SHOW-ALTER) 命令查看进度。
 
 语法：
 
@@ -68,7 +68,7 @@ ADD ROLLUP [rollup_name (column_name1, column_name2, ...)
 
 - 如果没有指定 from_index_name，则默认从 base index 创建
 - rollup 表中的列必须是 from_index 中已有的列
-- 在 properties 中，可以指定存储格式。具体请参阅 [CREATE TABLE](../../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)
+- 在 properties 中，可以指定存储格式。具体请参阅 [CREATE TABLE](/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)
 
 3. 删除 rollup index
 
