@@ -61,7 +61,7 @@ Doris BE启动时，会在后台启动一个compaction producer线程，同时�
 
 **tablet score通过如下公式计算：**
 
-<font color=#15A9CA><center><b><i>tablet_score = k1 * scan_frequency + k2 * compaction_score</b></i></center></font>
+`tablet_score = k1 * scan_frequency + k2 * compaction_score`
 
 其中，k1和k2分别可以通过参数compaction_tablet_scan_frequency_factor（默认值为0）和参数compaction_tablet_compaction_score_factor（默认值为1）动态配置。scan_frequency 表示tablet当前一段时间的scan频率。compaction score的计算方法会在本文的后面进行详细地介绍。
 
