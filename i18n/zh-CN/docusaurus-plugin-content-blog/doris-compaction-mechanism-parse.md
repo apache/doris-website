@@ -202,8 +202,4 @@ Doris的base compaction会将cumulative point之前的所有rowset进行合并�
 
 首先，从producer-consumer模式以及compaction任务提交的permission机制对compaction的总体设计和架构原理进行了剖析；然后，针对cumulative compaction的size_based策略进行了详细地介绍；最后，对base compaction的流程进行了深入地讲解。
 
-Doris通过compaction机制将不同的数据版本进行聚合，将小文件合并成大文件，进而有效地提升了查询性能。
-
-<font color=#15A9CA><b>【TODO】</b></font>
-
 目前在compaction的producer逻辑中，每次都会遍历所有的tablet来选取合适的compaction对象，这会带来一些不必要的系统开销。因为大多数tablet的版本信息并不会频繁变化，没有必要每次都重新计算。后续我们也会针对这一问题进行优化。

@@ -235,8 +235,4 @@ This article introduces Doris's compaction mechanism.
 
 First, the article analyzes the overall design and architectural principles of compaction from the producer-consumer mode and the permission mechanism submitted by compaction tasks; Then, the size_based strategy of cumulative compaction is introduced in detail; finally, the process of base compaction is explained in depth.
 
-Doris aggregates different data versions through the compaction mechanism and merges small files into large files, effectively improving query performance.
-
-<font color=#15A9CA><b>【TODO】</b></font>
-
 Currently, in the producer logic of compaction, all tablets are traversed each time to select the appropriate compaction object, which will bring some unnecessary system overhead. However, because the version information of most tablets does not change frequently, there is no need to recalculate each time. Therefore, we will also optimize this problem in the future.
