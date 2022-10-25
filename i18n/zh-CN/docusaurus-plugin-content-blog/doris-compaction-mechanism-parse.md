@@ -83,10 +83,7 @@ Doris中单个compaction任务执行过程中的内存使用量与本次compacti
 
 Compaction任务可以概括为两个阶段：compaction preparation和compaction execution，如图2-3所示。compaction preparation阶段主要是从tablet中选出需要进行版本合并的rowsets，compaction execution阶段主要进行rowsets的版本合并操作。
 
-<div align=center>
-<img alt="图2-3 compaction任务的两阶段划分示意图" width="50%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_2-3.png"/>
-</div>
- <p align="center">图2-3 compaction任务的两阶段划分示意图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_2-3.png")
 
 在Doris中，compaction任务的preparation阶段在permits request之前执行，从tablet中选出需要进行版本合并的rowsets，通过需要合并的segment文件数量计算compaction permits。compaction任务的execution阶段会真正在线程池中执行，进行版本的合并，如图2-4所示。
 
