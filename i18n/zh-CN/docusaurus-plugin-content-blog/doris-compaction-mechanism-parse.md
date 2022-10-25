@@ -141,10 +141,7 @@ Doris的cumulative compaction每次会在cumulative point之后选择相邻的�
 
 **【注】** level等级划分由参数cumulative_size_based_promotion_size_mbytes （默认值为1024MB）和cumulative_size_based_compaction_lower_size_mbytes （默认值为64MB）确定。最高的level值为cumulative_size_based_promotion_size_mbytes / 2，下一级level值为上一级level值的1/2，直到level值小于cumulative_size_based_compaction_lower_size_mbytes，则设置该级level值为0，level等级划分流程如图3-3所示。
 
-<div align=center>
-   <img alt="图3-3 level等级划分流程图" width="60%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_3-3_cn.png"/>
-   </div>
-    <p align="center">图3-3 level等级划分流程图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_3-3_cn.png")
 
 计算某一个rowset的level值时，如果level[n-1] > rowset_size >= level[n]，则该rowset的level值为level[n]。
 
