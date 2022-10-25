@@ -165,10 +165,7 @@ cumulative compaction执行结束之后，需要更新cumulative point。
 
 # 4 Base Compaction
 Doris的base compaction会将cumulative point之前的所有rowset进行合并，主要包含3个步骤，分别是选择input rowsets、检查base compaction的执行条件以及执行rowsets合并，如图4-1所示。其中，前面两个步骤属于compaction preparation阶段，最后一个步骤属于compaction execution阶段。
-<div align=center>
-   <img alt="图4-1 base compaction执行流程图" width="60%" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_4-1_cn.png"/>
-   </div>
-    <p align="center">图4-1 base compaction执行流程图</p>
+![](/images/blogs/doris-compaction-mechanism-parse/Figure_4-1_cn.png")
 
 ## 4.1 选择input rowsets
 1. 选择input rowsets。依次遍历tablet中的每一个rowset，获取所有版本位于cumulative point之前的rowset作为input rowsets。
