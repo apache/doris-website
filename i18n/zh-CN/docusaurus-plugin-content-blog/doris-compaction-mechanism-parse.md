@@ -47,10 +47,7 @@ Doris的存储引擎通过类似LSM的数据结构提供快速的数据导入支
 
 Compaction分为两种类型：base compaction和cumulative compaction。其中cumulative compaction则主要负责将多个最新导入的rowset合并成较大的rowset，而base compaction会将cumulative compaction产生的rowset合入到start version为0的基线数据版本（Base Rowset）中，是一种开销较大的compaction操作。这两种compaction的边界通过cumulative point来确定。base compaction会将cumulative point之前的所有rowset进行合并，cumulative compaction会在cumulative point之后选择相邻的数个rowset进行合并，如图1-2所示。
 
-<div align=center>
-<img alt="图1-2 compaction示意图" src="../../../static/images/blogs/doris-compaction-mechanism-parse/Figure_1-2.png"/>
-</div>
- <p align="center">图1-2 compaction示意图</p>
+![图1-2 compaction示意图](/images/blogs/doris-compaction-mechanism-parse/Figure_1-2.png")
 
 # 2 总体架构
 
