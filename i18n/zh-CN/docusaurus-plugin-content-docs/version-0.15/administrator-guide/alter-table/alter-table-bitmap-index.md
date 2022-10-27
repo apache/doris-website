@@ -32,34 +32,34 @@ under the License.
 * bitmap index：位图索引，是一种快速数据结构，能够加快查询速度
 
 ## 原理介绍
-创建和删除本质上是一个 schema change 的作业，具体细节可以参照 [Schema Change](./alter-table-schema-change)。
+创建和删除本质上是一个 schema change 的作业，具体细节可以参照 [Schema Change](../alter-table-schema-change)。
 
 ## 语法
 index 创建和修改相关语法有两种形式，一种集成与 alter table 语句中，另一种是使用单独的 
 create/drop index 语法
 1. 创建索引
 
-    创建索引的的语法可以参见 [CREATE INDEX](../../sql-reference/sql-statements/Data-Definition/CREATE-INDEX) 
-    或 [ALTER TABLE](../../sql-reference/sql-statements/Data-Definition/ALTER-TABLE) 中bitmap 索引相关的操作,
-    也可以通过在创建表时指定bitmap 索引，参见[CREATE TABLE](../../sql-reference/sql-statements/Data-Definition/CREATE-TABLE)
+    创建索引的的语法可以参见 [CREATE INDEX](../../../sql-reference/sql-statements/Data-Definition/CREATE-INDEX) 
+    或 [ALTER TABLE](../../../sql-reference/sql-statements/Data-Definition/ALTER-TABLE) 中bitmap 索引相关的操作,
+    也可以通过在创建表时指定bitmap 索引，参见[CREATE TABLE](../../../sql-reference/sql-statements/Data-Definition/CREATE-TABLE)
 
 2. 查看索引
 
-    参照[SHOW INDEX](../../sql-reference/sql-statements/Administration/SHOW-INDEX)
+    参照[SHOW INDEX](../../../sql-reference/sql-statements/Administration/SHOW-INDEX)
 
 3. 删除索引
 
-    参照[DROP INDEX](../../sql-reference/sql-statements/Data-Definition/DROP-INDEX)
-    或者 [ALTER TABLE](../../sql-reference/sql-statements/Data-Definition/ALTER-TABLE) 中bitmap 索引相关的操作
+    参照[DROP INDEX](../../../sql-reference/sql-statements/Data-Definition/DROP-INDEX)
+    或者 [ALTER TABLE](../../../sql-reference/sql-statements/Data-Definition/ALTER-TABLE) 中bitmap 索引相关的操作
 
 ## 创建作业
-参照 schema change 文档 [Schema Change](./alter-table-schema-change)
+参照 schema change 文档 [Schema Change](../alter-table-schema-change)
 
 ## 查看作业
-参照 schema change 文档 [Schema Change](./alter-table-schema-change)
+参照 schema change 文档 [Schema Change](../alter-table-schema-change)
 
 ## 取消作业
-参照 schema change 文档 [Schema Change](./alter-table-schema-change)
+参照 schema change 文档 [Schema Change](../alter-table-schema-change)
 
 ## 注意事项
 * 目前索引仅支持 bitmap 类型的索引。 

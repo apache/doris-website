@@ -196,7 +196,7 @@ sh ./load-tpch-data.sh
 
 ### 7.5 Check Imported Data
 
-Execute the following SQL statement to check the imported data volume is consistent with the above data volume.
+Execute the following SQL statement to check that the imported data is consistent with the above data.
 
 ```sql
 select count(*)  from  lineitem;

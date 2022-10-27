@@ -52,4 +52,4 @@ Once again, we sincerely thank all contributors who participated in the construc
 
 **See How to subscribe:**
 
-[https://doris.apache.org/zh-CN/community/subscribe-mail-list](https://doris.apache.org/zh-CN/community/subscribe-mail-list)
+[https://doris.apache.org/community/subscribe-mail-list](https://doris.apache.org/community/subscribe-mail-list/)

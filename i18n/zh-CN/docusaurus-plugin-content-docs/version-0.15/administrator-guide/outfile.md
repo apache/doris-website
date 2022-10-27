@@ -64,7 +64,7 @@ INTO OUTFILE "file_path"
 
     指定相关属性。目前支持通过 Broker 进程, 或通过 S3 协议进行导出。
 
-    + Broker 相关属性需加前缀 `broker.`。具体参阅[Broker 文档](./broker.html)。
+    + Broker 相关属性需加前缀 `broker.`。具体参阅[Broker 文档](../broker)。
     + HDFS 相关属性需加前缀 `hdfs.`。
     + S3 协议则直接执行 S3 协议配置即可。
 

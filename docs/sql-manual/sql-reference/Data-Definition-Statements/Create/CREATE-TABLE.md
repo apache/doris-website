@@ -230,7 +230,10 @@ distribution_desc
 
     Define the data bucketing method.
 
-    `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]`
+    1. Hash Syntax: `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]` Explain: Hash bucketing using the specified key column.
+    2. Random Syntax: `DISTRIBUTED BY RANDOM [BUCKETS num]` Explain: Use random numbers for bucketing.
+
+    Suggestion: It is recommended to use random bucketing when there is no suitable key for hash bucketing to make the data of the table evenly distributed. 
 
 * `rollup_list`
 

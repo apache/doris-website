@@ -104,7 +104,7 @@ Enter the host IP to add a new host, or add it in batches.
 
 1. Code package path
 
-   When deploying a cluster through Doris Manager, you need to provide the compiled Doris installation package. You can compile it yourself from the Doris source code, or use the officially provided [binary version](https://doris.apache.org/zh-CN/ downloads/downloads.html).
+   When deploying a cluster through Doris Manager, you need to provide the compiled Doris installation package. You can compile it yourself from the Doris source code.
 
 `Doris Manager will pull the Doris installation package through http. If you need to build your own http service, please refer to the bottom of the document - Self-built http service`.
 

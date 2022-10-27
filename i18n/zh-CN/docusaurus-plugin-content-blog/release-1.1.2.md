@@ -3,7 +3,7 @@
     'title': '[Doris 发版通告] Apache Doris 1.1.2 Release',
     'summary': '[Doris 发版通告] Apache Doris 1.1.2 Release',
     'date': '2022-09-13',
-    'author': 'Luzhijing',
+    'author': 'Apache Doris',
     'tags': ['版本发布'],
 }
 ---

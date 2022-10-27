@@ -720,6 +720,7 @@
                             "type": "category",
                             "label": "Show",
                             "items": [
+                                "sql-manual/sql-reference/Show-Statements/SHOW-ALTER-TABLE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-ALTER",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-BACKENDS",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-BACKUP",

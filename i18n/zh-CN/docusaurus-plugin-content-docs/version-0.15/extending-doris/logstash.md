@@ -28,7 +28,7 @@ under the License.
 
 该插件用于logstash输出数据到Doris，使用 HTTP 协议与 Doris FE Http接口交互，并通过 Doris 的 stream load 的方式进行数据导入.
 
-[了解Doris Stream Load ](http://doris.apache.org/master/zh-CN/administrator-guide/load-data/stream-load-manual.html)
+[了解Doris Stream Load ](https://doris.apache.org/zh-CN/docs/0.15/administrator-guide/load-data/stream-load-manual)
 
 [了解更多关于Doris](http://doris.apache.org/master/zh-CN/)
 
@@ -85,7 +85,7 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 `label_prefix` | 导入标识前缀，最终生成的标识为 *{label\_prefix}\_{db}\_{table}\_{time_stamp}*
 
 
-导入相关配置：([参考文档](http://doris.apache.org/master/zh-CN/administrator-guide/load-data/stream-load-manual.html))
+导入相关配置：([参考文档](https://doris.apache.org/zh-CN/docs/0.15/administrator-guide/load-data/stream-load-manual))
 
 配置 | 说明
 --- | ---

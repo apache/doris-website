@@ -119,6 +119,6 @@ under the License.
 
 ## 贡献 UDF 到社区
 
-当你符合前提条件并准备好代码，文档后就可以将 UDF 贡献到 Doris 社区了。在  [Github](https://github.com/apache/incubator-doris) 上面提交 Pull Request (PR) 即可。具体提交方式见：[Pull Request (PR)](https://help.github.com/articles/about-pull-requests/)。
+当你符合前提条件并准备好代码，文档后就可以将 UDF 贡献到 Doris 社区了。在  [Github](https://github.com/apache/doris) 上面提交 Pull Request (PR) 即可。具体提交方式见：[Pull Request (PR)](https://help.github.com/articles/about-pull-requests/)。
 
 最后，当 PR 评审通过并 Merge 后。恭喜你，你的 UDF 已经贡献给 Doris 社区，你可以在 [Doris 官网](/zh-CN) 的生态扩展部分查看到啦~。
