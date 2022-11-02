@@ -1,39 +1,29 @@
 import React from 'react';
 import clsx from 'clsx';
-import Translate from '@docusaurus/Translate';
 import './styles.scss';
-import { usePluginData } from '@docusaurus/useGlobalData';
+import { useState } from 'react';
 
-
+// type: paragraph (段落), inline（行内）
 export default function VersionsDoc(props): JSX.Element {
-    const { children, value = '' } = props;
-    const versionsPluginData: any = usePluginData('versions-plugin');
-    const getBuildVersions = (versionsPluginData): string[] => {
-        if (versionsPluginData) {
-            const versionsData = versionsPluginData.versions;
-            if (Array.isArray(versionsData) && versionsData.length > 0) {
-                return versionsData;
-            }
-        }
-        return []
-    }
-    const isShowVersionContent = (buildVersions: string[]) => {
-        if (!value) return false
-        if (buildVersions.length === 0) return true
-        return buildVersions.some(v => value.includes(v))
-    }
-
-    const buildVersions = getBuildVersions(versionsPluginData)
+    const { children, type="paragraph", since = '', deprecated = '', comment=''} = props;
+    const [showTag, setShowTag] = useState<boolean>(false)
+    
     return (
-        <div className={clsx('versions-tag')}>
-            {isShowVersionContent(buildVersions) && (
-                <>
-                    <span className="version-sub">
-                        <Translate id="doc.version">Version</Translate>: {value}
-                    </span>
-                    {children}
-                </>
-            )}
-        </div>
+        <span className={clsx('version-mark', type)} onMouseEnter={() => setShowTag(true)} onMouseLeave={() => setShowTag(false)}>
+            <span className={clsx('v-mark', showTag && 'show')}>
+                {<span className={clsx("version-tags")}>
+                    {since && <span className='version-tag'>
+                        <span className='version-tag-t'>Since</span>
+                        <span className='version-tag-n since'>Version {since}</span>
+                    </span>}
+                    {deprecated && <span className='version-tag'>
+                        <span className='version-tag-t'>Deprecated</span>
+                        <span className='version-tag-n deprecated'>Version {deprecated}</span>
+                    </span>}
+                </span>}
+                {comment && <span className='version-comment'>{comment}</span>}
+            </span>
+            {children}
+        </span>
     );
 }

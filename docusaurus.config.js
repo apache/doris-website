@@ -55,7 +55,7 @@ const config = {
             '@docusaurus/plugin-pwa',
             {
                 debug: false,
-                offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString', 'mobile'],
+                offlineModeActivationStrategies: ['standalone', 'queryString', 'mobile'],
                 injectManifestConfig: {
                     globPatterns: ['**/*.{json,pdf,docx,xlsx,html,css,js,png,svg,ico,jpg,jpeg}'],
                 },
