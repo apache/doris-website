@@ -1,23 +1,77 @@
 
-.versions-tag {
+.version-mark {
     position: relative;
-    &:before {
+    display: inline-block;
+    margin-bottom: 1rem;
+    &.paragraph:before {
         content: '';
         position: absolute;
-        left: -0.7rem;
-        top: 0.5rem;
-        bottom: 0.5rem;
+        left: -1rem;
+        height: 100%;
         border-left: 2px solid var(--ifm-color-primary);
         opacity: 0.2;
     }
-    .version-sub {
-        line-height: 1.4;
-        padding: 4px 12px;
-        font-size: 75%;
-        white-space: nowrap;
-        position: relative;
-        left: -1rem;
-        top: -0.2rem;
-        color: var(--ifm-color-primary);
+   
+    &.inline {
+        display: inline;
+        text-decoration: underline dotted #e6a700 2.3px;
+        .version-comment {
+            width: 40vw;
+        }
+        
+        .v-mark {
+            position: absolute;
+            left: 0;
+            top: 0rem;
+            visibility: hidden;
+            &.show {
+                visibility: visible;
+                top: -1.5rem;
+                transition: all .3s;
+            }
+        }
+    }
+    .version-tags {
+        display: inline-block;
+        margin-bottom: 0.6rem;
+        
+        .version-tag {
+            display: inline-block;
+            margin-right: 6px;
+            .version-tag-t {
+                font-size: 12px;
+                white-space: nowrap;
+                background-color: #505050;
+                color: #ffffff;
+                padding: 3px 6px;
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+            }
+            .version-tag-n {
+                font-size: 12px;
+                white-space: nowrap;
+                color: #ffffff;
+                padding: 3px 6px;
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+                &.since {
+                    background-color: #4caf8f;
+                }
+                &.deprecated {
+                    background-color: #c84c3d;
+                }
+            }
+        }
+    }
+    .version-comment {
+        display: block;
+        margin: 8px 0 12px 0;
+        padding: 8px 8px;
+        background-color: #fff8e6;
+        border-radius: 6px;
+        border-left: 4px solid #e6a700;
+        color: #4d3800;
+        font-size: 14px;
+        font-weight: normal;
     }
 }
