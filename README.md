@@ -82,6 +82,11 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 ## Modify the document
 
+### Use `<version>` to mark the document version
+
+How to use: [Doris 文档版本标记用法](https://selectdb.feishu.cn/docx/TdmDdhNTDoAKGbx1mkbcT3sbn8P)
+
+
 ### website directory structure
 
 ````
