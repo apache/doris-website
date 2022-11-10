@@ -66,7 +66,7 @@ Assume that the business has the following data table schema:
 If converted into a table-building statement, the following is done (omitting the Partition and Distribution information in the table-building statement)
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "user id",
     `date` DATE NOT NULL COMMENT "data import time",
@@ -250,7 +250,7 @@ In some multi-dimensional analysis scenarios, users are more concerned with how 
 This is a typical user base information table. There is no aggregation requirement for this type of data, just the uniqueness of the primary key is guaranteed. (The primary key here is user_id + username). Then our statement is as follows:
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
 `user_id` LARGEINT NOT NULL COMMENT "用户id",
 `username` VARCHAR (50) NOT NULL COMMENT "25143;" 261651;"
@@ -282,7 +282,7 @@ This table structure is exactly the same as the following table structure descri
 And table-building statements:
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
 `user_id` LARGEINT NOT NULL COMMENT "用户id",
 `username` VARCHAR (50) NOT NULL COMMENT "25143;" 261651;"
@@ -314,7 +314,7 @@ In some multidimensional analysis scenarios, data has neither primary keys nor a
 
 The TABLE statement is as follows:
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
 `timestamp` DATETIME NOT NULL COMMENT "日志时间",
 `type` INT NOT NULL COMMENT "日志类型",

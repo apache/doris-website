@@ -66,7 +66,7 @@ Doris 的数据模型主要分为3类:
 如果转换成建表语句则如下（省略建表语句中的 Partition 和 Distribution 信息）
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "用户id",
     `date` DATE NOT NULL COMMENT "数据灌入日期时间",
@@ -250,7 +250,7 @@ AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
 这是一个典型的用户基础信息表。这类数据没有聚合需求，只需保证主键唯一性。（这里的主键为 user_id + username）。那么我们的建表语句如下：
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "用户id",
     `username` VARCHAR(50) NOT NULL COMMENT "用户昵称",
@@ -282,7 +282,7 @@ UNIQUE KEY(`user_id`, `username`)
 及建表语句：
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "用户id",
     `username` VARCHAR(50) NOT NULL COMMENT "用户昵称",
@@ -316,7 +316,7 @@ AGGREGATE KEY(`user_id`, `username`)
 建表语句如下：
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.expamle_tbl
+CREATE TABLE IF NOT EXISTS example_db.example_tbl
 (
     `timestamp` DATETIME NOT NULL COMMENT "日志时间",
     `type` INT NOT NULL COMMENT "日志类型",
