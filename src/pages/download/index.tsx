@@ -20,8 +20,8 @@ import {
 } from '@site/src/constant/download.data';
 
 const BINARY_VERSION = [
-    { label: '1.1.3 ( latest )', value: VersionEnum.Latest },
-    { label: '1.1.2', value: VersionEnum.Prev },
+    { label: `${VersionEnum.Latest} ( latest )`, value: VersionEnum.Latest },
+    { label: VersionEnum.Prev, value: VersionEnum.Prev },
 ];
 const CPU = [
     { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
