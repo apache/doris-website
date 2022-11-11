@@ -32,7 +32,7 @@ under the License.
 
 - Broker Load 支持 华为云 OBS 对象存储。[#13523](https://github.com/apache/doris/pull/13523)
 
-- Spar Load 支持 Parquet 和 Orc 文件。[#13438](https://github.com/apache/doris/pull/13438)
+- Spark Load 支持 Parquet 和 Orc 文件。[#13438](https://github.com/apache/doris/pull/13438)
 
 
 # 优化改进
