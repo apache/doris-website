@@ -1,8 +1,8 @@
-
 .version-mark {
     position: relative;
     display: inline-block;
     margin-bottom: 1rem;
+    max-width: 100%;
     &.paragraph:before {
         content: '';
         position: absolute;
@@ -11,14 +11,14 @@
         border-left: 2px solid var(--ifm-color-primary);
         opacity: 0.2;
     }
-   
+
     &.inline {
         display: inline;
         text-decoration: underline dotted #e6a700 2.3px;
         .version-comment {
             width: 40vw;
         }
-        
+
         .v-mark {
             position: absolute;
             left: 0;
@@ -27,14 +27,14 @@
             &.show {
                 visibility: visible;
                 top: -1.5rem;
-                transition: all .3s;
+                transition: all 0.3s;
             }
         }
     }
     .version-tags {
         display: inline-block;
         margin-bottom: 0.6rem;
-        
+
         .version-tag {
             display: inline-block;
             margin-right: 6px;
