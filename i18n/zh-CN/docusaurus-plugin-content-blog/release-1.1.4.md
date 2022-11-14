@@ -1,7 +1,7 @@
 ---
 {
-    'title': '[Doris 发版通告] Apache Doris 1.1.3 Release',
-    'summary': '[Doris 发版通告] Apache Doris 1.1.3 Release',
+    'title': '[Doris 发版通告] Apache Doris 1.1.4 Release',
+    'summary': '[Doris 发版通告] Apache Doris 1.1.4 Release',
     'date': '2022-11-11',
     'author': 'Apache Doris',
     'tags': ['版本发布'],
