@@ -3,16 +3,12 @@
         {
             "type": "category",
             "label": "Doris Introduction",
-            "items": [
-                "summary/basic-summary"
-            ]
+            "items": ["summary/basic-summary"]
         },
         {
             "type": "category",
             "label": "Getting Started",
-            "items": [
-                "get-starting/get-starting"
-            ]
+            "items": ["get-starting/get-starting"]
         },
         {
             "type": "category",
@@ -113,29 +109,21 @@
         {
             "type": "category",
             "label": "Advanced Usage",
-            "items": [  
+            "items": [
                 {
                     "type": "category",
                     "label": "Alter Table",
-                    "items": [
-                        "advanced/alter-table/schema-change",
-                        "advanced/alter-table/replace-table"
-                    ]
-                }, 
+                    "items": ["advanced/alter-table/schema-change", "advanced/alter-table/replace-table"]
+                },
                 {
                     "type": "category",
                     "label": "Doris Partition",
-                    "items": [
-                        "advanced/partition/dynamic-partition",
-                        "advanced/partition/table-temp-partition"
-                    ]
-                }, 
+                    "items": ["advanced/partition/dynamic-partition", "advanced/partition/table-temp-partition"]
+                },
                 {
                     "type": "category",
                     "label": "Data Cache",
-                    "items": [
-                        "advanced/cache/partition-cache"
-                    ]
+                    "items": ["advanced/cache/partition-cache"]
                 },
                 {
                     "type": "category",
@@ -157,7 +145,7 @@
                         "advanced/best-practice/import-analysis",
                         "advanced/best-practice/debug-log"
                     ]
-                },  
+                },
                 "advanced/resource",
                 "advanced/orthogonal-bitmap-manual",
                 "advanced/using-hll",
@@ -202,10 +190,7 @@
                 {
                     "type": "category",
                     "label": "SeaTunnel",
-                    "items": [
-                        "ecosystem/seatunnel/flink-sink",
-                        "ecosystem/seatunnel/spark-sink"
-                    ]
+                    "items": ["ecosystem/seatunnel/flink-sink", "ecosystem/seatunnel/spark-sink"]
                 },
                 {
                     "type": "category",
@@ -462,9 +447,7 @@
                         {
                             "type": "category",
                             "label": "Hash Functions",
-                            "items": [
-                                "sql-manual/sql-functions/hash-functions/murmur_hash3_32"
-                            ]
+                            "items": ["sql-manual/sql-functions/hash-functions/murmur_hash3_32"]
                         },
                         {
                             "type": "category",
@@ -878,10 +861,7 @@
                 {
                     "type": "category",
                     "label": "User Privilege and Ldap",
-                    "items": [
-                        "admin-manual/privilege-ldap/user-privilege",
-                        "admin-manual/privilege-ldap/ldap"
-                    ]
+                    "items": ["admin-manual/privilege-ldap/user-privilege", "admin-manual/privilege-ldap/ldap"]
                 },
                 "admin-manual/multi-tenant",
                 {
@@ -959,29 +939,22 @@
         {
             "type": "category",
             "label": "FAQ",
-            "items": [
-                "faq/install-faq",
-                "faq/data-faq",
-                "faq/sql-faq"
-            ]
+            "items": ["faq/install-faq", "faq/data-faq", "faq/sql-faq"]
         },
         {
             "type": "category",
             "label": "Benchmark",
-            "items": [
-                "benchmark/ssb",
-                "benchmark/tpch"
-            ]
+            "items": ["benchmark/ssb", "benchmark/tpch"]
         },
         {
             "type": "category",
             "label": "Release notes",
             "items": [
-                "releasenotes/release-1.1.0",
-                "releasenotes/release-1.1.1",
-                "releasenotes/release-1.1.2",
+                "releasenotes/release-1.1.4",
                 "releasenotes/release-1.1.3",
-                "releasenotes/release-1.1.4"
+                "releasenotes/release-1.1.2",
+                "releasenotes/release-1.1.1",
+                "releasenotes/release-1.1.0"
             ]
         }
     ]
