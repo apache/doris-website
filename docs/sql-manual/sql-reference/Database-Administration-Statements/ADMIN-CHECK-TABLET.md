@@ -28,7 +28,7 @@ under the License.
 
 ### Name
 
-ADMIN CLEAN TRASH
+ADMIN CHECK TABLET
 
 ### Description
 
