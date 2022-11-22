@@ -324,7 +324,7 @@ FROM KAFKA
 >
 >
 
-<version since="1.1">
+<version since="1.2">
 
 **Accessing a Kerberos-certified Kafka cluster**
 
