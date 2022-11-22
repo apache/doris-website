@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Apache Doris 1.2 Star-Schema-Benchmark 性能测试报告，',
+    'title': 'Apache Doris 1.2 Star-Schema-Benchmark 性能测试报告',
     'summary': "Doris 1.2 版本在 SSB FlAT 宽表上， Apache Doris 1.2.0-rc01上相对 Apache Doris 1.1.3 整体性能提升了将近4倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近10倍，在标准的 SSB 测试SQL上， Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近2倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 31 倍 ",
     'date': '2022-11-22',
     'author': 'Apache Doris',
