@@ -28,7 +28,7 @@ under the License.
 
 Indexes are used to help quickly filter or find data.
 
-Doris currently supports two main types of indexes: built-in smart indexes, including prefix indexes and ZoneMap indexes. User-created secondary indexes, including the [Bloom Filter index](. /bloomfilter) and [Bitmap inverted index](. /bitmap-index).
+Doris currently supports two main types of indexes: built-in smart indexes, including prefix indexes and ZoneMap indexes. User-created secondary indexes, including the [Bloom Filter index](. /bloomfilter) and [Bitmap index](. /bitmap-index).
 
 The ZoneMap index is the index information automatically maintained for each column in the column storage format, including Min/Max, the number of Null values, and so on. This index is transparent to the user.
 
