@@ -1,7 +1,10 @@
 ---
 {
-    "title": "Star-Schema-Benchmark",
-    "language": "zh-CN"
+    'title': "Apache Doris 1.2 Star-Schema-Benchmark Performance Test Report",
+    'summary': "On the SSB flat wide table, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 4 times compared with Apache Doris 1.1.3, and nearly 10 times compared with Apache Doris 0.15.0 RC04. On the SQL test with standard SSB, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 2 times compared with Apache Doris 1.1.3, and nearly 31 times compared with Apache Doris 0.15.0 RC04.",
+    'date': '2022-11-22',
+    'author': 'Apache Doris',
+    'tags': ['Tech Sharing'],
 }
 ---
 
@@ -26,159 +29,158 @@ under the License.
 
 # Star Schema Benchmark
 
-[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) 是一个轻量级的数仓场景下的性能测试集。SSB 基于 [TPC-H](http://www.tpc.org/tpch/) 提供了一个简化版的星型模型数据集，主要用于测试在星型模型下，多表关联查询的性能表现。另外，业界内通常也会将 SSB 打平为宽表模型（以下简称：SSB flat），来测试查询引擎的性能，参考[Clickhouse](https://clickhouse.com/docs/zh/getting-started/example-datasets/star-schema)。
+[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) is a lightweight performance test set in the data warehouse scenario. SSB provides a simplified star schema data based on [TPC-H](http://www.tpc.org/tpch/), which is mainly used to test the performance of multi-table JOIN query under star schema.  In addition, the industry usually flattens SSB into a wide table model (Referred as: SSB flat) to test the performance of the query engine, refer to [Clickhouse](https://clickhouse.com/docs/zh/getting-started).
 
-本文档主要介绍Apache Doris 在 SSB 100G 测试集上的性能表现。
+This document mainly introduces the performance of Doris on the SSB 100G test set.
 
-> 注 1：包括 SSB 在内的标准测试集通常和实际业务场景差距较大，并且部分测试会针对测试集进行参数调优。所以标准测试集的测试结果仅能反映数据库在特定场景下的性能表现。建议用户使用实际业务数据进行进一步的测试。
+> Note 1: The standard test set including SSB usually has a large gap with the actual business scenario, and some tests will perform parameter tuning for the test set. Therefore, the test results of the standard test set can only reflect the performance of the database in a specific scenario. It is recommended that users use actual business data for further testing.
 >
-> 注 2：本文档涉及的操作都在 Ubuntu Server 20.04 环境进行，CentOS 7 也可测试。
+> Note 2: The operations involved in this document are all performed in the Ubuntu Server 20.04 environment, and CentOS 7 as well.
 
-在 SSB 标准测试数据集上的 13 个查询上，我们基于 Apache Doris 1.2.0-rc01， Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行了对别测试。
+With 13 queries on the SSB standard test data set, we conducted a comparison test based on Apache Doris 1.2.0-rc01, Apache Doris 1.1.3 and Apache Doris 0.15.0 RC04 versions.
 
-在 SSB FlAT 宽表上， Apache Doris 1.2.0-rc01上相对 Apache Doris 1.1.3 整体性能提升了将近4倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近10倍 。
+On the SSB flat wide table, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 4 times compared with Apache Doris 1.1.3, and nearly 10 times compared with Apache Doris 0.15.0 RC04.
 
-![ssb_v11_v015_compare](/images/ssb_flat.png)
+On the SQL test with standard SSB, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 2 times compared with Apache Doris 1.1.3, and nearly 31 times compared with Apache Doris 0.15.0 RC04.
 
-在标准的 SSB 测试SQL上， Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近2倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 31 倍 。
+## 1. Hardware Environment
 
-![ssb_12_11_015](/images/ssb.png)
+| Number of machines | 4 Tencent Cloud Hosts (1 FE, 3 BEs)        |
+| ------------------ | ----------------------------------------- |
+| CPU                | AMD EPYC™ Milan (2.55GHz/3.5GHz) 16 Cores |
+| Memory             | 64G                                       |
+| Network Bandwidth  | 7Gbps                                     |
+| Disk               | High-performance Cloud Disk               |
 
-## 1. 硬件环境
+## 2. Software Environment
 
-| 机器数量 | 4 台腾讯云主机（1个FE，3个BE）       |
-| -------- | ------------------------------------ |
-| CPU      | AMD EPYC™ Milan(2.55GHz/3.5GHz) 16核 |
-| 内存     | 64G                                  |
-| 网络带宽  | 7Gbps                               |
-| 磁盘     | 高性能云硬盘                         |
+- Doris deployed 3BEs and 1FE;
+- Kernel version: Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
+- OS version: Ubuntu Server 20.04 LTS 64-bit
+- Doris software versions: Apache Doris 1.2.0-rc01, Apache Doris 1.1.3 and Apache Doris 0.15.0 RC04
+- JDK: openjdk version "11.0.14" 2022-01-18
 
-## 2. 软件环境
+## 3. Test Data Volume
 
-- Doris 部署 3BE 1FE；
-- 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
-- 操作系统版本：Ubuntu Server 20.04 LTS 64位
-- Doris 软件版本： Apache Doris 1.2.0-rc01、Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04
-- JDK：openjdk version "11.0.14" 2022-01-18
+| SSB Table Name | Rows | Annotation                          |
+| :------------- | :------------- | :------------------------------- |
+| lineorder      | 600,037,902    | Commodity Order Details             |
+| customer       | 3,000,000      | Customer Information        |
+| part           | 1,400,000      | Parts Information          |
+| supplier       | 200,000        | Supplier Information        |
+| date           | 2,556          | Date                        |
+| lineorder_flat | 600,037,902    | Wide Table after Data Flattening |
 
-## 3. 测试数据量
+## 4. Test Results
 
-| SSB表名        | 行数       | 备注             |
-| :------------- | :--------- | :--------------- |
-| lineorder      | 600,037,902 | 商品订单明细表表 |
-| customer       | 3,000,000    | 客户信息表       |
-| part           | 1,400,000    | 零件信息表       |
-| supplier       | 200,000     | 供应商信息表     |
-| date           | 2,556       | 日期表           |
-| lineorder_flat | 600,037,902 | 数据展平后的宽表 |
+We use Apache Doris 1.2.0-rc01, Apache Doris 1.1.3 and Apache Doris 0.15.0 RC04 for comparative testing. The test results are as follows:
 
-## 4. SSB 宽表测试结果
-
-这里我们使用 Apache Doris 1.2.0-rc01、 Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
-
-
-| Query | Apache Doris 1.2.0-rc01(ms) | Apache Doris 1.1.3(ms) | Apache Doris 0.15.0 RC04(ms) |
+| Query | Apache Doris 1.2.0-rc01(ms) | Apache Doris 1.1.3 (ms) |  Doris 0.15.0 RC04 (ms) |
 | ----- | ------------- | ------------- | ----------------- |
 | Q1.1  | 20            | 90            | 250               |
 | Q1.2  | 10            | 10            | 30                |
 | Q1.3  | 30            | 70            | 120               |
 | Q2.1  | 90            | 360           | 900               |
-| Q2.2  | 90            | 340           | 1020              |
+| Q2.2  | 90            | 340           | 1,020              |
 | Q2.3  | 60            | 260           | 770               |
-| Q3.1  | 160           | 550           | 1710              |
+| Q3.1  | 160           | 550           | 1,710              |
 | Q3.2  | 80            | 290           | 670               |
 | Q3.3  | 90            | 240           | 550               |
 | Q3.4  | 20            | 20            | 30                |
-| Q4.1  | 140           | 480           | 1250              |
+| Q4.1  | 140           | 480           | 1,250              |
 | Q4.2  | 50            | 240           | 400               |
 | Q4.3  | 30            | 200           | 330               |
-| 合计  | 880           | 3150          | 8030              |
+| Total  | 880           | 3,150          | 8,030              |
 
-**结果说明**
+![ssb_v11_v015_compare](/images/ssb_flat.png)
 
-- 测试结果对应的数据集为 scale 100, 约 6 亿条。
-- 测试环境配置为用户常用配置，云服务器 4 台，16 核 64G SSD，1 FE 3 BE 部署。
-- 选用用户常见配置测试以降低用户选型评估成本，但整个测试过程中不会消耗如此多的硬件资源。
+**Interpretation of Results**
 
-## 5. 标准 SSB 测试结果
+- The data set corresponding to the test results is scale 100, about 600 million.
+- The test environment is configured as the user's common configuration, with 4 cloud servers, 16-core 64G SSD, and 1 FE, 3 BEs deployment.
+- We select the user's common configuration test to reduce the cost of user selection and evaluation, but the entire test process will not consume so many hardware resources.
 
-这里我们使用 Apache Doris 1.2.0-rc01、Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
 
-| Query | Apache Doris 1.2.0-rc01(ms) | Apache Doris 1.1.3 (ms) |  Apache Doris 0.15.0 RC04(ms) |
+## 5. Standard SSB Test Results
+
+Here we use Apache Doris 1.2.0-rc01, Apache Doris 1.1.3 and Apache Doris 0.15.0 RC04 for comparative testing. In the test, we use Query Time（ms） as the main performance indicator. The test results are as follows:
+
+| Query | Apache Doris 1.2.0-rc01 (ms) | Apache Doris 1.1.3 (ms) | Doris 0.15.0 RC04 (ms) |
 | ----- | ------- | ---------------------- | ------------------------------- |
 | Q1.1  | 40      | 18                    | 350                           |
 | Q1.2  | 30      | 100                    | 80                             |
 | Q1.3  | 20      | 70                     | 80                            |
-| Q2.1  | 350     | 940                  | 20680                     |
-| Q2.2  | 320     | 750                  | 18250                    |
-| Q2.3  | 300     | 720                  | 14760                   |
-| Q3.1  | 650     | 2150                 | 22190                   |
-| Q3.2  | 260     | 510                 | 8360                          |
-| Q3.3  | 220     | 450                  | 6200                        |
+| Q2.1  | 350     | 940                  | 20,680                     |
+| Q2.2  | 320     | 750                  | 18,250                    |
+| Q2.3  | 300     | 720                  | 14,760                   |
+| Q3.1  | 650     | 2,150                 | 22,190                   |
+| Q3.2  | 260     | 510                 | 8,360                          |
+| Q3.3  | 220     | 450                  | 6,200                        |
 | Q3.4  | 60      | 70                   | 160                            |
-| Q4.1  | 840     | 1480                   | 24320                      |
-| Q4.2  | 460     | 560                 | 6310                          |
-| Q4.3  | 610     | 660                  | 10170                    |
-| 合计  | 4160    | 8478                | 131910 |
+| Q4.1  | 840     | 1,480                   | 24,320                      |
+| Q4.2  | 460     | 560                 | 6,310                          |
+| Q4.3  | 610     | 660                  | 10,170                    |
+| Total  | 4,160    | 8,478                | 131,910 |
 
-**结果说明**
+![ssb_12_11_015](/images/ssb.png)
 
-- 测试结果对应的数据集为scale 100, 约6亿条。
-- 测试环境配置为用户常用配置，云服务器4台，16核 64G SSD，1 FE 3 BE 部署。
-- 选用用户常见配置测试以降低用户选型评估成本，但整个测试过程中不会消耗如此多的硬件资源。
+**Interpretation of Results**
 
+- The data set corresponding to the test results is scale 100, about 600 million.
+- The test environment is configured as the user's common configuration, with 4 cloud servers, 16-core 64G SSD, and 1 FE 3 BEs deployment.
+- We select the user's common configuration test to reduce the cost of user selection and evaluation, but the entire test process will not consume so many hardware resources.
 
-## 6. 环境准备
+## 6. Environment Preparation
 
-请先参照 [官方文档](../install/install-deploy.md) 进行 Apache Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
+Please first refer to the [official documentation](. /install/install-deploy.md) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
 
-以下文档中涉及的脚本都存放在 Apache Doris 代码库：[ssb-tools](https://github.com/apache/doris/tree/master/tools/ssb-tools)
+The scripts mentioned in the following documents are stored in the Apache Doris codebase: [ssb-tools](https://github.com/apache/doris/tree/master/tools/ssb-tools)
 
-## 7. 数据准备
+## 7. Data Preparation
 
-### 7.1 下载安装 SSB 数据生成工具。
+### 7.1 Download and Install the SSB Data Generation Tool.
 
-执行以下脚本下载并编译 [ssb-dbgen](https://github.com/electrum/ssb-dbgen.git) 工具。
+Execute the following script to download and compile the [ssb-dbgen](https://github.com/electrum/ssb-dbgen.git) tool.
 
 ```shell
 sh build-ssb-dbgen.sh
-```
+````
 
-安装成功后，将在 `ssb-dbgen/` 目录下生成 `dbgen` 二进制文件。
+After successful installation, the `dbgen` binary will be generated under the `ssb-dbgen/` directory.
 
-### 7.2 生成 SSB 测试集
+### 7.2 Generate SSB Test Set
 
-执行以下脚本生成 SSB 数据集：
+Execute the following script to generate the SSB dataset:
 
 ```shell
 sh gen-ssb-data.sh -s 100 -c 100
-```
+````
 
-> 注1：通过 `sh gen-ssb-data.sh -h` 查看脚本帮助。
+> Note 1: Check the script help via `sh gen-ssb-data.sh -h`.
 >
-> 注2：数据会以 `.tbl` 为后缀生成在  `ssb-data/` 目录下。文件总大小约60GB。生成时间可能在数分钟到1小时不等。
+> Note 2: The data will be generated under the `ssb-data/` directory with the suffix `.tbl`. The total file size is about 60GB and may need a few minutes to an hour to generate.
 >
-> 注3：`-s 100` 表示测试集大小系数为 100，`-c 100` 表示并发100个线程生成 lineorder 表的数据。`-c` 参数也决定了最终 lineorder 表的文件数量。参数越大，文件数越多，每个文件越小。
+> Note 3: `-s 100` indicates that the test set size factor is 100, `-c 100` indicates that 100 concurrent threads generate the data of the lineorder table. The `-c` parameter also determines the number of files in the final lineorder table. The larger the parameter, the larger the number of files and the smaller each file.
 
-在 `-s 100` 参数下，生成的数据集大小为：
+With the `-s 100` parameter, the resulting dataset size is:
 
 | Table     | Rows             | Size | File Number |
 | --------- | ---------------- | ---- | ----------- |
-| lineorder | 6亿（600037902） | 60GB | 100         |
-| customer  | 300万（3000000） | 277M | 1           |
-| part      | 140万（1400000） | 116M | 1           |
-| supplier  | 20万（200000）   | 17M  | 1           |
-| date      | 2556             | 228K | 1           |
+| lineorder | 600,037,902 | 60GB | 100         |
+| customer  | 3,000,000 | 277M | 1           |
+| part      | 1,400,000 | 116M | 1           |
+| supplier  | 200,000   | 17M  | 1           |
+| date      | 2,556             | 228K | 1           |
 
-### 7.3 建表
+### 7.3 Create Table
 
-#### 7.3.1 准备 `doris-cluster.conf` 文件。
+#### 7.3.1 Prepare the `doris-cluster.conf` File.
 
-在调用导入脚本前，需要将 FE 的 ip 端口等信息写在 `doris-cluster.conf` 文件中。
+Before import the script, you need to write the FE’s ip port and other information in the `doris-cluster.conf` file.
 
-文件位置和 `load-ssb-dimension-data.sh` 平级。
+The file location is at the same level as `load-ssb-dimension-data.sh`.
 
-文件内容包括 FE 的 ip，HTTP 端口，用户名，密码以及待导入数据的 DB 名称：
+The content of the file includes FE's ip, HTTP port, user name, password and the DB name of the data to be imported:
 
 ```shell
 export FE_HOST="xxx"
@@ -189,14 +191,15 @@ export PASSWORD='xxx'
 export DB="ssb"
 ```
 
-#### 7.3.2 执行以下脚本生成创建 SSB 表：
+#### 7.3.2 Execute the Following Script to Generate and Create the SSB Table:
 
 ```shell
 sh create-ssb-tables.sh
-```
-或者复制 [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables.sql)  和 [create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-table.sql)  中的建表语句，在 MySQL 客户端中执行。
+````
 
-下面是 `lineorder_flat` 表建表语句。在上面的 `create-ssb-flat-table.sh`  脚本中创建 `lineorder_flat` 表，并进行了默认分桶数（48个桶)。您可以删除该表，根据您的集群规模节点配置对这个分桶数进行调整，这样可以获取到更好的一个测试效果。
+Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables.sql) and [ create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-table.sql) and then execute them in the MySQL client.
+
+The following is the `lineorder_flat` table build statement. Create the `lineorder_flat` table in the above `create-ssb-flat-table.sh` script, and perform the default number of buckets (48 buckets). You can delete this table and adjust the number of buckets according to your cluster scale node configuration, so as to obtain a better test result.
 
 ```sql
 CREATE TABLE `lineorder_flat` (
@@ -258,25 +261,24 @@ PROPERTIES (
 );
 ```
 
-### 7.4 导入数据
+### 7.4 Import data
 
-我们使用以下命令完成 SSB 测试集所有数据导入及 SSB FLAT 宽表数据合成并导入到表里。
-
+We use the following command to complete all data import of SSB test set and SSB FLAT wide table data synthesis and then import into the table.
 
 ```shell
-sh bin/load-ssb-data.sh -c 10
+ sh bin/load-ssb-data.sh -c 10
 ```
 
-`-c 5` 表示启动 10 个并发线程导入（默认为 5）。在单 BE 节点情况下，由 `sh gen-ssb-data.sh -s 100 -c 100` 生成的 lineorder 数据，同时会在最后生成ssb-flat表的数据，如果开启更多线程，可以加快导入速度，但会增加额外的内存开销。
+`-c 5` means start 10 concurrent threads to import (5 by default). In the case of a single BE node, the lineorder data generated by `sh gen-ssb-data.sh -s 100 -c 100` will also generate the data of the ssb-flat table in the end. If more threads are enabled, the import speed can be accelerated. But it will cost extra memory.
 
-> 注：
+> Notes.
 >
-> 1. 为获得更快的导入速度，你可以在 be.conf 中添加 `flush_thread_num_per_store=5` 后重启BE。该配置表示每个数据目录的写盘线程数，默认为2。较大的数据可以提升写数据吞吐，但可能会增加 IO Util。（参考值：1块机械磁盘，在默认为2的情况下，导入过程中的 IO Util 约为12%，设置为5时，IO Util 约为26%。如果是 SSD 盘，则几乎为 0）。
+> 1. To get faster import speed, you can add `flush_thread_num_per_store=5` in be.conf and then restart BE. This configuration indicates the number of disk writing threads for each data directory, 2 by default. Larger data can improve write data throughput, but may increase IO Util. (Reference value: 1 mechanical disk, with 2 by default, the IO Util during the import process is about 12%. When it is set to 5, the IO Util is about 26%. If it is an SSD disk, it is almost 0%) .
 >
-> 2. flat 表数据采用 'INSERT INTO ... SELECT ... ' 的方式导入。
+> 2. The flat table data is imported by 'INSERT INTO ... SELECT ... '.
 
+### 7.5 Checking Imported data
 
-### 7.5 检查导入数据
 
 ```sql
 select count(*) from part;
@@ -287,26 +289,23 @@ select count(*) from lineorder;
 select count(*) from lineorder_flat;
 ```
 
-数据量应和生成数据的行数一致。
+The amount of data should be consistent with the number of rows of generated data.
 
 | Table          | Rows             | Origin Size | Compacted Size(1 Replica) |
 | -------------- | ---------------- | ----------- | ------------------------- |
-| lineorder_flat | 6亿（600037902） |             | 59.709 GB                 |
-| lineorder      | 6亿（600037902） | 60 GB       | 14.514 GB                 |
-| customer       | 300万（3000000） | 277 MB      | 138.247 MB                |
-| part           | 140万（1400000） | 116 MB      | 12.759 MB                 |
-| supplier       | 20万（200000）   | 17 MB       | 9.143 MB                  |
-| date           | 2556             | 228 KB      | 34.276 KB                 |
+| lineorder_flat | 600,037,902 |             | 59.709 GB                 |
+| lineorder      | 600,037,902 | 60 GB       | 14.514 GB                 |
+| customer       | 3,000,000 | 277 MB      | 138.247 MB                |
+| part           | 1,400,000 | 116 MB      | 12.759 MB                 |
+| supplier       | 200,000   | 17 MB       | 9.143 MB                  |
+| date           | 2,556             | 228 KB      | 34.276 KB                 |
 
-### 7.6 查询测试
+### 7.6 Query Test
 
-SSB-FlAT 查询语句 ：[ssb-flat-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-flat-queries)
+- SSB-Flat Query Statement: [ ssb-flat-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-flat-queries)
+- Standard SSB Queries: [ ssb-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-queries)
 
-
-标准 SSB 查询语句 ：[ssb-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-queries)
-
-#### 7.6.1 SSB FLAT 测试 SQL
-
+#### 7.6.1 SSB FLAT Test for SQL
 
 ```sql
 --Q1.1
@@ -393,11 +392,9 @@ GROUP BY YEAR, S_CITY, P_BRAND
 ORDER BY YEAR ASC, S_CITY ASC, P_BRAND ASC;
 ```
 
+#### 7.6.2 SSB Standard Test for SQL
 
-
-#### **7.6.2 SSB 标准测试 SQL**
-
-```sql
+```SQL
 --Q1.1
 SELECT SUM(lo_extendedprice * lo_discount) AS REVENUE
 FROM lineorder, dates

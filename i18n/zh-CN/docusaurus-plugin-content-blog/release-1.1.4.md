@@ -1,7 +1,10 @@
 ---
 {
-    "title": "Release 1.1.4",
-    "language": "zh-CN"
+    'title': '[Doris 发版通告] Apache Doris 1.1.4 Release',
+    'summary': '[Doris 发版通告] Apache Doris 1.1.4 Release',
+    'date': '2022-11-11',
+    'author': 'Apache Doris',
+    'tags': ['版本发布'],
 }
 ---
 
@@ -23,6 +26,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 
 
 

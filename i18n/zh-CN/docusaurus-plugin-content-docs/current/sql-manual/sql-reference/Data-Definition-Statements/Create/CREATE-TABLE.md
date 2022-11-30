@@ -229,10 +229,9 @@ distribution_desc
 
 * `distribution_desc`
   
-    定义数据分桶方式。
+    定义数据分桶方式 : 
 
-    1) Hash 分桶 语法： `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]` 说明： 使用指定的 key 列进行哈希分桶。
-
+    1. Hash 分桶 语法： `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num]` 说明： 使用指定的 key 列进行哈希分桶。
   2. Random 分桶 语法： `DISTRIBUTED BY RANDOM [BUCKETS num]` 说明： 使用随机数进行分桶。
   
 * `rollup_list`

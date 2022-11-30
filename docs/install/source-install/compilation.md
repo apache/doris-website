@@ -59,31 +59,34 @@ This document focuses on how to code Doris through source code.
 | apache/incubator-doris:build-env-latest | before [0efef1b](https://github.com/apache/doris/commit/0efef1b332300887ee0473f9df9bdd9d7297d824) | |
 | apache/doris:build-env-for-1.0.0| | 1.0.0 |
 | apache/doris:build-env-for-1.1.0| | 1.1.0 |
-| apache/doris:build-env-ldb-toolchain-latest | trunk |  |
+| apache/doris:build-env-ldb-toolchain-latest | | 1.1.x, trunk |
+| apache/doris:build-env-ldb-toolchain-no-avx2-latest | | 1.1.x, trunk |
 
 **note**:
 
-> 1. Dev docker image [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)
+> 1. Third-party libraries in images with no-avx2 in their names that can run on CPUs that do not support avx2 instructions. Doris can be compiled with the USE_AVX2=0 option.
 
-> 2. Doris version 0.14.0 still uses apache/incubator-doris:build-env-1.2 to compile, and the 0.14.x code will use apache/incubator-doris:build-env-1.3.1.
+> 2. Dev docker image [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)
 
-> 3. From docker image of build-env-1.3.1, both OpenJDK 8 and OpenJDK 11 are included, and OpenJDK 11 is used for compilation by default. Please make sure that the JDK version used for compiling is the same as the JDK version used at runtime, otherwise it may cause unexpected operation errors. You can use the following command to switch the default JDK version in container:
->
->   Switch to JDK 8:
->
->   ```
->   $ alternatives --set java java-1.8.0-openjdk.x86_64
->   $ alternatives --set javac java-1.8.0-openjdk.x86_64
->   $ export JAVA_HOME=/usr/lib/jvm/java-1.8.0
->   ```
->
->   Switch to JDK 11:
->
->   ```
->   $ alternatives --set java java-11-openjdk.x86_64
->   $ alternatives --set javac java-11-openjdk.x86_64
->   $ export JAVA_HOME=/usr/lib/jvm/java-11
->   ```
+> 3. Doris version 0.14.0 still uses apache/incubator-doris:build-env-1.2 to compile, and the 0.14.x code will use apache/incubator-doris:build-env-1.3.1.
+
+> 4. Since the docker image of build-env-1.3.1 includes both OpenJDK 8 and OpenJDK 11, please confirm the default JDK version with `java -version`. You can also switch versions in the following ways (it is recommended to use JDK8 by default)
+    >
+    >   Switch to JDK 8:
+    >
+    >   ```
+    >   alternatives --set java java-1.8.0-openjdk.x86_64
+    >   alternatives --set javac java-1.8.0-openjdk.x86_64
+    >   export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+    >   ```
+    >
+    >   Switch to JDK 11:
+    >
+    >   ```
+    >   alternatives --set java java-11-openjdk.x86_64
+    >   alternatives --set javac java-11-openjdk.x86_64
+    >   export JAVA_HOME=/usr/lib/jvm/java-11
+    >   ```
 
 2. Running Mirror
 
@@ -130,21 +133,13 @@ This document focuses on how to code Doris through source code.
    After compilation, the output files are in the `output/` directory.
 
     > **Note:**
-    >
-    > If you are using `build-env-for-0.15.0` or  `build-env-for-1.0.0` for the first time, use the following command when compiling:
-    >
-    >```
-    >sh build.sh --clean --be --fe --ui
-    >```
-    >
-    > `build-env-ldb-toolchain-latest` and later, use the following command:
-    >
-    >```
-    >sh build.sh --clean --be --fe
-    >```
-    >
-    > This is because from build-env-for-0.15.0, we upgraded thrift (0.9 -> 0.13), you need to use the --clean command to force the use of the new version of thrift to generate code files, otherwise incompatible code will appear.
-   
+     >
+     > If you are using `build-env-for-0.15.0` or later version for the first time, use the following command when compiling:
+     >
+     > `sh build.sh --clean --be --fe --ui`
+     >
+     > This is because from build-env-for-0.15.0, we upgraded thrift (0.9 -> 0.13), you need to use the --clean command to force the use of the new version of thrift to generate code files, otherwise incompatible code will appear.
+
     After compilation, the output file is in the `output/` directory.
 
 ### Self-compiling Development Environment Mirror
@@ -152,7 +147,7 @@ This document focuses on how to code Doris through source code.
 You can also create a Doris development environment mirror yourself, referring specifically to the `docker/README.md` file.
 
 
-## Direct Compilation (CentOS/Ubuntu)
+## Direct Compilation (Ubuntu)
 
 You can try to compile Doris directly in your own Linux environment.
 
@@ -187,8 +182,7 @@ You can try to compile Doris directly in your own Linux environment.
        ln -s /usr/bin/g++-11 /usr/bin/g++
        ln -s /usr/bin/gcc-11 /usr/bin/gcc
        sudo apt-get install autoconf automake libtool autopoint
-       ```
-    
+
 2. Compile Doris
 
    Compiling with the Docker development image, check whether the avx2 instruction is supported before compiling
@@ -233,13 +227,6 @@ You can try to compile Doris directly in your own Linux environment.
          ```
 
          REPOSITORY_URL contains all third-party library source code packages and their historical versions.
-
-3. `fatal error: Killed signal terminated program ...`
-
-   If you encounter the above error when compiling with a Docker image, it may be that the memory allocated to the image is insufficient（The default memory size allocated by Docker is 2GB, and the peak memory usage during compilation is greater than 2GB).
-
-   Try to increase the allocated memory of the image appropriately, 4GB ~ 8GB is recommended.
-
 
 ## Special statement
 
