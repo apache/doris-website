@@ -129,6 +129,7 @@ const config = {
                             banner: 'none',
                         },
                     },
+                    badge: false,
                     sidebarPath: require.resolve('./sidebars.json'),
                     onlyIncludeVersions:
                         process.env.NODE_ENV === 'development' && !showAllVersions
@@ -200,10 +201,10 @@ const config = {
                         docsPluginId: 'community',
                     },
                     { to: '/users', label: 'Users', position: 'left' },
-                    {
-                        type: 'docsVersionDropdown',
-                        position: 'right',
-                    },
+                    // {
+                    //     type: 'docsVersionDropdown',
+                    //     position: 'right',
+                    // },
                     {
                         type: 'localeDropdown',
                         position: 'right',
