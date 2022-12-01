@@ -132,7 +132,6 @@ const config = {
                             badge: false,
                         },
                     },
-                    badge: false,
                     sidebarPath: require.resolve('./sidebars.json'),
                     onlyIncludeVersions:
                         process.env.NODE_ENV === 'development' && !showAllVersions
