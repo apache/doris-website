@@ -121,12 +121,15 @@ const config = {
                         current: {
                             label: '1.1',
                             path: '',
+                            badge: false,
                         },
                         0.15: {
                             banner: 'none',
+                            badge: false,
                         },
                         dev: {
                             banner: 'none',
+                            badge: false,
                         },
                     },
                     badge: false,
