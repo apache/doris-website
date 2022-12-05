@@ -27,8 +27,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# JD.com's Exploration and Practice with Apache Doris in Realtime OLAP
-
 ![kv](/images/jd/en/kv.png)
 
 > Guide:
