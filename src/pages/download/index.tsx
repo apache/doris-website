@@ -191,7 +191,9 @@ export default function Download(): JSX.Element {
                                                 UDF ，下载后需要将其中放到
                                                 <code>be/lib</code>
                                                 目录下。详细升级注意事项请参考
-                                                <Link to="/docs/releasenotes/release-1.2.0">1.2.0 Release Note</Link>
+                                                <Link to="/docs/dev/releasenotes/release-1.2.0">
+                                                    1.2.0 Release Note
+                                                </Link>
                                                 以及
                                                 <Link to="/docs/dev/install/install-deploy">
                                                     <Translate id="Installation and deployment">
