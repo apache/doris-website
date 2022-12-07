@@ -116,7 +116,7 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    lastVersion: 'current',
+                    lastVersion: 'dev',
                     versions: {
                         current: {
                             label: '1.1',

@@ -27,6 +27,94 @@ export function getAllDownloadLinks(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? APACHE_LINK : CHINA_MIRROR_LINK;
     return [
         {
+            id: '1.2.0-intel-avx2-jdk8',
+            items: [
+                {
+                    label: 'apache-doris-fe-1.2.0-bin.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-1.2.0-bin-x86_64.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
+            id: '1.2.0-intel-noavx2-jdk8',
+            items: [
+                {
+                    label: 'apache-doris-fe-1.2.0-bin.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-1.2.0-bin-x86_64-noavx2.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-x86_64-noavx2.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-x86_64-noavx2.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-x86_64-noavx2.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
+            id: '1.2.0-arm-jdk8',
+            items: [
+                {
+                    label: 'apache-doris-fe-1.2.0-bin-arm.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-arm.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-fe-1.2.0-bin-arm.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-1.2.0-bin-arm.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-arm.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-be-1.2.0-bin-arm.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-arm.tar.xz',
+                    links: {
+                        source: `${sources}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-arm.tar.xz`,
+                        signature: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.2/1.2.0-rc04/apache-doris-java-udf-jar-with-dependencies-1.2.0-bin-arm.tar.xz.sha512`,
+                    },
+                },
+            ],
+        },
+
+        {
             id: '1.1.4-intel-avx2-jdk8',
             items: [
                 {
@@ -89,76 +177,39 @@ export function getAllDownloadLinks(locale: string) {
                 },
             ],
         },
-
-        {
-            id: '1.1.3-intel-avx2-jdk8',
-            items: [
-                {
-                    label: 'apache-doris-fe-1.1.3-bin.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.sha512`,
-                    },
-                },
-                {
-                    label: 'apache-doris-be-1.1.3-bin-x86_64.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64.tar.gz.sha512`,
-                    },
-                },
-            ],
-        },
-        {
-            id: '1.1.3-intel-noavx2-jdk8',
-            items: [
-                {
-                    label: 'apache-doris-fe-1.1.3-bin.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.sha512`,
-                    },
-                },
-                {
-                    label: 'apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-x86_64-noavx2.tar.gz.sha512`,
-                    },
-                },
-            ],
-        },
-        {
-            id: '1.1.3-arm-jdk8',
-            items: [
-                {
-                    label: 'apache-doris-fe-1.1.3-bin.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-fe-1.1.3-bin.tar.gz.sha512`,
-                    },
-                },
-                {
-                    label: 'apache-doris-be-1.1.3-bin-arm.tar.gz',
-                    links: {
-                        source: `${sources}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-arm.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-arm.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.3-rc02/apache-doris-be-1.1.3-bin-arm.tar.gz.sha512`,
-                    },
-                },
-            ],
-        },
     ];
 }
 
 export function getAllFlinkConnectorDownloadLinks(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? FLINK_CONNECTOR_LINK : CHINA_FLINK_CONNECTOR_MIRROR_LINK;
     return [
+        {
+            version: '1.3.0',
+            date: '2022-12-07',
+            flink: '1.16',
+            scala: '2.12, 2.11',
+            doris: '1.0+',
+            download: `${sources}doris/flink-connector/1.3.0/`,
+            github: 'https://github.com/apache/doris-flink-connector',
+        },
+        {
+            version: '1.2.1',
+            date: '2022-12-07',
+            flink: '1.15',
+            scala: '2.12, 2.11',
+            doris: '1.0+',
+            download: `${sources}doris/flink-connector/1.2.1/`,
+            github: 'https://github.com/apache/doris-flink-connector',
+        },
+        {
+            version: '1.1.1',
+            date: '2021-12-07',
+            flink: '1.14',
+            scala: '2.12, 2.11',
+            doris: '1.0+',
+            download: `${sources}doris/flink-connector/1.1.1/`,
+            github: 'https://github.com/apache/doris-flink-connector',
+        },
         {
             version: '1.2.0',
             date: '2022-08-15',
@@ -216,7 +267,13 @@ export function getAllRelease(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
     return [
         {
-            version: '1.1.4 ( latest )',
+            version: '1.2.0 ( latest )',
+            date: '2022-12-07',
+            note: '/docs/releasenotes/release-1.2.0',
+            download: `${sources}doris/1.2/1.2.0-rc04/`,
+        },
+        {
+            version: '1.1.4',
             date: '2022-11-11',
             note: '/docs/releasenotes/release-1.1.4',
             download: `${sources}doris/1.1/1.1.4-rc01/`,
@@ -267,8 +324,8 @@ export function getAllRelease(locale: string) {
 }
 
 export enum VersionEnum {
-    Latest = '1.1.4',
-    Prev = '1.1.3',
+    Latest = '1.2.0',
+    Prev = '1.1.4',
 }
 
 export enum CPUEnum {
