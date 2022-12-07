@@ -764,5 +764,8 @@
   },
   "Notice": {
     "message": "注意事项"
+  },
+  "download.quick.download.notice": {
+    "message": "1.2.0 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
   }
 }
