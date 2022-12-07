@@ -2,7 +2,7 @@
     margin: 3rem 0;
 
     a {
-        transition: all .3s;
+        transition: all 0.3s;
 
         &:hover {
             text-decoration: underline;
@@ -29,7 +29,7 @@
             display: flex;
             align-items: center;
 
-            &+.download-type {
+            & + .download-type {
                 margin-top: 1rem;
             }
 
@@ -73,21 +73,21 @@
                         color: var(--global-colors-white);
                     }
 
-                    &+.radio {
+                    & + .radio {
                         margin-left: -1px;
                     }
-                    & + .disabled{
+                    & + .disabled {
                         border-left: none;
                         margin-left: 0;
                     }
 
                     .inner {
                         margin: 0.3125rem;
-                        background-color: #F7FAFF;
+                        background-color: #f7faff;
                         width: calc(100% - 0.625rem);
                         color: var(--ifm-color-primary);
 
-                        & + .inner{
+                        & + .inner {
                             margin-top: 0;
                         }
                     }
@@ -95,29 +95,34 @@
             }
         }
 
-        .intr {
+        .tips {
             margin-left: 11.1875rem;
-            margin-top: 0.3125rem;
-            color: #556986;
-            font-size: var(--global-font-size-smaller);
-            line-height: 1.5;
-
-            code {
-                border-radius: 0.125rem;
-                border-width: 1px;
-                padding: 0.125rem 0.3125rem;
-                margin: 0 0.3125rem;
+            margin-top: 1rem;
+            .title {
+                color: #556986;
+                font-weight: 600;
+                font-size: var(--global-font-size-smaller);
             }
+            ul {
+                margin: 0;
+                padding: 0;
+                padding-left: 0.9375rem;
+                li {
+                    color: #556986;
+                    font-size: var(--global-font-size-smaller);
+                    line-height: 1.5;
+                    font-weight: 600;
+                    margin-top: 0.3125rem;
 
-            &.tips{
-                margin-top: 0.625rem;
-                position: relative;
-                padding-left: 0.625rem;
-                &::after{
-                    content: '*';
-                    position: absolute;
-                    left: 0;
-                    top: 0.1875rem;
+                    code {
+                        border-radius: 0.125rem;
+                        border-width: 1px;
+                        padding: 0.125rem 0.3125rem;
+                        margin: 0 0.3125rem;
+                    }
+                    a {
+                        margin: 0 0.3125rem;
+                    }
                 }
             }
         }
@@ -144,6 +149,10 @@
             .intr {
                 margin-left: 0;
             }
+
+            .tips {
+                margin-left: 0;
+            }
         }
     }
 
@@ -159,7 +168,7 @@
 
             thead {
                 tr {
-                    background-color: #F7FAFF;
+                    background-color: #f7faff;
                     border-bottom: none;
                     border-top: none;
 
@@ -167,7 +176,7 @@
                         font-size: var(--global-font-size-default);
                         color: var(--global-colors-text-primary);
                         font-weight: 700;
-                        border-color: #DBE4F3;
+                        border-color: #dbe4f3;
                         line-height: 1.9;
                         white-space: nowrap;
                     }
@@ -177,11 +186,11 @@
             tbody {
                 tr {
                     td {
-                        border-color: #DBE4F3;
+                        border-color: #dbe4f3;
                         font-size: var(--global-font-size-medium);
                         white-space: nowrap;
 
-                        a+a {
+                        a + a {
                             margin-left: 1.25rem;
                         }
                     }
