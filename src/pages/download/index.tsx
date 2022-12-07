@@ -175,23 +175,68 @@ export default function Download(): JSX.Element {
                                 </div>
                             </div>
                         </div>
-                        <div className="intr">
-                            <Translate id="download.quick.download.intr.prefix">
-                                If the CPU does not support the avx2 instruction set, select the no avx2 version. You
-                                can check whether it is supported by
-                            </Translate>
-                            <code>cat /proc/cpuinfo</code>
-                            <Translate id="download.quick.download.intr.suffix">
-                                . The avx2 instruction will improve the computational efficiency of data structures such
-                                as bloom filter.
-                            </Translate>
+                        <div className="tips">
+                            <div className="title">
+                                <Translate id="Notice">Notice</Translate>
+                                {currentLocale === 'zh-CN' ? '：' : ':'}
+                            </div>
+                            <ul>
+                                {version === VersionEnum.Latest ? (
+                                    <>
+                                        {currentLocale === 'zh-CN' ? (
+                                            <li>
+                                                由于 Apache 服务器文件大小限制，1.2
+                                                版本的二进制程序被分为三个包，其中新增的
+                                                apache-doris-java-udf-jar-with-dependencies 用于支持 JDBC 外表和 JAVA
+                                                UDF ，下载后需要将其中放到
+                                                <code>be/lib</code>
+                                                目录下。详细升级注意事项请参考
+                                                <Link to="/docs/releasenotes/release-1.2.0">1.2.0 Release Note</Link>
+                                                以及
+                                                <Link to="/docs/dev/install/install-deploy">
+                                                    <Translate id="Installation and deployment">
+                                                        Installation and deployment
+                                                    </Translate>
+                                                </Link>
+                                                以及
+                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
+                                                    <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
+                                                </Link>
+                                                手册。
+                                            </li>
+                                        ) : (
+                                            <li>
+                                                Due to file size limitations, the binary for version 1.2.0 is divided
+                                                into three packages. The `apache-doris-java-udf-jar-with-dependencies`
+                                                package is used to support the new JDBC expansion table and JAVA UDF.
+                                                After downloading, you need to put the
+                                                `java-udf-jar-with-dependencies.jar` in the <code>be/lib</code>
+                                                directory to start BE, otherwise it will not start successfully.
+                                            </li>
+                                        )}
+                                        <li>
+                                            <Translate id="download.quick.download.notice">
+                                                Version 1.2.0 does not support running with JDK11, and it will be fixed
+                                                in a later version.
+                                            </Translate>
+                                        </li>
+                                    </>
+                                ) : (
+                                    ''
+                                )}
+                                <li>
+                                    <Translate id="download.quick.download.intr.prefix">
+                                        If the CPU does not support the avx2 instruction set, select the no avx2
+                                        version. You can check whether it is supported by
+                                    </Translate>
+                                    <code>cat /proc/cpuinfo</code>
+                                    <Translate id="download.quick.download.intr.suffix">
+                                        . The avx2 instruction will improve the computational efficiency of data
+                                        structures such as bloom filter.
+                                    </Translate>
+                                </li>
+                            </ul>
                         </div>
-                        {/* <div className="intr tips">
-                            <Translate id="download.quick.download.version.tips">
-                                The apache-doris-1.1.2-bin-x86-noavx2 version is not currently available for download,
-                                we will update it soon.
-                            </Translate>
-                        </div> */}
                     </div>
                 </PageColumn>
             </section>
