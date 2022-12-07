@@ -151,7 +151,7 @@ export default function Home(): JSX.Element {
                     <div className="news-wrap">
                         <div className="news-item">
                             <span className="news-icon"></span>
-                            <Link to="/docs/releasenotes/release-1.2.0" className="news-content">
+                            <Link to="/docs/dev/releasenotes/release-1.2.0" className="news-content">
                                 <Translate id="homepage.news" description="The label for the link to homepage news">
                                     2022.12.07, Apache Doris 1.2.0 is officially released
                                 </Translate>

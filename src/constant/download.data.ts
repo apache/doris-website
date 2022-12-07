@@ -269,37 +269,37 @@ export function getAllRelease(locale: string) {
         {
             version: '1.2.0 ( latest )',
             date: '2022-12-07',
-            note: '/docs/releasenotes/release-1.2.0',
+            note: '/docs/dev/releasenotes/release-1.2.0',
             download: `${sources}doris/1.2/1.2.0-rc04/`,
         },
         {
             version: '1.1.4',
             date: '2022-11-11',
-            note: '/docs/releasenotes/release-1.1.4',
+            note: '/docs/dev/releasenotes/release-1.1.4',
             download: `${sources}doris/1.1/1.1.4-rc01/`,
         },
         {
             version: '1.1.3',
             date: '2022-10-17',
-            note: '/docs/releasenotes/release-1.1.3',
+            note: '/docs/dev/releasenotes/release-1.1.3',
             download: `${sources}doris/1.1/1.1.3-rc02/`,
         },
         {
             version: '1.1.2',
             date: '2022-09-13',
-            note: '/docs/releasenotes/release-1.1.2',
+            note: '/docs/dev/releasenotes/release-1.1.2',
             download: `${sources}doris/1.1/1.1.2-rc05/`,
         },
         {
             version: '1.1.1',
             date: '2022-07-29',
-            note: '/docs/releasenotes/release-1.1.1',
+            note: '/docs/dev/releasenotes/release-1.1.1',
             download: `${sources}doris/1.1/1.1.1-rc03/`,
         },
         {
             version: '1.1.0',
             date: '2022-07-14',
-            note: '/docs/releasenotes/release-1.1.0',
+            note: '/docs/dev/releasenotes/release-1.1.0',
             download: `${sources}doris/1.1/1.1.0-rc05/`,
         },
         {
