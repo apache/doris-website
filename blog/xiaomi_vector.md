@@ -28,7 +28,7 @@ under the License.
 
 > Author: ZuoWei, OLAP Engineer, Xiaomi
 
-![kv](/images/xiaomi/en/kv.jpg)
+![kv](/images/xiaomi/en/kv.png)
 
 # About Xiaomi
 [Xiaomi Corporation](https://www.mi.com/global) (“Xiaomi” or the “Group”; HKG:1810), a consumer electronics and smart manufacturing company with smartphones and smart hardware connected by an Internet of Things (IoT) platform.  In 2021, Xiaomi's total revenue amounted to RMB328.3 billion(USD472,231,316,200), an increase of 33.5% year-over-year; Adjusted net profit was RMB22.0 billion(USD3,164,510,800), an increase of 69.5% year-over-year.
