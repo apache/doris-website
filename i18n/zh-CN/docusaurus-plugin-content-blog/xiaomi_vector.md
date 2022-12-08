@@ -1,9 +1,5 @@
 ---
 {
-    "title": "最佳实践: Apache Doris 在小米数据场景的应用实践与优化",
-    "language": "zh"
-}
-{
     'title': '最佳实践: Apache Doris 在小米数据场景的应用实践与优化',
     'summary': '小米集团于 2019 年首次引入了 Apache Doris ，目前 Apache Doris 已经在小米内部数十个业务中得到广泛应用，并且在小米内部已经形成一套以 Apache Doris 为核心的数据生态。本篇文章转录自 Doris 社区线上 Meetup 主题演讲，旨在分享 Apache Doris 在小米数据场景的落地实践与优化实践',
     'date': '2022-12-08',
