@@ -116,7 +116,7 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    lastVersion: 'current',
+                    // lastVersion: 'current',
                     versions: {
                         current: {
                             label: '1.1',
@@ -128,15 +128,16 @@ const config = {
                             badge: false,
                         },
                         dev: {
+                            path: '/dev',
                             banner: 'none',
                             badge: false,
                         },
                     },
                     sidebarPath: require.resolve('./sidebars.json'),
-                    onlyIncludeVersions:
-                        process.env.NODE_ENV === 'development' && !showAllVersions
-                            ? ['current']
-                            : ['current', ...versions],
+                    // onlyIncludeVersions:
+                    //     process.env.NODE_ENV === 'development' && !showAllVersions
+                    //         ? ['current']
+                    //         : ['current', ...versions],
                     editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                         if (versionDocsDirPath === 'versioned_docs/version-dev') {
                             return `https://github.com/apache/doris/edit/master/docs/${locale}/docs/${docPath}`;
