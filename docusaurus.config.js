@@ -131,6 +131,7 @@ const config = {
                             path: '/dev',
                             banner: 'none',
                             badge: false,
+                            path: '/dev',
                         },
                     },
                     sidebarPath: require.resolve('./sidebars.json'),
