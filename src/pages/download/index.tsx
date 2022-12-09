@@ -9,44 +9,30 @@ import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import './index.scss';
 import {
-    CPUEnum,
     DownloadLinkProps,
-    JDKEnum,
-    VersionEnum,
-    getAllDownloadLinks,
-    getAllFlinkConnectorDownloadLinks,
-    getAllSparkConnectorDownloadLinks,
-    getAllRelease,
+    ALL_RELEASE_LINK,
+    CHINA_ALL_RELEASE_MIRROR_LINK,
+    FLINK_CONNECTOR_LINK,
+    CHINA_FLINK_CONNECTOR_MIRROR_LINK,
+    SPARK_CONNECTOR_LINK,
+    CHINA_SPARK_CONNECTOR_MIRROR_LINK,
 } from '@site/src/constant/download.data';
-
-const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( latest )`, value: VersionEnum.Latest },
-    { label: VersionEnum.Prev, value: VersionEnum.Prev },
-];
-const CPU = [
-    { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
-    { label: 'X64 ( no avx2 )', value: CPUEnum.IntelNoAvx2 },
-    { label: 'ARM64', value: CPUEnum.ARM },
-];
-const JDK = [
-    { label: 'JDK 8', value: JDKEnum.JDK8 },
-    { label: 'JDK 11', value: JDKEnum.JDK11 },
-];
+import data from '../../../download.json';
 
 export default function Download(): JSX.Element {
     const {
-        siteConfig,
-        i18n: { currentLocale, locales, localeConfigs },
+        i18n: { currentLocale },
     } = useDocusaurusContext();
 
-    const [version, setVersion] = useState<string>(VersionEnum.Latest);
-    const [cpu, setCPU] = useState<string>(CPUEnum.IntelAvx2);
-    const [jdk, setJDK] = useState<string>(JDKEnum.JDK8);
+    const [version, setVersion] = useState<string>(data.versions[0]);
+    const [cpu, setCPU] = useState<string>('');
     const [current, setCurrent] = useState<DownloadLinkProps>();
 
-    const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(currentLocale);
-    const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(currentLocale);
-    const ALL_RELEASE = getAllRelease(currentLocale);
+    const sources = currentLocale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
+    const flinkOrigin =
+        currentLocale.toLocaleUpperCase() === 'EN' ? FLINK_CONNECTOR_LINK : CHINA_FLINK_CONNECTOR_MIRROR_LINK;
+    const sparkOrigin =
+        currentLocale.toLocaleUpperCase() === 'EN' ? SPARK_CONNECTOR_LINK : CHINA_SPARK_CONNECTOR_MIRROR_LINK;
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -54,26 +40,23 @@ export default function Download(): JSX.Element {
     const changeCPU = (val: string) => {
         setCPU(val);
     };
-    const changeJDK = (val: string) => {
-        // if (version === VersionEnum.Latest && val !== JDKEnum.JDK8) return;
-        if (val !== JDKEnum.JDK8) return;
-        setJDK(val);
-    };
 
     const getDownloadLinks = () => {
-        const text = `${version}-${cpu}-${jdk}`;
-        const linkObj = getAllDownloadLinks(currentLocale).find(item => item.id === text);
+        const text = `${version}-${cpu}`;
+        const linkObj = data.downloadLinks.find(item => item.id === text);
         setCurrent(linkObj);
     };
 
     useEffect(() => {
-        getDownloadLinks();
-    }, [version, cpu, jdk]);
+        if (version && cpu) {
+            getDownloadLinks();
+        }
+    }, [version, cpu]);
 
     useEffect(() => {
-        setCPU(CPUEnum.IntelAvx2);
-        setJDK(JDKEnum.JDK8);
+        setCPU(data.cpus[0].value);
     }, [version]);
+
     return (
         <Layout
             title={translate({ id: 'download.title', message: 'Download' })}
@@ -100,15 +83,16 @@ export default function Download(): JSX.Element {
                                 </Translate>
                             </label>
                             <div className="tabs-radio">
-                                {BINARY_VERSION.map(item => (
+                                {data.versions?.map(item => (
                                     <div
                                         className={clsx('radio', {
-                                            checked: version === item.value,
+                                            checked: version === item,
                                         })}
-                                        key={item.value}
-                                        onClick={() => changeVersion(item.value)}
+                                        key={item}
+                                        onClick={() => changeVersion(item)}
                                     >
-                                        {item.label}
+                                        {item}
+                                        {data.lastVersion === item ? ' ( latest )' : ''}
                                     </div>
                                 ))}
                             </div>
@@ -120,7 +104,7 @@ export default function Download(): JSX.Element {
                                 </Translate>
                             </label>
                             <div className="tabs-radio">
-                                {CPU.map(item => (
+                                {data.cpus?.map(item => (
                                     <div
                                         className={clsx('radio', {
                                             checked: cpu === item.value,
@@ -133,28 +117,6 @@ export default function Download(): JSX.Element {
                                 ))}
                             </div>
                         </div>
-                        {/* <div className="download-type">
-                            <label>
-                                <Translate id="download.jdk.version" description="JDK Version">
-                                    JDK Version
-                                </Translate>
-                            </label>
-                            <div className="tabs-radio">
-                                {JDK.map(item => (
-                                    <div
-                                        className={clsx('radio', {
-                                            checked: jdk === item.value,
-                                            // disabled: version === VersionEnum.Latest && item.value !== JDKEnum.JDK8,
-                                            disabled: item.value !== JDKEnum.JDK8,
-                                        })}
-                                        key={item.value}
-                                        onClick={() => changeJDK(item.value)}
-                                    >
-                                        {item.label}
-                                    </div>
-                                ))}
-                            </div>
-                        </div> */}
                         <div className="download-type">
                             <label>
                                 <Translate id="download.download.link" description="Download">
@@ -175,70 +137,28 @@ export default function Download(): JSX.Element {
                                 </div>
                             </div>
                         </div>
-                        <div className="tips">
-                            <div className="title">
-                                <Translate id="Notice">Notice</Translate>
-                                {currentLocale === 'zh-CN' ? '：' : ':'}
+                        {data.downloadNotices?.length > 0 ? (
+                            <div className="tips">
+                                <div className="title">
+                                    <Translate id="Notice">Notice</Translate>
+                                    {currentLocale === 'zh-CN' ? '：' : ':'}
+                                </div>
+                                <ul>
+                                    {data.downloadNotices?.map(
+                                        (item, index) =>
+                                            item.version.includes(version) && (
+                                                <li
+                                                    key={index}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html:
+                                                            currentLocale === 'zh-CN' ? item.notice.zh : item.notice.en,
+                                                    }}
+                                                ></li>
+                                            ),
+                                    )}
+                                </ul>
                             </div>
-                            <ul>
-                                {version === VersionEnum.Latest ? (
-                                    <>
-                                        {currentLocale === 'zh-CN' ? (
-                                            <li>
-                                                由于 Apache 服务器文件大小限制，1.2
-                                                版本的二进制程序被分为三个包，其中新增的
-                                                apache-doris-java-udf-jar-with-dependencies 用于支持 JDBC 外表和 JAVA
-                                                UDF ，下载后需要将其中放到
-                                                <code>be/lib</code>
-                                                目录下。详细升级注意事项请参考
-                                                <Link to="/docs/dev/releasenotes/release-1.2.0">
-                                                    1.2.0 Release Note
-                                                </Link>
-                                                以及
-                                                <Link to="/docs/dev/install/install-deploy">
-                                                    <Translate id="Installation and deployment">
-                                                        Installation and deployment
-                                                    </Translate>
-                                                </Link>
-                                                以及
-                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
-                                                    <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
-                                                </Link>
-                                                手册。
-                                            </li>
-                                        ) : (
-                                            <li>
-                                                Due to file size limitations, the binary for version 1.2.0 is divided
-                                                into three packages. The `apache-doris-java-udf-jar-with-dependencies`
-                                                package is used to support the new JDBC expansion table and JAVA UDF.
-                                                After downloading, you need to put the
-                                                `java-udf-jar-with-dependencies.jar` in the <code>be/lib</code>
-                                                directory to start BE, otherwise it will not start successfully.
-                                            </li>
-                                        )}
-                                        <li>
-                                            <Translate id="download.quick.download.notice">
-                                                Version 1.2.0 does not support running with JDK11, and it will be fixed
-                                                in a later version.
-                                            </Translate>
-                                        </li>
-                                    </>
-                                ) : (
-                                    ''
-                                )}
-                                <li>
-                                    <Translate id="download.quick.download.intr.prefix">
-                                        If the CPU does not support the avx2 instruction set, select the no avx2
-                                        version. You can check whether it is supported by
-                                    </Translate>
-                                    <code>cat /proc/cpuinfo</code>
-                                    <Translate id="download.quick.download.intr.suffix">
-                                        . The avx2 instruction will improve the computational efficiency of data
-                                        structures such as bloom filter.
-                                    </Translate>
-                                </li>
-                            </ul>
-                        </div>
+                        ) : null}
                     </div>
                 </PageColumn>
             </section>
@@ -272,12 +192,15 @@ export default function Download(): JSX.Element {
                                 </tr>
                             </thead>
                             <tbody>
-                                {ALL_RELEASE.map((item, index) => (
+                                {data.allReleases?.map((item, index) => (
                                     <tr key={index}>
-                                        <td>{item.version}</td>
+                                        <td>
+                                            {item.version}
+                                            {data.lastVersion === item.version ? ' ( latest )' : ''}
+                                        </td>
                                         <td>{item.date}</td>
                                         <td>
-                                            <Link to={item.download}>
+                                            <Link to={sources + item.download}>
                                                 <Translate id="download.source.binary">Source / Binary</Translate>
                                             </Link>
                                         </td>
@@ -325,7 +248,7 @@ export default function Download(): JSX.Element {
                                 </tr>
                             </thead>
                             <tbody>
-                                {FLINK_CONNECTOR.map((item, index) => (
+                                {data.flinkConnectors?.map((item, index) => (
                                     <tr key={index}>
                                         <td>{item.version}</td>
                                         <td>{item.date}</td>
@@ -333,7 +256,7 @@ export default function Download(): JSX.Element {
                                         <td>{item.scala}</td>
                                         <td>{item.doris}</td>
                                         <td>
-                                            <Link to={item.download}>
+                                            <Link to={flinkOrigin + item.download}>
                                                 <Translate id="download">Download</Translate>
                                             </Link>
                                             <Link to={item.github}>GitHub</Link>
@@ -401,7 +324,7 @@ export default function Download(): JSX.Element {
                                 </tr>
                             </thead>
                             <tbody>
-                                {SPARK_CONNECTOR.map((item, index) => (
+                                {data.sparkConnectors?.map((item, index) => (
                                     <tr key={index}>
                                         <td>{item.version}</td>
                                         <td>{item.date}</td>
@@ -409,7 +332,7 @@ export default function Download(): JSX.Element {
                                         <td>{item.scala}</td>
                                         <td>{item.doris}</td>
                                         <td>
-                                            <Link to={item.download}>
+                                            <Link to={sparkOrigin + item.download}>
                                                 <Translate id="download">Download</Translate>
                                             </Link>
                                             <Link to={item.github}>GitHub</Link>
