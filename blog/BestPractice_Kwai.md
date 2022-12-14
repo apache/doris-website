@@ -1,11 +1,11 @@
 ---
 {
     'title': 'Best Practice in Kwai: Apache Doris on Elasticsearch',
-    'language': 'en'
+    'language': 'en',
     'summary': "This article mainly focuses on the practice of Apache Doris on Elasticsearch (DOE) in Kwai's business.Kwai’s commercial report engine provides advertisers with real-time query service for multi-dimensional analysis reports. And it also provides query service for multi-dimensional analysis reports for internal users. The engine is committed to dealing with high-performance, high-concurrency, and high-stability query problems in multi-dimensional analysis report cases. After using Doris, query becomes simple. We only need to synchronize the fact table and dim-table on a daily basis and Join while querying. By replacing Druid and Clickhouse with Doris, Doris basically covers all scenarios when we use Druid. In this way, Kwai's commercial report engine greatly improves the aggregation and analysis capabilities of massive data. During the use of Apache Doris, we also found some unexpected benefits: For example, the import method of Routine Load and Broker Load is relatively simple, which improves the query speed; The data occupation is greatly reduced; Doris supports the MySQL protocol, which is much easier for data analyst to fetch data and make charts.",
     'date': '2022-12-14',
     'author': 'Xiang He',
-    'tags': ['Best Practice'],
+    'tags': ['Best Practice']
 }
 ---
 
