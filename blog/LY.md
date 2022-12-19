@@ -1,9 +1,9 @@
 ---
 {
-    'title': 'Best Practice: The Efficiency of the Data Warehouse Greatly Improved in LY Digital',
-    'language": "en",
-    'summary': "Established in 2015, LY Digital is a financial service platform for tourism industry under LY. Com. In 2020, LY Digital introduced Apache Doris to build a data warehouse because of its rich data import methods, excellent parallel computing capabilities, and low maintenance costs. This article describes the evolution of data warehouse in LY Digital and why we switch to Apache Doris. ",
-    'date': '2022-12-19',
+    "title":"Best Practice: The Efficiency of the Data Warehouse Greatly Improved in LY Digital",
+    "language": "en",
+    "summary" : "Established in 2015, LY Digital is a financial service platform for tourism industry under LY. Com. In 2020, LY Digital introduced Apache Doris to build a data warehouse because of its rich data import methods, excellent parallel computing capabilities, and low maintenance costs. This article describes the evolution of data warehouse in LY Digital and why we switch to Apache Doris. ",
+    "date": "2022-12-19",
     'author': 'Xing Wang',
     'tags': ['Best Practice']
 }
