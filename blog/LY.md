@@ -94,7 +94,7 @@ The overall performance of Apache Doris is impressive:
 
 ## 3.3  Architecture of Real-time Processing 
 
-![page_4](page_4.png)
+![page_4](/images/LY/en/page_4.png)
 
 - Data source: In real-time processing, data sources come from business branches such as industrial finance, consumer finance, and risk control. They are all collected through Canal and API.
 - Data collection: After data collection through Canal-Admin, Canal sends the data to Kafka message queue. After that, the data is ingested into the Doris through Routine Load.
