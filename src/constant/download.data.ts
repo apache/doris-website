@@ -147,10 +147,10 @@ export function getAllDownloadLinks(locale: string) {
                     },
                 },
                 {
-                    label: 'apache-doris-be-1.1.4-bin-x86_64-noavx2.tar.gz',
+                    label: 'apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.11.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.asc`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.asc`,
                         sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.sha512`,
                     },
                 },
@@ -164,7 +164,7 @@ export function getAllDownloadLinks(locale: string) {
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
                         signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
