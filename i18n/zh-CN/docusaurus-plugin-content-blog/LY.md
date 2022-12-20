@@ -52,7 +52,7 @@ under the License.
 
 ## 工作流程
 
-![1](1.png)
+![1](/images/LY/zh/1.png)
 
 我们最初的数仓架构沿袭了前几年非常流行的SteamSets 和 Apache Kudu 组合的第一代架构。该架构中，Binlog 通过StreamSets后，通过实时采集后写入 Apache Kudu 中，最后通过 Apache Impala 和可视化工具进行查询和使用。
 
