@@ -115,64 +115,64 @@ export function getAllDownloadLinks(locale: string) {
         },
 
         {
-            id: '1.1.4-intel-avx2-jdk8',
+            id: '1.1.5-intel-avx2-jdk8',
             items: [
                 {
-                    label: 'apache-doris-fe-1.1.4-bin.tar.gz',
+                    label: 'apache-doris-fe-1.1.5-bin.tar.gz',
                     links: {
-                        source: `${sources}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
-                    label: 'apache-doris-be-1.1.4-bin-x86_64.tar.gz',
+                    label: 'apache-doris-be-1.1.5-bin-x86_64.tar.gz',
                     links: {
-                        source: `${sources}doris/1.1/1.1.4-rc01/apache-doris-be-1.1.4-bin-x86_64.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-be-1.1.4-bin-x86_64.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-be-1.1.4-bin-x86_64.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz.sha512`,
                     },
                 },
             ],
         },
         {
-            id: '1.1.4-intel-noavx2-jdk8',
+            id: '1.1.5-intel-noavx2-jdk8',
             items: [
                 {
-                    label: 'apache-doris-fe-1.1.4-bin.tar.gz',
+                    label: 'apache-doris-fe-1.1.5-bin.tar.gz',
                     links: {
-                        source: `${sources}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.1.4-bin-x86_64-noavx2.tar.gz',
                     links: {
-                        source: `${sources}doris/1.1/1.1.4-rc01/apache-doris-be-1.1.4-bin-x86_64-noavx2.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-be-1.1.4-bin-x86_64-noavx2.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-be-1.1.4-bin-x86_64-noavx2.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.11.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.sha512`,
                     },
                 },
             ],
         },
         {
-            id: '1.1.4-arm-jdk8',
+            id: '1.1.5-arm-jdk8',
             items: [
                 {
-                    label: 'apache-doris-fe-1.1.4-bin.tar.gz',
+                    label: 'apache-doris-fe-1.1.5-bin.tar.gz',
                     links: {
-                        source: `${sources}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.4-bin.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
-                    label: 'apache-doris-1.1.4-bin-arm.tar.gz ',
+                    label: 'apache-doris-1.1.5-bin-arm.tar.gz ',
                     links: {
-                        source: `${sources}doris/1.1/1.1.4-rc01/apache-doris-1.1.4-bin-arm.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-1.1.4-bin-arm.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.4-rc01/apache-doris-1.1.4-bin-arm.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-1.1.5-bin-arm.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-1.1.5-bin-arm.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-1.1.5-bin-arm.tar.gz.sha512`,
                     },
                 },
             ],
@@ -271,6 +271,12 @@ export function getAllRelease(locale: string) {
             date: '2022-12-07',
             note: '/docs/dev/releasenotes/release-1.2.0',
             download: `${sources}doris/1.2/1.2.0-rc04/`,
+        },
+        {
+            version: '1.1.5',
+            date: '2022-12-20',
+            note: '/docs/dev/releasenotes/release-1.1.5',
+            download: `${sources}doris/1.1/1.1.5-rc02/`,
         },
         {
             version: '1.1.4',
