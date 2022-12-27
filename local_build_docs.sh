@@ -26,7 +26,7 @@
 
 set -eo pipefail
 
-git clone https://github.com/apache/doris.git
+git clone https://github.com/apache/doris.git --depth 1
 mkdir versioned_docs/version-dev/
 cp -R doris/docs/en/docs/* versioned_docs/version-dev/
 cp -R doris/docs/sidebars.json versioned_sidebars/version-dev-sidebars.json
