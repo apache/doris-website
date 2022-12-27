@@ -50,15 +50,15 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    - name: Upload files to OSS
-      uses: ./.github/actions/aliyun-oss-website-action
-      with:
-          accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          # use your own endpoint
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          folder: build
+#     - name: Upload files to OSS
+#       uses: ./.github/actions/aliyun-oss-website-action
+#       with:
+#           accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+#           accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+#           bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+#           # use your own endpoint
+#           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+#           folder: build
 
     - name: Deploy Website
       if: ${{ github.event.inputs.branch == 'master' }}
