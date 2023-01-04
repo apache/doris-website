@@ -185,14 +185,14 @@ export default function Download(): JSX.Element {
                                     <>
                                         {currentLocale === 'zh-CN' ? (
                                             <li>
-                                                由于 Apache 服务器文件大小限制，1.2
+                                                由于 Apache 服务器文件大小限制，1.2.1
                                                 版本的二进制程序被分为三个包，其中新增的
                                                 apache-doris-java-udf-jar-with-dependencies 用于支持 JDBC 外表和 JAVA
                                                 UDF ，下载后需要将其中放到
                                                 <code>be/lib</code>
                                                 目录下。详细升级注意事项请参考
-                                                <Link to="/docs/dev/releasenotes/release-1.2.0">
-                                                    1.2.0 Release Note
+                                                <Link to="/docs/dev/releasenotes/release-1.2.1">
+                                                    1.2.1 Release Note
                                                 </Link>
                                                 以及
                                                 <Link to="/docs/dev/install/install-deploy">
