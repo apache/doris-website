@@ -208,7 +208,7 @@ export default function Download(): JSX.Element {
                                             </li>
                                         ) : (
                                             <li>
-                                                Due to file size limitations, the binary for version 1.2.0 is divided
+                                                Due to file size limitations, the binary for version 1.2.1 is divided
                                                 into three packages. The `apache-doris-java-udf-jar-with-dependencies`
                                                 package is used to support the new JDBC expansion table and JAVA UDF.
                                                 After downloading, you need to put the
@@ -218,7 +218,7 @@ export default function Download(): JSX.Element {
                                         )}
                                         <li>
                                             <Translate id="download.quick.download.notice">
-                                                Version 1.2.0 does not support running with JDK11, and it will be fixed
+                                                Version 1.2.1 does not support running with JDK11, and it will be fixed
                                                 in a later version.
                                             </Translate>
                                         </li>

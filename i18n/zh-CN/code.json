@@ -315,7 +315,7 @@
     "message": "Doris 团队"
   },
   "homepage.news": {
-    "message": "2022.12.07， Apache Doris 1.2.0 正式发布",
+    "message": "2023.01.04， Apache Doris 1.2.1 正式发布",
     "description": "The label for the link to homepage news"
   },
   "homepage.what": {
@@ -766,6 +766,6 @@
     "message": "注意事项"
   },
   "download.quick.download.notice": {
-    "message": "1.2.0 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
+    "message": "1.2.1 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
   }
 }
