@@ -185,12 +185,9 @@ export default function Download(): JSX.Element {
                                     <>
                                         {currentLocale === 'zh-CN' ? (
                                             <li>
-                                                由于 Apache 服务器文件大小限制，1.2.1
-                                                版本的二进制程序被分为三个包，其中新增的
-                                                apache-doris-java-udf-jar-with-dependencies 用于支持 JDBC 外表和 JAVA
-                                                UDF ，下载后需要将其中放到
-                                                <code>be/lib</code>
-                                                目录下。详细升级注意事项请参考
+                                                由于 Apache 服务器文件大小限制，1.2 版本的二进制程序被分为三个包，其中新增的 apache-doris-dependencies 包含用于支持 JDBC 外表和 JAVA UDF 的jar包，以及 Broker 和 AuditLoader。
+下载后，需要将其中的 java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。详细升级注意事项请参考 1.2.1 Release Note以及安装部署以及集群升级手册。
+                                                详细升级注意事项请参考
                                                 <Link to="/docs/dev/releasenotes/release-1.2.1">
                                                     1.2.1 Release Note
                                                 </Link>
@@ -208,12 +205,8 @@ export default function Download(): JSX.Element {
                                             </li>
                                         ) : (
                                             <li>
-                                                Due to file size limitations, the binary for version 1.2.1 is divided
-                                                into three packages. The `apache-doris-java-udf-jar-with-dependencies`
-                                                package is used to support the new JDBC expansion table and JAVA UDF.
-                                                After downloading, you need to put the
-                                                `java-udf-jar-with-dependencies.jar` in the <code>be/lib</code>
-                                                directory to start BE, otherwise it will not start successfully.
+                                                Due to the file size limitation of the Apache server, the binary program of version 1.2 is divided into three packages, among which the newly added apache-doris-dependencies include jar packages for supporting JDBC appearance and JAVA UDF, as well as Broker and AuditLoader.
+After downloading, you need to put the java-udf-jar-with-dependencies.jar in the be/lib directory. For detailed upgrade precautions, please refer to 1.2.1 Release Note and the Installation and Deployment and Cluster Upgrade Manual.
                                             </li>
                                         )}
                                         <li>
