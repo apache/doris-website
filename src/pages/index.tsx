@@ -1,14 +1,14 @@
-import Layout from '../theme/Layout';
-import React from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate, { translate } from '@docusaurus/Translate';
-import './index.scss';
-import PageBanner, { ButtonProps } from '../components/PageBanner';
-import Link from '@docusaurus/Link';
-import PageColumn from '../components/PageColumn';
-import usePhone from '../hooks/use-phone';
-import More from '../components/More/index';
 import clsx from 'clsx';
+import Layout from '../theme/Layout';
+import Link from '@docusaurus/Link';
+import More from '../components/More/index';
+import PageBanner, { ButtonProps } from '../components/PageBanner';
+import PageColumn from '../components/PageColumn';
+import React from 'react';
+import Translate, { translate } from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import usePhone from '../hooks/use-phone';
+import './index.scss';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -151,9 +151,9 @@ export default function Home(): JSX.Element {
                     <div className="news-wrap">
                         <div className="news-item">
                             <span className="news-icon"></span>
-                            <Link to="/docs/dev/releasenotes/release-1.2.1" className="news-content">
+                            <Link to="https://doris-summit.selectdb.com" className="news-content">
                                 <Translate id="homepage.news" description="The label for the link to homepage news">
-                                    2022.12.07, Apache Doris 1.2.1 is officially released
+                                    Check out all the sessions in Doris Summit 2022 online!
                                 </Translate>
                             </Link>
                         </div>
