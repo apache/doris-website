@@ -204,6 +204,7 @@ const config = {
                         docsPluginId: 'community',
                     },
                     { to: '/users', label: 'Users', position: 'left' },
+                    { to: 'https://doris-summit.selectdb.com', label: 'Doris Summit 2022', position: 'left' },
                     // {
                     //     type: 'docsVersionDropdown',
                     //     position: 'right',

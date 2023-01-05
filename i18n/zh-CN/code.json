@@ -1,771 +1,771 @@
 {
-  "theme.blog.post.readingTime.plurals": {
-    "message": "{readingTime} 分钟阅读",
-    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
-  },
-  "theme.ErrorPageContent.title": {
-    "message": "页面已崩溃。",
-    "description": "The title of the fallback page when the page crashed"
-  },
-  "theme.ErrorPageContent.tryAgain": {
-    "message": "重试",
-    "description": "The label of the button to try again when the page crashed"
-  },
-  "theme.NotFound.title": {
-    "message": "找不到页面",
-    "description": "The title of the 404 page"
-  },
-  "theme.NotFound.p1": {
-    "message": "我们找不到您要找的页面。",
-    "description": "The first paragraph of the 404 page"
-  },
-  "theme.NotFound.p2": {
-    "message": "请联系原始链接来源网站的所有者，并告知他们链接已损坏。",
-    "description": "The 2nd paragraph of the 404 page"
-  },
-  "theme.AnnouncementBar.closeButtonAriaLabel": {
-    "message": "关闭",
-    "description": "The ARIA label for close button of announcement bar"
-  },
-  "theme.BackToTopButton.buttonAriaLabel": {
-    "message": "回到顶部",
-    "description": "The ARIA label for the back to top button"
-  },
-  "theme.blog.archive.title": {
-    "message": "历史博文",
-    "description": "The page & hero title of the blog archive page"
-  },
-  "theme.blog.archive.description": {
-    "message": "历史博文",
-    "description": "The page & hero description of the blog archive page"
-  },
-  "theme.blog.paginator.navAriaLabel": {
-    "message": "博文列表分页导航",
-    "description": "The ARIA label for the blog pagination"
-  },
-  "theme.blog.paginator.newerEntries": {
-    "message": "较新的博文",
-    "description": "The label used to navigate to the newer blog posts page (previous page)"
-  },
-  "theme.blog.paginator.olderEntries": {
-    "message": "较旧的博文",
-    "description": "The label used to navigate to the older blog posts page (next page)"
-  },
-  "theme.blog.post.readMoreLabel": {
-    "message": "阅读 {title} 的全文",
-    "description": "The ARIA label for the link to full blog posts from excerpts"
-  },
-  "theme.blog.post.readMore": {
-    "message": "阅读更多",
-    "description": "The label used in blog post item excerpts to link to full blog posts"
-  },
-  "theme.blog.post.paginator.navAriaLabel": {
-    "message": "博文分页导航",
-    "description": "The ARIA label for the blog posts pagination"
-  },
-  "theme.blog.post.paginator.newerPost": {
-    "message": "较新一篇",
-    "description": "The blog post button label to navigate to the newer/previous post"
-  },
-  "theme.blog.post.paginator.olderPost": {
-    "message": "较旧一篇",
-    "description": "The blog post button label to navigate to the older/next post"
-  },
-  "theme.blog.post.plurals": {
-    "message": "{count} 篇博文",
-    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
-  },
-  "theme.blog.tagTitle": {
-    "message": "{nPosts} 含有标签「{tagName}」",
-    "description": "The title of the page for a blog tag"
-  },
-  "theme.tags.tagsPageLink": {
-    "message": "查看所有标签",
-    "description": "The label of the link targeting the tag list page"
-  },
-  "theme.colorToggle.ariaLabel": {
-    "message": "切换浅色/暗黑模式（当前为{mode}）",
-    "description": "The ARIA label for the navbar color mode toggle"
-  },
-  "theme.colorToggle.ariaLabel.mode.dark": {
-    "message": "暗黑模式",
-    "description": "The name for the dark color mode"
-  },
-  "theme.colorToggle.ariaLabel.mode.light": {
-    "message": "浅色模式",
-    "description": "The name for the light color mode"
-  },
-  "theme.docs.breadcrumbs.home": {
-    "message": "主页面",
-    "description": "The ARIA label for the home page in the breadcrumbs"
-  },
-  "theme.docs.breadcrumbs.navAriaLabel": {
-    "message": "页面路径",
-    "description": "The ARIA label for the breadcrumbs"
-  },
-  "theme.docs.DocCard.categoryDescription": {
-    "message": "{count} 个项目",
-    "description": "The default description for a category card in the generated index about how many items this category includes"
-  },
-  "theme.docs.paginator.navAriaLabel": {
-    "message": "文档分页导航",
-    "description": "The ARIA label for the docs pagination"
-  },
-  "theme.docs.paginator.previous": {
-    "message": "上一页",
-    "description": "The label used to navigate to the previous doc"
-  },
-  "theme.docs.paginator.next": {
-    "message": "下一页",
-    "description": "The label used to navigate to the next doc"
-  },
-  "theme.docs.tagDocListPageTitle.nDocsTagged": {
-    "message": "{count} 篇文档带有标签",
-    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
-  },
-  "theme.docs.tagDocListPageTitle": {
-    "message": "{nDocsTagged}「{tagName}」",
-    "description": "The title of the page for a docs tag"
-  },
-  "theme.docs.versionBadge.label": {
-    "message": "版本：{versionLabel}"
-  },
-  "theme.docs.versions.unreleasedVersionLabel": {
-    "message": "此为 {siteTitle} {versionLabel} 版本的文档。",
-    "description": "The label used to tell the user that he's browsing an unreleased doc version"
-  },
-  "theme.docs.versions.unmaintainedVersionLabel": {
-    "message": "此为 {siteTitle} {versionLabel} 版的文档，现已不再积极维护。",
-    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
-  },
-  "theme.docs.versions.latestVersionSuggestionLabel": {
-    "message": "最新的文档请参阅 {latestVersionLink} ({versionLabel})。",
-    "description": "The label used to tell the user to check the latest version"
-  },
-  "theme.docs.versions.latestVersionLinkLabel": {
-    "message": "最新版本",
-    "description": "The label used for the latest version suggestion link label"
-  },
-  "theme.common.editThisPage": {
-    "message": "编辑此页",
-    "description": "The link label to edit the current page"
-  },
-  "theme.common.headingLinkTitle": {
-    "message": "标题的直接链接",
-    "description": "Title for link to heading"
-  },
-  "theme.lastUpdated.atDate": {
-    "message": "于 {date} ",
-    "description": "The words used to describe on which date a page has been last updated"
-  },
-  "theme.lastUpdated.byUser": {
-    "message": "由 {user} ",
-    "description": "The words used to describe by who the page has been last updated"
-  },
-  "theme.lastUpdated.lastUpdatedAtBy": {
-    "message": "最后{byUser}{atDate}更新",
-    "description": "The sentence used to display when a page has been last updated, and by who"
-  },
-  "theme.navbar.mobileVersionsDropdown.label": {
-    "message": "选择版本",
-    "description": "The label for the navbar versions dropdown on mobile view"
-  },
-  "theme.common.skipToMainContent": {
-    "message": "跳到主要内容",
-    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
-  },
-  "theme.tags.tagsListLabel": {
-    "message": "标签：",
-    "description": "The label alongside a tag list"
-  },
-  "theme.blog.sidebar.navAriaLabel": {
-    "message": "最近博文导航",
-    "description": "The ARIA label for recent posts in the blog sidebar"
-  },
-  "theme.CodeBlock.copied": {
-    "message": "复制成功",
-    "description": "The copied button label on code blocks"
-  },
-  "theme.CodeBlock.copyButtonAriaLabel": {
-    "message": "复制代码到剪贴板",
-    "description": "The ARIA label for copy code blocks button"
-  },
-  "theme.CodeBlock.copy": {
-    "message": "复制",
-    "description": "The copy button label on code blocks"
-  },
-  "theme.CodeBlock.wordWrapToggle": {
-    "message": "切换自动换行",
-    "description": "The title attribute for toggle word wrapping button of code block lines"
-  },
-  "theme.DocSidebarItem.toggleCollapsedCategoryAriaLabel": {
-    "message": "打开/收起侧边栏菜单「{label}」",
-    "description": "The ARIA label to toggle the collapsible sidebar category"
-  },
-  "theme.navbar.mobileLanguageDropdown.label": {
-    "message": "选择语言",
-    "description": "The label for the mobile language switcher dropdown"
-  },
-  "theme.TOCCollapsible.toggleButtonLabel": {
-    "message": "本页总览",
-    "description": "The label used by the button on the collapsible TOC component"
-  },
-  "theme.docs.sidebar.collapseButtonTitle": {
-    "message": "收起侧边栏",
-    "description": "The title attribute for collapse button of doc sidebar"
-  },
-  "theme.docs.sidebar.collapseButtonAriaLabel": {
-    "message": "收起侧边栏",
-    "description": "The title attribute for collapse button of doc sidebar"
-  },
-  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
-    "message": "← 回到主菜单",
-    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
-  },
-  "theme.docs.sidebar.expandButtonTitle": {
-    "message": "展开侧边栏",
-    "description": "The ARIA label and title attribute for expand button of doc sidebar"
-  },
-  "theme.docs.sidebar.expandButtonAriaLabel": {
-    "message": "展开侧边栏",
-    "description": "The ARIA label and title attribute for expand button of doc sidebar"
-  },
-  "theme.SearchBar.noResultsText": {
-    "message": "没有找到任何文档"
-  },
-  "theme.SearchBar.seeAll": {
-    "message": "查看全部结果"
-  },
-  "theme.SearchBar.label": {
-    "message": "搜索",
-    "description": "The ARIA label and placeholder for search button"
-  },
-  "theme.SearchPage.existingResultsTitle": {
-    "message": "“{query}” 的搜索结果",
-    "description": "The search page title for non-empty query"
-  },
-  "theme.SearchPage.emptyResultsTitle": {
-    "message": "搜索文档",
-    "description": "The search page title for empty query"
-  },
-  "theme.SearchPage.documentsFound.plurals": {
-    "message": "共找到 {count} 篇文档",
-    "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
-  },
-  "theme.SearchPage.noResultsText": {
-    "message": "没有找到任何文档",
-    "description": "The paragraph for empty search result"
-  },
-  "homepage.more": {
-    "message": "了解更多",
-    "description": "more link"
-  },
-  "coreFeatures.title.f1": {
-    "message": "简单易用"
-  },
-  "coreFeatures.subTitle.f1": {
-    "message": "部署只需两个进程，不依赖其他系统；在线集群扩缩容，自动副本修复；兼容 MySQL 协议，并且使用标准 SQL"
-  },
-  "coreFeatures.title.f2": {
-    "message": "高性能"
-  },
-  "coreFeatures.subTitle.f2": {
-    "message": "依托列式存储引擎、现代的 MPP 架构、向量化查询引擎、预聚合物化视图、数据索引的实现，在低延迟和高吞吐查询上,  都达到了极速性能"
-  },
-  "coreFeatures.title.f3": {
-    "message": "统一数仓"
-  },
-  "coreFeatures.subTitle.f3": {
-    "message": "单一系统，可以同时支持实时数据服务、交互数据分析和离线数据处理场景"
-  },
-  "coreFeatures.title.f4": {
-    "message": "联邦查询"
-  },
-  "coreFeatures.subTitle.f4": {
-    "message": "支持对 Hive、Iceberg、Hudi 等数据湖和 MySQL、Elasticsearch 等数据库的联邦查询分析"
-  },
-  "coreFeatures.title.f5": {
-    "message": "多种导入"
-  },
-  "coreFeatures.subTitle.f5": {
-    "message": "支持从 HDFS/S3 等批量拉取导入和 MySQL Binlog/Kafka 等流式拉取导入；支持通过HTTP接口进行微批量推送写入和 JDBC 中使用 Insert 实时推送写入"
-  },
-  "coreFeatures.title.f6": {
-    "message": "生态丰富"
-  },
-  "coreFeatures.subTitle.f6": {
-    "message": "Spark 利用 Spark Doris Connector 读取和写入 Doris；Flink Doris Connector 配合 Flink CDC 实现数据 Exactly Once 写入 Doris；利用 DBT Doris Adapter，可以很容易的在 Doris 中完成数据转化"
-  },
-  "community.title.c1": {
-    "message": "邮件列表"
-  },
-  "community.title.c2": {
-    "message": "讨论区"
-  },
-  "community.title.c3": {
-    "message": "参与贡献"
-  },
-  "community.title.c4": {
-    "message": "源代码"
-  },
-  "community.title.c5": {
-    "message": "改进建议"
-  },
-  "community.title.c6": {
-    "message": "Doris 团队"
-  },
-  "homepage.news": {
-    "message": "2023.01.04， Apache Doris 1.2.1 正式发布",
-    "description": "The label for the link to homepage news"
-  },
-  "homepage.what": {
-    "message": "Apache Doris 定位",
-    "description": "What is Apache Doris"
-  },
-  "homepage.features": {
-    "message": "核心优势",
-    "description": "Core Features"
-  },
-  "homepage.join": {
-    "message": "加入社区",
-    "description": "Join The Community"
-  },
-  "homepage.start.title": {
-    "message": "准备踏上 Doris 之旅 ？"
-  },
-  "homepage.start.downloadButton": {
-    "message": "下载"
-  },
-  "homepage.start.docsButton": {
-    "message": "文档"
-  },
-  "learnmore": {
-    "message": "了解更多"
-  },
-  "sotry.summary.meituan": {
-    "message": "Apache Doris 可以较好地处理汇总与明细数据查询、变化维的历史回溯、非预设维的灵活应用、准实时的批处理等场景。"
-  },
-  "sotry.summary.jindong": {
-    "message": "Apache Doris 不仅可以应对海量数据的秒级查询，更可以满足实时、准实时的分析需求。"
-  },
-  "footer.follow": {
-    "message": "分享",
-    "description": "Footer Follow"
-  },
-  "download.quick.download": {
-    "message": "快速下载",
-    "description": "Quick Download"
-  },
-  "download.release": {
-    "message": "所有版本"
-  },
-  "download.flink.connector": {
-    "message": "Flink Doris Connector",
-    "description": "Flink Doris Connector"
-  },
-  "download.maven": {
-    "message": "Maven",
-    "description": "Maven"
-  },
-  "download.spark.connector": {
-    "message": "Spark Doris Connector",
-    "description": "Spark Doris Connector"
-  },
-  "download.verify": {
-    "message": "验证",
-    "description": "Verify"
-  },
-  "doc.version": {
-    "message": "版本",
-    "description": "Version"
-  },
-  "footer.language": {
-    "message": "语言",
-    "description": "Footer Language"
-  },
-  "download.binary.version": {
-    "message": "二进制版本",
-    "description": "Binary Version"
-  },
-  "download.cpu.model": {
-    "message": "CPU 型号",
-    "description": "CPU Model"
-  },
-  "download.jdk.version": {
-    "message": "JDK 版本",
-    "description": "JDK Version"
-  },
-  "download.download.link": {
-    "message": "下载链接",
-    "description": "Download"
-  },
-  "download.quick.download.intr.prefix": {
-    "message": "如果 CPU 不支持 avx2 指令集，请选择 noavx2 版本，您可以通过"
-  },
-  "download.quick.download.intr.suffix": {
-    "message": "查看 CPU 是否支持。avx2 指令将会提升 Bloom Filter 等数据结构的计算效率。"
-  },
-  "download.release.more": {
-    "message": "查看更多"
-  },
-  "download.all.release.version": {
-    "message": "版本"
-  },
-  "download.all.release.date": {
-    "message": "发布日期"
-  },
-  "download.all.release.note": {
-    "message": "版本通告"
-  },
-  "download.flink.connector.version": {
-    "message": "版本"
-  },
-  "download.flink.release.date": {
-    "message": "发布日期"
-  },
-  "download.flink.version": {
-    "message": "Flink 版本"
-  },
-  "download.flink.scala.version": {
-    "message": "Scala 版本"
-  },
-  "download.flink.doris.version": {
-    "message": "Doris 版本"
-  },
-  "download.spark.connector.version": {
-    "message": "版本"
-  },
-  "download.spark.release.date": {
-    "message": "发布日期"
-  },
-  "download.spark.version": {
-    "message": "Spark 版本"
-  },
-  "download.spark.scala.version": {
-    "message": "Scala 版本"
-  },
-  "download.spark.doris.version": {
-    "message": "Doris 版本"
-  },
-  "download.verify.w1": {
-    "message": "关于如何校验下载文件，请参阅 "
-  },
-  "download.verify.w2": {
-    "message": "校验下载文件"
-  },
-  "download.verify.w3": {
-    "message": "，并使用这些"
-  },
-  "download.verify.w4": {
-    "message": "KEYS"
-  },
-  "download.verify.w5": {
-    "message": "。校验完成后，可以参阅"
-  },
-  "download.verify.w6": {
-    "message": "编译文档"
-  },
-  "download.verify.w7": {
-    "message": "以及"
-  },
-  "download.verify.w8": {
-    "message": "安装与部署文档"
-  },
-  "download.verify.w9": {
-    "message": "进行 Doris 的编译、安装与部署。"
-  },
-  "user.companies": {
-    "message": "他们都在使用 Apache Doris",
-    "description": "Companies That Trust Apache Doris"
-  },
-  "user.case": {
-    "message": "案例研究",
-    "description": "Case Studies"
-  },
-  "user.add..your.company": {
-    "message": "添加你的企业信息",
-    "description": "Add Your Company"
-  },
-  "homepage.banner.title": {
-    "message": "Apache Doris"
-  },
-  "homepage.banner.subTitle": {
-    "message": "简单易用、高性能和统一的分析数据库"
-  },
-  "download.all.release.download": {
-    "message": "下载"
-  },
-  "download.source.binary": {
-    "message": "源码 / 二进制"
-  },
-  "download.source": {
-    "message": "源码"
-  },
-  "download": {
-    "message": "下载"
-  },
-  "homepage.banner.button1": {
-    "message": "快速开始"
-  },
-  "sotry.summary.xiaomi": {
-    "message": "Apache Doris 在小米得到了广泛的使用，目前已经服务了数十个业务，并形成了一套以 Apache Doris 为核心的数据生态。"
-  },
-  "navbar.download": {
-    "message": "下载"
-  },
-  "homepage.title": {
-    "message": "首页"
-  },
-  "download.title": {
-    "message": "下载"
-  },
-  "users.title": {
-    "message": "用户"
-  },
-  "sitemap.title": {
-    "message": "学习路径"
-  },
-  "sitemap.subTitle": {
-    "message": ""
-  },
-  "sitemap.page.title": {
-    "message": "学习路径"
-  },
-  "documentation.feedback": {
-    "message": "问题反馈"
-  },
-  "theme.PwaReloadPopup.info": {
-    "message": "有可用的新版本",
-    "description": "The text for PWA reload popup"
-  },
-  "theme.PwaReloadPopup.refreshButtonText": {
-    "message": "刷新",
-    "description": "The text for PWA reload button"
-  },
-  "theme.PwaReloadPopup.closeButtonAriaLabel": {
-    "message": "关闭",
-    "description": "The ARIA label for close button of PWA reload popup"
-  },
-  "Introduction to Apache Doris": {
-    "message": "Apache Doris 总体介绍"
-  },
-  "Get Started": {
-    "message": "快速开始"
-  },
-  "Installation and deployment": {
-    "message": "安装部署"
-  },
-  "Compilation": {
-    "message": "源码编译"
-  },
-  "Table Design": {
-    "message": "数据表设计"
-  },
-  "Data Model": {
-    "message": "数据模型"
-  },
-  "Data Partition": {
-    "message": "数据划分"
-  },
-  "Guidelines for Creating Table": {
-    "message": "建表指南"
-  },
-  "Rollup and Query": {
-    "message": "Rollup与查询"
-  },
-  "Practices of Creating Table": {
-    "message": "建表实践"
-  },
-  "Index": {
-    "message": "索引"
-  },
-  "Data Import": {
-    "message": "数据导入"
-  },
-  "Import Overview": {
-    "message": "导入总览"
-  },
-  "Import Local Data": {
-    "message": "导入本地数据"
-  },
-  "Import External Storage Data": {
-    "message": "导入外部存储数据"
-  },
-  "Subscribe Kafka Data": {
-    "message": "订阅 Kafka 日志"
-  },
-  "Synchronize Data Through External Table": {
-    "message": "通过外部表同步数据"
-  },
-  "Data Export": {
-    "message": "数据导出"
-  },
-  "Export Data": {
-    "message": "导出数据"
-  },
-  "Export Query Result": {
-    "message": "导出查询结果集"
-  },
-  "Export Table Structure or Data": {
-    "message": "导出表结构或数据"
-  },
-  "Data Backup": {
-    "message": "数据备份"
-  },
-  "Update and Delete": {
-    "message": "数据更新及删除"
-  },
-  "Update": {
-    "message": "数据更新"
-  },
-  "Delete": {
-    "message": "删除操作"
-  },
-  "Batch Delete": {
-    "message": "批量删除"
-  },
-  "Sequence Column": {
-    "message": "Sequence 列"
-  },
-  "Advanced Usage": {
-    "message": "进阶使用"
-  },
-  "Schema Change": {
-    "message": "表结构变更"
-  },
-  "Dynamic Partition": {
-    "message": "动态分区"
-  },
-  "Data Cache": {
-    "message": "数据缓存"
-  },
-  "Join Optimization": {
-    "message": "Join 优化"
-  },
-  "Materialized view": {
-    "message": "物化视图"
-  },
-  "BITMAP Precise De-duplication": {
-    "message": "BITMAP 精确去重"
-  },
-  "HLL ApproximateDe-duplication": {
-    "message": "HLL 近似去重"
-  },
-  "Variables": {
-    "message": "变量"
-  },
-  "Time Zone": {
-    "message": "时区"
-  },
-  "File Manager": {
-    "message": "文件管理器"
-  },
-  "Ecosystem": {
-    "message": "生态拓展"
-  },
-  "Doris on ES": {
-    "message": "Doris on ES"
-  },
-  "Doris on Hudi": {
-    "message": "Doris on Hudi"
-  },
-  "Doris on Iceberg": {
-    "message": "Doris on Iceberg"
-  },
-  "Doris on Hive": {
-    "message": "Doris on Hive"
-  },
-  "Doris on ODBC": {
-    "message": "Doris on ODBC"
-  },
-  "Spark Doris Connector": {
-    "message": "Spark Doris Connector"
-  },
-  "Flink Doris Connector": {
-    "message": "Flink Doris Connector"
-  },
-  "Seatunnel Connector": {
-    "message": "Seatunnel Connector"
-  },
-  "DataX doriswriter": {
-    "message": "DataX doriswriter"
-  },
-  "UDF": {
-    "message": "UDF"
-  },
-  "Audit log plugin": {
-    "message": "审计日记插件"
-  },
-  "SQL Manual": {
-    "message": "SQL 手册"
-  },
-  "SQL Function": {
-    "message": "SQL 函数"
-  },
-  "DDL": {
-    "message": "DDL"
-  },
-  "DML": {
-    "message": "DML"
-  },
-  "Data Types": {
-    "message": "数据类型"
-  },
-  "Utility": {
-    "message": "辅助命令"
-  },
-  "Cluster Management": {
-    "message": "集群管理"
-  },
-  "Cluster Upgrade": {
-    "message": "集群升级"
-  },
-  "Elastic scaling": {
-    "message": "弹性扩缩容"
-  },
-  "Statistics of query execution": {
-    "message": "查询分析"
-  },
-  "Maintenance and Monitor": {
-    "message": "监控报警"
-  },
-  "Metadata Operation": {
-    "message": "元数据运维"
-  },
-  "Error Code": {
-    "message": "错误码"
-  },
-  "Config": {
-    "message": "配置管理"
-  },
-  "Authority Management": {
-    "message": "权限管理"
-  },
-  "Multi-tenancy": {
-    "message": "多租户与资源管理"
-  },
-  "FAQ": {
-    "message": "常见问题"
-  },
-  "FAQs of Operation and Maintenance": {
-    "message": "运维常见问题"
-  },
-  "FAQs of Data Operation": {
-    "message": "数据操作问题"
-  },
-  "SQL FAQs": {
-    "message": "SQL 问题"
-  },
-  "sitemap.page.subTitle": {
-    "message": "从这里开启您的 Apache Doris 之旅，与 Apache Doris 一起发现无限可能"
-  },
-  "download.quick.download.version.tips": {
-    "message": "apache-doris-1.1.2-bin-x86-noavx2 版本暂不提供下载，我们会在进行更新。"
-  },
-  "Notice": {
-    "message": "注意事项"
-  },
-  "download.quick.download.notice": {
-    "message": "1.2.1 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
-  }
+    "theme.blog.post.readingTime.plurals": {
+        "message": "{readingTime} 分钟阅读",
+        "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+    },
+    "theme.ErrorPageContent.title": {
+        "message": "页面已崩溃。",
+        "description": "The title of the fallback page when the page crashed"
+    },
+    "theme.ErrorPageContent.tryAgain": {
+        "message": "重试",
+        "description": "The label of the button to try again when the page crashed"
+    },
+    "theme.NotFound.title": {
+        "message": "找不到页面",
+        "description": "The title of the 404 page"
+    },
+    "theme.NotFound.p1": {
+        "message": "我们找不到您要找的页面。",
+        "description": "The first paragraph of the 404 page"
+    },
+    "theme.NotFound.p2": {
+        "message": "请联系原始链接来源网站的所有者，并告知他们链接已损坏。",
+        "description": "The 2nd paragraph of the 404 page"
+    },
+    "theme.AnnouncementBar.closeButtonAriaLabel": {
+        "message": "关闭",
+        "description": "The ARIA label for close button of announcement bar"
+    },
+    "theme.BackToTopButton.buttonAriaLabel": {
+        "message": "回到顶部",
+        "description": "The ARIA label for the back to top button"
+    },
+    "theme.blog.archive.title": {
+        "message": "历史博文",
+        "description": "The page & hero title of the blog archive page"
+    },
+    "theme.blog.archive.description": {
+        "message": "历史博文",
+        "description": "The page & hero description of the blog archive page"
+    },
+    "theme.blog.paginator.navAriaLabel": {
+        "message": "博文列表分页导航",
+        "description": "The ARIA label for the blog pagination"
+    },
+    "theme.blog.paginator.newerEntries": {
+        "message": "较新的博文",
+        "description": "The label used to navigate to the newer blog posts page (previous page)"
+    },
+    "theme.blog.paginator.olderEntries": {
+        "message": "较旧的博文",
+        "description": "The label used to navigate to the older blog posts page (next page)"
+    },
+    "theme.blog.post.readMoreLabel": {
+        "message": "阅读 {title} 的全文",
+        "description": "The ARIA label for the link to full blog posts from excerpts"
+    },
+    "theme.blog.post.readMore": {
+        "message": "阅读更多",
+        "description": "The label used in blog post item excerpts to link to full blog posts"
+    },
+    "theme.blog.post.paginator.navAriaLabel": {
+        "message": "博文分页导航",
+        "description": "The ARIA label for the blog posts pagination"
+    },
+    "theme.blog.post.paginator.newerPost": {
+        "message": "较新一篇",
+        "description": "The blog post button label to navigate to the newer/previous post"
+    },
+    "theme.blog.post.paginator.olderPost": {
+        "message": "较旧一篇",
+        "description": "The blog post button label to navigate to the older/next post"
+    },
+    "theme.blog.post.plurals": {
+        "message": "{count} 篇博文",
+        "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+    },
+    "theme.blog.tagTitle": {
+        "message": "{nPosts} 含有标签「{tagName}」",
+        "description": "The title of the page for a blog tag"
+    },
+    "theme.tags.tagsPageLink": {
+        "message": "查看所有标签",
+        "description": "The label of the link targeting the tag list page"
+    },
+    "theme.colorToggle.ariaLabel": {
+        "message": "切换浅色/暗黑模式（当前为{mode}）",
+        "description": "The ARIA label for the navbar color mode toggle"
+    },
+    "theme.colorToggle.ariaLabel.mode.dark": {
+        "message": "暗黑模式",
+        "description": "The name for the dark color mode"
+    },
+    "theme.colorToggle.ariaLabel.mode.light": {
+        "message": "浅色模式",
+        "description": "The name for the light color mode"
+    },
+    "theme.docs.breadcrumbs.home": {
+        "message": "主页面",
+        "description": "The ARIA label for the home page in the breadcrumbs"
+    },
+    "theme.docs.breadcrumbs.navAriaLabel": {
+        "message": "页面路径",
+        "description": "The ARIA label for the breadcrumbs"
+    },
+    "theme.docs.DocCard.categoryDescription": {
+        "message": "{count} 个项目",
+        "description": "The default description for a category card in the generated index about how many items this category includes"
+    },
+    "theme.docs.paginator.navAriaLabel": {
+        "message": "文档分页导航",
+        "description": "The ARIA label for the docs pagination"
+    },
+    "theme.docs.paginator.previous": {
+        "message": "上一页",
+        "description": "The label used to navigate to the previous doc"
+    },
+    "theme.docs.paginator.next": {
+        "message": "下一页",
+        "description": "The label used to navigate to the next doc"
+    },
+    "theme.docs.tagDocListPageTitle.nDocsTagged": {
+        "message": "{count} 篇文档带有标签",
+        "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+    },
+    "theme.docs.tagDocListPageTitle": {
+        "message": "{nDocsTagged}「{tagName}」",
+        "description": "The title of the page for a docs tag"
+    },
+    "theme.docs.versionBadge.label": {
+        "message": "版本：{versionLabel}"
+    },
+    "theme.docs.versions.unreleasedVersionLabel": {
+        "message": "此为 {siteTitle} {versionLabel} 版本的文档。",
+        "description": "The label used to tell the user that he's browsing an unreleased doc version"
+    },
+    "theme.docs.versions.unmaintainedVersionLabel": {
+        "message": "此为 {siteTitle} {versionLabel} 版的文档，现已不再积极维护。",
+        "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+    },
+    "theme.docs.versions.latestVersionSuggestionLabel": {
+        "message": "最新的文档请参阅 {latestVersionLink} ({versionLabel})。",
+        "description": "The label used to tell the user to check the latest version"
+    },
+    "theme.docs.versions.latestVersionLinkLabel": {
+        "message": "最新版本",
+        "description": "The label used for the latest version suggestion link label"
+    },
+    "theme.common.editThisPage": {
+        "message": "编辑此页",
+        "description": "The link label to edit the current page"
+    },
+    "theme.common.headingLinkTitle": {
+        "message": "标题的直接链接",
+        "description": "Title for link to heading"
+    },
+    "theme.lastUpdated.atDate": {
+        "message": "于 {date} ",
+        "description": "The words used to describe on which date a page has been last updated"
+    },
+    "theme.lastUpdated.byUser": {
+        "message": "由 {user} ",
+        "description": "The words used to describe by who the page has been last updated"
+    },
+    "theme.lastUpdated.lastUpdatedAtBy": {
+        "message": "最后{byUser}{atDate}更新",
+        "description": "The sentence used to display when a page has been last updated, and by who"
+    },
+    "theme.navbar.mobileVersionsDropdown.label": {
+        "message": "选择版本",
+        "description": "The label for the navbar versions dropdown on mobile view"
+    },
+    "theme.common.skipToMainContent": {
+        "message": "跳到主要内容",
+        "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+    },
+    "theme.tags.tagsListLabel": {
+        "message": "标签：",
+        "description": "The label alongside a tag list"
+    },
+    "theme.blog.sidebar.navAriaLabel": {
+        "message": "最近博文导航",
+        "description": "The ARIA label for recent posts in the blog sidebar"
+    },
+    "theme.CodeBlock.copied": {
+        "message": "复制成功",
+        "description": "The copied button label on code blocks"
+    },
+    "theme.CodeBlock.copyButtonAriaLabel": {
+        "message": "复制代码到剪贴板",
+        "description": "The ARIA label for copy code blocks button"
+    },
+    "theme.CodeBlock.copy": {
+        "message": "复制",
+        "description": "The copy button label on code blocks"
+    },
+    "theme.CodeBlock.wordWrapToggle": {
+        "message": "切换自动换行",
+        "description": "The title attribute for toggle word wrapping button of code block lines"
+    },
+    "theme.DocSidebarItem.toggleCollapsedCategoryAriaLabel": {
+        "message": "打开/收起侧边栏菜单「{label}」",
+        "description": "The ARIA label to toggle the collapsible sidebar category"
+    },
+    "theme.navbar.mobileLanguageDropdown.label": {
+        "message": "选择语言",
+        "description": "The label for the mobile language switcher dropdown"
+    },
+    "theme.TOCCollapsible.toggleButtonLabel": {
+        "message": "本页总览",
+        "description": "The label used by the button on the collapsible TOC component"
+    },
+    "theme.docs.sidebar.collapseButtonTitle": {
+        "message": "收起侧边栏",
+        "description": "The title attribute for collapse button of doc sidebar"
+    },
+    "theme.docs.sidebar.collapseButtonAriaLabel": {
+        "message": "收起侧边栏",
+        "description": "The title attribute for collapse button of doc sidebar"
+    },
+    "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+        "message": "← 回到主菜单",
+        "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+    },
+    "theme.docs.sidebar.expandButtonTitle": {
+        "message": "展开侧边栏",
+        "description": "The ARIA label and title attribute for expand button of doc sidebar"
+    },
+    "theme.docs.sidebar.expandButtonAriaLabel": {
+        "message": "展开侧边栏",
+        "description": "The ARIA label and title attribute for expand button of doc sidebar"
+    },
+    "theme.SearchBar.noResultsText": {
+        "message": "没有找到任何文档"
+    },
+    "theme.SearchBar.seeAll": {
+        "message": "查看全部结果"
+    },
+    "theme.SearchBar.label": {
+        "message": "搜索",
+        "description": "The ARIA label and placeholder for search button"
+    },
+    "theme.SearchPage.existingResultsTitle": {
+        "message": "“{query}” 的搜索结果",
+        "description": "The search page title for non-empty query"
+    },
+    "theme.SearchPage.emptyResultsTitle": {
+        "message": "搜索文档",
+        "description": "The search page title for empty query"
+    },
+    "theme.SearchPage.documentsFound.plurals": {
+        "message": "共找到 {count} 篇文档",
+        "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+    },
+    "theme.SearchPage.noResultsText": {
+        "message": "没有找到任何文档",
+        "description": "The paragraph for empty search result"
+    },
+    "homepage.more": {
+        "message": "了解更多",
+        "description": "more link"
+    },
+    "coreFeatures.title.f1": {
+        "message": "简单易用"
+    },
+    "coreFeatures.subTitle.f1": {
+        "message": "部署只需两个进程，不依赖其他系统；在线集群扩缩容，自动副本修复；兼容 MySQL 协议，并且使用标准 SQL"
+    },
+    "coreFeatures.title.f2": {
+        "message": "高性能"
+    },
+    "coreFeatures.subTitle.f2": {
+        "message": "依托列式存储引擎、现代的 MPP 架构、向量化查询引擎、预聚合物化视图、数据索引的实现，在低延迟和高吞吐查询上,  都达到了极速性能"
+    },
+    "coreFeatures.title.f3": {
+        "message": "统一数仓"
+    },
+    "coreFeatures.subTitle.f3": {
+        "message": "单一系统，可以同时支持实时数据服务、交互数据分析和离线数据处理场景"
+    },
+    "coreFeatures.title.f4": {
+        "message": "联邦查询"
+    },
+    "coreFeatures.subTitle.f4": {
+        "message": "支持对 Hive、Iceberg、Hudi 等数据湖和 MySQL、Elasticsearch 等数据库的联邦查询分析"
+    },
+    "coreFeatures.title.f5": {
+        "message": "多种导入"
+    },
+    "coreFeatures.subTitle.f5": {
+        "message": "支持从 HDFS/S3 等批量拉取导入和 MySQL Binlog/Kafka 等流式拉取导入；支持通过HTTP接口进行微批量推送写入和 JDBC 中使用 Insert 实时推送写入"
+    },
+    "coreFeatures.title.f6": {
+        "message": "生态丰富"
+    },
+    "coreFeatures.subTitle.f6": {
+        "message": "Spark 利用 Spark Doris Connector 读取和写入 Doris；Flink Doris Connector 配合 Flink CDC 实现数据 Exactly Once 写入 Doris；利用 DBT Doris Adapter，可以很容易的在 Doris 中完成数据转化"
+    },
+    "community.title.c1": {
+        "message": "邮件列表"
+    },
+    "community.title.c2": {
+        "message": "讨论区"
+    },
+    "community.title.c3": {
+        "message": "参与贡献"
+    },
+    "community.title.c4": {
+        "message": "源代码"
+    },
+    "community.title.c5": {
+        "message": "改进建议"
+    },
+    "community.title.c6": {
+        "message": "Doris 团队"
+    },
+    "homepage.news": {
+        "message": "1月6日-7日，Doris Summit 2022 于线上全面开启！",
+        "description": "The label for the link to homepage news"
+    },
+    "homepage.what": {
+        "message": "Apache Doris 定位",
+        "description": "What is Apache Doris"
+    },
+    "homepage.features": {
+        "message": "核心优势",
+        "description": "Core Features"
+    },
+    "homepage.join": {
+        "message": "加入社区",
+        "description": "Join The Community"
+    },
+    "homepage.start.title": {
+        "message": "准备踏上 Doris 之旅 ？"
+    },
+    "homepage.start.downloadButton": {
+        "message": "下载"
+    },
+    "homepage.start.docsButton": {
+        "message": "文档"
+    },
+    "learnmore": {
+        "message": "了解更多"
+    },
+    "sotry.summary.meituan": {
+        "message": "Apache Doris 可以较好地处理汇总与明细数据查询、变化维的历史回溯、非预设维的灵活应用、准实时的批处理等场景。"
+    },
+    "sotry.summary.jindong": {
+        "message": "Apache Doris 不仅可以应对海量数据的秒级查询，更可以满足实时、准实时的分析需求。"
+    },
+    "footer.follow": {
+        "message": "分享",
+        "description": "Footer Follow"
+    },
+    "download.quick.download": {
+        "message": "快速下载",
+        "description": "Quick Download"
+    },
+    "download.release": {
+        "message": "所有版本"
+    },
+    "download.flink.connector": {
+        "message": "Flink Doris Connector",
+        "description": "Flink Doris Connector"
+    },
+    "download.maven": {
+        "message": "Maven",
+        "description": "Maven"
+    },
+    "download.spark.connector": {
+        "message": "Spark Doris Connector",
+        "description": "Spark Doris Connector"
+    },
+    "download.verify": {
+        "message": "验证",
+        "description": "Verify"
+    },
+    "doc.version": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "footer.language": {
+        "message": "语言",
+        "description": "Footer Language"
+    },
+    "download.binary.version": {
+        "message": "二进制版本",
+        "description": "Binary Version"
+    },
+    "download.cpu.model": {
+        "message": "CPU 型号",
+        "description": "CPU Model"
+    },
+    "download.jdk.version": {
+        "message": "JDK 版本",
+        "description": "JDK Version"
+    },
+    "download.download.link": {
+        "message": "下载链接",
+        "description": "Download"
+    },
+    "download.quick.download.intr.prefix": {
+        "message": "如果 CPU 不支持 avx2 指令集，请选择 noavx2 版本，您可以通过"
+    },
+    "download.quick.download.intr.suffix": {
+        "message": "查看 CPU 是否支持。avx2 指令将会提升 Bloom Filter 等数据结构的计算效率。"
+    },
+    "download.release.more": {
+        "message": "查看更多"
+    },
+    "download.all.release.version": {
+        "message": "版本"
+    },
+    "download.all.release.date": {
+        "message": "发布日期"
+    },
+    "download.all.release.note": {
+        "message": "版本通告"
+    },
+    "download.flink.connector.version": {
+        "message": "版本"
+    },
+    "download.flink.release.date": {
+        "message": "发布日期"
+    },
+    "download.flink.version": {
+        "message": "Flink 版本"
+    },
+    "download.flink.scala.version": {
+        "message": "Scala 版本"
+    },
+    "download.flink.doris.version": {
+        "message": "Doris 版本"
+    },
+    "download.spark.connector.version": {
+        "message": "版本"
+    },
+    "download.spark.release.date": {
+        "message": "发布日期"
+    },
+    "download.spark.version": {
+        "message": "Spark 版本"
+    },
+    "download.spark.scala.version": {
+        "message": "Scala 版本"
+    },
+    "download.spark.doris.version": {
+        "message": "Doris 版本"
+    },
+    "download.verify.w1": {
+        "message": "关于如何校验下载文件，请参阅 "
+    },
+    "download.verify.w2": {
+        "message": "校验下载文件"
+    },
+    "download.verify.w3": {
+        "message": "，并使用这些"
+    },
+    "download.verify.w4": {
+        "message": "KEYS"
+    },
+    "download.verify.w5": {
+        "message": "。校验完成后，可以参阅"
+    },
+    "download.verify.w6": {
+        "message": "编译文档"
+    },
+    "download.verify.w7": {
+        "message": "以及"
+    },
+    "download.verify.w8": {
+        "message": "安装与部署文档"
+    },
+    "download.verify.w9": {
+        "message": "进行 Doris 的编译、安装与部署。"
+    },
+    "user.companies": {
+        "message": "他们都在使用 Apache Doris",
+        "description": "Companies That Trust Apache Doris"
+    },
+    "user.case": {
+        "message": "案例研究",
+        "description": "Case Studies"
+    },
+    "user.add..your.company": {
+        "message": "添加你的企业信息",
+        "description": "Add Your Company"
+    },
+    "homepage.banner.title": {
+        "message": "Apache Doris"
+    },
+    "homepage.banner.subTitle": {
+        "message": "简单易用、高性能和统一的分析数据库"
+    },
+    "download.all.release.download": {
+        "message": "下载"
+    },
+    "download.source.binary": {
+        "message": "源码 / 二进制"
+    },
+    "download.source": {
+        "message": "源码"
+    },
+    "download": {
+        "message": "下载"
+    },
+    "homepage.banner.button1": {
+        "message": "快速开始"
+    },
+    "sotry.summary.xiaomi": {
+        "message": "Apache Doris 在小米得到了广泛的使用，目前已经服务了数十个业务，并形成了一套以 Apache Doris 为核心的数据生态。"
+    },
+    "navbar.download": {
+        "message": "下载"
+    },
+    "homepage.title": {
+        "message": "首页"
+    },
+    "download.title": {
+        "message": "下载"
+    },
+    "users.title": {
+        "message": "用户"
+    },
+    "sitemap.title": {
+        "message": "学习路径"
+    },
+    "sitemap.subTitle": {
+        "message": ""
+    },
+    "sitemap.page.title": {
+        "message": "学习路径"
+    },
+    "documentation.feedback": {
+        "message": "问题反馈"
+    },
+    "theme.PwaReloadPopup.info": {
+        "message": "有可用的新版本",
+        "description": "The text for PWA reload popup"
+    },
+    "theme.PwaReloadPopup.refreshButtonText": {
+        "message": "刷新",
+        "description": "The text for PWA reload button"
+    },
+    "theme.PwaReloadPopup.closeButtonAriaLabel": {
+        "message": "关闭",
+        "description": "The ARIA label for close button of PWA reload popup"
+    },
+    "Introduction to Apache Doris": {
+        "message": "Apache Doris 总体介绍"
+    },
+    "Get Started": {
+        "message": "快速开始"
+    },
+    "Installation and deployment": {
+        "message": "安装部署"
+    },
+    "Compilation": {
+        "message": "源码编译"
+    },
+    "Table Design": {
+        "message": "数据表设计"
+    },
+    "Data Model": {
+        "message": "数据模型"
+    },
+    "Data Partition": {
+        "message": "数据划分"
+    },
+    "Guidelines for Creating Table": {
+        "message": "建表指南"
+    },
+    "Rollup and Query": {
+        "message": "Rollup与查询"
+    },
+    "Practices of Creating Table": {
+        "message": "建表实践"
+    },
+    "Index": {
+        "message": "索引"
+    },
+    "Data Import": {
+        "message": "数据导入"
+    },
+    "Import Overview": {
+        "message": "导入总览"
+    },
+    "Import Local Data": {
+        "message": "导入本地数据"
+    },
+    "Import External Storage Data": {
+        "message": "导入外部存储数据"
+    },
+    "Subscribe Kafka Data": {
+        "message": "订阅 Kafka 日志"
+    },
+    "Synchronize Data Through External Table": {
+        "message": "通过外部表同步数据"
+    },
+    "Data Export": {
+        "message": "数据导出"
+    },
+    "Export Data": {
+        "message": "导出数据"
+    },
+    "Export Query Result": {
+        "message": "导出查询结果集"
+    },
+    "Export Table Structure or Data": {
+        "message": "导出表结构或数据"
+    },
+    "Data Backup": {
+        "message": "数据备份"
+    },
+    "Update and Delete": {
+        "message": "数据更新及删除"
+    },
+    "Update": {
+        "message": "数据更新"
+    },
+    "Delete": {
+        "message": "删除操作"
+    },
+    "Batch Delete": {
+        "message": "批量删除"
+    },
+    "Sequence Column": {
+        "message": "Sequence 列"
+    },
+    "Advanced Usage": {
+        "message": "进阶使用"
+    },
+    "Schema Change": {
+        "message": "表结构变更"
+    },
+    "Dynamic Partition": {
+        "message": "动态分区"
+    },
+    "Data Cache": {
+        "message": "数据缓存"
+    },
+    "Join Optimization": {
+        "message": "Join 优化"
+    },
+    "Materialized view": {
+        "message": "物化视图"
+    },
+    "BITMAP Precise De-duplication": {
+        "message": "BITMAP 精确去重"
+    },
+    "HLL ApproximateDe-duplication": {
+        "message": "HLL 近似去重"
+    },
+    "Variables": {
+        "message": "变量"
+    },
+    "Time Zone": {
+        "message": "时区"
+    },
+    "File Manager": {
+        "message": "文件管理器"
+    },
+    "Ecosystem": {
+        "message": "生态拓展"
+    },
+    "Doris on ES": {
+        "message": "Doris on ES"
+    },
+    "Doris on Hudi": {
+        "message": "Doris on Hudi"
+    },
+    "Doris on Iceberg": {
+        "message": "Doris on Iceberg"
+    },
+    "Doris on Hive": {
+        "message": "Doris on Hive"
+    },
+    "Doris on ODBC": {
+        "message": "Doris on ODBC"
+    },
+    "Spark Doris Connector": {
+        "message": "Spark Doris Connector"
+    },
+    "Flink Doris Connector": {
+        "message": "Flink Doris Connector"
+    },
+    "Seatunnel Connector": {
+        "message": "Seatunnel Connector"
+    },
+    "DataX doriswriter": {
+        "message": "DataX doriswriter"
+    },
+    "UDF": {
+        "message": "UDF"
+    },
+    "Audit log plugin": {
+        "message": "审计日记插件"
+    },
+    "SQL Manual": {
+        "message": "SQL 手册"
+    },
+    "SQL Function": {
+        "message": "SQL 函数"
+    },
+    "DDL": {
+        "message": "DDL"
+    },
+    "DML": {
+        "message": "DML"
+    },
+    "Data Types": {
+        "message": "数据类型"
+    },
+    "Utility": {
+        "message": "辅助命令"
+    },
+    "Cluster Management": {
+        "message": "集群管理"
+    },
+    "Cluster Upgrade": {
+        "message": "集群升级"
+    },
+    "Elastic scaling": {
+        "message": "弹性扩缩容"
+    },
+    "Statistics of query execution": {
+        "message": "查询分析"
+    },
+    "Maintenance and Monitor": {
+        "message": "监控报警"
+    },
+    "Metadata Operation": {
+        "message": "元数据运维"
+    },
+    "Error Code": {
+        "message": "错误码"
+    },
+    "Config": {
+        "message": "配置管理"
+    },
+    "Authority Management": {
+        "message": "权限管理"
+    },
+    "Multi-tenancy": {
+        "message": "多租户与资源管理"
+    },
+    "FAQ": {
+        "message": "常见问题"
+    },
+    "FAQs of Operation and Maintenance": {
+        "message": "运维常见问题"
+    },
+    "FAQs of Data Operation": {
+        "message": "数据操作问题"
+    },
+    "SQL FAQs": {
+        "message": "SQL 问题"
+    },
+    "sitemap.page.subTitle": {
+        "message": "从这里开启您的 Apache Doris 之旅，与 Apache Doris 一起发现无限可能"
+    },
+    "download.quick.download.version.tips": {
+        "message": "apache-doris-1.1.2-bin-x86-noavx2 版本暂不提供下载，我们会在进行更新。"
+    },
+    "Notice": {
+        "message": "注意事项"
+    },
+    "download.quick.download.notice": {
+        "message": "1.2.1 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
+    }
 }
