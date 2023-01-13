@@ -205,7 +205,7 @@ export default function Download(): JSX.Element {
                                                 手册。
                                             </li>
                                             <li>
-                                                1.2.1 版本的 java-udf-jar-with-dependencies.jar 可能存在兼容性问题，如果再使用 java udf 功能时遇到问题，请和我们联系:dev@doris.apache.org
+                                                1.2.1 版本的 java-udf-jar-with-dependencies.jar 可能存在兼容性问题，如果在使用 java udf 功能时遇到问题，请和我们联系:dev@doris.apache.org
                                             </li>
                                             </>
                                         ) : (
