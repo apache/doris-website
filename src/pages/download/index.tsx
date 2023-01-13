@@ -184,6 +184,7 @@ export default function Download(): JSX.Element {
                                 {version === VersionEnum.Latest ? (
                                     <>
                                         {currentLocale === 'zh-CN' ? (
+                                            <>
                                             <li>
                                                 由于 Apache 服务器文件大小限制，1.2 版本的二进制程序被分为三个包，其中新增的 apache-doris-dependencies 包含用于支持 JDBC 外表和 JAVA UDF 的jar包，以及 Broker 和 AuditLoader。
 下载后，需要将其中的 java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
@@ -206,7 +207,9 @@ export default function Download(): JSX.Element {
                                             <li>
                                                 1.2.1 版本的 java-udf-jar-with-dependencies.jar 可能存在兼容性问题，如果再使用 java udf 功能时遇到问题，请和我们联系:dev@doris.apache.org
                                             </li>
+                                            </>
                                         ) : (
+                                            <>
                                             <li>
                                                 Due to the file size limitation of the Apache server, the binary program of version 1.2 is divided into three packages, among which the newly added apache-doris-dependencies include jar packages for supporting JDBC appearance and JAVA UDF, as well as Broker and AuditLoader.
 After downloading, you need to put the java-udf-jar-with-dependencies.jar in the be/lib directory.
@@ -214,6 +217,7 @@ After downloading, you need to put the java-udf-jar-with-dependencies.jar in the
                                             <li>
                                                 The 1.2.1 version of java-udf-jar-with-dependencies.jar may have compatibility issues. If you encounter problems when using the java udf function, please contact us: dev@doris.apache.org
                                             </li>
+                                            </>
                                         )}
                                         <li>
                                             <Translate id="download.quick.download.notice">
