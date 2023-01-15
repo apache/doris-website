@@ -181,26 +181,6 @@ const sitemapList = [
         icon: require('@site/static/images/sitemap/sitemap-search.png').default,
         list: [
             {
-                title: <Translate>Doris on ES</Translate>,
-                link: '/docs/dev/ecosystem/external-table/doris-on-es',
-            },
-            {
-                title: <Translate>Doris on Hudi</Translate>,
-                link: '/docs/dev/ecosystem/external-table/hudi-external-table',
-            },
-            {
-                title: <Translate>Doris on Iceberg</Translate>,
-                link: '/docs/dev/ecosystem/external-table/iceberg-of-doris',
-            },
-            {
-                title: <Translate>Doris on Hive</Translate>,
-                link: '/docs/dev/ecosystem/external-table/hive-of-doris',
-            },
-            {
-                title: <Translate>Doris on ODBC</Translate>,
-                link: '/docs/dev/ecosystem/external-table/odbc-of-doris',
-            },
-            {
                 title: <Translate>Spark Doris Connector</Translate>,
                 link: '/docs/dev/ecosystem/spark-doris-connector',
             },
