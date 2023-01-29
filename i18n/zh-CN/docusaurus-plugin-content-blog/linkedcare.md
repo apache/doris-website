@@ -1,7 +1,7 @@
 {
     'title': '并发提升 10 倍，运算延时降低 70%，领健从 ClickHouse 和 Kudu 到 Apache Doris 数仓升级实践',
     'language': 'zh',
-    'summary': 'Doris 在领健的发展历程。最初 Doris 替代 ClickHouse 被应用到数据服务项目中，该项目是领健为旗下客户提供的增值报表服务；后在项目服务中发掘出 Doris 查询性能优异、简单易用、部署成本低等诸多优势，在 2021 年10月，我们决定扩大 Doris 应用范围，将 Doris 引入到公司的数仓中，在 Doris 社区及 SelectDB 专业技术团队的支持下，业务逐步从 Kudu 迁移到 Doris，并在最近升级到 1.1.4 向量化版本。",
+    'summary': 'Doris 在领健的发展历程。最初 Doris 替代 ClickHouse 被应用到数据服务项目中，该项目是领健为旗下客户提供的增值报表服务；后在项目服务中发掘出 Doris 查询性能优异、简单易用、部署成本低等诸多优势，在 2021 年10月，我们决定扩大 Doris 应用范围，将 Doris 引入到公司的数仓中，在 Doris 社区及 SelectDB 专业技术团队的支持下，业务逐步从 Kudu 迁移到 Doris，并在最近升级到 1.1.4 向量化版本。',
     'date': '2023-01-28',
     'author': '杨鷖',
     'tags': ['最佳实践']
