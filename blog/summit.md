@@ -180,7 +180,3 @@ https://github.com/apache/doris
 Apache Doris Website
 
 https://doris.apache.org
-
-# The END
-
-It is the end of my sharing. Thank you for listening.
