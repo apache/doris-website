@@ -1,7 +1,7 @@
 ---
 {
     'title': 'A Glimpse of the Next-generation Analytical Database',
-    'language": "en'
+    'language': 'en',
     'summary': "My name is Mingyu Chen and I am the PMC Chair of the Apache Doris.In this lecture, you will go through the development of Doris in 2022 and look into the new trends that Doris is exploring in 2023.",
     'date': '2023-01-19',
     'author': 'Mingyu Chen',
