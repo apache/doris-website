@@ -51,4 +51,5 @@ jobs:
           accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
           bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+          otherCacheControl: no-cache
           folder: build
