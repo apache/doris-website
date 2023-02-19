@@ -1,12 +1,8 @@
-name: Generate PDF
+name: Cron Generate PDF
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Specify the branch name'
-        required: true
-        default: 'master'
+  schedule:
+    - cron: '0 1 * * *'
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
