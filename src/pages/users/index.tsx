@@ -4,49 +4,29 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
-import More from '@site/src/components/More/index';
 import PageColumn from '@site/src/components/PageColumn';
+import MDXContent from '@theme/MDXContent';
+import CaseStudiesCn from '@site/userCases/zh_CN.md';
+import CaseStudiesEn from '@site/userCases/en_US.md';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper';
 
-const arr = new Array(30).fill('');
-const usersWalls = arr.map((item, index) => require(`@site/static/images/icon/u${index + 1}.png`).default);
-
-const storyList = [
-    {
-        img: require('@site/static/images/icon/meituan.png').default,
-        summary: (
-            <Translate id="sotry.summary.meituan">
-                Apache Doris can better meet the requirements of summary and detailed query, historical backtracking,
-                flexible query and real-time processing.
-            </Translate>
-        ),
-        link: '/blog/meituan',
-        id: 'meituan',
-    },
-    {
-        img: require('@site/static/images/icon/jd.png').default,
-        summary: (
-            <Translate id="sotry.summary.jindong">
-                Apache Doris can not only deal with second-level queries of massive data, but also meet real-time and
-                quasi-real-time analysis requirements.
-            </Translate>
-        ),
-        link: '/blog/jd',
-        id: 'jindong',
-    },
-    {
-        img: require('@site/static/images/icon/xiaomi.png').default,
-        summary: (
-            <Translate id="sotry.summary.xiaomi">
-                Apache Doris has been widely used in Xiaomi, and it has served dozens of businesses and formed a set of
-                data ecology with it as the core.
-            </Translate>
-        ),
-        link: '/blog/xiaomi',
-        id: 'xiaomi',
-    },
-];
 export default function Users(): JSX.Element {
-    const { siteConfig } = useDocusaurusContext();
+    const { i18n } = useDocusaurusContext();
+
+    const getUserLogos = (page: number = 1, total: number = 30) => {
+        const arr = new Array(total).fill('');
+        return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
+    };
+
+    const pagination = {
+        clickable: true,
+        renderBullet: function (index, className) {
+            return '<span class="' + className + '"></span>';
+        },
+    };
     return (
         <Layout
             title={translate({ id: 'users.title', message: 'Users' })}
@@ -59,49 +39,80 @@ export default function Users(): JSX.Element {
                 <PageColumn
                     align="left"
                     title={
-                        <Translate id="user.companies" description="Companies That Trust Apache Doris">
+                        <Translate id="user.logos" description="Companies That Trust Apache Doris">
                             Companies That Trust Apache Doris
                         </Translate>
                     }
                 >
-                    <ul className="users-wall-list row">
-                        {usersWalls.map((item, index) => (
-                            <li className="users-wall-item col col--2" key={index}>
-                                <img className="users-wall-img" src={item} alt="" />
-                            </li>
-                        ))}
-                    </ul>
+                    <Swiper
+                        pagination={pagination}
+                        modules={[Pagination]}
+                        spaceBetween={50}
+                        slidesPerView={1}
+                        className="mySwiper"
+                        onSlideChange={() => console.log('slide change')}
+                        onSwiper={(swiper: any) => console.log(swiper)}
+                    >
+                        <SwiperSlide>
+                            <div className="users-wall-list row">
+                                <img
+                                    className="users-wall-img"
+                                    src={require(`@site/static/images/user-logos-1.jpg`).default}
+                                    alt=""
+                                />
+                            </div>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <div className="users-wall-list row">
+                                <img
+                                    className="users-wall-img"
+                                    src={require(`@site/static/images/user-logos-2.jpg`).default}
+                                    alt=""
+                                />
+                            </div>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <div className="users-wall-list row">
+                                <img
+                                    className="users-wall-img"
+                                    src={require(`@site/static/images/user-logos-3.jpg`).default}
+                                    alt=""
+                                />
+                            </div>
+                        </SwiperSlide>
+                    </Swiper>
                 </PageColumn>
             </section>
             <section className="story">
                 <PageColumn
                     align="left"
                     title={
-                        <Translate id="user.case" description="Case Studies">
-                            Case Studies
+                        <Translate id="user.user-case" description="Companies Powerd by Apache Doris">
+                            Companies Powerd by Apache Doris
                         </Translate>
                     }
                     footer={
                         <div className="share-story">
                             <Link to="https://github.com/apache/doris/issues/10229" className="share-button">
                                 <Translate id="user.add..your.company" description="Add Your Company">
-                                    Add Your Company
+                                    Share You Stroy
                                 </Translate>
                             </Link>
                         </div>
                     }
                 >
-                    <div className="row">
-                        {storyList.map((item, index) => (
-                            <div className="col col--4" key={index}>
-                                <div className="story-item">
-                                    <img src={item.img} alt="" />
-                                    <p className="story-summary">{item.summary}</p>
-                                    <More link={item.link} />
-                                </div>
-                            </div>
-                        ))}
+                    <div style={{ fontSize: 16, marginTop: '-2rem', marginBottom: '-1rem' }}>
+                        <Translate
+                            id="user.case-description"
+                            description="There are more than 1,000 companies worldwide leveraging Apache Doris to build their unified
+                            data analytical database. Some of them are listed below:"
+                        >
+                            There are more than 1,000 companies worldwide leveraging Apache Doris to build their unified
+                            data analytical database. Some of them are listed below:
+                        </Translate>
                     </div>
+
+                    <MDXContent>{i18n.currentLocale === 'en' ? <CaseStudiesEn /> : <CaseStudiesCn />}</MDXContent>
                 </PageColumn>
             </section>
         </Layout>
