@@ -18,6 +18,13 @@
             font-size: 1.5rem;
         }
     }
+    .downlaod-document {
+        color: var(--ifm-color-primary);
+        cursor: pointer;
+        padding-left: 0.4rem;
+        display: flex;
+        align-items: center;
+    }
 
     &-box {
         padding: 3.125rem;
