@@ -6,8 +6,8 @@ import './index.scss';
 import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
 import MDXContent from '@theme/MDXContent';
-import CaseStudiesCn from '@site/userCases/zh_CN.md';
-import CaseStudiesEn from '@site/userCases/en_US.md';
+// import CaseStudiesCn from '@site/userCases/zh_CN.md';
+// import CaseStudiesEn from '@site/userCases/en_US.md';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -112,7 +112,7 @@ export default function Users(): JSX.Element {
                         </Translate>
                     </div>
 
-                    <MDXContent>{i18n.currentLocale === 'en' ? <CaseStudiesEn /> : <CaseStudiesCn />}</MDXContent>
+                    {/* <MDXContent>{i18n.currentLocale === 'en' ? <CaseStudiesEn /> : <CaseStudiesCn />}</MDXContent> */}
                 </PageColumn>
             </section>
         </Layout>
