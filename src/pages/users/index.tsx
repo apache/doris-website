@@ -5,7 +5,6 @@ import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
-import MDXContent from '@theme/MDXContent';
 import userCasesCn from '@site/userCases/zh_CN.json';
 import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperSlide } from 'swiper/react';
