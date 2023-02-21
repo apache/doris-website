@@ -19,6 +19,7 @@ export default function Layout(props) {
         title,
         description,
         isPage,
+        showAnnouncementBar,
     } = props;
     useKeyboardNavigation();
     const { isTop } = useScrollTop(80);
@@ -29,7 +30,7 @@ export default function Layout(props) {
 
             <SkipToContent />
 
-            <AnnouncementBar />
+            {showAnnouncementBar && <AnnouncementBar />}
             <Navbar />
             <div className={clsx(ThemeClassNames.wrapper.main, wrapperClassName, isPage ? 'has-margin' : '')}>
                 <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>

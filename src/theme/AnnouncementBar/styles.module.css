@@ -1,0 +1,87 @@
+:root {
+  --docusaurus-announcement-bar-height: 30px;
+}
+
+.announcementBar {
+  display: flex;
+  align-items: center;
+  height: var(--docusaurus-announcement-bar-height);
+  background-color: var(--ifm-color-white);
+  background: linear-gradient(270.01deg, #3C2FD5 -12.32%, #7780F4 150.41%);;
+  color: var(--ifm-color-black);
+  border-bottom: 1px solid var(--ifm-color-emphasis-100);
+}
+
+html[data-announcement-bar-initially-dismissed='true'] .announcementBar {
+  display: none;
+}
+
+.announcementBarPlaceholder {
+  flex: 0 0 10px;
+}
+
+.announcementBarClose {
+  flex: 0 0 30px;
+  align-self: stretch;
+  padding: 0;
+  line-height: 0;
+}
+
+.announcementBarContent {
+  flex: 1 1 auto;
+  font-size: 85%;
+  text-align: center;
+  padding: 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.announcementBarContent:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: url('../../../static/images/announcementBar-left.png') center no-repeat;
+  background-size: contain;
+  width: 29rem;
+  height: 2.375rem;
+}
+
+.announcementBarContent:after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: url('../../../static/images/announcementBar-right.png') center no-repeat;
+  background-size: contain;
+  width: 29rem;
+  height: 2.375rem;
+}
+
+@media print {
+  .announcementBar {
+    display: none;
+  }
+}
+
+.announcementBarContent a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+@media (min-width: 997px) {
+  :root {
+    --docusaurus-announcement-bar-height: 40px;
+  }
+
+  .announcementBarPlaceholder,
+  .announcementBarClose {
+    flex-basis: 50px;
+  }
+}

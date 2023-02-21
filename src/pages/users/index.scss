@@ -10,7 +10,8 @@
     }
 
     .users-wall-list {
-        padding-left: 0;
+        padding: 0 1rem;
+        padding-bottom: 4rem;
 
         .users-wall-item {
             list-style: none;
@@ -26,10 +27,19 @@
         }
 
         .col {
-            &+.col {
+            & + .col {
                 margin-top: 0 !important;
             }
         }
+    }
+
+    .swiper-pagination-bullet {
+        background: #d9d9d9;
+        margin: 0 0.5rem !important;
+    }
+
+    .swiper-pagination-bullet-active {
+        background: var(--ifm-color-primary);
     }
 }
 
@@ -40,7 +50,7 @@
 
     .count {
         font-size: 30px;
-        line-height: 1.0;
+        line-height: 1;
         margin: 0 0.3125rem;
         color: var(--ifm-color-primary);
         font-weight: 400;
@@ -54,6 +64,15 @@
         &.left {
             .page-column-title {
                 margin-bottom: 3.75rem;
+            }
+        }
+        .container {
+            p {
+                font-size: 1rem;
+            }
+            h2 {
+                margin-top: 3.8rem;
+                font-size: 1.75rem;
             }
         }
     }
@@ -83,7 +102,7 @@
             min-height: 10.5rem;
             margin-bottom: 0;
 
-            >svg {
+            > svg {
                 &:first-child {
                     position: absolute;
                     left: 1.25rem;
@@ -117,7 +136,7 @@
             font-weight: bold;
             font-size: var(--global-font-size-small);
             cursor: pointer;
-            transition: all .3s;
+            transition: all 0.3s;
             padding: 0 1rem;
 
             &:hover {
