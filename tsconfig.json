@@ -1,8 +1,10 @@
 {
-  // This file is not used in compilation. It is here just for a nice editor experience.
-  "extends": "@tsconfig/docusaurus/tsconfig.json",
-  "compilerOptions": {
-    "jsx": "react",
-    "baseUrl": "."
-  }
+    // This file is not used in compilation. It is here just for a nice editor experience.
+    "extends": "@tsconfig/docusaurus/tsconfig.json",
+    "compilerOptions": {
+        "jsx": "react",
+        "baseUrl": ".",
+        "esModuleInterop": true,
+        "resolveJsonModule": true
+    }
 }
