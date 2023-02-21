@@ -180,6 +180,16 @@ const config = {
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
+            announcementBar: {
+                id: 'support_us',
+                content: `Do you like Apache Doris？Give us a 🌟 on Github 
+                    <a href="https://github.com/apache/doris" target="_blank" style="display: inline-block; margin-left: 4px; height: 1.2rem;">
+                        <img style="width: 1.2rem; height: 1.2rem;" src="./images/github-white-icon.svg">
+                    </a>`,
+                backgroundColor: '#3C2FD4',
+                textColor: '#FFFFFF',
+                isCloseable: false,
+            },
             navbar: {
                 title: '',
                 logo: {
@@ -204,6 +214,7 @@ const config = {
                         docsPluginId: 'community',
                     },
                     { to: '/users', label: 'Users', position: 'left' },
+                    { to: 'https://github.com/apache/doris/issues/16392', label: 'Roadmap', position: 'left' },
                     // {
                     //     type: 'docsVersionDropdown',
                     //     position: 'right',

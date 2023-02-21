@@ -66,6 +66,27 @@ export default function Download(): JSX.Element {
         setCurrent(linkObj);
     };
 
+    function downloadFile(url: string) {
+        const a = document.createElement('a');
+        a.download = url;
+        a.href = url;
+        a.target = '_blank';
+        const clickEvt = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
+    const downloadDocument = () => {
+        const url =
+            currentLocale === 'en'
+                ? 'https://cdn-tencent.selectdb.com/assets/files/Apache Doris Docs (English).pdf'
+                : 'https://cdn-tencent.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
+        downloadFile(url);
+    };
     useEffect(() => {
         getDownloadLinks();
     }, [version, cpu, jdk]);
@@ -185,38 +206,49 @@ export default function Download(): JSX.Element {
                                     <>
                                         {currentLocale === 'zh-CN' ? (
                                             <>
-                                            <li>
-                                                由于 Apache 服务器文件大小限制，1.2 版本的二进制程序被分为三个包，其中新增的 apache-doris-dependencies 包含用于支持 JDBC 外表和 JAVA UDF 的jar包，以及 Broker 和 AuditLoader。
-下载后，需要将其中的 java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
-                                                详细升级注意事项请参考
-                                                <Link to="/docs/dev/releasenotes/release-1.2.1">
-                                                    1.2.1 Release Note
-                                                </Link>
-                                                以及
-                                                <Link to="/docs/dev/install/install-deploy">
-                                                    <Translate id="Installation and deployment">
-                                                        Installation and deployment
-                                                    </Translate>
-                                                </Link>
-                                                以及
-                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
-                                                    <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
-                                                </Link>
-                                                手册。
-                                            </li>
-                                            <li>
-                                                1.2.1 版本的 java-udf-jar-with-dependencies.jar 可能存在兼容性问题，如果在使用 java udf 功能时遇到问题，请和我们联系:dev@doris.apache.org
-                                            </li>
+                                                <li>
+                                                    由于 Apache 服务器文件大小限制，1.2
+                                                    版本的二进制程序被分为三个包，其中新增的 apache-doris-dependencies
+                                                    包含用于支持 JDBC 外表和 JAVA UDF 的jar包，以及 Broker 和
+                                                    AuditLoader。 下载后，需要将其中的
+                                                    java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
+                                                    详细升级注意事项请参考
+                                                    <Link to="/docs/dev/releasenotes/release-1.2.1">
+                                                        1.2.1 Release Note
+                                                    </Link>
+                                                    以及
+                                                    <Link to="/docs/dev/install/install-deploy">
+                                                        <Translate id="Installation and deployment">
+                                                            Installation and deployment
+                                                        </Translate>
+                                                    </Link>
+                                                    以及
+                                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
+                                                        <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
+                                                    </Link>
+                                                    手册。
+                                                </li>
+                                                <li>
+                                                    1.2.1 版本的 java-udf-jar-with-dependencies.jar
+                                                    可能存在兼容性问题，如果在使用 java udf
+                                                    功能时遇到问题，请和我们联系:dev@doris.apache.org
+                                                </li>
                                             </>
                                         ) : (
                                             <>
-                                            <li>
-                                                Due to the file size limitation of the Apache server, the binary program of version 1.2 is divided into three packages, among which the newly added apache-doris-dependencies include jar packages for supporting JDBC appearance and JAVA UDF, as well as Broker and AuditLoader.
-After downloading, you need to put the java-udf-jar-with-dependencies.jar in the be/lib directory.
-                                            </li>
-                                            <li>
-                                                The 1.2.1 version of java-udf-jar-with-dependencies.jar may have compatibility issues. If you encounter problems when using the java udf function, please contact us: dev@doris.apache.org
-                                            </li>
+                                                <li>
+                                                    Due to the file size limitation of the Apache server, the binary
+                                                    program of version 1.2 is divided into three packages, among which
+                                                    the newly added apache-doris-dependencies include jar packages for
+                                                    supporting JDBC appearance and JAVA UDF, as well as Broker and
+                                                    AuditLoader. After downloading, you need to put the
+                                                    java-udf-jar-with-dependencies.jar in the be/lib directory.
+                                                </li>
+                                                <li>
+                                                    The 1.2.1 version of java-udf-jar-with-dependencies.jar may have
+                                                    compatibility issues. If you encounter problems when using the java
+                                                    udf function, please contact us: dev@doris.apache.org
+                                                </li>
                                             </>
                                         )}
                                         <li>
@@ -368,6 +400,30 @@ After downloading, you need to put the java-udf-jar-with-dependencies.jar in the
   <version>1.1.0</version>
 </dependency>`}
                     </CodeBlock>
+                </PageColumn>
+            </section>
+            <section className="table-content">
+                <PageColumn
+                    align="left"
+                    title={
+                        <Translate id="download.document" description="文档">
+                            Document
+                        </Translate>
+                    }
+                >
+                    <div className="content">
+                        <p style={{ display: 'flex', alignItems: 'center' }}>
+                            Click to download the latest
+                            <span className="downlaod-document" onClick={downloadDocument}>
+                                offline documents{' '}
+                                <img
+                                    style={{ width: '1.2rem', height: '1.2rem', paddingLeft: '0.2rem' }}
+                                    src={require('@site/static/images/icon/download.png').default}
+                                    alt=""
+                                />
+                            </span>
+                        </p>
+                    </div>
                 </PageColumn>
             </section>
             <section className="table-content">

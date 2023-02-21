@@ -144,6 +144,7 @@ export default function Home(): JSX.Element {
                 id: 'homepage.banner.subTitle',
                 message: 'An easy-to-use, high-performance and unified analytical database',
             })}
+            showAnnouncementBar
         >
             <PageBanner {...banner}></PageBanner>
             <section className="news-section">
@@ -151,9 +152,9 @@ export default function Home(): JSX.Element {
                     <div className="news-wrap">
                         <div className="news-item">
                             <span className="news-icon"></span>
-                            <Link to="https://doris-summit.selectdb.com" className="news-content">
-                                <Translate id="homepage.news" description="The label for the link to homepage news">
-                                    Check out all the sessions in Doris Summit 2022 online!
+                            <Link to="https://github.com/apache/doris/releases/tag/1.2.2-rc01" className="news-content">
+                                <Translate id="1.2.2" description="Apache Doris 1.2.2 Release">
+                                    Apache Doris 1.2.2 Release
                                 </Translate>
                             </Link>
                         </div>
