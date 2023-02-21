@@ -6,8 +6,8 @@ import './index.scss';
 import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
 import MDXContent from '@theme/MDXContent';
-// import CaseStudiesCn from '@site/userCases/zh_CN.md';
-// import CaseStudiesEn from '@site/userCases/en_US.md';
+import userCasesCn from '@site/userCases/zh_CN.json';
+import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -15,7 +15,7 @@ import { Pagination } from 'swiper';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
-
+    const userCases = i18n.currentLocale === 'en' ? userCasesEn : userCasesCn;
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
@@ -111,8 +111,15 @@ export default function Users(): JSX.Element {
                             data analytical database. Some of them are listed below:
                         </Translate>
                     </div>
-
-                    {/* <MDXContent>{i18n.currentLocale === 'en' ? <CaseStudiesEn /> : <CaseStudiesCn />}</MDXContent> */}
+                    <div className="user-cases">
+                        {userCases &&
+                            userCases.map(item => (
+                                <div className="user-case" key={item.name}>
+                                    <h2 className="user-case-title">{item.name}</h2>
+                                    <p className="user-case-intro">{item.introduction}</p>
+                                </div>
+                            ))}
+                    </div>
                 </PageColumn>
             </section>
         </Layout>
