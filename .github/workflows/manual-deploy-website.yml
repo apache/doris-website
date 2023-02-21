@@ -18,6 +18,18 @@ jobs:
       with:
           persist-credentials: false
           submodules: recursive
+    
+    - name: Add Chinese Fonts
+      run: |
+          sudo apt-get install ttf-mscorefonts-installer
+          sudo apt-get install fontconfig
+          fc-list :lang=zh
+          ls -lh /usr/share/fonts/
+          cp -rf ./static/fonts/* /usr/share/fonts/
+          mkfontscale
+          mkfontdir
+          fc-cache
+          fc-list :lang=zh
 
     - name: Use Node.js
       uses: actions/setup-node@v1
@@ -50,15 +62,15 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
-    # - name: Generate PDF
-    #   run: |
-    #     npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/docs/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 1.1 (English)" --outputPDFFilename="Apache Doris 1.1 (English).pdf"
-    #     npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/docs/dev/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris Dev (English)" --outputPDFFilename="Apache Doris Dev (English).pdf"
-    #     npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/docs/0.15/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 0.15 (English)" --outputPDFFilename="Apache Doris 0.15 (English).pdf"
-    #     npx vitpress-generate-pdf -buildDirPath="./build/"  --firstDocPath="/zh-CN/docs/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 1.1 (中文)" --outputPDFFilename="Apache Doris 1.1 (中文).pdf"
-    #     npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/zh-CN/docs/dev/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris Dev (中文)" --outputPDFFilename="Apache Doris Dev (中文).pdf"
-    #     npx vitpress-generate-pdf --buildDirPath="./build/"  --firstDocPath="/zh-CN/docs/0.15/summary/basic-summary/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/images/doris-logo-512.png" --coverTitle="Apache Doris 0.15 (中文)" --outputPDFFilename="Apache Doris 0.15 (中文).pdf"
-    #     cp *.pdf ./build/assets/files/
+    - name: Generate PDF
+      run: |
+        npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
+        npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
+        ls
+        rm -rf ./build/**
+        mkdir -p ./build/assets/files/
+        cp *.pdf ./build/assets/files/
+        ls ./build/assets/files/
 
     - name: Upload files to OSS
       uses: ./.github/actions/aliyun-oss-website-action
