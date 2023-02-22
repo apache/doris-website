@@ -170,9 +170,9 @@ export function getAllDownloadLinks(locale: string) {
                 {
                     label: 'apache-doris-1.1.5-bin-arm.tar.gz ',
                     links: {
-                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-1.1.5-bin-arm.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-1.1.5-bin-arm.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-1.1.5-bin-arm.tar.gz.sha512`,
+                        source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz`,
+                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz.asc`,
+                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz.sha512`,
                     },
                 },
             ],
