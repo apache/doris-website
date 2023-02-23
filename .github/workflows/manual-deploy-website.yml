@@ -79,6 +79,9 @@ jobs:
           # use your own endpoint
           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
           folder: build
+    
+    - name: Remove pdf
+      run: rm -rf ./build/assets/files/*.pdf
 
     - name: Deploy Website
       if: ${{ github.event.inputs.branch == 'master' }}
