@@ -10,6 +10,7 @@
   background: linear-gradient(270.01deg, #3C2FD5 -12.32%, #7780F4 150.41%);;
   color: var(--ifm-color-black);
   border-bottom: 1px solid var(--ifm-color-emphasis-100);
+  z-index: 1;
 }
 
 html[data-announcement-bar-initially-dismissed='true'] .announcementBar {

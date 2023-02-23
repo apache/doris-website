@@ -182,9 +182,8 @@ const config = {
         ({
             announcementBar: {
                 id: 'support_us',
-                content: `Do you like Apache Doris？Give us a 🌟 on Github 
-                    <a href="https://github.com/apache/doris" target="_blank" style="display: inline-block; margin-left: 4px; height: 1.2rem;">
-                        <img style="width: 1.2rem; height: 1.2rem;" src="./images/github-white-icon.svg">
+                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">Do you like Apache Doris？Give us a 🌟 on Github 
+                        <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="./images/github-white-icon.svg">
                     </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',

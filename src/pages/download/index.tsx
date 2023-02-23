@@ -406,30 +406,6 @@ export default function Download(): JSX.Element {
                 <PageColumn
                     align="left"
                     title={
-                        <Translate id="download.document" description="文档">
-                            Document
-                        </Translate>
-                    }
-                >
-                    <div className="content">
-                        <p style={{ display: 'flex', alignItems: 'center' }}>
-                            Click to download the latest
-                            <span className="downlaod-document" onClick={downloadDocument}>
-                                offline documents{' '}
-                                <img
-                                    style={{ width: '1.2rem', height: '1.2rem', paddingLeft: '0.2rem' }}
-                                    src={require('@site/static/images/icon/download.png').default}
-                                    alt=""
-                                />
-                            </span>
-                        </p>
-                    </div>
-                </PageColumn>
-            </section>
-            <section className="table-content">
-                <PageColumn
-                    align="left"
-                    title={
                         <Translate id="download.spark.connector" description="Spark Doris Connector">
                             Spark Doris Connector
                         </Translate>
@@ -499,6 +475,30 @@ export default function Download(): JSX.Element {
   <version>1.1.0</version>
 </dependency>`}
                     </CodeBlock>
+                </PageColumn>
+            </section>
+            <section className="table-content">
+                <PageColumn
+                    align="left"
+                    title={
+                        <Translate id="download.document" description="文档">
+                            Document
+                        </Translate>
+                    }
+                >
+                    <div className="content">
+                        <p style={{ display: 'flex', alignItems: 'center' }}>
+                            Click to download the latest
+                            <span className="downlaod-document" onClick={downloadDocument}>
+                                offline documents{' '}
+                                <img
+                                    style={{ width: '1.2rem', height: '1.2rem', paddingLeft: '0.2rem' }}
+                                    src={require('@site/static/images/icon/download.png').default}
+                                    alt=""
+                                />
+                            </span>
+                        </p>
+                    </div>
                 </PageColumn>
             </section>
             <section className="verify">
