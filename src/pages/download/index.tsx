@@ -213,8 +213,8 @@ export default function Download(): JSX.Element {
                                                     AuditLoader。 下载后，需要将其中的
                                                     java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
                                                     详细升级注意事项请参考
-                                                    <Link to="/docs/dev/releasenotes/release-1.2.1">
-                                                        1.2.1 Release Note
+                                                    <Link to="/docs/dev/releasenotes/release-1.2.3">
+                                                        1.2.3 Release Note
                                                     </Link>
                                                     以及
                                                     <Link to="/docs/dev/install/install-deploy">
@@ -228,11 +228,7 @@ export default function Download(): JSX.Element {
                                                     </Link>
                                                     手册。
                                                 </li>
-                                                <li>
-                                                    1.2.1 版本的 java-udf-jar-with-dependencies.jar
-                                                    可能存在兼容性问题，如果在使用 java udf
-                                                    功能时遇到问题，请和我们联系:dev@doris.apache.org
-                                                </li>
+   
                                             </>
                                         ) : (
                                             <>
@@ -244,19 +240,10 @@ export default function Download(): JSX.Element {
                                                     AuditLoader. After downloading, you need to put the
                                                     java-udf-jar-with-dependencies.jar in the be/lib directory.
                                                 </li>
-                                                <li>
-                                                    The 1.2.1 version of java-udf-jar-with-dependencies.jar may have
-                                                    compatibility issues. If you encounter problems when using the java
-                                                    udf function, please contact us: dev@doris.apache.org
-                                                </li>
+                                               
                                             </>
                                         )}
-                                        <li>
-                                            <Translate id="download.quick.download.notice">
-                                                Version 1.2.1 does not support running with JDK11, and it will be fixed
-                                                in a later version.
-                                            </Translate>
-                                        </li>
+                                        
                                     </>
                                 ) : (
                                     ''
