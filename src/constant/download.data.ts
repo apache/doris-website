@@ -270,7 +270,7 @@ export function getAllRelease(locale: string) {
             version: '1.2.3 ( latest )',
             date: '2023-03-20',
             note: '/docs/dev/releasenotes/release-1.2.3',
-            download: `${sources}doris/1.2/1.2.2-rc01/`,
+            download: `${sources}doris/1.2/1.2.3-rc02/`,
         },
         {
             version: '1.2.2 ',
