@@ -1,3 +1,6 @@
 [submodule ".github/actions/paths-filter"]
 	path = .github/actions/paths-filter
 	url = https://github.com/dorny/paths-filter.git
+[submodule ".github/actions/aliyun-oss-website-action"]
+	path = .github/actions/aliyun-oss-website-action
+	url = https://github.com/jeffreys-cat/aliyun-oss-website-action.git
