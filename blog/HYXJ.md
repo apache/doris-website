@@ -3,7 +3,7 @@
     'title': 'Step-by-step Guide to Building a High-Performing Risk Data Mart',
     'summary': 'The key step is to leverage the Multi Catalog feature of Apache Doris to unify the heterogenous data sources. This removed a lot of our performance bottlenecks.',
     'date': '2023-04-20',
-    'author': 'SelectDB',
+    'author': 'Jacob Chow',
     'tags': ['Best Practice'],
 }
 ---
