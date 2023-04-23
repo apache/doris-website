@@ -3,7 +3,7 @@
     'title': 'How We Increased Database Query Concurrency by 20 Times',
     'summary': 'In the upcoming Apache Doris 2.0, we have optimized it for high-concurrency point queries. Long story short, it can achieve over 30,000 QPS for a single node.',
     'date': '2023-04-14',
-    'author': 'SelectDB',
+    'author': 'Apache Doris',
     'tags': ['Tech Insights'],
 }
 ---
