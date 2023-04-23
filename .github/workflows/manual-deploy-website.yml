@@ -71,7 +71,7 @@ jobs:
           # use your own endpoint
           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
           folder: build
-          isOnlyUpload: true
+          onlyUpload: true
 
     - name: Deploy Website
       if: ${{ github.event.inputs.branch == 'master' }}
