@@ -436,7 +436,7 @@ export function getAllRelease(locale: string) {
 
 export enum VersionEnum {
     Latest = '1.2.4',
-    Prev = '1.2.3',
+    Prev = '1.1.5',
 }
 
 export enum CPUEnum {
