@@ -21,7 +21,8 @@ const SPARK_CONNECTOR_LINK = 'https://dist.apache.org/repos/dist/release/';
 const CHINA_SPARK_CONNECTOR_MIRROR_LINK = CHINA_MIRROR_LINK;
 
 const ALL_RELEASE_LINK = 'https://archive.apache.org/dist/';
-const CHINA_ALL_RELEASE_MIRROR_LINK = 'https://mirrors.tuna.tsinghua.edu.cn/apache/';
+// There is no mirror site for archieve in China, so use same link.
+const CHINA_ALL_RELEASE_MIRROR_LINK = 'https://archive.apache.org/dist/';
 
 export function getAllDownloadLinks(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? APACHE_LINK : CHINA_MIRROR_LINK;
