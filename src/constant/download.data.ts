@@ -356,7 +356,7 @@ export function getAllRelease(locale: string) {
     return [
         {
             version: '1.2.4.1 ( latest )',
-            date: '2023-04-23',
+            date: '2023-04-27',
             note: '/docs/dev/releasenotes/release-1.2.4.1',
             download: `${sources}doris/1.2/1.2.4.1-rc01/`,
         },
