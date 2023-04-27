@@ -213,8 +213,8 @@ export default function Download(): JSX.Element {
                                                     AuditLoader。 下载后，需要将其中的
                                                     java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
                                                     详细升级注意事项请参考
-                                                    <Link to="/docs/dev/releasenotes/release-1.2.4">
-                                                        1.2.4 Release Note
+                                                    <Link to="/docs/dev/releasenotes/release-1.2.4.1">
+                                                        1.2.4.1 Release Note
                                                     </Link>
                                                     以及
                                                     <Link to="/docs/dev/install/install-deploy">
