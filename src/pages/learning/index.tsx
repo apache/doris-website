@@ -22,11 +22,11 @@ const sitemapList = [
             },
             {
                 title: <Translate>Installation and deployment</Translate>,
-                link: '/docs/dev/install/install-deploy',
+                link: '/docs/dev/install/standard-deployment',
             },
             {
                 title: <Translate>Compilation</Translate>,
-                link: '/docs/dev/install/source-install/compilation',
+                link: '/docs/dev/install/source-install/compilation-general',
             },
         ],
     },
@@ -190,7 +190,7 @@ const sitemapList = [
             },
             {
                 title: <Translate>Seatunnel Connector</Translate>,
-                link: '/docs/dev/ecosystem/seatunnel/flink-sink',
+                link: '/docs/dev/ecosystem/seatunnel',
             },
             {
                 title: <Translate>DataX doriswriter</Translate>,
