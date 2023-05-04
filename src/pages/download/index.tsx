@@ -217,7 +217,7 @@ export default function Download(): JSX.Element {
                                                         1.2.4.1 Release Note
                                                     </Link>
                                                     以及
-                                                    <Link to="/docs/dev/install/install-deploy">
+                                                    <Link to="/docs/dev/install/standard-deployment">
                                                         <Translate id="Installation and deployment">
                                                             Installation and deployment
                                                         </Translate>
