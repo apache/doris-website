@@ -56,6 +56,8 @@ jobs:
         touch build/.dummy
         cp .asf-site.yaml ./build/.asf.yaml
         cp versions.json ./build/
+        mkdir -p ./build/download-scripts/
+        cp -R doris/dist/download_scripts/* ./build/download-scripts/
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 

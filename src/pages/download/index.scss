@@ -40,6 +40,10 @@
                 margin-top: 1rem;
             }
 
+            &.way {
+                align-items: start;
+            }
+
             label {
                 font-size: var(--global-font-size-default);
                 font-weight: 600;
@@ -101,14 +105,91 @@
                 }
             }
         }
+        .download-way {
+            display: none;
+            &.show {
+                display: block;
+                width: 100%;
+            }
+            &.all-in-one {
+                .theme-code-block {
+                    font-size: 1rem;
+                    padding-left: 2rem;
+                    position: relative;
+                    &:before {
+                        content: '$';
+                        position: absolute;
+                        left: 1rem;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
 
         .tips {
-            margin-left: 11.1875rem;
             margin-top: 1rem;
             .title {
                 color: #556986;
                 font-weight: 600;
                 font-size: var(--global-font-size-smaller);
+            }
+            .notice-text {
+                font-size: var(--global-font-size-smaller);
+                font-weight: 600;
+                color: #556986;
+            }
+            .notice-dir {
+                display: flex;
+                // margin-bottom: 0.5rem;
+                .notice-dir-name {
+                    min-width: 10rem;
+                    padding-left: 3.5rem;
+                    &.md {
+                        position: relative;
+                        &:before {
+                            position: absolute;
+                            left: 0.8rem;
+                            content: '';
+                            width: 0;
+                            height: 100%;
+                            border-left: 1.5px solid #556986;
+                        }
+                        &:after {
+                            position: absolute;
+                            left: 0.8rem;
+                            top: 50%;
+                            content: '';
+                            width: 2rem;
+                            height: 0;
+                            border-top: 1.5px solid #556986;
+                        }
+                    }
+                    &.end {
+                        position: relative;
+                        &:before {
+                            position: absolute;
+                            left: 0.8rem;
+                            content: '';
+                            width: 0;
+                            height: 50%;
+                            border-left: 1.5px solid #556986;
+                        }
+                        &:after {
+                            position: absolute;
+                            left: 0.8rem;
+                            top: 50%;
+                            content: '';
+                            width: 2rem;
+                            height: 0;
+                            border-top: 1.5px solid #556986;
+                        }
+                    }
+                }
+                .notice-dir-val {
+                    margin-left: 1rem;
+                }
             }
             ul {
                 margin: 0;

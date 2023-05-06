@@ -8,6 +8,7 @@ interface item {
 }
 export interface DownloadLinkProps {
     id: string;
+    sh?: string;
     items: item[];
 }
 
@@ -26,9 +27,41 @@ const CHINA_ALL_RELEASE_MIRROR_LINK = 'https://archive.apache.org/dist/';
 
 export function getAllDownloadLinks(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? APACHE_LINK : CHINA_MIRROR_LINK;
+    const shSource = locale.toLocaleUpperCase() === 'EN' ? 'apache' : 'tsinghua';
     return [
         {
+            id: '2.0.0-alpha1-intel-avx2-jdk8',
+            sh: `https://doris.apache.org/download-scripts/2.0.0-alpha1/download_x64_${shSource}.sh`,
+            items: [
+                {
+                    label: 'apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz',
+                    links: {
+                        source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz',
+                    links: {
+                        source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+                {
+                    label: 'apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz',
+                    links: {
+                        source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz`,
+                        signature: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
             id: '1.2.4.1-intel-avx2-jdk8',
+            sh: `https://doris.apache.org/download-scripts/1.2.4.1/download_x64_${shSource}.sh`,
             items: [
                 {
                     label: 'apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz',
@@ -58,6 +91,7 @@ export function getAllDownloadLinks(locale: string) {
         },
         {
             id: '1.2.4.1-intel-noavx2-jdk8',
+            sh: `https://doris.apache.org/download-scripts/1.2.4.1/download_x64_noavx2_${shSource}.sh`,
             items: [
                 {
                     label: 'apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz',
@@ -87,6 +121,7 @@ export function getAllDownloadLinks(locale: string) {
         },
         {
             id: '1.2.4.1-arm-jdk8',
+            sh: `https://doris.apache.org/download-scripts/1.2.4.1/download_arm_${shSource}.sh`,
             items: [
                 {
                     label: 'apache-doris-fe-1.2.4.1-bin-arm.tar.xz',
@@ -116,6 +151,7 @@ export function getAllDownloadLinks(locale: string) {
         },
         {
             id: '1.2.3-intel-avx2-jdk8',
+            sh: `https://doris.apache.org/download-scripts/1.2.3/download_x64_${shSource}.sh`,
             items: [
                 {
                     label: 'apache-doris-fe-1.2.3-bin-x86_64.tar.xz',
@@ -145,6 +181,7 @@ export function getAllDownloadLinks(locale: string) {
         },
         {
             id: '1.2.3-intel-noavx2-jdk8',
+            sh: `https://doris.apache.org/download-scripts/1.2.3/download_x64_noavx2_${shSource}.sh`,
             items: [
                 {
                     label: 'apache-doris-fe-1.2.3-bin-x86_64.tar.xz',
@@ -174,6 +211,7 @@ export function getAllDownloadLinks(locale: string) {
         },
         {
             id: '1.2.3-arm-jdk8',
+            sh: `https://doris.apache.org/download-scripts/1.2.3/download_arm_${shSource}.sh`,
             items: [
                 {
                     label: 'apache-doris-fe-1.2.3-bin-arm.tar.xz',
@@ -436,8 +474,9 @@ export function getAllRelease(locale: string) {
 }
 
 export enum VersionEnum {
-    Latest = '1.2.4.1',
-    Prev = '1.1.5',
+    Latest = '2.0.0-alpha1',
+    Prev = '1.2.4.1',
+    Earlier = '1.1.5',
 }
 
 export enum CPUEnum {

@@ -22,12 +22,9 @@ import {
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( latest )`, value: VersionEnum.Latest },
     { label: VersionEnum.Prev, value: VersionEnum.Prev },
+    { label: VersionEnum.Earlier, value: VersionEnum.Earlier },
 ];
-const CPU = [
-    { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
-    { label: 'X64 ( no avx2 )', value: CPUEnum.IntelNoAvx2 },
-    { label: 'ARM64', value: CPUEnum.ARM },
-];
+
 const JDK = [
     { label: 'JDK 8', value: JDKEnum.JDK8 },
     { label: 'JDK 11', value: JDKEnum.JDK11 },
@@ -40,9 +37,11 @@ export default function Download(): JSX.Element {
     } = useDocusaurusContext();
 
     const [version, setVersion] = useState<string>(VersionEnum.Latest);
+    const [cpus, setCpus] = useState<any[]>([]);
     const [cpu, setCPU] = useState<string>(CPUEnum.IntelAvx2);
     const [jdk, setJDK] = useState<string>(JDKEnum.JDK8);
     const [current, setCurrent] = useState<DownloadLinkProps>();
+    const [downloadWay, setDownloadWay] = useState<string>('all-in-one');
 
     const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(currentLocale);
     const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(currentLocale);
@@ -64,6 +63,9 @@ export default function Download(): JSX.Element {
         const text = `${version}-${cpu}-${jdk}`;
         const linkObj = getAllDownloadLinks(currentLocale).find(item => item.id === text);
         setCurrent(linkObj);
+        if (!linkObj.sh) {
+            setDownloadWay('download');
+        }
     };
 
     function downloadFile(url: string) {
@@ -87,11 +89,31 @@ export default function Download(): JSX.Element {
                 : 'https://cdn-tencent.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
         downloadFile(url);
     };
+
+    const CPU = [
+        { label: 'X64 ( avx2 )', value: CPUEnum.IntelAvx2 },
+        { label: 'X64 ( no avx2 )', value: CPUEnum.IntelNoAvx2 },
+        { label: 'ARM64', value: CPUEnum.ARM },
+    ];
+
+    const getCpus = version => {
+        const currentCpus = [];
+        getAllDownloadLinks(currentLocale).forEach(item => {
+            if (item.id.includes(version)) {
+                const matchCpu = CPU.find(cpu => item.id.includes(cpu.value));
+                currentCpus.push(matchCpu);
+            }
+        });
+        return currentCpus;
+    };
+
     useEffect(() => {
         getDownloadLinks();
     }, [version, cpu, jdk]);
 
     useEffect(() => {
+        const currentCpus = getCpus(version);
+        setCpus(currentCpus);
         setCPU(CPUEnum.IntelAvx2);
         setJDK(JDKEnum.JDK8);
     }, [version]);
@@ -141,7 +163,7 @@ export default function Download(): JSX.Element {
                                 </Translate>
                             </label>
                             <div className="tabs-radio">
-                                {CPU.map(item => (
+                                {cpus.map(item => (
                                     <div
                                         className={clsx('radio', {
                                             checked: cpu === item.value,
@@ -176,87 +198,198 @@ export default function Download(): JSX.Element {
                                 ))}
                             </div>
                         </div> */}
-                        <div className="download-type">
-                            <label>
-                                <Translate id="download.download.link" description="Download">
-                                    Download
-                                </Translate>
-                            </label>
-                            <div className="tabs-radio">
-                                <div className="radio">
-                                    {current?.items.map(item => (
-                                        <div className="inner" key={item.label}>
-                                            <Link to={item?.links.source}>{item?.label}</Link>
-                                            <span> ( </span>
-                                            <Link to={item?.links.signature}>asc</Link>,{' '}
-                                            <Link to={item?.links.sha512}>sha512</Link>
-                                            <span> )</span>
-                                        </div>
-                                    ))}
+                        {current?.sh && (
+                            <div className="download-type">
+                                <label>
+                                    <Translate id="download.download.link" description="Download">
+                                        Download
+                                    </Translate>
+                                </label>
+                                <div className="tabs-radio">
+                                    <div
+                                        onClick={() => setDownloadWay('all-in-one')}
+                                        className={clsx('radio', {
+                                            checked: downloadWay === 'all-in-one',
+                                        })}
+                                    >
+                                        <span>
+                                            {currentLocale === 'zh-CN'
+                                                ? 'Download All-in-one （推荐）'
+                                                : 'Download All-in-one (Recommended)'}
+                                        </span>
+                                    </div>
+
+                                    <div
+                                        onClick={() => setDownloadWay('download')}
+                                        className={clsx('radio', {
+                                            checked: downloadWay === 'download',
+                                        })}
+                                    >
+                                        <Translate id="download.download.link" description="Download">
+                                            Download
+                                        </Translate>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="tips">
-                            <div className="title">
-                                <Translate id="Notice">Notice</Translate>
-                                {currentLocale === 'zh-CN' ? '：' : ':'}
+                        )}
+
+                        <div className="download-type way">
+                            <label>
+                                {!current?.sh && (
+                                    <Translate id="download.download.link" description="Download">
+                                        Download
+                                    </Translate>
+                                )}
+                            </label>
+                            <div
+                                className={clsx('download-way all-in-one', {
+                                    show: downloadWay === 'all-in-one',
+                                })}
+                            >
+                                <div>
+                                    <CodeBlock language="xml" title="">
+                                        {`curl ${current?.sh} | sh`}
+                                    </CodeBlock>
+                                </div>
+                                <div className="tips">
+                                    <div className="title">
+                                        <Translate id="Notice">Notice</Translate>
+                                        {currentLocale === 'zh-CN' ? '：' : ':'}
+                                    </div>
+                                    {currentLocale === 'zh-CN' ? (
+                                        <div>
+                                            <div className="notice-text">
+                                                推荐使用下载脚本一键下载所有二进制文件包（仅适用于 Linux 平台）。
+                                            </div>
+                                            <div className="notice-text">下载后的目录结构如下：</div>
+                                            <div className="notice-text">
+                                                <div>{`apache-doris-<version>-bin/`}</div>
+                                                <div className="notice-dir ">
+                                                    <span className="notice-dir-name md">be</span>
+                                                    <span className="notice-dir-val">Backend</span>
+                                                </div>
+                                                <div className="notice-dir">
+                                                    <span className="notice-dir-name md">fe</span>
+                                                    <span className="notice-dir-val">Frontend</span>
+                                                </div>
+                                                <div className="notice-dir">
+                                                    <span className="notice-dir-name end">dependencies</span>
+                                                    <span className="notice-dir-val">Broker、Audlit Plugin</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <div className="notice-text">
+                                                Download(All-in-one) is recommended(For Linux platform ONLY) to use. It
+                                                will download all packages automatically.
+                                            </div>
+                                            <div className="notice-text">The result will be like:</div>
+                                            <div className="notice-text">
+                                                <div>{`apache-doris-<version>-bin/`}</div>
+                                                <div className="notice-dir ">
+                                                    <span className="notice-dir-name md">be</span>
+                                                    <span className="notice-dir-val">Backend</span>
+                                                </div>
+                                                <div className="notice-dir">
+                                                    <span className="notice-dir-name md">fe</span>
+                                                    <span className="notice-dir-val">Frontend</span>
+                                                </div>
+                                                <div className="notice-dir">
+                                                    <span className="notice-dir-name end">dependencies</span>
+                                                    <span className="notice-dir-val">Broker、Audlit Plugin</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                            <ul>
-                                {version === VersionEnum.Latest ? (
-                                    <>
-                                        {currentLocale === 'zh-CN' ? (
+                            <div
+                                className={clsx('download-way', {
+                                    show: downloadWay === 'download',
+                                })}
+                            >
+                                <div className="tabs-radio">
+                                    <div className="radio">
+                                        {current?.items.map(item => (
+                                            <div className="inner" key={item.label}>
+                                                <Link to={item?.links.source}>{item?.label}</Link>
+                                                <span> ( </span>
+                                                <Link to={item?.links.signature}>asc</Link>,{' '}
+                                                <Link to={item?.links.sha512}>sha512</Link>
+                                                <span> )</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="tips">
+                                    <div className="title">
+                                        <Translate id="Notice">Notice</Translate>
+                                        {currentLocale === 'zh-CN' ? '：' : ':'}
+                                    </div>
+                                    <ul>
+                                        {version === VersionEnum.Latest ? (
                                             <>
-                                                <li>
-                                                    由于 Apache 服务器文件大小限制，1.2
-                                                    版本的二进制程序被分为三个包，其中新增的 apache-doris-dependencies
-                                                    包含用于支持 JDBC 外表和 JAVA UDF 的jar包，以及 Broker 和
-                                                    AuditLoader。 下载后，需要将其中的
-                                                    java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
-                                                    详细升级注意事项请参考
-                                                    <Link to="/docs/dev/releasenotes/release-1.2.4.1">
-                                                        1.2.4.1 Release Note
-                                                    </Link>
-                                                    以及
-                                                    <Link to="/docs/dev/install/standard-deployment">
-                                                        <Translate id="Installation and deployment">
-                                                            Installation and deployment
-                                                        </Translate>
-                                                    </Link>
-                                                    以及
-                                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
-                                                        <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
-                                                    </Link>
-                                                    手册。
-                                                </li>
+                                                {currentLocale === 'zh-CN' ? (
+                                                    <>
+                                                        <li>
+                                                            由于 Apache 服务器文件大小限制，2.0.0 Alpha1
+                                                            版本的二进制程序被分为三个包，其中新增的
+                                                            apache-doris-dependencies 包含用于支持 JDBC 外表和 JAVA UDF
+                                                            的jar包，以及 Broker 和 AuditLoader。 下载后，需要将其中的
+                                                            java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
+                                                            详细升级注意事项请参考
+                                                            <Link to="/docs/dev/releasenotes/release-2.0.0Alpha1">
+                                                                2.0.0 Alpha1 Release Note
+                                                            </Link>
+                                                            以及
+                                                            <Link to="/docs/dev/install/standard-deployment">
+                                                                <Translate id="Installation and deployment">
+                                                                    Installation and deployment
+                                                                </Translate>
+                                                            </Link>
+                                                            以及
+                                                            <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
+                                                                <Translate id="Cluster Upgrade">
+                                                                    Cluster Upgrade
+                                                                </Translate>
+                                                            </Link>
+                                                            手册。
+                                                        </li>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <li>
+                                                            Due to the file size limitation of the Apache server, the
+                                                            binary program of version 2.0.0 Alpha1 is divided into three
+                                                            packages, among which the newly added
+                                                            apache-doris-dependencies include jar packages for
+                                                            supporting JDBC appearance and JAVA UDF, as well as Broker
+                                                            and AuditLoader. After downloading, you need to put the
+                                                            java-udf-jar-with-dependencies.jar in the be/lib directory.
+                                                        </li>
+                                                    </>
+                                                )}
                                             </>
                                         ) : (
-                                            <>
-                                                <li>
-                                                    Due to the file size limitation of the Apache server, the binary
-                                                    program of version 1.2 is divided into three packages, among which
-                                                    the newly added apache-doris-dependencies include jar packages for
-                                                    supporting JDBC appearance and JAVA UDF, as well as Broker and
-                                                    AuditLoader. After downloading, you need to put the
-                                                    java-udf-jar-with-dependencies.jar in the be/lib directory.
-                                                </li>
-                                            </>
+                                            ''
                                         )}
-                                    </>
-                                ) : (
-                                    ''
-                                )}
-                                <li>
-                                    <Translate id="download.quick.download.intr.prefix">
-                                        If the CPU does not support the avx2 instruction set, select the no avx2
-                                        version. You can check whether it is supported by
-                                    </Translate>
-                                    <code>cat /proc/cpuinfo</code>
-                                    <Translate id="download.quick.download.intr.suffix">
-                                        . The avx2 instruction will improve the computational efficiency of data
-                                        structures such as bloom filter.
-                                    </Translate>
-                                </li>
-                            </ul>
+                                        {cpus.some(item => item.value === CPUEnum.IntelNoAvx2) && (
+                                            <li>
+                                                <Translate id="download.quick.download.intr.prefix">
+                                                    If the CPU does not support the avx2 instruction set, select the no
+                                                    avx2 version. You can check whether it is supported by
+                                                </Translate>
+                                                <code>cat /proc/cpuinfo</code>
+                                                <Translate id="download.quick.download.intr.suffix">
+                                                    . The avx2 instruction will improve the computational efficiency of
+                                                    data structures such as bloom filter.
+                                                </Translate>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </PageColumn>
