@@ -21,7 +21,7 @@ import {
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( latest )`, value: VersionEnum.Latest },
-    { label: VersionEnum.Prev, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Prev} （Stable)`, value: VersionEnum.Prev },
     { label: VersionEnum.Earlier, value: VersionEnum.Earlier },
 ];
 
@@ -63,7 +63,7 @@ export default function Download(): JSX.Element {
         const text = `${version}-${cpu}-${jdk}`;
         const linkObj = getAllDownloadLinks(currentLocale).find(item => item.id === text);
         setCurrent(linkObj);
-        if (!linkObj.sh) {
+        if (linkObj && !linkObj.sh) {
             setDownloadWay('download');
         }
     };
@@ -198,7 +198,7 @@ export default function Download(): JSX.Element {
                                 ))}
                             </div>
                         </div> */}
-                        {current?.sh && (
+                        {current && current?.sh && (
                             <div className="download-type">
                                 <label>
                                     <Translate id="download.download.link" description="Download">
@@ -248,7 +248,7 @@ export default function Download(): JSX.Element {
                             >
                                 <div>
                                     <CodeBlock language="xml" title="">
-                                        {`curl ${current?.sh} | sh`}
+                                        {`curl ${current && current?.sh} | sh`}
                                     </CodeBlock>
                                 </div>
                                 <div className="tips">
