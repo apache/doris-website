@@ -393,7 +393,13 @@ export function getAllRelease(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
     return [
         {
-            version: '1.2.4.1 ( latest )',
+            version: '2.0.0-alpha1 ( latest )',
+            date: '2023-05-06',
+            note: '/docs/dev/releasenotes/release-2.0.0Alpha1',
+            download: `${sources}doris/2.0/2.0.0-alpha1/`,
+        },
+        {
+            version: '1.2.4.1 (Stable)',
             date: '2023-04-27',
             note: '/docs/dev/releasenotes/release-1.2.4.1',
             download: `${sources}doris/1.2/1.2.4.1-rc01/`,
