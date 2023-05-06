@@ -28,6 +28,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Author: Tongyang Han, Senior Data Engineer at Douyu
+
 The Lambda architecture has been common practice in big data processing. The concept is to separate stream (real time data) and batch (offline data) processing, and that's exactly what we did. These two types of data of ours were processed in two isolated tubes before they were pooled together and ready for searches and queries.
 
 ![](../static/images/Douyu_1.png)
