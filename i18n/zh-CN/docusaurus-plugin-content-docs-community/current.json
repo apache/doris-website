@@ -19,6 +19,10 @@
     "message": "开发者手册",
     "description": "The label for category Developer Guide in sidebar community"
   },
+  "sidebar.community.category.Developer Guide.Mac Local Dev": {
+    "message": "Mac 本地开发",
+    "description": "The label for category Mac Local Dev in sidebar community"
+  },
   "sidebar.community.link.Improvement Proposals": {
     "message": "改进建议",
     "description": "The label for link Improvement Proposals in sidebar community, linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
