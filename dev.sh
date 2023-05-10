@@ -42,8 +42,10 @@ then
     echo "***************************************"
 else
     git clone https://github.com/apache/doris.git --depth 1
+    mkdir -p docs
     cp -R doris/docs/en/docs/* docs/
     cp -R doris/docs/sidebars.json sidebars.json
+    mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/current
     cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/current/
     cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/current.json
 
