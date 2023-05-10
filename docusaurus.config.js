@@ -1,9 +1,4 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
-// @ts-ignore
-const versions = require('./versions.json');
 const lightCodeTheme = require('prism-react-renderer/themes/github');
-const showAllVersions = false;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
@@ -116,28 +111,19 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    // lastVersion: 'current',
+                    lastVersion: 'current',
                     versions: {
+                        1.2: {
+                            banner: 'none',
+                            badge: false,
+                        },
                         current: {
-                            label: '1.1',
-                            path: '',
-                            badge: false,
-                        },
-                        0.15: {
-                            banner: 'none',
-                            badge: false,
-                        },
-                        dev: {
-                            path: '/dev',
-                            banner: 'none',
+                            label: 'dev',
+                            path: 'dev',
                             badge: false,
                         },
                     },
                     sidebarPath: require.resolve('./sidebars.json'),
-                    // onlyIncludeVersions:
-                    //     process.env.NODE_ENV === 'development' && !showAllVersions
-                    //         ? ['current']
-                    //         : ['current', ...versions],
                     editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                         if (versionDocsDirPath === 'versioned_docs/version-dev') {
                             return `https://github.com/apache/doris/edit/master/docs/${locale}/docs/${docPath}`;
@@ -202,7 +188,7 @@ const config = {
                         position: 'left',
                         label: 'Docs',
                         docId: 'summary/basic-summary',
-                        to: '/basic-summary',
+                        to: '/summary/basic-summary',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
                     {
@@ -214,10 +200,10 @@ const config = {
                     },
                     { to: '/users', label: 'Users', position: 'left' },
                     { to: 'https://github.com/apache/doris/issues/16392', label: 'Roadmap', position: 'left' },
-                    // {
-                    //     type: 'docsVersionDropdown',
-                    //     position: 'right',
-                    // },
+                    {
+                        type: 'docsVersionDropdown',
+                        position: 'right',
+                    },
                     {
                         type: 'localeDropdown',
                         position: 'right',
@@ -305,7 +291,7 @@ const config = {
             //         content:
             //             'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
             //     },
-            // ],
+            // ],s
         }),
     ssrTemplate,
 };

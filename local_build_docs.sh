@@ -27,12 +27,10 @@
 set -eo pipefail
 
 git clone https://github.com/apache/doris.git --depth 1
-mkdir versioned_docs/version-dev/
-cp -R doris/docs/en/docs/* versioned_docs/version-dev/
-cp -R doris/docs/sidebars.json versioned_sidebars/version-dev-sidebars.json
-mkdir i18n/zh-CN/docusaurus-plugin-content-docs/version-dev
-cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-dev/
-cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-dev.json
+cp -R doris/docs/en/docs/* docs/
+cp -R doris/docs/sidebars.json sidebars.json
+cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/current/
+cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/current.json
 
 mkdir -p community
 cp -R doris/docs/en/community/* community/

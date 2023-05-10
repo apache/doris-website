@@ -26,5 +26,9 @@
   "item.label.Home": {
     "message": "首页",
     "description": "Navbar item with label Home"
+  },
+  "item.label.Roadmap": {
+    "message": "Roadmap",
+    "description": "Navbar item with label Roadmap"
   }
 }
