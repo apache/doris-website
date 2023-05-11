@@ -64,6 +64,14 @@ jobs:
         ls build
         export DORIS_COMMIT=`git rev-parse HEAD`
 
+    - name: Generate PDF
+      run: |
+        npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
+        npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
+        mkdir -p ./build/assets/files/
+        cp *.pdf ./build/assets/files/
+        ls ./build/assets/files/
+
     - name: Upload files to OSS
       uses: ./.github/actions/aliyun-oss-website-action
       with:
