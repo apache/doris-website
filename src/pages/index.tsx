@@ -173,7 +173,7 @@ export default function Home(): JSX.Element {
                     }
                     footer={
                         <More
-                            link="/docs/summary/basic-summary"
+                            link="/docs/dev/summary/basic-summary"
                             text={
                                 <Translate id="homepage.more" description="more link">
                                     More
