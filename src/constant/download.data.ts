@@ -13,6 +13,7 @@ export interface DownloadLinkProps {
 }
 
 const APACHE_LINK = 'https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=';
+const APACHE_DOWNLOAD_LINK = 'https://downloads.apache.org/'
 const CHINA_MIRROR_LINK = 'https://mirrors.tuna.tsinghua.edu.cn/apache/';
 
 const FLINK_CONNECTOR_LINK = 'https://dist.apache.org/repos/dist/release/';
@@ -37,24 +38,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/2.0/2.0.0-alpha1/apache-doris-fe-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/2.0/2.0.0-alpha1/apache-doris-be-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/2.0/2.0.0-alpha1/apache-doris-dependencies-2.0.0-alpha1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
             ],
@@ -67,24 +68,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.2.4.1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
             ],
@@ -97,24 +98,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.2.4.1-bin-x86_64-noavx2.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64-noavx2.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64-noavx2.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64-noavx2.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64-noavx2.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-x86_64-noavx2.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-x86_64.tar.xz.sha512`,
                     },
                 },
             ],
@@ -127,24 +128,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.2.4.1-bin-arm.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-arm.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-arm.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-arm.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-fe-1.2.4.1-bin-arm.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.2.4.1-bin-arm.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-arm.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-arm.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-arm.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-be-1.2.4.1-bin-arm.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-1.2.4.1-bin-arm.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-arm.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-arm.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-arm.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.4.1-rc01/apache-doris-dependencies-1.2.4.1-bin-arm.tar.xz.sha512`,
                     },
                 },
             ],
@@ -157,24 +158,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.2.3-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.2.3-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.sha512`,
                     },
                 },
             ],
@@ -187,24 +188,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.2.3-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-x86_64.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.2.3-bin-x86_64-noavx2.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64-noavx2.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64-noavx2.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64-noavx2.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64-noavx2.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-x86_64-noavx2.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz.sha512`,
                     },
                 },
             ],
@@ -217,24 +218,24 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.2.3-bin-arm.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-arm.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-arm.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-arm.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-fe-1.2.3-bin-arm.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.2.3-bin-arm.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-arm.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-arm.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-arm.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-be-1.2.3-bin-arm.tar.xz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-dependencies-1.2.3-bin-arm.tar.xz',
                     links: {
                         source: `${sources}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-arm.tar.xz`,
-                        signature: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-arm.tar.xz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-arm.tar.xz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-arm.tar.xz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.3-rc02/apache-doris-dependencies-1.2.3-bin-arm.tar.xz.sha512`,
                     },
                 },
             ],
@@ -247,16 +248,16 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.1.5-bin.tar.gz',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.1.5-bin-x86_64.tar.gz',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64.tar.gz.sha512`,
                     },
                 },
             ],
@@ -268,16 +269,16 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.1.5-bin.tar.gz',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-x86_64-noavx2.tar.gz.sha512`,
                     },
                 },
             ],
@@ -289,16 +290,16 @@ export function getAllDownloadLinks(locale: string) {
                     label: 'apache-doris-fe-1.1.5-bin.tar.gz',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-fe-1.1.5-bin.tar.gz.sha512`,
                     },
                 },
                 {
                     label: 'apache-doris-1.1.5-bin-arm.tar.gz ',
                     links: {
                         source: `${sources}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz`,
-                        signature: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz.asc`,
-                        sha512: `${APACHE_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz.sha512`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.1/1.1.5-rc02/apache-doris-be-1.1.5-bin-arm.tar.gz.sha512`,
                     },
                 },
             ],
