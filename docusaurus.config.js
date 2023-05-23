@@ -179,7 +179,7 @@ const config = {
                 title: '',
                 logo: {
                     alt: 'Doris',
-                    src: 'https://cdn-tencent.selectdb.com/images/logo.svg',
+                    src: 'https://cdnd.selectdb.com/images/logo.svg',
                 },
                 items: [
                     { to: '/', label: 'Home', position: 'left', exact: true },

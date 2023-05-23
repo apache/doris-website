@@ -85,8 +85,8 @@ export default function Download(): JSX.Element {
     const downloadDocument = () => {
         const url =
             currentLocale === 'en'
-                ? 'https://cdn-tencent.selectdb.com/assets/files/Apache Doris Docs (English).pdf'
-                : 'https://cdn-tencent.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
+                ? 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (English).pdf'
+                : 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
         downloadFile(url);
     };
 
