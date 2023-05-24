@@ -274,7 +274,7 @@ export default function Download(): JSX.Element {
                                                 </div>
                                                 <div className="notice-dir">
                                                     <span className="notice-dir-name end">dependencies</span>
-                                                    <span className="notice-dir-val">Broker、Audlit Plugin</span>
+                                                    <span className="notice-dir-val">Broker、Audit Plugin</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -297,7 +297,7 @@ export default function Download(): JSX.Element {
                                                 </div>
                                                 <div className="notice-dir">
                                                     <span className="notice-dir-name end">dependencies</span>
-                                                    <span className="notice-dir-val">Broker、Audlit Plugin</span>
+                                                    <span className="notice-dir-val">Broker、Audit Plugin</span>
                                                 </div>
                                             </div>
                                         </div>
