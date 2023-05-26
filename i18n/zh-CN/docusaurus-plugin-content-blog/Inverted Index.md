@@ -33,7 +33,7 @@ under the License.
 
 
 
-**作者介绍：**肖康，[SelectDB](https://cn.selectdb.com/) 技术副总裁
+**作者介绍**：肖康，[SelectDB](https://cn.selectdb.com/) 技术副总裁
 
 # 导语
 
