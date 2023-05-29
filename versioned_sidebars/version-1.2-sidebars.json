@@ -1047,8 +1047,7 @@
                     "items": [
                         "admin-manual/cluster-management/upgrade",
                         "admin-manual/cluster-management/elastic-expansion",
-                        "admin-manual/cluster-management/load-balancing",
-                        "admin-manual/cluster-management/fqdn"
+                        "admin-manual/cluster-management/load-balancing"
                     ]
                 },
                 {
