@@ -138,8 +138,8 @@ export default function Download(): JSX.Element {
                     <div className="download-box">
                         <div className="download-type">
                             <label>
-                                <Translate id="download.binary.version" description="Binary Version">
-                                    Binary Version
+                                <Translate id="download.version" description="Binary Version">
+                                    Version
                                 </Translate>
                             </label>
                             <div className="tabs-radio">
@@ -214,8 +214,8 @@ export default function Download(): JSX.Element {
                                     >
                                         <span>
                                             {currentLocale === 'zh-CN'
-                                                ? 'Download All-in-one （推荐）'
-                                                : 'Download All-in-one (Recommended)'}
+                                                ? '二进制下载 （推荐）'
+                                                : 'Binary Download (Recommended)'}
                                         </span>
                                     </div>
 
@@ -225,9 +225,7 @@ export default function Download(): JSX.Element {
                                             checked: downloadWay === 'download',
                                         })}
                                     >
-                                        <Translate id="download.download.link" description="Download">
-                                            Download
-                                        </Translate>
+                                        <span>{currentLocale === 'zh-CN' ? '源码下载' : 'Download'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -246,63 +244,60 @@ export default function Download(): JSX.Element {
                                     show: downloadWay === 'all-in-one',
                                 })}
                             >
-                                <div>
-                                    <CodeBlock language="xml" title="">
-                                        {`curl ${current && current?.sh} | sh`}
-                                    </CodeBlock>
-                                </div>
-                                <div className="tips">
-                                    <div className="title">
-                                        <Translate id="Notice">Notice</Translate>
-                                        {currentLocale === 'zh-CN' ? '：' : ':'}
+                                {current && current.sh && (
+                                    <div className="tabs-radio">
+                                        <div className="radio">
+                                            <div className="inner" key={current.sh?.label}>
+                                                <Link to={current.sh?.links.source}>{current.sh?.label}</Link>
+                                                <span> ( </span>
+                                                <Link to={current.sh?.links.signature}>asc</Link>,{' '}
+                                                <Link to={current.sh?.links.sha512}>sha512</Link>
+                                                <span> )</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    {currentLocale === 'zh-CN' ? (
-                                        <div>
-                                            <div className="notice-text">
-                                                推荐使用下载脚本一键下载所有二进制文件包（仅适用于 Linux 平台）。
-                                            </div>
-                                            <div className="notice-text">下载后的目录结构如下：</div>
-                                            <div className="notice-text">
-                                                <div>{`apache-doris-<version>-bin/`}</div>
-                                                <div className="notice-dir ">
-                                                    <span className="notice-dir-name md">be</span>
-                                                    <span className="notice-dir-val">Backend</span>
-                                                </div>
-                                                <div className="notice-dir">
-                                                    <span className="notice-dir-name md">fe</span>
-                                                    <span className="notice-dir-val">Frontend</span>
-                                                </div>
-                                                <div className="notice-dir">
-                                                    <span className="notice-dir-name end">dependencies</span>
-                                                    <span className="notice-dir-val">Broker、Audit Plugin</span>
-                                                </div>
-                                            </div>
+                                )}
+                                {version === VersionEnum.Latest && (
+                                    <div className="tips">
+                                        <div className="title">
+                                            <Translate id="Notice">Notice</Translate>
+                                            {currentLocale === 'zh-CN' ? '：' : ':'}
                                         </div>
-                                    ) : (
-                                        <div>
+                                        {currentLocale === 'zh-CN' ? (
                                             <div className="notice-text">
-                                                Download(All-in-one) is recommended(For Linux platform ONLY) to use. It
-                                                will download all packages automatically.
+                                                详细升级注意事项请参考
+                                                <Link to="/docs/dev/releasenotes/release-2.0.0Alpha1">
+                                                    2.0.0 Alpha1 Release Note
+                                                </Link>
+                                                以及
+                                                <Link to="/docs/dev/install/standard-deployment">
+                                                    <Translate id="Installation and deployment">
+                                                        Installation and deployment
+                                                    </Translate>
+                                                </Link>
+                                                以及
+                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
+                                                    <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
+                                                </Link>
+                                                手册。
                                             </div>
-                                            <div className="notice-text">The result will be like:</div>
+                                        ) : (
                                             <div className="notice-text">
-                                                <div>{`apache-doris-<version>-bin/`}</div>
-                                                <div className="notice-dir ">
-                                                    <span className="notice-dir-name md">be</span>
-                                                    <span className="notice-dir-val">Backend</span>
-                                                </div>
-                                                <div className="notice-dir">
-                                                    <span className="notice-dir-name md">fe</span>
-                                                    <span className="notice-dir-val">Frontend</span>
-                                                </div>
-                                                <div className="notice-dir">
-                                                    <span className="notice-dir-name end">dependencies</span>
-                                                    <span className="notice-dir-val">Broker、Audit Plugin</span>
-                                                </div>
+                                                For detailed upgrade precautions, please refer to the{' '}
+                                                <Link to="/docs/dev/releasenotes/release-2.0.0Alpha1">
+                                                    2.0.0 Alpha1 Release Note
+                                                </Link>
+                                                and the
+                                                <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
+                                                cluster
+                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
+                                                    upgrade
+                                                </Link>
+                                                manual.
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             <div
                                 className={clsx('download-way', {
@@ -321,73 +316,6 @@ export default function Download(): JSX.Element {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                                <div className="tips">
-                                    <div className="title">
-                                        <Translate id="Notice">Notice</Translate>
-                                        {currentLocale === 'zh-CN' ? '：' : ':'}
-                                    </div>
-                                    <ul>
-                                        {version === VersionEnum.Latest ? (
-                                            <>
-                                                {currentLocale === 'zh-CN' ? (
-                                                    <>
-                                                        <li>
-                                                            由于 Apache 服务器文件大小限制，2.0.0 Alpha1
-                                                            版本的二进制程序被分为三个包，其中新增的
-                                                            apache-doris-dependencies 包含用于支持 JDBC 外表和 JAVA UDF
-                                                            的jar包，以及 Broker 和 AuditLoader。 下载后，需要将其中的
-                                                            java-udf-jar-with-dependencies.jar 放到 be/lib 目录下。
-                                                            详细升级注意事项请参考
-                                                            <Link to="/docs/dev/releasenotes/release-2.0.0Alpha1">
-                                                                2.0.0 Alpha1 Release Note
-                                                            </Link>
-                                                            以及
-                                                            <Link to="/docs/dev/install/standard-deployment">
-                                                                <Translate id="Installation and deployment">
-                                                                    Installation and deployment
-                                                                </Translate>
-                                                            </Link>
-                                                            以及
-                                                            <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
-                                                                <Translate id="Cluster Upgrade">
-                                                                    Cluster Upgrade
-                                                                </Translate>
-                                                            </Link>
-                                                            手册。
-                                                        </li>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <li>
-                                                            Due to the file size limitation of the Apache server, the
-                                                            binary program of version 2.0.0 Alpha1 is divided into three
-                                                            packages, among which the newly added
-                                                            apache-doris-dependencies include jar packages for
-                                                            supporting JDBC appearance and JAVA UDF, as well as Broker
-                                                            and AuditLoader. After downloading, you need to put the
-                                                            java-udf-jar-with-dependencies.jar in the be/lib directory.
-                                                        </li>
-                                                    </>
-                                                )}
-                                            </>
-                                        ) : (
-                                            ''
-                                        )}
-                                        {cpus.some(item => item.value === CPUEnum.IntelNoAvx2) && (
-                                            <li>
-                                                <Translate id="download.quick.download.intr.prefix">
-                                                    If the CPU does not support the avx2 instruction set, select the no
-                                                    avx2 version. You can check whether it is supported by
-                                                </Translate>
-                                                <code>cat /proc/cpuinfo</code>
-                                                <Translate id="download.quick.download.intr.suffix">
-                                                    . The avx2 instruction will improve the computational efficiency of
-                                                    data structures such as bloom filter.
-                                                </Translate>
-                                            </li>
-                                        )}
-                                    </ul>
                                 </div>
                             </div>
                         </div>
