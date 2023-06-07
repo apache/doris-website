@@ -787,5 +787,9 @@
   "user.case-description": {
     "message": "There are more than 1,000 companies worldwide leveraging Apache Doris to build their unified data analytical database. Some of them are listed below:",
     "description": "There are more than 1,000 companies worldwide leveraging Apache Doris to build their unified\n                            data analytical database. Some of them are listed below:"
+  },
+  "download.version": {
+    "message": "版本",
+    "description": "Binary Version"
   }
 }

@@ -139,6 +139,9 @@
                 font-size: var(--global-font-size-smaller);
                 font-weight: 600;
                 color: #556986;
+                a {
+                    margin: 0 0.3125rem;
+                }
             }
             .notice-dir {
                 display: flex;
