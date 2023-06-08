@@ -19,9 +19,9 @@
         "typecheck": "tsc"
     },
     "dependencies": {
-        "@docusaurus/core": "2.0.0-beta.21",
-        "@docusaurus/plugin-pwa": "2.0.0-beta.21",
-        "@docusaurus/preset-classic": "2.0.0-beta.21",
+        "@docusaurus/core": "^2.4.1",
+        "@docusaurus/plugin-pwa": "^2.4.1",
+        "@docusaurus/preset-classic": "^2.4.1",
         "@easyops-cn/docusaurus-search-local": "^0.30.2",
         "@mdx-js/react": "^1.6.22",
         "clsx": "^1.1.1",
@@ -35,7 +35,7 @@
         "vitpress-generate-pdf": "^1.1.0"
     },
     "devDependencies": {
-        "@docusaurus/module-type-aliases": "^2.0.0-beta.21",
+        "@docusaurus/module-type-aliases": "^2.4.1",
         "@tsconfig/docusaurus": "^1.0.6",
         "typescript": "^4.7.4"
     },

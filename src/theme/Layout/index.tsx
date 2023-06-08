@@ -1,16 +1,17 @@
 import React from 'react';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
-import { PageMetadata, ThemeClassNames, useKeyboardNavigation } from '@docusaurus/theme-common';
+import { PageMetadata, ThemeClassNames } from '@docusaurus/theme-common';
+import { useKeyboardNavigation } from '@docusaurus/theme-common/internal';
 import SkipToContent from '@theme/SkipToContent';
-import AnnouncementBar from '@theme/AnnouncementBar';
-import LayoutProviders from '@theme/LayoutProviders';
+import Layout from '@theme-original/Layout';
 import ErrorPageContent from '@theme/ErrorPageContent';
 import useScrollTop from '@site/src/hooks/scroll-top-hooks';
 import './styles.scss';
-import Navbar from '@theme/Navbar';
-import Footer from '../Footer';
-export default function Layout(props) {
+import AnnouncementBar from '../AnnouncementBar';
+// import Navbar from '@theme/Navbar';
+// import Footer from '../Footer';
+export default function CustomLayout(props) {
     const {
         children,
         noFooter,
@@ -25,17 +26,14 @@ export default function Layout(props) {
     const { isTop } = useScrollTop(80);
 
     return (
-        <LayoutProviders>
+        <Layout>
             <PageMetadata title={title} description={description} />
 
             <SkipToContent />
 
-            {showAnnouncementBar && <AnnouncementBar />}
-            <Navbar />
             <div className={clsx(ThemeClassNames.wrapper.main, wrapperClassName, isPage ? 'has-margin' : '')}>
                 <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
             </div>
-            {!noFooter && <Footer />}
-        </LayoutProviders>
+        </Layout>
     );
 }

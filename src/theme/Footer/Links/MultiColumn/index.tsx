@@ -2,7 +2,7 @@ import React from 'react';
 import LinkItem from '@theme/Footer/LinkItem';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate from '@docusaurus/Translate';
-import { useAlternatePageUtils } from '@docusaurus/theme-common';
+import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import NavbarItem from '@theme/NavbarItem';
 
 function ColumnLinkItem({ item }) {
