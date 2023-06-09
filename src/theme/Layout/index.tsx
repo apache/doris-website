@@ -31,9 +31,12 @@ export default function CustomLayout(props) {
 
             <SkipToContent />
 
+            {/* {showAnnouncementBar && <AnnouncementBar />} */}
+            {/* <Navbar /> */}
             <div className={clsx(ThemeClassNames.wrapper.main, wrapperClassName, isPage ? 'has-margin' : '')}>
                 <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
             </div>
+            {/* {!noFooter && <Footer />} */}
         </Layout>
     );
 }

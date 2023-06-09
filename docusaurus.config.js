@@ -1,7 +1,8 @@
-const lightCodeTheme = require('prism-react-renderer/themes/github');
+const themes = require('prism-react-renderer').themes;
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
+const lightCodeTheme = themes.github;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -13,15 +14,18 @@ const config = {
     onBrokenLinks: 'ignore',
     onBrokenMarkdownLinks: 'ignore',
     favicon: 'images/favicon.ico',
+    organizationName: 'Apache',
     i18n: {
         defaultLocale: 'en',
         locales: ['en', 'zh-CN'],
         localeConfigs: {
             en: {
                 label: 'EN',
+                htmlLang: 'en-US',
             },
             'zh-CN': {
                 label: '中文',
+                htmlLang: 'zh-Hans-CN',
             },
         },
     },
@@ -169,11 +173,11 @@ const config = {
             announcementBar: {
                 id: 'support_us',
                 content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you like Apache Doris？Give us a 🌟 on Github 
-                        <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="./images/github-white-icon.svg">
+                        <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
                     </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',
-                isCloseable: false,
+                isCloseable: true,
             },
             navbar: {
                 title: '',
