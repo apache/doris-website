@@ -517,7 +517,8 @@ export default function Download(): JSX.Element {
   <!--artifactId>spark-doris-connector-3.1_2.12</artifactId-->
   <!--artifactId>spark-doris-connector-2.3_2.11</artifactId-->
   <!--version>1.0.1</version-->
-  <version>1.1.0</version>
+  <!--version>1.1.0</version-->
+  <version>1.2.0</version>
 </dependency>`}
                     </CodeBlock>
                 </PageColumn>

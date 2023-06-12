@@ -335,11 +335,20 @@ export function getAllSparkConnectorDownloadLinks(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? SPARK_CONNECTOR_LINK : CHINA_SPARK_CONNECTOR_MIRROR_LINK;
     return [
         {
+            version: '1.2.0',
+            date: '2023-06-09',
+            spark: '3.2, 3.1, 2.3',
+            scala: '2.12, 2.11',
+            doris: '1.0+',
+            download: `${sources}doris/spark-connector/1.2.0/`,
+            github: 'https://github.com/apache/doris-spark-connector',
+        },
+        {
             version: '1.1.0',
             date: '2022-07-11',
             spark: '3.2, 3.1, 2.3',
             scala: '2.12, 2.11',
-            doris: '0.15+',
+            doris: '1.0+',
             download: `${sources}doris/spark-connector/1.1.0/`,
             github: 'https://github.com/apache/doris-spark-connector',
         },
@@ -348,7 +357,7 @@ export function getAllSparkConnectorDownloadLinks(locale: string) {
             date: '2021-03-18',
             spark: '3.1, 2.3',
             scala: '2.12, 2.11',
-            doris: '0.15+',
+            doris: '0.12-0.15',
             download: `${sources}doris/spark-connector/1.0.1/`,
             github: 'https://github.com/apache/doris-spark-connector',
         },
