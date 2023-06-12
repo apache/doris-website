@@ -25,3 +25,11 @@ yarn-error.log*
 
 *.zip
 yarn.lock
+
+sidebars.json
+sidebarsCommunity.json
+i18n/zh-CN/docusaurus-plugin-content-docs/current
+i18n/zh-CN/docusaurus-plugin-content-docs/current.json
+i18n/zh-CN/docusaurus-plugin-content-docs-community/current
+docs/
+community/

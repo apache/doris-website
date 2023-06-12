@@ -144,7 +144,7 @@ export default function Home(): JSX.Element {
                 id: 'homepage.banner.subTitle',
                 message: 'An easy-to-use, high-performance and unified analytical database',
             })}
-            showAnnouncementBar
+            showAnnouncementBar={true}
         >
             <PageBanner {...banner}></PageBanner>
             <section className="news-section">
