@@ -91,6 +91,19 @@
     }
 }
 
+@media screen and (min-width: 1300px) and (max-width: 1600px) {
+    .banner-section {
+        height: calc(100vh - var(--global-header-height) - 5rem);
+    }
+}
+
+@media (max-width: 1299px) {
+    .banner-section {
+        height: auto;
+        padding: 10rem 5rem;
+    }
+}
+
 @media (max-width: 996px) {
     .banner-section {
         height: auto;
