@@ -368,7 +368,7 @@ export function getAllRelease(locale: string) {
         {
             version: '1.2.4',
             date: '2023-04-27',
-            note: '/docs/dev/releasenotes/release-1.2.4.1',
+            note: '/docs/dev/releasenotes/release-1.2.4',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',

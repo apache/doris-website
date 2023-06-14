@@ -10,6 +10,9 @@ import { TwitterIcon } from '@site/src/components/Icons/twitter';
 import { SlackIcon } from '@site/src/components/Icons/slack';
 import { BilibiliIcon } from '@site/src/components/Icons/bilibili';
 import { WechatIcon } from '@site/src/components/Icons/wechat';
+import { YoutubeIcon } from '@site/src/components/Icons/youtube';
+import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
+
 import Translate from '@docusaurus/Translate';
 
 function Footer() {
@@ -29,18 +32,28 @@ function Footer() {
                     <div className="right">
                         <div className="footer__title">
                             <Translate id="footer.follow" description="Footer Follow">
-                                Follow
+                                Connect with Us
                             </Translate>
                         </div>
                         <div className="social-list">
                             <div className="social">
-                                <a href="mailto:dev@doris.apache.org" title="mail" className="item">
+                                <a href="mailto:dev@doris.apache.org" target="_blank" title="mail" className="item">
                                     <MailIcon />
                                 </a>
-                                <a href="https://github.com/apache/doris" title="github" className="item">
+                                <a
+                                    href="https://github.com/apache/doris"
+                                    target="_blank"
+                                    title="github"
+                                    className="item"
+                                >
                                     <GithubIcon />
                                 </a>
-                                <a href="https://twitter.com/doris_apache" title="twitter" className="item">
+                                <a
+                                    href="https://twitter.com/doris_apache"
+                                    target="_blank"
+                                    title="twitter"
+                                    className="item"
+                                >
                                     <TwitterIcon />
                                 </a>
                             </div>
@@ -48,18 +61,26 @@ function Footer() {
                                 <a
                                     href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1x7x8fger-F7NoshFQn~djlvGdnEtxUQ"
                                     title="slack"
+                                    target="_blank"
                                     className="item"
                                 >
                                     <SlackIcon />
                                 </a>
-                                <a href="https://space.bilibili.com/362350065" title="bilibili" className="item">
-                                    <BilibiliIcon />
+                                <a
+                                    href="https://www.youtube.com/@apachedoris/channels"
+                                    title="youtube"
+                                    target="_blank"
+                                    className="item"
+                                >
+                                    <YoutubeIcon />
                                 </a>
-                                <a className="item wechat">
-                                    <WechatIcon />
-                                    <div className="wechat-dropdown">
-                                        <img src={require('@site/static/images/wechat.png').default} alt="" />
-                                    </div>
+                                <a
+                                    href="https://www.linkedin.com/company/doris-apache/"
+                                    title="linkedin"
+                                    target="_blank"
+                                    className="item"
+                                >
+                                    <LinkedinIcon />
                                 </a>
                             </div>
                         </div>
