@@ -2,6 +2,7 @@
     background-color: var(--global-colors-background);
     border-right: none !important;
     clip-path: none !important;
+    z-index: 100;
 
     @media (min-width: 997px) {
         .sidebar {
