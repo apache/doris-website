@@ -116,6 +116,7 @@ const config = {
             ({
                 docs: {
                     lastVersion: 'current',
+                    routeBasePath: '/',
                     versions: {
                         1.2: {
                             banner: 'none',
@@ -163,6 +164,7 @@ const config = {
                 // indexPages: true,
                 indexDocs: true,
                 indexBlog: false,
+                docsRouteBasePath: '/',
                 explicitSearchResultPath: true,
             },
         ],
