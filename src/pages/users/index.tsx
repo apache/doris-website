@@ -103,10 +103,10 @@ export default function Users(): JSX.Element {
                     <div style={{ fontSize: 16, marginTop: '-2rem', marginBottom: '-1rem' }}>
                         <Translate
                             id="user.case-description"
-                            description="There are more than 1,000 companies worldwide leveraging Apache Doris to build their unified
+                            description="There are more than 2,000 companies worldwide leveraging Apache Doris to build their unified
                             data analytical database. Some of them are listed below:"
                         >
-                            There are more than 1,000 companies worldwide leveraging Apache Doris to build their unified
+                            There are more than 2,000 companies worldwide leveraging Apache Doris to build their unified
                             data analytical database. Some of them are listed below:
                         </Translate>
                     </div>
