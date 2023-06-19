@@ -94,7 +94,7 @@ export default function Users(): JSX.Element {
                         <div className="share-story">
                             <Link to="https://github.com/apache/doris/issues/10229" className="share-button">
                                 <Translate id="user.add..your.company" description="Add Your Company">
-                                    Share You Stroy
+                                    Share Your Story
                                 </Translate>
                             </Link>
                         </div>
