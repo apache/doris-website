@@ -768,9 +768,9 @@
   "download.quick.download.notice": {
     "message": "1.2.1 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
   },
-  "1.2.4.1": {
-    "message": "Apache Doris 1.2.4.1 Release",
-    "description": "Apache Doris 1.2.4.1 Release"
+  "1.2.5": {
+    "message": "Apache Doris 1.2.5 Release",
+    "description": "Apache Doris 1.2.5 Release"
   },
   "download.document": {
     "message": "Document",

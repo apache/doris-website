@@ -203,7 +203,6 @@ const config = {
                         docsPluginId: 'community',
                     },
                     { to: '/users', label: 'Users', position: 'left' },
-                    { to: 'https://github.com/apache/doris/issues/16392', label: 'Roadmap', position: 'left' },
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
