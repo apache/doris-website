@@ -48,7 +48,7 @@ There are two ways to view the configuration items of FE:
 
 2. View by command
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command:
+    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [ADMIN-SHOW-CONFIG](../../sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-CONFIG.md):
 
     `ADMIN SHOW FRONTEND CONFIG;`
 
@@ -1964,6 +1964,16 @@ This configs can set to true to disable the automatic colocate tables's relocate
 1. Under normal circumstances, there is no need to turn off balance at all.
 2. Because once the balance is turned off, the unstable colocate table may not be restored
 3. Eventually the colocate plan cannot be used when querying.
+
+#### `balance_slot_num_per_path`
+
+Default: 1
+
+IsMutable：true
+
+MasterOnly：true
+
+Default number of slots per path during balance.
 
 #### `disable_tablet_scheduler`
 

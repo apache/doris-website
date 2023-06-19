@@ -26,7 +26,9 @@
 
 set -eo pipefail
 
-git clone https://github.com/apache/doris.git --depth 1
+rm -rf doris
+
+git clone --branch master https://github.com/apache/doris.git --depth 1
 mkdir -p docs
 cp -R doris/docs/en/docs/* docs/
 cp -R doris/docs/sidebars.json sidebars.json
@@ -40,7 +42,24 @@ mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
 cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
 cp -R doris/docs/sidebarsCommunity.json .
 
+# clone images
 cp -R doris/docs/images static/
+
+rm -rf doris
+
+# clone docs version 1.2
+git clone --branch branch-1.2-lts https://github.com/apache/doris.git --depth 1
+mkdir -p docs
+mkdir -p versioned_docs/version-1.2
+cp -R doris/docs/en/docs/* versioned_docs/version-1.2/
+rm -rf versioned_sidebars/version-1.2-sidebars.json
+cp -R doris/docs/sidebars.json versioned_sidebars/version-1.2-sidebars.json
+mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2/
+cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
+
+rm -rf doris
+
 npm install -g yarn
 yarn cache clean
 yarn && yarn build

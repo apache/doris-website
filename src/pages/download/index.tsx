@@ -20,8 +20,8 @@ import {
 } from '@site/src/constant/download.data';
 
 const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} （Stable)`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Latest} (Latest)`, value: VersionEnum.Latest },
+    { label: `${VersionEnum.Prev} (Stable)`, value: VersionEnum.Prev },
     { label: VersionEnum.Earlier, value: VersionEnum.Earlier },
 ];
 
@@ -212,11 +212,7 @@ export default function Download(): JSX.Element {
                                             checked: downloadWay === 'all-in-one',
                                         })}
                                     >
-                                        <span>
-                                            {currentLocale === 'zh-CN'
-                                                ? '二进制下载 （推荐）'
-                                                : 'Binary Download (Recommended)'}
-                                        </span>
+                                        <span>{currentLocale === 'zh-CN' ? '二进制' : 'Binary'}</span>
                                     </div>
 
                                     <div
@@ -225,7 +221,7 @@ export default function Download(): JSX.Element {
                                             checked: downloadWay === 'download',
                                         })}
                                     >
-                                        <span>{currentLocale === 'zh-CN' ? '源码下载' : 'Download'}</span>
+                                        <span>{currentLocale === 'zh-CN' ? '源码' : 'Source'}</span>
                                     </div>
                                 </div>
                             </div>
