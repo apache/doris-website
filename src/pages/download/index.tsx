@@ -212,9 +212,7 @@ export default function Download(): JSX.Element {
                                             checked: downloadWay === 'all-in-one',
                                         })}
                                     >
-                                        <span>
-                                            {currentLocale === 'zh-CN' ? '二进制（推荐）' : 'Binary (Recommended)'}
-                                        </span>
+                                        <span>{currentLocale === 'zh-CN' ? '二进制' : 'Binary'}</span>
                                     </div>
 
                                     <div
