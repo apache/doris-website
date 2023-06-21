@@ -148,11 +148,11 @@ const sitemapList = [
             },
             {
                 title: <Translate>Join Optimization</Translate>,
-                link: '/docs/dev/query-acceleration/join-optimization/doris-join-optimization/',
+                link: '/docs/dev/query-acceleration/join-optimization/doris-join-optimization',
             },
             {
                 title: <Translate>Materialized view</Translate>,
-                link: '/docs/dev/query-acceleration/materialized-view/',
+                link: '/docs/dev/query-acceleration/materialized-view',
             },
             {
                 title: <Translate>BITMAP Precise De-duplication</Translate>,
