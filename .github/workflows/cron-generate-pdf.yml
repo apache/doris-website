@@ -20,14 +20,13 @@ jobs:
       with:
         node-version: 16.14.0
 
-   - name: Generate PDF
+    - name: Generate PDF
       run: |
         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
         mkdir -p ./build-pdf/assets/files/
         cp *.pdf ./build-pdf/assets/files/
         ls ./build-pdf/assets/files/
-
 
     - name: Upload files to OSS
       uses: ./.github/actions/aliyun-oss-website-action
