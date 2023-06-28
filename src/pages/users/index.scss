@@ -1,4 +1,5 @@
 .users-wall {
+    margin-bottom: -4rem;
     .page-column {
         padding-bottom: 0;
 
@@ -7,6 +8,14 @@
                 margin-bottom: 3.75rem;
             }
         }
+    }
+
+    // .swiper-pagination {
+    //     bottom: -4rem !important;
+    // }
+
+    .swiper-button-next, .swiper-button-prev {
+        top: calc(50% - 2rem);
     }
 
     .users-wall-list {
