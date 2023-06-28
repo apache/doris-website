@@ -498,6 +498,9 @@
   "download.source.binary": {
     "message": "源码 / 二进制"
   },
+  "download.all.binary": {
+    "message": "二进制"
+  },
   "download.source": {
     "message": "源码"
   },

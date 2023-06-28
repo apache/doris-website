@@ -371,19 +371,57 @@ export function getAllRelease(locale: string) {
             version: '2.0.0-alpha1 ( latest )',
             date: '2023-05-06',
             note: '/docs/dev/releasenotes/release-2.0.0Alpha1',
-            download: `${sources}doris/2.0/2.0.0-alpha1/`,
+            download: [
+                {
+                    cpu: 'X64 ( avx2 )',
+                    binary: `${ORIGIN}apache-doris-2.0.0-alpha1-bin-x86_64.tar.xz`,
+                    source: `${sources}doris/2.0/2.0.0-alpha1/apache-doris-2.0.0-alpha1-src.tar.gz`,
+                }
+            ]
         },
         {
             version: '1.2.5 (Stable)',
             date: '2023-06-18',
             note: '/docs/dev/releasenotes/release-1.2.5',
-            download: `${sources}doris/1.2/1.2.5-rc01/`,
+            download: [
+                {
+                    cpu: 'X64 ( avx2 )',
+                    binary: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.xz`,
+                    source: `${sources}doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz`,
+                },
+                {
+                    cpu: 'X64 ( no avx2 )',
+                    binary: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.xz`,
+                    source: `${sources}doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz`,
+                },
+                {
+                    cpu: 'ARM64',
+                    binary: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.xz`,
+                    source: `${sources}doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz`,
+                }
+            ]
         },
         {
             version: '1.2.4.1',
             date: '2023-04-27',
             note: '/docs/dev/releasenotes/release-1.2.4.1',
-            download: `${sources}doris/1.2/1.2.4.1-rc01/`,
+            download: [
+                {
+                    cpu: 'X64 ( avx2 )',
+                    binary: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64.tar.xz`,
+                    source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz`,
+                },
+                {
+                    cpu: 'X64 ( no avx2 )',
+                    binary: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64-noavx2.tar.xz`,
+                    source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz`,
+                },
+                {
+                    cpu: 'ARM64',
+                    binary: `${ORIGIN}apache-doris-1.2.4.1-bin-aarch64.tar.xz`,
+                    source: `${sources}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz`,
+                }
+            ]
         },
         {
             version: '1.2.3',
@@ -469,6 +507,12 @@ export enum VersionEnum {
 export enum CPUEnum {
     IntelAvx2 = 'intel-avx2',
     IntelNoAvx2 = 'intel-noavx2',
+    ARM = 'arm',
+}
+
+export enum CPUDownloadEnum {
+    IntelAvx2 = 'x86_64',
+    IntelNoAvx2 = 'x86_64-noavx2',
     ARM = 'arm',
 }
 

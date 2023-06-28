@@ -49,6 +49,7 @@ export default function Users(): JSX.Element {
                         spaceBetween={50}
                         slidesPerView={1}
                         className="mySwiper"
+                        style={{ height: 490 }}
                         onSlideChange={() => console.log('slide change')}
                         onSwiper={(swiper: any) => console.log(swiper)}
                     >
@@ -74,7 +75,7 @@ export default function Users(): JSX.Element {
                             <div className="users-wall-list row">
                                 <img
                                     className="users-wall-img"
-                                    src={require(`@site/static/images/user-logos-3.jpg`).default}
+                                    src={require(`@site/static/images/user-logos-3.png`).default}
                                     alt=""
                                 />
                             </div>
