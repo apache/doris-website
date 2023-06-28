@@ -18,6 +18,7 @@ import {
     getAllSparkConnectorDownloadLinks,
     getAllRelease,
 } from '@site/src/constant/download.data';
+import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} (Latest)`, value: VersionEnum.Latest },
@@ -46,6 +47,16 @@ export default function Download(): JSX.Element {
     const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(currentLocale);
     const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(currentLocale);
     const ALL_RELEASE = getAllRelease(currentLocale);
+    let ALL_RELEASE_VERSION = {};
+    ALL_RELEASE.forEach(item => {
+        const info: any = Array.isArray(item.download) ? item.download.find(item => item.cpu === 'X64 ( avx2 )') : {};
+        ALL_RELEASE_VERSION[item.version] = {
+            cpu: CPUEnum.IntelAvx2,
+            binary: info.binary,
+            source: info.source,
+        };
+    });
+    const [releaseUrls, setReleaseUrls] = useState(ALL_RELEASE_VERSION);
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -117,6 +128,18 @@ export default function Download(): JSX.Element {
         setCPU(CPUEnum.IntelAvx2);
         setJDK(JDKEnum.JDK8);
     }, [version]);
+
+    function handleCPUChange(cpu: any, currentVersionInfo: any) {
+        const info = currentVersionInfo.download.find(item => item.cpu === cpu);
+        setReleaseUrls({
+            ...releaseUrls,
+            [currentVersionInfo.version]: {
+                binary: info.binary,
+                source: info.source,
+            },
+        });
+    }
+
     return (
         <Layout
             title={translate({ id: 'download.title', message: 'Download' })}
@@ -340,6 +363,9 @@ export default function Download(): JSX.Element {
                                         <Translate id="download.all.release.date">Release Date</Translate>
                                     </th>
                                     <th>
+                                        <Translate id="download.cpu.model">CPU Model</Translate>
+                                    </th>
+                                    <th>
                                         <Translate id="download.all.release.download">Download</Translate>
                                     </th>
                                     <th>
@@ -353,9 +379,39 @@ export default function Download(): JSX.Element {
                                         <td>{item.version}</td>
                                         <td>{item.date}</td>
                                         <td>
-                                            <Link to={item.download}>
-                                                <Translate id="download.source.binary">Source / Binary</Translate>
-                                            </Link>
+                                            {/* <DropdownNavbarItem items={item.download} />, */}
+
+                                            {Array.isArray(item.download) ? (
+                                                <select
+                                                    style={{ height: 30 }}
+                                                    onChange={e => handleCPUChange(e.target.value, item)}
+                                                >
+                                                    {item.download.map(item => (
+                                                        <option key={item.cpu} value={item.cpu}>
+                                                            {item.cpu}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </td>
+                                        <td>
+                                            {Array.isArray(item.download) ? (
+                                                <div>
+                                                    <Link to={releaseUrls[item.version].source}>
+                                                        <Translate id="download.source">Source</Translate>
+                                                    </Link>
+                                                    <span style={{ padding: '0 0.28rem' }}>/</span>
+                                                    <Link to={releaseUrls[item.version].binary}>
+                                                        <Translate id="download.all.binary">Binary</Translate>
+                                                    </Link>
+                                                </div>
+                                            ) : (
+                                                <Link to={item.download}>
+                                                    <Translate id="download.source.binary">Source / Binary</Translate>
+                                                </Link>
+                                            )}
                                         </td>
                                         <td>
                                             <Link to={item.note}>Release Note</Link>
