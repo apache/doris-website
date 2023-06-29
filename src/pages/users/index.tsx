@@ -1,5 +1,5 @@
 import Layout from '../../theme/Layout';
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
@@ -7,18 +7,33 @@ import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
 import userCasesCn from '@site/userCases/zh_CN.json';
 import userCasesEn from '@site/userCases/en_US.json';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper';
+import 'swiper/css/navigation';
+import { Pagination, Navigation } from 'swiper';
+import usePhone from '@site/src/hooks/use-phone';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
     const userCases = i18n.currentLocale === 'en' ? userCasesEn : userCasesCn;
+    const { isPhone } = usePhone();
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
     };
+
+    const [swiperRef, setSwiperRef] = useState<SwiperClass>();
+
+    const theSlides = useMemo(() => ['slide one', 'slide two'], []);
+
+    const handlePrevious = useCallback(() => {
+        swiperRef?.slidePrev();
+    }, [swiperRef]);
+
+    const handleNext = useCallback(() => {
+        swiperRef?.slideNext();
+    }, [swiperRef]);
 
     const pagination = {
         clickable: true,
@@ -26,6 +41,72 @@ export default function Users(): JSX.Element {
             return '<span class="' + className + '"></span>';
         },
     };
+
+    function renderSwiper() {
+        const modules = [Pagination];
+        // if (!isPhone) {
+        //     modules.push(Navigation);
+        // }
+        return (
+            <div style={{ position: 'relative' }}>
+                {!isPhone && (
+                    <div
+                        onClick={handlePrevious}
+                        className="swiper-button-prev"
+                        style={{ position: 'absolute', top: 'calc(50% - 2rem)', left: '-3rem', zIndex: 99 }}
+                    ></div>
+                )}
+
+                <Swiper
+                    pagination={pagination}
+                    spaceBetween={50}
+                    slidesPerView={1}
+                    navigation={false}
+                    modules={modules}
+                    loop={true}
+                    className="mySwiper"
+                    // style={{ minHeight: 480 }}
+                    onSlideChange={() => console.log('slide change')}
+                    onSwiper={setSwiperRef}
+                >
+                    <SwiperSlide>
+                        <div className="users-wall-list row">
+                            <img
+                                className="users-wall-img"
+                                src={require(`@site/static/images/user-logos-1.jpg`).default}
+                                alt=""
+                            />
+                        </div>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <div className="users-wall-list row">
+                            <img
+                                className="users-wall-img"
+                                src={require(`@site/static/images/user-logos-2.jpg`).default}
+                                alt=""
+                            />
+                        </div>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <div className="users-wall-list row">
+                            <img
+                                className="users-wall-img"
+                                src={require(`@site/static/images/user-logos-3.png`).default}
+                                alt=""
+                            />
+                        </div>
+                    </SwiperSlide>
+                </Swiper>
+                {!isPhone && (
+                    <div
+                        onClick={handleNext}
+                        className="swiper-button-next"
+                        style={{ position: 'absolute', top: 'calc(50% - 2rem)', right: '-3rem', zIndex: 99 }}
+                    ></div>
+                )}
+            </div>
+        );
+    }
     return (
         <Layout
             title={translate({ id: 'users.title', message: 'Users' })}
@@ -43,43 +124,7 @@ export default function Users(): JSX.Element {
                         </Translate>
                     }
                 >
-                    <Swiper
-                        pagination={pagination}
-                        modules={[Pagination]}
-                        spaceBetween={50}
-                        slidesPerView={1}
-                        className="mySwiper"
-                        onSlideChange={() => console.log('slide change')}
-                        onSwiper={(swiper: any) => console.log(swiper)}
-                    >
-                        <SwiperSlide>
-                            <div className="users-wall-list row">
-                                <img
-                                    className="users-wall-img"
-                                    src={require(`@site/static/images/user-logos-1.jpg`).default}
-                                    alt=""
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="users-wall-list row">
-                                <img
-                                    className="users-wall-img"
-                                    src={require(`@site/static/images/user-logos-2.jpg`).default}
-                                    alt=""
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="users-wall-list row">
-                                <img
-                                    className="users-wall-img"
-                                    src={require(`@site/static/images/user-logos-3.jpg`).default}
-                                    alt=""
-                                />
-                            </div>
-                        </SwiperSlide>
-                    </Swiper>
+                    {renderSwiper()}
                 </PageColumn>
             </section>
             <section className="story">

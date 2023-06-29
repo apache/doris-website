@@ -54,6 +54,8 @@ mkdir -p versioned_docs/version-1.2
 cp -R doris/docs/en/docs/* versioned_docs/version-1.2/
 rm -rf versioned_sidebars/version-1.2-sidebars.json
 cp -R doris/docs/sidebars.json versioned_sidebars/version-1.2-sidebars.json
+rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
+rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
 mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
 cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2/
 cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
