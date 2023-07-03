@@ -285,7 +285,7 @@ export default function Download(): JSX.Element {
                                         {currentLocale === 'zh-CN' ? (
                                             <div className="notice-text">
                                                 详细升级注意事项请参考
-                                                <Link to="/docs/dev/releasenotes/release-2.0beta">
+                                                <Link to="/docs/dev/releasenotes/release-2.0-beta">
                                                     2.0-beta Release Note
                                                 </Link>
                                                 以及
@@ -303,7 +303,7 @@ export default function Download(): JSX.Element {
                                         ) : (
                                             <div className="notice-text">
                                                 For detailed upgrade precautions, please refer to the{' '}
-                                                <Link to="/docs/dev/releasenotes/release-2.0beta">
+                                                <Link to="/docs/dev/releasenotes/release-2.0-beta">
                                                     2.0-beta Release Note
                                                 </Link>
                                                 and the
