@@ -512,7 +512,7 @@ This is because the concurrent import of the same library exceeds 100, which can
 
 You can add sequence column configuration to ensure that, for details, please refer to [sequence](https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual)
 
-8. **The Flink task does not report an error, but the data cannot be synchronized? **
+8. **The Flink task does not report an error, but the data cannot be synchronized?**
 
 Before Connector1.1.0, it was written in batches, and the writing was driven by data. It was necessary to determine whether there was data written upstream. After 1.1.0, it depends on Checkpoint, and Checkpoint must be enabled to write.
 
@@ -520,7 +520,7 @@ Before Connector1.1.0, it was written in batches, and the writing was driven by 
 
 It usually occurs before Connector1.1.0, because the writing frequency is too fast, resulting in too many versions. The frequency of Streamload can be reduced by setting the sink.batch.size and sink.batch.interval parameters.
 
-10. **Flink imports dirty data, how to skip it? **
+10. **Flink imports dirty data, how to skip it?**
 
 When Flink imports data, if there is dirty data, such as field format, length, etc., it will cause StreamLoad to report an error, and Flink will continue to retry at this time. If you need to skip, you can disable the strict mode of StreamLoad (strict_mode=false, max_filter_ratio=1) or filter the data before the Sink operator.
 
