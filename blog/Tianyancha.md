@@ -95,7 +95,7 @@ We adopt the Unique model for user ID mapping tables, where the user ID is the u
 
 We adopt the Aggregate model for user group tables, where user tags serve as the aggregation keys. 
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/982676f6f7ad4eef9643a750dc47fcc6~tplv-k3u1fbpfcp-zoom-1.image)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e0da0c1435c4f209fc28e67ab218d81~tplv-k3u1fbpfcp-zoom-1.image)
 
 Supposing that we need to pick out the users whose IDs are between 0 and 2000000. 
 
