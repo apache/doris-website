@@ -771,9 +771,9 @@
   "download.quick.download.notice": {
     "message": "1.2.1 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
   },
-  "2.0-beta": {
-    "message": "Apache Doris 2.0-beta Release",
-    "description": "Apache Doris 2.0-beta Release"
+  "1.2.6": {
+    "message": "Apache Doris 1.2.6 Release",
+    "description": "Apache Doris 1.2.6 Release"
   },
   "download.document": {
     "message": "Document",

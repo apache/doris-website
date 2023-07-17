@@ -98,64 +98,64 @@ export function getAllDownloadLinks(locale: string) {
             ],
         },
         {
-            id: '1.2.4.1-intel-avx2-jdk8',
+            id: '1.2.6-intel-avx2-jdk8',
             sh: {
-                label: 'apache-doris-1.2.4.1-bin-x86_64.tar.xz',
+                label: 'apache-doris-1.2.6-bin-x64.tar.xz',
                 links: {
-                    source: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64.tar.xz`,
-                    signature: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64.tar.xz.asc`,
-                    sha512: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64.tar.xz.sha512`,
+                    source: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz`,
+                    signature: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz.asc`,
+                    sha512: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz.sha512`,
                 },
             },
             items: [
                 {
-                    label: 'apache-doris-1.2.4.1-src.tar.gz',
+                    label: 'apache-doris-1.2.6-src.tar.gz',
                     links: {
-                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz`,
-                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc`,
-                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512`,
+                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz`,
+                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.asc`,
+                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.sha512`,
                     },
                 },
             ],
         },
         {
-            id: '1.2.4.1-intel-noavx2-jdk8',
+            id: '1.2.6-intel-noavx2-jdk8',
             sh: {
-                label: 'apache-doris-1.2.4.1-bin-x86_64-noavx2.tar.xz',
+                label: 'apache-doris-1.2.6-bin-x64-noavx2.tar.xz',
                 links: {
-                    source: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64-noavx2.tar.xz`,
-                    signature: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64-noavx2.tar.xz.asc`,
-                    sha512: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64-noavx2.tar.xz.sha512`,
+                    source: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz`,
+                    signature: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz.asc`,
+                    sha512: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz.sha512`,
                 },
             },
             items: [
                 {
-                    label: 'apache-doris-1.2.4.1-src.tar.gz',
+                    label: 'apache-doris-1.2.6-src.tar.gz',
                     links: {
-                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz`,
-                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc`,
-                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512`,
+                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz`,
+                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.asc`,
+                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.sha512`,
                     },
                 },
             ],
         },
         {
-            id: '1.2.4.1-arm-jdk8',
+            id: '1.2.6-arm-jdk8',
             sh: {
-                label: 'apache-doris-1.2.4.1-bin-arm.tar.xz',
+                label: 'apache-doris-1.2.6-bin-arm.tar.xz',
                 links: {
-                    source: `${ORIGIN}apache-doris-1.2.4.1-bin-aarch64.tar.xz`,
-                    signature: `${ORIGIN}apache-doris-1.2.4.1-bin-aarch64.tar.xz.asc`,
-                    sha512: `${ORIGIN}apache-doris-1.2.4.1-bin-aarch64.tar.xz.sha512`,
+                    source: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz`,
+                    signature: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz.asc`,
+                    sha512: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz.sha512`,
                 },
             },
             items: [
                 {
-                    label: 'apache-doris-1.2.4.1-src.tar.gz',
+                    label: 'apache-doris-1.2.6-src.tar.gz',
                     links: {
-                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz`,
-                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc`,
-                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512`,
+                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz`,
+                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.asc`,
+                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.sha512`,
                     },
                 },
             ],
@@ -344,6 +344,28 @@ export function getAllRelease(locale: string) {
             ]
         },
         {
+            version: '1.2.6',
+            date: '2023-07-17',
+            note: '/docs/dev/releasenotes/release-1.2.6',
+            download: [
+                {
+                    cpu: 'X64 ( avx2 )',
+                    binary: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz`,
+                    source: `https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz`,
+                },
+                {
+                    cpu: 'X64 ( no avx2 )',
+                    binary: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz`,
+                    source: `https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz`,
+                },
+                {
+                    cpu: 'ARM64',
+                    binary: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz`,
+                    source: `https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz`,
+                }
+            ]
+        },
+        {
             version: '1.2.4.1',
             date: '2023-04-27',
             note: '/docs/dev/releasenotes/release-1.2.4.1',
@@ -442,7 +464,7 @@ export function getAllRelease(locale: string) {
 
 export enum VersionEnum {
     Latest = '2.0-beta',
-    Prev = '1.2.4.1',
+    Prev = '1.2.6',
     Earlier = '1.1.5',
 }
 
