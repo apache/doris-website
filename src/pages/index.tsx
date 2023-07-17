@@ -153,8 +153,8 @@ export default function Home(): JSX.Element {
                         <div className="news-item">
                             <span className="news-icon"></span>
                             <Link to="/docs/dev/releasenotes/release-1.2.6" className="news-content">
-                                <Translate id="1.2.6" description="Apache Doris 1.2.6 Release">
-                                    Apache Doris 1.2.6 Release
+                                <Translate id="1.2.6" description="2023.07.17 Apache Doris 1.2.6 is Released">
+                                    2023.07.17 Apache Doris 1.2.6 is Released
                                 </Translate>
                             </Link>
                         </div>

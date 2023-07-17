@@ -142,7 +142,7 @@ export function getAllDownloadLinks(locale: string) {
         {
             id: '1.2.6-arm-jdk8',
             sh: {
-                label: 'apache-doris-1.2.6-bin-arm.tar.xz',
+                label: 'apache-doris-1.2.6-bin-arm64.tar.xz',
                 links: {
                     source: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz`,
                     signature: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz.asc`,
