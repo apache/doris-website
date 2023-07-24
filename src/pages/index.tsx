@@ -139,10 +139,11 @@ export default function Home(): JSX.Element {
     ];
     return (
         <Layout
-            title={translate({ id: 'homepage.title', message: 'Home' })}
+            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open Source Real-Time Data Warehouse' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message:
+                    'Apache Doris is a next-generation open-source real-time data warehouse  based on MPP architecture, with easier use and higher performance for big data analytics.',
             })}
             showAnnouncementBar={true}
         >
@@ -153,8 +154,8 @@ export default function Home(): JSX.Element {
                         <div className="news-item">
                             <span className="news-icon"></span>
                             <Link to="/docs/dev/releasenotes/release-1.2.6" className="news-content">
-                                <Translate id="1.2.6" description="2023.07.17 Apache Doris 1.2.6 is Released">
-                                    2023.07.17 Apache Doris 1.2.6 is Released
+                                <Translate id="1.2.6" description="Apache Doris 1.2.6 is released now.">
+                                    Apache Doris 1.2.6 is released now.
                                 </Translate>
                             </Link>
                         </div>

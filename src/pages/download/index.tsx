@@ -21,9 +21,9 @@ import {
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 
 const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} (Latest)`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} (Stable)`, value: VersionEnum.Prev },
-    { label: VersionEnum.Earlier, value: VersionEnum.Earlier },
+    { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
+    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
 const JDK = [
@@ -369,7 +369,7 @@ export default function Download(): JSX.Element {
                                         <Translate id="download.all.release.download">Download</Translate>
                                     </th>
                                     <th>
-                                        <Translate id="download.all.release.note">Release Note</Translate>
+                                        <Translate id="download.all.release.note">Release Notes</Translate>
                                     </th>
                                 </tr>
                             </thead>
@@ -414,7 +414,7 @@ export default function Download(): JSX.Element {
                                             )}
                                         </td>
                                         <td>
-                                            <Link to={item.note}>Release Note</Link>
+                                            <Link to={item.note}>Release Notes</Link>
                                         </td>
                                     </tr>
                                 ))}
@@ -574,7 +574,7 @@ export default function Download(): JSX.Element {
                     </CodeBlock>
                 </PageColumn>
             </section>
-            <section className="table-content">
+            {/* <section className="table-content">
                 <PageColumn
                     align="left"
                     title={
@@ -597,7 +597,7 @@ export default function Download(): JSX.Element {
                         </p>
                     </div>
                 </PageColumn>
-            </section>
+            </section> */}
             <section className="verify">
                 <PageColumn
                     align="left"
@@ -613,7 +613,7 @@ export default function Download(): JSX.Element {
                     </Link>
                     <Translate id="download.verify.w3"> and using these </Translate>
                     <Link to="https://downloads.apache.org/doris/KEYS">
-                        <Translate id="download.verify.w4"> KEYS</Translate>
+                        <Translate id="download.verify.w4"> Keys</Translate>
                     </Link>
                     <Translate id="download.verify.w5">. After verification, please read</Translate>
                     <Link to="/docs/install/source-install/compilation">
@@ -621,7 +621,7 @@ export default function Download(): JSX.Element {
                     </Link>
                     <Translate id="download.verify.w7"> and </Translate>
                     <Link to="/docs/install/install-deploy">
-                        <Translate id="download.verify.w8"> Installation and deployment </Translate>
+                        <Translate id="download.verify.w8"> Installation and Deployment </Translate>
                     </Link>
                     <Translate id="download.verify.w9"> to compile and install Doris.</Translate>
                 </PageColumn>
