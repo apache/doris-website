@@ -142,7 +142,7 @@ export function getAllDownloadLinks(locale: string) {
         {
             id: '1.2.6-arm-jdk8',
             sh: {
-                label: 'apache-doris-1.2.6-bin-arm.tar.xz',
+                label: 'apache-doris-1.2.6-bin-arm64.tar.xz',
                 links: {
                     source: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz`,
                     signature: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz.asc`,
@@ -322,7 +322,7 @@ export function getAllRelease(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
     return [
         {
-            version: '2.0-beta (Latest)',
+            version: '2.0-beta ( Latest )',
             date: '2023-07-03',
             note: '/docs/dev/releasenotes/release-2.0-beta',
             download: [
@@ -366,7 +366,7 @@ export function getAllRelease(locale: string) {
             ]
         },
         {
-            version: '1.2.4.1',
+            version: '1.2.4',
             date: '2023-04-27',
             note: '/docs/dev/releasenotes/release-1.2.4.1',
             download: [

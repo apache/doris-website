@@ -772,8 +772,8 @@
     "message": "1.2.1 版本暂不支持使用 JDK11 运行，会在后续版本修复。"
   },
   "1.2.6": {
-    "message": "Apache Doris 1.2.6 Release",
-    "description": "Apache Doris 1.2.6 Release"
+    "message": "Apache Doris 1.2.6 is released now.",
+    "description": "Apache Doris 1.2.6 is released now."
   },
   "download.document": {
     "message": "Document",
