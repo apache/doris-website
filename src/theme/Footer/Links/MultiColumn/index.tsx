@@ -37,25 +37,12 @@ export default function FooterLinksMultiColumn({ columns }) {
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
 
-    const localeItems = locales.map(locale => {
-        const to = `pathname://${alternatePageUtils.createUrl({
-            locale,
-            fullyQualified: false,
-        })}`;
-        return {
-            label: localeConfigs[locale].label === 'EN' ? 'English' : '简体中文',
-            to,
-            target: '_self',
-            autoAddBaseUrl: false,
-        };
-    });
-
     return (
         <div className="row footer__links">
             {columns.map((column, i) => (
                 <Column key={i} column={column} />
             ))}
-            <div className="col footer__col">
+            {/* <div className="col footer__col">
                 <div className="footer__title">
                     <Translate id="footer.language" description="Footer Language">
                         Language
@@ -68,7 +55,7 @@ export default function FooterLinksMultiColumn({ columns }) {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -25,7 +25,7 @@ function BlogListPageMetadata(props) {
 function getBlogCatetories(props) {
     const { siteConfig } = useDocusaurusContext();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
-    const allText = isCN ? '全部' : 'All';
+    const allText = 'All';
     const { items } = props;
     const allCategory = { label: allText, values: [] };
     const categories = [allCategory];
@@ -66,7 +66,7 @@ function BlogListPageContent(props) {
 
     const { siteConfig } = useDocusaurusContext();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
-    const allText = isCN ? '全部' : 'All';
+    const allText = 'All';
     const [active, setActive] = useState(() => {
         const tag = isBrowser ? sessionStorage.getItem('tag') : allText;
         return tag || allText;
@@ -84,7 +84,6 @@ function BlogListPageContent(props) {
             currentCategory = blogCategories.find(item => item.label === allText);
         }
         setBlogs(currentCategory.values);
-        
     };
 
     useEffect(() => {
