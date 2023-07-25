@@ -5,7 +5,6 @@ import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
 import PageColumn from '@site/src/components/PageColumn';
-import userCasesCn from '@site/userCases/zh_CN.json';
 import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -16,7 +15,7 @@ import usePhone from '@site/src/hooks/use-phone';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
-    const userCases = i18n.currentLocale === 'en' ? userCasesEn : userCasesCn;
+    const userCases = userCasesEn;
     const { isPhone } = usePhone();
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
