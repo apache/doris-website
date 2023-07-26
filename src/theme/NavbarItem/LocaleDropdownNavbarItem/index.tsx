@@ -44,6 +44,10 @@ export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, 
           })
         : localeConfigs[currentLocale].label;
 
+    if (!location.pathname.includes('docs') && !location.pathname.includes('community')) {
+        return <></>;
+    }
+
     return mobile ? (
         <DropdownNavbarItem
             {...props}
