@@ -162,6 +162,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
+                docsRouteBasePath: '/',
                 indexBlog: false,
                 explicitSearchResultPath: true,
             },
@@ -188,19 +189,67 @@ const config = {
                 items: [
                     { to: '/', label: 'Home', position: 'left', exact: true },
                     {
-                        type: 'doc',
+                        type: "dropdown",
                         position: 'left',
                         label: 'Docs',
-                        docId: 'summary/basic-summary',
-                        to: '/summary/basic-summary',
+                        to: '/docs/dev/summary/basic-summary',
+                        items: [
+                            {
+                                label: 'Learning Path',
+                                to: '/learning',
+                                align: 'left',
+                            },
+                            {
+                                label: 'Getting Started',
+                                to: '/docs/dev/summary/basic-summary',
+                                align: 'left',
+                            },
+                            {
+                                label: 'Install and Deploy',
+                                to: '/docs/dev/install/standard-deployment',
+                                align: 'left',
+                            },
+                            {
+                                label: 'FAQ',
+                                to: '/docs/dev/faq/install-faq',
+                                align: 'left',
+                            },
+                            // {
+                            //     label: 'More Docs',
+                            //     to: '/docs/dev/get-starting/',
+                            //     align: 'left',
+                            // }
+                        ]
                     },
                     { to: '/blog', label: 'Blogs', position: 'left' },
                     {
                         label: 'Community',
-                        type: 'doc',
-                        docId: 'team',
+                        type: "dropdown",
+                        to: '/community/team',
                         position: 'left',
                         docsPluginId: 'community',
+                        items: [
+                            // {
+                            //     label: 'Join Community',
+                            //     to: '/learning',
+                            //     align: 'left',
+                            // },
+                            {
+                                label: 'Doris Team',
+                                to: '/community/team',
+                                align: 'left',
+                            },
+                            {
+                                label: 'How to Contribute',
+                                to: '/community/how-to-contribute/',
+                                align: 'left',
+                            },
+                            {
+                                label: 'Developer Guide',
+                                to: '/community/developer-guide/debug-tool',
+                                align: 'left',
+                            },
+                        ]
                     },
                     { to: '/users', label: 'User Stories', position: 'left' },
                     {
@@ -228,19 +277,6 @@ const config = {
             footer: {
                 links: [
                     {
-                        title: 'Resource',
-                        items: [
-                            {
-                                label: 'Download',
-                                href: '/download',
-                            },
-                            {
-                                label: 'Docs',
-                                href: '/learning',
-                            },
-                        ],
-                    },
-                    {
                         title: 'ASF',
                         items: [
                             {
@@ -266,6 +302,56 @@ const config = {
                             {
                                 label: 'Thanks',
                                 href: 'https://www.apache.org/foundation/thanks.html',
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Resource',
+                        items: [
+                            {
+                                label: 'Download',
+                                href: '/download',
+                            },
+                            {
+                                label: 'Docs',
+                                href: '/learning',
+                            },
+                            {
+                                label: 'Blog',
+                                href: '/blog',
+                            },
+                            {
+                                label: 'User cases',
+                                href: '/users',
+                            },
+                            {
+                                label: 'Courses (coming soon)',
+                                href: '/courses',
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Community Support',
+                        items: [
+                            {
+                                label: 'Doris Team',
+                                href: '/community/team',
+                            },
+                            {
+                                label: 'How to Contribute',
+                                href: '/community/how-to-contribute/',
+                            },
+                            {
+                                label: 'Source Code',
+                                href: 'https://github.com/apache/doris/',
+                            },
+                            {
+                                label: 'Improvement proposal',
+                                href: 'https://github.com/apache/doris/discussions',
+                            },
+                            {
+                                label: 'Roadmap',
+                                href: 'https://github.com/apache/doris/issues/16392',
                             },
                         ],
                     },
