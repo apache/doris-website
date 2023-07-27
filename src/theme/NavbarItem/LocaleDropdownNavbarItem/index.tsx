@@ -7,11 +7,13 @@ import IconLanguage from '@theme/Icon/Language';
 
 import './styles.scss';
 import NavbarItem from '@theme/NavbarItem';
+import { useLocation } from '@docusaurus/router';
 export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, dropdownItemsAfter, ...props }) {
     const {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
+    const location = useLocation();
     const localeItems = locales.map(locale => {
         const to = `pathname://${alternatePageUtils.createUrl({
             locale,
