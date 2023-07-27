@@ -225,15 +225,15 @@ const config = {
                     {
                         label: 'Community',
                         type: "dropdown",
-                        to: '/community/team',
+                        to: '/community/join-community',
                         position: 'left',
                         docsPluginId: 'community',
                         items: [
-                            // {
-                            //     label: 'Join Community',
-                            //     to: '/learning',
-                            //     align: 'left',
-                            // },
+                            {
+                                label: 'Join Community',
+                                to: '/community/join-community',
+                                align: 'left',
+                            },
                             {
                                 label: 'Doris Team',
                                 to: '/community/team',
@@ -306,7 +306,7 @@ const config = {
                         ],
                     },
                     {
-                        title: 'Resource',
+                        title: 'Resources',
                         items: [
                             {
                                 label: 'Download',
@@ -317,17 +317,17 @@ const config = {
                                 href: '/learning',
                             },
                             {
-                                label: 'Blog',
+                                label: 'Blogs',
                                 href: '/blog',
                             },
                             {
-                                label: 'User cases',
+                                label: 'User Stories',
                                 href: '/users',
                             },
-                            {
-                                label: 'Courses (coming soon)',
-                                href: '/courses',
-                            },
+                            // {
+                            //     label: 'Courses (coming soon)',
+                            //     href: '/courses',
+                            // },
                         ],
                     },
                     {
@@ -346,7 +346,7 @@ const config = {
                                 href: 'https://github.com/apache/doris/',
                             },
                             {
-                                label: 'Improvement proposal',
+                                label: 'Improvement Proposal',
                                 href: 'https://github.com/apache/doris/discussions',
                             },
                             {

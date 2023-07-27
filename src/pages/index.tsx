@@ -140,7 +140,7 @@ export default function Home(): JSX.Element {
     ];
     return (
         <Layout
-            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open Source Real-Time Data Warehouse' })}
+            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open-Source Real-Time Data Warehouse' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message:
@@ -249,7 +249,7 @@ export default function Home(): JSX.Element {
                                 <Translate id="homepage.start.downloadButton">Download</Translate>
                             </Link>
                             <Link className="start-btn docs-btn" to="/learning">
-                                <Translate id="homepage.start.docsButton">Go to docs</Translate>
+                                <Translate id="homepage.start.docsButton">Go to Docs</Translate>
                             </Link>
                         </div>
                     </div>
