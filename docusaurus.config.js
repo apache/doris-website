@@ -183,7 +183,7 @@ const config = {
             navbar: {
                 title: '',
                 logo: {
-                    alt: 'Doris',
+                    alt: 'Apache Doris',
                     src: 'https://cdnd.selectdb.com/images/logo.svg',
                 },
                 items: [

@@ -31,10 +31,11 @@ export default function Home(): JSX.Element {
         },
     ];
     const banner = {
-        title: <Translate id="homepage.banner.title">Apache Doris</Translate>,
+        title: <Translate id="homepage.banner.title">Real-Time Analysis Makes the Future</Translate>,
         subTitle: (
             <Translate id="homepage.banner.subTitle">
-                An easy-to-use, high-performance and unified analytical database
+                Apache Doris is a new-generation open-source real-time data warehouse based on MPP architecture, with
+                easier use and higher performance for big data analytics.
             </Translate>
         ),
         bannerImg: require('@site/static/images/home-banner.png').default,
@@ -239,7 +240,9 @@ export default function Home(): JSX.Element {
                 <div className="container">
                     <div className="ready-start-wrap">
                         <div className="start-title">
-                            <Translate id="homepage.start.title">Ready to get started ?</Translate>
+                            <Translate id="homepage.start.title">
+                                Start Your Journey in Real-Time with Apache Doris
+                            </Translate>
                         </div>
                         <div className="start-buttons">
                             <Link className="start-btn download-btn" to="/download">
