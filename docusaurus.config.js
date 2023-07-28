@@ -34,8 +34,8 @@ const config = {
         'https://fonts.googleapis.com/css?family=Montserrat:500',
         'https://fonts.googleapis.com/css?family=Noto+Sans+SC:400',
     ],
-    organizationName: 'doris', // Usually your GitHub org/user name.
-    projectName: 'doris', // Usually your repo name.
+    organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
+    projectName: 'apache/doris-website', // Usually your repo name.
     plugins: [
         'docusaurus-plugin-sass',
         versionsPlugin,
@@ -227,7 +227,7 @@ const config = {
                         type: "dropdown",
                         to: '/community/join-community',
                         position: 'left',
-                        docsPluginId: 'community',
+                        // docsPluginId: 'community',
                         items: [
                             {
                                 label: 'Join Community',

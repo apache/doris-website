@@ -9,6 +9,8 @@ import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
 import './index.scss';
+import NewsLetter from '../components/Newsletter';
+import { NEWSLETTER_DATA } from '../constant/newsletter.data';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -149,7 +151,8 @@ export default function Home(): JSX.Element {
             showAnnouncementBar={true}
         >
             <PageBanner {...banner}></PageBanner>
-            <section className="news-section">
+            <NewsLetter newsList={NEWSLETTER_DATA} style={{ marginTop: '0' }} />
+            {/* <section className="news-section">
                 <div className="container">
                     <div className="news-wrap">
                         <div className="news-item">
@@ -162,7 +165,7 @@ export default function Home(): JSX.Element {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
             <section className="apache-doris">
                 <PageColumn
                     title={
