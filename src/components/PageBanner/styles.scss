@@ -1,5 +1,5 @@
 .banner-section {
-    height: calc(100vh - var(--global-header-height) - 5rem);
+    height: calc(100vh - var(--global-header-height) - 10rem);
 
     .banner-container {
         height: 100%;
@@ -93,7 +93,7 @@
 
 @media screen and (min-width: 1300px) and (max-width: 1600px) {
     .banner-section {
-        height: calc(100vh - var(--global-header-height) - 5rem);
+        height: calc(100vh - var(--global-header-height) - 10rem);
     }
 }
 
@@ -107,6 +107,7 @@
 @media (max-width: 996px) {
     .banner-section {
         height: auto;
+        padding: 0;
 
         .banner-container {
             flex-direction: column-reverse;
