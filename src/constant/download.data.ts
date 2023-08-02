@@ -324,7 +324,7 @@ export function getAllRelease(locale: string) {
         {
             version: '2.0-beta ( Latest )',
             date: '2023-07-03',
-            note: '/docs/dev/releasenotes/release-2.0-beta',
+            note: '/docs/dev/releasenotes/release-2.0-Beta',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
