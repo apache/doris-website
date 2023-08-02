@@ -192,7 +192,7 @@ const config = {
                         type: "dropdown",
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/dev/summary/basic-summary',
+                        to: '/docs/dev/get-starting/what-is-apache-doris',
                         items: [
                             {
                                 label: 'Learning Path',
@@ -201,7 +201,7 @@ const config = {
                             },
                             {
                                 label: 'Getting Started',
-                                to: '/docs/dev/summary/basic-summary',
+                                to: '/docs/dev/get-starting/quick-start',
                                 align: 'left',
                             },
                             {
