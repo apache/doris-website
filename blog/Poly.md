@@ -3,8 +3,8 @@
     'title': 'For Entry-Level Data Engineers: How to Build a Simple but Solid Data Architecture',
     'summary': "This article aims to provide reference for non-tech companies who are seeking to empower your business with data analytics.",
     'date': '2023-07-31',
-    'author': 'Apache Doris',
-    'tags': ['Zhenwei Liu'],
+    'author': 'Zhenwei Liu',
+    'tags': ['Apache Doris'],
 }
 
 ---
