@@ -33,7 +33,7 @@ export default function Home(): JSX.Element {
         },
     ];
     const banner = {
-        title: <Translate id="homepage.banner.title">Real-Time Analysis Makes the Future</Translate>,
+        title: <Translate id="homepage.banner.title">Real-Time Analytics Makes the Future</Translate>,
         subTitle: (
             <Translate id="homepage.banner.subTitle">
                 Apache Doris is a new-generation open-source real-time data warehouse based on MPP architecture, with
