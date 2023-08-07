@@ -4,7 +4,7 @@
     'summary': "This article aims to provide reference for non-tech companies who are seeking to empower your business with data analytics.",
     'date': '2023-07-31',
     'author': 'Zhenwei Liu',
-    'tags': ['Apache Doris'],
+    'tags': ['Best Practice'],
 }
 
 ---
@@ -27,9 +27,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-For Entry-Level Data Engineers: How to Build a Simple but Solid Data Architecture
-
 
 
 This article aims to provide reference for non-tech companies who are seeking to empower your business with data analytics. You will learn the basics about how to build an efficient and easy-to-use data system, and I will walk you through every aspect of it with a use case of Apache Doris, an MPP-based analytic data warehouse. 
