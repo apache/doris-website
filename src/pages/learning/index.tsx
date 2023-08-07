@@ -14,11 +14,11 @@ const sitemapList = [
         list: [
             {
                 title: <Translate>Introduction to Apache Doris</Translate>,
-                link: '/docs/dev/summary/basic-summary',
+                link: '/docs/dev/get-starting/what-is-apache-doris',
             },
             {
                 title: <Translate>Get Started</Translate>,
-                link: '/docs/dev/get-starting/',
+                link: '/docs/dev/get-starting/quick-start',
             },
             {
                 title: <Translate>Installation and deployment</Translate>,
@@ -56,7 +56,7 @@ const sitemapList = [
             },
             {
                 title: <Translate>Index</Translate>,
-                link: '/docs/dev/data-table/index/prefix-index',
+                link: '/docs/dev/data-table/index/index-overview',
             },
         ],
     },
@@ -100,7 +100,7 @@ const sitemapList = [
             },
             {
                 title: <Translate>Export Table Structure or Data</Translate>,
-                link: '/docs/dev/data-operate/export/export_with_mysql_dump',
+                link: '/docs/dev/data-operate/export/export-with-mysql-dump',
             },
             {
                 title: <Translate>Data Backup</Translate>,
@@ -155,7 +155,7 @@ const sitemapList = [
                 link: '/docs/dev/query-acceleration/materialized-view',
             },
             {
-                title: <Translate>BITMAP Precise De-duplication</Translate>,
+                title: <Translate>BITMAP Precise De-Duplication</Translate>,
                 link: '/docs/dev/advanced/orthogonal-bitmap-manual',
             },
             {
@@ -212,11 +212,11 @@ const sitemapList = [
         list: [
             {
                 title: <Translate>SQL Function</Translate>,
-                link: '/docs/dev/sql-manual/sql-functions/date-time-functions/dayname',
+                link: '/docs/dev/sql-manual/sql-functions/array-functions/array',
             },
             {
                 title: <Translate>DDL</Translate>,
-                link: '/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-DATABASE',
+                link: '/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG',
             },
             {
                 title: <Translate>DML</Translate>,
@@ -224,7 +224,7 @@ const sitemapList = [
             },
             {
                 title: <Translate>Data Types</Translate>,
-                link: '/docs/dev/sql-manual/sql-reference/Data-Types/VARCHAR',
+                link: '/docs/dev/sql-manual/sql-reference/Data-Types/BOOLEAN',
             },
             {
                 title: <Translate>Utility</Translate>,
@@ -241,11 +241,11 @@ const sitemapList = [
                 link: '/docs/dev/admin-manual/cluster-management/upgrade',
             },
             {
-                title: <Translate>Elastic scaling</Translate>,
+                title: <Translate>Elastic Scaling</Translate>,
                 link: '/docs/dev/admin-manual/cluster-management/elastic-expansion',
             },
             {
-                title: <Translate>Statistics of query execution</Translate>,
+                title: <Translate>Statistics of Query Execution</Translate>,
                 link: '/docs/dev/admin-manual/query-profile',
             },
             {
