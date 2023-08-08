@@ -111,9 +111,9 @@ export function getAllDownloadLinks(locale: string) {
                 {
                     label: 'apache-doris-1.2.6-src.tar.gz',
                     links: {
-                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz`,
-                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.asc`,
-                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.sha512`,
+                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.sha512`,
                     },
                 },
             ],
@@ -132,9 +132,9 @@ export function getAllDownloadLinks(locale: string) {
                 {
                     label: 'apache-doris-1.2.6-src.tar.gz',
                     links: {
-                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz`,
-                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.asc`,
-                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.sha512`,
+                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.sha512`,
                     },
                 },
             ],
@@ -153,9 +153,9 @@ export function getAllDownloadLinks(locale: string) {
                 {
                     label: 'apache-doris-1.2.6-src.tar.gz',
                     links: {
-                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz`,
-                        signature: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.asc`,
-                        sha512: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc01/apache-doris-1.2.6-src.tar.gz.sha512`,
+                        source: `${APACHE_ARCHIVE}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz`,
+                        signature: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.asc`,
+                        sha512: `${APACHE_DOWNLOAD_LINK}doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.sha512`,
                     },
                 },
             ],
