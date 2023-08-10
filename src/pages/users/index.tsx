@@ -108,7 +108,7 @@ export default function Users(): JSX.Element {
     }
     return (
         <Layout
-            title={translate({ id: 'users.title', message: 'User Storeis' })}
+            title={translate({ id: 'users.title', message: 'User Stories' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message: 'An easy-to-use, high-performance and unified analytical database',

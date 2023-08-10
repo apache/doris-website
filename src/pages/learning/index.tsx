@@ -297,7 +297,7 @@ export default function Learning(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
     return (
         <Layout
-            title={translate({ id: 'sitemap.title', message: 'SiteMap' })}
+            title={translate({ id: 'sitemap.title', message: 'Learning Path' })}
             description={translate({
                 id: 'sitemap.subTitle',
                 message: '',
