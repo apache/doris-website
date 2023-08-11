@@ -108,6 +108,19 @@ const config = {
                 ],
             },
         ],
+        [
+            '@docusaurus/plugin-client-redirects',
+            {
+                fromExtensions: ['html', 'htm'],
+                redirects: [
+                    // /docs/oldDoc -> /docs/newDoc
+                    {
+                        from: '/docs/dev/summary/basic-summary',
+                        to: '/docs/dev/get-starting/quick-start',
+                    },
+                ],
+            },
+        ],
     ],
     presets: [
         [
@@ -189,7 +202,7 @@ const config = {
                 items: [
                     { to: '/', label: 'Home', position: 'left', exact: true },
                     {
-                        type: "dropdown",
+                        type: 'dropdown',
                         position: 'left',
                         label: 'Docs',
                         to: '/docs/dev/get-starting/what-is-apache-doris',
@@ -219,12 +232,12 @@ const config = {
                             //     to: '/docs/dev/get-starting/',
                             //     align: 'left',
                             // }
-                        ]
+                        ],
                     },
                     { to: '/blog', label: 'Blogs', position: 'left' },
                     {
                         label: 'Community',
-                        type: "dropdown",
+                        type: 'dropdown',
                         to: '/community/join-community',
                         position: 'left',
                         // docsPluginId: 'community',
@@ -249,7 +262,7 @@ const config = {
                                 to: '/community/developer-guide/debug-tool',
                                 align: 'left',
                             },
-                        ]
+                        ],
                     },
                     { to: '/users', label: 'User Stories', position: 'left' },
                     {
