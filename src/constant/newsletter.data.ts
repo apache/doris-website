@@ -13,6 +13,6 @@ export const NEWSLETTER_DATA = [
     {
         tag: 'Tech Sharing',
         title: 'Is Your Latest Data Really the Latest? Check the Data Update Mechanism of Your Database',
-        to: '/blog/Data_Update/',
+        to: '/blog/Data_Update',
     },
 ];
