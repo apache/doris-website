@@ -35,64 +35,64 @@ export function getAllDownloadLinks(locale: string) {
     const shSource = locale.toLocaleUpperCase() === 'EN' ? 'apache' : 'tsinghua';
     return [
         {
-            id: '2.0-beta-intel-avx2-jdk8',
+            id: '2.0.0-intel-avx2-jdk8',
             sh: {
-                label: 'apache-doris-2.0-beta-bin-x64.tar.gz',
+                label: 'apache-doris-2.0.0-bin-x64.tar.gz',
                 links: {
-                    source: `${ORIGIN}apache-doris-2.0-beta-bin-x64.tar.gz`,
-                    signature: `${ORIGIN}apache-doris-2.0-beta-bin-x64.tar.gz.asc`,
-                    sha512: `${ORIGIN}apache-doris-2.0-beta-bin-x64.tar.gz.sha512`,
+                    source: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz`,
+                    signature: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz.asc`,
+                    sha512: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz.sha512`,
                 },
             },
             items: [
                 {
-                    label: 'apache-doris-2.0-beta-src.tar.gz',
+                    label: 'apache-doris-2.0.0-src.tar.gz',
                     links: {
-                        source: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz`,
-                        signature: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz.asc`,
-                        sha512: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz.sha512`,
+                        source: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz`,
+                        signature: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.asc`,
+                        sha512: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.sha512`,
                     },
                 },
             ],
         },
         {
-            id: '2.0-beta-intel-noavx2-jdk8',
+            id: '2.0.0-intel-noavx2-jdk8',
             sh: {
-                label: 'apache-doris-2.0-beta-bin-x64-noavx2.tar.gz',
+                label: 'apache-doris-2.0.0-bin-x64-noavx2.tar.gz',
                 links: {
-                    source: `${ORIGIN}apache-doris-2.0-beta-bin-x64-noavx2.tar.gz`,
-                    signature: `${ORIGIN}apache-doris-2.0-beta-bin-x64-noavx2.tar.gz.asc`,
-                    sha512: `${ORIGIN}apache-doris-2.0-beta-bin-x64-noavx2.tar.gz.sha512`,
+                    source: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz`,
+                    signature: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz.asc`,
+                    sha512: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz.sha512`,
                 },
             },
             items: [
                 {
-                    label: 'apache-doris-2.0-beta-src.tar.gz',
+                    label: 'apache-doris-2.0.0-src.tar.gz',
                     links: {
-                        source: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz`,
-                        signature: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz.asc`,
-                        sha512: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz.sha512`,
+                        source: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz`,
+                        signature: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.asc`,
+                        sha512: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.sha512`,
                     },
                 },
             ],
         },
         {
-            id: '2.0-beta-arm-jdk8',
+            id: '2.0.0-arm-jdk8',
             sh: {
-                label: 'apache-doris-2.0-beta-bin-arm64.tar.gz',
+                label: 'apache-doris-2.0.0-bin-arm64.tar.gz',
                 links: {
-                    source: `${ORIGIN}apache-doris-2.0-beta-bin-arm64.tar.gz`,
-                    signature: `${ORIGIN}apache-doris-2.0-beta-bin-arm64.tar.gz.asc`,
-                    sha512: `${ORIGIN}apache-doris-2.0-beta-bin-arm64.tar.gz.sha512`,
+                    source: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz`,
+                    signature: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz.asc`,
+                    sha512: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz.sha512`,
                 },
             },
             items: [
                 {
-                    label: 'apache-doris-2.0-beta-src.tar.gz',
+                    label: 'apache-doris-2.0.0-src.tar.gz',
                     links: {
-                        source: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz`,
-                        signature: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz.asc`,
-                        sha512: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz.sha512`,
+                        source: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz`,
+                        signature: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.asc`,
+                        sha512: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.sha512`,
                     },
                 },
             ],
@@ -322,24 +322,24 @@ export function getAllRelease(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
     return [
         {
-            version: '2.0-beta ( Latest )',
+            version: '2.0.0 ( Latest )',
             date: '2023-07-03',
-            note: '/docs/dev/releasenotes/release-2.0-Beta',
+            note: '/docs/dev/releasenotes/release-2.0.0',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
-                    binary: `${ORIGIN}apache-doris-2.0-beta-bin-x64.tar.gz`,
-                    source: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz`,
+                    binary: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz`,
+                    source: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz`,
                 },
                 {
                     cpu: 'X64 ( no avx2 )',
-                    binary: `${ORIGIN}apache-doris-2.0-beta-bin-x64-noavx2.tar.gz`,
-                    source: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz`,
+                    binary: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz`,
+                    source: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz`,
                 },
                 {
                     cpu: 'ARM64',
-                    binary: `${ORIGIN}apache-doris-2.0-beta-bin-arm64.tar.gz`,
-                    source: `https://downloads.apache.org/doris/2.0/2.0-beta/apache-doris-2.0-beta-src.tar.gz`,
+                    binary: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz`,
+                    source: `https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz`,
                 }
             ]
         },
@@ -463,7 +463,7 @@ export function getAllRelease(locale: string) {
 }
 
 export enum VersionEnum {
-    Latest = '2.0-beta',
+    Latest = '2.0.0',
     Prev = '1.2.6',
     Earlier = '1.1.5',
 }
