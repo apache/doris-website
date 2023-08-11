@@ -7,7 +7,7 @@ export const NEWSLETTER_DATA = [
     {
         tag: 'Release Notes',
         title: 'Apache Doris Announced the Official Release of Version 2.0.0 ! ',
-        to: '/docs/dev/releasenotes/release-2.0.0',
+        to: 'https://github.com/apache/doris/issues/22647',
         hot: true,
     },
     {
