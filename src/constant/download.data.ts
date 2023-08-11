@@ -324,7 +324,7 @@ export function getAllRelease(locale: string) {
         {
             version: '2.0.0 ( Latest )',
             date: '2023-07-03',
-            note: '/docs/dev/releasenotes/release-2.0.0',
+            note: 'https://github.com/apache/doris/issues/22647',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
