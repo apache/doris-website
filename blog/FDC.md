@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Auto-Synchronization of an Entire MySQL Database for Data Analysis',
-    'summary': "Flink-Doris-Connector 1.4.0 allows users to ingest a whole database (**MySQL** or **Oracle**) that contains thousands of tables into Apache Doris, in one step.",
+    'summary': "Flink-Doris-Connector 1.4.0 allows users to ingest a whole database (MySQL or Oracle) that contains thousands of tables into Apache Doris, in one step.",
     'date': '2023-08-16',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
