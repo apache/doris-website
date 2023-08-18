@@ -1,18 +1,18 @@
 export const NEWSLETTER_DATA = [
     {
+        tag: 'Best Practice',
+        title: 'For Entry-Level Data Engineers: How to Build a Simple but Solid Data Architecture',
+        to: '/blog/Poly',
+    },
+    {
         tag: 'Release Notes',
-        title: 'Apache Doris Announced the Official Release of Version 1.2.6 ',
-        to: '/docs/dev/releasenotes/release-1.2.6',
+        title: 'Apache Doris Announced the Official Release of Version 2.0.0 ! ',
+        to: 'https://github.com/apache/doris/issues/22647',
         hot: true,
     },
     {
-        tag: 'Best Practice',
-        title: 'Listen to That Poor BI Engineer: We Need Fast Join',
-        to: '/blog/Moka',
-    },
-    {
         tag: 'Tech Sharing',
-        title: 'Building a Log Analytics Solution 10 Times More Cost-Effective than Elasticsearch',
-        to: '/blog/Inverted%20Index/',
+        title: 'Is Your Latest Data Really the Latest? Check the Data Update Mechanism of Your Database',
+        to: '/blog/Data_Update',
     },
 ];

@@ -28,8 +28,12 @@ under the License.
 -->
 
 
+# Apache Doris(Incubating) 0.15.0 Release
 
-# Feature
+Dear Community, After months of polishing, we are pleased to announce the release of Apache Doris(Incubating) on December 07, 2022! 
+
+
+# Important Updates
 ## Highlight
 
 1. Full Vectorizied-Engine support, greatly improved performance
