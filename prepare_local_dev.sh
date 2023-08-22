@@ -42,3 +42,4 @@ cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-com
 cp -R doris/docs/sidebarsCommunity.json .
 
 cp -R doris/docs/images static/
+rm -rf doris
