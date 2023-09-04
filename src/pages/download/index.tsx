@@ -285,7 +285,7 @@ export default function Download(): JSX.Element {
                                         {currentLocale === 'zh-CN' ? (
                                             <div className="notice-text">
                                                 详细升级注意事项请参考
-                                                <Link to="https://github.com/apache/doris/issues/23640">
+                                                <Link to="/docs/dev/releasenotes/release-2.0.1">
                                                     2.0.1 Release Note
                                                 </Link>
                                                 以及
@@ -303,7 +303,7 @@ export default function Download(): JSX.Element {
                                         ) : (
                                             <div className="notice-text">
                                                 For detailed upgrade precautions, please refer to the{' '}
-                                                <Link to="https://github.com/apache/doris/issues/23640">2.0.1</Link>
+                                                <Link to="/docs/dev/releasenotes/release-2.0.1">2.0.1</Link>
                                                 and the
                                                 <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
                                                 cluster
