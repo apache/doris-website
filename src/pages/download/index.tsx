@@ -303,7 +303,7 @@ export default function Download(): JSX.Element {
                                         ) : (
                                             <div className="notice-text">
                                                 For detailed upgrade precautions, please refer to the{' '}
-                                                <Link to="https://github.com/apache/doris/issues/22647">2.0.0</Link>
+                                                <Link to="https://github.com/apache/doris/issues/23640">2.0.1</Link>
                                                 and the
                                                 <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
                                                 cluster
