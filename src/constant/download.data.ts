@@ -324,7 +324,7 @@ export function getAllRelease(locale: string) {
         {
             version: '2.0.1 ( Latest )',
             date: '2023-09-04',
-            note: 'https://github.com/apache/doris/issues/22647',
+            note: '/docs/dev/releasenotes/release-2.0.1',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
@@ -350,7 +350,7 @@ export function getAllRelease(locale: string) {
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
-                    binary: `${ORIGIN}apache-doris-2.0.1-bin-x64.tar.gz`,
+                    binary: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz`,
                     source: `https://downloads.apache.org/doris/2.0/2.0.1/apache-doris-2.0.0-src.tar.gz`,
                 },
                 {
