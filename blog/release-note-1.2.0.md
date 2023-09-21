@@ -28,13 +28,11 @@ under the License.
 -->
 
 
-# Apache Doris(Incubating) 0.15.0 Release
 
-Dear Community, After months of polishing, we are pleased to announce the release of Apache Doris(Incubating) on December 07, 2022! 
+Dear Community, after months of polishing, we are pleased to announce the release of Apache Doris 1.2.0 on December 07, 2022! 
 
 
-# Important Updates
-## Highlight
+## Highlights
 
 1. Full Vectorizied-Engine support, greatly improved performance
 
@@ -290,13 +288,14 @@ When creating a table, set `"light_schema_change"="true"` in properties.
 	- `outer combine`
 	- and all array functions
 
-# Upgrade Notice
 
-## Known Issues
+## Upgrade Notices
+
+### Known Issues
 
 - Use JDK11 will cause BE crash, please use JDK8 instead.
 
-## Behavior Changed
+### Behavior Changes
 
 - Permission level changes
 
@@ -371,7 +370,7 @@ When creating a table, set `"light_schema_change"="true"` in properties.
 
 	FE Meta Version changed from 107 to 114, and cannot be rolled back after upgrading.
 	
-## During Upgrade
+### During Upgrade
 
 1. Upgrade preparation
   
@@ -391,7 +390,7 @@ When creating a table, set `"light_schema_change"="true"` in properties.
 
 	The above errors will return to normal after a full upgrade.
 	
-## Performance Impact
+### Performance Impact
 
 - By default, JeMalloc is used as the memory allocator of the new version BE, replacing TcMalloc (#13367)
 
@@ -399,7 +398,7 @@ When creating a table, set `"light_schema_change"="true"` in properties.
 
 - Disable chunk allocator by default (#13285)
 
-## Api change
+### API Changes
 
 - BE's http api error return information changed from `{"status": "Fail", "msg": "xxx"}` to more specific ``{"status": "Not found", "msg": "Tablet not found. tablet_id=1202"}``(#9771)
 
@@ -445,7 +444,8 @@ other
 
 	Search for "disble_auto_compaction" in the documentation: https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE
 	
-# Big Thanks
+
+## Big Thanks
 
 Thanks to ALL who contributed to this release! (alphabetically)
 ```
