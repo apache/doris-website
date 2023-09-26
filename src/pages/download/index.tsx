@@ -286,7 +286,7 @@ export default function Download(): JSX.Element {
                                             <div className="notice-text">
                                                 详细升级注意事项请参考
                                                 <Link to="/docs/dev/releasenotes/release-2.0.1">
-                                                    2.0.1 Release Note
+                                                    2.0.1.1 Release Note
                                                 </Link>
                                                 以及
                                                 <Link to="/docs/dev/install/standard-deployment">
@@ -303,7 +303,7 @@ export default function Download(): JSX.Element {
                                         ) : (
                                             <div className="notice-text">
                                                 For detailed upgrade precautions, please refer to the{' '}
-                                                <Link to="/docs/dev/releasenotes/release-2.0.1">2.0.1</Link>
+                                                <Link to="/docs/dev/releasenotes/release-2.0.1">2.0.1.1</Link>
                                                 and the
                                                 <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
                                                 cluster
