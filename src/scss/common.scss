@@ -13,6 +13,13 @@
         display: none;
     }
 }
+.markdown code {
+    background-color: #f6f7f8;
+}
+
+.markdown pre code {
+    background-color: #282A36;
+}
 
 @media (max-width: 996px) {
     .theme-doc-toc-mobile {
