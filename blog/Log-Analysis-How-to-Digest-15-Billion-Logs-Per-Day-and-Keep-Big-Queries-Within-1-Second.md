@@ -3,7 +3,7 @@
     'title': 'Log Analysis: How to Digest 15 Billion Logs Per Day and Keep Big Queries Within 1 Second',
     'summary': "This article describes a large-scale data warehousing use case to provide reference for data engineers who are looking for log analytic solutions. It introduces the log processing architecture and real case practice in data ingestion, storage, and queries.",
     'date': '2023-09-16',
-    'author': 'Yuri Liu',
+    'author': 'Yuqi Liu',
     'tags': ['Best Practice'],
 }
 ---
