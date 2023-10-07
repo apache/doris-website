@@ -35,13 +35,13 @@ Business intelligence (BI) tool is often the last stop of a data processing pipe
 
 I work as an engineer that supports a human resource management system. One prominent selling point of our services is **self-service** **BI**. That means we allow users to customize their own dashboards: they can choose the fields they need and relate them to form the dataset as they want. 
 
-![self-service-BI](../static/images/Moka_1.png)
+![](../static/images/Moka_1.png)
 
 Join query is a more efficient way to realize self-service BI. It allows people to break down their data assets into many smaller tables instead of putting it all in a flat table. This would make data updates much faster and more cost-effective, because updating the whole flat table is not always the optimal choice when you have plenty of new data flowing in and old data being updated or deleted frequently, as is the case for most data input.
 
 In order to maximize the time value of data, we need data updates to be executed really quickly. For this purpose, we looked into three OLAP databases on the market. They are all fast in some way but there are some differences.
 
-![Apache-Doris-VS-ClickHouse-VS-Greenplum](../static/images/Moka_2.png)
+![](../static/images/Moka_2.png)
 
 Greenplum is really quick in data loading and batch DML processing, but it is not good at handling high concurrency. There is a steep decline in performance as query concurrency rises. This can be risky for a BI platform that tries to ensure stable user experience. ClickHouse is mind-blowing in single-table queries, but it only allows batch update and batch delete, so that's less timely.
 
@@ -51,7 +51,7 @@ JOIN, my old friend JOIN, is always a hassle. Join queries are demanding for bot
 
 We tested our candidate OLAP engines with our common join queries and our most notorious slow queries. 
 
-![Apache-Doris-VS-ClickHouse](../static/images/Moka_3.png)
+![](../static/images/Moka_3.png)
 
 As the number of tables joined grows, we witness a widening performance gap between Apache Doris and ClickHouse. In most join queries, Apache Doris was about 5 times faster than ClickHouse. In terms of slow queries, Apache Doris responded to most of them within less than 1 second, while the performance of ClickHouse fluctuated within a relatively large range. 
 
@@ -79,15 +79,15 @@ Human resource data is subject to very strict and fine-grained access control po
 
 How does all this add to complexity in engineering? Any user who inputs a query on our BI platform must go through multi-factor authentication, and the authenticated information will all be inserted into the SQL via `in` and then passed on to the OLAP engine. Therefore, the more fine-grained the privilege controls are, the longer the SQL will be, and the more time the OLAP system will spend on ID filtering. That's why our users are often tortured by high latency.
 
-![privileged-access-queries](../static/images/Moka_4.png)
+![](../static/images/Moka_4.png)
 
 So how did we fix that? We use the [Bloom Filter index](https://doris.apache.org/docs/dev/data-table/index/bloomfilter/) in Apache Doris. 
 
-![BloomFilter-index](../static/images/Moka_5.png)
+![](../static/images/Moka_5.png)
 
 By adding Bloom Filter indexes to the relevant ID fields, we improve the speed of privileged queries by 30% and basically eliminate timeout errors.
 
-![faster-privileged-access-queries](../static/images/Moka_6.png)
+![](../static/images/Moka_6.png)
 
 Tips on when you should use the Bloom Filter index:
 

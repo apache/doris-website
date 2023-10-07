@@ -50,11 +50,11 @@ When the metrics are soundly put in place, you can ingest new data into your dat
 
 As is mentioned, some metrics are produced by combining multiple fields in the source table. In data engineering, that is a multi-table join query. Based on the optimization experience of an Apache Doris user, we recommend flat tables instead of Star/Snowflake Schema. The user reduced the query response time on tables of 100 million rows **from 5s to 63ms** after such a change.
 
-![join-queries](../static/images/Pingan_1.png)
+![](../static/images/Pingan_1.png)
 
 The flat table solution also eliminates jitter.
 
-![reduced-jitter](../static/images/Pingan_2.png)
+![](../static/images/Pingan_2.png)
 
 ## Enable SQL Caching to Reduce Resource Consumption
 
@@ -65,13 +65,13 @@ Analysts often check data reports of the same metrics on a regular basis. These 
 - A TPS (Transactions Per Second) of 300 is reached, with CPU, memory, disk, and I/O usage under 80%;
 - Under the recommended cluster size, over 10,000 metrics can be cached, which means you can save a lot of computation resources.
 
-![reduced-computation-resources](../static/images/Pingan_3.png)
+![](../static/images/Pingan_3.png)
 
 ## Conclusion
 
 The complexity of data analysis in the financial industry lies in the data itself other than the engineering side. Thus, the underlying data architecture should focus on facilitating the unified and efficient management of data. Apache Doris provides the flexibility of simple metric registration and the ability of fast and resource-efficient metric computation. In this case, the user is able to handle 10,000 active financial metrics in 10,000 dashboards with 30% less ETL efforts.
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog).
+
 
 
 
