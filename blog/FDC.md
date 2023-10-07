@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Auto-Synchronization-of-an-Entire-MySQL-Database-for-Data-Analysis',
+    'title': 'Auto-Synchronization of an Entire MySQL Database for Data Analysis',
     'summary': "Flink-Doris-Connector 1.4.0 allows users to ingest a whole database (MySQL or Oracle) that contains thousands of tables into Apache Doris, in one step.",
     'date': '2023-08-16',
     'author': 'Apache Doris',
@@ -94,11 +94,11 @@ When it comes to synchronizing a whole database (containing hundreds or even tho
 
 Under pressure test, the system showed high stability, with key metrics as follows:
 
-![Flink-Doris-Connector](../static/images/FDC_1.png)
+![](../static/images/FDC_1.png)
 
-![Flink-CDC](../static/images/FDC_2.png)
+![](../static/images/FDC_2.png)
 
-![Doris-Cluster-Compaction-Score](../static/images/FDC_3.png)
+![](../static/images/FDC_3.png)
 
 According to feedback from early adopters, the Connector has also delivered high performance and system stability in 10,000-table database synchronization in their production environment. This proves that the combination of Apache Doris and Flink CDC is capable of large-scale data synchronization with high efficiency and reliability.
 

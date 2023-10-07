@@ -32,11 +32,11 @@ In databases, data update is to add, delete, or modify data. Timely data update 
 
 Technically speaking, there are two types of data updates: you either update a whole row (**Row Update**) or just update part of the columns (**Partial Column Update**). Many databases supports both of them, but in different ways. This post is about one of them, which is simple in execution and efficient in data quality guarantee. 
 
-As an open source analytic database, Apache Doris supports both Row Update and Partial Column Update with one data model: the [**Unique Key Model**](https://doris.apache.org/docs/dev/data-table/data-model#unique-model). It is where you put data that doesn't need to be aggregated. In the Unique Key Model, you can specify one column or the combination of several columns as the Unique Key (a.k.a. Primary Key). For one Unique Key, there will always be one row of data: the newly ingested data record replaces the old. That's how data updates work.
+As an open source analytic database, Apache Doris supports both Row Update and Partial Column Update with one data model: the **Unique Key Model**. It is where you put data that doesn't need to be aggregated. In the Unique Key Model, you can specify one column or the combination of several columns as the Unique Key (a.k.a. Primary Key). For one Unique Key, there will always be one row of data: the newly ingested data record replaces the old. That's how data updates work.
 
 The idea is straightforward, but in real-life implementation, it happens that the latest data does not arrive the last or doesn't even get written at all, so I'm going to show you how Apache Doris implements data update and avoids messups with its Unique Key Model. 
 
-![data-update](../static/images/Dataupdate_1.png)
+![](../static/images/Dataupdate_1.png)
 
 ## Row Update
 
@@ -134,11 +134,11 @@ The execution of the Update command consists of three steps in the system:
 - Step Two: Modify the order status from "Payment Pending" to "Delivery Pending" (1, 100, 'Delivery Pending')
 - Step Three: Insert the new row into the table
 
-![partial-column-update-1](../static/images/Dataupdate_2.png)
+![](../static/images/Dataupdate_2.png)
 
 The table is in the Unique Key Model, which means for rows of the same Unique Key, only the last inserted one will be reserved, so this is what the table will finally look like:
 
-![partial-column-update-2](../static/images/Dataupdate_3.png)
+![](../static/images/Dataupdate_3.png)
 
 ## Order of Data Updates
 

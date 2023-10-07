@@ -41,7 +41,7 @@ A prominent feature of ticketing services is the periodic spikes in ticket order
 
 The building blocks of this architecture are simple. You only need Apache Flink and Apache Kafka for data ingestion, and Apache Doris as an analytic data warehouse. 
 
-![simple-data-architecture-with-Apache-Doris](../static/images/Poly_1.png)
+![](../static/images/Poly_1.png)
 
 Connecting data sources to the data warehouse is simple, too. The key component, Apache Doris, supports various data loading methods to fit with different data sources. You can perform column mapping, transforming, and filtering during data loading to avoid duplicate collection of data. To ingest a table, users only need to add the table name to the configurations, instead of writing a script themselves. 
 
@@ -53,7 +53,7 @@ Flink CDC was found to be the optimal choice if you are looking for higher stabi
 - Create two CDC jobs in Flink, one to capture the changed data (the Forward stream), the other to update the table management configurations (the Broadcast stream).
 - Configure all tables of the source database at the Sink end (the output end of Flink CDC). When there is newly added table in the source database, the Broadcast stream will be triggered to update the table management configurations. (You just need to configure the tables, instead of "creating" the tables.)
 
-![configure-Flink-CDC](../static/images/Poly_2.png)
+![](../static/images/Poly_2.png)
 
 ## Layering of Data Warehouse
 
@@ -76,7 +76,7 @@ Like many non-tech business, the ticketing service provider needs a data warehou
 - **Data Analysis**: This involves data such as membership orders, attendance rates, and user portraits.
 - **Dashboarding**: This is to visually display sales data.
 
-![Real-Time-Data-Warehouse-and-Reporting](../static/images/Poly_3.png)
+![](../static/images/Poly_3.png)
 
 These are all entry-level tasks in data analytics. One of the biggest burdens for the data engineers was to quickly develop new reports as the internal analysts required. The [Aggregate Key Model](https://doris.apache.org/docs/dev/data-table/data-model#aggregate-model) of Apache Doris is designed for this. 
 

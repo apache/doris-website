@@ -50,7 +50,7 @@ User segmentation is when analysts pick out a group of website users that share 
 
 We realize that instead of executing set operations on one big dataset, we can divide our dataset into smaller ones, execute set operations on each of them, and then merge all the results. In this way, each small dataset is computed by one thread/queue. Then we have a queue to do the final merging. It's simple distributed computing thinking.
 
-![distributed-computing-in-database](../static/images/Zhihu_1.png)
+![](../static/images/Zhihu_1.png)
 
 Example:
 
@@ -65,17 +65,17 @@ The problem here is, since user tags are randomly distributed across various mac
 
 This is enabled by the Colocate mechanism of Apache Doris. The idea of Colocate is to place data chunks that are often accessed together onto the same node, so as to reduce cross-node data transfer and thus, get lower latency.
 
-![colocate-mechanism](../static/images/Zhihu_2.png)
+![](../static/images/Zhihu_2.png)
 
 The implementation is simple: Bind one group key to one machine. Then naturally, data corresponding to that group key will be pre-bound to that machine. 
 
 The following is the query plan before we adopted Collocate: It is complicated, with a lot of data shuffling.
 
-![complicated-data-shuffling](../static/images/Zhihu_3.png)
+![](../static/images/Zhihu_3.png)
 
 This is the query plan after. It is much simpler, which is why queries are much faster and less costly.
 
-![simpler-query-plan-after-colocation-join](../static/images/Zhihu_4.png)
+![](../static/images/Zhihu_4.png)
 
 ### 3.Merge the operators
 
@@ -89,7 +89,7 @@ orthogonal_bitmap_union_count==bitmap_and(bitmap1,bitmap_and(bitmap2,bitmap3)
 
 Query execution with one compound function is much faster than that with a chain of simple functions, as you can tell from the lengths of the flow charts:
 
-![operator-merging](../static/images/Zhihu_5.png)
+![](../static/images/Zhihu_5.png)
 
 - **Multiple Simple functions**: This involves three function executions and two intermediate storage. It's a long and slow process.
 - **One compound function**: Simple in and out.
@@ -102,11 +102,11 @@ This is about putting the right workload on the right component. Apache Doris su
 
 In offline data ingestion, we used to perform most computation in Apache Hive, write the data files to HDFS, and pull data regularly from HDFS to Apache Doris. However, after Doris obtains parquet files from HDFS, it performs a series of operations on them before it can turn them into segment files: decompressing, bucketing, sorting, aggregating, and compressing. These workloads will be borne by Doris backends, which have to undertake a few bitmap operations at the same time. So there is a huge pressure on the CPU. 
 
-![Broker-Load](../static/images/Zhihu_6.png)
+![](../static/images/Zhihu_6.png)
 
 So we decided on the Spark Load method. It allows us to split the ingestion process into two parts: computation and storage, so we can move all the bucketing, sorting, aggregating, and compressing to Spark clusters. Then Spark writes the output to HDFS, from which Doris pulls data and flushes it to the local disks.
 
-![Spark-Load](../static/images/Zhihu_7.png)
+![](../static/images/Zhihu_7.png)
 
 When ingesting 1.2 TB data (that's 110 billion rows), the Spark Load method only took 55 minutes. 
 
@@ -126,7 +126,7 @@ They compared query response time before and after the vectorization in seven of
 
 The results are as below:
 
-![performance-after-vectorization](../static/images/Zhihu_8.png)
+![](../static/images/Zhihu_8.png)
 
 ## Conclusion
 
