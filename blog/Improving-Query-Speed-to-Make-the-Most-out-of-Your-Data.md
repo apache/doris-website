@@ -29,7 +29,7 @@ under the License.
 
 > Author: Junfei Liu, Senior Architect of Duyansoft
 
-![](../static/images/Duyansoft/Duyansoft.png)
+![Duyansoft-use-case-of-Apache-Doris](../static/images/Duyansoft/Duyansoft.png)
 
 The world is getting more and more value out of data, as exemplified by the currently much-talked-about ChatGPT, which I believe is a robotic data analyst. However, in today’s era, what’s more important than the data itself is the ability to locate your wanted information among all the overflowing data quickly. So in this article, I will talk about how I improved overall data processing efficiency by optimizing the choice and usage of data warehouses.
 
@@ -37,13 +37,13 @@ The world is getting more and more value out of data, as exemplified by the curr
 
 The choice of data warehouses was never high on my worry list until 2021. I have been working as a data engineer for a Fintech SaaS provider since its incorporation in 2014. In the company’s infancy, we didn’t have too much data to juggle. We only needed a simple tool for OLTP and business reporting, and the traditional databases would cut the mustard.
 
-![](../static/images/Duyansoft/Duyan_1.png)
+![data-processing-pipeline-Duyansoft](../static/images/Duyansoft/Duyan_1.png)
 
 But as the company grew, the data we received became overwhelmingly large in volume and increasingly diversified in sources. Every day, we had tons of user accounts logging in and sending myriads of requests. It was like collecting water from a thousand taps to put out a million scattered pieces of fire in a building, except that you must bring the exact amount of water needed for each fire spot. Also, we got more and more emails from our colleagues asking if we could make data analysis easier for them. That’s when the company assembled a big data team to tackle the beast.
 
 The first thing we did was to revolutionize our data processing architecture. We used DataHub to collect all our transactional or log data and ingest it into an offline data warehouse for data processing (analyzing, computing. etc.). Then the results would be exported to MySQL and then forwarded to QuickBI to display the reports visually. We also replaced MongoDB with a real-time data warehouse for business queries.
 
-![](../static/images/Duyansoft/Duyan_2.png)
+![Data-ingestion-ETL-ELT-application](../static/images/Duyansoft/Duyan_2.png)
 
 This new architecture worked, but there remained a few pebbles in our shoes:
 
@@ -61,7 +61,7 @@ To begin with, we tried to move the largest tables from MySQL to [Apache Doris](
 
 As for now, we are using two Doris clusters: one to handle point queries (high QPS) from our users and the other for internal ad-hoc queries and reporting. As a result, users have reported smoother experience and we can provide more features that are used to be bottlenecked by slow query execution. Moving our dimension tables to Doris also brought less data errors and higher development efficiency.
 
-![](../static/images/Duyansoft/Duyan_3.png)
+![Data-ingestion-ETL-ELT-Doris-application](../static/images/Duyansoft/Duyan_3.png)
 
 Both the FE and BE processes of Doris can be scaled out, so tens of PBs of data stored in hundreds of devices can be put into one single cluster. In addition, the two types of processes implement a consistency protocol to ensure service availability and data reliability. This removes dependency on Hadoop and thus saves us the cost of deploying Hadoop clusters.
 
@@ -89,11 +89,11 @@ In addition to the various monitoring metrics of Doris, we deployed an audit log
 
 Slow SQL queries:
 
-![](../static/images/Duyansoft/Duyan_4.png)
+![slow-SQL-queries-monitoring](../static/images/Duyansoft/Duyan_4.png)
 
 Some of our often-used monitoring metrics:
 
-![](../static/images/Duyansoft/Duyan_5.png)
+![monitoring-metrics](../static/images/Duyansoft/Duyan_5.png)
 
 **Tradeoff Between Resource Usage and Real-Time Availability:**
 
