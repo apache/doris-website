@@ -76,7 +76,7 @@ create table doris_audit_db__.doris_audit_log_tbl__
     return_rows bigint comment "Returned rows of this query",
     stmt_id int comment "An incremental id of statement",
     is_query tinyint comment "Is this statemt a query. 1 or 0",
-    frontend_ip varchar(32) comment "Frontend ip of executing this statement",
+    frontend_ip varchar(256) comment "Frontend ip of executing this statement",
     cpu_time_ms bigint comment "Total scan cpu time in millisecond of this query",
     sql_hash varchar(48) comment "Hash value for this query",
     sql_digest varchar(48) comment "Sql digest for this query",
@@ -112,7 +112,7 @@ create table doris_audit_db__.doris_slow_log_tbl__
     return_rows bigint comment "Returned rows of this query",
     stmt_id int comment "An incremental id of statement",
     is_query tinyint comment "Is this statemt a query. 1 or 0",
-    frontend_ip varchar(32) comment "Frontend ip of executing this statement",
+    frontend_ip varchar(256) comment "Frontend ip of executing this statement",
     cpu_time_ms bigint comment "Total scan cpu time in millisecond of this query",
     sql_hash varchar(48) comment "Hash value for this query",
     sql_digest varchar(48) comment "Sql digest for this query",
@@ -136,6 +136,14 @@ properties(
 >**注意**
 >
 > 上面表结构中：stmt string ，这个只能在0.15及之后版本中使用，之前版本，字段类型使用varchar
+>
+> 在启用FQDN后，由于frontend_ip会填入FQDN，需要扩展frontend_ip字段的长度；
+>
+> 对于已经启用审计日志，可以修改列长度
+>```
+>ALTER TABLE doris_audit_log_tbl__ MODIFY COLUMN frontend_ip varchar(256) comment "Frontend ip of executing this statement";
+>ALTER TABLE doris_slow_log_tbl__ MODIFY COLUMN frontend_ip varchar(256) comment "Frontend ip of executing this statement";
+>```
 
 其中 `dynamic_partition` 属性根据自己的需要，选择审计日志保留的天数。
 
