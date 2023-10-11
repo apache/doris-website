@@ -28,7 +28,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Six months ago, I wrote about [why we replaced ClickHouse with Apache Doris as an OLAP engine](https://doris.apache.org/blog/Tencent%20Music/) for our data management system. Back then, we were struggling with the auto-generation of SQL statements. As days pass, we have made progresses big enough to be references for you (I think), so here I am again. 
+Six months ago, I wrote about [why we replaced ClickHouse with Apache Doris as an OLAP engine](https://doris.apache.org/blog/Tencent-Data-Engineers-Why-We-Went-from-ClickHouse-to-Apache-Doris) for our data management system. Back then, we were struggling with the auto-generation of SQL statements. As days pass, we have made progresses big enough to be references for you (I think), so here I am again. 
 
 We have adopted Large Language Models (LLM) to empower our Doris-based OLAP services.
 
