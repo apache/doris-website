@@ -46,7 +46,7 @@ To speed up the highly concurrent point queries, you can create [Materialized Vi
 
 To facilitate queries on large tables, you can leverage the [Colocation Join](https://doris.apache.org/docs/dev/query-acceleration/join-optimization/colocation-join/) mechanism. Colocation Join minimizes data transfer between computation nodes to reduce overheads brought by data movement. Thus, it can largely improve query speed when joining large tables.
 
-![](../static/images/Xingyun_1.png)
+![colocation-join](../static/images/Xingyun_1.png)
 
 ## Log Analysis
 
@@ -54,7 +54,7 @@ Log analysis is important in financial data processing. Real-time processing and
 
 Retrieval is a major part of log analysis, so [Apache Doris 2.0](https://doris.apache.org/docs/dev/releasenotes/release-2.0.0) supports inverted index, which is a way to accelerate text searching and equivalence/range queries on numerics and datetime. It allows users to quickly locate the log record that they need among the massive data. The JSON storage feature in Apache Doris is reported to reduce storage costs of user activity logs by 70%, and the variety of parse functions provided can save data engineers from developing their own SQl functions. 
 
-![](../static/images/Xingyun_2.png)
+![log-analysis](../static/images/Xingyun_2.png)
 
 ## Easy Maintenance
 
@@ -64,4 +64,4 @@ In addition to the easy deployment, Apache Doris has a few mechanisms that are d
 
 This is overall data architecture in the case. The user utilizes Apache Flume for log data collection, and DataX for data update. Data from multiple sources will be collected into Apache Doris to form a data mart, from which analysts extract information to generate reports and dashboards for reference in risk control and business decisions. As for stability of the data mart itself, Grafana and Prometheus are used to monitor memory usage, compaction score and query response time of Apache Doris to make sure it is running well.
 
-![](../static/images/Xingyun_3.png)
+![data-architecture](../static/images/Xingyun_3.png)

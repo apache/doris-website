@@ -1,18 +1,18 @@
 export const NEWSLETTER_DATA = [
     {
         tag: 'Best Practice',
-        title: 'For Entry-Level Data Engineers: How to Build a Simple but Solid Data Architecture',
-        to: '/blog/Poly',
+        title: 'LLM-Powered OLAP: the Tencent Experience with Apache Doris',
+        to: '/blog/Tencent-LLM',
     },
     {
         tag: 'Release Notes',
-        title: 'Apache Doris Announced the Official Release of Version 2.0.1 ! ',
-        to: '/docs/dev/releasenotes/release-2.0.1',
+        title: 'Apache Doris Announced the Official Release of Version 2.0.2 ! ',
+        to: 'https://github.com/apache/doris/issues/25011',
         hot: true,
     },
     {
         tag: 'Tech Sharing',
-        title: 'Is Your Latest Data Really the Latest? Check the Data Update Mechanism of Your Database',
-        to: '/blog/Data_Update',
+        title: 'Auto-Synchronization of an Entire MySQL Database for Data Analysis',
+        to: '/blog/FDC',
     },
 ];

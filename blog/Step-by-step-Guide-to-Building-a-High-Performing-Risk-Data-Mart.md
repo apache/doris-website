@@ -39,7 +39,7 @@ I will walk you through how the risk data mart works following the data flow:
 
 So these are the three data sources of our risk data mart.
 
-![](../static/images/RDM_1.png)
+![risk-data-mart](../static/images/RDM_1.png)
 
 This whole architecture is built with CDH 6.0. The workflows in it can be divided into real-time data streaming and offline risk analysis.
 
@@ -48,7 +48,7 @@ This whole architecture is built with CDH 6.0. The workflows in it can be divide
 
 To give a brief overview, these are the components that support the four features of our data processing platform:
 
-![](../static/images/RDM_2.png)
+![features-of-a-data-processing-platform](../static/images/RDM_2.png)
 
 As you see, Apache Hive is central to this architecture. But in practice, it takes minutes for Apache Hive to execute analysis, so our next step is to increase query speed.
 
@@ -72,7 +72,7 @@ In addition, since our risk control analysts and modeling engineers are using Hi
 
 We wanted a unified gateway to manage our heterogenous data sources. That's why we introduced Apache Doris.
 
-![](../static/images/RDM_3.png)
+![unified-query-gateway](../static/images/RDM_3.png)
 
 But doesn't that make things even more complicated? Actually, no.
 
@@ -80,7 +80,7 @@ We can connect various data sources to Apache Doris and simply conduct queries o
 
 We create Elasticsearch Catalog and Hive Catalog in Apache Doris. These catalogs map to the external data in Elasticsearch and Hive, so we can conduct federated queries across these data sources using Apache Doris as a unified gateway. Also, we use the [Spark-Doris-Connector](https://github.com/apache/doris-spark-connector) to allow data communication between Spark and Doris. So basically, we replace Apache Hive with Apache Doris as the central hub of our data architecture. 
 
-![](../static/images/RDM_4.png)
+![Apache-Doris-as-center-of-data-architecture](../static/images/RDM_4.png)
 
 How does that affect our data processing efficiency?
 
@@ -101,7 +101,7 @@ Backup cluster: 4 frontends + 4 backends, m5d.16xlarge
 
 This is the monitoring board: 
 
-![](../static/images/RDM_5.png)
+![cluster-monitoring-board](../static/images/RDM_5.png)
 
 As is shown, the queries are fast. We expected that it would take at least 10 nodes but in real cases, we mainly conduct queries via Catalogs, so we can handle this with a relatively small cluster size. The compatibility is good, too. It doesn't rock the rest of our existing system.
 
@@ -109,7 +109,7 @@ As is shown, the queries are fast. We expected that it would take at least 10 no
 
 To accelerate the regular data ingestion from Hive to Apache Doris 1.2.2, we have a solution that goes as follows:
 
-![](../static/images/RDM_6.png)
+![faster-data-integration](../static/images/RDM_6.png)
 
 **Main components:**
 
@@ -197,7 +197,7 @@ group by product_no;
 
 **After**: For data synchronization, we call Spark on YARN using SeaTunnel. It can be finished within 11 minutes (100 million pieces per minute ), and the ingested data only takes up **378G** of storage space.
 
-![](../static/images/RDM_7.png)
+![faster-data-ingestion](../static/images/RDM_7.png)
 
 ## Summary
 
