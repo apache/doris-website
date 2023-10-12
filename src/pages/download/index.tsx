@@ -235,7 +235,7 @@ export default function Download(): JSX.Element {
                                             checked: downloadWay === 'all-in-one',
                                         })}
                                     >
-                                        <span>{currentLocale === 'zh-CN' ? '二进制' : 'Binary'}</span>
+                                        <span>Binary</span>
                                     </div>
 
                                     <div
@@ -244,7 +244,7 @@ export default function Download(): JSX.Element {
                                             checked: downloadWay === 'download',
                                         })}
                                     >
-                                        <span>{currentLocale === 'zh-CN' ? '源码' : 'Source'}</span>
+                                        <span>Source</span>
                                     </div>
                                 </div>
                             </div>
@@ -279,40 +279,17 @@ export default function Download(): JSX.Element {
                                 {version === VersionEnum.Latest && (
                                     <div className="tips">
                                         <div className="title">
-                                            <Translate id="Notice">Notice</Translate>
-                                            {currentLocale === 'zh-CN' ? '：' : ':'}
+                                            <Translate id="Notice">Notice:</Translate>
                                         </div>
-                                        {currentLocale === 'zh-CN' ? (
-                                            <div className="notice-text">
-                                                详细升级注意事项请参考
-                                                <Link to="https://github.com/apache/doris/issues/25011">
-                                                    2.0.2 Release Note
-                                                </Link>
-                                                以及
-                                                <Link to="/docs/dev/install/standard-deployment">
-                                                    <Translate id="Installation and deployment">
-                                                        Installation and deployment
-                                                    </Translate>
-                                                </Link>
-                                                以及
-                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
-                                                    <Translate id="Cluster Upgrade">Cluster Upgrade</Translate>
-                                                </Link>
-                                                手册。
-                                            </div>
-                                        ) : (
-                                            <div className="notice-text">
-                                                For detailed upgrade precautions, please refer to the{' '}
-                                                <Link to="https://github.com/apache/doris/issues/25011">2.0.2</Link>
-                                                and the
-                                                <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
-                                                cluster
-                                                <Link to="/docs/dev/admin-manual/cluster-management/upgrade">
-                                                    upgrade
-                                                </Link>
-                                                manual.
-                                            </div>
-                                        )}
+                                        <div className="notice-text">
+                                            For detailed upgrade precautions, please refer to the
+                                            <Link to="https://github.com/apache/doris/issues/25011">2.0.2</Link>
+                                            and the
+                                            <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
+                                            cluster
+                                            <Link to="/docs/dev/admin-manual/cluster-management/upgrade">upgrade</Link>
+                                            manual.
+                                        </div>
                                     </div>
                                 )}
                             </div>
