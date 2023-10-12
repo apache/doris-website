@@ -13,7 +13,7 @@ export const NEWSLETTER_DATA = [
     },
     {
         tag: 'Tech Sharing',
-        title: 'Auto-Synchronization of an Entire MySQL Database for Data Analysis',
-        to: '/blog/FDC',
+        title: 'Log Analysis: How to Digest 15 Billion Logs Per Day and Keep Big Queries Within 1 Second',
+        to: '/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second',
     },
 ];
