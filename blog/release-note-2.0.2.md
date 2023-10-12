@@ -27,6 +27,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Thanks to our community users and developers, 489 improvements and bug fixes have been made in Doris 2.0.2.
+
 ## Behavior Changes
 
 - [[Fix](Planner) remove json -> operator convert to json_extract #24679](https://github.com/apache/doris/pull/24679) remove json '->' operator since it is conflicted with lambda function syntax. It's a syntax sugar for function json_extract and can be replaced with the former.
