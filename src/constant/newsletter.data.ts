@@ -2,7 +2,7 @@ export const NEWSLETTER_DATA = [
     {
         tag: 'Release Notes',
         title: 'Apache Doris Announced the Official Release of Version 2.0.2 ! ',
-        to: 'https://github.com/apache/doris/issues/25011',
+        to: 'https://doris.apache.org/blog/release-2.0.2',
         
     },
     {
@@ -13,7 +13,7 @@ export const NEWSLETTER_DATA = [
     },
     {
         tag: 'Best Practice',
-        title: 'Log Analysis: How to Digest 15 Billion Logs Per Day and Keep Big Queries Within 1 Second',
-        to: '/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second',
+        title: 'Migrating from ClickHouse to Apache Doris: What Happened?',
+        to: '/blog/migrating-from-clickhouse-to-apache-doris-what-happened',
     },
 ];
