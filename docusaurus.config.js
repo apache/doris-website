@@ -128,15 +128,20 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    lastVersion: 'current',
+                    lastVersion: '2.0',
                     versions: {
                         1.2: {
+                            banner: 'none',
+                            badge: false,
+                        },
+                        "2.0": {
                             banner: 'none',
                             badge: false,
                         },
                         current: {
                             label: 'dev',
                             path: 'dev',
+                            banner: 'unreleased',
                             badge: false,
                         },
                     },
