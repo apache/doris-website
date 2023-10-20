@@ -15,18 +15,18 @@ function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
             sidebar: { hideable },
         },
     } = useThemeConfig();
-    const hasLearningPath = path.includes('/docs')
+    const hasLearningPath = path.includes('/docs');
     return (
         <div className={clsx('sidebar', hideOnScroll && 'sidebar-with-hideable-navbar', isHidden && 'sidebar-hidden')}>
             {hideOnScroll && <Logo tabIndex={-1} className="sidebar-logo" />}
             <div className="doc-search">
                 <SearchBar />
             </div>
-            {hasLearningPath && <Link to="/learning" className="learning-path">
+            {/* {hasLearningPath && <Link to="/learning" className="learning-path">
                 <Translate id="sitemap.page.title" description="">
                     Learning Path
                 </Translate>
-            </Link>}
+            </Link>} */}
             <Content path={path} sidebar={sidebar} />
             {hideable && <CollapseButton onClick={onCollapse} />}
         </div>

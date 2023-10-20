@@ -212,16 +212,11 @@ const config = {
                         type: 'dropdown',
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/dev/get-starting/what-is-apache-doris',
+                        to: '/docs/get-starting',
                         items: [
                             {
-                                label: 'Learning Path',
-                                to: '/learning',
-                                align: 'left',
-                            },
-                            {
                                 label: 'Getting Started',
-                                to: '/docs/get-starting/quick-start',
+                                to: '/docs/get-starting',
                                 align: 'left',
                             },
                             {
