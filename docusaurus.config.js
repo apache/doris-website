@@ -221,17 +221,17 @@ const config = {
                             },
                             {
                                 label: 'Getting Started',
-                                to: '/docs/dev/get-starting/quick-start',
+                                to: '/docs/get-starting/quick-start',
                                 align: 'left',
                             },
                             {
                                 label: 'Install and Deploy',
-                                to: '/docs/dev/install/standard-deployment',
+                                to: '/docs/install/standard-deployment',
                                 align: 'left',
                             },
                             {
                                 label: 'FAQ',
-                                to: '/docs/dev/faq/install-faq',
+                                to: '/docs/faq/install-faq',
                                 align: 'left',
                             },
                             // {
