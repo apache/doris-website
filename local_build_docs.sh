@@ -31,6 +31,7 @@ rm -rf doris
 git clone --branch master https://github.com/apache/doris.git --depth 1
 mkdir -p docs
 cp -R doris/docs/en/docs/* docs/
+rm -rf sidebars.json
 cp -R doris/docs/sidebars.json sidebars.json
 mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/current
 cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/current/
@@ -38,6 +39,7 @@ cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/current.json
 
 mkdir -p community
 cp -R doris/docs/en/community/* community/
+rm -rf sidebarsCommunity.json
 mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
 cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
 cp -R doris/docs/sidebarsCommunity.json .
@@ -50,6 +52,7 @@ rm -rf doris
 # clone docs version 1.2
 git clone --branch branch-1.2-lts https://github.com/apache/doris.git --depth 1
 mkdir -p docs
+rm -rf versioned_docs/version-1.2
 mkdir -p versioned_docs/version-1.2
 cp -R doris/docs/en/docs/* versioned_docs/version-1.2/
 rm -rf versioned_sidebars/version-1.2-sidebars.json
@@ -59,6 +62,22 @@ rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
 mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
 cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2/
 cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
+
+rm -rf doris
+
+# clone docs version 2.0
+git clone --branch branch-2.0 https://github.com/apache/doris.git --depth 1
+mkdir -p docs
+rm -rf versioned_docs/version-2.0
+mkdir -p versioned_docs/version-2.0
+cp -R doris/docs/en/docs/* versioned_docs/version-2.0/
+rm -rf versioned_sidebars/version-2.0-sidebars.json
+cp -R doris/docs/sidebars.json versioned_sidebars/version-2.0-sidebars.json
+rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.json
+rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0/
+cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.json
 
 rm -rf doris
 
