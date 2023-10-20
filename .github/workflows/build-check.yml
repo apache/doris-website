@@ -97,6 +97,7 @@ jobs:
         rm -rf doris
         npm install -g yarn
         yarn cache clean
+        export NODE_OPTIONS=--max-old-space-size=8192
         yarn && yarn build
 
         rm -rf build
