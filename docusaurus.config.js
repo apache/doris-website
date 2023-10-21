@@ -3,6 +3,31 @@ const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const lightCodeTheme = themes.dracula;
+const VERSIONS = require('./versions.json');
+
+function getDocsVersions() {
+    const result = {}
+    VERSIONS.map(version => {
+        if (version === "current") {
+            result[version] =  {
+                label: 'dev',
+                path: 'dev',
+                banner: 'unreleased',
+                badge: false,
+            } 
+        } else {
+            result[version] = {
+                banner: 'none',
+                badge: false,
+            }
+        }
+    })
+    return result;
+}
+
+function getLatestVersion() {
+    return VERSIONS.includes('2.0') ? '2.0' : VERSIONS[0]
+}
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -128,23 +153,8 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    lastVersion: '2.0',
-                    versions: {
-                        1.2: {
-                            banner: 'none',
-                            badge: false,
-                        },
-                        "2.0": {
-                            banner: 'none',
-                            badge: false,
-                        },
-                        current: {
-                            label: 'dev',
-                            path: 'dev',
-                            banner: 'unreleased',
-                            badge: false,
-                        },
-                    },
+                    lastVersion: getLatestVersion(),
+                    versions: getDocsVersions(),
                     sidebarPath: require.resolve('./sidebars.json'),
                     editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                         if (versionDocsDirPath === 'versioned_docs/version-dev') {
