@@ -200,15 +200,13 @@ const config = {
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             announcementBar: {
-                id: 'doris-summit2023',
-                content: `<a href="https://doris-summit.org.cn/?utm_source=doris&utm_medium=website&utm_id=2023" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Doris Summit Asia 2023 is Coming and Warmly Invite You to Join ! Click Now
-                </a>`,
-                // content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you like Apache Doris？Give us a 🌟 on GitHub 
-                //         <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
-                //     </a>`,
+                id: 'support_us',
+                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you like Apache Doris？Give us a 🌟 on GitHub 
+                        <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
+                    </a>`,
                 backgroundColor: '#3C2FD4',
                 textColor: '#FFFFFF',
-                isCloseable: false,
+                // isCloseable: false,
             },
             navbar: {
                 title: '',
