@@ -13,7 +13,7 @@ export const NEWSLETTER_DATA = [
     },
     {
         tag: 'Top News',
-        title: 'Doris Summit Asia 2023 ended triumphantly, let's delve into the highlights!',
+        title: `Doris Summit Asia 2023 ended triumphantly, let's delve into the highlights!`,
         to: 'https://doris-summit.org.cn/?utm_source=doris&utm_medium=website&utm_id=2023',
     },
 ];
