@@ -143,6 +143,10 @@ const config = {
                         from: '/docs/dev/summary/basic-summary',
                         to: '/docs/dev/get-starting/quick-start',
                     },
+                    {
+                        from: '/docs/dev/get-starting',
+                        to: '/docs/dev/get-starting/quick-start',
+                    },
                 ],
             },
         ],
@@ -220,11 +224,11 @@ const config = {
                         type: 'dropdown',
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/get-starting',
+                        to: '/docs/get-starting/quick-start',
                         items: [
                             {
                                 label: 'Getting Started',
-                                to: '/docs/get-starting',
+                                to: '/docs/get-starting/quick-start',
                                 align: 'left',
                             },
                             {
