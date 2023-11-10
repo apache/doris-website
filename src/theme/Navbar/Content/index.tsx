@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { splitNavbarItems, useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import NavbarItem from '@theme/NavbarItem';
@@ -37,6 +37,26 @@ export default function NavbarContent({ mobile }) {
     const items = useNavbarItems();
     const [leftItems, rightItems] = splitNavbarItems(items);
     const searchBarItem = items.find(item => item.type === 'search');
+    const [star, setStar] = useState<any>();
+    useEffect(() => {
+        getGithubStar();
+    }, []);
+
+    async function getGithubStar() {
+        const res = await fetch('https://api.github.com/repos/apache/doris');
+        const data = await res.json();
+        const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
+        setStar(starStr);
+    }
+
+    function formatStar(star) {
+        return String(star)
+            .split('')
+            .reverse()
+            .reduce((prev, next, index) => {
+                return (index % 3 ? next : next + '.') + prev;
+            });
+    }
     return (
         <NavbarContentLayout
             left={
@@ -59,7 +79,7 @@ export default function NavbarContent({ mobile }) {
                         </NavbarSearch>
                     )}
                     <span className="github-btn desktop header-right-button-github">
-                        <GitHubButton type="stargazers" size="large" namespace="apache" repo="doris" />
+                        {star && <div className="gh-count">{star}k</div>}
                     </span>
 
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
