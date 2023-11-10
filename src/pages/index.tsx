@@ -23,7 +23,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get Started</Translate>,
-            link: '/learning',
+            link: '/docs/get-starting/what-is-apache-doris',
             type: 'ghost',
         },
         {
@@ -251,7 +251,7 @@ export default function Home(): JSX.Element {
                             <Link className="start-btn download-btn" to="/download">
                                 <Translate id="homepage.start.downloadButton">Download</Translate>
                             </Link>
-                            <Link className="start-btn docs-btn" to="/learning">
+                            <Link className="start-btn docs-btn" to="/docs/get-starting/what-is-apache-doris">
                                 <Translate id="homepage.start.docsButton">Go to Docs</Translate>
                             </Link>
                         </div>
