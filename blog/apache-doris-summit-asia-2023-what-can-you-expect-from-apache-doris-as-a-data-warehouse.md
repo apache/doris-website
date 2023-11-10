@@ -48,7 +48,7 @@ We have built Apache Doris into more than just a powerful OLAP engine but also a
 
 Apache Doris has become one of the world's most active open-source big data projects in all aspects:
 
-- It has hit **10K stars** on [GitHubs](https://github.com/apache/doris/), a year-on-year growth of 70%, and the momentum keeps going.
+- It has hit **10K stars** on [GitHub](https://github.com/apache/doris/), a year-on-year growth of 70%, and the momentum keeps going.
 - The community has included almost 600 contributors and welcomes new faces every week.
 - With **120 monthly active contributors**, Apache Doris has become a more active project than Apache Spark, Elasticsearch, Trino, and Apache Druid.
 - Over **160 pull requests** are created every week. Meanwhile, we have established a mature code review pipeline, making sure that every pull request stands the test of 3000 use cases. This is how we guarantee stability in the midst of agile iteration.
