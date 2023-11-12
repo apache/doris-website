@@ -10,7 +10,6 @@ import NavbarSearch from '@theme/Navbar/Search';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
-import GitHubButton from 'react-github-button';
 function useNavbarItems() {
     // TODO temporary casting until ThemeConfig type is improved
     return useThemeConfig().navbar.items;
@@ -78,9 +77,13 @@ export default function NavbarContent({ mobile }) {
                             <SearchBar />
                         </NavbarSearch>
                     )}
-                    <span className="github-btn desktop header-right-button-github">
+                    <Link
+                        className="github-btn desktop header-right-button-github"
+                        href="https:/github.com/apache/doris"
+                        target="_blank"
+                    >
                         {star && <div className="gh-count">{star}k</div>}
-                    </span>
+                    </Link>
 
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">Download</Translate>
