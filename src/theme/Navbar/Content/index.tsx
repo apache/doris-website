@@ -79,7 +79,7 @@ export default function NavbarContent({ mobile }) {
                     )}
                     <Link
                         className="github-btn desktop header-right-button-github"
-                        href="https:/github.com/apache/doris"
+                        href="https://github.com/apache/doris"
                         target="_blank"
                     >
                         {star && <div className="gh-count">{star}k</div>}
