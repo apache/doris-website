@@ -175,7 +175,7 @@ export default function Home(): JSX.Element {
                     }
                     footer={
                         <More
-                            link="docs/dev/get-starting/what-is-apache-doris"
+                            link="docs/get-starting/what-is-apache-doris"
                             text={
                                 <Translate id="homepage.more" description="more link">
                                     More
