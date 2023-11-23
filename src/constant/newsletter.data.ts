@@ -6,14 +6,14 @@ export const NEWSLETTER_DATA = [
         
     },
     {
-        tag: 'Top News',
-        title: `Apache Doris Summit Asia 2023: What Can You Expect From Apache Doris as a Data Warehouse?`,
-        to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
+        tag: 'Best Practice',
+        title: 'Less Components, Higher Performance: Apache Doris Instead of ClickHouse, MySQL, Presto, and HBase',
+        to: '/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase',
         hot: true,
     },
     {
-        tag: 'Best Practice',
-        title: 'Data Analysis for Live Streaming: What Happens in Real Time is Analyzed in Real Time',
-        to: '/blog/data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time',
+        tag: 'Top News',
+        title: `Apache Doris Summit Asia 2023: What Can You Expect From Apache Doris as a Data Warehouse?`,
+        to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
     },
 ];
