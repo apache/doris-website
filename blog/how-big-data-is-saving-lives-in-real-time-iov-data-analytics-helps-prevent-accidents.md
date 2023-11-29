@@ -86,7 +86,7 @@ In Kafka, CAN data was arranged by the dimension of CAN ID. However, for the sak
 
 In Apache Doris, all they need is to build the tables with the [Aggregate Key model](https://doris.apache.org/docs/data-table/data-model#aggregate-model), specify VIN (Vehicle Identification Number) and timestamp as the Aggregate Key, and define other data fields by `REPLACE_IF_NOT_NULL`. With Doris, they don't have to take care of the SQL statements or the flat table, but are able to extract real-time insights from real-time data.
 
-![IoV-CAN-data](../static/images/IoV-CAN-data.png)
+![IoV-CAN-data](../static/images/IoV-CAN-data.jpeg)
 
 ### 2. DTC data query
 
