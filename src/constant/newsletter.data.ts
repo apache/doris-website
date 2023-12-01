@@ -14,5 +14,5 @@ export const NEWSLETTER_DATA = [
         tag: 'Top News',
         title: `Apache Doris Summit Asia 2023: What Can You Expect From Apache Doris as a Data Warehouse?`,
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
-        },
+    },
 ];
