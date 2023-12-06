@@ -5,10 +5,9 @@ export const NEWSLETTER_DATA = [
         to: 'https://doris.apache.org/blog/release-2.0.2',
         
     },
-    {
-        tag: 'Best Practice',
-        title: 'Less Components, Higher Performance: Apache Doris Instead of ClickHouse, MySQL, Presto, and HBase',
-        to: '/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase',
+    {   tag: 'Best Practice',
+        title: `How Big Data Is Saving Lives in Real Time: IoV Data Analytics Helps Prevent Accidents`,
+        to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
         hot: true,
     },
     {
