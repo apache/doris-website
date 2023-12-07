@@ -2,7 +2,7 @@
 {
     'title': 'Empowering cyber security by enabling 7 times faster log analysis',
     'summary': "This is about how a cyber security service provider built its log storage and analysis system (LSAS) and realized 3X data writing speed, 7X query execution speed, and visualized management.",
-    'date': '2023--12-07',
+    'date': '2023-12-07',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
 }
