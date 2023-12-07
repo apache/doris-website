@@ -28,7 +28,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: 'Slack',
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1x7x8fger-F7NoshFQn~djlvGdnEtxUQ',
+            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ',
             type: 'default',
         },
     ];
