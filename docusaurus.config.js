@@ -1,6 +1,4 @@
 const themes = require('prism-react-renderer').themes;
-const { ssrTemplate } = require('./config/ssrTemplate');
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const lightCodeTheme = themes.dracula;
 const VERSIONS = require('./versions.json');
@@ -56,8 +54,8 @@ const config = {
     },
     // scripts: ['/js/redirect.js'],
     stylesheets: [
-        'https://fonts.googleapis.com/css?family=Montserrat:500',
-        'https://fonts.googleapis.com/css?family=Noto+Sans+SC:400',
+        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin_VF:VF:Latin&display=swap',
+        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
     ],
     organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
@@ -74,7 +72,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         [
             '@docusaurus/plugin-pwa',
             {
@@ -129,23 +126,6 @@ const config = {
                         tagName: 'meta',
                         name: 'msapplication-TileColor',
                         content: '#000',
-                    },
-                ],
-            },
-        ],
-        [
-            '@docusaurus/plugin-client-redirects',
-            {
-                fromExtensions: ['html', 'htm'],
-                redirects: [
-                    // /docs/oldDoc -> /docs/newDoc
-                    {
-                        from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/dev/get-starting/quick-start',
-                    },
-                    {
-                        from: '/docs/dev/get-starting',
-                        to: '/docs/dev/get-starting/quick-start',
                     },
                 ],
             },
@@ -409,7 +389,6 @@ const config = {
             //     },
             // ],s
         }),
-    ssrTemplate,
 };
 
 module.exports = config;

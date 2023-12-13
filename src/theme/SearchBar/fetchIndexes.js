@@ -3,7 +3,7 @@ import { searchIndexUrl } from '../../utils/proxiedGenerated';
 export async function fetchIndexes(baseUrl) {
     if (process.env.NODE_ENV === 'production') {
         // const json = await (await fetch(`${baseUrl}${searchIndexUrl}`)).json();
-        const json = await (await fetch(`https://cdnd.selectdb.com${baseUrl}${searchIndexUrl}`)).json();
+        const json = await (await fetch(`${baseUrl}${searchIndexUrl}`)).json();
         const wrappedIndexes = json.map(({ documents, index }, type) => ({
             type: type,
             documents,
