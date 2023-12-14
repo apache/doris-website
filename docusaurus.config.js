@@ -212,31 +212,30 @@ const config = {
                     src: 'https://cdnd.selectdb.com/images/logo.svg',
                 },
                 items: [
-                    { to: '/', label: 'Home', position: 'left', exact: true },
+                    // { to: '/', label: 'Home', position: 'left', exact: true },
                     {
                         position: 'left',
                         label: 'Docs',
                         to: '/docs/get-starting/quick-start',
                     },
-                    { to: '/blog', label: 'Blogs', position: 'left' },
+                    { to: '/blog', label: 'Blog', position: 'left' },
+                    { to: '/users', label: 'Users', position: 'left' },
+                    {
+                        label: 'Discussions ↗',
+                        to: 'https://github.com',
+                        position: 'left',
+                    },
                     {
                         label: 'Ecosystem',
                         to: 'ecosystem',
                         position: 'left',
                         // docsPluginId: 'community',
                     },
-                    { to: '/users', label: 'User Stories', position: 'left' },
-                    {
-                        label: 'Discussions',
-                        to: 'https://github.com',
-                        position: 'left',
-                    },
-                    {
-                        label: 'Community',
-                        to: '/community/join-community',
-                        position: 'left',
-                        // docsPluginId: 'community',
-                    },
+                    // {
+                    //     label: 'Community',
+                    //     to: '/community/join-community',
+                    //     position: 'left',
+                    // },
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',

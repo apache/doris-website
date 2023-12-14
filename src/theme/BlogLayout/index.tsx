@@ -35,15 +35,7 @@ export default function BlogLayout(props) {
                 <PageHeader title="Blog" />
                 <div className="row">
                     {/* <BlogSidebar sidebar={sidebar} /> */}
-                    <main
-                        className={clsx('col', {
-                            'col--7': hasSidebar,
-                            'col--12': !hasSidebar && isBlogListPage,
-                            'col--9 col--offset-1': !hasSidebar && !isBlogListPage,
-                        })}
-                        itemScope
-                        itemType="http://schema.org/Blog"
-                    >
+                    <main itemScope itemType="http://schema.org/Blog">
                         {children}
                     </main>
                     {toc && <div className="col col--2">{toc}</div>}

@@ -63,15 +63,8 @@ function BlogListPageContent(props) {
     const { metadata, items, sidebar } = props;
     const isBrowser = useIsBrowser();
     const [blogs, setBlogs] = useState([]);
-    // console.log(props);
     const blogCategories = getBlogCategories(props);
     const ALL_BLOG = blogCategories.find(item => item.label === allText).values;
-    // const headBlogs = ALL_BLOG.find(blog => {
-    //     console.log(blog.BlogPostContent.frontMatter);
-    //     return blog.BlogPostContent.frontMatter.picked;
-    // });
-    // console.log('headBlogs');
-    // console.log(headBlogs);
 
     const { siteConfig } = useDocusaurusContext();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
