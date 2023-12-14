@@ -25,14 +25,17 @@
         "@docusaurus/preset-classic": "^2.4.1",
         "@easyops-cn/docusaurus-search-local": "^0.30.2",
         "@mdx-js/react": "^1.6.22",
+        "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
         "docusaurus-plugin-sass": "^0.2.3",
+        "postcss": "^8.4.32",
         "prism-react-renderer": "^2.0.4",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-github-button": "^0.1.11",
         "sass": "^1.63.2",
         "swiper": "^9.0.5",
+        "tailwindcss": "^3.3.6",
         "vitpress-generate-pdf": "^1.1.4"
     },
     "devDependencies": {
