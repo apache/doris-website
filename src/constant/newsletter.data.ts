@@ -6,13 +6,13 @@ export const NEWSLETTER_DATA = [
     },
     {   
         tag: 'Release Notes',
-        title: 'Apache Doris Announced the Official Release of Version 2.0.3 ! ',
+        title: 'Apache Doris 2.0.3 just released ',
         to: 'https://doris.apache.org/blog/release-note-2.0.3',
         hot: true,
     },
     {
         tag: 'Top News',
-        title: `Apache Doris Summit Asia 2023: What Can You Expect From Apache Doris as a Data Warehouse?`,
+        title: `Apache Doris Summit Asia 2023: What can you expect from Apache Doris as a data warehouse?`,
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
     },
 ];
