@@ -1,13 +1,13 @@
 export const NEWSLETTER_DATA = [
     {
+        tag: 'Best Practice',
+        title: 'Empowering cyber security by enabling 7 times faster log analysis',
+        to: 'blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis',     
+    },
+    {   
         tag: 'Release Notes',
         title: 'Apache Doris Announced the Official Release of Version 2.0.3 ! ',
-        to: 'https://github.com/apache/doris/issues/27909',
-        
-    },
-    {   tag: 'Best Practice',
-        title: `How Big Data Is Saving Lives in Real Time: IoV Data Analytics Helps Prevent Accidents`,
-        to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
+        to: 'https://doris.apache.org/blog/release-note-2.0.3',
         hot: true,
     },
     {
