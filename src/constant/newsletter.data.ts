@@ -2,8 +2,7 @@ export const NEWSLETTER_DATA = [
     {
         tag: 'Best Practice',
         title: 'Empowering cyber security by enabling 7 times faster log analysis',
-        to: 'blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis',
-        
+        to: 'blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis',     
     },
     {   
         tag: 'Release Notes',
