@@ -35,6 +35,69 @@ export function getAllDownloadLinks(locale: string) {
     const shSource = locale.toLocaleUpperCase() === 'EN' ? 'apache' : 'tsinghua';
     return [
         {
+            id: '2.0.3-intel-avx2-jdk8',
+            sh: {
+                label: 'apache-doris-2.0.3-bin-x64.tar.gz',
+                links: {
+                    source: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz`,
+                    signature: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.asc`,
+                    sha512: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.sha512`,
+                },
+            },
+            items: [
+                {
+                    label: 'apache-doris-2.0.3-src.tar.gz',
+                    links: {
+                        source: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz`,
+                        signature: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.asc`,
+                        sha512: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
+            id: '2.0.3-intel-noavx2-jdk8',
+            sh: {
+                label: 'apache-doris-2.0.3-bin-x64-noavx2.tar.gz',
+                links: {
+                    source: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz`,
+                    signature: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.asc`,
+                    sha512: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.sha512`,
+                },
+            },
+            items: [
+                {
+                    label: 'apache-doris-2.0.3-src.tar.gz',
+                    links: {
+                        source: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz`,
+                        signature: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.asc`,
+                        sha512: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
+            id: '2.0.3-arm-jdk8',
+            sh: {
+                label: 'apache-doris-2.0.3-bin-arm64.tar.gz',
+                links: {
+                    source: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz`,
+                    signature: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.asc`,
+                    sha512: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.sha512`,
+                },
+            },
+            items: [
+                {
+                    label: 'apache-doris-2.0.3-src.tar.gz',
+                    links: {
+                        source: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz`,
+                        signature: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.asc`,
+                        sha512: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.sha512`,
+                    },
+                },
+            ],
+        },
+        {
             id: '2.0.2-intel-avx2-jdk8',
             sh: {
                 label: 'apache-doris-2.0.2-bin-x64.tar.gz',
@@ -385,9 +448,31 @@ export function getAllRelease(locale: string) {
     const sources = locale.toLocaleUpperCase() === 'EN' ? ALL_RELEASE_LINK : CHINA_ALL_RELEASE_MIRROR_LINK;
     return [
         {
-            version: '2.0.2 ( Latest )',
+            version: '2.0.3 ( Latest )',
+            date: '2023-12-14',
+            note: 'https://github.com/apache/doris/issues/27909',
+            download: [
+                {
+                    cpu: 'X64 ( avx2 )',
+                    binary: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz`,
+                    source: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz`,
+                },
+                {
+                    cpu: 'X64 ( no avx2 )',
+                    binary: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz`,
+                    source: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz`,
+                },
+                {
+                    cpu: 'ARM64',
+                    binary: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz`,
+                    source: `https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz`,
+                }
+            ]
+        },
+        {
+            version: '2.0.2',
             date: '2023-10-07',
-            note: 'https://github.com/apache/doris/issues/25011',
+            note: '/docs/dev/releasenotes/release-2.0.2',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
@@ -592,7 +677,7 @@ export function getAllRelease(locale: string) {
 }
 
 export enum VersionEnum {
-    Latest = '2.0.2',
+    Latest = '2.0.3',
     Prev = '1.2.7.1',
     Earlier = '1.1.5',
 }
