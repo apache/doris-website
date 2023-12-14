@@ -450,7 +450,7 @@ export function getAllRelease(locale: string) {
         {
             version: '2.0.3 ( Latest )',
             date: '2023-12-14',
-            note: 'https://github.com/apache/doris/issues/27909',
+            note: '/docs/releasenotes/release-2.0.3/',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
