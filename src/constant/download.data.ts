@@ -492,7 +492,7 @@ export function getAllRelease(locale: string) {
             ]
         },
         {
-            version: '2.0.1.1',
+            version: '2.0.1',
             date: '2023-09-26',
             note: '/docs/dev/releasenotes/release-2.0.1',
             download: [
@@ -536,7 +536,7 @@ export function getAllRelease(locale: string) {
             ]
         },
         {
-            version: '1.2.7.1',
+            version: '1.2.7',
             date: '2023-09-04',
             note: '/docs/dev/releasenotes/release-1.2.7.1',
             download: [
@@ -678,7 +678,7 @@ export function getAllRelease(locale: string) {
 
 export enum VersionEnum {
     Latest = '2.0.3',
-    Prev = '1.2.7.1',
+    Prev = '1.2.7',
     Earlier = '1.1.5',
 }
 
