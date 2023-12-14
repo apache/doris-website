@@ -450,7 +450,7 @@ export function getAllRelease(locale: string) {
         {
             version: '2.0.3 ( Latest )',
             date: '2023-12-14',
-            note: 'https://github.com/apache/doris/issues/27909',
+            note: '/docs/releasenotes/release-2.0.3/',
             download: [
                 {
                     cpu: 'X64 ( avx2 )',
@@ -536,7 +536,7 @@ export function getAllRelease(locale: string) {
             ]
         },
         {
-            version: '1.2.7',
+            version: '1.2.7.1',
             date: '2023-09-04',
             note: '/docs/dev/releasenotes/release-1.2.7.1',
             download: [
@@ -678,7 +678,7 @@ export function getAllRelease(locale: string) {
 
 export enum VersionEnum {
     Latest = '2.0.3',
-    Prev = '1.2.7',
+    Prev = '1.2.7.1',
     Earlier = '1.1.5',
 }
 
