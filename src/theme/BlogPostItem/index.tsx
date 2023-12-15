@@ -44,7 +44,22 @@ export default function BlogPostItem(props) {
             itemType="http://schema.org/BlogPosting"
         >
             <header>
-                <TitleHeading className="blog-post-title" itemProp="headline">
+                <div className="text-center mb-4">
+                    <Link className="text-[#8592A6] cursor-pointer hover:no-underline" to="/blog">
+                        Blog
+                    </Link>
+                    <span className="px-2 text-[#8592A6]">/</span>
+                    <span>
+                        <span className="s-tags">
+                            {tags.map((tag, i) => (
+                                <span className="s-tag" key={i}>
+                                    {tag.label}
+                                </span>
+                            ))}
+                        </span>
+                    </span>
+                </div>
+                <TitleHeading className="blog-post-title text-[2.5rem] text-center" itemProp="headline">
                     {isBlogPostPage ? (
                         title
                     ) : (
@@ -53,23 +68,19 @@ export default function BlogPostItem(props) {
                         </Link>
                     )}
                 </TitleHeading>
-                <div className="blog-info">
-                    <time dateTime={date} itemProp="datePublished">
-                        {formattedDate}
-                    </time>
+                <div className="blog-info text-center flex justify-center text-sm text-black">
                     {authorsExists && (
                         <>
-                            <span className="split-line"></span>
                             <span className="authors">
                                 {authors.map((author, i) => (
-                                    <span className="s-author" key={i}>
+                                    <span className="s-author text-black" key={i}>
                                         {author.name}
                                     </span>
                                 ))}
                             </span>
                         </>
                     )}
-                    {tagsExists && (
+                    {/* {tagsExists && (
                         <>
                             <span className="split-line"></span>
                             <span className="s-tags">
@@ -80,7 +91,10 @@ export default function BlogPostItem(props) {
                                 ))}
                             </span>
                         </>
-                    )}
+                    )} */}
+                    <time dateTime={date} itemProp="datePublished" className="text-black ml-4">
+                        {formattedDate}
+                    </time>
                 </div>
             </header>
 
@@ -94,51 +108,6 @@ export default function BlogPostItem(props) {
             >
                 <MDXContent>{children}</MDXContent>
             </div>
-
-            {/* {(tagsExists || truncated) && (
-        <footer
-          className={clsx(
-            "row docusaurus-mt-lg",
-            isBlogPostPage && "blog-post-details-full"
-          )}
-        >
-          {isBlogPostPage && editUrl && (
-            <div className="col margin-top--sm">
-              <EditThisPage editUrl={editUrl} />
-            </div>
-          )}
-
-          {truncatedPost && (
-            <div
-              className={clsx("col text--right", {
-                "col--3": tagsExists,
-              })}
-            >
-              <Link
-                to={metadata.permalink}
-                aria-label={translate(
-                  {
-                    message: "Read more about {title}",
-                    id: "theme.blog.post.readMoreLabel",
-                    description:
-                      "The ARIA label for the link to full blog posts from excerpts",
-                  },
-                  { title }
-                )}
-              >
-                <b>
-                  <Translate
-                    id="theme.blog.post.readMore"
-                    description="The label used in blog post item excerpts to link to full blog posts"
-                  >
-                    Read More
-                  </Translate>
-                </b>
-              </Link>
-            </div>
-          )}
-        </footer>
-      )} */}
         </article>
     );
 }

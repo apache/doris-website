@@ -5,7 +5,9 @@
  */
 
 /* You can override the default Infima variables here. */
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import './variables';
 @import './components/sidebar';
 @import './components/breadcrumbs';
@@ -15,6 +17,3 @@
 @import './components/blog';
 @import './components/search';
 @import './common';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
