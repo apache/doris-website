@@ -283,7 +283,7 @@ export default function Download(): JSX.Element {
                                         </div>
                                         <div className="notice-text">
                                             For detailed upgrade precautions, please refer to the
-                                            <Link to="https://github.com/apache/doris/issues/25011">2.0.2</Link>
+                                            <Link to="https://github.com/apache/doris/issues/27909">2.0.3</Link>
                                             and the
                                             <Link to="/docs/dev/install/standard-deployment">deployment</Link> and
                                             cluster
