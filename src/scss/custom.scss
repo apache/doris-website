@@ -17,3 +17,15 @@
 @import './components/blog';
 @import './components/search';
 @import './common';
+
+.button-primary {
+    display: flex;
+    height: 52px;
+    padding: 15px 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 4px;
+    background: var(--b-1, #444FD9);
+    color: white;
+}
