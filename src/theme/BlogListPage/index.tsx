@@ -95,7 +95,7 @@ function BlogListPageContent(props) {
 
     return (
         <BlogLayout sidebar={sidebar} pageType="blogList">
-            <PageHeader title="Blog" />
+            <PageHeader title="Blog" {...props} />
             <HeadBlogs blogs={ALL_BLOG} />
             <div className="blog-list-wrap row">
                 <ul className="scrollbar-none mt-0 m-auto flex gap-3 overflow-scroll text-[#4C576C] lg:mt-8  lg:justify-center lg:gap-6 ">

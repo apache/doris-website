@@ -12,6 +12,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
 import usePhone from '@site/src/hooks/use-phone';
+import PageHeader from '@site/src/components/PageHeader';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
@@ -114,6 +115,15 @@ export default function Users(): JSX.Element {
                 message: 'An easy-to-use, high-performance and unified analytical database',
             })}
         >
+            <PageHeader
+                title="Start Real-Time Journey with Innovators"
+                subtitle="Over 4000 global leaders and enterprises are powered by Apache Doris."
+                extra={
+                    <div className="flex justify-center mt-5">
+                        <button className="button-primary">Share your story</button>
+                    </div>
+                }
+            />
             <section className="users-wall">
                 <PageColumn
                     align="left"
