@@ -15,3 +15,6 @@
 @import './components/blog';
 @import './components/search';
 @import './common';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

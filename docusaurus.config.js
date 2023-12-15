@@ -1,32 +1,30 @@
 const themes = require('prism-react-renderer').themes;
-const { ssrTemplate } = require('./config/ssrTemplate');
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const lightCodeTheme = themes.dracula;
 const VERSIONS = require('./versions.json');
 
 function getDocsVersions() {
-    const result = {}
+    const result = {};
     VERSIONS.map(version => {
-        if (version === "current") {
-            result[version] =  {
+        if (version === 'current') {
+            result[version] = {
                 label: 'dev',
                 path: 'dev',
                 banner: 'unreleased',
                 badge: false,
-            } 
+            };
         } else {
             result[version] = {
                 banner: 'none',
                 badge: false,
-            }
+            };
         }
-    })
+    });
     return result;
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('2.0') ? '2.0' : VERSIONS[0]
+    return VERSIONS.includes('2.0') ? '2.0' : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */
@@ -56,11 +54,13 @@ const config = {
     },
     // scripts: ['/js/redirect.js'],
     stylesheets: [
-        'https://fonts.googleapis.com/css?family=Montserrat:500',
-        'https://fonts.googleapis.com/css?family=Noto+Sans+SC:400',
+        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin_VF:VF:Latin&display=swap',
+        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
     ],
     organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
+    customFields: {
+    },
     plugins: [
         'docusaurus-plugin-sass',
         versionsPlugin,
@@ -74,7 +74,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         [
             '@docusaurus/plugin-pwa',
             {
@@ -133,23 +132,17 @@ const config = {
                 ],
             },
         ],
-        [
-            '@docusaurus/plugin-client-redirects',
-            {
-                fromExtensions: ['html', 'htm'],
-                redirects: [
-                    // /docs/oldDoc -> /docs/newDoc
-                    {
-                        from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/dev/get-starting/quick-start',
-                    },
-                    {
-                        from: '/docs/dev/get-starting',
-                        to: '/docs/dev/get-starting/quick-start',
-                    },
-                ],
-            },
-        ],
+        async function tailwindcssPlugin(context, options) {
+            return {
+                name: 'docusaurus-tailwindcss',
+                configurePostCss(postcssOptions) {
+                    // Appends TailwindCSS and AutoPrefixer.
+                    postcssOptions.plugins.push(require('tailwindcss'));
+                    postcssOptions.plugins.push(require('autoprefixer'));
+                    return postcssOptions;
+                },
+            };
+        },
     ],
     presets: [
         [
@@ -219,66 +212,30 @@ const config = {
                     src: 'https://cdnd.selectdb.com/images/logo.svg',
                 },
                 items: [
-                    { to: '/', label: 'Home', position: 'left', exact: true },
+                    // { to: '/', label: 'Home', position: 'left', exact: true },
                     {
-                        type: 'dropdown',
                         position: 'left',
                         label: 'Docs',
                         to: '/docs/get-starting/quick-start',
-                        items: [
-                            {
-                                label: 'Getting Started',
-                                to: '/docs/get-starting/quick-start',
-                                align: 'left',
-                            },
-                            {
-                                label: 'Install and Deploy',
-                                to: '/docs/install/standard-deployment',
-                                align: 'left',
-                            },
-                            {
-                                label: 'FAQ',
-                                to: '/docs/faq/install-faq',
-                                align: 'left',
-                            },
-                            // {
-                            //     label: 'More Docs',
-                            //     to: '/docs/dev/get-starting/',
-                            //     align: 'left',
-                            // }
-                        ],
                     },
-                    { to: '/blog', label: 'Blogs', position: 'left' },
+                    { to: '/blog', label: 'Blog', position: 'left' },
+                    { to: '/users', label: 'Users', position: 'left' },
                     {
-                        label: 'Community',
-                        type: 'dropdown',
-                        to: '/community/join-community',
+                        label: 'Discussions ↗',
+                        to: 'https://github.com',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Ecosystem',
+                        to: 'ecosystem',
                         position: 'left',
                         // docsPluginId: 'community',
-                        items: [
-                            {
-                                label: 'Join Community',
-                                to: '/community/join-community',
-                                align: 'left',
-                            },
-                            {
-                                label: 'Doris Team',
-                                to: '/community/team',
-                                align: 'left',
-                            },
-                            {
-                                label: 'How to Contribute',
-                                to: '/community/how-to-contribute/',
-                                align: 'left',
-                            },
-                            {
-                                label: 'Developer Guide',
-                                to: '/community/developer-guide/debug-tool',
-                                align: 'left',
-                            },
-                        ],
                     },
-                    { to: '/users', label: 'User Stories', position: 'left' },
+                    // {
+                    //     label: 'Community',
+                    //     to: '/community/join-community',
+                    //     position: 'left',
+                    // },
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
@@ -409,7 +366,6 @@ const config = {
             //     },
             // ],s
         }),
-    ssrTemplate,
 };
 
 module.exports = config;
