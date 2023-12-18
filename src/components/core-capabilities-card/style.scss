@@ -1,0 +1,36 @@
+.core-capabilities-card {
+    background-color: var(--global-colors-white);
+    padding: 2.5rem 2rem 3.375rem;
+    border-radius: 8px;
+    height: calc(100% - 3rem);
+    text-align: left;
+
+    .title {
+        font-size: 1.25rem;
+        font-weight: 400;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+    }
+
+    .content {
+        font-size: 1rem;
+        font-weight: 330;
+        line-height: 1.875;
+    }
+}
+
+.core-capabilities-icon {
+    width: 4rem;
+    height: 4rem;
+    background-color: var(--global-colors-white);
+    position: relative;
+    transform: translateY(50%);
+    border-radius: 50%;
+    left: 1.5rem;
+    svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
