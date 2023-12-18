@@ -10,7 +10,7 @@ interface ExternalLinkProps extends Props {
 export default function ExternalLink(props: ExternalLinkProps) {
     const { className = 'primary-btn', label, linkIcon = <ExternalLinkIcon />, ...rest } = props;
     return (
-        <Link {...rest} className={`external-link ${className}`}>
+        <Link {...rest} className={`flex items-center justify-center hover:no-underline external-link ${className}`}>
             {label}
             {linkIcon}
         </Link>

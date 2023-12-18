@@ -1,14 +1,14 @@
 import React from 'react';
 import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/ecomsystem-layout';
-import EcomsystemItem from '@site/src/components/ecomsystem/ecomsystem-item/ecomsystem-item';
 import ExternalLink from '@site/src/components/external-link/external-link';
+import CollapseBox from '@site/src/components/collapse-box/collapse-box';
 import '../index.scss';
 
 export default function Connectors() {
     return (
         <EcomsystemLayout>
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
-                <EcomsystemItem
+                <CollapseBox
                     title="Flink Doris Connector"
                     description="Read, insert, modify and delete data stored in Doris through Flink."
                     characteristic={[
@@ -32,7 +32,7 @@ export default function Connectors() {
                         </>
                     }
                 />
-                <EcomsystemItem
+                <CollapseBox
                     title="Spark Doris Connector"
                     description="Read data stored in Doris and write data to Doris through Spark."
                     characteristic={[
@@ -54,7 +54,7 @@ export default function Connectors() {
                         </>
                     }
                 />
-                <EcomsystemItem
+                <CollapseBox
                     title="dbt Doris Adapter"
                     description="An Extract, Load, Transform (ELT) component."
                     characteristic={[
@@ -66,7 +66,7 @@ export default function Connectors() {
                         <>
                             <ExternalLink href="https://github.com/selectdb/dbt-doris" label="Download"></ExternalLink>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/ecosystem/spark-doris-connector"
+                                href="https://doris.apache.org/docs/ecosystem/dbt-doris-adapter"
                                 className="sub-btn"
                                 label="Docs"
                             ></ExternalLink>

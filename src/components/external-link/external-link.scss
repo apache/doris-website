@@ -1,12 +1,4 @@
 .external-link {
-    display: flex;
-    height: 3rem;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1.25rem;
-    &:hover {
-        text-decoration: none;
-    }
     & + .external-link {
         margin-left: 1.5rem;
     }
@@ -19,5 +11,7 @@
         color: #fff;
         min-width: 10rem;
         border-radius: 4px;
+        padding: 0 1.25rem;
+        height: 3rem;
     }
 }

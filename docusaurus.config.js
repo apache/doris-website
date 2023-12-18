@@ -228,7 +228,7 @@ const config = {
                     },
                     {
                         label: 'Ecosystem',
-                        to: 'ecosystem/cluster-management',
+                        to: '/ecosystem/cluster-management',
                         position: 'left',
                     },
                     // {
