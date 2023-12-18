@@ -56,7 +56,7 @@ export const USERS = [
             </svg>
         ),
         category: 'Finance',
-        story: 'AWS GO GO GO!',
+        story: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”',
         to: '/blog',
     },
     {
@@ -74,7 +74,7 @@ export const USERS = [
             </svg>
         ),
         category: 'Media & Entertainment',
-        story: 'AWS GO GO GO!',
+        story: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”',
     },
     {
         name: 'VeloDB',
@@ -91,7 +91,7 @@ export const USERS = [
             </svg>
         ),
         category: 'Technology',
-        story: 'AWS GO GO GO!',
+        story: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”',
     },
     {
         name: 'SelectDB',
@@ -108,7 +108,7 @@ export const USERS = [
             </svg>
         ),
         category: 'Telecom & Manufacturing',
-        story: 'AWS GO GO GO!',
+        story: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”',
     },
     {
         name: 'SelectDB',
@@ -125,6 +125,6 @@ export const USERS = [
             </svg>
         ),
         category: 'Telecom & Manufacturing',
-        story: 'AWS GO GO GO!',
+        story: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”',
     },
 ];
