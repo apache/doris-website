@@ -8,7 +8,7 @@ function getDocsVersions() {
     VERSIONS.map(version => {
         if (version === 'current') {
             result[version] = {
-                label: 'dev',
+                label: 'Dev',
                 path: 'dev',
                 banner: 'unreleased',
                 badge: false,
@@ -43,11 +43,11 @@ const config = {
         locales: ['en', 'zh-CN'],
         localeConfigs: {
             en: {
-                label: 'EN',
+                label: 'English',
                 htmlLang: 'en-US',
             },
             'zh-CN': {
-                label: '中文',
+                label: 'Chinese',
                 htmlLang: 'zh-Hans-CN',
             },
         },
@@ -59,8 +59,7 @@ const config = {
     ],
     organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
-    customFields: {
-    },
+    customFields: {},
     plugins: [
         'docusaurus-plugin-sass',
         versionsPlugin,
@@ -237,11 +236,11 @@ const config = {
                     //     position: 'left',
                     // },
                     {
-                        type: 'docsVersionDropdown',
+                        type: 'localeDropdown',
                         position: 'right',
                     },
                     {
-                        type: 'localeDropdown',
+                        type: 'docsVersionDropdown',
                         position: 'right',
                     },
                     // {
