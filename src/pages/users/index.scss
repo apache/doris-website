@@ -19,8 +19,8 @@
     }
 
     .users-wall-list {
-        padding: 0 1rem;
-        padding-bottom: 4rem;
+        // padding: 0 1rem;
+        // padding-bottom: 4rem;
 
         .users-wall-item {
             list-style: none;
@@ -32,7 +32,9 @@
 
             img {
                 display: block;
+                width: 36.25rem;
             }
+
         }
 
         .col {
@@ -230,7 +232,7 @@ html[lang='zh-CN'] {
 
     .users-wall-list {
         flex-wrap: wrap;
-        padding: 0;
+        // padding: 0;
 
         .users-wall-item {
             flex: 0 0 33.333% !important;

@@ -4,7 +4,6 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate, { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
-import PageColumn from '@site/src/components/PageColumn';
 import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -13,11 +12,22 @@ import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
 import usePhone from '@site/src/hooks/use-phone';
 import PageHeader from '@site/src/components/PageHeader';
+import { USERS, USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
+import useIsBrowser from '@docusaurus/useIsBrowser';
+import UserItem from './user-item';
+
+const ALL_TEXT = 'ALL';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
     const userCases = userCasesEn;
     const { isPhone } = usePhone();
+    const isBrowser = useIsBrowser();
+    const [active, setActive] = useState(() => {
+        const tag = isBrowser ? sessionStorage.getItem('tag') : ALL_TEXT;
+        return tag || ALL_TEXT;
+    });
+    const [users, setUsers] = useState([]);
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
@@ -41,6 +51,15 @@ export default function Users(): JSX.Element {
             return '<span class="' + className + '"></span>';
         },
     };
+
+    function changeCategory(category: string) {
+        setActive(category);
+        let currentCategory = USER_STORIES_CATEGORIES.find(item => item === category);
+        if (!currentCategory) {
+            setActive(ALL_TEXT);
+            currentCategory = USER_STORIES_CATEGORIES.find(item => item === ALL_TEXT);
+        }
+    }
 
     function renderSwiper() {
         const modules = [Pagination];
@@ -69,33 +88,53 @@ export default function Users(): JSX.Element {
                     onSlideChange={() => console.log('slide change')}
                     onSwiper={setSwiperRef}
                 >
-                    <SwiperSlide>
-                        <div className="users-wall-list row">
-                            <img
-                                className="users-wall-img"
-                                src={require(`@site/static/images/user-logos-1.jpg`).default}
-                                alt=""
-                            />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="users-wall-list row">
-                            <img
-                                className="users-wall-img"
-                                src={require(`@site/static/images/user-logos-2.jpg`).default}
-                                alt=""
-                            />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="users-wall-list row">
-                            <img
-                                className="users-wall-img"
-                                src={require(`@site/static/images/user-logos-3.png`).default}
-                                alt=""
-                            />
-                        </div>
-                    </SwiperSlide>
+                    {USER_STORIES.map(userStory => {
+                        return (
+                            <SwiperSlide key={userStory.title}>
+                                <div className="users-wall-list row flex flex-start pb-8 lg:pb-16">
+                                    <div>
+                                        <img
+                                            className="users-wall-img"
+                                            src={`${require(`@site/static/images/${userStory.image}`).default}`}
+                                            alt="users-wall-img"
+                                        />
+                                    </div>
+                                    <div className="w-[35.75rem] ml-12 flex flex-col py-4">
+                                        <h3 className="leading-[38px] text-2xl">{userStory.title}</h3>
+                                        <p className="my-6 text-base">
+                                            <strong className="font-normal">{userStory.author.name}</strong>
+                                            <span className="ml-6 text-[#4C576C]">{userStory.author.title}</span>
+                                        </p>
+                                        <Link className="flex items-center cursor-pointer" to={userStory.to}>
+                                            <span className="text-primary mr-2">Read more</span>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="14"
+                                                viewBox="0 0 16 14"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M9.37549 12.3542L14.8755 6.85419L9.37549 1.35419"
+                                                    stroke="#444FD9"
+                                                    stroke-width="1.65"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                                <path
+                                                    d="M1.12549 6.85419L14.8755 6.85419"
+                                                    stroke="#444FD9"
+                                                    stroke-width="1.65"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        );
+                    })}
                 </Swiper>
                 {!isPhone && (
                     <div
@@ -124,56 +163,28 @@ export default function Users(): JSX.Element {
                     </div>
                 }
             />
-            <section className="users-wall">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="user.logos" description="Companies That Trust Apache Doris">
-                            Companies That Trust Apache Doris
-                        </Translate>
-                    }
-                >
-                    {renderSwiper()}
-                </PageColumn>
-            </section>
-            <section className="story">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="user.user-case" description="Companies Powerd by Apache Doris">
-                            Companies Powerd by Apache Doris
-                        </Translate>
-                    }
-                    footer={
-                        <div className="share-story">
-                            <Link to="https://github.com/apache/doris/issues/10229" className="share-button">
-                                <Translate id="user.add..your.company" description="Add Your Company">
-                                    Share Your Story
-                                </Translate>
-                            </Link>
-                        </div>
-                    }
-                >
-                    <div style={{ fontSize: 16, marginTop: '-2rem', marginBottom: '-1rem' }}>
-                        <Translate
-                            id="user.case-description"
-                            description="There are more than 2,000 companies worldwide leveraging Apache Doris to build their unified
-                            data analytical database. Some of them are listed below:"
-                        >
-                            There are more than 2,000 companies worldwide leveraging Apache Doris to build their unified
-                            data analytical database. Some of them are listed below:
-                        </Translate>
-                    </div>
-                    <div className="user-cases">
-                        {userCases &&
-                            userCases.map(item => (
-                                <div className="user-case" key={item.name}>
-                                    <h2 className="user-case-title">{item.name}</h2>
-                                    <p className="user-case-intro">{item.introduction}</p>
-                                </div>
-                            ))}
-                    </div>
-                </PageColumn>
+            <section className="users-wall container lg:pt-[88px]">{renderSwiper()}</section>
+            <section className="lg:pt-[5.5rem] container">
+                <div className="blog-list-wrap row">
+                    <ul className="scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-scroll w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
+                        {USER_STORIES_CATEGORIES.map((item: any) => (
+                            <li className="py-px" key={item} onClick={() => changeCategory(item)}>
+                                <span
+                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#0065FD] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                        active === item && 'bg-[#0065FD] text-white'
+                                    }`}
+                                >
+                                    {item}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <ul className="mt-6 grid gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
+                    {USERS.map(user => (
+                        <UserItem key={user.name} {...user} />
+                    ))}
+                </ul>
             </section>
         </Layout>
     );

@@ -228,9 +228,8 @@ const config = {
                     },
                     {
                         label: 'Ecosystem',
-                        to: 'ecosystem',
+                        to: 'ecosystem/cluster-management',
                         position: 'left',
-                        // docsPluginId: 'community',
                     },
                     // {
                     //     label: 'Community',
