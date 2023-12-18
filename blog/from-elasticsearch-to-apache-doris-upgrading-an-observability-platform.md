@@ -47,17 +47,13 @@ From the standpoint of a data pipeline, GuanceDB can be divided into two parts: 
 
 For data integration, GuanceDB uses its self-made tool called DataKit. It is an all-in-one data collector that extracts from different end devices, business systems, middleware, and data infrastructure. It can also preprocess data and relate it with metadata. It provides extensive support for data, from logs, and time series metrics, to data of distributed tracing, security events, and user behaviors from mobile APPs and web browsers. To cater to diverse needs across multiple scenarios, it ensures compatibility with various open-source probes and collectors as well as data sources of custom formats.
 
-<p align="center">
-<img src="../static/images/observability-platform-architecture.png" alt="observability-platform-architecture" style="width:90%;">
-</p>
+![observability-platform-architecture](../static/images/observability-platform-architecture.png)
 
 ### Query & storage engine
 
 Data collected by DataKit, goes through the core computation layer and arrive in GuanceDB, which is a multil-model database that combines various database technologies. It consists of the query engine layer and the storage engine layer. By decoupling the query engine and the storage engine, it enables pluggable and interchangeable architecture. 
 
-<p align="center">
-<img src="../static/images/observability-platform-query-engine-storage-engine.png" alt="observability-platform-query-engine-storage-engine" style="width:70%;">
-</p>
+![observability-platform-query-engine-storage-engine](../static/images/observability-platform-query-engine-storage-engine.png)
 
 For time series data, they built Metric Store, which is a self-developed storage engine based on VictoriaMetrics. For logs, they integrate Elasticsearch and OpenSearch. GuanceDB is performant in this architecture, while Elasticsearch demonstrates room for improvement:
 
@@ -73,9 +69,7 @@ In the GuanceDB observability platform, almost all queries involve timestamp fil
 
 That's why GuanceDB developed their own Data Query Language (DQL). With simplified syntax elements and computing functions optimized for observability use cases, this DQL can query metrics, logs, object data, and data from distributed tracing.
 
-<p align="center">
-<img src="../static/images/observability-platform-query-engine-storage-engine-apache-doris.png" alt="observability-platform-query-engine-storage-engine-apache-doris" style="width:70%;">
-</p>
+![observability-platform-query-engine-storage-engine-apache-doris](../static/images/observability-platform-query-engine-storage-engine-apache-doris.png)
 
 This is how DQL works together with Apache Doris. GuanceDB has found a way to make full use of the analytic power of Doris, while complementing its SQL functionalities.
 
@@ -84,9 +78,7 @@ As is shown below, Guance-Insert is the data writing component, while Guance-Sel
 - **Guance-Insert**: It allows data of different tenants to be accumulated in different batches, and strikes a balance between writing throughput and writing latency. When logs are generated in large volumes, it can maintain a low data latency of 2~3 seconds.
 - **Guance-Select**: For query execution, if the query SQL semantics or function is supported in Doris, Guance-Select will push the query down to the Doris Frontend for computation; if not, it will go for a fallback option: acquire columnar data in Arrow format via the Thrift RPC interface, and then finish computation in Guance-Select. The catch is that it cannot push the computation logic down to Doris Backend, so it can be slightly slower than executing queries in Doris Frontend.
 
-<p align="center">
-<img src="../static/images/DQL-GranceDB-apache-doris.png" alt="DQL-GranceDB-apache-doris" style="width:60%;">
-</p>
+![DQL-GranceDB-apache-doris](../static/images/DQL-GranceDB-apache-dorisDQL-GranceDB-apache-doris.png)
 
 ## Observations
 
@@ -96,9 +88,7 @@ Previously, with Elasticsearch clusters, they used 20 cloud virtual machines (16
 
 - **High writing throughput**: Under a consistent writing throughput of 1GB/s, Doris maintains a CPU usage of less than 20%. That equals 2.6 cloud virtual machines. With low CPU usage, the system is more stable and better prepared for sudden writing peaks.
 
-<p align="center">
-<img src="../static/images/writing-throughput-cpu-usage-apache-doris.png" alt="writing-throughput-cpu-usage-apache-doris" style="width:75%;">
-</p>
+![writing-throughput-cpu-usage-apache-doris](../static/images/writing-throughput-cpu-usage-apache-doris.png)
 
 - **High data compression ratio**: Doris utilizes the ZSTD compression algorithm on top of columnar storage. It can realize a compression ratio of 8:1. Compared to 1.5:1 in Elasticsearch, Doris can reduce storage costs by around 80%.
 - **[Tiered storage](https://doris.apache.org/blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How)**: Doris allows a more cost-effective way to store data: to put hot data in local disks and cold data object storage. Once the storage policy is set, Doris can automatically manage the "cooldown" process of hot data and move cold data to object storage. Such data lifecycle is transparent to the data application layer so it is user-friendly. Also, Doris speeds up cold data queries by local cache.
