@@ -78,7 +78,7 @@ As is shown below, Guance-Insert is the data writing component, while Guance-Sel
 - **Guance-Insert**: It allows data of different tenants to be accumulated in different batches, and strikes a balance between writing throughput and writing latency. When logs are generated in large volumes, it can maintain a low data latency of 2~3 seconds.
 - **Guance-Select**: For query execution, if the query SQL semantics or function is supported in Doris, Guance-Select will push the query down to the Doris Frontend for computation; if not, it will go for a fallback option: acquire columnar data in Arrow format via the Thrift RPC interface, and then finish computation in Guance-Select. The catch is that it cannot push the computation logic down to Doris Backend, so it can be slightly slower than executing queries in Doris Frontend.
 
-![DQL-GranceDB-apache-doris](../static/images/DQL-GranceDB-apache-dorisDQL-GranceDB-apache-doris.png)
+![DQL-GranceDB-apache-doris](../static/images/DQL-GranceDB-apache-doris.png)
 
 ## Observations
 
