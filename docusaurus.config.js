@@ -189,6 +189,8 @@ const config = {
                 docsRouteBasePath: '/',
                 indexBlog: false,
                 explicitSearchResultPath: true,
+                searchBarShortcut: true,
+                searchBarShortcutHint: true,
             },
         ],
     ],
@@ -235,6 +237,10 @@ const config = {
                     //     to: '/community/join-community',
                     //     position: 'left',
                     // },
+                    {
+                        type: 'search',
+                        position: 'right',
+                    },
                     {
                         type: 'localeDropdown',
                         position: 'right',

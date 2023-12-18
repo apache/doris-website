@@ -19,9 +19,9 @@ function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
     return (
         <div className={clsx('sidebar', hideOnScroll && 'sidebar-with-hideable-navbar', isHidden && 'sidebar-hidden')}>
             {hideOnScroll && <Logo tabIndex={-1} className="sidebar-logo" />}
-            <div className="doc-search">
+            {/* <div className="doc-search">
                 <SearchBar />
-            </div>
+            </div> */}
             {/* {hasLearningPath && <Link to="/learning" className="learning-path">
                 <Translate id="sitemap.page.title" description="">
                     Learning Path
