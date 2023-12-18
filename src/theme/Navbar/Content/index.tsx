@@ -77,13 +77,13 @@ export default function NavbarContent({ mobile }) {
                             <SearchBar />
                         </NavbarSearch>
                     )}
-                    <Link
+                    {/* <Link
                         className="github-btn desktop header-right-button-github"
                         href="https://github.com/apache/doris"
                         target="_blank"
                     >
                         {star && <div className="gh-count">{star}k</div>}
-                    </Link>
+                    </Link> */}
 
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">Download</Translate>
