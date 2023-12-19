@@ -24,7 +24,7 @@
         .banner-title {
             font-size: var(--global-font-size-bigger);
             font-weight: 700;
-            line-height: 1;
+            line-height: 4.875rem;
             text-align: center;
             color: var(--global-colors-text-black);
             .highlight {
@@ -36,7 +36,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 2.5rem;
+            margin-top: 4rem;
 
             .button {
                 display: flex;
@@ -54,7 +54,7 @@
                 }
 
                 & + .button {
-                    margin-left: 0.7rem;
+                    margin-left: 2rem;
                 }
 
                 &.primary {

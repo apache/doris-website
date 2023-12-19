@@ -416,7 +416,6 @@ export default function Home(): JSX.Element {
                                     <div className="w-full lg:w-auto flex justify-center">
                                         <img
                                             width={424}
-                                            style={{ height: '100%' }}
                                             src={`${require(`@site/static/images/${newsletter.image}`).default}`}
                                             alt={newsletter.title}
                                         />
@@ -424,15 +423,17 @@ export default function Home(): JSX.Element {
                                     <div className=" w-[45rem] ml-12 flex flex-col ">
                                         <div className="flex gap-1 mb-3">
                                             {newsletter.tags.map(value => (
-                                                <div className=" px-3 py-2 bg-white rounded-[2.5rem]">{value}</div>
+                                                <div className=" px-3 py-1 bg-white rounded-[2.5rem] text-xs leading-5">
+                                                    {value}
+                                                </div>
                                             ))}
                                         </div>
                                         <h3 className="leading-[38px] text-2xl font-medium line-clamp-1	">
                                             {newsletter.title}
                                         </h3>
-                                        <p className="pt-4 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
-                                        <Link className="flex items-center cursor-pointer pt-6" to={newsletter.to}>
-                                            <span className="text-primary mr-2">Read more</span>
+                                        <p className="pt-3 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
+                                        <Link className="flex items-center cursor-pointer pt-3" to={newsletter.to}>
+                                            <span className="text-primary mr-2 text-base leading-4">Learn more</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="16"
@@ -505,7 +506,7 @@ export default function Home(): JSX.Element {
             </section>
             <section className="apache-doris">
                 <PageColumn
-                    wrapperStyle={{ paddingBottom: '5.5rem' }}
+                    wrapperStyle={{ paddingBottom: '7.5rem' }}
                     title={
                         <Translate id="homepage.what" description="What is Apache Doris">
                             What is Apache Doris?
@@ -513,6 +514,7 @@ export default function Home(): JSX.Element {
                     }
                     footer={
                         <More
+                            style={{ marginTop: '5rem' }}
                             link="/docs/get-starting/what-is-apache-doris"
                             text={
                                 <Translate id="homepage.more" description="more link">
