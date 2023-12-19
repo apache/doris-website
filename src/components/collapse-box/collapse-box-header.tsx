@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
-import { ArrowDownIcon } from './icons/arrow-right-icon';
+import { ArrowDownIcon } from '../Icons/arrow-down-icon';
 
-export function EcomsystemItemHeader({ title }: { title: string }) {
-    const [expand, setExpand] = useState<boolean>(true);
+export function CollapseBoxHeader({ title, defaultExpand = true }: { title: string; defaultExpand: boolean }) {
+    const [expand, setExpand] = useState<boolean>(defaultExpand);
     return (
         <div
             onClick={() => setExpand(!expand)}
@@ -12,7 +12,7 @@ export function EcomsystemItemHeader({ title }: { title: string }) {
             }`}
         >
             {title}
-            <ArrowDownIcon className={`${expand ? 'rotate-180' : ''}`} />
+            <ArrowDownIcon className={`text-[#0065FD] ${expand ? 'rotate-180' : ''}`} />
         </div>
     );
 }

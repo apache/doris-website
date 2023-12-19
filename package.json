@@ -25,6 +25,7 @@
         "@docusaurus/preset-classic": "^2.4.1",
         "@easyops-cn/docusaurus-search-local": "^0.30.2",
         "@mdx-js/react": "^1.6.22",
+        "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
         "docusaurus-plugin-sass": "^0.2.3",

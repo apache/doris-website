@@ -1,14 +1,14 @@
 import React from 'react';
 import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/ecomsystem-layout';
-import EcomsystemItem from '@site/src/components/ecomsystem/ecomsystem-item/ecomsystem-item';
 import ExternalLink from '@site/src/components/external-link/external-link';
+import CollapseBox from '@site/src/components/collapse-box/collapse-box';
 import '../index.scss';
 
 export default function ClusterManagement() {
     return (
         <EcomsystemLayout>
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
-                <EcomsystemItem
+                <CollapseBox
                     title="Cluster Manager for Apache Doris"
                     description="A platform for visualized cluster deployment and management, developed by VeloDB."
                     characteristic={[
@@ -34,7 +34,7 @@ export default function ClusterManagement() {
                         </>
                     }
                 />
-                <EcomsystemItem
+                <CollapseBox
                     title="Doris Operator"
                     description="One-stop Doris cluster management tool on kubernetes, developed by VeloDB."
                     characteristic={[

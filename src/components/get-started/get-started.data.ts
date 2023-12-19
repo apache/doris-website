@@ -5,13 +5,13 @@ export const GET_STARTED_DATA = {
         {
             to: '/download',
             text: 'Download',
-            className: 'w-[10.5rem] bg-white rounded-lg text-[#444FD9]',
+            className: 'w-[10.5rem] h-[3rem] bg-white rounded-lg text-[#444FD9]',
         },
         {
-            to: '/download',
+            to: '/download#runAnywhere',
             text: 'Run anywhere',
             className:
-                'w-[10.5rem] bg-transparent rounded-lg text-white border-white border-[0.5px] border-solid hover:text-white',
+                'w-[10.5rem] bg-transparent h-[3rem] rounded-lg text-white border-white border-[0.5px] border-solid hover:text-white',
         },
     ],
 };
