@@ -118,8 +118,8 @@
     background: url('@site/static/images/start-bg.jpg') no-repeat center;
     background-size: cover;
 
-    height: 15rem;
-    padding-top: 2rem;
+    padding-top: 5.5rem;
+    padding-bottom: 5.5rem;
 
     .start-title {
         text-align: center;
@@ -130,7 +130,7 @@
     .start-buttons {
         display: flex;
         justify-content: center;
-
+        margin-top: 3rem;
         .start-btn {
             color: var(--global-colors-white);
             min-width: 8.75rem;
@@ -138,7 +138,6 @@
             text-align: center;
             font-size: var(--global-font-size-default);
             border-radius: 4px;
-            margin-top: 1.3rem;
             cursor: pointer;
             text-decoration: none;
 
@@ -256,13 +255,16 @@
 .firstPageSwiper {
     .swiper-pagination-bullets.swiper-pagination-horizontal {
         left: 132px;
-        top: 180px;
+        top: 150px;
         width: auto;
         .swiper-pagination-bullet {
             background-color: white;
+            opacity: 80%;
+            height: 0.25rem;
+            width: 0.25rem;
         }
         .swiper-pagination-bullet-active {
-            width: 4rem;
+            width: 2.5rem;
             border-radius: 0.375rem;
         }
     }
@@ -271,7 +273,7 @@
 @media (max-width: 1280px) {
     .firstPageSwiper {
         .swiper-pagination-bullets.swiper-pagination-horizontal {
-            top: 32%;
+            top: 38%;
             left: 50%;
             transform: translateX(-50%);
         }
