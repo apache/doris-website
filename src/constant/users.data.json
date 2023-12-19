@@ -1,0 +1,1136 @@
+[
+    {
+        "story": "Amazon Web Services (AWS) is a leading cloud computing platform that offers a wide range of scalable and reliable cloud services. AWS for Apache Doris is coming soon, enabling businesses to effortlessly scale their data analytics capabilities to handle massive workloads.",
+        "name": "AWS",
+        "category": "Commercial Distribution",
+        "logo": "AWS",
+        "order": 0,
+        "image": "/images/user-logo/Commercial Distribution/AWS.jpg"
+    },
+    {
+        "story": "Powered by Apache Doris, VeloDB is a modern data warehouse designed for swift analytics on large-scale real-time data. VeloDB Inc, the commercial company of Apache Doris, delivers real-time analytics products and solutions to enterprise users worldwide.",
+        "name": "VeloDB",
+        "category": "Commercial Distribution",
+        "logo": "VeloDB",
+        "order": 1,
+        "image": "/images/user-logo/Commercial Distribution/VeloDB.jpg"
+    },
+    {
+        "story": "SelectDB is a modern data warehouse for lightning-fast analytics on real-time data at scale, offering fully managed cloud-native data warehouse services and self-managed software on premises, VMs, or Kubernetes.",
+        "name": "SelectDB",
+        "category": "Commercial Distribution",
+        "logo": "SelectDB",
+        "order": 2,
+        "image": "/images/user-logo/Commercial Distribution/SelectDB.jpg"
+    },
+    {
+        "story": "Tencent Cloud House-D is a fully-managed cloud data warehouse service built on Apache Doris.",
+        "name": "Tencent Cloud",
+        "category": "Commercial Distribution",
+        "logo": "Tencent Cloud",
+        "order": 3,
+        "image": "/images/user-logo/Commercial Distribution/Tencent Cloud.jpg"
+    },
+    {
+        "story": "Alibaba Cloud is a global leader in cloud computing and artificial intelligence, offering a fully managed service built on Apache Doris for real-time analytics.",
+        "name": "Alibaba Cloud",
+        "category": "Commercial Distribution",
+        "logo": "Alibaba Cloud",
+        "order": 4,
+        "image": "/images/user-logo/Commercial Distribution/Alibaba Cloud.jpg"
+    },
+    {
+        "story": "A global phenomenon, where users create and share short videos, showcasing their talent and connecting with a vibrant community. With Doris, the platform process data efficiently and enhance user experiences",
+        "name": "TikTok",
+        "category": "Media & Entertainment",
+        "logo": "TikTok",
+        "order": 5,
+        "image": "/images/user-logo/Media & Entertainment/TikTok.jpg"
+    },
+    {
+        "name": "Huawei",
+        "category": "Technology",
+        "logo": "Huawei",
+        "order": 6,
+        "image": "/images/user-logo/Technology/Huawei.jpg"
+    },
+    {
+        "name": "Tencent",
+        "category": "Technology",
+        "logo": "Tencent",
+        "order": 7,
+        "image": "/images/user-logo/Technology/Tencent.jpg"
+    },
+    {
+        "name": "Alibaba.com",
+        "category": "Technology",
+        "logo": "Alibaba.com",
+        "order": 8,
+        "image": "/images/user-logo/Technology/Alibaba.com.jpg"
+    },
+    {
+        "story": "As a top-tier supply chain-based technology and service provider, JD.com uses Apache Doris for multi-dimensional analysis of real-time and offline data to empower their customer service.",
+        "name": "JD.com",
+        "category": "Technology",
+        "logo": "JD.com",
+        "order": 9,
+        "image": "/images/user-logo/Technology/JD.com.jpg"
+    },
+    {
+        "story": "Xiaomi, one of the world's biggest smartphone and consumer electronics manufacturer has applied Apache Doris to multiple aspects of its business, from dashboarding, A/B testing, to user behavior and business growth analytics.",
+        "name": "Xiaomi",
+        "category": "Technology",
+        "logo": "Xiaomi",
+        "order": 10,
+        "image": "/images/user-logo/Technology/Xiaomi.jpg"
+    },
+    {
+        "story": "A leading tech giant renowned for its expertise in artificial intelligence, cloud computing, and search engine technologies and dedicated to innovations in internet-related services.",
+        "name": "Baidu",
+        "category": "Technology",
+        "logo": "Baidu",
+        "order": 11,
+        "image": "/images/user-logo/Technology/Baidu.jpg"
+    },
+    {
+        "name": "ByteDance",
+        "category": "Technology",
+        "logo": "ByteDance",
+        "order": 12,
+        "image": "/images/user-logo/Technology/ByteDance.jpg"
+    },
+    {
+        "story": "The Bank of China is one of the largest commercial banks in China, using Apache Doris to enhance its business reporting analysis capabilities and improve the efficiency of business decision-making.",
+        "name": "Bank of China",
+        "category": "Finance",
+        "logo": "Bank of China",
+        "order": 13,
+        "image": "/images/user-logo/Finance/Bank of China.jpg"
+    },
+    {
+        "story": "Postal Savings Bank of China has built a real-time anti-fraud platform based on Apache Doris, which greatly improves the timeliness of data, and the query of business reports takes only a few seconds, reducing storage costs by 70%.",
+        "name": "Postal Savings Bank of China",
+        "category": "Finance",
+        "logo": "Postal Savings Bank of China",
+        "order": 14,
+        "image": "/images/user-logo/Finance/Postal Savings Bank of China.jpg"
+    },
+    {
+        "name": "WeLab",
+        "category": "Finance",
+        "logo": "WeLab",
+        "order": 15,
+        "image": "/images/user-logo/Finance/WeLab.jpg"
+    },
+    {
+        "story": "Fuse is the largest insurance technology company in Indonesia, using Apache Doris to accelerate insurance BI reporting and real-time data analytics capabilities.",
+        "name": "FUSE",
+        "category": "Finance",
+        "logo": "FUSE",
+        "order": 16,
+        "image": "/images/user-logo/Finance/FUSE.jpg"
+    },
+    {
+        "story": "Citic Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
+        "name": "CITIC Securities",
+        "category": "Finance",
+        "logo": "CITIC Securities",
+        "order": 17,
+        "image": "/images/user-logo/Finance/CITIC Securities.jpg"
+    },
+    {
+        "story": "One of the largest state-owned oil and gas companies in the world. Engaged in exploration, production, refining, and marketing, CNPC plays a pivotal role in China's energy industry.",
+        "name": "CNPC",
+        "category": "Telecom & Manufacturing",
+        "logo": "CNPC",
+        "order": 18,
+        "image": "/images/user-logo/Telecom & Manufacturing/CNPC.jpg"
+    },
+    {
+        "story": "China Mobile is the largest telecommunication company in China. With an extensive network coverage and a wide range of services, it provides mobile voice and data services to millions of customers in China.",
+        "name": "China Mobile",
+        "category": "Telecom & Manufacturing",
+        "logo": "China Mobile",
+        "order": 19,
+        "image": "/images/user-logo/Telecom & Manufacturing/China Mobile.jpg"
+    },
+    {
+        "story": "China Unicom, one of the world's biggest telecommunication service providers, uses Apache Doris for log analytics and ensures stable data digestion of 15 billion logs per day and queries on super large datasets to be executed within one second.",
+        "name": "China Unicom",
+        "category": "Telecom & Manufacturing",
+        "logo": "China Unicom",
+        "order": 20,
+        "image": "/images/user-logo/Telecom & Manufacturing/China Unicom.jpg"
+    },
+    {
+        "story": "Glodwind is a leading wind turbine manufacturer and renewable energy solutions provider，specializing in design, manufacturing and installation.",
+        "name": "Goldwind",
+        "category": "Telecom & Manufacturing",
+        "logo": "Goldwind",
+        "order": 21,
+        "image": "/images/user-logo/Telecom & Manufacturing/Goldwind.jpg"
+    },
+    {
+        "story": "An online programming platform that help software engineers and students enhance their coding skills and prepare them for technical interviews.",
+        "name": "Leetcode",
+        "category": "Technology",
+        "logo": "Leetcode",
+        "order": 22,
+        "image": "/images/user-logo/Technology/Leetcode.jpg"
+    },
+    {
+        "story": "miHoYo is a leading interactive entertainment company, known for their popular games like Genshin Impact, Honkai Impact 3rd, and Tears of Themis.",
+        "name": "miHoYo",
+        "category": "Media & Entertainment",
+        "logo": "miHoYo",
+        "order": 23,
+        "image": "/images/user-logo/Media & Entertainment/miHoYo.jpg"
+    },
+    {
+        "story": "NetEase introduces Apache Doris into its data management platform and gains improved performance and simpler tag management for its e-commerce business.",
+        "name": "NetEase",
+        "category": "Media & Entertainment",
+        "logo": "NetEase",
+        "order": 24,
+        "image": "/images/user-logo/Media & Entertainment/NetEase.jpg"
+    },
+    {
+        "story": "Temu provides one-stop destination for affordable items, perfect for home decor, electronic, pet supplies, sports and toy selections.",
+        "name": "Temu",
+        "category": "Media & Entertainment",
+        "logo": "Temu",
+        "order": 25,
+        "image": "/images/user-logo/Media & Entertainment/Temu.jpg"
+    },
+    {
+        "story": "Online media and technology company that operates platforms such as Sina Weibo and Sina.com, providing news, entertainment, social networking, and e-commerce services to a vast user base",
+        "name": "Sina",
+        "category": "Media & Entertainment",
+        "logo": "Sina",
+        "order": 26,
+        "image": "/images/user-logo/Media & Entertainment/Sina.jpg"
+    },
+    {
+        "story": "Tencent Music, a music streaming service provider with 800 million monthly active users, has transitioned from ClickHouse to Apache Doris and benefited from the convenience of partial column updates, lower storage costs, and easier maintenance.",
+        "name": "TME",
+        "category": "Media & Entertainment",
+        "logo": "TME",
+        "order": 27,
+        "image": "/images/user-logo/Media & Entertainment/TME.jpg"
+    },
+    {
+        "story": "A premier online brand that is indispensable in the daily lives of millions of users, providing a network of web properties and community-based/web 2.0 products.",
+        "name": "Sohu.com",
+        "category": "Media & Entertainment",
+        "logo": "Sohu.com",
+        "order": 28,
+        "image": "/images/user-logo/Media & Entertainment/Sohu.com.jpg"
+    },
+    {
+        "story": "Trusted by 45M users and growing , NewsBreak is  one of the best local & breaking news source in the US, featuring local weather, alerts, deals, events and more.",
+        "name": "NewsBreak",
+        "category": "Media & Entertainment",
+        "logo": "NewsBreak",
+        "order": 29,
+        "image": "/images/user-logo/Media & Entertainment/NewsBreak.jpg"
+    },
+    {
+        "story": "A popular dating app, known for its user-friendly interface and innovative features that facilitate meaningful connections and relationships.",
+        "name": "Tantan",
+        "category": "Media & Entertainment",
+        "logo": "Tantan",
+        "order": 30,
+        "image": "/images/user-logo/Media & Entertainment/Tantan.jpg"
+    },
+    {
+        "story": "A mobile application focused on personal well-being and self-improvement, offering features like mindfulness exercises and personal development resources.",
+        "name": "Soul App",
+        "category": "Media & Entertainment",
+        "logo": "Soul App",
+        "order": 31,
+        "image": "/images/user-logo/Media & Entertainment/Soul App.jpg"
+    },
+    {
+        "story": "A fitness app that offers a wide range of workout programs, personalized training plans, and a supportive community to help users achieve their fitness goals.",
+        "name": "Keep",
+        "category": "Media & Entertainment",
+        "logo": "Keep",
+        "order": 32,
+        "image": "/images/user-logo/Media & Entertainment/Keep.jpg"
+    },
+    {
+        "story": "Kwai, a social network for short videos, uses Apache Doris in replacement of the \"Druid + ClickHouse\" solution and thus increases efficiency in aggregated analysis of large datasets.",
+        "name": "Kwai",
+        "category": "Media & Entertainment",
+        "logo": "Kwai",
+        "order": 33,
+        "image": "/images/user-logo/Media & Entertainment/Kwai.jpg"
+    },
+    {
+        "story": "a prominent gaming company known for developing and publishing high-quality mobile games. With a diverse portfolio and a large user base, offering immersive gaming experiences to players worldwide.",
+        "name": "37 Interactive Entertainment",
+        "category": "Media & Entertainment",
+        "logo": "37 Interactive Entertainment",
+        "order": 34,
+        "image": "/images/user-logo/Media & Entertainment/37 Interactive Entertainment.jpg"
+    },
+    {
+        "story": "HUYA Inc. is a prominent live streaming platform, offering a diverse range of content including gaming, esports, and entertainment.",
+        "name": "HUYA Inc",
+        "category": "Media & Entertainment",
+        "logo": "HUYA Inc",
+        "order": 35,
+        "image": "/images/user-logo/Media & Entertainment/HUYA Inc.jpg"
+    },
+    {
+        "story": "This electric vehicle manufacturer tried a fair share of OLAP systems and settled on Apache Doris after considering performance, semantics, system compatibility, and maintenance costs.",
+        "name": "Nio",
+        "category": "Telecom & Manufacturing",
+        "logo": "Nio",
+        "order": 36,
+        "image": "/images/user-logo/Telecom & Manufacturing/Nio.jpg"
+    },
+    {
+        "story": "A renowned Japanese automobile manufacturer known for its diverse range of cars, motorcycles, and outboard motors. With a reputation for reliability and innovation, Suzuki vehicles are popular worldwide.",
+        "name": "Suzuki",
+        "category": "Telecom & Manufacturing",
+        "logo": "Suzuki",
+        "order": 37,
+        "image": "/images/user-logo/Telecom & Manufacturing/Suzuki.jpg"
+    },
+    {
+        "story": "A renowned automotive company that has been manufacturing and selling vehicles, known for its innovation and quality, Ford offers a wide range of cars, trucks, and SUVs globally.",
+        "name": "Ford",
+        "category": "Telecom & Manufacturing",
+        "logo": "Ford",
+        "order": 38,
+        "image": "/images/user-logo/Telecom & Manufacturing/Ford.jpg"
+    },
+    {
+        "name": "Luckin coffee",
+        "category": "FMCG & Logistics",
+        "logo": "Luckin coffee",
+        "order": 39,
+        "image": "/images/user-logo/FMCG & Logistics/Luckin coffee.jpg"
+    },
+    {
+        "name": "JD Logistics",
+        "category": "FMCG & Logistics",
+        "logo": "JD Logistics",
+        "order": 40,
+        "image": "/images/user-logo/FMCG & Logistics/JD Logistics.jpg"
+    },
+    {
+        "name": "Anta",
+        "category": "FMCG & Logistics",
+        "logo": "Anta",
+        "order": 41,
+        "image": "/images/user-logo/FMCG & Logistics/Anta.jpg"
+    },
+    {
+        "name": "Cabbeen",
+        "category": "FMCG & Logistics",
+        "logo": "Cabbeen",
+        "order": 42,
+        "image": "/images/user-logo/FMCG & Logistics/Cabbeen.jpg"
+    },
+    {
+        "name": "Semir",
+        "category": "FMCG & Logistics",
+        "logo": "Semir",
+        "order": 43,
+        "image": "/images/user-logo/FMCG & Logistics/Semir.jpg"
+    },
+    {
+        "name": "Septwolves",
+        "category": "FMCG & Logistics",
+        "logo": "Septwolves",
+        "order": 44,
+        "image": "/images/user-logo/FMCG & Logistics/Septwolves.jpg"
+    },
+    {
+        "name": "Yonghui Superstores",
+        "category": "FMCG & Logistics",
+        "logo": "Yonghui Superstores",
+        "order": 45,
+        "image": "/images/user-logo/FMCG & Logistics/Yonghui Superstores.jpg"
+    },
+    {
+        "name": "Yum",
+        "category": "FMCG & Logistics",
+        "logo": "Yum",
+        "order": 46,
+        "image": "/images/user-logo/FMCG & Logistics/Yum.jpg"
+    },
+    {
+        "name": "Ausnutria",
+        "category": "FMCG & Logistics",
+        "logo": "Ausnutria",
+        "order": 47,
+        "image": "/images/user-logo/FMCG & Logistics/Ausnutria.jpg"
+    },
+    {
+        "name": "Aftership",
+        "category": "FMCG & Logistics",
+        "logo": "Aftership",
+        "order": 48,
+        "image": "/images/user-logo/FMCG & Logistics/Aftership.jpg"
+    },
+    {
+        "name": "SF Express",
+        "category": "FMCG & Logistics",
+        "logo": "SF Express",
+        "order": 49,
+        "image": "/images/user-logo/FMCG & Logistics/SF Express.jpg"
+    },
+    {
+        "name": "Uda Express",
+        "category": "FMCG & Logistics",
+        "logo": "Uda Express",
+        "order": 50,
+        "image": "/images/user-logo/FMCG & Logistics/Uda Express.jpg"
+    },
+    {
+        "name": "ZTO Express",
+        "category": "FMCG & Logistics",
+        "logo": "ZTO Express",
+        "order": 51,
+        "image": "/images/user-logo/FMCG & Logistics/ZTO Express.jpg"
+    },
+    {
+        "name": "YT Express",
+        "category": "FMCG & Logistics",
+        "logo": "YT Express",
+        "order": 52,
+        "image": "/images/user-logo/FMCG & Logistics/YT Express.jpg"
+    },
+    {
+        "story": "An education platform, Koolearn, offers a wide range of courses and study materials for students and adult learners, providing interactive and personalized learning experiences.",
+        "name": "Koolearn",
+        "category": "Media & Entertainment",
+        "logo": "Koolearn",
+        "order": 53,
+        "image": "/images/user-logo/Media & Entertainment/Koolearn.jpg"
+    },
+    {
+        "story": "VIPKid platform connects paying students with teachers in the United States and Canada. Its online-classroom portal enables students to receive 25-minute English language lessons from fluent English-speaking teachers.",
+        "name": "vipkid",
+        "category": "Media & Entertainment",
+        "logo": "vipkid",
+        "order": 54,
+        "image": "/images/user-logo/Media & Entertainment/vipkid.jpg"
+    },
+    {
+        "story": "This leading local life service platform uses Apache Doris as a high-performance OLAP engine to address challenges in its real-time and offline data processing.",
+        "name": "Meituan",
+        "category": "Media & Entertainment",
+        "logo": "Meituan",
+        "order": 55,
+        "image": "/images/user-logo/Media & Entertainment/Meituan.jpg"
+    },
+    {
+        "story": "Homeware solutions helps you enjoy a genuine, comfortable life. Lifewit specializes in creating innovative products for the home, travel, and organization to enhance everyday living experiences.",
+        "name": "Lifewit",
+        "category": "Media & Entertainment",
+        "logo": "Lifewit",
+        "order": 56,
+        "image": "/images/user-logo/Media & Entertainment/Lifewit.jpg"
+    },
+    {
+        "story": "Lenovo is a global technology leader that designs, develops, and manufactures innovative products, including laptops, tablets, smartphones, and servers. Lenovo serves customers across the global.",
+        "name": "Lenovo",
+        "category": "Telecom & Manufacturing",
+        "logo": "Lenovo",
+        "order": 57,
+        "image": "/images/user-logo/Telecom & Manufacturing/Lenovo.jpg"
+    },
+    {
+        "story": "Volvo, as automobile manufacturer, known for its commitment to safety, reliability. With a  diverse lineup of cars, Volvo combines luxury with practicality to cater to discerning customers worldwide.",
+        "name": "Volvo",
+        "category": "Telecom & Manufacturing",
+        "logo": "Volvo",
+        "order": 58,
+        "image": "/images/user-logo/Telecom & Manufacturing/Volvo.jpg"
+    },
+    {
+        "story": "A leading global home appliance and HVAC solutions provider based in China. With a wide range of products including air conditioners, refrigerators, washing machines, and more.",
+        "name": "Midea",
+        "category": "Telecom & Manufacturing",
+        "logo": "Midea",
+        "order": 59,
+        "image": "/images/user-logo/Telecom & Manufacturing/Midea.jpg"
+    },
+    {
+        "name": "Haidilao",
+        "category": "FMCG & Logistics",
+        "logo": "Haidilao",
+        "order": 60,
+        "image": "/images/user-logo/FMCG & Logistics/Haidilao.jpg"
+    },
+    {
+        "name": "Xtep",
+        "category": "FMCG & Logistics",
+        "logo": "Xtep",
+        "order": 61,
+        "image": "/images/user-logo/FMCG & Logistics/Xtep.jpg"
+    },
+    {
+        "story": "Taikang Insurance has established an insurance business analysis platform using Doris, providing tens of thousands of front-line users with insurance business data analysis, with query time taking only a few seconds.",
+        "name": "Taikang Insurance Group",
+        "category": "Finance",
+        "logo": "Taikang Insurance Group",
+        "order": 62,
+        "image": "/images/user-logo/Finance/Taikang Insurance Group.jpg"
+    },
+    {
+        "name": "Ping An Insurance Group",
+        "category": "Finance",
+        "logo": "Ping An Insurance Group",
+        "order": 63,
+        "image": "/images/user-logo/Finance/Ping An Insurance Group.jpg"
+    },
+    {
+        "story": "CIGNA & CMB, an insurance company, uses Apache Doris as an all-in-one OLAP platform to undertake their customer-facing, analyst-facing, and management-facing data analytics workloads.",
+        "name": "Cigna & CMB",
+        "category": "Finance",
+        "logo": "Cigna & CMB",
+        "order": 64,
+        "image": "/images/user-logo/Finance/Cigna & CMB.jpg"
+    },
+    {
+        "name": "China Everbright Bank",
+        "category": "Finance",
+        "logo": "China Everbright Bank",
+        "order": 65,
+        "image": "/images/user-logo/Finance/China Everbright Bank.jpg"
+    },
+    {
+        "name": "GF Securities",
+        "category": "Finance",
+        "logo": "GF Securities",
+        "order": 66,
+        "image": "/images/user-logo/Finance/GF Securities.jpg"
+    },
+    {
+        "name": "Bosera Funds",
+        "category": "Finance",
+        "logo": "Bosera Funds",
+        "order": 67,
+        "image": "/images/user-logo/Finance/Bosera Funds.jpg"
+    },
+    {
+        "name": "Harvest Funds",
+        "category": "Finance",
+        "logo": "Harvest Funds",
+        "order": 68,
+        "image": "/images/user-logo/Finance/Harvest Funds.jpg"
+    },
+    {
+        "story": "With Apache Doris, this fintech service provider is able to handle 10,000 active financial metrics in 10,000 dashboards with 30% less ETL efforts, and reduced the query response time on tables of 100 million rows from 5s to 63ms.",
+        "name": "OneConnect",
+        "category": "Finance",
+        "logo": "OneConnect",
+        "order": 69,
+        "image": "/images/user-logo/Finance/OneConnect.jpg"
+    },
+    {
+        "name": "Qifu Technology",
+        "category": "Finance",
+        "logo": "Qifu Technology",
+        "order": 70,
+        "image": "/images/user-logo/Finance/Qifu Technology.jpg"
+    },
+    {
+        "name": "Advance Intelligence Group",
+        "category": "Technology",
+        "logo": "Advance Intelligence Group",
+        "order": 71,
+        "image": "/images/user-logo/Technology/Advance Intelligence Group.jpg"
+    },
+    {
+        "story": "The cyber security service provider builds its log storage and analysis system and realizes 3X data writing speed, 7X query execution speed, and visualized management.",
+        "name": "QAX-Cyber Security Services",
+        "category": "Technology",
+        "logo": "QAX-Cyber Security Services",
+        "order": 72,
+        "image": "/images/user-logo/Technology/QAX-Cyber Security Services.jpg"
+    },
+    {
+        "story": "The due diligence platform replaces Apache Hive, Elasticsearch, and PostgreSQL with Apache Doris and achieves higher speed in ad-hoc analysis and user segmentation.",
+        "name": "Tianyacha",
+        "category": "Technology",
+        "logo": "Tianyacha",
+        "order": 73,
+        "image": "/images/user-logo/Technology/Tianyacha.jpg"
+    },
+    {
+        "name": "TMS",
+        "category": "FMCG & Logistics",
+        "logo": "TMS",
+        "order": 74,
+        "image": "/images/user-logo/FMCG & Logistics/TMS.jpg"
+    },
+    {
+        "story": "Orange Connex provides digital supply chain solutions for e-commerce worldwide. After putting Apache Doris into production, it reduces its data computation latency from 2 hours to 3 minutes.",
+        "name": "Orange connex",
+        "category": "FMCG & Logistics",
+        "logo": "Orange connex",
+        "order": 75,
+        "image": "/images/user-logo/FMCG & Logistics/Orange connex.jpg"
+    },
+    {
+        "story": "A SaaS provider that offers inventory management, membership marketing, and cashier services for retailers including supermarkets, fresh produce stores, and clothing stores.",
+        "name": "Zhonglun Network",
+        "category": "Technology",
+        "logo": "Zhonglun Network",
+        "order": 76,
+        "image": "/images/user-logo/Technology/Zhonglun Network.jpg"
+    },
+    {
+        "story": "The SaaS provider adopts Apache Doris as a solution to improve data processing efficiency, particularly addressing multi-dimensional table maintenance and high-concurrency queries.",
+        "name": "Duyan Soft",
+        "category": "Technology",
+        "logo": "Duyan Soft",
+        "order": 77,
+        "image": "/images/user-logo/Technology/Duyan Soft.jpg"
+    },
+    {
+        "story": "The conversational AI services and natural language interaction solutions provider unifies their real-time and offline analytics workloads with Apache Doris, which empowers their chatbot services with its flexible functionalities and high performance.",
+        "name": "AISPEECH",
+        "category": "Technology",
+        "logo": "AISPEECH",
+        "order": 78,
+        "image": "/images/user-logo/Technology/AISPEECH.jpg"
+    },
+    {
+        "story": "A publicly listed company that empowers logistics and delivery with internet technologies. It provides intelligent industrial logistics services and also engages in online industries including gaming.",
+        "name": "Boton",
+        "category": "Technology",
+        "logo": "Boton",
+        "order": 79,
+        "image": "/images/user-logo/Technology/Boton.jpg"
+    },
+    {
+        "story": "A full-stack cloud computing solution provider dedicated to secure and reliable cloud services, efficient resource management, and industry-specific cloud applications.",
+        "name": "Sugon",
+        "category": "Technology",
+        "logo": "Sugon",
+        "order": 80,
+        "image": "/images/user-logo/Technology/Sugon.jpg"
+    },
+    {
+        "story": "A prominent technology conglomerate dedicated to providing cutting-edge solutions in various industries, including artificial intelligence, cloud computing, big data analytics, and telecommunications.",
+        "name": "Wasu",
+        "category": "Technology",
+        "logo": "Wasu",
+        "order": 81,
+        "image": "/images/user-logo/Technology/Wasu.jpg"
+    },
+    {
+        "story": "A leading AI technology company based in China, specializing in AI chips and software, aims to empower various industries with innovative AI solutions and drive the development of intelligent systems.",
+        "name": "Horizon Robotics",
+        "category": "Telecom & Manufacturing",
+        "logo": "Horizon Robotics",
+        "order": 82,
+        "image": "/images/user-logo/Telecom & Manufacturing/Horizon Robotics.jpg"
+    },
+    {
+        "story": "Youdao Inc. focuses on language-related products and services. It offers language learning platforms, translation tools, and smart devices, aiming to enhance communication and knowledge acquisition for users.",
+        "name": "Youdao",
+        "category": "Media & Entertainment",
+        "logo": "Youdao",
+        "order": 83,
+        "image": "/images/user-logo/Media & Entertainment/Youdao.jpg"
+    },
+    {
+        "story": "LY Digital provides fintech solution for the hospitality industry. It streamlines its data architecture by introducing the powerful and feature-rich Apache Doris, and thus benefits from faster data access and queries.",
+        "name": "LY Digit",
+        "category": "Finance",
+        "logo": "LY Digit",
+        "order": 84,
+        "image": "/images/user-logo/Finance/LY Digit.jpg"
+    },
+    {
+        "story": "A messaging and communication app that allows users to engage in real-time conversations, coordinate strategies, and build camaraderie in the vibrant voice chat rooms.",
+        "name": "TTChat",
+        "category": "Media & Entertainment",
+        "logo": "TTChat",
+        "order": 85,
+        "image": "/images/user-logo/Media & Entertainment/TTChat.jpg"
+    },
+    {
+        "story": "The live streaming platform uses Apache Doris to unify its stream processing and batch processing pipelines to make its data architecture faster, simpler, and more cost-effective.",
+        "name": "DouYu",
+        "category": "Media & Entertainment",
+        "logo": "DouYu",
+        "order": 86,
+        "image": "/images/user-logo/Media & Entertainment/DouYu.jpg"
+    },
+    {
+        "story": "This all-category Q&A website supports its data management platform with Apache Doris and benefits from fast data ingestion and fast query response.",
+        "name": "Zhihu Inc.",
+        "category": "Media & Entertainment",
+        "logo": "Zhihu Inc.",
+        "order": 87,
+        "image": "/images/user-logo/Media & Entertainment/Zhihu Inc..jpg"
+    },
+    {
+        "story": "An online grocery platform offers convenient and fast delivery of fresh produce, groceries, and daily essentials. It aims to simplify shopping experience for customers.",
+        "name": "Dingdong",
+        "category": "Media & Entertainment",
+        "logo": "Dingdong",
+        "order": 88,
+        "image": "/images/user-logo/Media & Entertainment/Dingdong.jpg"
+    },
+    {
+        "story": "This health technology SaaS software company details the evolution of its data service architecture from ClickHouse to Apache Doris.",
+        "name": "Linkedcare",
+        "category": "Technology",
+        "logo": "Linkedcare",
+        "order": 89,
+        "image": "/images/user-logo/Technology/Linkedcare.jpg"
+    },
+    {
+        "story": "LeTV specializes in internet-based services, smart devices, and content production. It offers a range of products including smartphones, smart TVs, and streaming services.",
+        "name": "LeTV",
+        "category": "Media & Entertainment",
+        "logo": "LeTV",
+        "order": 90,
+        "image": "/images/user-logo/Media & Entertainment/LeTV.jpg"
+    },
+    {
+        "story": "An online recruitment platform promotes instant direct chats between Bosses and job seekers, delivers accurate recommendation results, and is powered by proprietary AI algorithms and big data insights.",
+        "name": "Boss Zhipin",
+        "category": "Media & Entertainment",
+        "logo": "Boss Zhipin",
+        "order": 91,
+        "image": "/images/user-logo/Media & Entertainment/Boss Zhipin.jpg"
+    },
+    {
+        "story": "An cosmetic surgery platform listed on Nasdaq. Its social media-style credit evaluation system gains a strong user trust.",
+        "name": "Soyoung",
+        "category": "Media & Entertainment",
+        "logo": "Soyoung",
+        "order": 92,
+        "image": "/images/user-logo/Media & Entertainment/Soyoung.jpg"
+    },
+    {
+        "story": "Jiyue is Geely Holding;s next-generation automotive robocar brand, positioned as premium intelligent, committed to building leading intelligent automotive robots.",
+        "name": "Jiyue Auto",
+        "category": "Telecom & Manufacturing",
+        "logo": "Jiyue Auto",
+        "order": 93,
+        "image": "/images/user-logo/Telecom & Manufacturing/Jiyue Auto.jpg"
+    },
+    {
+        "story": "Wuling Motors specializes in producing affordable and practical vehicles, known for its compact cars and commercial vehicles, it has gained popularity in both domestic and international markets.",
+        "name": "Wuling Motors",
+        "category": "Telecom & Manufacturing",
+        "logo": "Wuling Motors",
+        "order": 94,
+        "image": "/images/user-logo/Telecom & Manufacturing/Wuling Motors.jpg"
+    },
+    {
+        "story": "This is a car manufacturer who connects 4 million cars together and has to process 100 billion pieces of CAN data every day. Apache Doris ensures real-time data analytics performance for it.",
+        "name": "Chang'an Automobile",
+        "category": "Telecom & Manufacturing",
+        "logo": "Chang'an Automobile",
+        "order": 95,
+        "image": "/images/user-logo/Telecom & Manufacturing/Chang'an Automobile.jpg"
+    },
+    {
+        "story": "Lotus as a renowned British automotive manufacturer, producing high-performance sports cars and racing vehicles.",
+        "name": "LOTUS",
+        "category": "Telecom & Manufacturing",
+        "logo": "LOTUS",
+        "order": 96,
+        "image": "/images/user-logo/Telecom & Manufacturing/LOTUS.jpg"
+    },
+    {
+        "story": "Great Wall Motors is a prominent Chinese automobile manufacturer specializing in SUVs, pickup trucks, and electric vehicles.",
+        "name": "Great Wall",
+        "category": "Telecom & Manufacturing",
+        "logo": "Great Wall",
+        "order": 97,
+        "image": "/images/user-logo/Telecom & Manufacturing/Great Wall.jpg"
+    },
+    {
+        "story": "Chery is recognized for its wide range of vehicles, including sedans, SUVs, and electric cars. With a focus on innovation and quality, Chery has established itself as a prominent player in the global automotive market.",
+        "name": "Chery",
+        "category": "Telecom & Manufacturing",
+        "logo": "Chery",
+        "order": 98,
+        "image": "/images/user-logo/Telecom & Manufacturing/Chery.jpg"
+    },
+    {
+        "story": "Envision Energy is dedicated to advancing clean and sustainable energy worldwide, with expertise in wind turbines, energy management software, and smart grid solutions",
+        "name": "Envision Energy",
+        "category": "Telecom & Manufacturing",
+        "logo": "Envision Energy",
+        "order": 99,
+        "image": "/images/user-logo/Telecom & Manufacturing/Envision Energy.jpg"
+    },
+    {
+        "story": "A leading provider of custom, end-to-end network, cloud and data center services for China, APAC and beyond.",
+        "name": "China Telecom",
+        "category": "Telecom & Manufacturing",
+        "logo": "China Telecom",
+        "order": 100,
+        "image": "/images/user-logo/Telecom & Manufacturing/China Telecom.jpg"
+    },
+    {
+        "story": "CTYun is a cloud computing and infrastructure service provider. With a portfolio of cloud solutions, CTYun empowers businesses with secure, scalable, and reliable cloud computing capabilities",
+        "name": "CTYun",
+        "category": "Telecom & Manufacturing",
+        "logo": "CTYun",
+        "order": 101,
+        "image": "/images/user-logo/Telecom & Manufacturing/CTYun.jpg"
+    },
+    {
+        "story": "Cisco is a multinational technology conglomerate specialized in networking solutions. It enables seamless connectivity, digital transformation and secure communications for businesses and organizations worldwide.",
+        "name": "Cisco",
+        "category": "Telecom & Manufacturing",
+        "logo": "Cisco",
+        "order": 102,
+        "image": "/images/user-logo/Telecom & Manufacturing/Cisco.jpg"
+    },
+    {
+        "story": "ZTE expertise in 5G technology, networking and mobile devices, offering innovative solutions that drive connectivity and digital transformation in the telecommunications industry.",
+        "name": "ZTE",
+        "category": "Telecom & Manufacturing",
+        "logo": "ZTE",
+        "order": 103,
+        "image": "/images/user-logo/Telecom & Manufacturing/ZTE.jpg"
+    },
+    {
+        "name": "HuoLaLa",
+        "category": "FMCG & Logistics",
+        "logo": "HuoLaLa",
+        "order": 104,
+        "image": "/images/user-logo/FMCG & Logistics/HuoLaLa.jpg"
+    },
+    {
+        "name": "Deppon Express",
+        "category": "FMCG & Logistics",
+        "logo": "Deppon Express",
+        "order": 105,
+        "image": "/images/user-logo/FMCG & Logistics/Deppon Express.jpg"
+    },
+    {
+        "name": "Du Xiaoman Financial",
+        "category": "Finance",
+        "logo": "Du Xiaoman Financial",
+        "order": 106,
+        "image": "/images/user-logo/Finance/Du Xiaoman Financial.jpg"
+    },
+    {
+        "name": "Industrial Bank Co.ltd",
+        "category": "Finance",
+        "logo": "Industrial Bank Co.ltd",
+        "order": 107,
+        "image": "/images/user-logo/Finance/Industrial Bank Co.ltd.jpg"
+    },
+    { "name": "UMS", "category": "Finance", "logo": "UMS", "order": 108, "image": "/images/user-logo/Finance/UMS.jpg" },
+    {
+        "name": "Caitong Securities",
+        "category": "Finance",
+        "logo": "Caitong Securities",
+        "order": 109,
+        "image": "/images/user-logo/Finance/Caitong Securities.jpg"
+    },
+    {
+        "name": "Lakala",
+        "category": "Finance",
+        "logo": "Lakala",
+        "order": 110,
+        "image": "/images/user-logo/Finance/Lakala.jpg"
+    },
+    {
+        "name": "Easy Pay",
+        "category": "Finance",
+        "logo": "Easy Pay",
+        "order": 111,
+        "image": "/images/user-logo/Finance/Easy Pay.jpg"
+    },
+    {
+        "name": "Mucfc.com",
+        "category": "Finance",
+        "logo": "Mucfc.com",
+        "order": 112,
+        "image": "/images/user-logo/Finance/Mucfc.com.jpg"
+    },
+    {
+        "name": "ZhongAn Insurance",
+        "category": "Finance",
+        "logo": "ZhongAn Insurance",
+        "order": 113,
+        "image": "/images/user-logo/Finance/ZhongAn Insurance.jpg"
+    },
+    {
+        "name": "InRice.com",
+        "category": "Finance",
+        "logo": "InRice.com",
+        "order": 114,
+        "image": "/images/user-logo/Finance/InRice.com.jpg"
+    },
+    {
+        "name": "Bairong.Inc.",
+        "category": "Finance",
+        "logo": "Bairong.Inc.",
+        "order": 115,
+        "image": "/images/user-logo/Finance/Bairong.Inc..jpg"
+    },
+    {
+        "story": "The SaaS provider utilizes Apache Doris to support self-service BI by enabling fast join queries. It also helps in improving efficiency of privileged queries.",
+        "name": "Moka",
+        "category": "Technology",
+        "logo": "Moka",
+        "order": 116,
+        "image": "/images/user-logo/Technology/Moka.jpg"
+    },
+    {
+        "story": "Apache Doris ensures quick computation and high data integrity for A/B testing on a big real-time data size with millions of operations per second. Each operation involves around 20 data tags and over a dozen dimensions.",
+        "name": "360 Security",
+        "category": "Technology",
+        "logo": "360 Security",
+        "order": 117,
+        "image": "/images/user-logo/Technology/360 Security.jpg"
+    },
+    {
+        "story": "A tech-driven intelligent retail service provider uses Apache Doris for resource isolation and high-concurrency data queries and realizes faster query speed and lower storage costs.",
+        "category": "Technology",
+        "order": 118,
+        "image": "/images/user-logo/Technology/undefined.jpg"
+    },
+    {
+        "story": "A generative AI solution provider that focuses on the development of SOTA, integrated generative AI product suites with independent intellectual property rights.",
+        "category": "Technology",
+        "order": 119,
+        "image": "/images/user-logo/Technology/undefined.jpg"
+    },
+    {
+        "story": "IGG is best known for formerly publishing various massively multiplayer online games in North America. \"Lords Mobile\" as IGG’s first cross-platform,  real-time game has approximately 320 million registered users worldwide.",
+        "name": "IGOTGAMES",
+        "category": "Media & Entertainment",
+        "logo": "IGOTGAMES",
+        "order": 120,
+        "image": "/images/user-logo/Media & Entertainment/IGOTGAMES.jpg"
+    },
+    {
+        "story": "Electronic Soul is one of the top leading game developers and publishers based in Asia， providing high-quality digital contents crossing Mobile, PC, and consoles.",
+        "name": "electronic soul",
+        "category": "Media & Entertainment",
+        "logo": "electronic soul",
+        "order": 121,
+        "image": "/images/user-logo/Media & Entertainment/electronic soul.jpg"
+    },
+    {
+        "name": "Haohan Data",
+        "category": "Telecom & Manufacturing",
+        "logo": "Haohan Data",
+        "order": 122,
+        "image": "/images/user-logo/Telecom & Manufacturing/Haohan Data.jpg"
+    },
+    {
+        "story": "Aima Tech, an electric vehicle manufacturer, is committed to revolutionizing the way we commute and reducing carbon emissions.",
+        "name": "Aima Tech",
+        "category": "Telecom & Manufacturing",
+        "logo": "Aima Tech",
+        "order": 123,
+        "image": "/images/user-logo/Telecom & Manufacturing/Aima Tech.jpg"
+    },
+    {
+        "name": "Peacebird",
+        "category": "FMCG & Logistics",
+        "logo": "Peacebird",
+        "order": 124,
+        "image": "/images/user-logo/FMCG & Logistics/Peacebird.jpg"
+    },
+    {
+        "name": "Full Truck Alliance",
+        "category": "FMCG & Logistics",
+        "logo": "Full Truck Alliance",
+        "order": 125,
+        "image": "/images/user-logo/FMCG & Logistics/Full Truck Alliance.jpg"
+    },
+    {
+        "name": "CaiNiao",
+        "category": "FMCG & Logistics",
+        "logo": "CaiNiao",
+        "order": 126,
+        "image": "/images/user-logo/FMCG & Logistics/CaiNiao.jpg"
+    },
+    {
+        "name": "Umetrip",
+        "category": "FMCG & Logistics",
+        "logo": "Umetrip",
+        "order": 127,
+        "image": "/images/user-logo/FMCG & Logistics/Umetrip.jpg"
+    },
+    {
+        "name": "Yunrun Group",
+        "category": "FMCG & Logistics",
+        "logo": "Yunrun Group",
+        "order": 128,
+        "image": "/images/user-logo/FMCG & Logistics/Yunrun Group.jpg"
+    },
+    {
+        "name": "Bondex",
+        "category": "FMCG & Logistics",
+        "logo": "Bondex",
+        "order": 129,
+        "image": "/images/user-logo/FMCG & Logistics/Bondex.jpg"
+    },
+    {
+        "name": "Zongteng Group",
+        "category": "FMCG & Logistics",
+        "logo": "Zongteng Group",
+        "order": 130,
+        "image": "/images/user-logo/FMCG & Logistics/Zongteng Group.jpg"
+    },
+    {
+        "story": "The fintech company includes Apache Doris in their credit assessment and risk control solution to speed up queries on large datasets with little engineering and maintenance efforts.",
+        "name": "Techsight",
+        "category": "Finance",
+        "logo": "Techsight",
+        "order": 131,
+        "image": "/images/user-logo/Finance/Techsight.jpg"
+    },
+    {
+        "story": "Zuoyebang is a leading online education platform, providing a wide range of educational resources, live classes, tutoring services, and personalized learning experiences for students of all ages.",
+        "name": "Zuoyebang",
+        "category": "Media & Entertainment",
+        "logo": "Zuoyebang",
+        "order": 132,
+        "image": "/images/user-logo/Media & Entertainment/Zuoyebang.jpg"
+    },
+    {
+        "story": "Atguigu as a learning platform, offers comprehensive training programs and resources to help individuals build technical skills and advance their careers in the technology industry.",
+        "name": "Atguigu",
+        "category": "Media & Entertainment",
+        "logo": "Atguigu",
+        "order": 133,
+        "image": "/images/user-logo/Media & Entertainment/Atguigu.jpg"
+    },
+    {
+        "story": "ITCast is a comprehensive online learning platform that offers a diverse range of IT and programming courses.",
+        "name": "ITCast",
+        "category": "Media & Entertainment",
+        "logo": "ITCast",
+        "order": 134,
+        "image": "/images/user-logo/Media & Entertainment/ITCast.jpg"
+    },
+    {
+        "story": "An online education platform offers a wide array of courses and programs taught by industry experts to help individuals acquire new skills and excel in their chosen fields.",
+        "name": "Kaikeba",
+        "category": "Media & Entertainment",
+        "logo": "Kaikeba",
+        "order": 135,
+        "image": "/images/user-logo/Media & Entertainment/Kaikeba.jpg"
+    },
+    {
+        "story": "Lizhiweike, a popular online platform for live audio broadcasting, allows users to create and share live audio content, including podcasts, radio shows, and interactive discussions, fostering a vibrant audio community.",
+        "name": "Lizhiweike",
+        "category": "Media & Entertainment",
+        "logo": "Lizhiweike",
+        "order": 136,
+        "image": "/images/user-logo/Media & Entertainment/Lizhiweike.jpg"
+    },
+    {
+        "story": "TenClass is an innovative education company that focuses on empowering individuals through digital skills, video editing, data analysis, and more.",
+        "name": "Tenclass",
+        "category": "Media & Entertainment",
+        "logo": "Tenclass",
+        "order": 137,
+        "image": "/images/user-logo/Media & Entertainment/Tenclass.jpg"
+    },
+    {
+        "name": "Wuxi Xishang Bank",
+        "category": "Finance",
+        "logo": "Wuxi Xishang Bank",
+        "order": 138,
+        "image": "/images/user-logo/Finance/Wuxi Xishang Bank.jpg"
+    },
+    {
+        "story": "The consumer financing company uses Apache Doris as a unified query gateway for its risk management platform, leveraging the Multi Catalog feature of Doris to unify the heterogenous data sources.",
+        "name": "HYXJ",
+        "category": "Finance",
+        "logo": "HYXJ",
+        "order": 139,
+        "image": "/images/user-logo/Finance/HYXJ.jpg"
+    },
+    {
+        "name": "HCFC",
+        "category": "Finance",
+        "logo": "HCFC",
+        "order": 140,
+        "image": "/images/user-logo/Finance/HCFC.jpg"
+    },
+    {
+        "story": "Autohome is a leading automotive online platform, offering comprehensive information, reviews, and services related to cars. It serves as a one-stop destination for car enthusiasts, buyers, and owners.",
+        "name": "Autohome",
+        "category": "Media & Entertainment",
+        "logo": "Autohome",
+        "order": 141,
+        "image": "/images/user-logo/Media & Entertainment/Autohome.jpg"
+    },
+    {
+        "story": "JJ World is a leading chess and card game developer, offering internet services such as the JJ-Dota battle platform, 3399 mini-game platform, and mobile applications.",
+        "name": "JJ World",
+        "category": "Media & Entertainment",
+        "logo": "JJ World",
+        "order": 142,
+        "image": "/images/user-logo/Media & Entertainment/JJ World.jpg"
+    },
+    {
+        "story": "Q1.com is dedicated to providing a superior user experience in the field of online gaming and entertainment.",
+        "name": "Q1.com",
+        "category": "Media & Entertainment",
+        "logo": "Q1.com",
+        "order": 143,
+        "image": "/images/user-logo/Media & Entertainment/Q1.com.jpg"
+    },
+    {
+        "story": "This live streaming service provider with 800 million end users adopts Apache Doris for its analytic solution to simplify its data components. They ends up with faster tag queries, quick disaster recovery, and the convenience of data visualization.",
+        "name": "Xiaoe Tech",
+        "category": "Media & Entertainment",
+        "logo": "Xiaoe Tech",
+        "order": 144,
+        "image": "/images/user-logo/Media & Entertainment/Xiaoe Tech.jpg"
+    },
+    {
+        "story": "An e-commerce SaaS provider migrates from ClickHouse to Apache Doris and increases its SQL query performance by 250%. Apache Doris outperforms ClickHouse in the join query tests of all data sizes.",
+        "name": "Youzan",
+        "category": "Media & Entertainment",
+        "logo": "Youzan",
+        "order": 145,
+        "image": "/images/user-logo/Media & Entertainment/Youzan.jpg"
+    },
+    {
+        "story": "最长3 行\n“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”\n\n最短1行半\n“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of...",
+        "category": "Commercial Distribution",
+        "order": 146,
+        "image": "/images/user-logo/Commercial Distribution/undefined.jpg"
+    },
+    {
+        "story": "A real-estate giants builds its data warehouse solution easily and quickly with Apache Doris and thus benefits from low query latency, easy maintenance, and low storage resource consumption.",
+        "name": "Midland Realty",
+        "category": "FMCG & Logistics",
+        "logo": "Midland Realty",
+        "order": 147,
+        "image": "/images/user-logo/FMCG & Logistics/Midland Realty.jpg"
+    },
+    {
+        "story": "A blockchain data analytics solutions provider that allows users to customize their data dashboards within 10 seconds and extract valuable insights from data.",
+        "name": "Footprint Analytics",
+        "category": "Technology",
+        "logo": "Footprint Analytics",
+        "order": 148,
+        "image": "/images/user-logo/Technology/Footprint Analytics.jpg"
+    },
+    {
+        "category": "Commercial Distribution",
+        "order": 149,
+        "image": "/images/user-logo/Commercial Distribution/undefined.jpg"
+    }
+]
