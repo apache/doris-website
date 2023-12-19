@@ -10,11 +10,23 @@ export default function DistributionsAndPackaging() {
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
                 <CollapseBox
                     title="VeloDB"
-                    characteristic={[
-                        'VeloDB is a modern data warehouse built on Apache Doris. It is designed to provide lightning-fast performance for large-scale real-time data processing. ',
-                        'With cloud-native services and self-managed software on-premises, VeloDB offers a powerful solution developed by VeloDB Inc., a leading technology company headquartered in Singapore.',
-                        'Businesses can leverage VeloDB to unlock invaluable insights from data with unparalleled efficiency.',
-                    ]}
+                    description={
+                        <>
+                            <p>
+                                VeloDB is a modern data warehouse built on Apache Doris. It is designed to provide
+                                lightning-fast performance for large-scale real-time data processing.{' '}
+                            </p>
+                            <p className="mt-6">
+                                With cloud-native services and self-managed software on-premises, VeloDB offers a
+                                powerful solution developed by VeloDB Inc., a leading technology company headquartered
+                                in Singapore.
+                            </p>
+                            <p className="mt-6">
+                                Businesses can leverage VeloDB to unlock invaluable insights from data with unparalleled
+                                efficiency.
+                            </p>
+                        </>
+                    }
                     rightContent={<img src={require(`@site/static/images/ecomsystem/velodb.png`).default} alt="" />}
                     moreLink={
                         <ExternalLink
@@ -28,9 +40,13 @@ export default function DistributionsAndPackaging() {
                 <CollapseBox
                     showListIcon={false}
                     title="SelectDB"
-                    characteristic={[
-                        'SelectDB is a modern data warehouse built on Apache Doris. It is designed to deliver exceptional speed and performance for processing real-time data at scale, offering cloud-native services and self-managed software on-premises. ',
-                    ]}
+                    description={
+                        <p>
+                            SelectDB is a modern data warehouse built on Apache Doris. It is designed to deliver
+                            exceptional speed and performance for processing real-time data at scale, offering
+                            cloud-native services and self-managed software on-premises.{' '}
+                        </p>
+                    }
                     rightContent={<img src={require(`@site/static/images/ecomsystem/selectdb.png`).default} alt="" />}
                     moreLink={
                         <ExternalLink

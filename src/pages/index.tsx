@@ -19,6 +19,7 @@ import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 import { USER_STORIES } from '../constant/user.data';
 import { TOP_NEWS_DATA } from '../constant/top-news.data';
+import GetStarted from '@site/src/components/get-started/get-started';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -608,25 +609,7 @@ export default function Home(): JSX.Element {
                     </div>
                 </div>
             </PageColumn>
-            <div className="ready-start">
-                <div className="">
-                    <div className="ready-start-wrap">
-                        <div className="start-title">
-                            <Translate id="homepage.start.title">
-                                Start Your Journey in Real-Time with Apache Doris
-                            </Translate>
-                        </div>
-                        <div className="start-buttons">
-                            <Link className="start-btn download-btn" to="/download">
-                                <Translate id="homepage.start.downloadButton">Download</Translate>
-                            </Link>
-                            <Link className="start-btn docs-btn" to="/download">
-                                <Translate id="homepage.start.docsButton">Run anywhere</Translate>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <GetStarted />
         </Layout>
     );
 }

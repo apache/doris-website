@@ -34,7 +34,11 @@ export default function CollapseBox({
                         <div className="w-full lg:mr-32 lg:flex-1">
                             {newLink}
                             {description && (
-                                <div className={`${newLink ? 'pb-4' : 'pb-8'} text-base leading-[1.8] text-[#1D1D1D]`}>
+                                <div
+                                    className={`${
+                                        newLink ? 'pb-4' : 'pb-8'
+                                    } text-base leading-[1.625rem] text-[#1D1D1D]`}
+                                >
                                     {description}
                                 </div>
                             )}
@@ -42,7 +46,7 @@ export default function CollapseBox({
                                 <div className="flex">
                                     <ul>
                                         {characteristic?.map(e => (
-                                            <li key={e} className="mt-2 flex items-center space-x-2">
+                                            <li key={e} className="mt-4 flex items-center space-x-2">
                                                 {showListIcon && <CheckedIcon />}
                                                 <div className="text-[#5F6368]">{e}</div>
                                             </li>
