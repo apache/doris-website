@@ -392,7 +392,7 @@ export default function Home(): JSX.Element {
                 {!isPhone && (
                     <div
                         onClick={handlePrevious}
-                        className="swiper-button-prev"
+                        className="swiper-button-prev invisible group-hover:visible"
                         style={{ position: 'absolute', top: 'calc(50% - 2rem)', left: '-3rem', zIndex: 99 }}
                     ></div>
                 )}
@@ -404,29 +404,34 @@ export default function Home(): JSX.Element {
                     navigation={false}
                     modules={modules}
                     loop={true}
-                    className="mySwiper"
+                    className="firstPageSwiper"
                     // style={{ minHeight: 480 }}
                     onSlideChange={() => console.log('slide change')}
                     onSwiper={setSwiperRef}
                 >
-                    {TOP_NEWS_DATA.map(userStory => {
+                    {NEWSLETTER_DATA.map(newsletter => {
                         return (
-                            <SwiperSlide key={userStory.title}>
-                                <div className="users-wall-list row flex flex-start pb-8 lg:pb-16">
-                                    <div>
+                            <SwiperSlide key={newsletter.title}>
+                                <div className=" row flex justify-center xl:justify-start flex-start pb-8 lg:pb-16">
+                                    <div className="w-full lg:w-auto flex justify-center">
                                         <img
-                                            className="users-wall-img"
-                                            src={`${require(`@site/static/images/${userStory.image}`).default}`}
-                                            alt="users-wall-img"
+                                            width={424}
+                                            style={{ height: '100%' }}
+                                            src={`${require(`@site/static/images/${newsletter.image}`).default}`}
+                                            alt={newsletter.title}
                                         />
                                     </div>
-                                    <div className="w-[35.75rem] ml-12 flex flex-col py-4">
-                                        <h3 className="leading-[38px] text-2xl">{userStory.title}</h3>
-                                        <p className="my-6 text-base">
-                                            <strong className="font-normal">{userStory.author.name}</strong>
-                                            <span className="ml-6 text-[#4C576C]">{userStory.author.title}</span>
-                                        </p>
-                                        <Link className="flex items-center cursor-pointer" to={userStory.to}>
+                                    <div className=" w-[45rem] ml-12 flex flex-col ">
+                                        <div className="flex gap-1 mb-3">
+                                            {newsletter.tags.map(value => (
+                                                <div className=" px-3 py-2 bg-white rounded-[2.5rem]">{value}</div>
+                                            ))}
+                                        </div>
+                                        <h3 className="leading-[38px] text-2xl font-medium line-clamp-1	">
+                                            {newsletter.title}
+                                        </h3>
+                                        <p className="pt-4 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
+                                        <Link className="flex items-center cursor-pointer pt-6" to={newsletter.to}>
                                             <span className="text-primary mr-2">Read more</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -460,7 +465,7 @@ export default function Home(): JSX.Element {
                 {!isPhone && (
                     <div
                         onClick={handleNext}
-                        className="swiper-button-next"
+                        className="swiper-button-next invisible  group-hover:visible"
                         style={{ position: 'absolute', top: 'calc(50% - 2rem)', right: '-3rem', zIndex: 99 }}
                     ></div>
                 )}
@@ -480,7 +485,6 @@ export default function Home(): JSX.Element {
         >
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />
-            <section></section>
             {/* <NewsLetter newsList={NEWSLETTER_DATA} style={{ marginTop: '0' }} /> */}
             {/* <section className="news-section">
                 <div className="container">
@@ -496,8 +500,8 @@ export default function Home(): JSX.Element {
                     </div>
                 </div>
             </section> */}
-            <section style={{ backgroundColor: '#F4F4FA' }}>
-                <div className="container lg:pt-[88px]">{renderSwiper()}</div>
+            <section style={{ backgroundColor: '#F7F9FE' }} className="group">
+                <div className="container pt-14">{renderSwiper()}</div>
             </section>
             <section className="apache-doris">
                 <PageColumn
@@ -530,7 +534,7 @@ export default function Home(): JSX.Element {
                 </PageColumn>
             </section>
             <PageColumn
-                wrapperStyle={{ paddingTop: '7.5rem', paddingBottom: '5.5rem', backgroundColor: '#F4F4FA' }}
+                wrapperStyle={{ paddingTop: '7.5rem', paddingBottom: '5.5rem', backgroundColor: '#F7F9FE' }}
                 title={
                     <Translate id="homepage.capabilities" description="Core capabilities">
                         Core capabilities
@@ -538,7 +542,7 @@ export default function Home(): JSX.Element {
                 }
                 footer={<></>}
             >
-                <div className="core-capabilities-group">
+                <div className="core-capabilities-group grid-cols-1 lg:grid-cols-3 ">
                     {CoreCapabilitiesData.map(props => (
                         <CoreCapabilitiesCard key={props.title} {...props} />
                     ))}
@@ -566,8 +570,8 @@ export default function Home(): JSX.Element {
             >
                 <div>
                     {VariousAnalyticsData.map(({ title, content, links, icon }) => (
-                        <div className="various-analytics-group">
-                            <div className="items-title">
+                        <div className="various-analytics-group flex-col lg:flex-row">
+                            <div className="items-title w-auto lg:w-[27.25rem] ">
                                 <div>{icon}</div>
                                 <div>{title}</div>
                             </div>

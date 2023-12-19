@@ -14,7 +14,8 @@
     //     bottom: -4rem !important;
     // }
 
-    .swiper-button-next, .swiper-button-prev {
+    .swiper-button-next,
+    .swiper-button-prev {
         top: calc(50% - 2rem);
     }
 
@@ -34,7 +35,6 @@
                 display: block;
                 width: 36.25rem;
             }
-
         }
 
         .col {
