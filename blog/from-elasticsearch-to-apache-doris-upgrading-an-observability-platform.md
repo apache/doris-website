@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'From Elasticsearch to Apache Doris: Upgrading an observability platform',
+    'title': 'From Elasticsearch to Apache Doris: upgrading an observability platform',
     'summary': "GuanceDB, an observability platform, replaces Elasticsearch with Apache Doris as its query and storage engine and realizes 70% less storage costs and 200%~400% data query performance.",
     'date': '2023-12-14',
     'author': 'Apache Doris',
