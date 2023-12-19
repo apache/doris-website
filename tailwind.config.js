@@ -9,7 +9,10 @@ module.exports = {
         },
         colors: {
             primary: '#444FD9',
-            white: '#FFFFFF'
+            white: '#FFFFFF',
+        },
+        fontFamily: {
+            misans: ['MiSans Latin'],
         },
     },
     darkMode: ['class', '[data-theme="dark"]'],

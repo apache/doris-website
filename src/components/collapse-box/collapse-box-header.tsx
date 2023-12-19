@@ -7,7 +7,7 @@ export function CollapseBoxHeader({ title, defaultExpand = true }: { title: stri
     return (
         <div
             onClick={() => setExpand(!expand)}
-            className={`peer flex cursor-pointer items-center justify-between rounded-t-lg bg-[#F7F9FE] px-[3rem] py-[1.5rem] text-2xl font-semibold leading-[2.5rem] ${
+            className={`peer flex cursor-pointer items-center justify-between rounded-t-lg bg-[#F7F9FE] px-[3rem] py-[1.5rem] text-2xl font-semibold leading-[2.5rem] font-misans ${
                 expand ? 'expand' : ' rounded-b-lg'
             }`}
         >
