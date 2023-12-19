@@ -164,8 +164,13 @@ export default function Users(): JSX.Element {
                 title="Start Real-Time Journey with Innovators"
                 subtitle="Over 4000 global leaders and enterprises are powered by Apache Doris."
                 extra={
-                    <div className="flex justify-center mt-5">
-                        <button className="button-primary">Share your story</button>
+                    <div className="flex justify-center mt-16">
+                        <button
+                            className="button-primary"
+                            onClick={() => window.open('https://github.com/apache/doris/discussions/27683', '_blank')}
+                        >
+                            Share your story
+                        </button>
                     </div>
                 }
             />

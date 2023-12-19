@@ -1,16 +1,28 @@
 .docs-wrapper {
-    .versions {
-        opacity: 1;
+    .navbar__inner {
+        .navbar__items--right {
+            .docs-search,
+            .custom-navbar-item {
+                display: block;
+            }
+            .header-right-button-github,
+            .header-right-button-slack {
+                display: none;
+            }
+        }
     }
 }
 
-.plugin-id-community {
-    .versions {
-        opacity: 0;
-    }
-
-    .doc-search {
-        display: none;
+.navbar__inner {
+    .navbar__items--right {
+        .docs-search,
+        .custom-navbar-item {
+            display: none;
+        }
+        .header-right-button-github,
+        .header-right-button-slack {
+            display: block;
+        }
     }
 }
 .markdown code {
@@ -18,7 +30,7 @@
 }
 
 .markdown pre code {
-    background-color: #282A36;
+    background-color: #282a36;
 }
 
 @media (max-width: 996px) {

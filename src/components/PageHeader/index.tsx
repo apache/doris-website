@@ -6,12 +6,13 @@ interface PageHeaderProps {
     subtitle?: string;
     extra?: any;
     [any: string]: any;
+    className?: string;
 }
 
 export default function PageHeader(props: PageHeaderProps) {
     const isBlog = props?.match?.path === '/blog';
     return (
-        <div className={`page-header pb-[7.5rem] ${isBlog ? 'white pt-[7.5rem] ' : 'bg-[#F7F9FE] pt-20'}`}>
+        <div className={`page-header bg-[#F7F9FE] py-20 ${props.className}`}>
             <h1 className="title">{props.title}</h1>
             <div className="subtitle mt-6">{props.subtitle}</div>
             {props?.extra && props?.extra}

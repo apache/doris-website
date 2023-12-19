@@ -58,7 +58,22 @@ export default function Download() {
                             linkIcon={<ExternalLinkArrowIcon />}
                         ></ExternalLink>
                     }
-                    notes="Note: For detailed upgrade precautions, please refer to the deployment manual and cluster upgrade manual."
+                    notes={
+                        <>
+                            Note: For detailed upgrade precautions, please refer to the{' '}
+                            <Link className="text-primary underline" to="/docs/dev/install/standard-deployment">
+                                deployment
+                            </Link>{' '}
+                            manual and cluster{' '}
+                            <Link
+                                className="text-primary underline"
+                                to="/docs/dev/admin-manual/cluster-management/upgrade"
+                            >
+                                upgrade
+                            </Link>{' '}
+                            manual.
+                        </>
+                    }
                 />
                 <CollapseBox
                     title="Apache Doris 1.2 ( Stable )"
@@ -91,7 +106,22 @@ export default function Download() {
                             linkIcon={<ExternalLinkArrowIcon />}
                         ></ExternalLink>
                     }
-                    notes="Note：For detailed upgrade precautions, please refer to the deployment manual and cluster upgrade manual."
+                    notes={
+                        <>
+                            Note: For detailed upgrade precautions, please refer to the{' '}
+                            <Link className="text-primary underline" to="/docs/dev/install/standard-deployment">
+                                deployment
+                            </Link>{' '}
+                            manual and cluster{' '}
+                            <Link
+                                className="text-primary underline"
+                                to="/docs/dev/admin-manual/cluster-management/upgrade"
+                            >
+                                upgrade
+                            </Link>{' '}
+                            manual.
+                        </>
+                    }
                 />
                 <CollapseBox
                     expand={false}

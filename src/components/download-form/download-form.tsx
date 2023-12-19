@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';
@@ -19,16 +19,15 @@ export default function DownloadForm(props: DownloadFormProps) {
         return options.children;
     };
 
-    const getVersionLinkByKeys = (version, cpu, suffix, type) => {
-        const versionNode = versions.find(({ value }) => value === version);
-        const cpuNode = versionNode?.children.find(({ value }) => value === cpu);
-        const suffixNode = cpuNode?.children.find(({ value }) => value === suffix);
-        return suffixNode?.[type] || null;
+    const getVersionLinkByKeys = (version, cpu, type) => {
+        const versionNode = versions.find(item => item.value === version);
+        const node = versionNode.children.find(item => item.value === cpu);
+        return node?.[type] || null;
     };
 
     useEffect(() => {
         const currentVersion = versions.find(item => form.getFieldValue('version') === item.value).children;
-        form.setFieldValue('architecture', [currentVersion[0].value, currentVersion[0].children[0].value]);
+        form.setFieldValue('architecture', currentVersion[0].value);
     }, [version]);
 
     return (
@@ -37,10 +36,7 @@ export default function DownloadForm(props: DownloadFormProps) {
             <Form
                 form={form}
                 onFinish={val => {
-                    window.open(
-                        getVersionLinkByKeys(val.version, val.architecture[0], val.architecture[1], 'link'),
-                        '_blank',
-                    );
+                    window.open(getVersionLinkByKeys(val.version, val.architecture, 'gz'), '_blank');
                     return;
                 }}
                 initialValues={{
@@ -56,7 +52,7 @@ export default function DownloadForm(props: DownloadFormProps) {
                             <FormSelect
                                 placeholder="Architecture"
                                 label="Architecture"
-                                isCascader={true}
+                                isCascader={false}
                                 options={getOptions(getFieldValue('version'))}
                             />
                         </Form.Item>
@@ -68,18 +64,31 @@ export default function DownloadForm(props: DownloadFormProps) {
                         Download
                     </button>
                 </Form.Item>
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-[1.5rem]">
                     <div
-                        className="inline-flex items-center text-[#444FD9] mt-[1.5rem] cursor-pointer"
+                        className="inline-flex items-center text-[#444FD9] cursor-pointer hover:underline"
                         onClick={() => {
-                            window.open(
-                                getVersionLinkByKeys(version, architecture?.[0], architecture?.[1], 'sourceLink'),
-                                '_blank',
-                            );
+                            window.open(getVersionLinkByKeys(version, architecture, 'asc'), '_blank');
                         }}
                     >
-                        Download source code
-                        <ExternalLinkArrowIcon />
+                        asc
+                    </div>
+                    <div
+                        className="inline-flex items-center ml-2 text-[#444FD9] cursor-pointer hover:underline"
+                        onClick={() => {
+                            window.open(getVersionLinkByKeys(version, architecture, 'sha512'), '_blank');
+                        }}
+                    >
+                        sha512
+                    </div>
+                    <div
+                        className="inline-flex items-center ml-2 text-[#444FD9] cursor-pointer hover:underline"
+                        onClick={() => {
+                            window.open(getVersionLinkByKeys(version, architecture, 'source'), '_blank');
+                        }}
+                    >
+                        source code
+                        <ExternalLinkArrowIcon className="ml-1" />
                     </div>
                 </div>
             </Form>

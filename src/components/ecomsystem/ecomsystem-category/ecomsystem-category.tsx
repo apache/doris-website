@@ -31,7 +31,7 @@ export default function EcomsystemCategory() {
                 setActive={() => setActive(EcomsystemCategoryEnum.ClusterManagement)}
                 active={active === EcomsystemCategoryEnum.ClusterManagement}
                 icon={<ClusterManagementIcon />}
-                title="Cluster Management"
+                title="Cluster management"
                 content="Easily deploy and maintain Doris clusters"
             />
             <TabItem
@@ -47,7 +47,7 @@ export default function EcomsystemCategory() {
                 setActive={() => setActive(EcomsystemCategoryEnum.DistributionsAndPackaging)}
                 active={active === EcomsystemCategoryEnum.DistributionsAndPackaging}
                 icon={<DistributionsAndPackagingIcon />}
-                title={'Distributions & Packaging'}
+                title={'Distributions'}
                 content="Complement Apache Doris"
             />
         </div>
