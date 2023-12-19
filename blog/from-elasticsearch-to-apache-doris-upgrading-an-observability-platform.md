@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'From Elasticsearch to Apache Doris: upgrading an observability platform',
+    'title': 'From Elasticsearch to Apache Doris: Upgrading an observability platform',
     'summary': "GuanceDB, an observability platform, replaces Elasticsearch with Apache Doris as its query and storage engine and realizes 70% less storage costs and 200%~400% data query performance.",
     'date': '2023-12-14',
     'author': 'Apache Doris',
@@ -35,7 +35,7 @@ The key to upgrading an observability platform is to increase data processing sp
 1. The faster you can identify abnormalities from your data, the more you can contain the potential damage.
 2. An observability platform needs to store a sea of data, and low storage cost is the only way to make that sustainable.
 
-This post is about how GuanceDB, an observability platform, makes progress in these two aspects by replacing Elasticsearch with Apache Doris as its query and storage engine. **The result is 70% less storage costs and 200%～400% data query performance.**
+This post is about how GuanceDB, an observability platform, makes progress in these two aspects by replacing Elasticsearch with [Apache Doris](https://doris.apache.org/) as its query and storage engine. **The result is 70% less storage costs and 200%～400% data query performance.**
 
 ## GuanceDB
 
@@ -61,7 +61,7 @@ For time series data, they built Metric Store, which is a self-developed storage
 - **Schemaless support**: Elasticsearch provides schemaless support by Dynamic Mapping, but that's not enough to handle large amounts of user-defined fields. In this case, it can lead to field type conflict and thus data loss.
 - **Data aggregation**: Large aggregation tasks often trigger a timeout error in Elasticsearch. 
 
-So this is where the upgrade happens. GuanceDB tried and replaced Elasticsearch with [Apache Doris](https://doris.apache.org/). 
+So this is where the upgrade happens. GuanceDB tried and replaced Elasticsearch with Apache Doris. 
 
 ## DQL
 
@@ -160,7 +160,7 @@ Currently, the Variant type requires extra type assertion, we plan to automate t
 
 ## Conclusion
 
-GuanceDB's transition from Elasticsearch to Apache Doris showcases a big stride in improving data processing speed and reducing costs. For these purposes, Apache Doris has optimized itself in the two major aspects of data processing: data integration and data analysis. It has expanded its schemaless support to flexibly accommodate more data types, introduced features like inverted index and tiered storage to enable faster and more cost-effective queries. Evolution is an ongoing process. Apache Doris has never stopped improving itself. We have a lot of new features under development and the Doris [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog) embrace any input and feedback.
+GuanceDB's transition from Elasticsearch to Apache Doris showcases a big stride in improving data processing speed and reducing costs. For these purposes, Apache Doris has optimized itself in the two major aspects of data processing: data integration and data analysis. It has expanded its schemaless support to flexibly accommodate more data types, introduced features like inverted index and tiered storage to enable faster and more cost-effective queries. Evolution is an ongoing process. Apache Doris has never stopped improving itself. We have a lot of new features under development and the Doris community embrace any input and feedback.
 
 Check Apache Doris GitHub [repo](https://github.com/apache/doris)
 
