@@ -43,11 +43,16 @@ export default function NavbarContent({ mobile }) {
     const [leftItems, rightItems] = splitNavbarItems(items);
     const searchBarItem = items.find(item => item.type === 'search');
     const [star, setStar] = useState<any>();
-    const pathname = location.pathname.split('/')[1];
+    const [isDocsPage, setIsDocsPage] = useState(false);
 
     useEffect(() => {
         getGithubStar();
-    }, []);
+        if (typeof window !== 'undefined') {
+            const pathname = location.pathname.split('/')[1];
+            const docsPage = pathname === 'docs';
+            setIsDocsPage(docsPage);
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
 
     async function getGithubStar() {
         const res = await fetch('https://api.github.com/repos/apache/doris');
@@ -70,7 +75,7 @@ export default function NavbarContent({ mobile }) {
                 // TODO stop hardcoding items?
                 <>
                     {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />}
-                    {pathname === 'docs' ? (
+                    {isDocsPage ? (
                         <div
                             className="cursor-pointer"
                             onClick={() => {
@@ -83,11 +88,11 @@ export default function NavbarContent({ mobile }) {
                         <NavbarLogo />
                     )}
 
-                    {pathname !== 'docs' && <NavbarItems items={leftItems} />}
+                    {!isDocsPage && <NavbarItems items={leftItems} />}
                     {/*  */}
                 </>
             }
-            isDocsPage={pathname === 'docs'}
+            isDocsPage={isDocsPage}
             right={
                 // TODO stop hardcoding items?
                 // Ask the user to add the respective navbar items => more flexible
