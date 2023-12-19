@@ -4,8 +4,8 @@ import { CollapseBoxHeader } from './collapse-box-header';
 
 interface CollapseBoxProps {
     title: string;
-    description: string;
-    characteristic: string[];
+    description: string | React.ReactNode;
+    characteristic?: string[];
     rightContent?: ReactNode;
     newLink?: ReactNode;
     moreLink?: ReactNode;
