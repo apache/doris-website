@@ -47,7 +47,9 @@ export default function Download() {
                         'More efficient data writing and updates',
                         'Improved multi-tenant and resource isolation mechanisms',
                     ]}
-                    rightContent={<DownloadForm versions={DORIS_VERSIONS.slice(0, 4)} />}
+                    rightContent={
+                        <DownloadForm versions={DORIS_VERSIONS.filter(item => item.majorVersion === '2.0')} />
+                    }
                     moreLink={
                         <ExternalLink
                             to="/docs/releasenotes/release-2.0.0"
@@ -78,7 +80,9 @@ export default function Download() {
                         'Multi-Catalog to enhance data lake analytics',
                         'Light schema change at millisecond-level and DDL auto-synchronization',
                     ]}
-                    rightContent={<DownloadForm versions={DORIS_VERSIONS.slice(4, DORIS_VERSIONS.length)} />}
+                    rightContent={
+                        <DownloadForm versions={DORIS_VERSIONS.filter(item => item.majorVersion === '1.2')} />
+                    }
                     moreLink={
                         <ExternalLink
                             to="/docs/releasenotes/release-1.2.0"
