@@ -171,8 +171,8 @@ export default function Users(): JSX.Element {
             />
             <section className="users-wall container lg:pt-[88px]">{renderSwiper()}</section>
             <section className="lg:pt-[5.5rem] container">
-                <div className="blog-list-wrap row">
-                    <ul className="scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-scroll w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
+                <div className="blog-list-wrap row mt-28 lg:mt-0">
+                    <ul className="container scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-scroll lg:w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
                         {USER_STORIES_CATEGORIES.map((item: any) => (
                             <li className="py-px" key={item} onClick={() => changeCategory(item)}>
                                 <span
@@ -186,7 +186,7 @@ export default function Users(): JSX.Element {
                         ))}
                     </ul>
                 </div>
-                <ul className="mt-6 grid gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
+                <ul className="mt-6 grid gap-1 grid-cols-3 lg:gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
                     {users.map(user => (
                         <UserItem key={user.name} {...user} />
                     ))}
