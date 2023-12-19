@@ -107,7 +107,7 @@ export default function BlogListItem(props) {
                     <div
                         className={`${
                             large ? ' mt-8 lg:text-base' : ' mt-4'
-                        }  justify-start space-x-2  text-sm leading-[1.375rem] text-[#4C576C]`}
+                        }  justify-start space-x-2  text-sm leading-[1.375rem] text-[#8592a6]`}
                     >
                         <time dateTime={date} itemProp="datePublished">
                             {formattedDate}

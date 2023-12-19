@@ -164,15 +164,20 @@ export default function Users(): JSX.Element {
                 title="Start Real-Time Journey with Innovators"
                 subtitle="Over 4000 global leaders and enterprises are powered by Apache Doris."
                 extra={
-                    <div className="flex justify-center mt-5">
-                        <button className="button-primary">Share your story</button>
+                    <div className="flex justify-center mt-16">
+                        <button
+                            className="button-primary"
+                            onClick={() => window.open('https://github.com/apache/doris/discussions/27683', '_blank')}
+                        >
+                            Share your story
+                        </button>
                     </div>
                 }
             />
             <section className="users-wall container lg:pt-[88px]">{renderSwiper()}</section>
             <section className="lg:pt-[5.5rem] container">
                 <div className="blog-list-wrap row mt-28 lg:mt-0">
-                    <ul className="container scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-scroll lg:w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
+                    <ul className="container scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-auto lg:w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
                         {USER_STORIES_CATEGORIES.map((item: any) => (
                             <li className="py-px" key={item} onClick={() => changeCategory(item)}>
                                 <span

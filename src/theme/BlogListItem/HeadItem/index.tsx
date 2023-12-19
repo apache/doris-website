@@ -28,7 +28,7 @@ export default function HeadItem(props: any) {
                         <div className="mt-4 line-clamp-2 h-11 text-sm leading-relaxed text-[#4C576C] transition group-hover:text-primary">
                             {summary}
                         </div>
-                        <div className="mt-4 flex justify-start space-x-2 text-sm  leading-[1.375rem] text-[#4C576C]">
+                        <div className="mt-4 flex justify-start space-x-2 text-sm  leading-[1.375rem] text-[#8592a6]">
                             <time dateTime={date} itemProp="datePublished" className="mr-4">
                                 {formattedDate}
                             </time>
@@ -65,7 +65,7 @@ export default function HeadItem(props: any) {
                     </h1>
                     <p className="mt-4 line-clamp-2 text-sm leading-[1.6875rem] text-[#666666] lg:text-lg">{summary}</p>
                     <div className="mt-4 flex space-x-6">
-                        <span className="text-sm text-[#5F6368CC]">
+                        <span className="text-sm text-[#8592a6]">
                             <time dateTime={date} itemProp="datePublished" className="mr-4">
                                 {formattedDate}
                             </time>

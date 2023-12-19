@@ -13,8 +13,15 @@ export default function GetStarted() {
                 <h2 className="text-center text-[1.75rem] font-medium text-white lg:text-title-md">{data.title}</h2>
                 {data?.description && <div className="mt-4 text-center text-white">{data.description}</div>}
                 <div className="relative z-[1] mt-12 flex justify-center space-x-4 lg:space-x-10">
-                    {data.buttons.map(item => {
-                        return <ExternalLink label={item.text} {...item} linkIcon={<ExternalLinkArrowIcon />} />;
+                    {data.buttons.map((item, index) => {
+                        return (
+                            <ExternalLink
+                                label={item.text}
+                                key={index}
+                                {...item}
+                                linkIcon={<ExternalLinkArrowIcon />}
+                            />
+                        );
                     })}
                 </div>
             </div>

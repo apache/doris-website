@@ -222,7 +222,7 @@ const config = {
                     { to: '/blog', label: 'Blog', position: 'left' },
                     { to: '/users', label: 'Users', position: 'left' },
                     {
-                        label: 'Discussions ↗',
+                        label: 'Discussions',
                         to: 'https://github.com',
                         position: 'left',
                     },
@@ -239,6 +239,7 @@ const config = {
                     {
                         type: 'search',
                         position: 'right',
+                        className: 'docs-search',
                     },
                     {
                         type: 'localeDropdown',

@@ -1,8 +1,10 @@
 export interface Option {
     label: string;
     value: string;
-    link?: string;
-    sourceLink?: string;
+    gz?: string;
+    asc?: string;
+    sha512?: string;
+    source?: string;
     children?: Option[];
     majorVersion?: string;
 }
@@ -30,74 +32,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.3/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.3/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.3/apache-doris-2.0.3-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.3/',
             },
         ],
     },
@@ -109,74 +63,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-x64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-x64.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.2.1-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.2.1-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.2.1-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.2.1/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-x64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-x64-noavx2.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-x64-noavx2.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.2.1-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.2.1-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.2.1-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.2.1/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-arm64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-arm64.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.2-bin-arm64.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.2/apache-doris-2.0.2-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.2.1-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.2.1-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.2.1-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.2.1/',
             },
         ],
     },
@@ -188,80 +94,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-x64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-x64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-x64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.1.1-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.1.1-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.1.1-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.1.1/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-x64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-x64-noavx2.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-x64-noavx2.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.1.1-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.1.1-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.1.1-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.1.1/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-arm64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-arm64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.1.1-bin-arm64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/2.0/2.0.1.1/apache-doris-2.0.1.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.1.1-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.1.1-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.1.1-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.1.1/',
             },
         ],
     },
@@ -273,74 +125,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.0-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.0/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.0-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.0/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz.asc`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz.sha512`,
-                        sourceLink: 'https://downloads.apache.org/doris/2.0/2.0.0/apache-doris-2.0.0-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.0-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.0/',
             },
         ],
     },
@@ -352,80 +156,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-x64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-x64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-x64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.7.1-bin-x64.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.7.1-bin-x64.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.7.1-bin-x64.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.7.1/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-x64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-x64-noavx2.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-x64-noavx2.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.7.1-bin-x64-noavx2.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.7.1-bin-x64-noavx2.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.7.1-bin-x64-noavx2.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.7.1/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-arm64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-arm64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.7.1-bin-arm64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.7.1/apache-doris-1.2.7.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.7.1-bin-arm64.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.7.1-bin-arm64.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.7.1-bin-arm64.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.7.1/',
             },
         ],
     },
@@ -437,80 +187,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.6-bin-x64.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.6-rc03/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.6-bin-x64-noavx2.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.6-rc03/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.6-rc03/apache-doris-1.2.6-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.6-bin-arm64.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.6-rc03/',
             },
         ],
     },
@@ -522,80 +218,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.5-bin-x86_64.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.5-rc01/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.5-rc01/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.gz`,
-                        sourceLink: 'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.gz.asc`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.gz.sha512`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.5-rc01/apache-doris-1.2.5-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.xz`,
+                asc: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.xz.asc`,
+                sha512: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.xz.sha512`,
+                source: 'https://downloads.apache.org/doris/1.2/1.2.5-rc01/',
             },
         ],
     },
@@ -607,83 +249,26 @@ export const DORIS_VERSIONS: Option[] = [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64.tar.xz`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc',
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512',
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.4.1-bin-x86_64.tar.xz`,
+                asc: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
+                sha512: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
+                source: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.gz`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc',
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512',
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.5-bin-x86_64-noavx2.tar.xz`,
+                asc: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
+                sha512: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
+                source: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                children: [
-                    {
-                        label: SuffixEnum.GZ,
-                        value: SuffixEnum.GZ,
-                        link: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.gz`,
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz',
-                    },
-                    {
-                        label: SuffixEnum.ASC,
-                        value: SuffixEnum.ASC,
-                        link: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc',
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.asc',
-                    },
-                    {
-                        label: SuffixEnum.SHA512,
-                        value: SuffixEnum.SHA512,
-                        link: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512',
-                        sourceLink:
-                            'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/apache-doris-1.2.4.1-src.tar.gz.sha512',
-                    },
-                ],
+                gz: `${ORIGIN}apache-doris-1.2.5-bin-aarch64.tar.xz`,
+                asc: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
+                sha512: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
+                source: 'https://downloads.apache.org/doris/1.2/1.2.4.1-rc01/',
             },
         ],
     },
@@ -691,82 +276,64 @@ export const DORIS_VERSIONS: Option[] = [
 
 export const OLD_VERSIONS: Option[] = [
     {
-        label: '1.2',
-        value: '1.2',
-        children: [
-            {
-                label: '1.2.3',
-                value: '1.2.3',
-                link: 'https://archive.apache.org/dist/doris/1.2/1.2.3-rc02/apache-doris-1.2.3-src.tar.gz',
-            },
-            {
-                label: '1.2.2',
-                value: '1.2.2',
-                link: 'https://archive.apache.org/dist/doris/1.2/1.2.2-rc01/apache-doris-1.2.2-src.tar.gz',
-            },
-            {
-                label: '1.2.1',
-                value: '1.2.1',
-                link: 'https://archive.apache.org/dist/doris/1.2/1.2.1-rc01/apache-doris-1.2.1-src.tar.gz',
-            },
-        ],
+        label: '1.2.3',
+        value: '1.2.3',
+        source: 'https://archive.apache.org/dist/doris/1.2/1.2.3-rc02/',
     },
     {
-        label: '1.1',
-        value: '1.1',
-        children: [
-            {
-                label: '1.1.5',
-                value: '1.1.5',
-                link: 'https://archive.apache.org/dist/doris/1.1/1.1.5-rc02/apache-doris-1.1.5-src.tar.gz',
-            },
-            {
-                label: '1.1.4',
-                value: '1.1.4',
-                link: 'https://archive.apache.org/dist/doris/1.1/1.1.4-rc01/apache-doris-1.1.4-src.tar.gz',
-            },
-            {
-                label: '1.1.3',
-                value: '1.1.3',
-                link: 'https://archive.apache.org/dist/doris/1.1/1.1.3-rc02/apache-doris-1.1.3-src.tar.gz',
-            },
-            {
-                label: '1.1.2',
-                value: '1.1.2',
-                link: 'https://archive.apache.org/dist/doris/1.1/1.1.2-rc05/apache-doris-1.1.2-src.tar.gz',
-            },
-            {
-                label: '1.1.1',
-                value: '1.1.1',
-                link: 'https://archive.apache.org/dist/doris/1.1/1.1.1/apache-doris-1.1.1-src.tar.gz',
-            },
-            {
-                label: '1.1.0',
-                value: '1.1.0',
-                link: 'https://archive.apache.org/dist/doris/1.1/1.1.0/apache-doris-1.0.0-incubating-src.tar.gz',
-            },
-        ],
+        label: '1.2.2',
+        value: '1.2.2',
+        source: 'https://archive.apache.org/dist/doris/1.2/1.2.2-rc01/',
     },
     {
-        label: '0.x',
-        value: '0.x',
-        children: [
-            {
-                label: '0.15.0',
-                value: '0.15.0',
-                link: 'https://archive.apache.org/dist/doris/0.15.0-incubating/apache-doris-0.15.0-incubating-src.tar.gz',
-            },
-            {
-                label: '0.14.0',
-                value: '0.14.0',
-                link: 'https://archive.apache.org/dist/doris/0.14.0-incubating/apache-doris-0.14.0-incubating-src.tar.gz',
-            },
-            {
-                label: '0.13.0',
-                value: '0.13.0',
-                link: 'https://archive.apache.org/dist/doris/0.13.0-incubating/apache-doris-0.13.0-incubating-src.tar.gz',
-            },
-        ],
+        label: '1.2.1',
+        value: '1.2.1',
+        source: 'https://archive.apache.org/dist/doris/1.2/1.2.1-rc01/',
+    },
+    {
+        label: '1.1.5',
+        value: '1.1.5',
+        source: 'https://archive.apache.org/dist/doris/1.1/1.1.5-rc02/',
+    },
+    {
+        label: '1.1.4',
+        value: '1.1.4',
+        source: 'https://archive.apache.org/dist/doris/1.1/1.1.4-rc01/',
+    },
+    {
+        label: '1.1.3',
+        value: '1.1.3',
+        source: 'https://archive.apache.org/dist/doris/1.1/1.1.3-rc02/',
+    },
+    {
+        label: '1.1.2',
+        value: '1.1.2',
+        source: 'https://archive.apache.org/dist/doris/1.1/1.1.2-rc05/',
+    },
+    {
+        label: '1.1.1',
+        value: '1.1.1',
+        source: 'https://archive.apache.org/dist/doris/1.1/1.1.1-rc03/',
+    },
+    {
+        label: '1.1.0',
+        value: '1.1.0',
+        source: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
+    },
+    {
+        label: '0.15.0',
+        value: '0.15.0',
+        source: 'https://archive.apache.org/dist/doris/0.15.0-incubating/',
+    },
+    {
+        label: '0.14.0',
+        value: '0.14.0',
+        source: 'https://archive.apache.org/dist/doris/0.14.0-incubating/',
+    },
+    {
+        label: '0.13.0',
+        value: '0.13.0',
+        source: 'https://archive.apache.org/dist/doris/0.13.0-incubating/',
     },
 ];
 

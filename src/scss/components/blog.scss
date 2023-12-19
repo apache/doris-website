@@ -2,8 +2,8 @@
     .blog-info {
         display: flex;
         align-items: center;
-        color: rgba(38, 40, 51, 0.4);
         flex-wrap: wrap;
+        color: #1d1d1d;
 
         .split-line {
             margin: 0 0.5rem;
@@ -37,7 +37,7 @@
 
         .s-tag {
             font-size: 12px;
-            background-color: #F5F7F9;
+            background-color: #f5f7f9;
             padding: 2px 4px;
             border-radius: 2px;
             color: rgba(38, 40, 51, 0.6);
