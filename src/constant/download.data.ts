@@ -4,6 +4,7 @@ export interface Option {
     link?: string;
     sourceLink?: string;
     children?: Option[];
+    majorVersion?: string;
 }
 
 export enum CPUEnum {
@@ -24,6 +25,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '2.0.3',
         value: '2.0.3',
+        majorVersion: '2.0',
         children: [
             {
                 label: CPUEnum.X64,
@@ -102,6 +104,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '2.0.2',
         value: '2.0.2',
+        majorVersion: '2.0',
         children: [
             {
                 label: CPUEnum.X64,
@@ -180,6 +183,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '2.0.1',
         value: '2.0.1',
+        majorVersion: '2.0',
         children: [
             {
                 label: CPUEnum.X64,
@@ -264,6 +268,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '2.0.0',
         value: '2.0.0',
+        majorVersion: '2.0',
         children: [
             {
                 label: CPUEnum.X64,
@@ -342,6 +347,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '1.2.7',
         value: '1.2.7',
+        majorVersion: '1.2',
         children: [
             {
                 label: CPUEnum.X64,
@@ -426,6 +432,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '1.2.6',
         value: '1.2.6',
+        majorVersion: '1.2',
         children: [
             {
                 label: CPUEnum.X64,
@@ -510,6 +517,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '1.2.5',
         value: '1.2.5',
+        majorVersion: '1.2',
         children: [
             {
                 label: CPUEnum.X64,
@@ -594,6 +602,7 @@ export const DORIS_VERSIONS: Option[] = [
     {
         label: '1.2.4',
         value: '1.2.4',
+        majorVersion: '1.2',
         children: [
             {
                 label: CPUEnum.X64,
