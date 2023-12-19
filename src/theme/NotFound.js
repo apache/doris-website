@@ -3,6 +3,7 @@ import Translate, { translate } from '@docusaurus/Translate';
 import { PageMetadata } from '@docusaurus/theme-common';
 import Layout from '@theme/Layout';
 import ExternalLink from '../components/external-link/external-link';
+import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 export default function NotFound() {
     return (
         <>
@@ -34,12 +35,21 @@ export default function NotFound() {
                                     different page or report this issue.
                                 </Translate>
                             </p>
-                            <div className="flex justify-center mt-10">
+                            <div className="flex justify-center gap-x-10 mt-10">
                                 <div className="w-[9.75rem]">
-                                    <ExternalLink label="Go to home" className="text-sm" />
+                                    <ExternalLink
+                                        to="/"
+                                        label="Go to home"
+                                        className="text-sm h-[2.625rem] bg-primary text-white rounded-md hover:text-white cursor-pointer"
+                                        linkIcon={<ExternalLinkArrowIcon />}
+                                    />
                                 </div>
                                 <div className="w-[9.75rem]">
-                                    <ExternalLink label="Report this issue" className="text-sm" />
+                                    <ExternalLink
+                                        label="Report this issue"
+                                        linkIcon={<ExternalLinkArrowIcon />}
+                                        className="text-sm border border-[#444FD9] h-[2.625rem] rounded-md text-primary cursor-pointer"
+                                    />
                                 </div>
                             </div>
                         </div>

@@ -120,6 +120,7 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
                     onClick={
                         collapsible
                             ? e => {
+                                  if (level === 1) return;
                                   onItemClick?.(item);
                                   if (href) {
                                       updateCollapsed(false);
@@ -129,6 +130,7 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
                                   }
                               }
                             : () => {
+                                  if (level === 1) return;
                                   onItemClick?.(item);
                               }
                     }
