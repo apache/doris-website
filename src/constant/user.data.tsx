@@ -21,22 +21,22 @@ export const USER_STORIES = [
         image: 'user-jd.png',
     },
     {
-        title: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”',
+        title: '“Reducing costs and increasing service availability, Large Language Models empower Doris-based OLAP service”',
         author: {
-            name: 'Bob',
-            title: 'Senior Software Engineer, JD.com',
+            name: 'Li Zhe, Lei Luo',
+            title: 'Senior software engineer, Tencent ',
         },
-        to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
-        image: 'user-jd.png',
+        to: 'blog/Tencent-LLM',
+        image: 'tme.png',
     },
     {
-        title: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”',
+        title: '“Digest 15 billion logs per day and keep big queries within 1 second. We use Doris to deploy multiple petabyte scale clusters on dozens of machines”',
         author: {
-            name: 'Bob',
-            title: 'Senior Software Engineer, JD.com',
+            name: 'Yuqi Liu',
+            title: 'Senior software engineer, China Unicom',
         },
-        to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
-        image: 'user-jd.png',
+        to: 'blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second',
+        image: 'china-unicom.png',
     },
 ];
 

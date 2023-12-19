@@ -6,8 +6,8 @@
     'author': 'Apache Doris',
     'tags': ['Top News'],
     'picked': "true",
-    'order': "2",
-    "image": 'https://www.velodb.io/_next/image?url=https%3A%2F%2Fcdn.selectdb.com%2Fstatic%2Fguance_c75d29f60d.jpg&w=3840&q=75'
+    'order': "1",
+    "image": '/images/doris-summit-asia.png'
 }
 
 ---

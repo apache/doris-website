@@ -5,6 +5,7 @@
     'date': '2023-08-16',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
+    "image": '/images/common.png'
 }
 ---
 

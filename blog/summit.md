@@ -6,6 +6,7 @@
     'date': '2023-01-19',
     'author': 'Mingyu Chen',
     'tags': ['Top News'],
+    "image": '/images/common.png'
 }
 ---
 

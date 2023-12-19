@@ -5,6 +5,7 @@
     'date': '2023-07-10',
     'author': 'Baoming Zhang',
     'tags': ['Best Practice'],
+    "image": '/images/common.png'
 }
 
 

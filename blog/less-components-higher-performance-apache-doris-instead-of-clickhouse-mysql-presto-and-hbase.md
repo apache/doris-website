@@ -5,6 +5,7 @@
     'date': '2023-11-22',
     'author': 'Big Data Platform R&D Team of CIGNA&CMB',
     'tags': ['Best Practice'],
+    "image": '/images/cigna-cmb.png'
 }
 
 ---

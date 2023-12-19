@@ -5,6 +5,7 @@
     'date': '2023-08-05',
     'author': 'Hou Lan',
     'tags': ['Best Practice'],
+    "image": '/images/common.png'
 }
 
 ---

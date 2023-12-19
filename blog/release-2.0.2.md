@@ -5,9 +5,7 @@
     'date': '2023-10-13',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "3",
-    "image": 'https://www.velodb.io/_next/image?url=https%3A%2F%2Fcdn.selectdb.com%2Fstatic%2Fguance_c75d29f60d.jpg&w=3840&q=75'
+    "image": '/images/2.0.2.png'
 }
 ---
 

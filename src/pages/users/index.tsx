@@ -100,12 +100,12 @@ export default function Users(): JSX.Element {
                                 <div className="users-wall-list row flex flex-start pb-8 lg:pb-16">
                                     <div>
                                         <img
-                                            className="users-wall-img"
+                                            className="users-wall-img lg:w-[580px] lg:h-[248px]"
                                             src={`${require(`@site/static/images/${userStory.image}`).default}`}
                                             alt="users-wall-img"
                                         />
                                     </div>
-                                    <div className="w-[35.75rem] ml-12 flex flex-col py-4">
+                                    <div className="w-[35.75rem] ml-4 lg:ml-12 flex flex-col py-4">
                                         <h3 className="leading-[38px] text-2xl">{userStory.title}</h3>
                                         <p className="my-6 text-base">
                                             <strong className="font-normal">{userStory.author.name}</strong>
