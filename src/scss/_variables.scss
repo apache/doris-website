@@ -1,9 +1,11 @@
 html[lang='zh-Hans-CN'] {
     --ifm-font-family-base: 'MiSans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'MiSans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 html[lang='en-US'] {
     --ifm-font-family-base: 'MiSans VF', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'MiSans VF', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 :root {
