@@ -5,7 +5,7 @@ export const NEWSLETTER_DATA = [
         content:
             'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners ...',
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
-        image: 'user-jd.png',
+        image: 'doris-summit.png',
     },
     {
         tags: ['Top news'],
@@ -13,7 +13,7 @@ export const NEWSLETTER_DATA = [
         content:
             'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners ...',
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
-        image: 'user-jd.png',
+        image: 'doris-summit.png',
     },
     {
         tags: ['Top news'],
@@ -21,7 +21,7 @@ export const NEWSLETTER_DATA = [
         content:
             'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners ...',
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
-        image: 'user-jd.png',
+        image: 'doris-summit.png',
     },
     {
         tags: ['Top news'],
@@ -29,6 +29,6 @@ export const NEWSLETTER_DATA = [
         content:
             'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners ...',
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
-        image: 'user-jd.png',
+        image: 'doris-summit.png',
     },
 ];
