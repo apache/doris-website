@@ -1,7 +1,7 @@
 import Layout from '../../theme/Layout';
 import React, { useCallback, useMemo, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate, { translate } from '@docusaurus/Translate';
+import { translate } from '@docusaurus/Translate';
 import './index.scss';
 import Link from '@docusaurus/Link';
 import userCasesEn from '@site/userCases/en_US.json';
@@ -9,7 +9,7 @@ import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Pagination, Navigation } from 'swiper';
+import { Pagination } from 'swiper';
 import usePhone from '@site/src/hooks/use-phone';
 import PageHeader from '@site/src/components/PageHeader';
 import { USERS, USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
@@ -27,7 +27,7 @@ export default function Users(): JSX.Element {
         const tag = isBrowser ? sessionStorage.getItem('tag') : ALL_TEXT;
         return tag || ALL_TEXT;
     });
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([...USERS]);
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
@@ -55,6 +55,12 @@ export default function Users(): JSX.Element {
     function changeCategory(category: string) {
         setActive(category);
         let currentCategory = USER_STORIES_CATEGORIES.find(item => item === category);
+        const currentUsers = USERS.filter(user => user.category === category);
+        if (category === ALL_TEXT) {
+            setUsers([...USERS]);
+        } else {
+            setUsers(currentUsers);
+        }
         if (!currentCategory) {
             setActive(ALL_TEXT);
             currentCategory = USER_STORIES_CATEGORIES.find(item => item === ALL_TEXT);
@@ -170,8 +176,8 @@ export default function Users(): JSX.Element {
                         {USER_STORIES_CATEGORIES.map((item: any) => (
                             <li className="py-px" key={item} onClick={() => changeCategory(item)}>
                                 <span
-                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#0065FD] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
-                                        active === item && 'bg-[#0065FD] text-white'
+                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                        active === item && 'bg-primary text-white'
                                     }`}
                                 >
                                     {item}
@@ -181,7 +187,7 @@ export default function Users(): JSX.Element {
                     </ul>
                 </div>
                 <ul className="mt-6 grid gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
-                    {USERS.map(user => (
+                    {users.map(user => (
                         <UserItem key={user.name} {...user} />
                     ))}
                 </ul>
