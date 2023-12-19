@@ -5,6 +5,7 @@
     'date': '2022-11-24',
     'author': 'Zhao Wei',
     'tags': ['Best Practice'],
+    "image": '/images/common.png'
 }
 ---
 

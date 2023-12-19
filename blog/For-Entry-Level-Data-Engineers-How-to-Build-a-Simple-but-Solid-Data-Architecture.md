@@ -5,6 +5,7 @@
     'date': '2023-07-31',
     'author': 'Zhenwei Liu',
     'tags': ['Best Practice'],
+    "image": '/images/common.png'
 }
 
 ---

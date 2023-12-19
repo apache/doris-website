@@ -5,6 +5,7 @@
     'date': '2023-11-29',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
+    "image": '/images/Iov.png'
 }
 
 ---
