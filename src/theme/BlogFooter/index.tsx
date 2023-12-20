@@ -1,3 +1,4 @@
+import { useHistory, useLocation } from '@docusaurus/router';
 import { ConfigProvider, Pagination } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import React from 'react';
@@ -5,19 +6,27 @@ import React from 'react';
 export default function BlogListFooter({
     total,
     currentPage,
-    setCurrentPage,
+    currentCategory,
 }: {
     total: number;
     currentPage: number;
-    setCurrentPage: (page: number) => void;
+    currentCategory?: string;
 }) {
+    const location = useLocation();
+    const history = useHistory();
+
     return (
         <div className="mt-6 flex justify-between container">
-            <div className="text-sm text-[#8592A6]">共 {total} 项数据</div>
+            <div className="text-sm text-[#8592A6]">Total {total} items</div>
             <Pagination
                 responsive
                 onChange={page => {
-                    setCurrentPage(page);
+                    history.push(
+                        `${location.pathname}?currentPage=${page ? page : ''}&currentCategory=${
+                            currentCategory ? currentCategory : ''
+                        }#blog`,
+                        location.state,
+                    );
                 }}
                 defaultPageSize={9}
                 current={currentPage}

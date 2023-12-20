@@ -431,7 +431,7 @@ export default function Home(): JSX.Element {
                                             {newsletter.title}
                                         </h3>
                                         <p className="pt-3 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
-                                        <Link className="flex items-center cursor-pointer pt-3" to={newsletter.to}>
+                                        <Link className="flex items-center cursor-pointer pt-6" to={newsletter.to}>
                                             <span className="text-primary mr-2 text-base leading-4">Learn more</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"

@@ -9,6 +9,7 @@ import useIsBrowser from '@docusaurus/useIsBrowser';
 import HeadBlogs from '@site/src/components/blogs/components/head-blogs';
 import PageHeader from '@site/src/components/PageHeader';
 import BlogListFooter from '../BlogFooter';
+import { useHistory, useLocation } from '@docusaurus/router';
 const allText = 'All';
 
 function BlogListPageMetadata(props) {
@@ -74,21 +75,48 @@ function BlogListPageContent(props) {
         const tag = isBrowser ? sessionStorage.getItem('tag') : allText;
         return tag || allText;
     });
-    const [pageSize, setPageSize] = useState<number>(8);
+    const [pageSize, setPageSize] = useState<number>(9);
     let [pageNumber, setPageNumber] = useState<number>(1);
     const [currentBlogs, setCurrentBlogs] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(0);
+    const location = useLocation();
+    const history = useHistory();
 
     const changeCategory = category => {
-        setPageNumber(1);
-        setActive(category);
-        let currentCategory = blogCategories.find(item => item.label === category);
+        history.push(
+            `${location.pathname}?currentPage=1&currentCategory=${category ? category : ''}#blog`,
+            location.state,
+        );
+    };
+
+    useEffect(() => {
+        let currentPageNumber = 1;
+        let currentCategoryName = allText;
+        if (location.search && location.search.split('?').length > 0) {
+            const params = location.search.split('?')[1].split('&');
+            if (params) {
+                params.map(e => {
+                    const [key, value] = e.split('=');
+                    if (key === 'currentPage') {
+                        if (value) currentPageNumber = +value;
+                    } else {
+                        if (value) currentCategoryName = decodeURI(value);
+                    }
+                });
+            }
+        }
+
+        setActive(currentCategoryName);
+        setCurrentPage(currentPageNumber);
+
+        let currentCategory = blogCategories.find(item => item.label === currentCategoryName);
         if (!currentCategory) {
-            setActive(allText);
             currentCategory = blogCategories.find(item => item.label === allText);
         }
+
         setBlogs(currentCategory.values);
-    };
+        setCurrentBlogs(currentCategory.values.slice((currentPageNumber - 1) * pageSize, currentPageNumber * pageSize));
+    }, [location.search]);
 
     useEffect(() => {
         changeCategory(active);
@@ -100,9 +128,9 @@ function BlogListPageContent(props) {
             <PageHeader title="Blog" className="bg-white" {...props} />
             <HeadBlogs blogs={ALL_BLOG} />
             <div className="blog-list-wrap row">
-                <ul className="scrollbar-none mt-0 m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6 ">
-                    {blogCategories.map((item: any) => (
-                        <li className=" py-px" key={item.id} onClick={() => changeCategory(item.label)}>
+                <ul className="scrollbar-none mt-0 m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
+                    {blogCategories.map((item: any, index) => (
+                        <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>
                             <span
                                 className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#444FD9] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
                                     active === item.label && 'bg-[#444FD9] text-white'
@@ -114,7 +142,7 @@ function BlogListPageContent(props) {
                     ))}
                 </ul>
                 <ul className="mt-6 grid gap-6 lg:mt-10 lg:grid-cols-3">
-                    {blogs.map((BlogPostContent, i) => (
+                    {currentBlogs.map((BlogPostContent, i) => (
                         <BlogListItem
                             key={BlogPostContent.metadata.permalink + i}
                             frontMatter={BlogPostContent.frontMatter}
@@ -126,7 +154,7 @@ function BlogListPageContent(props) {
                         </BlogListItem>
                     ))}
                 </ul>
-                <BlogListFooter total={blogs.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                <BlogListFooter total={blogs.length} currentPage={currentPage} currentCategory={active} />
             </div>
         </BlogLayout>
     );
