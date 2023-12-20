@@ -1,5 +1,5 @@
 import Layout from '../../theme/Layout';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { translate } from '@docusaurus/Translate';
 import './index.scss';
@@ -12,9 +12,10 @@ import 'swiper/css/navigation';
 import { Pagination } from 'swiper';
 import usePhone from '@site/src/hooks/use-phone';
 import PageHeader from '@site/src/components/PageHeader';
-import { USERS, USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
+import { USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import UserItem from './user-item';
+import USERS from '../../constant/users.data.json';
 
 const ALL_TEXT = 'ALL';
 
@@ -32,6 +33,10 @@ export default function Users(): JSX.Element {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
     };
+
+    useEffect(() => {
+        setActive(ALL_TEXT);
+    }, []);
 
     const [swiperRef, setSwiperRef] = useState<SwiperClass>();
 
