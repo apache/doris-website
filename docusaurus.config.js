@@ -314,23 +314,18 @@ const config = {
                                 href: '/ecosystem/cluster-management',
                             },
                             {
-                                label: 'User stories',
+                                label: 'Users',
                                 href: '/users',
                             },
                             {
                                 label: 'Discussions',
                                 href: 'https://github.com/apache/doris/discussions',
                             },
-                            // {
-                            //     label: 'Courses (coming soon)',
-                            //     href: '/courses',
-                            // },
                         ],
                     },
                     {
                         title: 'Community',
                         items: [
-                            
                             {
                                 label: 'How to contribute',
                                 href: '/community/how-to-contribute/',
@@ -339,7 +334,7 @@ const config = {
                                 label: 'Source code',
                                 href: 'https://github.com/apache/doris/',
                             },
-                            
+
                             {
                                 label: 'Improvement proposal',
                                 href: 'https://github.com/apache/doris/discussions',
