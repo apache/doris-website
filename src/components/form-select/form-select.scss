@@ -3,6 +3,12 @@
         &.ant-select-focused {
             .ant-select-selector {
                 box-shadow: none !important;
+                border-color: #444fd9 !important;
+            }
+        }
+        &:hover {
+            .ant-select-selector {
+                border-color: #444fd9 !important;
             }
         }
         .ant-select-selector {

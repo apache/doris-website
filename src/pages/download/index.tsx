@@ -23,9 +23,9 @@ export default function Download() {
             wrapperClassName="download"
         >
             <PageHeader
+                className="pt-[7.5rem]"
                 title="Quick Download & Easy Deployment"
                 subtitle="Access the latest version and enjoy effortless deployment for your big data analytics needs."
-                className="bg-white"
             />
             <div
                 className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row"
@@ -35,6 +35,7 @@ export default function Download() {
             >
                 <CollapseBox
                     title="Apache Doris 2.0"
+                    disabledExpand={true}
                     newLink={
                         <div className="flex items-center space-x-2 pb-8 text-[#0065FD]">
                             <NewIcon />
@@ -67,14 +68,11 @@ export default function Download() {
                     notes={
                         <>
                             Note: For detailed upgrade precautions, please refer to the{' '}
-                            <Link className="text-primary underline" to="/docs/dev/install/standard-deployment">
+                            <Link className="text-primary underline" to="/docs/install/standard-deployment">
                                 deployment
                             </Link>{' '}
                             manual and cluster{' '}
-                            <Link
-                                className="text-primary underline"
-                                to="/docs/dev/admin-manual/cluster-management/upgrade"
-                            >
+                            <Link className="text-primary underline" to="/docs/admin-manual/cluster-management/upgrade">
                                 upgrade
                             </Link>{' '}
                             manual.
@@ -83,6 +81,7 @@ export default function Download() {
                 />
                 <CollapseBox
                     title="Apache Doris 1.2 ( Stable )"
+                    disabledExpand={true}
                     newLink={
                         <div className="flex items-center space-x-2 pb-8 text-[#0065FD]">
                             <NewIcon />
@@ -115,14 +114,11 @@ export default function Download() {
                     notes={
                         <>
                             Note: For detailed upgrade precautions, please refer to the{' '}
-                            <Link className="text-primary underline" to="/docs/dev/install/standard-deployment">
+                            <Link className="text-primary underline" to="/docs/install/standard-deployment">
                                 deployment
                             </Link>{' '}
                             manual and cluster{' '}
-                            <Link
-                                className="text-primary underline"
-                                to="/docs/dev/admin-manual/cluster-management/upgrade"
-                            >
+                            <Link className="text-primary underline" to="/docs/admin-manual/cluster-management/upgrade">
                                 upgrade
                             </Link>{' '}
                             manual.
