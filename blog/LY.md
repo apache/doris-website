@@ -6,7 +6,7 @@
     "date": "2022-12-19",
     'author': 'Xing Wang',
     'tags': ['Best Practice'],
-    "image": '/images/common.png'
+    "image": '/images/Best Practice.png'
 }
 ---
 

@@ -5,7 +5,7 @@
     'date': '2023-06-01',
     'author': 'Heyu Dou, Xinxin Wang',
     'tags': ['Best Practice'],
-    "image": '/images/common.png'
+    "image": '/images/Best Practice.png'
 }
 ---
 

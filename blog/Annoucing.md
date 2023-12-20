@@ -5,7 +5,7 @@
     'date': '2022-06-16',
     'author': 'morningman',
     'tags': ['Top News'],
-    "image": '/images/common.png'
+    "image": '/images/Top News.png'
 }
 ---
 

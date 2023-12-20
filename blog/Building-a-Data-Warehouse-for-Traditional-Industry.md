@@ -5,7 +5,7 @@
     'date': '2023-05-12',
     'author': 'Herman Seah',
     'tags': ['Best Practice'],
-    "image": '/images/common.png'
+    "image": '/images/Best Practice.png'
 }
 
 ---
