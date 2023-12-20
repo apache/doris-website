@@ -4,8 +4,7 @@
     'summary': "The recipe for successful A/B testing is quick computation, no duplication, and no data loss. For that, we used Apache Flink and Apache Doris to build our data platform.",
     'date': '2023-06-01',
     'author': 'Heyu Dou, Xinxin Wang',
-    'tags': ['Best Practice'],
-    "image": '/images/common.png'
+    'tags': ['Best Practice']
 }
 ---
 

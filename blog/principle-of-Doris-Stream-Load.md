@@ -5,7 +5,7 @@
 'date': '2022-09-08',
 'author': 'Apache Doris',
 'tags': ['Tech Sharing'],
-"image": '/images/common.png'
+"image": '/images/tech-sharing.png'
 }
 ---
 

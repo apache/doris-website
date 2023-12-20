@@ -5,7 +5,7 @@
     'date': '2023-08-17',
     'author': 'Jianbo Liu',
     'tags': ['Best Practice'],
-    "image": '/images/common.png'
+    "image": '/images/best-practice.png'
 }
 
 ---

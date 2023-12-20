@@ -6,7 +6,7 @@
     'date': '2023-01-28',
     'author': 'Yi Yang',
     'tags': ['Best Practice'],
-    "image": '/images/common.png'
+    "image": '/images/best-practice.png'
 }
 ---
 

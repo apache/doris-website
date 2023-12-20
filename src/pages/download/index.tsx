@@ -23,10 +23,16 @@ export default function Download() {
             wrapperClassName="download"
         >
             <PageHeader
-                title="Quick Download or Easy Deployment"
+                title="Quick Download & Easy Deployment"
                 subtitle="Access the latest version and enjoy effortless deployment for your big data analytics needs."
+                className="bg-white"
             />
-            <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
+            <div
+                className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row"
+                style={{
+                    marginTop: '-5.5rem',
+                }}
+            >
                 <CollapseBox
                     title="Apache Doris 2.0"
                     newLink={
