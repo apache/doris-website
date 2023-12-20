@@ -13,12 +13,13 @@ interface CollapseBoxProps {
     notes?: string | ReactNode;
     expand?: boolean;
     className?: string;
+    disabledExpand?: boolean;
 }
 
 export default function CollapseBox({
     title,
     description,
-    characteristic,
+    characteristic = [],
     rightContent,
     newLink,
     moreLink,
@@ -26,23 +27,18 @@ export default function CollapseBox({
     notes,
     expand,
     className,
+    disabledExpand = false,
 }: CollapseBoxProps) {
     return (
-        <div className={`mt-[5.5rem] w-full rounded-lg border border-[#DFE5F0] ${className}`}>
-            <CollapseBoxHeader title={title} defaultExpand={expand} />
+        <div className={`mt-[5.5rem] w-full rounded-lg border border-[#DFE5F0]  ${className}`}>
+            <CollapseBoxHeader title={title} defaultExpand={expand} disabled={disabledExpand} />
             <div className="grid grid-rows-[0fr] overflow-hidden transition-all peer-[.expand]:grid-rows-[1fr]">
                 <div className="min-h-0 ">
                     <div className="flex flex-col flex-wrap items-center justify-between p-4 sm:p-[3rem] lg:flex-row lg:items-start">
                         <div className="w-full lg:mr-32 lg:flex-1">
                             {newLink}
                             {description && (
-                                <div
-                                    className={`${
-                                        newLink ? 'pb-4' : 'pb-8'
-                                    } text-base leading-[1.625rem] text-[#1D1D1D]`}
-                                >
-                                    {description}
-                                </div>
+                                <div className={`text-base leading-[1.625rem] text-[#1D1D1D]`}>{description}</div>
                             )}
                             {characteristic?.length > 0 && (
                                 <div className="flex">

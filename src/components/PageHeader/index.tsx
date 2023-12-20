@@ -10,11 +10,10 @@ interface PageHeaderProps {
 }
 
 export default function PageHeader(props: PageHeaderProps) {
-    const isBlog = props?.match?.path === '/blog';
     return (
         <div className={`page-header bg-[#F7F9FE] py-20 ${props.className}`}>
             <h1 className="title">{props.title}</h1>
-            <div className="subtitle mt-6">{props.subtitle}</div>
+            <div className="subtitle mt-4">{props.subtitle}</div>
             {props?.extra && props?.extra}
         </div>
     );

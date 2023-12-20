@@ -276,64 +276,82 @@ export const DORIS_VERSIONS: Option[] = [
 
 export const OLD_VERSIONS: Option[] = [
     {
-        label: '1.2.3',
-        value: '1.2.3',
-        source: 'https://archive.apache.org/dist/doris/1.2/1.2.3-rc02/',
+        label: '1.2',
+        value: '1.2',
+        children: [
+            {
+                label: '1.2.3',
+                value: '1.2.3',
+                source: 'https://archive.apache.org/dist/doris/1.2/1.2.3-rc02/',
+            },
+            {
+                label: '1.2.2',
+                value: '1.2.2',
+                source: 'https://archive.apache.org/dist/doris/1.2/1.2.2-rc01/',
+            },
+            {
+                label: '1.2.1',
+                value: '1.2.1',
+                source: 'https://archive.apache.org/dist/doris/1.2/1.2.1-rc01/',
+            },
+        ],
     },
     {
-        label: '1.2.2',
-        value: '1.2.2',
-        source: 'https://archive.apache.org/dist/doris/1.2/1.2.2-rc01/',
+        label: '1.1',
+        value: '1.1',
+        children: [
+            {
+                label: '1.1.5',
+                value: '1.1.5',
+                source: 'https://archive.apache.org/dist/doris/1.1/1.1.5-rc02/',
+            },
+            {
+                label: '1.1.4',
+                value: '1.1.4',
+                source: 'https://archive.apache.org/dist/doris/1.1/1.1.4-rc01/',
+            },
+            {
+                label: '1.1.3',
+                value: '1.1.3',
+                source: 'https://archive.apache.org/dist/doris/1.1/1.1.3-rc02/',
+            },
+            {
+                label: '1.1.2',
+                value: '1.1.2',
+                source: 'https://archive.apache.org/dist/doris/1.1/1.1.2-rc05/',
+            },
+            {
+                label: '1.1.1',
+                value: '1.1.1',
+                source: 'https://archive.apache.org/dist/doris/1.1/1.1.1-rc03/',
+            },
+            {
+                label: '1.1.0',
+                value: '1.1.0',
+                source: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
+            },
+        ],
     },
     {
-        label: '1.2.1',
-        value: '1.2.1',
-        source: 'https://archive.apache.org/dist/doris/1.2/1.2.1-rc01/',
-    },
-    {
-        label: '1.1.5',
-        value: '1.1.5',
-        source: 'https://archive.apache.org/dist/doris/1.1/1.1.5-rc02/',
-    },
-    {
-        label: '1.1.4',
-        value: '1.1.4',
-        source: 'https://archive.apache.org/dist/doris/1.1/1.1.4-rc01/',
-    },
-    {
-        label: '1.1.3',
-        value: '1.1.3',
-        source: 'https://archive.apache.org/dist/doris/1.1/1.1.3-rc02/',
-    },
-    {
-        label: '1.1.2',
-        value: '1.1.2',
-        source: 'https://archive.apache.org/dist/doris/1.1/1.1.2-rc05/',
-    },
-    {
-        label: '1.1.1',
-        value: '1.1.1',
-        source: 'https://archive.apache.org/dist/doris/1.1/1.1.1-rc03/',
-    },
-    {
-        label: '1.1.0',
-        value: '1.1.0',
-        source: 'https://archive.apache.org/dist/doris/1.1/1.1.0-rc05/',
-    },
-    {
-        label: '0.15.0',
-        value: '0.15.0',
-        source: 'https://archive.apache.org/dist/doris/0.15.0-incubating/',
-    },
-    {
-        label: '0.14.0',
-        value: '0.14.0',
-        source: 'https://archive.apache.org/dist/doris/0.14.0-incubating/',
-    },
-    {
-        label: '0.13.0',
-        value: '0.13.0',
-        source: 'https://archive.apache.org/dist/doris/0.13.0-incubating/',
+        label: '0.x',
+        value: '0.x',
+        children: [
+            {
+                label: '0.15.0',
+                value: '0.15.0',
+                source: 'https://archive.apache.org/dist/doris/0.15.0-incubating/',
+            },
+            {
+                label: '0.14.0',
+                value: '0.14.0',
+                source: 'https://archive.apache.org/dist/doris/0.14.0-incubating/',
+            },
+            {
+                label: '0.13.0',
+                value: '0.13.0',
+                source: 'https://archive.apache.org/dist/doris/0.13.0-incubating/',
+            },
+        ],
     },
 ];
 
