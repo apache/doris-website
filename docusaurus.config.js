@@ -223,7 +223,7 @@ const config = {
                     { to: '/users', label: 'Users', position: 'left' },
                     {
                         label: 'Discussions',
-                        to: 'https://github.com',
+                        to: 'https://github.com/apache/doris/discussions',
                         position: 'left',
                     },
                     {
