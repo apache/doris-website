@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const USER_STORIES_CATEGORIES = [
-    'ALL',
+    'All',
     'Finance',
     'Technology',
     'Media & Entertainment',
@@ -23,7 +23,7 @@ export const USER_STORIES = [
     {
         title: '“Reducing costs and increasing service availability, Large Language Models empower Doris-based OLAP service”',
         author: {
-            name: 'Li Zhe, Lei Luo',
+            name: 'Jun Zhang, Lei Luo',
             title: 'Senior software engineer, Tencent ',
         },
         to: 'blog/Tencent-LLM',

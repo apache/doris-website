@@ -17,7 +17,7 @@ import useIsBrowser from '@docusaurus/useIsBrowser';
 import UserItem from './user-item';
 import USERS from '../../constant/users.data.json';
 
-const ALL_TEXT = 'ALL';
+const ALL_TEXT = 'All';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
