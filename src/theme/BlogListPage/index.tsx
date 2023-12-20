@@ -8,6 +8,7 @@ import './styles.scss';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import HeadBlogs from '@site/src/components/blogs/components/head-blogs';
 import PageHeader from '@site/src/components/PageHeader';
+import BlogListFooter from '../BlogFooter';
 const allText = 'All';
 
 function BlogListPageMetadata(props) {
@@ -76,6 +77,7 @@ function BlogListPageContent(props) {
     const [pageSize, setPageSize] = useState<number>(8);
     let [pageNumber, setPageNumber] = useState<number>(1);
     const [currentBlogs, setCurrentBlogs] = useState([]);
+    const [currentPage, setCurrentPage] = useState<number>(0);
 
     const changeCategory = category => {
         setPageNumber(1);
@@ -102,8 +104,8 @@ function BlogListPageContent(props) {
                     {blogCategories.map((item: any) => (
                         <li className=" py-px" key={item.id} onClick={() => changeCategory(item.label)}>
                             <span
-                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#0065FD] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
-                                    active === item.label && 'bg-[#0065FD] text-white'
+                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#444FD9] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                    active === item.label && 'bg-[#444FD9] text-white'
                                 }`}
                             >
                                 {item.label}
@@ -124,6 +126,7 @@ function BlogListPageContent(props) {
                         </BlogListItem>
                     ))}
                 </ul>
+                <BlogListFooter total={blogs.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             </div>
         </BlogLayout>
     );

@@ -414,19 +414,17 @@ export default function Home(): JSX.Element {
                         return (
                             <SwiperSlide key={newsletter.title}>
                                 <div className=" row flex justify-center xl:justify-start flex-start pb-8 lg:pb-16">
-                                    <div className="w-full lg:w-auto flex justify-center">
+                                    <div className="w-full lg:w-auto flex justify-center ml-4">
                                         <img
                                             width={424}
                                             src={`${require(`@site/static/images/${newsletter.image}`).default}`}
                                             alt={newsletter.title}
                                         />
                                     </div>
-                                    <div className=" w-[45rem] ml-12 flex flex-col ">
-                                        <div className="flex gap-1 mb-3">
+                                    <div className=" w-[48rem] ml-12 flex flex-col ">
+                                        <div className="flex gap-1 mb-1">
                                             {newsletter.tags.map(value => (
-                                                <div className=" px-3 py-1 bg-white rounded-[2.5rem] text-xs leading-5">
-                                                    {value}
-                                                </div>
+                                                <div className="   text-xs leading-5">{value}</div>
                                             ))}
                                         </div>
                                         <h3 className="leading-[38px] text-2xl font-medium line-clamp-1	">
