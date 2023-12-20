@@ -5,6 +5,7 @@
         "category": "Commercial Distribution",
         "logo": "AWS",
         "order": 0,
+        "to": null,
         "image": "/images/user-logo/Commercial Distribution/AWS.jpg"
     },
     {
@@ -13,6 +14,7 @@
         "category": "Commercial Distribution",
         "logo": "VeloDB",
         "order": 1,
+        "to": null,
         "image": "/images/user-logo/Commercial Distribution/VeloDB.jpg"
     },
     {
@@ -21,6 +23,7 @@
         "category": "Commercial Distribution",
         "logo": "SelectDB",
         "order": 2,
+        "to": null,
         "image": "/images/user-logo/Commercial Distribution/SelectDB.jpg"
     },
     {
@@ -29,15 +32,17 @@
         "category": "Commercial Distribution",
         "logo": "Tencent Cloud",
         "order": 3,
+        "to": null,
         "image": "/images/user-logo/Commercial Distribution/Tencent Cloud.jpg"
     },
     {
         "story": "Alibaba Cloud is a global leader in cloud computing and artificial intelligence, offering a fully managed service built on Apache Doris for real-time analytics.",
-        "name": "Alibaba Cloud",
+        "name": "\nAlibaba Cloud",
         "category": "Commercial Distribution",
-        "logo": "Alibaba Cloud",
+        "logo": "\nAlibaba Cloud",
         "order": 4,
-        "image": "/images/user-logo/Commercial Distribution/Alibaba Cloud.jpg"
+        "to": null,
+        "image": "/images/user-logo/Commercial Distribution/\nAlibaba Cloud.jpg"
     },
     {
         "story": "A global phenomenon, where users create and share short videos, showcasing their talent and connecting with a vibrant community. With Doris, the platform process data efficiently and enhance user experiences",
@@ -45,27 +50,34 @@
         "category": "Media & Entertainment",
         "logo": "TikTok",
         "order": 5,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/TikTok.jpg"
     },
     {
+        "story": null,
         "name": "Huawei",
         "category": "Technology",
         "logo": "Huawei",
         "order": 6,
+        "to": null,
         "image": "/images/user-logo/Technology/Huawei.jpg"
     },
     {
-        "name": "Tencent",
+        "story": null,
+        "name": "Tencent ",
         "category": "Technology",
-        "logo": "Tencent",
+        "logo": "Tencent ",
         "order": 7,
-        "image": "/images/user-logo/Technology/Tencent.jpg"
+        "to": null,
+        "image": "/images/user-logo/Technology/Tencent .jpg"
     },
     {
+        "story": null,
         "name": "Alibaba.com",
         "category": "Technology",
         "logo": "Alibaba.com",
         "order": 8,
+        "to": null,
         "image": "/images/user-logo/Technology/Alibaba.com.jpg"
     },
     {
@@ -74,6 +86,7 @@
         "category": "Technology",
         "logo": "JD.com",
         "order": 9,
+        "to": "https://doris.apache.org/blog/JD_OLAP",
         "image": "/images/user-logo/Technology/JD.com.jpg"
     },
     {
@@ -82,6 +95,7 @@
         "category": "Technology",
         "logo": "Xiaomi",
         "order": 10,
+        "to": "https://doris.apache.org/blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid",
         "image": "/images/user-logo/Technology/Xiaomi.jpg"
     },
     {
@@ -90,13 +104,16 @@
         "category": "Technology",
         "logo": "Baidu",
         "order": 11,
+        "to": null,
         "image": "/images/user-logo/Technology/Baidu.jpg"
     },
     {
+        "story": null,
         "name": "ByteDance",
         "category": "Technology",
         "logo": "ByteDance",
         "order": 12,
+        "to": null,
         "image": "/images/user-logo/Technology/ByteDance.jpg"
     },
     {
@@ -105,6 +122,7 @@
         "category": "Finance",
         "logo": "Bank of China",
         "order": 13,
+        "to": null,
         "image": "/images/user-logo/Finance/Bank of China.jpg"
     },
     {
@@ -113,22 +131,26 @@
         "category": "Finance",
         "logo": "Postal Savings Bank of China",
         "order": 14,
+        "to": null,
         "image": "/images/user-logo/Finance/Postal Savings Bank of China.jpg"
     },
     {
+        "story": null,
         "name": "WeLab",
         "category": "Finance",
         "logo": "WeLab",
         "order": 15,
+        "to": null,
         "image": "/images/user-logo/Finance/WeLab.jpg"
     },
     {
         "story": "Fuse is the largest insurance technology company in Indonesia, using Apache Doris to accelerate insurance BI reporting and real-time data analytics capabilities.",
-        "name": "FUSE",
+        "name": " FUSE",
         "category": "Finance",
-        "logo": "FUSE",
+        "logo": " FUSE",
         "order": 16,
-        "image": "/images/user-logo/Finance/FUSE.jpg"
+        "to": null,
+        "image": "/images/user-logo/Finance/ FUSE.jpg"
     },
     {
         "story": "Citic Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
@@ -136,6 +158,7 @@
         "category": "Finance",
         "logo": "CITIC Securities",
         "order": 17,
+        "to": null,
         "image": "/images/user-logo/Finance/CITIC Securities.jpg"
     },
     {
@@ -144,6 +167,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "CNPC",
         "order": 18,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/CNPC.jpg"
     },
     {
@@ -152,14 +176,16 @@
         "category": "Telecom & Manufacturing",
         "logo": "China Mobile",
         "order": 19,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/China Mobile.jpg"
     },
     {
-        "story": "China Unicom, one of the world's biggest telecommunication service providers, uses Apache Doris for log analytics and ensures stable data digestion of 15 billion logs per day and queries on super large datasets to be executed within one second.",
+        "story": "China Unicom, one of the world's biggest telecommunication service providers, uses Apache Doris for log analytics and ensures stable data digestion of 15 billion logs per day and queries on super large datasets to be executed within one second. ",
         "name": "China Unicom",
         "category": "Telecom & Manufacturing",
         "logo": "China Unicom",
         "order": 20,
+        "to": "https://doris.apache.org/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second",
         "image": "/images/user-logo/Telecom & Manufacturing/China Unicom.jpg"
     },
     {
@@ -168,6 +194,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Goldwind",
         "order": 21,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Goldwind.jpg"
     },
     {
@@ -176,6 +203,7 @@
         "category": "Technology",
         "logo": "Leetcode",
         "order": 22,
+        "to": null,
         "image": "/images/user-logo/Technology/Leetcode.jpg"
     },
     {
@@ -184,6 +212,7 @@
         "category": "Media & Entertainment",
         "logo": "miHoYo",
         "order": 23,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/miHoYo.jpg"
     },
     {
@@ -192,14 +221,16 @@
         "category": "Media & Entertainment",
         "logo": "NetEase",
         "order": 24,
+        "to": "https://doris.apache.org/blog/Netease",
         "image": "/images/user-logo/Media & Entertainment/NetEase.jpg"
     },
     {
-        "story": "Temu provides one-stop destination for affordable items, perfect for home decor, electronic, pet supplies, sports and toy selections.",
+        "story": "Temu provides one-stop destination for affordable items, perfect for home decor, electronic, pet supplies, sports and toy selections. ",
         "name": "Temu",
         "category": "Media & Entertainment",
         "logo": "Temu",
         "order": 25,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Temu.jpg"
     },
     {
@@ -208,6 +239,7 @@
         "category": "Media & Entertainment",
         "logo": "Sina",
         "order": 26,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Sina.jpg"
     },
     {
@@ -216,6 +248,7 @@
         "category": "Media & Entertainment",
         "logo": "TME",
         "order": 27,
+        "to": "https://doris.apache.org/blog/Tencent-LLM",
         "image": "/images/user-logo/Media & Entertainment/TME.jpg"
     },
     {
@@ -224,6 +257,7 @@
         "category": "Media & Entertainment",
         "logo": "Sohu.com",
         "order": 28,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Sohu.com.jpg"
     },
     {
@@ -232,6 +266,7 @@
         "category": "Media & Entertainment",
         "logo": "NewsBreak",
         "order": 29,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/NewsBreak.jpg"
     },
     {
@@ -240,6 +275,7 @@
         "category": "Media & Entertainment",
         "logo": "Tantan",
         "order": 30,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Tantan.jpg"
     },
     {
@@ -248,6 +284,7 @@
         "category": "Media & Entertainment",
         "logo": "Soul App",
         "order": 31,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Soul App.jpg"
     },
     {
@@ -256,6 +293,7 @@
         "category": "Media & Entertainment",
         "logo": "Keep",
         "order": 32,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Keep.jpg"
     },
     {
@@ -264,6 +302,7 @@
         "category": "Media & Entertainment",
         "logo": "Kwai",
         "order": 33,
+        "to": "https://doris.apache.org/blog/BestPractice_Kwai",
         "image": "/images/user-logo/Media & Entertainment/Kwai.jpg"
     },
     {
@@ -272,6 +311,7 @@
         "category": "Media & Entertainment",
         "logo": "37 Interactive Entertainment",
         "order": 34,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/37 Interactive Entertainment.jpg"
     },
     {
@@ -280,6 +320,7 @@
         "category": "Media & Entertainment",
         "logo": "HUYA Inc",
         "order": 35,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/HUYA Inc.jpg"
     },
     {
@@ -288,14 +329,16 @@
         "category": "Telecom & Manufacturing",
         "logo": "Nio",
         "order": 36,
+        "to": "https://doris.apache.org/blog/NIO",
         "image": "/images/user-logo/Telecom & Manufacturing/Nio.jpg"
     },
     {
-        "story": "A renowned Japanese automobile manufacturer known for its diverse range of cars, motorcycles, and outboard motors. With a reputation for reliability and innovation, Suzuki vehicles are popular worldwide.",
+        "story": "A renowned Japanese automobile manufacturer known for its diverse range of cars, motorcycles, and outboard motors. With a reputation for reliability and innovation, Suzuki vehicles are popular worldwide.\n",
         "name": "Suzuki",
         "category": "Telecom & Manufacturing",
         "logo": "Suzuki",
         "order": 37,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Suzuki.jpg"
     },
     {
@@ -304,104 +347,133 @@
         "category": "Telecom & Manufacturing",
         "logo": "Ford",
         "order": 38,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Ford.jpg"
     },
     {
+        "story": "A coffee company and coffeehouse chain that rapidly expanded in a short period. Known for its convenient mobile ordering and delivery services, Luckin Coffee offers a variety of coffee beverages and snacks to customers across China.",
         "name": "Luckin coffee",
         "category": "FMCG & Logistics",
         "logo": "Luckin coffee",
         "order": 39,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Luckin coffee.jpg"
     },
     {
+        "story": "JD Logistics, a subsidiary of JD.com, is a leading logistics company with an extensive network and advanced technology. It offers efficient warehousing, transportation, and supply chain solutions, enabling seamless e-commerce operations across industries.\n",
         "name": "JD Logistics",
         "category": "FMCG & Logistics",
         "logo": "JD Logistics",
         "order": 40,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/JD Logistics.jpg"
     },
     {
+        "story": "Anta as a sportswear company renowned for its innovative designs and high-performance athletic footwear and apparel. With a focus on quality and style, Anta caters to athletes and fitness enthusiasts worldwide.",
         "name": "Anta",
         "category": "FMCG & Logistics",
         "logo": "Anta",
         "order": 41,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Anta.jpg"
     },
     {
+        "story": "Cabbeen is a fashion brand known for its contemporary and trendy clothing designs, with a focus on blending traditional elements with modern aesthetics.",
         "name": "Cabbeen",
         "category": "FMCG & Logistics",
         "logo": "Cabbeen",
         "order": 42,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Cabbeen.jpg"
     },
     {
+        "story": "Semir is a modern lifestyle brand for adults committed to developing innovative, and affordable fashion.",
         "name": "Semir",
         "category": "FMCG & Logistics",
         "logo": "Semir",
         "order": 43,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Semir.jpg"
     },
     {
+        "story": "A fashion brand to present lifestyles of contemporary successful men and echo the spirit of successful men in various fields.",
         "name": "Septwolves",
         "category": "FMCG & Logistics",
         "logo": "Septwolves",
         "order": 44,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Septwolves.jpg"
     },
     {
+        "story": "Yonghui Superstores is a Chinese reatail chain known for its comprehensive selection of groceries and household products, providing a convenient and pleasant shopping experience for consumers.",
         "name": "Yonghui Superstores",
         "category": "FMCG & Logistics",
         "logo": "Yonghui Superstores",
         "order": 45,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Yonghui Superstores.jpg"
     },
     {
+        "story": "A leading restaurant company in China, operatin popular barnds such as KFC, Pizza Hut, and Taco Bell. With a focus on delivering delicious and convenient dining experiences, Yum China has become a trusted choice for Chinese consumers.",
         "name": "Yum",
         "category": "FMCG & Logistics",
         "logo": "Yum",
         "order": 46,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Yum.jpg"
     },
     {
+        "story": "An international dairy company based in the Netherlands, specializing in the production and distribution of infant and toddler nutrition products, Ausnutria ensures high-quality and safe nutritional solutions for babies and young children worldwide.",
         "name": "Ausnutria",
         "category": "FMCG & Logistics",
         "logo": "Ausnutria",
         "order": 47,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Ausnutria.jpg"
     },
     {
-        "name": "Aftership",
+        "story": "AfterShip is a leading shipment tracking platform that enables businesses and consumers to track and monitor their packages from various courier services in real-time. It provides transparency and convenience in package delivery management.",
+        "name": "Aftership ",
         "category": "FMCG & Logistics",
-        "logo": "Aftership",
+        "logo": "Aftership ",
         "order": 48,
-        "image": "/images/user-logo/FMCG & Logistics/Aftership.jpg"
+        "to": null,
+        "image": "/images/user-logo/FMCG & Logistics/Aftership .jpg"
     },
     {
+        "story": "SF Express is a leading logistics and courier services company, providing efficient and reliable domestic and international shipping solutions while serving businesses and individuals worldwide.",
         "name": "SF Express",
         "category": "FMCG & Logistics",
         "logo": "SF Express",
         "order": 49,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/SF Express.jpg"
     },
     {
+        "story": "Uda Express aims to provide safe, convenient, efficient and integrated global logistic services for worldwide e-commerce platforms, buyers or sellers, traders or dealers and final consumers.\n",
         "name": "Uda Express",
         "category": "FMCG & Logistics",
         "logo": "Uda Express",
         "order": 50,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Uda Express.jpg"
     },
     {
+        "story": "A leading Chinese logistics company specializing in express delivery services, provides reliable and fast delivery solutions for businesses and consumers across China.",
         "name": "ZTO Express",
         "category": "FMCG & Logistics",
         "logo": "ZTO Express",
         "order": 51,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/ZTO Express.jpg"
     },
     {
+        "story": "YT Express understands the high demand for fresh and medical products specific cold chain equipment and the timeliness and efficiency of transportation.\n\n\n",
         "name": "YT Express",
         "category": "FMCG & Logistics",
         "logo": "YT Express",
         "order": 52,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/YT Express.jpg"
     },
     {
@@ -410,6 +482,7 @@
         "category": "Media & Entertainment",
         "logo": "Koolearn",
         "order": 53,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Koolearn.jpg"
     },
     {
@@ -418,6 +491,7 @@
         "category": "Media & Entertainment",
         "logo": "vipkid",
         "order": 54,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/vipkid.jpg"
     },
     {
@@ -426,6 +500,7 @@
         "category": "Media & Entertainment",
         "logo": "Meituan",
         "order": 55,
+        "to": "https://doris.apache.org/blog/meituan",
         "image": "/images/user-logo/Media & Entertainment/Meituan.jpg"
     },
     {
@@ -434,6 +509,7 @@
         "category": "Media & Entertainment",
         "logo": "Lifewit",
         "order": 56,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Lifewit.jpg"
     },
     {
@@ -442,6 +518,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Lenovo",
         "order": 57,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Lenovo.jpg"
     },
     {
@@ -450,28 +527,34 @@
         "category": "Telecom & Manufacturing",
         "logo": "Volvo",
         "order": 58,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Volvo.jpg"
     },
     {
-        "story": "A leading global home appliance and HVAC solutions provider based in China. With a wide range of products including air conditioners, refrigerators, washing machines, and more.",
+        "story": "A leading global home appliance and HVAC solutions provider based in China. With a wide range of products including air conditioners, refrigerators, washing machines, and more. ",
         "name": "Midea",
         "category": "Telecom & Manufacturing",
         "logo": "Midea",
         "order": 59,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Midea.jpg"
     },
     {
+        "story": "Haidilao is a renowned Chinese hot pot restaurant chain known for its exceptional service, quality ingredients, and unwavering commitment to customer satisfaction",
         "name": "Haidilao",
         "category": "FMCG & Logistics",
         "logo": "Haidilao",
         "order": 60,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Haidilao.jpg"
     },
     {
+        "story": "Xtep caters to sports enthusiasts and athletes, offering stylish and functional sportswear options, specialized in designing and manufacturing athletic footwear, apparel, and accessories.",
         "name": "Xtep",
         "category": "FMCG & Logistics",
         "logo": "Xtep",
         "order": 61,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Xtep.jpg"
     },
     {
@@ -480,49 +563,61 @@
         "category": "Finance",
         "logo": "Taikang Insurance Group",
         "order": 62,
+        "to": null,
         "image": "/images/user-logo/Finance/Taikang Insurance Group.jpg"
     },
     {
+        "story": null,
         "name": "Ping An Insurance Group",
         "category": "Finance",
         "logo": "Ping An Insurance Group",
         "order": 63,
+        "to": null,
         "image": "/images/user-logo/Finance/Ping An Insurance Group.jpg"
     },
     {
         "story": "CIGNA & CMB, an insurance company, uses Apache Doris as an all-in-one OLAP platform to undertake their customer-facing, analyst-facing, and management-facing data analytics workloads.",
-        "name": "Cigna & CMB",
+        "name": "Cigna & CMB ",
         "category": "Finance",
-        "logo": "Cigna & CMB",
+        "logo": "Cigna & CMB ",
         "order": 64,
-        "image": "/images/user-logo/Finance/Cigna & CMB.jpg"
+        "to": "https://doris.apache.org/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase",
+        "image": "/images/user-logo/Finance/Cigna & CMB .jpg"
     },
     {
+        "story": null,
         "name": "China Everbright Bank",
         "category": "Finance",
         "logo": "China Everbright Bank",
         "order": 65,
+        "to": null,
         "image": "/images/user-logo/Finance/China Everbright Bank.jpg"
     },
     {
+        "story": null,
         "name": "GF Securities",
         "category": "Finance",
         "logo": "GF Securities",
         "order": 66,
+        "to": null,
         "image": "/images/user-logo/Finance/GF Securities.jpg"
     },
     {
+        "story": null,
         "name": "Bosera Funds",
         "category": "Finance",
         "logo": "Bosera Funds",
         "order": 67,
+        "to": null,
         "image": "/images/user-logo/Finance/Bosera Funds.jpg"
     },
     {
+        "story": null,
         "name": "Harvest Funds",
         "category": "Finance",
         "logo": "Harvest Funds",
         "order": 68,
+        "to": null,
         "image": "/images/user-logo/Finance/Harvest Funds.jpg"
     },
     {
@@ -531,20 +626,25 @@
         "category": "Finance",
         "logo": "OneConnect",
         "order": 69,
+        "to": "https://doris.apache.org/blog/Database-in-Fintech-How-to-Support-ten-thousand-Dashboards-Without-Causing-a-Mess",
         "image": "/images/user-logo/Finance/OneConnect.jpg"
     },
     {
+        "story": "An AI-driven fintech service provider utilizes Apache Doris for big data processing and analytics and thus benefits from enhanced performance, flexible workload management, high service availability, and effortless maintenance.",
         "name": "Qifu Technology",
         "category": "Finance",
         "logo": "Qifu Technology",
         "order": 70,
+        "to": null,
         "image": "/images/user-logo/Finance/Qifu Technology.jpg"
     },
     {
+        "story": "An AI-driven technology company in Asia-Pacific committed to providing fintech products and services for consumers, enterprises and merchants.",
         "name": "Advance Intelligence Group",
         "category": "Technology",
         "logo": "Advance Intelligence Group",
         "order": 71,
+        "to": null,
         "image": "/images/user-logo/Technology/Advance Intelligence Group.jpg"
     },
     {
@@ -553,21 +653,25 @@
         "category": "Technology",
         "logo": "QAX-Cyber Security Services",
         "order": 72,
+        "to": "https://doris.apache.org/blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis",
         "image": "/images/user-logo/Technology/QAX-Cyber Security Services.jpg"
     },
     {
-        "story": "The due diligence platform replaces Apache Hive, Elasticsearch, and PostgreSQL with Apache Doris and achieves higher speed in ad-hoc analysis and user segmentation.",
-        "name": "Tianyacha",
+        "story": "The due diligence platform replaces Apache Hive, Elasticsearch, and PostgreSQL with Apache Doris and achieves higher speed in ad-hoc analysis and user segmentation. ",
+        "name": "Tianyancha",
         "category": "Technology",
-        "logo": "Tianyacha",
+        "logo": "Tianyancha",
         "order": 73,
-        "image": "/images/user-logo/Technology/Tianyacha.jpg"
+        "to": "https://doris.apache.org/blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris",
+        "image": "/images/user-logo/Technology/Tianyancha.jpg"
     },
     {
+        "story": "A cloud-based transportation management system designed to streamline and optimize logistics operations. It offers comprehensive solutions for planning, execution, and monitoring of shipments, enhancing efficiency and visibility throughout the supply chain.",
         "name": "TMS",
         "category": "FMCG & Logistics",
         "logo": "TMS",
         "order": 74,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/TMS.jpg"
     },
     {
@@ -576,6 +680,7 @@
         "category": "FMCG & Logistics",
         "logo": "Orange connex",
         "order": 75,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Orange connex.jpg"
     },
     {
@@ -584,14 +689,16 @@
         "category": "Technology",
         "logo": "Zhonglun Network",
         "order": 76,
+        "to": null,
         "image": "/images/user-logo/Technology/Zhonglun Network.jpg"
     },
     {
-        "story": "The SaaS provider adopts Apache Doris as a solution to improve data processing efficiency, particularly addressing multi-dimensional table maintenance and high-concurrency queries.",
+        "story": "The SaaS provider adopts Apache Doris as a solution to improve data processing efficiency, particularly addressing multi-dimensional table maintenance and high-concurrency queries. ",
         "name": "Duyan Soft",
         "category": "Technology",
         "logo": "Duyan Soft",
         "order": 77,
+        "to": "https://doris.apache.org/blog/Improving-Query-Speed-to-Make-the-Most-out-of-Your-Data",
         "image": "/images/user-logo/Technology/Duyan Soft.jpg"
     },
     {
@@ -600,6 +707,7 @@
         "category": "Technology",
         "logo": "AISPEECH",
         "order": 78,
+        "to": "https://doris.apache.org/blog/Use-Apache-Doris-with-AI-chatbots",
         "image": "/images/user-logo/Technology/AISPEECH.jpg"
     },
     {
@@ -608,6 +716,7 @@
         "category": "Technology",
         "logo": "Boton",
         "order": 79,
+        "to": null,
         "image": "/images/user-logo/Technology/Boton.jpg"
     },
     {
@@ -616,15 +725,17 @@
         "category": "Technology",
         "logo": "Sugon",
         "order": 80,
+        "to": null,
         "image": "/images/user-logo/Technology/Sugon.jpg"
     },
     {
         "story": "A prominent technology conglomerate dedicated to providing cutting-edge solutions in various industries, including artificial intelligence, cloud computing, big data analytics, and telecommunications.",
-        "name": "Wasu",
+        "name": "Wasu ",
         "category": "Technology",
-        "logo": "Wasu",
+        "logo": "Wasu ",
         "order": 81,
-        "image": "/images/user-logo/Technology/Wasu.jpg"
+        "to": null,
+        "image": "/images/user-logo/Technology/Wasu .jpg"
     },
     {
         "story": "A leading AI technology company based in China, specializing in AI chips and software, aims to empower various industries with innovative AI solutions and drive the development of intelligent systems.",
@@ -632,14 +743,16 @@
         "category": "Telecom & Manufacturing",
         "logo": "Horizon Robotics",
         "order": 82,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Horizon Robotics.jpg"
     },
     {
-        "story": "Youdao Inc. focuses on language-related products and services. It offers language learning platforms, translation tools, and smart devices, aiming to enhance communication and knowledge acquisition for users.",
+        "story": "Youdao Inc. focuses on language-related products and services. It offers language learning platforms, translation tools, and smart devices, aiming to enhance communication and knowledge acquisition for users.\n",
         "name": "Youdao",
         "category": "Media & Entertainment",
         "logo": "Youdao",
         "order": 83,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Youdao.jpg"
     },
     {
@@ -648,6 +761,7 @@
         "category": "Finance",
         "logo": "LY Digit",
         "order": 84,
+        "to": "https://doris.apache.org/blog/LY",
         "image": "/images/user-logo/Finance/LY Digit.jpg"
     },
     {
@@ -656,6 +770,7 @@
         "category": "Media & Entertainment",
         "logo": "TTChat",
         "order": 85,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/TTChat.jpg"
     },
     {
@@ -664,6 +779,7 @@
         "category": "Media & Entertainment",
         "logo": "DouYu",
         "order": 86,
+        "to": "https://doris.apache.org/blog/Zipping-up-the-Lambda-Architecture-for-40-Percent-Faster-Performance",
         "image": "/images/user-logo/Media & Entertainment/DouYu.jpg"
     },
     {
@@ -672,6 +788,7 @@
         "category": "Media & Entertainment",
         "logo": "Zhihu Inc.",
         "order": 87,
+        "to": "https://doris.apache.org/blog/Database-Dissection-How-Fast-Data-Queries-Are-Implemented",
         "image": "/images/user-logo/Media & Entertainment/Zhihu Inc..jpg"
     },
     {
@@ -680,6 +797,7 @@
         "category": "Media & Entertainment",
         "logo": "Dingdong",
         "order": 88,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Dingdong.jpg"
     },
     {
@@ -688,6 +806,7 @@
         "category": "Technology",
         "logo": "Linkedcare",
         "order": 89,
+        "to": "https://doris.apache.org/blog/linkedcare",
         "image": "/images/user-logo/Technology/Linkedcare.jpg"
     },
     {
@@ -696,6 +815,7 @@
         "category": "Media & Entertainment",
         "logo": "LeTV",
         "order": 90,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/LeTV.jpg"
     },
     {
@@ -704,22 +824,25 @@
         "category": "Media & Entertainment",
         "logo": "Boss Zhipin",
         "order": 91,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Boss Zhipin.jpg"
     },
     {
-        "story": "An cosmetic surgery platform listed on Nasdaq. Its social media-style credit evaluation system gains a strong user trust.",
+        "story": "An cosmetic surgery platform listed on Nasdaq. Its social media-style credit evaluation system gains a strong user trust. ",
         "name": "Soyoung",
         "category": "Media & Entertainment",
         "logo": "Soyoung",
         "order": 92,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Soyoung.jpg"
     },
     {
-        "story": "Jiyue is Geely Holding;s next-generation automotive robocar brand, positioned as premium intelligent, committed to building leading intelligent automotive robots.",
+        "story": "Jiyue is Geely Holding;s next-generation automotive robocar brand, positioned as premium intelligent, committed to building leading intelligent automotive robots. ",
         "name": "Jiyue Auto",
         "category": "Telecom & Manufacturing",
         "logo": "Jiyue Auto",
         "order": 93,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Jiyue Auto.jpg"
     },
     {
@@ -728,6 +851,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Wuling Motors",
         "order": 94,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Wuling Motors.jpg"
     },
     {
@@ -736,6 +860,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Chang'an Automobile",
         "order": 95,
+        "to": "https://doris.apache.org/blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents",
         "image": "/images/user-logo/Telecom & Manufacturing/Chang'an Automobile.jpg"
     },
     {
@@ -744,6 +869,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "LOTUS",
         "order": 96,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/LOTUS.jpg"
     },
     {
@@ -752,6 +878,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Great Wall",
         "order": 97,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Great Wall.jpg"
     },
     {
@@ -760,6 +887,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Chery",
         "order": 98,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Chery.jpg"
     },
     {
@@ -768,6 +896,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Envision Energy",
         "order": 99,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Envision Energy.jpg"
     },
     {
@@ -776,6 +905,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "China Telecom",
         "order": 100,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/China Telecom.jpg"
     },
     {
@@ -784,6 +914,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "CTYun",
         "order": 101,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/CTYun.jpg"
     },
     {
@@ -792,6 +923,7 @@
         "category": "Telecom & Manufacturing",
         "logo": "Cisco",
         "order": 102,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Cisco.jpg"
     },
     {
@@ -800,84 +932,115 @@
         "category": "Telecom & Manufacturing",
         "logo": "ZTE",
         "order": 103,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/ZTE.jpg"
     },
     {
+        "story": "Huolala operates as cargo service platforms,  providing intelligent freight information sharing, personal goods transportation, enterprise freight, and other cargo services. Huolala offers its services worldwide.\n\n",
         "name": "HuoLaLa",
         "category": "FMCG & Logistics",
         "logo": "HuoLaLa",
         "order": 104,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/HuoLaLa.jpg"
     },
     {
+        "story": "Deppon Express, as a logistics company providing comprehensive express delivery and supply chain solutions, ensuring reliable and efficient delivery services for businesses and individuals.",
         "name": "Deppon Express",
         "category": "FMCG & Logistics",
         "logo": "Deppon Express",
         "order": 105,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Deppon Express.jpg"
     },
     {
-        "name": "Du Xiaoman Financial",
+        "story": "A fintech company that leverage leading technologies to provide financial service including digital payment, small-scale loans, investment and wealth managements.",
+        "name": "Du Xiaoman Financial ",
         "category": "Finance",
-        "logo": "Du Xiaoman Financial",
+        "logo": "Du Xiaoman Financial ",
         "order": 106,
-        "image": "/images/user-logo/Finance/Du Xiaoman Financial.jpg"
+        "to": null,
+        "image": "/images/user-logo/Finance/Du Xiaoman Financial .jpg"
     },
     {
+        "story": null,
         "name": "Industrial Bank Co.ltd",
         "category": "Finance",
         "logo": "Industrial Bank Co.ltd",
         "order": 107,
+        "to": null,
         "image": "/images/user-logo/Finance/Industrial Bank Co.ltd.jpg"
     },
-    { "name": "UMS", "category": "Finance", "logo": "UMS", "order": 108, "image": "/images/user-logo/Finance/UMS.jpg" },
     {
+        "story": "A leading provider of electronic payment and financial technology solutions that focuses on building a global payment ecosystem and offering secure and convenient online payment services for both merchants and consumers.",
+        "name": "UMS",
+        "category": "Finance",
+        "logo": "UMS",
+        "order": 108,
+        "to": null,
+        "image": "/images/user-logo/Finance/UMS.jpg"
+    },
+    {
+        "story": null,
         "name": "Caitong Securities",
         "category": "Finance",
         "logo": "Caitong Securities",
         "order": 109,
+        "to": null,
         "image": "/images/user-logo/Finance/Caitong Securities.jpg"
     },
     {
+        "story": "A listed digital payment services provider that also offers cash, business, and supply chain management solutions for retailers, banks, and e-commerce companies.",
         "name": "Lakala",
         "category": "Finance",
         "logo": "Lakala",
         "order": 110,
+        "to": null,
         "image": "/images/user-logo/Finance/Lakala.jpg"
     },
     {
+        "story": "An electronic payment services provider that focuses on comprehensive payment solutions that cater to the needs of travelers, encompassing air travel, accommodation, and retail purchases. ",
         "name": "Easy Pay",
         "category": "Finance",
         "logo": "Easy Pay",
         "order": 111,
+        "to": null,
         "image": "/images/user-logo/Finance/Easy Pay.jpg"
     },
     {
+        "story": "A consumer financing company that focuses on the small and medium financing services beyond the coverage of traditional bank services to achieve inclusive finance.",
         "name": "Mucfc.com",
         "category": "Finance",
         "logo": "Mucfc.com",
         "order": 112,
+        "to": null,
         "image": "/images/user-logo/Finance/Mucfc.com.jpg"
     },
     {
+        "story": "A digital insurance provider that offers innovative insurance products for all walks of life and enhances its own operation efficiency and risk control effectiveness by cutting-edge technologies.",
         "name": "ZhongAn Insurance",
         "category": "Finance",
         "logo": "ZhongAn Insurance",
         "order": 113,
+        "to": null,
         "image": "/images/user-logo/Finance/ZhongAn Insurance.jpg"
     },
     {
+        "story": "A fintech service provider that focuses on comprehensive, scenario-based digital solutions from financing, marketing, to event and customer management.",
         "name": "InRice.com",
         "category": "Finance",
         "logo": "InRice.com",
         "order": 114,
+        "to": null,
         "image": "/images/user-logo/Finance/InRice.com.jpg"
     },
     {
+        "story": "A financial risk control and marketing services provider that leverages the power of artificial intelligence to empower decision-making for various industries. ",
         "name": "Bairong.Inc.",
         "category": "Finance",
         "logo": "Bairong.Inc.",
         "order": 115,
+        "to": null,
         "image": "/images/user-logo/Finance/Bairong.Inc..jpg"
     },
     {
@@ -886,6 +1049,7 @@
         "category": "Technology",
         "logo": "Moka",
         "order": 116,
+        "to": "https://doris.apache.org/blog/Listen-to-That-Poor-BI-Engineer-We-Need-Fast-Joins",
         "image": "/images/user-logo/Technology/Moka.jpg"
     },
     {
@@ -894,98 +1058,124 @@
         "category": "Technology",
         "logo": "360 Security",
         "order": 117,
+        "to": "https://doris.apache.org/blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid",
         "image": "/images/user-logo/Technology/360 Security.jpg"
     },
     {
         "story": "A tech-driven intelligent retail service provider uses Apache Doris for resource isolation and high-concurrency data queries and realizes faster query speed and lower storage costs.",
+        "name": "HuiCe",
         "category": "Technology",
+        "logo": "HuiCe",
         "order": 118,
-        "image": "/images/user-logo/Technology/undefined.jpg"
+        "to": null,
+        "image": "/images/user-logo/Technology/HuiCe.jpg"
     },
     {
         "story": "A generative AI solution provider that focuses on the development of SOTA, integrated generative AI product suites with independent intellectual property rights.",
+        "name": "JiaoLong Cloud",
         "category": "Technology",
+        "logo": "JiaoLong Cloud",
         "order": 119,
-        "image": "/images/user-logo/Technology/undefined.jpg"
+        "to": null,
+        "image": "/images/user-logo/Technology/JiaoLong Cloud.jpg"
     },
     {
-        "story": "IGG is best known for formerly publishing various massively multiplayer online games in North America. \"Lords Mobile\" as IGG’s first cross-platform,  real-time game has approximately 320 million registered users worldwide.",
+        "story": "IGG is best known for formerly publishing various massively multiplayer online games in North America. \"Lords Mobile\" as IGG’s first cross-platform,  real-time game has approximately 320 million registered users worldwide. ",
         "name": "IGOTGAMES",
         "category": "Media & Entertainment",
         "logo": "IGOTGAMES",
         "order": 120,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/IGOTGAMES.jpg"
     },
     {
         "story": "Electronic Soul is one of the top leading game developers and publishers based in Asia， providing high-quality digital contents crossing Mobile, PC, and consoles.",
-        "name": "electronic soul",
+        "name": "Electronic Soul",
         "category": "Media & Entertainment",
-        "logo": "electronic soul",
+        "logo": "Electronic Soul",
         "order": 121,
-        "image": "/images/user-logo/Media & Entertainment/electronic soul.jpg"
+        "to": null,
+        "image": "/images/user-logo/Media & Entertainment/Electronic Soul.jpg"
     },
     {
+        "story": "Leveraging advanced technologies and analytics, Haohan Data empowers businesses with comprehensive data solutions, enabling users to make informed decisions.",
         "name": "Haohan Data",
         "category": "Telecom & Manufacturing",
         "logo": "Haohan Data",
         "order": 122,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Haohan Data.jpg"
     },
     {
-        "story": "Aima Tech, an electric vehicle manufacturer, is committed to revolutionizing the way we commute and reducing carbon emissions.",
+        "story": "Aima Tech, an electric vehicle manufacturer, is committed to revolutionizing the way we commute and reducing carbon emissions.\n",
         "name": "Aima Tech",
         "category": "Telecom & Manufacturing",
         "logo": "Aima Tech",
         "order": 123,
+        "to": null,
         "image": "/images/user-logo/Telecom & Manufacturing/Aima Tech.jpg"
     },
     {
+        "story": "Known for contemporary and trendy clothing designs, Peacebird offers stylish and eco-friendly fashion choices for customers.",
         "name": "Peacebird",
         "category": "FMCG & Logistics",
         "logo": "Peacebird",
         "order": 124,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Peacebird.jpg"
     },
     {
+        "story": "Full Truck Alliance is a leading digital freight platform connecting shippers and truck drivers. It offers efficient and transparent trucking services, optimizing logistics operations and facilitating freight transportation across China.",
         "name": "Full Truck Alliance",
         "category": "FMCG & Logistics",
         "logo": "Full Truck Alliance",
         "order": 125,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Full Truck Alliance.jpg"
     },
     {
+        "story": "CaiNiao is a logistics platform owned by Alibaba Group, specializing in end-to-end supply chain management and delivery services. It connects merchants, warehouses, and couriers to streamline operations and ensure efficient and timely order fulfillment.",
         "name": "CaiNiao",
         "category": "FMCG & Logistics",
         "logo": "CaiNiao",
         "order": 126,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/CaiNiao.jpg"
     },
     {
+        "story": "Umetrip is a leading provider of information technology solutions for the aviation and travel industry in China, offering comprehensive services for airline reservation systems, passenger services, and aviation data management.",
         "name": "Umetrip",
         "category": "FMCG & Logistics",
         "logo": "Umetrip",
         "order": 127,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Umetrip.jpg"
     },
     {
-        "name": "Yunrun Group",
+        "story": "Yurun Group is a renowned Chinese food processing and distribution company operating a vertically integrated business model, encompassing farming, processing, and retail, to deliver premium meats to consumers.",
+        "name": "Yurun Group",
         "category": "FMCG & Logistics",
-        "logo": "Yunrun Group",
+        "logo": "Yurun Group",
         "order": 128,
-        "image": "/images/user-logo/FMCG & Logistics/Yunrun Group.jpg"
+        "to": null,
+        "image": "/images/user-logo/FMCG & Logistics/Yurun Group.jpg"
     },
     {
+        "story": "Bondex serves various import and export trade clients, offering tailored supply chain solutions and standardized logistics services specialized in cross-border operations, including planning, design, and implementation.",
         "name": "Bondex",
         "category": "FMCG & Logistics",
         "logo": "Bondex",
         "order": 129,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Bondex.jpg"
     },
     {
+        "story": "Zongteng Group, a large China-based provider of cross-border warehousing and logistics services for e-commerce sellers",
         "name": "Zongteng Group",
         "category": "FMCG & Logistics",
         "logo": "Zongteng Group",
         "order": 130,
+        "to": null,
         "image": "/images/user-logo/FMCG & Logistics/Zongteng Group.jpg"
     },
     {
@@ -994,14 +1184,16 @@
         "category": "Finance",
         "logo": "Techsight",
         "order": 131,
+        "to": "https://doris.apache.org/blog/Choosing-an-OLAP-Engine-for-Financial-Risk-Management-What-to-Consider",
         "image": "/images/user-logo/Finance/Techsight.jpg"
     },
     {
-        "story": "Zuoyebang is a leading online education platform, providing a wide range of educational resources, live classes, tutoring services, and personalized learning experiences for students of all ages.",
+        "story": "Zuoyebang is a leading online education platform, providing a wide range of educational resources, live classes, tutoring services, and personalized learning experiences for students of all ages.\n",
         "name": "Zuoyebang",
         "category": "Media & Entertainment",
         "logo": "Zuoyebang",
         "order": 132,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Zuoyebang.jpg"
     },
     {
@@ -1010,6 +1202,7 @@
         "category": "Media & Entertainment",
         "logo": "Atguigu",
         "order": 133,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Atguigu.jpg"
     },
     {
@@ -1018,6 +1211,7 @@
         "category": "Media & Entertainment",
         "logo": "ITCast",
         "order": 134,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/ITCast.jpg"
     },
     {
@@ -1026,6 +1220,7 @@
         "category": "Media & Entertainment",
         "logo": "Kaikeba",
         "order": 135,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Kaikeba.jpg"
     },
     {
@@ -1034,6 +1229,7 @@
         "category": "Media & Entertainment",
         "logo": "Lizhiweike",
         "order": 136,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Lizhiweike.jpg"
     },
     {
@@ -1042,13 +1238,16 @@
         "category": "Media & Entertainment",
         "logo": "Tenclass",
         "order": 137,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Tenclass.jpg"
     },
     {
+        "story": "A state-owned bank that leverages Apache Doris to propel its digitalization and refined management of marketing, risk control, and customer services.",
         "name": "Wuxi Xishang Bank",
         "category": "Finance",
         "logo": "Wuxi Xishang Bank",
         "order": 138,
+        "to": null,
         "image": "/images/user-logo/Finance/Wuxi Xishang Bank.jpg"
     },
     {
@@ -1057,21 +1256,25 @@
         "category": "Finance",
         "logo": "HYXJ",
         "order": 139,
+        "to": "https://doris.apache.org/blog/Step-by-step-Guide-to-Building-a-High-Performing-Risk-Data-Mart",
         "image": "/images/user-logo/Finance/HYXJ.jpg"
     },
     {
+        "story": "A consumer financing tech services provider that extensively utilizes Apache Doris for its internal business and operations and thus realizes much faster data query performance and improved data quality.",
         "name": "HCFC",
         "category": "Finance",
         "logo": "HCFC",
         "order": 140,
+        "to": null,
         "image": "/images/user-logo/Finance/HCFC.jpg"
     },
     {
-        "story": "Autohome is a leading automotive online platform, offering comprehensive information, reviews, and services related to cars. It serves as a one-stop destination for car enthusiasts, buyers, and owners.",
+        "story": "Autohome is a leading automotive online platform, offering comprehensive information, reviews, and services related to cars. It serves as a one-stop destination for car enthusiasts, buyers, and owners.\n",
         "name": "Autohome",
         "category": "Media & Entertainment",
         "logo": "Autohome",
         "order": 141,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Autohome.jpg"
     },
     {
@@ -1080,14 +1283,16 @@
         "category": "Media & Entertainment",
         "logo": "JJ World",
         "order": 142,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/JJ World.jpg"
     },
     {
-        "story": "Q1.com is dedicated to providing a superior user experience in the field of online gaming and entertainment.",
+        "story": "Q1.com is dedicated to providing a superior user experience in the field of online gaming and entertainment.\n",
         "name": "Q1.com",
         "category": "Media & Entertainment",
         "logo": "Q1.com",
         "order": 143,
+        "to": null,
         "image": "/images/user-logo/Media & Entertainment/Q1.com.jpg"
     },
     {
@@ -1096,28 +1301,25 @@
         "category": "Media & Entertainment",
         "logo": "Xiaoe Tech",
         "order": 144,
+        "to": "https://doris.apache.org/blog/data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time",
         "image": "/images/user-logo/Media & Entertainment/Xiaoe Tech.jpg"
     },
     {
-        "story": "An e-commerce SaaS provider migrates from ClickHouse to Apache Doris and increases its SQL query performance by 250%. Apache Doris outperforms ClickHouse in the join query tests of all data sizes.",
+        "story": "An e-commerce SaaS provider migrates from ClickHouse to Apache Doris and increases its SQL query performance by 250%. Apache Doris outperforms ClickHouse in the join query tests of all data sizes. ",
         "name": "Youzan",
         "category": "Media & Entertainment",
         "logo": "Youzan",
         "order": 145,
+        "to": "https://doris.apache.org/blog/migrating-from-clickhouse-to-apache-doris-what-happened",
         "image": "/images/user-logo/Media & Entertainment/Youzan.jpg"
     },
     {
-        "story": "最长3 行\n“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms” latency of just 150ms”achieve a query latency of ”\n\n最短1行半\n“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”“Processing 10 Billions rows of...",
-        "category": "Commercial Distribution",
-        "order": 146,
-        "image": "/images/user-logo/Commercial Distribution/undefined.jpg"
-    },
-    {
-        "story": "A real-estate giants builds its data warehouse solution easily and quickly with Apache Doris and thus benefits from low query latency, easy maintenance, and low storage resource consumption.",
+        "story": "A real-estate giants builds its data warehouse solution easily and quickly with Apache Doris and thus benefits from low query latency, easy maintenance, and low storage resource consumption. ",
         "name": "Midland Realty",
         "category": "FMCG & Logistics",
         "logo": "Midland Realty",
-        "order": 147,
+        "order": 146,
+        "to": "https://doris.apache.org/blog/Building-a-Data-Warehouse-for-Traditional-Industry",
         "image": "/images/user-logo/FMCG & Logistics/Midland Realty.jpg"
     },
     {
@@ -1125,12 +1327,8 @@
         "name": "Footprint Analytics",
         "category": "Technology",
         "logo": "Footprint Analytics",
-        "order": 148,
+        "order": 147,
+        "to": null,
         "image": "/images/user-logo/Technology/Footprint Analytics.jpg"
-    },
-    {
-        "category": "Commercial Distribution",
-        "order": 149,
-        "image": "/images/user-logo/Commercial Distribution/undefined.jpg"
     }
 ]
