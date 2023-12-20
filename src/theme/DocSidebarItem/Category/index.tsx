@@ -112,6 +112,7 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
                 })}
             >
                 <Link
+                    id={`${level === 1 ? 'menu__group' : ''}`}
                     className={clsx(`menu__link menu__link_level_${level}`, {
                         'menu__link--sublist': collapsible,
                         'menu__link--sublist-caret': !href && collapsible,

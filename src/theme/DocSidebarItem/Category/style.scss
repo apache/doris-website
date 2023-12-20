@@ -42,6 +42,9 @@
             }
         }
     }
+    #menu__group:hover {
+        background-color: white !important;
+    }
     .menu__list .menu__list {
         margin-left: 0.625rem;
         border-left: 1px solid #dfe5f0;
