@@ -37,12 +37,12 @@
     },
     {
         "story": "Alibaba Cloud is a global leader in cloud computing and artificial intelligence, offering a fully managed service built on Apache Doris for real-time analytics.",
-        "name": "\nAlibaba Cloud",
+        "name": "Alibaba Cloud",
         "category": "Commercial Distribution",
-        "logo": "\nAlibaba Cloud",
+        "logo": "Alibaba Cloud",
         "order": 4,
         "to": null,
-        "image": "/images/user-logo/Commercial Distribution/\nAlibaba Cloud.jpg"
+        "image": "/images/user-logo/Commercial Distribution/Alibaba Cloud.jpg"
     },
     {
         "story": "A global phenomenon, where users create and share short videos, showcasing their talent and connecting with a vibrant community. With Doris, the platform process data efficiently and enhance user experiences",
@@ -64,12 +64,12 @@
     },
     {
         "story": null,
-        "name": "Tencent ",
+        "name": "Tencent",
         "category": "Technology",
-        "logo": "Tencent ",
+        "logo": "Tencent",
         "order": 7,
         "to": null,
-        "image": "/images/user-logo/Technology/Tencent .jpg"
+        "image": "/images/user-logo/Technology/Tencent.jpg"
     },
     {
         "story": null,
@@ -145,12 +145,12 @@
     },
     {
         "story": "Fuse is the largest insurance technology company in Indonesia, using Apache Doris to accelerate insurance BI reporting and real-time data analytics capabilities.",
-        "name": " FUSE",
+        "name": "FUSE",
         "category": "Finance",
-        "logo": " FUSE",
+        "logo": "FUSE",
         "order": 16,
         "to": null,
-        "image": "/images/user-logo/Finance/ FUSE.jpg"
+        "image": "/images/user-logo/Finance/FUSE.jpg"
     },
     {
         "story": "Citic Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
@@ -433,12 +433,12 @@
     },
     {
         "story": "AfterShip is a leading shipment tracking platform that enables businesses and consumers to track and monitor their packages from various courier services in real-time. It provides transparency and convenience in package delivery management.",
-        "name": "Aftership ",
+        "name": "Aftership",
         "category": "FMCG & Logistics",
-        "logo": "Aftership ",
+        "logo": "Aftership",
         "order": 48,
         "to": null,
-        "image": "/images/user-logo/FMCG & Logistics/Aftership .jpg"
+        "image": "/images/user-logo/FMCG & Logistics/Aftership.jpg"
     },
     {
         "story": "SF Express is a leading logistics and courier services company, providing efficient and reliable domestic and international shipping solutions while serving businesses and individuals worldwide.",
@@ -577,12 +577,12 @@
     },
     {
         "story": "CIGNA & CMB, an insurance company, uses Apache Doris as an all-in-one OLAP platform to undertake their customer-facing, analyst-facing, and management-facing data analytics workloads.",
-        "name": "Cigna & CMB ",
+        "name": "Cigna & CMB",
         "category": "Finance",
-        "logo": "Cigna & CMB ",
+        "logo": "Cigna & CMB",
         "order": 64,
         "to": "https://doris.apache.org/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase",
-        "image": "/images/user-logo/Finance/Cigna & CMB .jpg"
+        "image": "/images/user-logo/Finance/Cigna & CMB.jpg"
     },
     {
         "story": null,
@@ -730,12 +730,12 @@
     },
     {
         "story": "A prominent technology conglomerate dedicated to providing cutting-edge solutions in various industries, including artificial intelligence, cloud computing, big data analytics, and telecommunications.",
-        "name": "Wasu ",
+        "name": "Wasu",
         "category": "Technology",
-        "logo": "Wasu ",
+        "logo": "Wasu",
         "order": 81,
         "to": null,
-        "image": "/images/user-logo/Technology/Wasu .jpg"
+        "image": "/images/user-logo/Technology/Wasu.jpg"
     },
     {
         "story": "A leading AI technology company based in China, specializing in AI chips and software, aims to empower various industries with innovative AI solutions and drive the development of intelligent systems.",
@@ -955,12 +955,12 @@
     },
     {
         "story": "A fintech company that leverage leading technologies to provide financial service including digital payment, small-scale loans, investment and wealth managements.",
-        "name": "Du Xiaoman Financial ",
+        "name": "Du Xiaoman Financial",
         "category": "Finance",
-        "logo": "Du Xiaoman Financial ",
+        "logo": "Du Xiaoman Financial",
         "order": 106,
         "to": null,
-        "image": "/images/user-logo/Finance/Du Xiaoman Financial .jpg"
+        "image": "/images/user-logo/Finance/Du Xiaoman Financial.jpg"
     },
     {
         "story": null,
