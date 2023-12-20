@@ -6,7 +6,7 @@
     'date': '2022-12-14',
     'author': 'Xiang He',
     'tags': ['Best Practice'],
-    "image": '/images/Best Practice.png'
+    "image": '/images/best-practice.png'
 }
 ---
 

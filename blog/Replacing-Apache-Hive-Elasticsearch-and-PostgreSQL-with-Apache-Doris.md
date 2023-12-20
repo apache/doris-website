@@ -5,7 +5,7 @@
     'date': '2023-07-01',
     'author': 'Tao Wang',
     'tags': ['Best Practice'],
-    "image": '/images/Best Practice.png'
+    "image": '/images/best-practice.png'
 }
 
 ---

@@ -5,7 +5,7 @@
     'date': '2023-02-27',
     'author': 'Junfei Liu',
     'tags': ['Best Practice'],
-    "image": '/images/Best Practice.png'
+    "image": '/images/best-practice.png'
 }
 ---
 

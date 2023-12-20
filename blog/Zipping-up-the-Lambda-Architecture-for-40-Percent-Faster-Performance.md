@@ -5,7 +5,7 @@
     'date': '2023-05-05',
     'author': 'Tongyang Han',
     'tags': ['Best Practice'],
-    "image": '/images/Best Practice.png'
+    "image": '/images/best-practice.png'
 }
 
 ---

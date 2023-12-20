@@ -5,7 +5,7 @@
     'date': '2023-04-20',
     'author': 'Jacob Chow',
     'tags': ['Best Practice'],
-    "image": '/images/Best Practice.png'
+    "image": '/images/best-practice.png'
 }
 ---
 

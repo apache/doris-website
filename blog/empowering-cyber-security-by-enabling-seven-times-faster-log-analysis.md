@@ -5,7 +5,7 @@
     'date': '2023-12-07',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
-    "image": '/images/Best Practice.png'
+    "image": '/images/best-practice.png'
 }
 
 

@@ -5,7 +5,7 @@
     'date': '2023-07-24',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    "image": '/images/Tech Sharing.png'
+    "image": '/images/tech-sharing.png'
 }
 
 ---
