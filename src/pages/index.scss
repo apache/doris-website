@@ -254,7 +254,7 @@
 
 .firstPageSwiper {
     .swiper-pagination-bullets.swiper-pagination-horizontal {
-        left: 132px;
+        left: 155px;
         top: 150px;
         width: auto;
         .swiper-pagination-bullet {
@@ -273,7 +273,27 @@
 @media (max-width: 1280px) {
     .firstPageSwiper {
         .swiper-pagination-bullets.swiper-pagination-horizontal {
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .firstPageSwiper {
+        .swiper-pagination-bullets.swiper-pagination-horizontal {
             top: 38%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    .firstPageSwiper {
+        .swiper-pagination-bullets.swiper-pagination-horizontal {
+            top: 33%;
             left: 50%;
             transform: translateX(-50%);
         }
