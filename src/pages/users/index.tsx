@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { translate } from '@docusaurus/Translate';
 import './index.scss';
-import Link from '@docusaurus/Link';
 import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -16,6 +15,7 @@ import { USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.d
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import UserItem from './user-item';
 import USERS from '../../constant/users.data.json';
+import ReadMore from '@site/src/components/ReadMore';
 
 const ALL_TEXT = 'All';
 
@@ -116,31 +116,7 @@ export default function Users(): JSX.Element {
                                             <strong className="font-normal">{userStory.author.name}</strong>
                                             <span className="ml-6 text-[#4C576C]">{userStory.author.title}</span>
                                         </p>
-                                        <Link className="flex items-center cursor-pointer" to={userStory.to}>
-                                            <span className="text-primary mr-2">Read more</span>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="16"
-                                                height="14"
-                                                viewBox="0 0 16 14"
-                                                fill="none"
-                                            >
-                                                <path
-                                                    d="M9.37549 12.3542L14.8755 6.85419L9.37549 1.35419"
-                                                    stroke="#444FD9"
-                                                    stroke-width="1.65"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                                <path
-                                                    d="M1.12549 6.85419L14.8755 6.85419"
-                                                    stroke="#444FD9"
-                                                    stroke-width="1.65"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                            </svg>
-                                        </Link>
+                                        <ReadMore to={userStory.to} className="text-primary" />
                                     </div>
                                 </div>
                             </SwiperSlide>

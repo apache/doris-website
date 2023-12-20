@@ -12,6 +12,7 @@ interface CollapseBoxProps {
     showListIcon?: boolean;
     notes?: string | ReactNode;
     expand?: boolean;
+    className?: string;
 }
 
 export default function CollapseBox({
@@ -24,9 +25,10 @@ export default function CollapseBox({
     showListIcon = true,
     notes,
     expand,
+    className,
 }: CollapseBoxProps) {
     return (
-        <div className="mt-[5.5rem] w-full rounded-lg border border-[#DFE5F0]">
+        <div className={`mt-[5.5rem] w-full rounded-lg border border-[#DFE5F0] ${className}`}>
             <CollapseBoxHeader title={title} defaultExpand={expand} />
             <div className="grid grid-rows-[0fr] overflow-hidden transition-all peer-[.expand]:grid-rows-[1fr]">
                 <div className="min-h-0 ">
