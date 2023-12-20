@@ -104,14 +104,18 @@ export default function NavbarContent({ mobile }) {
                             <SearchBar />
                         </NavbarSearch>
                     )}
-                    {/* <Link
+                    <Link
                         className="github-btn desktop header-right-button-github"
                         href="https://github.com/apache/doris"
                         target="_blank"
                     >
                         {star && <div className="gh-count">{star}k</div>}
-                    </Link> */}
-
+                    </Link>
+                    <Link
+                        className="slack-btn desktop header-right-button-slack"
+                        href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ"
+                        target="_blank"
+                    ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">Download</Translate>
                     </Link>

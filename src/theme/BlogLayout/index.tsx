@@ -10,7 +10,7 @@ export default function BlogLayout(props) {
 
     return (
         <Layout {...layoutProps}>
-            <div className="container margin-vert--lg blog-container">
+            <div className="container mt-8 mb-[4.875rem] blog-container">
                 <div className="row">
                     <BlogSidebar sidebar={sidebar} />
                     <main

@@ -52,7 +52,7 @@ export default function FormSelect({
             )}
             <label
                 htmlFor={label}
-                className="absolute left-2 top-4 z-10 origin-[0] -translate-y-7 scale-75 transform bg-[#fff]  px-1 text-sm text-[#8592A6] duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100  peer-hover:text-blue peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 peer-[.ant-input-status-error]:text-[#ff4d4f] peer-[.ant-select-open]:text-blue-500  dark:text-gray-400"
+                className="absolute left-2 top-5 z-10 origin-[0] -translate-y-7 scale-75 transform bg-[#fff]  px-1 text-sm text-[#8592A6] duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100  peer-hover:text-blue peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 peer-[.ant-input-status-error]:text-[#ff4d4f] peer-[.ant-select-open]:text-blue-500  dark:text-gray-400"
             >
                 {placeholder}
             </label>
