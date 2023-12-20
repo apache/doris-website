@@ -424,7 +424,9 @@ export default function Home(): JSX.Element {
                                     <div className=" w-[48rem] ml-12 flex flex-col ">
                                         <div className="flex gap-1 mb-1">
                                             {newsletter.tags.map(value => (
-                                                <div className="   text-xs leading-5">{value}</div>
+                                                <div className="color-[#4c576c] font-medium text-xs leading-5">
+                                                    {value}
+                                                </div>
                                             ))}
                                         </div>
                                         <h3 className="leading-[38px] text-2xl font-medium line-clamp-1	">
