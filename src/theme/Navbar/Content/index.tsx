@@ -49,7 +49,7 @@ export default function NavbarContent({ mobile }) {
         getGithubStar();
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
-            const docsPage = pathname === 'docs' || location.pathname.includes('zh_CN/docs');
+            const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
             setIsDocsPage(docsPage);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
