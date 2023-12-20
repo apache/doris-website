@@ -306,12 +306,20 @@ const config = {
                                 href: '/learning',
                             },
                             {
-                                label: 'Blogs',
+                                label: 'Blog',
                                 href: '/blog',
                             },
                             {
-                                label: 'User Stories',
+                                label: 'Ecosystem',
+                                href: '/ecosystem/cluster-management',
+                            },
+                            {
+                                label: 'User stories',
                                 href: '/users',
+                            },
+                            {
+                                label: 'Discussions',
+                                href: 'https://github.com/apache/doris/discussions',
                             },
                             // {
                             //     label: 'Courses (coming soon)',
@@ -320,23 +328,25 @@ const config = {
                         ],
                     },
                     {
-                        title: 'Community Support',
+                        title: 'Community',
                         items: [
+                            
                             {
-                                label: 'Doris Team',
-                                href: '/community/team',
-                            },
-                            {
-                                label: 'How to Contribute',
+                                label: 'How to contribute',
                                 href: '/community/how-to-contribute/',
                             },
                             {
-                                label: 'Source Code',
+                                label: 'Source code',
                                 href: 'https://github.com/apache/doris/',
                             },
+                            
                             {
-                                label: 'Improvement Proposal',
+                                label: 'Improvement proposal',
                                 href: 'https://github.com/apache/doris/discussions',
+                            },
+                            {
+                                label: 'Doris team',
+                                href: '/community/team',
                             },
                             {
                                 label: 'Roadmap',
