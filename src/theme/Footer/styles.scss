@@ -19,7 +19,7 @@
         .footer__link-item {
             color: var(--global-colors-white);
             font-size: var(--global-font-size-small);
-            transition: all .3s;
+            transition: all 0.3s;
             white-space: nowrap;
 
             svg {
@@ -32,7 +32,7 @@
         }
 
         .footer__col {
-            &+.footer__col {
+            & + .footer__col {
                 margin-left: 2rem;
             }
         }
@@ -71,7 +71,7 @@
                     .footer__col {
                         flex: 1;
 
-                        &+.footer__col {
+                        & + .footer__col {
                             margin-left: 0;
                         }
                     }
@@ -116,56 +116,38 @@
                         color: var(--global-colors-white);
                         position: relative;
 
-
                         &.wechat {
                             &:hover {
-                                opacity: 1;
-
+                                cursor: pointer;
                                 .wechat-dropdown {
                                     display: flex;
                                 }
-                            }
-
-                            .wechat-dropdown {
-                                background-color: var(--global-colors-white);
-                                padding: 0.625rem;
-                                border-radius: var(--global-border-radius);
-                                width: 8.75rem;
-                                height: 8.75rem;
-                                align-items: center;
-                                justify-content: center;
-                                position: absolute;
-                                right: 0;
-                                top: 2.5rem;
-                                z-index: 2;
-                                box-shadow: 0px 6px 16px rgba(255, 255, 255, .1);
-                                display: none;
-
-                                &::before {
+                                &::after {
                                     content: '';
-                                    border: 0.5rem solid transparent;
-                                    border-bottom-color: var(--global-colors-white);
+                                    opacity: 1;
+                                    position: relative;
                                     display: block;
-                                    position: absolute;
-                                    right: 0.625rem;
-                                    top: -1rem;
-                                }
-
-                                img {
-                                    width: 100%;
-                                    display: block;
+                                    left: 50%;
+                                    transform: translateX(-50%);
+                                    width: 156px;
+                                    height: 180px;
+                                    background: url('/static/images/wechat-qrc.png') no-repeat center;
+                                    background-size: cover;
+                                    z-index: 1;
+                                    @media screen and (max-width: 996px) {
+                                        width: 78px;
+                                        height: 90px;
+                                    }
                                 }
                             }
                         }
 
-                        &:hover {
-                            opacity: .8;
+                        svg:hover {
+                            opacity: 0.8;
                         }
                     }
                 }
             }
-
-
         }
     }
 
@@ -176,7 +158,7 @@
         line-height: 1.8;
         text-align: center;
         color: var(--global-colors-white);
-        opacity: .6;
+        opacity: 0.6;
         font-size: var(--global-font-size-smaller);
 
         a {

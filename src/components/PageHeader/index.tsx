@@ -11,7 +11,7 @@ interface PageHeaderProps {
 
 export default function PageHeader(props: PageHeaderProps) {
     return (
-        <div className={`page-header bg-[#F7F9FE] py-20 ${props.className}`}>
+        <div className={`page-header bg-[#F7F9FE] pt-10 pb-20 ${props.className}`}>
             <h1 className="title">{props.title}</h1>
             <div className="subtitle mt-4">{props.subtitle}</div>
             {props?.extra && props?.extra}
