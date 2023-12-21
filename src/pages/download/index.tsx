@@ -137,7 +137,7 @@ export default function Download() {
                 />
             </div>
             <a id="runAnywhere" className="scroll-mt-20"></a>
-            <div className="run-anywhere pt-[5.5rem] pb-[7.5rem]">
+            <div className="run-anywhere bg-[#F7F9FE] pt-[5.5rem] pb-[7.5rem]">
                 <div className="container mx-auto">
                     <h3 className="text-center text-[#1D1D1D] text-[2.5rem] font-medium">Run anywhere</h3>
                     <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">

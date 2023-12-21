@@ -213,9 +213,12 @@
 .various-analytics-group {
     padding-top: 2rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid #ccd4e2;
+
     display: flex;
     line-height: 1.6;
+    & + .various-analytics-group {
+        border-top: 1px solid #ccd4e2;
+    }
     .items-title {
         display: flex;
         align-items: center;
