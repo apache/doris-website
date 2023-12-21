@@ -5,7 +5,7 @@
     'date': '2023-03-07',
     'author': 'Jun Zhang & Kai Dai',
     'tags': ['Best Practice'],
-    "image": '/images/best-practice.png'
+    "image": '/images/tencent-data-engineer.png'
 }
 ---
 
