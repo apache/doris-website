@@ -584,7 +584,7 @@ export default function Home(): JSX.Element {
                                     >
                                         <div>{content}</div>
 
-                                        <div className="flex mt-14 ">
+                                        <div className="flex mt-14 gap-2">
                                             {links.map(({ content, to }) => (
                                                 <More style={{ textAlign: 'left' }} link={to} text={content} />
                                             ))}

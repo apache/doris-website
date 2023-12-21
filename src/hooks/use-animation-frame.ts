@@ -11,6 +11,7 @@ export const useAnimationFrame = (callback, stop) => {
      */
 
     React.useEffect(() => {
+        console.log(stop);
         const animate = time => {
             if (previousTimeRef.current !== undefined) {
                 const deltaTime = time - previousTimeRef.current;
