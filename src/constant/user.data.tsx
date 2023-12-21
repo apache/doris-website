@@ -12,16 +12,16 @@ export const USER_STORIES_CATEGORIES = [
 
 export const USER_STORIES = [
     {
-        title: '“Processing 10 Billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”',
+        title: '“Processing 10 billions rows of data every day with 10,000 QPS and achieve a query latency of just 150ms”',
         author: {
-            name: 'Li Zhe,Tom',
+            name: 'Li Zhe',
             title: 'Senior Software Engineer, JD.com',
         },
         to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
         image: 'user-jd.png',
     },
     {
-        title: '“Reducing costs and increasing service availability, Large Language Models empower Doris-based OLAP service”',
+        title: '“Reducing costs and increasing service availability, large language models empower Doris-based OLAP service”',
         author: {
             name: 'Jun Zhang, Lei Luo',
             title: 'Senior software engineer, Tencent ',
