@@ -124,11 +124,11 @@ function BlogListPageContent(props) {
     }, [active]);
 
     return (
-        <BlogLayout sidebar={sidebar} pageType="blogList">
+        <BlogLayout sidebar={sidebar} pageType="blogList" className="lg:max-w-7xl">
             <PageHeader title="Blog" className="bg-white" {...props} />
             <HeadBlogs blogs={ALL_BLOG} />
-            <div className="flex flex-col w-full">
-                <ul className="scrollbar-none w-[100vw] px-[1rem] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
+            <div className="flex flex-col lg:max-w-7xl">
+                <ul className="scrollbar-none w-[100%] px-[1rem] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
                     {blogCategories.map((item: any, index) => (
                         <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>
                             <span
@@ -141,7 +141,7 @@ function BlogListPageContent(props) {
                         </li>
                     ))}
                 </ul>
-                <ul className="mt-6 grid gap-6 lg:mt-10 lg:grid-cols-3 px-[1rem]">
+                <ul className="mt-6 grid gap-6 lg:mt-10 lg:grid-cols-3 px-[1rem] m-auto">
                     {currentBlogs.map((BlogPostContent, i) => (
                         <BlogListItem
                             key={BlogPostContent.metadata.permalink + i}

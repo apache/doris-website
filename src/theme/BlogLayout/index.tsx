@@ -10,7 +10,7 @@ export default function BlogLayout(props) {
 
     return (
         <Layout {...layoutProps}>
-            <div className="container mb-[4.875rem] blog-container">
+            <div className="mb-[4.875rem] container">
                 <div className="row">
                     <BlogSidebar sidebar={sidebar} />
                     <main
