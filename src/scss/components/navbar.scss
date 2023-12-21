@@ -8,6 +8,20 @@
     .navbar-left {
         display: flex;
     }
+    .docs-search {
+        display: none;
+    }
+    .custom-navbar-item {
+        display: none;
+    }
+    &.docs {
+        .docs-search {
+            display: block;
+        }
+        .custom-navbar-item {
+            display: block;
+        }
+    }
     &__inner {
         padding: 0 5rem;
         margin: 0 auto;
