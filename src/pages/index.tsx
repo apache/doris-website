@@ -501,7 +501,7 @@ export default function Home(): JSX.Element {
                         </Translate>
                     }
                     footer={
-                        <div className="justify-center flex mt-20">
+                        <div className="justify-center flex mt-9">
                             <LinkWithArrow
                                 to="/docs/get-starting/what-is-apache-doris"
                                 text={
