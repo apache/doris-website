@@ -5,7 +5,7 @@
     'date': '2023-05-26',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    "image": '/images/tech-sharing.png'
+    "image": '/images/building-a-log-analytics-solution-10-times-more-cost-effective-than-es.jpg'
 }
 
 ---
