@@ -142,7 +142,7 @@ export default function Users(): JSX.Element {
             })}
         >
             <PageHeader
-                className="pt-[7.5rem]"
+                className="lg:pt-[7.5rem] px-4"
                 title="Start Real-Time Journey with Innovators"
                 subtitle="Over 4000 global leaders and enterprises are powered by Apache Doris."
                 extra={

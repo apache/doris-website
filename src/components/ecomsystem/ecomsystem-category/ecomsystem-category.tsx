@@ -25,7 +25,7 @@ export default function EcomsystemCategory() {
     const [active, setActive] = useState<EcomsystemCategoryEnum | string>(currentActive);
 
     return (
-        <div className="container mx-auto flex flex-col flex-wrap items-center justify-center gap-6 lg:flex-row -mt-[3.875rem]">
+        <div className="container mx-auto flex flex-col flex-wrap items-center justify-center gap-6 lg:flex-row -mt-[1.5rem]">
             <TabItem
                 url={EcomsystemCategoryEnum.ClusterManagement}
                 setActive={() => setActive(EcomsystemCategoryEnum.ClusterManagement)}

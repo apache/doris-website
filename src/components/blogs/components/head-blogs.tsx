@@ -15,7 +15,7 @@ export default function HeadBlogs(props) {
     const news = blogs.filter(blog => blog.frontMatter.title !== topNews.frontMatter.title);
     return (
         <>
-            <div className="lg:flex">
+            <div className="flex lg:flex-row flex-col px-[1rem]">
                 <div className="mb-4 lg:mb-0 lg:flex-1 lg:pr-6">
                     <BlogListItem
                         large={true}
