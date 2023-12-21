@@ -53,7 +53,7 @@ export default function LocaleDropdownNavbarItem({ mobile, dropdownItemsBefore, 
     return (
         <DropdownNavbarItem
             {...props}
-            // mobile={mobile}
+            mobile={mobile}
             label={
                 <>
                     <svg

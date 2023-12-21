@@ -1,26 +1,28 @@
 .docs-wrapper {
     .navbar__inner {
         .navbar__items--right {
-            .docs-search,
-            .custom-navbar-item {
-                display: none;
-            }
             .header-right-button-github,
             .header-right-button-slack {
                 display: none;
             }
         }
     }
+    .navbar__bottom {
+        display: none;
+    }
 }
 
-.navbar__inner {
-    .navbar__items--right {
-        .docs-search,
-        .custom-navbar-item {
-            display: none;
+@media screen and (max-width: 996px) {
+    .docs-wrapper {
+        .navbar__inner {
+            .navbar__items--right {
+                .docs-search,
+                .custom-navbar-item {
+                    display: none;
+                }
+            }
         }
-        .header-right-button-github,
-        .header-right-button-slack {
+        .navbar__bottom {
             display: block;
         }
     }
