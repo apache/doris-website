@@ -109,7 +109,7 @@
             font-size: 1.25rem;
             color: var(--global-colors-text-primary);
             margin-top: 1.5rem;
-            font-weight: 540;
+            font-weight: 500;
         }
     }
 }
@@ -207,8 +207,7 @@
 }
 
 .core-capabilities-group {
-    display: grid;
-    gap: 1.5rem;
+    gap: 5rem 1.5rem;
 }
 
 .various-analytics-group {

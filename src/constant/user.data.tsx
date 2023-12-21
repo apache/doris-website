@@ -18,7 +18,7 @@ export const USER_STORIES = [
             title: 'Senior software engineer, JD.com',
         },
         to: 'blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents',
-        image: 'user-jd.png',
+        image: 'user-jd.jpg',
     },
     {
         title: '“Reducing costs and increasing service availability, large language models empower Doris-based OLAP service”',

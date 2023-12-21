@@ -4,7 +4,7 @@ import React from 'react';
 interface ReadMoreProps {
     to: string;
     className?: string;
-    text: string;
+    text: string | React.ReactNode;
 }
 
 export default function LinkWithArrow(props: ReadMoreProps) {

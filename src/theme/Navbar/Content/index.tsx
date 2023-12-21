@@ -82,7 +82,7 @@ export default function NavbarContent({ mobile }) {
             left={
                 // TODO stop hardcoding items?
                 <div className="navbar-left">
-                    <div className="navbar-logo-wrapper">
+                    <div className="navbar-logo-wrapper flex items-center">
                         {isDocsPage ? (
                             <div
                                 className="cursor-pointer docs"
