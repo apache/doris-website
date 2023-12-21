@@ -54,7 +54,7 @@
         "image": "/images/user-logo/Media & Entertainment/TikTok.jpg"
     },
     {
-        "story": null,
+        "story": "Huawei is a leading global communications technology company that provides comprehensive digital solutions including 5G, cloud computing, and artificial intelligence. Huawei uses Apache Doris to process and analyze real-time data to improve business efficiency and competitiveness.",
         "name": "Huawei",
         "category": "Technology",
         "logo": "Huawei",
@@ -63,7 +63,7 @@
         "image": "/images/user-logo/Technology/Huawei.jpg"
     },
     {
-        "story": null,
+        "story": "Tencent is the largest internet company in the world and one of the highest grossing multimedia companies in the world. Tencent has multiple businesses using Apache Doris to perform real-time analysis on user behavior data, better supporting business analysis and decision-making.",
         "name": "Tencent",
         "category": "Technology",
         "logo": "Tencent",
@@ -72,7 +72,7 @@
         "image": "/images/user-logo/Technology/Tencent.jpg"
     },
     {
-        "story": null,
+        "story": "Alibaba is a leading global Internet technology company with a wide range of business activities, including e-commerce, cloud computing, digital media and entertainment. Within Alibaba, multiple businesses are already using Apache Doris to support business strategies and product optimization through real-time data analysis.",
         "name": "Alibaba.com",
         "category": "Technology",
         "logo": "Alibaba.com",
@@ -95,7 +95,7 @@
         "category": "Technology",
         "logo": "Xiaomi",
         "order": 10,
-        "to": "https://doris.apache.org/blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid",
+        "to": "https://doris.apache.org/blog/xiaomi_vector",
         "image": "/images/user-logo/Technology/Xiaomi.jpg"
     },
     {
@@ -108,7 +108,7 @@
         "image": "/images/user-logo/Technology/Baidu.jpg"
     },
     {
-        "story": null,
+        "story": "ByteDance is a technology company focusing on mobile information, social entertainment and social platforms. ByteDance uses Apache Doris to conduct real-time analysis and processing of real-time data streams to provide real-time business support",
         "name": "ByteDance",
         "category": "Technology",
         "logo": "ByteDance",
@@ -135,7 +135,7 @@
         "image": "/images/user-logo/Finance/Postal Savings Bank of China.jpg"
     },
     {
-        "story": null,
+        "story": "WeLab is one of the fastest-growing pan-Asian fintech platforms, with over 60 million individual users and over 700 enterprise customers. Apache Doris plays a crucial role in WeLab's real-time big data platform, effectively supporting important scenarios such as real-time self-service BI reporting and user behavior analysis.",
         "name": "WeLab",
         "category": "Finance",
         "logo": "WeLab",
@@ -153,7 +153,7 @@
         "image": "/images/user-logo/Finance/FUSE.jpg"
     },
     {
-        "story": "CITIC Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
+        "story": "Citic Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
         "name": "CITIC Securities",
         "category": "Finance",
         "logo": "CITIC Securities",
@@ -189,7 +189,7 @@
         "image": "/images/user-logo/Telecom & Manufacturing/China Unicom.jpg"
     },
     {
-        "story": "Glodwind is a leading wind turbine manufacturer and renewable energy solutions provider，specializing in design, manufacturing and installation.",
+        "story": "Glodwind is a leading wind turbine manufacturer and renewable energy solutions provider, specializing in design, manufacturing and installation.",
         "name": "Goldwind",
         "category": "Telecom & Manufacturing",
         "logo": "Goldwind",
@@ -325,12 +325,12 @@
     },
     {
         "story": "This electric vehicle manufacturer tried a fair share of OLAP systems and settled on Apache Doris after considering performance, semantics, system compatibility, and maintenance costs.",
-        "name": "Nio",
+        "name": "NIO",
         "category": "Telecom & Manufacturing",
-        "logo": "Nio",
+        "logo": "NIO",
         "order": 36,
         "to": "https://doris.apache.org/blog/NIO",
-        "image": "/images/user-logo/Telecom & Manufacturing/Nio.jpg"
+        "image": "/images/user-logo/Telecom & Manufacturing/NIO.jpg"
     },
     {
         "story": "A renowned Japanese automobile manufacturer known for its diverse range of cars, motorcycles, and outboard motors. With a reputation for reliability and innovation, Suzuki vehicles are popular worldwide.\n",
@@ -352,12 +352,12 @@
     },
     {
         "story": "A coffee company and coffeehouse chain that rapidly expanded in a short period. Known for its convenient mobile ordering and delivery services, Luckin Coffee offers a variety of coffee beverages and snacks to customers across China.",
-        "name": "Luckin coffee",
+        "name": "Luckin Coffee",
         "category": "FMCG & Logistics",
-        "logo": "Luckin coffee",
+        "logo": "Luckin Coffee",
         "order": 39,
         "to": null,
-        "image": "/images/user-logo/FMCG & Logistics/Luckin coffee.jpg"
+        "image": "/images/user-logo/FMCG & Logistics/Luckin Coffee.jpg"
     },
     {
         "story": "JD Logistics, a subsidiary of JD.com, is a leading logistics company with an extensive network and advanced technology. It offers efficient warehousing, transportation, and supply chain solutions, enabling seamless e-commerce operations across industries.\n",
@@ -387,13 +387,13 @@
         "image": "/images/user-logo/FMCG & Logistics/Cabbeen.jpg"
     },
     {
-        "story": "Semir is a modern lifestyle brand for adults committed to developing innovative, and affordable fashion.",
-        "name": "Semir",
+        "story": "Semi is a modern lifestyle brand for adults committed to developing innovative, and affordable fashion.",
+        "name": "Semi",
         "category": "FMCG & Logistics",
-        "logo": "Semir",
+        "logo": "Semi",
         "order": 43,
         "to": null,
-        "image": "/images/user-logo/FMCG & Logistics/Semir.jpg"
+        "image": "/images/user-logo/FMCG & Logistics/Semi.jpg"
     },
     {
         "story": "A fashion brand to present lifestyles of contemporary successful men and echo the spirit of successful men in various fields.",
@@ -415,12 +415,12 @@
     },
     {
         "story": "A leading restaurant company in China, operatin popular barnds such as KFC, Pizza Hut, and Taco Bell. With a focus on delivering delicious and convenient dining experiences, Yum China has become a trusted choice for Chinese consumers.",
-        "name": "Yum",
+        "name": "YumChina",
         "category": "FMCG & Logistics",
-        "logo": "Yum",
+        "logo": "YumChina",
         "order": 46,
         "to": null,
-        "image": "/images/user-logo/FMCG & Logistics/Yum.jpg"
+        "image": "/images/user-logo/FMCG & Logistics/YumChina.jpg"
     },
     {
         "story": "An international dairy company based in the Netherlands, specializing in the production and distribution of infant and toddler nutrition products, Ausnutria ensures high-quality and safe nutritional solutions for babies and young children worldwide.",
@@ -567,7 +567,7 @@
         "image": "/images/user-logo/Finance/Taikang Insurance Group.jpg"
     },
     {
-        "story": null,
+        "story": "With over 227 million retail customers and 693 million Internet users, Ping An is one of the largest financial services companies in the world. Currently, multiple businesses within Ping An Group are using Apache Doris, including life insurance, property insurance, and financial technology.",
         "name": "Ping An Insurance Group",
         "category": "Finance",
         "logo": "Ping An Insurance Group",
@@ -585,7 +585,7 @@
         "image": "/images/user-logo/Finance/Cigna & CMB.jpg"
     },
     {
-        "story": null,
+        "story": "China Everbright Bank is a large joint-stock commercial bank that has introduced Apache Doris into its data platform to accelerate queries on the data lake and enhance real-time report analysis efficiency.",
         "name": "China Everbright Bank",
         "category": "Finance",
         "logo": "China Everbright Bank",
@@ -594,7 +594,7 @@
         "image": "/images/user-logo/Finance/China Everbright Bank.jpg"
     },
     {
-        "story": null,
+        "story": "Based on Apache Doris, Guangfa Securities has established a data metric service platform to accelerate the query speed of Hive data and provide data support for upper-level analysis applications.",
         "name": "GF Securities",
         "category": "Finance",
         "logo": "GF Securities",
@@ -603,7 +603,7 @@
         "image": "/images/user-logo/Finance/GF Securities.jpg"
     },
     {
-        "story": null,
+        "story": "Bosera Fund has upgraded its data warehouse system using Apache Doris, replacing both Teradata and Oracle, and achieved significant improvement in ETL/batch data processing efficiency.",
         "name": "Bosera Funds",
         "category": "Finance",
         "logo": "Bosera Funds",
@@ -612,7 +612,7 @@
         "image": "/images/user-logo/Finance/Bosera Funds.jpg"
     },
     {
-        "story": null,
+        "story": "Harvest Fund upgraded its original data warehouse system to Apache Doris to achieve more efficient data processing and analysis, resulting in better performance, lower costs, and higher reliability.",
         "name": "Harvest Funds",
         "category": "Finance",
         "logo": "Harvest Funds",
@@ -963,7 +963,7 @@
         "image": "/images/user-logo/Finance/Du Xiaoman Financial.jpg"
     },
     {
-        "story": null,
+        "story": "Xingye Bank is a large joint-stock commercial bank that has introduced Apache Doris into its big data platform to accelerate real-time data analysis efficiency and provide data support for business operations and management decisions.",
         "name": "Industrial Bank",
         "category": "Finance",
         "logo": "Industrial Bank",
@@ -981,7 +981,7 @@
         "image": "/images/user-logo/Finance/UMS.jpg"
     },
     {
-        "story": null,
+        "story": "Caitong Securities has used Apache Doris to summarize and analyze real-time data, quickly generating various reports, providing strong support for business development and decision-making.",
         "name": "Caitong Securities",
         "category": "Finance",
         "logo": "Caitong Securities",
@@ -1036,9 +1036,9 @@
     },
     {
         "story": "A financial risk control and marketing services provider that leverages the power of artificial intelligence to empower decision-making for various industries. ",
-        "name": "Bairong Inc.",
+        "name": "Bairong Inc",
         "category": "Finance",
-        "logo": "Bairong Inc.",
+        "logo": "Bairong Inc",
         "order": 115,
         "to": null,
         "image": "/images/user-logo/Finance/Bairong Inc.jpg"
