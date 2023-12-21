@@ -1041,7 +1041,7 @@
         "logo": "Bairong Inc.",
         "order": 115,
         "to": null,
-        "image": "/images/user-logo/Finance/Bairong Inc..jpg"
+        "image": "/images/user-logo/Finance/Bairong Inc.jpg"
     },
     {
         "story": "The SaaS provider utilizes Apache Doris to support self-service BI by enabling fast join queries. It also helps in improving efficiency of privileged queries.",

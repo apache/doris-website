@@ -11,6 +11,7 @@ import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-
 import DownloadFormSimple from '@site/src/components/download-form/download-form-simple';
 import Link from '@docusaurus/Link';
 import './index.scss';
+import ReadMore from '@site/src/components/ReadMore';
 
 export default function Download() {
     return (
@@ -23,7 +24,7 @@ export default function Download() {
             wrapperClassName="download"
         >
             <PageHeader
-                className="lg:pt-[7.5rem] px-4"
+                className="lg:pt-[7.5rem] g-white"
                 title="Quick Download & Easy Deployment"
                 subtitle="Access the latest version and enjoy effortless deployment for your big data analytics needs."
             />
@@ -136,14 +137,7 @@ export default function Download() {
                         </div>
                     }
                     rightContent={<DownloadFormSimple versions={OLD_VERSIONS} />}
-                    moreLink={
-                        <ExternalLink
-                            to="/docs/releasenotes/release-2.0.3"
-                            className="bg-white p-0 text-[#444FD9] -mt-6"
-                            label="View more"
-                            linkIcon={<ExternalLinkArrowIcon />}
-                        ></ExternalLink>
-                    }
+                    moreLink={<ReadMore to="/docs/releasenotes/release-2.0.3" />}
                 />
             </div>
             <a id="runAnywhere" className="scroll-mt-20"></a>

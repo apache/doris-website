@@ -8,8 +8,11 @@ interface ReadMoreProps {
 
 export default function ReadMore(props: ReadMoreProps) {
     return (
-        <Link className={`flex group items-center cursor-pointer hover:no-underline ${props?.className}`} to={props.to}>
-            <span className="mr-2">Read more</span>
+        <Link
+            className={`flex group text-primary items-center cursor-pointer hover:no-underline ${props?.className}`}
+            to={props.to}
+        >
+            <span className="mr-2 ">Read more</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
                 <path
                     d="M9.37549 12.3542L14.8755 6.85419L9.37549 1.35419"
