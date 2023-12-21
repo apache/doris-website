@@ -5,7 +5,7 @@
     'date': '2023-12-14',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
-    "image": '/images/best-practice.png'
+    "image": '/images/from-elasticsearch-to-apache-doris-upgrading-an-observability-platform.jpg'
 }
 
 ---
