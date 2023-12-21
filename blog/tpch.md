@@ -1,6 +1,6 @@
 ---
 {
-    'title': "Apache Doris 1.2 TPC-H Performance Test Report",
+    'title': "Apache Doris 1.2 TPC-H performance test report",
     'summary': "On 22 queries on the TPC-H standard test data set, we conducted a comparison test based on Apache Doris 1.2.0-rc01, Apache Doris 1.1.3 and Apache Doris 0.15.0 RC04 versions. Compared with Apache Doris 1.1.3, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 3 times, and by nearly 11 times compared with Apache Doris 0.15.0 RC04.",
     'date': '2022-11-22',
     'author': 'Apache Doris',

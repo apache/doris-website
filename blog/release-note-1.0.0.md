@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Apache Doris(Incubating) announced 1.0.0 Release',
+    'title': 'Apache Doris(Incubating) announced 1.0.0 release',
     'summary': 'Dear community friends, we are happy to announce that Apache Doris (incubating) has officially released the 1.0 Release version on April 18, 2022!',
     'date': '2022-04-18',
     'author': 'Apache Doris',

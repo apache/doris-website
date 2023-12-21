@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Apache Doris announced the official release of version 2.0.0',
+    'title': 'New milestone: Apache Doris 2.0.0 just released',
     'summary': 'Dear community, we are excited to announce that Apache Doris 2.0.0 is now production-ready on August 16, 2023',
     'date': '2023-08-16',
     'author': 'Apache Doris',

@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Data Analysis for Live Streaming: What Happens in Real Time is Analyzed in Real Time',
+    'title': 'Data analysis for live streaming: what happens in real time is analyzed in real time',
     'summary': "As live streaming emerges as a way of doing business, the need for data analysis follows up. This post is about how a live streaming service provider with 800 million end users found the right database to support its analytic solution.",
     'date': '2023-10-30',
     'author': 'He Gong',

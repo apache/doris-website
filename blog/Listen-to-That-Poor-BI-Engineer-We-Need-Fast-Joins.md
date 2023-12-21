@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Listen to That Poor BI Engineer: We Need Fast Joins',
+    'title': 'Listen to that poor BI engineer: we need fast joins',
     'summary': "JOIN queries are always a hassle, but yes, you can expect fast joins from a relational database. Read this and learn how.",
     'date': '2023-07-10',
     'author': 'Baoming Zhang',

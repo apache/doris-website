@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Zipping up the Lambda Architecture for 40% Faster Performance',
+    'title': 'Zipping up the lambda architecture for 40% faster performance',
     'summary': "Instead of pooling real-time and offline data after they are fully ready for queries, Douyu engineers use Apache Doris to share part of the pre-query computation burden.",
     'date': '2023-05-05',
     'author': 'Tongyang Han',
