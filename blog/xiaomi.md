@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Best Practice of Apache Doris in Xiaomi Group',
+    'title': 'Best practice of Apache Doris in Xiaomi Group',
     'summary': "In order to improve the query performance of the Xiaomi growth analysis platform and reduce the operation and maintenance costs, Xiaomi Group introduced Apache Doris in September 2019. In the past two and a half years, **Apache Doris has been widely used in Xiaomi Group,** **such as business growth analytic platform, realtime dashboards for all business groups,  finance analysis, user profile analysis, advertising reports, A/B testing platform and so on.** This article will share the best practice of Apache Doris in Xiaomi Group.",
     'date': '2022-07-20',
     'author': 'Apache Doris',

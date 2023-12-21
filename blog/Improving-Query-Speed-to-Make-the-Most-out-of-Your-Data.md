@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Best Practice in Duyansoft, Improving Query Speed to Make the Most out of Your Data',
+    'title': 'Best practice in Duyansoft, improving query speed to make the most out of your data',
     'summary': "This is about how Duyansoft improved its overall data processing efficiency by optimizing the choice and usage of data warehouses.",
     'date': '2023-02-27',
     'author': 'Junfei Liu',

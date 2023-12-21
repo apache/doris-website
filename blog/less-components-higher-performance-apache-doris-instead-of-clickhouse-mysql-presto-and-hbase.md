@@ -1,9 +1,9 @@
 ---
 {
-    'title': 'Less Components, Higher Performance: Apache Doris Instead of ClickHouse, MySQL, Presto, and HBase',
+    'title': 'Less components, higher performance: Apache Doris instead of ClickHouse, MySQL, Presto, and HBase',
     'summary': "This post is about building a unified OLAP platform. An insurance company tries to build a data warehouse that can undertake all their customer-facing, analyst-facing, and management-facing data analysis workloads.",
     'date': '2023-11-22',
-    'author': 'Big Data Platform R&D Team of CIGNA&CMB',
+    'author': 'CIGNA & CMB',
     'tags': ['Best Practice'],
     "image": '/images/cigna-cmb.png'
 }
