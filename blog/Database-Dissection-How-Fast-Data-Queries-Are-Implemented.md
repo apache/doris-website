@@ -1,11 +1,11 @@
 ---
 {
-    'title': 'Database Dissection: How Fast Data Queries Are Implemented',
+    'title': 'Database dissection: how fast data queries are implemented',
     'summary': "What's more important than quick performance itself is the architectural design and mechanism that enable it.",
     'date': '2023-07-16',
     'author': 'Rong Hou',
     'tags': ['Best Practice'],
-    "image": '/images/best-practice.png'
+    "image": '/images/how-fast-data-queries-are-implemented.png'
 }
 
 ---

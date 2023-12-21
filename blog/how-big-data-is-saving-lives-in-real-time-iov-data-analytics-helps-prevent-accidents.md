@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'How Big Data Is Saving Lives in Real Time: IoV Data Analytics Helps Prevent Accidents',
+    'title': 'How big data is saving lives in real time: IoV data analytics helps prevent accidents',
     'summary': "What needs to be taken care of in IoV data analysis? What's the difference between a near real-time analytic data platform and an actual real-time analytic data platform?",
     'date': '2023-11-29',
     'author': 'Apache Doris',

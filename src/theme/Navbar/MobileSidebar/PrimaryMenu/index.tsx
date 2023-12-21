@@ -14,12 +14,15 @@ export default function NavbarMobilePrimaryMenu() {
     // TODO how can the order be defined for mobile?
     // Should we allow providing a different list of items?
     const items = useNavbarItems();
+    console.log(items);
     return (
         <>
             <ul className="menu__list">
-                {items.map((item, i) => (
-                    <NavbarItem mobile {...item} onClick={() => mobileSidebar.toggle()} key={i} />
-                ))}
+                {items
+                    .filter(val => !['docsVersionDropdown', 'localeDropdown'].includes(val.type as string))
+                    .map((item, i) => (
+                        <NavbarItem mobile {...item} onClick={() => mobileSidebar.toggle()} key={i} />
+                    ))}
             </ul>
             {/* <span className="github-btn-mobile">
                 <GitHubButton type="stargazers" size="large" namespace="apache" repo="doris" />

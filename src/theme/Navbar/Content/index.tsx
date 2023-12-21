@@ -11,6 +11,8 @@ import NavbarSearch from '@theme/Navbar/Search';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
+import DocsVersionDropdownNavbarItem from '../../NavbarItem/DocsVersionDropdownNavbarItem';
+import LocaleDropdownNavbarItem from '../../NavbarItem/LocaleDropdownNavbarItem';
 function useNavbarItems() {
     // TODO temporary casting until ThemeConfig type is improved
     return useThemeConfig().navbar.items;
@@ -24,17 +26,15 @@ function NavbarItems({ items }) {
         </>
     );
 }
-function NavbarContentLayout({ left, right, isDocsPage = false }) {
+function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
     return (
-        <div
-            className="navbar__inner"
-            style={{
-                padding: isDocsPage && '0 1.6rem',
-            }}
-        >
-            <div className="navbar__items">{left}</div>
-            <div className="navbar__items navbar__items--right">{right}</div>
-        </div>
+        <>
+            <div className="navbar__inner">
+                <div className="navbar__items">{left}</div>
+                <div className="navbar__items navbar__items--right">{right}</div>
+            </div>
+            <div className="navbar__bottom">{bottom}</div>
+        </>
     );
 }
 export default function NavbarContent({ mobile }) {
@@ -44,7 +44,6 @@ export default function NavbarContent({ mobile }) {
     const searchBarItem = items.find(item => item.type === 'search');
     const [star, setStar] = useState<any>();
     const [isDocsPage, setIsDocsPage] = useState(false);
-
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
@@ -69,34 +68,40 @@ export default function NavbarContent({ mobile }) {
                 return (index % 3 ? next : next + '.') + prev;
             });
     }
+
+    function getNavItem(type: string) {
+        return items.find(item => item.type === type);
+    }
     return (
         <NavbarContentLayout
             left={
                 // TODO stop hardcoding items?
-                <>
-                    {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />}
-                    {isDocsPage ? (
-                        <div
-                            className="cursor-pointer"
-                            onClick={() => {
-                                window.location.href = '/';
-                            }}
-                        >
-                            <DocsLogo />
-                        </div>
-                    ) : (
-                        <NavbarLogo />
-                    )}
+                <div className="navbar-left">
+                    <div className="navbar-logo-wrapper">
+                        {isDocsPage ? (
+                            <div
+                                className="cursor-pointer docs"
+                                onClick={() => {
+                                    window.location.href = '/';
+                                }}
+                            >
+                                <DocsLogo />
+                            </div>
+                        ) : (
+                            <NavbarLogo />
+                        )}
+                    </div>
 
                     {!isDocsPage && <NavbarItems items={leftItems} />}
                     {/*  */}
-                </>
+                </div>
             }
             isDocsPage={isDocsPage}
             right={
                 // TODO stop hardcoding items?
                 // Ask the user to add the respective navbar items => more flexible
                 <>
+                    {!mobileSidebar.disabled && <NavbarMobileSidebarToggle />}
                     <NavbarItems items={rightItems} />
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
                     {!searchBarItem && (
@@ -120,6 +125,21 @@ export default function NavbarContent({ mobile }) {
                         <Translate id="navbar.download">Download</Translate>
                     </Link>
                 </>
+            }
+            bottom={
+                isDocsPage ? (
+                    <div className="docs-nav-version-locale">
+                        <LocaleDropdownNavbarItem mobile={false} {...(getNavItem('localeDropdown') as any)} />
+                        <DocsVersionDropdownNavbarItem
+                            mobile={false}
+                            docsPluginId="default"
+                            collapsed={false}
+                            {...(getNavItem('docsVersionDropdown') as any)}
+                        />
+                    </div>
+                ) : (
+                    <></>
+                )
             }
         />
     );
