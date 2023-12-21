@@ -501,7 +501,7 @@ export default function Home(): JSX.Element {
                         </Translate>
                     }
                     footer={
-                        <div className="justify-center flex mt-20">
+                        <div className="justify-center flex mt-8">
                             <LinkWithArrow
                                 to="/docs/get-starting/what-is-apache-doris"
                                 text={
@@ -615,6 +615,7 @@ export default function Home(): JSX.Element {
                 </div>
             </PageColumn>
             <PageColumn
+                className="bg-[#F7F9FE]"
                 title={
                     <Translate id="homepage.join" description="Join The Community">
                         Connect with community
