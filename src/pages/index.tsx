@@ -539,7 +539,7 @@ export default function Home(): JSX.Element {
                 }
                 footer={<></>}
             >
-                <div className="core-capabilities-group grid-cols-1 lg:grid-cols-3 ">
+                <div className="block lg:grid core-capabilities-group grid-cols-1 lg:grid-cols-3 ">
                     {CoreCapabilitiesData.map(props => (
                         <CoreCapabilitiesCard key={props.title} {...props} />
                     ))}
@@ -606,7 +606,7 @@ export default function Home(): JSX.Element {
                                 <div>{icon}</div>
                                 <div>{title}</div>
                             </div>
-                            <div className="items-content">
+                            <div className="items-content px-6 lg:px-0">
                                 <div>{content}</div>
 
                                 <div className="links">
