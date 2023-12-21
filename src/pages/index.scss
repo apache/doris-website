@@ -310,6 +310,9 @@
             font-size: 1.25rem;
             line-height: 1.6;
             position: relative;
+            margin-top: 0 !important;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
             &:hover {
                 color: #444fd9;
             }
