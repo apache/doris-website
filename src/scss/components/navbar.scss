@@ -288,6 +288,9 @@
             border-right-color: #f0f1fc;
         }
     }
+    .navbar__bottom {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 996px) {
@@ -300,6 +303,7 @@
                 height: 3.75rem;
             }
             .navbar__bottom {
+                display: block;
                 border-top: 0.5px solid #edf2fa;
                 height: 2.75rem;
                 padding: 0 1.25rem;
@@ -422,6 +426,12 @@
         }
 
         .navbar__items--right {
+            .docs-search {
+                display: none;
+            }
+            .custom-navbar-item {
+                display: none;
+            }
             .navbar__search-input {
                 background: transparent var(--ifm-navbar-search-input-icon) no-repeat 0.75rem center / 2rem 2rem;
                 border: none;
