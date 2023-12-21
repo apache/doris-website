@@ -23,16 +23,11 @@ export default function Download() {
             wrapperClassName="download"
         >
             <PageHeader
-                className="pt-[7.5rem]"
+                className="lg:pt-[7.5rem] px-4"
                 title="Quick Download & Easy Deployment"
                 subtitle="Access the latest version and enjoy effortless deployment for your big data analytics needs."
             />
-            <div
-                className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row"
-                style={{
-                    marginTop: '-5.5rem',
-                }}
-            >
+            <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
                 <CollapseBox
                     title="Apache Doris 2.0"
                     disabledExpand={true}
@@ -160,7 +155,7 @@ export default function Download() {
                             <Link
                                 href={item.link}
                                 key={item.title}
-                                className="relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
+                                className="relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
                             >
                                 <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
                                 <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
