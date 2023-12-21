@@ -5,7 +5,7 @@
     'date': '2023-07-16',
     'author': 'Rong Hou',
     'tags': ['Best Practice'],
-    "image": '/images/best-practice.png'
+    "image": '/images/how-fast-data-queries-are-implemented.png'
 }
 
 ---
