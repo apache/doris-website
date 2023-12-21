@@ -5,6 +5,7 @@
     'date': '2023-05-12',
     'author': 'Herman Seah',
     'tags': ['Best Practice'],
+    "image": '/images/building-a-data-warehouse-for-traditional-industry.png'
 }
 
 ---

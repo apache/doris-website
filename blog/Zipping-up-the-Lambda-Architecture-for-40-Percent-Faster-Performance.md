@@ -5,6 +5,7 @@
     'date': '2023-05-05',
     'author': 'Tongyang Han',
     'tags': ['Best Practice'],
+    "image": '/images/zipping-up-the-lambda-architecture-for-40-percent-faster-performance.png'
 }
 
 ---

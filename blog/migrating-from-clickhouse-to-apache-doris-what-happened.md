@@ -5,6 +5,7 @@
     'date': '2023-10-11',
     'author': 'Chuang Li',
     'tags': ['Best Practice'],
+    "image": '/images/e-commerce.png'
 }
 
 ---

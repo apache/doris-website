@@ -10,6 +10,7 @@ import EditThisPage from '@theme/EditThisPage';
 import TagsListInline from '@theme/TagsListInline';
 import BlogPostAuthors from '@theme/BlogPostAuthors';
 import './styles.scss';
+import HeadItem from './HeadItem';
 // Very simple pluralization: probably good enough for now
 function useReadingTimePlural() {
     const { selectMessage } = usePluralForm();
@@ -32,66 +33,98 @@ function useReadingTimePlural() {
 export default function BlogListItem(props) {
     const readingTimePlural = useReadingTimePlural();
     const { withBaseUrl } = useBaseUrlUtils();
-    const { children, frontMatter, assets, metadata, truncated, isBlogPostPage = false } = props;
+    const { children, frontMatter, assets, metadata, large = false } = props;
     const { date, formattedDate, permalink, tags, readingTime, title, editUrl, authors } = metadata;
     const image = assets.image ?? frontMatter.image;
-    const truncatedPost = !isBlogPostPage && truncated;
     const tagsExists = tags.length > 0;
-    const TitleHeading = isBlogPostPage ? 'h1' : 'h2';
     const summary = frontMatter.summary;
     const authorsExists = authors && authors.length > 0;
+    if (props?.headBlog) {
+        return (
+            <HeadItem
+                {...metadata}
+                image={image}
+                large={large}
+                size={large ? 'large' : 'small'}
+                tagsExists={tagsExists}
+                authorsExists={authorsExists}
+                summary={summary}
+            />
+        );
+    }
     return (
-        <article
-            className={!isBlogPostPage ? 'margin-bottom--xl blog-list-item' : undefined}
-            itemProp="blogPost"
-            itemScope
-            itemType="http://schema.org/BlogPosting"
-        >
-            <Link itemProp="url" to={permalink}>
-                {!!image && <div className="blog-preview-img" style={{ backgroundImage: `url(${image})` }}></div>}
-                <div className="blog-content">
-                    <header>
-                        <TitleHeading className="blog-post-title" itemProp="headline">
-                            {title}
-                        </TitleHeading>
-                        <div className="blog-info">
-                            <time dateTime={date} itemProp="datePublished">
-                                {formattedDate}
-                            </time>
-                            {authorsExists && (
-                                <>
-                                    <span className="split-line"></span>
-                                    <span className="authors">
-                                        {authors.map((author, i) => (
-                                            <span className="s-author" key={i}>
-                                                {author.name}
-                                            </span>
-                                        ))}
+        <article itemProp="blogPost" itemScope itemType="http://schema.org/BlogPosting">
+            <Link
+                itemProp="url"
+                to={permalink}
+                className="hover:no-underline hover:decoration-none transition-scale group relative flex h-full flex-col rounded-lg border border-[#DFE5F0] hover:border-[#0065FD] lg:border-0"
+            >
+                <div
+                    className={`relative overflow-hidden rounded-t-lg border-[#DFE5F0] group-hover:border-[#0065FD] lg:border lg:border-b-0 lg:pb-0`}
+                    style={{
+                        width: '100%',
+                        height: '165px',
+                    }}
+                >
+                    <img src={image} alt="" />
+                </div>
+                <div
+                    className={`px-6 ${
+                        large ? 'py-6 lg:pt-12' : ' py-6'
+                    } flex-1 rounded-b-lg border-[#DFE5F0] group-hover:border-[#0065FD] lg:border lg:border-t-0`}
+                >
+                    {!large && (
+                        <div className="">
+                            {tagsExists &&
+                                tags.map((tag: any) => (
+                                    <span
+                                        key={tag.label}
+                                        className="mr-4 inline-block rounded-3xl border border-[#DADCE0] px-2 py-1 text-xs leading-normal"
+                                    >
+                                        {tag.label}
                                     </span>
-                                </>
-                            )}
-
-                            {tagsExists && (
-                                <>
-                                    <span className="split-line"></span>
-                                    <span className="s-tags">
-                                        {tags.map((tag, i) => (
-                                            <span className="s-tag" key={i}>
-                                                {tag.label}
-                                            </span>
-                                        ))}
-                                    </span>
-                                </>
-                            )}
+                                ))}
                         </div>
-                    </header>
+                    )}
+                    <div className={`${large ? 'lg:h-[5.25rem]' : ''} h-12`}>
+                        <h1
+                            className={`${
+                                large ? ' lg:text-[1.75rem] lg:leading-normal' : 'mt-4'
+                            } line-clamp-2 break-keep  text-xl font-medium leading-tight text-black-dark transition`}
+                        >
+                            {title}
+                        </h1>
+                    </div>
+                    <div className={`${large ? 'h-14' : 'h-12'} mt-6 `}>
+                        <span
+                            className={`${
+                                large ? ' lg:text-lg' : '  leading-[1.375rem]'
+                            }  line-clamp-2 break-all  text-sm   text-[#4C576C] transition`}
+                        >
+                            {summary}
+                        </span>
+                    </div>
                     <div
-                        // This ID is used for the feed generation to locate the main content
-                        id={isBlogPostPage ? blogPostContainerID : undefined}
-                        className="markdown blog-item-summary"
-                        itemProp="articleBody"
+                        className={`${
+                            large ? ' mt-8 lg:text-base' : ' mt-4'
+                        }  justify-start space-x-2  text-sm leading-[1.375rem] text-[#8592a6]`}
                     >
-                        {summary}
+                        <time dateTime={date} itemProp="datePublished">
+                            {formattedDate}
+                        </time>
+
+                        {authorsExists && (
+                            <>
+                                <span className="split-line"></span>
+                                <span className="authors">
+                                    {authors.map((author, i) => (
+                                        <span className="s-author" key={i}>
+                                            {author.name}
+                                        </span>
+                                    ))}
+                                </span>
+                            </>
+                        )}
                     </div>
                 </div>
             </Link>

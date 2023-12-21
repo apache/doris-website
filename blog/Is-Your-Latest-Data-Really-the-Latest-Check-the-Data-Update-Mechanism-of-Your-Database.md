@@ -5,6 +5,7 @@
     'date': '2023-07-24',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
+    "image": '/images/check-the-data-update-mechanism-of-your-database.jpg'
 }
 
 ---

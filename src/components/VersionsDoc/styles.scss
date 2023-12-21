@@ -3,6 +3,12 @@
     display: inline-block;
     margin-bottom: 1rem;
     max-width: 100%;
+    &.paragraph {
+        margin-left: 1rem;
+        .version-tags {
+            margin-bottom: 0;
+        }
+    }
     &.paragraph:before {
         content: '';
         position: absolute;

@@ -6,6 +6,7 @@ Recently, NIO planned to enter the U.S. market alongside other western markets b
     'date': '2022-11-28',
     'author': 'Huaidong Tang',
     'tags': ['Best Practice'],
+    "image": '/images/nio.png'
 }
 ---
 

@@ -1,0 +1,18 @@
+.page-header {
+    .title {
+        color: var(--n-1, #1d1d1d);
+        text-align: center;
+        font-size: 44px;
+        font-style: normal;
+        font-weight: 540;
+        letter-spacing: 0.88px;
+    }
+    .subtitle {
+        color: var(--1, #252734);
+        text-align: center;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 330;
+        line-height: 28px; /* 155.556% */
+    }
+}

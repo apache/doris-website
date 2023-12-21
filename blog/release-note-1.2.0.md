@@ -5,6 +5,7 @@
     'date': '2022-12-7',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
+    "image": '/images/release-notes.png'
 }
 ---
 

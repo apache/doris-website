@@ -5,6 +5,7 @@
     'date': '2023-10-30',
     'author': 'He Gong',
     'tags': ['Best Practice'],
+    "image": '/images/live-streaming.png'
 }
 
 ---

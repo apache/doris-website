@@ -1,23 +1,19 @@
 .banner-section {
-    height: calc(100vh - var(--global-header-height) - 10rem);
+    // height: calc(100vh - var(--global-header-height) - 10rem);
 
     .banner-container {
         height: 100%;
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
 
         .banner-info {
-            margin-top: -2rem;
+            margin-top: var(--ifm-navbar-height);
         }
 
         .banner-title-wrap {
-            max-width: 72rem;
-            text-align: left;
         }
 
         .banner-sub-title {
+            text-align: center;
             font-size: 1.25rem;
             line-height: 1.5;
             color: var(--global-colors-text);
@@ -27,21 +23,29 @@
 
         .banner-title {
             font-size: var(--global-font-size-bigger);
-            font-weight: 700;
-            line-height: 1;
+            font-weight: 500;
+            line-height: 4rem;
+            text-align: center;
             color: var(--global-colors-text-black);
+            .highlight {
+                color: var(--ifm-color-primary);
+            }
         }
 
         .banner-buttons {
             display: flex;
+            justify-content: center;
             align-items: center;
-            margin-top: 2.5rem;
+            margin-top: 4rem;
 
             .button {
+                display: flex;
+                gap: 0.25rem;
+                align-items: center;
                 padding: 0.75rem 2.4rem;
                 font-size: var(--global-font-size-default);
                 border: none;
-                transition: all .3s;
+                transition: all 0.3s;
                 font-weight: 500;
                 border: 1px solid transparent;
 
@@ -49,8 +53,8 @@
                     // box-shadow: 10px 16px 18px rgba(195, 203, 235, 0.2);
                 }
 
-                &+.button {
-                    margin-left: 0.7rem;
+                & + .button {
+                    margin-left: 2rem;
                 }
 
                 &.primary {
@@ -63,7 +67,7 @@
                 }
 
                 &.default {
-                    background-color: #F0F1FC;
+                    background-color: #f0f1fc;
                     color: var(--ifm-color-primary);
 
                     &:hover {
@@ -93,14 +97,13 @@
 
 @media screen and (min-width: 1300px) and (max-width: 1600px) {
     .banner-section {
-        height: calc(100vh - var(--global-header-height) - 10rem);
+        // height: calc(100vh - var(--global-header-height) - 10rem);
     }
 }
 
 @media (max-width: 1299px) {
     .banner-section {
         height: auto;
-        padding: 10rem 5rem;
     }
 }
 
@@ -122,6 +125,23 @@
             .banner-info {
                 margin-top: 3rem;
                 margin-bottom: 5rem;
+                .banner-title {
+                    font-size: 2.25rem;
+                    line-height: 1.5;
+                    font-weight: 500;
+                }
+                .banner-sub-title {
+                    font-size: 1rem;
+                    margin-top: 1.2rem;
+                    font-weight: 400;
+                }
+            }
+            .banner-buttons {
+                .button {
+                    padding: 0.45rem 1.2rem;
+                    font-size: 1rem;
+                    font-weight: normal;
+                }
             }
         }
     }

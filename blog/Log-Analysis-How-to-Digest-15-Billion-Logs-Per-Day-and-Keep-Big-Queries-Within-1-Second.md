@@ -5,6 +5,7 @@
     'date': '2023-09-16',
     'author': 'Yuqi Liu',
     'tags': ['Best Practice'],
+    "image": '/images/china-unicom.png'
 }
 ---
 

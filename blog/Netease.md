@@ -5,6 +5,7 @@
     'date': '2022-11-30',
     'author': 'Xiaodong Liu',
     'tags': ['Best Practice'],
+    "image": '/images/best-practice.png'
 }
 ---
 

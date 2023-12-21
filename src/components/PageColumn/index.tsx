@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { ComponentProps, JSXElementConstructor, ReactNode } from 'react';
+import React, { CSSProperties, ComponentProps, JSXElementConstructor, ReactNode } from 'react';
 import './styles.scss';
 
 interface PageColumnProps extends ComponentProps<JSXElementConstructor<any>> {
@@ -7,11 +7,12 @@ interface PageColumnProps extends ComponentProps<JSXElementConstructor<any>> {
     title: string | ReactNode;
     footer?: ReactNode;
     subTitle?: string | ReactNode;
+    wrapperStyle?: CSSProperties;
 }
 export default function PageColumn(props: PageColumnProps): JSX.Element {
-    const { align = 'center', title, footer, children, subTitle } = props;
+    const { align = 'center', title, footer, children, subTitle, wrapperStyle, className } = props;
     return (
-        <div className={clsx('page-column', align, footer && 'has-footer')}>
+        <div style={wrapperStyle} className={clsx('page-column', className, align, footer && 'has-footer')}>
             <h1 className="page-column-title">
                 <div className="container">{title}</div>
             </h1>

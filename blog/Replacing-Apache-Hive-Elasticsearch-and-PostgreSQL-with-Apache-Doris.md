@@ -5,6 +5,7 @@
     'date': '2023-07-01',
     'author': 'Tao Wang',
     'tags': ['Best Practice'],
+    "image": '/images/replacing-apache-hive-es-and-postgresql-with-apache-doris.png'
 }
 
 ---

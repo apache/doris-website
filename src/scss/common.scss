@@ -1,24 +1,56 @@
 .docs-wrapper {
-    .versions {
-        opacity: 1;
+    .navbar__inner {
+        .navbar__items--right {
+            .header-right-button-github,
+            .header-right-button-slack {
+                display: none;
+            }
+        }
     }
-}
-
-.plugin-id-community {
-    .versions {
-        opacity: 0;
-    }
-
-    .doc-search {
+    .navbar__bottom {
         display: none;
     }
 }
-.markdown code {
-    background-color: #f6f7f8;
+
+@media screen and (max-width: 996px) {
+    .docs-wrapper {
+        .navbar__inner {
+            .navbar__items--right {
+                .docs-search,
+                .custom-navbar-item {
+                    display: none;
+                }
+            }
+        }
+        .navbar__bottom {
+            display: block;
+        }
+    }
 }
 
-.markdown pre code {
-    background-color: #282A36;
+.custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 10px;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: #fff;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0);
+        border-radius: 8px;
+    }
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            background-color: #dfe5f0;
+        }
+    }
+    &::-webkit-scrollbar-thumb {
+        &:hover {
+            background-color: #dfe5f0;
+        }
+    }
 }
 
 @media (max-width: 996px) {
@@ -35,6 +67,10 @@
 
 @media (max-width: 576px) {
     :root {
-        --ifm-font-size-base: 12px;
+        --ifm-font-size-base: 16px;
     }
+}
+
+.theme-code-block {
+    font-size: 0.875rem !important;
 }

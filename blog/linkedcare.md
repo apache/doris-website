@@ -6,6 +6,7 @@
     'date': '2023-01-28',
     'author': 'Yi Yang',
     'tags': ['Best Practice'],
+    "image": '/images/clickhouse-kudu-to-doris.png'
 }
 ---
 

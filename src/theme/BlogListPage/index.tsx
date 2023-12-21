@@ -6,6 +6,11 @@ import BlogLayout from '../BlogLayout';
 import BlogListItem from '../BlogListItem';
 import './styles.scss';
 import useIsBrowser from '@docusaurus/useIsBrowser';
+import HeadBlogs from '@site/src/components/blogs/components/head-blogs';
+import PageHeader from '@site/src/components/PageHeader';
+import BlogListFooter from '../BlogFooter';
+import { useHistory, useLocation } from '@docusaurus/router';
+const allText = 'All';
 
 function BlogListPageMetadata(props) {
     const { metadata } = props;
@@ -22,9 +27,8 @@ function BlogListPageMetadata(props) {
     );
 }
 
-function getBlogCatetories(props) {
+function getBlogCategories(props) {
     const { siteConfig } = useDocusaurusContext();
-    const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const allText = 'All';
     const { items } = props;
     const allCategory = { label: allText, values: [] };
@@ -32,7 +36,7 @@ function getBlogCatetories(props) {
 
     useEffect(() => {
         sessionStorage.setItem('tag', allText);
-    }, [isCN]);
+    }, []);
     items.forEach(({ content: BlogPostContent }) => {
         const { frontMatter } = BlogPostContent;
         const tags = frontMatter.tags || [];
@@ -62,29 +66,57 @@ function BlogListPageContent(props) {
     const { metadata, items, sidebar } = props;
     const isBrowser = useIsBrowser();
     const [blogs, setBlogs] = useState([]);
-    const blogCategories = getBlogCatetories(props);
+    const blogCategories = getBlogCategories(props);
+    const ALL_BLOG = blogCategories.find(item => item.label === allText).values;
 
     const { siteConfig } = useDocusaurusContext();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
-    const allText = 'All';
     const [active, setActive] = useState(() => {
         const tag = isBrowser ? sessionStorage.getItem('tag') : allText;
         return tag || allText;
     });
-    const [pageSize, setPageSize] = useState<number>(8);
+    const [pageSize, setPageSize] = useState<number>(9);
     let [pageNumber, setPageNumber] = useState<number>(1);
     const [currentBlogs, setCurrentBlogs] = useState([]);
+    const [currentPage, setCurrentPage] = useState<number>(0);
+    const location = useLocation();
+    const history = useHistory();
 
     const changeCategory = category => {
-        setPageNumber(1);
-        setActive(category);
-        let currentCategory = blogCategories.find(item => item.label === category);
+        history.push(
+            `${location.pathname}?currentPage=1&currentCategory=${category ? category : ''}#blog`,
+            location.state,
+        );
+    };
+
+    useEffect(() => {
+        let currentPageNumber = 1;
+        let currentCategoryName = allText;
+        if (location.search && location.search.split('?').length > 0) {
+            const params = location.search.split('?')[1].split('&');
+            if (params) {
+                params.map(e => {
+                    const [key, value] = e.split('=');
+                    if (key === 'currentPage') {
+                        if (value) currentPageNumber = +value;
+                    } else {
+                        if (value) currentCategoryName = decodeURI(value);
+                    }
+                });
+            }
+        }
+
+        setActive(currentCategoryName);
+        setCurrentPage(currentPageNumber);
+
+        let currentCategory = blogCategories.find(item => item.label === currentCategoryName);
         if (!currentCategory) {
-            setActive(allText);
             currentCategory = blogCategories.find(item => item.label === allText);
         }
+
         setBlogs(currentCategory.values);
-    };
+        setCurrentBlogs(currentCategory.values.slice((currentPageNumber - 1) * pageSize, currentPageNumber * pageSize));
+    }, [location.search]);
 
     useEffect(() => {
         changeCategory(active);
@@ -92,24 +124,25 @@ function BlogListPageContent(props) {
     }, [active]);
 
     return (
-        <BlogLayout sidebar={sidebar} pageType="blogList">
-            <div className="blog-list-wrap row">
-                <div className="blog-list-nav col col--3">
-                    <ul className="category-list">
-                        {blogCategories &&
-                            blogCategories.map((item, i) => (
-                                <li
-                                    className={clsx('category-item', active === item.label && 'active')}
-                                    key={i}
-                                    onClick={() => changeCategory(item.label)}
-                                >
-                                    {item.label}
-                                </li>
-                            ))}
-                    </ul>
-                </div>
-                <div className="blot-list col col--9">
-                    {blogs.map((BlogPostContent, i) => (
+        <BlogLayout sidebar={sidebar} pageType="blogList" className="lg:max-w-7xl">
+            <PageHeader title="Blog" className="bg-white" {...props} />
+            <HeadBlogs blogs={ALL_BLOG} />
+            <div className="flex flex-col lg:max-w-7xl">
+                <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
+                    {blogCategories.map((item: any, index) => (
+                        <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>
+                            <span
+                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#444FD9] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                    active === item.label && 'bg-[#444FD9] text-white'
+                                }`}
+                            >
+                                {item.label}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+                <ul className="mt-6 grid gap-6 lg:mt-10 lg:grid-cols-3 m-auto">
+                    {currentBlogs.map((BlogPostContent, i) => (
                         <BlogListItem
                             key={BlogPostContent.metadata.permalink + i}
                             frontMatter={BlogPostContent.frontMatter}
@@ -120,7 +153,8 @@ function BlogListPageContent(props) {
                             <BlogPostContent />
                         </BlogListItem>
                     ))}
-                </div>
+                </ul>
+                <BlogListFooter total={blogs.length} currentPage={currentPage} currentCategory={active} />
             </div>
         </BlogLayout>
     );

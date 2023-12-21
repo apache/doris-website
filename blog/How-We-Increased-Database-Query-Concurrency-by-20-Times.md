@@ -5,6 +5,7 @@
     'date': '2023-04-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
+    "image": '/images/how-we-increased-database-query-concurrency-by-20-times.jpg'
 }
 ---
 

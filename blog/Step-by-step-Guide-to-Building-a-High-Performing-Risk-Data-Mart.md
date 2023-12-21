@@ -5,6 +5,7 @@
     'date': '2023-04-20',
     'author': 'Jacob Chow',
     'tags': ['Best Practice'],
+    "image": '/images/step-by-step-guide-to-building-a-high-performing-risk-data-mart.png'
 }
 ---
 

@@ -38,6 +38,28 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
                                     key={index}
                                 >
                                     {btn.label}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="19"
+                                        height="18"
+                                        viewBox="0 0 19 18"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M10.6251 13.5L15.125 9L10.6251 4.5"
+                                            stroke="currentColor"
+                                            stroke-width="1.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                        <path
+                                            d="M3.87506 9.00055L15.1251 9.00055"
+                                            stroke="currentColor"
+                                            stroke-width="1.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
                                 </Link>
                             ) : (
                                 <div
@@ -46,13 +68,33 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
                                     key={index}
                                 >
                                     {btn.label}
+                                    <svg
+                                        style={{ display: 'inline-block' }}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="19"
+                                        height="18"
+                                        viewBox="0 0 19 18"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M10.6251 13.5L15.125 9L10.6251 4.5"
+                                            stroke="#444FD9"
+                                            stroke-width="1.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                        <path
+                                            d="M3.87506 9.00055L15.1251 9.00055"
+                                            stroke="#444FD9"
+                                            stroke-width="1.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
                                 </div>
                             ),
                         )}
                     </div>
-                </div>
-                <div className="banner-img-wrap">
-                    <img className="banner-img" src={bannerImg} alt="" />
                 </div>
             </div>
         </section>

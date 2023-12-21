@@ -5,6 +5,7 @@
     'date': '2023-06-01',
     'author': 'Heyu Dou, Xinxin Wang',
     'tags': ['Best Practice'],
+    "image": '/images/ab-testing-was-a-handful-until-we-found-the-replacement-for-druid.png'
 }
 ---
 

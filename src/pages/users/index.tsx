@@ -1,26 +1,42 @@
 import Layout from '../../theme/Layout';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Translate, { translate } from '@docusaurus/Translate';
+import { translate } from '@docusaurus/Translate';
 import './index.scss';
-import Link from '@docusaurus/Link';
-import PageColumn from '@site/src/components/PageColumn';
 import userCasesEn from '@site/userCases/en_US.json';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Pagination, Navigation } from 'swiper';
+import { Pagination } from 'swiper';
 import usePhone from '@site/src/hooks/use-phone';
+import PageHeader from '@site/src/components/PageHeader';
+import { USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
+import useIsBrowser from '@docusaurus/useIsBrowser';
+import UserItem from './user-item';
+import USERS from '../../constant/users.data.json';
+import ReadMore from '@site/src/components/ReadMore';
+
+const ALL_TEXT = 'All';
 
 export default function Users(): JSX.Element {
     const { i18n } = useDocusaurusContext();
     const userCases = userCasesEn;
     const { isPhone } = usePhone();
+    const isBrowser = useIsBrowser();
+    const [active, setActive] = useState(() => {
+        const tag = isBrowser ? sessionStorage.getItem('tag') : ALL_TEXT;
+        return tag || ALL_TEXT;
+    });
+    const [users, setUsers] = useState([...USERS].sort((a, b) => a.order - b.order));
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
     };
+
+    useEffect(() => {
+        setActive(ALL_TEXT);
+    }, []);
 
     const [swiperRef, setSwiperRef] = useState<SwiperClass>();
 
@@ -40,6 +56,21 @@ export default function Users(): JSX.Element {
             return '<span class="' + className + '"></span>';
         },
     };
+
+    function changeCategory(category: string) {
+        setActive(category);
+        let currentCategory = USER_STORIES_CATEGORIES.find(item => item === category);
+        const currentUsers = USERS.filter(user => user.category === category);
+        if (category === ALL_TEXT) {
+            setUsers([...USERS].sort((a, b) => a.order - b.order));
+        } else {
+            setUsers(currentUsers);
+        }
+        if (!currentCategory) {
+            setActive(ALL_TEXT);
+            currentCategory = USER_STORIES_CATEGORIES.find(item => item === ALL_TEXT);
+        }
+    }
 
     function renderSwiper() {
         const modules = [Pagination];
@@ -68,33 +99,29 @@ export default function Users(): JSX.Element {
                     onSlideChange={() => console.log('slide change')}
                     onSwiper={setSwiperRef}
                 >
-                    <SwiperSlide>
-                        <div className="users-wall-list row">
-                            <img
-                                className="users-wall-img"
-                                src={require(`@site/static/images/user-logos-1.jpg`).default}
-                                alt=""
-                            />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="users-wall-list row">
-                            <img
-                                className="users-wall-img"
-                                src={require(`@site/static/images/user-logos-2.jpg`).default}
-                                alt=""
-                            />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="users-wall-list row">
-                            <img
-                                className="users-wall-img"
-                                src={require(`@site/static/images/user-logos-3.png`).default}
-                                alt=""
-                            />
-                        </div>
-                    </SwiperSlide>
+                    {USER_STORIES.map(userStory => {
+                        return (
+                            <SwiperSlide key={userStory.title}>
+                                <div className="users-wall-list row flex flex-start pb-8 lg:pb-16">
+                                    <div>
+                                        <img
+                                            className="users-wall-img lg:w-[580px] lg:h-[248px]"
+                                            src={`${require(`@site/static/images/${userStory.image}`).default}`}
+                                            alt="users-wall-img"
+                                        />
+                                    </div>
+                                    <div className="w-[35.75rem] ml-4 lg:ml-12 flex flex-col py-4">
+                                        <h3 className="leading-[38px] text-2xl">{userStory.title}</h3>
+                                        <p className="my-6 text-base">
+                                            <strong className="font-normal">{userStory.author.name}</strong>
+                                            <span className="ml-6 text-[#4C576C]">{userStory.author.title}</span>
+                                        </p>
+                                        <ReadMore to={userStory.to} className="text-primary" />
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        );
+                    })}
                 </Swiper>
                 {!isPhone && (
                     <div
@@ -114,56 +141,43 @@ export default function Users(): JSX.Element {
                 message: 'An easy-to-use, high-performance and unified analytical database',
             })}
         >
-            <section className="users-wall">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="user.logos" description="Companies That Trust Apache Doris">
-                            Companies That Trust Apache Doris
-                        </Translate>
-                    }
-                >
-                    {renderSwiper()}
-                </PageColumn>
-            </section>
-            <section className="story">
-                <PageColumn
-                    align="left"
-                    title={
-                        <Translate id="user.user-case" description="Companies Powerd by Apache Doris">
-                            Companies Powerd by Apache Doris
-                        </Translate>
-                    }
-                    footer={
-                        <div className="share-story">
-                            <Link to="https://github.com/apache/doris/issues/10229" className="share-button">
-                                <Translate id="user.add..your.company" description="Add Your Company">
-                                    Share Your Story
-                                </Translate>
-                            </Link>
-                        </div>
-                    }
-                >
-                    <div style={{ fontSize: 16, marginTop: '-2rem', marginBottom: '-1rem' }}>
-                        <Translate
-                            id="user.case-description"
-                            description="There are more than 2,000 companies worldwide leveraging Apache Doris to build their unified
-                            data analytical database. Some of them are listed below:"
+            <PageHeader
+                className="lg:pt-[7.5rem] px-4"
+                title="Start Real-Time Journey with Innovators"
+                subtitle="Over 4000 global leaders and enterprises are powered by Apache Doris."
+                extra={
+                    <div className="flex justify-center mt-5">
+                        <button
+                            className="button-primary"
+                            onClick={() => window.open('https://github.com/apache/doris/discussions/27683', '_blank')}
                         >
-                            There are more than 2,000 companies worldwide leveraging Apache Doris to build their unified
-                            data analytical database. Some of them are listed below:
-                        </Translate>
+                            Share your story
+                        </button>
                     </div>
-                    <div className="user-cases">
-                        {userCases &&
-                            userCases.map(item => (
-                                <div className="user-case" key={item.name}>
-                                    <h2 className="user-case-title">{item.name}</h2>
-                                    <p className="user-case-intro">{item.introduction}</p>
-                                </div>
-                            ))}
-                    </div>
-                </PageColumn>
+                }
+            />
+            <section className="users-wall container lg:pt-[88px]">{renderSwiper()}</section>
+            <section className="lg:pt-[5.5rem] container">
+                <div className="blog-list-wrap row mt-28 lg:mt-0">
+                    <ul className="container scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-auto lg:w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
+                        {USER_STORIES_CATEGORIES.map((item: any) => (
+                            <li className="py-px" key={item} onClick={() => changeCategory(item)}>
+                                <span
+                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                        active === item && 'bg-primary text-white'
+                                    }`}
+                                >
+                                    {item}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <ul className="mt-6 grid gap-1 grid-cols-3 lg:gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
+                    {users.map(user => (
+                        <UserItem key={user.name} {...user} />
+                    ))}
+                </ul>
             </section>
         </Layout>
     );

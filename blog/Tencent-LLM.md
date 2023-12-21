@@ -5,6 +5,9 @@
     'date': '2023-08-29',
     'author': 'Jun Zhang & Lei Luo',
     'tags': ['Best Practice'],
+    'picked': "true",
+    'order': "3",
+    "image": '/images/tme.png'
 }
 
 ---
