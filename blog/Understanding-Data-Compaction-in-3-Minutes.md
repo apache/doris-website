@@ -5,7 +5,7 @@
     'date': '2023-06-09',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    "image": '/images/understanding-data-compaction-in-3-minutes.png'
+    "image": '/images/understanding-data-compaction-in-3-minutes.jpg'
 }
 
 ---
