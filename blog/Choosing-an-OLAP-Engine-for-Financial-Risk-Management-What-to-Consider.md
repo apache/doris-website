@@ -5,7 +5,7 @@
     'date': '2023-08-17',
     'author': 'Jianbo Liu',
     'tags': ['Best Practice'],
-    "image": '/images/best-practice.png'
+    "image": '/images/financial-risk.png'
 }
 
 ---
