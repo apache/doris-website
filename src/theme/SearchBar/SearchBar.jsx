@@ -244,7 +244,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [location.pathname, location.search, location.hash, history]);
     return (
         <div
-            className={clsx('navbar__search lg:block hidden', styles.searchBarContainer, {
+            className={clsx('navbar__search ', styles.searchBarContainer, {
                 [styles.searchIndexLoading]: loading && inputChanged,
                 [styles.focused]: focused,
             })}

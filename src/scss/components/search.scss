@@ -28,7 +28,6 @@
         .hitAction__La6 {
             svg {
                 display: none;
-
             }
 
             &::after {
@@ -50,9 +49,30 @@
             color: var(--ifm-color-primary);
         }
     }
-
 }
 
 p[class*='searchResultItemSummary'] {
     font-style: normal;
+}
+
+@media screen and (max-width: 996px) {
+    .docs-search {
+        display: none;
+    }
+    .docs-subnav-searchbar {
+        .navbar-search {
+            position: relative !important;
+            right: auto;
+            width: 100%;
+            .navbar__search {
+                margin-left: 0;
+                .searchBar_src-theme-SearchBar-SearchBar-module {
+                    width: 100%;
+                }
+                .navbar__search-input {
+                    width: 100% !important;
+                }
+            }
+        }
+    }
 }

@@ -15,6 +15,7 @@ export default function DocsVersionDropdownNavbarItem({
     dropdownItemsAfter,
     ...props
 }) {
+    console.log(docsPluginId, dropdownActiveClassDisabled, dropdownItemsBefore, dropdownItemsAfter, props);
     const { search, hash } = useLocation();
     const activeDocContext = useActiveDocContext(docsPluginId);
     const versions = useVersions(docsPluginId);
