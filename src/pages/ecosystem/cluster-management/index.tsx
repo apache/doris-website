@@ -36,7 +36,7 @@ export default function ClusterManagement() {
                 />
                 <CollapseBox
                     title="Doris Operator"
-                    description="One-stop Doris cluster management tool on kubernetes, developed by VeloDB."
+                    description="Run Apache Doris on K8s, developed by VeloDB."
                     characteristic={[
                         'Diverse PV management',
                         'Pod deployment configuration ',
