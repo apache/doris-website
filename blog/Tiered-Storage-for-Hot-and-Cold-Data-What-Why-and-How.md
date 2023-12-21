@@ -5,7 +5,7 @@
     'date': '2023-06-23',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    "image": '/images/tech-sharing.png'
+    "image": '/images/tiered-storage-for-hot-and-cold-cata.jpg'
 }
 
 ---
