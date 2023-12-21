@@ -61,6 +61,7 @@
         background-color: #f7f9fe;
         color: #1d1d1d;
         font-size: 1rem;
+        font-weight: 500;
     }
 
     table tr {
@@ -91,8 +92,10 @@
         }
     }
     ol {
+        margin: 16px 0;
+        padding-left: 20px;
         li {
-            list-style: initial;
+            list-style: decimal;
         }
     }
 }
