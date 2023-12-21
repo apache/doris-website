@@ -47,7 +47,7 @@ const config = {
                 htmlLang: 'en-US',
             },
             'zh-CN': {
-                label: 'Chinese',
+                label: '中文',
                 htmlLang: 'zh-Hans-CN',
             },
         },

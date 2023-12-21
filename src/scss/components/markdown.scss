@@ -34,16 +34,15 @@
     }
     p {
         line-height: 1.875;
-        code {
-            border-radius: 4px;
-            background-color: #edf2fa;
-            border: none;
-            padding: 3px 4px;
-            margin: 0 8px;
-            font-size: 14px;
-        }
-        img {
-        }
+    }
+    code {
+        border-radius: 4px;
+        background-color: #edf2fa;
+        border: none;
+        padding: 3px 4px;
+        margin: 0 8px;
+        font-size: 14px;
+        color: #4c576c;
     }
 
     pre {
@@ -81,6 +80,20 @@
     }
     a {
         color: var(--ifm-color-primary);
+    }
+    ul {
+        margin: 16px 0;
+        padding-left: 20px;
+        li {
+            margin-top: 4px;
+            position: relative;
+            list-style: initial;
+        }
+    }
+    ol {
+        li {
+            list-style: initial;
+        }
     }
 }
 
