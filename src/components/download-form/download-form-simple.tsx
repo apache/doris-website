@@ -3,7 +3,6 @@ import { Form } from 'antd';
 import { Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';
 import { useForm } from 'antd/es/form/Form';
-
 interface DownloadFormSimpleProps {
     versions: Option[];
 }
@@ -11,8 +10,9 @@ export default function DownloadFormSimple(props: DownloadFormSimpleProps) {
     const { versions } = props;
     const [form] = useForm();
 
-    const getVersionLinkByKeys = (version: string) => {
-        const node = versions.find(({ value }) => value === version);
+    const getVersionLinkByKeys = (version: string[]) => {
+        const versionNode = versions.find(({ value }) => value === version[0]);
+        const node = versionNode?.children.find(({ value }) => value === version[1]);
         return node?.source || null;
     };
 
@@ -26,17 +26,17 @@ export default function DownloadFormSimple(props: DownloadFormSimpleProps) {
                     return;
                 }}
                 initialValues={{
-                    version: versions[0].value,
+                    version: [versions[0].value, versions[0].children[0].value],
                 }}
             >
                 <Form.Item name="version" rules={[{ required: true }]}>
                     <FormSelect
                         placeholder="Version"
                         label="version"
-                        isCascader={false}
-                        // displayRender={label => {
-                        //     return label.length > 0 ? label[label.length - 1] : '';
-                        // }}
+                        isCascader={true}
+                        displayRender={label => {
+                            return label.length > 0 ? label[label.length - 1] : '';
+                        }}
                         options={versions}
                     />
                 </Form.Item>

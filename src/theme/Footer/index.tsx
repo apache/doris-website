@@ -12,7 +12,7 @@ import { BilibiliIcon } from '@site/src/components/Icons/bilibili';
 import { WechatIcon } from '@site/src/components/Icons/wechat';
 import { YoutubeIcon } from '@site/src/components/Icons/youtube';
 import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
-
+import { MediumIcon } from '@site/src/components/Icons/medium';
 import Translate from '@docusaurus/Translate';
 
 function Footer() {
@@ -21,8 +21,9 @@ function Footer() {
         return null;
     }
     const { copyright, links, logo, style } = footer;
+    console.log(links);
     return (
-        <div className="footer">
+        <div className="footer pt-16 pb-10">
             <div className="container">
                 <div className="footer-box">
                     <div className="left">
@@ -32,7 +33,7 @@ function Footer() {
                     <div className="right">
                         <div className="footer__title">
                             <Translate id="footer.follow" description="Footer Follow">
-                                Connect with Us
+                                Join the community
                             </Translate>
                         </div>
                         <div className="social-list">
@@ -56,8 +57,6 @@ function Footer() {
                                 >
                                     <TwitterIcon />
                                 </a>
-                            </div>
-                            <div className="social">
                                 <a
                                     href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ"
                                     title="slack"
@@ -66,6 +65,8 @@ function Footer() {
                                 >
                                     <SlackIcon />
                                 </a>
+                            </div>
+                            <div className="social">
                                 <a
                                     href="https://www.youtube.com/@apachedoris/channels"
                                     title="youtube"
@@ -81,6 +82,21 @@ function Footer() {
                                     className="item"
                                 >
                                     <LinkedinIcon />
+                                </a>
+                                <a
+                                    href="https://medium.com/@ApacheDoris"
+                                    title="medium"
+                                    target="_blank"
+                                    className="item"
+                                >
+                                    <MediumIcon />
+                                </a>
+                                <a className="item wechat">
+                                    <WechatIcon />
+                                    <div className="wechat-dropdown">
+                                        <p className="text-[#4c576c] text-xs">Connect on WeChat</p>
+                                        <img src={require('@site/static/images/doris-wechat.png').default} alt="" />
+                                    </div>
                                 </a>
                             </div>
                         </div>

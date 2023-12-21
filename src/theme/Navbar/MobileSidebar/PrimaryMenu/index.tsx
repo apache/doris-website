@@ -21,9 +21,9 @@ export default function NavbarMobilePrimaryMenu() {
                     <NavbarItem mobile {...item} onClick={() => mobileSidebar.toggle()} key={i} />
                 ))}
             </ul>
-            <span className="github-btn-mobile">
+            {/* <span className="github-btn-mobile">
                 <GitHubButton type="stargazers" size="large" namespace="apache" repo="doris" />
-            </span>
+            </span> */}
         </>
     );
 }

@@ -153,7 +153,7 @@
         "image": "/images/user-logo/Finance/FUSE.jpg"
     },
     {
-        "story": "Citic Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
+        "story": "CITIC Securities has built a real-time data warehouse using Apache Doris, replacing Impala and Greenplum, and upgraded multiple data applications such as Adhoc, reporting, and cockpit.",
         "name": "CITIC Securities",
         "category": "Finance",
         "logo": "CITIC Securities",
@@ -676,12 +676,12 @@
     },
     {
         "story": "Orange Connex provides digital supply chain solutions for e-commerce worldwide. After putting Apache Doris into production, it reduces its data computation latency from 2 hours to 3 minutes.",
-        "name": "Orange connex",
+        "name": "Orange Connex",
         "category": "FMCG & Logistics",
-        "logo": "Orange connex",
+        "logo": "Orange Connex",
         "order": 75,
         "to": null,
-        "image": "/images/user-logo/FMCG & Logistics/Orange connex.jpg"
+        "image": "/images/user-logo/FMCG & Logistics/Orange Connex.jpg"
     },
     {
         "story": "A SaaS provider that offers inventory management, membership marketing, and cashier services for retailers including supermarkets, fresh produce stores, and clothing stores.",
@@ -784,12 +784,12 @@
     },
     {
         "story": "This all-category Q&A website supports its data management platform with Apache Doris and benefits from fast data ingestion and fast query response.",
-        "name": "Zhihu Inc.",
+        "name": "Zhihu Inc",
         "category": "Media & Entertainment",
-        "logo": "Zhihu Inc.",
+        "logo": "Zhihu Inc",
         "order": 87,
         "to": "https://doris.apache.org/blog/Database-Dissection-How-Fast-Data-Queries-Are-Implemented",
-        "image": "/images/user-logo/Media & Entertainment/Zhihu Inc..jpg"
+        "image": "/images/user-logo/Media & Entertainment/Zhihu Inc.jpg"
     },
     {
         "story": "An online grocery platform offers convenient and fast delivery of fresh produce, groceries, and daily essentials. It aims to simplify shopping experience for customers.",
@@ -964,12 +964,12 @@
     },
     {
         "story": null,
-        "name": "Industrial Bank Co.ltd",
+        "name": "Industrial Bank",
         "category": "Finance",
-        "logo": "Industrial Bank Co.ltd",
+        "logo": "Industrial Bank",
         "order": 107,
         "to": null,
-        "image": "/images/user-logo/Finance/Industrial Bank Co.ltd.jpg"
+        "image": "/images/user-logo/Finance/Industrial Bank.jpg"
     },
     {
         "story": "A leading provider of electronic payment and financial technology solutions that focuses on building a global payment ecosystem and offering secure and convenient online payment services for both merchants and consumers.",
@@ -1036,12 +1036,12 @@
     },
     {
         "story": "A financial risk control and marketing services provider that leverages the power of artificial intelligence to empower decision-making for various industries. ",
-        "name": "Bairong.Inc.",
+        "name": "Bairong Inc.",
         "category": "Finance",
-        "logo": "Bairong.Inc.",
+        "logo": "Bairong Inc.",
         "order": 115,
         "to": null,
-        "image": "/images/user-logo/Finance/Bairong.Inc..jpg"
+        "image": "/images/user-logo/Finance/Bairong Inc..jpg"
     },
     {
         "story": "The SaaS provider utilizes Apache Doris to support self-service BI by enabling fast join queries. It also helps in improving efficiency of privileged queries.",

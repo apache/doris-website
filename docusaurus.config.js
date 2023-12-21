@@ -47,15 +47,15 @@ const config = {
                 htmlLang: 'en-US',
             },
             'zh-CN': {
-                label: 'Chinese',
+                label: '中文',
                 htmlLang: 'zh-Hans-CN',
             },
         },
     },
     // scripts: ['/js/redirect.js'],
     stylesheets: [
-        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin_VF:VF:Latin&display=swap',
         'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
+        'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
     ],
     organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
@@ -306,37 +306,42 @@ const config = {
                                 href: '/learning',
                             },
                             {
-                                label: 'Blogs',
+                                label: 'Blog',
                                 href: '/blog',
                             },
                             {
-                                label: 'User Stories',
+                                label: 'Ecosystem',
+                                href: '/ecosystem/cluster-management',
+                            },
+                            {
+                                label: 'Users',
                                 href: '/users',
                             },
-                            // {
-                            //     label: 'Courses (coming soon)',
-                            //     href: '/courses',
-                            // },
+                            {
+                                label: 'Discussions',
+                                href: 'https://github.com/apache/doris/discussions',
+                            },
                         ],
                     },
                     {
-                        title: 'Community Support',
+                        title: 'Community',
                         items: [
                             {
-                                label: 'Doris Team',
-                                href: '/community/team',
-                            },
-                            {
-                                label: 'How to Contribute',
+                                label: 'How to contribute',
                                 href: '/community/how-to-contribute/',
                             },
                             {
-                                label: 'Source Code',
+                                label: 'Source code',
                                 href: 'https://github.com/apache/doris/',
                             },
+
                             {
-                                label: 'Improvement Proposal',
+                                label: 'Improvement proposal',
                                 href: 'https://github.com/apache/doris/discussions',
+                            },
+                            {
+                                label: 'Doris team',
+                                href: '/community/team',
                             },
                             {
                                 label: 'Roadmap',

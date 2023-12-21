@@ -25,7 +25,7 @@ export function TabItem({ title, content, icon, active, setActive, url }: PriceT
             <div className="flex items-center">
                 <div className={`pr-[0.75rem] text-[3.375rem] `}>{icon}</div>
                 <div>
-                    <div className="text-base font-medium text-[#202124] font-misans sm:text-xl">{title}</div>
+                    <div className="text-base text-[#202124] font-misans sm:text-xl">{title}</div>
                     <div className=" pt-[0.3125rem] text-sm tracking-[-0.01rem] text-[#5F6368]">{content}</div>
                 </div>
             </div>
