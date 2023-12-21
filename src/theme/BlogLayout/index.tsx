@@ -11,7 +11,7 @@ export default function BlogLayout(props) {
     return (
         <Layout {...layoutProps}>
             <div className="mb-[4.875rem] container">
-                <div className="lg:row">
+                <div className="lg:row lg:flex">
                     <BlogSidebar sidebar={sidebar} />
                     <main
                         className={clsx({
