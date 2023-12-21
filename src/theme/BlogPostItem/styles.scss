@@ -1,29 +1,31 @@
 .blog-article-content {
-  margin-top: 2rem;
-  margin-bottom: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
 
-  .blog-post-title {
-    margin-bottom: 1.5rem;
-  }
+    .blog-post-title {
+        margin-bottom: 1rem;
+        font-weight: 500;
+        line-height: 4rem;
+    }
 
-  .blog-info {
-    margin-bottom: 2rem;
-  }
+    .blog-info {
+        margin-bottom: 2.5rem;
+    }
 }
 
 /**
   Blog post title should be smaller on smaller devices
 **/
 @media (max-width: 576px) {
-  .blog-post-title {
-    font-size: 2rem;
-  }
+    .blog-post-title {
+        font-size: 2rem;
+    }
 }
 
 .blog-post-data {
-  font-size: 0.9rem;
+    font-size: 0.9rem;
 }
 
 .blog-post-details-full {
-  flex-direction: column;
+    flex-direction: column;
 }

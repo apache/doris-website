@@ -10,7 +10,7 @@ export default function ClusterManagement() {
             <div className="container mx-auto flex flex-col flex-wrap items-center justify-center mb-[5.5rem] lg:flex-row">
                 <CollapseBox
                     title="Cluster Manager for Apache Doris"
-                    description="A platform for visualized cluster deployment and management, developed by VeloDB."
+                    description="One-stop database cluster management tool, developed by VeloDB."
                     characteristic={[
                         'Create, start, stop, upgrade, and scale clusters',
                         'Cluster inspection',

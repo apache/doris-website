@@ -13,7 +13,6 @@ import { WechatIcon } from '@site/src/components/Icons/wechat';
 import { YoutubeIcon } from '@site/src/components/Icons/youtube';
 import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
 import { MediumIcon } from '@site/src/components/Icons/medium';
-
 import Translate from '@docusaurus/Translate';
 
 function Footer() {
@@ -24,7 +23,7 @@ function Footer() {
     const { copyright, links, logo, style } = footer;
     console.log(links);
     return (
-        <div className="footer">
+        <div className="footer pt-16 pb-10">
             <div className="container">
                 <div className="footer-box">
                     <div className="left">
@@ -92,10 +91,13 @@ function Footer() {
                                 >
                                     <MediumIcon />
                                 </a>
-
-                                <div title="wechat" target="_blank" className="item wechat">
+                                <a className="item wechat">
                                     <WechatIcon />
-                                </div>
+                                    <div className="wechat-dropdown">
+                                        <p className="text-[#4c576c] text-xs">Connect on WeChat</p>
+                                        <img src={require('@site/static/images/doris-wechat.png').default} alt="" />
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
