@@ -12,6 +12,7 @@ import DownloadFormSimple from '@site/src/components/download-form/download-form
 import Link from '@docusaurus/Link';
 import './index.scss';
 import ReadMore from '@site/src/components/ReadMore';
+import LinkWithArrow from '../../components/link-arrow';
 
 export default function Download() {
     return (
@@ -54,12 +55,7 @@ export default function Download() {
                         <DownloadForm versions={DORIS_VERSIONS.filter(item => item.majorVersion === '2.0')} />
                     }
                     moreLink={
-                        <ExternalLink
-                            to="/docs/releasenotes/release-2.0.0"
-                            className="bg-white p-0 text-[#444FD9]"
-                            label="Learn more from release note"
-                            linkIcon={<ExternalLinkArrowIcon />}
-                        ></ExternalLink>
+                        <LinkWithArrow to="/docs/releasenotes/release-2.0.0" text="Learn more from release note" />
                     }
                     notes={
                         <>
@@ -154,8 +150,7 @@ export default function Download() {
                                 <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
                                 <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
                                 <div className="flex items-center mt-4 text-[#444FD9]">
-                                    Learn more
-                                    <ExternalLinkArrowIcon className="ml-1" />
+                                    <LinkWithArrow to={''} text="Learn more" />
                                 </div>
                             </Link>
                         ))}

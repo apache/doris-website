@@ -18,6 +18,14 @@
 @import './components/search';
 @import './common';
 
+
+@layer utilities {
+    .transition-slide {
+        @apply inline-block transform transition-transform duration-300 hover:translate-x-1 group-hover:translate-x-1;
+    }
+}
+
+
 .button-primary {
     display: flex;
     height: 52px;

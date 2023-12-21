@@ -4,15 +4,16 @@ import React from 'react';
 interface ReadMoreProps {
     to: string;
     className?: string;
+    text: string;
 }
 
-export default function ReadMore(props: ReadMoreProps) {
+export default function LinkWithArrow(props: ReadMoreProps) {
     return (
         <Link
-            className={`flex group text-primary items-center cursor-pointer hover:no-underline ${props?.className}`}
+            className={`flex group text-primary items-center text-base cursor-pointer hover:no-underline ${props?.className}`}
             to={props.to}
         >
-            <span className="mr-2 ">Read more</span>
+            <span className="mr-2">{props.text}</span>
             <span className="transition-slide">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
