@@ -17,8 +17,6 @@ import { CoreCapabilitiesCard } from '../components/core-capabilities-card/core-
 import { VariousAnalyticsData } from '../constant/various-analytics.data';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
-import { USER_STORIES } from '../constant/user.data';
-import { TOP_NEWS_DATA } from '../constant/top-news.data';
 import GetStarted from '@site/src/components/get-started/get-started';
 import ReadMore from '../components/ReadMore';
 
@@ -464,21 +462,6 @@ export default function Home(): JSX.Element {
         >
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />
-            {/* <NewsLetter newsList={NEWSLETTER_DATA} style={{ marginTop: '0' }} /> */}
-            {/* <section className="news-section">
-                <div className="container">
-                    <div className="news-wrap">
-                        <div className="news-item">
-                            <span className="news-icon"></span>
-                            <Link to="/docs/dev/releasenotes/release-1.2.6" className="news-content">
-                                <Translate id="1.2.6" description="Apache Doris 1.2.6 is released now.">
-                                    Apache Doris 1.2.6 is released now.
-                                </Translate>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section> */}
             <section style={{ backgroundColor: '#F7F9FE' }} className="group">
                 <div className="container pt-14">{renderSwiper()}</div>
             </section>
