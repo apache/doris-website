@@ -5,7 +5,7 @@
     'date': '2023-07-31',
     'author': 'Zhenwei Liu',
     'tags': ['Best Practice'],
-    "image": '/images/best-practice.png'
+    "image": '/images/how-to-build-a-simple-but-solid-data-architecture.png'
 }
 
 ---
