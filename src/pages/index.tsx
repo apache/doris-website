@@ -357,7 +357,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://www.linkedin.com/company/-apache',
+            href: 'https://www.linkedin.com/company/doris-apache/',
         },
         {
             title: <Translate id="community.title.c6">All video resources</Translate>,
