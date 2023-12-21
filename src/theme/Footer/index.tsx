@@ -21,7 +21,6 @@ function Footer() {
         return null;
     }
     const { copyright, links, logo, style } = footer;
-    console.log(links);
     return (
         <div className="footer pt-16 pb-10">
             <div className="container">
