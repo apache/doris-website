@@ -1,6 +1,6 @@
 export const NEWSLETTER_DATA = [
     {
-        tags: ['Top news'],
+        tags: ['Top News'],
         title: 'Apache Doris Summit Asia 2023: What Can You Expect From Apache Doris as a Data Warehouse?',
         content:
             'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners, to honor what we have achieved in the past year, and provide a preview of where we are going next.',

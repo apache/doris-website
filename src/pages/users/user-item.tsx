@@ -23,10 +23,10 @@ export default function UserItem(props: UserItemProps) {
             <div
                 className={`hidden group-hover:flex ${
                     props?.to && 'group-hover:flex-col'
-                } z-40 group-hover:text-white items-center h-full justify-between px-4 py-6`}
+                } z-40 group-hover:text-white h-full justify-between px-4 py-6`}
             >
                 <span className="text-xs lg:text-base">{props?.story}</span>
-                {props?.to && <ReadMore className="hover:text-white" to={props?.to} />}
+                {props?.to && <ReadMore className="hover:text-white justify-center" to={props?.to} />}
             </div>
         </div>
     );
