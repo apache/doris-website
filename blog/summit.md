@@ -6,7 +6,7 @@
     'date': '2023-01-19',
     'author': 'Mingyu Chen',
     'tags': ['Top News'],
-    "image": '/images/top-news.png'
+    "image": '/images/a-glimpse-of-the-next-generation-analytical-database.png'
 }
 ---
 
