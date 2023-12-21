@@ -63,9 +63,11 @@ export default function HeadItem(props: any) {
                     <h1 className=" mt-4 line-clamp-2 text-2xl font-medium text-black-dark lg:text-[2rem] lg:leading-[3rem]">
                         {title}
                     </h1>
-                    <p className="mt-4 line-clamp-2 text-sm leading-[1.6875rem] text-[#666666] lg:text-lg lg:h-[9.25rem]">
-                        {summary}
-                    </p>
+                    <div className="lg:h-[9.25rem]">
+                        <p className="mt-4 line-clamp-2 text-sm leading-[1.6875rem] text-[#666666] lg:text-lg ">
+                            {summary}
+                        </p>
+                    </div>
                     <div className="mt-4 flex space-x-6">
                         <span className="text-sm text-[#8592a6]">
                             <time dateTime={date} itemProp="datePublished" className="mr-4">

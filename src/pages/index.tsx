@@ -62,7 +62,12 @@ export default function Home(): JSX.Element {
     ];
     const banner = {
         title: (
-            <div>
+            <div
+                className="lg:leading-[78px]"
+                style={{
+                    fontWeight: 540,
+                }}
+            >
                 <p className="highlight">
                     <Translate id="homepage.banner.title">Open Source, Real-Time</Translate>
                 </p>
@@ -157,8 +162,9 @@ export default function Home(): JSX.Element {
         {
             title: <Translate id="community.title.c1">Developer mailing list</Translate>,
             img: (
-                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
-                    <g opacity="0.6" filter="url(#filter0_f_1665_499)">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect opacity="0.1" width="60" height="60" rx="10" fill="#00C2DD" />
+                    <g opacity="0.6" filter="url(#filter0_f_1665_497)">
                         <ellipse cx="30" cy="47" rx="11" ry="3" fill="#00C2DD" />
                     </g>
                     <path
@@ -171,7 +177,7 @@ export default function Home(): JSX.Element {
                     />
                     <defs>
                         <filter
-                            id="filter0_f_1665_499"
+                            id="filter0_f_1665_497"
                             x="9"
                             y="34"
                             width="42"
@@ -181,7 +187,7 @@ export default function Home(): JSX.Element {
                         >
                             <feFlood flood-opacity="0" result="BackgroundImageFix" />
                             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                            <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_499" />
+                            <feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_1665_497" />
                         </filter>
                     </defs>
                 </svg>

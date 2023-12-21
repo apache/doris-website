@@ -32,7 +32,7 @@ export default function AnnouncementBar() {
                         description: 'The ARIA label for close button of announcement bar',
                     })}
                 >
-                    <IconClose width={14} height={14} strokeWidth={3.1} />
+                    <IconClose width={14} height={14} strokeWidth={3.1} style={{ color: 'white' }} />
                 </button>
             ) : null}
         </div>
