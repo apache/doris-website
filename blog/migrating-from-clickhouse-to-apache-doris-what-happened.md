@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Migrating from ClickHouse to Apache Doris: What Happened?',
+    'title': 'Migrating from ClickHouse to Apache Doris: what happened?',
     'summary': "A user of Apache Doris has written down their migration process from ClickHouse to Doris, including why they need the change, what needs to be taken care of, and how they compare the performance of the two databases in their environment. ",
     'date': '2023-10-11',
     'author': 'Chuang Li',

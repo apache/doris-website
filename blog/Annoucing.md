@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Announcing Open Source Realtime Analytical database Apache Doris as a Top-Level Project',
+    'title': 'Announcing open source realtime analytical database Apache Doris as a top-level project',
     'summary': 'Apache Doris is a modern, high-performance and real-time analytical database based on MPP. It is well known for its high-performance and easy-to-use. It can return query results under massive data within only sub-seconds. It can support not only high concurrent point query scenarios, but also complex analysis scenarios with high throughput. Based on this, Apache Doris can be well applied in many business fields, such as multi-dimensional reporting, user portrait, ad-hoc query, real-time dashboard and so on.',
     'date': '2022-06-16',
     'author': 'morningman',

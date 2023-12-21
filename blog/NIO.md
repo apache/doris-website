@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'The Application of Apache Doris in NIO',
+    'title': 'The application of Apache Doris in NIO',
     'summary': "NIO Inc. (NYSE: NIO)is a leading company in the premium smart electric vehicle market. Founded in November 2014, NIO designs, develops, jointly manufactures and sells premium smart electric vehicles, driving innovations in autonomous driving, digital technologies, electric powertrains and batteries.
 Recently, NIO planned to enter the U.S. market alongside other western markets by the end of 2025. The company has already established a U.S. headquarters in San Jose, California, where they started hiring people..",
     'date': '2022-11-28',

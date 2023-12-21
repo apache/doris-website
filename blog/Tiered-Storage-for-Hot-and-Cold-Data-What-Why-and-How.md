@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Tiered Storage for Hot and Cold Data: What, Why, and How?',
+    'title': 'Tiered storage for hot and cold data: what, why, and how?',
     'summary': "Hot data is the frequently accessed data, while cold data is the one you seldom visit but still need. Separating them is for higher efficiency in computation and storage.",
     'date': '2023-06-23',
     'author': 'Apache Doris',
