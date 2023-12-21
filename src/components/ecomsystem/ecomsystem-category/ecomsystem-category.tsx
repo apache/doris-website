@@ -12,7 +12,6 @@ export default function EcomsystemCategory() {
 
     const current = pathnames.length > 0 ? pathnames[pathnames.length - 1] : '';
     let currentActive: EcomsystemCategoryEnum = EcomsystemCategoryEnum.ClusterManagement;
-    console.log(current);
 
     if (current === EcomsystemCategoryEnum.ClusterManagement) {
         currentActive = EcomsystemCategoryEnum.ClusterManagement;
