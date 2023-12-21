@@ -2,7 +2,7 @@ import React from 'react';
 
 export const VariousAnalyticsData = [
     {
-        title: 'Real-time reporting and decisioning',
+        title: 'Real-time analytics',
         content:
             'From traditional batch reporting to real-time reporting and dashboards. From internal-facing analytics like traditional BI to customer-facing analytics. From decision support analytics to algorithm-driven real-time decision-making.',
         links: [{ content: 'Read JD.com story ', to: '/blog/JD_OLAP' }],
@@ -24,9 +24,10 @@ export const VariousAnalyticsData = [
                 />
             </svg>
         ),
+        backgroundClassName: 'cases-bg-real-time',
     },
     {
-        title: 'Interactive ad-hoc analysis',
+        title: 'Ad-hoc analysis',
         content: `According to Forbes, 78% of organizations consider ad-hoc analysis to be a critical or very important feature in business intelligence adoption. Interactive ad-hoc analysis is replacing predefined data reporting, allowing a wider range of people to perform self-service analysis. Doris' high performance can provide fast response to any query, making it an invaluable tool for organizations that need to quickly analyze data and make informed decisions.`,
         links: [{ content: 'Read Xiaomi story', to: '/blog/xiaomi_vector' }],
         icon: (
@@ -43,6 +44,7 @@ export const VariousAnalyticsData = [
                 />
             </svg>
         ),
+        backgroundClassName: 'cases-bg-ad-hoc',
     },
     {
         title: 'Data lake analytics',
@@ -65,6 +67,7 @@ export const VariousAnalyticsData = [
                 <rect x="27.9999" y="25.5" width="6" height="3" rx="1.5" fill="white" />
             </svg>
         ),
+        backgroundClassName: 'cases-bg-datalake',
     },
     {
         title: 'ELT data processing',
@@ -85,9 +88,10 @@ export const VariousAnalyticsData = [
                 to: '/blog/For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture',
             },
         ],
+        backgroundClassName: 'cases-bg-ELT',
     },
     {
-        title: 'Log management and analytics',
+        title: 'Log analytics',
         content: `Store business, system, or IoT-related log data as structured, semi-structured, or raw text to establish a unified log storage and analytics platform. Doris offers efficient handling of high-volume log data and provides high-performance log retrieval and analytics capabilities at a highly cost-effective rate.`,
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
@@ -108,9 +112,10 @@ export const VariousAnalyticsData = [
                 to: '/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second',
             },
         ],
+        backgroundClassName: 'cases-bg-log',
     },
     {
-        title: 'User profile and behavior analytics',
+        title: 'Customer data platform',
         content: `Gather user-specific attributes and behavioral data, construct a comprehensive user data platform, perform in-depth analysis of user behaviors including engagement, retention, and conversion rates, and conduct precise audience analysis covering insights and segmentation.`,
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
@@ -133,5 +138,6 @@ export const VariousAnalyticsData = [
                 to: '/blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris/',
             },
         ],
+        backgroundClassName: 'cases-bg-customer',
     },
 ];

@@ -3,11 +3,14 @@ import Layout from '../theme/Layout';
 import Link from '@docusaurus/Link';
 import More from '../components/More/index';
 import PageBanner, { ButtonProps } from '../components/PageBanner';
+import { Progress } from '../components/progress/progress';
+
 import PageColumn from '../components/PageColumn';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
+import { useAnimationFrame } from '../hooks/use-animation-frame';
 import './index.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
 import { NEWSLETTER_DATA } from '../constant/newsletter.data';
@@ -18,6 +21,8 @@ import { VariousAnalyticsData } from '../constant/various-analytics.data';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 import GetStarted from '@site/src/components/get-started/get-started';
+import { Tabs } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 import ReadMore from '../components/ReadMore';
 
 export default function Home(): JSX.Element {
@@ -32,6 +37,9 @@ export default function Home(): JSX.Element {
     const modules = [Pagination];
     const [swiperRef, setSwiperRef] = useState<SwiperClass>();
 
+    const [count, setCount] = useState<number>(0);
+    const [activeKey, setActiveKey] = useState<string>('0');
+    const [stop, setStop] = useState<boolean>(false);
     const handlePrevious = useCallback(() => {
         swiperRef?.slidePrev();
     }, [swiperRef]);
@@ -450,6 +458,25 @@ export default function Home(): JSX.Element {
         );
     }
 
+    useAnimationFrame(deltaTime => {
+        // Pass on a function to the setter of the state
+        // to make sure we always have the latest state
+
+        setCount(prevCount => {
+            if (prevCount >= 100) {
+                setActiveKey(activeKey => {
+                    let nextKey = +activeKey + 1;
+                    if (nextKey >= VariousAnalyticsData.length) {
+                        nextKey = 0;
+                    }
+                    return nextKey.toString();
+                });
+                return 0;
+            }
+            return prevCount + 0.4;
+        });
+    }, stop);
+
     return (
         <Layout
             title={translate({ id: 'homepage.title', message: 'Apache Doris: Open-Source Real-Time Data Warehouse' })}
@@ -532,8 +559,42 @@ export default function Home(): JSX.Element {
                     </div>
                 }
             >
-                <div>
-                    {VariousAnalyticsData.map(({ title, content, links, icon }) => (
+                <div className="cases-tabs" onMouseEnter={() => setStop(true)} onMouseLeave={() => setStop(false)}>
+                    <Tabs
+                        activeKey={activeKey}
+                        onChange={activeKey => {
+                            setCount(0);
+                            setActiveKey(activeKey);
+                        }}
+                        tabPosition={isPhone ? 'top' : 'left'}
+                        items={VariousAnalyticsData.map(({ content, title, links, backgroundClassName }, index) => {
+                            return {
+                                label: (
+                                    <div className="font-misans text-start">
+                                        <span>{title}</span>
+                                        <div className="absolute -bottom-0 w-full">
+                                            <Progress percent={count} />
+                                        </div>
+                                    </div>
+                                ),
+                                key: index.toString(),
+                                children: (
+                                    <div
+                                        className={`font-misans text-start h-full ${backgroundClassName} py-14 pr-14 text-base`}
+                                    >
+                                        <div>{content}</div>
+
+                                        <div className="flex mt-14 ">
+                                            {links.map(({ content, to }) => (
+                                                <More style={{ textAlign: 'left' }} link={to} text={content} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ),
+                            };
+                        })}
+                    />
+                    {/* {VariousAnalyticsData.map(({ title, content, links, icon }) => (
                         <div className="various-analytics-group flex-col lg:flex-row">
                             <div className="items-title w-auto lg:w-[27.25rem] ">
                                 <div>{icon}</div>
@@ -550,7 +611,7 @@ export default function Home(): JSX.Element {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    ))} */}
                 </div>
             </PageColumn>
             <PageColumn
