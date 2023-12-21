@@ -35,7 +35,7 @@ export default function NotFound() {
                                     different page or report this issue.
                                 </Translate>
                             </p>
-                            <div className="flex justify-center gap-x-10 mt-10">
+                            <div className="flex justify-center gap-x-6 lg:gap-x-10 mt-10">
                                 <div className="w-[9.75rem]">
                                     <ExternalLink
                                         to="/"

@@ -58,12 +58,12 @@ export default function HeadItem(props: any) {
             } flex flex-col rounded-lg border border-[#DFE5F0] hover:border-[#0065FD]`}
         >
             <img src={image} alt="" />
-            <div className="flex flex-col-reverse justify-between lg:flex-row lg:space-x-10 px-6">
+            <div className="flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:space-x-10 px-6">
                 <div className="flex-1">
                     <h1 className=" mt-4 line-clamp-2 text-2xl font-medium text-black-dark lg:text-[2rem] lg:leading-[3rem]">
                         {title}
                     </h1>
-                    <p className="mt-4 line-clamp-2 text-sm leading-[1.6875rem] text-[#666666] lg:text-lg h-[9.25rem]">
+                    <p className="mt-4 line-clamp-2 text-sm leading-[1.6875rem] text-[#666666] lg:text-lg lg:h-[9.25rem]">
                         {summary}
                     </p>
                     <div className="mt-4 flex space-x-6">
