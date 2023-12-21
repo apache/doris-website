@@ -1,4 +1,6 @@
 const themes = require('prism-react-renderer').themes;
+const { ssrTemplate } = require('./config/ssrTemplate');
+const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const lightCodeTheme = themes.dracula;
 const VERSIONS = require('./versions.json');
@@ -73,6 +75,7 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
+        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         [
             '@docusaurus/plugin-pwa',
             {
@@ -142,6 +145,23 @@ const config = {
                 },
             };
         },
+        [
+            '@docusaurus/plugin-client-redirects',
+            {
+                fromExtensions: ['html', 'htm'],
+                redirects: [
+                    // /docs/oldDoc -> /docs/newDoc
+                    {
+                        from: '/docs/dev/summary/basic-summary',
+                        to: '/docs/dev/get-starting/quick-start',
+                    },
+                    {
+                        from: '/docs/dev/get-starting',
+                        to: '/docs/dev/get-starting/quick-start',
+                    },
+                ],
+            },
+        ],
     ],
     presets: [
         [
@@ -376,6 +396,7 @@ const config = {
             //     },
             // ],s
         }),
+    ssrTemplate,
 };
 
 module.exports = config;
