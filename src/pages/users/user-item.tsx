@@ -26,7 +26,7 @@ export default function UserItem(props: UserItemProps) {
                 } z-40 group-hover:text-white h-full justify-between px-4 py-6`}
             >
                 <span className="text-xs lg:text-base">{props?.story}</span>
-                {props?.to && <ReadMore className="hover:text-white justify-center" to={props?.to} />}
+                {props?.to && <ReadMore className="hover:text-white justify-center text-white" to={props?.to} />}
             </div>
         </div>
     );

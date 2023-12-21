@@ -9,7 +9,7 @@ import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
 import './index.scss';
-import NewsLetter from '../components/Newsletter';
+import LinkWithArrow from '@site/src/components/link-arrow';
 import { NEWSLETTER_DATA } from '../constant/newsletter.data';
 import { AchievementBanner } from '../components/achievement-banner/achievement-banner';
 import { CoreCapabilitiesData } from '../constant/core-capabilities.data';
@@ -20,6 +20,7 @@ import { Pagination, Navigation } from 'swiper';
 import { USER_STORIES } from '../constant/user.data';
 import { TOP_NEWS_DATA } from '../constant/top-news.data';
 import GetStarted from '@site/src/components/get-started/get-started';
+import ReadMore from '../components/ReadMore';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -433,31 +434,7 @@ export default function Home(): JSX.Element {
                                             {newsletter.title}
                                         </h3>
                                         <p className="pt-3 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
-                                        <Link className="flex items-center cursor-pointer pt-6" to={newsletter.to}>
-                                            <span className="text-primary mr-2 text-base leading-4">Learn more</span>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="16"
-                                                height="14"
-                                                viewBox="0 0 16 14"
-                                                fill="none"
-                                            >
-                                                <path
-                                                    d="M9.37549 12.3542L14.8755 6.85419L9.37549 1.35419"
-                                                    stroke="#444FD9"
-                                                    stroke-width="1.65"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                                <path
-                                                    d="M1.12549 6.85419L14.8755 6.85419"
-                                                    stroke="#444FD9"
-                                                    stroke-width="1.65"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                            </svg>
-                                        </Link>
+                                        <ReadMore to={newsletter.to} className="pt-6" />
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -514,15 +491,16 @@ export default function Home(): JSX.Element {
                         </Translate>
                     }
                     footer={
-                        <More
-                            style={{ marginTop: '5rem' }}
-                            link="/docs/get-starting/what-is-apache-doris"
-                            text={
-                                <Translate id="homepage.more" description="more link">
-                                    Learn more
-                                </Translate>
-                            }
-                        />
+                        <div className="justify-center flex mt-20">
+                            <LinkWithArrow
+                                to="/docs/get-starting/what-is-apache-doris"
+                                text={
+                                    <Translate id="homepage.more" description="more link">
+                                        Learn more
+                                    </Translate>
+                                }
+                            />
+                        </div>
                     }
                 >
                     {isPhone ? (
@@ -583,7 +561,8 @@ export default function Home(): JSX.Element {
 
                                 <div className="links">
                                     {links.map(({ content, to }) => (
-                                        <More style={{ textAlign: 'left' }} link={to} text={content} />
+                                        <LinkWithArrow to={to} text={content} />
+                                        // <More style={{ textAlign: 'left' }} link={to} text={content} />
                                     ))}
                                 </div>
                             </div>
