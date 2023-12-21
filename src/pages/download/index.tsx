@@ -150,7 +150,7 @@ export default function Download() {
                                 <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
                                 <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
                                 <div className="flex items-center mt-4 text-[#444FD9]">
-                                    <LinkWithArrow to={''} text="Learn more" />
+                                    <LinkWithArrow to={item.link} text="Learn more" />
                                 </div>
                             </Link>
                         ))}

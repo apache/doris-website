@@ -359,12 +359,12 @@ export const RUN_ANYWHERE = [
     {
         title: 'Doris on bare metal',
         description: 'A platform for visualized cluster deployment on bare metal or VM.',
-        link: '/',
+        link: 'https://doris.apache.org/docs/install/standard-deployment',
     },
     {
         title: 'Doris on K8s',
         description: 'Create, configure and manage Doris clusters on Kubernetes',
-        link: '/',
+        link: 'https://doris.apache.org/docs/install/k8s-deploy',
     },
     {
         title: 'Doris on AWS',

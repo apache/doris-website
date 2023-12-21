@@ -28,7 +28,7 @@ export default function Users(): JSX.Element {
         const tag = isBrowser ? sessionStorage.getItem('tag') : ALL_TEXT;
         return tag || ALL_TEXT;
     });
-    const [users, setUsers] = useState([...USERS]);
+    const [users, setUsers] = useState([...USERS].sort((a, b) => a.order - b.order));
     const getUserLogos = (page: number = 1, total: number = 30) => {
         const arr = new Array(total).fill('');
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
@@ -62,7 +62,7 @@ export default function Users(): JSX.Element {
         let currentCategory = USER_STORIES_CATEGORIES.find(item => item === category);
         const currentUsers = USERS.filter(user => user.category === category);
         if (category === ALL_TEXT) {
-            setUsers([...USERS]);
+            setUsers([...USERS].sort((a, b) => a.order - b.order));
         } else {
             setUsers(currentUsers);
         }

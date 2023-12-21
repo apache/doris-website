@@ -14,7 +14,6 @@ export default function NavbarMobilePrimaryMenu() {
     // TODO how can the order be defined for mobile?
     // Should we allow providing a different list of items?
     const items = useNavbarItems();
-    console.log(items);
     return (
         <>
             <ul className="menu__list">

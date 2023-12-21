@@ -81,7 +81,7 @@ export const VariousAnalyticsData = [
         ),
         links: [
             {
-                content: 'Read the use case of leading theaters',
+                content: 'Read use case',
                 to: '/blog/For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture',
             },
         ],
@@ -104,7 +104,7 @@ export const VariousAnalyticsData = [
         links: [
             { content: 'Deep dive', to: '/blog/log-analysis-elasticsearch-vs-apache-doris' },
             {
-                content: 'China Unicom',
+                content: 'Read China Unicom story',
                 to: '/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second',
             },
         ],
@@ -129,7 +129,7 @@ export const VariousAnalyticsData = [
         ),
         links: [
             {
-                content: 'Read the use case of data service company',
+                content: 'Read use case',
                 to: '/blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris/',
             },
         ],
