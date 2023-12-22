@@ -520,11 +520,11 @@ export default function Home(): JSX.Element {
                     }
                 >
                     {isPhone ? (
-                        <img src={require('@site/static/images/what-is-doris.png').default} alt="" />
+                        <img src={require('@site/static/images/what-is-doris-new.png').default} alt="" />
                     ) : (
                         <img
                             style={{ maxWidth: '85%', margin: 'auto' }}
-                            src={require('@site/static/images/what-is-doris.png').default}
+                            src={require('@site/static/images/what-is-doris-new.png').default}
                             alt=""
                         />
                     )}
