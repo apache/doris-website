@@ -173,7 +173,7 @@ export default function Users(): JSX.Element {
                         ))}
                     </ul>
                 </div>
-                <ul className="mt-6 grid gap-1 grid-cols-3 lg:gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
+                <ul className="mt-6 grid gap-1 grid-cols-2 lg:gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
                     {users.map(user => (
                         <UserItem key={user.name} {...user} />
                     ))}

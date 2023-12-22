@@ -434,7 +434,7 @@ export default function Home(): JSX.Element {
                                             alt={newsletter.title}
                                         />
                                     </div>
-                                    <div className=" w-[48rem] ml-12 flex flex-col ">
+                                    <div className="lg:w-[48rem] px-6 lg:px-0 lg:ml-12 mt-4 lg:mt-0 flex flex-col ">
                                         <div className="flex gap-1 mb-1">
                                             {newsletter.tags.map(value => (
                                                 <div className="color-[#4c576c] font-medium text-xs leading-5">
@@ -500,7 +500,8 @@ export default function Home(): JSX.Element {
             </section>
             <section className="apache-doris">
                 <PageColumn
-                    wrapperStyle={{ paddingBottom: '7.5rem' }}
+                    // wrapperStyle={{ paddingBottom: '7.5rem' }}
+                    className="lg:pb-[7.5rem] py-16"
                     title={
                         <Translate id="homepage.what" description="What is Apache Doris">
                             What is Apache Doris?
@@ -520,18 +521,19 @@ export default function Home(): JSX.Element {
                     }
                 >
                     {isPhone ? (
-                        <img src={require('@site/static/images/what-is-doris.png').default} alt="" />
+                        <img src={require('@site/static/images/what-is-doris-new.png').default} alt="" />
                     ) : (
                         <img
                             style={{ maxWidth: '85%', margin: 'auto' }}
-                            src={require('@site/static/images/what-is-doris.png').default}
+                            src={require('@site/static/images/what-is-doris-new.png').default}
                             alt=""
                         />
                     )}
                 </PageColumn>
             </section>
             <PageColumn
-                wrapperStyle={{ paddingTop: '7.5rem', paddingBottom: '5.5rem', backgroundColor: '#F7F9FE' }}
+                className="lg:py-[7.5rem]"
+                wrapperStyle={{ backgroundColor: '#F7F9FE' }}
                 title={
                     <Translate id="homepage.capabilities" description="Core capabilities">
                         Core capabilities
