@@ -12,7 +12,10 @@ interface PageColumnProps extends ComponentProps<JSXElementConstructor<any>> {
 export default function PageColumn(props: PageColumnProps): JSX.Element {
     const { align = 'center', title, footer, children, subTitle, wrapperStyle, className } = props;
     return (
-        <div style={wrapperStyle} className={clsx('page-column', className, align, footer && 'has-footer')}>
+        <div
+            style={wrapperStyle}
+            className={clsx('page-column lg:py-[6.25rem] py-16', className, align, footer && 'has-footer')}
+        >
             <h1 className="page-column-title">
                 <div className="container">{title}</div>
             </h1>

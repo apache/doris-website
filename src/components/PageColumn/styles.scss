@@ -1,11 +1,10 @@
 .page-column {
-    padding: 6.25rem 0;
+    // padding: 6.25rem 0;
     font-size: 1.25rem;
     color: var(--global-colors-text-primary);
     line-height: 2;
 
     .page-column-title {
-        font-size: 44px;
         font-weight: 540;
         line-height: 70px;
     }
@@ -33,9 +32,9 @@
         }
     }
 
-    &.has-footer {
-        padding-bottom: 2.5rem;
-    }
+    // &.has-footer {
+    //     padding-bottom: 2.5rem;
+    // }
 
     &-title {
         text-align: inherit;
