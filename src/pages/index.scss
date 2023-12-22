@@ -207,7 +207,7 @@
 }
 
 .core-capabilities-group {
-    gap: 5rem 1.5rem;
+    gap: 1.5rem;
 }
 
 .various-analytics-group {
@@ -329,6 +329,7 @@
             }
             .ant-tabs-tab-btn {
                 flex: 1;
+                color: #1d1d1d;
                 .progress {
                     display: none;
                 }
@@ -336,6 +337,7 @@
         }
     }
     .ant-tabs-content-holder {
+        border-left: 1px solid #f2f3fc;
         .ant-tabs-content {
             height: 100%;
             min-height: 300px;
@@ -374,10 +376,74 @@
 
                 &.ant-tabs-tabpane-active {
                     opacity: 1;
+                    z-index: 1;
                 }
                 &.ant-tabs-tabpane-hidden {
                     display: block;
                     opacity: 0;
+                    z-index: 0;
+                }
+            }
+        }
+    }
+}
+
+.cases-collapse {
+    text-align: left;
+    .ant-collapse {
+        background-color: #fff;
+        .ant-collapse-item-active {
+            .ant-collapse-header-text {
+                color: #444fd9;
+            }
+            .ant-collapse-expand-icon {
+                transform: rotate(180deg);
+                color: #444fd9;
+            }
+        }
+        .ant-collapse-item {
+            border-bottom: 0px;
+            .ant-collapse-header {
+                align-items: center;
+                padding: 1rem 0;
+                border-bottom: 0.5px solid #dfe5f0;
+                .ant-collapse-expand-icon {
+                    padding: 0;
+                    transition-property: all;
+                    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                    transition-duration: 150ms;
+                }
+            }
+            .ant-collapse-content-box {
+                height: 12rem;
+                padding: 0;
+                margin-top: 0.75rem;
+                margin-bottom: 0.75rem;
+
+                .cases-bg-datalake {
+                    background: url('/static/images/cases-bg-datalake.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-ad-hoc {
+                    background: url('/static/images/cases-bg-ad-hoc.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-customer {
+                    background: url('/static/images/cases-bg-customer.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-ELT {
+                    background: url('/static/images/cases-bg-ELT.png') no-repeat center;
+                    background-size: cover;
+                }
+                .cases-bg-log {
+                    background: url('/static/images/cases-bg-log.png') no-repeat center;
+                    background-size: cover;
+                }
+
+                .cases-bg-real-time {
+                    background: url('/static/images/cases-bg-real-time.png') no-repeat center;
+                    background-size: cover;
                 }
             }
         }

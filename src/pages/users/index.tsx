@@ -34,6 +34,9 @@ export default function Users(): JSX.Element {
         return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
     };
 
+    const PAGE_SIZE = 32;
+    const [currentSize, setCurrentSize] = useState<number>(PAGE_SIZE);
+
     useEffect(() => {
         setActive(ALL_TEXT);
     }, []);

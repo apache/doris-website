@@ -21,9 +21,10 @@ import { VariousAnalyticsData } from '../constant/various-analytics.data';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 import GetStarted from '@site/src/components/get-started/get-started';
-import { Tabs } from 'antd';
+import { Collapse, Tabs } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import ReadMore from '../components/ReadMore';
+import { ArrowDownIcon } from '../components/Icons/arrow-down-icon';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -504,7 +505,7 @@ export default function Home(): JSX.Element {
                     className="lg:pb-[7.5rem] py-16"
                     title={
                         <Translate id="homepage.what" description="What is Apache Doris">
-                            What is Apache Doris?
+                            What is Apache Doris
                         </Translate>
                     }
                     footer={
@@ -567,42 +568,85 @@ export default function Home(): JSX.Element {
                     </div>
                 }
             >
-                <div className="cases-tabs" onMouseEnter={() => setStop(true)} onMouseLeave={() => setStop(false)}>
-                    <Tabs
-                        activeKey={activeKey}
-                        onChange={activeKey => {
-                            setCount(0);
-                            setActiveKey(activeKey);
-                        }}
-                        tabPosition={isPhone ? 'top' : 'left'}
-                        items={VariousAnalyticsData.map(({ content, title, links, backgroundClassName }, index) => {
-                            return {
-                                label: (
-                                    <div className="font-misans text-start">
-                                        <span>{title}</span>
-                                        <div className="absolute -bottom-0 w-full">
-                                            <Progress percent={count} />
-                                        </div>
-                                    </div>
-                                ),
-                                key: index.toString(),
-                                children: (
-                                    <div
-                                        className={`font-misans text-start h-full ${backgroundClassName} py-14 pr-14 text-base`}
-                                    >
-                                        <div>{content}</div>
+                {isPhone ? (
+                    <div className="cases-collapse">
+                        <Collapse
+                            bordered={false}
+                            defaultActiveKey={['0']}
+                            accordion
+                            expandIcon={ArrowDownIcon}
+                            expandIconPosition="right"
+                            items={VariousAnalyticsData.map(
+                                ({ title, content, icon, links, backgroundClassName }, index) => {
+                                    return {
+                                        key: index,
+                                        label: (
+                                            <div className="flex items-center">
+                                                <div className="mr-4">{icon}</div>
+                                                <span className="text-base">{title}</span>
+                                            </div>
+                                        ),
+                                        children: (
+                                            <div
+                                                className={`font-misans text-start h-full ${backgroundClassName} text-[10px] leading-[17px]`}
+                                            >
+                                                <div className=" pt-3 pr-3">{content}</div>
 
-                                        <div className="flex mt-14 gap-2">
-                                            {links.map(({ content, to }) => (
-                                                <More style={{ textAlign: 'left' }} link={to} text={content} />
-                                            ))}
-                                        </div>
-                                    </div>
-                                ),
-                            };
-                        })}
-                    />
-                    {/* {VariousAnalyticsData.map(({ title, content, links, icon }) => (
+                                                <div className="flex mt-3 gap-2">
+                                                    {links.map(({ content, to }) => (
+                                                        <LinkWithArrow
+                                                            className="text-start text-[10px] leading-[17px]"
+                                                            to={to}
+                                                            text={content}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ),
+                                    };
+                                },
+                            )}
+                        />
+                    </div>
+                ) : (
+                    <div className="cases-tabs" onMouseMove={() => setStop(true)} onMouseLeave={() => setStop(false)}>
+                        <Tabs
+                            activeKey={activeKey}
+                            onChange={activeKey => {
+                                setCount(0);
+                                setActiveKey(activeKey);
+                            }}
+                            tabPosition={isPhone ? 'top' : 'left'}
+                            items={VariousAnalyticsData.map(
+                                ({ content, title, links, backgroundClassName, icon }, index) => {
+                                    return {
+                                        label: (
+                                            <div className="font-misans text-start">
+                                                <span>{title}</span>
+                                                <div className="absolute -bottom-0 w-full">
+                                                    <Progress percent={count} />
+                                                </div>
+                                            </div>
+                                        ),
+                                        key: index.toString(),
+                                        children: (
+                                            <div
+                                                className={`font-misans text-start h-full ${backgroundClassName} py-14 pr-14 text-base leading-7`}
+                                            >
+                                                <div>{content}</div>
+
+                                                <div className="flex mt-14 gap-2">
+                                                    {links.map(({ content, to }) => (
+                                                        <LinkWithArrow className="text-start" to={to} text={content} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ),
+                                    };
+                                },
+                            )}
+                        />
+                        {/* {VariousAnalyticsData.map(({ title, content, links, icon }) => (
                         <div className="various-analytics-group flex-col lg:flex-row">
                             <div className="items-title w-auto lg:w-[27.25rem] ">
                                 <div>{icon}</div>
@@ -620,7 +664,8 @@ export default function Home(): JSX.Element {
                             </div>
                         </div>
                     ))} */}
-                </div>
+                    </div>
+                )}
             </PageColumn>
             <PageColumn
                 className="bg-[#F7F9FE]"
