@@ -568,7 +568,7 @@ export default function Home(): JSX.Element {
                 }
             >
                 <div className="cases-tabs" onMouseEnter={() => setStop(true)} onMouseLeave={() => setStop(false)}>
-                    {/* <Tabs
+                    <Tabs
                         activeKey={activeKey}
                         onChange={activeKey => {
                             setCount(0);
@@ -601,8 +601,8 @@ export default function Home(): JSX.Element {
                                 ),
                             };
                         })}
-                    /> */}
-                    {VariousAnalyticsData.map(({ title, content, links, icon }) => (
+                    />
+                    {/* {VariousAnalyticsData.map(({ title, content, links, icon }) => (
                         <div className="various-analytics-group flex-col lg:flex-row">
                             <div className="items-title w-auto lg:w-[27.25rem] ">
                                 <div>{icon}</div>
@@ -619,7 +619,7 @@ export default function Home(): JSX.Element {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    ))} */}
                 </div>
             </PageColumn>
             <PageColumn
