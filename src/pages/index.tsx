@@ -434,11 +434,7 @@ export default function Home(): JSX.Element {
                                             alt={newsletter.title}
                                         />
                                     </div>
-<<<<<<< HEAD
-                                    <div className=" w-[48rem] ml-12 flex flex-col ">
-=======
                                     <div className="lg:w-[48rem] px-6 lg:px-0 lg:ml-12 mt-4 lg:mt-0 flex flex-col ">
->>>>>>> master
                                         <div className="flex gap-1 mb-1">
                                             {newsletter.tags.map(value => (
                                                 <div className="color-[#4c576c] font-medium text-xs leading-5">
