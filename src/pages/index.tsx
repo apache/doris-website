@@ -521,31 +521,19 @@ export default function Home(): JSX.Element {
                     }
                 >
                     {isPhone ? (
-<<<<<<< HEAD
-                        <img src={require('@site/static/images/what-is-doris.png').default} alt="" />
-                    ) : (
-                        <img
-                            style={{ maxWidth: '85%', margin: 'auto' }}
-                            src={require('@site/static/images/what-is-doris.png').default}
-=======
                         <img src={require('@site/static/images/what-is-doris-new.png').default} alt="" />
                     ) : (
                         <img
                             style={{ maxWidth: '85%', margin: 'auto' }}
                             src={require('@site/static/images/what-is-doris-new.png').default}
->>>>>>> master
                             alt=""
                         />
                     )}
                 </PageColumn>
             </section>
             <PageColumn
-<<<<<<< HEAD
-                wrapperStyle={{ paddingTop: '7.5rem', paddingBottom: '5.5rem', backgroundColor: '#F7F9FE' }}
-=======
                 className="lg:py-[7.5rem]"
                 wrapperStyle={{ backgroundColor: '#F7F9FE' }}
->>>>>>> master
                 title={
                     <Translate id="homepage.capabilities" description="Core capabilities">
                         Core capabilities
@@ -580,11 +568,7 @@ export default function Home(): JSX.Element {
                 }
             >
                 <div className="cases-tabs" onMouseEnter={() => setStop(true)} onMouseLeave={() => setStop(false)}>
-<<<<<<< HEAD
-                    {/* <Tabs
-=======
                     <Tabs
->>>>>>> master
                         activeKey={activeKey}
                         onChange={activeKey => {
                             setCount(0);
@@ -617,13 +601,8 @@ export default function Home(): JSX.Element {
                                 ),
                             };
                         })}
-<<<<<<< HEAD
-                    /> */}
-                    {VariousAnalyticsData.map(({ title, content, links, icon }) => (
-=======
                     />
                     {/* {VariousAnalyticsData.map(({ title, content, links, icon }) => (
->>>>>>> master
                         <div className="various-analytics-group flex-col lg:flex-row">
                             <div className="items-title w-auto lg:w-[27.25rem] ">
                                 <div>{icon}</div>
@@ -640,11 +619,7 @@ export default function Home(): JSX.Element {
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
-                    ))}
-=======
                     ))} */}
->>>>>>> master
                 </div>
             </PageColumn>
             <PageColumn
