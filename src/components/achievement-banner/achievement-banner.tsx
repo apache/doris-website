@@ -5,7 +5,7 @@ import './achievement-banner.scss';
 export function AchievementBanner() {
     return (
         <section
-            className="container achievement-banner-wrapper flex-col lg:flex-row items-center lg:mt-[7.5rem];
+            className="container achievement-banner-wrapper mt-16 flex-col lg:flex-row items-center lg:mt-[7.5rem];
         "
         >
             {AchievementBannerItemsData.map(({ title, content }) => (
