@@ -67,9 +67,9 @@ function DropdownNavbarItemDesktop({ items, position, className, onClick, ...pro
                 {props.children ?? props.label}
             </NavbarNavLink>
             <ul className="dropdown__menu">
-                {items.map((childItemProps, i) => (
-                    <NavbarItem isDropdownItem activeClassName="dropdown__link--active" {...childItemProps} key={i} />
-                ))}
+                {items.map((childItemProps, i) => {
+                    return <NavbarItem isDropdownItem activeClassName="dropdown__link--active" {...childItemProps} key={i} />
+})}
             </ul>
         </div>
     );

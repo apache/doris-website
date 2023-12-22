@@ -31,6 +31,7 @@ export default function DocsVersionDropdownNavbarItem({
             onClick: () => savePreferredVersionName(version.name),
         };
     });
+
     const items = [...dropdownItemsBefore, ...versionLinks, ...dropdownItemsAfter];
     const dropdownVersion = useDocsVersionCandidates(docsPluginId)[0];
     // Mobile dropdown is handled a bit differently
@@ -61,7 +62,7 @@ export default function DocsVersionDropdownNavbarItem({
         <DropdownNavbarItem
             {...props}
             mobile={mobile}
-            label={<span className="text-sm">Versions</span>}
+            label={<span className="text-sm">Versions: {versionLinks.find(e => e.isActive())?.label}</span>}
             to={dropdownTo}
             items={items}
             isActive={dropdownActiveClassDisabled ? () => false : undefined}

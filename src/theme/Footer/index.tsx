@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import FooterLinks from '@theme/Footer/Links';
 import FooterLogo from '@theme/Footer/Logo';
@@ -14,6 +14,7 @@ import { YoutubeIcon } from '@site/src/components/Icons/youtube';
 import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
 import { MediumIcon } from '@site/src/components/Icons/medium';
 import Translate from '@docusaurus/Translate';
+import Link from '@docusaurus/Link';
 
 function Footer() {
     const { footer } = useThemeConfig();
@@ -21,6 +22,48 @@ function Footer() {
         return null;
     }
     const { copyright, links, logo, style } = footer;
+
+    const [isDocsPage, setIsDocsPage] = useState(false);
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const pathname = location.pathname.split('/')[1];
+            const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
+            setIsDocsPage(docsPage);
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
+
+    const ResourcesItems = (links.find(e => e.title === 'Resources')?.items || []) as any[];
+    const CommunityItems = (links.find(e => e.title === 'Community')?.items || []) as any[];
+
+    if (isDocsPage) {
+        return (
+            <div className="docs-footer">
+                <div className="logo">
+                    <FooterLogo logo={logo} />
+                </div>
+                <div className="content">
+                    <div className="my-7 text-[#8592A6] text-sm">
+                        <div className="flex pb-3 border-b border-[#F7F9FE] flex-wrap">
+                            <div className=" w-40">RESOURCES</div>
+                            {ResourcesItems.map(({ label, href }) => (
+                                <Link className="w-40 no-underline	" href={href}>
+                                    {label}
+                                </Link>
+                            ))}
+                        </div>
+                        <div className="flex pt-3 flex-wrap">
+                            <div className="w-40">COMMUNITY</div>
+                            {CommunityItems.map(({ label, href }) => (
+                                <Link className="w-40 no-underline	" href={href}>
+                                    {label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="footer pt-16 pb-10">
             <div className="container">

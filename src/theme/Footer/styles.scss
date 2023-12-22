@@ -210,3 +210,26 @@
         }
     }
 }
+
+.docs-footer {
+    height: 7.625rem;
+    background-color: #fff;
+    display: flex;
+    border-top: 1px solid #edf2fa;
+    .logo {
+        width: var(--doc-sidebar-width);
+        position: relative;
+        .footer__logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8.5625rem;
+            height: 3.5rem;
+            margin-top: 0;
+        }
+    }
+    .content {
+        flex: 1;
+    }
+}
