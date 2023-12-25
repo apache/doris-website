@@ -323,7 +323,7 @@ const config = {
                             },
                             {
                                 label: 'Docs',
-                                href: '/learning',
+                                href: '/docs/get-starting/quick-start',
                             },
                             {
                                 label: 'Blog',
