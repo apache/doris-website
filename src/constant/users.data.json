@@ -540,13 +540,13 @@
         "image": "/images/user-logo/Telecom & Manufacturing/Midea.jpg"
     },
     {
-        "story": "Haidilao is a renowned Chinese hot pot restaurant chain known for its exceptional service, quality ingredients, and unwavering commitment to customer satisfaction",
-        "name": "Haidilao",
+        "story": "Shuhai, formerly a subsidiary of Haidilao, operates as a third-party full-service provider for food ingredient supply chain management, using Doris to build an enterprise-level data warehouse.",
+        "name": "Shuhai Supply Chain Solutions",
         "category": "FMCG & Logistics",
-        "logo": "Haidilao",
+        "logo": "Shuhai Supply Chain Solutions",
         "order": 60,
         "to": null,
-        "image": "/images/user-logo/FMCG & Logistics/Haidilao.jpg"
+        "image": "/images/user-logo/FMCG & Logistics/Shuhai Supply Chain Solutions.jpg"
     },
     {
         "story": "Xtep caters to sports enthusiasts and athletes, offering stylish and functional sportswear options, specialized in designing and manufacturing athletic footwear, apparel, and accessories.",
