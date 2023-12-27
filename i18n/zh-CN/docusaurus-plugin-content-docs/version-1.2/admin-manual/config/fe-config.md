@@ -1680,6 +1680,16 @@ sys_log_dir:
 
 日志拆分的大小，每1G拆分一个日志文件
 
+<version since="dev">
+
+#### `sys_log_enable_compress`
+
+默认值：false
+
+控制是否压缩fe log, 包括fe.log 及 fe.warn.log。如果开启，则使用gzip算法进行压缩。
+
+</version>
+
 #### `audit_log_dir`
 
 默认值：DorisFE.DORIS_HOME_DIR + "/log"
@@ -1724,6 +1734,16 @@ HOUR: log前缀是：yyyyMMddHH
 - 10小时  10 小时
 - 60m    60 分钟
 - 120s   120 秒
+
+<version since="dev">
+
+#### `audit_log_enable_compress`
+
+默认值：false
+
+控制是否压缩 fe.audit.log。如果开启，则使用gzip算法进行压缩。
+
+</version>
 
 ### 存储
 
@@ -1784,24 +1804,6 @@ show data （其他用法：HELP SHOW DATA）
 在某些情况下，某些 tablet 可能会损坏或丢失所有副本。 此时数据已经丢失，损坏的 tablet 会导致整个查询失败，无法查询剩余的健康 tablet。 
 
 在这种情况下，您可以将此配置设置为 true。 系统会将损坏的 tablet 替换为空 tablet，以确保查询可以执行。 （但此时数据已经丢失，所以查询结果可能不准确）
-
-#### `recover_with_skip_missing_version`
-
-默认值：disable
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-有些场景下集群出现了不可恢复的元数据问题，数据已的visibleversion 已经和be 不匹配，
-
-这种情况下仍然需要恢复剩余的数据（可能能会导致数据的正确性有问题），这个配置同`recover_with_empty_tablet` 一样只能在紧急情况下使用
-
-这个配置有三个值：
-
-   * disable ：出现异常会正常报错。
-   * ignore_version: 忽略 fe partition 中记录的visibleVersion 信息， 使用replica version 
-   * ignore_all: 除了ignore_version， 在遇到找不到可查询的replica 时，直接跳过而不是抛出异常
 
 #### `min_clone_task_timeout_sec`  和 `max_clone_task_timeout_sec`
 
@@ -2584,6 +2586,26 @@ SmallFileMgr 中存储的最大文件数
 
 备份作业的默认超时时间
 
+#### `backup_upload_task_num_per_be`
+
+默认值：3
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+备份过程中，分配给每个be的upload任务最大个数，默认值为3个。
+
+#### `restore_download_task_num_per_be`
+
+默认值：3
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+恢复过程中，分配给每个be的download任务最大个数，默认值为3个。
+
 #### `max_backup_restore_job_num_per_db`
 
 默认值：10
@@ -2713,4 +2735,16 @@ show data （其他用法：HELP SHOW DATA）
 当设置为 false 时，查询 `information_schema` 中的表时，将不再返回 external catalog 中的表的信息。
 
 这个参数主要用于避免因 external catalog 无法访问、信息过多等原因导致的查询 `information_schema` 超时的问题。
+
+
+#### `fe_thrift_max_pkg_bytes`
+
+默认值：20000000
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：false
+
+用于限制fe节点thrift端口可以接收的最大包长度，避免接收到过大或者错误的包导致OOM
+
 

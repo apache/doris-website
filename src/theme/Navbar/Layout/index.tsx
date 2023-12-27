@@ -15,11 +15,18 @@ export default function NavbarLayout({ children }) {
     const mobileSidebar = useNavbarMobileSidebar();
     const { navbarRef, isNavbarVisible } = useHideableNavbar(hideOnScroll);
     const [isDocsPage, setIsDocsPage] = useState(false);
+    const [isCommunity, setIsCommunity] = useState(false);
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
             const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
             setIsDocsPage(docsPage);
+        }
+
+        if (typeof window !== 'undefined') {
+            const pathname = location.pathname.split('/')[1];
+            const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
+            setIsCommunity(communityPage);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
     return (
@@ -34,6 +41,7 @@ export default function NavbarLayout({ children }) {
                 'navbar',
                 'navbar--fixed-top',
                 isDocsPage && 'docs',
+                isCommunity && 'community',
                 hideOnScroll && [styles.navbarHideable, !isNavbarVisible && styles.navbarHidden],
                 {
                     'navbar--dark': style === 'dark',

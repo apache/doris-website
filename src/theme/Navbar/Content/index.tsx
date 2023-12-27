@@ -49,11 +49,14 @@ export default function NavbarContent({ mobile }) {
     const searchBarItem = items.find(item => item.type === 'search');
     const [star, setStar] = useState<any>();
     const [isDocsPage, setIsDocsPage] = useState(false);
+    const [isCommunity, setIsCommunity] = useState(false);
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
             const pathname = location.pathname.split('/')[1];
             const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
+            const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
+            setIsCommunity(communityPage);
             setIsDocsPage(docsPage);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
@@ -132,15 +135,17 @@ export default function NavbarContent({ mobile }) {
                 </>
             }
             bottom={
-                isDocsPage ? (
+                isDocsPage || isCommunity ? (
                     <div className="docs-nav-version-locale">
                         <LocaleDropdownNavbarItem mobile={false} {...(getNavItem('localeDropdown') as any)} />
-                        <DocsVersionDropdownNavbarItem
-                            mobile={false}
-                            docsPluginId="default"
-                            collapsed={false}
-                            {...(getNavItem('docsVersionDropdown') as any)}
-                        />
+                        {isDocsPage && (
+                            <DocsVersionDropdownNavbarItem
+                                mobile={false}
+                                docsPluginId="default"
+                                collapsed={false}
+                                {...(getNavItem('docsVersionDropdown') as any)}
+                            />
+                        )}
                     </div>
                 ) : (
                     <></>
