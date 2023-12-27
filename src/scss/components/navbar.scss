@@ -22,6 +22,11 @@
             display: block;
         }
     }
+    &.community {
+        .custom-navbar-item:nth-child(3) {
+            display: block;
+        }
+    }
     &__inner {
         padding: 0 5rem;
         margin: 0 auto;
@@ -296,7 +301,8 @@
 @media screen and (max-width: 996px) {
     .navbar {
         height: 3.75rem;
-        &.docs {
+        &.docs,
+        &.community {
             height: 6.5rem;
             flex-direction: column;
             .navbar__inner {
@@ -319,6 +325,7 @@
                 }
             }
         }
+
         .navbar__inner {
             padding: 0 1.25rem;
         }
