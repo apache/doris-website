@@ -635,7 +635,7 @@
         "category": "Finance",
         "logo": "Qifu Technology",
         "order": 70,
-        "to": null,
+        "to": "https://doris.apache.org/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics",
         "image": "/images/user-logo/Finance/Qifu Technology.jpg"
     },
     {
