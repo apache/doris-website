@@ -4,7 +4,7 @@ export const NEWSLETTER_DATA = [
         title: 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
         content: `The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.`,
         to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
-        image: 'https://cdn.selectdb.com/static/apache_doris_speeds_up_data_reporting_tagging_and_data_lake_analytics_87a6746df5.png',
+        image: '/static/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpeg',
     },
     {
         tags: ['Top News'],

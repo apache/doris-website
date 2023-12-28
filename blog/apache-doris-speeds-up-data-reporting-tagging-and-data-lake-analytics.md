@@ -7,7 +7,7 @@
     'tags': ['Best Practice'],
     'picked': "true",
     'order': "1",
-    "image": 'https://cdn.selectdb.com/static/apache_doris_speeds_up_data_reporting_tagging_and_data_lake_analytics_87a6746df5.png'
+    "image": '/static/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpeg'
 }
 
 ---
@@ -43,19 +43,19 @@ Before migrating to Apache Doris, they used ClickHouse, MySQL, and Elasticsearch
 
 Data reporting is one of the major services they provide to their customers and they are bound by an SLA. They used to support such service with a combination of ClickHouse and MySQL, but they found significant fluctuations in their data synchronization duration, making it hard for them to meet the service levels outlined in their SLA. Diagnosis showed that it was because the multiple components add to the complexity and instability of data synchronization tasks. To fix that, they have used Apache Doris as a unified analytic engine to support data reporting. 
 
-<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/from_clickhouse_mysql_to_apache_doris_6387c0363a.png" alt="from-clickhouse-mysql-to-apache-doris" width="840"/></div >
+<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/from_clickhouse_mysql_to_apache_doris_6387c0363a.png" alt="from-clickhouse-mysql-to-apache-doris" width="840" style={{display: 'inline-block'}} /></div >
 
 ### Performance improvements
 
 With Apache Doris, they ingest data via the [Broker Load](https://doris.apache.org/docs/1.2/data-operate/import/import-way/broker-load-manual) method and reach an SLA compliance rate of over 99% in terms of data synchronization performance.
 
-<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/data_synchronization_size_and_duration_327e4dc1fe.png" alt="data-synchronization-size-and-duration" width="640"/></div >
+<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/data_synchronization_size_and_duration_327e4dc1fe.png" alt="data-synchronization-size-and-duration" width="640" style={{display: 'inline-block'}} /></div >
 
 As for data queries, the Doris-based architecture maintains an **average query response time** of less than **10s** and a **P90 response time** of less than **30s**. This is a 50% speedup compared to the old architecture. 
 
-<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/average_query_response_time_372d71ef16.png" alt="average-query-response-time" width="840"/></div >
+<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/average_query_response_time_372d71ef16.png" alt="average-query-response-time" width="840" style={{display: 'inline-block'}} /></div >
 
-<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/query_response_time_percentile_756c6f6a71.png" alt="query-response-time-percentile" width="840"/></div >
+<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/query_response_time_percentile_756c6f6a71.png" alt="query-response-time-percentile" width="840" style={{display: 'inline-block'}} /></div >
 
 ## Tagging
 
@@ -66,7 +66,7 @@ In the old processing architecture where Elasticsearch was the processing engine
 - Any problematic data in any of the tags could spoil the entire merging operation and thus interrupt the data services.
 - The merging operation was implemented based on Spark and MapReduce and took up to 4 hours. Such a long time frame could encroach on marketing opportunities and lead to unseen losses.
 
-<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/tagging_services_3263e21c36.png" alt="tagging-services" width="840"/></div >
+<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/tagging_services_3263e21c36.png" alt="tagging-services" width="840" style={{display: 'inline-block'}} /></div >
 
 Then Apache Doris takes this over. Apache Doris arranges tag data with its data models, which process data fast and smoothly. The aforementioned merging step can be done by the [Aggregate Key model](https://doris.apache.org/docs/data-table/data-model#aggregate-model), which aggregates tag data based on the specified Aggregate Key upon data ingestion. The [Unique Key model](https://doris.apache.org/docs/data-table/data-model#unique-model) is handy for partial column updates. Again, all you need is to specify the Unique Key. This enables swift and flexible data updating and saves you from the trouble of replacing the entire flat table. You can also put your detailed data into a [Duplicate model](https://doris.apache.org/docs/data-table/data-model#duplicate-model) to speed up certain queries. **In practice, it took the user 1 hour to finish the data ingestion, compared to 4 hours with the old architecture.**
 
@@ -86,7 +86,7 @@ The user introduces Compute Nodes into their cluster and deploys them with other
 
 For easier deployment, they have also optimized their Deploy on Yarn process via Skein. As is shown below, they define the number of Compute nodes and the required resources in the YAML file, and then pack the installation file, configuration file, and startup script into the distributed file system. In this way, they can start or stop the entire cluster of over 100 nodes within minutes using one simple line of code.
 
-<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/skein_3516ba1a83.png" alt="skein" width="560"/></div >
+<div style={{textAlign:'center'}}><img src="https://cdn.selectdb.com/static/skein_3516ba1a83.png" alt="skein" width="560" style={{display: 'inline-block'}} /></div >
 
 ## Conclusion
 
