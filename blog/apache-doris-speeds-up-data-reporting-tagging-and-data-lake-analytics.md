@@ -5,6 +5,8 @@
     'date': '2023-12-27',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
+    'picked': "true",
+    'order': "1",
     "image": 'https://cdn.selectdb.com/static/apache_doris_speeds_up_data_reporting_tagging_and_data_lake_analytics_87a6746df5.png'
 }
 

@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Top News'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/doris-summit-asia.png'
 }
 
