@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Best Practice'],
+        title: 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
+        content: `The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.`,
+        to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
+        image: 'https://cdn.selectdb.com/static/apache_doris_speeds_up_data_reporting_tagging_and_data_lake_analytics_87a6746df5.png',
+    },
+    {
         tags: ['Top News'],
         title: 'Apache Doris Summit Asia 2023: what can you expect from Apache Doris as a data warehouse?',
         content:
@@ -21,12 +28,5 @@ export const NEWSLETTER_DATA = [
         content: `As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.`,
         to: '/blog/log-analysis-elasticsearch-vs-apache-doris',
         image: 'newsletter-3.png',
-    },
-    {
-        tags: ['Best Practice'],
-        title: 'LLM-powered OLAP: the Tencent application with Apache Doris',
-        content: `The exploration of a LLM+OLAP solution is a bumpy journey, but phew, it now works well for the Tencent case, and they're writing down every lesson learned to share with you.`,
-        to: '/blog/Tencent-LLM',
-        image: 'newsletter-4.jpeg',
-    },
+    }
 ];
