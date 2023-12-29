@@ -7,7 +7,7 @@
     'tags': ['Best Practice'],
     'picked': "true",
     'order': "1",
-    "image": '/static/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpeg'
+    "image": '/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg'
 }
 
 ---
