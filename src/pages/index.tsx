@@ -480,7 +480,9 @@ export default function Home(): JSX.Element {
                 });
                 return 0;
             }
-            return prevCount + 0.4;
+            if (deltaTime > 100) return prevCount;
+
+            return prevCount + deltaTime * 0.01;
         });
     }, stop);
 
