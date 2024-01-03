@@ -72,6 +72,10 @@ p[class*='searchResultItemSummary'] {
                 .navbar__search-input {
                     width: 100% !important;
                 }
+
+                > span {
+                    width: 100%;
+                }
             }
         }
     }

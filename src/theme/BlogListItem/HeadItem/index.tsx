@@ -55,10 +55,14 @@ export default function HeadItem(props: any) {
             to={permalink}
             className={`hover:no-underline hover:decoration-none transition-scale group relative ${
                 large ? 'h-full' : 'h-auto'
-            } flex flex-col rounded-lg border border-[#DFE5F0] hover:border-[#0065FD]`}
+            } flex flex-col  `}
         >
-            <img src={image} alt="" />
-            <div className="flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:space-x-10 px-6">
+            <img
+                className="rounded-t-lg border border-b-0 border-[#DFE5F0] group-hover:border-[#0065FD]"
+                src={image}
+                alt=""
+            />
+            <div className="rounded-b-lg border border-t-0 border-[#DFE5F0] group-hover:border-[#0065FD] h-full   flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:space-x-10 px-6">
                 <div className="flex-1">
                     <h1 className=" mt-4 line-clamp-2 text-2xl font-medium text-black-dark lg:text-[2rem] lg:leading-[3rem]">
                         {title}

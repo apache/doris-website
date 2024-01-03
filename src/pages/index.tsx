@@ -597,7 +597,8 @@ export default function Home(): JSX.Element {
                                                 <div className="flex mt-3 gap-2">
                                                     {links.map(({ content, to }) => (
                                                         <LinkWithArrow
-                                                            className="text-start text-[10px] leading-[17px]"
+                                                            style={{ fontSize: '10px', lineHeight: '17px' }}
+                                                            className="text-start"
                                                             to={to}
                                                             text={content}
                                                         />
@@ -637,7 +638,7 @@ export default function Home(): JSX.Element {
                                             >
                                                 <div>{content}</div>
 
-                                                <div className="flex mt-14 gap-2">
+                                                <div className="flex mt-14 gap-10">
                                                     {links.map(({ content, to }) => (
                                                         <LinkWithArrow className="text-start" to={to} text={content} />
                                                     ))}

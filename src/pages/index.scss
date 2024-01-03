@@ -402,11 +402,10 @@
             }
         }
         .ant-collapse-item {
-            border-bottom: 0px;
+            border-bottom: 0.5px solid #dfe5f0;
             .ant-collapse-header {
                 align-items: center;
                 padding: 1rem 0;
-                border-bottom: 0.5px solid #dfe5f0;
                 .ant-collapse-expand-icon {
                     padding: 0;
                     transition-property: all;
@@ -418,7 +417,7 @@
                 height: 12rem;
                 padding: 0;
                 margin-top: 0.75rem;
-                margin-bottom: 0.75rem;
+                margin-bottom: 1rem;
 
                 .cases-bg-datalake {
                     background: url('/static/images/cases-bg-datalake.png') no-repeat center;
@@ -448,4 +447,7 @@
             }
         }
     }
+}
+
+@media (max-width: 1024px) {
 }

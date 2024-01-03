@@ -1,10 +1,11 @@
 import Link from '@docusaurus/Link';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 interface ReadMoreProps {
     to: string;
     className?: string;
     text: string | React.ReactNode;
+    style?: CSSProperties;
 }
 
 export default function LinkWithArrow(props: ReadMoreProps) {
@@ -12,6 +13,7 @@ export default function LinkWithArrow(props: ReadMoreProps) {
         <Link
             className={`flex group text-primary items-center text-base cursor-pointer hover:no-underline ${props?.className}`}
             to={props.to}
+            style={props.style}
         >
             <span className="mr-2">{props.text}</span>
             <span className="transition-slide">

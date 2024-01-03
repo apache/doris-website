@@ -129,6 +129,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                             const div = document.createElement('div');
                             div.className = styles.hitFooter;
                             div.appendChild(a);
+                            console.log(div);
                             return div;
                         },
                     },
@@ -244,7 +245,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
     }, [location.pathname, location.search, location.hash, history]);
     return (
         <div
-            className={clsx('navbar__search ', styles.searchBarContainer, {
+            className={clsx('navbar__search', styles.searchBarContainer, {
                 [styles.searchIndexLoading]: loading && inputChanged,
                 [styles.focused]: focused,
             })}

@@ -9,18 +9,17 @@ export const useAnimationFrame = (callback, stop) => {
      * The callback function is automatically passed a timestamp indicating
      * the precise time requestAnimationFrame() was called.
      */
+    const animate = time => {
+        if (previousTimeRef.current !== undefined) {
+            const deltaTime = time - previousTimeRef.current;
+            callback(deltaTime);
+        }
+        previousTimeRef.current = time;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        if (!stop) requestRef.current = requestAnimationFrame(animate);
+    };
 
     React.useEffect(() => {
-        const animate = time => {
-            if (previousTimeRef.current !== undefined) {
-                const deltaTime = time - previousTimeRef.current;
-                callback(deltaTime);
-            }
-            previousTimeRef.current = time;
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
-            if (!stop) requestRef.current = requestAnimationFrame(animate);
-        };
-
         if (!stop) {
             requestRef.current = requestAnimationFrame(animate);
         }
@@ -30,5 +29,5 @@ export const useAnimationFrame = (callback, stop) => {
                 cancelAnimationFrame(requestRef.current);
             }
         };
-    }, [stop]); // Make sure the effect runs only once
+    });
 };

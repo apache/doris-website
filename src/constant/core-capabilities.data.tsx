@@ -7,23 +7,6 @@ export const CoreCapabilitiesData = [
             'Push-based micro-batch and pull-based streaming data ingestion within a second. Storage engine with real-time upsert, append and pre-aggregation.',
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <path
-                    d="M24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48ZM22.6666 29.3337L18.6666 25.3337L11.9999 25.3337C11.9999 25.3337 12.7333 21.2937 14.6666 20.0004C16.8266 18.5604 21.3333 20.0004 21.3333 20.0004L21.1748 20.3173C21.2272 20.2336 21.28 20.1502 21.3333 20.067C22.8868 17.583 25.0501 15.5377 27.6173 14.1258C30.1844 12.7138 33.0702 11.9822 35.9999 12.0003C35.9999 15.627 34.9599 22.0003 27.9999 26.667C27.9999 26.667 29.4399 31.1737 27.9999 33.3337C26.7066 35.267 22.6666 36.0003 22.6666 36.0003L22.6666 29.3337Z"
-                    fill="#444FD9"
-                />
-                <path
-                    d="M14.9332 29.2177C12.9332 30.8977 12.2665 35.8844 12.2665 35.8844C12.2665 35.8844 17.2532 35.2177 18.9332 33.2177C19.8799 32.0977 19.8665 30.3777 18.8132 29.3377C18.2949 28.8431 17.6123 28.5572 16.8962 28.5351C16.1801 28.5129 15.481 28.756 14.9332 29.2177Z"
-                    fill="#DFE0F7"
-                />
-            </svg>
-        ),
-    },
-    {
-        title: 'Lightning-fast query',
-        content:
-            'Optimize for high-concurrency and high-throughput queries with columnar storage engine, MPP architecture, cost based query optimizer, vectorized execution engine.',
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
                 <g clip-path="url(#clip0_1665_614)">
                     <path
                         d="M26.9393 20.9393C27.5251 20.3536 28.4748 20.3536 29.0606 20.9393C29.6464 21.5251 29.6464 22.4749 29.0606 23.0607L25.0606 27.0607C24.4748 27.6464 23.5251 27.6464 22.9393 27.0607C22.3535 26.4749 22.3535 25.5251 22.9393 24.9393L26.9393 20.9393Z"
@@ -47,6 +30,23 @@ export const CoreCapabilitiesData = [
                         <rect width="48" height="48" fill="white" />
                     </clipPath>
                 </defs>
+            </svg>
+        ),
+    },
+    {
+        title: 'Lightning-fast query',
+        content:
+            'Optimize for high-concurrency and high-throughput queries with columnar storage engine, MPP architecture, cost based query optimizer, vectorized execution engine.',
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <path
+                    d="M24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48ZM22.6666 29.3337L18.6666 25.3337L11.9999 25.3337C11.9999 25.3337 12.7333 21.2937 14.6666 20.0004C16.8266 18.5604 21.3333 20.0004 21.3333 20.0004L21.1748 20.3173C21.2272 20.2336 21.28 20.1502 21.3333 20.067C22.8868 17.583 25.0501 15.5377 27.6173 14.1258C30.1844 12.7138 33.0702 11.9822 35.9999 12.0003C35.9999 15.627 34.9599 22.0003 27.9999 26.667C27.9999 26.667 29.4399 31.1737 27.9999 33.3337C26.7066 35.267 22.6666 36.0003 22.6666 36.0003L22.6666 29.3337Z"
+                    fill="#444FD9"
+                />
+                <path
+                    d="M14.9332 29.2177C12.9332 30.8977 12.2665 35.8844 12.2665 35.8844C12.2665 35.8844 17.2532 35.2177 18.9332 33.2177C19.8799 32.0977 19.8665 30.3777 18.8132 29.3377C18.2949 28.8431 17.6123 28.5572 16.8962 28.5351C16.1801 28.5129 15.481 28.756 14.9332 29.2177Z"
+                    fill="#DFE0F7"
+                />
             </svg>
         ),
     },

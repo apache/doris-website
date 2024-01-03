@@ -7,6 +7,7 @@
 
     .breadcrumbs {
         display: flex;
+        align-items: center;
         &__item {
             display: flex;
             align-items: center;
@@ -29,7 +30,9 @@
                 background: transparent;
                 padding-left: 0;
                 padding-right: 0;
-
+                > svg {
+                    top: 0px;
+                }
                 @media (max-width: 996px) {
                     display: inline-flex;
                     align-items: center;
@@ -37,7 +40,6 @@
                     vertical-align: middle;
 
                     > svg {
-                        top: -1px;
                     }
                 }
             }

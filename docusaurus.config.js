@@ -54,7 +54,7 @@ const config = {
             },
         },
     },
-    // scripts: ['/js/redirect.js'],
+    scripts: ['/js/custom-script.js'],
     stylesheets: [
         'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
         'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
@@ -64,6 +64,7 @@ const config = {
     customFields: {},
     plugins: [
         'docusaurus-plugin-sass',
+        // Use custom blog plugin
         versionsPlugin,
         [
             'content-docs',
@@ -134,6 +135,7 @@ const config = {
                 ],
             },
         ],
+  
         async function tailwindcssPlugin(context, options) {
             return {
                 name: 'docusaurus-tailwindcss',
