@@ -37,24 +37,24 @@ function Footer() {
 
     if (isDocsPage) {
         return (
-            <div className="docs-footer">
-                <div className="logo">
+            <div className="docs-footer flex-col lg:flex-row">
+                <div className="logo w-full lg:w-[var(--doc-sidebar-width)] pt-28 lg:h-auto">
                     <FooterLogo logo={logo} />
                 </div>
-                <div className="content">
+                <div className="content container">
                     <div className="my-7 text-[#8592A6] text-sm">
-                        <div className="flex pb-3 border-b border-[#F7F9FE] flex-wrap">
-                            <div className=" w-40">RESOURCES</div>
+                        <div className="flex flex-col lg:flex-row pb-3 border-b border-[#F7F9FE] flex-wrap">
+                            <div className=" w-40 mb-3 lg:mb-0">RESOURCES</div>
                             {ResourcesItems.map(({ label, href }) => (
-                                <Link className="w-40 no-underline	" href={href}>
+                                <Link className="w-40 no-underline mb-2" href={href}>
                                     {label}
                                 </Link>
                             ))}
                         </div>
-                        <div className="flex pt-3 flex-wrap">
-                            <div className="w-40">COMMUNITY</div>
+                        <div className="flex flex-col lg:flex-row pt-3 flex-wrap">
+                            <div className="w-40 mb-3 lg:mb-0">COMMUNITY</div>
                             {CommunityItems.map(({ label, href }) => (
-                                <Link className="w-40 no-underline	" href={href}>
+                                <Link className="w-40 no-underline mb-2" href={href}>
                                     {label}
                                 </Link>
                             ))}

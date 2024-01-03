@@ -23,14 +23,13 @@
     border-radius: 0.5rem;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 996px) {
     :global(.navbar__search-input):not(:focus) {
         width: 2rem;
     }
 
     .searchBar .dropdownMenu {
-        width: var(--search-local-modal-width-sm, 340px);
-        max-width: calc(100vw - var(--ifm-navbar-padding-horizontal) * 2);
+        width: 100%;
     }
 }
 
