@@ -362,7 +362,7 @@ export const RUN_ANYWHERE = [
         link: 'https://doris.apache.org/docs/install/standard-deployment',
     },
     {
-        title: 'Doris on K8s',
+        title: 'Doris on Kubernetes',
         description: 'Create, configure and manage Doris clusters on Kubernetes',
         link: 'https://doris.apache.org/docs/install/k8s-deploy',
     },
