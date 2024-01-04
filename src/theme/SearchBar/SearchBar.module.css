@@ -187,7 +187,7 @@ html[data-theme='dark'] .noResultsIcon {
     display: none;
     position: absolute;
     left: 10px;
-    top: 6px;
+    top: 10px;
 }
 
 .searchBarContainer .searchClearButton {
