@@ -125,7 +125,7 @@ export default function Download(): JSX.Element {
     useEffect(() => {
         const currentCpus = getCpus(version);
         setCpus(currentCpus);
-        setCPU(CPUEnum.IntelAvx2);
+        setCPU(CPUEnum.X64);
         setJDK(JDKEnum.JDK8);
     }, [version]);
 

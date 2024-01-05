@@ -6,16 +6,16 @@ export default function ArrowIcon() {
             <path
                 d="M10.1251 13.5L14.625 9L10.1251 4.5"
                 stroke="#444FD9"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
             <path
                 d="M3.37506 9.00049L14.6251 9.00049"
                 stroke="#444FD9"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     );

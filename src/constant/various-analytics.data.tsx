@@ -12,15 +12,15 @@ export const VariousAnalyticsData = [
                     d="M14.1176 16C15.1572 16 16 15.1572 16 14.1176L16 1.88235C16 0.842756 15.1572 -3.8256e-08 14.1176 -8.54458e-08L1.88236 -6.40837e-07C0.842762 -6.88026e-07 1.74312e-06 0.842759 3.06258e-06 1.88235L1.85917e-05 14.1176C1.99112e-05 15.1572 0.842778 16 1.88237 16L14.1176 16Z"
                     fill="#C0C3F1"
                 />
-                <path d="M3.29395 3.29419H12.7057" stroke="white" stroke-width="1.41176" stroke-linecap="round" />
-                <path d="M3.29395 6.58813H12.7057" stroke="white" stroke-width="1.41176" stroke-linecap="round" />
+                <path d="M3.29395 3.29419H12.7057" stroke="white" strokeWidth="1.41176" strokeLinecap="round" />
+                <path d="M3.29395 6.58813H12.7057" stroke="white" strokeWidth="1.41176" strokeLinecap="round" />
                 <circle cx="11.2943" cy="11.294" r="4.70588" fill="#444FD9" />
                 <path
                     d="M13.3077 10.3892L10.8039 13.0447L9.21063 11.5425"
                     stroke="white"
-                    stroke-width="1.41176"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.41176"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
             </svg>
         ),
@@ -39,8 +39,8 @@ export const VariousAnalyticsData = [
                 <path
                     d="M2.72949 8.00005H4.87202C4.9438 8.00005 5.00994 7.96114 5.04479 7.89839L6.65247 5.00457C6.73599 4.85424 6.95837 4.87491 7.01275 5.03806L8.98741 10.962C9.04179 11.1252 9.26417 11.1459 9.34769 10.9955L10.9554 8.10171C10.9902 8.03897 11.0564 8.00005 11.1281 8.00005H13.2707"
                     stroke="white"
-                    stroke-width="1.41176"
-                    stroke-linecap="round"
+                    strokeWidth="1.41176"
+                    strokeLinecap="round"
                 />
             </svg>
         ),
@@ -81,21 +81,16 @@ export const VariousAnalyticsData = [
                 <path
                     d="M4.70605 6.9646L3.49394 8.17671C3.38368 8.28698 3.38368 8.46575 3.49394 8.57602L4.70605 9.78813"
                     stroke="white"
-                    stroke-width="1.41176"
-                    stroke-linecap="round"
+                    strokeWidth="1.41176"
+                    strokeLinecap="round"
                 />
                 <path
                     d="M11.2939 7.05884L12.5061 8.27095C12.6163 8.38121 12.6163 8.55999 12.5061 8.67026L11.2939 9.88237"
                     stroke="white"
-                    stroke-width="1.41176"
-                    stroke-linecap="round"
+                    strokeWidth="1.41176"
+                    strokeLinecap="round"
                 />
-                <path
-                    d="M9.88255 4.23535L6.82373 11.2942"
-                    stroke="white"
-                    stroke-width="1.41176"
-                    stroke-linecap="round"
-                />
+                <path d="M9.88255 4.23535L6.82373 11.2942" stroke="white" strokeWidth="1.41176" strokeLinecap="round" />
             </svg>
         ),
         links: [
@@ -122,8 +117,8 @@ export const VariousAnalyticsData = [
                 <path
                     d="M4.70605 11.7647L6.52271 9.49387C6.55775 9.45006 6.62308 9.44644 6.66275 9.48611L8.86458 11.6879C8.90508 11.7284 8.97206 11.7237 9.00643 11.6779L11.7648 8"
                     stroke="white"
-                    stroke-width="1.41175"
-                    stroke-linecap="round"
+                    strokeWidth="1.41175"
+                    strokeLinecap="round"
                 />
             </svg>
         ),
@@ -150,8 +145,8 @@ export const VariousAnalyticsData = [
                     d="M7.6001 4.3999V6.7999H8.8001V9.1999C8.8001 9.1999 9.47713 8.26219 9.8001 7.5999C10.0926 7.00009 10.4001 5.9999 10.4001 5.9999H9.2001L9.6001 4.3999H7.6001Z"
                     fill="white"
                     stroke="white"
-                    stroke-width="0.4"
-                    stroke-linejoin="round"
+                    strokeWidth="0.4"
+                    strokeLinejoin="round"
                 />
             </svg>
         ),
