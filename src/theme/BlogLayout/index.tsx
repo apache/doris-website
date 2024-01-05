@@ -25,7 +25,7 @@ export default function BlogLayout(props) {
                     >
                         {children}
                     </main>
-                    {toc && <div className="col col--2 ml-[10.25rem]">{toc}</div>}
+                    {toc && <div className="col col--2">{toc}</div>}
                 </div>
             </div>
         </Layout>

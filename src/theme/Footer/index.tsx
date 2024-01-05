@@ -44,7 +44,7 @@ function Footer() {
                 <div className="content container">
                     <div className="my-7 text-[#8592A6] text-sm">
                         <div className="flex flex-col lg:flex-row pb-3 border-b border-[#F7F9FE] flex-wrap">
-                            <div className=" w-40 mb-3 lg:mb-0">RESOURCES</div>
+                            <div className=" w-40 mb-3 lg:mb-0 font-medium">RESOURCES</div>
                             {ResourcesItems.map(({ label, href }) => (
                                 <Link className="w-40 no-underline mb-2" href={href}>
                                     {label}
@@ -52,7 +52,7 @@ function Footer() {
                             ))}
                         </div>
                         <div className="flex flex-col lg:flex-row pt-3 flex-wrap">
-                            <div className="w-40 mb-3 lg:mb-0">COMMUNITY</div>
+                            <div className="w-40 mb-3 lg:mb-0 font-medium">COMMUNITY</div>
                             {CommunityItems.map(({ label, href }) => (
                                 <Link className="w-40 no-underline mb-2" href={href}>
                                     {label}
