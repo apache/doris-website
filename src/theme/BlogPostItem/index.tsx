@@ -61,7 +61,10 @@ export default function BlogPostItem(props) {
                             </span>
                         </span>
                     </div>
-                    <TitleHeading className="blog-post-title text-[2.5rem] text-center" itemProp="headline">
+                    <TitleHeading
+                        className="blog-post-title text-[2rem] leading-normal lg:text-[2.5rem] text-center"
+                        itemProp="headline"
+                    >
                         {isBlogPostPage ? (
                             title
                         ) : (
