@@ -28,6 +28,7 @@
         "antd": "^5.12.2",
         "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
+        "copy-to-clipboard": "^3.3.3",
         "docusaurus-plugin-sass": "^0.2.3",
         "postcss": "^8.4.32",
         "prism-react-renderer": "^2.0.4",
@@ -55,5 +56,8 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "peerDependencies": {
+        "semver": "^7.5.4"
     }
 }

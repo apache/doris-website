@@ -26,7 +26,7 @@ export default function FormSelect({
     },
 }: FormSelectProps) {
     return (
-        <div className="group relative z-0 w-full form-select">
+        <div className="group relative z-0 w-full form-select text-left">
             {isCascader ? (
                 <Cascader
                     displayRender={displayRender}

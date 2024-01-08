@@ -203,16 +203,16 @@ export default function Users(): JSX.Element {
                                     <path
                                         d="M4.5 9.82226L8.5 13.8222L12.5 9.82227"
                                         stroke="#444FD9"
-                                        stroke-width="1.37143"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                        strokeWidth="1.37143"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
                                     />
                                     <path
                                         d="M8.49951 3.82227L8.49951 13.8223"
                                         stroke="#444FD9"
-                                        stroke-width="1.37143"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                        strokeWidth="1.37143"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
                                     />
                                 </svg>
                             </span>

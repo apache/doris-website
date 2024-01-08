@@ -1,143 +1,143 @@
 name: Cron Deploy
 
-on: 
-  schedule:
-    - cron: '0 1 * * *'
+on:
+    schedule:
+        - cron: '0 1 * * *'
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-    - name: Checkout
-      uses: actions/checkout@master
-      with:
-          persist-credentials: false
-          submodules: recursive
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        environment: Production
+        steps:
+            - name: Checkout
+              uses: actions/checkout@master
+              with:
+                  persist-credentials: false
+                  submodules: recursive
 
-    - name: Add Chinese Fonts
-      run: |
-          sudo apt-get install ttf-mscorefonts-installer
-          sudo apt-get install fontconfig
-          fc-list :lang=zh
-          ls -lh /usr/share/fonts/
-          cp -rf ./static/fonts/* /usr/share/fonts/
-          mkfontscale
-          mkfontdir
-          fc-cache
-          fc-list :lang=zh
+            - name: Add Chinese Fonts
+              run: |
+                  sudo apt-get install ttf-mscorefonts-installer
+                  sudo apt-get install fontconfig
+                  fc-list :lang=zh
+                  ls -lh /usr/share/fonts/
+                  cp -rf ./static/fonts/* /usr/share/fonts/
+                  mkfontscale
+                  mkfontdir
+                  fc-cache
+                  fc-list :lang=zh
 
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.14.0
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
 
-    - name: Build
-      run: |
-        # clone docs version dev
-        git clone --branch master https://github.com/apache/doris.git --depth 1
-        mkdir -p docs
-        cp -R doris/docs/en/docs/* docs/
-        cp -R doris/docs/sidebars.json sidebars.json
-        mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/current
-        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/current/
-        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/current.json
+            - name: Build
+              run: |
+                  # clone docs version dev
+                  git clone --branch master https://github.com/apache/doris.git --depth 1
+                  mkdir -p docs
+                  cp -R doris/docs/en/docs/* docs/
+                  cp -R doris/docs/sidebars.json sidebars.json
+                  mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/current
+                  cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/current/
+                  cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/current.json
 
-        mkdir -p community
-        cp -R doris/docs/en/community/* community/
-        mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
-        cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
-        cp -R doris/docs/sidebarsCommunity.json .
+                  mkdir -p community
+                  cp -R doris/docs/en/community/* community/
+                  mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
+                  cp -R doris/docs/zh-CN/community/* i18n/zh-CN/docusaurus-plugin-content-docs-community/current/
+                  cp -R doris/docs/sidebarsCommunity.json .
 
-        # clone images
-        cp -R doris/docs/images static/
+                  # clone images
+                  cp -R doris/docs/images static/
 
-        rm -rf doris
+                  rm -rf doris
 
-        # clone docs version 1.2
-        git clone --branch branch-1.2-lts https://github.com/apache/doris.git --depth 1
-        mkdir -p docs
-        rm -rf versioned_docs/version-1.2
-        mkdir -p versioned_docs/version-1.2
-        cp -R doris/docs/en/docs/* versioned_docs/version-1.2/
-        rm -rf versioned_sidebars/version-1.2-sidebars.json
-        cp -R doris/docs/sidebars.json versioned_sidebars/version-1.2-sidebars.json
-        rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
-        rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
-        mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
-        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2/
-        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
+                  # clone docs version 1.2
+                  git clone --branch branch-1.2-lts https://github.com/apache/doris.git --depth 1
+                  mkdir -p docs
+                  rm -rf versioned_docs/version-1.2
+                  mkdir -p versioned_docs/version-1.2
+                  cp -R doris/docs/en/docs/* versioned_docs/version-1.2/
+                  rm -rf versioned_sidebars/version-1.2-sidebars.json
+                  cp -R doris/docs/sidebars.json versioned_sidebars/version-1.2-sidebars.json
+                  rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
+                  rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2
+                  cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2/
+                  cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2.json
 
-        rm -rf doris
+                  rm -rf doris
 
-        # clone docs version 2.0
-        git clone --branch branch-2.0 https://github.com/apache/doris.git --depth 1
-        mkdir -p docs
-        rm -rf versioned_docs/version-2.0
-        mkdir -p versioned_docs/version-2.0
-        cp -R doris/docs/en/docs/* versioned_docs/version-2.0/
-        rm -rf versioned_sidebars/version-2.0-sidebars.json
-        cp -R doris/docs/sidebars.json versioned_sidebars/version-2.0-sidebars.json
-        rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.json
-        rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
-        mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
-        cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0/
-        cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.json
+                  # clone docs version 2.0
+                  git clone --branch branch-2.0 https://github.com/apache/doris.git --depth 1
+                  mkdir -p docs
+                  rm -rf versioned_docs/version-2.0
+                  mkdir -p versioned_docs/version-2.0
+                  cp -R doris/docs/en/docs/* versioned_docs/version-2.0/
+                  rm -rf versioned_sidebars/version-2.0-sidebars.json
+                  cp -R doris/docs/sidebars.json versioned_sidebars/version-2.0-sidebars.json
+                  rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.json
+                  rm -rf i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0
+                  cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0/
+                  cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0.json
 
-        rm -rf doris
+                  rm -rf doris
 
-        npm install -g yarn
-        yarn cache clean
-        export NODE_OPTIONS=--max-old-space-size=8192
-        yarn && yarn build
-        touch build/.dummy
-        cp .asf-site.yaml ./build/.asf.yaml
-        cp versions.json ./build/
-        ls build
-        export DORIS_COMMIT=`git rev-parse HEAD`
+                  npm install -g yarn
+                  yarn cache clean
+                  export NODE_OPTIONS=--max-old-space-size=8192
+                  yarn && yarn build
+                  touch build/.dummy
+                  cp .asf-site.yaml ./build/.asf.yaml
+                  cp versions.json ./build/
+                  ls build
+                  export DORIS_COMMIT=`git rev-parse HEAD`
 
-#     - name: Generate PDF
-#       run: |
-#         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
-#         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
-#         mkdir -p ./build/assets/files/
-#         cp *.pdf ./build/assets/files/
-#         ls ./build/assets/files/
+            #     - name: Generate PDF
+            #       run: |
+            #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
+            #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
+            #         mkdir -p ./build/assets/files/
+            #         cp *.pdf ./build/assets/files/
+            #         ls ./build/assets/files/
 
-    - name: Upload files to OSS
-      uses: ./.github/actions/aliyun-oss-website-action
-      with:
-          accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          # use your own endpoint
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          folder: build
-          onlyUpload: true
-          
-    - name: Remove pdf
-      run: rm -rf ./build/assets/files/*.pdf
+            - name: Upload files to OSS
+              uses: ./.github/actions/aliyun-oss-website-action
+              with:
+                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+                  # use your own endpoint
+                  endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+                  folder: build
+                  onlyUpload: true
 
-    - name: Deploy Website
-      if: ${{ github.event.inputs.branch == 'master' }}
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ github.token }}
-        publish_branch: asf-site
-        publish_dir: ./build
-        destination_dir: ./
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+            - name: Remove pdf
+              run: rm -rf ./build/assets/files/*.pdf
 
-    - name: Deploy Branch
-      if: ${{ github.event.inputs.branch != 'master' }}
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: asf-site
-        publish_dir: ./build
-        destination_dir: ${{ github.event.inputs.branch }}
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+            - name: Deploy Website
+              if: ${{ github.event.inputs.branch == 'master' }}
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ github.token }}
+                  publish_branch: asf-site
+                  publish_dir: ./build
+                  destination_dir: ./
+                  user_name: 'github-actions[bot]'
+                  user_email: 'github-actions[bot]@users.noreply.github.com'
+                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+
+            - name: Deploy Branch
+              if: ${{ github.event.inputs.branch != 'master' }}
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_branch: asf-site
+                  publish_dir: ./build
+                  destination_dir: ${{ github.event.inputs.branch }}
+                  user_name: 'github-actions[bot]'
+                  user_email: 'github-actions[bot]@users.noreply.github.com'
+                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
