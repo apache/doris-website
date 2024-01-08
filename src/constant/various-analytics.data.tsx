@@ -56,7 +56,7 @@ export const VariousAnalyticsData = [
             },
             {
                 content: 'Read use case',
-                to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
+                to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
             },
         ],
         icon: (
