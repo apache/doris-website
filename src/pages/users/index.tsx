@@ -16,6 +16,7 @@ import useIsBrowser from '@docusaurus/useIsBrowser';
 import UserItem from './user-item';
 import USERS from '../../constant/users.data.json';
 import ReadMore from '@site/src/components/ReadMore';
+import LinkWithArrow from '@site/src/components/link-arrow';
 
 const ALL_TEXT = 'All';
 
@@ -85,7 +86,7 @@ export default function Users(): JSX.Element {
                 {!isPhone && (
                     <div
                         onClick={handlePrevious}
-                        className="swiper-button-prev"
+                        className="swiper-button-prev invisible  group-hover:visible"
                         style={{ position: 'absolute', top: 'calc(50% - 2rem)', left: '-3rem', zIndex: 99 }}
                     ></div>
                 )}
@@ -129,7 +130,7 @@ export default function Users(): JSX.Element {
                 {!isPhone && (
                     <div
                         onClick={handleNext}
-                        className="swiper-button-next"
+                        className="swiper-button-next invisible  group-hover:visible"
                         style={{ position: 'absolute', top: 'calc(50% - 2rem)', right: '-3rem', zIndex: 99 }}
                     ></div>
                 )}
@@ -159,8 +160,11 @@ export default function Users(): JSX.Element {
                     </div>
                 }
             />
-            <section className="users-wall container lg:pt-[88px]">{renderSwiper()}</section>
-            <section className="lg:pt-[5.5rem] container">
+
+            <section className="group">
+                <div className="users-wall container lg:pt-[88px] ">{renderSwiper()}</div>
+            </section>
+            <section className="lg:pt-[5.5rem] container pb-[88px]">
                 <div className="blog-list-wrap row mt-28 lg:mt-0">
                     <ul className="container scrollbar-none mt-0 m-auto flex flex-wrap gap-3 overflow-auto lg:w-[58rem] text-[#4C576C] lg:mt-8 lg:justify-center lg:gap-6 ">
                         {USER_STORIES_CATEGORIES.map((item: any) => (
@@ -176,11 +180,45 @@ export default function Users(): JSX.Element {
                         ))}
                     </ul>
                 </div>
-                <ul className="mt-6 grid gap-1 grid-cols-2 lg:gap-6 lg:mt-12 lg:grid-cols-4 pb-[88px]">
-                    {users.map(user => (
+                <ul className="mt-6 grid gap-1 grid-cols-2 lg:gap-8 lg:mt-12 lg:grid-cols-4 ">
+                    {users.slice(0, currentSize).map(user => (
                         <UserItem key={user.name} {...user} />
                     ))}
                 </ul>
+                {currentSize < users.length && (
+                    <div
+                        onClick={() => setCurrentSize(currentSize => Math.min(currentSize + PAGE_SIZE, users.length))}
+                        className="justify-center flex mt-9"
+                    >
+                        <div className="flex items-center cursor-pointer px-8 py-4 border border-[#444FD9] rounded text-[#444FD9] text-base">
+                            <span className="mr-1">View more</span>
+                            <span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="17"
+                                    height="17"
+                                    viewBox="0 0 17 17"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M4.5 9.82226L8.5 13.8222L12.5 9.82227"
+                                        stroke="#444FD9"
+                                        strokeWidth="1.37143"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                    <path
+                                        d="M8.49951 3.82227L8.49951 13.8223"
+                                        stroke="#444FD9"
+                                        strokeWidth="1.37143"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                )}
             </section>
         </Layout>
     );

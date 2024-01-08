@@ -443,7 +443,7 @@ export default function Home(): JSX.Element {
                                                 </div>
                                             ))}
                                         </div>
-                                        <h3 className="leading-[38px] text-2xl font-medium line-clamp-1	">
+                                        <h3 className="leading-[38px] text-2xl font-semibold line-clamp-1	">
                                             {newsletter.title}
                                         </h3>
                                         <p className="pt-3 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
@@ -511,7 +511,7 @@ export default function Home(): JSX.Element {
                         </Translate>
                     }
                     footer={
-                        <div className="justify-center flex mt-9">
+                        <div className="justify-center flex mt-14">
                             <LinkWithArrow
                                 to="/docs/get-starting/what-is-apache-doris"
                                 text={
@@ -597,7 +597,8 @@ export default function Home(): JSX.Element {
                                                 <div className="flex mt-3 gap-2">
                                                     {links.map(({ content, to }) => (
                                                         <LinkWithArrow
-                                                            className="text-start text-[10px] leading-[17px]"
+                                                            style={{ fontSize: '10px', lineHeight: '17px' }}
+                                                            className="text-start"
                                                             to={to}
                                                             text={content}
                                                         />
@@ -637,7 +638,7 @@ export default function Home(): JSX.Element {
                                             >
                                                 <div>{content}</div>
 
-                                                <div className="flex mt-14 gap-2">
+                                                <div className="flex mt-14 gap-10">
                                                     {links.map(({ content, to }) => (
                                                         <LinkWithArrow className="text-start" to={to} text={content} />
                                                     ))}
