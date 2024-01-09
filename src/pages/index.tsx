@@ -61,7 +61,7 @@ export default function Home(): JSX.Element {
             type: 'ghost',
         },
         {
-            label: <Translate id="homepage.banner.button2">Slack</Translate>,
+            label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
             link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ',
             type: 'ghost',
         },
