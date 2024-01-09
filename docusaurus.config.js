@@ -135,7 +135,7 @@ const config = {
                 ],
             },
         ],
-  
+
         async function tailwindcssPlugin(context, options) {
             return {
                 name: 'docusaurus-tailwindcss',
@@ -309,6 +309,10 @@ const config = {
                             {
                                 label: 'Privacy',
                                 href: 'https://privacy.apache.org/policies/privacy-policy-public.html',
+                            },
+                            {
+                                label: 'Security',
+                                href: 'https://www.apache.org/security/',
                             },
                             {
                                 label: 'Thanks',
