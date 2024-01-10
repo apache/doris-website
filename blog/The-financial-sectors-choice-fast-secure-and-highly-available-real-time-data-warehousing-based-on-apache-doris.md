@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris',
+    'title': 'Choice of the financial sector: fast, secure, and highly available real-time data warehousing based on Apache Doris',
     'summary': "A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.",
     'date': '2024-01-09',
     'author': 'Apache Doris',
