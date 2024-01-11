@@ -54,6 +54,10 @@ export const VariousAnalyticsData = [
                 content: 'Deep dive',
                 to: '/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance',
             },
+            {
+                content: 'Read use case',
+                to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
+            },
         ],
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

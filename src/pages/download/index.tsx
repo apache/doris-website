@@ -202,8 +202,8 @@ export default function Download() {
                                                 <div className="inner" key={downloadInfo.filename}>
                                                     <Link to={downloadInfo.gz}>{downloadInfo.filename}</Link>
                                                     <span> ( </span>
-                                                    <Link to={downloadInfo.asc}>asc</Link>,{' '}
-                                                    <Link to={downloadInfo.sha512}>sha512</Link>
+                                                    <Link to={downloadInfo.asc}>ASC</Link>,{' '}
+                                                    <Link to={downloadInfo.sha512}>SHA-512</Link>
                                                     <span> )</span>
                                                 </div>
                                             ) : (
@@ -215,13 +215,13 @@ export default function Download() {
                                                     <Link
                                                         to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
                                                     >
-                                                        asc
+                                                        ASC
                                                     </Link>
                                                     ,{' '}
                                                     <Link
                                                         to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
                                                     >
-                                                        sha512
+                                                        SHA-512
                                                     </Link>
                                                     <span> )</span>
                                                 </div>

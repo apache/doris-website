@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/doris-intro.png'
 }
 

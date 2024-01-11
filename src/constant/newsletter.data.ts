@@ -1,6 +1,13 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Best Practice'],
+        title: "The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris",
+        content: `A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.`,
+        to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
+        image: 'apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png',
+    },
+    {
+        tags: ['Best Practice'],
         title: 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
         content: `The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.`,
         to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
@@ -21,12 +28,5 @@ export const NEWSLETTER_DATA = [
             'This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.',
         to: '/blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse',
         image: 'newsletter-2.png',
-    },
-    {
-        tags: ['Tech Sharing'],
-        title: 'Log analysis: Elasticsearch vs Apache Doris',
-        content: `As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.`,
-        to: '/blog/log-analysis-elasticsearch-vs-apache-doris',
-        image: 'newsletter-3.png',
     }
 ];

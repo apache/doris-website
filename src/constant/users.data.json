@@ -977,7 +977,7 @@
         "category": "Finance",
         "logo": "UMS",
         "order": 108,
-        "to": null,
+        "to": "https://doris.apache.org/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris",
         "image": "/images/user-logo/Finance/UMS.jpg"
     },
     {
