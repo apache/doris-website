@@ -52,7 +52,7 @@ export default function ClusterManagement() {
                         <>
                             <ExternalLink href="https://www.velodb.io/download/tools" label="Download"></ExternalLink>
                             <ExternalLink
-                                href="https://github.com/apache/doris/blob/master/docs/en/docs/install/k8s-deploy.md"
+                                href="https://github.com/apache/doris/blob/master/docs/en/docs/install/k8s-deploy/operator-deploy.md"
                                 className="sub-btn"
                                 label="Docs"
                             ></ExternalLink>
