@@ -64,8 +64,10 @@ export default function NavbarContent({ mobile }) {
     async function getGithubStar() {
         const res = await fetch('https://api.github.com/repos/apache/doris');
         const data = await res.json();
-        const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
-        setStar(starStr);
+        if (data && data.stargazers_count) {
+            const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
+            setStar(starStr);
+        }
     }
 
     function formatStar(star) {
