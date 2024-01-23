@@ -3,14 +3,11 @@ import Layout from '../theme/Layout';
 import Link from '@docusaurus/Link';
 import More from '../components/More/index';
 import PageBanner, { ButtonProps } from '../components/PageBanner';
-import { Progress } from '../components/progress/progress';
-
 import PageColumn from '../components/PageColumn';
 import React, { useCallback, useEffect, useState } from 'react';
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import usePhone from '../hooks/use-phone';
-import { useAnimationFrame } from '../hooks/use-animation-frame';
 import './index.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
 import { NEWSLETTER_DATA } from '../constant/newsletter.data';
@@ -25,29 +22,12 @@ import { Collapse, Tabs } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import ReadMore from '../components/ReadMore';
 import { ArrowDownIcon } from '../components/Icons/arrow-down-icon';
+import { UserCaseCarousel } from '../components/user-case-carousel';
+import { NewsLetterSwiper } from '../components/newsletter-swiper';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
     const { isPhone } = usePhone();
-    const pagination = {
-        clickable: true,
-        renderBullet: function (index, className) {
-            return '<span class="' + className + '"></span>';
-        },
-    };
-    const modules = [Pagination];
-    const [swiperRef, setSwiperRef] = useState<SwiperClass>();
-
-    const [count, setCount] = useState<number>(0);
-    const [activeKey, setActiveKey] = useState<string>('0');
-    const [stop, setStop] = useState<boolean>(false);
-    const handlePrevious = useCallback(() => {
-        swiperRef?.slidePrev();
-    }, [swiperRef]);
-
-    const handleNext = useCallback(() => {
-        swiperRef?.slideNext();
-    }, [swiperRef]);
 
     const buttons: ButtonProps[] = [
         {
@@ -402,95 +382,6 @@ export default function Home(): JSX.Element {
         },
     ];
 
-    function renderSwiper() {
-        const modules = [Pagination];
-        // if (!isPhone) {
-        //     modules.push(Navigation);
-        // }
-        return (
-            <div style={{ position: 'relative' }}>
-                {!isPhone && (
-                    <div
-                        onClick={handlePrevious}
-                        className="swiper-button-prev invisible group-hover:visible"
-                        style={{ position: 'absolute', top: 'calc(50% - 2rem)', left: '-3rem', zIndex: 99 }}
-                    ></div>
-                )}
-
-                <Swiper
-                    pagination={pagination}
-                    spaceBetween={50}
-                    slidesPerView={1}
-                    navigation={false}
-                    modules={modules}
-                    loop={true}
-                    className="firstPageSwiper"
-                    // style={{ minHeight: 480 }}
-                    onSlideChange={() => console.log('slide change')}
-                    onSwiper={setSwiperRef}
-                >
-                    {NEWSLETTER_DATA.map(newsletter => {
-                        return (
-                            <SwiperSlide key={newsletter.title}>
-                                <div className=" row flex justify-center xl:justify-start flex-start pb-8 lg:pb-16">
-                                    <div className="w-full lg:w-auto flex justify-center ml-4">
-                                        <img
-                                            width={424}
-                                            src={`${require(`@site/static/images/${newsletter.image}`).default}`}
-                                            alt={newsletter.title}
-                                        />
-                                    </div>
-                                    <div className="lg:w-[48rem] px-6 lg:px-0 lg:ml-12 mt-4 lg:mt-0 flex flex-col ">
-                                        <div className="flex gap-1 mb-1">
-                                            {newsletter.tags.map(value => (
-                                                <div className="color-[#4c576c] font-medium text-xs leading-5">
-                                                    {value}
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <h3 className="leading-[38px] text-2xl font-semibold line-clamp-1	">
-                                            {newsletter.title}
-                                        </h3>
-                                        <p className="pt-3 line-clamp-2 text-lg leading-8">{newsletter.content}</p>
-                                        <ReadMore to={newsletter.to} className="pt-6" />
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                        );
-                    })}
-                </Swiper>
-                {!isPhone && (
-                    <div
-                        onClick={handleNext}
-                        className="swiper-button-next invisible  group-hover:visible"
-                        style={{ position: 'absolute', top: 'calc(50% - 2rem)', right: '-3rem', zIndex: 99 }}
-                    ></div>
-                )}
-            </div>
-        );
-    }
-
-    useAnimationFrame(deltaTime => {
-        // Pass on a function to the setter of the state
-        // to make sure we always have the latest state
-
-        setCount(prevCount => {
-            if (prevCount >= 100) {
-                setActiveKey(activeKey => {
-                    let nextKey = +activeKey + 1;
-                    if (nextKey >= VariousAnalyticsData.length) {
-                        nextKey = 0;
-                    }
-                    return nextKey.toString();
-                });
-                return 0;
-            }
-            if (deltaTime > 100) return prevCount;
-
-            return prevCount + deltaTime * 0.01;
-        });
-    }, stop);
-
     return (
         <Layout
             title={translate({ id: 'homepage.title', message: 'Apache Doris: Open-Source Real-Time Data Warehouse' })}
@@ -504,7 +395,7 @@ export default function Home(): JSX.Element {
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />
             <section style={{ backgroundColor: '#F7F9FE' }} className="group">
-                <div className="container pt-14">{renderSwiper()}</div>
+                <NewsLetterSwiper />
             </section>
             <section className="apache-doris">
                 <PageColumn
@@ -575,105 +466,7 @@ export default function Home(): JSX.Element {
                     </div>
                 }
             >
-                {isPhone ? (
-                    <div className="cases-collapse">
-                        <Collapse
-                            bordered={false}
-                            defaultActiveKey={['0']}
-                            accordion
-                            expandIcon={ArrowDownIcon}
-                            expandIconPosition="right"
-                            items={VariousAnalyticsData.map(
-                                ({ title, content, icon, links, backgroundClassName }, index) => {
-                                    return {
-                                        key: index,
-                                        label: (
-                                            <div className="flex items-center">
-                                                <div className="mr-4">{icon}</div>
-                                                <span className="text-base">{title}</span>
-                                            </div>
-                                        ),
-                                        children: (
-                                            <div
-                                                className={`font-misans text-start h-full ${backgroundClassName} text-[10px] leading-[17px]`}
-                                            >
-                                                <div className=" pt-3 pr-3">{content}</div>
-
-                                                <div className="flex mt-3 gap-2">
-                                                    {links.map(({ content, to }) => (
-                                                        <LinkWithArrow
-                                                            style={{ fontSize: '10px', lineHeight: '17px' }}
-                                                            className="text-start"
-                                                            to={to}
-                                                            text={content}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        ),
-                                    };
-                                },
-                            )}
-                        />
-                    </div>
-                ) : (
-                    <div className="cases-tabs" onMouseMove={() => setStop(true)} onMouseLeave={() => setStop(false)}>
-                        <Tabs
-                            activeKey={activeKey}
-                            onChange={activeKey => {
-                                setCount(0);
-                                setActiveKey(activeKey);
-                            }}
-                            tabPosition={isPhone ? 'top' : 'left'}
-                            items={VariousAnalyticsData.map(
-                                ({ content, title, links, backgroundClassName, icon }, index) => {
-                                    return {
-                                        label: (
-                                            <div className="font-misans text-start">
-                                                <span>{title}</span>
-                                                <div className="absolute -bottom-0 w-full">
-                                                    <Progress percent={count} />
-                                                </div>
-                                            </div>
-                                        ),
-                                        key: index.toString(),
-                                        children: (
-                                            <div
-                                                className={`font-misans text-start h-full ${backgroundClassName} py-14 pr-14 text-base leading-7`}
-                                            >
-                                                <div>{content}</div>
-
-                                                <div className="flex mt-14 gap-10">
-                                                    {links.map(({ content, to }) => (
-                                                        <LinkWithArrow className="text-start" to={to} text={content} />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        ),
-                                    };
-                                },
-                            )}
-                        />
-                        {/* {VariousAnalyticsData.map(({ title, content, links, icon }) => (
-                        <div className="various-analytics-group flex-col lg:flex-row">
-                            <div className="items-title w-auto lg:w-[27.25rem] ">
-                                <div>{icon}</div>
-                                <div>{title}</div>
-                            </div>
-                            <div className="items-content px-6 lg:px-0">
-                                <div>{content}</div>
-
-                                <div className="links">
-                                    {links.map(({ content, to }) => (
-                                        <LinkWithArrow to={to} text={content} />
-                                        // <More style={{ textAlign: 'left' }} link={to} text={content} />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    ))} */}
-                    </div>
-                )}
+                <UserCaseCarousel />
             </PageColumn>
             <PageColumn
                 className="bg-[#F7F9FE]"
