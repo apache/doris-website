@@ -5,8 +5,6 @@
     'date': '2023-10-03',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/doris-intro.png'
 }
 
