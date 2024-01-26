@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Notes'],
+        title: "Apache Doris 2.0.4 just released",
+        content: `Thanks to our community users and developers, 333 improvements and bug fixes have been made in Doris 2.0.4.`,
+        to: '/blog/release-note-2.0.4',
+        image: '2.0.4.png',
+    },
+    {
         tags: ['Best Practice'],
         title: "The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris",
         content: `A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.`,
@@ -21,12 +28,12 @@ export const NEWSLETTER_DATA = [
         to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
         image: 'newsletter-1.png',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: 'Introduction to Apache Doris: a next-generation real-time data warehouse',
-        content:
-            'This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.',
-        to: '/blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse',
-        image: 'newsletter-2.png',
-    }
+    // {
+    //     tags: ['Tech Sharing'],
+    //     title: 'Introduction to Apache Doris: a next-generation real-time data warehouse',
+    //     content:
+    //         'This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.',
+    //     to: '/blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse',
+    //     image: 'newsletter-2.png',
+    // }
 ];
