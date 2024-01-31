@@ -253,11 +253,11 @@ const config = {
                         to: '/ecosystem/cluster-management',
                         position: 'left',
                     },
-                    // {
-                    //     label: 'Community',
-                    //     to: '/community/join-community',
-                    //     position: 'left',
-                    // },
+                    {
+                        label: 'Community',
+                        to: '/community/join-community',
+                        position: 'left',
+                    },
                     {
                         type: 'search',
                         position: 'right',
