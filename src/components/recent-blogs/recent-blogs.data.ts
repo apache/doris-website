@@ -1,6 +1,6 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris`,
+        label: `Financial data warehousing: fast, secure, and highly available with Apache Doris`,
         link: 'https://doris.apache.org/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
     },
     {

@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg'
 }
 

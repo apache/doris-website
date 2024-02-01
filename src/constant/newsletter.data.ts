@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "A deep dive into inverted index: how it speeds up text searches by 40 times",
+        content: `This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.`,
+        to: '/blog/inverted-index-apache-doris-deep-dive',
+        image: 'how-inverted-index-accelerates-text-searches-by-40-times.png',
+    },
+    {
         tags: ['Release Notes'],
         title: "Apache Doris 2.0.4 just released",
         content: `Thanks to our community users and developers, 333 improvements and bug fixes have been made in Doris 2.0.4.`,
@@ -20,14 +27,14 @@ export const NEWSLETTER_DATA = [
         to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
         image: 'apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg',
     },
-    {
-        tags: ['Top News'],
-        title: 'Apache Doris Summit Asia 2023: what can you expect from Apache Doris as a data warehouse?',
-        content:
-            'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners, to honor what we have achieved in the past year, and provide a preview of where we are going next.',
-        to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
-        image: 'newsletter-1.png',
-    },
+    // {
+    //     tags: ['Top News'],
+    //     title: 'Apache Doris Summit Asia 2023: what can you expect from Apache Doris as a data warehouse?',
+    //     content:
+    //         'When it is cranberry and pumpkin season, we had the unforgettable Apache Doris Summit Asia 2023 with our remarkable committers, users, and community partners, to honor what we have achieved in the past year, and provide a preview of where we are going next.',
+    //     to: '/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse',
+    //     image: 'newsletter-1.png',
+    // },
     // {
     //     tags: ['Tech Sharing'],
     //     title: 'Introduction to Apache Doris: a next-generation real-time data warehouse',
