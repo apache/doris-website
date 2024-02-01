@@ -3,7 +3,7 @@ export const NEWSLETTER_DATA = [
         tags: ['Tech Sharing'],
         title: "A deep dive into inverted index: how it speeds up text searches by 40 times",
         content: `This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.`,
-        to: '/blog/inverted-index-apache-doris-deep-dive',
+        to: '/blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris',
         image: 'how-inverted-index-accelerates-text-searches-by-40-times.png',
     },
     {
