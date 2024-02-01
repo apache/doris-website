@@ -33,7 +33,7 @@ function BlogPostPageContent(props: { sidebar: BlogSidebar; children: ReactNode 
             }
         >
             <BlogPostItem>{children}</BlogPostItem>
-            <div className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-12 lg:gap-4 pl-4">
+            {/* <div className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-12 lg:gap-4 pl-4">
                 {tags.map((item: any, index) => (
                     <Link className="py-px" to={`/blog?currentPage=1&currentCategory=${item.label}`} key={index}>
                         <span
@@ -43,7 +43,7 @@ function BlogPostPageContent(props: { sidebar: BlogSidebar; children: ReactNode 
                         </span>
                     </Link>
                 ))}
-            </div>
+            </div> */}
             {/* {(nextItem || prevItem) && <BlogPostPaginator nextItem={nextItem} prevItem={prevItem} />} */}
             <RecentBlogs />
         </BlogLayout>

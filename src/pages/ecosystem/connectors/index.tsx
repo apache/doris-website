@@ -3,6 +3,7 @@ import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/
 import ExternalLink from '@site/src/components/external-link/external-link';
 import CollapseBox from '@site/src/components/collapse-box/collapse-box';
 import '../index.scss';
+import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 
 export default function Connectors() {
     return (
@@ -21,13 +22,14 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://github.com/apache/doris-flink-connector"
+                                href="https://github.com/apache/doris-flink-connector/releases"
                                 label="Download"
                             ></ExternalLink>
                             <ExternalLink
                                 href="https://doris.apache.org/docs/ecosystem/flink-doris-connector"
                                 className="sub-btn"
                                 label="Docs"
+                                linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
                         </>
                     }
@@ -43,13 +45,15 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://github.com/apache/doris-spark-connector"
+                                href="https://github.com/apache/doris-spark-connector/releases"
                                 label="Download"
                             ></ExternalLink>
+
                             <ExternalLink
                                 href="https://doris.apache.org/docs/ecosystem/spark-doris-connector"
                                 className="sub-btn"
                                 label="Docs"
+                                linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
                         </>
                     }
@@ -69,6 +73,7 @@ export default function Connectors() {
                                 href="https://doris.apache.org/docs/ecosystem/dbt-doris-adapter"
                                 className="sub-btn"
                                 label="Docs"
+                                linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
                         </>
                     }

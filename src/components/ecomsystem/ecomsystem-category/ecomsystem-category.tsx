@@ -4,21 +4,22 @@ import { EcomsystemCategoryEnum } from '../ecomsystem.data';
 import { ClusterManagementIcon } from './components/icons/cluster-management-icon';
 import { ConnectorsIcon } from './components/icons/connectors-icon';
 import { DistributionsAndPackagingIcon } from './components/icons/distributions-packaging-icon';
+import { DataLoadingIcon } from './components/icons/data-loading';
+
 import { TabItem } from './components/tab-item';
 
 export default function EcomsystemCategory() {
     const location = useLocation();
     const pathnames = location.pathname.split('/');
-
-    const current = pathnames.length > 0 ? pathnames[pathnames.length - 1] : '';
     let currentActive: EcomsystemCategoryEnum = EcomsystemCategoryEnum.ClusterManagement;
 
-    if (current === EcomsystemCategoryEnum.ClusterManagement) {
+    if (pathnames.some(current => current === EcomsystemCategoryEnum.ClusterManagement)) {
         currentActive = EcomsystemCategoryEnum.ClusterManagement;
-    } else if (current === EcomsystemCategoryEnum.Connectors) {
+    } else if (pathnames.some(current => current === EcomsystemCategoryEnum.Connectors)) {
         currentActive = EcomsystemCategoryEnum.Connectors;
     } else {
-        currentActive = EcomsystemCategoryEnum.DistributionsAndPackaging;
+        currentActive = EcomsystemCategoryEnum.DataLoading;
+        // currentActive = EcomsystemCategoryEnum.DistributionsAndPackaging;
     }
 
     const [active, setActive] = useState<EcomsystemCategoryEnum | string>(currentActive);
@@ -42,13 +43,21 @@ export default function EcomsystemCategory() {
                 content="Integrate with Flink, Spark, dbt and more"
             />
             <TabItem
+                url={EcomsystemCategoryEnum.DataLoading}
+                setActive={() => setActive(EcomsystemCategoryEnum.DataLoading)}
+                active={active === EcomsystemCategoryEnum.DataLoading}
+                icon={<DataLoadingIcon />}
+                title={'Data loading'}
+                content="Accelerate large-scale data loading"
+            />
+            {/* <TabItem
                 url={EcomsystemCategoryEnum.DistributionsAndPackaging}
                 setActive={() => setActive(EcomsystemCategoryEnum.DistributionsAndPackaging)}
                 active={active === EcomsystemCategoryEnum.DistributionsAndPackaging}
                 icon={<DistributionsAndPackagingIcon />}
                 title={'Distributions'}
                 content="Complement Apache Doris"
-            />
+            /> */}
         </div>
     );
 }

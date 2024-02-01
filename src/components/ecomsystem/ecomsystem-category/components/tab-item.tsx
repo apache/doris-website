@@ -14,7 +14,7 @@ interface PriceTabProps {
 export function TabItem({ title, content, icon, active, setActive, url }: PriceTabProps) {
     return (
         <Link
-            to={url}
+            to={`/ecosystem/${url}`}
             onClick={() => {
                 setActive();
             }}
