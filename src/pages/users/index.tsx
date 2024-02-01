@@ -11,11 +11,11 @@ import usePhone from '@site/src/hooks/use-phone';
 import PageHeader from '@site/src/components/PageHeader';
 import { USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
 import useIsBrowser from '@docusaurus/useIsBrowser';
-import UserItem from './user-item';
+import UserItem from '../../components/user-item/user-item';
 import USERS from '../../constant/users.data.json';
 import ReadMore from '@site/src/components/ReadMore';
 import LinkWithArrow from '@site/src/components/link-arrow';
-import { UserSwiper } from './user-swiper';
+import { UserSwiper } from '../../components/user-swiper/user-swiper';
 
 const ALL_TEXT = 'All';
 

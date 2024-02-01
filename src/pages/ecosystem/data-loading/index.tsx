@@ -25,7 +25,7 @@ export default function DistributionsAndPackaging() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://github.com/apache/doris-streamloader/releases"
+                                href="https://github.com/apache/doris-streamloader"
                                 label="GitHub"
                             ></ExternalLink>
 
