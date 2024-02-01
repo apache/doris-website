@@ -5,8 +5,6 @@
     'date': '2023-11-10',
     'author': 'Apache Doris',
     'tags': ['Top News'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/doris-summit-asia.png'
 }
 
