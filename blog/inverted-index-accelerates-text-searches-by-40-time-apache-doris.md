@@ -211,9 +211,12 @@ By skipping the irrelevant pages, the BloomFilter index reduces unnecessary data
 `gram_size` determines the matching efficiency, while `bf_size` impacts the false positive rate. Typically, a large `bf_size` reduces the false positive rate but also requires more storage space. Thus, we suggest that you configure these two parameters based on these two factors: 
 
 1. Text length:
+
    - For short texts (words or phrases), a small `gram_size` (2~4) and a small `bf_size` are recommended.
    - For long texts (sentences or paragraphs), a large `gram_size` (5~10) and a large `bf_size` work better.
+
 2. Query pattern: 
+
    - If the queries often involve phrases or complete words, a large `gram_size` will be more efficient.
    - For fuzzy matching or diverse queries, a small `gram_size` allows more flexible matching.
 
@@ -222,6 +225,7 @@ By skipping the irrelevant pages, the BloomFilter index reduces unnecessary data
 [Inverted index](https://doris.apache.org/blog/Building-A-Log-Analytics-Solution-10-Times-More-Cost-Effective-Than-Elasticsearch) is another way to accelerate text searches. Creating inverted index is simple:
 
 1.  **Add inverted index**: Refer to the snippet below to create inverted index for the `review_body` column of the `amazon_reviews` table. Inverted index supports phrase searching, in which the order of the tokenized words will affect the search results.
+
 2. **Add inverted index for historical data**: You can also create inverted index for historical data.
 
 ```SQL
@@ -298,6 +302,8 @@ Results show that inverted index has decreased the query latency to **0.19 secon
 5 rows in set (0.19 sec)
 ```
 
+
+
 **How does inverted index make it possible?**
 
 Inverted index splits the texts into words and maps each word to a row number. Then the tokenized words are sorted alphabetically and and a skip list index is created. When executing queries of specific words, the system locates the row numbers in this orderly mapping using the skip list index and binary search methods. Based on the row numbers, the system retrieves the entire data record. 
@@ -306,7 +312,8 @@ This approach avoids line-by-line matching and reduces computational complexity 
 
 ![img](../static/images/illustration-of-inverted-index.png)
 
-*Illustration of Inverted Index*
+
+<div style={{textAlign:'center'}}> Illustration of Inverted Index </div >
 
 To provide a deeper understanding of inverted index, I will start from its read/write logic. In Doris, logically, inverted index is applied at the column level of a table. However, from a physical storage and implementation perspective, it is actually built on data files. 
 

@@ -3,6 +3,7 @@ import EcomsystemLayout from '@site/src/components/ecomsystem/ecomsystem-layout/
 import ExternalLink from '@site/src/components/external-link/external-link';
 import CollapseBox from '@site/src/components/collapse-box/collapse-box';
 import '../index.scss';
+import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 
 export default function ClusterManagement() {
     return (
@@ -52,9 +53,10 @@ export default function ClusterManagement() {
                         <>
                             <ExternalLink href="https://www.velodb.io/download/tools" label="Download"></ExternalLink>
                             <ExternalLink
-                                href="https://github.com/apache/doris/blob/master/docs/en/docs/install/k8s-deploy/operator-deploy.md"
+                                href="https://doris.apache.org/docs/install/k8s-deploy/operator-deploy"
                                 className="sub-btn"
                                 label="Docs"
+                                linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
                         </>
                     }
