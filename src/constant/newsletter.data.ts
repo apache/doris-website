@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Best Practice'],
+        title: "A financial anti-fraud solution based on the Apache Doris data warehouse",
+        content: `Financial fraud prevention is a race against time. This post will get into details about how a retail bank builds their fraud risk management platform based on Apache Doris and how it performs.`,
+        to: '/blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse',
+        image: 'a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.png',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "A deep dive into inverted index: how it speeds up text searches by 40 times",
         content: `This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.`,
@@ -20,13 +27,13 @@ export const NEWSLETTER_DATA = [
         to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
         image: 'apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png',
     },
-    {
-        tags: ['Best Practice'],
-        title: 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
-        content: `The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.`,
-        to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
-        image: 'apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg',
-    },
+    // {
+    //     tags: ['Best Practice'],
+    //     title: 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
+    //     content: `The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.`,
+    //     to: '/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
+    //     image: 'apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg',
+    // },
     // {
     //     tags: ['Top News'],
     //     title: 'Apache Doris Summit Asia 2023: what can you expect from Apache Doris as a data warehouse?',
