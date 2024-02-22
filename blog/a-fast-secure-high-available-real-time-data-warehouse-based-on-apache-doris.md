@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png'
 }
 
