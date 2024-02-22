@@ -5,8 +5,6 @@
     'date': '2023-12-27',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/apache-doris-speeds-up-data-reporting-data-lake-analytics.jpg'
 }
 

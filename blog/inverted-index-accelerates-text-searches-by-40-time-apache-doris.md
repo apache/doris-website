@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/how-inverted-index-accelerates-text-searches-by-40-times.png'
 }
 ---
