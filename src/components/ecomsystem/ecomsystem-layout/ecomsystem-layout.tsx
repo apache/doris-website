@@ -21,7 +21,7 @@ export default function EcomsystemLayout(props: PropsWithChildren) {
         >
             <PageHeader
                 title="Ecosystem"
-                subtitle="Break complexity in data integration and cluster management."
+                subtitle="Simplify data integration, cluster management and data loading."
                 className="pt-20 px-4"
                 extra={
                     <div className="flex justify-center mt-5">
