@@ -371,7 +371,7 @@ const config = {
                             },
                             {
                                 label: 'Roadmap',
-                                href: 'https://github.com/apache/doris/issues/16392',
+                                href: 'https://github.com/apache/doris/issues/30669',
                             },
                         ],
                     },
