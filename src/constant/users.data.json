@@ -131,7 +131,7 @@
         "category": "Finance",
         "logo": "Postal Savings Bank of China",
         "order": 14,
-        "to": "https://doris.apache.org/blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse",
+        "to": null,
         "image": "/images/user-logo/Finance/Postal Savings Bank of China.jpg"
     },
     {
