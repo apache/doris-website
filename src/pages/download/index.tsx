@@ -53,7 +53,7 @@ export default function Download() {
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.0.4');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.0.5');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -260,7 +260,7 @@ export default function Download() {
                             <LinkWithArrow to={releaseNote} text="Release note" />
                         </div>
                         <div className="all-download-note">
-                            Note：For detailed upgrade precautions, please refer to the{' '}
+                            Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
                                 to="/docs/install/standard-deployment"
                                 style={{
