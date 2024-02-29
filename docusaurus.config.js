@@ -64,6 +64,7 @@ const config = {
     customFields: {},
     plugins: [
         'docusaurus-plugin-sass',
+        'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
         [
@@ -219,6 +220,12 @@ const config = {
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
+            matomo: {
+                matomoUrl: 'https://analytics.apache.org/',
+                siteId: '43',
+                phpLoader: 'matomo.php',
+                jsLoader: 'matomo.js',
+            },
             announcementBar: {
                 id: 'support_us',
                 content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 

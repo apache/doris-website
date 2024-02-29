@@ -29,6 +29,7 @@
         "autoprefixer": "^10.4.16",
         "clsx": "^1.1.1",
         "copy-to-clipboard": "^3.3.3",
+        "docusaurus-plugin-matomo": "^0.0.8",
         "docusaurus-plugin-sass": "^0.2.3",
         "postcss": "^8.4.32",
         "prism-react-renderer": "^2.0.4",
