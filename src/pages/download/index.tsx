@@ -21,8 +21,8 @@ import { ALL_VERSIONS, OLD_VERSIONS } from '../../constant/download.data';
 import * as semver from 'semver';
 
 const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Latest} ( Stable )`, value: VersionEnum.Latest },
+    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
 ];
 
 function downloadFile(url: string) {
