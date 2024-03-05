@@ -2,7 +2,7 @@ export const NEWSLETTER_DATA = [
     {
         tags: ['Best Practice'],
         title: "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
-        content: `he insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark, Impala, HBase and NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.`,
+        content: `The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark, Impala, HBase and NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.`,
         to: '/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp',
         image: 'breaking-down-data-silos-with-an-apache-doris-based-cdp.png',
     },
