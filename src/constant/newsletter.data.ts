@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Best Practice'],
+        title: "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
+        content: `he insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark, Impala, HBase and NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.`,
+        to: '/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp',
+        image: 'breaking-down-data-silos-with-an-apache-doris-based-cdp.png',
+    },
+    {
         tags: ['Release Notes'],
         title: "Apache Doris 2.0.5 just released",
         content: `Thanks to our community users and developers, about 217 improvements and bug fixes have been made in Doris 2.0.5 version.`,
@@ -20,12 +27,12 @@ export const NEWSLETTER_DATA = [
         to: '/blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris',
         image: 'how-inverted-index-accelerates-text-searches-by-40-times.png',
     },
-    {
-        tags: ['Best Practice'],
-        title: "The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris",
-        content: `A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.`,
-        to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
-        image: 'apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png',
-    },
+    // {
+    //     tags: ['Best Practice'],
+    //     title: "The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris",
+    //     content: `A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.`,
+    //     to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
+    //     image: 'apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png',
+    // },
  
 ];
