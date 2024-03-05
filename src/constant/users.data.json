@@ -1022,7 +1022,7 @@
         "category": "Finance",
         "logo": "ZhongAn Insurance",
         "order": 113,
-        "to": null,
+        "to": "https://doris.apache.org/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp",
         "image": "/images/user-logo/Finance/ZhongAn Insurance.jpg"
     },
     {

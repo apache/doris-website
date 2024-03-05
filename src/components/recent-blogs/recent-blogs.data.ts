@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
+        label: `Apache Doris 2.0.5 just released`,
+        link: 'https://doris.apache.org/blog/release-note-2.0.5',
+    },
+    {
+        label: 'A financial anti-fraud solution based on the Apache Doris data warehouse',
+        link: 'https://doris.apache.org/blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse',
+    },
+    {
+        label: 'A deep dive into inverted index: how it speeds up text searches by 40 times',
+        link: 'https://doris.apache.org/blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris',
+    },
+    {
         label: `Financial data warehousing: fast, secure, and highly available with Apache Doris`,
         link: 'https://doris.apache.org/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
-    },
-    {
-        label: 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
-        link: 'https://doris.apache.org/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics',
-    },
-    {
-        label: 'From Elasticsearch to Apache Doris: upgrading an observability platform',
-        link: 'https://doris.apache.org/blog/from-elasticsearch-to-apache-doris-upgrading-an-observability-platform',
-    },
-    {
-        label: `Empowering cyber security by enabling 7 times faster log analysis`,
-        link: 'https://doris.apache.org/blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis',
     },
     
 ];
