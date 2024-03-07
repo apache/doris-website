@@ -21,6 +21,12 @@ export enum SuffixEnum {
     SHA512 = '.tar.gz.sha512',
 }
 
+export enum ToolsEnum {
+    Flink = 'Flink Doris Connector',
+    Spark = 'Spark Doris Connector',
+    StreamLoader = 'Doris Streamloader',
+}
+
 export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
 export enum VersionEnum {
     Latest = '2.0.5',
@@ -888,6 +894,99 @@ export const OLD_VERSIONS: Option[] = [
                 label: '0.13.0',
                 value: '0.13.0',
                 source: 'https://archive.apache.org/dist/doris/0.13.0-incubating/',
+            },
+        ],
+    },
+];
+
+export const TOOL_VERSIONS = [
+    {
+        label: ToolsEnum.Flink,
+        value: ToolsEnum.Flink,
+        children: [
+            {
+                label: '1.5.2',
+                value: '1.5.2',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.5.2.tar.gz',
+            },
+            {
+                label: '1.4.0',
+                value: '1.4.0',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.4.0.tar.gz',
+            },
+            {
+                label: '1.3.0',
+                value: '1.3.0',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.16-1.3.0.tar.gz',
+            },
+            {
+                label: '1.2.1',
+                value: '1.2.1',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.15-1.2.1.tar.gz',
+            },
+            {
+                label: '1.1.1',
+                value: '1.1.1',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.14_2.12-1.1.1.tar.gz',
+            },
+            {
+                label: '1.0.3',
+                value: '1.0.3',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.13_2.11-1.0.3.tar.gz',
+            },
+        ],
+    },
+    {
+        label: ToolsEnum.Spark,
+        value: ToolsEnum.Spark,
+        children: [
+            {
+                label: '1.3.1',
+                value: '1.3.1',
+                gz: 'https://github.com/apache/doris-spark-connector/archive/refs/tags/1.3.1.tar.gz',
+            },
+            {
+                label: '1.2.0',
+                value: '1.2.0',
+                gz: 'https://github.com/apache/doris-spark-connector/archive/refs/tags/1.2.0.tar.gz',
+            },
+            {
+                label: '1.1.0',
+                value: '3.2_2.12-1.1.0',
+                gz: 'https://github.com/apache/doris-spark-connector/archive/refs/tags/3.2_2.12-1.1.0.tar.gz',
+            },
+            {
+                label: '1.0.1 (For Spark 3.1)',
+                value: '3.1_2.12-1.0.1',
+                gz: 'https://github.com/apache/doris-spark-connector/archive/refs/tags/3.1_2.12-1.0.1.tar.gz',
+            },
+            {
+                label: '1.0.1 (For Spark 2.x)',
+                value: '2.3_2.11-1.0.1',
+                gz: 'https://github.com/apache/doris-spark-connector/archive/refs/tags/2.3_2.11-1.0.1.tar.gz',
+            },
+        ],
+    },
+    {
+        label: ToolsEnum.StreamLoader,
+        value: ToolsEnum.StreamLoader,
+        children: [
+            {
+                label: '1.0.1',
+                value: '1.0.1',
+                children: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
+                    },
+                ],
+                source: 'https://github.com/apache/doris-streamloader/archive/refs/tags/1.0.1.tar.gz',
             },
         ],
     },
