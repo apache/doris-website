@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
-import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
+import { Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';
-import * as semver from 'semver';
 import copy from 'copy-to-clipboard';
-import { ToolsEnum, CPUEnum } from '@site/src/constant/download.data';
+import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { ExternalLinkIcon } from '../Icons/external-link-icon';
 
@@ -17,16 +16,6 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     const tool = useWatch('tool', form);
     const architecture = useWatch('architecture', form);
     const version = useWatch('version', form);
-
-    function showArch(version: string) {
-        const SUPPORTED_VERSION = '>1.2.3';
-        const versionNumber = version.match(/[0-9].[0-9].[0-9]*/)?.[0] || '0.0.0';
-        if (semver.satisfies(versionNumber, SUPPORTED_VERSION)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     const getOptions = useMemo(() => {
         if (!tool) return [];
@@ -53,16 +42,6 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
         }
     };
 
-    // useEffect(() => {
-    //     if (Array.isArray(version) && showArch(version[1])) {
-    //         const currentParentVersion = versions.find(
-    //             item => form.getFieldValue('version')[0] === item.value,
-    //         ).children;
-    //         const currentVersion = currentParentVersion.find(item => form.getFieldValue('version')[1] === item.value);
-    //         form.setFieldValue('architecture', currentVersion.items[0].value);
-    //     }
-    // }, [version]);
-
     useEffect(() => {
         if (tool) {
             form.setFieldValue('version', getOptions[0].value);
@@ -82,8 +61,6 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                 form={form}
                 onFinish={val => {
                     const url = getDownloadLinkByCard();
-                    console.log(url);
-
                     window.open(url, '_blank');
                 }}
                 initialValues={{
@@ -158,8 +135,6 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-[#444FD9]"
                             onClick={() => {
                                 const url = getDownloadLinkByCard(true);
-                                console.log(url);
-
                                 window.open(url, '_blank');
                             }}
                         >
