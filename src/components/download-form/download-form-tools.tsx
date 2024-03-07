@@ -5,7 +5,7 @@ import FormSelect from '../form-select/form-select';
 import copy from 'copy-to-clipboard';
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
-import { ExternalLinkIcon } from '../Icons/external-link-icon';
+import { DownloadIcon } from '../Icons/download-icon';
 
 interface DownloadFormToolsProps {
     data: Option[];
@@ -130,7 +130,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     </svg>
                 </div>
                 {tool === ToolsEnum.StreamLoader && (
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center mt-4 hover:text-[#444FD9]">
                         <div
                             className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-[#444FD9]"
                             onClick={() => {
@@ -140,7 +140,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         >
                             Source code
                             <div className="ml-1">
-                                <ExternalLinkIcon />
+                                <DownloadIcon style={{ fontSize: 14 }} />
                             </div>
                         </div>
                     </div>
