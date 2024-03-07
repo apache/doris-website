@@ -1,8 +1,7 @@
 .run-anywhere {
-    background: #F7F9FE;
+    background: #f7f9fe;
 }
 .download {
-
     a {
         transition: all 0.3s;
 
@@ -30,9 +29,9 @@
 
     &-box {
         padding: 3.125rem;
-        box-shadow: 10px 12px 38px rgba(33, 39, 116, 0.07);
-        border-radius: 4px;
+        border-radius: 8px;
         background-color: var(--global-colors-white);
+        border: #dfe5f0 solid 1px;
 
         .download-type {
             display: flex;
@@ -95,7 +94,6 @@
 
                     .inner {
                         margin: 0.3125rem;
-                        background-color: #f7faff;
                         width: calc(100% - 0.625rem);
                         color: var(--ifm-color-primary);
 
@@ -114,7 +112,7 @@
             }
             &.all-in-one {
                 .theme-code-block {
-                    font-size: 0.875rem ;
+                    font-size: 0.875rem;
                     padding-left: 2rem;
                     position: relative;
                     &:before {
@@ -314,7 +312,7 @@
         align-items: flex-start;
         gap: 48px;
         border-radius: 8px;
-        border: 1px solid var(---N5, #DFE5F0);
+        border: 1px solid var(---N5, #dfe5f0);
 
         .all-download-intro {
             display: flex;
@@ -323,7 +321,7 @@
             align-items: flex-start;
             gap: 32px;
             .all-download-intro-text {
-                color: var(---N1, #1D1D1D);
+                color: var(---N1, #1d1d1d);
                 font-size: 16px;
                 font-style: normal;
                 line-height: 26px; /* 162.5% */
@@ -345,11 +343,10 @@
         }
     }
     .all-download-note {
-        color: var(---N3, #8592A6);
+        color: var(---N3, #8592a6);
         font-size: 12px;
         font-style: normal;
         line-height: 20px;
         text-align: left;
     }
 }
-
