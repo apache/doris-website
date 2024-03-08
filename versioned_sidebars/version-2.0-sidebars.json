@@ -18,7 +18,6 @@
                         "install/construct-docker/run-docker-cluster"
                     ]
                 },
-                "install/k8s-deploy",
                 {
                     "type": "category",
                     "label": "Source Code Compilation",
@@ -48,8 +47,7 @@
                         "data-table/index/index-overview",
                         "data-table/index/inverted-index",
                         "data-table/index/bloomfilter",
-                        "data-table/index/ngram-bloomfilter-index",
-                        "data-table/index/bitmap-index"
+                        "data-table/index/ngram-bloomfilter-index"
                     ]
                 }
             ]
@@ -90,11 +88,6 @@
                                 "data-operate/import/import-way/insert-into-manual",
                                 "data-operate/import/import-way/load-json-format"
                             ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Import Advanced",
-                            "items": ["data-operate/import/import-advanced/min-load-replica-num"]
                         }
                     ]
                 },
@@ -158,7 +151,6 @@
                 "advanced/time-zone",
                 "advanced/small-file-mgr",
                 "advanced/cold-hot-separation",
-                "advanced/compute-node",
                 "advanced/lateral-view",
                 "advanced/is-being-synced",
                 "advanced/sql-mode"
@@ -910,7 +902,6 @@
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-DATABASE",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION",
-                                        "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-BITMAP",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-ROLLUP",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-RENAME",
                                         "sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE",

@@ -26,7 +26,7 @@ function getDocsVersions() {
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('2.0') ? '2.0' : VERSIONS[0];
+    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */

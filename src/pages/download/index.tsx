@@ -22,8 +22,8 @@ import * as semver from 'semver';
 import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 
 const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( Stable )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
+    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
 ];
 
 function downloadFile(url: string) {
@@ -54,7 +54,7 @@ export default function Download() {
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.0.5');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.0');
 
     const changeVersion = (val: string) => {
         setVersion(val);
