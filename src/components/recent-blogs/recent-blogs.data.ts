@@ -1,7 +1,7 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris 2.0.5 just released`,
-        link: 'https://doris.apache.org/blog/release-note-2.0.5',
+        label: `New milestone: Apache Doris 2.1.0 is available now`,
+        link: 'https://doris.apache.org/blog/release-note-2.1.0',
     },
     {
         label: 'A financial anti-fraud solution based on the Apache Doris data warehouse',

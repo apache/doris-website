@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Notes'],
+        title: "New milestone: Apache Doris 2.1.0 is available now",
+        content: `Dear community, we are pleased to share with you the official release of Apache Doris 2.1.0, now available for download and use as of March 8th.`,
+        to: '/blog/release-note-2.1.0',
+        image: '2.1.0.png',
+    },
+    {
         tags: ['Best Practice'],
         title: "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
         content: `The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark, Impala, HBase and NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.`,
         to: '/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp',
         image: 'breaking-down-data-silos-with-an-apache-doris-based-cdp.png',
-    },
-    {
-        tags: ['Release Notes'],
-        title: "Apache Doris 2.0.5 just released",
-        content: `Thanks to our community users and developers, about 217 improvements and bug fixes have been made in Doris 2.0.5 version.`,
-        to: '/blog/release-note-2.0.5',
-        image: '2.0.5.png',
     },
     {
         tags: ['Best Practice'],
