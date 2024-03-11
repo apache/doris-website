@@ -36,7 +36,6 @@ export default function BlogPostItem(props) {
     const tagsExists = tags.length > 0;
     const TitleHeading = isBlogPostPage ? 'h1' : 'h2';
     const authorsExists = authors && authors.length > 0;
-    console.log(metadata);
     return (
         <>
             <article

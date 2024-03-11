@@ -9,7 +9,7 @@
 	</linearGradient>
 </defs>
 <style type="text/css">
-	.func_g:hover { stroke:black; strokeWidth:0.5; cursor:pointer; }
+	.func_g:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
 </style>
 <script type="text/ecmascript">
 <![CDATA[
