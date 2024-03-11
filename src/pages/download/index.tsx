@@ -3,7 +3,7 @@ import React, { useEffect, useState, version } from 'react';
 import PageHeader from '@site/src/components/PageHeader';
 import Layout from '@site/src/theme/Layout';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
-import DownloadFormSimple from '@site/src/components/download-form/download-form-simple';
+import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
 import {
     CPUEnum,
     DORIS_VERSIONS,
@@ -17,12 +17,13 @@ import './index.scss';
 import LinkWithArrow from '../../components/link-arrow';
 import PageColumn from '@site/src/components/PageColumn';
 import clsx from 'clsx';
-import { ALL_VERSIONS, OLD_VERSIONS } from '../../constant/download.data';
+import { ALL_VERSIONS, TOOL_VERSIONS } from '../../constant/download.data';
 import * as semver from 'semver';
+import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 
 const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( Stable )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
+    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
 ];
 
 function downloadFile(url: string) {
@@ -53,7 +54,7 @@ export default function Download() {
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.0.5');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.0');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -117,9 +118,6 @@ export default function Download() {
             <PageHeader className="lg:pt-[5rem] g-white" title="Quick Download & Easy Deployment" />
             <section className="quick-download">
                 <PageColumn align="center">
-                    <span className="font-medium" style={{ fontSize: 40 }}>
-                        Quick Download
-                    </span>
                     <div className="download-box">
                         <div className="download-type">
                             <label>
@@ -234,13 +232,16 @@ export default function Download() {
                     </div>
                 </PageColumn>
             </section>
-            <PageColumn>
-                <span
-                    className="font-medium"
-                    style={{ display: 'block', marginTop: 40, fontSize: 40, marginBottom: 32 }}
-                >
-                    All Releases
-                </span>
+            <PageColumn
+                title={
+                    <span
+                        className="font-normal"
+                        style={{ display: 'block', lineHeight: '64px', marginTop: 40, fontSize: 40 }}
+                    >
+                        Doris All Releases
+                    </span>
+                }
+            >
                 <div className="all-download">
                     <div className="all-download-intro">
                         <div className="all-download-intro-text">
@@ -291,6 +292,69 @@ export default function Download() {
                     </div>
                 </div>
             </PageColumn>
+            <PageColumn
+                title={
+                    <span
+                        className="font-normal"
+                        style={{ display: 'block', lineHeight: '64px', marginTop: 40, fontSize: 40 }}
+                    >
+                        Doris Ecosystem
+                    </span>
+                }
+            >
+                <div className="all-download">
+                    <div className="all-download-intro">
+                        <div className="all-download-intro-text">
+                            <div>Streamline integration and data loading with Doris tools</div>
+                        </div>
+                        <div className="flex">
+                            <ul>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Flink Doris Connector</div>
+                                </li>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Spark Doris Connector</div>
+                                </li>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Doris Streamloader</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <LinkWithArrow to="/docs/ecosystem/datax" text="More Tools" />
+                        </div>
+                        <div className="all-download-note">
+                            Note: For detailed upgrade precautions, please refer to the{' '}
+                            <Link
+                                to="/docs/install/standard-deployment"
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                deployment
+                            </Link>{' '}
+                            manual and cluster{' '}
+                            <Link
+                                style={{
+                                    color: '#444FD9',
+                                    cursor: 'pointer',
+                                }}
+                                to="/docs/admin-manual/cluster-management/upgrade"
+                            >
+                                upgrade
+                            </Link>{' '}
+                            manual.
+                        </div>
+                    </div>
+                    <div className="all-download-card">
+                        <DownloadFormTools data={TOOL_VERSIONS} />
+                    </div>
+                </div>
+            </PageColumn>
             <a id="runAnywhere" className="scroll-mt-20"></a>
             <div className="run-anywhere bg-[#F7F9FE] pt-[5.5rem] pb-[7.5rem] mt-[80px]">
                 <div className="container mx-auto">
@@ -298,8 +362,8 @@ export default function Download() {
                     <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
                         {RUN_ANYWHERE.map(item =>
                             item.title !== 'Doris on AWS' ? (
-                                <Link
-                                    href={item.link}
+                                <div
+                                    onClick={() => window.open(item.link)}
                                     key={item.title}
                                     className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
                                 >
@@ -308,9 +372,9 @@ export default function Download() {
                                     <div className="flex items-center mt-4 text-[#444FD9]">
                                         <LinkWithArrow to={item.link} text="Learn more" />
                                     </div>
-                                </Link>
+                                </div>
                             ) : (
-                                <section>
+                                <section key={item.title}>
                                     <div className="relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline">
                                         <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
                                         <div className="mt-4 text-base text-center text-[#4C576C]">

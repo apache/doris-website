@@ -69,7 +69,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
 
     return (
         <div className="rounded-lg border border-b-[0.375rem] border-[#444FD9] px-8 pt-[3.125rem] pb-[2.1875rem]">
-            <div className="mb-8 text-xl font-medium">Available downloads</div>
+            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
             <Form
                 form={form}
                 onFinish={val => {
@@ -91,7 +91,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                 <Form.Item name="version" rules={[{ required: true }]}>
                     <FormSelect
                         placeholder="Version"
-                        label="version"
+                        label="Version"
                         isCascader={true}
                         displayRender={label => {
                             return label.length > 0 ? label[label.length - 1] : '';
@@ -145,7 +145,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                 {Array.isArray(version) && showArch(version[1]) && (
                     <>
                         <div
-                            className="flex cursor-pointer text-[#444FD9] items-center mt-7 justify-center"
+                            className="flex cursor-pointer text-[#444FD9] items-center mt-4 justify-center"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
                                     version: version,
@@ -182,9 +182,9 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 />
                             </svg>
                         </div>
-                        <div className="flex justify-center mt-[1.5rem]">
+                        <div className="flex justify-center mt-4">
                             <div
-                                className="inline-flex items-center text-[#444FD9] cursor-pointer hover:underline"
+                                className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-[#444FD9]"
                                 onClick={() => {
                                     const url = getDownloadLinkByCard({
                                         version: version,
@@ -198,7 +198,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 ASC
                             </div>
                             <div
-                                className="inline-flex items-center ml-4 text-[#444FD9] cursor-pointer hover:underline"
+                                className="inline-flex items-center ml-4 text-[#8592A6] hover:text-[#444FD9] cursor-pointer hover:underline"
                                 onClick={() => {
                                     const url = getDownloadLinkByCard({
                                         version: version,
