@@ -90,7 +90,9 @@ That's why we have adopted Parallel Adaptive Scan in Doris V2.1. What happens is
 
 In 2.1 and future versions, we recommend that you set **the number of buckets equal to the total number of disks in the cluster**, in order to fully utilize the I/O resources of the entire cluster.
 
-Note: Parallel Adaptive Scan is currently available for the Duplicate Key model and the Merge-on-Write tables of the Unique Key model. We plan to add it to the Aggregate Key model and the Merge-on-Read tables of the Unique Key model in version 2.1.1.
+:::note
+Parallel Adaptive Scan is currently available for the Duplicate Key model and the Merge-on-Write tables of the Unique Key model. We plan to add it to the Aggregate Key model and the Merge-on-Read tables of the Unique Key model in version 2.1.1.
+:::
 
 ### Local Shuffle
 
@@ -105,7 +107,7 @@ For queries across multiple instances, uneven data distribution can prolong the 
 
 For a proof of concept, we have simulated unreasonable bucket number settings. Firstly, we use the ClickBench dataset and run flat-table queries with the bucket number being 1 and 16, respectively. Then, we use the TPC-H 100G dataset and run join queries with 1 bucket and 16 buckets in each partition, respectively. Results from the runs show minimal fluctuations, which means the combination of Parallel Adaptive Scan and Local Shuffle is able to guarantee high query performance even with inappropriately sharded or unevenly distributed data.
 
-![Clickbench and Local Shuffle](/images/2.1-doris-clickbench-tpch.png)
+![Clickbench and Local Shuffle](/images/2.1-Clickbench-and-Local-shuffle.png)
 
 
 :::note
@@ -129,6 +131,7 @@ V2.1 is specifically adapted to and optimized for ARM architecture. Compared to 
 V2.1 also reaches new heights in data lake analysis. According to TPC-DS benchmark tests (1TB) of Doris V2.1 against Trino V435,
 
 - Without caching, Apache Doris is **45% faster than** **Trino**, with their total execution time being 717s and 1296s, respectively. Specifically, Doris outperforms Trino in 80% of the total 99 SQL queries.
+
 - If you enable file cache, you can expect another 2.2-time speedup from Doris (323s). **That is 4 times the speed of Trino, with a straight win in all 99 SQL queries.**
 
 In addition, TPC-DS 10TB benchmark tests show that Apache Doris 2.1 is 4.2 times as fast as Spark 3.5.0 and 6.1 times as Spark 3.3.1.
@@ -415,7 +418,7 @@ See doc: https://doris.apache.org/docs/advanced/partition/auto-partition/
 
 For further improvement, in V2.1, we have moved forward the execution of MemTable to reduce data ingestion overheads. Tests show that this can **double the data ingestion speed in most cases compared to V2.0**. 
 
-![100% faster INSERT INTO SELECT](/images/2.1-doris-INSERT-INTO-SELECT.png)
+![100% faster INSERT INTO SELECT](/images/2.1-INSERT-INTO-SELECT-EN.png)
 
 The process comparison before and after moving forward the execution of MemTable is illustrated above. The Sink node no longer sends encoded data blocks but instead processes MemTable locally and sends the generated segments to downstream nodes. This reduces the overheads caused by multiple data encoding and improves the speed and accuracy of memory backpressure. In addition, we have replaced Ping-Pong RPC with Streaming RPC so there will be less waiting during data transfer.
 
