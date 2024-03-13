@@ -136,7 +136,7 @@ V2.1 also reaches new heights in data lake analysis. According to TPC-DS benchma
 
 In addition, TPC-DS 10TB benchmark tests show that Apache Doris 2.1 is 4.2 times as fast as Spark 3.5.0 and 6.1 times as Spark 3.3.1.
 
-![Data lake analytic performance](/static/images/2.1-doris-TPC-DS.png)
+![Data lake analytic performance](/images/2.1-doris-TPC-DS.png)
 
 This is achieved by a series of optimizations in I/O for HDFS and object storage, parquet/ORC file reading, floating-point decompression, predicate pushdown, caching, and scan task scheduling. It is also built upon a more precise cost model in the optimizer and more accurate statistics collection for different data sources.
 
