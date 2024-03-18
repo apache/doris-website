@@ -25,8 +25,6 @@ under the License.
 -->
 
 
-# 导入严格模式
-
 严格模式（strict_mode）为导入操作中的一个参数配置。该参数会影响某些数值的导入行为和最终导入的数据。
 
 本文档主要说明如何设置严格模式，以及严格模式产生的影响。
@@ -37,7 +35,7 @@ under the License.
 
 不同的导入方式设置严格模式的方式不尽相同。
 
-1. [BROKER LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD)
+1. [BROKER LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD)
 
    ```sql
    LOAD LABEL example_db.label1
@@ -58,7 +56,7 @@ under the License.
    )
    ```
 
-2. [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
+2. [STREAM LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
    ```bash
    curl --location-trusted -u user:passwd \
@@ -67,7 +65,7 @@ under the License.
    http://host:port/api/example_db/my_table/_stream_load
    ```
 
-3. [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)
+3. [ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)
 
    ```sql
    CREATE ROUTINE LOAD example_db.test_job ON my_table
@@ -82,9 +80,9 @@ under the License.
    );
    ```
 
-4. [INSERT](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT)
+4. [INSERT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT)
 
-   通过[会话变量](../../../advanced/variables)设置：
+   通过[会话变量](../../query/query-variables/variables)设置：
 
    ```sql
    SET enable_insert_strict = true;
@@ -93,7 +91,7 @@ under the License.
 
 ## 严格模式的作用
 
-- 对于导入过程中的列类型转换进行严格过滤。
+### 对于导入过程中的列类型转换进行严格过滤。
 
 严格过滤的策略如下：
 
@@ -103,38 +101,46 @@ under the License.
 
 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，严格模式对其也不产生影响。例如：如果类型是 `decimal(1,0)`, 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。
 
-1. 以列类型为 TinyInt 来举例：
+**1. 以列类型为 TinyInt 来举例：**
 
-   | 原始数据类型 | 原始数据举例  | 转换为 TinyInt 后的值 | 严格模式   | 结果             |
-   | ------------ | ------------- | --------------------- | ---------- | ---------------- |
-   | 空值         | \N            | NULL                  | 开启或关闭 | NULL             |
-   | 非空值       | "abc" or 2000 | NULL                  | 开启       | 非法值（被过滤） |
-   | 非空值       | "abc"         | NULL                  | 关闭       | NULL             |
-   | 非空值       | 1             | 1                     | 开启或关闭 | 正确导入         |
+| 原始数据类型 | 原始数据举例  | 转换为 TinyInt 后的值 | 严格模式   | 结果             |
+| ------------ | ------------- | --------------------- | ---------- | ---------------- |
+| 空值         | \N            | NULL                  | 开启或关闭 | NULL             |
+| 非空值       | "abc" or 2000 | NULL                  | 开启       | 非法值（被过滤） |
+| 非空值       | "abc"         | NULL                  | 关闭       | NULL             |
+| 非空值       | 1             | 1                     | 开启或关闭 | 正确导入         |
 
-   > 说明：
-   >
-   > 1. 表中的列允许导入空值
-   > 2. `abc` 及 `2000` 在转换为 TinyInt 后，会因类型或精度问题变为 NULL。在严格模式开启的情况下，这类数据将会被过滤。而如果是关闭状态，则会导入 `null`。
+:::tip
+说明：
 
-2. 以列类型为 Decimal(1,0) 举例
+1. 表中的列允许导入空值
 
-   | 原始数据类型 | 原始数据举例 | 转换为 Decimal 后的值 | 严格模式   | 结果             |
-   | ------------ | ------------ | --------------------- | ---------- | ---------------- |
-   | 空值         | \N           | null                  | 开启或关闭 | NULL             |
-   | 非空值       | aaa          | NULL                  | 开启       | 非法值（被过滤） |
-   | 非空值       | aaa          | NULL                  | 关闭       | NULL             |
-   | 非空值       | 1 or 10      | 1 or 10               | 开启或关闭 | 正确导入         |
+2. `abc` 及 `2000` 在转换为 TinyInt 后，会因类型或精度问题变为 NULL。在严格模式开启的情况下，这类数据将会被过滤。而如果是关闭状态，则会导入 `null`。
+:::
 
-   > 说明：
-   >
-   > 1. 表中的列允许导入空值
-   > 2. `abc` 在转换为 Decimal 后，会因类型问题变为 NULL。在严格模式开启的情况下，这类数据将会被过滤。而如果是关闭状态，则会导入 `null`。
-   > 3. `10` 虽然是一个超过范围的值，但是因为其类型符合 decimal 的要求，所以严格模式对其不产生影响。`10` 最后会在其他导入处理流程中被过滤。但不会被严格模式过滤。
+**2. 以列类型为 Decimal(1,0) 举例**
 
-- 限定部分列更新只能更新已有的列
+| 原始数据类型 | 原始数据举例 | 转换为 Decimal 后的值 | 严格模式   | 结果             |
+| ------------ | ------------ | --------------------- | ---------- | ---------------- |
+| 空值         | \N           | null                  | 开启或关闭 | NULL             |
+| 非空值       | aaa          | NULL                  | 开启       | 非法值（被过滤） |
+| 非空值       | aaa          | NULL                  | 关闭       | NULL             |
+| 非空值       | 1 or 10      | 1 or 10               | 开启或关闭 | 正确导入         |
 
-在严格模式下，部分列更新插入的每一行数据必须满足该行数据的 key 在表中已经存在。而在而非严格模式下，进行部分列更新时可以更新 key 已经存在的行，也可以插入 key 不存在的新行。
+:::tip
+说明：
+
+1. 表中的列允许导入空值
+
+2. `abc` 在转换为 Decimal 后，会因类型问题变为 NULL。在严格模式开启的情况下，这类数据将会被过滤。而如果是关闭状态，则会导入 `null`。
+
+3. `10` 虽然是一个超过范围的值，但是因为其类型符合 decimal 的要求，所以严格模式对其不产生影响。`10` 最后会在其他导入处理流程中被过滤。但不会被严格模式过滤。
+:::
+
+
+### 限定部分列更新只能更新已有的列
+
+在严格模式下，部分列更新插入的每一行数据必须满足该行数据的 Key 在表中已经存在。而在而非严格模式下，进行部分列更新时可以更新 Key 已经存在的行，也可以插入 Key 不存在的新行。
 
 例如有表结构如下：
 ```
@@ -153,27 +159,27 @@ mysql> desc user_profile;
 
 表中有一条数据如下：
 
-```
+```sql
 1,"kevin",18,"shenzhen",400,"2023-07-01 12:00:00"
 ```
 
-当用户使用非严格模式的 stram load 部分列更新向表中插入如下数据时
+当用户使用非严格模式的 Stream Load 部分列更新向表中插入如下数据时
 
-```
+```sql
 1,500,2023-07-03 12:00:01
 3,23,2023-07-03 12:00:02
 18,9999999,2023-07-03 12:00:03
 ```
 
-```
+```bash
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
 表中原有的一条数据将会被更新，此外还向表中插入了两条新数据。对于插入的数据中用户没有指定的列，如果该列有默认值，则会以默认值填充；否则，如果该列可以为 NULL，则将以 NULL 值填充；否则本次插入不成功。
 
-而当用户使用严格模式的 stram load 部分列更新向表中插入上述数据时
+而当用户使用严格模式的 Stream Load 部分列更新向表中插入上述数据时
 
-```
+``` bash
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 

@@ -24,556 +24,1918 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Routine Load
+Doris 可以通过 Routine Load 导入方式持续消费 Kafka Topic 中的数据。在提交 Routine Load 作业后，Doris 会持续运行该导入作业，实时生成导入任务不断消费 Kakfa 集群中指定 Topic 中的消息。
 
-例行导入（Routine Load）功能，支持用户提交一个常驻的导入任务，通过不断的从指定的数据源读取数据，将数据导入到 Doris 中。
+Routine Load 是一个流式导入作业，支持 Exactly-Once 语义，保证数据不丢不重。
 
-本文档主要介绍该功能的实现原理、使用方式以及最佳实践。
+## 使用场景
 
-## 基本原理
+### 支持数据文件格式
 
-```text
-         +---------+
-         |  Client |
-         +----+----+
-              |
-+-----------------------------+
-| FE          |               |
-| +-----------v------------+  |
-| |                        |  |
-| |   Routine Load Job     |  |
-| |                        |  |
-| +---+--------+--------+--+  |
-|     |        |        |     |
-| +---v--+ +---v--+ +---v--+  |
-| | task | | task | | task |  |
-| +--+---+ +---+--+ +---+--+  |
-|    |         |        |     |
-+-----------------------------+
-     |         |        |
-     v         v        v
- +---+--+   +--+---+   ++-----+
- |  BE  |   |  BE  |   |  BE  |
- +------+   +------+   +------+
-```
+Routine Load 支持从 Kafka 中消费 CSV 及 JSON 格式的数据。
 
-如上图，Client 向 FE 提交一个Routine Load 作业。
+在导入 CSV 格式时，需要明确区分空值（null）与空字符串（''）：
 
-1. FE 通过 JobScheduler 将一个导入作业拆分成若干个 Task。每个 Task 负责导入指定的一部分数据。Task 被 TaskScheduler 分配到指定的 BE 上执行。
+- 空值（null）需要用 `\n` 表示，`a,\n,b` 数据表示中间列是一个空值（null）
 
-2. 在 BE 上，一个 Task 被视为一个普通的导入任务，通过 Stream Load 的导入机制进行导入。导入完成后，向 FE 汇报。
-
-3. FE 中的 JobScheduler 根据汇报结果，继续生成后续新的 Task，或者对失败的 Task 进行重试。
-
-4. 整个 Routine Load 作业通过不断的产生新的 Task，来完成数据不间断的导入。
-
-
-## Kafka例行导入
-
-当前我们仅支持从 Kafka 进行例行导入。该部分会详细介绍 Kafka 例行导入使用方式和最佳实践。
+- 空字符串（''）直接将数据置空，a,,b 数据表示中间列是一个空字符串（''）
 
 ### 使用限制
 
-1. 支持无认证的 Kafka 访问，以及通过 SSL 方式认证的 Kafka 集群。
-2. 支持的消息格式为 csv， json 文本格式。csv 每一个 message 为一行，且行尾**不包含**换行符。
-3. 默认支持 Kafka 0.10.0.0(含) 以上版本。如果要使用 Kafka 0.10.0.0 以下版本 (0.9.0, 0.8.2, 0.8.1, 0.8.0)，需要修改 be 的配置，将 kafka_broker_version_fallback 的值设置为要兼容的旧版本，或者在创建routine load的时候直接设置 property.broker.version.fallback的值为要兼容的旧版本，使用旧版本的代价是routine load 的部分新特性可能无法使用，如根据时间设置 kafka 分区的 offset。
+在使用 Routine Load 消费 Kafka 中数据时，有以下限制：
 
-### 创建任务
+- 支持无认证的 Kafka 访问，以及通过 SSL 方式认证的 Kafka 集群；
 
-创建例行导入任务的详细语法可以连接到 Doris 后，查看[CREATE ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md)命令手册，或者执行 `HELP ROUTINE LOAD;` 查看语法帮助。
+- 支持的消息格式为 CSV 及 JSON 文本格式。CSV 每一个 message 为一行，且行尾**不包含**换行符；
 
-下面我们以几个例子说明如何创建Routine Load任务：
+- 默认支持 Kafka 0.10.0.0（含）以上版本。如果要使用 Kafka 0.10.0.0 以下版本（0.9.0, 0.8.2, 0.8.1, 0.8.0），需要修改 BE 的配置，将 `kafka_broker_version_fallback` 的值设置为要兼容的旧版本，或者在创建 Routine Load 的时候直接设置 `property.broker.version.fallback` 的值为要兼容的旧版本，使用旧版本的代价是 Routine Load 的部分新特性可能无法使用，如根据时间设置 Kafka 分区的 offset。
 
-1. 为example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅。 
+## 基本原理
+
+Routine Load 会持续消费 Kafka Topic 中的数据，写入 Doris 中。
+
+在 Doris 中，创建 Routine Load 作业后会生成一个常驻的导入作业和若干个导入任务：
+
+- 导入作业（load job）：一个 Routine Load 对应一个导入作业，导入作业是一个常驻的任务，会持续不断地消费 Kafka Topic 中的数据；
+
+- 导入任务（load task）：一个导入作业会被拆解成若干个导入作业，作为一个独立的导入基本单位，以 Stream Load 的方式写入到 BE 中。
+
+Routine Load 的导入具体流程如下图展示：
+
+![Routine Load](/images/routine-load.jpeg)
+
+1. Client 向 FE 提交 Routine Load 常驻 Routine Load Job
+
+2. FE 通过 Job Scheduler 将 Routine Load Job 拆分成若干个 Routine Load Task
+
+3. 在 BE 上，一个 Routine Load Task 会被视为 Stream Load 任务进行导入，导入完成后向 FE 汇报
+
+4. FE 中的 Job Scheduler 根据汇报结果，继续生成新的 Task，或对失败的 Task 进行重试
+
+5. Routine Load Job 会不断产生新的 Task，来完成数据的不间断导入
+
+## 快速上手
+
+### 创建导入作业
+
+在 Doris 内可以通过 CREATE ROUTINE LOAD 命令创建常驻 Routine Load 导入任务。详细语法可以参考 [CREATE ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)。Routine Load 可以消费 CSV 和 JSON 的数据。
+
+**导入 CSV 数据**
+
+1. 导入数据样本
+
+在 Kafka 中，有以下样本数据
 
 ```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
+1,Emily,25
+2,Benjamin,35
+3,Olivia,28
+4,Alexander,60
+5,Ava,17
+6,William,69
+7,Sophia,32
+8,James,64
+9,Emma,37
+10,Liam,64
+```
+
+2. 创建需要导入的表
+
+在 Doris 中，创建被导入的表，具体语法如下
+
+```sql
+CREATE TABLE testdb.test_streamload(
+    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
+    name               VARCHAR(20)           COMMENT "用户姓名",
+    age                INT                   COMMENT "用户年龄"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
+
+3. 创建 Routine Load 导入作业
+
+在 Doris 中，使用 CREATE ROUTINE LOAD 命令，创建导入作业
+
+```SQL
+CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
+COLUMNS TERMINATED BY ",",
+COLUMNS(user_id, name, age)
+FROM KAFKA(
+    "kafka_broker_list" = "192.168.88.62:9092",
+    "kafka_topic" = "test-routine-load-csv",
+    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+);
+```
+
+### 导入 JSON 数据
+
+1. 导入样本数据
+
+在 Kafka 中，有以下样本数据
+
+```sql
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-json --from-beginning
+{"user_id":1,"name":"Emily","age":25}
+{"user_id":2,"name":"Benjamin","age":35}
+{"user_id":3,"name":"Olivia","age":28}
+{"user_id":4,"name":"Alexander","age":60}
+{"user_id":5,"name":"Ava","age":17}
+{"user_id":6,"name":"William","age":69}
+{"user_id":7,"name":"Sophia","age":32}
+{"user_id":8,"name":"James","age":64}
+{"user_id":9,"name":"Emma","age":37}
+{"user_id":10,"name":"Liam","age":64}
+```
+
+2. 创建需要导入的表
+
+在 Doris 中，创建被导入的表，具体语法如下
+
+```sql
+CREATE TABLE testdb.test_streamload(
+    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
+    name               VARCHAR(20)           COMMENT "用户姓名",
+    age                INT                   COMMENT "用户年龄"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
+
+3. 创建 Routine Load 导入作业
+
+在 Doris 中，使用 CREATE ROUTINE LOAD 命令，创建导入作业
+
+```sql
+CREATE ROUTINE LOAD testdb.example_routine_load_json ON test_routineload_tbl
+COLUMNS(user_id,name,age)
+PROPERTIES(
+    "format"="json",
+    "jsonpaths"="[\"$.user_id\",\"$.name\",\"$.age\"]"
+)
+FROM KAFKA(
+    "kafka_broker_list" = "192.168.88.62:9092",
+    "kafka_topic" = "test-routine-load-json",
+    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+);
+```
+
+### 查看导入状态
+
+在 Doris 中，可以查看 Routine Load 的导入作业情况和导入任务情况：
+
+- 导入作业：主要用于查看导入任务目标表、子任务数量、导入延迟状态、导入配置与导入结果等信息；
+
+- 导入任务：主要用于查看导入的子任务状态、消费进度以及下发的 BE 节点。
+
+**01 查看导入运行任务**
+
+可以通过 [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) 命令查看导入作业情况。SHOW ROUTINE LOAD 描述了当前作业的基本情况，如导入目标表、导入延迟状态、导入配置信息、导入错误信息等。
+
+如通过以下命令可以查看 testdb.example_routine_load_csv 的任务情况：
+
+```sql
+mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
+*************************** 1. row ***************************
+                  Id: 12025
+                Name: example_routine_load
+          CreateTime: 2024-01-15 08:12:42
+           PauseTime: NULL
+             EndTime: NULL
+              DbName: default_cluster:testdb
+           TableName: test_routineload_tbl
+        IsMultiTable: false
+               State: RUNNING
+      DataSourceType: KAFKA
+      CurrentTaskNum: 1
+       JobProperties: {"max_batch_rows":"200000","timezone":"America/New_York","send_batch_parallelism":"1","load_to_single_tablet":"false","column_separator":"','","line_delimiter":"\n","current_concurrent_number":"1","delete":"*","partial_columns":"false","merge_type":"APPEND","exec_mem_limit":"2147483648","strict_mode":"false","jsonpaths":"","max_batch_interval":"10","max_batch_size":"104857600","fuzzy_parse":"false","partitions":"*","columnToColumnExpr":"user_id,name,age","whereExpr":"*","desired_concurrent_number":"5","precedingFilter":"*","format":"csv","max_error_number":"0","max_filter_ratio":"1.0","json_root":"","strip_outer_array":"false","num_as_string":"false"}
+DataSourceProperties: {"topic":"test-topic","currentKafkaPartitions":"0","brokerList":"192.168.88.62:9092"}
+    CustomProperties: {"kafka_default_offsets":"OFFSET_BEGINNING","group.id":"example_routine_load_73daf600-884e-46c0-a02b-4e49fdf3b4dc"}
+           Statistic: {"receivedBytes":28,"runningTxns":[],"errorRows":0,"committedTaskNum":3,"loadedRows":3,"loadRowsRate":0,"abortedTaskNum":0,"errorRowsAfterResumed":0,"totalRows":3,"unselectedRows":0,"receivedBytesRate":0,"taskExecuteTimeMs":30069}
+            Progress: {"0":"2"}
+                 Lag: {"0":0}
+ReasonOfStateChanged:
+        ErrorLogUrls:
+            OtherMsg:
+                User: root
+             Comment:
+1 row in set (0.00 sec)
+```
+
+**02 查看导入运行作业**
+
+可以通过 [SHOW ROUTINE LOAD TASK](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD-TASK) 命令查看导入子任务情况。SHOW ROUTINE LOAD TASK 描述了当前作业下的子任务信息，如子任务状态，下发 BE id 等信息。
+
+如通过以下命令可以查看 testdb.example_routine_load_csv 的任务情况：
+
+```sql
+mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
++-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
+| TaskId                            | TxnId | TxnStatus | JobId | CreateTime          | ExecuteStartTime    | Timeout | BeId  | DataSourceProperties |
++-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
+| 8cf47e6a68ed4da3-8f45b431db50e466 | 195   | PREPARE   | 12177 | 2024-01-15 12:20:41 | 2024-01-15 12:21:01 | 20      | 10429 | {"4":1231,"9":2603}  |
+| f2d4525c54074aa2-b6478cf8daaeb393 | 196   | PREPARE   | 12177 | 2024-01-15 12:20:41 | 2024-01-15 12:21:01 | 20      | 12109 | {"1":1225,"6":1216}  |
+| cb870f1553864250-975279875a25fab6 | -1    | NULL      | 12177 | 2024-01-15 12:20:52 | NULL                | 20      | -1    | {"2":7234,"7":4865}  |
+| 68771fd8a1824637-90a9dac2a7a0075e | -1    | NULL      | 12177 | 2024-01-15 12:20:52 | NULL                | 20      | -1    | {"3":1769,"8":2982}  |
+| 77112dfea5e54b0a-a10eab3d5b19e565 | 197   | PREPARE   | 12177 | 2024-01-15 12:21:02 | 2024-01-15 12:21:02 | 20      | 12098 | {"0":3000,"5":2622}  |
++-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
+```
+
+### 暂停导入作业
+
+可以通过 [PAUSE ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD) 命令暂停导入作业。暂停导入作业后，会进入 PAUSED 状态，但导入作业并未终止，可以通过 RESUME ROUTINE LOAD 命令重启导入作业。
+
+如通过以下命令可以暂停 testdb.example_routine_load_csv 导入作业：
+
+```sql
+PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
+```
+
+### 恢复导入作业
+
+可以通过 [RESUME ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) 命令恢复导入作业。
+
+如通过以下命令可以恢复 testdb.example_routine_load_csv 导入作业：
+
+```sql
+RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
+```
+
+### 修改导入作业
+
+可以通过 [ALTER ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD) 命令修改已创建的导入作业。在修改导入作业前，需要使用 PAUSE ROUTINE LOAD 暂停导入作业，修改后需要使用 RESUME ROUTINE LOAD 恢复导入作业。
+
+如通过以下命令可以修改期望导入任务并行度参数 desired_concurrent_number，并修改 Kafka Topic 信息：
+
+```sql
+ALTER ROUTINE LOAD FOR testdb.example_routine_load_csv
+PROPERTIES(
+    "desired_concurrent_number" = "3"
+)
+FROM KAFKA(
+    "kafka_broker_list" = "192.168.88.60:9092",
+    "kafka_topic" = "test-topic"
+);
+```
+
+### 取消导入作业
+
+可以通过 [STOP ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) 命令停止并删除 Routine Load 导入作业。删除后的导入作业无法被恢复，也无法通过 SHOW ROUTINE LOAD 命令查看。
+
+可以通过以下命令停止并删除导入作业 testdb.example_routine_load_csv：
+
+```sql
+STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
+```
+
+## 参考手册
+
+### 导入命令
+
+创建一个 Routine Load 常驻导入作业语法如下：
+
+```sql
+CREATE ROUTINE LOAD [<db_name>.]<job_name> [ON <tbl_name>]
+[merge_type]
+[load_properties]
+[job_properties]
+FROM KAFKA [data_source_properties]
+[COMMENT "<comment>"]
+```
+
+创建导入作业的模块说明如下：
+
+| 模块                   | 说明                                                         |
+| ---------------------- | ------------------------------------------------------------ |
+| db_name                | 指定创建导入任务的数据库。                                   |
+| job_name               | 指定创建的导入任务名称，同一个 database 不能有名字相同的任务。 |
+| tbl_name               | 指定需要导入的表的名称，可选参数，如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。 |
+| merge_type             | 数据合并类型。默认值为 APPEND。<p>merge_type 有三种选项：</p> <p>- APPEND：追加导入方式；</p> <p>- MERGE：合并导入方式；</p> <p>- DELETE：导入的数据皆为需要删除的数据。</p> |
+| load_properties        | 导入描述模块，包括以下组成部分：<p>- colum_spearator 子句</p> <p>- columns_mapping 子句</p> <p>- preceding_filter 子句</p> <p>- where_predicates 子句</p> <p>- partitions 子句</p> <p>- delete_on 子句</p> <p>- order_by 子句</p> |
+| job_properties         | 用于指定 Routine Load 的通用导入参数。                       |
+| data_source_properties | 用于描述 Kafka 数据源属性。                                  |
+| comment                | 用于描述导入作业的备注信息。                                 |
+
+### 导入参数说明
+
+**01 FE 配置参数**
+
+**max_routine_load_task_concurrent_num**
+
+- 默认值：5
+
+- 动态配置：是
+
+- FE Master 独有配置：是
+
+- 参数描述：限制 Routine Load 的导入作业最大子并发数量。建议维持在默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。
+
+**max_routine_load_task_num_per_be**
+
+- 默认值：5
+
+- 动态配置：是
+
+- FE Master 独有配置：是
+
+- 参数描述：每个 BE 限制的最大并发 Routine Load 任务数。`max_routine_load_task_num_per_be` 应该小 `routine_load_thread_pool_size` 于参数。
+
+**max_routine_load_job_num**
+
+- 默认值：100
+
+- 动态配置：是
+
+- FE Master 独有配置：是
+
+- 参数描述：限制最大 Routine Load 作业数，包括 NEED_SCHEDULED，RUNNING，PAUSE
+
+**max_tolerable_backend_down_num**
+
+- 默认值：0
+
+- 动态配置：是
+
+- FE Master 独有配置：是
+
+- 参数描述：只要有一个 BE 宕机，Routine Load 就无法自动恢复。在满足某些条件时，Doris 可以将 PAUSED 的任务重新调度，转换为 RUNNING 状态。该参数为 0 表示只有所有 BE 节点都是 alive 状态踩允许重新调度。
+
+**period_of_auto_resume_min**
+
+- 默认值：5（分钟）
+
+- 动态配置：是
+
+- FE Master 独有配置：是
+
+- 参数描述：自动恢复 Routine Load 的周期
+
+**02 BE 配置参数**
+
+**max_consumer_num_per_group**
+
+- 默认值：3
+
+- 动态配置：是
+
+- 描述：一个子任务重最多生成几个 consumer 消费数据。对于 Kafka 数据源，一个 consumer 可能消费一个或多个 Kafka Partition。假设一个任务需要消费 6 个 Kafka Partitio，则会生成 3 个 consumer，每个 consumer 消费 2 个 partition。如果只有 2 个 partition，则只会生成 2 个 consumer，每个 consumer 消费 1 个 partition。
+
+**03 导入配置参数**
+
+在创建 Routine Load 作业时，可以通过 CREATE ROUTINE LOAD 命令指定不同模块的导入配置参数。
+
+**tbl_name 子句**
+
+指定需要导入的表的名称，可选参数。
+
+如果不指定，则采用动态表的方式，这个时候需要 Kafka 中的数据包含表名的信息。目前仅支持从 Kafka 的 Value 中获取动态表名，且需要符合这种格式：以 json 为例：`table_name|{"col1": "val1", "col2": "val2"}`, 其中 `tbl_name` 为表名，以 `|` 作为表名和表数据的分隔符。csv 格式的数据也是类似的，如：`table_name|val1,val2,val3`。注意，这里的 `table_name` 必须和 Doris 中的表名一致，否则会导致导入失败。注意，动态表不支持后面介绍的 column_mapping 配置。
+
+**merge_type 子句**
+
+可以通过 merge_type 模块指定数据合并的类型。merge_type 有三种选项：
+
+- APPEND：追加导入方式
+
+- MERGE：合并导入方式。仅适用于 Unique Key 模型。需要配合 [DELETE ON] 模块，以标注 Delete Flag 列
+
+- DELETE：导入的数据皆为需要删除的数据
+
+**load_properties 子句**
+
+可以通过 load_properties 模块描述导入数据的属性，具体语法如下
+
+```sql
+[COLUMNS TERMINATED BY <column_separator>,]
+[COLUMNS (<column1_name>[, <column2_name>, <column_mapping>, ...]),]
+[WHERE <where_expr>,]
+[PARTITION(<partition1_name>, [<partition2_name>, <partition3_name>, ...]),]
+[DELETE ON <delete_expr>,]
+[ORDER BY <order_by_column1>[, <order_by_column2>, <order_by_column3>, ...]]
+```
+
+具体模块对应参数如下：
+
+| 子模块                | 参数                                                         | 说明                                                         |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| COLUMNS TERMINATED BY | <column_separator>                                           | 用于指定列分隔符，默认为 `\t`。例如需要指定逗号为分隔符，可以使用以下命令：`COLUMN TERMINATED BY ","`对于空值处理，需要注意以下事项：<p>- 空值（null）需要用 `\n` 表示，`a,\n,b` 数据表示中间列是一个空值（null）</p> <p>- 空字符串（''）直接将数据置空，a,,b 数据表示中间列是一个空字符串（''）</p> |
+| COLUMNS               | <column_name>                                                | 用于指定对应的列名例如需要指定导入列 `(k1, k2, k3)`，可以使用以下命令：`COLUMNS(k1, k2, k3)`在以下情况下可以缺省 COLUMNS 子句：<p>- CSV 中的列与表中的列一一对应</p> <p>- JSON 中的 key 列与表中的列名相同</p> |   
+| &nbsp;&nbsp;               | <column_mapping>      | 在导入过程中，可以通过列映射进行列的过滤和转换。如在导入的过程中，目标列需要基于数据源的某一列进行衍生计算，目标列 k4 基于 k3 列使用公式 k3+1 计算得出，需要可以使用以下命令：`COLUMNS(k1, k2, k3, k4 = k3 + 1)`详细内容可以参考[数据转换](../../data-operate/import/load-data-convert) |                                                              |
+| WHERE                 | <where_expr>                                                 | 指定 where_expr 可以根据条件过滤导入的数据源。如只希望导入 age > 30 的数据源，可以使用以下命令：`WHERE age > 30` |
+| PARTITION             | <partition_name>                                             | 指定导入目标表中的哪些 partition。如果不指定，会自动导入对应的 partition 中。如希望导入目标表 p1 与 p2 分区，可以使用以下命令：`PARTITION(p1, p2)` |
+| DELETE ON             | <delete_expr>                                                | 在 MERGE 导入模式下，使用 delete_expr 标记哪些列需要被删除。如需要在 MERGE 时删除 age > 30 的列，可以使用，可以使用以下命令：`DELETE ON age > 30` |
+| ORDER BY              | <order_by_column>                                            | 进针对 Unique Key 模型生效。用于指定导入数据中的 Sequence Column 列，以保证数据的顺序。如在 Unique Key 表导入时，需要指定导入的 Sequence Column 为 create_time，可以使用以下命令：`ORDER BY create_time`针对与 Unique Key 模型 Sequence Column 列的描述，可以参考文档[ 数据更新/Sequence 列 ](../../data-operate/update/sequence-column-manual) |
+
+**job_properties 子句**
+
+在创建 Routine Load 导入作业时，可以指定 job_properties 子句以指定导入作业的属性。语法如下：
+
+```sql
+PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
+```
+
+job_properties 子句具体参数选项如下：
+
+| 参数                      | 说明                                                         |
+| ------------------------- | ------------------------------------------------------------ |
+| desired_concurrent_number | <p>默认值：5 </p> <p>参数描述：单个导入子任务（load task）期望的并发度，修改 Routine Load 导入作业切分的期望导入子任务数量。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际的并发度会根据集群的节点数、负载情况，以及数据源的情况综合考虑，使用公式以下可以计算出实际的导入子任务数：</p> <p>` min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p> <p>- topic_partition_num 表示 Kafka Topic 的 parititon 数量</p> <p>- desired_concurrent_number 表示设置的参数大小</p> <p>- max_routine_load_task_concurrent_num 为 FE 中设置 Routine Load 最大任务并行度的参数</p> |
+| max_batch_interval        | 每个子任务的最大运行时间，单位是秒，范围为 1s 到 60s，默认值为 10(s)。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_rows            | 每个子任务最多读取的行数。必须大于等于 200000。默认是 200000。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_size            | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB。默认是 100MB。max_batch_interval/max_batch_rows/max_batch_size 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_error_number          | 采样窗口内，允许的最大错误行数。必须大于等于 0。默认是 0，即不允许有错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，通过 [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) 命令中 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
+| strict_mode               | 是否开启严格模式，默认为关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。如果开启后，非空原始数据的列类型变换如果结果为 NULL，则会被过滤。<p>严格模式过滤策略如下：</p> <p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响</p> <p>- 当列类型需要转换，错误的数据类型将被过滤掉，在 [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看因为数据类型错误而被过滤掉的列</p> <p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换，但无法通过范围限制的，strict mode 对其也不产生影响。例如：如果类型是 decimal(1,0), 原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。这种数据 strict 对其不产生影响。详细内容参考[严格模式](../../data-operate/import/load-strict-mode)。</p> |
+| timezone                  | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的和时区有关的函数结果。 |
+| format                    | 指定导入数据格式，默认是 csv，支持 json 格式。               |
+| jsonpaths                 | 当导入数据格式为 JSON 时，可以通过 jsonpaths 指定抽取 Json 数据中的字段。例如通过以下命令指定导入 jsonpaths：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
+| json_root                 | 当导入数据格式为 json 时，可以通过 json_root 指定 Json 数据的根节点。Doris 将通过 json_root 抽取根节点的元素进行解析。默认为空。例如通过一下命令指定导入 Json 根节点：`"json_root" = "$.RECORDS"` |
+| strip_outer_array         | 当导入数据格式为 json 时，strip_outer_array 为 true 表示 Json 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常情况下，Kafka 中的 Json 数据可能以数组形式表示，即在最外层中包含中括号`[]`，此时，可以指定 `"strip_outer_array" = "true"`，以数组模式消费 Topic 中的数据。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| send_batch_parallelism    | 用于设置发送批量数据的并行度。如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。 |
+| load_to_single_tablet     | 支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。 |
+| partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[部分列更新](../../data-operate/update/partial-update) |
+| max_filter_ratio          | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 1.0，表示可以容忍任何错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。被 where 条件过滤掉的行不算错误行。 |
+| enclose                   | 指定包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
+| escape                    | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
+
+**04 data_source_properties 子句**
+
+在创建 Routine Load 导入作业时，可以指定 data_source_properties 子句以指定 Kafka 数据源的属性。语法如下：
+
+```sql
+FROM KAFKA ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
+```
+
+data_source_properties 子句具体参数选项如下：
+
+| 参数              | 说明                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| kafka_broker_list | 指定 Kafka 的 broker 连接信息。格式为 `<kafka_broker_ip>:<kafka port>`。多个 broker 之间以逗号分隔。例如在 Kafka Broker 中默认端口号为 9092，可以使用以下命令指定 Broker List：`"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
+| kafka_topic       | 指定要订阅的 Kafka 的 topic。一个导入作业仅能消费一个 Kafka Topic。 |
+| kafka_partitions  | 指定需要订阅的 Kafka Partition。如果不指定，则默认消费所有分区。 |
+| kafka_offsets     | 待销费的 Kakfa Partition 中起始消费点（offset）。如果指定时间，则会从大于等于该时间的最近一个 offset 处开始消费。offset 可以指定从大于等于 0 的具体 offset，也可以使用以下格式：<p>- OFFSET_BEGINNING: 从有数据的位置开始订阅。</p> <p>- OFFSET_END: 从末尾开始订阅。</p> <p>- 时间格式，如："2021-05-22 11:00:00"</p> <p>如果没有指定，则默认从 `OFFSET_END` 开始订阅 topic 下的所有 partition。</p> <p>可以指定多个其实消费点，使用逗号分隔，如：`"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"`或者`"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</p> <p>注意，时间格式不能和 OFFSET 格式混用。</p> |
+| property          | 指定自定义 kafka 参数。功能等同于 kafka shell 中 "--property" 参数。当参数的 Value 为一个文件时，需要在 Value 前加上关键词："FILE:"。创建文件可以参考 [CREATE FILE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-FILE) 命令文档。更多支持的自定义参数，可以参考 librdkafka 的官方 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) 文档中，client 端的配置项。如：`"property.client.id" = "12345"``"property.group.id" = "group_id_0"``"property.ssl.ca.location" = "FILE:ca.pem"` |
+
+通过配置 data_source_properties 中的 kafka property 参数，可以配置安全访问选项。目前 Doris 支持多种 Kafka 安全协议，如 plaintext（默认）、SSL、PLAIN、Kerberos 等。
+
+1. 访问 SSL 认证的 Kafka 集群 property 参数示例
+
+```sql
+"property.security.protocol" = "ssl",
+"property.ssl.ca.location" = "FILE:ca.pem",
+"property.ssl.certificate.location" = "FILE:client.pem",
+"property.ssl.key.location" = "FILE:client.key",
+"property.ssl.key.password" = "ssl_passwd"
+```
+
+2. 访问 PLAIN 认证的 Kafka 集群 property 参数示例
+
+```sql
+"property.security.protocol"="SASL_PLAINTEXT",
+"property.sasl.mechanism"="PLAIN",
+"property.sasl.username"="admin",
+"property.sasl.password"="admin_passwd"
+```
+
+3. 访问 Kerberos 认证的 Kafka 集群 property 参数示例
+
+```sql
+"property.security.protocol" = "SASL_PLAINTEXT",
+"property.sasl.kerberos.service.name" = "kafka",
+"property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
+"property.sasl.kerberos.principal" = "doris@YOUR.COM"
+```
+
+### 导入状态
+
+通过 SHOW ROUTINE LOAD 命令可以查看导入作业的状态，具体语法如下：
+
+```sql
+SHOW [ALL] ROUTINE LOAD [FOR jobName];
+```
+
+如通过 SHOW ROUTINE LOAD 会返回以下结果集示例：
+
+```SQL
+mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
+*************************** 1. row ***************************
+                  Id: 12025
+                Name: example_routine_load
+          CreateTime: 2024-01-15 08:12:42
+           PauseTime: NULL
+             EndTime: NULL
+              DbName: default_cluster:testdb
+           TableName: test_routineload_tbl
+        IsMultiTable: false
+               State: RUNNING
+      DataSourceType: KAFKA
+      CurrentTaskNum: 1
+       JobProperties: {"max_batch_rows":"200000","timezone":"America/New_York","send_batch_parallelism":"1","load_to_single_tablet":"false","column_separator":"','","line_delimiter":"\n","current_concurrent_number":"1","delete":"*","partial_columns":"false","merge_type":"APPEND","exec_mem_limit":"2147483648","strict_mode":"false","jsonpaths":"","max_batch_interval":"10","max_batch_size":"104857600","fuzzy_parse":"false","partitions":"*","columnToColumnExpr":"user_id,name,age","whereExpr":"*","desired_concurrent_number":"5","precedingFilter":"*","format":"csv","max_error_number":"0","max_filter_ratio":"1.0","json_root":"","strip_outer_array":"false","num_as_string":"false"}
+DataSourceProperties: {"topic":"test-topic","currentKafkaPartitions":"0","brokerList":"192.168.88.62:9092"}
+    CustomProperties: {"kafka_default_offsets":"OFFSET_BEGINNING","group.id":"example_routine_load_73daf600-884e-46c0-a02b-4e49fdf3b4dc"}
+           Statistic: {"receivedBytes":28,"runningTxns":[],"errorRows":0,"committedTaskNum":3,"loadedRows":3,"loadRowsRate":0,"abortedTaskNum":0,"errorRowsAfterResumed":0,"totalRows":3,"unselectedRows":0,"receivedBytesRate":0,"taskExecuteTimeMs":30069}
+            Progress: {"0":"2"}
+                 Lag: {"0":0}
+ReasonOfStateChanged:
+        ErrorLogUrls:
+            OtherMsg:
+                User: root
+             Comment:
+1 row in set (0.00 sec)
+```
+
+具体显示结果说明如下：
+
+| 结果列               | 列说明                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| Id                   | 作业 ID。由 Doris 自动生成。                                 |
+| Name                 | 作业名称。                                                   |
+| CreateTime           | 作业创建时间。                                               |
+| PauseTime            | 最近一次作业暂停时间。                                       |
+| EndTime              | 作业结束时间。                                               |
+| DbName               | 对应数据库名称                                               |
+| TableName            | 对应表名称。多表的情况下由于是动态表，因此不显示具体表名，会显示 multi-table。 |
+| IsMultiTbl           | 是是否为多表                                                 |
+| State                | 作业运行状态，有 5 种状态：<p>- NEED_SCHEDULE：作业等待被调度。在 CREATE ROUTINE LOAD 或 RESUME ROUTINE LOAD 后，作业会先进入到 NEED_SCHEDULE 状态；</p> <p>- RUNNING：作业运行中；</p> <p>- PAUSED：作业被暂停，可以通过 RESUME ROUTINE LOAD 恢复导入作业；</p> <p>- STOPPED：作业已结束，无法被重启；</p> <p>- CANCELLED：作业已取消。</p> |
+| DataSourceType       | 数据源类型：KAFKA。                                          |
+| CurrentTaskNum       | 当前子任务数量。                                             |
+| JobProperties        | 作业配置详情。                                               |
+| DataSourceProperties | 数据源配置详情。                                             |
+| CustomProperties     | 自定义配置。                                                 |
+| Statistic            | 作业运行状态统计信息。                                       |
+| Progress             | 作业运行进度。对于 Kafka 数据源，显示每个分区当前已消费的 offset。如 `{"0":"2"}` 表示 Kafka 分区 0 的消费进度为 2。 |
+| Lag                  | 作业延迟状态。对于 Kafka 数据源，显示每个分区的消费延迟。如 `{"0":10}` 表示 Kafka 分区 0 的消费延迟为 10。 |
+| ReasonOfStateChanged | 作业状态变更的原因                                           |
+| ErrorLogUrls         | 被过滤的质量不合格的数据的查看地址                           |
+| OtherMsg             | 其他错误信息                                                 |
+
+## 导入最佳实践
+
+### CSV 格式导入
+
+**设置导入最大容错率**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18
+2,Emily,20
+3,Alexander,22
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test01 (
+    id       INT             NOT NULL   COMMENT "用户 id",
+    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+    age      INT                        COMMENT "年纪"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
         COLUMNS TERMINATED BY ",",
-        COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100)
+        COLUMNS(id, name, age)
         PROPERTIES
         (
-            "desired_concurrent_number"="3",
-            "max_batch_interval" = "20",
-            "max_batch_rows" = "300000",
-            "max_batch_size" = "209715200",
+            "desired_concurrent_number"="1",
+            "max_filter_ratio"="0.5",
             "strict_mode" = "false"
         )
         FROM KAFKA
         (
-            "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-            "kafka_topic" = "my_topic",
-            "property.group.id" = "xxx",
-            "property.client.id" = "xxx",
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad01",
+            "property.group.id" = "kafka_job01",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test01;
++------+------------+------+
+| id   | name       | age  |
++------+------------+------+
+|    1 | Benjamin   |   18 |
+|    2 | Emily      |   20 |
+|    3 | Alexander  |   22 |
++------+------------+------+
+3 rows in set (0.01 sec)
+```
+
+**从指定消费点消费数据**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18
+2,Emily,20
+3,Alexander,22
+4,Sophia,24
+5,William,26
+6,Charlotte,28
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test02 (
+    id       INT             NOT NULL   COMMENT "用户 id",
+    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+    age      INT                        COMMENT "年纪"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad02",
+            "property.group.id" = "kafka_job",
+            "kafka_partitions" = "0",
+            "kafka_offsets" = "3"
+        );
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test02;
++------+--------------+------+
+| id   | name         | age  |
++------+--------------+------+
+|    4 | Sophia       |   24 |
+|    5 | William      |   26 |
+|    6 | Charlotte    |   28 |
++------+--------------+------+
+3 rows in set (0.01 sec)
+```
+
+**指定 Consumer Group 的 group.id 与 client.id**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18
+2,Emily,20
+3,Alexander,22
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test03 (
+    id       INT             NOT NULL   COMMENT "用户 id",
+    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+    age      INT                        COMMENT "年纪"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad01",
+            "property.group.id" = "kafka_job03",
+            "property.client.id" = "kafka_client_03",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test03;
++------+------------+------+
+| id   | name       | age  |
++------+------------+------+
+|    1 | Benjamin   |   18 |
+|    2 | Emily      |   20 |
+|    3 | Alexander  |   22 |
++------+------------+------+
+3 rows in set (0.01 sec)
+```
+
+**设置导入过滤条件**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18
+2,Emily,20
+3,Alexander,22
+4,Sophia,24
+5,William,26
+6,Charlotte,28
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test04 (
+    id       INT             NOT NULL   COMMENT "用户 id",
+    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+    age      INT                        COMMENT "年纪"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age),
+        WHERE id >= 3
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad04",
+            "property.group.id" = "kafka_job04",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test04;
++------+--------------+------+
+| id   | name         | age  |
++------+--------------+------+
+|    4 | Sophia       |   24 |
+|    5 | William      |   26 |
+|    6 | Charlotte    |   28 |
++------+--------------+------+
+3 rows in set (0.01 sec)
+```
+
+**导入指定分区数据**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18,2024-02-04 10:00:00
+2,Emily,20,2024-02-05 11:00:00
+3,Alexander,22,2024-02-06 12:00:00
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test05 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+    date    DATETIME                 COMMENT "时间"
+)
+PARTITION BY RANGE(date) ()
+DISTRIBUTED BY HASH(date)
+PROPERTIES
+(        
+    "replication_num" = "1",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-2",
+    "dynamic_partition.end" = "3",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "1"
+);
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age,date),
+        PARTITION(p20240205)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad05",
+            "property.group.id" = "kafka_job05",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        ); 
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test05;
++------+----------+------+---------------------+
+| id   | name     | age  | date                |
++------+----------+------+---------------------+
+|    2 | Emily    |   20 | 2024-02-05 11:00:00 |
++------+----------+------+---------------------+
+3 rows in set (0.01 sec)
+```
+
+**设置导入时区**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18,2024-02-04 10:00:00
+2,Emily,20,2024-02-05 11:00:00
+3,Alexander,22,2024-02-06 12:00:00
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test06 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+    date    DATETIME                 COMMENT "时间"
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age，date)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false",
+            "timezone"="Asia/Shanghai"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad06",
+            "property.group.id" = "kafka_job06",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test06;
++------+-------------+------+---------------------+
+| id   | name        | age  | date                |
++------+-------------+------+---------------------+
+|    1 | Benjamin    |   18 | 2024-02-05 10:00:00 |
+|    2 | Emily       |   20 | 2024-02-05 11:00:00 |
+|    3 | Alexander   |   22 | 2024-02-05 12:00:00 |
++------+-------------+------+---------------------+
+3 rows in set (0.00 sec)
+```
+
+**指定 merge_type 进行 delete 操作**
+
+1. 导入数据样例
+
+```sql
+3,Alexander,22
+5,William,26
+```
+
+导入前表中数据如下
+
+```sql
+mysql> SELECT * FROM routine_test07;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
+|    4 | Sophia         |   24 |
+|    5 | William        |   26 |
+|    6 | Charlotte      |   28 |
++------+----------------+------+
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test07 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
+        WITH DELETE 
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "max_filter_ratio"="0.5",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad07",
+            "property.group.id" = "kafka_job07",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> SELECT * FROM routine_test07;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    4 | Sophia         |   24 |
+|    6 | Charlotte      |   28 |
++------+----------------+------+
+```
+
+**指定 merge_typpe 进行 merge 操作**
+
+1. 导入数据样例
+
+```sql
+1,xiaoxiaoli,28
+2,xiaoxiaowang,30
+3,xiaoxiaoliu,32
+4,dadali,34
+5,dadawang,36
+6,dadaliu,38
+```
+
+导入前表中数据如下：
+
+```sql
+mysql> SELECT * FROM routine_test08;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
+|    4 | Sophia         |   24 |
+|    5 | William        |   26 |
+|    6 | Charlotte      |   28 |
++------+----------------+------+
+6 rows in set (0.01 sec)
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test08 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
+        WITH MERGE 
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age),
+        DELETE ON id = 2
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad08",
+            "property.group.id" = "kafka_job08",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );   
+```
+
+4. 导入结果
+
+```sql
+mysql> SELECT * FROM routine_test08;
++------+-------------+------+
+| id   | name        | age  |
++------+-------------+------+
+|    1 | xiaoxiaoli  |   28 |
+|    3 | xiaoxiaoliu |   32 |
+|    4 | dadali      |   34 |
+|    5 | dadawang    |   36 |
+|    6 | dadaliu     |   38 |
++------+-------------+------+
+5 rows in set (0.00 sec)
+```
+
+**指定导入需要 merge 的 sequence 列**
+
+1. 导入数据样例
+
+```sql
+1,xiaoxiaoli,28
+2,xiaoxiaowang,30
+3,xiaoxiaoliu,32
+4,dadali,34
+5,dadawang,36
+6,dadaliu,38
+```
+
+导入前表中数据如下：
+
+```sql
+mysql> SELECT * FROM routine_test09;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
+|    4 | Sophia         |   24 |
+|    5 | William        |   26 |
+|    6 | Charlotte      |   28 |
++------+----------------+------+
+6 rows in set (0.01 sec)
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test08 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "function_column.sequence_col" = "age"
+);
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job09 ON routine_test09
+        WITH MERGE 
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age),
+        DELETE ON id = 2,
+        ORDER BY age
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad09",
+            "property.group.id" = "kafka_job09",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );   
+```
+
+4. 导入结果
+
+```sql
+mysql> SELECT * FROM routine_test09;
++------+-------------+------+
+| id   | name        | age  |
++------+-------------+------+
+|    1 | xiaoxiaoli  |   28 |
+|    3 | xiaoxiaoliu |   32 |
+|    4 | dadali      |   34 |
+|    5 | dadawang    |   36 |
+|    6 | dadaliu     |   38 |
++------+-------------+------+
+5 rows in set (0.00 sec)
+```
+
+**导入完成列影射与衍生列计算**
+
+1. 导入数据样例
+
+```sql
+1,Benjamin,18
+2,Emily,20
+3,Alexander,22
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test10 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+    num     INT                      COMMENT "数量"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(id, name, age, num=age*10)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "max_filter_ratio"="0.5",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad10",
+            "property.group.id" = "kafka_job10",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> SELECT * FROM routine_test10;
++------+----------------+------+------+
+| id   | name           | age  | num  |
++------+----------------+------+------+
+|    1 | Benjamin       |   18 |  180 |
+|    2 | Emily          |   20 |  200 |
+|    3 | Alexander      |   22 |  220 |
++------+----------------+------+------+
+3 rows in set (0.01 sec)
+```
+
+**导入包含包围附的数据**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "xiaoli", "age":18 }
+{ "id" : 2, "name" : "xiaowang", "age":20 }
+{ "id" : 3, "name" : "xiaoliu", "age":22 }
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test12 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad12",
+            "property.group.id" = "kafka_job12",
             "property.kafka_default_offsets" = "OFFSET_BEGINNING"
         );
 ```
 
-2. 以 **严格模式** 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务；
+4. 导入结果
 
 ```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-        COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
-        WHERE k1 > 100 and k2 like "%doris%"
+mysql> SELECT * FROM routine_test12;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
++------+----------------+------+
+3 rows in set (0.02 sec)
+```
+
+### JSON 格式导入
+
+**以简单模式导入 JSON 格式数据**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18 }
+{ "id" : 2, "name" : "Emily", "age":20 }
+{ "id" : 3, "name" : "Alexander", "age":22 }
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test12 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
         PROPERTIES
         (
-            "desired_concurrent_number"="3",
-            "max_batch_interval" = "20",
-            "max_batch_rows" = "300000",
-            "max_batch_size" = "209715200",
-            "strict_mode" = "true"
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
         )
         FROM KAFKA
         (
-            "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-            "kafka_topic" = "my_topic",
-            "kafka_partitions" = "0,1,2,3",
-            "kafka_offsets" = "101,0,0,200"
-        );
-
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad12",
+            "property.group.id" = "kafka_job12",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
 ```
 
-[3. 导入Json格式数据使用示例](#导入Json格式数据使用示例)
-
-   Routine Load导入的json格式仅支持以下两种
-
-   第一种只有一条记录，且为json对象：
-   当使用**单表导入**（即通过 ON TABLE_NAME 指定 表名）时，json 数据格式如下
-   ```json
-   {"category":"a9jadhx","author":"test","price":895}
-   ```
-
-当使用**动态/多表导入** Routine Load （即不指定具体的表名）时，json 数据格式如下
-
-  ```
-  table_name|{"category":"a9jadhx","author":"test","price":895}
-  ```
-假设我们需要导入数据到 user_address 以及 user_info 两张表，那么消息格式如下
-
-eg: user_address 表的 json 数据
-    
-```
-    user_address|{"user_id":128787321878,"address":"朝阳区朝阳大厦XXX号","timestamp":1589191587}
-```
-eg: user_info 表的 json 数据
-```
-    user_info|{"user_id":128787321878,"name":"张三","age":18,"timestamp":1589191587}
-```
-
-第二种为json数组，数组中可含多条记录
-
-当使用**单表导入**（即通过 ON TABLE_NAME 指定 表名）时，json 数据格式如下
-
-   ```json
-   [
-       {   
-           "category":"11",
-           "author":"4avc",
-           "price":895,
-           "timestamp":1589191587
-       },
-       {
-           "category":"22",
-           "author":"2avc",
-           "price":895,
-           "timestamp":1589191487
-       },
-       {
-           "category":"33",
-           "author":"3avc",
-           "price":342,
-           "timestamp":1589191387
-       }
-   ]
-   ```
-当使用**动态/多表导入**（即不指定具体的表名）时，json 数据格式如下
-```
-   table_name|[
-       {
-           "user_id":128787321878,
-           "address":"朝阳区朝阳大厦XXX号",
-           "timestamp":1589191587
-       },
-       {
-           "user_id":128787321878,
-           "address":"朝阳区朝阳大厦XXX号",
-           "timestamp":1589191587
-       },
-       {
-           "user_id":128787321878,
-           "address":"朝阳区朝阳大厦XXX号",
-           "timestamp":1589191587
-       }
-   ]
-```
-同样我们以 `user_address` 以及 `user_info` 两张表为例，那么消息格式如下
-    
-eg: user_address 表的 json 数据
-```
-     user_address|[
-       {   
-           "category":"11",
-           "author":"4avc",
-           "price":895,
-           "timestamp":1589191587
-       },
-       {
-           "category":"22",
-           "author":"2avc",
-           "price":895,
-           "timestamp":1589191487
-       },
-       {
-           "category":"33",
-           "author":"3avc",
-           "price":342,
-           "timestamp":1589191387
-       }
-     ]
-```
-eg: user_info 表的 json 数据
-```
-        user_info|[
-         {
-             "user_id":128787321878,
-             "address":"朝阳区朝阳大厦XXX号",
-             "timestamp":1589191587
-         },
-         {
-             "user_id":128787321878,
-             "address":"朝阳区朝阳大厦XXX号",
-             "timestamp":1589191587
-         },
-         {
-             "user_id":128787321878,
-             "address":"朝阳区朝阳大厦XXX号",
-             "timestamp":1589191587
-         }
-```
-
-   创建待导入的Doris数据表
-
-   ```sql
-   CREATE TABLE `example_tbl` (
-      `category` varchar(24) NULL COMMENT "",
-      `author` varchar(24) NULL COMMENT "",
-      `timestamp` bigint(20) NULL COMMENT "",
-      `dt` int(11) NULL COMMENT "",
-      `price` double REPLACE
-   ) ENGINE=OLAP
-   AGGREGATE KEY(`category`,`author`,`timestamp`,`dt`)
-   COMMENT "OLAP"
-   PARTITION BY RANGE(`dt`)
-   (
-     PARTITION p0 VALUES [("-2147483648"), ("20200509")),
-   	PARTITION p20200509 VALUES [("20200509"), ("20200510")),
-   	PARTITION p20200510 VALUES [("20200510"), ("20200511")),
-   	PARTITION p20200511 VALUES [("20200511"), ("20200512"))
-   )
-   DISTRIBUTED BY HASH(`category`,`author`,`timestamp`) BUCKETS 4
-   PROPERTIES (
-       "replication_num" = "1"
-   );
-   ```
-
-   以简单模式导入json数据
-
-   ```sql
-   CREATE ROUTINE LOAD example_db.test_json_label_1 ON table1
-   COLUMNS(category,price,author)
-   PROPERTIES
-   (
-   	"desired_concurrent_number"="3",
-   	"max_batch_interval" = "20",
-   	"max_batch_rows" = "300000",
-   	"max_batch_size" = "209715200",
-   	"strict_mode" = "false",
-   	"format" = "json"
-   )
-   FROM KAFKA
-   (
-   	"kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-   	"kafka_topic" = "my_topic",
-   	"kafka_partitions" = "0,1,2",
-   	"kafka_offsets" = "0,0,0"
-    );
-   ```
-
-   精准导入json格式数据
-
-   ```sql
-   CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-   COLUMNS(category, author, price, timestamp, dt=from_unixtime(timestamp, '%Y%m%d'))
-   PROPERTIES
-   (
-       "desired_concurrent_number"="3",
-       "max_batch_interval" = "20",
-       "max_batch_rows" = "300000",
-       "max_batch_size" = "209715200",
-       "strict_mode" = "false",
-       "format" = "json",
-       "jsonpaths" = "[\"$.category\",\"$.author\",\"$.price\",\"$.timestamp\"]",
-       "strip_outer_array" = "true"
-   )
-   FROM KAFKA
-   (
-       "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-       "kafka_topic" = "my_topic",
-       "kafka_partitions" = "0,1,2",
-       "kafka_offsets" = "0,0,0"
-   );
-   ```
-
-**注意：** 表里的分区字段 `dt`  在我们的数据里并没有，而是在我们Routine load 语句里通过 `dt=from_unixtime(timestamp, '%Y%m%d')` 转换出来的
-
-
-
-**strict mode 与 source data 的导入关系**
-
-这里以列类型为 TinyInt 来举例
-
-> 注：当表中的列允许导入空值时
-
-| source data | source data example | string to int | strict_mode   | result                 |
-| ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-| 空值        | \N                  | N/A           | true or false | NULL                   |
-| not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
-| not null    | aaa                 | NULL          | false         | NULL                   |
-| not null    | 1                   | 1             | true or false | correct data           |
-
-这里以列类型为 Decimal(1,0) 举例
-
-> 注：当表中的列允许导入空值时
-
-| source data | source data example | string to int | strict_mode   | result                 |
-| ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-| 空值        | \N                  | N/A           | true or false | NULL                   |
-| not null    | aaa                 | NULL          | true          | invalid data(filtered) |
-| not null    | aaa                 | NULL          | false         | NULL                   |
-| not null    | 1 or 10             | 1             | true or false | correct data           |
-
-> 注意：10 虽然是一个超过范围的值，但是因为其类型符合 decimal的要求，所以 strict mode对其不产生影响。10 最后会在其他 ETL 处理流程中被过滤。但不会被 strict mode 过滤。
-
-**访问 SSL 认证的 Kafka 集群**
-
-访问 SSL 认证的 Kafka 集群需要用户提供用于认证 Kafka Broker 公钥的证书文件（ca.pem）。如果 Kafka 集群同时开启了客户端认证，则还需提供客户端的公钥（client.pem）、密钥文件（client.key），以及密钥密码。这里所需的文件需要先通过 `CREAE FILE` 命令上传到 Doris 中，**并且 catalog 名称为 `kafka`**。`CREATE FILE` 命令的具体帮助可以参见 `HELP CREATE FILE;`。这里给出示例：
-
-1. 上传文件
-
-   ```sql
-   CREATE FILE "ca.pem" PROPERTIES("url" = "https://example_url/kafka-key/ca.pem", "catalog" = "kafka");
-   CREATE FILE "client.key" PROPERTIES("url" = "https://example_urlkafka-key/client.key", "catalog" = "kafka");
-   CREATE FILE "client.pem" PROPERTIES("url" = "https://example_url/kafka-key/client.pem", "catalog" = "kafka");
-   ```
-
-2. 创建例行导入作业
-
-   ```sql
-   CREATE ROUTINE LOAD db1.job1 on tbl1
-   PROPERTIES
-   (
-       "desired_concurrent_number"="1"
-   )
-   FROM KAFKA
-   (
-       "kafka_broker_list"= "broker1:9091,broker2:9091",
-       "kafka_topic" = "my_topic",
-       "property.security.protocol" = "ssl",
-       "property.ssl.ca.location" = "FILE:ca.pem",
-       "property.ssl.certificate.location" = "FILE:client.pem",
-       "property.ssl.key.location" = "FILE:client.key",
-       "property.ssl.key.password" = "abcdefg"
-   );
-   ```
-
-> Doris 通过 Kafka 的 C++ API `librdkafka` 来访问 Kafka 集群。`librdkafka` 所支持的参数可以参阅
->
-> [https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md)
-
-**访问阿里云消息队列Kafka集群(接入点类型为SSL)**
+4. 导入结果
 
 ```sql
-#上传证书文件地址，地址：https://github.com/AliwareMQ/aliware-kafka-demos/blob/master/kafka-cpp-demo/vpc-ssl/only-4096-ca-cert
-CREATE FILE "ca.pem" PROPERTIES("url" = "http://xxx/only-4096-ca-cert", "catalog" = "kafka");
+mysql> select * from routine_test12;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
++------+----------------+------+
+3 rows in set (0.02 sec)
+```
 
-# 创建任务
-CREATE ROUTINE LOAD test.test_job on test_tbl
+**匹配模式导入复杂的 JSON 格式数据**
+
+1. 导入数据样例
+
+```sql
+{ "name" : "Benjamin", "id" : 1, "num":180 , "age":18 }
+{ "name" : "Emily", "id" : 2, "num":200 , "age":20 }
+{ "name" : "Alexander", "id" : 3, "num":220 , "age":22 }
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test13 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+    num     INT                      COMMENT "数字"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job13 ON routine_test13
+        COLUMNS(name, id, num, age)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false",
+            "jsonpaths" = "[\"$.name\",\"$.id\",\"$.num\",\"$.age\"]"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad13",
+            "property.group.id" = "kafka_job13",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test13;
++------+----------------+------+------+
+| id   | name           | age  | num  |
++------+----------------+------+------+
+|    1 | Benjamin       |   18 |  180 |
+|    2 | Emily          |   20 |  200 |
+|    3 | Alexander      |   22 |  220 |
++------+----------------+------+------+
+3 rows in set (0.01 sec)
+```
+
+**指定 JSON 根节点导入数据**
+
+1. 导入数据样例
+
+```sql
+{"id": 1231, "source" :{ "id" : 1, "name" : "Benjamin", "age":18 }}
+{"id": 1232, "source" :{ "id" : 2, "name" : "Emily", "age":20 }}
+{"id": 1233, "source" :{ "id" : 3, "name" : "Alexander", "age":22 }}
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test14 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false",
+            "json_root" = "$.source"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad14",
+            "property.group.id" = "kafka_job14",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test14;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
++------+----------------+------+
+3 rows in set (0.01 sec)
+```
+
+**导入完成列影射与衍生列计算**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18 }
+{ "id" : 2, "name" : "Emily", "age":20 }
+{ "id" : 3, "name" : "Alexander", "age":22 }
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test15 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+    num     INT                      COMMENT "数字"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job15 ON routine_test15
+        COLUMNS(id, name, age, num=age*10)
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad15",
+            "property.group.id" = "kafka_job15",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test15;
++------+----------------+------+------+
+| id   | name           | age  | num  |
++------+----------------+------+------+
+|    1 | Benjamin       |   18 |  180 |
+|    2 | Emily          |   20 |  200 |
+|    3 | Alexander      |   22 |  220 |
++------+----------------+------+------+
+3 rows in set (0.01 sec)
+```
+
+### 导入复杂类型
+
+**导入 Array 数据类型**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18, "array":[1,2,3,4,5]}
+{ "id" : 2, "name" : "Emily", "age":20, "array":[6,7,8,9,10]}
+{ "id" : 3, "name" : "Alexander", "age":22, "array":[11,12,13,14,15]}
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test16
+(
+    id      INT             NOT NULL  COMMENT "id",
+    name    VARCHAR(30)     NOT NULL  COMMENT "名字",
+    age     INT                       COMMENT "年纪",
+    array   ARRAY<int(11)>  NULL      COMMENT "测试数组列"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad16",
+            "property.group.id" = "kafka_job16",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test16;
++------+----------------+------+----------------------+
+| id   | name           | age  | array                |
++------+----------------+------+----------------------+
+|    1 | Benjamin       |   18 | [1, 2, 3, 4, 5]      |
+|    2 | Emily          |   20 | [6, 7, 8, 9, 10]     |
+|    3 | Alexander      |   22 | [11, 12, 13, 14, 15] |
++------+----------------+------+----------------------+
+3 rows in set (0.00 sec)
+```
+
+**导入 Map 数据类型**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18, "map":{"a": 100, "b": 200}}
+{ "id" : 2, "name" : "Emily", "age":20, "map":{"c": 300, "d": 400}}
+{ "id" : 3, "name" : "Alexander", "age":22, "map":{"e": 500, "f": 600}}
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test17 (
+    id      INT                 NOT NULL  COMMENT "id",
+    name    VARCHAR(30)         NOT NULL  COMMENT "名字",
+    age     INT                           COMMENT "年纪",
+    map     Map<STRING, INT>    NULL      COMMENT "测试列"
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
+       PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad17",
+            "property.group.id" = "kafka_job17",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test17;
++------+----------------+------+--------------------+
+| id   | name           | age  | map                |
++------+----------------+------+--------------------+
+|    1 | Benjamin       |   18 | {"a":100, "b":200} |
+|    2 | Emily          |   20 | {"c":300, "d":400} |
+|    3 | Alexander      |   22 | {"e":500, "f":600} |
++------+----------------+------+--------------------+
+3 rows in set (0.01 sec)
+```
+
+**导入 Bitmap 数据类型**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18, "bitmap_id":243}
+{ "id" : 2, "name" : "Emily", "age":20, "bitmap_id":28574}
+{ "id" : 3, "name" : "Alexander", "age":22, "bitmap_id":8573}
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test18 (
+    id        INT            NOT NULL      COMMENT "id",
+    name      VARCHAR(30)    NOT NULL      COMMENT "名字",
+    age       INT                          COMMENT "年纪",
+    bitmap_id INT                          COMMENT "测试",
+    device_id BITMAP         BITMAP_UNION  COMMENT "测试列"
+)
+AGGREGATE KEY (`id`,`name`,`age`,`bitmap_id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job18 ON routine_test18
+        COLUMNS(id, name, age, bitmap_id, device_id=to_bitmap(bitmap_id))
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad18",
+            "property.group.id" = "kafka_job18",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );
+```
+
+4. 导入结果
+
+```sql
+mysql> select id, BITMAP_UNION_COUNT(pv) over(order by id) uv from(
+    ->    select id, BITMAP_UNION(device_id) as pv
+    ->    from routine_test18 
+    -> group by id 
+    -> ) final;
++------+------+
+| id   | uv   |
++------+------+
+|    1 |    1 |
+|    2 |    2 |
+|    3 |    3 |
++------+------+
+3 rows in set (0.00 sec)
+```
+
+**导入 HLL 数据类型**
+
+1. 导入数据样例
+
+```sql
+2022-05-05,10001,测试01,北京,windows
+2022-05-05,10002,测试01,北京,linux
+2022-05-05,10003,测试01,北京,macos
+2022-05-05,10004,测试01,河北,windows
+2022-05-06,10001,测试01,上海,windows
+2022-05-06,10002,测试01,上海,linux
+2022-05-06,10003,测试01,江苏,macos
+2022-05-06,10004,测试01,陕西,windows
+```
+
+2. 建表结构
+
+```sql
+create table demo.routine_test19 (
+    dt        DATE,
+    id        INT,
+    name      VARCHAR(10),
+    province  VARCHAR(10),
+    os        VARCHAR(10),
+    pv        hll hll_union
+)
+Aggregate KEY (dt,id,name,province,os)
+distributed by hash(id) buckets 10;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
+        COLUMNS TERMINATED BY ",",
+        COLUMNS(dt, id, name, province, os, pv=hll_hash(id))
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "10.16.10.6:9092",
+            "kafka_topic" = "routineLoad19",
+            "property.group.id" = "kafka_job19",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test19;
++------------+-------+----------+----------+---------+------+
+| dt         | id    | name     | province | os      | pv   |
++------------+-------+----------+----------+---------+------+
+| 2022-05-05 | 10001 | 测试01   | 北京     | windows | NULL |
+| 2022-05-06 | 10001 | 测试01   | 上海     | windows | NULL |
+| 2022-05-05 | 10002 | 测试01   | 北京     | linux   | NULL |
+| 2022-05-06 | 10002 | 测试01   | 上海     | linux   | NULL |
+| 2022-05-05 | 10004 | 测试01   | 河北     | windows | NULL |
+| 2022-05-06 | 10004 | 测试01   | 陕西     | windows | NULL |
+| 2022-05-05 | 10003 | 测试01   | 北京     | macos   | NULL |
+| 2022-05-06 | 10003 | 测试01   | 江苏     | macos   | NULL |
++------------+-------+----------+----------+---------+------+
+8 rows in set (0.01 sec)
+
+mysql> SELECT HLL_UNION_AGG(pv) FROM routine_test19;
++-------------------+
+| hll_union_agg(pv) |
++-------------------+
+|                 4 |
++-------------------+
+1 row in set (0.01 sec)
+```
+
+### Kafka 安全认证
+
+**导入 SSL 认证的 Kafka 数据**
+
+**导入 Kerberos 认证的 Kafka 数据**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18 }
+{ "id" : 2, "name" : "Emily", "age":20 }
+{ "id" : 3, "name" : "Alexander", "age":22 }
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test21 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad21",
+            "property.group.id" = "kafka_job21",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING",
+            "property.security.protocol" = "SASL_PLAINTEXT",
+            "property.sasl.kerberos.service.name" = "kafka",
+            "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
+            "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
+            "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test21;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
++------+----------------+------+
+3 rows in set (0.01 sec)
+```
+
+**导入 PLAIN 认证的 Kafka 集群**
+
+1. 导入数据样例
+
+```sql
+{ "id" : 1, "name" : "Benjamin", "age":18 }
+{ "id" : 2, "name" : "Emily", "age":20 }
+{ "id" : 3, "name" : "Alexander", "age":22 }
+```
+
+2. 建表结构
+
+```sql
+CREATE TABLE demo.routine_test22 (
+    id      INT            NOT NULL  COMMENT "id",
+    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+    age     INT                      COMMENT "年纪",
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+```
+
+3. 导入命令
+
+```sql
+CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
+        PROPERTIES
+        (
+            "desired_concurrent_number"="1",
+            "format" = "json",
+            "strict_mode" = "false"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad22",
+            "property.group.id" = "kafka_job22",
+            "property.kafka_default_offsets" = "OFFSET_BEGINNING",
+            "property.security.protocol"="SASL_PLAINTEXT",
+            "property.sasl.mechanism"="PLAIN",
+            "property.sasl.username"="admin",
+            "property.sasl.password"="admin"
+        );  
+```
+
+4. 导入结果
+
+```sql
+mysql> select * from routine_test22;
++------+----------------+------+
+| id   | name           | age  |
++------+----------------+------+
+|    1 | Benjamin       |   18 |
+|    2 | Emily          |   20 |
+|    3 | Alexander      |   22 |
++------+----------------+------+
+3 rows in set (0.02 sec)
+```
+
+### 一流多表导入
+
+为 example_db 创建一个名为 test1 的 Kafka 例行动态多表导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅。
+
+这里假设需要将 Kafka 中的数据导入到 example_db 中的 tbl1 以及 tbl2 表中，我们创建了一个名为 test1 的例行导入任务，同时将名为 `my_topic` 的 Kafka 的 Topic 数据同时导入到 tbl1 和 tbl2 中的数据中，这样就可以通过一个例行导入任务将 Kafka 中的数据导入到两个表中。
+
+```sql
+CREATE ROUTINE LOAD example_db.test1
 PROPERTIES
 (
-    "desired_concurrent_number"="1",
-    "format" = "json"
+    "desired_concurrent_number"="3",
+    "max_batch_interval" = "20",
+    "max_batch_rows" = "300000",
+    "max_batch_size" = "209715200",
+    "strict_mode" = "false"
 )
 FROM KAFKA
 (
-    "kafka_broker_list"= "xxx.alikafka.aliyuncs.com:9093",
-    "kafka_topic" = "test",
-    "property.group.id" = "test_group",
-    "property.client.id" = "test_group",
-    "property.security.protocol"="ssl",
-    "property.ssl.ca.location"="FILE:ca.pem",
-    "property.security.protocol"="sasl_ssl",
-    "property.sasl.mechanism"="PLAIN",
-    "property.sasl.username"="xxx",
-    "property.sasl.password"="xxx"
+    "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
+    "kafka_topic" = "my_topic",
+    "property.group.id" = "xxx",
+    "property.client.id" = "xxx",
+    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
 
-**访问 PLAIN 认证的 Kafka 集群**
+### 严格模式导入
 
-访问开启 PLAIN 认证的Kafka集群，需要增加以下配置：
+为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。导入任务为严格模式。
 
-   - property.security.protocol=SASL_PLAINTEXT : 使用 SASL plaintext
-   - property.sasl.mechanism=PLAIN : 设置 SASL 的认证方式为 PLAIN
-   - property.sasl.username=admin : 设置 SASL 的用户名
-   - property.sasl.password=admin : 设置 SASL 的密码
-
-1. 创建例行导入作业
-
-    ```sql
-    CREATE ROUTINE LOAD db1.job1 on tbl1
-    PROPERTIES (
-    "desired_concurrent_number"="1",
-     )
-    FROM KAFKA
-    (
-        "kafka_broker_list" = "broker1:9092,broker2:9092",
-        "kafka_topic" = "my_topic",
-        "property.security.protocol"="SASL_PLAINTEXT",
-        "property.sasl.mechanism"="PLAIN",
-        "property.sasl.username"="admin",
-        "property.sasl.password"="admin"
-    );
-    
-    ```
-
-**访问 Kerberos 认证的 Kafka 集群**
-
-<version since="1.2">
-
-访问开启kerberos认证的Kafka集群，需要增加以下配置：
-
-   - security.protocol=SASL_PLAINTEXT : 使用 SASL plaintext
-   - sasl.kerberos.service.name=$SERVICENAME : 设置 broker servicename
-   - sasl.kerberos.keytab=/etc/security/keytabs/${CLIENT_NAME}.keytab : 设置 keytab 本地文件路径
-   - sasl.kerberos.principal=${CLIENT_NAME}/${CLIENT_HOST} : 设置 Doris 连接 Kafka 时使用的 Kerberos 主体
-
-1. 创建例行导入作业
-
-   ```sql
-   CREATE ROUTINE LOAD db1.job1 on tbl1
-   PROPERTIES (
-   "desired_concurrent_number"="1",
-    )
-   FROM KAFKA
-   (
-       "kafka_broker_list" = "broker1:9092,broker2:9092",
-       "kafka_topic" = "my_topic",
-       "property.security.protocol" = "SASL_PLAINTEXT",
-       "property.sasl.kerberos.service.name" = "kafka",
-       "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
-       "property.sasl.kerberos.principal" = "doris@YOUR.COM"
-   );
-   ```
-
-**注意：**
-- 若要使 Doris 访问开启kerberos认证方式的Kafka集群，需要在 Doris 集群所有运行节点上部署 Kerberos 客户端 kinit，并配置 krb5.conf，填写KDC 服务信息等。
-- 配置 property.sasl.kerberos.keytab 的值需要指定 keytab 本地文件的绝对路径，并允许 Doris 进程访问该本地文件。
-
-</version>
-
-### 查看作业状态
-
-查看**作业**状态的具体命令和示例可以通过 `HELP SHOW ROUTINE LOAD;` 命令查看。
-
-查看**任务**运行状态的具体命令和示例可以通过 `HELP SHOW ROUTINE LOAD TASK;` 命令查看。
-
-只能查看当前正在运行中的任务，已结束和未开始的任务无法查看。
-
-### 修改作业属性
-
-用户可以修改已经创建的作业。具体说明可以通过 `HELP ALTER ROUTINE LOAD;` 命令查看或参阅 [ALTER ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD.md)。
-
-### 作业控制
-
-用户可以通过 `STOP/PAUSE/RESUME` 三个命令来控制作业的停止，暂停和重启。可以通过 `HELP STOP ROUTINE LOAD;` `HELP PAUSE ROUTINE LOAD;` 以及 `HELP RESUME ROUTINE LOAD;` 三个命令查看帮助和示例。
-
-## 其他说明
-
-1. 例行导入作业和 ALTER TABLE 操作的关系
-
-   - 例行导入不会阻塞 SCHEMA CHANGE 和 ROLLUP 操作。但是注意如果 SCHEMA CHANGE 完成后，列映射关系无法匹配，则会导致作业的错误数据激增，最终导致作业暂停。建议通过在例行导入作业中显式指定列映射关系，以及通过增加 Nullable 列或带 Default 值的列来减少这类问题。
-   - 删除表的 Partition 可能会导致导入数据无法找到对应的 Partition，作业进入暂停。
-
-2. 例行导入作业和其他导入作业的关系（LOAD, DELETE, INSERT）
-
-   - 例行导入和其他 LOAD 作业以及 INSERT 操作没有冲突。
-   - 当执行 DELETE 操作时，对应表分区不能有任何正在执行的导入任务。所以在执行 DELETE 操作前，可能需要先暂停例行导入作业，并等待已下发的 task 全部完成后，才可以执行 DELETE。
-
-3. 例行导入作业和 DROP DATABASE/TABLE 操作的关系
-
-   当例行导入对应的 database 或 table 被删除后，作业会自动 CANCEL。
-
-4. kafka 类型的例行导入作业和 kafka topic 的关系
-
-   当用户在创建例行导入声明的 `kafka_topic` 在kafka集群中不存在时。
-
-   - 如果用户 kafka 集群的 broker 设置了 `auto.create.topics.enable = true`，则 `kafka_topic` 会先被自动创建，自动创建的 partition 个数是由**用户方的kafka集群**中的 broker 配置 `num.partitions` 决定的。例行作业会正常的不断读取该 topic 的数据。
-   - 如果用户 kafka 集群的 broker 设置了 `auto.create.topics.enable = false`, 则 topic 不会被自动创建，例行作业会在没有读取任何数据之前就被暂停，状态为 `PAUSED`。
-
-   所以，如果用户希望当 kafka topic 不存在的时候，被例行作业自动创建的话，只需要将**用户方的kafka集群**中的 broker 设置 `auto.create.topics.enable = true` 即可。
-
-5. 在网络隔离的环境中可能出现的问题 在有些环境中存在网段和域名解析的隔离措施，所以需要注意
-
-   1. 创建Routine load 任务中指定的 Broker list 必须能够被Doris服务访问
-   2. Kafka 中如果配置了`advertised.listeners`, `advertised.listeners` 中的地址必须能够被Doris服务访问
-
-6. 关于指定消费的 Partition 和 Offset
-
-   Doris 支持指定 Partition 和 Offset 开始消费。新版中还支持了指定时间点进行消费的功能。这里说明下对应参数的配置关系。
-
-   有三个相关参数：
-
-   - `kafka_partitions`：指定待消费的 partition 列表，如："0, 1, 2, 3"。
-   - `kafka_offsets`：指定每个分区的起始offset，必须和 `kafka_partitions` 列表个数对应。如："1000, 1000, 2000, 2000"
-   - `property.kafka_default_offset`：指定分区默认的起始offset。
-
-   在创建导入作业时，这三个参数可以有以下组合：
-
-   | 组合 | `kafka_partitions` | `kafka_offsets` | `property.kafka_default_offset` | 行为                                                         |
-   | ---- | ------------------ | --------------- | ------------------------------- | ------------------------------------------------------------ |
-   | 1    | No                 | No              | No                              | 系统会自动查找topic对应的所有分区并从 OFFSET_END 开始消费    |
-   | 2    | No                 | No              | Yes                             | 系统会自动查找topic对应的所有分区并从 default offset 指定的位置开始消费 |
-   | 3    | Yes                | No              | No                              | 系统会从指定分区的 OFFSET_END 开始消费                       |
-   | 4    | Yes                | Yes             | No                              | 系统会从指定分区的指定offset 处开始消费                      |
-   | 5    | Yes                | No              | Yes                             | 系统会从指定分区，default offset 指定的位置开始消费          |
-
-7. STOP和PAUSE的区别
-
-   FE会自动定期清理STOP状态的ROUTINE LOAD，而PAUSE状态的则可以再次被恢复启用。
-
-## 相关参数
-
-一些系统配置参数会影响例行导入的使用。
-
-1. max_routine_load_task_concurrent_num
-
-   FE 配置项，默认为 5，可以运行时修改。该参数限制了一个例行导入作业最大的子任务并发数。建议维持默认值。设置过大，可能导致同时并发的任务数过多，占用集群资源。
-
-2. max_routine_load_task_num_per_be
-
-   FE 配置项，默认为5，可以运行时修改。该参数限制了每个 BE 节点最多并发执行的子任务个数。建议维持默认值。如果设置过大，可能导致并发任务数过多，占用集群资源。
-
-3. max_routine_load_job_num
-
-   FE 配置项，默认为100，可以运行时修改。该参数限制的例行导入作业的总数，包括 NEED_SCHEDULED, RUNNING, PAUSE 这些状态。超过后，不能在提交新的作业。
-
-4. max_consumer_num_per_group
-
-   BE 配置项，默认为 3。该参数表示一个子任务中最多生成几个 consumer 进行数据消费。对于 Kafka 数据源，一个 consumer 可能消费一个或多个 kafka partition。假设一个任务需要消费 6 个 kafka partition，则会生成 3 个 consumer，每个 consumer 消费 2 个 partition。如果只有 2 个 partition，则只会生成 2 个 consumer，每个 consumer 消费 1 个 partition。
-
-5. max_tolerable_backend_down_num FE 配置项，默认值是0。在满足某些条件下，Doris可PAUSED的任务重新调度，即变成RUNNING。该参数为0代表只有所有BE节点是alive状态才允许重新调度。
-
-6. period_of_auto_resume_min FE 配置项，默认是5分钟。Doris重新调度，只会在5分钟这个周期内，最多尝试3次. 如果3次都失败则锁定当前任务，后续不在进行调度。但可通过人为干预，进行手动恢复。
+```SQL
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
+PRECEDING FILTER k1 = 1,
+WHERE k1  100 and k2 like "%doris%"
+PROPERTIES
+(
+    "desired_concurrent_number"="3",
+    "max_batch_interval" = "20",
+    "max_batch_rows" = "300000",
+    "max_batch_size" = "209715200",
+    "strict_mode" = "true"
+)
+FROM KAFKA
+(
+    "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
+    "kafka_topic" = "my_topic",
+    "kafka_partitions" = "0,1,2,3",
+    "kafka_offsets" = "101,0,0,200"
+);
+```
 
 ## 更多帮助
 
-关于 **Routine Load** 使用的更多详细语法，可以在Mysql客户端命令行下输入 `HELP ROUTINE LOAD` 获取更多帮助信息。
+参考 SQL 手册 [Routine Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)。也可以在客户端命令行下输入 `HELP ROUTINE LOAD` 获取更多帮助信息。

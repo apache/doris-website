@@ -6,7 +6,6 @@
             "items": [
                 "get-starting/what-is-apache-doris",
                 "get-starting/quick-start"
-                
             ]
         },
         {
@@ -25,28 +24,28 @@
                         "install/source-install/compilation-mac"
                     ]
                 },
-                 {
+                {
                     "type": "category",
                     "label": "Cluster Deployment",
                     "items": [
                         "install/cluster-deployment/standard-deployment",
                         "install/cluster-deployment/run-docker-cluster",
                         {
-                        "type": "category",
-                        "label": "Deploy on Kubernetes",
-                        "items": [
-                            "install/cluster-deployment/k8s-deploy/operator-deploy",
-                            "install/cluster-deployment/k8s-deploy/helm-chart-deploy",
-                            "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
-                            "install/cluster-deployment/k8s-deploy/network",
-                            "install/cluster-deployment/k8s-deploy/persistent-volume",
-                            "install/cluster-deployment/k8s-deploy/root-user-use",
-                            "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                            "install/cluster-deployment/k8s-deploy/debug-crash"
+                            "type": "category",
+                            "label": "Deploy on Kubernetes",
+                            "items": [
+                                "install/cluster-deployment/k8s-deploy/operator-deploy",
+                                "install/cluster-deployment/k8s-deploy/helm-chart-deploy",
+                                "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
+                                "install/cluster-deployment/k8s-deploy/network",
+                                "install/cluster-deployment/k8s-deploy/persistent-volume",
+                                "install/cluster-deployment/k8s-deploy/root-user-use",
+                                "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
+                                "install/cluster-deployment/k8s-deploy/debug-crash"
                             ]
                         }
                     ]
-                }                
+                }
             ]
         },
         {
@@ -115,7 +114,7 @@
                         "data-operate/update/load-update",
                         "data-operate/update/update",
                         "data-operate/update/partial-update",
-                        "data-operate/update/sequence-column-manual"   
+                        "data-operate/update/sequence-column-manual"
                     ]
                 },
                 {
@@ -125,8 +124,8 @@
                         "data-operate/delete/delete-manual",
                         "data-operate/delete/batch-delete-manual",
                         "data-operate/delete/truncate-manual",
-                        "data-operate/delete/table-temp-partition",
-                        "data-operate/delete/atomicity-replace"
+                        "data-operate/delete/atomicity-replace",
+                        "data-operate/delete/table-temp-partition"
                     ]
                 },
                 {
@@ -137,26 +136,105 @@
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
                     ]
-                }                
+                }
             ]
         },
         {
             "type": "category",
-            "label": "Query Acceleration",
+            "label": "Query",
             "items": [
-                "query-acceleration/pipeline-execution-engine",
-                "query-acceleration/nereids",
-                "query-acceleration/hight-concurrent-point-query",
-                "query-acceleration/materialized-view",
-                "query-acceleration/statistics",
+                {
+                    "type": "category",
+                    "label": "Query Data",
+                    "items": [
+                        "query/query-data/mysql-compatibility",
+                        "query/query-data/select",
+                        "query/query-data/complex-type",
+                        "query/query-data/subquery",
+                        "query/query-data/common-table-expression",
+                        "query/query-data/lateral-view",
+                        "query/query-data/windwon-function",
+                        "query/query-data/encryption-function"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Query Variables",
+                    "items": [
+                        "query/query-variables/variables",
+                        "query/query-variables/sql-mode",
+                        "query/query-variables/time-zone"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Nereids",
+                    "items": [
+                        "query/nereids/nereids",
+                        "query/nereids/statistics"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Pipeline",
+                    "items": [
+                        "query/pipline/pipeline-execution-engine",
+                        "query/pipline/pipelinex-execution-engine"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Cache",
+                    "items": [
+                        "query/query-cache/query-cache",
+                        "query/query-cache/sql-cache-manual",
+                        "query/query-cache/partition-cache-manual"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "View and Materialize View",
+                    "items": [
+                        "query/view-materialized-view/create-view",
+                        "query/view-materialized-view/materialized-view",
+                        "query/view-materialized-view/multi-materialized-view"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Join Optimization",
                     "items": [
-                        "query-acceleration/join-optimization/bucket-shuffle-join",
-                        "query-acceleration/join-optimization/colocation-join",
-                        "query-acceleration/join-optimization/runtime-filter",
-                        "query-acceleration/join-optimization/doris-join-optimization"
+                        "query/join-optimization/doris-join-optimization",
+                        "query/join-optimization/bucket-shuffle-join",
+                        "query/join-optimization/colocation-join",
+                        "query/join-optimization/runtime-filter",
+                        "query/join-optimization/join-hint"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Dulicate",
+                    "items": [
+                        "query/duplicate/orthogonal-bitmap-manual",
+                        "query/duplicate/using-hll"
+                    ]
+                },
+                "query/hight-concurrent-point-query",
+                {
+                    "type": "category",
+                    "label": "Query Analysis",
+                    "items": [
+                        "query/query-analysis/query-profile",
+                        "query/query-analysis/query-analysis",
+                        "query/query-analysis/import-analysis"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "UDF",
+                    "items": [
+                        "query/udf/java-user-defined-function",
+                        "query/udf/remote-user-defined-function"
                     ]
                 }
             ]
@@ -165,65 +243,237 @@
             "type": "category",
             "label": "Lakehouse",
             "items": [
+                "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Multi-catalog",
+                    "label": "Data Lake Analytics",
                     "items": [
-                        "lakehouse/multi-catalog/multi-catalog",
-                        "lakehouse/multi-catalog/hive",
-                        "lakehouse/multi-catalog/iceberg",
-                        "lakehouse/multi-catalog/hudi",
-                        "lakehouse/multi-catalog/paimon",
-                        "lakehouse/multi-catalog/dlf",
-                        "lakehouse/multi-catalog/max-compute",
-                        "lakehouse/multi-catalog/es",
-                        "lakehouse/multi-catalog/jdbc",
-                        "lakehouse/multi-catalog/faq-multi-catalog"
+                        "lakehouse/datalake/hive",
+                        "lakehouse/datalake/hudi",
+                        "lakehouse/datalake/iceberg",
+                        "lakehouse/datalake/paimon",
+                        "lakehouse/datalake/cloud-auth"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Database Analytics",
+                    "items": [
+                        "lakehouse/database/es",
+                        "lakehouse/database/jdbc",
+                        "lakehouse/database/max-compute"
                     ]
                 },
                 "lakehouse/file",
                 "lakehouse/filecache",
-                "lakehouse/compute-node",
                 "lakehouse/external-statistics",
-                "lakehouse/fs-benchmark-tool",
-                "lakehouse/faq"
+                "lakehouse/sql-dialect"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Admin Manual",
+            "items": [
+                {
+                    "type": "category",
+                    "label": "Cluster Management",
+                    "items": [
+                        "admin-manual/cluster-management/upgrade",
+                        "admin-manual/cluster-management/elastic-expansion",
+                        "admin-manual/cluster-management/load-balancing",
+                        "admin-manual/cluster-management/fqdn"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Admin",
+                    "items": [
+                        "admin-manual/data-admin/backup",
+                        "admin-manual/data-admin/restore",
+                        "admin-manual/data-admin/data-recovery",
+                        "admin-manual/data-admin/delete-recover",
+                        "admin-manual/data-admin/ccr"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Resource Admin",
+                    "items": [
+                        "admin-manual/resource-admin/workload-group",
+                        "admin-manual/resource-admin/multi-tenant",
+                        "admin-manual/resource-admin/compute-node"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Query Admin",
+                    "items": [
+                        "admin-manual/query-admin/sql-interception",
+                        "admin-manual/query-admin/kill-query",
+                        "admin-manual/query-admin/job"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "User Privilege and Ldap",
+                    "items": [
+                        "admin-manual/privilege-ldap/user-privilege",
+                        "admin-manual/privilege-ldap/certificate",
+                        "admin-manual/privilege-ldap/fe-certificate",
+                        "admin-manual/privilege-ldap/ldap",
+                        "admin-manual/privilege-ldap/apache-ranger"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Memory Management",
+                    "items": [
+                        "admin-manual/memory-management/memory-tracker",
+                        "admin-manual/memory-management/memory-limit-exceeded-analysis",
+                        "admin-manual/memory-management/be-oom-analysis"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Maintenance and Monitor",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Monitor Metrics",
+                            "items": [
+                                "admin-manual/maint-monitor/monitor-metrics/metrics"
+                            ]
+                        },
+                        "admin-manual/maint-monitor/disk-capacity",
+                        "admin-manual/maint-monitor/tablet-repair-and-balance",
+                        "admin-manual/maint-monitor/be-olap-error-code",
+                        "admin-manual/maint-monitor/doris-error-code",
+                        "admin-manual/maint-monitor/tablet-meta-tool",
+                        "admin-manual/maint-monitor/tablet-restore-tool",
+                        "admin-manual/maint-monitor/monitor-alert",
+                        "admin-manual/maint-monitor/tablet-local-debug",
+                        "admin-manual/maint-monitor/metadata-operation",
+                        "admin-manual/maint-monitor/automatic-service-start",
+                        "admin-manual/maint-monitor/debug-log"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Config",
+                    "items": [
+                        "admin-manual/config/config-dir",
+                        "admin-manual/config/fe-config",
+                        "admin-manual/config/be-config",
+                        "admin-manual/config/user-property"
+                    ]
+                },
+                "admin-manual/audit-plugin",
+                {
+                    "type": "category",
+                    "label": "FE OPEN API",
+                    "items": [
+                        "admin-manual/fe/config-action",
+                        "admin-manual/fe/ha-action",
+                        "admin-manual/fe/hardware-info-action",
+                        "admin-manual/fe/help-action",
+                        "admin-manual/fe/log-action",
+                        "admin-manual/fe/login-action",
+                        "admin-manual/fe/logout-action",
+                        "admin-manual/fe/query-profile-action-controller",
+                        "admin-manual/fe/session-action",
+                        "admin-manual/fe/system-action",
+                        "admin-manual/fe/colocate-meta-action",
+                        "admin-manual/fe/meta-action",
+                        "admin-manual/fe/cluster-action",
+                        "admin-manual/fe/node-action",
+                        "admin-manual/fe/query-profile-action",
+                        "admin-manual/fe/backends-action",
+                        "admin-manual/fe/bootstrap-action",
+                        "admin-manual/fe/cancel-load-action",
+                        "admin-manual/fe/check-decommission-action",
+                        "admin-manual/fe/check-storage-type-action",
+                        "admin-manual/fe/connection-action",
+                        "admin-manual/fe/extra-basepath-action",
+                        "admin-manual/fe/fe-version-info-action",
+                        "admin-manual/fe/get-ddl-stmt-action",
+                        "admin-manual/fe/get-load-info-action",
+                        "admin-manual/fe/get-load-state",
+                        "admin-manual/fe/get-log-file-action",
+                        "admin-manual/fe/get-small-file",
+                        "admin-manual/fe/health-action",
+                        "admin-manual/fe/meta-info-action",
+                        "admin-manual/fe/meta-replay-state-action",
+                        "admin-manual/fe/metrics-action",
+                        "admin-manual/fe/profile-action",
+                        "admin-manual/fe/query-detail-action",
+                        "admin-manual/fe/query-schema-action",
+                        "admin-manual/fe/query-stats-action",
+                        "admin-manual/fe/row-count-action",
+                        "admin-manual/fe/set-config-action",
+                        "admin-manual/fe/show-data-action",
+                        "admin-manual/fe/show-meta-info-action",
+                        "admin-manual/fe/show-proc-action",
+                        "admin-manual/fe/show-runtime-info-action",
+                        "admin-manual/fe/show-table-data-action",
+                        "admin-manual/fe/statement-execution-action",
+                        "admin-manual/fe/table-query-plan-action",
+                        "admin-manual/fe/table-row-count-action",
+                        "admin-manual/fe/table-schema-action",
+                        "admin-manual/fe/upload-action",
+                        "admin-manual/fe/import-action",
+                        "admin-manual/fe/meta-info-action-V2",
+                        "admin-manual/fe/debug-point-action",
+                        "admin-manual/fe/statistic-action"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "BE OPEN API",
+                    "items": [
+                        "admin-manual/be/check-rpc-channel",
+                        "admin-manual//be/reset-rpc-channel",
+                        "admin-manual/be/compaction-status",
+                        "admin-manual/be/compaction-run",
+                        "admin-manual/be/meta",
+                        "admin-manual/be/snapshot",
+                        "admin-manual/be/check-tablet-segment",
+                        "admin-manual/be/config",
+                        "admin-manual/be/metrics",
+                        "admin-manual/be/tablet-distribution",
+                        "admin-manual/be/tablet-migration",
+                        "admin-manual/be/tablet-info",
+                        "admin-manual/be/checksum",
+                        "admin-manual/be/download",
+                        "admin-manual/be/pad-rowset",
+                        "admin-manual/be/version-info",
+                        "admin-manual/be/health",
+                        "admin-manual/be/tablet-reload",
+                        "admin-manual/be/tablet-restore"
+                    ]
+                },
+                "admin-manual/plugin-development-manual",
+                "admin-manual/small-file-mgr",
+                "admin-manual/compaction",
+                "admin-manual/rowsets"
             ]
         },
         {
             "type": "category",
             "label": "Ecosystem",
             "items": [
+                "ecosystem/ecosystem-overview",
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
                 "ecosystem/doris-kafka-connector",
-                "ecosystem/doris-streamloader",
                 "ecosystem/datax",
+                "ecosystem/dbt-doris-adapter",
                 "ecosystem/seatunnel",
                 "ecosystem/kyuubi",
                 "ecosystem/logstash",
-                "ecosystem/beats",
-                "ecosystem/plugin-development-manual",
-                "ecosystem/audit-plugin",
                 "ecosystem/cloudcanal",
-                "ecosystem/hive-bitmap-udf",
-                "ecosystem/dbt-doris-adapter",
-                {
-                    "type": "category",
-                    "label": "UDF",
-                    "items": [
-                        "ecosystem/udf/contribute-udf",
-                        "ecosystem/udf/remote-user-defined-function",
-                        "ecosystem/udf/java-user-defined-function",
-                        "ecosystem/udf/native-user-defined-function"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "UDAF",
-                    "items": [
-                        "ecosystem/udaf/remote-user-defined-aggregation-function"
-                    ]
-                }
+                "ecosystem/apache-superset",
+                "ecosystem/doris-streamloader",
+                "ecosystem/hive-bitmap-udf"
             ]
         },
         {
@@ -1087,184 +1337,6 @@
                                 "sql-manual/sql-reference/Utility-Statements/REFRESH",
                                 "sql-manual/sql-reference/Utility-Statements/SYNC",
                                 "sql-manual/sql-reference/Utility-Statements/CLEAN-QUERY-STATS"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Admin Manual",
-            "items": [
-                {
-                    "type": "category",
-                    "label": "cluster management",
-                    "items": [
-                        "admin-manual/cluster-management/upgrade",
-                        "admin-manual/cluster-management/elastic-expansion",
-                        "admin-manual/cluster-management/load-balancing",
-                        "admin-manual/cluster-management/fqdn"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Data Admin",
-                    "items": [
-                        "admin-manual/data-admin/backup",
-                        "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/data-recovery",
-                        "admin-manual/data-admin/delete-recover"
-                    ]
-                },
-                "admin-manual/sql-interception",
-                "admin-manual/query-profile",
-                "admin-manual/certificate",
-                "admin-manual/fe-certificate",
-                {
-                    "type": "category",
-                    "label": "Maintenance and Monitor",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "Monitor Metrics",
-                            "items": [
-                                "admin-manual/maint-monitor/monitor-metrics/metrics"
-                            ]
-                        },
-                        "admin-manual/maint-monitor/disk-capacity",
-                        "admin-manual/maint-monitor/tablet-repair-and-balance",
-                        "admin-manual/maint-monitor/be-olap-error-code",
-                        "admin-manual/maint-monitor/doris-error-code",
-                        "admin-manual/maint-monitor/tablet-meta-tool",
-                        "admin-manual/maint-monitor/tablet-restore-tool",
-                        "admin-manual/maint-monitor/monitor-alert",
-                        "admin-manual/maint-monitor/tablet-local-debug",
-                        "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Memory Management",
-                    "items": [
-                        "admin-manual/maint-monitor/memory-management/memory-tracker",
-                        "admin-manual/maint-monitor/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/maint-monitor/memory-management/be-oom-analysis"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Config",
-                    "items": [
-                        "admin-manual/config/config-dir",
-                        "admin-manual/config/fe-config",
-                        "admin-manual/config/be-config",
-                        "admin-manual/config/user-property"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "User Privilege and Ldap",
-                    "items": [
-                        "admin-manual/privilege-ldap/user-privilege",
-                        "admin-manual/privilege-ldap/ldap"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "System Table",
-                    "items": [
-                        "admin-manual/system-table/rowsets"
-                    ]
-                },
-                "admin-manual/workload-group",
-                "admin-manual/multi-tenant",
-                {
-                    "type": "category",
-                    "label": "HTTP API",
-                    "items": [
-                        {
-                            "type": "category",
-                            "label": "FE",
-                            "items": [
-                                "admin-manual/http-actions/fe/config-action",
-                                "admin-manual/http-actions/fe/ha-action",
-                                "admin-manual/http-actions/fe/hardware-info-action",
-                                "admin-manual/http-actions/fe/help-action",
-                                "admin-manual/http-actions/fe/log-action",
-                                "admin-manual/http-actions/fe/login-action",
-                                "admin-manual/http-actions/fe/logout-action",
-                                "admin-manual/http-actions/fe/query-profile-action-controller",
-                                "admin-manual/http-actions/fe/session-action",
-                                "admin-manual/http-actions/fe/system-action",
-                                "admin-manual/http-actions/fe/colocate-meta-action",
-                                "admin-manual/http-actions/fe/meta-action",
-                                "admin-manual/http-actions/fe/cluster-action",
-                                "admin-manual/http-actions/fe/node-action",
-                                "admin-manual/http-actions/fe/query-profile-action",
-                                "admin-manual/http-actions/fe/backends-action",
-                                "admin-manual/http-actions/fe/bootstrap-action",
-                                "admin-manual/http-actions/fe/cancel-load-action",
-                                "admin-manual/http-actions/fe/check-decommission-action",
-                                "admin-manual/http-actions/fe/check-storage-type-action",
-                                "admin-manual/http-actions/fe/connection-action",
-                                "admin-manual/http-actions/fe/extra-basepath-action",
-                                "admin-manual/http-actions/fe/fe-version-info-action",
-                                "admin-manual/http-actions/fe/get-ddl-stmt-action",
-                                "admin-manual/http-actions/fe/get-load-info-action",
-                                "admin-manual/http-actions/fe/get-load-state",
-                                "admin-manual/http-actions/fe/get-log-file-action",
-                                "admin-manual/http-actions/fe/get-small-file",
-                                "admin-manual/http-actions/fe/health-action",
-                                "admin-manual/http-actions/fe/meta-info-action",
-                                "admin-manual/http-actions/fe/meta-replay-state-action",
-                                "admin-manual/http-actions/fe/metrics-action",
-                                "admin-manual/http-actions/fe/profile-action",
-                                "admin-manual/http-actions/fe/query-detail-action",
-                                "admin-manual/http-actions/fe/query-schema-action",
-                                "admin-manual/http-actions/fe/query-stats-action",
-                                "admin-manual/http-actions/fe/row-count-action",
-                                "admin-manual/http-actions/fe/set-config-action",
-                                "admin-manual/http-actions/fe/show-data-action",
-                                "admin-manual/http-actions/fe/show-meta-info-action",
-                                "admin-manual/http-actions/fe/show-proc-action",
-                                "admin-manual/http-actions/fe/show-runtime-info-action",
-                                "admin-manual/http-actions/fe/show-table-data-action",
-                                "admin-manual/http-actions/fe/statement-execution-action",
-                                "admin-manual/http-actions/fe/table-query-plan-action",
-                                "admin-manual/http-actions/fe/table-row-count-action",
-                                "admin-manual/http-actions/fe/table-schema-action",
-                                "admin-manual/http-actions/fe/upload-action",
-                                "admin-manual/http-actions/fe/import-action",
-                                "admin-manual/http-actions/fe/meta-info-action-V2",
-                                "admin-manual/http-actions/fe/debug-point-action",
-                                "admin-manual/http-actions/fe/statistic-action"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "BE",
-                            "items": [
-                                "admin-manual/http-actions/be/check-rpc-channel",
-                                "admin-manual/http-actions/be/reset-rpc-channel",
-                                "admin-manual/http-actions/be/compaction-status",
-                                "admin-manual/http-actions/be/compaction-run",
-                                "admin-manual/http-actions/be/meta",
-                                "admin-manual/http-actions/be/snapshot",
-                                "admin-manual/http-actions/be/check-tablet-segment",
-                                "admin-manual/http-actions/be/config",
-                                "admin-manual/http-actions/be/metrics",
-                                "admin-manual/http-actions/be/tablet-distribution",
-                                "admin-manual/http-actions/be/tablet-migration",
-                                "admin-manual/http-actions/be/tablet-info",
-                                "admin-manual/http-actions/be/checksum",
-                                "admin-manual/http-actions/be/download",
-                                "admin-manual/http-actions/be/pad-rowset",
-                                "admin-manual/http-actions/be/version-info",
-                                "admin-manual/http-actions/be/health",
-                                "admin-manual/http-actions/be/tablet-reload",
-                                "admin-manual/http-actions/be/tablet-restore"
                             ]
                         }
                     ]

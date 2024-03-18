@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# JSON 格式数据导入
+
 
 Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON 格式数据导入时的注意事项。
 
@@ -33,14 +33,16 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 目前只有以下导入方式支持 JSON 格式的数据导入：
 
 - 通过 [S3 表函数](../../../sql-manual/sql-functions/table-functions/s3.md) 导入语句：insert into table select * from S3();
-- 将本地 JSON 格式的文件通过 [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md) 方式导入。
-- 通过 [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) 订阅并消费 Kafka 中的 JSON 格式消息。
+
+- 将本地 JSON 格式的文件通过 [STREAM LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) 方式导入。
+
+- 通过 [ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD) 订阅并消费 Kafka 中的 JSON 格式消息。
 
 暂不支持其他方式的 JSON 格式数据导入。
 
 ## 支持的 JSON 格式
 
-当前仅支持以下两种 JSON 格式：
+**当前仅支持以下两种 JSON 格式：**
 
 1. 以 Array 表示的多行数据
 
@@ -80,7 +82,7 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 
    这种方式通常用于 Routine Load 导入方式，如表示 Kafka 中的一条消息，即一行数据。
    
-2. 以固定分隔符分隔的多行 Object 数据
+3. 以固定分隔符分隔的多行 Object 数据
 
    Object 表示的一行数据即表示要导入的一行数据，示例如下：
 
@@ -98,11 +100,11 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 
 一些数据格式，如 JSON，无法进行拆分处理，必须读取全部数据到内存后才能开始解析，因此，这个值用于限制此类格式数据单次导入最大数据量。
 
-默认值为 100，单位 MB，可参考[BE 配置项](../../../admin-manual/config/be-config.md)修改这个参数
+默认值为 100，单位 MB，可参考[ BE 配置项 ](../../admin-manual/config/be-config)修改这个参数
 
 ### fuzzy_parse 参数
 
-在 [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md)中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
+在 [STREAM LOAD ](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)中，可以添加 `fuzzy_parse` 参数来加速 JSON 数据的导入效率。
 
 这个参数通常用于导入 **以 Array 表示的多行数据** 这种格式，所以一般要配合 `strip_outer_array=true` 使用。
 
@@ -112,7 +114,9 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 
 Doris 支持通过 JSON Path 抽取 JSON 中指定的数据。
 
-**注：因为对于 Array 类型的数据，Doris 会先进行数组展开，最终按照 Object 格式进行单行处理。所以本文档之后的示例都以单个 Object 格式的 Json 数据进行说明。**
+:::tip
+注：因为对于 Array 类型的数据，Doris 会先进行数组展开，最终按照 Object 格式进行单行处理。所以本文档之后的示例都以单个 Object 格式的 Json 数据进行说明。
+:::
 
 - 不指定 JSON Path
 
@@ -288,7 +292,9 @@ curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", 
 
 Doris 支持通过 JSON root 抽取 JSON 中指定的数据。
 
-**注：因为对于 Array 类型的数据，Doris 会先进行数组展开，最终按照 Object 格式进行单行处理。所以本文档之后的示例都以单个 Object 格式的 Json 数据进行说明。**
+:::tip
+注：因为对于 Array 类型的数据，Doris 会先进行数组展开，最终按照 Object 格式进行单行处理。所以本文档之后的示例都以单个 Object 格式的 Json 数据进行说明。
+:::
 
 - 不指定 JSON root
 
@@ -384,91 +390,91 @@ city    VARHCAR NULL,
 code    INT     NULL
 ```
 
-1. 导入单行数据 1
+**1. 导入单行数据 1**
 
-   ```json
-   {"id": 100, "city": "beijing", "code" : 1}
-   ```
+```json
+{"id": 100, "city": "beijing", "code" : 1}
+```
 
-   - 不指定 JSON Path
+- 不指定 JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ```
+  ```bash
+  curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+  ```
 
-     导入结果：
+  导入结果：
 
-     ```text
-     100     beijing     1
-     ```
+  ```text
+  100     beijing     1
+  ```
 
-   - 指定 JSON Path
+- 指定 JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ```
+  ```bash
+  curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+  ```
 
-     导入结果：
+  导入结果：
 
-     ```text
-     100     beijing     1
-     ```
+  ```text
+  100     beijing     1
+  ```
 
-2. 导入单行数据 2
+**2. 导入单行数据 2**
 
-   ```json
-   {"id": 100, "content": {"city": "beijing", "code" : 1}}
-   ```
+```json
+{"id": 100, "content": {"city": "beijing", "code" : 1}}
+```
 
-   - 指定 JSON Path
+  - 指定 JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\"]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ```
+  ```bash
+  curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\"]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+  ```
 
-     导入结果：
+  导入结果：
 
-     ```text
-     100     beijing     1
-     ```
+  ```text
+  100     beijing     1
+  ```
 
-3. 以 Array 形式导入多行数据
+**3. 以 Array 形式导入多行数据**
 
-   ```json
-   [
-       {"id": 100, "city": "beijing", "code" : 1},
-       {"id": 101, "city": "shanghai"},
-       {"id": 102, "city": "tianjin", "code" : 3},
-       {"id": 103, "city": "chongqing", "code" : 4},
-       {"id": 104, "city": ["zhejiang", "guangzhou"], "code" : 5},
-       {
-           "id": 105,
-           "city": {
-               "order1": ["guangzhou"]
-           }, 
-           "code" : 6
-       }
-   ]
-   ```
+```json
+[
+  {"id": 100, "city": "beijing", "code" : 1},
+  {"id": 101, "city": "shanghai"},
+  {"id": 102, "city": "tianjin", "code" : 3},
+  {"id": 103, "city": "chongqing", "code" : 4},
+  {"id": 104, "city": ["zhejiang", "guangzhou"], "code" : 5},
+  {
+      "id": 105,
+      "city": {
+          "order1": ["guangzhou"]
+      }, 
+      "code" : 6
+  }
+]
+```
 
-   - 指定 JSON Path
+- 指定 JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ```
+  ```bash
+  curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" -H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+  ```
 
-     导入结果：
+  导入结果：
 
-     ```text
-     100     beijing                     1
-     101     shanghai                    NULL
-     102     tianjin                     3
-     103     chongqing                   4
-     104     ["zhejiang","guangzhou"]    5
-     105     {"order1":["guangzhou"]}    6
-     ```
+  ```text
+  100     beijing                     1
+  101     shanghai                    NULL
+  102     tianjin                     3
+  103     chongqing                   4
+  104     ["zhejiang","guangzhou"]    5
+  105     {"order1":["guangzhou"]}    6
+  ```
 
-4. 以多行 Object 形式导入多行数据
+**4. 以多行 Object 形式导入多行数据**
 
       ```json
       {"id": 100, "city": "beijing", "code" : 1}
@@ -477,22 +483,22 @@ code    INT     NULL
       {"id": 103, "city": "chongqing", "code" : 4}
       ```
 
-StreamLoad 导入：
+- StreamLoad 导入：
 
-```bash
-curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-```
+  ```bash
+  curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+  ```
 
-导入结果：
+  导入结果：
 
-```
-100     beijing                     1
-101     shanghai                    NULL
-102     tianjin                     3
-103     chongqing                   4
-```
+  ```
+  100     beijing                     1
+  101     shanghai                    NULL
+  102     tianjin                     3
+  103     chongqing                   4
+  ```
 
-5. 对导入数据进行转换
+**5. 对导入数据进行转换**
 
 数据依然是示例 3 中的多行数据，现需要对导入数据中的 `code` 列加 1 后导入。
 
@@ -511,7 +517,7 @@ curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\
 105     {"order1":["guangzhou"]}    7
 ```
 
-6. 使用 JSON 导入 Array 类型
+**6. 使用 JSON 导入 Array 类型**
 由于 RapidJSON 处理 decimal 和 largeint 数值会导致精度问题，所以我们建议使用 JSON 字符串来导入数据到`array<decimal>` 或 `array<largeint>`列。
 
 ```json
