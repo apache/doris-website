@@ -7,32 +7,33 @@
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
   },
-  "sidebar.docs.category.Doris Introduction": {
-    "message": "Doris 介绍",
-    "description": "The label for category Doris Introduction in sidebar docs"
-  },
   "sidebar.docs.category.Install and Deploy": {
     "message": "安装部署",
     "description": "The label for category Install and Deploy in sidebar docs"
-  },
-  "sidebar.docs.category.Docker Deployment": {
-    "message": "Docker 部署",
-    "description": "Make docker image and quickly start Doris's Docker cluster"
-  },
-  "sidebar.docs.category.Deploy Doris on Kubernetes": {
-    "message": "基于 Kubernetes 部署",
-    "description": "The label for category Deploy Doris on Kubernetes in sidebar docs"
   },
   "sidebar.docs.category.Source Code Compilation": {
     "message": "源码编译",
     "description": "The label for category Compile in sidebar docs"
   },
+    "sidebar.docs.category.Cluster Deployment": {
+    "message": "集群部署",
+    "description": "The label for category Cluster Deployment in sidebar docs"
+  },
+    "sidebar.docs.category.Deploy on Kubernetes": {
+    "message": "K8s 部署",
+    "description": "The label for category Deploy on Kubernetes in sidebar docs"
+  },
+  
   "sidebar.docs.category.Table Design": {
     "message": "数据表设计",
     "description": "The label for category Table Design in sidebar docs"
   },
+    "sidebar.docs.category.Data Model": {
+    "message": "数据模型",
+    "description": "The label for category Data Model in sidebar docs"
+  },
   "sidebar.docs.category.Index": {
-    "message": "索引",
+    "message": "表索引",
     "description": "The label for category Index in sidebar docs"
   },
   "sidebar.docs.category.Data Operation": {
@@ -43,25 +44,17 @@
     "message": "数据导入",
     "description": "The label for category Import in sidebar docs"
   },
-  "sidebar.docs.category.Import Scenes": {
-    "message": "按场景导入",
-    "description": "The label for category Import Scenes in sidebar docs"
+  "sidebar.docs.category.Update": {
+    "message": "数据更新",
+    "description": "The label for category Update in sidebar docs"
   },
-  "sidebar.docs.category.Import Way": {
-    "message": "按方式导入",
-    "description": "The label for category Import Way in sidebar docs"
-  },
-  "sidebar.docs.category.Import Advanced": {
-    "message": "高级导入",
-    "description": "The label for category Import Advanced in sidebar docs"
+     "sidebar.docs.category.Delete": {
+    "message": "数据删除",
+    "description": "The label for category Delete in sidebar docs"
   },
   "sidebar.docs.category.Export": {
-    "message": "导出",
+    "message": "数据导出",
     "description": "The label for category Export in sidebar docs"
-  },
-  "sidebar.docs.category.Update and Delete": {
-    "message": "数据更新及删除",
-    "description": "The label for category Update and Delete in sidebar docs"
   },
   "sidebar.docs.category.Advanced Usage": {
     "message": "进阶使用",

@@ -1,6 +1,6 @@
 ---
 {
-"title": "在 Windows 平台上编译",
+"title": "Windows 平台上编译",
 "language": "zh-CN"
 }
 ---
@@ -24,71 +24,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 在 Windows 平台上编译
-
-本文介绍如何在 Windows 平台上编译源码
+本文介绍如何在 Windows 平台上编译源码，借助 Windows 的 WSL 功能，可以通过在 Windows 上启动 Linux 系统来编译 Doris。
 
 ## 环境要求
 
-1. Windows 11 或 Windows 10 版本 1903、内部版本 18362 或更高版本中可用
-2. 可正常使用 WSL2，WSL2 开启步骤不再在此赘述
+1.  必须运行 Windows 10 版本 2004 及更高版本（内部版本 19041 及更高版本）或 Windows 11 才能使用。
 
 ## 编译步骤
 
-1. 通过 Microsoft Store 安装 Oracle Linux 7.9 发行版
+### 安装 WSL2
 
-   > 也可通过 Docker 镜像或 Github 安装方式安装其他想要的发行版
+可参考微软官方 [WSL 安装文档](https://learn.microsoft.com/zh-cn/windows/wsl/install)，不在此赘述。
 
-2. 打开 CMD，指定身份运行 WSL2
+### 编译 Doris
 
-   ```shell
-   wsl -d OracleLinux_7_9 -u root
-   ```
+通过使用 WSL2 启动的 Linux 子系统，选择任意 Doris 在 Linux 上的编译方式即可。
 
-3. 安装依赖
+-   [使用 LDB Toolchain 编译](../../install/source-install/compilation-with-ldb-toolchain) 
 
-   ```shell
-   # install required system packages
-   sudo yum install -y byacc patch automake libtool make which file ncurses-devel gettext-devel unzip bzip2 zip util-linux wget git python2
-   
-   # install autoconf-2.69
-   wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
-       tar zxf autoconf-2.69.tar.gz && \
-       cd autoconf-2.69 && \
-       ./configure && \
-       make && \
-       make install
-   
-   # install bison-3.0.4
-   wget http://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz && \
-       tar xzf bison-3.0.4.tar.gz && \
-       cd bison-3.0.4 && \
-       ./configure && \
-       make && \
-       make install
-   ```
+-   [使用 Docker 开发镜像编译（推荐）](../../install/source-install/compilation-with-docker) 
 
-4. 安装 LDB_TOOLCHAIN 及其他主要编译环境
-
-    - [Java8](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u131-linux-x64.tar.gz)
-    - [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz)
-    - [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)
-    - [LDB_TOOLCHAIN](https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.18/ldb_toolchain_gen.sh)
-
-5. 配置环境变量
-
-6. 拉取 Doris 源码
-
-   ```
-   git clone http://github.com/apache/doris.git
-   ```
-
-7. 编译
-
-   ```
-   cd doris
-   sh build.sh
-   ```
 ## 注意事项
 
-默认 WSL2 的发行版数据存储盘符为 C 盘，如有需要提前切换存储盘符，以防止系统盘符占满
+默认 WSL2 的发行版数据存储盘符为 C 盘，如有需要提前切换存储盘符，以防止系统盘符占满。

@@ -4,65 +4,84 @@
             "type": "category",
             "label": "Getting Started",
             "items": [
-                "get-starting/quick-start",
-                "get-starting/what-is-apache-doris"
+                "get-starting/what-is-apache-doris",
+                "get-starting/quick-start"
+                
             ]
         },
         {
             "type": "category",
             "label": "Install and Deploy",
             "items": [
-                "install/standard-deployment",
-                {
-                    "type": "category",
-                    "label": "Docker Deployment",
-                    "items": [
-                        "install/construct-docker/build-docker-image",
-                        "install/construct-docker/run-docker-cluster"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Deploy Doris on Kubernetes",
-                    "items": [
-                        "install/k8s-deploy/operator-deploy",
-                        "install/k8s-deploy/helm-chart-deploy",
-                        "install/k8s-deploy/network",
-                        "install/k8s-deploy/persistent-volume"
-                    ]
-                },
                 {
                     "type": "category",
                     "label": "Source Code Compilation",
                     "items": [
-                        "install/source-install/compilation-general",
+                        "install/source-install/compilation-with-docker",
                         "install/source-install/compilation-with-ldb-toolchain",
+                        "install/source-install/compilation-linux",
                         "install/source-install/compilation-arm",
                         "install/source-install/compilation-win",
                         "install/source-install/compilation-mac"
                     ]
-                }
+                },
+                 {
+                    "type": "category",
+                    "label": "Cluster Deployment",
+                    "items": [
+                        "install/cluster-deployment/standard-deployment",
+                        "install/cluster-deployment/run-docker-cluster",
+                        {
+                        "type": "category",
+                        "label": "Deploy on Kubernetes",
+                        "items": [
+                            "install/cluster-deployment/k8s-deploy/operator-deploy",
+                            "install/cluster-deployment/k8s-deploy/helm-chart-deploy",
+                            "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
+                            "install/cluster-deployment/k8s-deploy/network",
+                            "install/cluster-deployment/k8s-deploy/persistent-volume",
+                            "install/cluster-deployment/k8s-deploy/root-user-use",
+                            "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
+                            "install/cluster-deployment/k8s-deploy/debug-crash"
+                            ]
+                        }
+                    ]
+                }                
             ]
         },
         {
             "type": "category",
             "label": "Table Design",
             "items": [
-                "data-table/data-model",
-                "data-table/data-partition",
-                "data-table/basic-usage",
-                "data-table/hit-the-rollup",
-                "data-table/best-practice",
+                {
+                    "type": "category",
+                    "label": "Data Model",
+                    "items": [
+                        "table-design/data-model/overview",
+                        "table-design/data-model/duplicate",
+                        "table-design/data-model/unique",
+                        "table-design/data-model/aggregate",
+                        "table-design/data-model/tips"
+                    ]
+                },
+                "table-design/data-type",
+                "table-design/data-partition",
+                "table-design/schema-change",
+                "table-design/cold-hot-separation",
                 {
                     "type": "category",
                     "label": "Index",
                     "items": [
-                        "data-table/index/index-overview",
-                        "data-table/index/inverted-index",
-                        "data-table/index/bloomfilter",
-                        "data-table/index/ngram-bloomfilter-index"
+                        "table-design/index/index-overview",
+                        "table-design/index/prefix-index",
+                        "table-design/index/bloomfilter",
+                        "table-design/index/ngram-bloomfilter-index",
+                        "table-design/index/bitmap-index",
+                        "table-design/index/inverted-index"
                     ]
-                }
+                },
+                "table-design/auto-increment",
+                "table-design/best-practice"
             ]
         },
         {
@@ -74,34 +93,40 @@
                     "label": "Import",
                     "items": [
                         "data-operate/import/load-manual",
-                        {
-                            "type": "category",
-                            "label": "Import Scenes",
-                            "items": [
-                                "data-operate/import/import-scenes/local-file-load",
-                                "data-operate/import/import-scenes/external-storage-load",
-                                "data-operate/import/import-scenes/kafka-load",
-                                "data-operate/import/import-scenes/external-table-load",
-                                "data-operate/import/import-scenes/jdbc-load",
-                                "data-operate/import/import-scenes/load-atomicity",
-                                "data-operate/import/import-scenes/load-data-convert",
-                                "data-operate/import/import-scenes/load-strict-mode"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Import Way",
-                            "items": [
-                                "data-operate/import/import-way/broker-load-manual",
-                                "data-operate/import/import-way/routine-load-manual",
-                                "data-operate/import/import-way/spark-load-manual",
-                                "data-operate/import/import-way/stream-load-manual",
-                                "data-operate/import/import-way/mysql-load-manual",
-                                "data-operate/import/import-way/s3-load-manual",
-                                "data-operate/import/import-way/insert-into-manual",
-                                "data-operate/import/import-way/load-json-format"
-                            ]
-                        }
+                        "data-operate/import/stream-load-manual",
+                        "data-operate/import/broker-load-manual",
+                        "data-operate/import/routine-load-manual",
+                        "data-operate/import/insert-into-manual",
+                        "data-operate/import/mysql-load-manual",
+                        "data-operate/import/cdc-load-manual",
+                        "data-operate/import/load-json-format",
+                        "data-operate/import/migrate-data-from-other-olap",
+                        "data-operate/import/group-commit-manual",
+                        "data-operate/import/load-atomicity",
+                        "data-operate/import/load-data-convert",
+                        "data-operate/import/min-load-replica-num",
+                        "data-operate/import/load-strict-mode"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Update",
+                    "items": [
+                        "data-operate/update/load-update",
+                        "data-operate/update/update",
+                        "data-operate/update/partial-update",
+                        "data-operate/update/sequence-column-manual"   
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Delete",
+                    "items": [
+                        "data-operate/delete/delete-manual",
+                        "data-operate/delete/batch-delete-manual",
+                        "data-operate/delete/truncate-manual",
+                        "data-operate/delete/table-temp-partition",
+                        "data-operate/delete/atomicity-replace"
                     ]
                 },
                 {
@@ -112,70 +137,7 @@
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
                     ]
-                },
-                {
-                    "type": "category",
-                    "label": "Update and Delete",
-                    "items": [
-                        "data-operate/update-delete/batch-delete-manual",
-                        "data-operate/update-delete/update",
-                        "data-operate/update-delete/partial-update",
-                        "data-operate/update-delete/delete-manual",
-                        "data-operate/update-delete/sequence-column-manual"
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Advanced Usage",
-            "items": [
-                {
-                    "type": "category",
-                    "label": "Alter Table",
-                    "items": [
-                        "advanced/alter-table/schema-change",
-                        "advanced/alter-table/replace-table"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Partition",
-                    "items": [
-                        "advanced/partition/dynamic-partition",
-                        "advanced/partition/table-temp-partition"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Data Cache",
-                    "items": [
-                        "advanced/cache/partition-cache"
-                    ]
-                },
-                "advanced/autobucket",
-                "advanced/broker",
-                {
-                    "type": "category",
-                    "label": "Best Practice",
-                    "items": [
-                        "advanced/best-practice/query-analysis",
-                        "advanced/best-practice/import-analysis",
-                        "advanced/best-practice/debug-log",
-                        "advanced/best-practice/compaction"
-                    ]
-                },
-                "advanced/resource",
-                "advanced/orthogonal-bitmap-manual",
-                "advanced/using-hll",
-                "advanced/variables",
-                "advanced/time-zone",
-                "advanced/sql-mode",
-                "advanced/small-file-mgr",
-                "advanced/cold-hot-separation",
-                "advanced/is-being-synced",
-                "advanced/lateral-view"
-                
+                }                
             ]
         },
         {

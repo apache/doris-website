@@ -33,9 +33,9 @@ under the License.
 在 Doris 中，数据以表（Table）的形式进行逻辑上的描述。
 一张表包括行（Row）和列（Column）。Row 即用户的一行数据。Column 用于描述一行数据中不同的字段。
 
-Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris的key列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 Key 列，除了 Key 列剩下的就是 Value 列。
+Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris 的 key 列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 Key 列，除了 Key 列剩下的就是 Value 列。
 
-Doris 的数据模型主要分为3类:
+Doris 的数据模型主要分为 3 类：
 
 - Aggregate
 - Unique
@@ -47,13 +47,13 @@ Doris 的数据模型主要分为3类:
 
 我们以实际的例子来说明什么是聚合模型，以及如何正确的使用聚合模型。
 
-### 示例1：导入数据聚合
+### 示例 1：导入数据聚合
 
 假设业务有如下数据表模式：
 
 | ColumnName      | Type        | AggregationType | Comment    |
 |-----------------|-------------|-----------------|------------|
-| user_id         | LARGEINT    |                 | 用户id       |
+| user_id         | LARGEINT    |                 | 用户 id       |
 | date            | DATE        |                 | 数据灌入日期     |
 | city            | VARCHAR(20) |                 | 用户所在城市     |
 | age             | SMALLINT    |                 | 用户年龄       |
@@ -92,17 +92,17 @@ PROPERTIES (
 
 表中的列按照是否设置了 `AggregationType`，分为 Key (维度列) 和 Value（指标列）。没有设置 `AggregationType` 的，如 `user_id`、`date`、`age` ... 等称为 **Key**，而设置了 `AggregationType` 的称为 **Value**。
 
-当我们导入数据时，对于 Key 列相同的行会聚合成一行，而 Value 列会按照设置的 `AggregationType` 进行聚合。 `AggregationType` 目前有以下几种聚合方式和agg_state：
+当我们导入数据时，对于 Key 列相同的行会聚合成一行，而 Value 列会按照设置的 `AggregationType` 进行聚合。 `AggregationType` 目前有以下几种聚合方式和 agg_state：
 
 1. SUM：求和，多行的 Value 进行累加。
 2. REPLACE：替代，下一批数据中的 Value 会替换之前导入过的行中的 Value。
 3. MAX：保留最大值。
 4. MIN：保留最小值。
-5. REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于null值，不做替换。
+5. REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于 null 值，不做替换。
 6. HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
 7. BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
 
-如果这几种聚合方式无法满足需求，则可以选择使用agg_state类型。
+如果这几种聚合方式无法满足需求，则可以选择使用 agg_state 类型。
 
 
 假设我们有以下导入数据（原始数据）：
@@ -117,7 +117,7 @@ PROPERTIES (
 | 10004   | 2017-10-01 | 深圳   | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3              | 3              |
 | 10004   | 2017-10-03 | 深圳   | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6              | 6              |
 
-通过sql导入数据：
+通过 sql 导入数据：
 
 ```sql
 insert into example_db.example_tbl_agg1 values
@@ -134,7 +134,7 @@ insert into example_db.example_tbl_agg1 values
 
 | 数据                  | 说明                  |
 |---------------------|---------------------|
-| 10000               | 用户id，每个用户唯一识别id     |
+| 10000               | 用户 id，每个用户唯一识别 id     |
 | 2017-10-01          | 数据入库时间，精确到日期        |
 | 北京                  | 用户所在城市              |
 | 20                  | 用户年龄                |
@@ -157,7 +157,7 @@ insert into example_db.example_tbl_agg1 values
 
 可以看到，用户 10000 只剩下了一行**聚合后**的数据。而其余用户的数据和原始数据保持一致。这里先解释下用户 10000 聚合后的数据：
 
-前5列没有变化，从第6列 `last_visit_date` 开始：
+前 5 列没有变化，从第 6 列 `last_visit_date` 开始：
 
 - `2017-10-01 07:00:00`：因为 `last_visit_date` 列的聚合方式为 REPLACE，所以 `2017-10-01 07:00:00` 替换了 `2017-10-01 06:00:00` 保存了下来。
 
@@ -171,13 +171,13 @@ insert into example_db.example_tbl_agg1 values
 
 经过聚合，Doris 中最终只会存储聚合后的数据。换句话说，即明细数据会丢失，用户不能够再查询到聚合前的明细数据了。
 
-### 示例2：保留明细数据
+### 示例 2：保留明细数据
 
-接示例1，我们将表结构修改如下：
+接示例 1，我们将表结构修改如下：
 
 | ColumnName      | Type        | AggregationType | Comment     |
 |-----------------|-------------|-----------------|-------------|
-| user_id         | LARGEINT    |                 | 用户id        |
+| user_id         | LARGEINT    |                 | 用户 id        |
 | date            | DATE        |                 | 数据灌入日期      |
 | timestamp       | DATETIME    |                 | 数据灌入时间，精确到秒 |
 | city            | VARCHAR(20) |                 | 用户所在城市      |
@@ -224,7 +224,7 @@ PROPERTIES (
 | 10004   | 2017-10-01 | 2017-10-01 12:12:48 | 深圳   | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3              | 3              |
 | 10004   | 2017-10-03 | 2017-10-03 12:38:20 | 深圳   | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6              | 6              |
 
-通过sql导入数据：
+通过 sql 导入数据：
 
 ```sql
 insert into example_db.example_tbl_agg2 values
@@ -251,9 +251,9 @@ insert into example_db.example_tbl_agg2 values
 
 我们可以看到，存储的数据，和导入数据完全一样，没有发生任何聚合。这是因为，这批数据中，因为加入了 `timestamp` 列，所有行的 Key 都**不完全相同**。也就是说，只要保证导入的数据中，每一行的 Key 都不完全相同，那么即使在聚合模型下，Doris 也可以保存完整的明细数据。
 
-### 示例3：导入数据与已有数据聚合
+### 示例 3：导入数据与已有数据聚合
 
-接示例1。假设现在表中已有数据如下：
+接示例 1。假设现在表中已有数据如下：
 
 | user_id | date       | city | age | sex | last_visit_date     | cost | max_dwell_time | min_dwell_time |
 |---------|------------|------|-----|-----|---------------------|------|----------------|----------------|
@@ -271,7 +271,7 @@ insert into example_db.example_tbl_agg2 values
 | 10004   | 2017-10-03 | 深圳   | 35  | 0   | 2017-10-03 11:22:00 | 44   | 19             | 19             |
 | 10005   | 2017-10-03 | 长沙   | 29  | 1   | 2017-10-03 18:11:02 | 3    | 1              | 1              |
 
-通过sql导入数据：
+通过 sql 导入数据：
 
 ```sql
 insert into example_db.example_tbl_agg1 values
@@ -320,22 +320,22 @@ distributed BY hash(k1) buckets 3
 properties("replication_num" = "1");
 ```
 
-其中agg_state用于声明数据类型为agg_state，sum/group_concat为聚合函数的签名。
-注意agg_state是一种数据类型，同int/array/string
+其中 agg_state 用于声明数据类型为 agg_state，sum/group_concat 为聚合函数的签名。
+注意 agg_state 是一种数据类型，同 int/array/string
 
-agg_state只能配合[state](../sql-manual/sql-functions/combinators/state.md)
+agg_state 只能配合[state](../sql-manual/sql-functions/combinators/state.md)
     /[merge](../sql-manual/sql-functions/combinators/merge.md)/[union](../sql-manual/sql-functions/combinators/union.md)函数组合器使用。
 
-agg_state是聚合函数的中间结果，例如，聚合函数sum ， 则agg_state可以表示sum(1,2,3,4,5)的这个中间状态，而不是最终的结果。
+agg_state 是聚合函数的中间结果，例如，聚合函数 sum，则 agg_state 可以表示 sum(1,2,3,4,5) 的这个中间状态，而不是最终的结果。
 
-agg_state类型需要使用state函数来生成，对于当前的这个表，则为`sum_state`,`group_concat_state`。
+agg_state 类型需要使用 state 函数来生成，对于当前的这个表，则为`sum_state`,`group_concat_state`。
 
 ```sql
 insert into aggstate values(1,sum_state(1),group_concat_state('a'));
 insert into aggstate values(1,sum_state(2),group_concat_state('b'));
 insert into aggstate values(1,sum_state(3),group_concat_state('c'));
 ```
-此时表只有一行 ( 注意，下面的表只是示意图，不是真的可以select显示出来)
+此时表只有一行 ( 注意，下面的表只是示意图，不是真的可以 select 显示出来)
 
 | k1 | k2         | k3                        |               
 |----|------------|---------------------------| 
@@ -354,7 +354,7 @@ insert into aggstate values(2,sum_state(4),group_concat_state('d'));
 | 1  | sum(1,2,3) | group_concat_state(a,b,c) | 
 | 2  | sum(4)     | group_concat_state(d)     |
 
-我们可以通过merge操作来合并多个state，并且返回最终聚合函数计算的结果
+我们可以通过 merge 操作来合并多个 state，并且返回最终聚合函数计算的结果
 
 ```
 mysql> select sum_merge(k2) from aggstate;
@@ -365,8 +365,8 @@ mysql> select sum_merge(k2) from aggstate;
 +---------------+
 ```
 
-`sum_merge` 会先把sum(1,2,3) 和 sum(4) 合并成 sum(1,2,3,4) ，并返回计算的结果。
-因为group_concat对于顺序有要求，所以结果是不稳定的。
+`sum_merge` 会先把 sum(1,2,3) 和 sum(4) 合并成 sum(1,2,3,4) ，并返回计算的结果。
+因为 group_concat 对于顺序有要求，所以结果是不稳定的。
 
 ```
 mysql> select group_concat_merge(k3) from aggstate;
@@ -377,7 +377,7 @@ mysql> select group_concat_merge(k3) from aggstate;
 +------------------------+
 ```
 
-如果不想要聚合的最终结果，可以使用union来合并多个聚合的中间结果，生成一个新的中间结果。
+如果不想要聚合的最终结果，可以使用 union 来合并多个聚合的中间结果，生成一个新的中间结果。
 
 ```sql
 insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate ;
@@ -408,34 +408,34 @@ mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
 +---------------+------------------------+
 ```
 
-用户可以通过agg_state做出跟细致的聚合函数操作。
+用户可以通过 agg_state 做出跟细致的聚合函数操作。
 
 注意 agg_state 存在一定的性能开销
 
 ## Unique 模型
 
-当用户有数据更新需求时，可以选择使用Unique数据模型。Unique模型能够保证Key的唯一性，当用户更新一条数据时，新写入的数据会覆盖具有相同key的旧数据。
+当用户有数据更新需求时，可以选择使用 Unique 数据模型。Unique 模型能够保证 Key 的唯一性，当用户更新一条数据时，新写入的数据会覆盖具有相同 key 的旧数据。
 
 **两种实现方式**
 
-Unique模型提供了两种实现方式：
+Unique 模型提供了两种实现方式：
 
-- 读时合并(merge-on-read)。在读时合并实现中，用户在进行数据写入时不会触发任何数据去重相关的操作，所有数据去重的操作都在查询或者compaction时进行。因此，读时合并的写入性能较好，查询性能较差，同时内存消耗也较高。
-- 写时合并(merge-on-write)。在1.2版本中，我们引入了写时合并实现，该实现会在数据写入阶段完成所有数据去重的工作，因此能够提供非常好的查询性能。
+- 读时合并 (merge-on-read)。在读时合并实现中，用户在进行数据写入时不会触发任何数据去重相关的操作，所有数据去重的操作都在查询或者 compaction 时进行。因此，读时合并的写入性能较好，查询性能较差，同时内存消耗也较高。
+- 写时合并 (merge-on-write)。在 1.2 版本中，我们引入了写时合并实现，该实现会在数据写入阶段完成所有数据去重的工作，因此能够提供非常好的查询性能。
 
-自2.0版本起，写时合并已经非常成熟稳定, 由于其优秀的查询性能，我们推荐大部分用户选择该实现。自2.1版本其，写时合并成为Unique模型的默认实现
+自 2.0 版本起，写时合并已经非常成熟稳定，由于其优秀的查询性能，我们推荐大部分用户选择该实现。自 2.1 版本其，写时合并成为 Unique 模型的默认实现
 关于两种实现方式的详细区别，用户可以本章节后续内容的介绍。关于两种实现方式的性能差异，参考后续章节[聚合模型的局限性](#聚合模型的局限性)的描述。
 
 **数据更新的语意**
 
-- Unique模型默认的更新语意为**整行`UPSERT`**，即UPDATE OR INSERT，该行数据的key如果存在，则进行更新，如果不存在，则进行新数据插入。在整行`UPSERT`语意下，即使用户使用insert into指定部分列进行写入，Doris也会在Planner中将未提供的列使用NULL值或者默认值进行填充
-- 部分列更新。如果用户希望更新部分字段，需要使用写时合并实现，并通过特定的参数来开启部分列更新的支持。请查阅文档[部分列更新](../data-operate/update-delete/partial-update.md)获取相关使用建议
+- Unique 模型默认的更新语意为**整行`UPSERT`**，即 UPDATE OR INSERT，该行数据的 key 如果存在，则进行更新，如果不存在，则进行新数据插入。在整行`UPSERT`语意下，即使用户使用 insert into 指定部分列进行写入，Doris 也会在 Planner 中将未提供的列使用 NULL 值或者默认值进行填充
+- 部分列更新。如果用户希望更新部分字段，需要使用写时合并实现，并通过特定的参数来开启部分列更新的支持。请查阅文档[部分列更新](../data-operate/update/partial-update.md)获取相关使用建议
 
 ### 读时合并（与聚合模型相同的实现方式）
 
 | ColumnName    | Type         | IsKey | Comment |
 |---------------|--------------|-------|---------|
-| user_id       | BIGINT       | Yes   | 用户id    |
+| user_id       | BIGINT       | Yes   | 用户 id    |
 | username      | VARCHAR(50)  | Yes   | 用户昵称    |
 | city          | VARCHAR(20)  | No    | 用户所在城市  |
 | age           | SMALLINT     | No    | 用户年龄    |
@@ -469,7 +469,7 @@ PROPERTIES (
 
 | ColumnName    | Type         | AggregationType | Comment |
 |---------------|--------------|-----------------|---------|
-| user_id       | BIGINT       |                 | 用户id    |
+| user_id       | BIGINT       |                 | 用户 id    |
 | username      | VARCHAR(50)  |                 | 用户昵称    |
 | city          | VARCHAR(20)  | REPLACE         | 用户所在城市  |
 | age           | SMALLINT     | REPLACE         | 用户年龄    |
@@ -499,15 +499,15 @@ PROPERTIES (
 );
 ```
 
-即Unique 模型的读时合并实现完全可以用聚合模型中的 REPLACE 方式替代。其内部的实现方式和数据存储方式也完全一样。这里不再继续举例说明。
+即 Unique 模型的读时合并实现完全可以用聚合模型中的 REPLACE 方式替代。其内部的实现方式和数据存储方式也完全一样。这里不再继续举例说明。
 
 <version since="1.2">
 
 ### 写时合并
 
-Unique模型的写时合并实现，查询性能更接近于duplicate模型，在有主键约束需求的场景上相比聚合模型有较大的查询性能优势，尤其是在聚合查询以及需要用索引过滤大量数据的查询中。
+Unique 模型的写时合并实现，查询性能更接近于 duplicate 模型，在有主键约束需求的场景上相比聚合模型有较大的查询性能优势，尤其是在聚合查询以及需要用索引过滤大量数据的查询中。
 
-在 1.2.0 版本中，作为一个新的feature，写时合并默认关闭(2.1 版本之前)，用户可以通过添加下面的property来开启
+在 1.2.0 版本中，作为一个新的 feature，写时合并默认关闭 (2.1 版本之前)，用户可以通过添加下面的 property 来开启
 
 ```
 "enable_unique_key_merge_on_write" = "true"
@@ -516,10 +516,10 @@ Unique模型的写时合并实现，查询性能更接近于duplicate模型，�
 从 2.1 版本开始，写时合并默认开启。
 
 > 注意：
-> 1. 对于1.2的用户
->    1. 建议使用1.2.4及以上版本，该版本修复了一些bug和稳定性问题。
->    2. 在be.conf中添加配置项：disable_storage_page_cache=false。不添加该配置项可能会对数据导入性能产生较大影响
-> 1. 对于新用户，强烈推荐使用2.0以上版本。在2.0版本中，写时合并的性能和稳定性都有大幅的提升和优化
+> 1. 对于 1.2 的用户
+>    1. 建议使用 1.2.4 及以上版本，该版本修复了一些 bug 和稳定性问题。
+>    2. 在 be.conf 中添加配置项：disable_storage_page_cache=false。不添加该配置项可能会对数据导入性能产生较大影响
+> 1. 对于新用户，强烈推荐使用 2.0 以上版本。在 2.0 版本中，写时合并的性能和稳定性都有大幅的提升和优化
 
 仍然以上面的表为例，建表语句为
 
@@ -547,7 +547,7 @@ PROPERTIES (
 
 | ColumnName    | Type         | AggregationType | Comment |
 |---------------|--------------|-----------------|---------|
-| user_id       | BIGINT       |                 | 用户id    |
+| user_id       | BIGINT       |                 | 用户 id    |
 | username      | VARCHAR(50)  |                 | 用户昵称    |
 | city          | VARCHAR(20)  | NONE            | 用户所在城市  |
 | age           | SMALLINT     | NONE            | 用户年龄    |
@@ -556,12 +556,12 @@ PROPERTIES (
 | address       | VARCHAR(500) | NONE            | 用户住址    |
 | register_time | DATETIME     | NONE            | 用户注册时间  |
 
-在开启了写时合并选项的Unique表上，数据在导入阶段就会去将被覆盖和被更新的数据进行标记删除，同时将新的数据写入新的文件。在查询的时候，
+在开启了写时合并选项的 Unique 表上，数据在导入阶段就会去将被覆盖和被更新的数据进行标记删除，同时将新的数据写入新的文件。在查询的时候，
 所有被标记删除的数据都会在文件级别被过滤掉，读取出来的数据就都是最新的数据，消除掉了读时合并中的数据聚合过程，并且能够在很多情况下支持多种谓词的下推。因此在许多场景都能带来比较大的性能提升，尤其是在有聚合查询的情况下。
 
 【注意】
-1. Unique表的实现方式只能在建表时确定，无法通过schema change进行修改。
-2. 旧的Merge-on-read的实现无法无缝升级到Merge-on-write的实现（数据组织方式完全不同），如果需要改为使用写时合并的实现版本，需要手动执行`insert into unique-mow-table select * from source table`.
+1. Unique 表的实现方式只能在建表时确定，无法通过 schema change 进行修改。
+2. 旧的 Merge-on-read 的实现无法无缝升级到 Merge-on-write 的实现（数据组织方式完全不同），如果需要改为使用写时合并的实现版本，需要手动执行`insert into unique-mow-table select * from source table`.
 
 </version>
 
@@ -575,7 +575,7 @@ PROPERTIES (
 | type       | INT           | Yes     | 日志类型    |
 | error_code | INT           | Yes     | 错误码     |
 | error_msg  | VARCHAR(1024) | No      | 错误详细信息  |
-| op_id      | BIGINT        | No      | 负责人id   |
+| op_id      | BIGINT        | No      | 负责人 id   |
 | op_time    | DATETIME      | No      | 处理时间    |
 
 建表语句如下：
@@ -598,8 +598,8 @@ PROPERTIES (
 ```
 
 这种数据模型区别于 Aggregate 和 Unique 模型。数据完全按照导入文件中的数据进行存储，不会有任何聚合。即使两行数据完全相同，也都会保留。
-而在建表语句中指定的 DUPLICATE KEY，只是用来指明底层数据按照那些列进行排序。（更贴切的名称应该为 “Sorted Column”，
-这里取名 “DUPLICATE KEY” 只是用以明确表示所用的数据模型。关于 “Sorted Column”的更多解释，可以参阅[前缀索引](./index/index-overview.md)）。在 DUPLICATE KEY 的选择上，我们建议适当的选择前 2-4 列就可以。
+而在建表语句中指定的 DUPLICATE KEY，只是用来指明底层数据按照那些列进行排序。（更贴切的名称应该为“Sorted Column”，
+这里取名“DUPLICATE KEY”只是用以明确表示所用的数据模型。关于“Sorted Column”的更多解释，可以参阅[前缀索引](./index/index-overview.md)）。在 DUPLICATE KEY 的选择上，我们建议适当的选择前 2-4 列就可以。
 
 这种数据模型适用于既没有聚合需求，又没有主键唯一性约束的原始数据的存储。更多使用场景，可参阅[聚合模型的局限性](#聚合模型的局限性)小节。
 
@@ -607,7 +607,7 @@ PROPERTIES (
 
 ### 无排序列 Duplicate 模型
 
-当创建表的时候没有指定Unique、Aggregate或Duplicate时，会默认创建一个Duplicate模型的表，并自动指定排序列。
+当创建表的时候没有指定 Unique、Aggregate 或 Duplicate 时，会默认创建一个 Duplicate 模型的表，并自动指定排序列。
 
 当用户并没有排序需求的时候，可以通过在表属性中配置：
 
@@ -660,7 +660,7 @@ MySQL > desc example_tbl_duplicate_without_keys_by_default;
 
 | ColumnName | Type     | AggregationType | Comment |
 |------------|----------|-----------------|---------|
-| user_id    | LARGEINT |                 | 用户id    |
+| user_id    | LARGEINT |                 | 用户 id    |
 | date       | DATE     |                 | 数据灌入日期  |
 | cost       | BIGINT   | SUM             | 用户总消费   |
 
@@ -737,7 +737,7 @@ SELECT COUNT(*) FROM table;
 | 10002   | 2017-11-21 | 39   |
 | 10003   | 2017-11-22 | 22   |
 
-所以，`select count(*) from table;` 的正确结果应该为 **4**。但如果我们只扫描 `user_id` 这一列，如果加上查询时聚合，最终得到的结果是 **3**（10001, 10002, 10003）。而如果不加查询时聚合，则得到的结果是 **5**（两批次一共5行数据）。可见这两个结果都是不对的。
+所以，`select count(*) from table;` 的正确结果应该为 **4**。但如果我们只扫描 `user_id` 这一列，如果加上查询时聚合，最终得到的结果是 **3**（10001, 10002, 10003）。而如果不加查询时聚合，则得到的结果是 **5**（两批次一共 5 行数据）。可见这两个结果都是不对的。
 
 为了得到正确的结果，我们必须同时读取 `user_id` 和 `date` 这两列的数据，**再加上查询时聚合**，才能返回 **4** 这个正确的结果。也就是说，在 count(*) 查询中，Doris 必须扫描所有的 AGGREGATE KEY 列（这里就是 `user_id` 和 `date`），并且聚合后，才能得到语意正确的结果。当聚合列非常多时，count(*) 查询需要扫描大量的数据。
 
@@ -745,10 +745,10 @@ SELECT COUNT(*) FROM table;
 
 | ColumnName | Type   | AggregateType | Comment   |
 |------------|--------|---------------|-----------|
-| user_id    | BIGINT |               | 用户id      |
+| user_id    | BIGINT |               | 用户 id      |
 | date       | DATE   |               | 数据灌入日期    |
 | cost       | BIGINT | SUM           | 用户总消费     |
-| count      | BIGINT | SUM           | 用于计算count |
+| count      | BIGINT | SUM           | 用于计算 count |
 
 增加一个 count 列，并且导入数据中，该列值**恒为 1**。则 `select count(*) from table;` 的结果等价于 `select sum(count) from table;`。
 而后者的查询效率将远高于前者。不过这种方式也有使用限制，就是用户需要自行保证，不会重复导入 AGGREGATE KEY 列都相同地行。
@@ -756,9 +756,9 @@ SELECT COUNT(*) FROM table;
 
 另一种方式，就是 **将如上的 `count` 列的聚合类型改为 REPLACE，且依然值恒为 1**。那么 `select sum(count) from table;` 和 `select count(*) from table;` 的结果将是一致的。并且这种方式，没有导入重复行的限制。
 
-### Unique模型的写时合并实现
+### Unique 模型的写时合并实现
 
-Unique模型的写时合并实现没有聚合模型的局限性，还是以刚才的数据为例，写时合并为每次导入的rowset增加了对应的delete bitmap，来标记哪些数据被覆盖。第一批数据导入后状态如下
+Unique 模型的写时合并实现没有聚合模型的局限性，还是以刚才的数据为例，写时合并为每次导入的 rowset 增加了对应的 delete bitmap，来标记哪些数据被覆盖。第一批数据导入后状态如下
 
 **batch 1**
 
@@ -784,24 +784,24 @@ Unique模型的写时合并实现没有聚合模型的局限性，还是以刚�
 | 10001   | 2017-11-21 | 5    | false      |
 | 10003   | 2017-11-22 | 22   | false      |
 
-在查询时，所有在delete bitmap中被标记删除的数据都不会读出来，因此也无需进行做任何数据聚合，上述数据中有效地行数为4行，
-查询出的结果也应该是4行，也就可以采取开销最小的方式来获取结果，即前面提到的“仅扫描某一列数据，获得 count 值”的方式。
+在查询时，所有在 delete bitmap 中被标记删除的数据都不会读出来，因此也无需进行做任何数据聚合，上述数据中有效地行数为 4 行，
+查询出的结果也应该是 4 行，也就可以采取开销最小的方式来获取结果，即前面提到的“仅扫描某一列数据，获得 count 值”的方式。
 
-在测试环境中，count(*) 查询在Unique模型的写时合并实现上的性能，相比聚合模型有10倍以上的提升。
+在测试环境中，count(*) 查询在 Unique 模型的写时合并实现上的性能，相比聚合模型有 10 倍以上的提升。
 
 ### Duplicate 模型
 
 Duplicate 模型没有聚合模型的这个局限性。因为该模型不涉及聚合语意，在做 count(*) 查询时，任意选择一列查询，即可得到语意正确的结果。
 
 ## key 列
-Duplicate、Aggregate、Unique 模型，都会在建表指定 key 列，然而实际上是有所区别的：对于 Duplicate 模型，表的key列，
-可以认为只是 “排序列”，并非起到唯一标识的作用。而 Aggregate、Unique 模型这种聚合类型的表，key 列是兼顾 “排序列” 和 “唯一标识列”，是真正意义上的“ key 列”。
+Duplicate、Aggregate、Unique 模型，都会在建表指定 key 列，然而实际上是有所区别的：对于 Duplicate 模型，表的 key 列，
+可以认为只是“排序列”，并非起到唯一标识的作用。而 Aggregate、Unique 模型这种聚合类型的表，key 列是兼顾“排序列”和“唯一标识列”，是真正意义上的“key 列”。
 
 ## 数据模型的选择建议
 
 因为数据模型在建表时就已经确定，且**无法修改**。所以，选择一个合适的数据模型**非常重要**。
 
 1. Aggregate 模型可以通过预聚合，极大地降低聚合查询时所需扫描的数据量和查询的计算量，非常适合有固定模式的报表类查询场景。但是该模型对 count(*) 查询很不友好。同时因为固定了 Value 列上的聚合方式，在进行其他类型的聚合查询时，需要考虑语意正确性。
-2. Unique 模型针对需要唯一主键约束的场景，可以保证主键唯一性约束。但是无法利用 ROLLUP 等预聚合带来的查询优势。对于聚合查询有较高性能需求的用户，推荐使用自1.2版本加入的写时合并实现。
+2. Unique 模型针对需要唯一主键约束的场景，可以保证主键唯一性约束。但是无法利用 ROLLUP 等预聚合带来的查询优势。对于聚合查询有较高性能需求的用户，推荐使用自 1.2 版本加入的写时合并实现。
 3. Duplicate 适合任意维度的 Ad-hoc 查询。虽然同样无法利用预聚合的特性，但是不受聚合模型的约束，可以发挥列存模型的优势（只读取相关列，而不需要读取所有 Key 列）。
 4. 如果有部分列更新的需求，请查阅文档[部分列更新](../data-operate/update-delete/partial-update.md)获取相关使用建议
