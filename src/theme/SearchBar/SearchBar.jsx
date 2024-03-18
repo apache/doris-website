@@ -129,7 +129,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
                             const div = document.createElement('div');
                             div.className = styles.hitFooter;
                             div.appendChild(a);
-                            console.log(div);
                             return div;
                         },
                     },

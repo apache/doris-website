@@ -64,7 +64,6 @@ export default function Download() {
         const downloadInfo = cpus.find(item => item.value === val);
         const filename = downloadInfo.gz.split(ORIGIN)[1];
         downloadInfo.filename = filename;
-        console.log(downloadInfo);
         setDownloadInfo(downloadInfo);
     };
 

@@ -1,8 +1,8 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Notes'],
-        title: "New milestone: Apache Doris 2.1.0 is available now",
-        content: `Dear community, we are pleased to share with you the official release of Apache Doris 2.1.0, now available for download and use as of March 8th.`,
+        title: "Another big leap: Apache Doris 2.1.0 is released",
+        content: `We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.`,
         to: '/blog/release-note-2.1.0',
         image: '2.1.0.png',
     },

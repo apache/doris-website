@@ -25,7 +25,6 @@ export function NewsLetterSwiper() {
     useAnimationFrame(deltaTime => {
         // Pass on a function to the setter of the state
         // to make sure we always have the latest state
-        console.log(deltaTime);
 
         setProgressCount(prevProgressCount => {
             if (prevProgressCount >= 100) {

@@ -26,11 +26,11 @@ yarn-error.log*
 *.zip
 yarn.lock
 
-sidebars.json
-sidebarsCommunity.json
-i18n/zh-CN/docusaurus-plugin-content-docs
-i18n/zh-CN/docusaurus-plugin-content-docs-community/current
-docs/
-community/
-versioned_docs
+# sidebars.json
+# sidebarsCommunity.json
+# i18n/zh-CN/docusaurus-plugin-content-docs
+# i18n/zh-CN/docusaurus-plugin-content-docs-community/current
+# docs/
+# community/
+# versioned_docs
 doris
