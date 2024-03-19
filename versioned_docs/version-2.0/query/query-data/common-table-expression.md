@@ -24,4 +24,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Coming Soon
+
+Common Table Expressions (CTEs) define a temporary result set that can be referenced multiple times within the scope of an SQL statement. CTEs are primarily used in SELECT statements.
+
+To specify a CTE, use the WITH clause with one or more comma-separated clauses. Each clause provides a subquery that generates a result set and associates a name with the subquery. 
+
+The following example defines CTEs named `cte1` and `cte2` within the `WITH` clause and refers to them in the top-level `SELECT` below the `WITH` clause:
+
+```sql
+WITH
+  cte1 AS (SELECT a, b FROM table1),
+  cte2 AS (SELECT c, d FROM table2)
+SELECT b, d FROM cte1 JOIN cte2
+WHERE cte1.a = cte2.c;
+```
+
+
+Within the statement that contains the `WITH` clause, you can reference each CTE name to access the corresponding CTE result set. CTE names can be referenced in other CTEs, allowing you to define CTEs based on other CTEs.
+
+CTEs can also refer to themselves to define recursive CTEs. Recursive CTEs are commonly used for generating and traversing hierarchical or tree-like structured data.
