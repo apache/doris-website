@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BE版本信息",
+    "title": "BE 版本信息",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# BE版本信息
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-用于获取be节点的版本信息。
+用于获取 be 节点的版本信息。
     
 ## Path parameters
 
@@ -48,7 +48,7 @@ under the License.
 
 ## Response
 
-    ```
+    ```json
     {
         "msg":"success",
         "code":0,

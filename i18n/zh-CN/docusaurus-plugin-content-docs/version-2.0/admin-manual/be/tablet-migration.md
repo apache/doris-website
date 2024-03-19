@@ -1,6 +1,6 @@
 ---
 {
-    "title": "迁移tablet",
+    "title": "迁移 tablet",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 迁移tablet
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-在BE节点上迁移单个tablet到指定磁盘
+在 BE 节点上迁移单个 tablet 到指定磁盘
 
 ## Query parameters
 
@@ -41,7 +41,7 @@ under the License.
     - `status`：查询任务的执行状态
 
 * `tablet_id`
-    需要迁移的tablet的id
+    需要迁移的 tablet 的 id
 
 * `schema_hash`
     schema hash
@@ -57,14 +57,14 @@ under the License.
 
 ### 提交结果
 
-```
+```json
     {
         status: "Success",
         msg: "migration task is successfully submitted."
     }
 ```
 或
-```
+```json
     {
         status: "Fail",
         msg: "Migration task submission failed"
@@ -73,7 +73,7 @@ under the License.
 
 ### 执行状态
 
-```
+```json
     {
         status: "Success",
         msg: "migration task is running",
@@ -83,7 +83,7 @@ under the License.
 
 或
 
-```
+```json
     {
         status: "Success",
         msg: "migration task has finished successfully",
@@ -93,7 +93,7 @@ under the License.
 
 或
 
-```
+```json
     {
         status: "Success",
         msg: "migration task failed.",
@@ -104,7 +104,7 @@ under the License.
 ## Examples
 
 
-    ```
+    ```bash
     curl "http://127.0.0.1:8040/api/tablet_migration?goal=run&tablet_id=123&schema_hash=333&disk=/disk1"
 
     ```

@@ -24,13 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 文件管理器
+
 
 Doris 中的一些功能需要使用一些用户自定义的文件。比如用于访问外部数据源的公钥、密钥文件、证书文件等等。文件管理器提供这样一个功能，能够让用户预先上传这些文件并保存在 Doris 系统中，然后可以在其他命令中引用或访问。
 
 ## 名词解释
 
 - BDBJE：Oracle Berkeley DB Java Edition。FE 中用于持久化元数据的分布式嵌入式数据库。
+
 - SmallFileMgr：文件管理器。负责创建并维护用户的文件。
 
 ## 基本概念
@@ -118,7 +119,9 @@ Examples:
 1. FE 配置
 
    - `small_file_dir`：用于存放上传文件的路径，默认为 FE 运行目录的 `small_files/` 目录下。
+   
    - `max_small_file_size_bytes`：单个文件大小限制，单位为字节。默认为 1MB。大于该配置的文件创建将会被拒绝。
+   
    - `max_small_file_number`：一个 Doris 集群支持的总文件数量。默认为 100。当创建的文件数超过这个值后，后续的创建将会被拒绝。
 
    > 如果需要上传更多文件或提高单个文件的大小限制，可以通过 `ADMIN SET CONFIG` 命令修改 `max_small_file_size_bytes` 和 `max_small_file_number` 参数。但文件数量和大小的增加，会导致 FE 内存使用量的增加。

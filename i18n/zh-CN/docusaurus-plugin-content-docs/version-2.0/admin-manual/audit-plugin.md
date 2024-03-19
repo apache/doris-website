@@ -51,7 +51,9 @@ Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一�
     解压生成以下文件：
 
     * auditloader.jar：插件代码包。
+    
     * plugin.properties：插件属性文件。
+    
     * plugin.conf：插件配置文件。
 
 您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`) 到所有 FE 的指定目录下。这里我们使用后者。  
@@ -63,11 +65,17 @@ Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一�
     以下配置可供修改：
 
     * frontend_host_port：FE 节点 IP 地址和 HTTP 端口，格式为 <fe_ip>:<fe_http_port>。默认值为 127.0.0.1:8030。
+    
     * database：审计日志库名。
+    
     * audit_log_table：审计日志表名。
+    
     * slow_log_table：慢查询日志表名。
+    
     * enable_slow_log：是否开启慢查询日志导入功能。默认值为 false。
+    
     * user：集群用户名。该用户必须具有对应表的 INSERT 权限。
+    
     * password：集群用户密码。
 
 4. 重新打包 Audit Loader 插件
@@ -162,9 +170,11 @@ properties(
 );
 ```
 
->**注意**
->
-> 上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
+:::caution
+**注意**
+
+- 上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
+:::
 
 ### 部署
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "rowsets",
+    "title": "系统表",
     "language": "zh-CN"
 }
 ---
@@ -24,21 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## rowsets
 
-### Name
 
-<version since="1.2">
+:::note
 
-rowsets
+自 Doris 1.2 版本起支持 `rowset` 
+:::
 
-</version>
 
-### description
+## 描述
 
-`rowsets` 是doris内置的一张系统表，存放在`information_schema`数据库下。通过 `rowsets` 系统表可以查看各个`BE` 当前rowsets情况。
+`rowsets` 是 Doris 内置的一张系统表，存放在`information_schema`数据库下。通过 `rowsets` 系统表可以查看各个`BE` 当前 rowsets 情况。
 
-rowsets表结构为：
+rowsets 表结构为：
 ```sql
 MySQL [(none)]> desc information_schema.rowsets;
 +------------------------+------------+------+-------+---------+-------+
@@ -59,7 +57,7 @@ MySQL [(none)]> desc information_schema.rowsets;
 +------------------------+------------+------+-------+---------+-------+
 ```
 
-### Example
+## Example
 
 ```sql
 select * from information_schema.rowsets where BACKEND_ID = 10004 limit 10;
@@ -79,8 +77,7 @@ select * from information_schema.rowsets where BACKEND_ID = 10004 limit 10;
 +------------+--------------------------------------------------+-----------+-----------------+--------+--------------+---------------+-------------+-----------------+----------------+---------------+------------------------+------------------------+
 ```
 
-### KeyWords
+## KeyWords
 
-    rowsets, information_schema
+rowsets, information_schema
 
-### Best Practice

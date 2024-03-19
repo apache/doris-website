@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Statement Execution Action
+
 
 
 ## Request
@@ -41,7 +41,7 @@ Statement Execution Action 用于执行语句并返回结果。
 
 * `<db_name>`
 
-    指定数据库名称。该数据库会被视为当前session的默认数据库，如果在 SQL 中的表名没有限定数据库名称的话，则使用该数据库。
+    指定数据库名称。该数据库会被视为当前 session 的默认数据库，如果在 SQL 中的表名没有限定数据库名称的话，则使用该数据库。
 
 ## Query parameters
 

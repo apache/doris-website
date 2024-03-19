@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Meta Action
 
-## Request
+
+
 
 ```
 GET /image

@@ -30,7 +30,7 @@ under the License.
 
 doris-operator 提供了 `debug` 的运行模式，本质上是通过 debug 进程占用对应节点的探活端口，绕过 k8s 探活机制，制造一个平稳运行的容器环境来方便用户进入并定位问题。
 
-下面描述了当服务进入 `CrashLoopBackOff` 时如何进入 debug 模式进行人工 debug ，以及解决后如何恢复到正常启动状态。
+下面描述了当服务进入 `CrashLoopBackOff` 时如何进入 debug 模式进行人工 debug，以及解决后如何恢复到正常启动状态。
 
 
 
@@ -39,6 +39,7 @@ doris-operator 提供了 `debug` 的运行模式，本质上是通过 debug 进�
 当服务一个 pod 进入 CrashLoopBackOff 或者正常运行过程中无法再正常启动时，通过一下步骤让服务进入 `debug` 模式，进行手动启动服务查找问题。
 
 **1.通过以下命令给运行有问题的 pod 进行添加 annnotation**
+
 ```shell
 $ kubectl annotate pod ${pod_name} --namespace ${namespace} selectdb.com.doris/runmode=debug
 ```
@@ -69,5 +70,6 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 **进入 pod 内部后，需要修改配置文件的端口信息，才能手动启动 相应的 Doris 组件**
 
 - FE 需要修改默认路径为：`/opt/apache-doris/fe/conf/fe.conf` 的 `http_port=8030` 配置。
+
 - BE 需要修改默认路径为：`/opt/apache-doris/be/conf/be.conf` 的 `webserver_port=8040` 配置。
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Metrics Action
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-获取doris metrics信息。
+获取 doris metrics 信息。
     
 ## Path parameters
 
@@ -42,9 +42,9 @@ under the License.
 
 * `type`
 
-    可选参数。默认输出全部metrics信息，有以下取值：
-    - `core` 输出核心metrics信息
-    - `json` 以json格式输出metrics信息
+    可选参数。默认输出全部 metrics 信息，有以下取值：
+    - `core` 输出核心 metrics 信息
+    - `json` 以 json 格式输出 metrics 信息
 
 ## Request body
 

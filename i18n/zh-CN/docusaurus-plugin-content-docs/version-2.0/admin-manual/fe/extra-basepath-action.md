@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Extra Basepath Action
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-获取http 的basepath。
+获取 http 的 basepath。
     
 ## Path parameters
 

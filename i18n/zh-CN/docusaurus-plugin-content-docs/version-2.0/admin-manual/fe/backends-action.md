@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Backends Action
+
 
 ## Request
 
@@ -44,7 +44,7 @@ Backends Action 返回 Backends 列表，包括 Backend 的 IP、PORT 等信息�
 
 * `is_alive`
 
-    可选参数。是否返回存活的 BE 节点。默认为false，即返回所有 BE 节点。
+    可选参数。是否返回存活的 BE 节点。默认为 false，即返回所有 BE 节点。
 
 ## Request body
 

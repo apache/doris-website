@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Query Profile Action
+
 
 ## Request
 
@@ -58,7 +58,7 @@ under the License.
 
 * `query_id`
 
-    可选，指定返回查询的queryID， 默认返回所有查询的信息。
+    可选，指定返回查询的 queryID，默认返回所有查询的信息。
     
 * `search`
 
@@ -66,7 +66,7 @@ under the License.
 
 * `is_all_node`
   
-    可选，若为 true 则返回所有fe节点的查询信息，若为 false 则返回当前fe节点的查询信息。默认为true。
+    可选，若为 true 则返回所有 fe 节点的查询信息，若为 false 则返回当前 fe 节点的查询信息。默认为 true。
 
 
 ### Response
@@ -191,7 +191,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 </version>
 
-## 获取指定查询的sql和文本profile
+## 获取指定查询的 sql 和文本 profile
 
 `GET /rest/v2/manager/query/sql/{query_id}`
 
@@ -199,19 +199,19 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 ### Description
 
-用于获取指定query id的sql和profile文本。
+用于获取指定 query id 的 sql 和 profile 文本。
     
 ### Path parameters
 
 * `query_id`
 
-    query id。
+    query id.
 
 ### Query parameters
 
 * `is_all_node`
   
-    可选，若为 true 则在所有fe节点中查询指定query id的信息，若为 false 则在当前连接的fe节点中查询指定query id的信息。默认为true。
+    可选，若为 true 则在所有 fe 节点中查询指定 query id 的信息，若为 false 则在当前连接的 fe 节点中查询指定 query id 的信息。默认为 true。
 
 ### Response
 
@@ -270,25 +270,25 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     }
     ```
 
-## 获取指定查询fragment和instance信息
+## 获取指定查询 fragment 和 instance 信息
 
 `GET /rest/v2/manager/query/profile/fragments/{query_id}`
 
 ### Description
 
-用于获取指定query id的fragment名称，instance id、主机IP及端口和执行时长。
+用于获取指定 query id 的 fragment 名称，instance id、主机 IP 及端口和执行时长。
     
 ### Path parameters
 
 * `query_id`
 
-    query id。
+    query id.
 
 ### Query parameters
 
 * `is_all_node`
   
-    可选，若为 true 则在所有fe节点中查询指定query id的信息，若为 false 则在当前连接的fe节点中查询指定query id的信息。默认为true。
+    可选，若为 true 则在所有 fe 节点中查询指定 query id 的信息，若为 false 则在当前连接的 fe 节点中查询指定 query id 的信息。默认为 true。
 
 ### Response
 
@@ -376,31 +376,31 @@ Response:
 }
 ```
 
-## 获取指定query id树状profile信息
+## 获取指定 query id 树状 profile 信息
 
 `GET /rest/v2/manager/query/profile/graph/{query_id}`
 
 ### Description
 
-获取指定query id树状profile信息，同 `show query profile` 指令。
+获取指定 query id 树状 profile 信息，同 `show query profile` 指令。
     
 ### Path parameters
 
 * `query_id`
 
-    query id。
+    query id.
 
 ### Query parameters
 
 * `fragment_id` 和 `instance_id`
 
     可选，这两个参数需同时指定或同时不指定。  
-    同时不指定则返回profile 简易树形图，相当于`show query profile '/query_id'`;  
-    同时指定则返回指定instance详细profile树形图，相当于`show query profile '/query_id/fragment_id/instance_id'`.
+    同时不指定则返回 profile 简易树形图，相当于`show query profile '/query_id'`;  
+    同时指定则返回指定 instance 详细 profile 树形图，相当于`show query profile '/query_id/fragment_id/instance_id'`.
 
 * `is_all_node`
   
-    可选，若为 true 则在所有fe节点中查询指定query id的信息，若为 false 则在当前连接的fe节点中查询指定query id的信息。默认为true。
+    可选，若为 true 则在所有 fe 节点中查询指定 query id 的信息，若为 false 则在当前连接的 fe 节点中查询指定 query id 的信息。默认为 true。
 
 ### Response
 
@@ -430,7 +430,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 </version>
 
-## 正在执行的query
+## 正在执行的 query
 
 `GET /rest/v2/manager/query/current_queries`
 
@@ -444,7 +444,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 * `is_all_node`
   
-    可选，若为 true 则返回所有FE节点当前正在执行的 query 信息。默认为 true。
+    可选，若为 true 则返回所有 FE 节点当前正在执行的 query 信息。默认为 true。
 
 ### Response
 
@@ -463,7 +463,7 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-## 取消query
+## 取消 query
 
 `POST /rest/v2/manager/query/kill/{query_id}`
 

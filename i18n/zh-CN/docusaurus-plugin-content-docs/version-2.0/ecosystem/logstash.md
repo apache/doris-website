@@ -33,6 +33,7 @@ under the License.
 
 
 ## 安装和编译
+
 ### 1.下载插件源码
 
 ### 2.编译 ##
@@ -52,6 +53,7 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 安装 logstash-output-doris 插件
 
 ## 配置
+
 ### 示例：
 
 在 config 目录下新建一个配置配置文件，命名为 logstash-doris.conf
@@ -118,6 +120,7 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 
 
 ## 完整使用示例
+
 ### 1.编译 doris-output-plugin
 1> 下载 ruby 压缩包，自行到[ruby 官网](https://www.ruby-lang.org/en/downloads/)下载，这里使用的 2.7.1 版本
 
@@ -131,9 +134,9 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 
 ### 2.安装配置 filebeat(此处使用 filebeat 作为 input)
 
-1> [es 官网](https://www.elastic.co/)下载 filebeat tar 压缩包并解压
+1. [es 官网](https://www.elastic.co/)下载 filebeat tar 压缩包并解压
 
-2> 进入 filebeat 目录下，修改配置文件 filebeat.yml 如下：
+2. 进入 filebeat 目录下，修改配置文件 filebeat.yml 如下：
 
 	filebeat.inputs:
 	- type: log
@@ -144,23 +147,23 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 
 /tmp/doris.data 为 doris 数据路径
 
-3> 启动 filebeat：
+3. 启动 filebeat：
 
 `./filebeat -e -c filebeat.yml -d "publish"`
 
 
 ### 3.安装 logstash 及 doris-out-plugin
-1> [es 官网](https://www.elastic.co/)下载 logstash tar 压缩包并解压
+1. [es 官网](https://www.elastic.co/)下载 logstash tar 压缩包并解压
 
-2> 将步骤 1 中得到的 logstash-output-doris-0.1.0.gem copy 到 logstash 安装目录下
+2. 将步骤 1 中得到的 logstash-output-doris-0.1.0.gem copy 到 logstash 安装目录下
 
-3> 执行
+3. 执行
 
 `./bin/logstash-plugin install logstash-output-doris-0.1.0.gem`
 
 安装插件
 
-4> 在 config 目录下新建配置文件 logstash-doris.conf 内容如下：
+4. 在 config 目录下新建配置文件 logstash-doris.conf 内容如下：
 
 	input {
 	    beats {
@@ -183,7 +186,7 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 
 这里的配置需按照配置说明自行配置
 
-5> 启动 logstash：
+5. 启动 logstash：
 
 ./bin/logstash -f ./config/logstash-doris.conf --config.reload.automatic
 

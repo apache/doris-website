@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Get DDL Statement Action
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-用于获取指定表的建表语句、建分区语句和建rollup语句。
+用于获取指定表的建表语句、建分区语句和建 rollup 语句。
     
 ## Path parameters
 

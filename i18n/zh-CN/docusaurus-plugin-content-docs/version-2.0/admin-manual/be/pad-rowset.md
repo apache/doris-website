@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 填充坏副本
+
 
 ## Request
 
@@ -32,12 +32,12 @@ under the License.
 
 ## Description
 
-该功能用于使用一个空的rowset填充损坏的副本。
+该功能用于使用一个空的 rowset 填充损坏的副本。
 
 ## Query parameters
 
 * `tablet_id`
-    table的id
+    table 的 id
 
 * `start_version`
     起始版本
@@ -52,7 +52,7 @@ under the License.
 
 ## Response
 
-    ```
+    ```json
     {
         msg: "OK",
         code: 0
@@ -61,7 +61,7 @@ under the License.
 ## Examples
 
 
-    ```
+    ```bash
     curl -X POST "http://127.0.0.1:8040/api/pad_rowset?tablet_id=123456&start_version=1111111&end_version=1111112"
 
     ```

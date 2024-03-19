@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Show Meta Info Action
+
 
 ## Request
 
@@ -113,7 +113,7 @@ under the License.
     }
     ```
     
-2. 查看FE选举组情况
+2. 查看 FE 选举组情况
 
     ```
     GET /api/show_meta_info?action=show_ha

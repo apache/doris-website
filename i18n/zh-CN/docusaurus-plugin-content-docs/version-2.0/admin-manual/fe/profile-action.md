@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Profile Action
+
 
 ## Request
 
@@ -33,8 +33,8 @@ under the License.
 ## Description
 
 用于获取指定 query id 的 query profile
-如果query_id不存在, 直接返回404 NOT FOUND错误
-如果query_id存在，返回下列文本的profile:
+如果 query_id 不存在，直接返回 404 NOT FOUND 错误
+如果 query_id 存在，返回下列文本的 profile:
 
 ```
 Query:

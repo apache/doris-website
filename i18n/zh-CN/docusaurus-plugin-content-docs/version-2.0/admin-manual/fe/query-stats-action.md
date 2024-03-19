@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Query Stats Action
 
-<version since="dev"></version>
+
+
 
 ## Request
 
@@ -43,13 +43,13 @@ delete api/query_stats/<catalog_name>/<db_name>/<tbl_name>
 
 ## Description
 
-获取或者删除指定的catalog 数据库或者表中的统计信息， 如果是doris catalog 可以使用default_cluster
+获取或者删除指定的 catalog 数据库或者表中的统计信息，如果是 doris catalog 可以使用 default_cluster
     
 ## Path parameters
 
 * `<catalog_name>`
 
-    指定的catalog 名称
+    指定的 catalog 名称
 * `<db_name>`
 
     指定的数据库名称
@@ -59,7 +59,7 @@ delete api/query_stats/<catalog_name>/<db_name>/<tbl_name>
 
 ## Query parameters
 * `summary`
-如果为true 则只返回summary信息， 否则返回所有的表的详细统计信息，只在get 时使用
+如果为 true 则只返回 summary 信息，否则返回所有的表的详细统计信息，只在 get 时使用
 
 ## Request body
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# System Action
+
 
 ## Request
 
@@ -90,4 +90,4 @@ System Action 用于 Doris 内置的 Proc 系统的相关信息。
 }
 ```
     
-其中 data 部分的 `column_names` 是表头信息，`href_columns` 表示表中的哪些列是超链接列。`rows` 数组中的每个元素表示一行。其中 `__hrefPaths ` 不是表数据，而是超链接列的链接URL，和 `href_columns` 中的列一一对应。
+其中 data 部分的 `column_names` 是表头信息，`href_columns` 表示表中的哪些列是超链接列。`rows` 数组中的每个元素表示一行。其中 `__hrefPaths ` 不是表数据，而是超链接列的链接 URL，和 `href_columns` 中的列一一对应。

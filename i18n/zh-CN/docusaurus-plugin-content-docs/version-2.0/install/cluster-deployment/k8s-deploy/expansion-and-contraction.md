@@ -28,7 +28,7 @@ Doris 在 K8S 之上的扩缩容可通过修改 DorisCluster 资源对应组件�
 
 ## 获取 DorisCluster 资源
 
-使用命令 `kubectl --namespace {namespace} get doriscluster` 获取已部署 DorisCluster (简称 dcr )资源的名称。本文中，我们以doris 为 namespace.
+使用命令 `kubectl --namespace {namespace} get doriscluster` 获取已部署 DorisCluster (简称 dcr ) 资源的名称。本文中，我们以 doris 为 namespace.
 
 ```shell
 $ kubectl --namespace doris get doriscluster
@@ -92,9 +92,12 @@ doriscluster-sample-be-1   1/1     Running   0             12m
 
 ### 节点缩容
 
-关于节点缩容问题，Doris-Operator 目前并不能很好的支持节点安全下线，在这里仍能够通过减少集群组件的 replicas 属性来实现减少 FE 或 BE 的目的，这里是直接 stop 节点来实现节点下线，当前版本的 Doris-Operator 并未能实现 [decommission](../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) 安全转移副本后下线。由此可能引发一些问题及其注意事项如下
+关于节点缩容问题，Doris-Operator 目前并不能很好的支持节点安全下线，在这里仍能够通过减少集群组件的 replicas 属性来实现减少 FE 或 BE 的目的，这里是直接 stop 节点来实现节点下线，当前版本的 Doris-Operator 并未能实现 [decommission](../../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) 安全转移副本后下线。由此可能引发一些问题及其注意事项如下
 
 - 表存在单副本情况下贸然下线 BE 节点，一定会有数据丢失，尽可能避免此操作。
+
 - FE Follower 节点尽量避免随意下线，可能带来元数据损坏影响服务。
+
 - FE Observer 类型节点可以随意下线，并无风险。
+
 - CN 节点不持有数据副本，可以随意下线，但因此会损失存在于该 CN 节点的远端数据缓存，导致数据查询短时间内存在一定的性能回退。

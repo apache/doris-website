@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Cluster Action
+
 
 ## Request
 
@@ -36,7 +36,7 @@ under the License.
 
 ### Description
 
-用于获取集群http、mysql连接信息。
+用于获取集群 http、mysql 连接信息。
 
 ## Path parameters
 

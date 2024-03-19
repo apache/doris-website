@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-# Get Load Info Action
+
 
 ## Request
 
@@ -33,7 +33,7 @@ under the License.
 
 ## Description
 
-用于获取指定label的导入作业的信息。
+用于获取指定 label 的导入作业的信息。
     
 ## Path parameters
 
@@ -45,7 +45,7 @@ under the License.
 
 * `label`
 
-    指定导入Label
+    指定导入 Label
 
 ## Request body
 

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Checksum
+
 
 ## Request
 
@@ -37,10 +37,10 @@ checksum
 ## Query parameters
 
 * `tablet_id`
-    需要校验的tablet的id
+    需要校验的 tablet 的 id
 
 * `version`
-    需要校验的tablet的version    
+    需要校验的 tablet 的 version    
 
 * `schema_hash`
     schema hash

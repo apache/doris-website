@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Upload Action
 
-Upload Action 目前主要服务于FE的前端页面，用于用户导入一些测试性质的小文件。
+
+Upload Action 目前主要服务于 FE 的前端页面，用于用户导入一些测试性质的小文件。
 
 ## 上传导入文件
 
-用于将文件上传到FE节点，可在稍后用于导入该文件。目前仅支持上传最大100MB的文件。
+用于将文件上传到 FE 节点，可在稍后用于导入该文件。目前仅支持上传最大 100MB 的文件。
 
 ### Request
 
@@ -60,7 +60,7 @@ POST /api/<namespace>/<db>/<tbl>/upload
     
 * `preview`
 
-    可选项，如果设置为 `true`，则返回结果中会显示最多10行根据 `column_separator` 切分好的数据行。
+    可选项，如果设置为 `true`，则返回结果中会显示最多 10 行根据 `column_separator` 切分好的数据行。
 
 ### Request body
 
@@ -110,11 +110,11 @@ PUT /api/<namespace>/<db>/<tbl>/upload
 
 * `file_id`
 
-    指定导入的文件id，文件id由上传导入文件的API返回。
+    指定导入的文件 id，文件 id 由上传导入文件的 API 返回。
 
 * `file_uuid`
 
-    指定导入的文件uuid，文件uuid由上传导入文件的API返回。
+    指定导入的文件 uuid，文件 uuid 由上传导入文件的 API 返回。
     
 ### Header
 

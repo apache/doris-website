@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Session Action
+
 
 ## Request
 
 `GET /rest/v1/session`
 
-<version since="dev">
+
 
 `GET /rest/v1/session/all`
 
-</version>
+
 
 ## Description
 
@@ -52,7 +52,7 @@ Session Action 用于获取当前的会话信息。
 
 无
 
-## 获取当前FE的会话信息
+## 获取当前 FE 的会话信息
 
 `GET /rest/v1/session`
 
@@ -80,7 +80,7 @@ Session Action 用于获取当前的会话信息。
 }
 ```
 
-## 获取所有FE的会话信息
+## 获取所有 FE 的会话信息
 
 `GET /rest/v1/session/all`
 

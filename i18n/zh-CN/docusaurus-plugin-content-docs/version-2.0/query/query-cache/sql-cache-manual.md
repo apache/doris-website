@@ -24,40 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# SQL Cache
+
 
 SQL 语句完全一致时将命中缓存。
 
 ## 需求场景 & 解决方案
 
-见 query-cache.md。
+见 [缓存概览](../query-cache/query-cache) 文档。
 
 ## 设计原理
 
-SQLCache按SQL的签名、查询的表的分区ID、分区最新版本来存储和获取缓存。三者组合确定一个缓存数据集，任何一个变化了，如SQL有变化，如查询字段或条件不一样，或数据更新后版本变化了，会导致命中不了缓存。
+SQLCache 按 SQL 的签名、查询的表的分区 ID、分区最新版本来存储和获取缓存。三者组合确定一个缓存数据集，任何一个变化了，如 SQL 有变化，如查询字段或条件不一样，或数据更新后版本变化了，会导致命中不了缓存。
 
-如果多张表Join，使用最近更新的分区ID和最新的版本号，如果其中一张表更新了，会导致分区ID或版本号不一样，也一样命中不了缓存。
+如果多张表 Join，使用最近更新的分区 ID 和最新的版本号，如果其中一张表更新了，会导致分区 ID 或版本号不一样，也一样命中不了缓存。
 
-SQLCache，更适合T+1更新的场景，凌晨数据更新，首次查询从BE中获取结果放入到缓存中，后续相同查询从缓存中获取。实时更新数据也可以使用，但是可能存在命中率低的问题。
+SQLCache，更适合 T+1 更新的场景，凌晨数据更新，首次查询从 BE 中获取结果放入到缓存中，后续相同查询从缓存中获取。实时更新数据也可以使用，但是可能存在命中率低的问题。
 
-当前支持 OlapTable内表 和 Hive外表。
+当前支持 OlapTable 内表 和 Hive 外表。
 
 ## 使用方式
 
-确保fe.conf的cache_enable_sql_mode=true（默认是true）
+确保 fe.conf 的 cache_enable_sql_mode=true（默认是 true）
 
 ```text
 vim fe/conf/fe.conf
 cache_enable_sql_mode=true
 ```
 
-在MySQL命令行中设置变量
+在 MySQL 命令行中设置变量
 
 ```sql
 MySQL [(none)]> set [global] enable_sql_cache=true;
 ```
 
-注：global是全局变量，不加指当前会话变量
+注：global 是全局变量，不加指当前会话变量
 
 ## 缓存条件
 
@@ -67,12 +67,12 @@ MySQL [(none)]> set [global] enable_sql_cache=true;
 
 2. 查询结果行数 小于 fe.conf 中的 cache_result_max_row_count。
 
-3. 查询结果bytes 小于 fe.conf 中的 cache_result_max_data_size。
+3. 查询结果 bytes 小于 fe.conf 中的 cache_result_max_data_size。
 
 具体参数介绍和未尽事项见 query-cache.md。
 
 ## 未尽事项
 
-- SQL中包含产生随机值的函数，比如 random()，使用 QueryCache 会导致查询结果失去随机性，每次执行将得到相同的结果。
+- SQL 中包含产生随机值的函数，比如 random()，使用 QueryCache 会导致查询结果失去随机性，每次执行将得到相同的结果。
 
-- 类似的SQL，之前查询了2个指标，现在查询3个指标，是否可以利用2个指标的缓存？ 目前不支持
+- 类似的 SQL，之前查询了 2 个指标，现在查询 3 个指标，是否可以利用 2 个指标的缓存？目前不支持

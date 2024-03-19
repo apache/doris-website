@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 重置连接缓存
+
 
 ## Request
 
@@ -32,13 +32,15 @@ under the License.
 
 ## Description
 
-该功能用于重置brpc的连接缓存。
+该功能用于重置 brpc 的连接缓存。
 
 ## Path parameters
 
 * `endpoints`
-    支持如下形式:
+    支持如下形式：
+   
     - `all`
+   
     - `host1:port1,host2:port2`
 
 ## Request body
@@ -47,7 +49,7 @@ under the License.
 
 ## Response
 
-    ```
+    ```json
     {
         "msg":"success",
         "code":0,
@@ -58,11 +60,11 @@ under the License.
 ## Examples
 
 
-    ```
+    ```bash
     curl http://127.0.0.1:8040/api/reset_rpc_channel/all
     ```
     
-    ```
+    ```bash
     curl http://127.0.0.1:8040/api/reset_rpc_channel/1.1.1.1:8080,2.2.2.2:8080
     ```
 

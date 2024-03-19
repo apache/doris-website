@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Meta Action
+
 
 Meta Info Action 用于获取集群内的元数据信息。如数据库列表，表结构等。
 
@@ -146,7 +146,7 @@ GET /api/meta/namespaces/<ns_name>/databases/<db_name>/tables/<tbl_name>/schema
 
 * `with_mv`
 
-    可选项，如果未指定，默认返回 base 表的表结构。如果指定，则还会返回所有rollup的信息。
+    可选项，如果未指定，默认返回 base 表的表结构。如果指定，则还会返回所有 rollup 的信息。
 
 ### Request body
 

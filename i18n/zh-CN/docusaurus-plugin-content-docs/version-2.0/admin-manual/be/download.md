@@ -1,6 +1,6 @@
 ---
 {
-    "title": "下载load日志",
+    "title": "下载 load 日志",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 下载load日志
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-下载load错误日志文件。
+下载 load 错误日志文件。
 
 ## Query parameters
 
@@ -53,7 +53,7 @@ under the License.
 ## Examples
 
 
-    ```
+    ```bash
     curl "http://127.0.0.1:8040/api/_load_error_log?file=a&token=1"
     ```
 

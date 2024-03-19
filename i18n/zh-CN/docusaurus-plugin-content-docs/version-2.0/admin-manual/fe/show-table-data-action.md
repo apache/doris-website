@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Show Table Data Action
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-用于获取所有internal源下所有数据库所有表的数据量，或者指定数据库或指定表的数据量。单位字节。
+用于获取所有 internal 源下所有数据库所有表的数据量，或者指定数据库或指定表的数据量。单位字节。
     
 ## Path parameters
 

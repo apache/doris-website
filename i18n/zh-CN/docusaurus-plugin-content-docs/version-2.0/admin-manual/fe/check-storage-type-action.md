@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Check Storage Type Action
+
 
 ## Request
 

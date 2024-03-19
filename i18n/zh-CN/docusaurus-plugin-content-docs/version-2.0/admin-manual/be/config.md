@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BE的配置信息",
+    "title": "BE 的配置信息",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# BE的配置信息
+
 
 ## Request
 
@@ -33,7 +33,7 @@ under the License.
 
 ## Description
 
-查询/更新 BE的配置信息
+查询/更新 BE 的配置信息
 
 ## Query parameters
 
@@ -54,12 +54,12 @@ under the License.
 
 ### 查询
 
-```
+```json
 [["agent_task_trace_threshold_sec","int32_t","2","true"], ...]
 ```
 
 ### 更新
-```
+```json
 [
     {
         "config_name": "agent_task_trace_threshold_sec",
@@ -69,7 +69,7 @@ under the License.
 ]
 ```
 
-```
+```json
 [
     {
         "config_name": "agent_task_trace_threshold_sec",
@@ -91,15 +91,15 @@ under the License.
 ## Examples
 
 
-```
+```bash
 curl "http://127.0.0.1:8040/api/show_config"
 ```
 
-```
+```bash
 curl -X POST "http://127.0.0.1:8040/api/update_config?agent_task_trace_threshold_sec=2&persist=true"
 
 ```
 
-```
+```bash
 curl -X POST "http://127.0.0.1:8040/api/update_config?agent_task_trace_threshold_sec=2&enable_merge_on_write_correctness_check=true&persist=true"
 ```

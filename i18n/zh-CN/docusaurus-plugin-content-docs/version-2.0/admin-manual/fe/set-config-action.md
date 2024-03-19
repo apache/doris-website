@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Set Config Action
+
 
 ## Request
 
@@ -117,7 +117,7 @@ under the License.
 
 	storage_min_left_capacity_bytes 设置成功；  
 	replica_ack_policy 设置失败，原因是该配置项不支持动态修改； 
-	agent_task_resend_wait_time_ms 设置失败，因为该配置项类型为long， 设置boolean类型失败。
+	agent_task_resend_wait_time_ms 设置失败，因为该配置项类型为 long，设置 boolean 类型失败。
     ```
 
 2. 设置 `max_bytes_per_broker_scanner` 并持久化
@@ -139,7 +139,7 @@ under the License.
     }
 	```
 
-	fe/conf 目录生成fe_custom.conf：
+	fe/conf 目录生成 fe_custom.conf：
 	```
 	#THIS IS AN AUTO GENERATED CONFIG FILE.
     #You can modify this file manually, and the configurations in this file

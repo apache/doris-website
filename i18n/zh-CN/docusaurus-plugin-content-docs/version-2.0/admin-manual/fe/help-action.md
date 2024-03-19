@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Help Action
+
 
 ## Request
 
@@ -42,7 +42,7 @@ under the License.
 
 * `query`
 
-    需要进行匹配的关键词，如array、select等。
+    需要进行匹配的关键词，如 array、select 等。
 
 ## Request body
 

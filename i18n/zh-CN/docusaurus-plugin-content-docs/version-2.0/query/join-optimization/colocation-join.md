@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Colocation Join
+
 
 Colocation Join 是在 Doris 0.9 版本中引入的新功能。旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，加速查询。
 
@@ -32,11 +32,12 @@ Colocation Join 是在 Doris 0.9 版本中引入的新功能。旨在为某些 J
 
 Colocation Join 功能经过一次改版，设计和使用方式和最初设计稍有不同。本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。  
 
-注意：这个属性不会被CCR同步，如果这个表是被CCR复制而来的，即PROPERTIES中包含`is_being_synced = true`时，这个属性将会在这个表中被擦除。
+注意：这个属性不会被 CCR 同步，如果这个表是被 CCR 复制而来的，即 PROPERTIES 中包含`is_being_synced = true`时，这个属性将会在这个表中被擦除。
 
 ## 名词解释
 
 - Colocation Group（CG）：一个 CG 中会包含一张及以上的 Table。在同一个 Group 内的 Table 有着相同的 Colocation Group Schema，并且有着相同的数据分片分布。
+
 - Colocation Group Schema（CGS）：用于描述一个 CG 中的 Table，和 Colocation 相关的通用 Schema 信息。包括分桶列类型，分桶数以及副本数等。
 
 ## 原理
@@ -57,7 +58,7 @@ Colocation Join 功能，是将一组拥有相同 CGS 的 Table 组成一个 CG�
 
 同一个 CG 内的表，分区的个数、范围以及分区列的类型不要求一致。
 
-在固定了分桶列和分桶数后，同一个 CG 内的表会拥有相同的 BucketsSequence。而副本数决定了每个分桶内的 Tablet 的多个副本，存放在哪些 BE 上。假设 BucketsSequence 为 `[0, 1, 2, 3, 4, 5, 6, 7]`，BE 节点有 `[A, B, C, D]` 4个。则一个可能的数据分布如下：
+在固定了分桶列和分桶数后，同一个 CG 内的表会拥有相同的 BucketsSequence。而副本数决定了每个分桶内的 Tablet 的多个副本，存放在哪些 BE 上。假设 BucketsSequence 为 `[0, 1, 2, 3, 4, 5, 6, 7]`，BE 节点有 `[A, B, C, D]` 4 个。则一个可能的数据分布如下：
 
 ```text
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
@@ -90,11 +91,15 @@ PROPERTIES(
 );
 ```
 
-如果指定的 Group 不存在，则 Doris 会自动创建一个只包含当前这张表的 Group。如果 Group 已存在，则 Doris 会检查当前表是否满足 Colocation Group Schema。如果满足，则会创建该表，并将该表加入 Group。同时，表会根据已存在的 Group 中的数据分布规则创建分片和副本。 Group 归属于一个 Database，Group 的名字在一个 Database 内唯一。在内部存储是 Group 的全名为 `dbId_groupName`，但用户只感知 groupName。
+如果指定的 Group 不存在，则 Doris 会自动创建一个只包含当前这张表的 Group。如果 Group 已存在，则 Doris 会检查当前表是否满足 Colocation Group Schema。如果满足，则会创建该表，并将该表加入 Group。同时，表会根据已存在的 Group 中的数据分布规则创建分片和副本。Group 归属于一个 Database，Group 的名字在一个 Database 内唯一。在内部存储是 Group 的全名为 `dbId_groupName`，但用户只感知 groupName。
 
-<version since="dev">
 
-2.0 版本中，Doris 支持了跨Database的 Group。在建表时，需使用关键词 `__global__` 作为 Group 名称的前缀。如：
+
+:::tip
+2.0 版本中，Doris 支持了跨 Database 的 Group。
+:::
+
+在建表时，需使用关键词 `__global__` 作为 Group 名称的前缀。如：
 
 ```
 CREATE TABLE tbl (k1 int, v1 int sum)
@@ -109,7 +114,7 @@ PROPERTIES(
 
 通过创建 Global Group，可以实现跨 Database 的 Colocate Join。
 
-</version>
+
 
 ### 删表
 
@@ -129,13 +134,19 @@ SHOW PROC '/colocation_group';
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 ```
 
-- GroupId： 一个 Group 的全集群唯一标识，前半部分为 db id，后半部分为 group id。
-- GroupName： Group 的全名。
-- TabletIds： 该 Group 包含的 Table 的 id 列表。
-- BucketsNum： 分桶数。
-- ReplicationNum： 副本数。
-- DistCols： Distribution columns，即分桶列类型。
-- IsStable： 该 Group 是否稳定（稳定的定义，见 `Colocation 副本均衡和修复` 一节）。
+- GroupId：一个 Group 的全集群唯一标识，前半部分为 db id，后半部分为 group id。
+
+- GroupName：Group 的全名。
+
+- TabletIds：该 Group 包含的 Table 的 id 列表。
+
+- BucketsNum：分桶数。
+
+- ReplicationNum：副本数。
+
+- DistCols：Distribution columns，即分桶列类型。
+
+- IsStable：该 Group 是否稳定（稳定的定义，见 `Colocation 副本均衡和修复` 一节）。
 
 通过以下命令可以进一步查看一个 Group 的数据分布情况：
 
@@ -156,10 +167,13 @@ SHOW PROC '/colocation_group/10005.10008';
 +-------------+---------------------+
 ```
 
-- BucketIndex： 分桶序列的下标。
-- BackendIds： 分桶中数据分片所在的 BE 节点 id 列表。
+- BucketIndex：分桶序列的下标。
 
-> 以上命令需要 ADMIN 权限。暂不支持普通用户查看。
+- BackendIds：分桶中数据分片所在的 BE 节点 id 列表。
+
+:::note
+以上命令需要 ADMIN 权限。暂不支持普通用户查看。
+:::
 
 ### 修改表 Colocate Group 属性
 
@@ -170,6 +184,7 @@ ALTER TABLE tbl SET ("colocate_with" = "group2");
 ```
 
 - 如果该表之前没有指定过 Group，则该命令检查 Schema，并将该表加入到该 Group（Group 不存在则会创建）。
+
 - 如果该表之前有指定其他 Group，则该命令会先将该表从原有 Group 中移除，并加入新 Group（Group 不存在则会创建）。
 
 也可以通过以下命令，删除一个表的 Colocation 属性：
@@ -196,9 +211,11 @@ Group 自身有一个 Stable 属性，当 Stable 为 true 时，表示当前 Gro
 
 Doris 会尽力将 Colocation 表的分片均匀分布在所有 BE 节点上。对于普通表的副本均衡，是以单副本为粒度的，即单独为每一个副本寻找负载较低的 BE 节点即可。而 Colocation 表的均衡是 Bucket 级别的，即一个 Bucket 内的所有副本都会一起迁移。我们采用一个简单的均衡算法，即在不考虑副本实际大小，而只根据副本数量，将 BucketsSequence 均匀的分布在所有 BE 上。具体算法可以参阅 `ColocateTableBalancer.java` 中的代码注释。
 
-> 注1：当前的 Colocation 副本均衡和修复算法，对于异构部署的 Doris 集群效果可能不佳。所谓异构部署，即 BE 节点的磁盘容量、数量、磁盘类型（SSD 和 HDD）不一致。在异构部署情况下，可能出现小容量的 BE 节点和大容量的 BE 节点存储了相同的副本数量。
->
-> 注2：当一个 Group 处于 Unstable 状态时，其中的表的 Join 将退化为普通 Join。此时可能会极大降低集群的查询性能。如果不希望系统自动均衡，可以设置 FE 的配置项 `disable_colocate_balance` 来禁止自动均衡。然后在合适的时间打开即可。（具体参阅 `高级操作` 一节）
+:::caution
+- 注 1：当前的 Colocation 副本均衡和修复算法，对于异构部署的 Doris 集群效果可能不佳。所谓异构部署，即 BE 节点的磁盘容量、数量、磁盘类型（SSD 和 HDD）不一致。在异构部署情况下，可能出现小容量的 BE 节点和大容量的 BE 节点存储了相同的副本数量。
+
+- 注 2：当一个 Group 处于 Unstable 状态时，其中的表的 Join 将退化为普通 Join。此时可能会极大降低集群的查询性能。如果不希望系统自动均衡，可以设置 FE 的配置项 `disable_colocate_balance` 来禁止自动均衡。然后在合适的时间打开即可。（具体参阅 `高级操作` 一节）
+:::
 
 ## 查询
 
@@ -206,7 +223,7 @@ Doris 会尽力将 Colocation 表的分片均匀分布在所有 BE 节点上。�
 
 举例说明：
 
-表1：
+表 1：
 
 ```sql
 CREATE TABLE `tbl1` (
@@ -226,7 +243,7 @@ PROPERTIES (
 );
 ```
 
-表2：
+表 2：
 
 ```sql
 CREATE TABLE `tbl2` (

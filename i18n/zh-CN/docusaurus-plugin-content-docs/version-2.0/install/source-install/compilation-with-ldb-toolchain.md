@@ -1,6 +1,6 @@
 ---
 {
-    "title": 使用 LDB Toolchain 编译（推荐）",
+    "title": 使用 LDB Toolchain 编译（推荐）,
     "language": "zh-CN"
 }
 ---

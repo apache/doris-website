@@ -1,6 +1,6 @@
 ---
 {
-    "title": "行转列",
+    "title": "列转行 (Literal Views)",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 行转列
+
 
 与生成器函数（例如 `EXPLODE`）结合使用，将生成包含一个或多个行的虚拟表。 `LATERAL VIEW` 将行应用于每个原始输出行。
 
@@ -46,7 +46,7 @@ LATERAL VIEW generator_function ( expression [, ...] ) [ table_identifier ] AS c
 
 - column_identifier
 
-  列出列别名 `generator_function`，它可用于输出行。 列标识符的数目必须与 generator 函数返回的列数匹配。
+  列出列别名 `generator_function`，它可用于输出行。列标识符的数目必须与 generator 函数返回的列数匹配。
 
 ## 示例
 

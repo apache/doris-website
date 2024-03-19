@@ -40,7 +40,7 @@ under the License.
 
 通过使用 WSL2 启动的 Linux 子系统，选择任意 Doris 在 Linux 上的编译方式即可。
 
--   [使用 LDB Toolchain 编译](../../install/source-install/compilation-with-ldb-toolchain) 
+-   [使用 LDB Toolchain 编译 (推荐) ](../../install/source-install/compilation-with-ldb-toolchain) 
 
 -   [使用 Docker 开发镜像编译（推荐）](../../install/source-install/compilation-with-docker) 
 

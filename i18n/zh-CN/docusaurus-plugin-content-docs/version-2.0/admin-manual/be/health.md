@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BE探活",
+    "title": "BE 探活",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# BE探活
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-给监控服务提供的探活接口，请求能响应代表BE状态正常。
+给监控服务提供的探活接口，请求能响应代表 BE 状态正常。
 
 ## Query parameters
 无    
@@ -42,14 +42,14 @@ under the License.
 
 ## Response
 
-    ```
+    ```json
     {"status": "OK","msg": "To Be Added"}
     ```
 
 ## Examples
 
 
-    ```
+    ```bash
     curl http://127.0.0.1:8040/api/health
     ```
 

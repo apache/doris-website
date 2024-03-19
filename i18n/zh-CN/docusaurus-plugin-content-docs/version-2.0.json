@@ -91,7 +91,7 @@
     "message": "查询缓存",
     "description": "The label for category Pipeline in sidebar docs"
   },
-  "sidebar.docs.category.View and Materialize View": {
+  "sidebar.docs.category.Create View and Materialize View": {
     "message": "视图与物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
@@ -174,18 +174,6 @@
   "sidebar.docs.category.Monitor Metrics": {
     "message": "监控指标",
     "description": "The label for category Monitor Metrics in sidebar docs"
-  },
-  "sidebar.docs.category.System Table": {
-    "message": "System Table",
-    "description": "The label for category System Table in sidebar docs"
-  },
-  "sidebar.docs.category.FE": {
-    "message": "FE",
-    "description": "The label for category FE in sidebar docs"
-  },
-  "sidebar.docs.category.BE": {
-    "message": "BE",
-    "description": "The label for category BE in sidebar docs"
   },
   "sidebar.docs.category.SQL Manual": {
     "message": "SQL 手册",
@@ -330,10 +318,6 @@
   "sidebar.docs.category.Benchmark": {
     "message": "性能测试",
     "description": "The label for category Benchmark in sidebar docs"
-  },
-  "sidebar.docs.category.External Table": {
-    "message": "外部表",
-    "description": "The label for category Lakehouse.External Table in sidebar docs"
   },
   "sidebar.docs.category.Release notes": {
     "message": "版本发布",

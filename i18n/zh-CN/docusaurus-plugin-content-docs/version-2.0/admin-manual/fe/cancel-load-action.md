@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Cancel Load Action
+
 
 ## Request
 
@@ -32,11 +32,11 @@ under the License.
 
 ## Description
 
-用于取消掉指定label的导入任务。
-执行完成后，会以Json格式返回这次导入的相关内容。当前包括以下字段
-    Status: 是否成功cancel
-        Success: 成功cancel事务
-        其他: cancel失败
+用于取消掉指定 label 的导入任务。
+执行完成后，会以 Json 格式返回这次导入的相关内容。当前包括以下字段
+    Status: 是否成功 cancel
+        Success: 成功 cancel 事务
+        其他：cancel 失败
     Message: 具体的失败信息
     
 ## Path parameters
@@ -49,7 +49,7 @@ under the License.
 
 * `<label>`
 
-    指定导入label
+    指定导入 label
 
 ## Request body
 
@@ -81,7 +81,7 @@ under the License.
     
 ## Examples
 
-1. 取消指定label的导入事务
+1. 取消指定 label 的导入事务
 
     ```
     POST /api/example_db/_cancel?label=my_label1

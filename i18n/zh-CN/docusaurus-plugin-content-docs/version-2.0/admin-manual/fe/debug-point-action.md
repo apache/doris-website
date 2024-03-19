@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 代码打桩
+
 
 代码打桩是代码测试使用的。激活木桩后，可以执行木桩代码。木桩的名字是任意取的。
 
@@ -37,7 +37,7 @@ FE 桩子示例代码
 ```java
 private Status foo() {  
 	// dbug_fe_foo_do_nothing 是一个木桩名字，
-	// 打开这个木桩之后，DebugPointUtil.isEnable("dbug_fe_foo_do_nothing") 将会返回true
+	// 打开这个木桩之后，DebugPointUtil.isEnable("dbug_fe_foo_do_nothing") 将会返回 true
 	if (DebugPointUtil.isEnable("dbug_fe_foo_do_nothing")) {
 		return Status.Nothing;
 	}
@@ -85,10 +85,10 @@ void Status foo() {
     木桩名字。必填。
 
 * `timeout`
-    超时时间，单位为秒。超时之后，木桩失活。默认值-1表示永远不超时。可填。
+    超时时间，单位为秒。超时之后，木桩失活。默认值 -1 表示永远不超时。可填。
 
 * `execute`
-    木桩最大激活次数。默认值-1表示不限激活次数。可填。       
+    木桩最大激活次数。默认值 -1 表示不限激活次数。可填。       
 
 
 ### Request body
@@ -107,7 +107,7 @@ void Status foo() {
 ### Examples
 
 
-打开木桩 `foo`，最多激活5次。
+打开木桩 `foo`，最多激活 5 次。
 	
 	
     ```

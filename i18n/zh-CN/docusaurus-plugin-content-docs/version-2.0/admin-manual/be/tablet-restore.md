@@ -1,6 +1,6 @@
 ---
 {
-    "title": "恢复tablet",
+    "title": "恢复 tablet",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 恢复tablet
+
 
 ## Request
 
@@ -32,12 +32,12 @@ under the License.
 
 ## Description
 
-该功能用于恢复trash目录中被误删的tablet数据。
+该功能用于恢复 trash 目录中被误删的 tablet 数据。
 
 ## Query parameters
 
 * `tablet_id`
-    需要恢复的table的id
+    需要恢复的 table 的 id
 
 * `schema_hash`
     schema hash       
@@ -49,7 +49,7 @@ under the License.
 
 ## Response
 
-    ```
+    ```json
     {
         msg: "OK",
         code: 0

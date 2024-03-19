@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Import Action
+
 
 ## Request
 
@@ -33,7 +33,7 @@ under the License.
 
 ## Description
 
-查看格式为CSV或PARQUET的文件内容。
+查看格式为 CSV 或 PARQUET 的文件内容。
 
     
 ## Path parameters

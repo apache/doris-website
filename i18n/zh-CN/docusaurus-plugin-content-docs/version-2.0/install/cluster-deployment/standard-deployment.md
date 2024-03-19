@@ -290,8 +290,8 @@ FE 的配置文件在 FE 部署路径下的 conf 目录中，启动 FE 节点前
 
 4. 修改 Doris 大小写敏感参数 `lower_case_table_names`
 
-  在 Doris 中默认表名大小写敏感。如果有对大小写不敏感的需求，需要在集群初始化时进行设置。表名大小写敏感在集群初始化完成后就无法再进行修改。详细参见[变量](https://doris.apache.org/zh-CN/docs/2.0/advanced/variables)文档中关于 `lower_case_table_names` 的介绍。
-[](../../lakehouse/)
+  在 Doris 中默认表名大小写敏感。如果有对大小写不敏感的需求，需要在集群初始化时进行设置。表名大小写敏感在集群初始化完成后就无法再进行修改。详细参见 [变量](../../query/query-variables/variables) 文档中关于 `lower_case_table_names` 的介绍。
+
 **启动 FE 进程**
 
 通过以下命令可以启动 FE 进程

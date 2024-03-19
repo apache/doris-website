@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Hardware Info Action
+
 
 ## Request
 
@@ -34,7 +34,7 @@ GET /rest/v1/hardware_info/fe/
 
 ## Description
 
-Hardware Info Action 用于获取当前FE的硬件信息。
+Hardware Info Action 用于获取当前 FE 的硬件信息。
     
 ## Path parameters
 
@@ -77,4 +77,4 @@ Hardware Info Action 用于获取当前FE的硬件信息。
 }
 ```
 
-* 其中 `HarewareInfo` 字段中的各个值的内容，都是以html格式展现的硬件信息文本。 
+* 其中 `HarewareInfo` 字段中的各个值的内容，都是以 html 格式展现的硬件信息文本。 

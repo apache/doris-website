@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Get Small File
+
 
 ## Request
 
@@ -32,7 +32,7 @@ under the License.
 
 ## Description
 
-通过文件id，下载在文件管理器中的文件。    
+通过文件 id，下载在文件管理器中的文件。    
 ## Path parameters
 
 无
@@ -41,11 +41,11 @@ under the License.
 
 * `token`
 
-    集群的token。可以在 `doris-meta/image/VERSION` 文件中查看。
+    集群的 token。可以在 `doris-meta/image/VERSION` 文件中查看。
 
 * `file_id`
     
-    文件管理器中显示的文件id。文件id可以通过 `SHOW FILE` 命令查看。
+    文件管理器中显示的文件 id。文件 id 可以通过 `SHOW FILE` 命令查看。
 
 ## Request body
 
@@ -78,7 +78,7 @@ under the License.
     
 ## Examples
 
-1. 下载指定id的文件
+1. 下载指定 id 的文件
 
     ```
     GET /api/get_small_file?token=98e8c0a6-3a41-48b8-a72b-0432e42a7fe5&file_id=11002

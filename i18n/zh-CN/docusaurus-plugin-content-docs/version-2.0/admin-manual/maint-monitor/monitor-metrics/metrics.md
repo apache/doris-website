@@ -24,23 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 监控指标
+
 
 Doris 的 FE 进程和 BE 进程都提供了完备的监控指标。监控指标可以分为两类：
 
 1. 进程监控：主要展示 Doris 进程本身的一些监控值。
+
 2. 节点监控：主要展示 Doris 进程所在节点机器本身的监控，如 CPU、内存、IO、网络等等。
 
 可以通过访问 FE 或 BE 节点的 http 端口获取当前监控。如：
 
-```
+```bash
 curl http://fe_host:http_port/metrics
 curl http://be_host:webserver_port/metrics
 ```
 
 默认返回 Prometheus 兼容格式的监控指标，如：
 
-```
+```bash
 doris_fe_cache_added{type="partition"} 0
 doris_fe_cache_added{type="sql"} 0
 doris_fe_cache_hit{type="partition"} 0
@@ -48,9 +49,9 @@ doris_fe_cache_hit{type="sql"} 0
 doris_fe_connection_total 2
 ```
 
-如需获取 Json 格式的监控指标，请访问：
+如需获取 JSON 格式的监控指标，请访问：
 
-```
+```bash
 curl http://fe_host:http_port/metrics?type=json
 curl http://be_host:webserver_port/metrics?type=json
 ```

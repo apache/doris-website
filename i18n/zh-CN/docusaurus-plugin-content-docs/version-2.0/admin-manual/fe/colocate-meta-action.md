@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Colocate Meta Action
+
 
 ## Request
 
@@ -34,7 +34,7 @@ under the License.
 
 ## Description
 
-获取/修改colocate group信息。
+获取/修改 colocate group 信息。
     
 ## Path parameters
 
@@ -44,11 +44,11 @@ under the License.
 
 * `db_id`
 
-    指定数据库id
+    指定数据库 id
 
 * `group_id`
     
-    指定组id
+    指定组 id
 
 ## Request body
 

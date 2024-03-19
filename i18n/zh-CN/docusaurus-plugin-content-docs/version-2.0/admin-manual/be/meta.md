@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 查询元信息
+
 
 ## Request
 
@@ -32,17 +32,17 @@ under the License.
 
 ## Description
 
-查询tablet元信息
+查询 tablet 元信息
 
 ## Path parameters
 
 * `tablet_id`
-    table的id
+    table 的 id
 
 ## Query parameters
 
 * `byte_to_base64`
-    是否按base64编码，选填，默认`false`。
+    是否按 base64 编码，选填，默认`false`。
 
 ## Request body
 
@@ -50,7 +50,7 @@ under the License.
 
 ## Response
 
-    ```
+    ```json
     {
         "table_id": 148107,
         "partition_id": 148104,
@@ -66,7 +66,7 @@ under the License.
 ## Examples
 
 
-    ```
+    ```bash
     curl "http://127.0.0.1:8040/api/meta/header/148193&byte_to_base64=true"
 
     ```

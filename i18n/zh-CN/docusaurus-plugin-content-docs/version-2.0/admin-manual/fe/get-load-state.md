@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Get Load State
+
 
 ## Request
 
@@ -32,17 +32,17 @@ under the License.
 
 ## Description
 
-返回指定label的导入事务的状态
-执行完毕后，会以Json格式返回这次导入的相关内容。当前包括以下字段：
+返回指定 label 的导入事务的状态
+执行完毕后，会以 Json 格式返回这次导入的相关内容。当前包括以下字段：
 	Label：本次导入的 label，如果没有指定，则为一个 uuid
-	Status：此命令是否成功执行，Success表示成功执行
-	Message： 具体的执行信息
-	State: 只有在Status为Success时才有意义
-		UNKNOWN: 没有找到对应的Label
-		PREPARE: 对应的事务已经prepare，但尚未提交
-		COMMITTED: 事务已经提交，不能被cancel
-		VISIBLE: 事务提交，并且数据可见，不能被cancel
-		ABORTED: 事务已经被ROLLBACK，导入已经失败
+	Status：此命令是否成功执行，Success 表示成功执行
+	Message：具体的执行信息
+	State: 只有在 Status 为 Success 时才有意义
+		UNKNOWN: 没有找到对应的 Label
+		PREPARE: 对应的事务已经 prepare，但尚未提交
+		COMMITTED: 事务已经提交，不能被 cancel
+		VISIBLE: 事务提交，并且数据可见，不能被 cancel
+		ABORTED: 事务已经被 ROLLBACK，导入已经失败
     
 ## Path parameters
 
@@ -54,7 +54,7 @@ under the License.
 
 * `label`
 
-    指定导入label
+    指定导入 label
 
 ## Request body
 
@@ -71,7 +71,7 @@ under the License.
 }
 ```
 
-如label不存在，则返回：
+如 label 不存在，则返回：
 
 ```
 {
@@ -84,7 +84,7 @@ under the License.
     
 ## Examples
 
-1. 获取指定label的导入事务的状态。
+1. 获取指定 label 的导入事务的状态。
 
     ```
     GET /api/example_db/get_load_state?label=my_label

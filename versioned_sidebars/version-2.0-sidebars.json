@@ -97,7 +97,6 @@
                         "data-operate/import/routine-load-manual",
                         "data-operate/import/insert-into-manual",
                         "data-operate/import/mysql-load-manual",
-                        "data-operate/import/cdc-load-manual",
                         "data-operate/import/load-json-format",
                         "data-operate/import/migrate-data-from-other-olap",
                         "data-operate/import/group-commit-manual",
@@ -153,7 +152,7 @@
                         "query/query-data/subquery",
                         "query/query-data/common-table-expression",
                         "query/query-data/lateral-view",
-                        "query/query-data/windwon-function",
+                        "query/query-data/window-function",
                         "query/query-data/encryption-function"
                     ]
                 },
@@ -178,8 +177,8 @@
                     "type": "category",
                     "label": "Pipeline",
                     "items": [
-                        "query/pipline/pipeline-execution-engine",
-                        "query/pipline/pipelinex-execution-engine"
+                        "query/pipeline/pipeline-execution-engine",
+                        "query/pipeline/pipelinex-execution-engine"
                     ]
                 },
                 {
@@ -193,7 +192,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "View and Materialize View",
+                    "label": "Create View and Materialize View",
                     "items": [
                         "query/view-materialized-view/create-view",
                         "query/view-materialized-view/materialized-view",
@@ -213,13 +212,13 @@
                 },
                 {
                     "type": "category",
-                    "label": "Dulicate",
+                    "label": "Duplicate",
                     "items": [
                         "query/duplicate/orthogonal-bitmap-manual",
                         "query/duplicate/using-hll"
                     ]
                 },
-                "query/hight-concurrent-point-query",
+                "query/high-concurrent-point-query",
                 {
                     "type": "category",
                     "label": "Query Analysis",
@@ -431,7 +430,7 @@
                     "label": "BE OPEN API",
                     "items": [
                         "admin-manual/be/check-rpc-channel",
-                        "admin-manual//be/reset-rpc-channel",
+                        "admin-manual/be/reset-rpc-channel",
                         "admin-manual/be/compaction-status",
                         "admin-manual/be/compaction-run",
                         "admin-manual/be/meta",
@@ -470,6 +469,7 @@
                 "ecosystem/seatunnel",
                 "ecosystem/kyuubi",
                 "ecosystem/logstash",
+                "ecosystem/beats",
                 "ecosystem/cloudcanal",
                 "ecosystem/apache-superset",
                 "ecosystem/doris-streamloader",
@@ -1345,19 +1345,20 @@
         },
         {
             "type": "category",
-            "label": "FAQ",
-            "items": [
-                "faq/install-faq",
-                "faq/data-faq",
-                "faq/sql-faq"
-            ]
-        },
-        {
-            "type": "category",
             "label": "Benchmark",
             "items": [
                 "benchmark/ssb",
                 "benchmark/tpch"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "FAQ",
+            "items": [
+                "faq/install-faq",
+                "faq/data-faq",
+                "faq/sql-faq",
+                "faq/lakehouse-faq"
             ]
         },
         {
@@ -1370,22 +1371,7 @@
                 "releasenotes/release-2.0.3",
                 "releasenotes/release-2.0.2",
                 "releasenotes/release-2.0.1",
-                "releasenotes/release-2.0.0",
-                "releasenotes/release-1.2.8",
-                "releasenotes/release-1.2.7",
-                "releasenotes/release-1.2.6",
-                "releasenotes/release-1.2.5",
-                "releasenotes/release-1.2.4",
-                "releasenotes/release-1.2.3",
-                "releasenotes/release-1.2.2",
-                "releasenotes/release-1.2.1",
-                "releasenotes/release-1.2.0",
-                "releasenotes/release-1.1.5",
-                "releasenotes/release-1.1.4",
-                "releasenotes/release-1.1.3",
-                "releasenotes/release-1.1.2",
-                "releasenotes/release-1.1.1",
-                "releasenotes/release-1.1.0"
+                "releasenotes/release-2.0.0"
             ]
         }
     ]

@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 查询分析
+
 
 Doris 提供了一个图形化的命令以帮助用户更方便的分析一个具体的查询或导入。本文介绍如何使用该功能。
 
@@ -195,7 +195,7 @@ mysql> explain graph select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1
 +---------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-从图中可以看出，查询计划树被分为了5个 Fragment：0、1、2、3、4。如 `OlapScanNode` 节点上的 `[Fragment: 0]` 表示这个节点属于 Fragment 0。每个Fragment之间都通过 DataStreamSink 和 ExchangeNode 进行数据传输。
+从图中可以看出，查询计划树被分为了 5 个 Fragment：0、1、2、3、4。如 `OlapScanNode` 节点上的 `[Fragment: 0]` 表示这个节点属于 Fragment 0。每个 Fragment 之间都通过 DataStreamSink 和 ExchangeNode 进行数据传输。
 
 图形命令仅展示简化后的节点信息，如果需要查看更具体的节点信息，如下推到节点上的过滤条件等，则需要通过第二个命令查看更详细的文字版信息：
 
@@ -471,7 +471,9 @@ mysql> explain verbose select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.
 ```
 
 
-> 查询计划中显示的信息还在不断规范和完善中，我们将在后续的文章中详细介绍。
+:::note
+查询计划中显示的信息还在不断规范和完善中，我们将在后续的文章中详细介绍。
+:::
 
 ## 查看查询 Profile
 
@@ -501,11 +503,11 @@ QueryState: EOF
 
 这个命令会列出当前保存的所有 Profile。每行对应一个查询。我们可以选择我们想看的 Profile 对应的 QueryId，查看具体情况。
 
-查看一个Profile分为3个步骤：
+查看一个 Profile 分为 3 个步骤：
 
 1. 查看整体执行计划树
 
-   这一步主要用于从整体分析执行计划，并查看每个Fragment的执行耗时。
+   这一步主要用于从整体分析执行计划，并查看每个 Fragment 的执行耗时。
 
    ```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9"\G
@@ -588,7 +590,7 @@ QueryState: EOF
    1 row in set (0.02 sec)
    ```
 
-   如上图，每个节点都标注了自己所属的 Fragment，并且在每个 Fragment 的 Sender节点，标注了该 Fragment 的执行耗时。这个耗时，是Fragment下所有 Instance 执行耗时中最长的一个。这个有助于我们从整体角度发现最耗时的 Fragment。
+   如上图，每个节点都标注了自己所属的 Fragment，并且在每个 Fragment 的 Sender 节点，标注了该 Fragment 的执行耗时。这个耗时，是 Fragment 下所有 Instance 执行耗时中最长的一个。这个有助于我们从整体角度发现最耗时的 Fragment。
 
 2. 查看具体 Fragment 下的 Instance 列表
 
@@ -607,7 +609,7 @@ QueryState: EOF
    
    这里展示了 Fragment 1 上所有的 3 个 Instance 所在的执行节点和耗时。
 
-1. 查看具体 Instance
+3. 查看具体 Instance
 
    我们可以继续查看某一个具体的 Instance 上各个算子的详细 Profile：
 
@@ -683,4 +685,4 @@ QueryState: EOF
 
    上图展示了 Fragment 1 中，Instance c257c52f93e149ee-ace8ac14e8c9ff03 的各个算子的具体 Profile。
 
-通过以上3个步骤，我们可以逐步排查一个SQL的性能瓶颈。
+通过以上 3 个步骤，我们可以逐步排查一个 SQL 的性能瓶颈。

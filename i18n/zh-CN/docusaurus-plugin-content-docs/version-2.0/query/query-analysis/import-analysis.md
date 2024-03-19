@@ -24,17 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 导入分析
+
 
 Doris 提供了一个图形化的命令以帮助用户更方便的分析一个具体的导入。本文介绍如何使用该功能。
 
-> 该功能目前仅针对 Broker Load 的分析。
+:::note
+该功能目前仅针对 Broker Load 的分析。
+:::
 
 ## 导入计划树
 
-如果你对 Doris 的查询计划树还不太了解，请先阅读之前的文章 [DORIS/最佳实践/查询分析](./query-analysis)。
+如果你对 Doris 的查询计划树还不太了解，请先阅读之前的文章 [DORIS 查询分析](../query-analysis/query-analysis)。
 
-一个 [Broker Load](../../data-operate/import/import-way/broker-load-manual) 请求的执行过程，也是基于 Doris 的查询框架的。一个Broker Load 作业会根据导入请求中 DATA INFILE 子句的个数将作业拆分成多个子任务。每个子任务可以视为是一个独立的导入执行计划。一个导入计划的组成只会有一个 Fragment，其组成如下：
+一个 [Broker Load](../../data-operate/import/broker-load-manual) 请求的执行过程，也是基于 Doris 的查询框架的。一个 Broker Load 作业会根据导入请求中 DATA INFILE 子句的个数将作业拆分成多个子任务。每个子任务可以视为是一个独立的导入执行计划。一个导入计划的组成只会有一个 Fragment，其组成如下：
 
 ```sql
 ┌─────────────┐
@@ -48,7 +50,7 @@ Doris 提供了一个图形化的命令以帮助用户更方便的分析一个�
 
 BrokerScanNode 主要负责去读源数据并发送给 OlapTableSink，而 OlapTableSink 负责将数据按照分区分桶规则发送到对应的节点，由对应的节点负责实际的数据写入。
 
-而这个导入执行计划的 Fragment 会根据导入源文件的数量、BE节点的数量等参数，划分成一个或多个 Instance。每个 Instance 负责一部分数据导入。
+而这个导入执行计划的 Fragment 会根据导入源文件的数量、BE 节点的数量等参数，划分成一个或多个 Instance。每个 Instance 负责一部分数据导入。
 
 多个子任务的执行计划是并发执行的，而一个执行计划的多个 Instance 也是并行执行。
 
@@ -62,7 +64,9 @@ SET is_report_success=true;
 
 然后提交一个 Broker Load 导入请求，并等到导入执行完成。Doris 会产生该导入的一个 Profile。Profile 包含了一个导入各个子任务、Instance 的执行详情，有助于我们分析导入瓶颈。
 
-> 目前不支持查看未执行成功的导入作业的 Profile。
+:::note
+目前不支持查看未执行成功的导入作业的 Profile。
+:::
 
 我们可以通过如下命令先获取 Profile 列表：
 
@@ -108,7 +112,7 @@ WaitAndFetchResultTime: N/A
 
 这个命令会列出当前保存的所有导入 Profile。每行对应一个导入。其中 QueryId 列为导入作业的 ID。这个 ID 也可以通过 SHOW LOAD 语句查看拿到。我们可以选择我们想看的 Profile 对应的 QueryId，查看具体情况。
 
-**查看一个Profile分为3个步骤：**
+**查看一个 Profile 分为 3 个步骤：**
 
 1. 查看子任务总览
 
@@ -198,4 +202,4 @@ WaitAndFetchResultTime: N/A
 
    上图展示了子任务 980014623046410a-af5d36f23381017f 中，Instance 980014623046410a-88e260f0c43031f5 的各个算子的具体 Profile。
 
-通过以上3个步骤，我们可以逐步排查一个导入任务的执行瓶颈。
+通过以上 3 个步骤，我们可以逐步排查一个导入任务的执行瓶颈。

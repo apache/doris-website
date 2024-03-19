@@ -30,7 +30,9 @@ under the License.
 ## 环境准备
 
 -   选择一个 X86-64 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
+
 -   Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u202，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox))。
+
 -   建议在 Linux 上新建一个 Doris 用户（避免使用 root 用户，以防对操作系统误操作）
 
 ## 下载二进制包

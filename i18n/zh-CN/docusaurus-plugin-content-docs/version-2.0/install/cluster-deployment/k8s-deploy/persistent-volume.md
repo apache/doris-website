@@ -27,19 +27,26 @@ under the License.
 Doris-Operator 支持 Doris 各个组件的 pod 挂载 PV（Persistent Volume）。
 
 PV 一般由 kubernetes 系统管理员创建，Doris-Operator 部署 Doris 服务的时候不直接使用 PV，而是通过 PVC 声明一组资源来向 kubernetes 集群申请 PV。
+
 当 PVC 被创建时，Kubernetes 将尝试将其与符合要求的可用 PV 进行绑定。
+
 StorageClass 屏蔽了管理员手动创建 PV 的过程，对于没有现成的 PV 满足 PVC 需求时，可以根据 StorageClass 动态分配 PV。
+
 PV 提供多种存储类型，主要分为两大类：网络存储、本地存储。两者基于各自原理和实现，为用户提供不同的性能和使用方式的体验，用户可以依据自己的容器化的服务类型和自身需求选择。
 
 如果部署时未对 PVC 进行配置，Doris-Operator 默认 使用 `emptyDir` 模式来存储 元数据 数据文件 和 运行日志。当 pod 重新启动时，相关数据将会丢失。
 
 建议持久化存储的节点目录类型：
 * FE：doris-meta、log
+
 * BE：storage、log
+
 * CN：storage、log
+
 * BROKER：log
 
 Doris-Operator 同时将日志输出到 console 和 指定目录下。如果用户的 Kubernetes 系统有完整的日志收集能力，可通过 console 输出来收集 Doris INFO 级别（默认）的日志信息。
+
 但是这里仍然推荐配置 PVC 来持久化日志文件，因为除了 INFO 级别日志还会有诸如 fe.out、be.out、audit.log 以及 垃圾回收日志，便于快速定位问题和审计日志回溯。
 
 
@@ -51,6 +58,7 @@ ConfigMap 是 Kubernetes 中用于存储配置文件的资源对象，它允许�
 
 Doris-Operator 提供了使用 Kubernetes 默认 `StorageClass` 模式来支持 FE 和 BE 数据存储，其中存储路径（mountPath）使用镜像里的默认配置。
 如果用户需要自己指定 StorageClass 则需要在 `spec.feSpec.persistentVolumes` 内修改 `persistentVolumeClaimSpec.storageClassName`，参考如下：
+
 ```yaml
 apiVersion: doris.selectdb.com/v1
 kind: DorisCluster
@@ -123,7 +131,8 @@ spec:
 ```
 
 ## 定制化 ConfigMap
-Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。 在部署 `doriscluster` 之前需要提前在同 `namespace` 下部署想要使用的 `ConfigMap`，以下样例展示了 FE 使用名称为 fe-configmap 的 `ConfigMap`， BE 使用名称为 be-configmap 的 `ConfigMap` 的集群相关 yaml:  
+
+Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。在部署 `doriscluster` 之前需要提前在同 `namespace` 下部署想要使用的 `ConfigMap`，以下样例展示了 FE 使用名称为 fe-configmap 的 `ConfigMap`，BE 使用名称为 be-configmap 的 `ConfigMap` 的集群相关 yaml:  
 
 FE 的 ConfigMap 样例
 ```yaml
@@ -162,7 +171,7 @@ data:
     enable_fqdn_mode = true
 ```
 
-注意，使用 FE 的 ConfigMap ，必须为 `fe.conf` 添加 `enable_fqdn_mode = true`，具体原因可参考 [此处文档](https://doris.apache.org/zh-CN/docs/dev/admin-manual/cluster-management/fqdn)
+注意，使用 FE 的 ConfigMap，必须为 `fe.conf` 添加 `enable_fqdn_mode = true`，具体原因可参考 [此处文档](../../admin-manual/cluster-management/fqdn)
 
 BE 的 ConfigMap 样例
 ```yaml
@@ -200,7 +209,7 @@ data:
     heartbeat_service_port = 9050
     brpc_port = 8060
 ```
-使用以上两个 `ConfigMap` 的 `doriscluster` 部署样例:
+使用以上两个 `ConfigMap` 的 `doriscluster` 部署样例：
 ```yaml
 apiVersion: doris.selectdb.com/v1
 kind: DorisCluster
@@ -250,10 +259,10 @@ spec:
       resolveKey: apache_hdfs_broker.conf
 
 ```
-这里的 `resolveKey` 是传入配置文件名（必须是`fe.conf`，`be.conf` 或 `apache_hdfs_broker.conf`，cn 节点也是 `be.conf`） 用以解析传入的 Doris 集群配置的文件，doris-operator 会去解析该文件去指导 doriscluster 的定制化部署。
+这里的 `resolveKey` 是传入配置文件名（必须是`fe.conf`，`be.conf` 或 `apache_hdfs_broker.conf`，cn 节点也是 `be.conf`）用以解析传入的 Doris 集群配置的文件，doris-operator 会去解析该文件去指导 doriscluster 的定制化部署。
 
 ## 为 conf 目录添加特殊配置文件
-本段落用来供参考 需要在 Doris 节点的 conf 目录放置配置其他文件的容器化部署方案。比如常见的 [数据湖联邦查询](https://doris.apache.org/zh-CN/docs/dev/lakehouse/multi-catalog/hive) 的 hdfs 配置文件映射。
+本段落用来供参考 需要在 Doris 节点的 conf 目录放置配置其他文件的容器化部署方案。比如常见的 [数据湖联邦查询](../../../lakehouse/datalake/hive) 的 hdfs 配置文件映射。
 
 这里以 BE 的 ConfigMap 和 需要添加的 core-site.xml 文件为例：
 ```yaml
@@ -294,7 +303,7 @@ data:
 ## BE 多盘配置
 Doris 的 BE 服务支持多盘挂载，在服务器时代能够很好满足一个计算资源和存储资源不匹配的问题，同时使用多盘也能够很好提高 Doris 的存储效率。在 Kubernetes 上 Doris 同样可以挂载多盘来实现存储效益最大化。在 Kubernetes 上使用多盘需要配合配置文件一起使用。
 为实现服务和配置解耦，Doris 采用 `ConfigMap` 来作为配置的承载，实现配置文件动态挂载给服务使用。
-以下为 BE 服务使用 `ConfigMap` 来承载配置文件，挂载两块盘供BE使用的 doriscluster 配置：
+以下为 BE 服务使用 `ConfigMap` 来承载配置文件，挂载两块盘供 BE 使用的 doriscluster 配置：
 ```yaml
 apiVersion: doris.selectdb.com/v1
 kind: DorisCluster
@@ -379,6 +388,7 @@ spec:
             storage: 100Gi
 ```
 与默认样例相比增加了 `configMapInfo` 的配置，同时也增加了一个 `persistentVolumeClaimSpec` 的配置，[`persistentVolumeClaimSpec`](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) 完全遵循 Kubernetes 原生资源 PVC spec 的定义格式。
+
 样例中 `configMapInfo` 标识 BE 部署后使用同 `namespace` 下哪一个 ConfigMap 以及 哪一个 key 对应的内容作为配置文件启动，其中 key 为必须为 be.conf。以下为需要预先部署的配合上述 `doriscluster` ConfigMap 样例：
 ```yaml
 apiVersion: v1
@@ -417,5 +427,5 @@ data:
     
     storage_root_path = /opt/apache-doris/be/storage,medium:ssd;/opt/apache-doris/be/storage1,medium:ssd
 ```
-在使用多盘时，`ConfigMap` 中 `storage_root_path` 对应值中的路径要与 `doriscluster` 中 `persistentVolume` 各个挂载路径对应。[`storage_root_path`](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/be-config/#storage_root_path) 对应的书写规则请参考链接中文档。
+在使用多盘时，`ConfigMap` 中 `storage_root_path` 对应值中的路径要与 `doriscluster` 中 `persistentVolume` 各个挂载路径对应。[`storage_root_path`](../../../admin-manual/config/be-config/#storage_root_path) 对应的书写规则请参考链接中文档。
 在使用云盘的情形下，介质统一使用 `SSD`。

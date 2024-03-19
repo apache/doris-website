@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Node Action
+
 
 ## Request
 
@@ -52,7 +52,7 @@ under the License.
 
 </version>
 
-## 获取fe, be, broker节点信息
+## 获取 fe, be, broker 节点信息
 
 `GET /rest/v2/manager/node/frontends`
 
@@ -62,7 +62,7 @@ under the License.
 
 ### Description
 
-用于获取集群获取fe, be, broker节点信息。
+用于获取集群获取 fe, be, broker 节点信息。
 
 ### Response
 
@@ -192,7 +192,7 @@ configuration_info 用于获取节点配置详细信息。
 `POST /rest/v2/manager/node/configuration_info`
 
 * type 
-  值为 fe 或 be， 用于指定获取fe的配置信息或be的配置信息。
+  值为 fe 或 be，用于指定获取 fe 的配置信息或 be 的配置信息。
 
 ### Request body
 
@@ -304,7 +304,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
     
 ### Examples
 
-1. 获取fe agent_task_resend_wait_time_ms 配置项信息：
+1. 获取 fe agent_task_resend_wait_time_ms 配置项信息：
 
     POST /rest/v2/manager/node/configuration_info?type=fe  
     body:
@@ -355,7 +355,7 @@ node 用于指定返回哪些节点的配置项信息，默认为全部fe节点�
 
 ### Description
 
-用于修改fe或be节点配置值
+用于修改 fe 或 be 节点配置值
 
 ### Request body
 ```
@@ -399,7 +399,7 @@ failed 表示修改失败的配置信息。
     
 ### Examples
 
-1. 修改fe 127.0.0.1:8030 节点中 agent_task_resend_wait_time_ms 和alter_table_timeout_second 配置值：
+1. 修改 fe 127.0.0.1:8030 节点中 agent_task_resend_wait_time_ms 和 alter_table_timeout_second 配置值：
 
     POST /rest/v2/manager/node/set_config/fe
     body:

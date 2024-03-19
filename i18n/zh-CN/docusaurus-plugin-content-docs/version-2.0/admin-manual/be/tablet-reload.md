@@ -1,6 +1,6 @@
 ---
 {
-    "title": "重加载tablet",
+    "title": "重加载 tablet",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 重加载tablet
 
 ## Request
 
@@ -32,12 +31,12 @@ under the License.
 
 ## Description
 
-该功能用于重加载tablet数据。
+该功能用于重加载 tablet 数据。
 
 ## Query parameters
 
 * `tablet_id`
-    需要重加载的table的id
+    需要重加载的 table 的 id
 
 * `schema_hash`
     schema hash      
@@ -52,13 +51,13 @@ under the License.
 
 ## Response
 
-    ```
+    ```bash
     load header succeed
     ```
 ## Examples
 
 
-    ```
+    ```bash
     curl "http://127.0.0.1:8040/api/reload_tablet?tablet_id=123456&schema_hash=1111111&path=/abc"
 
     ```
