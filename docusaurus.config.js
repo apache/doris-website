@@ -175,11 +175,12 @@ const config = {
                     lastVersion: getLatestVersion(),
                     versions: getDocsVersions(),
                     sidebarPath: require.resolve('./sidebars.json'),
-                    editUrl: ({ locale, versionDocsDirPath, docPath }) => {
-                        if (versionDocsDirPath === 'versioned_docs/version-dev') {
-                            return `https://github.com/apache/doris/edit/master/docs/${locale}/docs/${docPath}`;
-                        }
-                    },
+                    // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
+                    //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
+                    //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
+                    //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
+                    //     // }
+                    // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
                 },

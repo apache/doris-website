@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# DataX doriswriter
+
 
 [DataX](https://github.com/alibaba/DataX) doriswriter 插件，用于通过 DataX 同步其他数据源的数据到 Doris 中。
 
-这个插件是利用Doris的Stream Load 功能进行数据导入的。需要配合 DataX 服务一起使用。
+这个插件是利用 Doris 的 Stream Load 功能进行数据导入的。需要配合 DataX 服务一起使用。
 
 ## 关于 DataX
 
-DataX 是阿里云 DataWorks数据集成 的开源版本，在阿里巴巴集团内被广泛使用的离线数据同步工具/平台。DataX 实现了包括 MySQL、Oracle、SqlServer、Postgre、HDFS、Hive、ADS、HBase、TableStore(OTS)、MaxCompute(ODPS)、Hologres、DRDS 等各种异构数据源之间高效的数据同步功能。
+DataX 是阿里云 DataWorks 数据集成 的开源版本，在阿里巴巴集团内被广泛使用的离线数据同步工具/平台。DataX 实现了包括 MySQL、Oracle、SqlServer、Postgre、HDFS、Hive、ADS、HBase、TableStore(OTS)、MaxCompute(ODPS)、Hologres、DRDS 等各种异构数据源之间高效的数据同步功能。
 
-更多信息请参阅: `https://github.com/alibaba/DataX/`
+更多信息请参阅：`https://github.com/alibaba/DataX/`
 
 ## 使用手册
 
@@ -57,53 +57,64 @@ doriswriter 插件依赖的 DataX 代码中的一些模块。而这些模块并�
    这个脚本主要用于构建 DataX 开发环境，他主要进行了以下操作：
 
     1. 将 DataX 代码库 clone 到本地。
+
     2. 将 `doriswriter/` 目录软链到 `DataX/doriswriter` 目录。
+
     3. 在 `DataX/pom.xml` 文件中添加 `<module>doriswriter</module>` 模块。
+
     4. 将 `DataX/core/pom.xml` 文件中的 httpclient 版本从 4.5 改为 4.5.13.
 
-       > httpclient v4.5 在处理 307 转发时有bug。
+    :::note
+    httpclient v4.5 在处理 307 转发时有 bug。
+    :::
 
    这个脚本执行后，开发者就可以进入 `DataX/` 目录开始开发或编译了。因为做了软链，所以任何对 `DataX/doriswriter` 目录中文件的修改，都会反映到 `doriswriter/` 目录中，方便开发者提交代码。
 
 ### 编译
 
-#### Doris 代码库编译
+**Doris 代码库编译**
 
 1. 运行 `init-env.sh`
+
 2. 按需修改 `DataX/doriswriter` 中的代码。
-3. 编译 doriswriter：
 
-    1. 单独编译 doriswriter 插件:
+3. 编译 Doriswriter：
 
-       `mvn clean install -pl plugin-rdbms-util,doriswriter -DskipTests`
+- 单独编译 doriswriter 插件：
 
-    2. 编译整个 DataX 项目:
+    `mvn clean install -pl plugin-rdbms-util,doriswriter -DskipTests`
 
-       `mvn package assembly:assembly -Dmaven.test.skip=true`
+- 编译整个 DataX 项目：
 
-       产出在 `target/datax/datax/`.
+    `mvn package assembly:assembly -Dmaven.test.skip=true`
 
-       > hdfsreader, hdfswriter and oscarwriter 这三个插件需要额外的jar包。如果你并不需要这些插件，可以在 `DataX/pom.xml` 中删除这些插件的模块。
+    产出在 `target/datax/datax/`.
 
-    3. 编译错误
+    > hdfsreader, hdfswriter and oscarwriter 这三个插件需要额外的 jar 包。如果你并不需要这些插件，可以在 `DataX/pom.xml` 中删除这些插件的模块。
 
-       如遇到如下编译错误：
+- 编译错误
 
-       ```
-       Could not find artifact com.alibaba.datax:datax-all:pom:0.0.1-SNAPSHOT ...
-       ```
+    如遇到如下编译错误：
 
-       可尝试以下方式解决：
+    ```
+    Could not find artifact com.alibaba.datax:datax-all:pom:0.0.1-SNAPSHOT ...
+    ```
 
-        1. 下载 [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz)
-        2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下。
-        3. 再次尝试编译。
+    :::tip
+    可尝试以下方式解决：
+
+    1. 下载 [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz)
+
+    2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下。
+
+    3. 再次尝试编译。
+    :::
 
 4. 按需提交修改。
 
-#### Datax 代码库编译
+**DataX 代码库编译**
 
-从datax 代码库拉取代码，执行编译
+从 DataX 代码库拉取代码，执行编译
 
 ```
 git clone https://github.com/alibaba/DataX.git
@@ -111,136 +122,178 @@ cd datax
 mvn package assembly:assembly -Dmaven.test.skip=true
 ```
 
-编译完成后可以在 `datax/target/Datax` 下看到datax.tar.gz 包
+编译完成后可以在 `datax/target/Datax` 下看到 datax.tar.gz 包
 
-### Datax DorisWriter 参数介绍：
+### DataX DorisWriter 参数介绍：
 
-* **jdbcUrl**
+**jdbcUrl**
 
-    - 描述：Doris 的 JDBC 连接串，用户执行 preSql 或 postSQL。
-    - 必选：是
-    - 默认值：无
-* **loadUrl**
+- 描述：Doris 的 JDBC 连接串，用户执行 preSql 或 PostSQL。
 
-  - 描述：作为 Stream Load 的连接目标。格式为 "ip:port"。其中 IP 是 FE 节点 IP，port 是 FE 节点的 http_port。可以填写多个，多个之间使用英文状态的逗号隔开:`,`，doriswriter 将以轮询的方式访问。
+- 必选：是
+
+- 默认值：无
+
+**loadUrl**
+
+- 描述：作为 Stream Load 的连接目标。格式为 "ip:port"。其中 IP 是 FE 节点 IP，port 是 FE 节点的 http_port。可以填写多个，多个之间使用英文状态的逗号隔开：`,`，doriswriter 将以轮询的方式访问。
+
+- 必选：是
+
+- 默认值：无
+
+**username**
+
+  - 描述：访问 Doris 数据库的用户名
+
   - 必选：是
-  - 默认值：无
-* **username**
 
-    - 描述：访问Doris数据库的用户名
-    - 必选：是
-    - 默认值：无
-* **password**
+  - 默认值：无
+
+**password**
   
-    - 描述：访问Doris数据库的密码
-    - 必选：否
-    - 默认值：空
-* **connection.selectedDatabase**
-    - 描述：需要写入的Doris数据库名称。
-    - 必选：是
-    - 默认值：无
-* **connection.table**
-  - 描述：需要写入的Doris表名称。
-    - 必选：是
-    - 默认值：无
-* **flushInterval**
-    - 描述：数据写入批次的时间间隔。如果这个时间间隔设置的太小会造成 Doris 写阻塞问题，错误代码 -235，同时如果你这个时间设置太小，`maxBatchRows` 和 `batchSize` 参数设置的有很大，那么很可能达不到你这设置的数据量大小，也会执行导入。
-    - 必选：否
-    - 默认值：30000（ms）
-* **column**
-    - 描述：目的表需要写入数据的字段，这些字段将作为生成的 Json 数据的字段名。字段之间用英文逗号分隔。例如: "column": ["id","name","age"]。
-    - 必选：是
-    - 默认值：否
-* **preSql**
+- 描述：访问 Doris 数据库的密码
 
-  - 描述：写入数据到目的表前，会先执行这里的标准语句。
-  - 必选：否
-  - 默认值：无
-* **postSql**
+- 必选：否
 
-  - 描述：写入数据到目的表后，会执行这里的标准语句。
-  - 必选：否
-  - 默认值：无
+- 默认值：空
+
+**connection.selectedDatabase**
+
+- 描述：需要写入的 Doris 数据库名称。
+
+- 必选：是
+
+- 默认值：无
+
+**connection.table**
+
+- 描述：需要写入的 Doris 表名称。
+
+- 必选：是
+
+- 默认值：无
+
+**flushInterval**
+
+- 描述：数据写入批次的时间间隔。如果这个时间间隔设置的太小会造成 Doris 写阻塞问题，错误代码 -235，同时如果你这个时间设置太小，`maxBatchRows` 和 `batchSize` 参数设置的有很大，那么很可能达不到你这设置的数据量大小，也会执行导入。
+
+- 必选：否
+
+- 默认值：30000（ms）
+
+**column**
+- 描述：目的表需要写入数据的字段，这些字段将作为生成的 Json 数据的字段名。字段之间用英文逗号分隔。例如："column": ["id","name","age"]。
+
+- 必选：是
+
+- 默认值：否
+
+**preSql**
+
+- 描述：写入数据到目的表前，会先执行这里的标准语句。
+
+- 必选：否
+
+- 默认值：无
+
+**postSql**
+
+- 描述：写入数据到目的表后，会执行这里的标准语句。
+
+- 必选：否
+
+- 默认值：无
 
 
-* **maxBatchRows**
-  - 描述：每批次导入数据的最大行数。和 **batchSize** 共同控制每批次的导入记录行数。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
-  - 必选：否
-  - 默认值：500000
+**maxBatchRows**
+
+- 描述：每批次导入数据的最大行数。和 **batchSize** 共同控制每批次的导入记录行数。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
+
+- 必选：否
+
+- 默认值：500000
   
-* **batchSize**
-  - 描述：每批次导入数据的最大数据量。和 **maxBatchRows** 共同控制每批次的导入数量。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
-  - 必选：否
-  - 默认值：104857600
-  
-* **maxRetries**
+**batchSize**
 
-  - 描述：每批次导入数据失败后的重试次数。
-  - 必选：否
-  - 默认值：3
+- 描述：每批次导入数据的最大数据量。和 **maxBatchRows** 共同控制每批次的导入数量。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
+
+- 必选：否
+
+- 默认值：104857600
+
+**maxRetries**
+
+- 描述：每批次导入数据失败后的重试次数。
+
+- 必选：否
+
+- 默认值：3
 
 
-* **labelPrefix**
+**labelPrefix**
 
-  - 描述：每批次导入任务的 label 前缀。最终的 label 将有 `labelPrefix + UUID` 组成全局唯一的 label，确保数据不会重复导入
-  - 必选：否
-  - 默认值：`datax_doris_writer_`
+- 描述：每批次导入任务的 label 前缀。最终的 label 将有 `labelPrefix + UUID` 组成全局唯一的 label，确保数据不会重复导入
 
-* **loadProps**
+- 必选：否
 
-  - 描述：StreamLoad 的请求参数，详情参照StreamLoad介绍页面。[Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/stream-load-manual)
+- 默认值：`datax_doris_writer_`
 
-    这里包括导入的数据格式：format等，导入数据格式默认我们使用csv，支持JSON，具体可以参照下面类型转换部分，也可以参照上面Stream load 官方信息
+**loadProps**
 
-  - 必选：否
+- 描述：StreamLoad 的请求参数，详情参照 StreamLoad 介绍页面。[Stream load - Apache Doris](../data-operate/import/stream-load-manual)
 
-  - 默认值：无
+  这里包括导入的数据格式：format 等，导入数据格式默认我们使用 csv，支持 JSON，具体可以参照下面类型转换部分，也可以参照上面 Stream load 官方信息
+
+- 必选：否
+
+- 默认值：无
 
 ### 示例
 
-#### 1.Stream读取数据后导入至Doris
+**1.Stream 读取数据后导入至 Doris**
 
 该示例插件的使用说明请参阅 [这里](https://github.com/apache/incubator-doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md)
 
-#### 2.Mysql读取数据后导入至Doris
+**2.Mysql 读取数据后导入至 Doris**
 
-1.Mysql表结构
+- Mysql 表结构
 
-```sql
-CREATE TABLE `t_test`(
- `id`bigint(30) NOT NULL,
- `order_code` varchar(30) DEFAULT NULL COMMENT '',
- `line_code` varchar(30) DEFAULT NULL COMMENT '',
- `remark` varchar(30) DEFAULT NULL COMMENT '',
- `unit_no` varchar(30) DEFAULT NULL COMMENT '',
- `unit_name` varchar(30) DEFAULT NULL COMMENT '',
- `price` decimal(12,2) DEFAULT NULL COMMENT '',
- PRIMARY KEY(`id`) USING BTREE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='';
-```
+  ```sql
+  CREATE TABLE `t_test`(
+  `id`bigint(30) NOT NULL,
+  `order_code` varchar(30) DEFAULT NULL COMMENT '',
+  `line_code` varchar(30) DEFAULT NULL COMMENT '',
+  `remark` varchar(30) DEFAULT NULL COMMENT '',
+  `unit_no` varchar(30) DEFAULT NULL COMMENT '',
+  `unit_name` varchar(30) DEFAULT NULL COMMENT '',
+  `price` decimal(12,2) DEFAULT NULL COMMENT '',
+  PRIMARY KEY(`id`) USING BTREE
+  )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='';
+  ```
 
-2.Doris表结构
+- Doris 表结构
 
-```sql
-CREATE TABLE `ods_t_test` (
- `id` bigint(30) NOT NULL,
- `order_code` varchar(30) DEFAULT NULL COMMENT '',
- `line_code` varchar(30) DEFAULT NULL COMMENT '',
- `remark` varchar(30) DEFAULT NULL COMMENT '',
- `unit_no` varchar(30) DEFAULT NULL COMMENT '',
- `unit_name` varchar(30) DEFAULT NULL COMMENT '',
- `price` decimal(12,2) DEFAULT NULL COMMENT ''
-) ENGINE=OLAP
-UNIQUE KEY(`id`, `order_code`)
-DISTRIBUTED BY HASH(`order_code`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 3",
-"in_memory" = "false",
-"storage_format" = "V2"
-);
-```
+  ```sql
+  CREATE TABLE `ods_t_test` (
+  `id` bigint(30) NOT NULL,
+  `order_code` varchar(30) DEFAULT NULL COMMENT '',
+  `line_code` varchar(30) DEFAULT NULL COMMENT '',
+  `remark` varchar(30) DEFAULT NULL COMMENT '',
+  `unit_no` varchar(30) DEFAULT NULL COMMENT '',
+  `unit_name` varchar(30) DEFAULT NULL COMMENT '',
+  `price` decimal(12,2) DEFAULT NULL COMMENT ''
+  ) ENGINE=OLAP
+  UNIQUE KEY(`id`, `order_code`)
+  DISTRIBUTED BY HASH(`order_code`) BUCKETS 1
+  PROPERTIES (
+  "replication_allocation" = "tag.location.default: 3",
+  "in_memory" = "false",
+  "storage_format" = "V2"
+  );
+  ```
 
-3.创建datax脚本 
+- 创建 DataX 脚本 
 
 my_import.json
 
@@ -301,35 +354,41 @@ my_import.json
 }
 ```
 
->备注：
->
->```json
->"loadProps": {
->   "format": "json",
->   "strip_outer_array":"true",
->   "line_delimiter": "\\x02"
->}
->```
->
->1. 这里我们使用了 JSON 格式导入数据
->2.  `line_delimiter` 默认是换行符，可能会和数据中的值冲突，我们可以使用一些特殊字符或者不可见字符，避免导入错误
->3. strip_outer_array ：在一批导入数据中表示多行数据，Doris 在解析时会将数组展开，然后依次解析其中的每一个 Object 作为一行数据
->4. 更多 Stream load 参数请参照 [Stream load文档]([Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/stream-load-manual))
->5. 如果是 CSV 格式我们可以这样使用
->
->```json
->"loadProps": {
->    "format": "csv",
->    "column_separator": "\\x01",
->    "line_delimiter": "\\x02"
->}
->```
->
->**CSV 格式要特别注意行列分隔符，避免和数据中的特殊字符冲突，这里建议使用隐藏字符，默认列分隔符是：\t，行分隔符：\n**
+:::note
+备注：
 
-4.执行datax任务，具体参考 [datax官网](https://github.com/alibaba/DataX/blob/master/userGuid.md)
-
+```json
+"loadProps": {
+  "format": "json",
+   "strip_outer_array":"true",
+   "line_delimiter": "\\x02"
+}
 ```
+
+1. 这里我们使用了 JSON 格式导入数据
+
+2.  `line_delimiter` 默认是换行符，可能会和数据中的值冲突，我们可以使用一些特殊字符或者不可见字符，避免导入错误
+
+3. strip_outer_array：在一批导入数据中表示多行数据，Doris 在解析时会将数组展开，然后依次解析其中的每一个 Object 作为一行数据
+
+4. 更多 Stream load 参数请参照 [Stream load 文档]([Stream load - Apache Doris](../data-operate/import/stream-load-manual))
+
+5. 如果是 CSV 格式我们可以这样使用
+
+```json
+"loadProps": {
+    "format": "csv",
+    "column_separator": "\\x01",
+    "line_delimiter": "\\x02"
+}
+```
+
+**CSV 格式要特别注意行列分隔符，避免和数据中的特殊字符冲突，这里建议使用隐藏字符，默认列分隔符是：\t，行分隔符：\n**
+:::
+
+4.执行 DataX 任务，具体参考 [DataX 官网](https://github.com/alibaba/DataX/blob/master/userGuid.md)
+
+```python
 python bin/datax.py my_import.json
 ```
 

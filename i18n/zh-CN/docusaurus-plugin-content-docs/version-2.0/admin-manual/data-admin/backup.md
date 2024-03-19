@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 数据备份
+
 
 Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存储系统中。之后可以通过 恢复 命令，从远端存储系统中将数据恢复到任意 Doris 集群。通过这个功能，Doris 可以支持将数据定期的进行快照备份。也可以通过这个功能，在不同集群间进行数据迁移。
 
@@ -46,7 +46,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
 
 3. 动态分区表说明
 
-   如果该表是动态分区表，备份之后会自动禁用动态分区属性，在做恢复的时候需要手动将该表的动态分区属性启用，命令如下:
+   如果该表是动态分区表，备份之后会自动禁用动态分区属性，在做恢复的时候需要手动将该表的动态分区属性启用，命令如下：
 
    ```sql
    ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
@@ -83,10 +83,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
        "AWS_REGION" = "xxx"
    ); 
    ```
-
-   >注意：
-   >
-   >ON LOCATION 这里后面跟的是 Bucket Name
+   :::caution
+   注意：
+   
+   ON LOCATION 这里后面跟的是 Bucket Name
+   :::
 
 2. 全量备份 example_db 下的表 example_tbl 到仓库 example_repo 中：
 
@@ -143,7 +144,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
    1 row in set (0.15 sec)
    ```
 
-BACKUP的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP)。
 
 ## 最佳实践
 
@@ -160,74 +161,103 @@ BACKUP的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Defi
 ## 重点说明
 
 1. 备份恢复相关的操作目前只允许拥有 ADMIN 权限的用户执行。
+
 2. 一个 Database 内，只允许有一个正在执行的备份或恢复作业。
+
 3. 备份和恢复都支持最小分区（Partition）级别的操作，当表的数据量很大时，建议按分区分别执行，以降低失败重试的代价。
+
 4. 因为备份恢复操作，操作的都是实际的数据文件。所以当一个表的分片过多，或者一个分片有过多的小版本时，可能即使总数据量很小，依然需要备份或恢复很长时间。用户可以通过 `SHOW PARTITIONS FROM table_name;` 和 `SHOW TABLETS FROM table_name;` 来查看各个分区的分片数量，以及各个分片的文件版本数量，来预估作业执行时间。文件数量对作业执行的时间影响非常大，所以建议在建表时，合理规划分区分桶，以避免过多的分片。
+
 5. 当通过 `SHOW BACKUP` 或者 `SHOW RESTORE` 命令查看作业状态时。有可能会在 `TaskErrMsg` 一列中看到错误信息。但只要 `State` 列不为 `CANCELLED`，则说明作业依然在继续。这些 Task 有可能会重试成功。当然，有些 Task 错误，也会直接导致作业失败。
+
    常见的`TaskErrMsg`错误如下：
-      Q1：备份到HDFS，状态显示UPLOADING，TaskErrMsg 错误信息：[13333: Close broker writer failed, broker:TNetworkAddress(hostname=10.10.0.0,port=8000) msg:errors while close file output stream, cause by: DataStreamer Exception: ]
+      Q1：备份到 HDFS，状态显示 UPLOADING，TaskErrMsg 错误信息：[13333: Close broker writer failed, broker:TNetworkAddress(hostname=10.10.0.0,port=8000) msg:errors while close file output stream, cause by: DataStreamer Exception: ]
       这个一般是网络通信问题，查看broker日志，看某个ip 或者端口不通，如果是云服务，则需要查看是否访问了内网，如果是，则可以在borker/conf文件夹下添加hdfs-site.xml，还需在hdfs-site.xml配置文件下添加dfs.client.use.datanode.hostname=true，并在broker节点上配置HADOOP集群的主机名映射。
+
 6. 如果恢复作业是一次覆盖操作（指定恢复数据到已经存在的表或分区中），那么从恢复作业的 `COMMIT` 阶段开始，当前集群上被覆盖的数据有可能不能再被还原。此时如果恢复作业失败或被取消，有可能造成之前的数据已损坏且无法访问。这种情况下，只能通过再次执行恢复操作，并等待作业完成。因此，我们建议，如无必要，尽量不要使用覆盖的方式恢复数据，除非确认当前数据已不再使用。
 
 ## 相关命令
 
 和备份恢复功能相关的命令如下。以下命令，都可以通过 mysql-client 连接 Doris 后，使用 `help cmd;` 的方式查看详细帮助。
 
-1. CREATE REPOSITORY
+**1. CREATE REPOSITORY**
 
-   创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker文档](../../advanced/broker.md)，也可以直接通过S3 协议备份到支持AWS S3协议的远程存储上去，也可以直接备份到HDFS，具体参考 [创建远程仓库文档](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md)
+创建一个远端仓库路径，用于备份或恢复。该命令需要借助 Broker 进程访问远端存储，不同的 Broker 需要提供不同的参数，具体请参阅 [Broker 文档](../../data-operate/import/broker-load-manual)，也可以直接通过 S3 协议备份到支持 AWS S3 协议的远程存储上去，也可以直接备份到 HDFS，具体参考 [创建远程仓库文档](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY)
 
-2. BACKUP
+**2. BACKUP**
 
-   执行一次备份操作。
+执行一次备份操作。
 
-3. SHOW BACKUP
+**3. SHOW BACKUP**
 
-   查看最近一次 backup 作业的执行情况，包括：
+查看最近一次 backup 作业的执行情况，包括：
 
-   - JobId：本次备份作业的 id。
-   - SnapshotName：用户指定的本次备份作业的名称（Label）。
-   - DbName：备份作业对应的 Database。
-   - State：备份作业当前所在阶段：
-     - PENDING：作业初始状态。
-     - SNAPSHOTING：正在进行快照操作。
-     - UPLOAD_SNAPSHOT：快照结束，准备上传。
-     - UPLOADING：正在上传快照。
-     - SAVE_META：正在本地生成元数据文件。
-     - UPLOAD_INFO：上传元数据文件和本次备份作业的信息。
-     - FINISHED：备份完成。
-     - CANCELLED：备份失败或被取消。
-   - BackupObjs：本次备份涉及的表和分区的清单。
-   - CreateTime：作业创建时间。
-   - SnapshotFinishedTime：快照完成时间。
-   - UploadFinishedTime：快照上传完成时间。
-   - FinishedTime：本次作业完成时间。
-   - UnfinishedTasks：在 `SNAPSHOTTING`，`UPLOADING` 等阶段，会有多个子任务在同时进行，这里展示的当前阶段，未完成的子任务的 task id。
-   - TaskErrMsg：如果有子任务执行出错，这里会显示对应子任务的错误信息。
-   - Status：用于记录在整个作业过程中，可能出现的一些状态信息。
-   - Timeout：作业的超时时间，单位是秒。
+- JobId：本次备份作业的 id。
 
-4. SHOW SNAPSHOT
+- SnapshotName：用户指定的本次备份作业的名称（Label）。
 
-   查看远端仓库中已存在的备份。
+- DbName：备份作业对应的 Database。
 
-   - Snapshot：备份时指定的该备份的名称（Label）。
-   - Timestamp：备份的时间戳。
-   - Status：该备份是否正常。
+- State：备份作业当前所在阶段：
 
-   如果在 `SHOW SNAPSHOT` 后指定了 where 子句，则可以显示更详细的备份信息。
+   - PENDING：作业初始状态。
 
-   - Database：备份时对应的 Database。
-   - Details：展示了该备份完整的数据目录结构。
+   - SNAPSHOTING：正在进行快照操作。
 
-5. CANCEL BACKUP
+   - UPLOAD_SNAPSHOT：快照结束，准备上传。
 
-   取消当前正在执行的备份作业。
+   - UPLOADING：正在上传快照。
 
-6. DROP REPOSITORY
+   - SAVE_META：正在本地生成元数据文件。
 
-   删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。
+   - UPLOAD_INFO：上传元数据文件和本次备份作业的信息。
+
+   - FINISHED：备份完成。
+
+   - CANCELLED：备份失败或被取消。
+
+- BackupObjs：本次备份涉及的表和分区的清单。
+
+- CreateTime：作业创建时间。
+
+- SnapshotFinishedTime：快照完成时间。
+
+- UploadFinishedTime：快照上传完成时间。
+
+- FinishedTime：本次作业完成时间。
+
+- UnfinishedTasks：在 `SNAPSHOTTING`，`UPLOADING` 等阶段，会有多个子任务在同时进行，这里展示的当前阶段，未完成的子任务的 task id。
+
+- TaskErrMsg：如果有子任务执行出错，这里会显示对应子任务的错误信息。
+
+- Status：用于记录在整个作业过程中，可能出现的一些状态信息。
+
+- Timeout：作业的超时时间，单位是秒。
+
+**4. SHOW SNAPSHOT**
+
+查看远端仓库中已存在的备份。
+
+- Snapshot：备份时指定的该备份的名称（Label）。
+
+- Timestamp：备份的时间戳。
+
+- Status：该备份是否正常。
+
+如果在 `SHOW SNAPSHOT` 后指定了 where 子句，则可以显示更详细的备份信息。
+
+- Database：备份时对应的 Database。
+
+- Details：展示了该备份完整的数据目录结构。
+
+**5. CANCEL BACKUP**
+
+取消当前正在执行的备份作业。
+
+**6. DROP REPOSITORY**
+
+删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。
 
 ## 更多帮助
 
- 关于 BACKUP 使用的更多详细语法及最佳实践，请参阅 [BACKUP](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP BACKUP` 获取更多帮助信息。
+ 关于 BACKUP 使用的更多详细语法及最佳实践，请参阅 [BACKUP](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP BACKUP` 获取更多帮助信息。

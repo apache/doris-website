@@ -26,7 +26,7 @@ under the License.
 
 # Data Deletion Recovery
 
-Data deletion recovery includes two situations：
+Data deletion recovery includes two situations:
 
 1. After executing the command `drop database/table/partition`,  user can use command `recover` to recover all the data in the entire database/table/partition. It will restore the metadata of the database/table/partition from the FE's catalog recycle bin, change them from invisible to visible again, and the data will also be visible again;
 

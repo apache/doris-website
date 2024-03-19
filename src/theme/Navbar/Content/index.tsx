@@ -144,7 +144,6 @@ export default function NavbarContent({ mobile }) {
                             <DocsVersionDropdownNavbarItem
                                 mobile={false}
                                 docsPluginId="default"
-                                collapsed={false}
                                 {...(getNavItem('docsVersionDropdown') as any)}
                             />
                         )}
