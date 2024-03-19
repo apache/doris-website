@@ -24,11 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 数据删除恢复
+
 
 数据删除恢复包含两种情况：
 
 1. 用户执行命令`drop database/table/partition`之后，再使用命令`recover`来恢复整个数据库/表/分区的所有数据。这种修复将会把 FE 上的数据库/表/分区的结构，从 catalog 回收站里恢复过来，把它们从不可见状态，重新变回可见，并且原来的数据也恢复可见；
+
 2. 用户因为某些误操作或者线上 bug，导致 BE 上部分 tablet 被删除，通过运维工具把这些 tablet 从 BE 回收站中抢救回来。
 
 上面两个，前者针对的是数据库/表/分区在 FE 上已经不可见，且数据库/表/分区的元数据尚保留在 FE 的 catalog 回收站里。而后者针对的是数据库/表/分区在 FE 上可见，但部分 BE tablet 数据被删除。
@@ -95,7 +96,9 @@ BE 回收站中的数据包括：tablet 的 data 文件 (.dat)，tablet 的索�
 ```
 
 * `root_path`：对应 BE 节点的某个数据根目录。
+
 * `trash`：回收站的目录。
+
 * `time_label`：时间标签，为了回收站中数据目录的唯一性，同时记录数据时间，使用时间标签作为子目录。
 
 当用户发现线上的数据被误删除，需要从回收站中恢复被删除的 tablet，需要用到这个 tablet 数据恢复功能。
@@ -103,15 +106,16 @@ BE 回收站中的数据包括：tablet 的 data 文件 (.dat)，tablet 的索�
 BE 提供 http 接口和 `restore_tablet_tool.sh` 脚本实现这个功能，支持单 tablet 操作（single mode）和批量操作模式（batch mode）。
 
 * 在 single mode 下，支持单个 tablet 的数据恢复。
+
 * 在 batch mode 下，支持批量 tablet 的数据恢复。
 
 另外，用户可以使用命令 `show trash`查看 BE 中的 trash 数据，可以使用命令`admin clean trash`来清楚 BE 的 trash 数据。
 
-#### 操作
+**操作**
 
-##### single mode
+**1. single mode**
 
-1. http 请求方式
+- http 请求方式
 
     BE 中提供单个 tablet 数据恢复的 http 接口，接口如下：
     
@@ -131,7 +135,7 @@ BE 提供 http 接口和 `restore_tablet_tool.sh` 脚本实现这个功能，支
     {"status": "Failed", "msg": "create link path failed"}
     ```
 
-2. 脚本方式
+- 脚本方式
 
     `restore_tablet_tool.sh` 可用来实现单 tablet 数据恢复的功能。
     
@@ -140,7 +144,7 @@ BE 提供 http 接口和 `restore_tablet_tool.sh` 脚本实现这个功能，支
     sh tools/restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --tablet_id 12345 --schema_hash 11111
     ```
 
-##### batch mode
+**2. batch mode**
 
 批量恢复模式用于实现恢复多个 tablet 数据的功能。
 
@@ -165,7 +169,9 @@ sh restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --file tablets.txt
 
 在某些极特殊情况下，如代码 BUG、或人为误操作等，可能导致部分分片的全部副本都丢失。这种情况下，数据已经实质性的丢失。但是在某些场景下，业务依然希望能够在即使有数据丢失的情况下，保证查询正常不报错，降低用户层的感知程度。此时，我们可以通过使用空白 Tablet 填充丢失副本的功能，来保证查询能够正常执行。
 
+:::caution
 **注：该操作仅用于规避查询因无法找到可查询副本导致报错的问题，无法恢复已经实质性丢失的数据**
+:::
 
 1. 查看 Master FE 日志 `fe.log`
 
@@ -185,7 +191,7 @@ sh restore_tablet_tool.sh --backend "http://127.0.0.1:8040" --file tablets.txt
     ADMIN SET FRONTEND CONFIG ("recover_with_empty_tablet" = "true");
     ```
 
-    * 注：可以先通过 `ADMIN SHOW FRONTEND CONFIG;` 命令查看当前版本是否支持该参数。
+    注：可以先通过 `ADMIN SHOW FRONTEND CONFIG;` 命令查看当前版本是否支持该参数。
 
 3. 设置完成几分钟后，应该会在 Master FE 日志 `fe.log` 中看到如下日志：
 

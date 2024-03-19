@@ -381,7 +381,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
   用于设置查询超时。该变量会作用于当前连接中所有的查询语句，对于 INSERT 语句推荐使用 insert_timeout。默认为 15 分钟，单位为秒。
 
 - `insert_timeout`
-  <version since="dev"></version>用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效，以兼容旧版本用户的习惯。
+  用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效，以兼容旧版本用户的习惯。
 
 - `resource_group`
 
@@ -640,19 +640,17 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
 
     控制是否在 `show roles` 的结果里显示每个用户隐式对应的角色。默认为 false。
 
 * `use_fix_replica`
 
-    <version since="1.2.0"></version>
+    
 
     使用固定 replica 进行查询。replica 从 0 开始，如果 use_fix_replica 为 0，则使用最小的，如果 use_fix_replica 为 1，则使用第二个最小的，依此类推。默认值为 -1，表示未启用。
 
 * `dry_run_query`
 
-    <version since="dev"></version>
 
     如果设置为 true，对于查询请求，将不再返回实际结果集，而仅返回行数。对于导入和 insert，Sink 丢掉了数据，不会有实际的写发生。额默认为 false。
 

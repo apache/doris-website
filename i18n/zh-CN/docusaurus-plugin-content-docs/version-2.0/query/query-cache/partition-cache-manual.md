@@ -34,7 +34,7 @@ Partition Cache 是试验性功能，没有得到很好的维护，谨慎使用
 
 ## 需求场景 & 解决方案
 
-见 [缓存概览](../query-cache/query-cache) 文档。
+见 [缓存概览](../query-cache/query-cache.md) 文档。
 
 ## 设计原理
 

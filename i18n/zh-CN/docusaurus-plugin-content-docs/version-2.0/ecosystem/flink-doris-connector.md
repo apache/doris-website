@@ -680,13 +680,13 @@ Exactly-Once 场景下，Flink Job 重启时必须从最新的 Checkpoint/Savepo
 
 **6. errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/fe-config/#max_running_txn_num_per_db)。
+这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](../../admin-manual/config/fe-config/#max_running_txn_num_per_db)。
 
 同时，一个任务频繁修改 label 重启，也可能会导致这个错误。2pc 场景下 (Duplicate/Aggregate 模型)，每个任务的 label 需要唯一，并且从 checkpoint 重启时，flink 任务才会主动 abort 掉之前已经 precommit 成功，没有 commit 的 txn，频繁修改 label 重启，会导致大量 precommit 成功的 txn 无法被 abort，占用事务。在 Unique 模型下也可关闭 2pc，可以实现幂等写入。
 
 **7. Flink 写入 Uniq 模型时，如何保证一批数据的有序性？**
 
-可以添加 sequence 列配置来保证，具体可参考 [sequence](https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual)
+可以添加 sequence 列配置来保证，具体可参考 [sequence](../data-operate/update/sequence-column-manual)
 
 **8. Flink 任务没报错，但是无法同步数据？**
 

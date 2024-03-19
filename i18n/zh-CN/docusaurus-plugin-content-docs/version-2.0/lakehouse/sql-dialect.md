@@ -31,7 +31,7 @@ under the License.
 :::
 
 :::caution
-1. 该功能目前是实验性功能，您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub issue](https://github.com/apache/doris/issues) 等方式进行反馈。
+1. 该功能目前是实验性功能，您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub Issue](https://github.com/apache/doris/issues) 等方式进行反馈。
 
 2. 该功能只支持查询语句，不支持 DDL、DML 语句。
 :::

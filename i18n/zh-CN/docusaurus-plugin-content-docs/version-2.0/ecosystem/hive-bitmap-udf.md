@@ -169,4 +169,4 @@ insert into doris_bitmap_table select k1, k2, k3, bitmap_from_base64(uuid) from 
 
 ### 方法二：Spark Load
 
- 详见：[Spark Load](../../data-operate/import/spark-load-manual.md) -> 基本操作  -> 创建导入 (示例 3：上游数据源是 hive binary 类型情况)
+ 详见：[Spark Load](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/spark-load-manual) -> 基本操作  -> 创建导入 (示例 3：上游数据源是 hive binary 类型情况)

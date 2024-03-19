@@ -110,10 +110,11 @@
                     "type": "category",
                     "label": "Update",
                     "items": [
-                        "data-operate/update/load-update",
-                        "data-operate/update/update",
-                        "data-operate/update/partial-update",
-                        "data-operate/update/sequence-column-manual"
+                        "data-operate/update/update-overview",
+                        "data-operate/update/unique-update",
+                        "data-operate/update/unique-load-update",
+                        "data-operate/update/aggregate-load-update",
+                        "data-operate/update/unique-update-transaction"
                     ]
                 },
                 {
@@ -196,7 +197,7 @@
                     "items": [
                         "query/view-materialized-view/create-view",
                         "query/view-materialized-view/materialized-view",
-                        "query/view-materialized-view/multi-materialized-view"
+                        "query/view-materialized-view/asyn-materialized-view"
                     ]
                 },
                 {

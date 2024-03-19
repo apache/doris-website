@@ -34,7 +34,7 @@ under the License.
 
 ## 解决方法
 
-参考 [BE 配置项](../../../admin-manual/config/be-config) 在`be.conf`中调小`mem_limit`，调大`max_sys_mem_available_low_water_mark_bytes`。
+参考 [BE 配置项](../../admin-manual/config/be-config) 在`be.conf`中调小`mem_limit`，调大`max_sys_mem_available_low_water_mark_bytes`。
 
 ## 内存分析
 

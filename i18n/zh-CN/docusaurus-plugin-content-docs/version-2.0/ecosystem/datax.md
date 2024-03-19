@@ -241,7 +241,7 @@ mvn package assembly:assembly -Dmaven.test.skip=true
 
 **loadProps**
 
-- 描述：StreamLoad 的请求参数，详情参照 StreamLoad 介绍页面。[Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/stream-load-manual)
+- 描述：StreamLoad 的请求参数，详情参照 StreamLoad 介绍页面。[Stream load - Apache Doris](../data-operate/import/stream-load-manual)
 
   这里包括导入的数据格式：format 等，导入数据格式默认我们使用 csv，支持 JSON，具体可以参照下面类型转换部分，也可以参照上面 Stream load 官方信息
 
@@ -371,7 +371,7 @@ my_import.json
 
 3. strip_outer_array：在一批导入数据中表示多行数据，Doris 在解析时会将数组展开，然后依次解析其中的每一个 Object 作为一行数据
 
-4. 更多 Stream load 参数请参照 [Stream load 文档]([Stream load - Apache Doris](../../data-operate/import/stream-load-manual))
+4. 更多 Stream load 参数请参照 [Stream load 文档]([Stream load - Apache Doris](../data-operate/import/stream-load-manual))
 
 5. 如果是 CSV 格式我们可以这样使用
 

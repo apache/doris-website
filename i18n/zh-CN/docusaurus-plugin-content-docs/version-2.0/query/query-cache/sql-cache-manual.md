@@ -30,7 +30,7 @@ SQL 语句完全一致时将命中缓存。
 
 ## 需求场景 & 解决方案
 
-见 [缓存概览](../query-cache/query-cache) 文档。
+见 [缓存概览](../query-cache/query-cache.md) 文档。
 
 ## 设计原理
 

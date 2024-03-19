@@ -1,7 +1,7 @@
 ---
 {
-    "title": "导入更新",
-    "language": "zh-CN"
+    "title": "Asynchronous Materialized View",
+    "language": "en"
 }
 ---
 
@@ -24,3 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+:::tip
+The asynchronous materialized view feature is released in Doris 2.1, see Doris 2.1 documentation.
+:::

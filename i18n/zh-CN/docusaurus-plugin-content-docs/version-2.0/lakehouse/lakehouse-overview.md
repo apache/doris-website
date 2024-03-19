@@ -197,7 +197,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 这里我们通过连接一个 Hive 集群说明如何使用 Catalog 功能。
 
-更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/data-lake-analytics/hive)
+更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake/hive)
 
 **1. 创建 Catalog**
 
@@ -224,11 +224,11 @@ mysql> SHOW CATALOGS;
 +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-- [SHOW CATALOGS 语法帮助](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS)
+- [SHOW CATALOGS 语法帮助](../../sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS)
 
-- 可以通过 [SHOW CREATE CATALOG](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Show-Statements/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
+- 可以通过 [SHOW CREATE CATALOG](../../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
 
-- 可以通过 [ALTER CATALOG](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-CATALOG) 修改 Catalog 的属性。
+- 可以通过 [ALTER CATALOG](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-CATALOG) 修改 Catalog 的属性。
 
 **4. 切换 Catalog**
 
@@ -395,7 +395,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 "access_controller.class" = "org.apache.doris.catalog.authorizer.RangerHiveAccessControllerFactory"
 ```
 
-则可以使用 Apache Range 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/data-lake-analytics/hive)
+则可以使用 Apache Range 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../../lakehouse/datalake/hive)
 
 ### 指定需要同步的数据库
 
@@ -408,7 +408,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 :::tip
 - 当 `include_database_list` 和 `exclude_database_list` 有重合的 database 配置时，`exclude_database_list`会优先生效。
 
-- 连接 JDBC 时，上述 2 个配置需要和配置 `only_specified_database` 搭配使用，详见 [JDBC](../lakehouse/database-analytics/jdbc)
+- 连接 JDBC 时，上述 2 个配置需要和配置 `only_specified_database` 搭配使用，详见 [JDBC](../lakehouse/database/jdbc)
 :::
 
 ### 元数据更新
@@ -442,4 +442,4 @@ CREATE CATALOG es PROPERTIES (
 
 #### 自动刷新
 
-自动刷新目前仅支持 [Hive Catalog](../lakehouse/data-lake-analytics/hive)。
+自动刷新目前仅支持 [Hive Catalog](../lakehouse/datalake/hive)。

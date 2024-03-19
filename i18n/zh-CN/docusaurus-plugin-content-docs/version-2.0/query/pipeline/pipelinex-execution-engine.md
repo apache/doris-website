@@ -36,4 +36,6 @@ PipelineX 执行引擎 是 Doris 在 2.1 版本加入的实验性功能。目标
 
 4. profile 方面，目前 pipeline 无法为用户提供简单易懂的指标。
 
+:::tip
 使用最新的 PipelineX 执行引擎，请参考 Doris 2.1。
+:::

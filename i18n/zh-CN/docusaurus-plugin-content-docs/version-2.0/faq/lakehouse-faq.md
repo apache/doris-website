@@ -29,7 +29,7 @@ under the License.
 
 ## Kerberos
 
-### 连接 Kerberos 认证的 Hive Metastore 报错：`GSS initiate failed`
+**连接 Kerberos 认证的 Hive Metastore 报错：`GSS initiate failed`**
 
 通常是因为 Kerberos 认证信息填写不正确导致的，可以通过以下步骤排查：
 
@@ -45,7 +45,7 @@ under the License.
 
 4. 确认 `/etc/krb5.conf` 文件存在于所有 FE、BE 节点上。
 
-### 通过 Hive Catalog 连接 Hive 数据库报错：`RemoteException: SIMPLE authentication is not enabled.  Available:[TOKEN, KERBEROS]`.
+**通过 Hive Catalog 连接 Hive 数据库报错：`RemoteException: SIMPLE authentication is not enabled.  Available:[TOKEN, KERBEROS]`.**
 
 如果在 `show databases` 和 `show tables` 都是没问题的情况下，查询的时候出现上面的错误，我们需要进行下面两个操作：
 
@@ -53,13 +53,13 @@ under the License.
 
 - BE 节点执行 Kerberos 的 kinit 然后重启 BE，然后再去执行查询即可。
 
-### 查询配置了 Kerberos 的外表，遇到该报错：`GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos Ticket)`，一般重启 FE 和 BE 能够解决该问题。
+**查询配置了 Kerberos 的外表，遇到该报错：`GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos Ticket)`，一般重启 FE 和 BE 能够解决该问题。**
 
 - 重启所有节点前可在`"${DORIS_HOME}/be/conf/be.conf"`中的 JAVA_OPTS 参数里配置`-Djavax.security.auth.useSubjectCredsOnly=false`，通过底层机制去获取 JAAS credentials 信息，而不是应用程序。
 
 - 在[JAAS Troubleshooting](https://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/Troubleshooting.html)中可获取更多常见 JAAS 报错的解决方法。
 
-### 在 Catalog 中配置 Kerberos 时，报错`Unable to obtain password from user`的解决方法：
+**在 Catalog 中配置 Kerberos 时，报错`Unable to obtain password from user`的解决方法：**
 
 - 用到的 principal 必须在 klist 中存在，使用`klist -kt your.keytab`检查。
 
@@ -67,11 +67,11 @@ under the License.
 
 - 若上述检查没问题，则当前系统 yum 或者其他包管理软件安装的 JDK 版本存在不支持的加密算法，建议自行安装 JDK 并设置`JAVA_HOME`环境变量。
 
-### 使用 KMS 访问 HDFS 时报错：`java.security.InvalidKeyException: Illegal key size`
+**使用 KMS 访问 HDFS 时报错：`java.security.InvalidKeyException: Illegal key size`**
 
 升级 JDK 版本到 >= Java 8 u162 的版本。或者下载安装 JDK 相应的 JCE Unlimited Strength Jurisdiction Policy Files。
 
-### 在 Catalog 中配置 Kerberos 时，如果报错`SIMPLE authentication is not enabled. Available:[TOKEN, KERBEROS]`，那么需要将`core-site.xml`文件放到`"${DORIS_HOME}/be/conf"`目录下。
+**在 Catalog 中配置 Kerberos 时，如果报错`SIMPLE authentication is not enabled. Available:[TOKEN, KERBEROS]`，那么需要将`core-site.xml`文件放到`"${DORIS_HOME}/be/conf"`目录下。**
 
 如果访问 HDFS 报错`No common protection layer between client and server`，检查客户端和服务端的`hadoop.rpc.protection`属性，使他们保持一致。
 
@@ -89,11 +89,11 @@ under the License.
     </configuration>
 ```
 
-### 在使用 Broker Load 时，配置了 Kerberos，如果报错`Cannot locate default realm.`。
+**在使用 Broker Load 时，配置了 Kerberos，如果报错`Cannot locate default realm.`。**
 
 将 `-Djava.security.krb5.conf=/your-path` 配置项添加到 Broker Load 启动脚本的 `start_broker.sh` 的 `JAVA_OPTS`里。
 
-### 当在 Catalog 里使用 Kerberos 配置时，不能同时使用`hadoop.username`属性。
+**当在 Catalog 里使用 Kerberos 配置时，不能同时使用`hadoop.username`属性。**
 
 ## JDBC Catalog
 
@@ -148,7 +148,7 @@ under the License.
 3. 如果创建 Hive Catalog 后能正常`show tables`，但查询时报`java.net.UnknownHostException: xxxxx`
 
     可以在 CATALOG 的 PROPERTIES 中添加
-    
+
     ```
     'fs.defaultFS' = 'hdfs://<your_nameservice_or_actually_HDFS_IP_and_port>'
     ```

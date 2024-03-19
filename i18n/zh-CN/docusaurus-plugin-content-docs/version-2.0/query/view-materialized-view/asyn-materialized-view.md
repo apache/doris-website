@@ -1,11 +1,11 @@
 ---
 {
-    "title": "Migrate data from other OLAP",
-    "language": "en"
+    "title": "异步物化视图",
+    "language": "zh-CN"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,4 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Coming soon
+:::tip
+异步物化视图功能，在 Doris 2.1 发布，请参考 Doris 2.1 版本文档。
+:::

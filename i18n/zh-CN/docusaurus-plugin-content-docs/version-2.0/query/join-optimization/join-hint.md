@@ -85,7 +85,9 @@ Leading Hint 用于指导优化器确定查询计划的连接顺序。在一个�
 
 Leading Hint 允许你指定希望优化器遵循的表连接的顺序。
 
-在 doris 里面，其语法为 /*+LEADING( tablespec [ tablespec ]...  ) */,leading 由"/*+"和"*/"包围并置于 select 语句里面 select 的正后方。注意，leading 后方的 '/' 和 selectlist 需要隔开至少一个分割符例如空格。至少需要写两个以上的表才认为这个 leadinghint 是合理的。且任意的 join 里面可以用大括号括号起来，来显式地指定 joinTree 的形状。例：
+在 doris 里面，其语法为 /*+LEADING( tablespec [ tablespec ]...  ) */,leading 由"/*+"和"*/"包围并置于 select 语句里面 select 的正后方。
+
+注意，leading 后方的 '/' 和 selectlist 需要隔开至少一个分割符例如空格。至少需要写两个以上的表才认为这个 leadinghint 是合理的。且任意的 join 里面可以用大括号括号起来，来显式地指定 joinTree 的形状。例：
 
 ```sql
 mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 = c2;
@@ -213,7 +215,9 @@ mysql> explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join 
 
 ### 基本用例
 
-（注意这里列命名和表命名相关，例：只有 t1 中有 c1 字段，后续例子为了简化会将 t1.c1 直接写成 c1）
+:::tip
+注意这里列命名和表命名相关，例：只有 t1 中有 c1 字段，后续例子为了简化会将 t1.c1 直接写成 c1
+:::
 
 ```sql
 CREATE DATABASE testleading;

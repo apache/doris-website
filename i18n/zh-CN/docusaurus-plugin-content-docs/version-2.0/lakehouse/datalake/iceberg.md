@@ -111,7 +111,7 @@ Iceberg 属性详情参见 [Iceberg Glue Catalog](https://iceberg.apache.org/doc
 
 **阿里云 DLF**
 
-参见[阿里云 DLF Catalog 配置](dlf.md)
+参见[阿里云 DLF Catalog 配置](https://doris.apache.org/zh-CN/docs/lakehouse/multi-catalog/dlf)
 
 **REST Catalog**
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Partial Update",
+    "title": "Update for Uniuqe Load",
     "language": "en"
 }
 ---

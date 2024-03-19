@@ -1,11 +1,11 @@
 ---
 {
-    "title": 异步物化视图",
-    "language": "zh-CN"
+    "title": "Update for Aggregate Load",
+    "language": "en"
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,4 +24,4 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-异步物化视图功能，在 Doris 2.1 发布，请参考 Doris 2.1 版本文档。
+Coming soon
