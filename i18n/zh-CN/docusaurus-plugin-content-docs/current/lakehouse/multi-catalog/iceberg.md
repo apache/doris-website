@@ -57,6 +57,10 @@ CREATE CATALOG iceberg PROPERTIES (
 
 #### Hadoop Catalog
 
+> 注意：`warehouse` 的路径必须指向 `Database` 路径的上一级。
+>
+> 示例：如果你的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`
+
 ```sql
 CREATE CATALOG iceberg_hadoop PROPERTIES (
     'type'='iceberg',
