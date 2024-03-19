@@ -89,11 +89,11 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
         setCollapsed(toCollapsed);
     };
     useAutoExpandActiveCategory({ isActive, collapsed, updateCollapsed });
-    useEffect(() => {
-        if (collapsible && expandedItem != null && expandedItem !== index && autoCollapseCategories) {
-            setCollapsed(true);
-        }
-    }, [collapsible, expandedItem, index, setCollapsed, autoCollapseCategories]);
+    // useEffect(() => {
+    //     if (collapsible && expandedItem != null && expandedItem !== index && autoCollapseCategories) {
+    //         setCollapsed(true);
+    //     }
+    // }, [collapsible, expandedItem, index, setCollapsed, autoCollapseCategories]);
     return (
         <li
             className={clsx(
