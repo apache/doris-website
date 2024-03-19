@@ -79,7 +79,7 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
             if (!collapsible) {
                 return false;
             }
-            return isActive || level === 1 ? false : item.collapsed;
+            return isActive ? false : item.collapsed;
         },
     });
     const { expandedItem, setExpandedItem } = useDocSidebarItemsExpandedState();
@@ -121,7 +121,6 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
                     onClick={
                         collapsible
                             ? e => {
-                                  if (level === 1) return;
                                   onItemClick?.(item);
                                   if (href) {
                                       updateCollapsed(false);
@@ -131,7 +130,6 @@ export default function DocSidebarItemCategory({ item, onItemClick, activePath, 
                                   }
                               }
                             : () => {
-                                  if (level === 1) return;
                                   onItemClick?.(item);
                               }
                     }
