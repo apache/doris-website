@@ -24,23 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 数据副本管理
+
 
 从 0.9.0 版本开始，Doris 引入了优化后的副本管理策略，同时支持了更为丰富的副本状态查看工具。本文档主要介绍 Doris 数据副本均衡、修复方面的调度策略，以及副本管理的运维方法。帮助用户更方便的掌握和管理集群中的副本状态。
 
-> Colocation 属性的表的副本修复和均衡可以参阅[这里](../../query-acceleration/join-optimization/colocation-join.md)
+:::tip
+Colocation 属性的表的副本修复和均衡可以参阅[这里](../../query/join-optimization/colocation-join.md)
+:::
 
 ## 名词解释
 
 1. Tablet：Doris 表的逻辑分片，一个表有多个分片。
-2. Replica：分片的副本，默认一个分片有3个副本。
+
+2. Replica：分片的副本，默认一个分片有 3 个副本。
+
 3. Healthy Replica：健康副本，副本所在 Backend 存活，且副本的版本完整。
+
 4. TabletChecker（TC）：是一个常驻的后台线程，用于定期扫描所有的 Tablet，检查这些 Tablet 的状态，并根据检查结果，决定是否将 tablet 发送给 TabletScheduler。
+
 5. TabletScheduler（TS）：是一个常驻的后台线程，用于处理由 TabletChecker 发来的需要修复的 Tablet。同时也会进行集群副本均衡的工作。
+
 6. TabletSchedCtx（TSC）：是一个 tablet 的封装。当 TC 选择一个 tablet 后，会将其封装为一个 TSC，发送给 TS。
+
 7. Storage Medium：存储介质。Doris 支持对分区粒度指定不同的存储介质，包括 SSD 和 HDD。副本调度策略也是针对不同的存储介质分别调度的。
 
-```
+```bash
 
               +--------+              +-----------+
               |  Meta  |              |  Backends |
@@ -66,7 +74,7 @@ under the License.
 
 1. BAD
 
-    即副本损坏。包括但不限于磁盘故障、BUG等引起的副本不可恢复的损毁状态。
+    即副本损坏。包括但不限于磁盘故障、BUG 等引起的副本不可恢复的损毁状态。
     
 2. VERSION\_MISSING
 
@@ -119,9 +127,11 @@ under the License.
 
 TabletChecker 作为常驻的后台进程，会定期检查所有分片的状态。对于非健康状态的分片，将会交给 TabletScheduler 进行调度和修复。修复的实际操作，都由 BE 上的 clone 任务完成。FE 只负责生成这些 clone 任务。
 
-> 注1：副本修复的主要思想是先通过创建或补齐使得分片的副本数达到期望值，然后再删除多余的副本。
-> 
-> 注2：一个 clone 任务就是完成从一个指定远端 BE 拷贝指定数据到指定目的端 BE 的过程。
+:::note
+- 注 1：副本修复的主要思想是先通过创建或补齐使得分片的副本数达到期望值，然后再删除多余的副本。
+ 
+- 注 2：一个 clone 任务就是完成从一个指定远端 BE 拷贝指定数据到指定目的端 BE 的过程。
+:::
 
 针对不同的状态，我们采用不同的修复方式：
 
@@ -140,12 +150,19 @@ TabletChecker 作为常驻的后台进程，会定期检查所有分片的状态
 4. REDUNDANT
 
     通常经过副本修复后，分片会有冗余的副本。我们选择一个冗余副本将其删除。冗余副本的选择遵从以下优先级：
+    
     1. 副本所在 BE 已经下线
+    
     2. 副本已损坏
+    
     3. 副本所在 BE 失联或在下线中
+    
     4. 副本处于 CLONE 状态（该状态是 clone 任务执行过程中的一个中间状态）
+    
     5. 副本有版本缺失
+    
     6. 副本所在 cluster 不正确
+    
     7. 副本所在 BE 节点负载高
 
 5. FORCE\_REDUNDANT
@@ -170,24 +187,31 @@ TabletScheduler 里等待被调度的分片会根据状态不同，赋予不同�
 1. VERY\_HIGH
 
     * REDUNDANT。对于有副本冗余的分片，我们优先处理。虽然逻辑上来讲，副本冗余的紧急程度最低，但是因为这种情况处理起来最快且可以快速释放资源（比如磁盘空间等），所以我们优先处理。
+    
     * FORCE\_REDUNDANT。同上。
 
 2. HIGH
 
-    * REPLICA\_MISSING 且多数副本缺失（比如3副本丢失了2个）
+    * REPLICA\_MISSING 且多数副本缺失（比如 3 副本丢失了 2 个）
+    
     * VERSION\_INCOMPLETE 且多数副本的版本缺失
+    
     * COLOCATE\_MISMATCH 我们希望 Colocation 表相关的分片能够尽快修复完成。
+    
     * COLOCATE\_REDUNDANT
 
 3. NORMAL
 
-    * REPLICA\_MISSING 但多数存活（比如3副本丢失了1个）
+    * REPLICA\_MISSING 但多数存活（比如 3 副本丢失了 1 个）
+   
     * VERSION\_INCOMPLETE 但多数副本的版本完整
-    * REPLICA\_RELOCATING 且多数副本需要 relocate（比如3副本有2个）
+   
+    * REPLICA\_RELOCATING 且多数副本需要 relocate（比如 3 副本有 2 个）
 
 4. LOW
 
     * REPLICA\_MISSING\_IN\_CLUSTER
+   
     * REPLICA\_RELOCATING 但多数副本 stable
 
 ### 手动优先级
@@ -198,7 +222,9 @@ TabletScheduler 里等待被调度的分片会根据状态不同，赋予不同�
 
 这个命令，告诉 TC，在扫描 Tablet 时，对需要优先修复的表或分区中的有问题的 Tablet，给予 VERY\_HIGH 的优先级。
     
-> 注：这个命令只是一个 hint，并不能保证一定能修复成功，并且优先级也会随 TS 的调度而发生变化。并且当 Master FE 切换或重启后，这些信息都会丢失。
+:::note
+注：这个命令只是一个 hint，并不能保证一定能修复成功，并且优先级也会随 TS 的调度而发生变化。并且当 Master FE 切换或重启后，这些信息都会丢失。
+:::
 
 可以通过以下命令取消优先级：
 
@@ -208,15 +234,17 @@ TabletScheduler 里等待被调度的分片会根据状态不同，赋予不同�
 
 优先级保证了损坏严重的分片能够优先被修复，提高系统可用性。但是如果高优先级的修复任务一直失败，则会导致低优先级的任务一直得不到调度。因此，我们会根据任务的运行状态，动态的调整任务的优先级，保证所有任务都有机会被调度到。
 
-* 连续5次调度失败（如无法获取资源，无法找到合适的源端或目的端等），则优先级会被下调。
+* 连续 5 次调度失败（如无法获取资源，无法找到合适的源端或目的端等），则优先级会被下调。
+
 * 持续 30 分钟未被调度，则上调优先级。 
+
 * 同一 tablet 任务的优先级至少间隔 5 分钟才会被调整一次。
 
 同时为了保证初始优先级的权重，我们规定，初始优先级为 VERY\_HIGH 的，最低被下调到 NORMAL。而初始优先级为 LOW 的，最多被上调为 HIGH。这里的优先级调整，也会调整用户手动设置的优先级。
 
 ## 副本均衡
 
-Doris 会自动进行集群内的副本均衡。目前支持两种均衡策略，负载/分区。负载均衡适合需要兼顾节点磁盘使用率和节点副本数量的场景；而分区均衡会使每个分区的副本都均匀分布在各个节点，避免热点，适合对分区读写要求比较高的场景。但是，分区均衡不考虑磁盘使用率，使用分区均衡时需要注意磁盘的使用情况。 策略只能在fe启动前配置[tablet_rebalancer_type](../config/fe-config.md)  ，不支持运行时切换。
+Doris 会自动进行集群内的副本均衡。目前支持两种均衡策略，负载/分区。负载均衡适合需要兼顾节点磁盘使用率和节点副本数量的场景；而分区均衡会使每个分区的副本都均匀分布在各个节点，避免热点，适合对分区读写要求比较高的场景。但是，分区均衡不考虑磁盘使用率，使用分区均衡时需要注意磁盘的使用情况。策略只能在 fe 启动前配置[tablet_rebalancer_type](../../admin-manual/config/fe-config)  ，不支持运行时切换。
 
 ### 负载均衡
 
@@ -224,11 +252,11 @@ Doris 会自动进行集群内的副本均衡。目前支持两种均衡策略�
 
 同样，副本均衡会保证不会将同一个 Tablet 的副本部署在同一个 host 的 BE 上。
 
-#### BE 节点负载
+**BE 节点负载**
 
-我们用 ClusterLoadStatistics（CLS）表示一个 cluster 中各个 Backend 的负载均衡情况。TabletScheduler 根据这个统计值，来触发集群均衡。我们当前通过 **磁盘使用率** 和 **副本数量** 两个指标，为每个BE计算一个 loadScore，作为 BE 的负载分数。分数越高，表示该 BE 的负载越重。
+我们用 ClusterLoadStatistics（CLS）表示一个 cluster 中各个 Backend 的负载均衡情况。TabletScheduler 根据这个统计值，来触发集群均衡。我们当前通过 **磁盘使用率** 和 **副本数量** 两个指标，为每个 BE 计算一个 loadScore，作为 BE 的负载分数。分数越高，表示该 BE 的负载越重。
 
-磁盘使用率和副本数量各有一个权重系数，分别为 **capacityCoefficient** 和 **replicaNumCoefficient**，其 **和恒为1**。其中 capacityCoefficient 会根据实际磁盘使用率动态调整。当一个 BE 的总体磁盘使用率在 50% 以下，则 capacityCoefficient 值为 0.5，如果磁盘使用率在 75%（可通过 FE 配置项 `capacity_used_percent_high_water` 配置）以上，则值为 1。如果使用率介于 50% ~ 75% 之间，则该权重系数平滑增加，公式为：
+磁盘使用率和副本数量各有一个权重系数，分别为 **capacityCoefficient** 和 **replicaNumCoefficient**，其 **和恒为 1**。其中 capacityCoefficient 会根据实际磁盘使用率动态调整。当一个 BE 的总体磁盘使用率在 50% 以下，则 capacityCoefficient 值为 0.5，如果磁盘使用率在 75%（可通过 FE 配置项 `capacity_used_percent_high_water` 配置）以上，则值为 1。如果使用率介于 50% ~ 75% 之间，则该权重系数平滑增加，公式为：
 
 `capacityCoefficient= 2 * 磁盘使用率 - 0.5`
 
@@ -239,11 +267,11 @@ TabletScheduler 会每隔 20s 更新一次 CLS。
 ### 分区均衡
 
 分区均衡的主要思想是，将每个分区的在各个 Backend 上的 replica 数量差（即 partition skew），减少到最小。因此只考虑副本个数，不考虑磁盘使用率。
-为了尽量少的迁移次数，分区均衡使用二维贪心的策略，优先均衡partition skew最大的分区，均衡分区时会尽量选择，可以使整个 cluster 的在各个 Backend 上的 replica 数量差（即 cluster skew/total skew）减少的方向。
+为了尽量少的迁移次数，分区均衡使用二维贪心的策略，优先均衡 partition skew 最大的分区，均衡分区时会尽量选择，可以使整个 cluster 的在各个 Backend 上的 replica 数量差（即 cluster skew/total skew）减少的方向。
 
-#### skew 统计
+**skew 统计**
 
-skew 统计信息由`ClusterBalanceInfo`表示，其中，`partitionInfoBySkew`以 partition skew 为key排序，便于找到max partition skew；`beByTotalReplicaCount`则是以 Backend 上的所有 replica 个数为key排序。`ClusterBalanceInfo`同样保持在CLS中, 同样 20s 更新一次。
+skew 统计信息由`ClusterBalanceInfo`表示，其中，`partitionInfoBySkew`以 partition skew 为 key 排序，便于找到 max partition skew；`beByTotalReplicaCount`则是以 Backend 上的所有 replica 个数为 key 排序。`ClusterBalanceInfo`同样保持在 CLS 中，同样 20s 更新一次。
 
 max partition skew 的分区可能有多个，采用随机的方式选择一个分区计算。
 
@@ -267,7 +295,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
     通过 `SHOW PROC '/cluster_health/tablet_health';` 命令可以查看整个集群的副本状态。
 
-    ```
+    ```sql
     +-------+--------------------------------+-----------+------------+-------------------+----------------------+----------------------+--------------+----------------------------+-------------------------+-------------------+---------------------+----------------------+----------------------+------------------+-----------------------------+-----------------+-------------+------------+
     | DbId  | DbName                         | TabletNum | HealthyNum | ReplicaMissingNum | VersionIncompleteNum | ReplicaRelocatingNum | RedundantNum | ReplicaMissingInClusterNum | ReplicaMissingForTagNum | ForceRedundantNum | ColocateMismatchNum | ColocateRedundantNum | NeedFurtherRepairNum | UnrecoverableNum | ReplicaCompactionTooSlowNum | InconsistentNum | OversizeNum | CloningNum |
     +-------+--------------------------------+-----------+------------+-------------------+----------------------+----------------------+--------------+----------------------------+-------------------------+-------------------+---------------------+----------------------+----------------------+------------------+-----------------------------+-----------------+-------------+------------+
@@ -278,13 +306,13 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     +-------+--------------------------------+-----------+------------+-------------------+----------------------+----------------------+--------------+----------------------------+-------------------------+-------------------+---------------------+----------------------+----------------------+------------------+-----------------------------+-----------------+-------------+------------+
     ```
 
-    其中 `HealthyNum` 列显示了对应的 Database 中，有多少 Tablet 处于健康状态。`ReplicaCompactionTooSlowNum` 列显示了对应的 Database 中，有多少 Tablet的 处于副本版本数过多的状态， `InconsistentNum` 列显示了对应的 Database 中，有多少 Tablet 处于副本不一致的状态。最后一行 `Total` 行对整个集群进行了统计。正常情况下 `TabletNum` 和 `HealthNum` 应该相等。如果不相等，可以进一步查看具体有哪些 Tablet。如上图中，ssb1 数据库有 1 个 Tablet 状态不健康，则可以使用以下命令查看具体是哪一个 Tablet。
+    其中 `HealthyNum` 列显示了对应的 Database 中，有多少 Tablet 处于健康状态。`ReplicaCompactionTooSlowNum` 列显示了对应的 Database 中，有多少 Tablet 的 处于副本版本数过多的状态， `InconsistentNum` 列显示了对应的 Database 中，有多少 Tablet 处于副本不一致的状态。最后一行 `Total` 行对整个集群进行了统计。正常情况下 `TabletNum` 和 `HealthNum` 应该相等。如果不相等，可以进一步查看具体有哪些 Tablet。如上图中，ssb1 数据库有 1 个 Tablet 状态不健康，则可以使用以下命令查看具体是哪一个 Tablet。
     
     `SHOW PROC '/cluster_health/tablet_health/13402';`
     
     其中 `13402` 为对应的 DbId。
 
-   ```
+   ```sql
    +-----------------------+--------------------------+--------------------------+------------------+--------------------------------+-----------------------------+-----------------------+-------------------------+--------------------------+--------------------------+----------------------+---------------------------------+---------------------+-----------------+
    | ReplicaMissingTablets | VersionIncompleteTablets | ReplicaRelocatingTablets | RedundantTablets | ReplicaMissingInClusterTablets | ReplicaMissingForTagTablets | ForceRedundantTablets | ColocateMismatchTablets | ColocateRedundantTablets | NeedFurtherRepairTablets | UnrecoverableTablets | ReplicaCompactionTooSlowTablets | InconsistentTablets | OversizeTablets |
    +-----------------------+--------------------------+--------------------------+------------------+--------------------------------+-----------------------------+-----------------------+-------------------------+--------------------------+--------------------------+----------------------+---------------------------------+---------------------+-----------------+
@@ -300,7 +328,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     `ADMIN SHOW REPLICA STATUS FROM tbl1 PARTITION (p1, p2) WHERE STATUS = "OK";`
     
-    ```
+    ```sql
     +----------+-----------+-----------+---------+-------------------+--------------------+------------------+------------+------------+-------+--------+--------+
     | TabletId | ReplicaId | BackendId | Version | LastFailedVersion | LastSuccessVersion | CommittedVersion | SchemaHash | VersionNum | IsBad | State  | Status |
     +----------+-----------+-----------+---------+-------------------+--------------------+------------------+------------+------------+-------+--------+--------+
@@ -319,7 +347,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     `SHOW TABLETS FROM tbl1;`
     
-    ```
+    ```sql
     +----------+-----------+-----------+------------+---------+-------------+-------------------+-----------------------+------------------+----------------------+---------------+----------+----------+--------+-------------------------+--------------+----------------------+--------------+----------------------+----------------------+----------------------+
     | TabletId | ReplicaId | BackendId | SchemaHash | Version | VersionHash | LstSuccessVersion | LstSuccessVersionHash | LstFailedVersion | LstFailedVersionHash | LstFailedTime | DataSize | RowCount | State  | LstConsistencyCheckTime | CheckVersion |     CheckVersionHash | VersionCount | PathHash             | MetaUrl              | CompactionStatus     |
     +----------+-----------+-----------+------------+---------+-------------+-------------------+-----------------------+------------------+----------------------+---------------+----------+----------+--------+-------------------------+--------------+----------------------+--------------+----------------------+----------------------+----------------------+
@@ -331,13 +359,15 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     上图展示了包括副本大小、行数、版本数量、所在数据路径等一些额外的信息。
     
-    > 注：这里显示的 `State` 列的内容不代表副本的健康状态，而是副本处于某种任务下的状态，比如 CLONE、SCHEMA\_CHANGE、ROLLUP 等。
+    :::tip
+    注：这里显示的 `State` 列的内容不代表副本的健康状态，而是副本处于某种任务下的状态，比如 CLONE、SCHEMA\_CHANGE、ROLLUP 等。
+    :::
 
     此外，用户也可以通过以下命令，查看指定表或分区的副本分布情况，来检查副本分布是否均匀。
     
     `ADMIN SHOW REPLICA DISTRIBUTION FROM tbl1;`
     
-    ```
+    ```sql
     +-----------+------------+-------+---------+
     | BackendId | ReplicaNum | Graph | Percent |
     +-----------+------------+-------+---------+
@@ -361,7 +391,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     `SHOW TABLET 29502553;`
 
-    ```
+    ```sql
     +------------------------+-----------+---------------+-----------+----------+----------+-------------+----------+--------+---------------------------------------------------------------------------+
     | DbName                 | TableName | PartitionName | IndexName | DbId     | TableId  | PartitionId | IndexId  | IsSync | DetailCmd                                                                 |
     +------------------------+-----------+---------------+-----------+----------+----------+-------------+----------+--------+---------------------------------------------------------------------------+
@@ -391,7 +421,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
     `SHOW PROC '/cluster_balance/pending_tablets';`
 
-    ```
+    ```sql
     +----------+--------+-----------------+---------+----------+----------+-------+---------+--------+----------+---------+---------------------+---------------------+---------------------+----------+------+-------------+---------------+---------------------+------------+---------------------+--------+---------------------+-------------------------------+
     | TabletId | Type   | Status          | State   | OrigPrio | DynmPrio | SrcBe | SrcPath | DestBe | DestPath | Timeout | Create              | LstSched            | LstVisit            | Finished | Rate | FailedSched | FailedRunning | LstAdjPrio          | VisibleVer | VisibleVerHash      | CmtVer | CmtVerHash          | ErrMsg                        |
     +----------+--------+-----------------+---------+----------+----------+-------+---------+--------+----------+---------+---------------------+---------------------+---------------------+----------+------+-------------+---------------+---------------------+------------+---------------------+--------+---------------------+-------------------------------+
@@ -402,25 +432,45 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     各列的具体含义如下：
     
     * TabletId：等待调度的 Tablet 的 ID。一个调度任务只针对一个 Tablet
-    * Type：任务类型，可以是 REPAIR（修复） 或 BALANCE（均衡）
+    
+    * Type：任务类型，可以是 REPAIR（修复）或 BALANCE（均衡）
+    
     * Status：该 Tablet 当前的状态，如 REPLICA\_MISSING（副本缺失）
+    
     * State：该调度任务的状态，可能为 PENDING/RUNNING/FINISHED/CANCELLED/TIMEOUT/UNEXPECTED
+    
     * OrigPrio：初始的优先级
+    
     * DynmPrio：当前动态调整后的优先级
+    
     * SrcBe：源端 BE 节点的 ID
+    
     * SrcPath：源端 BE 节点的路径的 hash 值
+    
     * DestBe：目的端 BE 节点的 ID
+    
     * DestPath：目的端 BE 节点的路径的 hash 值
+    
     * Timeout：当任务被调度成功后，这里会显示任务的超时时间，单位秒
+    
     * Create：任务被创建的时间
+    
     * LstSched：上一次任务被调度的时间
+    
     * LstVisit：上一次任务被访问的时间。这里“被访问”指包括被调度，任务执行汇报等和这个任务相关的被处理的时间点
+    
     * Finished：任务结束时间
+    
     * Rate：clone 任务的数据拷贝速率
+    
     * FailedSched：任务调度失败的次数
+    
     * FailedRunning：任务执行失败的次数
+    
     * LstAdjPrio：上一次优先级调整的时间
+    
     * CmtVer/CmtVerHash/VisibleVer/VisibleVerHash：用于执行 clone 任务的 version 信息
+    
     * ErrMsg：任务被调度和运行过程中，出现的错误信息
 
 2. 查看正在运行的任务
@@ -445,7 +495,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     首先看到的是对不同存储介质的划分：
     
-    ```
+    ```sql
     +---------------+
     | StorageMedium |
     +---------------+
@@ -458,7 +508,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     `SHOW PROC '/cluster_balance/cluster_load_stat/location_default/HDD';`
     
-    ```
+    ```sql
     +----------+-----------------+-----------+---------------+----------------+-------------+------------+----------+-----------+--------------------+-------+
     | BeId     | Cluster         | Available | UsedCapacity  | Capacity       | UsedPercent | ReplicaNum | CapCoeff | ReplCoeff | Score              | Class |
     +----------+-----------------+-----------+---------------+----------------+-------------+------------+----------+-----------+--------------------+-------+
@@ -476,19 +526,26 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     其中一些列的含义如下：
 
     * Available：为 true 表示 BE 心跳正常，且没有处于下线中
+    
     * UsedCapacity：字节，BE 上已使用的磁盘空间大小
+    
     * Capacity：字节，BE 上总的磁盘空间大小
+    
     * UsedPercent：百分比，BE 上的磁盘空间使用率
+    
     * ReplicaNum：BE 上副本数量
+    
     * CapCoeff/ReplCoeff：磁盘空间和副本数的权重系数
+    
     * Score：负载分数。分数越高，负载越重
+    
     * Class：根据负载情况分类，LOW/MID/HIGH。均衡调度会将高负载节点上的副本迁往低负载节点
 
     用户可以进一步查看某个 BE 上各个路径的使用率，比如 ID 为 10001 这个 BE：
 
     `SHOW PROC '/cluster_balance/cluster_load_stat/location_default/HDD/10001';`
 
-    ```
+    ```sql
     +------------------+------------------+---------------+---------------+---------+--------+----------------------+
     | RootPath         | DataUsedCapacity | AvailCapacity | TotalCapacity | UsedPct | State  | PathHash             |
     +------------------+------------------+---------------+---------------+---------+--------+----------------------+
@@ -508,7 +565,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
     `SHOW PROC '/cluster_balance/working_slots';`
 
-    ```
+    ```sql
     +----------+----------------------+------------+------------+-------------+----------------------+
     | BeId     | PathHash             | AvailSlots | TotalSlots | BalanceSlot | AvgRate              |
     +----------+----------------------+------------+------------+-------------+----------------------+
@@ -537,7 +594,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 `SHOW PROC '/cluster_balance/sched_stat';`
 
-```
+```sql
 +---------------------------------------------------+-------------+
 | Item                                              | Value       |
 +---------------------------------------------------+-------------+
@@ -570,30 +627,54 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 各行含义如下：
 
 * num of tablet check round：Tablet Checker 检查次数
+
 * cost of tablet check(ms)：Tablet Checker 检查总耗时
+
 * num of tablet checked in tablet checker：Tablet Checker 检查过的 tablet 数量
+
 * num of unhealthy tablet checked in tablet checker：Tablet Checker 检查过的不健康的 tablet 数量
+
 * num of tablet being added to tablet scheduler：被提交到 Tablet Scheduler 中的 tablet 数量
+
 * num of tablet schedule round：Tablet Scheduler 运行次数
+
 * cost of tablet schedule(ms)：Tablet Scheduler 运行总耗时
+
 * num of tablet being scheduled：被调度的 Tablet 总数量
+
 * num of tablet being scheduled succeeded：被成功调度的 Tablet 总数量
+
 * num of tablet being scheduled failed：调度失败的 Tablet 总数量
+
 * num of tablet being scheduled discard：调度失败且被抛弃的 Tablet 总数量
+
 * num of tablet priority upgraded：优先级上调次数
+
 * num of tablet priority downgraded：优先级下调次数
+
 * num of clone task：生成的 clone 任务数量
+
 * num of clone task succeeded：clone 任务成功的数量
+
 * num of clone task failed：clone 任务失败的数量
+
 * num of clone task timeout：clone 任务超时的数量
+
 * num of replica missing error：检查的状态为副本缺失的 tablet 的数量
+
 * num of replica version missing error：检查的状态为版本缺失的 tablet 的数量（该统计值包括了 num of replica relocating 和 num of replica missing in cluster error）
+
 * num of replica relocating：检查的状态为 replica relocating 的 tablet 的数量
+
 * num of replica redundant error：检查的状态为副本冗余的 tablet 的数量
+
 * num of replica missing in cluster error：检查的状态为不在对应 cluster 的 tablet 的数量
+
 * num of balance scheduled：均衡调度的次数
 
-> 注：以上状态都只是历史累加值。我们也在 FE 的日志中，定期打印了这些统计信息，其中括号内的数值表示自上次统计信息打印依赖，各个统计值的变化数量。
+:::tip
+注：以上状态都只是历史累加值。我们也在 FE 的日志中，定期打印了这些统计信息，其中括号内的数值表示自上次统计信息打印依赖，各个统计值的变化数量。
+::
 
 ## 相关配置说明
 
@@ -604,37 +685,49 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 * use\_new\_tablet\_scheduler
 
     * 说明：是否启用新的副本调度方式。新的副本调度方式即本文档介绍的副本调度方式。
+   
     * 默认值：true
+   
     * 重要性：高
 
 * tablet\_repair\_delay\_factor\_second
 
     * 说明：对于不同的调度优先级，我们会延迟不同的时间后开始修复。以防止因为例行重启、升级等过程中，产生大量不必要的副本修复任务。此参数为一个基准系数。对于 HIGH 优先级，延迟为 基准系数 * 1；对于 NORMAL 优先级，延迟为 基准系数 * 2；对于 LOW 优先级，延迟为 基准系数 * 3。即优先级越低，延迟等待时间越长。如果用户想尽快修复副本，可以适当降低该参数。
-    * 默认值：60秒
+   
+    * 默认值：60 秒
+   
     * 重要性：高
 
 * schedule\_slot\_num\_per\_path
   
     * 说明：默认分配给每块磁盘用于副本修复的 slot 数目。该数目表示一块磁盘能同时运行的副本修复任务数。如果想以更快的速度修复副本，可以适当调高这个参数。单数值越高，可能对 IO 影响越大。
+   
     * 默认值：2
+   
     * 重要性：高
 
 * balance\_load\_score\_threshold
 
     * 说明：集群均衡的阈值。默认为 0.1，即 10%。当一个 BE 节点的 load score，不高于或不低于平均 load score 的 10% 时，我们认为这个节点是均衡的。如果想让集群负载更加平均，可以适当调低这个参数。
+  
     * 默认值：0.1
+  
     * 重要性：中
 
 * storage\_high\_watermark\_usage\_percent 和 storage\_min\_left\_capacity\_bytes
 
     * 说明：这两个参数，分别表示一个磁盘的最大空间使用率上限，以及最小的空间剩余下限。当一块磁盘的空间使用率大于上限，或者剩余空间小于下限时，该磁盘将不再作为均衡调度的目的地址。
-    * 默认值：0.85 和 2097152000 （2GB）
+ 
+    * 默认值：0.85 和 2097152000（2GB）
+ 
     * 重要性：中
     
 * disable\_balance
 
     * 说明：控制是否关闭均衡功能。当副本处于均衡过程中时，有些功能，如 ALTER TABLE 等将会被禁止。而均衡可能持续很长时间。因此，如果用户希望尽快进行被禁止的操作。可以将该参数设为 true，以关闭均衡调度。
+    
     * 默认值：false
+    
     * 重要性：中
 
 以下可调整参数均为 be.conf 中可配置参数。
@@ -642,7 +735,9 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 * clone\_worker\_count
 
     * 说明：影响副本均衡的速度。在磁盘压力不大的情况下，可以通过调整该参数来加快副本均衡。
+   
     * 默认值：3
+   
     * 重要性：中
 
 ### 不可调整参数
@@ -651,11 +746,11 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 * TabletChecker 调度间隔
 
-    TabletChecker 每20秒进行一次检查调度。
+    TabletChecker 每 20 秒进行一次检查调度。
     
 * TabletScheduler 调度间隔
 
-    TabletScheduler 每5秒进行一次调度
+    TabletScheduler 每 5 秒进行一次调度
     
 * TabletScheduler 每批次调度个数
 
@@ -671,7 +766,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
 * 每块磁盘用于均衡任务的 slot 数目
 
-    每块磁盘用于均衡任务的 slot 数目为2。这个 slot 独立于用于副本修复的 slot。
+    每块磁盘用于均衡任务的 slot 数目为 2。这个 slot 独立于用于副本修复的 slot。
     
 * 集群均衡情况更新间隔
 
@@ -683,7 +778,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
 * 动态优先级调整策略
 
-    优先级最小调整间隔为 5min。当一个 tablet 调度失败5次后，会调低优先级。当一个 tablet 30min 未被调度时，会调高优先级。
+    优先级最小调整间隔为 5min。当一个 tablet 调度失败 5 次后，会调低优先级。当一个 tablet 30min 未被调度时，会调高优先级。
 
 ## 相关问题
 
@@ -717,11 +812,11 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
 2. 优先修复某个表或分区
 
-    `help admin repair table;` 查看帮助。该命令会尝试优先修复指定表或分区的tablet。
+    `help admin repair table;` 查看帮助。该命令会尝试优先修复指定表或分区的 tablet。
     
 3. 停止均衡任务
 
-    均衡任务会占用一定的网络带宽和IO资源。如果希望停止新的均衡任务的产生，可以通过以下命令：
+    均衡任务会占用一定的网络带宽和 IO 资源。如果希望停止新的均衡任务的产生，可以通过以下命令：
     
     ```
     ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
@@ -729,7 +824,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 4. 停止所有副本调度任务
 
-    副本调度任务包括均衡和修复任务。这些任务都会占用一定的网络带宽和IO资源。可以通过以下命令停止所有副本调度任务（不包括已经在运行的，包括 colocation 表和普通表）：
+    副本调度任务包括均衡和修复任务。这些任务都会占用一定的网络带宽和 IO 资源。可以通过以下命令停止所有副本调度任务（不包括已经在运行的，包括 colocation 表和普通表）：
     
     ```
     ADMIN SET FRONTEND CONFIG ("disable_tablet_scheduler" = "true");
@@ -745,9 +840,9 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 6. 使用更保守的策略修复副本
 
-    Doris 在检测到副本缺失、BE宕机等情况下，会自动修复副本。但为了减少一些抖动导致的错误（如BE短暂宕机），Doris 会延迟触发这些任务。
+    Doris 在检测到副本缺失、BE 宕机等情况下，会自动修复副本。但为了减少一些抖动导致的错误（如 BE 短暂宕机），Doris 会延迟触发这些任务。
     
-    * `tablet_repair_delay_factor_second` 参数。默认 60 秒。根据修复任务优先级的不同，会推迟 60秒、120秒、180秒后开始触发修复任务。可以通过以下命令延长这个时间，这样可以容忍更长的异常时间，以避免触发不必要的修复任务：
+    * `tablet_repair_delay_factor_second` 参数。默认 60 秒。根据修复任务优先级的不同，会推迟 60 秒、120 秒、180 秒后开始触发修复任务。可以通过以下命令延长这个时间，这样可以容忍更长的异常时间，以避免触发不必要的修复任务：
 
     ```
     ADMIN SET FRONTEND CONFIG ("tablet_repair_delay_factor_second" = "120");
@@ -755,7 +850,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 7. 使用更保守的策略触发 colocation group 的重分布
 
-    colocation group 的重分布可能伴随着大量的 tablet 迁移。`colocate_group_relocate_delay_second` 用于控制重分布的触发延迟。默认 1800秒。如果某台 BE 节点可能长时间下线，可以尝试调大这个参数，以避免不必要的重分布：
+    colocation group 的重分布可能伴随着大量的 tablet 迁移。`colocate_group_relocate_delay_second` 用于控制重分布的触发延迟。默认 1800 秒。如果某台 BE 节点可能长时间下线，可以尝试调大这个参数，以避免不必要的重分布：
     
     ```
     ADMIN SET FRONTEND CONFIG ("colocate_group_relocate_delay_second" = "3600");
@@ -763,7 +858,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 8. 更快速的副本均衡
 
-    Doris 的副本均衡逻辑会先增加一个正常副本，然后在删除老的副本，已达到副本迁移的目的。而在删除老副本时，Doris会等待这个副本上已经开始执行的导入任务完成，以避免均衡任务影响导入任务。但这样会降低均衡逻辑的执行速度。此时可以通过修改以下参数，让 Doris 忽略这个等待，直接删除老副本：
+    Doris 的副本均衡逻辑会先增加一个正常副本，然后在删除老的副本，已达到副本迁移的目的。而在删除老副本时，Doris 会等待这个副本上已经开始执行的导入任务完成，以避免均衡任务影响导入任务。但这样会降低均衡逻辑的执行速度。此时可以通过修改以下参数，让 Doris 忽略这个等待，直接删除老副本：
     
     ```
     ADMIN SET FRONTEND CONFIG ("enable_force_drop_redundant_replica" = "true");
@@ -773,10 +868,14 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
     
 总体来讲，当我们需要将集群快速恢复到正常状态时，可以考虑按照以下思路处理：
 
-1. 找到导致高优任务报错的tablet，将有问题的副本置为 bad。
+1. 找到导致高优任务报错的 tablet，将有问题的副本置为 bad。
+
 2. 通过 `admin repair` 语句高优修复某些表。
+
 3. 停止副本均衡逻辑以避免占用集群资源，等集群恢复后，再开启即可。
+
 4. 使用更保守的策略触发修复任务，以应对 BE 频繁宕机导致的雪崩效应。
+
 5. 按需关闭 colocation 表的调度任务，集中集群资源修复其他高优数据。
 
 

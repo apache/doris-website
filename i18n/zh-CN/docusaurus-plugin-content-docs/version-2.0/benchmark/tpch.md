@@ -26,18 +26,19 @@ under the License.
 
 # TPC-H Benchmark
 
-TPC-H是一个决策支持基准（Decision Support Benchmark），它由一套面向业务的特别查询和并发数据修改组成。查询和填充数据库的数据具有广泛的行业相关性。这个基准测试演示了检查大量数据、执行高度复杂的查询并回答关键业务问题的决策支持系统。TPC-H报告的性能指标称为TPC-H每小时复合查询性能指标(QphH@Size)，反映了系统处理查询能力的多个方面。这些方面包括执行查询时所选择的数据库大小，由单个流提交查询时的查询处理能力，以及由多个并发用户提交查询时的查询吞吐量。
+TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套面向业务的特别查询和并发数据修改组成。查询和填充数据库的数据具有广泛的行业相关性。这个基准测试演示了检查大量数据、执行高度复杂的查询并回答关键业务问题的决策支持系统。TPC-H 报告的性能指标称为 TPC-H 每小时复合查询性能指标 (QphH@Size)，反映了系统处理查询能力的多个方面。这些方面包括执行查询时所选择的数据库大小，由单个流提交查询时的查询处理能力，以及由多个并发用户提交查询时的查询吞吐量。
 
 本文档主要介绍 Doris 在 TPC-H 100G 测试集上的性能表现。
 
-> 注1：包括 TPC-H 在内的标准测试集通常和实际业务场景差距较大，并且部分测试会针对测试集进行参数调优。所以标准测试集的测试结果仅能反映数据库在特定场景下的性能表现。建议用户使用实际业务数据进行进一步的测试。
->
-> 注2：本文档涉及的操作都在 CentOS 7.x 上进行测试。
-> 
-> 注 3: Doris 从 1.2.2 版本开始，为了减少内存占用，默认关闭了 Page Cache，会对性能有一定影响，所以在进行性能测试时请在 be.conf 添加 disable_storage_page_cache=false 来打开 Page Cache。
+:::note
+- 注 1：包括 TPC-H 在内的标准测试集通常和实际业务场景差距较大，并且部分测试会针对测试集进行参数调优。所以标准测试集的测试结果仅能反映数据库在特定场景下的性能表现。建议用户使用实际业务数据进行进一步的测试。
 
+- 注 2：本文档涉及的操作都在 CentOS 7.x 上进行测试。
 
-在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 1.2.0-rc01， Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行了对别测试， Apache Doris 1.2.0-rc01上相对 Apache Doris 1.1.3 整体性能提升了将近 3 倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 11 倍 。
+- 注 3: Doris 从 1.2.2 版本开始，为了减少内存占用，默认关闭了 Page Cache，会对性能有一定影响，所以在进行性能测试时请在 be.conf 添加 disable_storage_page_cache=false 来打开 Page Cache。
+:::
+
+在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行了对别测试，Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近 3 倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 11 倍。
 
 ![image-20220614114351241](/images/tpch.png)
 
@@ -45,38 +46,42 @@ TPC-H是一个决策支持基准（Decision Support Benchmark），它由一套�
 
 | 硬件     | 配置说明                                                     |
 | -------- | ------------------------------------ |
-| 机器数量 | 4 台腾讯云主机（1个FE，3个BE）       |
-| CPU      | Intel Xeon(Cascade Lake) Platinum 8269CY  16核  (2.5 GHz/3.2 GHz) |
+| 机器数量 | 4 台腾讯云主机（1 个 FE，3 个 BE）       |
+| CPU      | Intel Xeon(Cascade Lake) Platinum 8269CY  16 核  (2.5 GHz/3.2 GHz) |
 | 内存     | 64G                                  |
 | 网络带宽  | 5Gbps                              |
-| 磁盘     | ESSD云硬盘                      |
+| 磁盘     | ESSD 云硬盘                      |
 
 ## 2. 软件环境
 
-- Doris部署 3BE 1FE；
+- Doris 部署 3BE 1FE；
+
 - 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
+
 - 操作系统版本：CentOS 7.8
-- Doris 软件版本： Apache Doris 1.2.0-rc01、 Apache Doris 1.1.3 、 Apache Doris 0.15.0 RC04
+
+- Doris 软件版本：Apache Doris 1.2.0-rc01、Apache Doris 1.1.3、Apache Doris 0.15.0 RC04
+
 - JDK：openjdk version "11.0.14" 2022-01-18
 
 ## 3. 测试数据量
 
-整个测试模拟生成 TPCH 100G 的数据分别导入到 Apache Doris 1.2.0-rc01， Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04  版本进行测试，下面是表的相关说明及数据量。
+整个测试模拟生成 TPCH 100G 的数据分别导入到 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04  版本进行测试，下面是表的相关说明及数据量。
 
-| TPC-H表名 | 行数   | 导入后大小 | 备注         |
+| TPC-H 表名 | 行数   | 导入后大小 | 备注         |
 | :-------- | :----- | ---------- | :----------- |
 | REGION    | 5      | 400KB      | 区域表       |
 | NATION    | 25     | 7.714 KB   | 国家表       |
-| SUPPLIER  | 100万  | 85.528 MB  | 供应商表     |
-| PART      | 2000万 | 752.330 MB | 零部件表     |
-| PARTSUPP  | 8000万 | 4.375 GB   | 零部件供应表 |
-| CUSTOMER  | 1500万 | 1.317 GB   | 客户表       |
-| ORDERS    | 1.5亿  | 6.301 GB   | 订单表       |
-| LINEITEM  | 6亿    | 20.882 GB  | 订单明细表   |
+| SUPPLIER  | 100 万  | 85.528 MB  | 供应商表     |
+| PART      | 2000 万 | 752.330 MB | 零部件表     |
+| PARTSUPP  | 8000 万 | 4.375 GB   | 零部件供应表 |
+| CUSTOMER  | 1500 万 | 1.317 GB   | 客户表       |
+| ORDERS    | 1.5 亿  | 6.301 GB   | 订单表       |
+| LINEITEM  | 6 亿    | 20.882 GB  | 订单明细表   |
 
-## 4. 测试SQL
+## 4. 测试 SQL
 
-TPCH 22 个测试查询语句 ： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
+TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 **注意：**
 
@@ -91,7 +96,7 @@ TPCH 22 个测试查询语句 ： [TPCH-Query-SQL](https://github.com/apache/dor
 
 ## 5. 测试结果
 
-这里我们使用 Apache Doris 1.2.0-rc01， Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
+这里我们使用 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
 
 | Query    | Apache Doris 1.2.0-rc01 (s) | Apache Doris 1.1.3 (s) | Apache Doris 0.15.0 RC04 (s) |
 | -------- | --------------------------- | ---------------------- | ---------------------------- |
@@ -121,9 +126,12 @@ TPCH 22 个测试查询语句 ： [TPCH-Query-SQL](https://github.com/apache/dor
 
 **结果说明**
 
-- 测试结果对应的数据集为scale 100, 约6亿条。
-- 测试环境配置为用户常用配置，云服务器4台，16核 64G SSD，1 FE 3 BE 部署。
+- 测试结果对应的数据集为 scale 100, 约 6 亿条。
+
+- 测试环境配置为用户常用配置，云服务器 4 台，16 核 64G SSD，1 FE 3 BE 部署。
+
 - 选用用户常见配置测试以降低用户选型评估成本，但整个测试过程中不会消耗如此多的硬件资源。
+
 - Apache Doris 0.15 RC04 在 TPC-H 测试中 Q14 执行失败，无法完成查询。
 
 ## 6. 环境准备
@@ -150,15 +158,17 @@ sh build-tpch-dbgen.sh
 sh gen-tpch-data.sh
 ```
 
-> 注1：通过 `sh gen-tpch-data.sh -h` 查看脚本帮助。
->
-> 注2：数据会以 `.tbl` 为后缀生成在  `tpch-data/` 目录下。文件总大小约100GB。生成时间可能在数分钟到1小时不等。
->
-> 注3：默认生成 100G 的标准测试数据集
+:::note
+- 注 1：通过 `sh gen-tpch-data.sh -h` 查看脚本帮助。
+
+- 注 2：数据会以 `.tbl` 为后缀生成在  `tpch-data/` 目录下。文件总大小约 100GB。生成时间可能在数分钟到 1 小时不等。
+
+- 注 3：默认生成 100G 的标准测试数据集
+:::
 
 ### 7.3 建表
 
-#### 7.3.1 准备 `doris-cluster.conf` 文件
+**7.3.1 准备 `doris-cluster.conf` 文件**
 
 在调用导入脚本前，需要将 FE 的 ip 端口等信息写在 `doris-cluster.conf` 文件中。
 
@@ -181,7 +191,7 @@ export PASSWORD=''
 export DB='tpch1'
 ```
 
-#### 7.3.2 执行以下脚本生成创建 TPC-H 表
+**7.3.2 执行以下脚本生成创建 TPC-H 表**
 
 ```shell
 sh create-tpch-tables.sh
@@ -215,7 +225,7 @@ select count(*)  from  revenue0;
 
 ### 7.6 查询测试
 
-## 7.6.1 执行查询脚本
+**7.6.1 执行查询脚本**
 
 执行上面的测试 SQL 或者 执行下面的命令
 
@@ -223,16 +233,19 @@ select count(*)  from  revenue0;
 ./run-tpch-queries.sh
 ```
 
->注意：
->
->1. 目前Doris的查询优化器和统计信息功能还不完善，所以我们在TPC-H中重写了一些查询以适应Doris的执行框架，但不影响结果的正确性
->
->2. Doris 新的查询优化器将在后续的版本中发布
->3. 执行查询之前设置 `set mem_exec_limit=8G`
+:::note
+注意：
 
-## 7.6.2 单个 SQL 执行
+- 1. 目前 Doris 的查询优化器和统计信息功能还不完善，所以我们在 TPC-H 中重写了一些查询以适应 Doris 的执行框架，但不影响结果的正确性
 
-下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL 。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
+- 2. Doris 新的查询优化器将在后续的版本中发布
+
+- 3. 执行查询之前设置 `set mem_exec_limit=8G`
+:::
+
+**7.6.2 单个 SQL 执行**
+
+下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
 ```sql
 --Q1

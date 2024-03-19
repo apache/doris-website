@@ -34,26 +34,26 @@ under the License.
 
 ## 功能说明
 
-对于含有自增列的表，用户在在导入数据时:
-- 如果导入的目标列中不包含自增列，则自增列将会被Doris自动生成的值填充。
-- 如果导入的目标列中包含自增列，则导入数据中该列中的null值将会被Doris自动生成的值替换，非null值则保持不变。需要注意**非 null 值会破坏自增列值的唯一性**。
+对于含有自增列的表，用户在在导入数据时：
+- 如果导入的目标列中不包含自增列，则自增列将会被 Doris 自动生成的值填充。
+- 如果导入的目标列中包含自增列，则导入数据中该列中的 null 值将会被 Doris 自动生成的值替换，非 null 值则保持不变。需要注意**非 null 值会破坏自增列值的唯一性**。
 
 ### 唯一性
 
-Doris保证了自增列上生成的值具有**表内唯一性**。但需要注意的是，**自增列的唯一性仅保证由Doris自动填充的值具有唯一性，而不考虑由用户提供的值**，如果用户同时对该表通过显示指定自增列的方式插入了用户提供的值，则不能保证这个唯一性。
+Doris 保证了自增列上生成的值具有**表内唯一性**。但需要注意的是，**自增列的唯一性仅保证由 Doris 自动填充的值具有唯一性，而不考虑由用户提供的值**，如果用户同时对该表通过显示指定自增列的方式插入了用户提供的值，则不能保证这个唯一性。
 
 ### 聚集性
 
-Doris保证自增列上自动生成的值是稠密的，但**不能保证**在一次导入中自动填充的自增列的值是完全连续的，因此可能会出现一次导入中自增列自动填充的值具有一定的跳跃性的现象。这是因为出于性能考虑，每个BE上都会缓存一部分预先分配的自增列的值，每个BE上缓存的值互不相交。此外，由于缓存的存在，Doris不能保证在物理时间上后一次导入的数据在自增列上自动生成的值比前一次更大。因此，不能根据自增列分配出的值的大小来判断导入时间上的先后顺序。
+Doris 保证自增列上自动生成的值是稠密的，但**不能保证**在一次导入中自动填充的自增列的值是完全连续的，因此可能会出现一次导入中自增列自动填充的值具有一定的跳跃性的现象。这是因为出于性能考虑，每个 BE 上都会缓存一部分预先分配的自增列的值，每个 BE 上缓存的值互不相交。此外，由于缓存的存在，Doris 不能保证在物理时间上后一次导入的数据在自增列上自动生成的值比前一次更大。因此，不能根据自增列分配出的值的大小来判断导入时间上的先后顺序。
 
 
 ## 语法
 
-要使用自增列，需要在建表[CREATE-TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)时为对应的列添加`AUTO_INCREMENT`属性。 若要手动指定自增列起始值，可以通过建表时`AUTO_INCREMENT(start_value)`语句指定，如果未指定，则默认起始值为1。
+要使用自增列，需要在建表[CREATE-TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)时为对应的列添加`AUTO_INCREMENT`属性。若要手动指定自增列起始值，可以通过建表时`AUTO_INCREMENT(start_value)`语句指定，如果未指定，则默认起始值为 1。
 
 ### 示例
 
-1. 创建一个Dupliciate模型表，其中一个key列是自增列
+1. 创建一个 Dupliciate 模型表，其中一个 key 列是自增列
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
@@ -67,7 +67,7 @@ Doris保证自增列上自动生成的值是稠密的，但**不能保证**在�
   );
   ```
 
-2. 创建一个Dupliciate模型表，其中一个key列是自增列，并设置起始值为100
+2. 创建一个 Dupliciate 模型表，其中一个 key 列是自增列，并设置起始值为 100
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
@@ -81,7 +81,7 @@ Doris保证自增列上自动生成的值是稠密的，但**不能保证**在�
   );
   ```
 
-3. 创建一个Dupliciate模型表，其中一个value列是自增列
+3. 创建一个 Dupliciate 模型表，其中一个 value 列是自增列
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
@@ -97,7 +97,7 @@ Doris保证自增列上自动生成的值是稠密的，但**不能保证**在�
   );
   ```
 
-4. 创建一个Unique模型表，其中一个key列是自增列
+4. 创建一个 Unique 模型表，其中一个 key 列是自增列
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
@@ -113,7 +113,7 @@ Doris保证自增列上自动生成的值是稠密的，但**不能保证**在�
   );
   ```
 
-5. 创建一个Unique模型表，其中一个value列是自增列
+5. 创建一个 Unique 模型表，其中一个 value 列是自增列
 
   ```sql
   CREATE TABLE `demo`.`tbl` (
@@ -130,10 +130,10 @@ Doris保证自增列上自动生成的值是稠密的，但**不能保证**在�
 
 ### 约束和限制
 
-1. 仅Duplicate模型表和Unique模型表可以包含自增列。
+1. 仅 Duplicate 模型表和 Unique 模型表可以包含自增列。
 2. 一张表最多只能包含一个自增列。
-3. 自增列的类型必须是BIGINT类型，且必须为NOT NULL。
-4. 自增列手动指定的起始值必须大于等于0。
+3. 自增列的类型必须是 BIGINT 类型，且必须为 NOT NULL。
+4. 自增列手动指定的起始值必须大于等于 0。
 
 ## 使用方式
 
@@ -155,7 +155,7 @@ PROPERTIES (
 );
 ```
 
-使用insert into语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
+使用 insert into 语句导入并且不指定自增列`id`时，`id`列会被自动填充生成的值。
 ```sql
 mysql> insert into tbl(name, value) values("Bob", 10), ("Alice", 20), ("Jack", 30);
 Query OK, 3 rows affected (0.09 sec)
@@ -172,7 +172,7 @@ mysql> select * from tbl order by id;
 3 rows in set (0.05 sec)
 ```
 
-类似地，使用stream load导入文件test.csv且不指定自增列`id`，`id`列会被自动填充生成的值。
+类似地，使用 stream load 导入文件 test.csv 且不指定自增列`id`，`id`列会被自动填充生成的值。
 
 test.csv:
 ```
@@ -198,7 +198,7 @@ mysql> select * from tbl order by id;
 5 rows in set (0.04 sec)
 ```
 
-使用insert into导入时指定自增列`id`，则该列数据中的null值会被生成的值替换。
+使用 insert into 导入时指定自增列`id`，则该列数据中的 null 值会被生成的值替换。
 
 ```sql
 mysql> insert into tbl(id, name, value) values(null, "Doris", 60), (null, "Nereids", 70);
@@ -223,7 +223,7 @@ mysql> select * from tbl order by id;
 
 ### 部分列更新
 
-在对一张包含自增列的merge-on-write Unique表进行部分列更新时，如果自增列是key列，由于部分列更新时用户必须显示指定key列，部分列更新的目标列必须包含自增列。此时的导入行为和普通的部分列更新相同。
+在对一张包含自增列的 merge-on-write Unique 表进行部分列更新时，如果自增列是 key 列，由于部分列更新时用户必须显示指定 key 列，部分列更新的目标列必须包含自增列。此时的导入行为和普通的部分列更新相同。
 ```sql
 mysql> CREATE TABLE `demo`.`tbl2` (
     ->     `id` BIGINT NOT NULL AUTO_INCREMENT,
@@ -274,7 +274,7 @@ mysql> select * from tbl2 order by id;
 4 rows in set (0.04 sec)
 ```
 
-当自增列是非key列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的null值会被替换为生成出的值，非null值则保持不表，然后以部分列更新的语义插入该表。
+当自增列是非 key 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不表，然后以部分列更新的语义插入该表。
 
 ```sql
 mysql> CREATE TABLE `demo`.`tbl3` (
@@ -346,7 +346,7 @@ mysql> select * from tbl3 order by id;
 
 在用户画像场景中使用 bitmap 做人群分析时需要构建用户字典，每个用户对应一个唯一的整数字典值，聚集的字典值可以获得更好的 bitmap 性能。
 
-以离线uv，pv分析场景为例，假设有如下用户行为表存放明细数据：
+以离线 uv，pv 分析场景为例，假设有如下用户行为表存放明细数据：
 
 ```sql
 CREATE TABLE `demo`.`dwd_dup_tbl` (
@@ -449,19 +449,19 @@ PROPERTIES (
 );
 ```
 
-假设在分页展示中，每页展示100条数据。那么获取第1页的数据可以使用如下sql进行查询：
+假设在分页展示中，每页展示 100 条数据。那么获取第 1 页的数据可以使用如下 sql 进行查询：
 
 ```sql
 select * from records_tbl order by key, name limit 100;
 ```
 
-获取第2页的数据可以使用如下sql进行查询：
+获取第 2 页的数据可以使用如下 sql 进行查询：
 
 ```sql
 select * from records_tbl order by key, name limit 100, offset 100;
 ```
 
-然而，当进行深分页查询时(offset很大时)，即使实际需要需要的数据行很少，该方法依然会将全部数据读取到内存中进行全量排序后再进行后续处理，这种方法比较低效。可以通过自增列给每行数据一个唯一值，在查询时就可以通过记录之前页面`unique_value`列的最大值`max_value`，然后使用 `where unique_value > max_value limit rows_per_page` 的方式通过提下推谓词提前过滤大量数据，从而更高效地实现分页。
+然而，当进行深分页查询时 (offset 很大时)，即使实际需要需要的数据行很少，该方法依然会将全部数据读取到内存中进行全量排序后再进行后续处理，这种方法比较低效。可以通过自增列给每行数据一个唯一值，在查询时就可以通过记录之前页面`unique_value`列的最大值`max_value`，然后使用 `where unique_value > max_value limit rows_per_page` 的方式通过提下推谓词提前过滤大量数据，从而更高效地实现分页。
 
 仍然以上述业务表为例，通过在表中添加一个自增列从而赋予每一行一个唯一标识：
 
@@ -483,19 +483,19 @@ PROPERTIES (
 );
 ```
 
-在分页展示中，每页展示100条数据，使用如下方式获取第一页的数据：
+在分页展示中，每页展示 100 条数据，使用如下方式获取第一页的数据：
 
 ```sql
 select * from records_tbl2 order by unique_value limit 100;
 ```
 
-通过程序记录下返回结果中`unique_value`中的最大值，假设为99，则可用如下方式查询第2页的数据：
+通过程序记录下返回结果中`unique_value`中的最大值，假设为 99，则可用如下方式查询第 2 页的数据：
 
 ```sql
 select * from records_tbl2 where unique_value > 99 order by unique_value limit 100;
 ```
 
-如果要直接查询一个靠后页面的内容，此时不方便直接获取之前页面数据中`unique_value`的最大值时，例如要直接获取第101页的内容，则可以使用如下方式进行查询
+如果要直接查询一个靠后页面的内容，此时不方便直接获取之前页面数据中`unique_value`的最大值时，例如要直接获取第 101 页的内容，则可以使用如下方式进行查询
 
 ```sql
 select key, name, address, city, nation, region, phone, mktsegment

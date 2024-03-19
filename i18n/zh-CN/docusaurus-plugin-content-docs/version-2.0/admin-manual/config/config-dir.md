@@ -24,13 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 配置文件目录
+
 
 FE 和 BE 的配置文件目录为 `conf/`。这个目录除了存放默认的 fe.conf, be.conf 等文件外，也被用于公用的配置文件存放目录。
 
 用户可以在其中存放一些配置文件，系统会自动读取。
 
-<version since="1.2.0">
+:::note
+自 Doris 1.2 版本后支持该功能
+:::
 
 ## hdfs-site.xml 和 hive-site.xml
 
@@ -46,4 +48,4 @@ FE 和 BE 的配置文件目录为 `conf/`。这个目录除了存放默认的 f
 
 这样，用户仅需填写少量的配置，即可完成对 HDFS/Hive 的访问。
 
-</version>
+
