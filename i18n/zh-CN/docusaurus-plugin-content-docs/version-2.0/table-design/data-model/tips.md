@@ -187,4 +187,4 @@ Duplicate、Aggregate、Unique 模型，都会在建表指定 Key 列，然而�
 
 3.  Duplicate 适合任意维度的 Ad-hoc 查询。虽然同样无法利用预聚合的特性，但是不受聚合模型的约束，可以发挥列存模型的优势（只读取相关列，而不需要读取所有 Key 列）。
 
-4.  如果有部分列更新的需求，请查阅文档[部分列更新](../../data-operate/update/partial-update)获取相关使用建议
+4.  如果有部分列更新的需求，请查阅文档[主键模型部分列更新](../../data-operate/update/unique-load-update) 与 [聚合模型部份列更新](../../data-operate/update/aggregate-load-update) 获取相关使用建议
