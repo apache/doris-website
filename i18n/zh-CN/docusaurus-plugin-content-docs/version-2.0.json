@@ -23,6 +23,10 @@
     "message": "K8s 部署",
     "description": "The label for category Deploy on Kubernetes in sidebar docs"
   },
+  "sidebar.docs.category.Database Connect": {
+    "message": "数据库连接",
+    "description": "The label for category Deploy on Kubernetes in sidebar docs"
+  },
   "sidebar.docs.category.Table Design": {
     "message": "数据表设计",
     "description": "The label for category Table Design in sidebar docs"
