@@ -50,6 +50,13 @@
         },
         {
             "type": "category",
+            "label": "Database Connect",
+            "items": [
+                "db-connect/database-connect"
+            ]
+        },
+        {
+            "type": "category",
             "label": "Table Design",
             "items": [
                 {
