@@ -39,11 +39,11 @@ Using the three tables: lineitem, orders, and partsupp from TPC-H, let's describ
 a materialized view and using the materialized view for transparent query rewriting.
 ```sql
 CREATE TABLE IF NOT EXISTS lineitem (
-                                        l_orderkey    integer not null,
-                                        l_partkey     integer not null,
-                                        l_suppkey     integer not null,
-                                        l_linenumber  integer not null,
-                                        l_quantity    decimalv3(15,2) not null,
+    l_orderkey    integer not null,
+    l_partkey     integer not null,
+    l_suppkey     integer not null,
+    l_linenumber  integer not null,
+    l_quantity    decimalv3(15,2) not null,
     l_extendedprice  decimalv3(15,2) not null,
     l_discount    decimalv3(15,2) not null,
     l_tax         decimalv3(15,2) not null,

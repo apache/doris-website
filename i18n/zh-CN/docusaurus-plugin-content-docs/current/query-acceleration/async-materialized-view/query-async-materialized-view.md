@@ -35,11 +35,11 @@ Doris 可以分析查询 SQL 的结构信息，自动寻找满足要求的物化
 表的定义如下：
 ```sql
 CREATE TABLE IF NOT EXISTS lineitem (
-                                        l_orderkey    integer not null,
-                                        l_partkey     integer not null,
-                                        l_suppkey     integer not null,
-                                        l_linenumber  integer not null,
-                                        l_quantity    decimalv3(15,2) not null,
+    l_orderkey    integer not null,
+    l_partkey     integer not null,
+    l_suppkey     integer not null,
+    l_linenumber  integer not null,
+    l_quantity    decimalv3(15,2) not null,
     l_extendedprice  decimalv3(15,2) not null,
     l_discount    decimalv3(15,2) not null,
     l_tax         decimalv3(15,2) not null,
