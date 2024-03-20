@@ -185,7 +185,6 @@
                 "advanced/orthogonal-bitmap-manual",
                 "advanced/using-hll",
                 "advanced/variables",
-                "advanced/variables-template",
                 "advanced/time-zone",
                 "advanced/sql-mode",
                 "advanced/small-file-mgr",
@@ -1305,7 +1304,6 @@
                         "admin-manual/config/config-dir",
                         "admin-manual/config/fe-config",
                         "admin-manual/config/be-config",
-                        "admin-manual/config/fe-config-template",
                         "admin-manual/config/user-property"
                     ]
                 },
