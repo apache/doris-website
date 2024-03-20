@@ -53,7 +53,7 @@ Asynchronous refresh of data for a materialized view
 1. Refresh materialized view mv1 (automatically calculate the partition to be refreshed)
 
     ```sql
-    REFRESH MATERIALIZED VIEW mv1;
+    REFRESH MATERIALIZED VIEW mv1 AUTO;
     ```
 
 2. Refresh partition named p_19950801_19950901和p_19950901_19951001

@@ -37,19 +37,21 @@ REFRESH MATERIALIZED VIEW
 语法：
 
 ```sql
-REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE)? 
+REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE | AUTO)
 ```
 
 说明：
 
-异步刷新某个物化视图的数据
+- AUTO：会计算物化视图的哪些分区和基表不同步（目前，如果基表是外表，会被认为始终和物化视图同步，因此如果基表是外表，需要指定`COMPLETE`或指定要刷新的分区），然后刷新对应的分区
+- COMPLETE：会强制刷新物化视图的所有分区，不会判断分区是否和基表同步
+- partitionSpec：会强制刷新指定的分区，不会判断分区是否和基表同步
 
 ### Example
 
 1. 刷新物化视图mv1(自动计算要刷新的分区)
 
     ```sql
-    REFRESH MATERIALIZED VIEW mv1;
+    REFRESH MATERIALIZED VIEW mv1 AUTO;
     ```
 
 2. 刷新名字为p_19950801_19950901和p_19950901_19951001的分区
