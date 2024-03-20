@@ -75,6 +75,7 @@ SELECT
 - Group by having
 
     对结果集进行分组，having 出现则对 group by 的结果进行刷选。`Grouping Sets`、`Rollup`、`Cube` 为 group by 的扩展，详细可参考 [GROUPING SETS 设计文档](https://doris.apache.org/zh-CN/community/design/grouping_sets_design)。
+   
 
 - Order by 
 
