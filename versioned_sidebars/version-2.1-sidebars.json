@@ -1303,7 +1303,6 @@
                         "admin-manual/config/config-dir",
                         "admin-manual/config/fe-config",
                         "admin-manual/config/be-config",
-                        "admin-manual/config/fe-config-template",
                         "admin-manual/config/user-property"
                     ]
                 },
