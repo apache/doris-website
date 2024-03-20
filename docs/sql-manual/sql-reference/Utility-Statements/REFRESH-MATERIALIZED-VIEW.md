@@ -37,12 +37,16 @@ This statement is used to manually refresh the specified asynchronous materializ
 syntax:
 
 ```sql
-REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE)? 
+REFRESH MATERIALIZED VIEW mvName=multipartIdentifier (partitionSpec | COMPLETE | AUTO)
 ```
 
 Explanation:
 
 Asynchronous refresh of data for a materialized view
+
+- AUTO: The calculation will determine which partitions of the materialized view are not synchronized with the base table. (Currently, if the base table is an external table, it is considered to be always synchronized with the materialized view. Therefore, if the base table is an external table, it is necessary to specify `COMPLETE` or designate the partitions to be refreshed), and then proceed to refresh the corresponding partitions accordingly.
+- COMPLETE: It will forcibly refresh all partitions of the materialized view without checking whether the partitions are synchronized with the base table.
+- partitionSpec: It will forcibly refresh the specified partitions without checking whether the partitions are synchronized with the base table.
 
 ### Example
 
