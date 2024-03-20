@@ -97,7 +97,19 @@ BUILD IMMEDIATE
 
 COMPLETE：全量刷新
 
-AUTO：尽量增量刷新，如果不能增量刷新，就全量刷新
+AUTO：尽量增量刷新，如果不能分区增量刷新，就全量刷新
+
+物化视图的 SQL 定义和分区字段需要满足如下条件才可以进行分区增量更新
+
+- 物化视图使用的 base table 中至少有一个是分区表。
+- 物化视图使用的分区表，必须使用 list 或者 range 分区策略。
+- 物化视图最顶层的分区列只能有一个分区字段。
+- 物化视图的 SQL 中需要使用了 base table 中的分区列，比如在 Select 后。
+- 如果使用了group by，分区列的字段一定要在 group by 后。
+- 如果使用了 window 函数，分区列的字段一定要在partition by后。
+- 数据变更应发生在分区表上，如果发生在非分区表，物化视图需要全量构建。
+- 物化视图使用 Join 的 null 产生端的字段作为分区字段，不能分区增量更新。
+- 物化视图使用的 base table 表分区字段，如果来源于内表，base table 的 null 属性不能为空，如果来源于 hive 外表，base table 的 null 属性可以为空。
 
 ```sql
 refreshMethod
@@ -165,16 +177,7 @@ KEY(k1,k2)
 例如：基表是range分区，分区字段为`create_time`并按天分区，创建物化视图时指定`partition by(ct) as select create_time as ct from t1`
 那么物化视图也会是range分区，分区字段为`ct`,并且按天分区
 
-分区字段的选择和物化视图的定义需要满足如下约束才可以创建成功，否则会报错 `Unable to find a suitable base table for partitioning`
-- 物化视图使用的 base table 中至少有一个是分区表。
-- 物化视图使用的分区表，必须使用 list 或者 range 分区策略。
-- 物化视图最顶层的分区列只能有一个分区字段。
-- 物化视图的 SQL 需要使用了 base table 中的分区列。
-- 如果使用了group by，分区列的字段一定要在 group by 后。
-- 如果使用了 window 函数，分区列的字段一定要在partition by后。
-- 数据变更应发生在分区表上，如果发生在非分区表，物化视图需要全量构建。
-- 物化视图使用 Join 的 null 产生端的字段作为分区字段，不能分区增量更新。
-- 物化视图引用的 base table 分区表，目前只支持内表和 HIVE 表。其中内表的分区列的属性不能是 NULL。HIVE表允许为 NULL。
+分区字段的选择和物化视图的定义需要满足分区增量更新的条件，物化视图才可以创建成功，否则会报错 `Unable to find a suitable base table for partitioning`
 
 #### property
 物化视图既可以指定table的property，也可以指定物化视图特有的property。
