@@ -38,8 +38,6 @@ ALTER ROLE
  ALTER ROLE role_name comment;
 ```
 
-该语句修改一个角色的注释。
-
 ### Example
 
 1. 修改一个角色的注释
