@@ -330,7 +330,7 @@ SELECT * FROM t1 TABLET(10001) TABLESAMPLE(1000 ROWS) REPEATABLE 2 limit 1000;
   
   - FROM 后的 table_references 指示参与查询的一个或者多个表。如果列出了多个表，就会执行 JOIN 操作。而对于每一个指定表，都可以为其定义别名
   
-  - SELECT 后被选择的列，可以在 ORDER IN 和 GROUP BY 中，通过列名、列别名或者代表列位置的整数（从 1 开始）来引用
+  - SELECT 后被选择的列，可以在 ORDER BY 和 GROUP BY 中，通过列名、列别名或者代表列位置的整数（从 1 开始）来引用
   
     ```Plain
     SELECT college, region, seed FROM tournament

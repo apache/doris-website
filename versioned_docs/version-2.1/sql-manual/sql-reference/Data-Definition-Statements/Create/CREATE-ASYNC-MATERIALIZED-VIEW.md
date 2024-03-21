@@ -99,6 +99,18 @@ COMPLETE：Full refresh
 
 AUTO：Try to refresh incrementally as much as possible. If incremental refresh is not possible, refresh in full
 
+The SQL definition and partition fields of the materialized view need to meet the following conditions for partition incremental updates:
+
+- At least one of the base tables used by the materialized view must be a partitioned table.
+- The partitioned tables used by the materialized view must employ list or range partitioning strategies.
+- The top-level partition column in the materialized view can only have one partition field.
+- The SQL of the materialized view needs to use partition columns from the base table, such as after the SELECT clause.
+- If GROUP BY is used, the partition column fields must be after the GROUP BY.
+- If window functions are used, the partition column fields must be after the PARTITION BY.
+- Data changes should occur on partitioned tables. If they occur on non-partitioned tables, the materialized view needs to be fully rebuilt.
+- Using the fields that generate nulls in the JOIN as partition fields in the materialized view prohibits partition incremental updates.
+- The null attribute of partition fields in the base table used by the materialized view must not be empty if it comes from an internal table. If it comes from an external table in Hive, the null attribute of the base table can be empty.
+
 ```sql
 refreshMethod
 : COMPLETE | AUTO
@@ -165,17 +177,7 @@ There are two types of partitioning methods for materialized views. If no partit
 For example, if the base table is a range partition with a partition field of `create_time` and partitioning by day, and `partition by(ct) as select create_time as ct from t1` is specified when creating a materialized view, 
 then the materialized view will also be a range partition with a partition field of 'ct' and partitioning by day
 
-The selection of partition fields and the definition of materialized views must meet the following constraints to be successfully created; 
-otherwise, an error "Unable to find a suitable base table for partitioning" will occur:
-
-- At least one of the base tables used by the materialized view must be a partitioned table.
-- Partitioned tables used by the materialized view must employ list or range partitioning strategies.
-- The top-level partition column in the materialized view can only have one partition field.
-- The SQL of the materialized view needs to use partition columns from the base table.
-- If GROUP BY is used, the partition column fields must be after the GROUP BY.
-- If window functions are used, the partition column fields must be after the PARTITION BY.
-- Data changes should occur on partitioned tables. If they occur on non-partitioned tables, the materialized view needs to be fully rebuilt.
-- Using the fields that generate nulls in the JOIN as partition fields in the materialized view prohibits partition incremental updates.
+The selection of partition fields and the definition of materialized views must meet the conditions for partition incremental updates for the materialized view to be created successfully; otherwise, an error "Unable to find a suitable base table for partitioning" will occur.
 
 #### property
 The materialized view can specify both the properties of the table and the properties unique to the materialized view.

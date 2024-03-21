@@ -33,40 +33,40 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
 | 类型         | MySQL                                                        | Doris                                                  |
 | ------------ | ------------------------------------------------------------ | ------------------------------------------------------ |
-| Boolean      | - 支持 - 范围：0 代表 false，1 代表 true                         | - 支持 - 关键字：Boolean - 范围：0 代表 false，1 代表 true |
-| Bit          | - 支持 - 范围：1 ~ 64                                        | 不支持                                                 |
-| Tinyint      | - 支持 - 支持 signed,unsigned - 范围：  - signed: -128 ~ 127  - unsigned: 0 ~ 255 | - 支持 - 只支持 signed - 范围：-128 ~ 127               |
-| Smallint     | - 支持 - 支持 signed,unsigned - 范围：  - signed: -2^15 ~ 2^15-1  - unsigned: 0 ~ 2^16-1 | - 支持 - 只支持 signed - 范围：-32768 ~ 32767           |
-| Mediumint    | - 支持 - 支持 signed,unsigned - 范围：  - signed: -2^23 ~ 2^23-1  - unsigned: 0 ~ -2^24-1 | - 不支持                                               |
-| int          | - 支持 - 支持 signed,unsigned - 范围：  - signed: -2^31 ~ 2^31-1  - unsigned: 0 ~ -2^32-1 | - 支持 - 只支持 signed - 范围： -2147483648~ 2147483647 |
-| Bigint       | - 支持 - 支持 signed,unsigned - 范围：  - signed: -2^63 ~ 2^63-1  - unsigned: 0 ~ 2^64-1 | - 支持 - 只支持 signed - 范围： -2^63 ~ 2^63-1          |
-| Largeint     | - 不支持                                                     | - 支持 - 只支持 signed - 范围：-2^127 ~ 2^127-1         |
-| Decimal      | - 支持 - 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated） - 默认值：Decimal(10, 0) | - 支持 - 只支持 signed - 默认值：Decimal(9, 0)          |
-| Float/Double | - 支持 - 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated） | - 支持 - 只支持 signed                                  |
+| Boolean      | <p>- 支持</p> <p>- 范围：0 代表 false，1 代表 true</p>                         | <p>- 支持</p> <p>- 关键字：Boolean</p> <p>- 范围：0 代表 false，1 代表 true</p> |
+| Bit          | <p>- 支持</p> <p>- 范围：1 ~ 64</p>                                        | 不支持                                                 |
+| Tinyint      | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：  - signed: -128 ~ 127</p>  <p>- unsigned: 0 ~ 255</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-128 ~ 127</p>               |
+| Smallint     | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^15 ~ 2^15-1</p> <p>- unsigned: 0 ~ 2^16-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-32768 ~ 32767</p>           |
+| Mediumint    | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^23 ~ 2^23-1</p>  <p>- unsigned: 0 ~ -2^24-1</p> | - 不支持                                               |
+| int          | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^31 ~ 2^31-1</p>  <p>- unsigned: 0 ~ -2^32-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围： -2147483648~ 2147483647</p> |
+| Bigint       | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^63 ~ 2^63-1</p>  <p>- unsigned: 0 ~ 2^64-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围： -2^63 ~ 2^63-1 </p>         |
+| Largeint     | - 不支持                                                     | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-2^127 ~ 2^127-1</p>         |
+| Decimal      | <p>- 支持</p> <p>- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）</p> <p>- 默认值：Decimal(10, 0)</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 默认值：Decimal(9, 0)</p>          |
+| Float/Double | <p>- 支持</p> <p>- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）</p> | <p>- 支持</p> <p>- 只支持 signed</p>                                  |
 
 ### 日期类型
 
 | 类型      | MySQL                                                        | Doris                                                        |
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Date      | - 支持 - 范围：['1000-01-01','9999-12-31'] - 格式：YYYY-MM-DD | - 支持 - 范围：['0000-01-01', '9999-12-31'] - 格式：YYYY-MM-DD |
-| DateTime  | - 支持 - DATETIME([P])，可选参数 P 表示精度 - 范围：'1000-01-01 00:00:00.000000' ,'9999-12-31 23:59:59.999999' - 格式：YYYY-MM-DD hh:mm:ss[.fraction] | - 支持 - DATETIME([P])，可选参数 P 表示精度 - 范围：['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]'] - 格式：YYYY-MM-DD hh:mm:ss[.fraction] |
-| Timestamp | - 支持 - Timestamp[(p)]，可选参数 P 表示精度 - 范围：['1970-01-01 00:00:01.000000' UTC , '2038-01-19 03:14:07.999999' UTC] - 格式：YYYY-MM-DD hh:mm:ss[.fraction] | - 不支持                                                     |
-| Time      | - 支持 - Time[(p)] - 范围：['-838:59:59.000000' to '838:59:59.000000'] - 格式：hh:mm:ss[.fraction] | - 不支持                                                     |
-| Year      | - 支持 - 范围：1901 to 2155, or 0000 - 格式：yyyy            | - 不支持                                                     |
+| Date      | <p>- 支持 - 范围：['1000-01-01','9999-12-31']</p> <p>- 格式：YYYY-MM-DD</p> | <p>- 支持</p> <p>- 范围：['0000-01-01', '9999-12-31']</p> <p>- 格式：YYYY-MM-DD</p> |
+| DateTime  | <p>- 支持</p> <p>- DATETIME([P])，可选参数 P 表示精度</p> <p>- 范围：'1000-01-01 00:00:00.000000' ,'9999-12-31 23:59:59.999999'</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- 支持</p> <p>- DATETIME([P])，可选参数 P 表示精度</p> <p>- 范围：['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> |
+| Timestamp | <p>- 支持</p> <p>- Timestamp[(p)]，可选参数 P 表示精度</p> <p>- 范围：['1970-01-01 00:00:01.000000' UTC , '2038-01-19 03:14:07.999999' UTC]</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> | - 不支持                                                     |
+| Time      | <p>- 支持</p> <p>- Time[(p)]</p> <p>- 范围：['-838:59:59.000000' to '838:59:59.000000']</p> <p>- 格式：hh:mm:ss[.fraction]</p> | - 不支持                                                     |
+| Year      | <p>- 支持</p> <p>- 范围：1901 to 2155, or 0000</p> <p>- 格式：yyyy</p>            | - 不支持                                                     |
 
 ### 字符串类型
 
 | 类型      | MySQL                                                        | Doris                                                        |
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Char      | - 支持 - CHAR[(M)，M 为字符长度，缺省表示长度为 1, - 定长 - 范围：[0,255]，字节大小 | - 支持 - CHAR[(M)，M 为字节长度 - 可变 - 范围：[1,255]        |
-| Varchar   | - 支持 - VARCHAR(M)，M 为字符长度 - 范围：[0,65535]，字节大小 | - 支持 - VARCHAR(M)，M 为字节长度。 - 范围：[1, 65533]        |
-| String    | - 不支持                                                     | - 支持 - 1048576 字节（1MB），可调大到 2147483643 字节（2G） |
-| Binary    | - 支持 - 类似于 Char                                          | - 不支持                                                     |
-| Varbinary | - 支持 - 类似于 Varchar                                       | - 不支持                                                     |
-| Blob      | - 支持 - TinyBlob、Blob、MediumBlob、LongBlob                | - 不支持                                                     |
-| Text      | - 支持 - TinyText、Text、MediumText、LongText                | - 不支持                                                     |
-| Enum      | - 支持 - 最多支持 65535 个 elements                             | - 不支持                                                     |
-| Set       | - 支持 - 最多支持 64 个 elements                                | - 不支持                                                     |
+| Char      | <p>- 支持</p> <p>- CHAR[(M)，M 为字符长度，缺省表示长度为 1</p> <p>- 定长</p> <p>- 范围：[0,255]，字节大小</p> | <p>- 支持</p> <p>- CHAR[(M)，M 为字节长度</p> <p>- 可变</p> <p>- 范围：[1,255]</p>        |
+| Varchar   | <p>- 支持</p> <p>- VARCHAR(M)，M 为字符长度</p> <p>- 范围：[0,65535]，字节大小</p> | <p>- 支持</p> <p>- VARCHAR(M)，M 为字节长度。</p> <p>- 范围：[1, 65533]</p>        |
+| String    | - 不支持                                                     | <p>- 支持</p> <p>- 1048576 字节（1MB），可调大到 2147483643 字节（2G）</p> |
+| Binary    | <p>- 支持</p> <p>- 类似于 Char</p>                                          | - 不支持                                                     |
+| Varbinary | <p>- 支持</p> <p>- 类似于 Varchar</p>                                       | - 不支持                                                     |
+| Blob      | <p>- 支持</p> <p>- TinyBlob、Blob、MediumBlob、LongBlob</p>                | - 不支持                                                     |
+| Text      | <p>- 支持</p> <p>- TinyText、Text、MediumText、LongText</p>                | - 不支持                                                     |
+| Enum      | <p>- 支持</p> <p>- 最多支持 65535 个 elements</p>                             | - 不支持                                                     |
+| Set       | <p>- 支持</p> <p>- 最多支持 64 个 elements</p>                                | - 不支持                                                     |
 
 ### JSON 数据类型
 
@@ -78,7 +78,7 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
 - **HyperLogLog**
 
-    HLL HLL 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 HLL_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 HLL 列只能通过配套的 hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 进行查询或使用。
+    HLL 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 HLL_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 HLL 列只能通过配套的 hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 进行查询或使用。
 
     HLL 是模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的误差通常在 1% 左右，有时会达到 2%。
 
@@ -292,7 +292,7 @@ INSERT INTO table_name
 
 Doris Insert 语法与 MySQL 的基本一致。
 
-**update**
+**Update**
 
 ```sql
 UPDATE target_table [table_alias]
