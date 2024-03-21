@@ -380,5 +380,5 @@ Cause: All these issues arise from not using the correct ldb-toolchain for compi
 Solution:
 
 - Check if the ldb-toolchain environment variable is properly configured.
-- Verify if the GCC version matches the recommended version in the [Compile with LDB Toolchain](https://doris.apache.org/docs/2.0/install/source-install/compilation-with-ldb-toolchain)documentation.
+- Verify if the GCC version matches the recommended version in the [Compile with LDB Toolchain](https://doris.apache.org/docs/2.0/install/source-install/compilation-with-ldb-toolchain) documentation.
 - Delete the ldb directory generated after executing the `ldb_toolchain_gen.aarch64.sh` script. Re-run the script, configure the environment variables, and verify the GCC version.
