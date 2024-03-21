@@ -3,6 +3,7 @@
     "title": "Data Model",
     "language": "en"
 }
+
 ---
 
 <!-- 
@@ -32,7 +33,7 @@ This topic introduces the data models in Doris from a logical perspective so you
 
 In Doris, data is logically described in the form of tables. A table consists of rows and columns. Row is a row of user data. Column is used to describe different fields in a row of data.
 
-Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and indicator columns, respectively. The key column of Doris is the column specified in the table creation statement. The column after the keyword 'unique key' or 'aggregate key' or 'duplicate key' in the table creation statement is the key column, and the rest except the key column is the value column .
+Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and indicator columns, respectively. The key column of Doris is the column specified in the table creation statement. The column after the keyword `unique key` or `aggregate key` or `duplicate key` in the table creation statement is the **Key column**, and the rest is the **Value column**.
 
 Data models in Doris fall into three types:
 
@@ -51,7 +52,7 @@ We illustrate what aggregation model is and how to use it correctly with practic
 Assume that the business has the following data table schema:
 
 | ColumnName      | Type         | AggregationType | Comment                     |
-|-----------------|--------------|-----------------|-----------------------------|
+| --------------- | ------------ | --------------- | --------------------------- |
 | userid          | LARGEINT     |                 | user id                     |
 | date            | DATE         |                 | date of data filling        |
 | City            | VARCHAR (20) |                 | User City                   |
@@ -64,7 +65,7 @@ Assume that the business has the following data table schema:
 
 The corresponding to CREATE TABLE statement would be as follows (omitting the Partition and Distribution information):
 
-```
+```sql
 CREATE DATABASE IF NOT EXISTS example_db;
 
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg1
@@ -104,15 +105,15 @@ If these aggregation methods cannot meet the requirements, you can choose to use
 
 Suppose that you have the following import data (raw data):
 
-| user\_id | date       | city      | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|----------|------------|-----------|-----|-----|---------------------|------|------------------|------------------|
-| 10000    | 2017-10-01 | Beijing   | 20  | 0   | 2017-10-01 06:00    | 20   | 10               | 10               |
-| 10000    | 2017-10-01 | Beijing   | 20  | 0   | 2017-10-01 07:00    | 15   | 2                | 2                |
-| 10001    | 2017-10-01 | Beijing   | 30  | 1   | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002    | 2017-10-02 | Shanghai  | 20  | 1   | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003    | 2017-10-02 | Guangzhou | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004    | 2017-10-01 | Shenzhen  | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004    | 2017-10-03 | Shenzhen  | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6                | 6                |
+| user\_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| -------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 06:00    | 20   | 10               | 10               |
+| 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 15   | 2                | 2                |
+| 10001    | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
+| 10002    | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
+| 10003    | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
+| 10004    | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
+| 10004    | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
 
 
 And you can import data with the following sql:
@@ -131,7 +132,7 @@ insert into example_db.example_tbl_agg1 values
 Assume that this is a table recording the user behaviors when visiting a certain commodity page. The first row of data, for example, is explained as follows:
 
 | Data             | Description                                               |
-|------------------|-----------------------------------------------------------|
+| ---------------- | --------------------------------------------------------- |
 | 10000            | User id, each user uniquely identifies id                 |
 | 2017-10-01       | Data storage time, accurate to date                       |
 | Beijing          | User City                                                 |
@@ -144,14 +145,14 @@ Assume that this is a table recording the user behaviors when visiting a certain
 
 After this batch of data is imported into Doris correctly, it will be stored in Doris as follows:
 
-| user\_id | date       | city      | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|----------|------------|-----------|-----|-----|---------------------|------|------------------|------------------|
-| 10000    | 2017-10-01 | Beijing   | 20  | 0   | 2017-10-01 07:00    | 35   | 10               | 2                |
-| 10001    | 2017-10-01 | Beijing   | 30  | 1   | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002    | 2017-10-02 | Shanghai  | 20  | 1   | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003    | 2017-10-02 | Guangzhou | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004    | 2017-10-01 | Shenzhen  | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004    | 2017-10-03 | Shenzhen  | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6                | 6                |
+| user\_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| -------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10000    | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 35   | 10               | 2                |
+| 10001    | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
+| 10002    | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
+| 10003    | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
+| 10004    | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
+| 10004    | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
 
 As you can see, the data of User 10000 have been aggregated to one row, while those of other users remain the same. The explanation for the aggregated data of User 10000 is as follows (the first 5 columns remain unchanged, so it starts with Column 6 `last_visit_date`):
 
@@ -171,18 +172,18 @@ After aggregation, Doris only stores the aggregated data. In other words, the de
 
 Here is a modified version of the table schema in Example 1:
 
-| ColumnName      | Type         | AggregationType | Comment                                                               |
-|-----------------|--------------|-----------------|-----------------------------------------------------------------------|
-| user_id         | LARGEINT     |                 | User ID                                                               |
-| date            | DATE         |                 | Date when the data are imported                                       |
+| ColumnName      | Type         | AggregationType | Comment                                                      |
+| --------------- | ------------ | --------------- | ------------------------------------------------------------ |
+| user_id         | LARGEINT     |                 | User ID                                                      |
+| date            | DATE         |                 | Date when the data are imported                              |
 | timestamp       | DATETIME     |                 | Date and time when the data are imported (with second-level accuracy) |
-| city            | VARCHAR (20) |                 | User location city                                                    |
-| age             | SMALLINT     |                 | User age                                                              |
-| sex             | TINYINT      |                 | User gender                                                           |
-| last visit date | DATETIME     | REPLACE         | Last visit time of the user                                           |
-| cost            | BIGINT       | SUM             | Total consumption of the user                                         |
-| max_dwell_time  | INT          | MAX             | Maximum user dwell time                                               |
-| min_dwell_time  | INT          | MIN             | Minimum user dwell time                                               |
+| city            | VARCHAR (20) |                 | User location city                                           |
+| age             | SMALLINT     |                 | User age                                                     |
+| sex             | TINYINT      |                 | User gender                                                  |
+| last visit date | DATETIME     | REPLACE         | Last visit time of the user                                  |
+| cost            | BIGINT       | SUM             | Total consumption of the user                                |
+| max_dwell_time  | INT          | MAX             | Maximum user dwell time                                      |
+| min_dwell_time  | INT          | MIN             | Minimum user dwell time                                      |
 
 A new column  `timestamp` has been added to record the date and time when the data are imported (with second-level accuracy).
 
@@ -209,15 +210,15 @@ PROPERTIES (
 
 Suppose that the import data are as follows:
 
-| user_id | date       | timestamp           | city      | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|---------|------------|---------------------|-----------|-----|-----|---------------------|------|------------------|------------------|
-| 10000   | 2017-10-01 | 2017-10-01 08:00:05 | Beijing   | 20  | 0   | 2017-10-01 06:00    | 20   | 10               | 10               |
-| 10000   | 2017-10-01 | 2017-10-01 09:00:05 | Beijing   | 20  | 0   | 2017-10-01 07:00    | 15   | 2                | 2                |
-| 10001   | 2017-10-01 | 2017-10-01 18:12:10 | Beijing   | 30  | 1   | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002   | 2017-10-02 | 2017-10-02 13:10:00 | Shanghai  | 20  | 1   | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003   | 2017-10-02 | 2017-10-02 13:15:00 | Guangzhou | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004   | 2017-10-01 | 2017-10-01 12:12:48 | Shenzhen  | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004   | 2017-10-03 | 2017-10-03 12:38:20 | Shenzhen  | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6                | 6                |
+| user_id | date       | timestamp           | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| ------- | ---------- | ------------------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10000   | 2017-10-01 | 2017-10-01 08:00:05 | Beijing   | 20   | 0    | 2017-10-01 06:00    | 20   | 10               | 10               |
+| 10000   | 2017-10-01 | 2017-10-01 09:00:05 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 15   | 2                | 2                |
+| 10001   | 2017-10-01 | 2017-10-01 18:12:10 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
+| 10002   | 2017-10-02 | 2017-10-02 13:10:00 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
+| 10003   | 2017-10-02 | 2017-10-02 13:15:00 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
+| 10004   | 2017-10-01 | 2017-10-01 12:12:48 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
+| 10004   | 2017-10-03 | 2017-10-03 12:38:20 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
 
 And you can import data with the following sql:
 
@@ -234,15 +235,15 @@ insert into example_db.example_tbl_agg2 values
 
 After importing, this batch of data will be stored in Doris as follows:
 
-| user_id | date       | timestamp           | city      | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|---------|------------|---------------------|-----------|-----|-----|---------------------|------|------------------|------------------|
-| 10000   | 2017-10-01 | 2017-10-01 08:00:05 | Beijing   | 20  | 0   | 2017-10-01 06:00    | 20   | 10               | 10               |
-| 10000   | 2017-10-01 | 2017-10-01 09:00:05 | Beijing   | 20  | 0   | 2017-10-01 07:00    | 15   | 2                | 2                |
-| 10001   | 2017-10-01 | 2017-10-01 18:12:10 | Beijing   | 30  | 1   | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002   | 2017-10-02 | 2017-10-02 13:10:00 | Shanghai  | 20  | 1   | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003   | 2017-10-02 | 2017-10-02 13:15:00 | Guangzhou | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004   | 2017-10-01 | 2017-10-01 12:12:48 | Shenzhen  | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004   | 2017-10-03 | 2017-10-03 12:38:20 | Shenzhen  | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6                | 6                |
+| user_id | date       | timestamp           | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| ------- | ---------- | ------------------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10000   | 2017-10-01 | 2017-10-01 08:00:05 | Beijing   | 20   | 0    | 2017-10-01 06:00    | 20   | 10               | 10               |
+| 10000   | 2017-10-01 | 2017-10-01 09:00:05 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 15   | 2                | 2                |
+| 10001   | 2017-10-01 | 2017-10-01 18:12:10 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
+| 10002   | 2017-10-02 | 2017-10-02 13:10:00 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
+| 10003   | 2017-10-02 | 2017-10-02 13:15:00 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
+| 10004   | 2017-10-01 | 2017-10-01 12:12:48 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
+| 10004   | 2017-10-03 | 2017-10-03 12:38:20 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
 
 As you can see, the stored data are exactly the same as the import data. No aggregation has ever happened. This is because, the newly added `timestamp` column results in **difference of Keys** among the rows. That is to say, as long as the Keys of the rows are not identical in the import data, Doris can save the complete detailed data even in the Aggregate Model.
 
@@ -250,21 +251,21 @@ As you can see, the stored data are exactly the same as the import data. No aggr
 
 Based on Example 1, suppose that you have the following data stored in Doris:
 
-| user_id | date       | city      | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|---------|------------|-----------|-----|-----|---------------------|------|------------------|------------------|
-| 10000   | 2017-10-01 | Beijing   | 20  | 0   | 2017-10-01 07:00    | 35   | 10               | 2                |
-| 10001   | 2017-10-01 | Beijing   | 30  | 1   | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002   | 2017-10-02 | Shanghai  | 20  | 1   | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003   | 2017-10-02 | Guangzhou | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004   | 2017-10-01 | Shenzhen  | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004   | 2017-10-03 | Shenzhen  | 35  | 0   | 2017-10-03 10:20:22 | 11   | 6                | 6                |
+| user_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| ------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10000   | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 35   | 10               | 2                |
+| 10001   | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
+| 10002   | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
+| 10003   | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
+| 10004   | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
+| 10004   | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22 | 11   | 6                | 6                |
 
 Now you need to import a new batch of data:
 
-| user_id | date       | city     | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|---------|------------|----------|-----|-----|---------------------|------|------------------|------------------|
-| 10004   | 2017-10-03 | Shenzhen | 35  | 0   | 2017-10-03 11:22:00 | 44   | 19               | 19               |
-| 10005   | 2017-10-03 | Changsha | 29  | 1   | 2017-10-03 18:11:02 | 3    | 1                | 1                |
+| user_id | date       | city     | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| ------- | ---------- | -------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10004   | 2017-10-03 | Shenzhen | 35   | 0    | 2017-10-03 11:22:00 | 44   | 19               | 19               |
+| 10005   | 2017-10-03 | Changsha | 29   | 1    | 2017-10-03 18:11:02 | 3    | 1                | 1                |
 
 And you can import data with the following sql:
 
@@ -276,15 +277,15 @@ insert into example_db.example_tbl_agg1 values
 
 After importing, the data stored in Doris will be updated as follows:
 
-| user_id | date       | city      | age | sex | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
-|---------|------------|-----------|-----|-----|---------------------|------|------------------|------------------|
-| 10000   | 2017-10-01 | Beijing   | 20  | 0   | 2017-10-01 07:00    | 35   | 10               | 2                |
-| 10001   | 2017-10-01 | Beijing   | 30  | 1   | 2017-10-01 17:05:45 | 2    | 22               | 22               |
-| 10002   | 2017-10-02 | Shanghai  | 20  | 1   | 2017-10-02 12:59:12 | 200  | 5                | 5                |
-| 10003   | 2017-10-02 | Guangzhou | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11               | 11               |
-| 10004   | 2017-10-01 | Shenzhen  | 35  | 0   | 2017-10-01 10:00:15 | 100  | 3                | 3                |
-| 10004   | 2017-10-03 | Shenzhen  | 35  | 0   | 2017-10-03 11:22:00 | 55   | 19               | 6                |
-| 10005   | 2017-10-03 | Changsha  | 29  | 1   | 2017-10-03 18:11:02 | 3    | 1                | 1                |
+| user_id | date       | city      | age  | sex  | last\_visit\_date   | cost | max\_dwell\_time | min\_dwell\_time |
+| ------- | ---------- | --------- | ---- | ---- | ------------------- | ---- | ---------------- | ---------------- |
+| 10000   | 2017-10-01 | Beijing   | 20   | 0    | 2017-10-01 07:00    | 35   | 10               | 2                |
+| 10001   | 2017-10-01 | Beijing   | 30   | 1    | 2017-10-01 17:05:45 | 2    | 22               | 22               |
+| 10002   | 2017-10-02 | Shanghai  | 20   | 1    | 2017-10-02 12:59:12 | 200  | 5                | 5                |
+| 10003   | 2017-10-02 | Guangzhou | 32   | 0    | 2017-10-02 11:20:00 | 30   | 11               | 11               |
+| 10004   | 2017-10-01 | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15 | 100  | 3                | 3                |
+| 10004   | 2017-10-03 | Shenzhen  | 35   | 0    | 2017-10-03 11:22:00 | 55   | 19               | 6                |
+| 10005   | 2017-10-03 | Changsha  | 29   | 1    | 2017-10-03 18:11:02 | 3    | 1                | 1                |
 
 As you can see, the existing data and the newly imported data of User 10004 have been aggregated. Meanwhile, the new data of User 10005 have been added.
 
@@ -315,9 +316,9 @@ properties("replication_num" = "1");
 ```
 
 
-"agg_state" is used to declare the data type as "agg_state," and "sum/group_concat" are the signatures of aggregation functions.
+"agg_state" is used to declare the data type as "agg_state", and "sum/group_concat" are the signatures of aggregation functions.
 
-Please note that "agg_state" is a data type, similar to "int," "array," or "string."
+Please note that "agg_state" is a data type, similar to "int", "array" or "string".
 
 "agg_state" can only be used in conjunction with the [state](../sql-manual/sql-functions/combinators/state.md)/[merge](../sql-manual/sql-functions/combinators/merge.md)/[union](../sql-manual/sql-functions/combinators/union.md) function combinators.
 
@@ -333,9 +334,9 @@ insert into aggstate values(1,sum_state(3),group_concat_state('c'));
 
 At this point, the table contains only one row. Please note that the table below is for illustrative purposes and cannot be selected/displayed directly:
 
-| k1 | k2         | k3                        |               
-|----|------------|---------------------------| 
-| 1  | sum(1,2,3) | group_concat_state(a,b,c) | 
+| k1   | k2         | k3                        |
+| ---- | ---------- | ------------------------- |
+| 1    | sum(1,2,3) | group_concat_state(a,b,c) |
 
 Insert another record.
 
@@ -345,14 +346,14 @@ insert into aggstate values(2,sum_state(4),group_concat_state('d'));
 
 The table's structure at this moment is...
 
-| k1 | k2         | k3                        |               
-|----|------------|---------------------------| 
-| 1  | sum(1,2,3) | group_concat_state(a,b,c) | 
-| 2  | sum(4)     | group_concat_state(d)     |
+| k1   | k2         | k3                        |
+| ---- | ---------- | ------------------------- |
+| 1    | sum(1,2,3) | group_concat_state(a,b,c) |
+| 2    | sum(4)     | group_concat_state(d)     |
 
 We can use the 'merge' operation to combine multiple states and return the final result calculated by the aggregation function.
 
-```
+```sql
 mysql> select sum_merge(k2) from aggstate;
 +---------------+
 | sum_merge(k2) |
@@ -364,7 +365,7 @@ mysql> select sum_merge(k2) from aggstate;
 `sum_merge` will first combine sum(1,2,3) and sum(4) into sum(1,2,3,4), and return the calculated result.
 Because `group_concat` has a specific order requirement, the result is not stable.
 
-```
+```sql
 mysql> select group_concat_merge(k3) from aggstate;
 +------------------------+
 | group_concat_merge(k3) |
@@ -373,23 +374,23 @@ mysql> select group_concat_merge(k3) from aggstate;
 +------------------------+
 ```
 
-If you do not want the final aggregation result, you can use 'union' to combine multiple intermediate aggregation results and generate a new intermediate result.
+If you do not want the final aggregation result, you can use `union` to combine multiple intermediate aggregation results and generate a new intermediate result.
 
 ```sql
 insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate ;
 ```
 
-The table's structure at this moment is...
+The table's structure at this moment is:
 
-| k1 | k2           | k3                          |               
-|----|--------------|-----------------------------| 
-| 1  | sum(1,2,3)   | group_concat_state(a,b,c)   | 
-| 2  | sum(4)       | group_concat_state(d)       |
-| 3  | sum(1,2,3,4) | group_concat_state(a,b,c,d) |
+| k1   | k2           | k3                          |
+| ---- | ------------ | --------------------------- |
+| 1    | sum(1,2,3)   | group_concat_state(a,b,c)   |
+| 2    | sum(4)       | group_concat_state(d)       |
+| 3    | sum(1,2,3,4) | group_concat_state(a,b,c,d) |
 
 You can achieve this through a query.
 
-```
+```sql
 mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
 +---------------+------------------------+
 | sum_merge(k2) | group_concat_merge(k3) |
@@ -431,7 +432,7 @@ For detailed differences between the two implementation methods, refer to the su
 ### Merge on Read ( Same Implementation as Aggregate Model)
 
 | ColumnName    | Type          | IsKey | Comment                |
-|---------------|---------------|-------|------------------------|
+| ------------- | ------------- | ----- | ---------------------- |
 | user_id       | BIGINT        | Yes   | User ID                |
 | username      | VARCHAR (50)  | Yes   | Username               |
 | city          | VARCHAR (20)  | No    | User location city     |
@@ -443,7 +444,7 @@ For detailed differences between the two implementation methods, refer to the su
 
 This is a typical user basic information table. There is no aggregation requirement for such data. The only concern is to ensure the uniqueness of the primary key. (The primary key here is user_id + username). The CREATE TABLE statement for the above table is as follows:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_unique
 (
 `user_id` LARGEINT NOT NULL COMMENT "User ID",
@@ -465,7 +466,7 @@ PROPERTIES (
 This is the same table schema and the CREATE TABLE statement as those of the Aggregate Model:
 
 | ColumnName    | Type          | AggregationType | Comment                |
-|---------------|---------------|-----------------|------------------------|
+| ------------- | ------------- | --------------- | ---------------------- |
 | user_id       | BIGINT        |                 | User ID                |
 | username      | VARCHAR (50)  |                 | Username               |
 | city          | VARCHAR (20)  | REPLACE         | User location city     |
@@ -475,7 +476,7 @@ This is the same table schema and the CREATE TABLE statement as those of the Agg
 | address       | VARCHAR (500) | REPLACE         | User address           |
 | register_time | DATETIME      | REPLACE         | User registration time |
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg3
 (
 `user_id` LARGEINT NOT NULL COMMENT "User ID",
@@ -503,13 +504,14 @@ The Merge on Write implementation of the Unique Model can deliver better perform
 
 In Doris 1.2.0, as a new feature, Merge on Write is disabled by default(before version 2.1), and users can enable it by adding the following property:
 
-```
+```sql
 "enable_unique_key_merge_on_write" = "true"
 ```
 
 In Doris 2.1, Merge on Write is enabled by default.
 
 > Note:
+>
 > 1. For users on version 1.2:
 >    1. It is recommended to use version 1.2.4 or above, as this version addresses some bugs and stability issues.
 >    2. Add the configuration item `disable_storage_page_cache=false` in `be.conf`. Failure to add this configuration item may significantly impact data import performance.
@@ -517,7 +519,7 @@ In Doris 2.1, Merge on Write is enabled by default.
 
 Take the previous table as an example, the corresponding to CREATE TABLE statement should be:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_unique_merge_on_write
 (
 `user_id` LARGEINT NOT NULL COMMENT "User ID",
@@ -541,7 +543,7 @@ The table schema produced by the above statement will be different from that of 
 
 
 | ColumnName    | Type          | AggregationType | Comment                |
-|---------------|---------------|-----------------|------------------------|
+| ------------- | ------------- | --------------- | ---------------------- |
 | user_id       | BIGINT        |                 | User ID                |
 | username      | VARCHAR (50)  |                 | Username               |
 | city          | VARCHAR (20)  | NONE            | User location city     |
@@ -565,7 +567,7 @@ On a Unique table with the Merge on Write option enabled, during the import stag
 In some multidimensional analysis scenarios, there is no need for primary keys or data aggregation. For these cases, we introduce the Duplicate Model to. Here is an example:
 
 | ColumnName | Type           | SortKey | Comment        |
-|------------|----------------|---------|----------------|
+| ---------- | -------------- | ------- | -------------- |
 | timstamp   | DATETIME       | Yes     | Log time       |
 | type       | INT            | Yes     | Log type       |
 | error_code | INT            | Yes     | Error code     |
@@ -575,7 +577,7 @@ In some multidimensional analysis scenarios, there is no need for primary keys o
 
 The corresponding to CREATE TABLE statement is as follows:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_duplicate
 (
     `timestamp` DATETIME NOT NULL COMMENT "Log time",
@@ -606,7 +608,7 @@ When creating a table without specifying Unique, Aggregate, or Duplicate, a tabl
 
 When users do not need SORTING COLUMN or Prefix Index, they can configure the following table property:
 
-```
+```sql
 "enable_duplicate_without_keys_by_default" = "true"
 ```
 
@@ -653,7 +655,7 @@ The Aggregate Model only presents the aggregated data. That means we have to ens
 Suppose that you have the following table schema:
 
 | ColumnName | Type     | AggregationType | Comment                         |
-|------------|----------|-----------------|---------------------------------|
+| ---------- | -------- | --------------- | ------------------------------- |
 | user\_id   | LARGEINT |                 | User ID                         |
 | date       | DATE     |                 | Date when the data are imported |
 | cost       | BIGINT   | SUM             | Total user consumption          |
@@ -663,14 +665,14 @@ Assume that there are two batches of data that have been imported into the stora
 **batch 1**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 50   |
 | 10002    | 2017-11-21 | 39   |
 
 **batch 2**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 1    |
 | 10001    | 2017-11-21 | 5    |
 | 10003    | 2017-11-22 | 22   |
@@ -678,7 +680,7 @@ Assume that there are two batches of data that have been imported into the stora
 As you can see, data about User 10001 in these two import batches have not yet been aggregated. However, in order to ensure that users can only query the aggregated data as follows:
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 51   |
 | 10001    | 2017-11-21 | 5    |
 | 10002    | 2017-11-21 | 39   |
@@ -705,14 +707,14 @@ For the previous example:
 **batch 1**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 50   |
 | 10002    | 2017-11-21 | 39   |
 
 **batch 2**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 1    |
 | 10001    | 2017-11-21 | 5    |
 | 10003    | 2017-11-22 | 22   |
@@ -720,7 +722,7 @@ For the previous example:
 Since the final aggregation result is:
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 51   |
 | 10001    | 2017-11-21 | 5    |
 | 10002    | 2017-11-21 | 39   |
@@ -738,7 +740,7 @@ Therefore, if you need to perform frequent `count (*)` queries, we recommend tha
 column of value 1 and aggregation type SUM. In this way, the table schema in the previous example will be modified as follows:
 
 | ColumnName | Type   | AggregationType | Comment                         |
-|------------|--------|-----------------|---------------------------------|
+| ---------- | ------ | --------------- | ------------------------------- |
 | user ID    | BIGINT |                 | User ID                         |
 | date       | DATE   |                 | Date when the data are imported |
 | Cost       | BIGINT | SUM             | Total user consumption          |
@@ -760,7 +762,7 @@ In Merge on Write, the model adds a  `delete bitmap` for each imported rowset to
 **batch 1**
 
 | user_id | date       | cost | delete bit |
-|---------|------------|------|------------|
+| ------- | ---------- | ---- | ---------- |
 | 10001   | 2017-11-20 | 50   | false      |
 | 10002   | 2017-11-21 | 39   | false      |
 
@@ -769,14 +771,14 @@ After Batch 2 is imported, the duplicate rows in the first batch will be marked 
 **batch 1**
 
 | user_id | date       | cost | delete bit |
-|---------|------------|------|------------|
+| ------- | ---------- | ---- | ---------- |
 | 10001   | 2017-11-20 | 50   | **true**   |
 | 10002   | 2017-11-21 | 39   | false      |
 
 **batch 2**
 
 | user\_id | date       | cost | delete bit |
-|----------|------------|------|------------|
+| -------- | ---------- | ---- | ---------- |
 | 10001    | 2017-11-20 | 1    | false      |
 | 10001    | 2017-11-21 | 5    | false      |
 | 10003    | 2017-11-22 | 22   | false      |
