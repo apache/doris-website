@@ -25,274 +25,121 @@ under the License.
 -->
 
 
-# Build Docker Image 
+# Compile with Docker (Recommended)
 
-This topic is about how to build a running image of Apache Doris through Dockerfile, so that an Apache Doris image can be quickly pulled in a container orchestration tool or during a quick test to complete the cluster creation.
+This guide is about how to compile Doris using the official compilation image provided. As this image is maintained by the Apache Doris team and is regularly updated with the necessary dependencies, it is the recommended way of compilation for users.
 
-## Software and Hardware Requirements
+## Install Docker
 
-### Overview
+In CentOS, execute the following command: 
 
-Prepare the production machine before building a Docker image. The platform architecture of the Docker image will be the same as that of the machine. For example, if you use an X86_64 machine to build a Docker image, you need to download the Doris binary program of X86_64, and the Docker image built can only run on the X86_64 platform. The ARM platform (or M1), likewise.
-
-### Hardware Requirements
-
-Minimum configuration: 2C 4G
-
-Recommended configuration: 4C 16G
-
-### Software Requirements
-
-Docker Version: 20.10 or newer
-
-## Build Docker Image
-
-During Dockerfile scripting, please note that:
-> 1. Use the official OpenJDK image certified by Docker-Hub as the base parent image (Version: JDK 1.8).
-> 2. Use the official binary package for download; do not use binary packages from unknown sources.
-> 3. Use embedded scripts for tasks such as FE startup, multi-FE registration, FE status check, BE startup, registration of BE to FE, and BE status check.
-> 4. Do not use `--daemon`  to start applications in Docker. Otherwise there will be exceptions during the deployment of orchestration tools such as K8S.
-
-Apache Doris 1.2 and the subsequent versions support JavaUDF, so you also need a JDK environment for BE. The recommended images are as follows:
-
-| Doris Program | Recommended Base Parent Image |
-| ---------- | ----------------- |
-| Frontend | openjdk:8u342-jdk |
-| Backend | openjdk:8u342-jdk |
-| Broker | openjdk:8u342-jdk |
-
-### Script Preparation
-
-In the Dockerfile script for compiling the Docker Image, there are two methods to load the binary package of the Apache Doris program:
-
-1. Execute the download command via wget / curl when compiling, and then start the docker build process.
-2. Download the binary package to the compilation directory in advance, and then load it into the docker build process through the ADD or COPY command.
-
-Method 1 can produce a smaller Docker image, but if the docker build process fails, the download operation might be repeated and result in longer build time; Method 2 is more suitable for less-than-ideal network environments.
-
-**The examples below are based on Method 2. If you prefer to go for Method 1, you may modify the steps accordingly.**
-
-### Prepare Binary Package
-
-Please noted that if you have a need for custom development, you need to modify the source code, [compile](../source-install/compilation-general.md) and package it, and then place it in the build directory.
-
-If you have no such needs, you can just [download](https://doris.apache.org/download) the binary package from the official website.
-### Steps
-
-#### Build FE
-
-The build environment directory is as follows:
-
-```sql
-└── docker-build                                       // build root directory
-     └── fe                                            // FE build directory
-         ├── dockerfile                                // dockerfile script
-         └── resource                                  // resource directory
-             ├── init_fe.sh                            // startup and registration script
-             └── apache-doris-x.x.x-bin-fe.tar.gz      // binary package
-```
-1. Create a build environment directory
-
-   ```shell
-   mkdir -p ./docker-build/fe/resource
-   ```
-
-2. Download [official binary package](https://doris.apache.org/download)/compiled binary package
-
-   Copy the binary package to the `./docker-build/fe/resource` directory
-
-3. Write the Dockerfile script for FE
-
-   ```powershell
-   # Select the base image
-   FROM openjdk:8u342-jdk
-   
-   # Set environment variables
-   ENV JAVA_HOME="/usr/local/openjdk-8/" \
-       PATH="/opt/apache-doris/fe/bin:$PATH"
-   
-   # Download the software into the image (you can modify based on your own needs)
-   ADD ./resource/apache-doris-fe-${x.x.x}-bin.tar.gz /opt/
-   
-   RUN apt-get update && \
-       apt-get install -y default-mysql-client && \
-       apt-get clean && \
-       mkdir /opt/apache-doris && \
-       cd /opt && \
-       mv apache-doris-fe-${x.x.x}-bin /opt/apache-doris/fe
-   
-   ADD ./resource/init_fe.sh /opt/apache-doris/fe/bin
-   RUN chmod 755 /opt/apache-doris/fe/bin/init_fe.sh
-   
-   ENTRYPOINT ["/opt/apache-doris/fe/bin/init_fe.sh"]
-   ```
-
-   After writing, name it `Dockerfile` and save it to the `./docker-build/fe` directory.
-
-4. Write the execution script of FE
-
-   You can refer to [init_fe.sh](https://github.com/apache/doris/tree/master/docker/runtime/fe/resource/init_fe.sh).
-
-   After writing, name it `init_fe.sh` and save it to the `./docker-build/fe/resouce` directory.
-
-5. Execute the build
-
-   Please note that `${tagName}` needs to be replaced with the tag name you want to package and name, such as: `apache-doris:1.1.3-fe`
-
-   Build FE:
-
-   ```shell
-   cd ./docker-build/fe
-   docker build . -t ${fe-tagName}
-   ```
-#### Build BE
-
-1. Create a build environment directory
-
-```shell
-mkdir -p ./docker-build/be/resource
-```
-2. The build environment directory is as follows:
-
-   ```sql
-   └── docker-build                                            // build root directory
-       └── be                                                  // BE build directory
-           ├── dockerfile                                      // dockerfile script
-           └── resource                                        // resource directory
-               ├── init_be.sh                                  // startup and registration script
-               └── apache-doris-x.x.x-bin-x86_64/arm-be.tar.gz // binary package
-   ```
-
-3. Write the Dockerfile script for BE
-
-   ```powershell
-   # Select the base image
-   FROM openjdk:8u342-jdk
-   
-   # Set environment variables
-   ENV JAVA_HOME="/usr/local/openjdk-8/" \
-       PATH="/opt/apache-doris/be/bin:$PATH"
-   
-   # Download the software into the image (you can modify based on your own needs)
-   ADD ./resource/apache-doris-be-${x.x.x}-bin-x86_64.tar.gz /opt/
-   
-   RUN apt-get update && \
-       apt-get install -y default-mysql-client && \
-       apt-get clean && \
-       mkdir /opt/apache-doris && \
-       cd /opt && \
-       mv apache-doris-be-${x.x.x}-bin-x86_64 /opt/apache-doris/be
-   
-   ADD ./resource/init_be.sh /opt/apache-doris/be/bin
-   RUN chmod 755 /opt/apache-doris/be/bin/init_be.sh
-   
-   ENTRYPOINT ["/opt/apache-doris/be/bin/init_be.sh"]
-   ```
-
-   After writing, name it `Dockerfile` and save it to the `./docker-build/be` directory
-
-4. Write the execution script of BE
-
-   You can refer to [init_be.sh](https://github.com/apache/doris/tree/master/docker/runtime/be/resource/init_be.sh).
-
-   After writing, name it `init_be.sh` and save it to the `./docker-build/be/resouce` directory.
-
-5. Execute the build
-
-   Please note that `${tagName}` needs to be replaced with the tag name you want to package and name, such as: `apache-doris:1.1.3-be`
-
-   Build BE:
-
-   ```shell
-   cd ./docker-build/be
-   docker build . -t ${be-tagName}
-   ```
-
-   After the build process is completed, you will see the prompt  `Success`. Then, you can check the built image using the following command.
-
-   ```shell
-   docker images
-   ```
-#### Build Broker
-
-1. Create a build environment directory
-
-```shell
-mkdir -p ./docker-build/broker/resource
+```Bash
+yum install docker
 ```
 
-2. The build environment directory is as follows:
+Or refer to the [official Docker installation doc](https://docs.docker.com/engine/install/).
 
-   ```sql
-   └── docker-build                                     // build root directory
-       └── broker                                       // BROKER build directory
-           ├── dockerfile                               // dockerfile script
-           └── resource                                 // resource directory
-               ├── init_broker.sh                       // startup and registration script
-               └── apache-doris-x.x.x-bin-broker.tar.gz // binary package
-   ```
+## Download build image
 
-3. Write the Dockerfile script for Broker
+For different versions of Doris, you need to download different build images. The "apache/doris:build-env-ldb-toolchain-latest" image is used for compiling the latest master code, and it is regularly updated to align with the master.
 
-   ```powershell
-   # Select the base image
-   FROM openjdk:8u342-jdk
-   
-   # Set environment variables
-   ENV JAVA_HOME="/usr/local/openjdk-8/" \
-       PATH="/opt/apache-doris/broker/bin:$PATH"
-   
-   # Download the software into the image, where the broker directory is synchronously compressed to the binary package of FE, which needs to be decompressed and repackaged (you can modify based on your own needs)
-   ADD ./resource/apache_hdfs_broker.tar.gz /opt/
-   
-   RUN apt-get update && \
-       apt-get install -y default-mysql-client && \
-       apt-get clean && \
-       mkdir /opt/apache-doris && \
-       cd /opt && \
-       mv apache_hdfs_broker /opt/apache-doris/broker
-   
-   ADD ./resource/init_broker.sh /opt/apache-doris/broker/bin
-   RUN chmod 755 /opt/apache-doris/broker/bin/init_broker.sh
-   
-   ENTRYPOINT ["/opt/apache-doris/broker/bin/init_broker.sh"]
-   ```
+| Image Version                                       | Doris Version |
+| --------------------------------------------------- | ------------- |
+| apache/doris:build-env-for-2.0                      | 2.0.x         |
+| apache/doris:build-env-for-2.0-no-avx2              | 2.0.x         |
+| apache/doris:build-env-ldb-toolchain-latest         | master        |
+| apache/doris:build-env-ldb-toolchain-no-avx2-latest | master        |
 
-   After writing, name it `Dockerfile` and save it to the `./docker-build/broker` directory
+Take Doris 2.0 as an example, download and check the correponding Docker image.
 
-4. Write the execution script of BE
+```Bash
+# Choose docker.io/apache/doris:build-env-for-2.0
+$ docker pull apache/doris:build-env-for-2.0
 
-   You can refer to [init_broker.sh](https://github.com/apache/doris/tree/master/docker/runtime/broker/resource/init_broker.sh).
-
-   After writing, name it `init_broker.sh` and save it to the `./docker-build/broker/resouce` directory.
-
-5. Execute the build
-
-   Please note that `${tagName}` needs to be replaced with the tag name you want to package and name, such as: `apache-doris:1.1.3-broker`
-
-   Build Broker:
-
-   ```shell
-   cd ./docker-build/broker
-   docker build . -t ${broker-tagName}
-   ```
-
-   After the build process is completed, you will see the prompt  `Success`. Then, you can check the built image using the following command.
-
-   ```shell
-   docker images
-   ```
-
-## Push Image to DockerHub or Private Warehouse
-
-Log into your DockerHub account
-
-```
-docker login
+# Check if it is downloaded
+$ docker images
+REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
+apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 ```
 
-If the login succeeds, you will see the prompt `Success` , and then you can push the Docker image to the warehouse.
+**Note:** 
 
-```shell
-docker push ${tagName}
+- Download the right image version for the Doris version that you're working with. The image version number is aligned with the Doris version number. For example, you should use "apache/doris:build-env-for-2.0" to compile Doris 2.0.
+- `apache/doris:build-env-ldb-toolchain-latest` is used for compiling the latest master code and is updated along with the master. You can check the update time in the `docker/README.md` file.
+- Images with "no-avx2" in their names contain third-party libraries that can run on CPUs that do not support AVX2 instructions. Using these images, you can compile Doris with the "USE_AVX2=0".
+- For information about changes in the compilation image, please see [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
+- The Docker compilation image includes both OpenJDK 8 and OpenJDK 11. You can check the default JDK version by running `java -version`, and switch between versions using the following commands (JDK 8 as the default version is recommended).
+
+```Bash
+# Switch to JDK 8
+alternatives --set java java-1.8.0-openjdk.x86_64
+alternatives --set javac java-1.8.0-openjdk.x86_64
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+
+# Switch to JDK 11
+alternatives --set java java-11-openjdk.x86_64
+alternatives --set javac java-11-openjdk.x86_64
+export JAVA_HOME=/usr/lib/jvm/java-11
 ```
+
+## Compile Doris
+
+### 1. Download Doris source code
+
+Log in to the host machine and obtain the latest code from the Doris 2.0 branch via git clone.
+
+```Plain
+$ git clone -b branch-2.0 https://github.com/apache/doris.git
+```
+
+After downloading, assume that the source code path is in the "doris-branch-2.0" directory.
+
+### 2. Run build image
+
+```Plain
+# Pre-build a Maven .m2 directory on the host machine to reuse the downloaded Java libraries in Docker.
+mkdir ~/.m2 
+
+# Run the build image
+docker run -it --network=host --name mydocker -v ~/.m2:/root/.m2 -v ~/doris-branch-2.0:/root/doris-branch-2.0/ apache/doris:build-env-for-2.0  
+
+# After successful execution, it should be in the Docker.
+```
+
+**Note:**
+
+- It is recommended to run the image by mounting the local Doris source code directory. This way, the compiled binary files will be stored on the host machine and will not be lost when the container exits.
+- It is also recommended to mount the `.m2` directory of Maven in the image to a directory on the host machine. This prevents repeated downloads of Maven dependencies each time the image is started for compilation.
+- When running the image for compilation, if there is a need to download additional files, it is suggested to use the host mode. The host mode does not require the use of `-p` for port mapping and allows sharing the network IP and ports with the host machine.
+- Below are explanations for some of the parameters used in the `docker run` command:
+
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| -v        | Mount a storage volume to a specific directory within a container. |
+| --name    | Specify a name for the container to use the assigned name in future container management. |
+| --network | Container network settings: "bridge" uses the Docker daemon's specified bridge network, "host" allows the container to use the host's network, "container:NAME_or_ID" uses the network of another container by sharing IP and port resources, "none" enables the container to use its own network (similar to --net=bridge) without any additional configuration. |
+
+### 3. Execute the build
+
+```Plain
+# By default, it builds the AVX2 version.
+$ sh build.sh
+
+# If you need the no AVX2 version, add USE_AVX2=0.
+$ USE_AVX2=0 sh build.sh
+
+# To compile a debug version of BE, add BUILD_TYPE=Debug.
+$ BUILD_TYPE=Debug sh build.sh
+```
+
+:::tip
+**To check if the machine supports AVX2:**
+
+$ cat /proc/cpuinfo | grep avx2
+:::
+
+After compilation, the output file is in the `output/` directory.
+
+## Build your own development environment image
+
+You can create a Doris development environment image by referring to the `docker/README.md` file.
