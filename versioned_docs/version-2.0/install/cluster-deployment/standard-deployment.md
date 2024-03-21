@@ -560,7 +560,7 @@ server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 
 Doris FE has a built-in Web UI. Users do not need to install a MySQL client to perform tasks such as adding BE/FE nodes or running other SQL queries.
 
-To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_port, for example, [http://172.20.63.118:8030](http://172.20.63.118:8030/). This will open Doris's built-in Web console.
+To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_port, for example, [http://172.20.63.118:8030](http://172.20.63.118:8030/). This will open the built-in Web console of Doris.
 
 The built-in Web console is primarily intended for use by the root account of the cluster. By default, the root account password is empty after installation.
 
