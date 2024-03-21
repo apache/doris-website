@@ -35,7 +35,7 @@ CREATE ROLE
 该语句用户创建一个角色
 
 ```sql
- CREATE ROLE rol_name;
+ CREATE ROLE role_name [comment];
 ```
 
 该语句创建一个无权限的角色，可以后续通过 GRANT 命令赋予该角色权限。
@@ -46,6 +46,11 @@ CREATE ROLE
 
     ```sql
     CREATE ROLE role1;
+    ```
+2. 创建一个角色并添加注释
+    
+    ```sql
+    CREATE ROLE role2 COMMENT "this is my first role";
     ```
 
 ### Keywords
