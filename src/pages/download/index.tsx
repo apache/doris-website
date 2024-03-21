@@ -310,6 +310,10 @@ export default function Download() {
                             <ul>
                                 <li className="mt-2 flex items-center space-x-2">
                                     <CheckedIcon />
+                                    <div className="text-[#4C576C]  text-base">Kafka Doris Connector</div>
+                                </li>
+                                <li className="mt-2 flex items-center space-x-2">
+                                    <CheckedIcon />
                                     <div className="text-[#4C576C]  text-base">Flink Doris Connector</div>
                                 </li>
                                 <li className="mt-2 flex items-center space-x-2">

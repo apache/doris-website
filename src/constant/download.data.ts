@@ -22,6 +22,7 @@ export enum SuffixEnum {
 }
 
 export enum ToolsEnum {
+    Kafka = 'Kafka Doris Connector',
     Flink = 'Flink Doris Connector',
     Spark = 'Spark Doris Connector',
     StreamLoader = 'Doris Streamloader',
@@ -736,6 +737,17 @@ export const OLD_VERSIONS: Option[] = [
 ];
 
 export const TOOL_VERSIONS = [
+    {
+        label: ToolsEnum.Kafka,
+        value: ToolsEnum.Kafka,
+        children: [
+            {
+                label: '1.0.0',
+                value: '1.0.0',
+                gz: 'https://repo1.maven.org/maven2/org/apache/doris/doris-kafka-connector/1.0.0/doris-kafka-connector-1.0.0.jar',
+            },
+        ],
+    },
     {
         label: ToolsEnum.Flink,
         value: ToolsEnum.Flink,
