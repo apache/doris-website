@@ -32,13 +32,11 @@ ALTER ROLE
 
 ### Description
 
-The statement user creates a role
+Statement used to modify a role
 
 ```sql
  ALTER ROLE role_name comment;
 ```
-
-This statement modifies the comment of a role.
 
 ### Example
 
