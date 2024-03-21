@@ -32,7 +32,7 @@ ALTER ROLE
 
 ### Description
 
-该语句用户修改一个角色
+该语句用于修改一个角色
 
 ```sql
  ALTER ROLE role_name comment;
