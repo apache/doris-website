@@ -40,13 +40,13 @@ CCR is applicable to the following scenarios:
 
 ### Concepts
 
-Source cluster: the cluster where business data is written and originates from, requiring Doris version 2.0
+- Source cluster: the cluster where business data is written and originates from, requiring Doris version 2.0
 
-Target cluster: the destination cluster for cross cluster replication, requiring version 2.0
+- Target cluster: the destination cluster for cross cluster replication, requiring version 2.0
 
-Binlog: the change log of the source cluster, including schema and data changes
+- Binlog: the change log of the source cluster, including schema and data changes
 
-Syncer: a lightweight process
+- Syncer: a lightweight process
 
 ### Architecture description
 
@@ -68,27 +68,26 @@ enable_feature_binlog=true
 
 4. Deploy syncers
 
-​		Build CCR syncer
+​Build CCR syncer
 
-1. ```Bash
-   git clone https://github.com/selectdb/ccr-syncer
-   
-   cd ccr-syncer
-   
-   bash build.sh <-j NUM_OF_THREAD> <--output SYNCER_OUTPUT_DIR>
-   
-   cd SYNCER_OUTPUT_DIR# Contact the Doris community for a free CCR binary package
-   ```
+```Bash
+git clone https://github.com/selectdb/ccr-syncer
+cd ccr-syncer   
+bash build.sh <-j NUM_OF_THREAD> <--output SYNCER_OUTPUT_DIR>
+cd SYNCER_OUTPUT_DIR# Contact the Doris community for a free CCR binary package
+```
 
-2. Start and stop syncer
 
-3. ```Bash
-   # Start
-   cd bin && sh start_syncer.sh --daemon
+Start and stop syncer
+
+
+```Bash
+# Start
+cd bin && sh start_syncer.sh --daemon
    
-   # Stop
-   sh stop_syncer.sh
-   ```
+# Stop
+sh stop_syncer.sh
+```
 
 5. Enable binlog in the source cluster.
 
