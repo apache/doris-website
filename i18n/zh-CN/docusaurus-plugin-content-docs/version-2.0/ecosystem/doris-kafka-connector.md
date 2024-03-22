@@ -26,9 +26,21 @@ under the License.
 
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) 是一款可扩展、可靠的在 Apache Kafka 和其他系统之间进行数据传输的工具，可以定义 Connectors 将大量数据迁入迁出 Kafka。
 
-Doris 提供了 Sink Connector 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
+Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
 
 ## Doris Kafka Connector 使用
+
+### 下载
+[doris-kafka-connector](https://doris.apache.org/zh-CN/download)
+
+maven 依赖
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
+  <artifactId>doris-kafka-connector</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 
 ### Standalone 模式启动
 
@@ -58,8 +70,6 @@ doris.password=
 doris.database=test_db
 key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
-key.converter.schemas.enable=false
-value.converter.schemas.enable=false
 ```
 
 启动 Standalone
@@ -67,7 +77,7 @@ value.converter.schemas.enable=false
 ```shell
 $KAFKA_HOME/bin/connect-standalone.sh -daemon $KAFKA_HOME/config/connect-standalone.properties $KAFKA_HOME/config/doris-connector-sink.properties
 ```
-:::caution
+:::note
 注意：一般不建议在生产环境中使用 standalone 模式
 :::
 
@@ -112,9 +122,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
     "doris.query.port":"9030",
     "doris.database":"test_db",
     "key.converter":"org.apache.kafka.connect.storage.StringConverter",
-    "value.converter":"org.apache.kafka.connect.json.JsonConverter",
-    "key.converter.schemas.enable":"false",
-    "value.converter.schemas.enable":"false",
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
   }
 }'
 ```
@@ -134,7 +142,7 @@ curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart
 ```
 参考：[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html#kconnect-rest-interface)
 
-:::caution
+:::note
 注意 kafka-connect 首次启动时，会往 kafka 集群中创建 `config.storage.topic` `offset.storage.topic` `status.storage.topic` 三个 topic 用于记录 kafka-connect 的共享连接器配置、偏移数据和状态更新。[How to Use Kafka Connect - Get Started](https://docs.confluent.io/platform/current/connect/userguide.html)
 :::
 
@@ -190,4 +198,4 @@ errors.deadletterqueue.topic.replication.factor=1
 | sink.properties.*     | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'` | N            | Stream Load 的导入参数。<br />例如：定义列分隔符`'sink.properties.column_separator':','`  <br />详细参数参考[这里](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD/#description)。 |
 | delivery.guarantee    | at_least_once                                                                        | N            | 消费 Kafka 数据导入至 doris 时，数据一致性的保障方式。支持 `at_least_once` `exactly_once`，默认为 `at_least_once` 。Doris 需要升级至 2.1.0 以上，才能保障数据的 `exactly_once`                                                                                  |
 
-其他 Kafka Connect Sink 通用配置项可参考：[Kafka Connect Sink Configuration Properties](https://docs.confluent.io/platform/current/installation/configuration/connect/sink-connect-configs.html#kconnect-long-sink-configuration-properties-for-cp)
+其他Kafka Connect Sink通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)

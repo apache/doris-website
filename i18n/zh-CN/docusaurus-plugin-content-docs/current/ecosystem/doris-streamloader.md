@@ -1,4 +1,3 @@
-
 ---
 {
     "title": "Doris Streamloader",
@@ -38,7 +37,7 @@ under the License.
 
 **1.0 版本** 
 
-源代码:  https://github.com/apache/doris-streamloader
+源代码：https://github.com/apache/doris-streamloader
 
 | 版本    | 日期      |  平台  |  链接  |
 |---|---|---|---|
@@ -122,16 +121,16 @@ doris-streamloader --source_file="data.csv" --url="http://localhost:8330" --head
 | --u      | 数据库用户名      |  root    |      |
 | --p      | 数据库用户对应的密码   |  空字符串    |      |
 | --compress      | 导入数据是否在 HTTP 传输时压缩   |  false    |   保持默认，打开后压缩解压会分别增加工具和 Doris BE 的 CPU 压力，所以仅在数据源所在机器网络带宽瓶颈时打开   |
-|--timeout    | 向 Doris 发送 HTTP 请求的超时时间, 单位:秒   |  60\*60\*10    | 保持默认   |
-| --batch      | 文件批量读取和发送的粒度, 单位: 行      |  4096    |  保持默认    |
-| --batch_byte      | 文件批量读取和发送的粒度, 单位: byte      |  943718400 (900MB)    |  保持默认    |
-| --workers   | 导入的并发数   |  0    |   设置成 0 为自动模式，会根据导入数据的大小，磁盘的吞吐量，Stream Load 导入速度计算一个值。 也可以手动设置，性能好的集群可以设置大点，最好不要超过 10。如果观察到导入内存过高（通过观察 Memtracker 或者 Exceed 日志）, 则可适当降低 worker 数量   |
-| --disk_throughput      | 磁盘的吞吐量，单位 MB/s   |  800    |  通常保持默认即可。该值参与 --workers 的自动推算过程。 如果希望通过工具能计算出一个适当的 workers 数，可以根据实际磁盘吞吐设置。  |
-|--streamload_throughput | Stream Load 导入实际的吞吐大小，单位 MB/s | 100 | 通常保持默认即可。该值参与 --workers 的自动推算过程。 默认值是通过每日性能测试环境给出的 Stream Load 吞吐量以及性能可预测性得出的。 如果希望通过工具能计算出一个适当的 workers 数，可以设置实测的 Stream Load 的吞吐，即：(LoadBytes\*1000)/(LoadTimeMs\*1024\*1024) 计算出实际的吞吐量 |
+|--timeout    | 向 Doris 发送 HTTP 请求的超时时间，单位：秒   |  60\*60\*10    | 保持默认   |
+| --batch      | 文件批量读取和发送的粒度，单位：行      |  4096    |  保持默认    |
+| --batch_byte      | 文件批量读取和发送的粒度，单位：byte      |  943718400 (900MB)    |  保持默认    |
+| --workers   | 导入的并发数   |  0    |   设置成 0 为自动模式，会根据导入数据的大小，磁盘的吞吐量，Stream Load 导入速度计算一个值。也可以手动设置，性能好的集群可以设置大点，最好不要超过 10。如果观察到导入内存过高（通过观察 Memtracker 或者 Exceed 日志）, 则可适当降低 worker 数量   |
+| --disk_throughput      | 磁盘的吞吐量，单位 MB/s   |  800    |  通常保持默认即可。该值参与 --workers 的自动推算过程。如果希望通过工具能计算出一个适当的 workers 数，可以根据实际磁盘吞吐设置。  |
+|--streamload_throughput | Stream Load 导入实际的吞吐大小，单位 MB/s | 100 | 通常保持默认即可。该值参与 --workers 的自动推算过程。默认值是通过每日性能测试环境给出的 Stream Load 吞吐量以及性能可预测性得出的。如果希望通过工具能计算出一个适当的 workers 数，可以设置实测的 Stream Load 的吞吐，即：(LoadBytes\*1000)/(LoadTimeMs\*1024\*1024) 计算出实际的吞吐量 |
 | --max_byte_per_task      | 每个导入任务数据量的最大大小，超过这个值剩下的数据会被拆分到一个新的导入任务中。  |  107374182400 (100G)    |  建议设置一个很大的值来减少导入的版本数。但如果遇到 body exceed max size 错误且不想调整 streaming_load_max_mb 参数（需重启 be），又或是遇到 -238 TOO MANY SEGMENT 错误，可以临时调小这个配置    |
-| --check_utf8 | <p>是否对导入数据的编码进行检查：</p>   <p> 1） false，那么不做检查直接将原始数据导入; 2） true，那么对数据中非 utf-8 编码的字符用 � 进行替代</p> | true |保持默认|
+| --check_utf8 | <p>是否对导入数据的编码进行检查：</p>   <p> 1）false，那么不做检查直接将原始数据导入; 2）true，那么对数据中非 utf-8 编码的字符用 � 进行替代</p> | true |保持默认|
 |--debug |打印 Debug 日志 | false | 保持默认|
-|--auto_retry| 自动重传失败的 worker 序号和 task 序号的列表 | 空字符串 | 仅导入失败时重传使用，正常导入无需关心。失败时会提示具体参数内容，复制执行即可。例：如果 --auto_retry="1,1,2,1" 则表示： 需要重传的task为：第一个 worker 的第一个 task，第二个 worker 的第一个 task。 |
+|--auto_retry| 自动重传失败的 worker 序号和 task 序号的列表 | 空字符串 | 仅导入失败时重传使用，正常导入无需关心。失败时会提示具体参数内容，复制执行即可。例：如果 --auto_retry="1,1,2,1" 则表示：需要重传的 task 为：第一个 worker 的第一个 task，第二个 worker 的第一个 task。 |
 |--auto_retry_times | 自动重传的次数 | 3 | 保持默认，如果不想重传需要把这个值设置为 0 |
 |--auto_retry_interval | 自动重传的间隔 | 60 | 保持默认，如果 Doris 因宕机导致失败，建议根据实际 Doris 重启的时间间隔来设置该值 |
 |--log_filename | 日志存储的位置 | "" | 默认将日志打印到控制台上，如果要打印到日志文件中，可以设置存储日志文件的路径，如--log_filename = "/var/log" |
@@ -157,7 +156,7 @@ doris-streamloader --source_file="data.csv" --url="http://localhost:8330" --head
 
 
 
-具体例子如下:
+具体例子如下：
 
 - 导入成功，成功信息如下： 
 
@@ -189,7 +188,7 @@ doris-streamloader --source_file="data.csv" --url="http://localhost:8330" --head
   ./doris-streamloader --source_file /mnt/disk1/laihui/doris/tools/tpch-tools/bin/tpch-data/lineitem.tbl.1  --url="http://127.0.0.1:8239" --header="column_separator:|?columns: l_orderkey, l_partkey, l_suppkey, l_linenumber, l_quantity, l_extendedprice, l_discount, l_tax, l_returnflag,l_linestatus, l_shipdate,l_commitdate,l_receiptdate,l_shipinstruct,l_shipmode,l_comment,temp" --db="db" --table="lineitem1" -u root -p "" --compress=false --timeout=36000 --workers=3 --batch=4096 --batch_byte=943718400 --max_byte_per_task=1073741824 --check_utf8=true --report_duration=1 --auto_retry="2,1;1,1;0,1" --auto_retry_times=0 --auto_retry_interval=60
   ```
   
-只需复制运行该命令即可，`auto_retry` 说明可参考, 并给出失败的结果信息：
+只需复制运行该命令即可，`auto_retry` 说明可参考，并给出失败的结果信息：
 
 ```Go
 Load Result: {

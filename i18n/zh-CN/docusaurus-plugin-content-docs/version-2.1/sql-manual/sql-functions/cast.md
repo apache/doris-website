@@ -3,6 +3,7 @@
     "title": "CAST",
     "language": "zh-CN"
 }
+
 ---
 
 <!-- 
@@ -25,29 +26,33 @@ under the License.
 -->
 
 ## CAST
-### description
+
+### Description
+
+`CAST` 函数用于 SQL 查询中的数据类型转换。 它通常用于将一种数据类型转换为另一种数据类型，例如将字符串转换为整数、将整数转换为字符串等。
+
 #### Syntax
 
-`T cast (input as Type)`
+`CAST (src_type as dst_type)`
 
-将 input 转成 指定的 Type类型
+将 src_type 转成指定的 dst_type 类型
 
-### example
+### Example
 
 1. 转常量，或表中某列
 
-```
-mysql> select cast (1 as BIGINT);
-+-------------------+
-| CAST(1 AS BIGINT) |
-+-------------------+
-|                 1 |
-+-------------------+
+```mysql
+mysql> select cast('1234' as int);
++---------------------+
+| cast('1234' as INT) |
++---------------------+
+|                1234 |
++---------------------+
 ```
 
 2. 转导入的原始数据
 
-```
+```shell
 curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=cast(tmp_k1 as BIGINT)"  http://host:port/api/test/bigint/_stream_load
 ```
 
@@ -55,9 +60,11 @@ curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=c
 
 如果想强制将这种类型的原始数据 cast to int 的话。请看下面写法：
 
-```
+```shell
 curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=cast(cast(tmp_k1 as DOUBLE) as BIGINT)"  http://host:port/api/test/bigint/_stream_load
+```
 
+```mysql
 mysql> select cast(cast ("11.2" as double) as bigint);
 +----------------------------------------+
 | CAST(CAST('11.2' AS DOUBLE) AS BIGINT) |
@@ -67,8 +74,9 @@ mysql> select cast(cast ("11.2" as double) as bigint);
 1 row in set (0.00 sec)
 ```
 
-对于DECIMALV3类型，cast会进行四舍五入
-```
+对于DECIMALV3类型，`CAST` 会进行四舍五入：
+
+```mysql
 mysql> select cast (1.115 as DECIMALV3(16, 2));
 +---------------------------------+
 | cast(1.115 as DECIMALV3(16, 2)) |
@@ -76,5 +84,7 @@ mysql> select cast (1.115 as DECIMALV3(16, 2));
 |                            1.12 |
 +---------------------------------+
 ```
-### keywords
+
+### Keywords
+
 CAST

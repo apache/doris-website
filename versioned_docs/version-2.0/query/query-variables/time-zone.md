@@ -174,7 +174,36 @@ In summary, the best practice for dealing with time zone issues is to:
 
 ### Daylight Saving Time
 
-The start and end times for Daylight Saving Time are taken from the [current time zone data source](#data-source) and may not necessarily correspond exactly to the actual officially recognised times for the current year's time zone location. This data is maintained by ICANN. If you need to ensure that Daylight Saving Time behaves as specified for the current year, please make sure that data source selected by Doris is the latest ICANN published time zone data, which could be downloaded at [Extended Reading](#extended-reading).
+The start and end times for Daylight Saving Time are taken from the [current time zone data source](#data-source) and may not necessarily correspond exactly to the actual officially recognised times for the current year's time zone location. This data is maintained by ICANN. If you need to ensure that Daylight Saving Time behaves as specified for the current year, please make sure that data source selected by Doris is the latest ICANN published time zone data. See below for download access.
+
+### Data update
+
+Real-world time zone and daylight saving time data may change from time to time for a variety of reasons, and IANA periodically records these changes and updates the corresponding time zone files. If you want the time zone information in Doris to be up to date with the latest IANA data, do one of the followings:
+
+1. Use the Package Manager to update
+
+Depending on the package manager used by the current operating system, you can update the time zone data directly using the corresponding command:
+
+```shell
+# yum
+> sudo yum update tzdata
+# apt
+> sudo apt update tzdata
+```
+
+The data updated in this way is located under the system `$TZDIR` (typically `usr/share/zoneinfo`). If `use_doris_tzfile = true`, the user should overwrite it to the `zoneinfo` directory in the BE deployment directory.
+
+2. pull the IANA time zone database manually (recommended)
+
+Most Linux distributions have a package manager where tzdata is not synchronised in a timely manner. If the accuracy of the time zone data is important, you can pull the data published by IANA on a regular basis:
+
+```shell
+wget https://www.iana.org/time-zones/repository/tzdb-latest.tar.lz
+```
+
+Then generate the specific zoneinfo data according the README file in the extracted folder. The generated data should be copied to `$TZDIR` or to the BE deployment directory, depending on the value of the BE config `use_doris_tzfile`.
+
+Please note that all the above operations **must** be restarted **on the corresponding BE to take effect after they are done on the BE machine.
 
 ## Extended Reading
 
