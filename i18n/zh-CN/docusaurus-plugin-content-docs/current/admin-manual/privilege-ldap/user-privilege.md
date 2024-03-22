@@ -260,11 +260,11 @@ ADMIN_PRIV 和 GRANT_PRIV 权限同时拥有**授予权限**的权限，较为�
 ## 行级权限
 从1.2版本开始，可以通过 [CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md) 命令创建行级权限。
 
-从2.1版本开始，支持通过 ApacheRanger 的 Row Level Filter 来设置行权限，[Doris Ranger](ranger.md)， [单独为指定的catalog配置ranger](../../lakehouse/multi-catalog/hive.md)
+从2.1版本开始，支持通过 ApacheRanger 的 Row Level Filter 来设置行权限，[Doris Ranger](ranger.md)， [单独为指定的catalog配置ranger](../../lakehouse/multi-catalog/hive.md)（注意：仅支持在Nereids优化器使用）
 
 ## 数据脱敏
 
-从2.1版本开始，支持通过 ApacheRanger 的 Masking 来为某些列设置脱敏策略，目前仅支持[Doris Ranger](ranger.md)来设置
+从2.1版本开始，支持通过 ApacheRanger 的 Masking 来为某些列设置脱敏策略，目前仅支持[Doris Ranger](ranger.md)来设置。（注意：仅支持在Nereids优化器使用）
 
 ## 最佳实践
 
