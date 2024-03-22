@@ -151,8 +151,16 @@ Join rewriting refers to when the tables used in the query and the materializati
 In this case, the optimizer will attempt transparent rewriting by either joining the input of the materialized
 view with the query or placing the join in the outer layer of the query's WHERE clause.
 
-This pattern of rewriting is supported for multi-table joins and supports inner and left join types.
-Support for other types is continually expanding.
+This pattern of rewriting is supported for multi-table joins and supported join types is as following:
+
+* INNER JOIN
+* LEFT OUTER JOIN
+* RIGHT OUTER JOIN
+* FULL OUTER JOIN
+* LEFT SEMI JOIN
+* RIGHT SEMI JOIN
+* LEFT ANTI JOIN
+* RIGHT ANTI JOIN
 
 **Case 1:**
 

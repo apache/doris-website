@@ -144,7 +144,15 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ### JOIN 改写
 Join 改写指的是查询和物化使用的表相同，可以在物化视图和查询 Join 的输入或者 Join 的外层写 where，优化器对此 pattern 的查询会尝试进行透明改写。
 
-支持多表 Join，支持 Join 的类型为 inner，left。其他类型在不断拓展中。
+支持多表 Join，支持 Join 的类型为:
+* INNER JOIN
+* LEFT OUTER JOIN
+* RIGHT OUTER JOIN
+* FULL OUTER JOIN
+* LEFT SEMI JOIN
+* RIGHT SEMI JOIN
+* LEFT ANTI JOIN
+* RIGHT ANTI JOIN
 
 **用例1:**
 
