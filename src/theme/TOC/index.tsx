@@ -43,7 +43,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
             ) : (
                 <Link
                     className="ml-4 mb-8 flex items-center hover:no-underline"
-                    href="https://ask.selectdb.com"
+                    href="https://github.com/apache/doris/discussions"
                     target="_blank"
                 >
                     <span className="pr-2">Join Discussion</span>
