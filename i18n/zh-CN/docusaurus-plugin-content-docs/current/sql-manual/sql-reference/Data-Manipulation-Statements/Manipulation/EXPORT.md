@@ -92,7 +92,7 @@ EXPORT
 
   - `with_bom`: 默认为false，若指定为true，则导出的文件编码为带有BOM的UTF8编码（只对csv相关的文件格式生效）。
 
-  - `data_consistency`: 可以设置为`none` / `partition`，默认为`none`。指示以何种粒度切分导出表，`none`代表tablets级别，`partition`代表partition级别。
+  - `data_consistency`: 可以设置为 `none` / `partition` ，默认为 `none` 。指示以何种粒度切分导出表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
 
   - `timeout`：导出作业的超时时间，默认为2小时，单位是秒。
 
@@ -350,10 +350,10 @@ Export 作业拆分成多个`SELECT INTO OUTFILE`的具体逻辑是：将该表�
 
 当所要导出的数据量很大时，可以考虑适当调大`parallelism`参数来增加并发导出。若机器核数紧张，无法再增加`parallelism` 而导出表的Tablets又较多 时，可以考虑调大`maximum_tablets_of_outfile_in_export`来增加一个`SELECT INTO OUTFILE`语句负责的tablets数量，也可以加快导出速度。
 
-若希望以Parition粒度导出Table，可以设置Export属性 `"data_consistency" = "partition"` ，此时Export任务并发的线程会以Parition粒度来划分为多个Outfile语句，不同的Outfile语句导出的Parition不同，而同一个Outfile语句导出的数据一定属于同一个Partition。如：设置`"data_consistency" = "partition"`后
+若希望以 Parition 粒度导出 Table ，可以设置 Export 属性 `"data_consistency" = "partition"` ，此时 Export 任务并发的线程会以 Parition 粒度来划分为多个 Outfile 语句，不同的 Outfile 语句导出的 Parition 不同，而同一个 Outfile 语句导出的数据一定属于同一个 Partition。如：设置 `"data_consistency" = "partition"` 后
 
-- num(partition) = 40, parallelism = 3，则这3个线程各自负责的partition数量分别为 14，13，13个。
-- num(partition) = 2, parallelism = 3，则Doris会自动将parallelism设置为2，每一个线程负责一个Partition。
+- num(partition) = 40, parallelism = 3，则这3个线程各自负责的 Partition 数量分别为 14，13，13个。
+- num(partition) = 2, parallelism = 3，则 Doris 会自动将 Parallelism 设置为2，每一个线程负责一个 Partition 。
 
 
 #### 内存限制
