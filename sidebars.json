@@ -921,6 +921,7 @@
                             "items": [
                                 "sql-manual/sql-reference/Account-Management-Statements/CREATE-ROLE",
                                 "sql-manual/sql-reference/Account-Management-Statements/CREATE-USER",
+                                "sql-manual/sql-reference/Account-Management-Statements/ALTER-ROLE",
                                 "sql-manual/sql-reference/Account-Management-Statements/ALTER-USER",
                                 "sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD",
                                 "sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY",
