@@ -3,6 +3,7 @@
     "title": "Unique Key",
     "language": "en"
 }
+
 ---
 
 <!--
@@ -47,7 +48,7 @@ For detailed differences between the two implementation methods, refer to the su
 ### Merge on Read ( Same Implementation as Aggregate Model)
 
 | ColumnName    | Type          | IsKey | Comment                |
-|---------------|---------------|-------|------------------------|
+| ------------- | ------------- | ----- | ---------------------- |
 | user_id       | BIGINT        | Yes   | User ID                |
 | username      | VARCHAR (50)  | Yes   | Username               |
 | city          | VARCHAR (20)  | No    | User location city     |
@@ -59,7 +60,7 @@ For detailed differences between the two implementation methods, refer to the su
 
 This is a typical user basic information table. There is no aggregation requirement for such data. The only concern is to ensure the uniqueness of the primary key. (The primary key here is user_id + username). The CREATE TABLE statement for the above table is as follows:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_unique
 (
 `user_id` LARGEINT NOT NULL COMMENT "User ID",
@@ -81,7 +82,7 @@ PROPERTIES (
 This is the same table schema and the CREATE TABLE statement as those of the Aggregate Model:
 
 | ColumnName    | Type          | AggregationType | Comment                |
-|---------------|---------------|-----------------|------------------------|
+| ------------- | ------------- | --------------- | ---------------------- |
 | user_id       | BIGINT        |                 | User ID                |
 | username      | VARCHAR (50)  |                 | Username               |
 | city          | VARCHAR (20)  | REPLACE         | User location city     |
@@ -91,7 +92,7 @@ This is the same table schema and the CREATE TABLE statement as those of the Agg
 | address       | VARCHAR (500) | REPLACE         | User address           |
 | register_time | DATETIME      | REPLACE         | User registration time |
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg3
 (
 `user_id` LARGEINT NOT NULL COMMENT "User ID",
@@ -126,6 +127,7 @@ In Doris 1.2.0, as a new feature, Merge on Write is disabled by default(before v
 In Doris 2.1, Merge on Write is enabled by default.
 
 > Note:
+>
 > 1. For users on version 1.2:
 >    1. It is recommended to use version 1.2.4 or above, as this version addresses some bugs and stability issues.
 >    2. Add the configuration item `disable_storage_page_cache=false` in `be.conf`. Failure to add this configuration item may significantly impact data import performance.
@@ -133,7 +135,7 @@ In Doris 2.1, Merge on Write is enabled by default.
 
 Take the previous table as an example, the corresponding to CREATE TABLE statement should be:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_unique_merge_on_write
 (
 `user_id` LARGEINT NOT NULL COMMENT "User ID",
@@ -157,7 +159,7 @@ The table schema produced by the above statement will be different from that of 
 
 
 | ColumnName    | Type          | AggregationType | Comment                |
-|---------------|---------------|-----------------|------------------------|
+| ------------- | ------------- | --------------- | ---------------------- |
 | user_id       | BIGINT        |                 | User ID                |
 | username      | VARCHAR (50)  |                 | Username               |
 | city          | VARCHAR (20)  | NONE            | User location city     |

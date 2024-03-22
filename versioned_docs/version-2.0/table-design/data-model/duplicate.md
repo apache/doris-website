@@ -3,6 +3,7 @@
     "title": "Duplicate Key",
     "language": "en"
 }
+
 ---
 
 <!--
@@ -30,7 +31,7 @@ under the License.
 In some multidimensional analysis scenarios, there is no need for primary keys or data aggregation. For these cases, we introduce the Duplicate Model to. Here is an example:
 
 | ColumnName | Type           | SortKey | Comment        |
-|------------|----------------|---------|----------------|
+| ---------- | -------------- | ------- | -------------- |
 | timstamp   | DATETIME       | Yes     | Log time       |
 | type       | INT            | Yes     | Log type       |
 | error_code | INT            | Yes     | Error code     |
@@ -40,7 +41,7 @@ In some multidimensional analysis scenarios, there is no need for primary keys o
 
 The corresponding to CREATE TABLE statement is as follows:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_duplicate
 (
     `timestamp` DATETIME NOT NULL COMMENT "Log time",
@@ -71,7 +72,7 @@ When creating a table without specifying Unique, Aggregate, or Duplicate, a tabl
 
 When users do not need SORTING COLUMN or Prefix Index, they can configure the following table property:
 
-```
+```sql
 "enable_duplicate_without_keys_by_default" = "true"
 ```
 
@@ -118,7 +119,7 @@ The Aggregate Model only presents the aggregated data. That means we have to ens
 Suppose that you have the following table schema:
 
 | ColumnName | Type     | AggregationType | Comment                         |
-|------------|----------|-----------------|---------------------------------|
+| ---------- | -------- | --------------- | ------------------------------- |
 | user\_id   | LARGEINT |                 | User ID                         |
 | date       | DATE     |                 | Date when the data are imported |
 | cost       | BIGINT   | SUM             | Total user consumption          |
@@ -128,14 +129,14 @@ Assume that there are two batches of data that have been imported into the stora
 **batch 1**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 50   |
 | 10002    | 2017-11-21 | 39   |
 
 **batch 2**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 1    |
 | 10001    | 2017-11-21 | 5    |
 | 10003    | 2017-11-22 | 22   |
@@ -143,7 +144,7 @@ Assume that there are two batches of data that have been imported into the stora
 As you can see, data about User 10001 in these two import batches have not yet been aggregated. However, in order to ensure that users can only query the aggregated data as follows:
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 51   |
 | 10001    | 2017-11-21 | 5    |
 | 10002    | 2017-11-21 | 39   |
@@ -170,14 +171,14 @@ For the previous example:
 **batch 1**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 50   |
 | 10002    | 2017-11-21 | 39   |
 
 **batch 2**
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 1    |
 | 10001    | 2017-11-21 | 5    |
 | 10003    | 2017-11-22 | 22   |
@@ -185,7 +186,7 @@ For the previous example:
 Since the final aggregation result is:
 
 | user\_id | date       | cost |
-|----------|------------|------|
+| -------- | ---------- | ---- |
 | 10001    | 2017-11-20 | 51   |
 | 10001    | 2017-11-21 | 5    |
 | 10002    | 2017-11-21 | 39   |
@@ -203,7 +204,7 @@ Therefore, if you need to perform frequent `count (*)` queries, we recommend tha
 column of value 1 and aggregation type SUM. In this way, the table schema in the previous example will be modified as follows:
 
 | ColumnName | Type   | AggregationType | Comment                         |
-|------------|--------|-----------------|---------------------------------|
+| ---------- | ------ | --------------- | ------------------------------- |
 | user ID    | BIGINT |                 | User ID                         |
 | date       | DATE   |                 | Date when the data are imported |
 | Cost       | BIGINT | SUM             | Total user consumption          |
@@ -225,7 +226,7 @@ In Merge on Write, the model adds a  `delete bitmap` for each imported rowset to
 **batch 1**
 
 | user_id | date       | cost | delete bit |
-|---------|------------|------|------------|
+| ------- | ---------- | ---- | ---------- |
 | 10001   | 2017-11-20 | 50   | false      |
 | 10002   | 2017-11-21 | 39   | false      |
 
@@ -234,14 +235,14 @@ After Batch 2 is imported, the duplicate rows in the first batch will be marked 
 **batch 1**
 
 | user_id | date       | cost | delete bit |
-|---------|------------|------|------------|
+| ------- | ---------- | ---- | ---------- |
 | 10001   | 2017-11-20 | 50   | **true**   |
 | 10002   | 2017-11-21 | 39   | false      |
 
 **batch 2**
 
 | user\_id | date       | cost | delete bit |
-|----------|------------|------|------------|
+| -------- | ---------- | ---- | ---------- |
 | 10001    | 2017-11-20 | 1    | false      |
 | 10001    | 2017-11-21 | 5    | false      |
 | 10003    | 2017-11-22 | 22   | false      |
@@ -269,4 +270,4 @@ Since the data model was established when the table was built, and **irrevocable
 1. The Aggregate Model can greatly reduce the amount of data scanned and query computation by pre-aggregation. Thus, it is very suitable for report query scenarios with fixed patterns. But this model is unfriendly to `count (*)` queries. Meanwhile, since the aggregation method on the Value column is fixed, semantic correctness should be considered in other types of aggregation queries.
 2. The Unique Model guarantees the uniqueness of primary key for scenarios requiring a unique primary key. The downside is that it cannot exploit the advantage brought by pre-aggregation such as ROLLUP in queries. Users who have high-performance requirements for aggregate queries are recommended to use the newly added Merge on Write implementation since version 1.2.
 3. The Duplicate Model is suitable for ad-hoc queries of any dimensions. Although it may not be able to take advantage of the pre-aggregation feature, it is not limited by what constrains the Aggregate Model and can give full play to the advantage of columnar storage (reading only the relevant columns, but not all Key columns).
-4. If user need to use partial-update, please refer to document [partial-update](../data-operate/update-delete/partial-update.md)
+4. If user need to use partial-update, please refer to document [partial-update](

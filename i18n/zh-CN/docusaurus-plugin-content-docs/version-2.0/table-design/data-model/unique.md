@@ -95,7 +95,7 @@ PROPERTIES (
 
 用户需要在建表时添加下面的 property 来开启写时合并。
 
-```Plain
+```sql
 "enable_unique_key_merge_on_write" = "true"
 ```
 :::caution

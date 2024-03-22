@@ -78,7 +78,7 @@ batch 2
 
 另外，在聚合列（Value）上，执行与聚合类型不一致的聚合类查询时，要注意语意。比如在如上示例中执行如下查询：
 
-```Plain
+```sql
 SELECT MIN(cost) FROM table;
 ```
 
@@ -88,7 +88,7 @@ SELECT MIN(cost) FROM table;
 
 以最基本的 count(*) 查询为例：
 
-```Plain
+```sql
 SELECT COUNT(*) FROM table;
 ```
 

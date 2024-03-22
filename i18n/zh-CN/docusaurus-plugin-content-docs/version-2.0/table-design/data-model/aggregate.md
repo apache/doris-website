@@ -260,7 +260,7 @@ insert into aggstate values(2,sum_state(4),group_concat_state('d'));
 
 我们可以通过 merge 操作来合并多个 state，并且返回最终聚合函数计算的结果
 
-```Plain
+```sql
 mysql> select sum_merge(k2) from aggstate;
 +---------------+
 | sum_merge(k2) |
@@ -271,7 +271,7 @@ mysql> select sum_merge(k2) from aggstate;
 
 `sum_merge` 会先把 sum(1,2,3) 和 sum(4) 合并成 sum(1,2,3,4) ，并返回计算的结果。因为 group_concat 对于顺序有要求，所以结果是不稳定的。
 
-```Plain
+```sql
 mysql> select group_concat_merge(k3) from aggstate;
 +------------------------+
 | group_concat_merge(k3) |
@@ -296,7 +296,7 @@ insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate
 
 可以通过查询
 
-```Plain
+```sql
 mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
 +---------------+------------------------+
 | sum_merge(k2) | group_concat_merge(k3) |

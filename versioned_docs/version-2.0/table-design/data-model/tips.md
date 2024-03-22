@@ -3,6 +3,7 @@
     "title": "Usage Guidelines",
     "language": "en"
 }
+
 ---
 
 <!-- 
@@ -45,7 +46,7 @@ Doris has its built-in root, and the default password is empty.
 
 After starting the Doris program, root or admin users can connect to Doris clusters. You can use the following command to log in to Doris. After login, you will enter the corresponding MySQL command line interface.
 
-```sql
+```shell
 [root@doris ~]# mysql  -h FE_HOST -P9030 -uroot
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 41
@@ -104,40 +105,40 @@ CREATE DATABASE example_db;
 >
 > If you don't know the full name of the command, you can use "HELP + a field of the command" for fuzzy query. For example, if you type in  `HELP CREATE`, you can find commands including `CREATE DATABASE`, `CREATE TABLE`, and `CREATE USER`.
 >
-> ```
->mysql> HELP CREATE;
->Many help items for your request exist.
->To make a more specific request, please type 'help <item>',
->where <item> is one of the following
->topics:
->   CREATE CATALOG
->   CREATE DATABASE
->   CREATE ENCRYPTKEY
->   CREATE EXTERNAL TABLE
->   CREATE FILE
->   CREATE FUNCTION
->   CREATE INDEX
->   CREATE MATERIALIZED VIEW
->   CREATE POLICY
->   CREATE REPOSITORY
->   CREATE RESOURCE
->   CREATE ROLE
->   CREATE ROUTINE LOAD
->   CREATE SQL BLOCK RULE
->   CREATE SYNC JOB
->   CREATE TABLE
->   CREATE TABLE AS SELECT
->   CREATE TABLE LIKE
->   CREATE USER
->   CREATE VIEW
->   CREATE WORKLOAD GROUP
->   SHOW CREATE CATALOG
->   SHOW CREATE DATABASE
->   SHOW CREATE FUNCTION
->   SHOW CREATE LOAD
->   SHOW CREATE REPOSITORY
->   SHOW CREATE ROUTINE LOAD
->   SHOW CREATE TABLE
+> ```sql
+> mysql> HELP CREATE;
+> Many help items for your request exist.
+> To make a more specific request, please type 'help <item>',
+> where <item> is one of the following
+> topics:
+> CREATE CATALOG
+> CREATE DATABASE
+> CREATE ENCRYPTKEY
+> CREATE EXTERNAL TABLE
+> CREATE FILE
+> CREATE FUNCTION
+> CREATE INDEX
+> CREATE MATERIALIZED VIEW
+> CREATE POLICY
+> CREATE REPOSITORY
+> CREATE RESOURCE
+> CREATE ROLE
+> CREATE ROUTINE LOAD
+> CREATE SQL BLOCK RULE
+> CREATE SYNC JOB
+> CREATE TABLE
+> CREATE TABLE AS SELECT
+> CREATE TABLE LIKE
+> CREATE USER
+> CREATE VIEW
+> CREATE WORKLOAD GROUP
+> SHOW CREATE CATALOG
+> SHOW CREATE DATABASE
+> SHOW CREATE FUNCTION
+> SHOW CREATE LOAD
+> SHOW CREATE REPOSITORY
+> SHOW CREATE ROUTINE LOAD
+> SHOW CREATE TABLE
 > ```
 
 After the database is created, you can view the information about the database via the [SHOW DATABASES](../sql-manual/sql-reference/Show-Statements/SHOW-DATABASES.md) command.
@@ -189,6 +190,7 @@ The table schema is as follows:
 * `pv`: BIGINT (8 bytes); default value: 0; This is a metric column, and Doris will aggregate the metric columns internally. The `pv` column is aggregated by SUM.
 
 The corresponding CREATE TABLE statement is as follows:
+
 ```sql
 CREATE TABLE table1
 (
@@ -225,6 +227,7 @@ Use the `event_day` column as the partitioning column and create 3 partitions: p
 HASH bucket each partition based on `siteid`. The number of buckets per partition is 10.
 
 The corresponding CREATE TABLE statement is as follows:
+
 ```sql
 CREATE TABLE table2
 (
@@ -495,7 +498,7 @@ When the job status is ``FINISHED``, the job is complete. The new Schema has tak
 
 After ALTER TABLE is completed, you can view the latest Schema via ``DESC TABLE``.
 
-```
+```sql
 mysql> DESC table1;
 +----------+-------------+------+-------+---------+-------+
 | Field    | Type        | Null | Key   | Default | Extra |
@@ -555,7 +558,7 @@ If the task status is ``FINISHED``, the job is completed.
 
 After the Rollup is created, you can use ``DESC table1 ALL`` to check the information of the Rollup.
 
-```
+```sql
 mysql> desc table1 all;
 +-------------+----------+-------------+------+-------+--------+-------+
 | IndexName   | Field    | Type        | Null | Key   | Default | Extra |
