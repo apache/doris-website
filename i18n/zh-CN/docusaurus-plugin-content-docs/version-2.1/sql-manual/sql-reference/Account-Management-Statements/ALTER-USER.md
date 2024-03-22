@@ -34,9 +34,11 @@ ALTER USER
 
 ALTER USER 命令用于修改一个用户的账户属性，包括密码、和密码策略等
 
->注意：
->
->从2.0版本开始，此命令不再支持修改用户角色,相关操作请使用[GRANT](./GRANT.md)和[REVOKE](./REVOKE.md)
+:::caution
+注意：
+
+从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](../Account-Management-Statements/GRANT)和[REVOKE](../Account-Management-Statements/REVOKE)
+:::
 
 ```sql
 ALTER USER [IF EXISTS] user_identity [IDENTIFIED BY 'password']
@@ -62,9 +64,13 @@ password_policy:
 在一个 ALTER USER 命令中，只能同时对以下账户属性中的一项进行修改：
 
 1. 修改密码
+
 2. 修改 `PASSWORD_HISTORY`
+
 3. 修改 `PASSWORD_EXPIRE`
+
 4. 修改 `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
+
 5. 解锁用户
 
 ### Example
