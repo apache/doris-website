@@ -41,6 +41,7 @@ The ALTER USER command is used to modify a user's account attributes, including 
 ```sql
 ALTER USER [IF EXISTS] user_identity [IDENTIFIED BY 'password']
 [password_policy]
+[comment]    
 
 user_identity:
     'user_name'@'host'
@@ -84,6 +85,12 @@ In an ALTER USER command, only one of the following account attributes can be mo
 
     ```
     ALTER USER jack@'%' ACCOUNT_UNLOCK
+    ```
+
+4. Modify the user's comment
+
+    ```
+    ALTER USER jack@'%' COMMENT "this is my first user"
     ```
 
 ### Keywords

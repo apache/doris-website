@@ -41,7 +41,8 @@ ALTER USER 命令用于修改一个用户的账户属性，包括密码、和密
 ```sql
 ALTER USER [IF EXISTS] user_identity [IDENTIFIED BY 'password']
 [password_policy]
-
+[comment]
+    
 user_identity:
     'user_name'@'host'
 
@@ -84,6 +85,12 @@ password_policy:
 
     ```
     ALTER USER jack@'%' ACCOUNT_UNLOCK
+    ```
+
+4. 修改一个用户的注释
+    
+    ```
+    ALTER USER jack@'%' COMMENT "this is my first user"
     ```
 
 ### Keywords

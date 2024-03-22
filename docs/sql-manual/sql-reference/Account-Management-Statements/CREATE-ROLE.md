@@ -35,18 +35,24 @@ CREATE ROLE
 The statement user creates a role
 
 ```sql
-  CREATE ROLE rol_name;
+  CREATE ROLE role_name [comment];
 ````
 
 This statement creates an unprivileged role, which can be subsequently granted with the GRANT command.
 
 ### Example
 
-1. Create a character
+1. Create a role
 
     ```sql
     CREATE ROLE role1;
     ````
+
+2. Create a role with comment
+
+    ```sql
+    CREATE ROLE role2 COMMENT "this is my first role";
+    ```
 
 ### Keywords
 

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CREATE-ROLE",
-    "language": "zh-CN"
+    "title": "ALTER-ROLE",
+    "language": "en"
 }
 ---
 
@@ -24,38 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CREATE ROLE
+## ALTER ROLE
 
 ### Name
 
-CREATE ROLE
+ALTER ROLE
 
 ### Description
 
-该语句用户创建一个角色
+Statement used to modify a role
 
 ```sql
- CREATE ROLE role_name [comment];
+ ALTER ROLE role_name comment;
 ```
-
-该语句创建一个无权限的角色，可以后续通过 GRANT 命令赋予该角色权限。
 
 ### Example
 
-1. 创建一个角色
+1. Modify the role's comment
 
     ```sql
-    CREATE ROLE role1;
-    ```
-2. 创建一个角色并添加注释
-    
-    ```sql
-    CREATE ROLE role2 COMMENT "this is my first role";
+    ALTER ROLE role1 COMMENT "this is my first role";
     ```
 
 ### Keywords
 
-    CREATE, ROLE
+    ALTER, ROLE
 
 ### Best Practice
 
