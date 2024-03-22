@@ -42,7 +42,9 @@ brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
 python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@11 npm
 ```
 
-:::tip On MacOS, since Homebrew does not provide an installation package for JDK8, JDK11 is used here instead. Alternatively, you can manually download and install JDK8. :::
+:::tip 
+On MacOS, since Homebrew does not provide an installation package for JDK8, JDK11 is used here instead. Alternatively, you can manually download and install JDK8. 
+:::
 
 2. **Compile source code**
 
@@ -50,7 +52,9 @@ python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@
 bash build.sh
 ```
 
-:::tip The first step of compiling Doris is to download and compile third-party libraries. You can download the pre-compiled versions of third-party libraries provided by the Doris community. Please refer to the instructions below for downloading **pre-compiled third-party libraries** to speed up the build process. :::
+:::tip 
+The first step of compiling Doris is to download and compile third-party libraries. You can download the pre-compiled versions of third-party libraries provided by the Doris community. Please refer to the instructions below for downloading **pre-compiled third-party libraries** to speed up the build process. 
+:::
 
 ## Start
 
@@ -107,4 +111,6 @@ cd installed/bin
 ./thrift --version
 ```
 
-:::tip When running protoc and thrift, you may encounter an issue where the binary cannot be opened due to developer verification. To resolve this, you can go to "Security & Privacy" settings. In the "General" tab, click on the "Open Anyway" button to confirm your intent to open the binary. Refer to: https://support.apple.com/en-us/102445 :::
+:::tip 
+When running protoc and thrift, you may encounter an issue where the binary cannot be opened due to developer verification. To resolve this, you can go to "Security & Privacy" settings. In the "General" tab, click on the "Open Anyway" button to confirm your intent to open the binary. Refer to: https://support.apple.com/en-us/102445 
+:::
