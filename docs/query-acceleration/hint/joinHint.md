@@ -464,37 +464,6 @@ mysql>  explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2
 +--------------------------------------------------------------------------------+
 18 rows in set (0.02 sec)
   ```
-## Limitation
-- The current version supports only one leadingHint. If leadinghint is used with a subquery, the query will report an error. Example (This example explain will report an error, but will follow the normal path generation plan) :
-```sql
-mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select /*+ leading(t3 t2) */ c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
-  +----------------------------------------------------------------------------------------+
-  | Explain String(Nereids Planner)                                                        |
-  +----------------------------------------------------------------------------------------+
-  | PhysicalResultSink                                                                     |
-  | --hashAgg[GLOBAL]                                                                      |
-  | ----PhysicalDistribute[DistributionSpecGather]                                         |
-  | ------hashAgg[LOCAL]                                                                   |
-  | --------PhysicalProject                                                                |
-  | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()    |
-  | ------------PhysicalProject                                                            |
-  | --------------PhysicalOlapScan[t1]                                                     |
-  | ------------PhysicalDistribute[DistributionSpecHash]                                   |
-  | --------------PhysicalProject                                                          |
-  | ----------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-  | ------------------PhysicalProject                                                      |
-  | --------------------PhysicalOlapScan[t2]                                               |
-  | ------------------PhysicalDistribute[DistributionSpecHash]                             |
-  | --------------------PhysicalProject                                                    |
-  | ----------------------PhysicalOlapScan[t3]                                             |
-  |                                                                                        |
-  | Hint log:                                                                              |
-  | Used:                                                                                  |
-  | UnUsed: leading(alias t1)                                                              |
-  | SyntaxError: leading(t3 t2) Msg:one query block can only have one leading clause       |
-  +----------------------------------------------------------------------------------------+
-  21 rows in set (0.01 sec)
-```
  # OrderedHint
 - Using ordered hint causes the join tree to be fixed in shape and displayed in text order
 - The syntax is /*+ ORDERED */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement, for example：
