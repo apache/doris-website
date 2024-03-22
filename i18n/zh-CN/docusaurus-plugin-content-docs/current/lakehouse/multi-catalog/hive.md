@@ -385,7 +385,7 @@ Apache Ranger是一个用来在Hadoop平台上进行监控，启用服务，以�
 
 Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权。
 
-目前支持 Ranger 的库、表、列的鉴权，暂不支持加密、行权限、Data Mask 等功能。
+目前支持 Ranger 的库、表、列的鉴权，暂不支持Data Mask 功能。
 
 如需使用 Apache Ranger 为整个 Doris 集群服务进行鉴权，请参阅 [使用 Apache Ranger 鉴权](../../admin-manual/privilege-ldap/ranger.md)
 

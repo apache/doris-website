@@ -56,7 +56,7 @@ privilege_list 是需要赋予的权限列表，以逗号分隔。当前 Doris �
     NODE_PRIV：集群节点操作权限，包括节点上下线等操作。同时拥有 Grant_priv 和 Node_priv 的用户，可以将该权限赋予其他用户。
     ADMIN_PRIV：除 NODE_PRIV 以外的所有权限。
     GRANT_PRIV: 操作权限的权限。包括创建删除用户、角色，授权和撤权，设置密码等。
-    SELECT_PRIV：对指定的库或表的读取权限
+    SELECT_PRIV[(col1,col2...)]：对指定的库或表[列]的读取权限
     LOAD_PRIV：对指定的库或表的导入权限
     ALTER_PRIV：对指定的库或表的schema变更权限
     CREATE_PRIV：对指定的库或表的创建权限
@@ -170,6 +170,12 @@ role_list 是需要赋予的角色列表，以逗号分隔，指定的角色必�
     ```sql
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
     ````
+
+12. 授予指定列的查询权限给用户
+
+    ```sql
+    GRANT SELECT_PRIV(k1,k2) ON ctl1.db1.tbl1 TO 'jack'@'192.8.%';
+    ```
 
 ### Keywords
 
