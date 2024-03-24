@@ -80,7 +80,8 @@ PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
     PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01")
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
 )
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
 PROPERTIES
@@ -381,6 +382,86 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
 - 解决数据倾斜问题：每个分区可以单独指定分桶数量。如按天分区，当每天的数据量差异很大时，可以通过指定分区的分桶数，合理划分不同分区的数据,分桶列建议选择区分度大的列。
 
 用户也可以不使用复合分区，即使用单分区。则数据只做 HASH 分布。
+
+#### NULL 分区
+
+> 从 2.1.2 版本开始，Doris 的 LIST 和 RANGE PARTITION 开始支持以下 NULL 值分区用法。
+
+PARTITION 列默认必须为 NOT NULL 列，如果需要使用 NULL 列，应设置 session variable `allow_partition_column_nullable = true`。对于 LIST PARTITION，我们支持真正的 NULL 分区。对于 RANGE PARTITION，NULL 值会被划归**最小的 LESS THAN 分区**。分列如下：
+
+1. LIST 分区
+
+```sql
+mysql> create table null_list(
+    -> k0 varchar null
+    -> )
+    -> partition by list (k0)
+    -> (
+    -> PARTITION pX values in ((NULL))
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into null_list values (null);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.18 sec)
+```
+
+2. RANGE 分区 —— 归属最小的 LESS THAN 分区
+
+```sql
+mysql> create table null_range(
+    -> k0 int null
+    -> )
+    -> partition by range (k0)
+    -> (
+    -> PARTITION p10 values less than (10),
+    -> PARTITION p100 values less than (100),
+    -> PARTITION pMAX values less than (maxvalue)
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> insert into null_range values (null);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from null_range partition(p10);
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.18 sec)
+```
+
+3. RANGE 分区 —— 没有 LESS THAN 分区时，无法插入
+
+```sql
+mysql> create table null_range2(
+    -> k0 int null
+    -> )
+    -> partition by range (k0)
+    -> (
+    -> PARTITION p200 values [("100"), ("200"))
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into null_range2 values (null);
+ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
+```
+
+自动分区对于 NULL 分区值的处理方式详述于其文档[对应部分](../advanced/partition/auto-partition/#null-值分区)。
 
 ### PROPERTIES
 

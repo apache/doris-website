@@ -78,7 +78,8 @@ PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
     PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01")
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
 )
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
 PROPERTIES
@@ -375,6 +376,86 @@ Compound partitioning is recommended for the following scenarios:
 - Scenarios with a need to avoid data skew: you can specify the number of buckets individually for each partition. For example, if you choose to partition the data by day, and the data volume per day varies greatly, you can customize the number of buckets for each partition. For the choice of bucketing column, it is recommended to select the column(s) with variety in values.
 
 Users can also choose for single partitioning, which is about HASH distribution.
+
+#### NULL-valued partition
+
+> Starting from version 2.1.2, Doris LIST and RANGE PARTITION support the following NULL value partitioning usage.
+
+PARTITION columns must be NOT NULL columns by default, if you need to use NULL columns, you should set the session variable `allow_partition_column_nullable = true`. For LIST PARTITION, we support true NULL partitions. For RANGE PARTITION, NULL values are assigned to the **minimal LESS THAN partition**. The partitions are listed below:
+
+1. LIST PARTITION
+
+```sql
+mysql> create table null_list(
+    -> k0 varchar null
+    -> )
+    -> partition by list (k0)
+    -> (
+    -> PARTITION pX values in ((NULL))
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into null_list values (null);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.18 sec)
+```
+
+2. RANGE partition - attributed to the minimal LESS THAN partition
+
+```sql
+mysql> create table null_range(
+    -> k0 int null
+    -> )
+    -> partition by range (k0)
+    -> (
+    -> PARTITION p10 values less than (10),
+    -> PARTITION p100 values less than (100),
+    -> PARTITION pMAX values less than (maxvalue)
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> insert into null_range values (null);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from null_range partition(p10);
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.18 sec)
+```
+
+3. RANGE partition -- cannot be inserted without the LESS THAN partition
+
+```sql
+mysql> create table null_range2(
+    -> k0 int null
+    -> )
+    -> partition by range (k0)
+    -> (
+    -> PARTITION p200 values [("100"), ("200"))
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into null_range2 values (null);
+ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
+```
+
+Auto Partition's handling of NULL partition values is detailed in its documentation [corresponding section](../advanced/partition/auto-partition/#null-valued-partition)。
 
 ### PROPERTIES
 
