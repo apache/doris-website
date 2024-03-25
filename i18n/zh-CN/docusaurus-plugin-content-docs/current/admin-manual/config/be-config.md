@@ -968,26 +968,10 @@ BaseCompaction:546859:
 * 描述：Chunk Allocator的reserved bytes限制，通常被设置为 mem_limit 的百分比。默认单位字节，值必须是2的倍数，且必须大于0，如果大于物理内存，将被设置为物理内存大小。增加这个变量可以提高性能，但是会获得更多其他模块无法使用的空闲内存。
 * 默认值：20%
 
-#### `madvise_huge_pages`
-
-* 类型：bool
-* 描述：是否使用linux内存大页
-* 默认值：false
-
 #### `max_memory_sink_batch_count`
 
 * 描述：最大外部扫描缓存批次计数，表示缓存max_memory_cache_batch_count * batch_size row，默认为20，batch_size的默认值为1024，表示将缓存20 * 1024行
 * 默认值：20
-
-#### `memory_max_alignment`
-
-* 描述：最大校对内存
-* 默认值：16
-
-#### `mmap_buffers`
-
-* 描述：是否使用mmap分配内存
-* 默认值：false
 
 #### `memtable_mem_tracker_refresh_interval_ms`
 
@@ -1051,12 +1035,6 @@ BaseCompaction:546859:
 * 描述: 读取hdfs或者对象存储上的文件时，使用的缓存大小。
   - 增大这个值，可以减少远端数据读取的调用次数，但会增加内存开销。
 * 默认值: 16MB
-
-#### `file_cache_type`
-
-* 类型：string
-* 描述：缓存文件的类型。`whole_file_cache`：将segment文件整个下载，`sub_file_cache`：将segment文件按大小切分成多个文件。设置为""，则不缓存文件，需要缓存的时候请设置此参数。
-* 默认值：""
 
 #### `file_cache_alive_time_sec`
 
@@ -1140,11 +1118,6 @@ BaseCompaction:546859:
 
 * 描述：磁盘状态检查时间间隔
 * 默认值：5  （s）
-
-#### `max_free_io_buffers`
-
-* 描述：对于每个 io 缓冲区大小，IoMgr 将保留的最大缓冲区数从 1024B 到 8MB 的缓冲区，最多约为 2GB 的缓冲区。
-* 默认值：128
 
 #### `max_garbage_sweep_interval`
 
@@ -1423,11 +1396,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述: 代理向 FE 报告任务签名的间隔时间
 * 默认值: 10 (s)
-
-#### `periodic_counter_update_period_ms`
-
-* 描述: 更新速率计数器和采样计数器的周期
-* 默认值: 500 (ms)
 
 #### `enable_metric_calculator`
 
