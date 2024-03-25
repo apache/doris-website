@@ -318,13 +318,13 @@ The automatic update feature involves the following parameters in fe.conf:
 To enable automatic update(Excluding Huawei MRS), you need to modify the hive-site.xml of HMS and then restart HMS and HiveServer2:
 
 ```Plain
-<property>
-    <name>hive.metastore.event.db.notification.api.auth</name>
-    <value>false</value>
-</property>
-<property>
-    <name>hive.metastore.dml.events</name>
-    <value>true</value>
+property>
+    name>hive.metastore.event.db.notification.api.auth/name>
+    value>false/value>
+/property>
+property>
+    name>hive.metastore.dml.events/name>
+    value>true/value>
 </property>
 <property>
     <name>hive.metastore.transactional.event.listeners</name>
@@ -359,24 +359,24 @@ CREATE CATALOG hive PROPERTIES (
 
 For Hive/Iceberge/Hudi
 
-| HMS Type                              | Doris Type                            | Comment                                                      |
-| ------------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| boolean                               | boolean                               |                                                              |
-| tinyint                               | tinyint                               |                                                              |
-| smallint                              | smallint                              |                                                              |
-| int                                   | int                                   |                                                              |
-| bigint                                | bigint                                |                                                              |
-| date                                  | date                                  |                                                              |
-| timestamp                             | datetime                              |                                                              |
-| float                                 | float                                 |                                                              |
-| double                                | double                                |                                                              |
-| char                                  | char                                  |                                                              |
-| varchar                               | varchar                               |                                                              |
-| decimal                               | decimal                               |                                                              |
-| array<type>                           | array<type>                           | Supports nested structure, such as array<map<string, int>>   |
-| map<KeyType, ValueType>               | map<KeyType, ValueType>               | Supports nested structure, such as map<string, array<int>>   |
-| struct<col1: Type1, col2: Type2, ...> | struct<col1: Type1, col2: Type2, ...> | Supports nested structure, such as struct<col1: array<int>, col2: map<int, date>> |
-| other                                 | unsupported                           |                                                              |
+| HMS Type                                | Doris Type                              | Comment                                                                               |
+| --------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------- |
+| boolean                                 | boolean                                 |                                                                                       |
+| tinyint                                 | tinyint                                 |                                                                                       |
+| smallint                                | smallint                                |                                                                                       |
+| int                                     | int                                     |                                                                                       |
+| bigint                                  | bigint                                  |                                                                                       |
+| date                                    | date                                    |                                                                                       |
+| timestamp                               | datetime                                |                                                                                       |
+| float                                   | float                                   |                                                                                       |
+| double                                  | double                                  |                                                                                       |
+| char                                    | char                                    |                                                                                       |
+| varchar                                 | varchar                                 |                                                                                       |
+| decimal                                 | decimal                                 |                                                                                       |
+| `array<type>`                           | `array<type>`                           | Supports nested structure, such as `array<map<string, int>>`                          |
+| `map<KeyType, ValueType>`               | `map<KeyType, ValueType>`               | Supports nested structure, such as `map<string, array<int>>`                          |
+| `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | Supports nested structure, such as `struct<col1: array<int>`, `col2: map<int, date>>` |
+| other                                   | unsupported                             |                                                                                       |
 
 :::tip
 **Truncate char or varchar columns**
