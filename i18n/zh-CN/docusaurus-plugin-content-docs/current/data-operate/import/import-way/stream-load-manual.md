@@ -432,6 +432,10 @@ curl -v --location-trusted -u root: -H "sql: insert into test.t1(c1, c2) WITH LA
 
   或者调整 FE 的参数`stream_load_default_timeout_second` 来设置全局的默认超时时间。
 
+- enable_pipeline_load
+
+  是否开启 Pipeline 引擎执行 Streamload 任务。详见[导入](../load-manual)文档。
+
 ### BE配置
 
 - streaming_load_max_mb

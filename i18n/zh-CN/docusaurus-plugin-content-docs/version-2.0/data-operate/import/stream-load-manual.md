@@ -287,6 +287,10 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 
 参数描述：Stream Load 默认的超时时间。导入任务的超时时间（以秒为单位），导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。如果导入的源文件无法在规定时间内完成导入，用户可以在 Stream Load 请求中设置单独的超时时间。或者调整 FE 的参数`stream_load_default_timeout_second` 来设置全局的默认超时时间。
 
+2. enable_pipeline_load
+
+  是否开启 Pipeline 引擎执行 Streamload 任务。详见[导入](./load-manual)文档。
+
 **BE 配置**
 
 1. streaming_load_max_mb

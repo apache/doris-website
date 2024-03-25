@@ -73,3 +73,7 @@ set enable_local_shuffle = true;
 ```
 set ignore_storage_data_distribution = true;
 ```
+
+### 导入
+
+导入的引擎选择设置，详见[导入](../data-operate/import/load-manual)文档。
