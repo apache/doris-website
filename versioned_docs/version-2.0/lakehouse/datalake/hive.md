@@ -359,24 +359,24 @@ CREATE CATALOG hive PROPERTIES (
 
 For Hive/Iceberge/Hudi
 
-| HMS Type                              | Doris Type                            | Comment                                                      |
-| ------------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| boolean                               | boolean                               |                                                              |
-| tinyint                               | tinyint                               |                                                              |
-| smallint                              | smallint                              |                                                              |
-| int                                   | int                                   |                                                              |
-| bigint                                | bigint                                |                                                              |
-| date                                  | date                                  |                                                              |
-| timestamp                             | datetime                              |                                                              |
-| float                                 | float                                 |                                                              |
-| double                                | double                                |                                                              |
-| char                                  | char                                  |                                                              |
-| varchar                               | varchar                               |                                                              |
-| decimal                               | decimal                               |                                                              |
-| array<type>                           | array<type>                           | Supports nested structure, such as array<map<string, int>>   |
-| map<KeyType, ValueType>               | map<KeyType, ValueType>               | Supports nested structure, such as map<string, array<int>>   |
-| struct<col1: Type1, col2: Type2, ...> | struct<col1: Type1, col2: Type2, ...> | Supports nested structure, such as struct<col1: array<int>, col2: map<int, date>> |
-| other                                 | unsupported                           |                                                              |
+| HMS Type                                | Doris Type                              | Comment                                                                               |
+| --------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------- |
+| boolean                                 | boolean                                 |                                                                                       |
+| tinyint                                 | tinyint                                 |                                                                                       |
+| smallint                                | smallint                                |                                                                                       |
+| int                                     | int                                     |                                                                                       |
+| bigint                                  | bigint                                  |                                                                                       |
+| date                                    | date                                    |                                                                                       |
+| timestamp                               | datetime                                |                                                                                       |
+| float                                   | float                                   |                                                                                       |
+| double                                  | double                                  |                                                                                       |
+| char                                    | char                                    |                                                                                       |
+| varchar                                 | varchar                                 |                                                                                       |
+| decimal                                 | decimal                                 |                                                                                       |
+| `array<type>`                           | `array<type>`                           | Supports nested structure, such as `array<map<string, int>>`                          |
+| `map<KeyType, ValueType>`               | `map<KeyType, ValueType>`               | Supports nested structure, such as `map<string, array<int>>`                          |
+| `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | Supports nested structure, such as `struct<col1: array<int>`, `col2: map<int, date>>` |
+| other                                   | unsupported                             |                                                                                       |
 
 :::tip
 **Truncate char or varchar columns**
