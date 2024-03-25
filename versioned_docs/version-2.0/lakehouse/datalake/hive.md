@@ -318,13 +318,13 @@ The automatic update feature involves the following parameters in fe.conf:
 To enable automatic update(Excluding Huawei MRS), you need to modify the hive-site.xml of HMS and then restart HMS and HiveServer2:
 
 ```Plain
-property>
-    name>hive.metastore.event.db.notification.api.auth/name>
-    value>false/value>
-/property>
-property>
-    name>hive.metastore.dml.events/name>
-    value>true/value>
+<property>
+    <name>hive.metastore.event.db.notification.api.auth</name>
+    <value>false</value>
+</property>
+<property>
+    <name>hive.metastore.dml.events</name>
+    <value>true</value>
 </property>
 <property>
     <name>hive.metastore.transactional.event.listeners</name>
