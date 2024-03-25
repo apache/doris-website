@@ -142,7 +142,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 >
 >"strict_mode" = "true"
 
-[3. Example of importing data in Json format](#Example_of_importing_data_in_Json_format)
+3. Example of importing data in Json format
 
   The json format imported by Routine Load only supports the following two types:
 
