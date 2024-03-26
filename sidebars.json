@@ -218,6 +218,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "Slow Query Analysis",
+                    "items": [
+                        "query-acceleration/slow-query-analysis/get-profile"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Async Materialized View",
                     "items": [
                         "query-acceleration/async-materialized-view/async-materialized-view",
