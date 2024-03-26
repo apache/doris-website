@@ -43,7 +43,10 @@ As an open-source real-time data warehouse, [Apache Doris](https://doris.apache.
 
 ## A newly-added data type: Variant
 
-<iframe width="880" height="500" src="https://www.youtube.com/embed/FVfsnkZUBsU?si=9iqvxZaeHau6HKK7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+:::tip
+To help you quickly learn and use Variant data type, we provide **[a hands-on demo](https://www.youtube.com/watch?v=FVfsnkZUBsU) **
+:::
+
 
 In Apache Doris 2.1.0, we have introduced a new data type: [Variant](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Types/VARIANT). Fields of the Variant data type can accommodate integers, strings, boolean values, and any combination of them. With Variant, you don't have to define the specific columns in the table schema in advance.
 
@@ -57,7 +60,7 @@ Compared to the JSON type, storage data in the Variant type can save up to 65% o
 
 Create table: syntax keyword `variant`
 
-```SQL
+```sql
 -- No index
 CREATE TABLE IF NOT EXISTS ${table_name} (
     k BIGINT,
@@ -84,7 +87,7 @@ properties("replication_num" = "1", "bloom_filter_columns" = "v");
 
 Query: access sub-column via `[]`. The sub-columns are also of the Variant type.
 
-```SQL
+```sql
 SELECT v["properties"]["title"] from ${table_name}
 ```
 
