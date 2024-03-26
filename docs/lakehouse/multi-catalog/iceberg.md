@@ -57,6 +57,10 @@ Use the Iceberg API to access metadata, and support services such as Hadoop File
 
 #### Hadoop Catalog
 
+> Note: The path of `warehouse` should point to the parent path of `Database` level.
+>
+> Eg: If you path is like `s3://bucket/path/to/db1/table1`, the `warehouse` should be `s3://bucket/path/to/`
+
 ```sql
 CREATE CATALOG iceberg_hadoop PROPERTIES (
     'type'='iceberg',

@@ -371,7 +371,7 @@ const config = {
 
                             {
                                 label: 'Improvement proposal',
-                                href: 'https://github.com/apache/doris/discussions',
+                                href: 'https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals',
                             },
                             {
                                 label: 'Doris team',

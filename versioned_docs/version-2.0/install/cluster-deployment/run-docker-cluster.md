@@ -23,166 +23,300 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# Deploy the Docker Cluster
+# Deploy with Docker
 
-## Background Description
+This guide is about how to create a running image of Apache Doris using a Dockerfile. It allows for the quick pulling of an Apache Doris image to create and run a cluster, either with container orchestration tools or for a quick test.
 
-This article will briefly describe how to quickly build a complete Doris test cluster through `docker run` or `docker-compose up` commands.
+# Prerequisites
 
-## Applicable scene
+**Overview**
 
-It is recommended to use Doris Docker in SIT or DEV environment to simplify the deployment process.
+Prepare the build machine before creating the Docker image. The platform architecture of this machine determines the platform architecture for which the Docker image will be applicable. For example, if you use an X86_64 machine, you should download the X86_64 Doris binary program, because the resulting image will only run on X86_64 platforms. The same applies to ARM64 platforms.
 
-If you want to test a certain function point in the new version, you can use Doris Docker to deploy a Playground environment. Or when you want to reproduce a certain problem during debugging, you can also use the docker environment to simulate.
+**Hardware**
 
-In the production environment, currently try to avoid using containerized solutions for Doris deployment.
+Recommended configuration: 4 cores, 16GB memory.
 
-## Software Environment
+**Software**
 
-| Software | Version |
-| -------------- | ----------- |
-| Docker | 20.0 and above |
-| docker-compose | 2.10 and above |
+Docker version: 20.10 or later.
 
-## Hardware Environment
+# Build image
 
-| Configuration Type | Hardware Information | Maximum Running Cluster Size |
-| -------- | -------- | ---------------- |
-| Minimum configuration | 2C 4G | 1FE 1BE |
-| Recommended configuration | 4C 16G | 3FE 3BE |
+## Preparation
 
-## Pre-Environment Preparation
+**Dockerfile script writing**
 
-The following command needs to be executed on the host machine
+- Choose a Docker Hub-certified OpenJDK official image as the base parent image. The recommended base parent image is: openjdk:8u342-jdk (JDK 1.8 version).
+- Use embed scripts for FE startup, multi-FE registration, FE status checks, BE startup, BE registration in FE, and BE status checks.
+- Avoid using the `--daemon` option to start the application within Docker, as it may cause issues during deployment with orchestration tools like Kubernetes (K8s).
 
-```shell
+**Methods to build**
+
+About the Dockerfile script used for compiling the Docker image, there are two ways to load the Apache Doris binary package:
+
+- Use `wget` or `curl` commands to download the package during compilation and then complete the Docker Build process.
+- Pre-download the binary package to the build directory and load it into the Docker Build process using the `ADD` or `COPY` command.
+
+The former method produces a Docker image of smaller size, but if the build fails, the download operation may be repeated, leading to longer build times. The latter method is suitable for environments with unstable network conditions. Here, we will provide an example using the second method.
+
+## **Build** **FE** **Image**
+
+1. Environment directory for building the FE image:
+
+The build environment directory is as follows:
+
+```Plain
+└── docker-build                                    // Root directory 
+    └── fe                                          // FE directory
+        ├── dockerfile                              // Dockerfile script
+        └── resource                                // Resource directory
+            ├── init_fe.sh                          // Startup and registration script
+            └── apache-doris-2.0.3-bin.tar.gz       // Binary package
+```
+
+2. Download binary package
+
+Download the [official binary package](https://doris.apache.org/zh-CN/download/) or the compiled binary package, and replace the apache-doris package in `./docker-build/fe/resource` with it.
+
+3. Write Dockerfile
+
+```Bash
+# Choose a base image
+FROM openjdk:8u342-jdk
+
+# Set environment variables
+ENV JAVA_HOME="/usr/local/openjdk-8/"
+ENV PATH="/opt/apache-doris/fe/bin:$PATH"
+
+# Download the software into the Docker image
+ADD ./resource/apache-doris-2.0.3-bin.tar.gz /opt/
+
+RUN apt-get update && \
+    apt-get install -y default-mysql-client && \
+    apt-get clean && \
+    mkdir /opt/apache-doris && \
+    cd /opt && \
+    mv apache-doris-2.0.3-bin/fe /opt/apache-doris/
+
+ADD ./resource/init_fe.sh /opt/apache-doris/fe/bin
+RUN chmod 755 /opt/apache-doris/fe/bin/init_fe.sh
+
+ENTRYPOINT ["/opt/apache-doris/fe/bin/init_fe.sh"]
+```
+
+- Rename the file as `Dockerfile` and save it to the `./docker-build/fe` directory.
+- For the FE execution script init_fe.sh, refer to [init_fe.sh](https://github.com/apache/doris/tree/master/docker/runtime/fe/resource/init_fe.sh) in the Doris source code library.
+
+4. Perform build
+
+Note that `${tagName}` should be replaced with the tag you need, such as: `apache-doris:2.0.3-fe`.
+
+```Shell
+cd ./docker-build/fe
+docker build . -t ${fe-tagName}
+```
+
+## Build BE image
+
+1. Environment directory for building the BE image:
+
+```SQL
+└── docker-build                                     // Root directory 
+    └── be                                           // BE directory
+        ├── dockerfile                               // Dockerfile script
+        └── resource                                 // Resource directory
+            ├── init_be.sh                           // Startup and registration script
+            └── apache-doris-2.0.3-bin.tar.gz        // Binary package
+```
+
+2. Write Dockerfile
+
+```PowerShell
+# Choose a base image
+FROM openjdk:8u342-jdk
+
+# Set environment variables
+ENV JAVA_HOME="/usr/local/openjdk-8/" 
+ENV PATH="/opt/apache-doris/be/bin:$PATH"
+
+# 下Download the software into the Docker image
+ADD ./resource/apache-doris-2.0.3-bin.tar.gz /opt/
+
+RUN apt-get update && \
+    apt-get install -y default-mysql-client && \
+    apt-get clean && \
+    mkdir /opt/apache-doris && \
+    cd /opt && \
+    mv apache-doris-2.0.3-bin/be /opt/apache-doris/
+
+ADD ./resource/init_be.sh /opt/apache-doris/be/bin
+RUN chmod 755 /opt/apache-doris/be/bin/init_be.sh
+
+ENTRYPOINT ["/opt/apache-doris/be/bin/init_be.sh"]
+```
+
+- Rename the file as `Dockerfile` and save it to the `./docker-build/be` directory.
+- For the BE execution script init_be.sh, refer to [init_be.sh](https://github.com/apache/doris/tree/master/docker/runtime/be/resource/init_be.sh).
+
+3. Perform build
+
+Note that `${tagName}` should be replaced with the tag you need, such as: `apache-doris:2.0.3-be`.
+
+```Shell
+cd ./docker-build/be
+docker build . -t ${be-tagName}
+```
+
+## Push the image to DockerHub or a private repository
+
+Log in to DockerHub
+
+```Plain
+docker login
+```
+
+Upon successful login, a "Success" prompt will be displayed. After that, you can push the image.
+
+```Shell
+docker push ${tagName}
+```
+
+# Deploy Docker cluster
+
+The following is a brief overview of how to quickly create a complete Doris testing cluster using the `docker run` or `docker-compose up` commands.
+
+It is advisable to avoid containerized solutions for Doris deployment in production environments. Instead, when deploying Doris on Kubernetes (K8s), it is recommended to utilize the Doris Operator for deployment.
+
+## Prerequisite
+
+**Software**
+
+| Software       | Version        |
+| -------------- | -------------- |
+| Docker         | 20.0 and later |
+| docker-compose | 20.1 and later |
+
+**Hardware**
+
+| Configuration | Hardware | Maximum Running Cluster Size |
+| ------------- | -------- | ---------------------------- |
+| Minimum       | 2C 4G    | 1FE 1BE                      |
+| Recommended   | 4C 16G   | 3FE 3BE                      |
+
+**Execute the following command in the host machine:**
+
+```Shell
 sysctl -w vm.max_map_count=2000000
 ```
 
 ## Docker Compose
 
-Different platforms need to use different Image images. This article takes the `X86_64` platform as an example.
+The required image varies depending on the platform. The following takes the `X86_64` platform as an example.
 
-### Network Mode Description
+### Network mode
 
-There are two network modes applicable to Doris Docker.
+Doris Docker supports two network modes:
 
-1. HOST mode suitable for deployment across multiple nodes, this mode is suitable for deploying 1FE 1BE on each node.
-2. The subnet bridge mode is suitable for deploying multiple Doris processes on a single node. This mode is suitable for single-node deployment (recommended). If you want to deploy multiple nodes, you need to deploy more components (not recommended).
+- The HOST mode is suitable for deploying across multiple nodes, with one FE and one BE per node.
+- The subnet bridge mode is suitable for deploying multiple Doris processes on a single node (recommended). If you want to deploy across multiple nodes, additional component deployments are required (not recommended).
 
-For the sake of presentation, this chapter only demonstrates scripts written in subnet bridge mode.
+For demonstration purposes, this section will only show scripts written for the subnet bridge mode.
 
-### Interface Description
+### Interface description
 
-From the version of `Apache Doris 1.2.1 Docker Image`, the interface list of each process image is as follows:
+Since `Apache Doris 2.0.3 Docker Image`, the interface list for each process image is as follows:
 
-| process name | interface name | interface definition | interface example |
-|--------------|----------------|---------------|------------------|
-| FE           | BE             | BROKER | FE_SERVERS | FE node main information | fe1:172.20.80.2:9010,fe2:172.20.80.3:9010,fe3:172.20.80.4:9010 |
-| FE           | FE_ID          | FE node ID | 1 |
-| BE           | BE_ADDR        | BE node main information | 172.20.80.5:9050 |
-| BE           | NODE_ROLE      | BE node type | computation |
-| BROKER       | BROKER_ADDR    | Main information of BROKER node | 172.20.80.6:8000 |
+| Process | Interface | Interface Definition | Interface Example |
+| ------- | --------- | -------------------- | ----------------- |
+| FE      | BE        | BROKER               | FE_SERVERS        |
+| FE      | FE_ID     | FE node ID           | 1                 |
+| BE      | BE_ADDR   | BE node informatioin | 172.20.80.5:9050  |
+| BE      | NODE_ROLE | BE node type         | computation       |
 
-Note that the above interface must fill in the information, otherwise the process cannot be started.
+Note that the above interfaces must be specified with relevant information; otherwise, the process will not start.
 
-> FE_SERVERS interface rules are: `FE_NAME:FE_HOST:FE_EDIT_LOG_PORT[,FE_NAME:FE_HOST:FE_EDIT_LOG_PORT]`
+> The FE_SERVERS interface follows the rule: `FE_NAME:FE_HOST:FE_EDIT_LOG_PORT[,FE_NAME:FE_HOST:FE_EDIT_LOG_PORT]`
 >
-> The FE_ID interface rule is: an integer of `1-9`, where the FE number `1` is the Master node.
+> The FE_ID interface should be an integer from `1` to `9`, where `1` represents the Master node.
 >
-> BE_ADDR interface rule is: `BE_HOST:BE_HEARTBEAT_SERVICE_PORT`
+> The BE_ADDR interface follows the rule: `BE_HOST:BE_HEARTBEAT_SERVICE_PORT`
 >
-> The NODE_ROLE interface rule is: `computation` or empty, where empty or other values indicate that the node type is `mix` type
+> The NODE_ROLE interface should be `computation` or empty. When it is empty or any other value, it indicates a `mix` node.
 >
-> BROKER_ADDR interface rule is: `BROKER_HOST:BROKER_IPC_PORT`
+> The BROKER_ADDR interface follows the rule: `BROKER_HOST:BROKER_IPC_PORT`
 
-### Script Template
+### Script template
 
-#### Docker Run Command
+#### Docker Run command
 
-1FE & 1BE Command Templates
+1 FE & 1 BE command template
 
-Note that you need to modify `${intranet IP of the current machine}` to replace it with the intranet IP of the current machine
+Note that you should replace `${INTERNAL_IP_OF_CURRENT_MACHINE}` with the internal IP of your current machine.
 
-```shell
+```Shell
 docker run -itd \
 --name=fe \
---env FE_SERVERS="fe1:${intranet IP of the current machine}:9010" \
+--env FE_SERVERS="fe1:${INTERNAL_IP_OF_CURRENT_MACHINE}:9010" \
 --env FE_ID=1 \
--p 8030:8030\
+-p 8030:8030 \
 -p 9030:9030 \
 -v /data/fe/doris-meta:/opt/apache-doris/fe/doris-meta \
 -v /data/fe/log:/opt/apache-doris/fe/log \
 --net=host \
-apache/doris:2.0.0_alpha-fe-x86_64
+apache/doris:2.0.3-fe-x86_64
 
 docker run -itd \
---name=be\
---env FE_SERVERS="fe1:${intranet IP of the current machine}:9010" \
---env BE_ADDR="${Intranet IP of the current machine}:9050" \
+--name=be \
+--env FE_SERVERS="fe1:${INTERNAL_IP_OF_CURRENT_MACHINE}:9010" \
+--env BE_ADDR="${INTERNAL_IP_OF_CURRENT_MACHINE}:9050" \
 -p 8040:8040 \
 -v /data/be/storage:/opt/apache-doris/be/storage \
 -v /data/be/log:/opt/apache-doris/be/log \
 --net=host \
-apache/doris:2.0.0_alpha-be-x86_64
+apache/doris:2.0.3-be-x86_64
 ```
 
-3FE & 3BE Run command template if needed [click here](https://github.com/apache/doris/tree/master/docker/runtime/docker-compose-demo/build-cluster/rum-command/3fe_3be .sh) to access downloads.
+Download the Docker Run command template for 3 FE & 3 BE from [here](https://github.com/apache/doris/blob/master/docker/runtime/docker-compose-demo/build-cluster/rum-command/3fe_3be.sh) if needed.
 
-#### Docker Compose Script
+#### Docker Compose scripte
 
-1FE & 1BE template
+1 FE & 1 BE template
 
-Note that you need to modify `${intranet IP of the current machine}` to replace it with the intranet IP of the current machine
+Note that you should replace `${INTERNAL_IP_OF_CURRENT_MACHINE}` with the internal IP of your current machine.
 
-```yaml
+```YAML
 version: "3"
 services:
-   fe:
-     image: apache/doris:2.0.0_alpha-fe-x86_64
-     hostname: fe
-     environment:
-      - FE_SERVERS=fe1:${intranet IP of the current machine}:9010
-      - FE_ID=1
-     volumes:
-      - /data/fe/doris-meta/:/opt/apache-doris/fe/doris-meta/
-      - /data/fe/log/:/opt/apache-doris/fe/log/
-     network_mode: host
-   be:
-     image: apache/doris:2.0.0_alpha-be-x86_64
-     hostname: be
-     environment:
-      - FE_SERVERS=fe1:${intranet IP of the current machine}:9010
-      - BE_ADDR=${intranet IP of the current machine}:9050
-     volumes:
-      - /data/be/storage/:/opt/apache-doris/be/storage/
-      - /data/be/script/:/docker-entrypoint-initdb.d/
-     depends_on:
-       -fe
-     network_mode: host
+  fe:
+    image: apache/doris:2.0.3-fe-x86_64
+    hostname: fe
+    environment:
+     - FE_SERVERS=fe1:${INTERNAL_IP_OF_CURRENT_MACHINE}:9010
+     - FE_ID=1
+    volumes:
+     - /data/fe/doris-meta/:/opt/apache-doris/fe/doris-meta/
+     - /data/fe/log/:/opt/apache-doris/fe/log/
+    network_mode: host
+  be:
+    image: apache/doris:2.0.3-be-x86_64
+    hostname: be
+    environment:
+     - FE_SERVERS=fe1:${INTERNAL_IP_OF_CURRENT_MACHINE}:9010
+     - BE_ADDR=${INTERNAL_IP_OF_CURRENT_MACHINE}:9050
+    volumes:
+     - /data/be/storage/:/opt/apache-doris/be/storage/
+     - /data/be/script/:/docker-entrypoint-initdb.d/
+    depends_on:
+      - fe
+    network_mode: host
 ```
 
-3FE & 3BE Docker Compose script template if needed [click here](https://github.com/apache/doris/tree/master/docker/runtime/docker-compose-demo/build-cluster/docker-compose/ 3fe_3be/docker-compose.yaml) access to download.
+Download the Docker Compose command template for 3 FE & 3 BE from [here](https://github.com/apache/doris/blob/master/docker/runtime/docker-compose-demo/build-cluster/docker-compose/3fe_3be/docker-compose.yaml) if needed.
 
 ## Deploy Doris Docker
 
-You can choose one of the two deployment methods:
+Choose one of the following deployment methods:
 
-1. Execute the `docker run` command to create a cluster
-2. Save the `docker-compose.yaml` script and execute the `docker-compose up -d` command in the same directory to create a cluster
-
-### Special Case Description
-
-Due to the different ways of implementing containers internally on MacOS, it may not be possible to directly modify the value of `max_map_count` on the host during deployment. You need to create the following containers first:
-
-```shel
-docker run -it --privileged --pid=host --name=change_count debian nsenter -t 1 -m -u -n -i sh
-```
-
-The container was created successfully executing the following command:
-
-```shell
-sysctl -w vm.max_map_count=2000000
-```
-
-Then `exit` exits and creates the Doris Docker cluster.
+1. Execute the `docker run` command to create the cluster.
+2. Save the `docker-compose.yaml` script and execute the `docker-compose up -d`command in the same directory to create the cluster.

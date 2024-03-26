@@ -141,11 +141,79 @@ PROPERTIES (
 
 ### 约束
 
-1. 自动分区的分区列必须为 NOT NULL 列。
-2. 在AUTO LIST PARTITION中，**分区名长度不得超过 50**. 该长度来自于对应数据行上各分区列内容的拼接与转义，因此实际容许长度可能更短。
-3. 在AUTO RANGE PARTITION中，分区函数仅支持 `date_trunc`，分区列仅支持 `DATE` 或者 `DATETIME` 格式；
-4. 在AUTO LIST PARTITION中，不支持函数调用，分区列支持 `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` 数据类型，分区值为枚举值。
-5. 在AUTO LIST PARTITION中，分区列的每个当前不存在对应分区的取值，都会创建一个独立的新PARTITION。
+1. 在 AUTO LIST PARTITION 中，**分区名长度不得超过 50**. 该长度来自于对应数据行上各分区列内容的拼接与转义，因此实际容许长度可能更短。
+2. 在 AUTO RANGE PARTITION 中，分区函数仅支持 `date_trunc`，分区列仅支持 `DATE` 或者 `DATETIME` 格式；
+3. 在 AUTO LIST PARTITION 中，不支持函数调用，分区列支持 `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` 数据类型，分区值为枚举值。
+4. 在 AUTO LIST PARTITION 中，分区列的每个当前不存在对应分区的取值，都会创建一个独立的新 PARTITION。
+
+### NULL 值分区
+
+> 从 2.1.2 开始，Doris 支持以下功能。
+
+当开启 session variable `allow_partition_column_nullable` 后，LIST 和 RANGE 分区都支持 NULL 列作为分区列。当分区列实际遇到 NULL 值的插入时：
+
+1. 对于 AUTO LIST PARTITION，会自动创建对应的 NULL 值分区：
+
+```sql
+mysql> create table auto_null_list(
+    -> k0 varchar null
+    -> )
+    -> auto partition by list (k0)
+    -> (
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> insert into auto_null_list values (null);
+Query OK, 1 row affected (0.28 sec)
+
+mysql> select * from auto_null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.20 sec)
+
+mysql> select * from auto_null_list partition(pX);
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.20 sec)
+```
+
+2. Doris 中，无论是否为 AUTO PARTITION 表，NULL 值都被包含在最小值分区内。因此，如果对 NULL 值自动创建分区，会得到一个最小值起始的分区：
+
+```sql
+mysql>  CREATE TABLE `range_table_nullable` (
+    ->      `k1` INT,
+    ->      `k2` DATETIMEV2(3),
+    ->      `k3` DATETIMEV2(6)
+    ->  ) ENGINE=OLAP
+    ->  DUPLICATE KEY(`k1`)
+    ->  AUTO PARTITION BY RANGE date_trunc(`k2`, 'day')
+    ->  (
+    ->  )
+    ->  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
+    ->  PROPERTIES (
+    ->  "replication_allocation" = "tag.location.default: 1"
+    ->  );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> insert into range_table_nullable values (0, null, null);
+Query OK, 1 row affected (0.21 sec)
+
+mysql> show partitions from range_table_nullable;
++-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                                                    | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+| 457060      | p00000101000000 | 2              | 2024-03-25 03:01:38 | NORMAL | k2           | [types: [DATETIMEV2]; keys: [0000-01-01 00:00:00]; ..types: [DATETIMEV2]; keys: [0000-01-02 00:00:00]; ) | k1              | 16      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      | true               | NULL         |
++-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+1 row in set (0.09 sec)
+```
 
 ## 场景示例
 

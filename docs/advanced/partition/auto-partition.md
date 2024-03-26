@@ -141,11 +141,77 @@ When building a table, use the following syntax to populate [CREATE-TABLE](../..
 
 ### Using constraints
 
-1. The partition column for AUTO PARTITION must be a NOT NULL column;
-2. In an AUTO LIST PARTITION, **the length of the partition name must not exceed 50**. This length is derived from the splicing and escaping of the contents of the partition columns on the corresponding rows of data, so the actual allowable length may be shorter；
-3. In AUTO RANGE PARTITION, the partition function supports only `date_trunc` and the partition column supports only `DATE` or `DATETIME` type;
-4. In AUTO LIST PARTITION, function calls are not supported. Partitioned columns support `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` data-types, and partitioned values are enum values;
-5. In AUTO LIST PARTITION, a separate new PARTITION is created for each fetch of a partition column for which the corresponding partition does not currently exist.
+1. In AUTO LIST PARTITION, **the length of the partition name must not exceed 50**. This length is derived from the splicing and escaping of the contents of the partition columns on the corresponding rows of data, so the actual allowable length may be shorter；
+2. In AUTO RANGE PARTITION, the partition function supports only `date_trunc` and the partition column supports only `DATE` or `DATETIME` type;
+3. In AUTO LIST PARTITION, function calls are not supported. Partitioned columns support `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` data-types, and partitioned values are enum values;
+4. In AUTO LIST PARTITION, a separate new PARTITION is created for each fetch of a partition column for which the corresponding partition does not currently exist.
+
+### NULL-valued partition
+
+Both LIST and RANGE partitions support NULL columns as partition columns when the session variable `allow_partition_column_nullable` is turned on. When a partition column actually encounters an insert with a NULL value:
+
+1. For an AUTO LIST PARTITION, the corresponding NULL-valued partition is automatically created:
+
+```sql
+mysql> create table auto_null_list(
+    -> k0 varchar null
+    -> )
+    -> auto partition by list (k0)
+    -> (
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> insert into auto_null_list values (null);
+Query OK, 1 row affected (0.28 sec)
+
+mysql> select * from auto_null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.20 sec)
+
+mysql> select * from auto_null_list partition(pX);
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.20 sec)
+```
+
+2. In Doris, NULL values are included in the minimum value partition, whether they are AUTO PARTITION tables or not. Therefore, if a partition is automatically created for a NULL value, you get a partition starting with the minimum value:
+
+```sql
+mysql>  CREATE TABLE `range_table_nullable` (
+    ->      `k1` INT,
+    ->      `k2` DATETIMEV2(3),
+    ->      `k3` DATETIMEV2(6)
+    ->  ) ENGINE=OLAP
+    ->  DUPLICATE KEY(`k1`)
+    ->  AUTO PARTITION BY RANGE date_trunc(`k2`, 'day')
+    ->  (
+    ->  )
+    ->  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
+    ->  PROPERTIES (
+    ->  "replication_allocation" = "tag.location.default: 1"
+    ->  );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> insert into range_table_nullable values (0, null, null);
+Query OK, 1 row affected (0.21 sec)
+
+mysql> show partitions from range_table_nullable;
++-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                                                    | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+| 457060      | p00000101000000 | 2              | 2024-03-25 03:01:38 | NORMAL | k2           | [types: [DATETIMEV2]; keys: [0000-01-01 00:00:00]; ..types: [DATETIMEV2]; keys: [0000-01-02 00:00:00]; ) | k1              | 16      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      | true               | NULL         |
++-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
+1 row in set (0.09 sec)
+```
 
 ## Sample Scenarios
 

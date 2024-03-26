@@ -836,7 +836,11 @@ Therefore, it is recommended to confirm the usage method to build the table reas
 
 #### Dynamic Partition
 
-The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../advanced/partition/dynamic-partition.md) document for more help.
+The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../advanced/partition/dynamic-partition) document for more help.
+
+#### Auto Partition
+
+See in [Auto Partition](../../../../advanced/partition/auto-partition).
 
 #### Materialized View
 

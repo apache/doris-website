@@ -38,6 +38,7 @@ CREATE USER 命令用于创建一个 Doris 用户。
 CREATE USER [IF EXISTS] user_identity [IDENTIFIED BY 'password']
 [DEFAULT ROLE 'role_name']
 [password_policy]
+[comment]  
 
 user_identity:
     'user_name'@'host'
@@ -122,6 +123,12 @@ password_policy 是用于指定密码认证登录相关策略的子句，目前�
 
     ```sql
     CREATE USER 'jack' IDENTIFIED BY '12345' PASSWORD_HISTORY 8;
+    ```
+
+9. 创建一个用户并添加注释
+
+   ```sql
+    CREATE USER 'jack' COMMENT "this is my first user";
     ```
 
 ### Keywords
