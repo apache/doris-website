@@ -402,7 +402,7 @@ PARTITION BY LIST(id, city)
 
 -  `dynamic_partition.start_day_of_month`
 
-  当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号位起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。
+  当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。
 
 - `dynamic_partition.create_history_partition`
 
@@ -474,7 +474,7 @@ PARTITION BY LIST(id, city)
 假设需要创建的历史分区数量为 `expect_create_partition_num`，根据不同的设置具体数量如下：
 
 - create_history_partition = true
-  
+
   dynamic_partition.history_partition_num 未设置，即 -1. expect_create_partition_num = end - start;
 
   dynamic_partition.history_partition_num 已设置 expect_create_partition_num = end - max(start, -histoty_partition_num);
@@ -578,7 +578,7 @@ PROPERTIES
 );
 ```
 
-假设当前日期为 2020-05-29，是 2020 年的第 22 周。默认每周起始为星期一。则根于以上规则，tbl1 会产生以下分区：
+假设当前日期为 2020-05-29，是 2020 年的第 22 周。默认每周起始为星期一。则以上规则，tbl1 会产生以下分区：
 
 ```Plain
 p2020_22: ["2020-05-25 00:00:00", "2020-06-01 00:00:00")
