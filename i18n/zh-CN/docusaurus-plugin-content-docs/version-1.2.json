@@ -71,6 +71,10 @@
     "message": "Join 优化",
     "description": "The label for category Join Optimization in sidebar docs"
   },
+  "sidebar.docs.category.Slow Query Analysis": {
+    "message": "分析慢查询",
+    "description": "The label for category Join Optimization in sidebar docs"
+  },
   "sidebar.docs.category.Data Cache": {
     "message": "数据缓存",
     "description": "The label for category Data Cache in sidebar docs"

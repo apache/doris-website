@@ -186,6 +186,13 @@
                         "query-acceleration/join-optimization/runtime-filter",
                         "query-acceleration/join-optimization/doris-join-optimization"
                     ]
+                },
+                {
+                    "type": "category",
+                    "label": "Slow Query Analysis",
+                    "items": [
+                        "query-acceleration/slow-query-analysis/get-profile"
+                    ]
                 }
             ]
         },
@@ -1211,7 +1218,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
- 		"releasenotes/release-1.2.8",
+                "releasenotes/release-1.2.8",
                 "releasenotes/release-1.2.7",
                 "releasenotes/release-1.2.6",
                 "releasenotes/release-1.2.5",
