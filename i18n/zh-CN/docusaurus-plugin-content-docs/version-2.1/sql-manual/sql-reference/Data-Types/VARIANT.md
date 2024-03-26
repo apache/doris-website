@@ -45,14 +45,14 @@ under the License.
 |    | 存储空间   |
 |--------------|------------|
 | 预定义静态列 | 12.618 GB  |
-| variant 类型    | 12.718 GB |
-| json 类型             | 35.711 GB   |
+| VARIANT 类型    | 12.718 GB |
+| JSON 类型             | 35.711 GB   |
    
    
 
 **节省约 65%存储容量**
 
-| 查询次数        | 预定义静态列 | variant 类型 | json 类型        |
+| 查询次数        | 预定义静态列 | VARIANT 类型 | JSON 类型        |
 |----------------|--------------|--------------|-----------------|
 | 第一次查询 (cold) | 233.79s      | 248.66s      | **大部分查询超时**  |
 | 第二次查询 (hot)  | 86.02s       | 94.82s       | 789.24s         |
@@ -70,7 +70,7 @@ under the License.
 
 **建表语法**
 
-建表，建表语法关键字 VARIANT
+建表语法关键字 VARIANT
 
 ``` sql
 -- 无索引
@@ -100,13 +100,13 @@ properties("replication_num" = "1", "bloom_filter_columns" = "v");
 **查询语法**
 
 ``` sql
--- 使用 v['a']['b'] 形式如下，v['properties']['title']类型是Variant
+-- 使用 v['a']['b'] 形式如下，v['properties']['title']类型是VARIANT
 SELECT v['properties']['title'] from ${table_name}
 ```
 
 ### 基于 github events 数据集示例
 
-这里用 github events 数据展示 variant 的建表、导入、查询。
+这里用 github events 数据展示 VARIANT 的建表、导入、查询。
 下面是格式化后的一行数据
 
 ``` json
