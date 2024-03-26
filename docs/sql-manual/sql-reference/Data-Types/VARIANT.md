@@ -32,7 +32,6 @@ under the License.
 
 ### Description
 
-VARIANT Type
 Introduced a new data type VARIANT in Doris 2.1, which can store semi-structured JSON data. It allows storing complex data structures containing different data types (such as integers, strings, boolean values, etc.) without the need to define specific columns in the table structure beforehand. The VARIANT type is particularly useful for handling complex nested structures that may change at any time. During the writing process, this type can automatically infer column information based on the structure and types of the columns, dynamicly merge written schemas. It stores JSON keys and their corresponding values as columns and dynamic sub-columns.
 
 ### Note
@@ -66,7 +65,7 @@ Below are test results based on clickbench data:
 Demonstrate the functionality and usage of VARIANT with an example covering table creation, data import, and query cycle.
 
 **Table Creation Syntax**
-Create a table, using the `variant` keyword in the syntax.
+Create a table, using the `VARIANT` keyword in the syntax.
 
 ``` sql
 -- Without index
@@ -97,14 +96,14 @@ properties("replication_num" = "1", "bloom_filter_columns" = "v");
 **Query Syntax**
 
 ``` sql
--- use v['a']['b'] format for example, v['properties']['title'] type is Variant
+-- use v['a']['b'] format for example, v['properties']['title'] type is VARIANT
 SELECT v['properties']['title'] from ${table_name}
 
 ```
 
 **Example based on the GitHub events dataset**
 
-Here, github events data is used to demonstrate the table creation, data import, and query using variant.
+Here, github events data is used to demonstrate the table creation, data import, and query using VARIANT.
 The below is a formatted line of data:
 
 ``` json
