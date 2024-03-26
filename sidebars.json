@@ -1447,6 +1447,7 @@
             "label": "Release notes",
             "items": [
                 "releasenotes/release-2.1.0",
+                "releasenotes/release-2.0.7",
                 "releasenotes/release-2.0.6",
                 "releasenotes/release-2.0.5",
                 "releasenotes/release-2.0.4",

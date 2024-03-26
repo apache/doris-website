@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.png'
 }
 
