@@ -64,6 +64,7 @@ Below are test results based on clickbench data:
 Demonstrate the functionality and usage of VARIANT with an example covering table creation, data import, and query cycle.
 
 **Table Creation Syntax**
+
 Create a table, using the `VARIANT` keyword in the syntax.
 
 ``` sql
