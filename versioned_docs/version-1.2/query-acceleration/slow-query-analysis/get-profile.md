@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Get Profile
+
 
 ## Background
 
@@ -112,7 +112,7 @@ When the cluster cannot access the external network normally, it needs to obtain
 - Query Profile and redirect Profile to a text
 
     ```
-    template：curl -X GET -u user:password http://fe_ip:http_port/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
+    template: curl -X GET -u user:password http://fe_ip:http_port/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
     
     [user@VM-10-6-centos profile]$ curl -X GET -u root:root http://127.0.0.1:8030/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current

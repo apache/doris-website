@@ -22,7 +22,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 获取 Profile
+
 
 ## 背景
 
@@ -84,14 +84,14 @@ under the License.
 
 3. 获取 Profile
 
-   集群在多个 FE 的情况下，需要访问执行对应 Query 的 FE HTTP 界面( HTTP://FE_IP:HTTP_PORT )的 QueryProfile 页面,点击对应 Profile ID 查看对应 Profile，还可以在 Profile 界面下载对应 Profile。
+   集群在多个 FE 的情况下，需要访问执行对应 Query 的 FE HTTP 界面 ( HTTP://FE_IP:HTTP_PORT ) 的 QueryProfile 页面，点击对应 Profile ID 查看对应 Profile，还可以在 Profile 界面下载对应 Profile。
 
    ![profile1.png](/images/profile1.png)
    ![profile2.png](/images/profile2.png)
 
 ## Doris 集群访问外网受到限制
 
-集群不能正常访问外网时，需要通过 API 的方式拿到对应 Profile (HTTP://FE_IP:HTTP_PORT/API/Profile?Query_ID=),IP 和端口是指执行对应 Query 的 FE 对应 IP 和端口。此时获取对应 Query 的 Profile 步骤前两步和正常访问外网时是一样的,第三步获取 Profile 时会有差别。
+集群不能正常访问外网时，需要通过 API 的方式拿到对应 Profile (HTTP://FE_IP:HTTP_PORT/API/Profile?Query_ID=),IP 和端口是指执行对应 Query 的 FE 对应 IP 和端口。此时获取对应 Query 的 Profile 步骤前两步和正常访问外网时是一样的，第三步获取 Profile 时会有差别。
 
 **获取 Porfile**
 
@@ -120,7 +120,7 @@ under the License.
     100  1211    0  1211    0     0   168k      0 --:--:-- --:--:-- --:--:--  168k
     ```
 
-- 返回的 Profile 换行符为 \ \n 分析起来很不方便, 可以在文本编辑工具中将 \ \n 替换为 \n
+- 返回的 Profile 换行符为 \ \n 分析起来很不方便，可以在文本编辑工具中将 \ \n 替换为 \n
 
     ```
     [user@VM-10-6-centos profile]$ cat test.profile

@@ -233,7 +233,8 @@
                     "items": [
                         "query/query-analysis/query-profile",
                         "query/query-analysis/query-analysis",
-                        "query/query-analysis/import-analysis"
+                        "query/query-analysis/import-analysis",
+                        "query/query-analysis/get-profile"
                     ]
                 },
                 {
