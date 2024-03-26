@@ -1024,7 +1024,7 @@ This variable is a session variable, and the session level takes effect.
 
 #### `enable_pipeline_load`
 
-Default value: false
+Default value: true
 
 IsMutable: true
 

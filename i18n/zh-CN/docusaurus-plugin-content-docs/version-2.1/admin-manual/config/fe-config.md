@@ -1025,7 +1025,7 @@ colocate join PlanFragment instance 的 memory_limit = exec_mem_limit / min (que
 
 #### `enable_pipeline_load`
 
-默认值：false
+默认值：true
 
 是否可以动态配置：true
 
