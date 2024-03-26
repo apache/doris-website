@@ -132,7 +132,7 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 
 ```
 
-[3. 导入Json格式数据使用示例](#导入Json格式数据使用示例)
+3. 导入Json格式数据使用示例
 
    Routine Load导入的json格式仅支持以下两种
 

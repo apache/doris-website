@@ -250,7 +250,9 @@ gcc --version
 
 ## Compile
 
-:::tip It is recommended to use LDB Toolchain for compilation with ARM environment. :::
+:::tip 
+It is recommended to use LDB Toolchain for compilation with ARM environment. 
+:::
 
 When compiling Doris on an ARM platform, please disable the AVX2 and LIBUNWIND third-party libraries.
 

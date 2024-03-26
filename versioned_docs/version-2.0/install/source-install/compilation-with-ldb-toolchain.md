@@ -28,9 +28,11 @@ under the License.
 
 This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help the developers and users without a Docker environment. The recommended LDB Toolchain version is 0.17, which includes clang-16 and gcc-11.
 
-:::tip LDB Toolchain is fully known as Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions. :::
+:::tip 
+LDB Toolchain is fully known as Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions. 
 
 Special thanks to [Amos Bird](https://github.com/amosbird) for the contribution.
+:::
 
 ## Prepare the compilation environment:
 
@@ -40,7 +42,9 @@ This method applies to most Linux distributions (CentOS, Ubuntu, etc.).
 
 Download the latest `ldb_toolchain_gen.sh` from [here](https://github.com/amosbird/ldb_toolchain_gen/releases). This script is used to generate ldb toolchain.
 
-:::tip For more information, please visit https://github.com/amosbird/ldb_toolchain_gen :::
+:::tip 
+For more information, please visit https://github.com/amosbird/ldb_toolchain_gen 
+:::
 
 2. **Execute the following command to generate ldb toolchain.**
 
@@ -105,7 +109,9 @@ export PATH=/path/to/ldb_toolchain/bin:$PATH
 
 ## Compile Doris
 
-:::tip The first step of compiling Doris source code is to first download third-party libraries and compile them. You can refer to the following instructions to download precompiled versions of the third-party libraries. :::
+:::tip 
+The first step of compiling Doris source code is to first download third-party libraries and compile them. You can refer to the following instructions to download precompiled versions of the third-party libraries. 
+:::
 
 1. **Enter the Doris source code directory and execute the following command to check if the compilation machine supports the AVX2 instruction set.**
 

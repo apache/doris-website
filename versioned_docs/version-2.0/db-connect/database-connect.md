@@ -101,6 +101,8 @@ ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 
 ![Doris-Web-UI-Playground-en](../../../static/images/Doris-Web-UI-Playground-en.png)
 
-:::tip For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later.
+:::tip 
+For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later.
 
-The current built-in web console cannot execute SET type SQL statements. Therefore, the web console does not support statements like SET PASSWORD FOR 'user' = PASSWORD('user_password'). :::
+The current built-in web console cannot execute SET type SQL statements. Therefore, the web console does not support statements like SET PASSWORD FOR 'user' = PASSWORD('user_password'). 
+:::

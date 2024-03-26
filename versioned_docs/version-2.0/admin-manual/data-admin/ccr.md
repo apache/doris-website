@@ -562,7 +562,9 @@ download_binlog_rate_limit_kbs=1024 # This configuration limits the size to 1MB.
 
 ## IS_BEING_SYNCED
 
-:::tip Doris v2.0 "is_being_synced" = "true" :::
+:::tip 
+Doris v2.0 "is_being_synced" = "true" 
+:::
 
 During data synchronization using CCR, replica tables (referred to as target tables) are created in the target cluster for the tables within the synchronization scope of the source cluster (referred to as source tables). However, certain functionalities and attributes need to be disabled or cleared when creating replica tables to ensure the correctness of the synchronization process. For example:
 
