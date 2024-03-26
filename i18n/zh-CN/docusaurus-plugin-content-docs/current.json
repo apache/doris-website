@@ -75,6 +75,10 @@
     "message": "Doris 表分区",
     "description": "The label for category Doris Partition in sidebar docs"
   },
+  "sidebar.docs.category.Slow Query Analysis": {
+    "message": "分析慢查询",
+    "description": "The label for category Join Optimization in sidebar docs"
+  },
   "sidebar.docs.category.Join Optimization": {
     "message": "Join 优化",
     "description": "The label for category Join Optimization in sidebar docs"

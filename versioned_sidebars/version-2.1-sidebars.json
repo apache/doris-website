@@ -216,6 +216,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "Slow Query Analysis",
+                    "items": [
+                        "query-acceleration/slow-query-analysis/get-profile"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Async Materialized View",
                     "items": [
                         "query-acceleration/async-materialized-view/async-materialized-view",
@@ -919,6 +926,7 @@
                             "items": [
                                 "sql-manual/sql-reference/Account-Management-Statements/CREATE-ROLE",
                                 "sql-manual/sql-reference/Account-Management-Statements/CREATE-USER",
+                                "sql-manual/sql-reference/Account-Management-Statements/ALTER-ROLE",
                                 "sql-manual/sql-reference/Account-Management-Statements/ALTER-USER",
                                 "sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD",
                                 "sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY",
@@ -1437,6 +1445,7 @@
             "label": "Release notes",
             "items": [
                 "releasenotes/release-2.1.0",
+                "releasenotes/release-2.0.7",
                 "releasenotes/release-2.0.6",
                 "releasenotes/release-2.0.5",
                 "releasenotes/release-2.0.4",

@@ -148,7 +148,7 @@ Distributed replica management improvements include skipping partition deletion,
 - Fix the problem of BE crash caused by repeated expressions in the group by statement
 - Fix be crash when there are duplicate expressions in `group by` statements.
   - https://github.com/apache/doris/pull/27523
-- Disables the float/doubld type in the `group by` clause when a view is created. 
+- Disables the float/double type in the `group by` clause when a view is created. 
   - https://github.com/apache/doris/pull/25823
 - Improve the function of select query matching materialized view 
   - https://github.com/apache/doris/pull/24691 

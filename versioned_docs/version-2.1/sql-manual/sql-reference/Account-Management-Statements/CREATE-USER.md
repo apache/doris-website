@@ -38,7 +38,8 @@ The CREATE USER command is used to create a Doris user.
 CREATE USER [IF EXISTS] user_identity [IDENTIFIED BY 'password']
 [DEFAULT ROLE 'role_name']
 [password_policy]
-
+[comment]
+    
 user_identity:
     'user_name'@'host'
     
@@ -122,6 +123,12 @@ If a role (ROLE) is specified, the newly created user will be automatically gran
 
     ```sql
     CREATE USER 'jack' IDENTIFIED BY '12345' PASSWORD_HISTORY 8;
+    ```
+
+9. Create a user with comment
+
+   ```sql
+    CREATE USER 'jack' COMMENT "this is my first user";
     ```
 
 ### Keywords

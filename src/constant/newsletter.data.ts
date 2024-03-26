@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis",
+        content: `Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.`,
+        to: '/blog/variant-in-apache-doris-2.1',
+        image: 'variant-in-apache-doris-2.1.png',
+    },
+    {
         tags: ['Release Notes'],
         title: "Another big leap: Apache Doris 2.1.0 is released",
         content: `We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.`,
@@ -20,13 +27,6 @@ export const NEWSLETTER_DATA = [
         to: '/blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse',
         image: 'a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.png',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: "A deep dive into inverted index: how it speeds up text searches by 40 times",
-        content: `This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.`,
-        to: '/blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris',
-        image: 'how-inverted-index-accelerates-text-searches-by-40-times.png',
-    },
     // {
     //     tags: ['Best Practice'],
     //     title: "The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris",
@@ -34,5 +34,5 @@ export const NEWSLETTER_DATA = [
     //     to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
     //     image: 'apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png',
     // },
- 
+
 ];

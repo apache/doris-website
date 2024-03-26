@@ -457,37 +457,6 @@ mysql>  explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2
 +--------------------------------------------------------------------------------+
 18 rows in set (0.02 sec)
   ```
-## 使用限制
-- 当前版本只支持使用一个leadingHint。若和子查询同时使用leadinghint的话则查询会报错。例（这个例子explain会报错，但是会走正常的路径生成计划）：
-```sql
-mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select /*+ leading(t3 t2) */ c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
-  +----------------------------------------------------------------------------------------+
-  | Explain String(Nereids Planner)                                                        |
-  +----------------------------------------------------------------------------------------+
-  | PhysicalResultSink                                                                     |
-  | --hashAgg[GLOBAL]                                                                      |
-  | ----PhysicalDistribute[DistributionSpecGather]                                         |
-  | ------hashAgg[LOCAL]                                                                   |
-  | --------PhysicalProject                                                                |
-  | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()    |
-  | ------------PhysicalProject                                                            |
-  | --------------PhysicalOlapScan[t1]                                                     |
-  | ------------PhysicalDistribute[DistributionSpecHash]                                   |
-  | --------------PhysicalProject                                                          |
-  | ----------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
-  | ------------------PhysicalProject                                                      |
-  | --------------------PhysicalOlapScan[t2]                                               |
-  | ------------------PhysicalDistribute[DistributionSpecHash]                             |
-  | --------------------PhysicalProject                                                    |
-  | ----------------------PhysicalOlapScan[t3]                                             |
-  |                                                                                        |
-  | Hint log:                                                                              |
-  | Used:                                                                                  |
-  | UnUsed: leading(alias t1)                                                              |
-  | SyntaxError: leading(t3 t2) Msg:one query block can only have one leading clause       |
-  +----------------------------------------------------------------------------------------+
-  21 rows in set (0.01 sec)
-```
  # OrderedHint 使用说明
 - 使用ordered hint会让join tree的形状固定下来，按照文本序来显示
 - 语法为 /*+ ORDERED */,leading由"/*+"和"*/"包围并置于select语句里面 select的正后方，例：

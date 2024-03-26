@@ -26,9 +26,21 @@ under the License.
 
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) is a scalable and reliable tool for data transmission between Apache Kafka and other systems. Connectors can be defined Move large amounts of data in and out of Kafka.
 
-Doris provides the Sink Connector plug-in, which can write data from Kafka topics to Doris.
+The Doris community provides the [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
 
 ## Usage Doris Kafka Connector
+
+### Download
+[doris-kafka-connector](https://doris.apache.org/zh-CN/download)
+
+maven dependencies
+```xml
+<dependency>
+  <groupId>org.apache.doris</groupId>
+  <artifactId>doris-kafka-connector</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 
 ### Standalone mode startup
 
@@ -58,8 +70,6 @@ doris.password=
 doris.database=test_db
 key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
-key.converter.schemas.enable=false
-value.converter.schemas.enable=false
 ```
 
 Start Standalone
@@ -67,7 +77,7 @@ Start Standalone
 ```shell
 $KAFKA_HOME/bin/connect-standalone.sh -daemon $KAFKA_HOME/config/connect-standalone.properties $KAFKA_HOME/config/doris-connector-sink.properties
 ```
-:::warning
+:::note
 Note: It is generally not recommended to use standalone mode in a production environment.
 :::
 
@@ -111,9 +121,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
     "doris.query.port":"9030",
     "doris.database":"test_db",
     "key.converter":"org.apache.kafka.connect.storage.StringConverter",
-    "value.converter":"org.apache.kafka.connect.json.JsonConverter",
-    "key.converter.schemas.enable":"false",
-    "value.converter.schemas.enable":"false",
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
   }
 }'
 ```
@@ -133,7 +141,7 @@ curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart
 ```
 Refer to: [Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html#kconnect-rest-interface)
 
-:::warning
+:::note
 Note that when kafka-connect is started for the first time, three topics `config.storage.topic` `offset.storage.topic` and `status.storage.topic` will be created in the kafka cluster to record the shared connector configuration of kafka-connect. Offset data and status updates. [How to Use Kafka Connect - Get Started](https://docs.confluent.io/platform/current/connect/userguide.html)
 :::
 
@@ -189,4 +197,4 @@ errors.deadletterqueue.topic.replication.factor=1
 | sink.properties.*      | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'` | N            | Import parameters for Stream Load. <br />For example: define column separator `'sink.properties.column_separator':','` <br />Detailed parameter reference [here](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD/) |
 | delivery.guarantee     | at_least_once                                                                        | N            | How to ensure data consistency when consuming Kafka data is imported into Doris. Supports `at_least_once` `exactly_once`, default is `at_least_once`. Doris needs to be upgraded to 2.1.0 or above to ensure data `exactly_once`                                        |
 
-For other Kafka Connect Sink common configuration items, please refer to: [Kafka Connect Sink Configuration Properties](https://docs.confluent.io/platform/current/installation/configuration/connect/sink-connect-configs.html#kconnect-long-sink-configuration-properties-for-cp)
+For other Kafka Connect Sink common configuration items, please refer to: [connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)

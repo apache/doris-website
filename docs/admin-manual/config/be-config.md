@@ -942,26 +942,10 @@ BaseCompaction:546859:
 * Description: The reserved bytes limit of Chunk Allocator, usually set as a percentage of mem_limit. defaults to bytes if no unit is given, the number of bytes must be a multiple of 2. must larger than 0. and if larger than physical memory size, it will be set to physical memory size. increase this variable can improve performance, but will acquire more free memory which can not be used by other modules.
 * Default value: 20%
 
-#### `madvise_huge_pages`
-
-* Type: bool
-* Description: Whether to use linux memory huge pages.
-* Default value: false
-
 #### `max_memory_sink_batch_count`
 
 * Description: The maximum external scan cache batch count, which means that the cache max_memory_cache_batch_count * batch_size row, the default is 20, and the default value of batch_size is 1024, which means that 20 * 1024 rows will be cached
 * Default value: 20
-
-#### `memory_max_alignment`
-
-* Description: Maximum alignment memory
-* Default value: 16
-
-#### `mmap_buffers`
-
-* Description: Whether to use mmap to allocate memory
-* Default value: false
 
 #### `memtable_mem_tracker_refresh_interval_ms`
 
@@ -1025,12 +1009,6 @@ BaseCompaction:546859:
 * Description: The cache size used when reading files on hdfs or object storage.
   - Increasing this value can reduce the number of calls to read remote data, but it will increase memory overhead.
 * Default value: 16 (MB)
-
-#### `file_cache_type`
-
-* Type: string
-* Description: Type of cache file.`whole_file_cache`: download the entire segment file, `sub_file_cache`: the segment file is divided into multiple files by size. if set "", no cache, please set this parameter when caching is required.
-* Default value: ""
 
 #### `file_cache_alive_time_sec`
 
@@ -1115,11 +1093,6 @@ BaseCompaction:546859:
 
 * Description: Disk status check interval
 * Default value: 5（s）
-
-#### `max_free_io_buffers`
-
-* Description: For each io buffer size, the maximum number of buffers that IoMgr will reserve ranges from 1024B to 8MB buffers, up to about 2GB buffers.
-* Default value: 128
 
 #### `max_garbage_sweep_interval`
 
@@ -1393,11 +1366,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: The interval time for the agent to report the task signature to FE
 * Default value: 10 (s)
-
-#### `periodic_counter_update_period_ms`
-
-* Description: Update rate counter and sampling counter cycle
-* Default value: 500 (ms)
 
 #### `enable_metric_calculator`
 
