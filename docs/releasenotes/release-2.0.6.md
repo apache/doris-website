@@ -28,7 +28,7 @@ under the License.
 
 Thanks to our community users and developers, about 114 improvements and bug fixes have been created by 51 contributors in Doris 2.0.6 version.
 
-**Quick Download：** [https://doris.apache.org/download/](https://doris.apache.org/download/)
+**Quick Download:** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 
 **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 

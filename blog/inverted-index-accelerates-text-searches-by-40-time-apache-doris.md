@@ -5,8 +5,6 @@
     'date': '2024-02-01',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/how-inverted-index-accelerates-text-searches-by-40-times.png'
 }
 ---
