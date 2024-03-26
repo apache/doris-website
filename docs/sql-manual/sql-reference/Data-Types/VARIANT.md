@@ -64,6 +64,7 @@ Below are test results based on clickbench data:
 Demonstrate the functionality and usage of VARIANT with an example covering table creation, data import, and query cycle.
 
 **Table Creation Syntax**
+
 Create a table, using the `VARIANT` keyword in the syntax.
 
 ``` sql
@@ -95,14 +96,14 @@ properties("replication_num" = "1", "bloom_filter_columns" = "v");
 **Query Syntax**
 
 ``` sql
--- use v['a']['b'] format for example, v['properties']['title'] type is Variant
+-- use v['a']['b'] format for example, v['properties']['title'] type is VARIANT
 SELECT v['properties']['title'] from ${table_name}
 
 ```
 
 **Example based on the GitHub events dataset**
 
-Here, github events data is used to demonstrate the table creation, data import, and query using variant.
+Here, github events data is used to demonstrate the table creation, data import, and query using VARIANT.
 The below is a formatted line of data:
 
 ``` json
