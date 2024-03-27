@@ -91,7 +91,7 @@ load数据时，对用户bitmap值range范围纵向切割，例如，用户id在
 
 注：正交bitmap函数不能用在分区表，因为分区表分区内正交，分区之间的数据是无法保证正交的，则计算结果也是无法预估的。
 
-#### bitmap_orthogonal_intersect
+#### orthogonal_bitmap_intersect
 
 求bitmap交集函数
 
