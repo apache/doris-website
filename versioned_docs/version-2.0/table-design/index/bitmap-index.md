@@ -24,13 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Bitmap index
-
 Bitmap Index is an index represented by bitmaps, where a bitmap is created for each key value in a column. Compared to other indexes, it occupies very little storage space and is very fast to create and use. However, it has a disadvantage of having a large lock granularity for modification operations, making it unsuitable for frequent updates.
 
 ![bitmap index](/images/Bitmap-index.png)
 
-### Applicable scenarios
+## Applicable scenarios
 
 - Columns with high value repetition, recommended to be between 100 and 100,000, such as occupation, city, etc. If the repetition is too high, there is no significant advantage compared to other types of indexes; if the repetition is too low, space efficiency and performance will be greatly reduced.
 - Specific types of queries such as `count`, `or`, `and` logical operations that only require bitwise operations. For example: querying with multiple conditions combined, `select count(*) from table where city = 'Nanjing' and job = 'Doctor' and phonetype = 'iphone' and gender = 'Male'.` If bitmap indexes are established on each query condition column, the database can perform efficient bit operations, accurately locate the required data, reduce disk IO, and the smaller the filtered result set, the more obvious the advantage of bitmap indexes.

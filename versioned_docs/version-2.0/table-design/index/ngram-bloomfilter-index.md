@@ -1,6 +1,6 @@
 ---
 {
-    "title": "NGram BloomFilter Index",
+    "title": "N-Gram BloomFilter Index",
     "language": "en"
 }
 ---
@@ -24,14 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# NGram BloomFilter Index
 
-<version since="2.0.0">
-</version>
 
-In order to improve the like query performance, the NGram BloomFilter index was implemented.
+In order to improve the like query performance, the N-Gram BloomFilter index was implemented.
 
-## Create Column with NGram BloomFilter Index
+:::tip
+
+N-Gram BloomFilter indexing is supported starting from the Doris 2.0 version.
+
+:::
+
+### Create N-Gram BloomFilter index
 
 During create table：
 
@@ -47,34 +50,34 @@ DISTRIBUTED BY HASH(`siteid`) BUCKETS 10
 PROPERTIES (
 "replication_num" = "1"
 );
-
--- PROPERTIES("gram_size"="3", "bf_size"="1024")，indicate the number of gram and bytes of bloom filter respectively.
--- the gram size set to same as the like query pattern string length. and the suitable bytes of bloom filter can be get by test, more larger more better, 256 maybe is a good start.
--- Usually, if the data's cardinality is small, you can increase the bytes of bloom filter to improve the efficiency.
 ```
 
-## Show NGram BloomFilter Index
+- PROPERTIES("gram_size"="3", "bf_size"="1024")，indicate the number of gram and bytes of bloom filter respectively.
+- The number of grams is related to the actual query scenarios and is usually set to the length of most query strings. The byte size of the Bloom Filter can be determined through testing, and generally, a larger size leads to better filtering effects. You can start with 256 bytes for validation testing to see the results. However, a larger byte size will also increase the storage and memory cost of the index.
+- If the data cardinality is relatively high, the byte size does not need to be set too large. If the cardinality is not very high, the filtering effect can be improved by increasing the byte size.
+
+### Show N-Gram BloomFilter index
 
 ```sql
 show index from example_db.table3;
 ```
 
-## Drop NGram BloomFilter Index
+### Drop N-Gram BloomFilter index
 
 
 ```sql
 alter table example_db.table3 drop index idx_ngrambf;
 ```
 
-## Add NGram BloomFilter Index
+### Modify N-Gram BloomFilter index
 
-Add NGram BloomFilter Index for old column:
+Add N-Gram BloomFilter Index for old column:
 
 ```sql
 alter table example_db.table3 add index idx_ngrambf(username) using NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="512")comment 'username ngram_bf index' 
 ```
 
-## **Some Notes about Doris NGram BloomFilter**
+### **Some Notes about Doris NGram BloomFilter**
 
 1. NGram BloomFilter only support CHAR/VARCHAR/String column.
 2. NGram BloomFilter index and BloomFilter index should be exclusive on same column
