@@ -100,3 +100,12 @@ LOAD LABEL label_03_14_49_34_898986_19090452100 (
   PROPERTIES( "max_filter_ratio"="0.8" );
 ```
 
+## 使用的执行引擎
+
+导入时默认关闭 Pipeline 引擎，通过以下两个变量开启：
+
+1. [FE CONFIG](../../admin-manual/config/fe-config) 中的 `enable_pipeline_load`，开启后 Streamload 等导入任务将尝试使用 Pipeline 引擎执行。
+
+2. Session Variable 中的 `enable_nereids_dml_with_pipeline`，开启后 insert into 将尝试使用 Pipeline 引擎执行。
+
+以上变量开启后，具体是否使用、使用哪一套 Pipeline 引擎，取决于另两个 Session Variables `enable_pipeline_engine` 和 `enable_pipeline_x_engine` 的设置。都开启时，PipelineX 优先于 Pipeline 引擎被选择。如果都不开启，即使以上变量被设置为 `true`，导入依然不会使用 Pipeline 引擎执行。

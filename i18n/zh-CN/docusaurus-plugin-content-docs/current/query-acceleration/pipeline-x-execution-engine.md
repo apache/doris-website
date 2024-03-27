@@ -52,7 +52,7 @@ PipelineX 执行引擎 是 Doris 在 2.1 版本加入的实验性功能。目标
 
 #### enable_pipeline_x_engine
 
-将session变量`enable_pipeline_x_engine `设置为`true`，则 BE 在进行查询执行时就会默认将 SQL 的执行模型转变 PipelineX 的执行方式。
+将session变量`enable_pipeline_x_engine` 设置为`true`，则 BE 在进行查询执行时就会默认将 SQL 的执行模型转变 PipelineX 的执行方式。如果 Pipeline 和 PipelineX 引擎都设置为开启，Doris 将优先使用 PipelineX 引擎。
 
 ```
 set enable_pipeline_x_engine = true;
@@ -73,3 +73,7 @@ set enable_local_shuffle = true;
 ```
 set ignore_storage_data_distribution = true;
 ```
+
+### 导入
+
+导入的引擎选择设置，详见[导入](../data-operate/import/load-manual)文档。

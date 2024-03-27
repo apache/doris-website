@@ -1022,6 +1022,14 @@ This variable is a session variable, and the session level takes effect.
 
 ### Load And Export
 
+#### `enable_pipeline_load`
+
+Default value: true
+
+IsMutable: true
+
+Whether or not to enable the Pipeline engine to perform import tasks such as Streamload.
+
 #### `enable_vectorized_load`
 
 Default: true

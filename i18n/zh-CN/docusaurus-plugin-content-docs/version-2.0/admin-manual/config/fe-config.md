@@ -1024,6 +1024,14 @@ colocate join PlanFragment instance 的 memory_limit = exec_mem_limit / min (que
 
 ### 导入与导出
 
+#### `enable_pipeline_load`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否开启 Pipeline 引擎执行 Streamload 等导入任务。
+
 #### `enable_vectorized_load`
 
 默认值：true

@@ -202,6 +202,10 @@ This command returns the insert results and the details of the corresponding tra
 
   Insert Into itself is also an SQL command, and the Insert Into statement is restricted by the Session variable <version since="dev" type="inline">`insert_timeout`</version>. You can increase the timeout time by `SET insert_timeout = xxx;` in seconds.
 
++ enable_nereids_dml_with_pipeline
+
+  When set to `true`, the `insert into` statement will attempt to be executed through the Pipeline engine. See the [import](../load-manual) documentation for details.
+
 ## Best Practices
 
 ### Application scenarios
