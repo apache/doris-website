@@ -33,7 +33,7 @@ INSERT OVERWRITE
 
 ### Description
 
-该语句的功能是重写表或表的某个分区
+该语句的功能是重写表或表的某些分区
 
 ```sql
 INSERT OVERWRITE table table_name
@@ -138,6 +138,13 @@ PROPERTIES (
 
 
 #### Overwrite Table Partition
+
+使用 INSERT OVERWRITE 重写分区时，实际我们是将如下三步操作封装为一个事务并执行，如果中途失败，已进行的操作将会回滚：
+1. 假设指定重写分区 p1，首先创建一个与重写的目标分区结构相同的空临时分区 `pTMP`
+2. 向 `pTMP` 中写入数据
+3. 使用 `pTMP` 原子替换 `p1` 分区
+
+举例如下：
 
 1. VALUES的形式重写`test`表分区`P1`和`p2`
 

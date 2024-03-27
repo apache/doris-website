@@ -33,7 +33,7 @@ INSERT OVERWRITE
 
 ### Description
 
-The function of this statement is to overwrite a table or a partition of a table
+The function of this statement is to overwrite a table or some partitions of a table
 
 ```sql
 INSERT OVERWRITE table table_name
@@ -137,6 +137,13 @@ PROPERTIES (
 
 
 #### Overwrite Table Partition
+
+When using INSERT OVERWRITE to rewrite partitions, we actually encapsulate the following three steps into a single transaction and execute it. If it fails halfway through, the operations that have been performed will be rolled back:
+1. Assuming that partition `p1` is specified to be rewritten, first create an empty temporary partition `pTMP` with the same structure as the target partition to be rewritten.
+2. Write data to `pTMP`.
+3. replace `p1` with the `pTMP` atom
+
+The following is examples:
 
 1. Overwrite partitions `P1` and `P2` of the `test` table using the form of `VALUES`.
 
