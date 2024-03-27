@@ -119,8 +119,8 @@
                     "items": [
                         "data-operate/update/update-overview",
                         "data-operate/update/unique-update",
-                        "data-operate/update/unique-load-update",
-                        "data-operate/update/aggregate-load-update",
+                        "data-operate/update/update-of-unique-model",
+                        "data-operate/update/update-of-aggregate-model",
                         "data-operate/update/unique-update-transaction"
                     ]
                 },

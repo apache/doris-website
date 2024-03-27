@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Update",
+    "title": "Update Overview",
     "language": "en"
 }
 ---
@@ -24,109 +24,66 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Update
+Data update primarily refers to the modification of the value column of data with the same key. For the primary(unique) key model, this update involves replacing the existing value, while for the aggregate model, it involves aggregating the values in the value column.
 
-This article mainly describes how to use the UPDATE command to operate if we need to modify or update the data in Doris. The data update is limited to the version of Doris and can only be used in Doris **Version 0.15.x +**.
+## Update in Primary Key (Unique) Model
 
-## Applicable scenarios
+Starting from Doris 2.0, Doris primary key (unique) model supports both Merge-on-Read (MoR) and Merge-on-Write (MoW) storage modes. MoR is optimized for write operations, while MoW is optimized for faster analysis performance. In actual tests, the analysis performance of MoW storage can be 5-10 times faster than MoR.
 
-+ Modify its value for rows that meet certain conditions;
-+ Point update, small range update, the row to be updated is preferably a very small part of the entire table;
-+ The update command can only be executed on a table with a Unique data model.
-
-## Fundamentals
-
-Use the query engine's own where filtering logic to filter the rows that need to be updated from the table to be updated. Then use the Unique model's own Value column replacement logic to change the rows to be updated and reinsert them into the table. This enables row-level updates.
-
-### Synchronization
-
-The Update syntax is a synchronization syntax in Doris. If the Update statement succeeds, the update succeeds and the data is visible.
-
-### Performance
-
-The performance of the Update statement is closely related to the number of rows to be updated and the retrieval efficiency of the condition.
-
-+ Number of rows to be updated: The more rows to be updated, the slower the Update statement will be. This is consistent with the principle of importing.
-        Doris updates are more suitable for occasional update scenarios, such as changing the values of individual rows.
-        Doris is not suitable for large batches of data changes. Large modifications can make Update statements take a long time to run.
-
-+ Condition retrieval efficiency: Doris Update implements the principle of reading the rows that satisfy the condition first, so if the condition retrieval efficiency is high, the Update will be faster.
-        The condition column should ideally be hit, indexed, or bucket clipped. This way Doris does not need to scan the entire table and can quickly locate the rows that need to be updated. This improves update efficiency.
-        It is strongly discouraged to include the UNIQUE model value column in the condition column.
-
-### Concurrency Control
-
-By default, multiple concurrent Update operations on the same table are not allowed at the same time.
-
-The main reason for this is that Doris currently supports row updates, which means that even if the user declares ``SET v2 = 1``, virtually all other Value columns will be overwritten (even though the values are not changed).
-
-This presents a problem in that if two Update operations update the same row at the same time, the behavior may be indeterminate. That is, there may be dirty data.
-
-However, in practice, the concurrency limit can be turned on manually if the user himself can guarantee that even if concurrent updates are performed, they will not operate on the same row at the same time. This is done by modifying the FE configuration ``enable_concurrent_update``. When the configuration value is true, there is no limit on concurrent updates.
-> Note: After enabling the configuration, there will be certain performance risks. You can refer to the performance section above to improve update efficiency.
-
-## Risks of Use
-
-Since Doris currently supports row updates and uses a two-step read-and-write operation, there is uncertainty about the outcome of an Update statement if it modifies the same row as another Import or Delete statement.
-
-Therefore, when using Doris, you must be careful to control the concurrency of Update statements and other DML statements on the **user side itself**.
-
-## Usage Examples
-
-Suppose there is an order table in Doris, where the order id is the Key column, the order status and the order amount are the Value column. The data status is as follows:
-
-| order id | order amount | order status    |
-| -------- | ------------ | --------------- |
-| 1        | 100          | Pending Payment |
+By default, in Doris 2.0, the unique key model is still based on MoR. To create a MoW model, you need to manually specify the parameter "enable_unique_key_merge_on_write" as "true". Here's an example:
 
 ```sql
-+----------+--------------+-----------------+
-| order_id | order_amount | order_status    |
-+----------+--------------+-----------------+
-| 1        | 100          | Pending Payment |
-+----------+--------------+-----------------+
-1 row in set (0.01 sec)
+CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
+(
+    `user_id` LARGEINT NOT NULL,
+    `username` VARCHAR(50) NOT NULL ,
+    `city` VARCHAR(20),
+    `age` SMALLINT,
+    `sex` TINYINT,
+    `phone` LARGEINT,
+    `address` VARCHAR(500),
+    `register_time` DATETIME
+)
+UNIQUE KEY(`user_id`, `username`)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1",
+"enable_unique_key_merge_on_write" = "true"
+);
 ```
 
-At this time, after the user clicks to pay, the Doris system needs to change the status of the order with the order id '1' to 'Pending Shipping', and the Update function needs to be used.
+:::caution
+Starting from Doris 2.1, write merge will be the default mode for the unique key model. So, if you are using Doris 2.1, make sure to read the relevant table creation documentation.
+:::
 
-```sql
-mysql> UPDATE test_order SET order_status = 'Pending Shipping' WHERE order_id = 1;
-Query OK, 1 row affected (0.11 sec)
-{'label':'update_20ae22daf0354fe0-b5aceeaaddc666c5', 'status':'VISIBLE', 'txnId':'33', 'queryId':'20ae22daf0354fe0-b5aceeaaddc666c5'}
-```
+### Two Update Methods in Unique Key Model
 
-The result after the update is as follows
+- Update statement: This method is used to update a specific column and is suitable for infrequent updates with a small amount of data.
 
-```sql
-+----------+--------------+------------------+
-| order_id | order_amount | order_status     |
-+----------+--------------+------------------+
-| 1        |          100 | Pending Shipping |
-+----------+--------------+------------------+
-1 row in set (0.01 sec)
-```
+- Batch update based on load: Doris supports various load methods such as Stream Load, Broker Load, Routine Load, and Insert Into. For unique key tables, all load have the "UPSERT" semantics, meaning that if a row with the same key does not exist, it will be inserted, and if it already exists, it will be updated.
 
-After the user executes the UPDATE command, the system performs the following three steps.
+- If all columns are updated, MoR and MoW have the same semantics, which is to replace all value columns for the same key.
 
- Step 1: Read the rows that satisfy WHERE order id=1 (1, 100, 'pending payment')
- Step 2: Change the order status of the row from 'Pending Payment' to 'Pending Shipping' (1, 100, 'Pending shipment')
- Step 3: Insert the updated row back into the table to achieve the updated effect. 
+- If only some columns are updated, the default semantics for MoR and MoW are the same. In this case, the missing columns in the table schema will be updated with their default values, overwriting the old records.
 
-  | order id | order amount | order status | 
-  | ---| ---| ---| 
-  | 1 | 100| Pending Payment | 
-  | 1 | 100 | Pending shipments | 
+- If only some columns are updated and MoW is used in the unique key model, and the MySQL session variable "partial_columns" is set to true, or the HTTP header "partial_columns" is set to true, the missing columns will be updated with the corresponding missing column values from the existing record, instead of using the default values from the table schema.
 
-Since the table order is a UNIQUE model, the rows with the same Key, after which the latter will take effect, so the final effect is as follows. 
+We will provide detailed explanations of these two update methods in the documentation: [Update in Unique Key Model](../update/unique-update) and [Load Update in Unique Key Model](../update/unique-load-update).
 
-  | order id | order amount | order status | 
-  |---|---|---| 
-  | 1 | 100 | Pending shipments |
+### Update Transactions in Unique Key Model
 
-## Update Primary Key Column
-Currently, the Update operation only supports updating the Value column, and the update of the Key column can refer to [Using FlinkCDC to update key column](../../ecosystem/flink-doris-connector.md#Use-FlinkCDC-to-update-Key-column)
+Whether you use the update statement or the batch update based on load, there may be multiple update statements or load jobs in progress. In such cases, it is important to ensure the effectiveness of multiple updates, maintain atomicity, and prevent data inconsistency. This is where update transactions in the unique key model come into play.
 
-## More Help
+The documentation on update transactions in the unique key model will cover these aspects. In this document, we will focus on how to control the effectiveness of updates by introducing the hidden column __**DORIS_SEQUENCE_COL__, allowing developers to coordinate and achieve better update transactions.
 
-For more detailed syntax used by **data update**, please refer to the [update](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE.md) command manual , you can also enter `HELP UPDATE` in the Mysql client command line to get more help information.
+## Update in Aggregate Model
+
+The update in the aggregate model refers to the process of generating new aggregate values by combining new column values with existing aggregate values, according to the requirements of the aggregate functions.
+
+New Agg Value = Agg Func ( Old Agg Value + New Column Value)
+
+The update in the aggregate model is only supported through load methods and does not support the use of Update statements.
+
+When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model.
+
+For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/aggregate-load-update).

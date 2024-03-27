@@ -56,7 +56,7 @@ Update 语句的性能和待更新的行数以及 condition 的检索效率密�
 | ------ | -------- | -------- |
 | 1      | 100      | 待付款   |
 
-```SQL
+```sql
 +----------+--------------+--------------+
 | order_id | order_amount | order_status |
 +----------+--------------+--------------+
@@ -67,7 +67,7 @@ Update 语句的性能和待更新的行数以及 condition 的检索效率密�
 
 这时候，用户点击付款后，Doris 系统需要将订单 id 为 '1' 的订单状态变更为 '待发货'，就需要用到 Update 功能。
 
-```SQL
+```sql
 mysql> UPDATE test_order SET order_status = '待发货' WHERE order_id = 1;
 Query OK, 1 row affected (0.11 sec)
 {'label':'update_20ae22daf0354fe0-b5aceeaaddc666c5', 'status':'VISIBLE', 'txnId':'33', 'queryId':'20ae22daf0354fe0-b5aceeaaddc666c5'}
@@ -75,7 +75,7 @@ Query OK, 1 row affected (0.11 sec)
 
 更新后结果如下
 
-```SQL
+```sql
 +----------+--------------+--------------+
 | order_id | order_amount | order_status |
 +----------+--------------+--------------+
@@ -86,4 +86,4 @@ Query OK, 1 row affected (0.11 sec)
 
 ## 更多帮助
 
-关于数据更新使用的更多详细语法，请参阅 [update](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP UPDATE` 获取更多帮助信息。
+关于数据更新使用的更多详细语法，请参阅 [update](../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP UPDATE` 获取更多帮助信息。

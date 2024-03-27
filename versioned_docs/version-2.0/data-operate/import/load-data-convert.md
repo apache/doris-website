@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Transformation, Column Mapping and Filtering",
+    "title": "Load Data Convert",
     "language": "en"
 }
 ---
@@ -24,343 +24,404 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Imported Data Transformation, Column Mapping and Filtering
+## Usage Scenarios
 
-## Supported import methods
+During the import process, Doris supports some transformations on the source data, including mapping, conversion, preceding filtering, and post-filtering.
 
-- [BROKER LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD)
+- Mapping: Import column A from the source data into column B in the target table.
 
-  ```sql
-  LOAD LABEL example_db.label1
-  (
-      DATA INFILE("bos://bucket/input/file")
-      INTO TABLE `my_table`
-      (k1, k2, tmpk3)
-      PRECEDING FILTER k1 = 1
-      SET (
-          k3 = tmpk3 + 1
-      )
-      WHERE k1 > k2
-  )
-  WITH BROKER bos
-  (
-      ...
-  );
-  ````
+- Conversion: Calculate the values in the target column based on the columns in the source data using an expression. Custom functions are supported in the expression.
 
-- [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
+- Preceding Filtering: Filter rows in the source data and only import rows that meet the filtering conditions.
 
-  ```bash
-  curl
-  --location-trusted
-  -u user:passwd
-  -H "columns: k1, k2, tmpk3, k3 = tmpk3 + 1"
-  -H "where: k1 > k2"
-  -T file.txt
-  http://host:port/api/testDb/testTbl/_stream_load
-  ````
+- Post-Filtering: Filter rows in the result and only import rows that meet the filtering conditions.
 
-- [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD)
+## Quick Start
 
-  ```sql
-  CREATE ROUTINE LOAD example_db.label1 ON my_table
-  COLUMNS(k1, k2, tmpk3, k3 = tmpk3 + 1),
-  PRECEDING FILTER k1 = 1,
-  WHERE k1 > k2
-  ...
-  ````
+### BROKER LOAD
 
-The above import methods all support column mapping, transformation and filtering operations on the source data:
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("bos://bucket/input/file")
+    INTO TABLE `my_table`
+    (k1, k2, tmpk3)
+    PRECEDING FILTER k1 = 1
+    SET (
+        k3 = tmpk3 + 1
+    )
+    WHERE k1 > k2
+)
+WITH BROKER bos
+(
+    ...
+);
+```
 
-- Pre-filtering: filter the read raw data once.
+### STREAM LOAD
 
-  ````text
-  PRECEDING FILTER k1 = 1
-  ````
+```bash
+curl
+--location-trusted
+-u user:passwd
+-H "columns: k1, k2, tmpk3, k3 = tmpk3 + 1"
+-H "where: k1 > k2"
+-T file.txt
+http://host:port/api/testDb/testTbl/_stream_load
+```
 
-- Mapping: Define the columns in the source data. If the defined column name is the same as the column in the table, it is directly mapped to the column in the table. If different, the defined column can be used for subsequent transformation operations. As in the example above:
+### ROUTINE LOAD
 
-  ````text
-  (k1, k2, tmpk3)
-  ````
+```sql
+CREATE ROUTINE LOAD example_db.label1 ON my_table
+COLUMNS(k1, k2, tmpk3, k3 = tmpk3 + 1),
+PRECEDING FILTER k1 = 1,
+WHERE k1 > k2
+...
+```
 
-- Conversion: Convert the mapped columns in the first step, you can use built-in expressions, functions, and custom functions for conversion, and remap them to the corresponding columns in the table. As in the example above:
+## Reference Manual
 
-  ````text
-  k3 = tmpk3 + 1
-  ````
+### Loading Syntax
 
-- Post filtering: Filter the mapped and transformed columns by expressions. Filtered data rows are not imported into the system. As in the example above:
+**Stream Load**
 
-  ````text
-  WHERE k1 > k2
-  ````
+Add `columns` and `where` parameters in the HTTP header.
 
-## column mapping
+- `columns` specify column mapping and value transformation.
 
-The purpose of column mapping is mainly to describe the information of each column in the import file, which is equivalent to defining the name of the column in the source data. By describing the column mapping relationship, we can import source files with different column order and different number of columns into Doris. Below we illustrate with an example:
+- `where` specify post-filtering.
 
-Assuming that the source file has 4 columns, the contents are as follows (the header column names are only for convenience, and there is no header actually):
+Stream load does not support preceding filtering.
 
-| Column 1 | Column 2 | Column 3  | Column 4 |
-| -------- | -------- | --------- | -------- |
-| 1        | 100      | beijing   | 1.1      |
-| 2        | 200      | shanghai  | 1.2      |
-| 3        | 300      | guangzhou | 1.3      |
-| 4        | \N       | chongqing | 1.4      |
+Example:
 
-> Note: `\N` means null in the source file.
+```bash
+curl
+--location-trusted
+-u user:passwd
+-H "columns: k1, k2, tmpk3, k3 = tmpk3 + 1"
+-H "where: k1 > k2"
+-T file.txt
+http://host:port/api/testDb/testTbl/_stream_load
+```
 
-1. Adjust the mapping order
+**Broker Load**
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. The import mapping relationship we want is as follows:
+Define data transformation in the SQL statement, including:
 
-   ````text
-   column 1 -> k1
-   column 2 -> k3
-   column 3 -> k2
-   column 4 -> k4
-   ````
+- `(k1, k2, tmpk3)` specifies column mapping.
 
-   Then the column mapping should be written in the following order:
+- `PRECEDING FILTER` specifies preceding filtering.
 
-   ````text
-   (k1, k3, k2, k4)
-   ````
+- `SET` specifies column transformation.
 
-2. There are more columns in the source file than in the table
+- `WHERE` specifies post-filtering.
 
-   Suppose there are 3 columns `k1,k2,k3` in the table. The import mapping relationship we want is as follows:
+```sql
+LOAD LABEL example_db.label1
+(
+    DATA INFILE("bos://bucket/input/file")
+    INTO TABLE `my_table`
+    (k1, k2, tmpk3)
+    PRECEDING FILTER k1 = 1
+    SET (
+        k3 = tmpk3 + 1
+    )
+    WHERE k1 > k2
+)
+WITH BROKER bos
+(
+    ...
+);
+```
 
-   ````text
-   column 1 -> k1
-   column 2 -> k3
-   column 3 -> k2
-   ````
+**Routine Load**
 
-   Then the column mapping should be written in the following order:
+Define data transformation in the SQL statement, including:
 
-   ````text
-   (k1, k3, k2, tmpk4)
-   ````
+- `COLUMNS` specifies column mapping and column transformation.
 
-   where `tmpk4` is a custom column name that does not exist in the table. Doris ignores this non-existing column name.
+- `PRECEDING FILTER` specifies preceding filtering.
 
-3. The number of columns in the source file is less than the number of columns in the table, fill with default values
+- `WHERE` specifies post-filtering.
 
-   Suppose there are 5 columns `k1,k2,k3,k4,k5` in the table. The import mapping relationship we want is as follows:
+```sql
+CREATE ROUTINE LOAD example_db.label1 ON my_table
+COLUMNS(k1, k2, tmpk3, k3 = tmpk3 + 1),
+PRECEDING FILTER k1 = 1,
+WHERE k1 > k2
+...
+```
 
-   ````text
-   column 1 -> k1
-   column 2 -> k3
-   column 3 -> k2
-   ````
+**Insert Into**
 
-   Here we only use the first 3 columns from the source file. The two columns `k4,k5` want to be filled with default values.
+Insert Into can perform data transformation directly in the `SELECT` statement, and add a `WHERE` clause for data filtering.
 
-   Then the column mapping should be written in the following order:
 
-   ````text
-   (k1, k3, k2)
-   ````
+### Column Mapping
 
-   If the `k4,k5` columns have default values, the default values will be populated. Otherwise, if it is a `nullable` column, it will be populated with a `null` value. Otherwise, the import job will report an error.
+The purpose of column mapping is to describe the information of each column in the load file, which is equivalent to defining names for the columns in the source data. By describing the column mapping relationship, we can load source files with different column orders and column numbers into Doris. Let's illustrate it through examples:
 
-## Column pre-filtering
+Suppose the source file has 4 columns with the following contents (the column names in the table header are for illustration purposes only and are not actually present in the file):
 
-Pre-filtering is to filter the read raw data once. Currently only BROKER LOAD and ROUTINE LOAD are supported.
+| Column 1 | Column 2 | Column 3   | Column 4 |
+| -------- | -------- | ---------- | -------- |
+| 1        | 100      | beijing    | 1.1      |
+| 2        | 200      | shanghai   | 1.2      |
+| 3        | 300      | guangzhou  | 1.3      |
+| 4        | \N       | chongqing  | 1.4      |
 
-Pre-filtering has the following application scenarios:
+:::note
+Note: `\N` represents null in the source file.
+:::
 
-1. Filter before conversion
+1. Adjusting Mapping Order
 
-   Scenarios where you want to filter before column mapping and transformation. It can filter out some unwanted data first.
+2. Suppose there are 4 columns in the table: `k1, k2, k3, k4`. The desired load mapping is as follows:
 
-2. The filter column does not exist in the table, it is only used as a filter identifier
+```Plain
+Column 1 -> k1
+Column 2 -> k3
+Column 3 -> k2
+Column 4 -> k4
+```
 
-   For example, the source data stores the data of multiple tables (or the data of multiple tables is written to the same Kafka message queue). Each row in the data has a column name to identify which table the row of data belongs to. Users can filter the corresponding table data for import by pre-filtering conditions.
+3. The order of column mapping should be as follows:
 
-## Column conversion
+```Plain
+(k1, k3, k2, k4)
+```
 
-The column transformation function allows users to transform column values in the source file. Currently, Doris supports most of the built-in functions and user-defined functions for conversion.
+4. The number of columns in the source file is greater than the number of columns in the table.
 
-> Note: The user-defined function belongs to a certain database. When using the user-defined function for conversion, the user needs to have read permission to this database.
+5. Suppose there are 3 columns in the table: `k1, k2, k3`. The desired load mapping is as follows:
 
-Transformation operations are usually defined along with column mappings. That is, the columns are first mapped and then converted. Below we illustrate with an example:
+```Plain
+Column 1 -> k1
+Column 2 -> k3
+Column 3 -> k2
+```
 
-Assuming that the source file has 4 columns, the contents are as follows (the header column names are only for convenience, and there is no header actually):
+6. The order of column mapping should be as follows:
 
-| Column 1 | Column 2 | Column 3  | Column 4 |
-| -------- | -------- | --------- | -------- |
-| 1        | 100      | beijing   | 1.1      |
-| 2        | 200      | shanghai  | 1.2      |
-| 3        | 300      | guangzhou | 1.3      |
-| \N       | 400      | chongqing | 1.4      |
+```Plain
+(k1, k3, k2, tmpk4)
+```
 
-1. Convert the column values in the source file and import them into the table
+7. Here, `tmpk4` is a custom column name that doesn't exist in the table. Doris will ignore this non-existing column name.
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. Our desired import mapping and transformation relationship is as follows:
+8. The number of columns in the source file is less than the number of columns in the table, and default values will be used to fill the missing columns.
 
-   ````text
-   column 1 -> k1
-   column 2 * 100 -> k3
-   column 3 -> k2
-   column 4 -> k4
-   ````
+9. Suppose there are 5 columns in the table: `k1, k2, k3, k4, k5`. The desired load mapping is as follows:
 
-   Then the column mapping should be written in the following order:
+```Plain
+Column 1 -> k1
+Column 2 -> k3
+Column 3 -> k2
+```
 
-   ````text
-   (k1, tmpk3, k2, k4, k3 = tmpk3 * 100)
-   ````
+10. Here, only the first 3 columns from the source file will be used. The columns `k4` and `k5` are expected to be filled with default values.
 
-   This is equivalent to us naming the second column in the source file `tmpk3`, and specifying that the value of the `k3` column in the table is `tmpk3 * 100`. The data in the final table is as follows:
+11. The order of column mapping should be as follows:
 
-   | k1   | k2        | k3    | k4   |
-   | ---- | --------- | ----- | ---- |
-   | 1    | beijing   | 10000 | 1.1  |
-   | 2    | shanghai  | 20000 | 1.2  |
-   | 3    | guangzhou | 30000 | 1.3  |
-   | null | chongqing | 40000 | 1.4  |
+```Plain
+(k1, k3, k2)
+```
 
-2. Through the case when function, column conversion is performed conditionally.
+12. If the columns `k4` and `k5` have default values, they will be filled accordingly. Otherwise, if the columns are nullable, they will be filled with `null` values. Otherwise, the loading job will report an error.
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. We hope that `beijing, shanghai, guangzhou, chongqing` in the source data are converted to the corresponding region ids and imported:
+### Pre-filtering
 
-   ````text
-   column 1 -> k1
-   column 2 -> k2
-   Column 3 after region id conversion -> k3
-   column 4 -> k4
-   ````
+Pre-filtering is a process of filtering the raw data that is read. Currently, it is only supported in BROKER LOAD and ROUTINE LOAD.
 
-   Then the column mapping should be written in the following order:
+Pre-filtering can be applied in the following scenarios:
 
-   ````text
-   (k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-   ````
+1. Filtering before transformation: It allows filtering of data before performing column mapping and transformation. This way, unnecessary data can be filtered out in advance.
 
-   The data in the final table is as follows:
+2. Filtering columns that do not exist in the table: It can be used as a filtering identifier when certain columns are not present in the table.
 
-   | k1   | k2   | k3   | k4   |
-   | ---- | ---- | ---- | ---- |
-   | 1    | 100  | 1    | 1.1  |
-   | 2    | 200  | 2    | 1.2  |
-   | 3    | 300  | 3    | 1.3  |
-   | null | 400  | 4    | 1.4  |
+3. Handling data from multiple tables: For example, if the source data contains data from multiple tables (or data from multiple tables is written to the same Kafka message queue), each row may include a column name that identifies which table the data belongs to. Users can use pre-filtering conditions to select and load the corresponding table data.
 
-3. Convert the null value in the source file to 0 and import it. At the same time, the region id conversion in Example 2 is also performed.
+### Column Transformation
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. While converting the region id, we also want to convert the null value of the k1 column in the source data to 0 and import:
+Column transformation enables users to modify the values of columns in the source files. Currently, Doris supports the use of built-in functions and user-defined functions for transformation.
 
-   ````text
-   Column 1 is converted to 0 if it is null -> k1
-   column 2 -> k2
-   column 3 -> k3
-   column 4 -> k4
-   ````
+:::note
+Note: User-defined functions belong to a specific database, and when using custom functions for transformation, users need to have read permissions on that database.
+:::
 
-   Then the column mapping should be written in the following order:
+Transformation operations are typically defined in conjunction with column mapping. In the following example, we illustrate the process:
 
-   ````text
-   (tmpk1, k2, tmpk3, k4, k1 = ifnull(tmpk1, 0), k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-   ````
+Assume that the source file has 4 columns with the following content (the column names in the header are for descriptive purposes only and are not actually present in the file):
 
-   The data in the final table is as follows:
+| Column 1 | Column 2 | Column 3    | Column 4 |
+| -------- | -------- | ----------- | -------- |
+| 1        | 100      | beijing     | 1.1      |
+| 2        | 200      | shanghai    | 1.2      |
+| 3        | 300      | guangzhou   | 1.3      |
+| \N       | 400      | chongqing   | 1.4      |
 
-   | k1   | k2   | k3   | k4   |
-   | ---- | ---- | ---- | ---- |
-   | 1    | 100  | 1    | 1.1  |
-   | 2    | 200  | 2    | 1.2  |
-   | 3    | 300  | 3    | 1.3  |
-   | 0    | 400  | 4    | 1.4  |
+1. Load the transformed column values into the table from the source file.
 
-## List filter
+2. Assuming the table has 4 columns: `k1`, `k2`, `k3`, `k4`, and we want the following mapping and transformation relationships:
 
-After column mapping and transformation, we can filter the data that we do not want to import into Doris through filter conditions. Below we illustrate with an example:
+```Plain
+Column 1       -> k1
+Column 2 * 100 -> k3
+Column 3       -> k2
+Column 4       -> k4
+```
 
-Assuming that the source file has 4 columns, the contents are as follows (the header column names are only for convenience, and there is no header actually):
+3. The order of column mapping should be as follows:
 
-| Column 1 | Column 2 | Column 3  | Column 4 |
-| -------- | -------- | --------- | -------- |
-| 1        | 100      | beijing   | 1.1      |
-| 2        | 200      | shanghai  | 1.2      |
-| 3        | 300      | guangzhou | 1.3      |
-| \N       | 400      | chongqing | 1.4      |
+```Plain
+(k1, tmpk3, k2, k4, k3 = tmpk3 * 100)
+```
 
-1. In the default case of column mapping and transformation, filter directly
+4. Here, we rename the second column in the source file as `tmpk3` and specify that the value of column `k3` in the table is `tmpk3 * 100`. The final data in the table would be as follows:
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. We can define filter conditions directly with default column mapping and transformation. If we want to import only the data rows whose fourth column in the source file is greater than 1.2, the filter conditions are as follows:
+| k1   | k2        | k3    | k4   |
+| ---- | --------- | ----- | ---- |
+| 1    | beijing   | 10000 | 1.1  |
+| 2    | shanghai  | 20000 | 1.2  |
+| 3    | guangzhou | 30000 | 1.3  |
+| null | chongqing | 40000 | 1.4  |
 
-   ````text
-   where k4 > 1.2
-   ````
+5. Perform conditional column transformation using the `case when` function.
 
-   The data in the final table is as follows:
+6. Assuming the table has 4 columns: `k1`, `k2`, `k3`, `k4`, and we want to transform the values `beijing`, `shanghai`, `guangzhou`, `chongqing` in the source data to their corresponding region IDs before loading:
 
-   | k1   | k2   | k3        | k4   |
-   | ---- | ---- | --------- | ---- |
-   | 3    | 300  | guangzhou | 1.3  |
-   | null | 400  | chongqing | 1.4  |
+```Plain
+Column 1                 -> k1
+Column 2                 -> k2
+Column 3 with region ID  -> k3
+Column 4                 -> k4
+```
 
-   By default, Doris maps columns sequentially, so column 4 in the source file is automatically mapped to column `k4` in the table.
+7. The order of column mapping should be as follows:
 
-2. Filter the column-transformed data
+```Plain
+(k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
+```
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. In the **column conversion** example, we converted province names to ids. Here we want to filter out the data with id 3. Then the conversion and filter conditions are as follows:
+8. The final data in the table would be as follows:
 
-   ````text
-   (k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
-   where k3 != 3
-   ````
+| k1   | k2   | k3   | k4   |
+| ---- | ---- | ---- | ---- |
+| 1    | 100  | 1    | 1.1  |
+| 2    | 200  | 2    | 1.2  |
+| 3    | 300  | 3    | 1.3  |
+| null | 400  | 4    | 1.4  |
 
-   The data in the final table is as follows:
+9. Transform null values in the source file to 0 during load. Also, perform the region ID transformation as shown in example 2.
 
-   | k1   | k2   | k3   | k4   |
-   | ---- | ---- | ---- | ---- |
-   | 1    | 100  | 1    | 1.1  |
-   | 2    | 200  | 2    | 1.2  |
-   | null | 400  | 4    | 1.4  |
+10. Assuming the table has `k1, k2, k3, k4` as its four columns. While performing the region ID conversion, we also want to convert null values in the k1 column of the source data to 0 during load:
 
-   Here we see that the column value when performing the filter is the final column value after mapping and transformation, not the original data.
+```Plain
+If Column 1 is null, then convert it to 0 -> k1
+Column 2                                  -> k2
+Column 3                                  -> k3
+Column 4                                  -> k4
+```
 
-3. Multi-condition filtering
+11. The order of column mapping should be as follows:
 
-   Suppose there are 4 columns `k1,k2,k3,k4` in the table. We want to filter out the data whose `k1` column is `null`, and at the same time filter out the data whose `k4` column is less than 1.2, the filter conditions are as follows:
+```Plain
+(tmpk1, k2, tmpk3, k4, k1 = ifnull(tmpk1, 0), k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
+```
 
-   ````text
-   where k1 is not null and k4 >= 1.2
-   ````
+12. The final data in the table would be as follows:
 
-   The data in the final table is as follows:
+| k1   | k2   | k3   | k4   |
+| ---- | ---- | ---- | ---- |
+| 1    | 100  | 1    | 1.1  |
+| 2    | 200  | 2    | 1.2  |
+| 3    | 300  | 3    | 1.3  |
+| 0    | 400  | 4    | 1.4  |
 
-   | k1   | k2   | k3   | k4   |
-   | ---- | ---- | ---- | ---- |
-   | 2    | 200  | 2    | 1.2  |
-   | 3    | 300  | 3    | 1.3  |
+### Post-Filtering
 
-### Data Quality Issues and Filtering Thresholds
+After column mapping and transformation, we can filter out data that we don't want to load into Doris using filtering conditions. Let's illustrate this with an example:
 
-The rows of data processed in an import job can be divided into the following three types:
+Assume that the source file has 4 columns with the following content (the column names in the table header are for descriptive purposes only and are not actually present):
 
-1. Filtered Rows
+| Column 1 | Column 2 | Column 3   | Column 4 |
+| -------- | -------- | ---------- | -------- |
+| 1        | 100      | beijing    | 1.1      |
+| 2        | 200      | shanghai   | 1.2      |
+| 3        | 300      | guangzhou  | 1.3      |
+| null     | 400      | chongqing  | 1.4      |
 
-   Data that was filtered out due to poor data quality. Unqualified data quality includes data format problems such as type error, precision error, long string length, mismatched file column number, and data rows that are filtered out because there is no corresponding partition.
+1. Filtering with default column mapping and transformation.
 
-2. Unselected Rows
+2. Suppose the table has 4 columns: `k1, k2, k3, k4`. We can define filtering conditions directly without column mapping and transformation. For example, if we only want to load data rows from the source file where the value in the 4th column is greater than 1.2, the filtering condition would be:
 
-   This part is the row of data that was filtered out due to `preceding filter` or `where` column filter conditions.
+```sql
+where k4 > 1.2
+```
 
-3. Loaded Rows
+3. The final data in the table would be as follows:
 
-   Rows of data being imported correctly.
+| k1   | k2   | k3        | k4   |
+| ---- | ---- | --------- | ---- |
+| 3    | 300  | guangzhou | 1.3  |
+| null | 400  | chongqing | 1.4  |
 
-Doris's import task allows the user to set a maximum error rate (`max_filter_ratio`). If the error rate of the imported data is below the threshold, those erroneous rows will be ignored and other correct data will be imported.
+4. In the default case, Doris performs column mapping in sequential order, so the 4th column in the source file is automatically mapped to the `k4` column in the table.
 
-The error rate is calculated as:
+5. Filtering transformed data.
 
-````text
+6. Suppose the table has 4 columns: `k1, k2, k3, k4`. In the column transformation example, we converted province names to IDs. Now, let's say we want to filter out data with an ID of 3. The transformation and filtering conditions would be as follows:
+
+```Plain
+(k1, k2, tmpk3, k4, k3 = case tmpk3 when "beijing" then 1 when "shanghai" then 2 when "guangzhou" then 3 when "chongqing" then 4 else null end)
+where k3 != 3
+```
+
+7. The final data in the table would be as follows:
+
+| k1   | k2   | k3   | k4   |
+| ---- | ---- | ---- | ---- |
+| 1    | 100  | 1    | 1.1  |
+| 2    | 200  | 2    | 1.2  |
+| null | 400  | 4    | 1.4  |
+
+8. Here, we can observe that the column values used for filtering are the final transformed column values, not the original data.
+
+9. Filtering with multiple conditions.
+
+10. Suppose the table has 4 columns: `k1, k2, k3, k4`. We want to filter out data where the `k1` column is null and the `k4` column is less than 1.2. The filtering condition would be:
+
+```Plain
+where k1 is not null and k4 >= 1.2
+```
+
+11. The final data in the table would be as follows:
+
+| k1   | k2   | k3   | k4   |
+| ---- | ---- | ---- | ---- |
+| 2    | 200  | 2    | 1.2  |
+| 3    | 300  | 3    | 1.3  |
+
+## Best Practices
+
+### Data Quality Issues and Filtering Threshold
+
+The rows of data processed in the load job can be classified into the following three categories:
+
+- Filtered Rows: Data rows that are filtered out due to data quality issues. Data quality issues can include type errors, precision errors, strings exceeding length limits, mismatched file column counts, and data rows filtered out due to missing corresponding partitions.
+
+- Unselected Rows: These are data rows filtered out due to `preceding filter` or `where` column filtering conditions.
+
+- Loaded Rows: Data rows that are successfully loaded.
+
+Doris's load task allows users to set a maximum error rate (`max_filter_ratio`). If the error rate of the loaded data is below the threshold, the error rows will be ignored, and the other correct data will be loaded.
+
+The error rate is calculated as follows:
+
+```Plain
 #Filtered Rows / (#Filtered Rows + #Loaded Rows)
-````
+```
 
-That is to say, `Unselected Rows` will not participate in the calculation of the error rate.
+This means that `Unselected Rows` are not included in the error rate calculation.
