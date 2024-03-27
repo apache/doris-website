@@ -274,7 +274,7 @@ mysql> select * from tbl2 order by id;
 4 rows in set (0.04 sec)
 ```
 
-当自增列是非 key 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不表，然后以部分列更新的语义插入该表。
+当自增列是非 key 列时，如果用户没有指定自增列的值，其值会从表中原有的数据行中进行补齐。如果用户指定了自增列，则该列数据中的 null 值会被替换为生成出的值，非 null 值则保持不变，然后以部分列更新的语义插入该表。
 
 ```sql
 mysql> CREATE TABLE `demo`.`tbl3` (
@@ -383,14 +383,14 @@ PROPERTIES (
 将存量数据中的`user_id`导入字典表，建立`user_id`到整数值的编码映射
 
 ```sql
-insert into dit_tbl(user_id)
+insert into dictionary_tbl(user_id)
 select user_id from dwd_dup_tbl group by user_id;
 ```
 
 或者使用如下方式仅将增量数据中的`user_id`导入到字典表
 
 ```sql
-insert into dit_tbl(user_id)
+insert into dictionary_tbl(user_id)
 select dwd_dup_tbl.user_id from dwd_dup_tbl left join dictionary_tbl
 on dwd_dup_tbl.user_id = dictionary_tbl.user_id where dwd_dup_tbl.visit_time > '2023-12-10' and dictionary_tbl.user_id is NULL;
 ```
@@ -417,7 +417,7 @@ PROPERTIES (
 将数据聚合运算后存放至聚合结果表
 
 ```sql
-insert into dws_tbl
+insert into dws_agg_tbl
 select dwd_dup_tbl.dim1, dwd_dup_tbl.dim3, dwd_dup_tbl.dim5, BITMAP_UNION(TO_BITMAP(dictionary_tbl.aid)), COUNT(1)
 from dwd_dup_tbl INNER JOIN dictionary_tbl on dwd_dup_tbl.user_id = dictionary_tbl.user_id;
 ```
