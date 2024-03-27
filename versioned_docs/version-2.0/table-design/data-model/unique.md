@@ -25,29 +25,18 @@ under the License.
 -->
 
 
-## Unique Model
 
-When users have data update requirement, they can choose to use the Unique data model. The Unique model ensures the uniqueness of keys, and when a user updates a piece of data, the newly written data will overwrite the old data with the same key.
+When users have data update requirements, they can choose to use the Unique data model. The unique model can ensure the uniqueness of the primary key. When a user updates a piece of data, the newly written data will overwrite the old data with the same primary key.
 
-**Two Implementation Methods**
+The Unique data model provides two implementation methods:
 
-The Unique model provides two implementation methods:
+- Merge-on-read. In the merge-on-read implementation, users will not trigger any data deduplication-related operations when writing data. All data deduplication operations are performed during queries or compaction. Therefore, the write performance of merge-on-read is better, the query performance is poor, and the memory consumption is also higher.
+- Merge-on-write. Starting from version 1.2, Doris has introduced the merge-on-write implementation, which completes all data deduplication work during the data write phase, thus providing excellent query performance. On a Unique table with the merge-on-write option enabled, data that will be overwritten and updated during the import phase will be marked for deletion, and new data will be written to a new file. During a query, all marked data will be filtered out at the file level, and the read data will be the latest data, eliminating the data aggregation process in merge-on-read and supporting the pushdown of various predicates in many cases. Therefore, it can bring significant performance improvements in many scenarios, especially when there are aggregated queries.
 
-- Merge-on-read: In the merge-on-read implementation, no data deduplication-related operations are triggered when writing data. All data deduplication operations occur during queries or compaction. Therefore, merge-on-read has better write performance, poorer query performance, and higher memory consumption.
-- Merge-on-write: In version 1.2, we introduced the merge-on-write implementation, which performs all data deduplication during the data writing phase, providing excellent query performance.
-
-Since version 2.0, merge-on-write has become a mature and stable, due to its excellent query performance, we recommend the majority of users to choose this implementation. Starting from version 2.1, merge-on-write has become the default implementation for the Unique model.
-For detailed differences between the two implementation methods, refer to the subsequent sections in this chapter. For performance differences between the two implementation methods, see the description in the following section [Limitations of Aggregate Model](#limitations-of-aggregate-model).
-
-**Semantic of Data Updates**
-
-- The default update semantic for the Unique model is **whole-row `UPSERT`**, meaning UPDATE OR INSERT. If the key of a row of data exists, it is updated; if it does not exist, new data is inserted. Under the whole-row `UPSERT` semantic, even if users use `insert into` to write into specific columns, Doris will fill in the columns not provided with NULL values or default values in the Planner.
-- Partial column updates: If users want to update only specific fields, they need to use the merge-on-write implementation and enable support for partial column updates through specific parameters. Refer to the documentation [Partial Column Updates](../data-operate/update-delete/partial-update.md) for relevant usage recommendations.
-
-### Merge on Read ( Same Implementation as Aggregate Model)
+Let's look at how to create a Unique model table with merge-on-read and merge-on-write using a typical user basic information table as an example. This table does not have aggregation requirements and only needs to ensure the uniqueness of the primary key (The primary key is user_id + username).
 
 | ColumnName    | Type          | IsKey | Comment                |
-|---------------|---------------|-------|------------------------|
+| ------------- | ------------- | ----- | ---------------------- |
 | user_id       | BIGINT        | Yes   | User ID                |
 | username      | VARCHAR (50)  | Yes   | Username               |
 | city          | VARCHAR (20)  | No    | User location city     |
@@ -57,121 +46,64 @@ For detailed differences between the two implementation methods, refer to the su
 | address       | VARCHAR (500) | No    | User address           |
 | register_time | DATETIME      | No    | User registration time |
 
-This is a typical user basic information table. There is no aggregation requirement for such data. The only concern is to ensure the uniqueness of the primary key. (The primary key here is user_id + username). The CREATE TABLE statement for the above table is as follows:
+## Merge-on-Read
+
+The table creation statement for Merge-on-read is as follows:
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.example_tbl_unique
+CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
-`user_id` LARGEINT NOT NULL COMMENT "User ID",
-`username` VARCHAR (50) NOT NULL COMMENT "Username",
-`city` VARCHAR (20) COMMENT "User location city",
-`age` SMALLINT COMMENT "User age",
-`sex` TINYINT COMMENT "User sex",
-`phone` LARGEINT COMMENT "User phone number",
-`address` VARCHAR (500) COMMENT "User address",
-`register_time` DATETIME COMMENT "User registration time"
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `username` VARCHAR(50) NOT NULL COMMENT "Username",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `phone` LARGEINT COMMENT "User phone number",
+    `address` VARCHAR(500) COMMENT "User address",
+    `register_time` DATETIME COMMENT "User registration time"
 )
-UNIQUE KEY (`user_id`, `username`)
+UNIQUE KEY(`user_id`, `username`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1"
 );
 ```
 
-This is the same table schema and the CREATE TABLE statement as those of the Aggregate Model:
+## Merge-on-Write
 
-| ColumnName    | Type          | AggregationType | Comment                |
-|---------------|---------------|-----------------|------------------------|
-| user_id       | BIGINT        |                 | User ID                |
-| username      | VARCHAR (50)  |                 | Username               |
-| city          | VARCHAR (20)  | REPLACE         | User location city     |
-| age           | SMALLINT      | REPLACE         | User age               |
-| sex           | TINYINT       | REPLACE         | User gender            |
-| phone         | LARGEINT      | REPLACE         | User phone number      |
-| address       | VARCHAR (500) | REPLACE         | User address           |
-| register_time | DATETIME      | REPLACE         | User registration time |
+The table creation statement for Merge-on-write is as follows:
 
 ```
-CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg3
+CREATE TABLE IF NOT EXISTS example_tbl_unique_merge_on_write
 (
-`user_id` LARGEINT NOT NULL COMMENT "User ID",
-`username` VARCHAR (50) NOT NULL COMMENT "Username",
-`city` VARCHAR (20) REPLACE COMMENT "User location city",
-`sex` TINYINT REPLACE COMMENT "User gender",
-`phone` LARGEINT REPLACE COMMENT "User phone number",
-`address` VARCHAR(500) REPLACE COMMENT "User address",
-`register_time` DATETIME REPLACE COMMENT "User registration time"
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `username` VARCHAR(50) NOT NULL COMMENT "Username",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `phone` LARGEINT COMMENT "User phone number",
+    `address` VARCHAR(500) COMMENT "User address",
+    `register_time` DATETIME COMMENT "User registration time"
 )
-AGGREGATE KEY(`user_id`, `username`)
+UNIQUE KEY(`user_id`, `username`)
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+"replication_allocation" = "tag.location.default: 1",
+"enable_unique_key_merge_on_write" = "true"
 );
 ```
 
-That is to say, the Merge on Read implementation of the Unique Model is equivalent to the REPLACE aggregation type in the Aggregate Model. The internal implementation and data storage are exactly the same.
-
-<version since="1.2">
-
-### Merge on Write
-
-The Merge on Write implementation of the Unique Model can deliver better performance in aggregation queries with primary key limitations.
-
-In Doris 1.2.0, as a new feature, Merge on Write is disabled by default(before version 2.1), and users can enable it by adding the following property:
+Users need to add the property with **enable_unique_key_merge_on_write" = "true"** when creating the table to enable Merge-on-write.
 
 ```
 "enable_unique_key_merge_on_write" = "true"
 ```
 
-In Doris 2.1, Merge on Write is enabled by default.
+In version 2.1, Merge-on-Write will be the default behavior for the unique key model. Therefore, if you are using Doris version 2.1, it is important to read the relevant table creation documentation.
 
-> Note:
-> 1. For users on version 1.2:
->    1. It is recommended to use version 1.2.4 or above, as this version addresses some bugs and stability issues.
->    2. Add the configuration item `disable_storage_page_cache=false` in `be.conf`. Failure to add this configuration item may significantly impact data import performance.
-> 2. For new users, it is strongly recommended to use version 2.0 or above. In version 2.0, there has been a significant improvement and optimization in the performance and stability of merge-on-write.
+## Use attention
 
-Take the previous table as an example, the corresponding to CREATE TABLE statement should be:
-
-```
-CREATE TABLE IF NOT EXISTS example_db.example_tbl_unique_merge_on_write
-(
-`user_id` LARGEINT NOT NULL COMMENT "User ID",
-`username` VARCHAR (50) NOT NULL COMMENT "Username",
-`city` VARCHAR (20) COMMENT "User location city",
-`age` SMALLINT COMMENT "Userage",
-`sex` TINYINT COMMENT "User gender",
-`phone` LARGEINT COMMENT "User phone number",
-`address` VARCHAR (500) COMMENT "User address",
-`register_time` DATETIME COMMENT "User registration time"
-)
-UNIQUE KEY (`user_id`, `username`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-"enable_unique_key_merge_on_write" = "true"
-);
-```
-
-The table schema produced by the above statement will be different from that of the Aggregate Model.
-
-
-| ColumnName    | Type          | AggregationType | Comment                |
-|---------------|---------------|-----------------|------------------------|
-| user_id       | BIGINT        |                 | User ID                |
-| username      | VARCHAR (50)  |                 | Username               |
-| city          | VARCHAR (20)  | NONE            | User location city     |
-| age           | SMALLINT      | NONE            | User age               |
-| sex           | TINYINT       | NONE            | User gender            |
-| phone         | LARGEINT      | NONE            | User phone number      |
-| address       | VARCHAR (500) | NONE            | User address           |
-| register_time | DATETIME      | NONE            | User registration time |
-
-On a Unique table with the Merge on Write option enabled, during the import stage, the data that are to be overwritten and updated will be marked for deletion, and new data will be written in. When querying, all data marked for deletion will be filtered out at the file level, and only the latest data would be readed. This eliminates the data aggregation cost while reading, and supports many types of predicate pushdown now. Therefore, it can largely improve performance in many scenarios, especially in aggregation queries.
-
-[NOTE]
-
-1. The implementation method of a Unique table can only be determined during table creation and cannot be modified through schema changes.
-2. The old Merge on Read cannot be seamlessly upgraded to the Merge on Write implementation (since they have completely different data organization). If you want to switch to the Merge on Write implementation, you need to manually execute `insert into unique-mow-table select * from source table` to load data to new table.
-
-</version>
+- The implementation of the Unique model can only be determined during table creation and cannot be modified through schema changes.
+- The Merge-on-read table cannot be seamlessly upgraded to the Merge-on-write table (due to completely different data organization methods). If you need to switch to Merge-on-write, you must manually perform an `INSERT INTO unique-mow-table SELECT * FROM source_table` to re-import the data.
+- **Whole-row Updates**: The default update semantics for the Unique model is a whole-row UPSERT, which stands for UPDATE OR INSERT. If the key for a row of data exists, it will be updated; if it does not exist, new data will be inserted. Under the whole-row UPSERT semantics, even if the user specifies only certain columns for insertion using `INSERT INTO`, Doris will fill in the unprovided columns with NULL values or default values during the planning phase.
+- **Partial Column Updates**: If the user wishes to update only certain fields, they must use Merge-on-write and enable support for partial column updates through specific parameters. Please refer to the documentation on partial column updates(links) for relevant usage recommendations.
