@@ -385,7 +385,7 @@ PROPERTIES (
 Import the value of `user_id` from existing data into the dictionary table, establishing the mapping of `user_id` to integer values:
 
 ```sql
-insert into dit_tbl(user_id)
+insert into dictionary_tbl(user_id)
 select user_id from dwd_dup_tbl group by user_id;
 ```
 
@@ -393,7 +393,7 @@ Or import only the value of `user_id` in incrementa data into the dictionary tab
 
 
 ```sql
-insert into dit_tbl(user_id)
+insert into dictionary_tbl(user_id)
 select dwd_dup_tbl.user_id from dwd_dup_tbl left join dictionary_tbl
 on dwd_dup_tbl.user_id = dictionary_tbl.user_id where dwd_dup_tbl.visit_time > '2023-12-10' and dictionary_tbl.user_id is NULL;
 ```
@@ -420,7 +420,7 @@ PROPERTIES (
 Store the result of the data aggregation operations into the aggregation result table:
 
 ```sql
-insert into dws_tbl
+insert into dws_agg_tbl
 select dwd_dup_tbl.dim1, dwd_dup_tbl.dim3, dwd_dup_tbl.dim5, BITMAP_UNION(TO_BITMAP(dictionary_tbl.aid)), COUNT(1)
 from dwd_dup_tbl INNER JOIN dictionary_tbl on dwd_dup_tbl.user_id = dictionary_tbl.user_id;
 ```
