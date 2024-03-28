@@ -96,7 +96,7 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
   
   - `with_bom`: The default is false. If it is set to true, the exported file is encoded in UTF8 with BOM (valid only for CSV-related file format).
 
-  - `data_consisteency`: can be set to` none` / ` partition`, default value is `none`. This parameter indicates the granularity at which the export table is shred, `none` represents tablets level, and` partition` represents partition level.
+  - `data_consisteency`: can be set to` none`, default value is `partition`. This parameter indicates the granularity at which the export table is shred, `none` represents tablets level, and` partition` represents partition level.
 
   - `timeout`: This is the timeout parameter of the export job, the default timeout is 2 hours, and the unit is seconds.
 
@@ -349,7 +349,7 @@ WITH BROKER "broker_name"
 
   #### Concurrent Export
 
-  An Export job can be configured with the `parallelism` parameter to concurrently export data. The `parallelism` parameter specifies the number of threads to execute the `EXPORT Job`. Each thread is responsible for exporting a subset of the total tablets.
+  An Export job can be configured with the `parallelism` parameter to concurrently export data. The `parallelism` parameter specifies the number of threads to execute the `EXPORT Job`. When you set `"data_consistency" = "none"` , each thread is responsible for exporting a subset of the total tablets.
 
   The underlying execution logic of an `Export Job `is actually the `SELECT INTO OUTFILE` statement. Each thread specified by the `parallelism` parameter executes independent `SELECT INTO OUTFILE` statements.
 
