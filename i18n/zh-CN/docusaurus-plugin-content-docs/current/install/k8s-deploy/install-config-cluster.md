@@ -37,12 +37,6 @@ StorageClass 可以用于定义 PV 的类型和行为，通过 StorageClass 可�
 如果部署时未配置 PersistentVolumeClaim，Doris Operator 默认会使用 emptyDir 模式来存储元数据、数据以及日志。当 pod 重启时，相关数据会丢失掉。
 :::
 
-:::caution
-提示：
-建议在部署时将数据持久化到存储中。
-如果部署时未配置 PersistentVolumeClaim，Doris Operator 默认会使用 emptyDir 模式来存储元数据、数据以及日志。当 pod 重启时，相关数据会丢失掉。
-:::
-
 ### 持久化目录类型
 
 在 Doris 中，建议持久化存储以下目录：
