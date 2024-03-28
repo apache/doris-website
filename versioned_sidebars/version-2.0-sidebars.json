@@ -43,7 +43,8 @@
                                 "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
                                 "install/cluster-deployment/k8s-deploy/debug-crash"
                             ]
-                        }
+                        },
+                        "install/cluster-deployment/doris-on-aws"
                     ]
                 }
             ]
