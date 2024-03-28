@@ -24,21 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Inverted Index
 
-<version since="2.0.0">
- 
-</version>
 
-From version 2.0.0, Doris implemented inverted index to support fulltext search on text field, normal eq and range filter on text, numeric, datetime field. This doc introduce inverted index usage, including create, drop and query.
+From version 2.0, Doris implemented inverted index to support fulltext search on text field, normal eq and range filter on text, numeric, datetime field. This doc introduce inverted index usage, including create, drop and query.
 
 
 ## Glossary
 
-- [inverted index](https://en.wikipedia.org/wiki/Inverted_index) is a index techlogy used in information retirval commonly. It split text into word terms and construct a term to doc index. This index is called inverted index and can be used to find the docs where a specific term appears.
+[inverted index](https://en.wikipedia.org/wiki/Inverted_index) is a index techlogy used in information retirval commonly. It split text into word terms and construct a term to doc index. This index is called inverted index and can be used to find the docs where a specific term appears.
 
 
-## Basic Principles
+## Basic principles
 
 In the inverted index of Doris, a row in a table corresponds to a doc in CLucene, a column corresponds to a field in doc. So using inverted index, doris can get the rows that meet the filter of SQL WHERE clause, and then get the rows quickly without reading other unrelated rows.
 
@@ -122,7 +118,8 @@ Inverted indexes have different limitations in different data models:
 
 - add an inverted index to existed table
 
-**Before version 2.0-beta:**
+**Before version 2.0.0:**
+
 ```sql
 -- syntax 1
 CREATE INDEX idx_name ON table_name(column_name) USING INVERTED [PROPERTIES("parser" = "english|chinese|unicode")] [COMMENT 'your comment'];
@@ -130,7 +127,7 @@ CREATE INDEX idx_name ON table_name(column_name) USING INVERTED [PROPERTIES("par
 ALTER TABLE table_name ADD INDEX idx_name(column_name) USING INVERTED [PROPERTIES("parser" = "english|chinese|unicode")] [COMMENT 'your comment'];
 ```
 
-**After version 2.0-beta (including 2.0-beta):**
+**After version 2.0.0 (including 2.0.0):**
 
 The above 'create/add index' operation only generates inverted index for incremental data. The syntax of BUILD INDEX is added to add inverted index to stock data:
 ```sql
@@ -273,7 +270,7 @@ PROPERTIES ("replication_num" = "1");
 ```
 
 
-### Load Data
+### Load data
 
 - load data by stream load
 
@@ -402,7 +399,7 @@ mysql> SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP OLTP';
 ```
 
 
-#### Normal Equal, Range Query
+#### Normal equal, range query
 
 - range query on DateTime column
 ```sql
@@ -422,7 +419,8 @@ mysql> SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00'
 mysql> CREATE INDEX idx_timestamp ON hackernews_1m(timestamp) USING INVERTED;
 Query OK, 0 rows affected (0.03 sec)
 ```
-**After 2.0-beta (including 2.0-beta), you need to execute `BUILD INDEX` to add inverted index to the stock data:**
+**After version 2.0.0 (including 2.0.0), you need to execute `BUILD INDEX` to add inverted index to the stock data:**
+
 ```sql
 mysql> BUILD INDEX idx_timestamp ON hackernews_1m;
 Query OK, 0 rows affected (0.01 sec)
@@ -439,7 +437,8 @@ mysql> SHOW ALTER TABLE COLUMN;
 1 row in set (0.00 sec)
 ```
 
-**After 2.0-beta (including 2.0-beta), you can view the progress of stock data creating index by `SHOW BUILD INDEX`:**
+**After version 2.0.0 (including 2.0.0), you can view the progress of stock data creating index by `SHOW BUILD INDEX`:**
+
 ```sql
 -- If the table has no partitions, the PartitionName defaults to TableName
 mysql> SHOW BUILD INDEX;
@@ -477,7 +476,7 @@ mysql> SELECT count() FROM hackernews_1m WHERE parent = 11189;
 mysql> ALTER TABLE hackernews_1m ADD INDEX idx_parent(parent) USING INVERTED;
 Query OK, 0 rows affected (0.01 sec)
 
--- After 2.0-beta (including 2.0-beta), you need to execute `BUILD INDEX` to add inverted index to the stock data:
+-- After version 2.0.0 (including 2.0.0), you need to execute `BUILD INDEX` to add inverted index to the stock data:
 mysql> BUILD INDEX idx_parent ON hackernews_1m;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -520,7 +519,7 @@ mysql> SELECT count() FROM hackernews_1m WHERE author = 'faster';
 mysql> ALTER TABLE hackernews_1m ADD INDEX idx_author(author) USING INVERTED;
 Query OK, 0 rows affected (0.01 sec)
 
--- After 2.0-beta (including 2.0-beta), you need to execute `BUILD INDEX` to add inverted index to the stock data:
+-- After version 2.0.0 (including 2.0.0), you need to execute `BUILD INDEX` to add inverted index to the stock data:
 mysql> BUILD INDEX idx_author ON hackernews_1m;
 Query OK, 0 rows affected (0.01 sec)
 
