@@ -34,11 +34,12 @@
                             "type": "category",
                             "label": "Deploy on Kubernetes",
                             "items": [
-                                "install/cluster-deployment/k8s-deploy/operator-deploy",
-                                "install/cluster-deployment/k8s-deploy/helm-chart-deploy",
+                                "install/cluster-deployment/k8s-deploy/install-env",
+                                "install/cluster-deployment/k8s-deploy/install-operator",
+                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                "install/cluster-deployment/k8s-deploy/install-access-cluster",
                                 "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
-                                "install/cluster-deployment/k8s-deploy/network",
-                                "install/cluster-deployment/k8s-deploy/persistent-volume",
                                 "install/cluster-deployment/k8s-deploy/root-user-use",
                                 "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
                                 "install/cluster-deployment/k8s-deploy/debug-crash"
