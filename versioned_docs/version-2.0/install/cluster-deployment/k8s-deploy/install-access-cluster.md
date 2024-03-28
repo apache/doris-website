@@ -30,6 +30,7 @@ Doris provides ClusterIP access mode by default on Kubernetes. The ClusterIP acc
 1. Configure and use ClusterIP as the Service type
 
 Doris provides ClusterIP access mode by default on Kubernetes. No modification is required to use ClusterIP access mode.
+
 2. Get Service
 
 After deploying the cluster, you can view the services exposed by Doris Operator through the following command:

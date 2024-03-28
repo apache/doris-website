@@ -31,6 +31,7 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。ClusterIP 访问�
 1. 配置使用 ClusterIP 作为 Service 类型
 
 Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改即可使用 ClusterIP 访问模式。
+
 2. 获取 Service
 
 在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
