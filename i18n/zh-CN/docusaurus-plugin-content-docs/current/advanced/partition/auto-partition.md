@@ -88,7 +88,7 @@ PROPERTIES (
 1. AUTO RANGE PARTITION:
 
   ```sql
-  AUTO PARTITION BY RANGE FUNC_CALL_EXPR
+  AUTO PARTITION BY RANGE (FUNC_CALL_EXPR)
   (
   )
   ```
@@ -96,6 +96,8 @@ PROPERTIES (
   ```sql
   FUNC_CALL_EXPR ::= date_trunc ( <partition_column>, '<interval>' )
   ```
+
+注意：在 2.1.0 版本，`FUNC_CALL_EXPR` 外围不需要被括号包围。
 
 2. AUTO LIST PARTITION:
 
@@ -114,7 +116,7 @@ PROPERTIES (
       `TIME_STAMP` datev2 NOT NULL COMMENT '采集日期'
   ) ENGINE=OLAP
   DUPLICATE KEY(`TIME_STAMP`)
-  AUTO PARTITION BY RANGE date_trunc(`TIME_STAMP`, 'month')
+  AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
   (
   )
   DISTRIBUTED BY HASH(`TIME_STAMP`) BUCKETS 10
@@ -183,9 +185,7 @@ mysql> select * from auto_null_list partition(pX);
 1 row in set (0.20 sec)
 ```
 
-2. 对于 AUTO RANGE PARTITION，NULL 值的存储需要手动创建特定的分区。
-
-在 Doris 的 RANGE PARTITION 中，我们并不使用单独的 NULL PARTITION 来包含 NULL 值，而是将其归属于**最小的 LESS THAN 分区内**。为保持逻辑清晰，AUTO RANGE PARTITION 在遇到 NULL 值时不会自动创建这样的分区。如有需要，可以自行创建这样的分区，以包含 NULL 值。
+2. 对于 AUTO RANGE PARTITION，**不支持 NULLABLE 列作为分区列**。
 
 ```sql
 mysql>  CREATE TABLE `range_table_nullable` (
@@ -194,31 +194,14 @@ mysql>  CREATE TABLE `range_table_nullable` (
     ->      `k3` DATETIMEV2(6)
     ->  ) ENGINE=OLAP
     ->  DUPLICATE KEY(`k1`)
-    ->  AUTO PARTITION BY RANGE date_trunc(`k2`, 'day')
+    ->  AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
     ->  (
     ->  )
     ->  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
     ->  PROPERTIES (
     ->  "replication_allocation" = "tag.location.default: 1"
     ->  );
-Query OK, 0 rows affected (0.09 sec)
-
-mysql> insert into range_table_nullable values (0, null, null);
-ERROR 1105 (HY000): errCode = 2, detailMessage = [CANCELLED]TStatus: errCode = 2, detailMessage = Can't create partition for NULL Range
-
-mysql> alter table range_table_nullable add partition pX VALUES LESS THAN ("1970-01-01");
-Query OK, 0 rows affected (0.11 sec)
-
-mysql> insert into range_table_nullable values (0, null, null);
-Query OK, 1 row affected (0.18 sec)
-
-mysql> select * from range_table_nullable;
-+------+------+------+
-| k1   | k2   | k3   |
-+------+------+------+
-|    0 | NULL | NULL |
-+------+------+------+
-1 row in set (0.18 sec)
+ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
 ```
 
 ## 场景示例
@@ -233,7 +216,7 @@ CREATE TABLE `DAILY_TRADE_VALUE`
     ......
 )
 UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
-AUTO PARTITION BY RANGE date_trunc(`TRADE_DATE`, 'year')
+AUTO PARTITION BY RANGE (date_trunc(`TRADE_DATE`, 'year'))
 (
 )
 DISTRIBUTED BY HASH(`TRADE_DATE`) BUCKETS 10
@@ -276,7 +259,7 @@ CREATE TABLE tbl3
     k1 DATETIME NOT NULL,
     col1 int 
 )
-AUTO PARTITION BY RANGE date_trunc(`k1`, 'year') ()
+AUTO PARTITION BY RANGE (date_trunc(`k1`, 'year')) ()
 DISTRIBUTED BY HASH(k1)
 PROPERTIES
 (
@@ -308,7 +291,7 @@ mysql > CREATE TABLE tbl3
             k1 DATETIME NOT NULL,
             col1 int 
         )
-        AUTO PARTITION BY RANGE date_trunc(`k1`, 'year') ()
+        AUTO PARTITION BY RANGE (date_trunc(`k1`, 'year')) ()
         DISTRIBUTED BY HASH(k1)
         PROPERTIES
         (
