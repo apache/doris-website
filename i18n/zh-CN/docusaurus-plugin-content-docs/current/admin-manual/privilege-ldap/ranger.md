@@ -228,7 +228,7 @@ Config Properties 部分参数含义如下:
 
 ## 最佳实践
 
-### 示例 1
+### 配置权限
 
 1. 在 Doris 中创建 `user1`。
 2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
@@ -244,6 +244,22 @@ Config Properties 部分参数含义如下:
 
 7. 使用 `user1` 登录 Doris。该用户可以查看或查询 `hive` catalog 下，所有以 `tpch` 开头的 database 下的所有表。
 
-## 常见问题
+### 行权限示例
 
-1. 暂不支持 Ranger 中的列权限、行权限以及 Data Mask 功能。
+1. 参考 `配置权限` 给 `user1` 分配 `internal.db1.user` 表的 `select` 权限
+2. 在 Ranger 中添加一个 Row Level Filter policy
+
+   ![](/images/ranger/ranger-rowpolicy.png)
+
+3. 使用 `user1` 登录 Doris。执行 `select * from internal.db1.user`，只能看到满足 `id` 大于3且 `age` 等于2的数据。
+
+### 数据脱敏示例
+
+1. 参考`配置权限`给 `user1` 分配 `internal.db1.user` 表的 `select` 权限
+2. 在 Ranger 中添加一个 Masking policy
+
+   ![](/images/ranger/ranger-mask.png)
+
+3. 使用 `user1` 登录 Doris。执行 `select * from internal.db1.user`，看到的 `phone` 是按照指定规则脱敏后的数据
+
+## 常见问题
