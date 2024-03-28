@@ -183,7 +183,9 @@ mysql> select * from auto_null_list partition(pX);
 1 row in set (0.20 sec)
 ```
 
-2. Doris 中，无论是否为 AUTO PARTITION 表，NULL 值都被包含在最小值分区内。因此，如果对 NULL 值自动创建分区，会得到一个最小值起始的分区：
+2. 对于 AUTO RANGE PARTITION，NULL 值的存储需要手动创建特定的分区。
+
+在 Doris 的 RANGE PARTITION 中，我们并不使用单独的 NULL PARTITION 来包含 NULL 值，而是将其归属于**最小的 LESS THAN 分区内**。为保持逻辑清晰，AUTO RANGE PARTITION 在遇到 NULL 值时不会自动创建这样的分区。如有需要，可以自行创建这样的分区，以包含 NULL 值。
 
 ```sql
 mysql>  CREATE TABLE `range_table_nullable` (
@@ -202,15 +204,21 @@ mysql>  CREATE TABLE `range_table_nullable` (
 Query OK, 0 rows affected (0.09 sec)
 
 mysql> insert into range_table_nullable values (0, null, null);
-Query OK, 1 row affected (0.21 sec)
+ERROR 1105 (HY000): errCode = 2, detailMessage = [CANCELLED]TStatus: errCode = 2, detailMessage = Can't create partition for NULL Range
 
-mysql> show partitions from range_table_nullable;
-+-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
-| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                                                    | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
-+-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
-| 457060      | p00000101000000 | 2              | 2024-03-25 03:01:38 | NORMAL | k2           | [types: [DATETIMEV2]; keys: [0000-01-01 00:00:00]; ..types: [DATETIMEV2]; keys: [0000-01-02 00:00:00]; ) | k1              | 16      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      | true               | NULL         |
-+-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
-1 row in set (0.09 sec)
+mysql> alter table range_table_nullable add partition pX VALUES LESS THAN ("1970-01-01");
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into range_table_nullable values (0, null, null);
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select * from range_table_nullable;
++------+------+------+
+| k1   | k2   | k3   |
++------+------+------+
+|    0 | NULL | NULL |
++------+------+------+
+1 row in set (0.18 sec)
 ```
 
 ## 场景示例
