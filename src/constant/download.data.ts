@@ -888,6 +888,6 @@ export const RUN_ANYWHERE = [
     {
         title: 'Doris on AWS',
         description: 'Deploy Doris on AWS with CloudFormation templates',
-        link: 'https://doris-cf-template.s3.amazonaws.com/cloudformation_doris.template.yaml',
+        link: 'https://doris.apache.org/docs/install/doris-on-aws',
     },
 ];
