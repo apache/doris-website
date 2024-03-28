@@ -12,6 +12,17 @@
             "type": "category",
             "label": "Install and Deploy",
             "items": [
+                {
+                    "type": "category",
+                    "label": "Source Code Compilation",
+                    "items": [
+                        "install/source-install/compilation-general",
+                        "install/source-install/compilation-with-ldb-toolchain",
+                        "install/source-install/compilation-arm",
+                        "install/source-install/compilation-win",
+                        "install/source-install/compilation-mac"
+                    ]
+                },
                 "install/standard-deployment",
                 {
                     "type": "category",
@@ -35,17 +46,7 @@
                         "install/k8s-deploy/debug-crash"
                     ]
                 },
-                {
-                    "type": "category",
-                    "label": "Source Code Compilation",
-                    "items": [
-                        "install/source-install/compilation-general",
-                        "install/source-install/compilation-with-ldb-toolchain",
-                        "install/source-install/compilation-arm",
-                        "install/source-install/compilation-win",
-                        "install/source-install/compilation-mac"
-                    ]
-                }
+                "install/doris-on-aws"
             ]
         },
         {
