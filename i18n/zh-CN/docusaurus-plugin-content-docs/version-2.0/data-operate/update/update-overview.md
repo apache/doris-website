@@ -28,7 +28,7 @@ under the License.
 
 ## 主键（Unique）模型的更新
 
-Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge on Read（MoR），也引入了 Merge on Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
+Doris 主键 (unique) 模型，从 Doris 2.0 开始，除了原来的 Merge-on-Read（MoR），也引入了 Merge-on-Write（MoW）的存储方式，MoR 是为了写入做优化，而 MoW 是为了更快的分析性能做优化。在实际测试中，MoW 存储方式的典型表，分析性能可以是 MoR 方式的 5-10 倍。
 
 在 Doris 2.0，默认创建的 unique 模型依旧是 MoR 的，如果要创建 MoW 的，需要通过参数 "enable_unique_key_merge_on_write" = "true" 手动指定，如下示例：
 
@@ -72,7 +72,7 @@ Doris 支持 Stream Load、Broker Load、Routine Load、Insert Into 等多种导
 
 - 如果更新的是部分列，主键模型采用的是 MoW，并且设置了 MySQL Session 变量 partial_columns = true 或者 HTTP Header partial_columns:true，则被更新的缺失列的值，不是再使用表 Schema 中缺失列的默认值，而是已经存在记录的对应缺失列的值。
 
-我们会分别在文档 主键模型的 Update 更新 和 主键模型的导入更新 详细介绍两种更新方式。
+我们会分别在文档 [主键模型的 Update 更新](../update/unique-update) 和 [主键模型的导入更新](../update/unique-load-update) 详细介绍两种更新方式。
 
 ### 主键模型的更新事务
 
@@ -90,4 +90,4 @@ New Agg Value = Agg Func ( Old Agg Value + New Column Value)
 
 在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。
 
-更多内容，请查看 聚合模型的导入更新。
+更多内容，请查看 [聚合模型的导入更新](../update/aggregate-load-update)。

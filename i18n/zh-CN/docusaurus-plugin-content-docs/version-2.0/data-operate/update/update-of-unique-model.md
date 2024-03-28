@@ -123,7 +123,7 @@ $ curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separat
 
 若使用`INSRT INTO`可以通过如下方式进行更新：
 
-```Plain
+```sql
 set enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
 ```

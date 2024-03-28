@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Sequence Column",
+    "title": "Update Transaction of Unique Model",
     "language": "en"
 }
 ---
@@ -24,78 +24,98 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Sequence Column
-The sequence column currently only supports the Uniq model. The Uniq model is mainly aimed at scenarios that require a unique primary key, which can guarantee the uniqueness constraint of the primary key. However, due to the REPLACE aggregation method, the replacement order of data imported in the same batch is not guaranteed. See [Data Model](../../data-table/data-model.md). If the replacement order cannot be guaranteed, the specific data finally imported into the table cannot be determined, and there is uncertainty.
+## Update Concurrency Control
 
-In order to solve this problem, Doris supports the sequence column. The user specifies the sequence column when importing. Under the same key column, the REPLACE aggregation type column will be replaced according to the value of the sequence column. The larger value can replace the smaller value, and vice versa. Cannot be replaced. This method leaves the determination of the order to the user, who controls the replacement order.
+By default, concurrent updates on the same table are not allowed in Doris.
 
-## Applicable Scene
+The main reason is that Doris currently supports row-level updates, which means that even if the user specifies to update only a specific column (e.g., `SET v2 = 1`), all other value columns will be overwritten as well (even though their values remain unchanged).
 
-Sequence columns can only be used under the Uniq data model.
+This poses a problem when multiple update operations are performed concurrently on the same row. The behavior becomes unpredictable, and it may lead to inconsistent or "dirty" data.
 
-## Fundamental
+However, in practical applications, if the user can guarantee that concurrent updates will not operate on the same row simultaneously, they can manually enable concurrent update restrictions. This can be achieved by modifying the FE (Frontend) configuration `enable_concurrent_update`. When the configuration value is set to true, there are no restrictions on concurrent updates.
 
-By adding a hidden column `__DORIS_SEQUENCE_COL__`, the type of the column is specified by the user when creating the table, the specific value of the column is determined during import, and the REPLACE column is replaced according to this value.
+:::caution
+Note: Enabling the `enable_concurrent_update` configuration carries some performance risks.
+:::
 
-### Create Table
-When creating a Uniq table, a hidden column `__DORIS_SEQUENCE_COL__` will be automatically added according to the user-specified type.
+## Sequence Column
 
-### Import
+The Unique model primarily caters to scenarios that require unique primary keys, ensuring the uniqueness constraint. When loading data in the same batch or different batches, the replacement order is not guaranteed. The uncertainty in the replacement order results in ambiguity in the specific data loaded into the table.
 
-When importing, fe sets the value of the hidden column to the value of the `order by` expression (broker load and routine load), or the value of the `function_column.sequence_col` expression (stream load) during the parsing process, the value column will be Replace with this value. The value of the hidden column `__DORIS_SEQUENCE_COL__` can be set to either a column in the data source or a column in the table structure.
+To address this issue, Doris supports sequence columns. Users can specify a sequence column during data load, allowing the replacement order to be controlled by the user. The sequence column determines the order of replacements for rows with the same key column. A higher sequence value can replace a lower one, but not vice versa. This method delegates the determination of order to the user, enabling control over the replacement sequence.
 
-### Read
+:::note
+Sequence columns are currently supported only in the Uniq model.
+:::
 
-When the request contains the value column, the `__DORIS_SEQUENCE_COL__` column needs to be additionally read. This column is used as the basis for the replacement order of the REPLACE aggregate function under the same key column. The larger value can replace the smaller value, otherwise it cannot be replaced.
+### Basic Principles
 
-### Cumulative Compaction
+The basic principle is achieved by adding a hidden column called __**DORIS_SEQUENCE_COL__. The type of this column is specified by the user during table creation and its specific value is determined during data load. Based on this value, the row that takes effect is determined for rows with the same key column.
 
-The principle is the same as that of the reading process during Cumulative Compaction.
+**Table Creation**
 
-### Base Compaction
+When creating a Uniq table, an automatically added hidden column called __**DORIS_SEQUENCE_COL__ is created, based on the user-specified type.
 
-The principle is the same as the reading process during Base Compaction.
+**Data load**
 
-### Syntax
+During data load, the FE (Frontend) sets the value of the hidden column as the value of the `ORDER BY` expression (for broker load and routine load) or the value of the `function_column.sequence_col` expression (for stream load). The value column is replaced based on this sequence value. The value of the hidden column, `DORIS_SEQUENCE_COL`, can be set as a column in the data source or a column in the table structure.
 
-There are two ways to create a table with sequence column. One is to set the `sequence_col` attribute when creating a table, and the other is to set the `sequence_type` attribute when creating a table.
+**Read**
 
-#### Set `sequence_col`(Recommend)
-When you create the Uniq table, you can specify the mapping of sequence column to other columns
+When requesting the value column, an additional read operation is performed for the `DORIS_SEQUENCE_COL` column. This column is used as the basis for the REPLACE
 
-```text
+**Cumulative Compaction**
+
+The principles during Cumulative Compaction are the same as the read operation.
+
+**Base Compaction**
+
+The principles during Base Compaction are the same as the read operation.
+
+
+### Syntax Usage
+
+**Sequence Column has two ways to create a table, one is to set the `sequence_col` attribute when creating a table, and the other is to set the `sequence_type` attribute when creating a table.**
+
+**1. Set `sequence_col` (Recommended)**
+
+When creating a Uniq table, specify the mapping of the sequence column to other columns in the table.
+
+```Plain
 PROPERTIES (
     "function_column.sequence_col" = 'column_name',
 );
 ```
-The sequence_col is used to specify the mapping of the sequence column to a column in the table, which can be integral and time (DATE, DATETIME). The type of this column cannot be changed after creation.
 
-The import method is the same as that without the sequence column. It is relatively simple and recommended.
+`sequence_col` is used to specify the mapping of the sequence column to a column in the table. The column can be of type integer or time type (DATE, DATETIME), and its type cannot be changed after creation.
 
-### Set `sequence_type`
+The load method is the same as when there is no sequence column, making it relatively simple. This method is recommended.
 
-When you create the Uniq table, you can specify the sequence column type
+**2. Set `sequence_type`**
 
-```text
+When creating a Uniq table, specify the type of the sequence column.
+
+```Plain
 PROPERTIES (
     "function_column.sequence_type" = 'Date',
 );
 ```
-The sequence_type is used to specify the type of the sequence column, which can be integral and time (DATE / DATETIME). 
 
-The mapping column needs to be specified when importing.
+`sequence_type` is used to specify the type of the sequence column, which can be integer or time type (DATE, DATETIME).
 
-#### Stream Load
+**During data load, you need to specify the mapping of the sequence column to other columns.**
 
-The syntax of the stream load is to add the mapping of hidden columns corresponding to source_sequence in the `function_column.sequence_col` field in the header, for example
+**1. Stream Load**
 
-```shell
+The syntax for stream load is to add the mapping of the hidden column `function_column.sequence_col` to the `source_sequence` in the header. Example:
+
+```Bash
 curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
 ```
 
-#### Broker Load
+**2. Broker Load**
 
-Set the source_sequence field for the hidden column map at `ORDER BY`
+Set the mapping of the hidden column `source_sequence` in the `ORDER BY` clause.
 
 ```sql
 LOAD LABEL db1.label1
@@ -115,18 +135,17 @@ PROPERTIES
 (
     "timeout" = "3600"
 );
-
 ```
 
-#### Routine Load
+**3. Routine Load**
 
-The mapping method is the same as above, as shown below
+The mapping method is the same as above. Example:
 
 ```sql
-   CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
     [WITH MERGE|APPEND|DELETE]
     COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1 > 100 and k2 like "%doris%"
+    WHERE k1  100 and k2 like "%doris%"
     [ORDER BY source_sequence]
     PROPERTIES
     (
@@ -145,16 +164,21 @@ The mapping method is the same as above, as shown below
     );
 ```
 
-## Enable Sequence Column Support
-If `function_column.sequence_col`  or  `function_column.sequence_type` is set when creating a new table, the new table will support sequence column. For a table that does not support sequence column, if you want to use this function, you can use the following statement: `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")` to enable.
+### Enabling Sequence Column Support
 
- If you are not sure whether a table supports sequence column, you can display hidden columns by setting a session variable `SET show_hidden_columns=true`, then use `desc tablename`, if there is a `__DORIS_SEQUENCE_COL__` column in the output, it is supported, if not, it is not supported .
+If `function_column.sequence_col` or `function_column.sequence_type` is set when creating a new table, the new table will support sequence columns.
 
-## Usage Examples
-Let's take the stream Load as an example to show how to use it
-1. Create a table that supports sequence column. 
+For a table that does not support sequence columns, if you want to use this feature, you can use the following statement: `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")` to enable it.
 
-Create the test_table data table of the unique model and specify that the sequence column maps to the `modify_date` column in the table.
+If you are unsure whether a table supports sequence columns, you can set a session variable to display hidden columns with `SET show_hidden_columns=true`, and then use `desc tablename`. If the output includes the `DORIS_SEQUENCE_COL` column, it means that the table supports sequence columns; otherwise, it does not.
+
+### Usage Example
+
+Here is an example using Stream Load to demonstrate the usage:
+
+**1. Create a table with sequence col support**
+
+Create a unique model `test_table` and specify the sequence column mapping to the `modify_date` column in the table.
 
 ```sql
 CREATE TABLE test.test_table
@@ -174,9 +198,10 @@ PROPERTIES(
 );
 ```
 
-The table structure is shown below
+Table structure:
+
 ```sql
-MySQL > desc test_table;
+MySQL  desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 | Field       | Type         | Null | Key   | Default | Extra   |
 +-------------+--------------+------+-------+---------+---------+
@@ -188,10 +213,11 @@ MySQL > desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 ```
 
-2. Import data normally:
+**2. Load data normally:**
 
-Import the following data
-```
+Load the following data:
+
+```Plain
 1       2020-02-22      1       2020-02-21      a
 1       2020-02-22      1       2020-02-22      b
 1       2020-02-22      1       2020-03-05      c
@@ -199,58 +225,76 @@ Import the following data
 1       2020-02-22      1       2020-02-23      e
 1       2020-02-22      1       2020-02-24      b
 ```
-Take the Stream Load as an example here and map the sequence column to the modify_date column
-```shell
+
+Here is an example using Stream Load:
+
+```Bash
 curl --location-trusted -u root: -T testData http://host:port/api/test/test_table/_stream_load
 ```
-The results is
+
+The result is:
+
 ```sql
-MySQL > select * from test_table;
+MySQL  select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
 |       1 | 2020-02-22 |        1 | 2020-03-05  | c       |
 +---------+------------+----------+-------------+---------+
 ```
-In this import, the c is eventually retained in the keyword column because the value of the sequence column (the value in modify_date) is the maximum value: '2020-03-05'.
 
-3. Guarantee of substitution order
+In the data load, because the value of the sequence column (i.e., modify_date) '2020-03-05' is the maximum, the keyword column retains the value 'c'.
 
-After the above steps are completed, import the following data
-```text
+**3. Guarantee the order of replacement**
+
+After completing the above steps, load the following data:
+
+```Plain
 1       2020-02-22      1       2020-02-22      a
 1       2020-02-22      1       2020-02-23      b
 ```
-Query data
+
+Query the data:
+
 ```sql
-MySQL [test]> select * from test_table;
+MySQL [test] select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
 |       1 | 2020-02-22 |        1 | 2020-03-05  | c       |
 +---------+------------+----------+-------------+---------+
 ```
-In this import, the c is eventually retained in the keyword column because the value of the sequence column (the value in modify_date) in all imports is the maximum value: '2020-03-05'.
-Try importing the following data again
 
-```
+In the loaded data, the sequence column (modify_date) of all previously loaded data is compared, and '2020-03-05' is the maximum. Therefore, the keyword column retains the value 'c'.
+
+**4. Try loading the following data again**
+
+```Plain
 1       2020-02-22      1       2020-02-22      a
 1       2020-02-22      1       2020-03-23      w
 ```
-Query data
+
+Query the data:
+
 ```sql
-MySQL [test]> select * from test_table;
+MySQL [test] select * from test_table;
 +---------+------------+----------+-------------+---------+
 | user_id | date       | group_id | modify_date | keyword |
 +---------+------------+----------+-------------+---------+
 |       1 | 2020-02-22 |        1 | 2020-03-23  | w       |
 +---------+------------+----------+-------------+---------+
 ```
-At this point, you can replace the original data in the table. To sum up, the sequence column will be compared among all the batches, the largest value of the same key will be imported into Doris table.
 
-## Note
-1. To prevent misuse, in load tasks like StreamLoad/BrokerLoad and row updates with insert statements, user must explicitly specify the sequence column (unless the sequence column's default value is CURRENT_TIMESTAMP); otherwise, user will receive the following error message:
+Now the original data in the table can be replaced. In summary, during thestream load process, the sequence column is used to determine the order of replacement for duplicate records. The record with the maximum value in the sequence column will be retained in the table.
+
+### Note
+
+1. To prevent misuse, users must explicitly specify the sequence column in loading tasks such as StreamLoad/BrokerLoad and in insert statements for row updates (unless the default value of the sequence column is CURRENT_TIMESTAMP). Otherwise, the following error message will be received:
+
+```Plain
+Table test_tbl has sequence column, need to specify the sequence column
 ```
-Table test_tbl has a sequence column, need to specify the sequence column
-```
-2 Starting from version 2.0, Doris supports partial column updates for Merge-on-Write implementation on Unique Key tables. In load tasks with partial column update, users can update only a subset of columns at a time, so it is not mandatory to include the sequence column. If the import task submitted by the user includes the sequence column, it will have no effect on the behavior. However, if the import task does not include the sequence column, Doris will use the matching historical data's sequence column as the value for the updated row's sequence column. If there is no existing column with the same key in the historical data, it will be automatically filled with null or the default value.
+
+2. Since version 2.0, Doris has supported partial column updates for Merge-on-Write implementation of Unique Key tables. In partial column update, users can update only a subset of columns each time, so it is not necessary to include the sequence column. If the loading task submitted by the user includes the sequence column, it has no effect. If the loading task submitted by the user does not include the sequence column, Doris will use the value of the matching sequence column from the historical data as the value of the updated row's sequence column. If there is no existing column with the same key in the historical data, it will be automatically filled with null or the default value.
+
+3. In cases of concurrent data load, Doris utilizes MVCC (Multi-Version Concurrency Control) mechanism to ensure data correctness. If two batches of loaded data update different columns of the same key, the load task with a higher system version will reapply the data for the same key written by the load task with a lower version after the lower version load task succeeds.

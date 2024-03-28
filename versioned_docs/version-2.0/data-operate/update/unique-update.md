@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Unique update",
+    "title": "UPDATE Command to Update Data in Unique Model",
     "language": "en"
 }
 ---
@@ -24,37 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The Update command is used to update data in Doris. It can only be executed on tables that follow the Unique data model.
+The main topic is how to use the UPDATE command to update data in Doris. The UPDATE command can only be executed on tables in the Unique data model.
 
-## Use cases
+## Use Cases
 
-- Modifying the values of rows that meet certain conditions.
+- Modify the values of rows that meet certain conditions.
 
-- This is suitable for updating a small amount of data that is not frequently updated.
+- Suitable for updating a small amount of data that is not frequently updated.
 
-## Principles
+## Basic Principles
 
-The Update command uses the filtering logic of the query engine's WHERE clause to select the rows that need to be updated from the target table. It then uses the inherent value column of the Unique data model to replace the old data with the new data. After modifying the selected rows, they are reinserted into the table, thereby achieving row-level updates.
+By utilizing the filtering logic of the query engine's WHERE clause, the UPDATE command selects the rows that need to be updated from the target table. Then, using the built-in logic of the Value column in the Unique model, the old data is replaced with the new data, and the updated rows are reinserted into the table, thus achieving row-level updates.
 
 ### Synchronization
 
-The Update syntax in Doris is synchronous. This means that once the Update statement is successfully executed, the update operation is completed, and the data is immediately visible.
+The UPDATE syntax in Doris is synchronous, meaning that when an UPDATE statement is executed successfully, the update operation is completed, and the data is immediately visible.
 
 ### Performance
 
-The performance of the Update statement depends on the number of rows to be updated and the efficiency of the condition used for retrieval.
+The performance of the UPDATE statement depends on the number of rows to be updated and the efficiency of the condition retrieval.
 
-- Number of rows to be updated: The more rows that need to be updated, the slower the Update statement will be. Update is suitable for scenarios where only a few rows need to be modified, such as updating the values of individual rows. It is not recommended for bulk data modification.
+- Number of rows to be updated: The more rows that need to be updated, the slower the UPDATE statement will be. The UPDATE command is suitable for scenarios where occasional updates are required, such as modifying values for individual rows. It is not suitable for bulk data modifications.
 
-- Efficiency of the condition: The Update operation first reads the rows that satisfy the given condition. Therefore, if the condition can be efficiently retrieved, the update speed will be faster. It is recommended to have the condition column hit an index or perform partition and bucket pruning. This helps Doris to quickly locate the rows to be updated and improves update efficiency. It is strongly discouraged to have the condition column dependent on the value column.
+- Efficiency of condition retrieval: The UPDATE operation reads the rows that satisfy the condition first. Therefore, if the condition retrieval is efficient, the UPDATE operation will be faster. It is recommended to have the condition column indexed or utilize partitioning and bucketing pruning to quickly locate the rows to be updated, thus improving the update efficiency. It is strongly advised not to include the value column in the condition column.
 
-## Examples
+## Example
 
-Assuming there is an order table in Doris, where the order ID is the key column and the order status and order amount are the value columns. 
+Suppose there is an order table in Doris, where the order_id is the key column, and the order status and order amount are the Value columns. The data looks as follows:
 
-Here is an example of the data:
-
-| Order ID | Order Amount | Order Status |
+| order_id | order_amount | order_status |
 | -------- | ------------ | ------------ |
 | 1        | 100          | Pending      |
 
@@ -67,7 +65,7 @@ Here is an example of the data:
 1 row in set (0.01 sec)
 ```
 
-Now, when a user clicks on the "Pay" button, the Doris system needs to update the order status of order ID '1' to 'To be shipped'. This requires the use of the Update functionality.
+Now, when a user clicks on the payment, the Doris system needs to update the order status of the order with ID '1' to 'To be shipped'. This requires using the UPDATE functionality.
 
 ```sql
 mysql> UPDATE test_order SET order_status = 'To be shipped' WHERE order_id = 1;
@@ -75,7 +73,7 @@ Query OK, 1 row affected (0.11 sec)
 {'label':'update_20ae22daf0354fe0-b5aceeaaddc666c5', 'status':'VISIBLE', 'txnId':'33', 'queryId':'20ae22daf0354fe0-b5aceeaaddc666c5'}
 ```
 
-After the update, the result will be as follows:
+The updated result is as follows:
 
 ```sql
 +----------+--------------+--------------+
@@ -86,6 +84,6 @@ After the update, the result will be as follows:
 1 row in set (0.01 sec)
 ```
 
-## More details
+## More Details
 
-For more detailed syntax and usage information on data updates, please refer to the [Update](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command-line interface to get more help information.
+For more detailed syntax on data updates, please refer to the [UPDATE](../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more information and assistance.

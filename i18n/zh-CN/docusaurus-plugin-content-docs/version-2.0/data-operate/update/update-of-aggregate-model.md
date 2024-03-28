@@ -38,7 +38,7 @@ Aggregate 表主要在预聚合场景使用而非数据更新的场景使用，�
 
 将需要进行列更新的字段对应的聚合函数设置为`REPLACE_IF_NOT_NULL`
 
-```Plain
+```sql
 CREATE TABLE order_tbl (
   order_id int(11) NULL,
   order_amount int(11) REPLACE_IF_NOT_NULL NULL,
@@ -66,13 +66,13 @@ PROPERTIES (
 
 与前面例子相同，对应的 Stream Load 命令为（不需要额外的 header）：
 
-```Plain
+```shell
 curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
 ```
 
 对应的`INSERT INTO`语句为（不需要额外设置 session variable）：
 
-```Plain
+```sql
 INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
 ```
 

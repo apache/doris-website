@@ -146,7 +146,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
+具体可以参考 Docs 目录下[RESOURCE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
 :::
 
 ### 一些限制
@@ -161,19 +161,19 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 ## 冷数据占用对象大小
 
-方式一：通过 show proc '/backends'可以查看到每个 be 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
+方式一：通过 show proc '/backends'可以查看到每个 BE 上传到对象的大小，RemoteUsedCapacity 项，此方式略有延迟。
 
 方式二：通过 show tablets from tableName 可以查看到表的每个 tablet 占用的对象大小，RemoteDataSize 项。
 
 ## 冷数据的 cache
 
-上文提到冷数据为了优化查询的性能和对象存储资源节省，引入了 cache 的概念。在冷却后首次命中，Doris 会将已经冷却的数据又重新加载到 be 的本地磁盘，cache 有以下特性：
+上文提到冷数据为了优化查询的性能和对象存储资源节省，引入了 cache 的概念。在冷却后首次命中，Doris 会将已经冷却的数据又重新加载到 BE 的本地磁盘，cache 有以下特性：
 
--   cache 实际存储于 be 磁盘，不占用内存空间。
+-   cache 实际存储于 BE 磁盘，不占用内存空间。
 
 -   cache 可以限制膨胀，通过 LRU 进行数据的清理
 
--   cache 的实现和联邦查询 catalog 的 cache 是同一套实现，文档参考[此处](../../lakehouse/filecache)
+-   cache 的实现和联邦查询 Catalog 的 cache 是同一套实现，文档参考[此处](../lakehouse/filecache)
 
 ## 冷数据的 Compaction
 
@@ -205,7 +205,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 3.  冷数据 Compaction 后，合并前的 rowset 因为还可能被其他 Replica 使用不能立即删除，但是最终 FollowerReplica 都使用了最新的合并后的 rowset，合并前的 rowset 成为垃圾数据。
 
-另外，对象上的垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置冷数据的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。。
+另外，对象上的垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置冷数据的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
 
 ## 未尽事项
 
