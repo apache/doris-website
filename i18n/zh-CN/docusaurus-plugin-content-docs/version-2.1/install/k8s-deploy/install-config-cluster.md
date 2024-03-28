@@ -48,10 +48,6 @@ StorageClass 可以用于定义 PV 的类型和行为，通过 StorageClass 可�
 
 在 Doris 中存在多种日志类型，如 INFO 日志、OUT 日志、GC 日志以及审计日志。Doris Operator 可以将日志同时输出到 console 与指定目录下。如果用户的 Kubernetes 有完整的日志收集能力，可以通过 console 输出来收集 Doris 的 INFO 日志。建议将 Doris 的所有日志通过 PVC 配置持久化到指定存储中，这将有助于问题的定位与排查。
 
-### 数据持久化到本地 PV
-
-功能待完善
-
 ### 数据持久化到网络 PV
 
 Doris Operator 使用 Kubernetes 默认的 StorageClass 来支持 FE 与 BE 的存储。在 DorisCluster 的 CR 中，通修改 StorageClass 指定 `persistentVolumeClaimSpec.storageClassName`，可以配置指定的网络 PV。

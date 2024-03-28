@@ -49,10 +49,6 @@ In Doris, the following directories are recommended for persistent storage:
 
 There are multiple log types in Doris, such as INFO log, OUT log, GC log and audit log. Doris Operator can output logs to the console and the specified directory at the same time. If the user's Kubernetes has complete log collection capabilities, Doris' INFO logs can be collected through console output. It is recommended that all Doris logs be persisted to the designated storage through PVC configuration, which will help locate and troubleshoot problems.
 
-### Data persistence to local PV
-
-Function to be improved
-
 ### Data persistence to network PV
 
 Doris Operator uses Kubernetes' default StorageClass to support FE and BE storage. In the CR of DorisCluster, the specified network PV can be configured by modifying the StorageClass to specify `persistentVolumeClaimSpec.storageClassName`.
