@@ -67,11 +67,15 @@ As you can see from [GitHub](https://github.com/apache/doris), Apache Doris (inc
 
 Documentation is the most important way for you to understand Apache Doris, and it's where we need help most!
 
-Browse the document, you can deepen your understanding of Doris, can also help you understand Doris's function and technical details, if you find that the document has problems, please contact us in time;
+Browsing the document, you can deepen your understanding of Doris,and can also help you understand Doris's function and technical details. If you find that the document has problems, please contact us anytime;
 
 If you are interested in improving the quality of documents, whether it is revising the address of a page, correcting a link, and writing a better introductory document, we are very welcome!
 
-Most of our documents are written in markdown format, and you can modify and submit document changes directly through `docs/` in [GitHub](https://github.com/apache/doris). If you submit code changes, you can refer to [Pull Request](./pull-request.md).
+Most of our documents are written in markdown format, and you can modify and submit document changes directly through [apache/doris-website](https://github.com/apache/doris-website) . 
+
+If you are committing a document change, you can refer to the [Docs Contribute](https://doris.apache.org/community/how-to-contribute/contribute-doc)
+
+If you submit code changes, you can refer to [Pull Request](https://doris.apache.org/community/how-to-contribute/pull-request).
 
 ## If a Bug or problem is found
 
