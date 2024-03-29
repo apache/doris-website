@@ -32,12 +32,11 @@ under the License.
 
 ### Description
 
-VARIANT类型
 在 Doris 2.1 中引入一种新的数据类型 VARIANT，它可以存储半结构化 JSON 数据。它允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中提前定义具体的列。VARIANT 类型特别适用于处理复杂的嵌套结构，而这些结构可能随时会发生变化。在写入过程中，该类型可以自动根据列的结构、类型推断列信息，动态合并写入的 schema，并通过将 JSON 键及其对应的值存储为列和动态子列。
 
 ### Note
 
-相比 JSON 类型有有以下优势:
+相比 JSON 类型有以下优势:
 
 1. 存储方式不同， JSON 类型是以二进制 JSONB 格式进行存储，整行 JSON 以行存的形式存储到 segment 文件中。而 VARIANT 类型在写入的时候进行类型推断，将写入的 JSON 列存化。比JSON类型有更高的压缩比， 存储空间更小。
 2. 查询方式不同，查询不需要进行解析。VARIANT 充分利用 Doris 中列式存储、向量化引擎、优化器等组件给用户带来极高的查询性能。
@@ -46,14 +45,14 @@ VARIANT类型
 |    | 存储空间   |
 |--------------|------------|
 | 预定义静态列 | 12.618 GB  |
-| variant 类型    | 12.718 GB |
-| json 类型             | 35.711 GB   |
+| VARIANT 类型    | 12.718 GB |
+| JSON 类型             | 35.711 GB   |
    
    
 
 **节省约 65%存储容量**
 
-| 查询次数        | 预定义静态列 | variant 类型 | json 类型        |
+| 查询次数        | 预定义静态列 | VARIANT 类型 | JSON 类型        |
 |----------------|--------------|--------------|-----------------|
 | 第一次查询 (cold) | 233.79s      | 248.66s      | **大部分查询超时**  |
 | 第二次查询 (hot)  | 86.02s       | 94.82s       | 789.24s         |
@@ -71,7 +70,7 @@ VARIANT类型
 
 **建表语法**
 
-建表，建表语法关键字 variant
+建表语法关键字 VARIANT
 
 ``` sql
 -- 无索引
@@ -101,13 +100,13 @@ properties("replication_num" = "1", "bloom_filter_columns" = "v");
 **查询语法**
 
 ``` sql
--- 使用 v['a']['b'] 形式如下，v['properties']['title']类型是Variant
+-- 使用 v['a']['b'] 形式如下，v['properties']['title']类型是VARIANT
 SELECT v['properties']['title'] from ${table_name}
 ```
 
 ### 基于 github events 数据集示例
 
-这里用 github events 数据展示 variant 的建表、导入、查询。
+这里用 github events 数据展示 VARIANT 的建表、导入、查询。
 下面是格式化后的一行数据
 
 ``` json

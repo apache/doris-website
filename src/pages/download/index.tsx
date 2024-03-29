@@ -364,31 +364,17 @@ export default function Download() {
                     <h3 className="text-center text-[#1D1D1D] text-[2.5rem] font-medium">Run anywhere</h3>
                     <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
                         {RUN_ANYWHERE.map(item =>
-                            item.title !== 'Doris on AWS' ? (
-                                <div
-                                    onClick={() => window.open(item.link)}
-                                    key={item.title}
-                                    className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
-                                >
-                                    <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
-                                    <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
-                                    <div className="flex items-center mt-4 text-[#444FD9]">
-                                        <LinkWithArrow to={item.link} text="Learn more" />
-                                    </div>
+                            <div
+                                onClick={() => window.open(item.link)}
+                                key={item.title}
+                                className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
+                            >
+                                <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
+                                <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
+                                <div className="flex items-center mt-4 text-[#444FD9]">
+                                    <LinkWithArrow to={item.link} text="Learn more" />
                                 </div>
-                            ) : (
-                                <section key={item.title}>
-                                    <div className="relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline">
-                                        <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
-                                        <div className="mt-4 text-base text-center text-[#4C576C]">
-                                            {item.description}
-                                        </div>
-                                        <div className="flex items-center mt-4">
-                                            <span>Coming soon</span>
-                                        </div>
-                                    </div>
-                                </section>
-                            ),
+                            </div>
                         )}
                     </ul>
                 </div>

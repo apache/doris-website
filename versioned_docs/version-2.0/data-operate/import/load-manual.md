@@ -98,3 +98,13 @@ LOAD LABEL label_03_14_49_34_898986_19090452100 (
   WITH BROKER "hdfs" ("username"="test_array", "password"="") 
   PROPERTIES( "max_filter_ratio"="0.8" );
 ```
+
+## Execution Engine Selected
+
+The Pipeline engine is turned off by default on import, and is enabled by the following two variables:
+
+1. `enable_pipeline_load` in [FE CONFIG](../../admin-manual/config/fe-config) `enable_pipeline_load`. When enabled, import tasks such as Streamload will try to use the Pipeline engine.
+
+2. `enable_nereids_dml_with_pipeline` in Session Variable to enable insert into to try to use the Pipeline engine.
+
+Whether or not the Pipeline engine is used when the above variable is enabled still depends on the Session Variables `enable_pipeline_engine`. If this value is `false`, the import will not use the Pipeline engine even if the above variable is set to `true`.

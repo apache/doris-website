@@ -63,21 +63,26 @@ Pipeline 执行引擎 是 Doris 在 2.0 版本加入的实验性功能。目标�
 
 ## 使用方式
 
-### 设置 Session 变量
+### 查询
 
-**enable_pipeline_engine**
+1. enable_pipeline_engine
 
-将 session 变量`enable_pipeline_engine `设置为`true`，则 BE 在进行查询执行时就会默认将 SQL 的执行模型转变 Pipeline 的执行方式。
+将 session 变量 `enable_pipeline_engine` 设置为 `true`，则 BE 在进行查询执行时将会使用 Pipeline 执行引擎。
 
 ```sql
 set enable_pipeline_engine = true;
 ```
 
-**parallel_pipeline_task_num**
+2. parallel_pipeline_task_num
 
-`parallel_pipeline_task_num`代表了 SQL 查询进行查询并发的 Pipeline Task 数目。Doris 默认的配置为`0`,即 CPU 核数的一半。用户也可以实际根据自己的实际情况进行调整。
+`parallel_pipeline_task_num` 代表了 SQL 查询进行查询并发的 Pipeline Task 数目。Doris 默认的配置为 `0`，此时 Pipeline Task 数目将自动设置为当前集群机器中最少的 CPU 数量的一半。用户也可以根据自己的实际情况进行调整。
 
 ```sql
 set parallel_pipeline_task_num = 0;
 ```
-可以通过设置 max_instance_num 来限制自动设置的并发数 (默认为 64)
+
+可以通过设置 `max_instance_num` 来限制自动设置的并发数(默认为64)
+
+### 导入
+
+导入的引擎选择设置，详见[导入](../../data-operate/import/load-manual)文档。

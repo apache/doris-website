@@ -409,6 +409,10 @@ By default, BE does not record Stream Load records. If you want to view records 
 
   At present, Stream load does not support custom import timeout time. All Stream load import timeout time is uniform. The default timeout time is 600 seconds. If the imported source file can no longer complete the import within the specified time, the FE parameter ```stream_load_default_timeout_second``` needs to be adjusted.
 
++ enable\_pipeline\_load
+
+  Whether or not to enable the Pipeline engine to execute Streamload tasks. See the [Import](../load-manual) documentation.
+
 ### BE configuration
 
 + streaming\_load\_max\_mb

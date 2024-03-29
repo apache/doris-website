@@ -183,7 +183,9 @@ mysql> select * from auto_null_list partition(pX);
 1 row in set (0.20 sec)
 ```
 
-2. In Doris, NULL values are included in the minimum value partition, whether they are AUTO PARTITION tables or not. Therefore, if a partition is automatically created for a NULL value, you get a partition starting with the minimum value:
+2. For AUTO RANGE PARTITION, the storage of NULL values requires the manual creation of specific partitions.
+
+In Doris' RANGE PARTITION, we do not use a separate NULL PARTITION to contain NULL values, but rather group them in the **minium LESS THAN partition**. For logical clarity, the AUTO RANGE PARTITION does not automatically create such a partition when it encounters a NULL value. If necessary, you can create such a partition yourself to contain NULL values.
 
 ```sql
 mysql>  CREATE TABLE `range_table_nullable` (
@@ -202,15 +204,21 @@ mysql>  CREATE TABLE `range_table_nullable` (
 Query OK, 0 rows affected (0.09 sec)
 
 mysql> insert into range_table_nullable values (0, null, null);
-Query OK, 1 row affected (0.21 sec)
+ERROR 1105 (HY000): errCode = 2, detailMessage = [CANCELLED]TStatus: errCode = 2, detailMessage = Can't create partition for NULL Range
 
-mysql> show partitions from range_table_nullable;
-+-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
-| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                                                    | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
-+-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
-| 457060      | p00000101000000 | 2              | 2024-03-25 03:01:38 | NORMAL | k2           | [types: [DATETIMEV2]; keys: [0000-01-01 00:00:00]; ..types: [DATETIMEV2]; keys: [0000-01-02 00:00:00]; ) | k1              | 16      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      | true               | NULL         |
-+-------------+-----------------+----------------+---------------------+--------+--------------+----------------------------------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+--------------------+--------------+
-1 row in set (0.09 sec)
+mysql> alter table range_table_nullable add partition pX VALUES LESS THAN ("1970-01-01");
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into range_table_nullable values (0, null, null);
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select * from range_table_nullable;
++------+------+------+
+| k1   | k2   | k3   |
++------+------+------+
+|    0 | NULL | NULL |
++------+------+------+
+1 row in set (0.18 sec)
 ```
 
 ## Sample Scenarios

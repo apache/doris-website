@@ -287,6 +287,10 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 
 参数描述：Stream Load 默认的超时时间。导入任务的超时时间（以秒为单位），导入任务在设定的 timeout 时间内未完成则会被系统取消，变成 CANCELLED。如果导入的源文件无法在规定时间内完成导入，用户可以在 Stream Load 请求中设置单独的超时时间。或者调整 FE 的参数`stream_load_default_timeout_second` 来设置全局的默认超时时间。
 
+2. enable_pipeline_load
+
+  是否开启 Pipeline 引擎执行 Streamload 任务。详见[导入](./load-manual)文档。
+
 **BE 配置**
 
 1. streaming_load_max_mb
@@ -306,10 +310,10 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | label                        | 用于指定 Doris 该次导入的标签，标签相同的数据无法多次导入。如果不指定 label，Doris 会自动生成一个标签。用户可以通过指定 label 的方式来避免一份数据重复导入的问题。Doris 默认保留三天内的导入作业标签，可以 `label_keep_max_second` 调整保留时长。例如，指定本次导入 label 为 123，需要指定命令 `-H "label:123"`。label 的使用，可以防止用户重复导入相同的数据。强烈推荐用户同一批次数据使用相同的 label。这样同一批次数据的重复请求只会被接受一次，保证了 At-Most-Once 当 label 对应的导入作业状态为 CANCELLED 时，该 label 可以再次被使用。 |
 | column_separator             | 用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
 | line_delimiter               | 用于指定导入文件中的换行符，默认为 \n。可以使用做多个字符的组合作为换行符。例如，指定换行符为 \n，需要指定命令 `-H "line_delimiter:\n"`。 |
-| columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考“导入过程中数据转换”。 |
+| columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../data-operate/import/load-data-convert)。 |
 | where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入大于 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
 | max_filter_ratio             | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。例如，最大程度保证所有正确的数据都可以导入（容忍度 100%），需要指定命令 `-H "max_filter_ratio:1"`。 |
-| partitions                   | 用于指定这次导入所设计的 partition。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。例如，指定导入到 p1, p2 分区，需要指定命令 `-H "partitions: p1, p2"`。 |
+| partitions                   | 用于指定这次导入所涉及的 partition。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。例如，指定导入到 p1, p2 分区，需要指定命令 `-H "partitions: p1, p2"`。 |
 | timeout                      | 指定导入的超时时间。单位秒。默认是 600 秒。可设置范围为 1 秒 ~ 259200 秒。例如，指定导入超时时间为 1200s，需要指定命令 `-H "timeout:1200"`。 |
 | strict_mode                  | 用户指定此次导入是否开启严格模式，默认为关闭。例如，指定开启严格模式，需要指定命令 `-H "strict_mode:true"`。 |
 | timezone                     | 指定本次导入所使用的时区。默认为东八区。该参数会影响所有导入涉及的和时区有关的函数结果。例如，指定导入时区为 Africa/Abidjan，需要指定命令 `-H "timezone:Africa/Abidjan"`。 |
@@ -331,7 +335,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | trim_double_quotes           | 布尔类型，默认值为 false，为 true 时表示裁剪掉 CSV 文件每个字段最外层的双引号。 |
 | skip_lines                   | 整数类型，默认值为 0，含义为跳过 CSV 文件的前几行。当设置 format 设置为 `csv_with_names`或`csv_with_names_and_types`时，该参数会失效。 |
 | comment                      | 字符串类型，默认值为空。给任务增加额外的信息。               |
-| enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。|
+| enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
 | escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 
 ### 导入返回值
@@ -394,7 +398,7 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 使用 TVF http_stream 进行 Stream Load 导入时的 Rest API URL 不同于 Stream Load 普通导入的 URL。
 
 - 普通导入的 URL 为：
-    
+  
     http://fe_host:http_port/api/{db}/{table}/_stream_load
 
 - 使用 TVF http_stream 导入的 URL 为：
@@ -453,7 +457,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 设置导入最大容错率
 
-Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。关于容忍率的一些计算方式，可以参阅 [数据转化](../../data-operate/import/load-data-convert) 文档。
+Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。关于容忍率的一些计算方式，可以参阅 [数据转换](../../data-operate/import/load-data-convert) 文档。
 
 通过以下命令可以指定 max_filter_ratio 容忍度为 0.4 创建 stream load 导入任务：
 
@@ -503,7 +507,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 由于 Doris 目前没有内置时区的时间类型，所有 `DATETIME` 相关类型均只表示绝对的时间点，而不包含时区信息，不因 Doris 系统时区变化而发生变化。因此，对于带时区数据的导入，我们统一的处理方式为将其转换为特定目标时区下的数据。在 Doris 系统中，即 session variable `time_zone` 所代表的时区。
 
-而在导入中，我们的目标时区通过参数 `timezone` 指定，该变量在发生时区转换、运算时区敏感函数时将会替代 session variable `time_zone`。因此，如果没有特殊情况，在导入事务中应当设定 `timezone` 与当前 Doris 集群的 `time_zone` 一致。此时意味着所有带时区的时间数据，均会发生向该时区的转换。例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00Z" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
+而在导入中，我们的目标时区通过参数 `timezone` 指定，该变量在发生时区转换、运算时区敏感函数时将会替代 session variable `time_zone`。因此，如果没有特殊情况，在导入事务中应当设定 `timezone` 与当前 Doris 集群的 `time_zone` 一致。此时意味着所有带时区的时间数据，均会发生向该时区的转换。例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
 
 ### 使用 Streaming 方式导入
 
@@ -545,7 +549,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-如导入数据前标重数据为：
+如导入数据前表中数据为：
 
 ```sql
 +--------+----------+----------+------+
@@ -563,7 +567,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 3,2,tom,0
 ```
 
-导入后会删除原表数据，变成一下结果集
+导入后会删除原表数据，变成以下结果集
 
 ```sql
 +--------+----------+----------+------+
@@ -738,7 +742,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 张三,30,'上海市，黄浦区，\'大沽路'
 ```
 
-可以通过 escape 参数可以指定单字节转义字符，如上例中 `\`:
+可以通过 escape 参数可以指定单字节转义字符，如下例中 `\`:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -997,7 +1001,7 @@ AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
 ```
 
-通过以 to_bitmap 可以将数据转化成 Bitmap 类型：
+通过以 to_bitmap 可以将数据转换成 Bitmap 类型：
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -1009,7 +1013,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 导入 HLL 数据类型
 
-通过 hll_hash 函数可以将数据转化成 hll 类型，如下数据：
+通过 hll_hash 函数可以将数据转换成 hll 类型，如下数据：
 
 ```SQL
 1001|koga
@@ -1052,7 +1056,7 @@ Doris 中所有导入任务都是原子生效的。并且在同一个导入任�
 
 ### 列映射、衍生列和过滤
 
-Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [数据转化](../../data-operate/import/load-data-convert) 文档。
+Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [数据转换](../../data-operate/import/load-data-convert) 文档。
 
 ### 启用严格模式导入
 
@@ -1060,8 +1064,8 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 导入时进行部分列更新
 
-关于导入时，如何表达部分列更新，可以参考 数据操作/数据更新 文档
+关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../) 文档
 
 ## 更多帮助
 
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。
+关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。

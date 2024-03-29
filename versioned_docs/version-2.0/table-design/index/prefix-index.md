@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Sort key and prefix index
 
 Doris stores data in a data structure similar to SSTable (Sorted String Table), which is an ordered data structure that can sort and store data according to specified columns. Performing queries based on sorted columns in this data structure is highly efficient.
 
@@ -33,18 +32,32 @@ In the three data models of Aggregate, Unique, and Duplicate, the underlying dat
 Based on the Sort Keys, Prefix Indexes are introduced. A Prefix Index is a sparse index. In the table, a logical data block is formed according to the corresponding number of rows. Each logical data block stores an index entry in the Prefix Index table. The length of the index entry does not exceed 36 bytes, and its content is the prefix composed of the sorted columns of the first row of data in the data block. When searching the Prefix Index table, it can help determine the starting row number of the logical data block where the row data is located. Because the Prefix Index is relatively small, it can be fully cached in memory, allowing for rapid data block localization and significantly improving query efficiency.
 
 :::tip
-The first 36 bytes of a row of data in a data block serve as the prefix index for that row. When encountering a VARCHAR type, the prefix index will be truncated directly. If the first column is of the VARCHAR type, truncation will occur even if the length does not reach 36 bytes.
+
+The first 36 bytes of a row of data in a data block serve as the prefix index for that row. When encountering a `VARCHAR` type, the prefix index will be truncated directly. If the first column is of the `VARCHAR` type, truncation will occur even if the length does not reach 36 bytes.
+
 :::
 
 ## Example
 
 - If the sort keys of the table are as follows: 5 columns, then the prefix index would be: user_id (8 Bytes), age (4 Bytes), message (prefix 20 Bytes).
 
-ColumnNameTypeuser_idBIGINTageINTmessageVARCHAR(100)max_dwell_timeDATETIMEmin_dwell_timeDATETIME
+| ColumnName     | Type         |
+| -------------- | ------------ |
+| user_id        | BIGINT       |
+| age            | INT          |
+| message        | VARCHAR(100) |
+| max_dwell_time | DATETIME     |
+| min_dwell_time | DATETIME     |
 
 - If the sort keys of the table consist of 5 columns and the first column is `user_name` of the VARCHAR type, then the prefix index would be `user_name` (truncated to 20 Bytes). Even though the total size of the prefix index has not reached 36 bytes, truncation occurs because it encounters a VARCHAR column, and no further columns are included.
 
-ColumnNameTypeuser_nameVARCHAR(20)ageINTmessageVARCHAR(100)max_dwell_timeDATETIMEmin_dwell_timeDATETIME
+| ColumnName     | Type         |
+| -------------- | ------------ |
+| user_name      | VARCHAR(20)  |
+| age            | INT          |
+| message        | VARCHAR(100) |
+| max_dwell_time | DATETIME     |
+| min_dwell_time | DATETIME     |
 
 - When our query conditions match the prefix index, it can greatly accelerate the query speed. For example, in the first case, executing the following query:
 

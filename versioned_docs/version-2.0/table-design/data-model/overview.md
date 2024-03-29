@@ -29,14 +29,15 @@ This topic introduces the data models in Doris from a logical perspective so you
 
 ## Basic Concepts
 
-In Doris, data is logically described in the form of tables. A table consists of rows and columns. Row is a row of user data. Column is used to describe different fields in a row of data.
+This document mainly describes the data model of Doris from a logical perspective, aiming to assist users in better utilizing Doris for different scenarios.
 
-Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and indicator columns, respectively. The key column of Doris is the column specified in the table creation statement. The column after the keyword 'unique key' or 'aggregate key' or 'duplicate key' in the table creation statement is the key column, and the rest except the key column is the value column .
+In Doris, data is logically represented in the form of tables. A table comprises Rows and Columns. Row represents a single data entry from the user. This row contains a set of related values that represent different attributes or fields, which are defined by the columns (Column) of the table.
 
-Data models in Doris fall into three types:
+Columns can be broadly categorized into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. In Doris, the Key columns are those specified in the table creation statement. The columns that follow the keywords `unique key`, `aggregate key`, or `duplicate key` in the table creation statement are considered Key columns, while the remaining columns are Value columns.
 
-* Aggregate
-* Unique
-* Duplicate
+The data models in Doris are primarily classified into three types:
 
+- Duplicate: This data model allows for storing duplicate rows based on the specified key columns. It is suitable for scenarios where preserving all the original data records is essential.
+- Unique: In this data model, each row is uniquely identified by the combination of values in the key columns. This ensures that no duplicate rows exist for a given set of key values.
+- Aggregate: This model enables the aggregation of data based on the key columns. It is commonly used for scenarios where summary or aggregated information, such as totals or averages, is required.
 

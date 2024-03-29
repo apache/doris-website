@@ -211,6 +211,10 @@ TransactionStatus: VISIBLE
 
   Insert Into 本身也是一个 SQL 命令，Insert Into 语句受到 Session 变量 <version since="dev" type="inline">`insert_timeout`</version> 的限制。可以通过 `SET insert_timeout = xxx;` 来增加超时时间，单位是秒。
 
++ enable\_nereids\_dml\_with\_pipeline
+
+  设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](../load-manual)文档。
+
 ## 最佳实践
 
 ### 应用场景

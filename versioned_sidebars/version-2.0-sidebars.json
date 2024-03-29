@@ -43,7 +43,8 @@
                                 "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
                                 "install/cluster-deployment/k8s-deploy/debug-crash"
                             ]
-                        }
+                        },
+                        "install/cluster-deployment/doris-on-aws"
                     ]
                 }
             ]
@@ -119,8 +120,8 @@
                     "items": [
                         "data-operate/update/update-overview",
                         "data-operate/update/unique-update",
-                        "data-operate/update/unique-load-update",
-                        "data-operate/update/aggregate-load-update",
+                        "data-operate/update/update-of-unique-model",
+                        "data-operate/update/update-of-aggregate-model",
                         "data-operate/update/unique-update-transaction"
                     ]
                 },
@@ -317,8 +318,7 @@
                     "label": "Query Admin",
                     "items": [
                         "admin-manual/query-admin/sql-interception",
-                        "admin-manual/query-admin/kill-query",
-                        "admin-manual/query-admin/job"
+                        "admin-manual/query-admin/kill-query"
                     ]
                 },
                 {
