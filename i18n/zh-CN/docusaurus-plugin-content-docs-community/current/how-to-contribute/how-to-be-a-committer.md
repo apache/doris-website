@@ -24,12 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 如何成为 Committer
+
 
 在 Apache 项目中，开发者有三种角色：
 
 1. Contributor：当开发者的代码正式合入代码后，该开发这自动成为该项目的 Contributor。
+
 2. Committer：Committer 对代码库有合入权限。Committer 一般由 PMC（项目管理委员会）经过投票推举产生。
+
 3. PMC Member：项目管理委员会成员。对项目的决策（如版本发布等）有投票权。一般由 PMC（项目管理委员会）经过投票推举产生。
 
 不同的角色拥有不同的权利和义务。如何成为 Committer 或 PMC Member 并没有严格的条件，你可以参考这里了解更多信息：

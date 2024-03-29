@@ -39,8 +39,11 @@ Any questions, you can contact us to get timely answers, including Wechat, Gitte
 For the first time in Doris community, you can:
 
 * Follow [Doris Github](https://github.com/apache/doris)
+
 * Subscribe to our [mailing list](../subscribe-mail-list.md);
+
 * Join Doris Wechat Group (add WeChat-ID: morningman-cmy, note: join Doris Group) and ask questions at any time.
+
 * Enter Doris's [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-11jb8gesh-7IukzSrdea6mqoG0HB4gZg)
 
 Learn the development trends of Doris project in time and give your opinions on the topics you are concerned about.
@@ -78,7 +81,7 @@ You can also fix it yourself by reading the analysis code (of course, it's bette
 
 ## Modify the code and submit PR (Pull Request)
 
-You can download the code, compile and install it, deploy and run it for a try (refer to the [compilation document](/docs/dev/install/source-install/compilation-general) to see if it works as you expected. If you have problems, you can contact us directly, ask questions or fix them by reading and analyzing the source code.
+You can download the code, compile and install it, deploy and run it for a try (refer to the [compilation document](/docs/dev/install/source-install/compilation-general)) to see if it works as you expected. If you have problems, you can contact us directly, ask questions or fix them by reading and analyzing the source code.
 
 Whether it's fixing Bugs or adding Features, we're all very welcome. If you want to submit code to Doris, you need to create a new branch for your submitted code from the fork code library on GitHub to your project space, add the source project upstream, and submit PR.
 
