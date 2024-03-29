@@ -32,7 +32,7 @@ under the License.
 
 StorageClass 可以用于定义 PV 的类型和行为，通过 StorageClass 可以将磁盘资源与容器解耦，从而实现数据的持久性与可靠性。在 Doris Operator 中，在 Kubernetes 上部署 Doris，可以支持本地 PV 与网络 PV，可以根据业务需求进行选择。
 
-:::caution
+:::caution 注意
 建议在部署时将数据持久化到存储中。
 如果部署时未配置 PersistentVolumeClaim，Doris Operator 默认会使用 emptyDir 模式来存储元数据、数据以及日志。当 pod 重启时，相关数据会丢失掉。
 :::
@@ -114,7 +114,7 @@ microk8s-hostpath (default)   microk8s.io/hostpath           Delete          Imm
 doris-storage                 openebs.io/local               Delete          WaitForFirstConsumer   false                  54d
 ```
 
-:::tip
+:::tip 提示
 可以通过配置 [ConfigMap](<#FE ConfigMap>) 修改默认的元数据路径与日志路径：
 1. fe-meta 的 mounthPath 配置需要与 ConfigMap 中的 meta_dir 变量配置路径一致，默认情况下元数据会写入  /opt/apache-doris/fe/doris-meta 目录下；
 2. fe-log 的 mounthPath 配置需要与 ConfigMap 中的 LOG_DIR 变量路径一致，默认情况下日志数据会写入到 /opt/apache-doris/fe/log 目录下。
@@ -242,7 +242,7 @@ data:
 
 其中，在 metadata.name 中定义 FE ConfigMap 的名字，在 data 中定义 fe.conf 中的数据库配置。
 
-:::tip
+:::tip 提示
 在 ConfigMap 中使用 data 字段存储键值对。在上述 FE ConfigMap 中：
 - fe.conf 是键值对中的 key，使用 `|` 表示将保留后续字符串中的换行符和缩进
 - 后续配置为键值对中的 value，与 fe.conf 文件中的配置相同
@@ -315,7 +315,7 @@ data:
 
 其中，在 metadata.name 中定义 BE ConfigMap 的名字，在 data 中定义 be.conf 中的数据库配置。
 
-:::tip
+:::tip 提示
 在 ConfigMap 中使用 data 字段存储键值对。在上述 BE ConfigMap 中：
 - be.conf 是键值对中的 key，使用 `|` 表示将保留后续字符串中的换行符和缩进
 - 后续配置为键值对中的 value，与 be.conf 文件中的配置相同
@@ -496,7 +496,7 @@ data:
     storage_root_path = /opt/apache-doris/be/storage,medium:ssd;/opt/apache-doris/be/storage1,medium:ssd
 ```
 
-:::caution
+:::caution 注意
 在创建 BE ConfigMap 时，需要注意以下事项：
 1. metadata.name 需要与 DorisCluster CR 中 beSpec.configMapInfo.configMapName 相同，表示该集群使用指定的 ConfigMap；
 2. ConfigMap 中的 storage_root_path 参数要与 DorisCluster CR 中的 persistentVolume 数据盘一一对应。

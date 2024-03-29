@@ -233,7 +233,7 @@ in:
 - ${podName} represents the third-level domain name of the pod where the error currently occurs. For example, in the above example, the pod name needs to be filled in doriscluster-sample-be-2
 - ${ServiceType} is the deployed Service type, you can choose NodePort or LoadBalancer
 
-:::tip
+:::tip Tip
 Since the pod name returned by each stream load may be different, please delete the customized Service after obtaining the detailed error information of the stream load.
 :::
 

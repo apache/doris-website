@@ -235,7 +235,7 @@ spec:
 - ${podName} 表示当前发生错误的 pod 三级域名，如上例中需要填写 pod 名为 doriscluster-sample-be-2
 - ${ServiceType} 为部署的 Service 类型，可以选择 NodePort 或 LoadBalancer
 
-:::tip
+:::tip 提示
 由于每次 stream load 返回的 pod 名可能不同，获取 Stream Load 详细错误信息后，请将定制化的 Service 删除。
 :::
 

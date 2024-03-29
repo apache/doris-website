@@ -33,7 +33,7 @@ In a Doris cluster, components including FE, BE, CN, and monitoring components a
 
 StorageClass can be used to define the type and behavior of PV. StorageClass can decouple disk resources from containers to achieve data persistence and reliability. In Doris Operator, deploying Doris on Kubernetes can support local PV and network PV, and you can choose according to business needs.
 
-:::caution
+:::caution Caution
 It is recommended to persist data to storage at deployment time.
 If PersistentVolumeClaim is not configured during deployment, Doris Operator will use emptyDir mode by default to store metadata, data, and logs. When the pod is restarted, related data will be lost.
 :::
@@ -114,7 +114,7 @@ local-storage                 kubernetes.io/no-provisioner   Delete          Wai
 microk8s-hostpath (default)   microk8s.io/hostpath           Delete          Immediate              false                  219d
 doris-storage                 openebs.io/local               Delete          WaitForFirstConsumer   false                  54d
 ```
-:::tip
+:::tip Tip
 The default metadata path and log path can be modified by configuring [ConfigMap](<#FE ConfigMap>):
 1. The mounthPath configuration of fe-meta needs to be consistent with the meta_dir variable configuration path in ConfigMap. By default, metadata will be written to the /opt/apache-doris/fe/doris-meta directory;
 2. The mounthPath configuration of fe-log needs to be consistent with the LOG_DIR variable path in ConfigMap. By default, log data will be written to the /opt/apache-doris/fe/log directory.
@@ -242,7 +242,7 @@ data:
 
 Among them, the name of FE ConfigMap is defined in metadata.name, and the database configuration in fe.conf is defined in data.
 
-:::tip
+:::tip Tip
 Use the data field in ConfigMap to store key-value pairs. In the above FE ConfigMap:
 - fe.conf is the key in the key-value pair, using `|` means that newlines and indents in subsequent strings will be preserved
 - Subsequent configuration is the value in the key-value pair, which is the same as the configuration in the fe.conf file
@@ -315,7 +315,7 @@ data:
 
 Among them, the name of BE ConfigMap is defined in metadata.name, and the database configuration in be.conf is defined in data.
 
-:::tip
+:::tip Tip
 Use the data field in ConfigMap to store key-value pairs. In the above BE ConfigMap:
 - be.conf is the key in the key-value pair, using `|` means that newlines and indents in subsequent strings will be retained
 - Subsequent configuration is the value in the key-value pair, which is the same as the configuration in the be.conf file
@@ -495,7 +495,7 @@ data:
      storage_root_path = /opt/apache-doris/be/storage,medium:ssd;/opt/apache-doris/be/storage1,medium:ssd
 ```
 
-:::caution
+:::caution Caution
 When creating a BE ConfigMap, you need to pay attention to the following:
 1. metadata.name needs to be the same as beSpec.configMapInfo.configMapName in DorisCluster CR, indicating that the cluster uses the specified ConfigMap;
 2. The storage_root_path parameter in ConfigMap must correspond one-to-one with the persistentVolume data disk in DorisCluster CR.

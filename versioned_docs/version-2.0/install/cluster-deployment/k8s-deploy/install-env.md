@@ -45,7 +45,7 @@ systemctl disable firewalld
 ```
 
 If the firewall service cannot be turned off, you can open the FE and BE ports according to your plan:
-:::tip
+:::tip Tip
 If the firewall cannot be turned off, you need to open the firewall of the corresponding Doris port according to the Kubernetes mapping rules. For specific ports, please refer to [Doris Cluster Port Planning](../standard-deployment.md#Network Requirements).
 :::
 
