@@ -45,6 +45,7 @@ under the License.
 | 1.3.0             | 1.16                | 1.0+   | 8    | -         |
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
+| 1.6.0             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
 
 ## USE
 
@@ -57,7 +58,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.5.2</version>
+   <version>1.6.0</version>
 </dependency>
 ```
 
@@ -320,19 +321,22 @@ ON a.city = c.city
 | password                         | --            | Y        | Password to access Doris                                     |
 | auto-redirect                    | true          | N        | Whether to redirect StreamLoad requests. After being turned on, StreamLoad will be written through FE, and BE information will no longer be displayed. |
 | doris.request.retries            | 3             | N        | Number of retries to send requests to Doris                  |
-| doris.request.connect.timeout.ms | 30000         | N        | Connection timeout for sending requests to Doris             |
-| doris.request.read.timeout.ms    | 30000         | N        | Read timeout for sending requests to Doris                   |
+| doris.request.connect.timeout | 30s         | N        | Connection timeout for sending requests to Doris             |
+| doris.request.read.timeout    | 30s         | N        | Read timeout for sending requests to Doris                   |
 
 ### Source configuration item
 
 | Key                           | Default Value      | Required | Comment                                                      |
 | ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
-| doris.request.query.timeout.s | 3600               | N        | The timeout time for querying Doris, the default value is 1 hour, -1 means no timeout limit |
-| doris.request.tablet.size     | Integer. MAX_VALUE | N        | The number of Doris Tablets corresponding to a Partition. The smaller this value is set, the more Partitions will be generated. This improves the parallelism on the Flink side, but at the same time puts more pressure on Doris. |
+| doris.request.query.timeout | 21600s              | N        | The timeout time for querying Doris, the default value is 6 hour |
+| doris.request.tablet.size     | 1 | N        | The number of Doris Tablets corresponding to a Partition. The smaller this value is set, the more Partitions will be generated. This improves the parallelism on the Flink side, but at the same time puts more pressure on Doris. |
 | doris.batch.size              | 1024               | N        | The maximum number of rows to read data from BE at a time. Increasing this value reduces the number of connections established between Flink and Doris. Thereby reducing the additional time overhead caused by network delay. |
-| doris.exec.mem.limit          | 2147483648         | N        | Memory limit for a single query. The default is 2GB, in bytes |
+| doris.exec.mem.limit          | 8192mb         | N        | Memory limit for a single query. The default is 8GB, in bytes |
 | doris.deserialize.arrow.async | FALSE              | N        | Whether to support asynchronous conversion of Arrow format to RowBatch needed for flink-doris-connector iterations |
 | doris.deserialize.queue.size  | 64                 | N        | Asynchronous conversion of internal processing queue in Arrow format, effective when doris.deserialize.arrow.async is true |
+
+#### DataStream proprietary configuration items
+
 | doris.read.field              | --                 | N        | Read the list of column names of the Doris table, separated by commas |
 | doris.filter.query            | --                 | N        | The expression to filter the read data, this expression is transparently passed to Doris. Doris uses this expression to complete source-side data filtering. For example age=18. |
 
@@ -387,8 +391,10 @@ ON a.city = c.city
 | VARCHAR    | STRING            |
 | STRING     | STRING            |
 | DECIMALV2  | DECIMAL                      |
-| TIME       | DOUBLE             |
-| HLL        | Unsupported datatype             |
+| ARRAY      | ARRAY             |
+| MAP        | MAP             |
+| JSON       | STRING             |
+
 
 ## Flink write Metrics
 Where the metrics value of type Counter is the cumulative value of the imported task from the beginning to the current time, you can observe each metric in each table in the Flink Webui metrics.
@@ -779,7 +785,7 @@ You can search for the log `abort transaction response` in TaskManager and deter
 
 14. **org.apache.flink.table.api.SqlParserException when using doris.filter.query: SQL parsing failed. "xx" encountered at row x, column xx**
 
-This problem is mainly caused by the conditional varchar/string type, which needs to be quoted. The correct way to write it is xxx = ''xxx''. In this way, the Flink SQL parser will interpret two consecutive single quotes as one single quote character instead of The end of the string, and the concatenated string is used as the value of the attribute. For example: `t1 >= '2024-01-01'` can be written as `'doris.filter.query' = 't1 >=''2024-01-01'''`.
+This problem is mainly caused by the conditional varchar/string type, which needs to be quoted. The correct way to write it is xxx = ''xxx''. In this way, the Flink SQL parser will interpret two consecutive single quotes as one single quote character instead of The end of the string, and the concatenated string is used as the value of the attribute. For example: `t1 >= '2024-01-01'` can be written as `'doris.filter.query' = 't1 >=''2024-01-01'''`. After Connector 1.6.0, FlinkSQL can implement automatic predicate and projection pushdown.
 
 15. **Failed to connect to backend: http://host:webserver_port, and BE is still alive**
 
