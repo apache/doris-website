@@ -46,43 +46,30 @@ WHERE
 column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
-<version since="dev">
-
 语法二：该语法只能在UNIQUE KEY模型表上使用
 
 ```sql
+[cte]
 DELETE FROM table_name [table_alias]
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
     WHERE condition
 ```
 
-</version>
-
 #### Required Parameters
 
++ cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + table_name: 指定需要删除数据的表
 + column_name: 属于table_name的列
 + op: 逻辑比较操作符，可选类型包括：=, >, <, >=, <=, !=, in, not in
 + value | value_list: 做逻辑比较的值或值列表
-
-<version since="dev">
-
 + WHERE condition: 指定一个用于选择删除行的条件
-
-</version>
-
 
 #### Optional Parameters
 
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): 指定执行删除数据的分区名，如果表不存在此分区，则报错
-
-<version since="dev">
-
 + table_alias: 表的别名
 + USING additional_tables: 如果需要在WHERE语句中使用其他的表来帮助识别需要删除的行，则可以在USING中指定这些表或者查询。
-
-</version>
 
 #### Note
 
@@ -114,8 +101,6 @@ DELETE FROM table_name [table_alias]
     DELETE FROM my_table PARTITIONS (p1, p2)
     WHERE k1 >= 3 AND k2 = "abc";
     ```
-
-<version since="dev">
 
 4. 使用`t2`和`t3`表连接的结果，删除`t1`中的数据，删除的表只支持unique模型
 
@@ -172,7 +157,46 @@ DELETE FROM table_name [table_alias]
    +----+----+----+--------+------------+
    ```
 
-</version>
+5. 使用 cte 关联删除
+
+   ```sql
+   create table orders(
+    o_orderkey bigint,
+    o_totalprice decimal(15, 2)
+   ) unique key(o_orderkey)
+   distributed by hash(o_orderkey) buckets 1
+   properties (
+   "replication_num" = "1"
+   );
+   
+   insert into orders values
+   (1, 34.1),
+   (2, 432.8);
+   
+   create table lineitem(
+   l_linenumber int,
+   o_orderkey bigint,
+   l_discount  decimal(15, 2)
+   ) unique key(l_linenumber)
+   distributed by hash(l_linenumber) buckets 1
+   properties (
+   "replication_num" = "1"
+   );
+   
+   insert into lineitem values
+   (1, 1, 1.23),
+   (2, 1, 3.21),
+   (3, 2, 18.08),
+   (4, 2, 23.48);
+   
+   with discount_orders as (
+   select * from orders
+   where o_totalprice > 100
+   )
+   delete from lineitem
+   using discount_orders
+   where lineitem.o_orderkey = discount_orders.o_orderkey;
+   ```
 
 ### Keywords
 
