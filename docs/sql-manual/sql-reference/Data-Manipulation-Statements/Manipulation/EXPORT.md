@@ -96,7 +96,7 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
   
   - `with_bom`: The default is false. If it is set to true, the exported file is encoded in UTF8 with BOM (valid only for CSV-related file format).
 
-  - `data_consisteency`: can be set to` none`, default value is `partition`. This parameter indicates the granularity at which the export table is shred, `none` represents tablets level, and` partition` represents partition level.
+  - `data_consistency`: can be set to` none` / `partition` , default value is `partition`. This parameter indicates the granularity at which the export table is shred, `none` represents tablets level, and` partition` represents partition level.
 
   - `timeout`: This is the timeout parameter of the export job, the default timeout is 2 hours, and the unit is seconds.
 
