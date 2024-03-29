@@ -15,7 +15,8 @@
                 "how-to-contribute/docs-format-specification",
                 "how-to-contribute/pull-request",
                 "how-to-contribute/contribute-doc",
-                "how-to-contribute/how-to-share-blogs"
+                "how-to-contribute/how-to-share-blogs",
+                "how-to-contribute/trino-connector-developer-guide"
             ]
         },
         {
