@@ -1,6 +1,6 @@
 ---
 {
-  "title": "How to share blogs", 
+  "title": "How to Share Blogs", 
   "language": "en"
 }
 ---
@@ -31,9 +31,13 @@ The Doris community welcomes the sharing of Doris-related articles. Once merged,
 Articles include, but are not limited to.
 
 * Doris usage tips
+
 * Introduction to Doris features
+
 * Doris system tuning
+
 * How Doris works
+
 * Doris business scenarios in practice
 
 For details, please go to: https://github.com/apache/doris-website [README](https://github.com/apache/doris-website)

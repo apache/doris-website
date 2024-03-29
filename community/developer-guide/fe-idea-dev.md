@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Setting Up dev env for FE - IntelliJ IDEA",
+    "title": "Setting Up Dec Env for FE - IntelliJ IDEA",
     "language": "en"
 }
 ---

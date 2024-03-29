@@ -1,6 +1,6 @@
 ---
 {
-    "title": "GROUPING SETS DESIGN",
+    "title": "GROUPING SETS Design",
     "language": "en"
 }
 ---

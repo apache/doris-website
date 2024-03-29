@@ -1,6 +1,6 @@
 ---
 {
-    "title": "doris future project",
+    "title": "Doris Future Project",
     "language": "en"
 }
 ---
