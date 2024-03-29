@@ -53,7 +53,7 @@ UPDATE target_table [table_alias]
 
 #### Optional Parameters
 
-+ cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
++ cte: Common Table Expression, e.g. 'WITH a AS SELECT * FROM tbl'
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
 
