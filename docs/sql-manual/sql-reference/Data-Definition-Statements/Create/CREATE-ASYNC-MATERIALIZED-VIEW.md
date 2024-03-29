@@ -192,6 +192,16 @@ The properties unique to materialized views include:
 
 `workload_group`: The name of the workload_group used by the materialized view when performing refresh tasks. This is used to limit the resources used for refreshing data in the materialized view, in order to avoid affecting the operation of other business processes. For details on how to create and use workload_group, refer to [WORKLOAD-GROUP](../../../../admin-manual/workload-group.md)
 
+`partition_sync_limit`: When the partition field of the base table is time (and if it's a string-type time, `partition_date_format` can be set), this attribute can be used to configure the partition range for synchronizing the base table. It works in conjunction with `partition_sync_time_unit`.
+
+For instance, if it's set to 2 and `partition_sync_time_unit` is set to `MONTH`, it means only the partitions and data of the last 2 months in the base table will be synchronized. The minimum value is 1.
+
+As time passes, the materialized view will automatically add and delete partitions during each refresh. For example, if the materialized view currently has data for February and March, next month it will automatically delete the data for February and add data for April.
+
+`partition_sync_time_unit`: time unit, support DAY/MONTH/YEAR（default: DAY）
+
+`partition_date_format`: date format of partition column，for example: "%Y-%m-%d"
+
 ##### query
 
 Create a query statement for the materialized view, and the result is the data in the materialized view
