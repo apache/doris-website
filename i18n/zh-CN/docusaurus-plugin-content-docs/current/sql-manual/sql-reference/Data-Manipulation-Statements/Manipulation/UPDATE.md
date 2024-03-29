@@ -48,13 +48,13 @@ UPDATE target_table [table_alias]
 
 #### Required Parameters
 
-+ cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + target_table: 待更新数据的目标表。可以是 'db_name.table_name' 形式
 + assignment_list: 待更新的目标列，形如 'col_name = value, col_name = value' 格式
 + WHERE condition: 期望更新的条件，一个返回 true 或者 false 的表达式即可
 
 #### Optional Parameters
 
++ cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + table_alias: 表的别名
 + FROM additional_tables: 指定一个或多个表，用于选中更新的行，或者获取更新的值。注意，如需要在此列表中再次使用目标表，需要为其显式指定别名。
 

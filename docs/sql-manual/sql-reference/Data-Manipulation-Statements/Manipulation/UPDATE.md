@@ -47,13 +47,13 @@ UPDATE target_table [table_alias]
 
 #### Required Parameters
 
-+ cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
 + target_table: The target table of the data to be updated. Can be of the form 'db_name.table_name'
 + assignment_list: The target column to be updated, in the format 'col_name = value, col_name = value'
 + where condition: the condition that is expected to be updated, an expression that returns true or false can be
 
 #### Optional Parameters
 
++ cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
 

@@ -58,7 +58,6 @@ DELETE FROM table_name [table_alias]
 
 #### Required Parameters
 
-+ cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + table_name: 指定需要删除数据的表
 + column_name: 属于table_name的列
 + op: 逻辑比较操作符，可选类型包括：=, >, <, >=, <=, !=, in, not in
@@ -67,6 +66,7 @@ DELETE FROM table_name [table_alias]
 
 #### Optional Parameters
 
++ cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): 指定执行删除数据的分区名，如果表不存在此分区，则报错
 + table_alias: 表的别名
 + USING additional_tables: 如果需要在WHERE语句中使用其他的表来帮助识别需要删除的行，则可以在USING中指定这些表或者查询。

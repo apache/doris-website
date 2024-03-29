@@ -58,7 +58,6 @@ DELETE FROM table_name
 
 #### Required Parameters
 
-+ cte: Common Table Expression, e.g. 'WITH a AS SELECT * FROM tbl'.
 + table_name: Specifies the table from which rows are removed.
 + column_name: column belong to table_name
 + op: Logical comparison operator, The optional types of op include: =, >, <, >=, <=, !=, in, not in
@@ -67,6 +66,7 @@ DELETE FROM table_name
 
 #### Optional Parameters
 
++ cte: Common Table Expression, e.g. 'WITH a AS SELECT * FROM tbl'.
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specifies the partition or partitions to select rows for removal
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
