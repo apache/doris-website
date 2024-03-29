@@ -33,7 +33,7 @@ In a Doris cluster, components including FE, BE, CN, and monitoring components a
 
 StorageClass can be used to define the type and behavior of PV. StorageClass can decouple disk resources from containers to achieve data persistence and reliability. In Doris Operator, deploying Doris on Kubernetes can support local PV and network PV, and you can choose according to business needs.
 
-:::caution Caution
+:::caution Warning
 It is recommended to persist data to storage at deployment time.
 If PersistentVolumeClaim is not configured during deployment, Doris Operator will use emptyDir mode by default to store metadata, data, and logs. When the pod is restarted, related data will be lost.
 :::
@@ -495,7 +495,7 @@ data:
      storage_root_path = /opt/apache-doris/be/storage,medium:ssd;/opt/apache-doris/be/storage1,medium:ssd
 ```
 
-:::caution Caution
+:::caution Warning
 When creating a BE ConfigMap, you need to pay attention to the following:
 1. metadata.name needs to be the same as beSpec.configMapInfo.configMapName in DorisCluster CR, indicating that the cluster uses the specified ConfigMap;
 2. The storage_root_path parameter in ConfigMap must correspond one-to-one with the persistentVolume data disk in DorisCluster CR.
