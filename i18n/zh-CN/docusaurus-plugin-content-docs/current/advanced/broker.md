@@ -71,7 +71,7 @@ Broker 在 Doris 系统架构中的位置如下：
    - 支持通过 kerberos 认证访问
    - 支持 HDFS HA 模式访问
 2. 对象存储
-   - 所有支持S3协议的对象存储
+   - 所有支持 S3 协议的对象存储
 
 1. [Broker Load](../data-operate/import/import-way/broker-load-manual)
 2. [数据导出（Export）](../data-operate/export/export-manual)
@@ -145,7 +145,7 @@ WITH BROKER "broker_name"
    )
    ```
 
-   如果采用Kerberos认证方式，则部署Broker进程的时候需要[krb5.conf (opens new window)](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html)文件， krb5.conf文件包含Kerberos的配置信息，通常，您应该将krb5.conf文件安装在目录/etc中。您可以通过设置环境变量KRB5_CONFIG覆盖默认位置。 krb5.conf文件的内容示例如下：
+   如果采用 Kerberos 认证方式，则部署 Broker 进程的时候需要[krb5.conf (opens new window)](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html)文件，krb5.conf 文件包含 Kerberos 的配置信息，通常，您应该将 krb5.conf 文件安装在目录/etc 中。您可以通过设置环境变量 KRB5_CONFIG 覆盖默认位置。krb5.conf 文件的内容示例如下：
 
    ```text
    [libdefaults]
@@ -166,8 +166,8 @@ WITH BROKER "broker_name"
    这个配置用于访问以 HA 模式部署的 HDFS 集群。
 
    - `dfs.nameservices`：指定 hdfs 服务的名字，自定义，如："dfs.nameservices" = "my_ha"。
-   - `dfs.ha.namenodes.xxx`：自定义 namenode 的名字,多个名字以逗号分隔。其中 xxx 为 `dfs.nameservices` 中自定义的名字，如： "dfs.ha.namenodes.my_ha" = "my_nn"。
-   - `dfs.namenode.rpc-address.xxx.nn`：指定 namenode 的rpc地址信息。其中 nn 表示 `dfs.ha.namenodes.xxx` 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"。
+   - `dfs.ha.namenodes.xxx`：自定义 namenode 的名字，多个名字以逗号分隔。其中 xxx 为 `dfs.nameservices` 中自定义的名字，如： "dfs.ha.namenodes.my_ha" = "my_nn"。
+   - `dfs.namenode.rpc-address.xxx.nn`：指定 namenode 的 rpc 地址信息。其中 nn 表示 `dfs.ha.namenodes.xxx` 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"。
    - `dfs.client.failover.proxy.provider`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
 
    示例如下：
@@ -198,7 +198,7 @@ WITH BROKER "broker_name"
    )
    ```
 
-   关于HDFS集群的配置可以写入hdfs-site.xml文件中，用户使用Broker进程读取HDFS集群的信息时，只需要填写集群的文件路径名和认证信息即可。
+   关于 HDFS 集群的配置可以写入 hdfs-site.xml 文件中，用户使用 Broker 进程读取 HDFS 集群的信息时，只需要填写集群的文件路径名和认证信息即可。
 
 #### 腾讯云 CHDFS
 
@@ -215,7 +215,8 @@ WITH BROKER "broker_name"
 ```
 
 #### 百度云 BOS
-当前使用BOS时需要将[bos-hdfs-sdk-1.0.3-community.jar.zip](https://sdk.bce.baidu.com/console-sdk/bos-hdfs-sdk-1.0.3-community.jar.zip)下载并解压后把jar包放到broker的lib目录下。
+
+当前使用 BOS 时需要下载相应的 SDK 包，具体配置与使用，可以参考 [BOS HDFS 官方文档](https://cloud.baidu.com/doc/BOS/s/fk53rav99)。在下载完成并解压后将 jar 包放到 broker 的 lib 目录下。
 
 ```
 (
@@ -258,7 +259,7 @@ WITH BROKER "broker_name"
 ```
 
 #### GCS
- 在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选,所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md)
+ 在使用 Broker 访问 GCS 时，Project ID 是必须的，其他参数可选，所有参数配置请参考 [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md)
 ```
 (
     "fs.gs.project.id" = "你的 Project ID",

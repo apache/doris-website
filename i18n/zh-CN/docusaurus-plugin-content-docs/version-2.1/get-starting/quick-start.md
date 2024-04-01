@@ -31,7 +31,7 @@ Apache Doris 是一个基于 MPP 架构的高性能、实时的分析型数据�
 
 ## 下载 Doris
 
-Doris 运行在 Linux 环境中，推荐 CentOS 7.x 或者 Ubuntu 16.04 以上版本，同时你需要安装 Java 运行环境（JDK版本要求为8），要检查你所安装的 Java 版本，请运行以下命令：
+Doris 运行在 Linux 环境中，推荐 CentOS 7.x 或者 Ubuntu 16.04 以上版本，同时你需要安装 Java 运行环境（JDK 版本要求为 8），要检查你所安装的 Java 版本，请运行以下命令：
 
 ```
 java -version
@@ -63,7 +63,7 @@ priority_networks=172.23.16.0/24
 
 >注意：
 >
->这个参数我们在安装的时候是必须要配置的，特别是当一台机器拥有多个IP地址的时候，我们要为 FE 指定唯一的IP地址。
+>这个参数我们在安装的时候是必须要配置的，特别是当一台机器拥有多个 IP 地址的时候，我们要为 FE 指定唯一的 IP 地址。
 
 > 这里假设你的节点 IP 是 `172.23.16.32`，那么我们可以通过掩码的方式配置为 `172.23.16.0/24`。
 
@@ -75,7 +75,7 @@ meta_dir=/path/your/doris-meta
 
 >注意：
 >
->这里你可以不配置，默认是在你的Doris FE 安装目录下的 doris-meta，
+>这里你可以不配置，默认是在你的 Doris FE 安装目录下的 doris-meta，
 >
 >单独配置元数据目录，需要你提前创建好你指定的目录
 
@@ -95,11 +95,11 @@ meta_dir=/path/your/doris-meta
 curl http://127.0.0.1:8030/api/bootstrap
 ```
 
-这里 IP 和 端口分别是 FE 的 IP 和 http_port（默认8030），如果是你在 FE 节点执行，直接运行上面的命令即可。
+这里 IP 和 端口分别是 FE 的 IP 和 http_port（默认 8030），如果是你在 FE 节点执行，直接运行上面的命令即可。
 
 如果返回结果中带有 `"msg":"success"` 字样，则说明启动成功。
 
-你也可以通过 Doris FE 提供的Web UI 来检查，在浏览器里输入地址
+你也可以通过 Doris FE 提供的 Web UI 来检查，在浏览器里输入地址
 
 http:// fe_ip:8030
 
@@ -116,7 +116,7 @@ http:// fe_ip:8030
 
 #### 连接 FE
 
-我们下面通过 MySQL 客户端来连接 Doris FE，下载免安装的 [MySQL 客户端](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)
+我们下面通过 MySQL 客户端来连接 Doris FE，下载免安装的 [MySQL 客户端](https://dev.mysql.com/downloads/mysql/)
 
 解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
 
@@ -127,8 +127,8 @@ mysql -uroot -P9030 -h127.0.0.1
 >注意：
 >
 >1. 这里使用的 root 用户是 doris 内置的默认用户，也是超级管理员用户，具体的用户权限查看 [权限管理](../admin-manual/privilege-ldap/user-privilege.md)
->2. -P ：这里是我们连接 Doris 的查询端口，默认端口是 9030，对应的是fe.conf里的 `query_port`
->3. -h ： 这里是我们连接的 FE IP地址，如果你的客户端和 FE 安装在同一个节点可以使用127.0.0.1。
+>2. -P：这里是我们连接 Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
+>3. -h：这里是我们连接的 FE IP 地址，如果你的客户端和 FE 安装在同一个节点可以使用 127.0.0.1。
 
 执行下面的命令查看 FE 运行状态
 
@@ -162,30 +162,30 @@ ReplayedJournalId: 49292
 1 row in set (0.03 sec)
 ```
 
-1. 如果 IsMaster、Join 和 Alive 三列均为true，则表示节点正常。
+1. 如果 IsMaster、Join 和 Alive 三列均为 true，则表示节点正常。
 
 #### 加密连接 FE
 
-Doris支持基于SSL的加密连接，当前支持TLS1.2，TLS1.3协议，可以通过以下配置开启Doris的SSL模式：
-修改FE配置文件`conf/fe.conf`，添加`enable_ssl = true`即可。
+Doris 支持基于 SSL 的加密连接，当前支持 TLS1.2，TLS1.3 协议，可以通过以下配置开启 Doris 的 SSL 模式：
+修改 FE 配置文件`conf/fe.conf`，添加`enable_ssl = true`即可。
 
-接下来通过`mysql`客户端连接Doris，mysql支持五种SSL模式：
+接下来通过`mysql`客户端连接 Doris，mysql 支持五种 SSL 模式：
 
-1.`mysql -uroot -P9030 -h127.0.0.1`与`mysql --ssl-mode=PREFERRED -uroot -P9030 -h127.0.0.1`一样，都是一开始试图建立SSL加密连接，如果失败，则尝试使用普通连接。
+1.`mysql -uroot -P9030 -h127.0.0.1`与`mysql --ssl-mode=PREFERRED -uroot -P9030 -h127.0.0.1`一样，都是一开始试图建立 SSL 加密连接，如果失败，则尝试使用普通连接。
 
-2.`mysql --ssl-mode=DISABLE -uroot -P9030 -h127.0.0.1`，不使用SSL加密连接，直接使用普通连接。
+2.`mysql --ssl-mode=DISABLE -uroot -P9030 -h127.0.0.1`，不使用 SSL 加密连接，直接使用普通连接。
 
-3.`mysql --ssl-mode=REQUIRED -uroot -P9030 -h127.0.0.1`，强制使用SSL加密连接。
+3.`mysql --ssl-mode=REQUIRED -uroot -P9030 -h127.0.0.1`，强制使用 SSL 加密连接。
 
-4.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem -uroot -P9030 -h127.0.0.1`，强制使用SSL加密连接，并且通过指定CA证书验证服务端身份是否有效。
+4.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem -uroot -P9030 -h127.0.0.1`，强制使用 SSL 加密连接，并且通过指定 CA 证书验证服务端身份是否有效。
 
-5.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem -uroot -P9030 -h127.0.0.1`，强制使用SSL加密连接，双向验证。
+5.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem -uroot -P9030 -h127.0.0.1`，强制使用 SSL 加密连接，双向验证。
 
 
 >注意：
->`--ssl-mode`参数是mysql5.7.11版本引入的，低于此版本的mysql客户端请参考[这里](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-security.html)。
+>`--ssl-mode`参数是 mysql5.7.11 版本引入的，低于此版本的 mysql 客户端请参考[这里](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-security.html)。
 
-Doris开启SSL加密连接需要密钥证书文件验证，默认的密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/`下。密钥证书文件的生成请参考[密钥证书配置](../admin-manual/certificate.md)。
+Doris 开启 SSL 加密连接需要密钥证书文件验证，默认的密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/`下。密钥证书文件的生成请参考[密钥证书配置](../admin-manual/certificate.md)。
 
 #### 停止 FE 节点
 
@@ -213,7 +213,7 @@ priority_networks=172.23.16.0/24
 
 >注意：
 >
->这个参数我们在安装的时候是必须要配置的，特别是当一台机器拥有多个IP地址的时候，我们要为 BE 指定唯一的IP地址。
+>这个参数我们在安装的时候是必须要配置的，特别是当一台机器拥有多个 IP 地址的时候，我们要为 BE 指定唯一的 IP 地址。
 
 2. 配置 BE 数据存储目录
 
@@ -224,7 +224,7 @@ storage_root_path=/path/your/data_dir
 
 >注意：
 >
->1. 默认目录在 BE安装目录的 storage 目录下。
+>1. 默认目录在 BE 安装目录的 storage 目录下。
 >2. BE 配置的存储目录必须先创建好
 
 3. 配置 JAVA_HOME 环境变量
@@ -234,8 +234,8 @@ storage_root_path=/path/your/data_dir
 
 4. 安装 Java UDF 函数
 
-<version since="1.2.0">安装Java UDF 函数</version>  
-因为从1.2 版本开始支持Java UDF 函数，需要从官网下载 Java UDF 函数的 JAR 包放到 BE 的 lib 目录下，否则可能会启动失败。
+<version since="1.2.0">安装 Java UDF 函数</version>  
+因为从 1.2 版本开始支持 Java UDF 函数，需要从官网下载 Java UDF 函数的 JAR 包放到 BE 的 lib 目录下，否则可能会启动失败。
 
 
 
@@ -249,7 +249,7 @@ storage_root_path=/path/your/data_dir
 
 #### 添加 BE 节点到集群
 
-通过MySQL 客户端连接到 FE 之后执行下面的 SQL，将 BE 添加到集群中
+通过 MySQL 客户端连接到 FE 之后执行下面的 SQL，将 BE 添加到集群中
 
 ```sql
 ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
@@ -297,7 +297,7 @@ ClusterDecommissioned: false
 1 row in set (0.01 sec)
 ```
 
-1. Alive : true表示节点运行正常
+1. Alive : true 表示节点运行正常
 
 #### 停止 BE 节点
 
@@ -355,14 +355,14 @@ PROPERTIES (
 
 4. 导入数据
 
-这里我们通过Stream load 方式将上面保存到文件中的数据导入到我们刚才创建的表里。
+这里我们通过 Stream load 方式将上面保存到文件中的数据导入到我们刚才创建的表里。
 
 ```
 curl  --location-trusted -u root: -T test.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/example_tbl/_stream_load
 ```
 
 - -T test.csv : 这里使我们刚才保存的数据文件，如果路径不一样，请指定完整路径
-- -u root :  这里是用户名密码，我们使用默认用户root，密码是空
+- -u root :  这里是用户名密码，我们使用默认用户 root，密码是空
 - 127.0.0.1:8030 : 分别是 fe 的 ip 和 http_port
 
 执行成功之后我们可以看到下面的返回信息
@@ -436,4 +436,4 @@ mysql> select city, sum(cost) as total_cost from example_tbl group by city;
 
 
 
-到这里我们整个快速开始就结束了，我们从 Doris 安装部署、启停、创建库表、数据导入及查询，完整的体验了Doris的操作流程，下面开始我们 Doris 使用之旅吧。
+到这里我们整个快速开始就结束了，我们从 Doris 安装部署、启停、创建库表、数据导入及查询，完整的体验了 Doris 的操作流程，下面开始我们 Doris 使用之旅吧。

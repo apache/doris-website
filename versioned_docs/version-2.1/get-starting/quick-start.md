@@ -112,7 +112,7 @@ You can see the following screen, which indicates that the FE has started succes
 
 #### Connect FE
 
-We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)
+We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://dev.mysql.com/downloads/mysql/)
 
 Unzip the MySQL client you just downloaded. You can find the `mysql` command line tool in the `bin/` directory. Execute the following command to connect to Doris.
 

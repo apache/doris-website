@@ -102,7 +102,7 @@ server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 
 ### Connect to Doris FE
 
-Download the [portable MySQL client](https://doris-build-hk.oss-cn-hongkong.aliyuncs.com/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz) to connect to Doris FE.
+Download the [portable MySQL client](https://dev.mysql.com/downloads/mysql/) to connect to Doris FE.
 
 Unpack the client, find the `mysql` command-line tool in the `bin/` directory. Then execute the following command to connect to Doris.
 
