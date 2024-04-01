@@ -528,6 +528,8 @@
                                 "sql-manual/sql-functions/string-functions/convert-to",
                                 "sql-manual/sql-functions/string-functions/extract-url-parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
+                                "sql-manual/sql-functions/string-functions/uuid-to-int",
+                                "sql-manual/sql-functions/string-functions/int-to-uuid",
                                 "sql-manual/sql-functions/string-functions/space",
                                 "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
