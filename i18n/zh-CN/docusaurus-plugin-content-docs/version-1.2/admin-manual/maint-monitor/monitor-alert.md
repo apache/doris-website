@@ -52,7 +52,7 @@ Doris 使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.
     
     Grafana 是一款开源的数据分析和展示平台。支持包括 Prometheus 在内的多个主流时序数据库源。通过对应的数据库查询语句，从数据源中获取展现数据。通过灵活可配置的 Dashboard，快速的将这些数据以图表的形式展示给用户。
 
-> 注: 本文档仅提供一种使用 Prometheus 和 Grafana 进行 Doris 监控数据采集和展示的方式。原则上不开发、维护这些组件。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。
+> 注：本文档仅提供一种使用 Prometheus 和 Grafana 进行 Doris 监控数据采集和展示的方式。原则上不开发、维护这些组件。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。
 
 ## 监控数据
 
@@ -136,7 +136,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 ### Prometheus
 
-1. 在 [Prometheus 官网](https://prometheus.io/download/) 下载最新版本的 Prometheus 或者直接[点击下载](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/prometheus-2.43.0.linux-amd64.tar.gz)。这里我们以 2.43.0-linux-amd64 版本为例。
+1. 在 [Prometheus 官网](https://prometheus.io/download/) 下载最新版本的 Prometheus。这里我们以 2.43.0-linux-amd64 版本为例。
 2. 在准备运行监控服务的机器上，解压下载后的 tar 文件。
 3. 打开配置文件 prometheus.yml。这里我们提供一个示例配置并加以说明（配置文件为 yml 格式，一定注意统一的缩进和空格）：
 
@@ -203,7 +203,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 ### Grafana
 
-1. 在 [Grafana 官网](https://grafana.com/grafana/download) 下载最新版本的 Grafana 或者直接[点击下载](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/grafana-enterprise-8.5.22.linux-amd64.tar.gz)。这里我们以 8.5.22.linux-amd64 版本为例。
+1. 在 [Grafana 官网](https://grafana.com/grafana/download) 下载最新版本的 Grafana。这里我们以 8.5.22.linux-amd64 版本为例。
 
 2. 在准备运行监控服务的机器上，解压下载后的 tar 文件。
 
@@ -300,7 +300,7 @@ jvm_heap_size_bytes{type="used"} 156375280
     2. 点击下方的图例，可以单独查看某一监控项。再次点击，则显示所有。
     3. 在图表中拖拽可以选定时间范围。
     4. 标题的 [] 中显示选定的集群名称。
-    5. 一些数值对应左边的Y轴，一些对应右边的，可以通过图例末尾的 `-right` 区分。
+    5. 一些数值对应左边的 Y 轴，一些对应右边的，可以通过图例末尾的 `-right` 区分。
     6. 点击图表名称->`Edit`，可以对图表进行编辑。
 
 ## Dashboard 更新

@@ -144,7 +144,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 ### Prometheus
 
-1. 在 [Prometheus 官网](https://prometheus.io/download/) 下载最新版本的 Prometheus 或者直接[点击下载](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/prometheus-2.43.0.linux-amd64.tar.gz)。这里我们以 2.43.0-linux-amd64 版本为例。
+1. 在 [Prometheus 官网](https://prometheus.io/download/) 下载最新版本的 Prometheus。这里我们以 2.43.0-linux-amd64 版本为例。
 
 2. 在准备运行监控服务的机器上，解压下载后的 tar 文件。
 
@@ -213,7 +213,7 @@ jvm_heap_size_bytes{type="used"} 156375280
 
 ### Grafana
 
-1. 在 [Grafana 官网](https://grafana.com/grafana/download) 下载最新版本的 Grafana 或者直接[点击下载](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/grafana-enterprise-8.5.22.linux-amd64.tar.gz)。这里我们以 8.5.22.linux-amd64 版本为例。
+1. 在 [Grafana 官网](https://grafana.com/grafana/download) 下载最新版本的 Grafana。这里我们以 8.5.22.linux-amd64 版本为例。
 
 2. 在准备运行监控服务的机器上，解压下载后的 tar 文件。
 
