@@ -1443,7 +1443,8 @@
             "label": "Benchmark",
             "items": [
                 "benchmark/ssb",
-                "benchmark/tpch"
+                "benchmark/tpch",
+                "benchmark/tpcds"
             ]
         },
         {
