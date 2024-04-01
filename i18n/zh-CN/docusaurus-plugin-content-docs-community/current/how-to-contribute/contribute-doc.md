@@ -1,6 +1,6 @@
 ---
 {
-    "title": "文档贡献",
+    "title": "文档贡献指南",
     "language": "zh-CN"
 }
 ---
@@ -24,264 +24,356 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris 文档贡献
+本篇文档贡献指南主要介绍 Doris 的文档如何修改与贡献。**不论是历史版本的文档或最新版本文档，皆在 [apache/doris-website](https://github.com/apache/doris-website) 代码库上提交 PR 修改。**
 
-这里我们主要介绍 Doris 的文档怎么修改和贡献，
+:::tip
 
-怎么去提交你的文档修改，请参照
+PR 提交指南还可以参考：
 
-[为 Doris 做贡献](./)
+- [为 Doris 做贡献](https://doris.apache.org/zh-CN/community/how-to-contribute/)
 
-[代码提交指南](./pull-request.md)
+- [代码提交指南](https://doris.apache.org/zh-CN/community/how-to-contribute/pull-request)
+:::
 
-历史版本的文档，直接在 [apache/doris-website](https://github.com/apache/doris-website) 上提交 PR 即可，如果是最新版本的，需要在 [apache/doris-website](https://github.com/apache/doris-website)  和 [apache/doris](https://github.com/apache/doris)  代码库上同时提交修改。
-
-下面介绍 Doris Website站点的目录结构，以方便用户修改提交文档
 
 ## Doris Website 目录结构
 
-```
+```Plain
 .
-├── README.md
-├── babel.config.js
 ├── blog
-│   ├── 1.1 Release.md
-│   ├── Annoucing.md
-│   ├── jd.md
-│   ├── meituan.md
-│   ├── release-note-0.15.0.md
-│   ├── release-note-1.0.0.md
-│   └── xiaomi.md
-├── build.sh
+│   ├── 1.1 Release.md
+│   ├── Annoucing.md
+│   ├── jd.md
+│   ├── meituan.md
+│   ├── release-note-0.15.0.md
+│   ├── release-note-1.0.0.md
+│   └── xiaomi.md
 ├── community
-│   ├── design
-│   │   ├── Flink-doris-connector-Design.md
-│   │   ├── doris_storage_optimization.md
-│   │   ├── grouping_sets_design.md
-│   │   └── metadata-design.md
-│   ├── ......
+│   ├── design
+│   │   ├── spark_load.md
+│   │   ├── doris_storage_optimization.md
+│   │   ├── grouping_sets_design.md
+│   │   └── metadata-design.md
+│   ├── ......
 ├── docs
-│   ├── admin-manual
-│   │   ├── cluster-management
-│   │   ├── config
-│   │   ├── data-admin
-│   │   ├── http-actions
-│   │   ├── maint-monitor
-│   │   ├── multi-tenant.md
-│   │   ├── optimization.md
-│   │   ├── privilege-ldap
-│   │   ├── query-profile.md
-│   │   └── sql-interception.md
-│   ├── ......
-├── docusaurus.config.js
+│   ├── admin-manual
+│   │   ├── cluster-management
+│   │   ├── config
+│   │   ├── data-admin
+│   │   ├── http-actions
+│   │   ├── maint-monitor
+│   │   ├── privilege-ldap
+│   │   ├── multi-tenant.md
+│   │   ├── optimization.md
+│   │   ├── query-profile.md
+│   │   └── sql-interception.md
+│   │   └── workload-group.md
+│   ├── ......
 ├── i18n
-│   └── zh-CN
-│       ├── code.json
-│       ├── docusaurus-plugin-content-blog
-│       ├── docusaurus-plugin-content-docs
-│       ├── docusaurus-plugin-content-docs-community
-│       └── docusaurus-theme-classic
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── current
+│       │   ├── version-1.2
+│       │   ├── version-2.0
+│       │   ├── version-2.1
+│       │   ├── current.json
+│       │   ├── version-1.2.json
+│       │   ├── version-2.0.json
+│       │   ├── version-2.1.json
+│       ├── docusaurus-plugin-content-docs-community
+│       └── local_build_docs.sh
+├── src
+│   ├── components
+│   │   ├── Icons
+│   │   ├── More
+│   │   ├── PageBanner
+│   │   └── PageColumn
+│   ├── ......
+├── static
+│   ├── images
+│   │   ├── Bloom_filter.svg.png
+│   │   ├── .....
+│   └── js
+│       └── redirect.js
+├── versioned_docs
+│   ├── version-1.2
+│   │   ├── admin-manual
+│   │   ├── advanced
+│   │   ├── benchmark
+│   │   ├── data-operate
+│   │   ├── data-table
+│   │   ├── ecosystem
+│   │   ├── faq
+│   │   ├── get-starting
+│   │   ├── install
+│   │   ├── lakehouse
+│   │   ├── query-acceleration
+│   │   ├── releasenotes
+│   │   └── sql-manual
+│   └── version-2.0
+│       ├── admin-manual
+│       ├── benchmark
+│       ├── data-operate
+│       ├── db-connect
+│       ├── ecosystem
+│       ├── faq
+│       ├── get-starting
+│       ├── install
+│       ├── lakehouse
+│       ├── query
+│       ├── releasenotes
+│       ├── sql-manual
+│       └── table-design
+└── version-2.1
+│       ├── admin-manual
+│       ├── advanced
+│       ├── benchmark
+│       ├── data-operate
+│       ├── data-table
+│       ├── ecosystem
+│       ├── faq
+│       ├── get-starting
+│       ├── install
+│       ├── lakehouse
+│       ├── query-acceleration
+│       ├── releasenotes
+│       └── sql-manual
+├── versioned_sidebars
+│   ├── version-1.2-sidebars.json
+│   └── version-2.0-sidebars.json
+│   └── version-2.1-sidebars.json
+├── babel.config.js
+├── build.sh
+├── buildVersions.sh
+├── docusaurus.config.js
 ├── package.json
+├── README.md
 ├── sidebars.json
 ├── sidebarsCommunity.json
-├── src
-│   ├── components
-│   │   ├── Icons
-│   │   ├── More
-│   │   ├── PageBanner
-│   │   └── PageColumn
-│   ├── ......
-├── static
-│   ├── images
-│   │   ├── Bloom_filter.svg.png
-│   │   ├── .....
-│   └── js
-│       └── redirect.js
 ├── tree.out
 ├── tsconfig.json
-├── versioned_docs
-│   ├── version-0.15
-│   │   ├── administrator-guide
-│   │   ├── best-practices
-│   │   ├── extending-doris
-│   │   ├── getting-started
-│   │   ├── installing
-│   │   ├── internal
-│   │   ├── sql-reference
-│   │   └── sql-reference-v2
-│   └── version-1.0
-│       ├── administrator-guide
-│       ├── benchmark
-│       ├── extending-doris
-│       ├── faq
-│       ├── getting-started
-│       ├── installing
-│       ├── internal
-│       ├── sql-reference
-│       └── sql-reference-v2
-├── versioned_sidebars
-│   ├── version-0.15-sidebars.json
-│   └── version-1.0-sidebars.json
 ├── versions.json
-
 ```
 
-目录结构说明：
+下面介绍 Doris Website 站点的各个目录结构，以方便用户找到对应根目录并提交修改文档。
 
-1. 博客目录
+### 01 博客目录
 
-   - 英文博客目录在根目录下的blog下面，所有博客的英文文件放到这个目录下
-   - 中文博客的目录在 `i18n/zh-CN/docusaurus-plugin-content-blog` 目录下，所有中文博客文件放到这个下面
-   - 中英文博客的文件名称要一致
+博客目录在根目录 `/blog` 下，所有博客 Markdown 文件放到该目录下。如果您感兴趣参与博客贡献或愿意分享技术心得，欢迎通过 dev@doris.apache.org 或直接提交 Blog PR 参与博客共建
 
-2. 文档内容目录
+### 02 文档目录
 
-   - 最新版本的英文文档内容在根目录下的docs下面
+- 当你需要**修改已有文档内容**时，需要**同时更新** Master 分支最新文档版本和相应的各版本（如 2.1、2.0、1.2 或多版本）；
 
-   - 英文文档的版本在根目录下的 `versioned_docs/` 下面
+- 当你需要**添加新文档**时，除了上传新的 Markdown 文件之外，还需要在文档目录结构中添加新文档链接路径；
 
-     - 这个目录只放历史版本的文档
+- 当你需要**新增文档目录栏**时，除了对目录结构进行调整，还需要对新增的目录栏进行中文翻译。
 
-       ```
-       .
-       ├── version-0.15
-       │   ├── administrator-guide
-       │   ├── best-practices
-       │   ├── extending-doris
-       │   ├── getting-started
-       │   ├── installing
-       │   ├── internal
-       │   ├── sql-reference
-       │   └── sql-reference-v2
-       └── version-1.0
-           ├── administrator-guide
-           ├── benchmark
-           ├── extending-doris
-           ├── faq
-           ├── getting-started
-           ├── installing
-           ├── internal
-           ├── sql-reference
-           └── sql-reference-v2
-       ```
+以下是需要进行修改的文件列表：
 
-     - 英文文档的版本控制在根目录下的 `versioned_sidebars` 下面
+1. **Markdown 文件：** 这是你新增的文档内容，你需要将其上传到相应的文件夹中，并在 Markdown 文件中编写具体的文档内容。
 
-       ```
-       .
-       ├── version-0.15-sidebars.json
-       └── version-1.0-sidebars.json
-       ```
+2. **Sidebar 文件：** 这是控制中英文文档的目录结构文件，你需要在其中添加新文档路径链接，以便在目录中正确显示新文档的位置。当前 Master 最新文档分支与各版本文档皆由不同的 Sidebar 文件控制，包括 `sidebar.json` / `version-2.0-sidebars.json` / `version-2.1-sidebars.json`
 
-       这里的 json 文件按照对应版本的目录结构进行编写
+3. **目录栏中文翻译文件：** 这是在新增文档目录栏后，控制目录栏在中文文档中的翻译文件。你需要按照正确的格式进行编辑，以确保目录栏名称正确显示。与 Sidebar 文件相同，当前 Master 最新文档分支与各版本文档由不同翻译文件控制，包括`current.json / version-1.2.json / version-2.0.json /version-2.1.json`
 
-   - 中文文档在 `i18n/zh-CN/docusaurus-plugin-content-docs`
 
-     - 在这个下面对应不同的版本目录及版本对应的 json 文件 ，如下效果
+:::caution 注意
 
-       current是当前最新版本的文档，示例中对应的是 1.1 版本，修改的时候，根据要修改的文档版本，在对应目录下找到相应的文件修改，提交即可。
+所有文档必须同时含有中文与英文文档，否则会造成目录结构不一致、中文文档无法显示等问题。这个适用于所有博客、文档、社区内容。
+:::
 
-       ```
-       .
-       ├── current
-       │   ├── admin-manual
-       │   ├── advanced
-       │   ├── benchmark
-       │   ├── data-operate
-       │   ├── data-table
-       │   ├── ecosystem
-       │   ├── faq
-       │   ├── get-starting
-       │   ├── install
-       │   ├── sql-manual
-       │   └── summary
-       ├── current.json
-       ├── version-0.15
-       │   ├── administrator-guide
-       │   ├── best-practices
-       │   ├── extending-doris
-       │   ├── getting-started
-       │   ├── installing
-       │   ├── internal
-       │   ├── sql-reference
-       │   └── sql-reference-v2
-       ├── version-0.15.json
-       ├── version-1.0
-       │   ├── administrator-guide
-       │   ├── benchmark
-       │   ├── extending-doris
-       │   ├── faq
-       │   ├── getting-started
-       │   ├── installing
-       │   ├── internal
-       │   ├── sql-reference
-       │   └── sql-reference-v2
-       └── version-1.0.json
-       ```
 
-     - Version Json 文件
+下面将介绍各版本文档如何进行内容修改、文档目录结构修改、目录栏中文翻译的操作。
 
-       Current.json 对应的是最新版本文档的中文翻译内容，例如：
+**Dev 版本：为 Doris 最新 Master 分支文档。**
 
-       ```
-       {
-         "version.label": {
-           "message": "1.1",
-           "description": "The label for version current"
-         },
-         "sidebar.docs.category.Getting Started": {
-           "message": "快速开始",
-           "description": "The label for category Getting Started in sidebar docs"
+**1. 内容修改**
+
+该版本的英文文档在根目录 `docs` 下进行修改
+
+```Plain
+.
+├── docs
+│   ├── admin-manual
+│   ├── ......
+```
+
+中文文档在根目录 `i18n / zh-CN / docusaurus-plugin-content-docs / current`下进行修改
+
+```Plain
+.
+├── docs
+├── i18n
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── current
+│       │   │    ├── admin-manual
+│       │   │    ├── ......
+```
+
+**2. 文档目录结构**
+
+Dev 版本中英文文档统一由根目录下 `sidebar.json`进行控制。
+
+```Plain
+.
+├── docs
+│   ├── admin-manua
+│   ├── ......
+├── i18n
+├── src
+├── static
+├── versioned_docs
+├── versioned_sidebars
+├── sidebars.json
+```
+
+`sidebar.json` 示例如下：
+
+```JSON
+{
+    "docs": [
+            {
+                "type": "category",
+                "label": "Getting Started",
+                "items": [
+                    "get-starting/quick-start",
+                    "get-starting/what-is-apache-doris"
+                ]
+            },
+            {
+                "type": "category",
+                "label": "Install and Deploy",
+                "items": [
+                    "install/standard-deployment",
+                    {
+                        "type": "category",
+                        "label": "Docker Deployment",
+                        "items": [
+                            "install/construct-docker/build-docker-image",
+                            "install/construct-docker/run-docker-cluster"
+                        ]
+             }
+             ......
          }
-         .....
-       }
-       ```
+     ]
+ }
+```
 
-       这里的 `sidebar.docs.category.Getting Started` 和根目录下的 `sidebars.json`  里的 `label` 对应
+**3. 文档目录栏中文翻译**
 
-       例如刚才这个 `sidebar.docs.category.Getting Started` ，是由 `sidebar` 前缀和 `sidebars.json` 里面的结构对应的
+Dev 版本的目录栏中文翻译文件在根目录`i18n / zh-CN / docusaurus-plugin-content-docs / current.json `中。
 
-       首先是 `sidebar + "." + docs +  ".'" + [ type ] + [ label ] ` 组成.
+以文档目录“快速开始”为例：
 
-       ```json
-       {
-           "docs": [
-               {
-                   "type": "category",
-                   "label": "Getting Started",
-                   "items": [
-                       "get-starting/get-starting"
-                   ]
-               },
-               {
-                   "type": "category",
-                   "label": "Doris Introduction",
-                   "items": [
-                       "summary/basic-summary"
-                   ]
-               }
-             .....
-       }
-       ```
+- 这里的 `sidebar.docs.category.Getting Started` 与目录下的 `sidebars.json` 里的 `label`层级对应
+- 编写格式为：sidebar + "." + docs + "." + [type] + [label]
 
-     - 在中文的 version json 文件中支持 label 的翻译，不需要描述文档层级关系，文档层级关系是在 `sidebar.json` 文件里描述的
+```JSON
+{
+      "version.label": {
+        "message": "dev",
+        "description": "The label for version current"
+      },
+      "sidebar.docs.category.Getting Started": {
+        "message": "快速开始",
+        "description": "The label for category Getting Started in sidebar docs"
+      },
+      ......
+  }
+{
+    "docs": [
+            {
+                "type": "category",
+                "label": "Getting Started",
+                "items": [
+                    "get-starting/quick-start",
+                    "get-starting/what-is-apache-doris"
+                ]
+            },
+            ......
+         }
+     ]
+ }
+```
 
-     - 所有的文档必须有英文的，中文才能显示，如果英文没写，可以创建一个空文件，不然中文文档也显示不出来，这个适用于所有博客、文档、社区内容
+**2.1 / 2.0 /1.2 版本**
 
-3. 社区文档
+**1. 内容修改**
 
-   这块的文档不区分版本，是通用的
+- 2.1 版本的英文文档在根目录 `/versioned_docs/version-2.1` 下，中文文档在根目录 `i18n / zh-CN / docusaurus-plugin-content-docs / version-2.1`下
 
-   - 英文文档在根目录下的 `community/` 目录下面。
+- 2.0 版本的英文文档在根目录 `/versioned_docs / version-2.0` 下，中文文档在根目录 `i18n / zh-CN / docusaurus-plugin-content-docs / version-2.0 ` 下
 
-   - 中文文档在  `i18n/zh-CN/docusaurus-plugin-content-docs-community/` 目录下面。
+- 1.2 版本的英文文档在根目录 `/versioned_docs / version-1.2` 下，中文文档在根目录 `i18n / zh-CN / docusaurus-plugin-content-docs / version-1.2`下
 
-   - 社区文档的目录结构控制在根目录下的 `sidebarsCommunity.json` 文件中，
+```Plain
+.
+├── blog
+├── community
+├── docs
+├── i18n
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── current
+│       │   ├── version-1.2
+│       │   ├── version-2.0
+│       │   ├── version-2.1
+├── versioned_docs
+│   ├── version-1.2
+│   ├── version-2.0
+│   ├── version-2.1
+```
 
-   - 社区文档目录结构对应的中文翻译在 `i18n/zh-CN/docusaurus-plugin-content-docs-community/current.json` 文件中
+**1. 文档目录结构**
 
-     ```json
-     {
+各版本中英文文档统一由根目录下的 `version-X.X-sidebars.json`进行控制。
+
+```Plain
+.
+├── blog
+├── community
+├── docs
+├── i18n
+├── versioned_docs
+├── versioned_sidebars
+│   ├── version-1.2-sidebars.json
+│   └── version-2.0-sidebars.json
+│   └── version-2.1-sidebars.json
+```
+
+各版本 Sidebar 层级修改与上文 Dev 版本修改基本一致，在此不进行举例说明。
+
+**2. 目录栏中文翻译**
+
+各版本目录栏的中文翻译文件统一在根目录`i18n / zh-CN / docusaurus-plugin-content-docs / version-X.X.json `中。
+
+```Plain
+├── i18n
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── version-1.2.json
+│       │   ├── version-2.0.json
+│       │   ├── version-2.1.json
+```
+
+各版本中文文档 `label` 翻译与上文 Dev 版本修改基本一致，在此不进行举例说明
+
+### 03 社区文档目录
+
+社区文档当前为通用版，不区分版本。
+
+1. 英文文档在根目录下的 `community/` 目录下面。
+
+2. 中文文档在  `i18n/zh-CN/docusaurus-plugin-content-docs-community/` 目录下面。
+
+3. 社区文档的目录结构在根目录下的 `sidebarsCommunity.json` 文件中
+
+4. 社区文档的目录栏中文翻译文件在 `i18n/zh-CN/docusaurus-plugin-content-docs-community/current.json`中
+
+```JSON
+        {
        "version.label": {
          "message": "Next",
          "description": "The label for version current"
@@ -303,24 +395,31 @@ under the License.
          "description": "The label for category Developer Guide in sidebar community"
        }
      }
-     ```
+```
 
-4. 图片
+### 04 图片目录
 
-   所有图片都在 `static/images `目录下面
+1. 所有图片都在 `static/images `目录下
 
-## 如何编写命令帮助手册
+2. 图片引用路径格式为 `![文本描述](/images/图片名称.图片格式)`
+   
+   - 文本描述：根据图片内容自定义，建议文本描述就近引用该图片所在的标题内容
+   
+   - 图片名称：文件名由多个英文单词组成时，单词中间**由短划线“-”隔开**
 
-命令帮助手册文档，是指在 `docs/sql-manual` 下的文档。这些文档用于两个地方：
+## **如何编写命令帮助手册**
+
+命令帮助手册文档，是指在 Master 分支与各版本文档 `/sql-manual` 下的文档。这些文档主要用于两个地方：
 
 1. 官网文档展示。
+
 2. HELP 命令的输出。
 
-为了支持 HELP 命令输出，这些文档需要严格按照以下格式排版编写，否则无法通过准入检查。
+为了支持 HELP 命令输出，文档需要严格按照以下格式排版编写，否则无法通过准入检查。
 
 以 `SHOW ALTER` 命令示例如下：
 
-```
+```markdown
 ---
 {
     "title": "SHOW-ALTER",
@@ -368,126 +467,9 @@ SHOW, ALTER
 ### Best Practice
 
 （最佳实践（如有））
-
 ```
 
-注意，不论中文还是英文文档，以上标题都是用英文，并且注意标题的层级。
-
-## 文档多版本
-
-网站文档支持通过 html 标签标记版本。可以通过 `<version>` 标签标记文档中的某段内容是从哪个版本开始的，或者从哪个版本移除。
-
-### 参数介绍
-
-| 参数 | 说明 | 值 |
-|---|---|---|
-| since | 从该版本支持 | 版本号 |
-| deprecated | 从该版本移除 | 版本号 |
-| comment | 注释 |  |
-| type | 有默认和行内两种样式 | 不传值表示默认样式，传inline表示行内样式 |
-
-注意：`<version>` 标签前后要有空行，避免样式渲染异常。
-
-### 单标签
-
-```
-
-<version since="1.1">
-
-Apache Doris was first born as Palo project for Baidu's ad reporting business,
- officially open-sourced in 2017, donated by Baidu to the Apache Foundation 
- for incubation in July 2018, and then incubated and operated by members of 
- the incubator project management committee under the guidance of 
- Apache mentors. Currently, the Apache Doris community has gathered 
- more than 300 contributors from nearly 100 companies in different 
- industries, and the number of active contributors is close to 100 per month. 
- Apache Doris has graduated from Apache incubator successfully and 
- become a Top-Level Project in June 2022.
-
-</version>
-
-```
-
-渲染样式：
-
-<version since="1.1">
-
-Apache Doris was first born as Palo project for Baidu's ad reporting business,
- officially open-sourced in 2017, donated by Baidu to the Apache Foundation 
- for incubation in July 2018, and then incubated and operated by members of 
- the incubator project management committee under the guidance of 
- Apache mentors. Currently, the Apache Doris community has gathered 
- more than 300 contributors from nearly 100 companies in different 
- industries, and the number of active contributors is close to 100 per month. 
- Apache Doris has graduated from Apache incubator successfully and 
- become a Top-Level Project in June 2022.
-
-</version>
-
-### 多标签
-
-```
-
-<version since="1.2" deprecated="1.5">
-
-# Usage Scenarios
-
-As shown in the figure below, after various data integration and processing, the data sources are usually stored in the real-time data warehouse Doris and the offline data lake or data warehouse (in Apache Hive, Apache Iceberg or Apache Hudi).
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sekvbs5ih5rb16wz6n9k.png)
-
-Apache Doris is widely used in the following scenarios:
-
-</version>
-
-```
-
-渲染样式：
-
-<version since="1.2" deprecated="1.5">
-
-# Usage Scenarios
-
-As shown in the figure below, after various data integration and processing, the data sources are usually stored in the real-time data warehouse Doris and the offline data lake or data warehouse (in Apache Hive, Apache Iceberg or Apache Hudi).
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sekvbs5ih5rb16wz6n9k.png)
-
-Apache Doris is widely used in the following scenarios:
-
-</version>
-
-### 包含注释
-
-```
-
-<version since="1.3" comment="This is comment, Both types of processes are horizontally scalable, and a single cluster can support up to hundreds of machines and tens of petabytes of storage capacity. ">
-
--   Frontend（FE）: It is mainly responsible for user request access, query parsing and planning, management of metadata, and node management-related work.
--   Backend（BE）: It is mainly responsible for data storage and query plan execution.
-
-Both types of processes are horizontally scalable, and a single cluster can support up to hundreds of machines and tens of petabytes of storage capacity. And these two types of processes guarantee high availability of services and high reliability of data through consistency protocols. This highly integrated architecture design greatly reduces the operation and maintenance cost of a distributed system.
-
-</version>
-
-```
-
-渲染样式：
-
-<version since="1.3" comment="This is comment, Both types of processes are horizontally scalable, and a single cluster can support up to hundreds of machines and tens of petabytes of storage capacity. ">
-
--   Frontend（FE）: It is mainly responsible for user request access, query parsing and planning, management of metadata, and node management-related work.
--   Backend（BE）: It is mainly responsible for data storage and query plan execution.
-
-Both types of processes are horizontally scalable, and a single cluster can support up to hundreds of machines and tens of petabytes of storage capacity. And these two types of processes guarantee high availability of services and high reliability of data through consistency protocols. This highly integrated architecture design greatly reduces the operation and maintenance cost of a distributed system.
-
-</version>
-
-### 行内标签
-
-```
-In terms of the storage engine, Doris uses columnar storage to encode and compress and read data by column, <version since="1.0" type="inline" > enabling a very high compression ratio while reducing a large number of scans of non-relevant data,</version> thus making more efficient use of IO and CPU resources.
-```
-
-渲染样式：
-
-In terms of the storage engine, Doris uses columnar storage to encode and compress and read data by column, <version since="1.0" type="inline" > enabling a very high compression ratio while reducing a large number of scans of non-relevant data,</version> thus making more efficient use of IO and CPU resources.
-
+:::caution 注意
+不论中文还是英文文档，以上标题都需使用英文，并且注意标题的层级。
+:::
 

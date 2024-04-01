@@ -39,25 +39,7 @@ When a Flink job starts, the Connector automatically checks for data equivalence
 
 ## Quick Start
 
-**For MySQL**:
-
-Download JAR file: https://github.com/apache/doris-flink-connector/releases/tag/1.4.0
-
-Maven: 
-
-```SQL
-<dependency>
-  <groupId>org.apache.doris</groupId>
-  <artifactId>flink-doris-connector-1.15</artifactId>
-  <!--artifactId>flink-doris-connector-1.16</artifactId-->
-  <!--artifactId>flink-doris-connector-1.17</artifactId-->
-  <version>1.4.0</version>
-</dependency>
-```
-
-**For Oracle**:
-
-Download JAR file: [Flink 1.15](http://justtmp-bj-1308700295.cos.ap-beijing.myqcloud.com/oracle/flink-doris-connector-1.15-1.5.0-SNAPSHOT.jar), [Flink 1.16](http://justtmp-bj-1308700295.cos.ap-beijing.myqcloud.com/oracle/flink-doris-connector-1.16-1.5.0-SNAPSHOT.jar), [Flink 1.17](http://justtmp-bj-1308700295.cos.ap-beijing.myqcloud.com/oracle/flink-doris-connector-1.17-1.5.0-SNAPSHOT.jar)
+Download Flink Doris Connector: https://doris.apache.org/download/
 
 ## How to Use It
 

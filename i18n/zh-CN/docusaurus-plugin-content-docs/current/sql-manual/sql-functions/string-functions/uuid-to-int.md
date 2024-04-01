@@ -1,7 +1,7 @@
 ---
 {
-  "title": "How to share blogs", 
-  "language": "en"
+    "title": "UUID_TO_INT",
+    "language": "zh-CN"
 }
 ---
 
@@ -16,7 +16,7 @@ with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, 
+Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, either express or implied.  See the License for the
@@ -24,16 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# How to share a blog
+## uuid_to_int
 
-The Doris community welcomes the sharing of Doris-related articles. Once merged, these articles will appear on the official Doris website.
+### description
 
-Articles include, but are not limited to.
+`LARGEINT uuid_to_int(VARCHAR uuid)`
 
-* Doris usage tips
-* Introduction to Doris features
-* Doris system tuning
-* How Doris works
-* Doris business scenarios in practice
+对于输入的 uuid 字符串，返回一个 int128 表示。
 
-For details, please go to: https://github.com/apache/doris-website [README](https://github.com/apache/doris-website)
+### example
+
+```sql
+mysql> select uuid_to_int("6ce4766f-6783-4b30-b357-bba1c7600348");
++-----------------------------------------------------+
+| uuid_to_int('6ce4766f-6783-4b30-b357-bba1c7600348') |
++-----------------------------------------------------+
+| 95721955514869408091759290071393952876              |
++-----------------------------------------------------+
+```
+
+### keywords
+    UUID_TO_INT

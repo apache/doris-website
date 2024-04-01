@@ -1,7 +1,6 @@
 {
     "community": [
         "join-community",
-        "team",
         "subscribe-mail-list",
         "feedback",
         "doris-future",
@@ -13,8 +12,11 @@
                 "how-to-contribute/contributor-guide",
                 "how-to-contribute/how-to-be-a-committer",
                 "how-to-contribute/commit-format-specification",
+                "how-to-contribute/docs-format-specification",
                 "how-to-contribute/pull-request",
-                "how-to-contribute/contribute-doc"
+                "how-to-contribute/contribute-doc",
+                "how-to-contribute/how-to-share-blogs",
+                "how-to-contribute/trino-connector-developer-guide"
             ]
         },
         {
@@ -65,16 +67,16 @@
                 "developer-guide/java-format-code",
                 "developer-guide/cpp-format-code",
                 "developer-guide/cpp-diagnostic-code",
-                "developer-guide/how-to-share-blogs",
                 "developer-guide/bitmap-hll-file-format",
                 "developer-guide/github-checks",
                 "developer-guide/regression-testing"
             ]
         },
+        "team",
         {
             "type": "link",
             "href": "https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals",
-            "label" : "Improvement Proposals"
+            "label": "Improvement Proposals"
         }
     ]
 }

@@ -39,8 +39,11 @@ Any questions, you can contact us to get timely answers, including Wechat, Gitte
 For the first time in Doris community, you can:
 
 * Follow [Doris Github](https://github.com/apache/doris)
+
 * Subscribe to our [mailing list](../subscribe-mail-list.md);
+
 * Join Doris Wechat Group (add WeChat-ID: morningman-cmy, note: join Doris Group) and ask questions at any time.
+
 * Enter Doris's [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-11jb8gesh-7IukzSrdea6mqoG0HB4gZg)
 
 Learn the development trends of Doris project in time and give your opinions on the topics you are concerned about.
@@ -64,11 +67,15 @@ As you can see from [GitHub](https://github.com/apache/doris), Apache Doris (inc
 
 Documentation is the most important way for you to understand Apache Doris, and it's where we need help most!
 
-Browse the document, you can deepen your understanding of Doris, can also help you understand Doris's function and technical details, if you find that the document has problems, please contact us in time;
+Browsing the document, you can deepen your understanding of Doris,and can also help you understand Doris's function and technical details. If you find that the document has problems, please contact us anytime;
 
 If you are interested in improving the quality of documents, whether it is revising the address of a page, correcting a link, and writing a better introductory document, we are very welcome!
 
-Most of our documents are written in markdown format, and you can modify and submit document changes directly through `docs/` in [GitHub](https://github.com/apache/doris). If you submit code changes, you can refer to [Pull Request](./pull-request.md).
+Most of our documents are written in markdown format, and you can modify and submit document changes directly through [apache/doris-website](https://github.com/apache/doris-website) . 
+
+If you are committing a document change, you can refer to the [Docs Contribute](https://doris.apache.org/community/how-to-contribute/contribute-doc)
+
+If you submit code changes, you can refer to [Pull Request](https://doris.apache.org/community/how-to-contribute/pull-request).
 
 ## If a Bug or problem is found
 
@@ -78,7 +85,7 @@ You can also fix it yourself by reading the analysis code (of course, it's bette
 
 ## Modify the code and submit PR (Pull Request)
 
-You can download the code, compile and install it, deploy and run it for a try (refer to the [compilation document](/docs/dev/install/source-install/compilation-general) to see if it works as you expected. If you have problems, you can contact us directly, ask questions or fix them by reading and analyzing the source code.
+You can download the code, compile and install it, deploy and run it for a try (refer to the [compilation document](/docs/dev/install/source-install/compilation-general)) to see if it works as you expected. If you have problems, you can contact us directly, ask questions or fix them by reading and analyzing the source code.
 
 Whether it's fixing Bugs or adding Features, we're all very welcome. If you want to submit code to Doris, you need to create a new branch for your submitted code from the fork code library on GitHub to your project space, add the source project upstream, and submit PR.
 

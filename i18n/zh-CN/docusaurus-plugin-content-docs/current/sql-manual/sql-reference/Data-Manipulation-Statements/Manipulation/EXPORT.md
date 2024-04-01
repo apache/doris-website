@@ -92,7 +92,7 @@ EXPORT
 
   - `with_bom`: 默认为false，若指定为true，则导出的文件编码为带有BOM的UTF8编码（只对csv相关的文件格式生效）。
 
-  - `data_consistency`: 可以设置为 `none` / `partition` ，默认为 `none` 。指示以何种粒度切分导出表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
+  - `data_consistency`: 可以设置为 `none` / `partition` ，默认为 `partition` 。指示以何种粒度切分导出表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
 
   - `timeout`：导出作业的超时时间，默认为2小时，单位是秒。
 
@@ -336,7 +336,7 @@ WITH BROKER "broker_name"
 
 #### 并发执行
 
-一个 Export 作业可以设置`parallelism`参数来并发导出数据。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。每一个线程会负责导出表的部分Tablets。
+一个 Export 作业可以设置`parallelism`参数来并发导出数据。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。当设置`"data_consistency" = "none"`时，每一个线程会负责导出表的部分Tablets。
 
 一个 Export 作业的底层执行逻辑实际上是`SELECT INTO OUTFILE`语句，`parallelism`参数设置的每一个线程都会去执行独立的`SELECT INTO OUTFILE`语句。
 
