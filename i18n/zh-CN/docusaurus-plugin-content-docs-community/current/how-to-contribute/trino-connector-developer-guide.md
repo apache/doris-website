@@ -37,7 +37,7 @@ Trino Connector 兼容框架的目的在于帮助 Doris 快速对接更多的数
 
 下面以 Trino 的 Kafka Connector 插件为例，详细介绍如何在 Doris 中适配 Trino 的 Kafka Connector 插件，然后通过 Doris 的 `Trino-Connector` Catalog 功能访问 Kafka 数据源。
 
-> 注：Trino 是一款由 [Trino 软件基金会](https://trino.io/foundation) 提供的 Apache License 2.0 协议开源软件，详情可访问 [Trino 官网](https://github.com/apache/doris-website/pull/trino.io)。
+> 注：Trino 是一款由 [Trino 软件基金会](https://trino.io/foundation) 提供的 Apache License 2.0 协议开源软件，详情可访问 [Trino 官网](https://trino.io/docs/current/)。
 
 ## 步骤一：编译 Kakfa Connector 插件
 

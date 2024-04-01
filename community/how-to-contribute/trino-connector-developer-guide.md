@@ -39,7 +39,7 @@ This article mainly introduces how to adapt a Trino Connector plugin in Doris.
 
 The following takes Trino's kafka Connector plugin as an example to introduce in detail how to adapt Trino's kafka Connector plugin in Doris, and then access the kafka data source through the `Trino-Connector` catalog function of Doris.
 
-> Note: Trino is an Apache License 2.0 protocol open source software provided by [Trino Software Foundation](https://trino.io/foundation). For details, please visit [Trino official website](https://github.com/apache/doris-website/pull/trino.io).
+> Note: Trino is an Apache License 2.0 protocol open source software provided by [Trino Software Foundation](https://trino.io/foundation). For details, please visit [Trino official website](https://trino.io/docs/current/).
 
 ## Step 1: Compile Kakfa connector plugin
 
