@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FE SSL certificate",
+    "title": "FE SSL Certificate",
     "language": "en"
 }
 ---

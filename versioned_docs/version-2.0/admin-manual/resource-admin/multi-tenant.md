@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Multi-tenancy",
+    "title": "Resource Group",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Multi-tenancy
+
 
 The main purpose of Doris's multi-tenant and resource isolation solution is to reduce interference between multiple users when performing data operations in the same Doris cluster, and to allocate cluster resources to each user more reasonably.
 
@@ -138,7 +138,10 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
     
     After the setting is complete, when user1 initiates a query on the UserTable table, it will only access the data copy on the nodes in the `group_a` resource group, and the query will only use the node computing resources in the `group_a` resource group. The query of user3 can use copies and computing resources in any resource group.
     
-    > Note: By default, the user's `resource_tags.location` attribute is empty. In versions prior to 2.0.2 (inclusive), by default, users are not restricted by tags and can use any resource group. After version 2.0.3, normal users can only use the `default` resource group by default. Root and Admin user can use any resource group.
+    :::tip Tip
+    
+    By default, the user's `resource_tags.location` attribute is empty. In versions prior to 2.0.2 (inclusive), by default, users are not restricted by tags and can use any resource group. After version 2.0.3, normal users can only use the `default` resource group by default. Root and Admin user can use any resource group.
+    :::
 
     In this way, we have achieved physical resource isolation for different user queries by dividing nodes and restricting user resource usage. Furthermore, we can create different users for different business departments and restrict each user from using different resource groups. In order to avoid the use of resource interference between different business parts. For example, there is a business table in the cluster that needs to be shared by all 9 business departments, but it is hoped that resource preemption between different departments can be avoided as much as possible. Then we can create 3 copies of this table and store them in 3 resource groups. Next, we create 9 users for 9 business departments, and limit the use of one resource group for every 3 users. In this way, the degree of competition for resources is reduced from 9 to 3.
     
@@ -147,11 +150,15 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
 4. Resource group assignments for load job
 
     The resource usage of load jobs (including insert, broker load, routine load, stream load, etc.) can be divided into two parts:
+
     1. Computing resources: responsible for reading data sources, data transformation and distribution.
+    
     2. Write resource: responsible for data encoding, compression and writing to disk.
 
     The write resource must be the node where the replica is located, and the computing resource can theoretically select any node to complete. Therefore, the allocation of resource groups for load jobs is divided into two steps:
+
     1. Use user-level resource tags to limit the resource groups that computing resources can use.
+    
     2. Use the resource tag of the replica to limit the resource group that the write resource can use.
 
     So if you want all the resources used by the load operation to be limited to the resource group where the data is located, you only need to set the resource tag of the user level to the same as the resource tag of the replica.
@@ -200,9 +207,13 @@ Through memory and CPU resource limits. We can divide user queries into more fin
 ### Tag division and CPU limitation are new features in version 0.15. In order to ensure a smooth upgrade from the old version, Doris has made the following forward compatibility:
 
 1. Each BE node will have a default Tag: `"tag.location": "default"`.
+
 2. The BE node added through the `alter system add backend` statement will also set Tag: `"tag.location": "default"` by default.
+
 2. The copy distribution of all tables is modified by default to: `"tag.location.default:xx`. xx is the number of original copies.
+
 3. Users can still specify the number of replicas in the table creation statement by `"replication_num" = "xx"`, this attribute will be automatically converted to: `"tag.location.default:xx`. This ensures that there is no need to modify the original creation. Table statement.
+
 4. By default, the memory limit for a single query is 2GB for a single node, and the CPU resources are unlimited, which is consistent with the original behavior. And the user's `resource_tags.location` attribute is empty, that is, by default, the user can access the BE of any Tag, which is consistent with the original behavior.
 
 Here we give an example of the steps to start using the resource division function after upgrading from the original cluster to version 0.15:
@@ -245,27 +256,27 @@ Through the above 4 steps, we can smoothly use the resource division function af
 
 ### How to conveniently set replica distribution strategies when there are many tables
 
-   For example, there is a db1 with four tables under it, and the replica distribution strategy required for table1 is `group_a:1,group_b:2`, the replica distribution strategy required for tables 2, 3, and 4 is `group_c:1,group_b:2`
+For example, there is a db1 with four tables under it, and the replica distribution strategy required for table1 is `group_a:1,group_b:2`, the replica distribution strategy required for tables 2, 3, and 4 is `group_c:1,group_b:2`
 
-   Then you can use the following statement to create db1:
-   
-   ```sql
-   CREATE DATABASE db1 PROPERTIES (
-   "replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
-   )
-   ```
+Then you can use the following statement to create db1:
 
-   Create table1 using the following statement:
-   
-   ```sql
-   CREATE TABLE table1
-   (k1 int, k2 int)
-   distributed by hash(k1) buckets 1
-   properties(
-   "replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
-   )
-   ```
+```sql
+CREATE DATABASE db1 PROPERTIES (
+"replication_allocation" = "tag.location.group_c:1, tag.location.group_b:2"
+)
+```
 
-   The table creation statements for table2, table3, and table4 do not need to specify `replication_allocation` again.
+Create table1 using the following statement:
 
-   Note: Changing the replica distribution policy of the database will not affect existing tables.
+```sql
+CREATE TABLE table1
+(k1 int, k2 int)
+distributed by hash(k1) buckets 1
+properties(
+"replication_allocation"="tag.location.group_a:1, tag.location.group_b:2"
+)
+```
+
+The table creation statements for table2, table3, and table4 do not need to specify `replication_allocation` again.
+
+Note: Changing the replica distribution policy of the database will not affect existing tables.
