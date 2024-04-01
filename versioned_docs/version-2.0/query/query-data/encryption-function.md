@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Encrption Function",
+    "title": "Encrption and Masking Function ",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compiling with LDB Toolchain",
+    "title": "Compiling with LDB Toolchain (Recommended)",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Compile with LDB-Toolchain (Recommended)
+
 
 This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help the developers and users without a Docker environment. The recommended LDB Toolchain version is 0.17, which includes clang-16 and gcc-11.
 
