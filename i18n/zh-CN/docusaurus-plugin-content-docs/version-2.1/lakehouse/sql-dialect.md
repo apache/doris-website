@@ -38,7 +38,12 @@ under the License.
 
 ## 部署服务
 
-**1. 下载最新版本的 [SQL 方言转换工具 (1.0.1)](https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/transform-doris-tool/doris-sql-convertor-1.0.1-bin-x86)**
+1. 下载最新版本的 [SQL 方言转换工具 (1.0.1)](https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/transform-doris-tool/doris-sql-convertor-1.0.1-bin-x86)
+
+    > 注：
+    >
+    > SQL 方言转换工具基于开源的 [SQLGlot](https://github.com/tobymao/sqlglot) 二次开发，关于 SQLGlot 可参阅 [SQLGlot 官网](https://sqlglot.com/sqlglot.html)
+
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
