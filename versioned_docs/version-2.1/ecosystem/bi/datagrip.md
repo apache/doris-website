@@ -37,14 +37,14 @@ You can visit www.jetbrains.com/datagrip/ to download and install DataGrip
 
 ## Add data source
 
-:::note
+:::info Note
 Currently verified using DataGrip version 2023.3.4
 :::
 
 1. Start DataGrip
 2. Click the plus sign (**+**) icon in the upper left corner of the DataGrip window and select the MySQL data source
 
-    ![image.png](/images/datagrip1.png)
+    ![add data source](/images/datagrip1.png)
 
 3. Configure Doris connection
 
@@ -60,29 +60,29 @@ Currently verified using DataGrip version 2023.3.4
     Database can be used to distinguish between internal catalog and external catalog. If only the Database name is filled in, the current data source will be connected to the internal catalog by default. If the format is catalog.db, the current data source will be connected to the catalog filled in Database by default, as shown in DataGrip The database table is also a database table in the connected catalog. In this way, you can use DataGrip's MySQL data source to create multiple Doris data sources to manage different Catalogs in Doris.
     :::
 
-    :::info
+    :::info Note
     Managing the external catalog connected to Doris through the Database form of catalog.db requires Doris version 2.1.0 and above.
     :::
 
   - internal catalog
 
-    ![image.png](/images/datagrip2.png)
+    ![connect internal catalog](/images/datagrip2.png)
 
   - external catalog
 
-    ![image.png](/images/datagrip3.png)
+    ![connect external catalog](/images/datagrip3.png)
 
 5. Test data source connection
 
     After filling in the connection information, click Test Connection in the lower left corner to verify the accuracy of the database connection information. If DBeaver returns the following pop-up window, the test connection is successful. Then click OK in the lower right corner to complete the connection configuration.
 
-   ![image.png](/images/datagrip4.png)
+   ![test connection](/images/datagrip4.png)
 
 6. Connect to database
 
     After the database connection is established, you can see the created data source connection in the database connection navigation on the left, and you can connect and manage the database through DataGrip.
 
-   ![image.png](/images/datagrip5.png)
+   ![create connection](/images/datagrip5.png)
 
 ## Function support
 

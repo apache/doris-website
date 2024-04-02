@@ -37,22 +37,22 @@ Apache Doris 高度兼容 MySQL 协议，可以使用 DBeaver 的 MySQL 驱动�
 
 ## 添加数据源
 
-:::note
+:::info 备注
 当前验证使用 DBeaver 24.0.0 版本
 :::
 
 1. 启动 DBeaver
 2. 在 DBeaver 窗口左上角单击加号 (**+**) 图标，或者在菜单栏选择 **Database > New Database Connection**，打开 **Connect to a database** 界面。
    
-    ![image.png](/images/dbeaver1.png)
+    ![添加连接 1](/images/dbeaver1.png)
 
-    ![image.png](/images/dbeaver2.png)
+    ![添加连接 2](/images/dbeaver2.png)
 
 3. 选择 MySQL 驱动器
 
     在 **Select your database** 窗口，选择 **MySQL** 。
 
-    ![image.png](/images/dbeaver3.png)
+    ![选择驱动](/images/dbeaver3.png)
 
 4. 配置 Doris 连接 
 
@@ -68,29 +68,29 @@ Apache Doris 高度兼容 MySQL 协议，可以使用 DBeaver 的 MySQL 驱动�
     Database 可以用于区别 internal catalog 和 external catalog，如仅填写 Database 名称，则当前数据源默认连接 internal catalog，如填写格式为 catalog.db，则当前数据源默认连接 Database 中所填写的 catalog，DBeaver 中展示的库表也为所连接 catalog 中的库表，因此可以使用 DBeaver 的 MySQL 驱动器来创建多个 Doris 数据源来管理 Doris 中不同的 Catalog。
     :::
 
-    :::info
+    :::info 备注
     通过 catalog.db 的 Database 形式来管理连接 Doris 的 external catalog 需要 Doris 版本在 2.1.0 及以上
     :::
 
   - internal catalog
 
-  ![image.png](/images/dbeaver4.png)
+  ![连接 internal catalog](/images/dbeaver4.png)
 
   - external catalog
 
-  ![image.png](/images/dbeaver5.png)
+  ![连接 external catalog](/images/dbeaver5.png)
 
 5. 测试数据源连接
 
     在填写完连接信息后，单击左下角 Test Connection 验证数据库连接信息的准确性。DBeaver 返回如下对话框，确认配置连接信息。单击 OK 即确认配置连接信息无误。然后单击右下角 Finish 完成连接配置。
 
-    ![image.png](/images/dbeaver6.png)
+    ![测试连接](/images/dbeaver6.png)
 
 6. 连接数据库
 
     数据库连接建立以后，可以在左侧的数据库连接导航看到已创建的数据源连接，并且可以通过 DBeaver 连接并管理数据库。
 
-    ![image.png](/images/dbeaver7.png)
+    ![建立连接](/images/dbeaver7.png)
 
 ## 功能支持
 

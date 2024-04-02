@@ -37,7 +37,7 @@ You can visit https://dbeaver.io to download and install DBeaver
 
 ## Add data source
 
-:::note
+:::info Note
 Currently verified using DBeaver version 24.0.0
 :::
 
@@ -45,15 +45,15 @@ Currently verified using DBeaver version 24.0.0
 
 2. Click the plus sign (**+**) icon in the upper left corner of the DBeaver window, or select **Database > New Database Connection** in the menu bar to open the **Connect to a database** interface.
    
-    ![image.png](/images/dbeaver1.png)
+    ![add connection 1](/images/dbeaver1.png)
 
-    ![image.png](/images/dbeaver2.png)
+    ![add connection 2](/images/dbeaver2.png)
 
 3. Select the MySQL driver
 
     In the **Select your database** window, select **MySQL**.
 
-    ![image.png](/images/dbeaver3.png)
+    ![chose driver](/images/dbeaver3.png)
 
 4. Configure Doris connection
 
@@ -69,24 +69,24 @@ Currently verified using DBeaver version 24.0.0
    Database can be used to distinguish between internal catalog and external catalog. If only the Database name is filled in, the current data source will be connected to the internal catalog by default. If the format is catalog.db, the current data source will be connected to the catalog filled in Database by default, as shown in DBeaver The database tables are also database tables in the connected catalog, so you can use DBeaver's MySQL driver to create multiple Doris data sources to manage different Catalogs in Doris.
    :::
 
-   :::info
+   :::info Note
    Managing the external catalog connected to Doris through the Database form of catalog.db requires Doris version 2.1.0 and above.
    :::
 
   - internal catalog
-    ![image.png](/images/dbeaver4.png)
+    ![connect internal catalog](/images/dbeaver4.png)
   - external catalog
-    ![image.png](/images/dbeaver5.png)
+    ![connect external catalog](/images/dbeaver5.png)
 
 5. Test data source connection
 
    After filling in the connection information, click Test Connection in the lower left corner to verify the accuracy of the database connection information. DBeaver returns to the following dialog box to confirm the configuration of the connection information. Click OK to confirm that the configured connection information is correct. Then click Finish in the lower right corner to complete the connection configuration.
-   ![image.png](/images/dbeaver6.png)
+   ![test connection](/images/dbeaver6.png)
 
 6. Connect to database
 
    After the database connection is established, you can see the created data source connection in the database connection navigation on the left, and you can connect and manage the database through DBeaver.
-   ![image.png](/images/dbeaver7.png)
+   ![create connection](/images/dbeaver7.png)
 
 ## Function support
 - fully support
