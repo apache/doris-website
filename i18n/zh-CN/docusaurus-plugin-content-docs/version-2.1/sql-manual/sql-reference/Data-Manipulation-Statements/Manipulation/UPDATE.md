@@ -39,30 +39,12 @@ UPDATE操作目前只支持更新Value列，Key列的更新可参考[使用Flink
 #### Syntax
 
 ```sql
-UPDATE target_table [table_alias]
-    SET assignment_list
-    WHERE condition
-
-assignment_list:
-    assignment [, assignment] ...
-
-assignment:
-    col_name = value
-
-value:
-    {expr | DEFAULT}
-```
-
-<version since="dev">
-
-```sql
+[cte]
 UPDATE target_table [table_alias]
     SET assignment_list
     [ FROM additional_tables]
     WHERE condition
 ```
-
-</version>
 
 #### Required Parameters
 
@@ -72,12 +54,9 @@ UPDATE target_table [table_alias]
 
 #### Optional Parameters
 
-<version since="dev">
-
++ cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + table_alias: 表的别名
 + FROM additional_tables: 指定一个或多个表，用于选中更新的行，或者获取更新的值。注意，如需要在此列表中再次使用目标表，需要为其显式指定别名。
-
-</version>
 
 #### Note
 
@@ -98,8 +77,6 @@ UPDATE test SET v1 = 1 WHERE k1=1 and k2=2;
 ```sql
 UPDATE test SET v1 = v1+1 WHERE k1=1;
 ```
-
-<version since="dev">
 
 3. 使用`t2`和`t3`表连接的结果，更新`t1`
 
@@ -158,7 +135,46 @@ UPDATE t1
 +----+----+----+--------+------------+
 ```
 
-</version>
+4. 使用 cte 更新表
+
+```sql
+create table orders(
+    o_orderkey bigint,
+    o_totalprice decimal(15, 2)
+) unique key(o_orderkey)
+distributed by hash(o_orderkey) buckets 1 
+properties (
+    "replication_num" = "1"
+);
+
+insert into orders values
+(1, 34.1),
+(2, 432.8);
+
+create table lineitem(
+    l_linenumber int,
+    o_orderkey bigint,
+    l_discount  decimal(15, 2)
+) unique key(l_linenumber)
+distributed by hash(l_linenumber) buckets 1 
+properties (
+    "replication_num" = "1"
+);
+
+insert into lineitem values
+(1, 1, 1.23),
+(2, 1, 3.21),
+(3, 2, 18.08),
+(4, 2, 23.48);
+
+with discount_orders as (
+    select * from orders 
+    where o_totalprice > 100
+)
+update lineitem  set l_discount = l_discount*0.9
+from discount_orders 
+where lineitem.o_orderkey = discount_orders.o_orderkey;
+```
 
 ### Keywords
 
