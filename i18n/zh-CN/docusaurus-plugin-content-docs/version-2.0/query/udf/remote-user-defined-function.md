@@ -1,6 +1,6 @@
 ---
 {
-    "title": "远程 UDF",
+    "title": "Remote UDF",
     "language": "zh-CN"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 远程 UDF
+## Remote UDF
 
 Remote UDF Service 支持通过 RPC 的方式访问用户提供的 UDF Service，以实现用户自定义函数的执行。相比于 Native 的 UDF 实现，Remote UDF Service 有如下优势和限制：
 

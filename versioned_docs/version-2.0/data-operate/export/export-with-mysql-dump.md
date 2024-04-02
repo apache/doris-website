@@ -1,6 +1,6 @@
 ---
 {
-"title": "Export Data or Table Structure with MYSQLDUMP ",
+"title": "Export Data or Table Structure with MySQL Dump ",
 "language": "en"
 }
 ---
