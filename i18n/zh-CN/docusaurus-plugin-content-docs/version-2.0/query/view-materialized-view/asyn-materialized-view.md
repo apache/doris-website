@@ -25,5 +25,5 @@ under the License.
 -->
 
 :::tip
-异步物化视图功能，在 Doris 2.1 发布，请参考 Doris 2.1 版本文档。
+异步物化视图功能，在 Doris 2.1 发布，请参考 [Doris 2.1 版本文档](https://doris.apache.org/zh-CN/docs/query-acceleration/async-materialized-view/)。
 :::

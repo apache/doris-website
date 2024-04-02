@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LDAP 打通",
+    "title": "基于 LDAP 的用户认证",
     "language": "zh-CN"
 }
 ---
