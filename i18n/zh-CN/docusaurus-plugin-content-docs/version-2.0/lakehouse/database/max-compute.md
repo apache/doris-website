@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Max Compute",
+    "title": "MaxCompute",
     "language": "zh-CN"
 }
 ---

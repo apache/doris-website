@@ -131,6 +131,10 @@
     "message": "生态扩展",
     "description": "The label for category Ecosystem in sidebar docs"
   },
+  "sidebar.docs.category.BI and Database IDE": {
+      "message": "BI 与数据库 IDE",
+      "description": "The label for category BI and Database IDE in sidebar docs"
+  },
   "sidebar.docs.category.Admin Manual": {
     "message": "管理指南",
     "description": "The label for category Admin Manual in sidebar docs"

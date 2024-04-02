@@ -203,6 +203,43 @@ The materialized view has a dedicated deletion syntax and cannot be deleted thro
 
 Specific syntax can be viewed [DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
 
+## Best Practice
+### When there are excessive partitions in the base table, the materialized view should only focus on the data from the most recent period.
+create table with 3 partitions
+```sql
+CREATE TABLE t1 (
+    `k1` INT,
+    `k2` DATE NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k1`)
+COMMENT 'OLAP'
+PARTITION BY range(`k2`)
+(
+PARTITION p26 VALUES [("2024-03-26"),("2024-03-27")),
+PARTITION p27 VALUES [("2024-03-27"),("2024-03-28")),
+PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
+)
+DISTRIBUTED BY HASH(`k1`) BUCKETS 2
+PROPERTIES (
+'replication_num' = '1'
+);
+```
+To create a materialized view that focuses only on the data from the most recent day, assuming the current time is 2024-03-28 xx:xx:xx, the materialized view would include only the partition ranging from ["2024-03-28") to ("2024-03-29"). This ensures that the materialized view contains data only for the latest day.
+```sql
+CREATE MATERIALIZED VIEW mv1
+BUILD DEFERRED REFRESH AUTO ON MANUAL
+partition by(`k2`)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES (
+'replication_num' = '1',
+'partition_sync_limit'='1',
+'partition_sync_time_unit'='DAY'
+)
+AS
+SELECT * FROM t1;
+```
+As another day passes and the current time becomes 2024-03-29 xx:xx:xx, a new partition is added to t1, ranging from ["2024-03-29") to ("2024-03-30"). If the materialized view is refreshed at this point, upon completion of the refresh, the materialized view will contain only this new partition, ranging from ["2024-03-29") to ("2024-03-30").
+
 ## The use of materialized views
 
 can be viewed [Query async materialized view](./query-async-materialized-view.md)

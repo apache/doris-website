@@ -68,6 +68,6 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 
 **After entering the pod, you need to modify the port information of the configuration file before you can manually start the corresponding Doris component.**
 
-- FE needs to modify the `http_port=8030` configuration with the default path: `/opt/apache-doris/fe/conf/fe.conf`.
-- BE needs to modify the `webserver_port=8040` configuration with the default path: `/opt/apache-doris/be/conf/be.conf`.
+- FE needs to modify the `query_port=9030` configuration with the default path: `/opt/apache-doris/fe/conf/fe.conf`.
+- BE needs to modify the `heartbeat_service_port=9050` configuration with the default path: `/opt/apache-doris/be/conf/be.conf`.
 

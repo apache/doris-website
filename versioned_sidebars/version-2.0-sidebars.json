@@ -481,9 +481,17 @@
                 "ecosystem/logstash",
                 "ecosystem/beats",
                 "ecosystem/cloudcanal",
-                "ecosystem/apache-superset",
                 "ecosystem/doris-streamloader",
-                "ecosystem/hive-bitmap-udf"
+                "ecosystem/hive-bitmap-udf",
+                {
+                    "type": "category",
+                    "label": "BI and Database IDE",
+                    "items": [
+                        "ecosystem/bi/apache-superset",
+                        "ecosystem/bi/dbeaver",
+                        "ecosystem/bi/datagrip"
+                    ]
+                }
             ]
         },
         {
@@ -1358,7 +1366,8 @@
             "label": "Benchmark",
             "items": [
                 "benchmark/ssb",
-                "benchmark/tpch"
+                "benchmark/tpch",
+                "benchmark/tpcds"
             ]
         },
         {

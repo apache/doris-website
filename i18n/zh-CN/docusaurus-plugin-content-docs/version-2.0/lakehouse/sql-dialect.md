@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SQL 方言兼容",
+    "title": "SQL 方言支持",
     "language": "zh-CN"
 }
 ---

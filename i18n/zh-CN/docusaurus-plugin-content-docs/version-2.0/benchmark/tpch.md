@@ -28,111 +28,77 @@ under the License.
 
 TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套面向业务的特别查询和并发数据修改组成。查询和填充数据库的数据具有广泛的行业相关性。这个基准测试演示了检查大量数据、执行高度复杂的查询并回答关键业务问题的决策支持系统。TPC-H 报告的性能指标称为 TPC-H 每小时复合查询性能指标 (QphH@Size)，反映了系统处理查询能力的多个方面。这些方面包括执行查询时所选择的数据库大小，由单个流提交查询时的查询处理能力，以及由多个并发用户提交查询时的查询吞吐量。
 
-本文档主要介绍 Doris 在 TPC-H 100G 测试集上的性能表现。
+本文档主要介绍 Doris 在 TPC-H 1000G 测试集上的性能表现。
 
-:::note
-- 注 1：包括 TPC-H 在内的标准测试集通常和实际业务场景差距较大，并且部分测试会针对测试集进行参数调优。所以标准测试集的测试结果仅能反映数据库在特定场景下的性能表现。建议用户使用实际业务数据进行进一步的测试。
-
-- 注 2：本文档涉及的操作都在 CentOS 7.x 上进行测试。
-
-- 注 3: Doris 从 1.2.2 版本开始，为了减少内存占用，默认关闭了 Page Cache，会对性能有一定影响，所以在进行性能测试时请在 be.conf 添加 disable_storage_page_cache=false 来打开 Page Cache。
-:::
-
-在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行了对别测试，Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近 3 倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 11 倍。
-
-![image-20220614114351241](/images/tpch.png)
+在 TPC-H 标准测试数据集上的 22 个查询上，我们基于 Apache Doris 2.0.6 版本进行了测试。
 
 ## 1. 硬件环境
 
-| 硬件     | 配置说明                                                     |
-| -------- | ------------------------------------ |
-| 机器数量 | 4 台腾讯云主机（1 个 FE，3 个 BE）       |
-| CPU      | Intel Xeon(Cascade Lake) Platinum 8269CY  16 核  (2.5 GHz/3.2 GHz) |
-| 内存     | 64G                                  |
-| 网络带宽  | 5Gbps                              |
-| 磁盘     | ESSD 云硬盘                      |
+| 硬件   | 配置说明                                 |
+|------|--------------------------------------|
+| 机器数量 | 4 台腾讯云主机（1个FE，3个BE）                  |
+| CPU  | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48核 |
+| 内存   | 192G                                 |
+| 网络带宽 | 21Gbps                               |
+| 磁盘   | 高性能云硬盘                               |
 
 ## 2. 软件环境
 
-- Doris 部署 3BE 1FE；
-
+- Doris部署 3BE 1FE
 - 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
-
-- 操作系统版本：CentOS 7.8
-
-- Doris 软件版本：Apache Doris 1.2.0-rc01、Apache Doris 1.1.3、Apache Doris 0.15.0 RC04
-
-- JDK：openjdk version "11.0.14" 2022-01-18
+- 操作系统版本：Ubuntu 20.04 LTS (Focal Fossa)
+- Doris 软件版本：Apache Doris 2.0.6
+- JDK：openjdk version "1.8.0_131"
 
 ## 3. 测试数据量
 
-整个测试模拟生成 TPCH 100G 的数据分别导入到 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04  版本进行测试，下面是表的相关说明及数据量。
+整个测试模拟生成 TPCH 1000G 的数据导入到 Apache Doris 2.0.6 版本进行测试，下面是表的相关说明及数据量。
 
-| TPC-H 表名 | 行数   | 导入后大小 | 备注         |
-| :-------- | :----- | ---------- | :----------- |
-| REGION    | 5      | 400KB      | 区域表       |
-| NATION    | 25     | 7.714 KB   | 国家表       |
-| SUPPLIER  | 100 万  | 85.528 MB  | 供应商表     |
-| PART      | 2000 万 | 752.330 MB | 零部件表     |
-| PARTSUPP  | 8000 万 | 4.375 GB   | 零部件供应表 |
-| CUSTOMER  | 1500 万 | 1.317 GB   | 客户表       |
-| ORDERS    | 1.5 亿  | 6.301 GB   | 订单表       |
-| LINEITEM  | 6 亿    | 20.882 GB  | 订单明细表   |
+| TPC-H表名  | 行数    | 备注     |
+|:---------|:------|:-------|
+| REGION   | 5     | 区域表    |
+| NATION   | 25    | 国家表    |
+| SUPPLIER | 1000万 | 供应商表   |
+| PART     | 2亿    | 零部件表   |
+| PARTSUPP | 8亿    | 零部件供应表 |
+| CUSTOMER | 1.5亿  | 客户表    |
+| ORDERS   | 15亿   | 订单表    |
+| LINEITEM | 60亿   | 订单明细表  |
 
 ## 4. 测试 SQL
 
 TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
 
-**注意：**
-
-以上 SQL 中的以下四个参数在 Apache Doris 0.15.0 RC04 中不存在，在执行的时候，去掉：
-
-```
-1. enable_vectorized_engine=true,
-2. batch_size=4096,
-3. disable_join_reorder=false
-4. enable_projection=true
-```
 
 ## 5. 测试结果
 
-这里我们使用 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
+使用 Apache Doris 2.0.6 版本进行测试结果如下：
 
-| Query    | Apache Doris 1.2.0-rc01 (s) | Apache Doris 1.1.3 (s) | Apache Doris 0.15.0 RC04 (s) |
-| -------- | --------------------------- | ---------------------- | ---------------------------- |
-| Q1       | 2.12                        | 3.75                   | 28.63                        |
-| Q2       | 0.20                        | 4.22                   | 7.88                         |
-| Q3       | 0.62                        | 2.64                   | 9.39                         |
-| Q4       | 0.61                        | 1.5                    | 9.3                          |
-| Q5       | 1.05                        | 2.15                   | 4.11                         |
-| Q6       | 0.08                        | 0.19                   | 0.43                         |
-| Q7       | 0.58                        | 1.04                   | 1.61                         |
-| Q8       | 0.72                        | 1.75                   | 50.35                        |
-| Q9       | 3.61                        | 7.94                   | 16.34                        |
-| Q10      | 1.26                        | 1.41                   | 5.21                         |
-| Q11      | 0.15                        | 0.35                   | 1.72                         |
-| Q12      | 0.21                        | 0.57                   | 5.39                         |
-| Q13      | 2.62                        | 8.15                   | 20.88                        |
-| Q14      | 0.16                        | 0.3                    |                              |
-| Q15      | 0.30                        | 0.66                   | 1.86                         |
-| Q16      | 0.38                        | 0.79                   | 1.32                         |
-| Q17      | 0.65                        | 1.51                   | 26.67                        |
-| Q18      | 2.28                        | 3.364                  | 11.77                        |
-| Q19      | 0.20                        | 0.829                  | 1.71                         |
-| Q20      | 0.21                        | 2.77                   | 5.2                          |
-| Q21      | 1.17                        | 4.47                   | 10.34                        |
-| Q22      | 0.46                        | 0.9                    | 3.22                         |
-| **合计** | **19.64**                   | **51.253**             | **223.33**                   |
-
-**结果说明**
-
-- 测试结果对应的数据集为 scale 100, 约 6 亿条。
-
-- 测试环境配置为用户常用配置，云服务器 4 台，16 核 64G SSD，1 FE 3 BE 部署。
-
-- 选用用户常见配置测试以降低用户选型评估成本，但整个测试过程中不会消耗如此多的硬件资源。
-
-- Apache Doris 0.15 RC04 在 TPC-H 测试中 Q14 执行失败，无法完成查询。
+| Query  | Apache Doris 2.0.6 (ms) |
+|--------|-------------------------|
+| Q1     | 7638                    |
+| Q2     | 377                     |
+| Q3     | 4389                    |
+| Q4     | 1903                    |
+| Q5     | 6425                    |
+| Q6     | 150                     |
+| Q7     | 3141                    |
+| Q8     | 2792                    |
+| Q9     | 24732                   |
+| Q10    | 7315                    |
+| Q11    | 395                     |
+| Q12    | 417                     |
+| Q13    | 8095                    |
+| Q14    | 681                     |
+| Q15    | 1459                    |
+| Q16    | 1382                    |
+| Q17    | 1204                    |
+| Q18    | 11386                   |
+| Q19    | 2172                    |
+| Q20    | 1455                    |
+| Q21    | 6570                    |
+| Q22    | 1517                    |
+| **合计** | **95595**               |
 
 ## 6. 环境准备
 
@@ -145,7 +111,7 @@ TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/dori
 执行以下脚本下载并编译  [tpch-tools](https://github.com/apache/doris/tree/master/tools/tpch-tools)  工具。
 
 ```shell
-sh build-tpch-dbgen.sh
+sh bin/build-tpch-dbgen.sh
 ```
 
 安装成功后，将在 `TPC-H_Tools_v3.0.0/` 目录下生成 `dbgen` 二进制文件。
@@ -155,20 +121,18 @@ sh build-tpch-dbgen.sh
 执行以下脚本生成 TPC-H 数据集：
 
 ```shell
-sh gen-tpch-data.sh
+sh bin/gen-tpch-data.sh -s 1000
 ```
 
-:::note
-- 注 1：通过 `sh gen-tpch-data.sh -h` 查看脚本帮助。
-
-- 注 2：数据会以 `.tbl` 为后缀生成在  `tpch-data/` 目录下。文件总大小约 100GB。生成时间可能在数分钟到 1 小时不等。
-
-- 注 3：默认生成 100G 的标准测试数据集
-:::
+> 注1：通过 `sh gen-tpch-data.sh -h` 查看脚本帮助。
+>
+> 注2：数据会以 `.tbl` 为后缀生成在  `tpch-data/` 目录下。文件总大小约1000GB。生成时间可能在数分钟到1小时不等。
+>
+> 注3：默认生成 100G 的标准测试数据集
 
 ### 7.3 建表
 
-**7.3.1 准备 `doris-cluster.conf` 文件**
+#### 7.3.1 准备 `doris-cluster.conf` 文件
 
 在调用导入脚本前，需要将 FE 的 ip 端口等信息写在 `doris-cluster.conf` 文件中。
 
@@ -188,15 +152,15 @@ export USER='root'
 # Doris password
 export PASSWORD=''
 # The database where TPC-H tables located
-export DB='tpch1'
+export DB='tpch'
 ```
 
-**7.3.2 执行以下脚本生成创建 TPC-H 表**
+#### 7.3.2 执行以下脚本生成创建 TPC-H 表
 
 ```shell
-sh create-tpch-tables.sh
+sh bin/create-tpch-tables.sh -s 1000
 ```
-或者复制 [create-tpch-tables.sql](https://github.com/apache/doris/blob/master/tools/tpch-tools/ddl/create-tpch-tables-sf100.sql) 中的建表语句，在 Doris 中执行。
+或者复制 [create-tpch-tables.sql](https://github.com/apache/doris/blob/master/tools/tpch-tools/ddl/create-tpch-tables-sf1000.sql) 中的建表语句，在 Doris 中执行。
 
 
 ### 7.4 导入数据
@@ -204,12 +168,12 @@ sh create-tpch-tables.sh
 通过下面的命令执行数据导入：
 
 ```shell
-sh ./load-tpch-data.sh
+sh bin/load-tpch-data.sh
 ```
 
 ### 7.5 检查导入数据
 
-执行下面的 SQL 语句检查导入的数据与上面的数据量是一致。
+执行下面的 SQL 语句检查导入的数据与上面的数据量一致。
 
 ```sql
 select count(*)  from  lineitem;
@@ -225,31 +189,22 @@ select count(*)  from  revenue0;
 
 ### 7.6 查询测试
 
-**7.6.1 执行查询脚本**
+### 7.6.1 执行查询脚本
 
 执行上面的测试 SQL 或者 执行下面的命令
 
+```shell
+sh bin/run-tpch-queries.sh -s 1000
 ```
-./run-tpch-queries.sh
-```
 
-:::note
-注意：
 
-- 1. 目前 Doris 的查询优化器和统计信息功能还不完善，所以我们在 TPC-H 中重写了一些查询以适应 Doris 的执行框架，但不影响结果的正确性
+### 7.6.2 单个 SQL 执行
 
-- 2. Doris 新的查询优化器将在后续的版本中发布
-
-- 3. 执行查询之前设置 `set mem_exec_limit=8G`
-:::
-
-**7.6.2 单个 SQL 执行**
-
-下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries)
+下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL 。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
 
 ```sql
 --Q1
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=false, enable_projection=false) */
+select
     l_returnflag,
     l_linestatus,
     sum(l_quantity) as sum_qty,
@@ -272,7 +227,7 @@ order by
     l_linestatus;
 
 --Q2
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=1, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     s_acctbal,
     s_name,
     n_name,
@@ -282,29 +237,9 @@ select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num
     s_phone,
     s_comment
 from
-    partsupp join
-    (
-        select
-            ps_partkey as a_partkey,
-            min(ps_supplycost) as a_min
-        from
-            partsupp,
-            part,
-            supplier,
-            nation,
-            region
-        where
-            p_partkey = ps_partkey
-            and s_suppkey = ps_suppkey
-            and s_nationkey = n_nationkey
-            and n_regionkey = r_regionkey
-            and r_name = 'EUROPE'
-            and p_size = 15
-            and p_type like '%BRASS'
-        group by a_partkey
-    ) A on ps_partkey = a_partkey and ps_supplycost=a_min ,
     part,
     supplier,
+    partsupp,
     nation,
     region
 where
@@ -315,7 +250,21 @@ where
     and s_nationkey = n_nationkey
     and n_regionkey = r_regionkey
     and r_name = 'EUROPE'
-
+    and ps_supplycost = (
+        select
+            min(ps_supplycost)
+        from
+            partsupp,
+            supplier,
+            nation,
+            region
+        where
+        p_partkey = ps_partkey
+        and s_suppkey = ps_suppkey
+        and s_nationkey = n_nationkey
+        and n_regionkey = r_regionkey
+        and r_name = 'EUROPE'
+)
 order by
     s_acctbal desc,
     n_name,
@@ -324,21 +273,21 @@ order by
 limit 100;
 
 --Q3
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=false, enable_projection=true, runtime_filter_wait_time_ms=10000) */
+select
     l_orderkey,
     sum(l_extendedprice * (1 - l_discount)) as revenue,
     o_orderdate,
     o_shippriority
 from
-    (
-        select l_orderkey, l_extendedprice, l_discount, o_orderdate, o_shippriority, o_custkey from
-        lineitem join orders
-        where l_orderkey = o_orderkey
-        and o_orderdate < date '1995-03-15'
-        and l_shipdate > date '1995-03-15'
-    ) t1 join customer c 
-    on c.c_custkey = t1.o_custkey
-    where c_mktsegment = 'BUILDING'
+    customer,
+    orders,
+    lineitem
+where
+    c_mktsegment = 'BUILDING'
+    and c_custkey = o_custkey
+    and l_orderkey = o_orderkey
+    and o_orderdate < date '1995-03-15'
+    and l_shipdate > date '1995-03-15'
 group by
     l_orderkey,
     o_orderdate,
@@ -349,29 +298,30 @@ order by
 limit 10;
 
 --Q4
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=4, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     o_orderpriority,
     count(*) as order_count
 from
-    (
+    orders
+where
+    o_orderdate >= date '1993-07-01'
+    and o_orderdate < date '1993-07-01' + interval '3' month
+    and exists (
         select
             *
         from
             lineitem
-        where l_commitdate < l_receiptdate
-    ) t1
-    right semi join orders
-    on t1.l_orderkey = o_orderkey
-where
-    o_orderdate >= date '1993-07-01'
-    and o_orderdate < date '1993-07-01' + interval '3' month
+        where
+                l_orderkey = o_orderkey
+          and l_commitdate < l_receiptdate
+    )
 group by
     o_orderpriority
 order by
     o_orderpriority;
 
 --Q5
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     n_name,
     sum(l_extendedprice * (1 - l_discount)) as revenue
 from
@@ -397,7 +347,7 @@ order by
     revenue desc;
 
 --Q6
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=1, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     sum(l_extendedprice * l_discount) as revenue
 from
     lineitem
@@ -408,7 +358,7 @@ where
     and l_quantity < 24;
 
 --Q7
-select /*+SET_VAR(exec_mem_limit=458589934592, parallel_fragment_exec_instance_num=2, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     supp_nation,
     cust_nation,
     l_year,
@@ -450,7 +400,7 @@ order by
 
 --Q8
 
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     o_year,
     sum(case
         when nation = 'BRAZIL' then volume
@@ -463,11 +413,11 @@ from
             l_extendedprice * (1 - l_discount) as volume,
             n2.n_name as nation
         from
+            part,
+            supplier,
             lineitem,
             orders,
             customer,
-            supplier,
-            part,
             nation n1,
             nation n2,
             region
@@ -489,7 +439,7 @@ order by
     o_year;
 
 --Q9
-select/*+SET_VAR(exec_mem_limit=37179869184, parallel_fragment_exec_instance_num=2, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=false, enable_projection=true, enable_remove_no_conjuncts_runtime_filter_policy=true, runtime_filter_wait_time_ms=100000) */
+select
     nation,
     o_year,
     sum(amount) as sum_profit
@@ -500,14 +450,20 @@ from
             extract(year from o_orderdate) as o_year,
             l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
         from
-            lineitem join orders on o_orderkey = l_orderkey
-            join[shuffle] part on p_partkey = l_partkey
-            join[shuffle] partsupp on ps_partkey = l_partkey
-            join[shuffle] supplier on s_suppkey = l_suppkey
-            join[broadcast] nation on s_nationkey = n_nationkey
+            part,
+            supplier,
+            lineitem,
+            partsupp,
+            orders,
+            nation
         where
-            ps_suppkey = l_suppkey and 
-            p_name like '%green%'
+            s_suppkey = l_suppkey
+            and ps_suppkey = l_suppkey
+            and ps_partkey = l_partkey
+            and p_partkey = l_partkey
+            and o_orderkey = l_orderkey
+            and s_nationkey = n_nationkey
+            and p_name like '%green%'
     ) as profit
 group by
     nation,
@@ -517,11 +473,10 @@ order by
     o_year desc;
 
 --Q10
-
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=4, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     c_custkey,
     c_name,
-    sum(t1.l_extendedprice * (1 - t1.l_discount)) as revenue,
+    sum(l_extendedprice * (1 - l_discount)) as revenue,
     c_acctbal,
     n_name,
     c_address,
@@ -529,16 +484,15 @@ select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num
     c_comment
 from
     customer,
-    (
-        select o_custkey,l_extendedprice,l_discount from lineitem, orders
-        where l_orderkey = o_orderkey
-        and o_orderdate >= date '1993-10-01'
-        and o_orderdate < date '1993-10-01' + interval '3' month
-        and l_returnflag = 'R'
-    ) t1,
+    orders,
+    lineitem,
     nation
 where
-    c_custkey = t1.o_custkey
+    c_custkey = o_custkey
+    and l_orderkey = o_orderkey
+    and o_orderdate >= date '1993-10-01'
+    and o_orderdate < date '1993-10-01' + interval '3' month
+    and l_returnflag = 'R'
     and c_nationkey = n_nationkey
 group by
     c_custkey,
@@ -552,39 +506,38 @@ order by
     revenue desc
 limit 20;
 
+
 --Q11
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=2, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     ps_partkey,
     sum(ps_supplycost * ps_availqty) as value
 from
     partsupp,
-    (
-    select s_suppkey
-    from supplier, nation
-    where s_nationkey = n_nationkey and n_name = 'GERMANY'
-    ) B
+    supplier,
+    nation
 where
-    ps_suppkey = B.s_suppkey
+    ps_suppkey = s_suppkey
+    and s_nationkey = n_nationkey
+    and n_name = 'GERMANY'
 group by
     ps_partkey having
-        sum(ps_supplycost * ps_availqty) > (
-            select
-                sum(ps_supplycost * ps_availqty) * 0.000002
-            from
-                partsupp,
-                (select s_suppkey
-                 from supplier, nation
-                 where s_nationkey = n_nationkey and n_name = 'GERMANY'
-                ) A
-            where
-                ps_suppkey = A.s_suppkey
-        )
+    sum(ps_supplycost * ps_availqty) > (
+        select
+        sum(ps_supplycost * ps_availqty) * 0.000002
+        from
+            partsupp,
+            supplier,
+            nation
+        where
+            ps_suppkey = s_suppkey
+            and s_nationkey = n_nationkey
+            and n_name = 'GERMANY'
+    )
 order by
     value desc;
 
 --Q12
-
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=2, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     l_shipmode,
     sum(case
         when o_orderpriority = '1-URGENT'
@@ -614,7 +567,7 @@ order by
     l_shipmode;
 
 --Q13
-select /*+SET_VAR(exec_mem_limit=45899345920, parallel_fragment_exec_instance_num=16, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     c_count,
     count(*) as custdist
 from
@@ -623,7 +576,7 @@ from
             c_custkey,
             count(o_orderkey) as c_count
         from
-            orders right outer join customer on
+            customer left outer join orders on
                 c_custkey = o_custkey
                 and o_comment not like '%special%requests%'
         group by
@@ -636,23 +589,22 @@ order by
     c_count desc;
 
 --Q14
-
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=true, enable_projection=true, runtime_filter_mode=OFF) */
+select
     100.00 * sum(case
         when p_type like 'PROMO%'
             then l_extendedprice * (1 - l_discount)
         else 0
     end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue
 from
-    part,
-    lineitem
+    lineitem,
+    part
 where
     l_partkey = p_partkey
     and l_shipdate >= date '1995-09-01'
     and l_shipdate < date '1995-09-01' + interval '1' month;
 
 --Q15
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     s_suppkey,
     s_name,
     s_address,
@@ -673,7 +625,7 @@ order by
     s_suppkey;
 
 --Q16
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=8, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     p_brand,
     p_type,
     p_size,
@@ -705,70 +657,62 @@ order by
     p_size;
 
 --Q17
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=1, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     sum(l_extendedprice) / 7.0 as avg_yearly
 from
-    lineitem join [broadcast]
-    part p1 on p1.p_partkey = l_partkey
+    lineitem,
+    part
 where
-    p1.p_brand = 'Brand#23'
-    and p1.p_container = 'MED BOX'
+    p_partkey = l_partkey
+    and p_brand = 'Brand#23'
+    and p_container = 'MED BOX'
     and l_quantity < (
         select
             0.2 * avg(l_quantity)
         from
-            lineitem join [broadcast]
-            part p2 on p2.p_partkey = l_partkey
+            lineitem
         where
-            l_partkey = p1.p_partkey
-            and p2.p_brand = 'Brand#23'
-            and p2.p_container = 'MED BOX'
+            l_partkey = p_partkey
     );
 
 --Q18
-
-select /*+SET_VAR(exec_mem_limit=45899345920, parallel_fragment_exec_instance_num=4, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=true, enable_projection=true) */
+select
     c_name,
     c_custkey,
-    t3.o_orderkey,
-    t3.o_orderdate,
-    t3.o_totalprice,
-    sum(t3.l_quantity)
+    o_orderkey,
+    o_orderdate,
+    o_totalprice,
+    sum(l_quantity)
 from
-customer join
-(
-  select * from
-  lineitem join
-  (
-    select * from
-    orders left semi join
-    (
-      select
-          l_orderkey
-      from
-          lineitem
-      group by
-          l_orderkey having sum(l_quantity) > 300
-    ) t1
-    on o_orderkey = t1.l_orderkey
-  ) t2
-  on t2.o_orderkey = l_orderkey
-) t3
-on c_custkey = t3.o_custkey
-group by
+    customer,
+    orders,
+    lineitem
+where
+    o_orderkey  in  (
+        select
+            l_orderkey
+        from
+            lineitem
+        group  by
+            l_orderkey  having
+                sum(l_quantity)  >  300
+    )
+    and  c_custkey  =  o_custkey
+    and  o_orderkey  =  l_orderkey
+group  by
     c_name,
     c_custkey,
-    t3.o_orderkey,
-    t3.o_orderdate,
-    t3.o_totalprice
-order by
-    t3.o_totalprice desc,
-    t3.o_orderdate
-limit 100;
+    o_orderkey,
+    o_orderdate,
+    o_totalprice
+order  by
+    o_totalprice  desc,
+    o_orderdate
+limit  100;
+
 
 --Q19
-
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=2, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=false, enable_cost_based_join_reorder=false, enable_projection=true) */
+select
     sum(l_extendedprice* (1 - l_discount)) as revenue
 from
     lineitem,
@@ -805,88 +749,119 @@ where
     );
 
 --Q20
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=2, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=true, enable_projection=true, runtime_bloom_filter_size=551943) */
-s_name, s_address from
-supplier left semi join
-(
-    select * from
-    (
-        select l_partkey,l_suppkey, 0.5 * sum(l_quantity) as l_q
-        from lineitem
-        where l_shipdate >= date '1994-01-01'
-            and l_shipdate < date '1994-01-01' + interval '1' year
-        group by l_partkey,l_suppkey
-    ) t2 join
-    (
-        select ps_partkey, ps_suppkey, ps_availqty
-        from partsupp left semi join part
-        on ps_partkey = p_partkey and p_name like 'forest%'
-    ) t1
-    on t2.l_partkey = t1.ps_partkey and t2.l_suppkey = t1.ps_suppkey
-    and t1.ps_availqty > t2.l_q
-) t3
-on s_suppkey = t3.ps_suppkey
-join nation
-where s_nationkey = n_nationkey
+select
+    s_name,
+    s_address
+from
+    supplier,
+    nation
+where
+    s_suppkey in (
+        select
+            ps_suppkey
+        from
+            partsupp
+        where
+            ps_partkey in (
+                select
+                    p_partkey
+                from
+                    part
+                where
+                        p_name like 'forest%'
+            )
+            and ps_availqty > (
+                select
+                    0.5 * sum(l_quantity)
+                from
+                    lineitem
+                where
+                    l_partkey = ps_partkey
+                    and l_suppkey = ps_suppkey
+                    and l_shipdate >= date '1994-01-01'
+                    and l_shipdate < date '1994-01-01' + interval '1' year
+            )
+    )
+    and s_nationkey = n_nationkey
     and n_name = 'CANADA'
-order by s_name;
+order by
+    s_name;
 
 --Q21
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=4, enable_vectorized_engine=true, batch_size=4096, disable_join_reorder=true, enable_cost_based_join_reorder=true, enable_projection=true) */
-s_name, count(*) as numwait
+select
+    s_name,
+    count(*) as numwait
 from
-  lineitem l2 right semi join
-  (
-    select * from
-    lineitem l3 right anti join
-    (
-      select * from
-      orders join lineitem l1 on l1.l_orderkey = o_orderkey and o_orderstatus = 'F'
-      join
-      (
-        select * from
-        supplier join nation
-        where s_nationkey = n_nationkey
-          and n_name = 'SAUDI ARABIA'
-      ) t1
-      where t1.s_suppkey = l1.l_suppkey and l1.l_receiptdate > l1.l_commitdate
-    ) t2
-    on l3.l_orderkey = t2.l_orderkey and l3.l_suppkey <> t2.l_suppkey  and l3.l_receiptdate > l3.l_commitdate
-  ) t3
-  on l2.l_orderkey = t3.l_orderkey and l2.l_suppkey <> t3.l_suppkey 
-
+    supplier,
+    lineitem l1,
+    orders,
+    nation
+where
+    s_suppkey = l1.l_suppkey
+    and o_orderkey = l1.l_orderkey
+    and o_orderstatus = 'F'
+    and l1.l_receiptdate > l1.l_commitdate
+    and exists (
+        select
+            *
+        from
+            lineitem l2
+        where
+                l2.l_orderkey = l1.l_orderkey
+          and l2.l_suppkey <> l1.l_suppkey
+    )
+    and not exists (
+        select
+            *
+        from
+            lineitem l3
+        where
+                l3.l_orderkey = l1.l_orderkey
+          and l3.l_suppkey <> l1.l_suppkey
+          and l3.l_receiptdate > l3.l_commitdate
+    )
+    and s_nationkey = n_nationkey
+    and n_name = 'SAUDI ARABIA'
 group by
-    t3.s_name
+    s_name
 order by
     numwait desc,
-    t3.s_name
+    s_name
 limit 100;
 
 --Q22
-
-with tmp as (select
-                    avg(c_acctbal) as av
-                from
-                    customer
-                where
-                    c_acctbal > 0.00
-                    and substring(c_phone, 1, 2) in
-                        ('13', '31', '23', '29', '30', '18', '17'))
-
-select /*+SET_VAR(exec_mem_limit=8589934592, parallel_fragment_exec_instance_num=4,runtime_bloom_filter_size=4194304) */
+select
     cntrycode,
     count(*) as numcust,
     sum(c_acctbal) as totacctbal
 from
     (
-	select
+        select
             substring(c_phone, 1, 2) as cntrycode,
             c_acctbal
         from
-             orders right anti join customer c on  o_custkey = c.c_custkey join tmp on c.c_acctbal > tmp.av
+            customer
         where
             substring(c_phone, 1, 2) in
-                ('13', '31', '23', '29', '30', '18', '17')
+            ('13', '31', '23', '29', '30', '18', '17')
+            and c_acctbal > (
+                select
+                    avg(c_acctbal)
+                from
+                    customer
+                where
+                    c_acctbal > 0.00
+                    and substring(c_phone, 1, 2) in
+                      ('13', '31', '23', '29', '30', '18', '17')
+            )
+            and not exists (
+                select
+                    *
+                from
+                    orders
+                where
+                    o_custkey = c_custkey
+            )
     ) as custsale
 group by
     cntrycode
