@@ -47,6 +47,7 @@ under the License.
 | 1.3.0             | 1.16                | 1.0+   | 8    | -         |
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
+| 1.6.0             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
 
 ## 使用
 
@@ -59,7 +60,7 @@ under the License.
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>1.5.2</version>
+  <version>1.6.0</version>
 </dependency>  
 ```
 
@@ -323,21 +324,26 @@ ON a.city = c.city
 | password                         | --            | Y        | 访问 Doris 的密码                                            |
 | auto-redirect                    | true          | N        | 是否重定向StreamLoad请求。开启后StreamLoad将通过FE写入，不再显示获取BE信息 |
 | doris.request.retries            | 3             | N        | 向 Doris 发送请求的重试次数                                  |
-| doris.request.connect.timeout.ms | 30000         | N        | 向 Doris 发送请求的连接超时时间                              |
-| doris.request.read.timeout.ms    | 30000         | N        | 向 Doris 发送请求的读取超时时间                              |
+| doris.request.connect.timeout | 30s         | N        | 向 Doris 发送请求的连接超时时间                              |
+| doris.request.read.timeout    | 30s         | N        | 向 Doris 发送请求的读取超时时间                              |
 
 ### Source 配置项
 
 | Key                           | Default Value      | Required | Comment                                                      |
 | ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
-| doris.request.query.timeout.s | 3600               | N        | 查询 Doris 的超时时间，默认值为1小时，-1表示无超时限制       |
-| doris.request.tablet.size     | Integer. MAX_VALUE | N        | 一个 Partition 对应的 Doris Tablet 个数。 此数值设置越小，则会生成越多的 Partition。从而提升 Flink 侧的并行度，但同时会对 Doris 造成更大的压力。 |
+| doris.request.query.timeout   | 21600s               | N        | 查询 Doris 的超时时间，默认值为6小时      |
+| doris.request.tablet.size     | 1 | N        | 一个 Partition 对应的 Doris Tablet 个数。 此数值设置越小，则会生成越多的 Partition。从而提升 Flink 侧的并行度，但同时会对 Doris 造成更大的压力。 |
 | doris.batch.size              | 1024               | N        | 一次从 BE 读取数据的最大行数。增大此数值可减少 Flink 与 Doris 之间建立连接的次数。 从而减轻网络延迟所带来的额外时间开销。 |
-| doris.exec.mem.limit          | 2147483648         | N        | 单个查询的内存限制。默认为 2GB，单位为字节                   |
+| doris.exec.mem.limit          | 8192mb         | N        | 单个查询的内存限制。默认为 8GB，单位为字节                   |
 | doris.deserialize.arrow.async | FALSE              | N        | 是否支持异步转换 Arrow 格式到 flink-doris-connector 迭代所需的 RowBatch |
 | doris.deserialize.queue.size  | 64                 | N        | 异步转换 Arrow 格式的内部处理队列，当 doris.deserialize.arrow.async 为 true 时生效 |
+
+#### DataStream 专有配置项
+| Key                           | Default Value      | Required | Comment                                                      |
+| ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
 | doris.read.field              | --                 | N        | 读取 Doris 表的列名列表，多列之间使用逗号分隔                |
 | doris.filter.query            | --                 | N        | 过滤读取数据的表达式，此表达式透传给 Doris。Doris 使用此表达式完成源端数据过滤。比如 age=18。 |
+
 
 ### Sink 配置项
 
@@ -390,8 +396,10 @@ ON a.city = c.city
 | VARCHAR    | STRING            |
 | STRING     | STRING            |
 | DECIMALV2  | DECIMAL                      |
-| TIME       | DOUBLE             |
-| HLL        | Unsupported datatype             |
+| ARRAY      | ARRAY             |
+| MAP        | MAP             |
+| JSON       | STRING             |
+
 
 ## Flink 写入指标
 其中Counter类型的指标值为导入任务从开始到当前的累加值，可以在Flink Webui metrics中观察各表的各项指标。
@@ -527,10 +535,10 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --table-suffix          | 同上，Doris表的后缀名。                                      |
 | --including-tables      | 需要同步的MySQL表，可以使用"\|" 分隔多个表，并支持正则表达式。 比如--including-tables table1 |
 | --excluding-tables      | 不需要同步的表，用法同上。                                   |
-| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1 ，您可以在[这里](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/mysql-cdc.html)查看所有配置MySQL-CDC，其中hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 `scan.incremental.snapshot.chunk.key-column`，且只能选择非空类型的一个字段。<br/>例如：`scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...`，不同的库表列之间用`,`隔开。 |
-| --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/oracle-cdc.html)查看所有配置Oracle-CDC，其中hostname/username/password/database-name/schema-name 是必需的。 |
-| --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1 ，您可以在[这里](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/postgres-cdc.html)查看所有配置Postgres-CDC，其中hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
-| --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1 ，您可以在[这里](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/sqlserver-cdc.html)查看所有配置SQLServer-CDC，其中hostname/username/password/database-name/schema-name 是必需的。 |
+| --mysql-conf            | MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1 ，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置MySQL-CDC，其中hostname/username/password/database-name 是必需的。同步的库表中含有非主键表时，必须设置 `scan.incremental.snapshot.chunk.key-column`，且只能选择非空类型的一个字段。<br/>例如：`scan.incremental.snapshot.chunk.key-column=database.table:column,database.table1:column...`，不同的库表列之间用`,`隔开。 |
+| --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置Oracle-CDC，其中hostname/username/password/database-name/schema-name 是必需的。 |
+| --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1 ，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/)查看所有配置Postgres-CDC，其中hostname/username/password/database-name/schema-name/slot.name 是必需的。 |
+| --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1 ，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置SQLServer-CDC，其中hostname/username/password/database-name/schema-name 是必需的。 |
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。 |
 | --table-conf            | Doris表的配置项，即properties中包含的内容（其中table-buckets例外，非properties属性）。 例如 `--table-conf replication_num=1`， 而 `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"`表示按照正则表达式顺序指定不同表的buckets数量，如果没有匹配到则采用BUCKETS AUTO建表。 |
 | --ignore-default-value  | 关闭同步mysql表结构的默认值。适用于同步mysql数据到doris时，字段有默认值，但实际插入数据为null情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152) |
@@ -779,7 +787,7 @@ Flink在数据导入时，如果有脏数据，比如字段格式、长度等问
 
 14. **使用doris.filter.query出现org.apache.flink.table.api.SqlParserException: SQL parse failed. Encountered "xx" at line x, column xx**
 
-出现这个问题主要是条件varchar/string类型，需要加引号导致的，正确写法是 xxx = ''xxx'',这样Flink SQL 解析器会将两个连续的单引号解释为一个单引号字符,而不是字符串的结束，并将拼接后的字符串作为属性的值。比如说：`t1 >= '2024-01-01'`，可以写成`'doris.filter.query' = 't1 >=''2024-01-01'''`。
+出现这个问题主要是条件varchar/string类型，需要加引号导致的，正确写法是 xxx = ''xxx'',这样Flink SQL 解析器会将两个连续的单引号解释为一个单引号字符,而不是字符串的结束，并将拼接后的字符串作为属性的值。比如说：`t1 >= '2024-01-01'`，可以写成`'doris.filter.query' = 't1 >=''2024-01-01'''`。Connector1.6.0之后 FlinkSQL可以实现自动谓词和投影下推。
 
 15. **如果出现Failed to connect to backend: http://host:webserver_port, 并且Be还是活着的**
 
