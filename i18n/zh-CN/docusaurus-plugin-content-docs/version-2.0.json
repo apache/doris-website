@@ -95,7 +95,7 @@
     "message": "查询缓存",
     "description": "The label for category Pipeline in sidebar docs"
   },
-  "sidebar.docs.category.Create View and Materialize View": {
+  "sidebar.docs.category.View and Materialize View": {
     "message": "视图与物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },

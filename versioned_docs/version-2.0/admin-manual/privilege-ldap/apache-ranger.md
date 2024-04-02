@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Apache Ranger",
+    "title": "Authority Management based on Apache Ranger",
     "language": "en"
 }
 ---

@@ -61,6 +61,7 @@
             "type": "category",
             "label": "Table Design",
             "items": [
+                "table-design/data-type",
                 {
                     "type": "category",
                     "label": "Data Model",
@@ -72,7 +73,6 @@
                         "table-design/data-model/tips"
                     ]
                 },
-                "table-design/data-type",
                 "table-design/data-partition",
                 "table-design/schema-change",
                 "table-design/cold-hot-separation",
@@ -202,7 +202,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Create View and Materialize View",
+                    "label": "View and Materialize View",
                     "items": [
                         "query/view-materialized-view/create-view",
                         "query/view-materialized-view/materialized-view",
@@ -235,8 +235,7 @@
                     "items": [
                         "query/query-analysis/query-profile",
                         "query/query-analysis/query-analysis",
-                        "query/query-analysis/import-analysis",
-                        "query/query-analysis/get-profile"
+                        "query/query-analysis/import-analysis"
                     ]
                 },
                 {
@@ -319,7 +318,8 @@
                     "label": "Query Admin",
                     "items": [
                         "admin-manual/query-admin/sql-interception",
-                        "admin-manual/query-admin/kill-query"
+                        "admin-manual/query-admin/kill-query",
+                        "admin-manual/query-admin/job"
                     ]
                 },
                 {

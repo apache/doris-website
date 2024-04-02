@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SSL 密钥证书配置",
+    "title": "MySQL 安全传输",
     "language": "zh-CN"
 }
 ---
@@ -80,6 +80,6 @@ openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12
 openssl pkcs12 -inkey server-key.pem -in server.pem -export -out server_certificate.p12
 ```
 
-:::note
+:::info Note
 [参考文档](https://www.ibm.com/docs/en/api-connect/2018.x?topic=overview-generating-self-signed-certificate-using-openssl)
 :::

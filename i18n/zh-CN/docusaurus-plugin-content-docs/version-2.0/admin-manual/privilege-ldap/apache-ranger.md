@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Apache Ranger",
+    "title": "基于 Apache Ranger 的鉴权管理",
     "language": "zh-CN"
 }
 ---

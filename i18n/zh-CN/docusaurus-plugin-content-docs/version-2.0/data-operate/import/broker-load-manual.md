@@ -611,7 +611,7 @@ WITH BROKER "broker_name"
 
 - 百度云 BOS
 
-当前使用 BOS 时需要将[ bos-hdfs-sdk-1.0.3-community.jar.zip ](https://sdk.bce.baidu.com/console-sdk/bos-hdfs-sdk-1.0.3-community.jar.zip)下载并解压后把 jar 包放到 broker 的 lib 目录下。
+当前使用 BOS 时需要下载相应的 SDK 包，具体配置与使用，可以参考 [BOS HDFS 官方文档](https://cloud.baidu.com/doc/BOS/s/fk53rav99)。在下载完成并解压后将 jar 包放到 broker 的 lib 目录下。
 
 ```Plain
 (

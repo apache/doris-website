@@ -24,245 +24,414 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Insert Into
+The INSERT INTO statement supports importing the results of a Doris query into another table. INSERT INTO is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
 
-The use of Insert Into statements is similar to that of Insert Into statements in databases such as MySQL. But in Doris, all data writing is a separate import job. So Insert Into is also introduced here as an import method.
+There are primarily two main forms of the INSERT INTO command:
 
-The main Insert Into command contains the following two kinds;
+- INSERT INTO tbl SELECT...
+- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...)
 
-- INSERT INTO tbl SELECT ...
-- INSERT INTO tbl (col1, col2, ...) VALUES (1, 2, ...), (1,3, ...);
+## Applicable scenarios
 
-The second command is for Demo only, not in a test or production environment.
+1. If a user wants to import only a few test data records to verify the functionality of the Doris system, the INSERT INTO VALUES syntax is applicable. It is similar to the MySQL syntax. However, it is not recommended to use INSERT INTO VALUES in a production environment.
+2. If a user wants to perform ETL on existing data in a Doris table and then import it into a new Doris table, the INSERT INTO SELECT syntax is applicable.
+3. In conjunction with the Multi-Catalog external table mechanism, tables from MySQL or Hive systems can be mapped via Multi-Catalog. Then, data from external tables can be imported into Doris tables using the INSERT INTO SELECT syntax.
+4. Utilizing the Table Value Functions (TVFs), users can directly query data stored in object storage or files on HDFS as tables, with automatic column type inference. Then, data from external tables can be imported into Doris tables using the INSERT INTO SELECT syntax.
 
-## Import operations and load results
+## Implementation
 
-The Insert Into command needs to be submitted through MySQL protocol. Creating an import request returns the import result synchronously.
+When using INSERT INTO, the import job needs to be initiated and submitted to the FE node using the MySQL protocol. The FE generates an execution plan, which includes query-related operators, with the last operator being the OlapTableSink. The OlapTableSink operator is responsible for writing the query result to the target table. The execution plan is then sent to the BE nodes for execution. Doris designates one BE node as the Coordinator, which receives and distributes the data to other BE nodes.
 
-The following are examples of the use of two Insert Intos:
+## Get started
 
-```sql
-INSERT INTO tbl2 WITH LABEL label1 SELECT * FROM tbl3;
-INSERT INTO tbl1 VALUES ("qweasdzxcqweasdzxc"), ("a");
+An INSERT INTO job is submitted and transmitted using the MySQL protocol. The following example demonstrates submitting an import job using INSERT INTO through the MySQL command-line interface.
+
+Detailed syntax can be found in the INSERT INTO documentation.
+
+### Preparation
+
+INSERT INTO requires INSERT permissions on the target table. You can grant permissions to user accounts using the GRANT command.
+
+### Create an INSERT INTO job
+
+**INSERT INTO VALUES**
+
+1. Create a source table
+
+```SQL
+CREATE TABLE testdb.test_table(
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
+)
+DUPLICATE KEY(user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-> Note: When you need to use `CTE(Common Table Expressions)` as the query part in an insert operation, you must specify the `WITH LABEL` and column list parts or wrap `CTE`. Example:
->
-> ```sql
-> INSERT INTO tbl1 WITH LABEL label1
-> WITH cte1 AS (SELECT * FROM tbl1), cte2 AS (SELECT * FROM tbl2)
-> SELECT k1 FROM cte1 JOIN cte2 WHERE cte1.k1 = 1;
-> 
-> 
-> INSERT INTO tbl1 (k1)
-> WITH cte1 AS (SELECT * FROM tbl1), cte2 AS (SELECT * FROM tbl2)
-> SELECT k1 FROM cte1 JOIN cte2 WHERE cte1.k1 = 1;
-> 
-> INSERT INTO tbl1 (k1)
-> select * from (
-> WITH cte1 AS (SELECT * FROM tbl1), cte2 AS (SELECT * FROM tbl2)
-> SELECT k1 FROM cte1 JOIN cte2 WHERE cte1.k1 = 1) as ret
-> ```
+2. Import data into the source table using `INSERT INTO VALUES` (not recommended for production environments).
 
-For specific parameter description, you can refer to [INSERT INTO](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) command or execute `HELP INSERT ` to see its help documentation for better use of this import method.
-
-
-Insert Into itself is a SQL command, and the return result is divided into the following types according to the different execution results:
-
-1. Result set is empty
-
-   If the result set of the insert corresponding SELECT statement is empty, it is returned as follows:
-
-   ```text
-   mysql> insert into tbl1 select * from empty_tbl;
-   Query OK, 0 rows affected (0.02 sec)
-   ```
-
-   `Query OK` indicates successful execution. `0 rows affected` means that no data was loaded.
-
-2. The result set is not empty
-
-   In the case where the result set is not empty. The returned results are divided into the following situations:
-
-   1. Insert is successful and data is visible:
-
-      ```text
-      mysql> insert into tbl1 select * from tbl2;
-      Query OK, 4 rows affected (0.38 sec)
-      {'label': 'insert_8510c568-9eda-4173-9e36-6adc7d35291c', 'status': 'visible', 'txnId': '4005'}
-      
-      mysql> insert into tbl1 with label my_label1 select * from tbl2;
-      Query OK, 4 rows affected (0.38 sec)
-      {'label': 'my_label1', 'status': 'visible', 'txnId': '4005'}
-      
-      mysql> insert into tbl1 select * from tbl2;
-      Query OK, 2 rows affected, 2 warnings (0.31 sec)
-      {'label': 'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status': 'visible', 'txnId': '4005'}
-      
-      mysql> insert into tbl1 select * from tbl2;
-      Query OK, 2 rows affected, 2 warnings (0.31 sec)
-      {'label': 'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status': 'committed', 'txnId': '4005'}
-      ```
-
-      `Query OK` indicates successful execution. `4 rows affected` means that a total of 4 rows of data were imported. `2 warnings` indicates the number of lines to be filtered.
-
-      Also returns a json string:
-
-      ```text
-      {'label': 'my_label1', 'status': 'visible', 'txnId': '4005'}
-      {'label': 'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status': 'committed', 'txnId': '4005'}
-      {'label': 'my_label1', 'status': 'visible', 'txnId': '4005', 'err': 'some other error'}
-      ```
-
-      `label` is a user-specified label or an automatically generated label. Label is the ID of this Insert Into load job. Each load job has a label that is unique within a single database.
-
-      `status` indicates whether the loaded data is visible. If visible, show `visible`, if not, show`committed`.
-
-      `txnId` is the id of the load transaction corresponding to this insert.
-
-      The `err` field displays some other unexpected errors.
-
-      When user need to view the filtered rows, the user can use the following statement
-
-      ```text
-      show load where label = "xxx";
-      ```
-
-      The URL in the returned result can be used to query the wrong data. For details, see the following **View Error Lines** Summary.    **"Data is not visible" is a temporary status, this batch of data must be visible eventually**
-
-      You can view the visible status of this batch of data with the following statement:
-
-      ```text
-      show transaction where id = 4005;
-      ```
-
-      If the `TransactionStatus` column in the returned result is `visible`, the data is visible.
-
-   2. Insert fails
-
-      Execution failure indicates that no data was successfully loaded, and returns as follows:
-
-      ```text
-      mysql> insert into tbl1 select * from tbl2 where k1 = "a";
-      ERROR 1064 (HY000): all partitions have no load data. Url: http://10.74.167.16:8042/api/_load_error_log?file=__shard_2/error_log_insert_stmt_ba8bb9e158e4879-ae8de8507c0bf8a2_ba8bb9e158e4879_ae8de850e8de850
-      ```
-
-      Where `ERROR 1064 (HY000): all partitions have no load data` shows the reason for the failure. The latter url can be used to query the wrong data. For details, see the following **View Error Lines** Summary.
-
-**In summary, the correct processing logic for the results returned by the insert operation should be:**
-
-1. If the returned result is `ERROR 1064 (HY000)`, it means that the import failed.
-2. If the returned result is `Query OK`, it means the execution was successful.
-   1. If `rows affected` is 0, the result set is empty and no data is loaded.
-   2. If`rows affected` is greater than 0:
-      1. If `status` is`committed`, the data is not yet visible. You need to check the status through the `show transaction` statement until `visible`.
-      2. If `status` is`visible`, the data is loaded successfully.
-   3. If `warnings` is greater than 0, it means that some data is filtered. You can get the url through the `show load` statement to see the filtered rows.
-
-In the previous section, we described how to follow up on the results of insert operations. However, it is difficult to get the json string of the returned result in some mysql libraries. Therefore, Doris also provides the `SHOW LAST INSERT` command to explicitly retrieve the results of the last insert operation.
-
-After executing an insert operation, you can execute `SHOW LAST INSERT` on the same session connection. This command returns the result of the most recent insert operation, e.g.
-
-```sql
-mysql> show last insert\G
-*************************** 1. row ***************************
-    TransactionId: 64067
-            Label: insert_ba8f33aea9544866-8ed77e2844d0cc9b
-         Database: default_cluster:db1
-            Table: t1
-TransactionStatus: VISIBLE
-       LoadedRows: 2
-     FilteredRows: 0
+```SQL
+INSERT INTO testdb.test_table (user_id, name, age)
+VALUES (1, "Emily", 25),
+       (2, "Benjamin", 35),
+       (3, "Olivia", 28),
+       (4, "Alexander", 60),
+       (5, "Ava", 17);
 ```
 
-This command returns the insert results and the details of the corresponding transaction. Therefore, you can continue to execute the `show last insert` command after each insert operation to get the insert results.
+INSERT INTO is a synchronous import method, where the import result is directly returned to the user.
 
-> Note: This command will only return the results of the last insert operation within the same session connection. If the connection is broken or replaced with a new one, the empty set will be returned.
-
-## Relevant System Configuration
-
-### FE configuration
-
-- time out
-
-  The timeout time of the import task (in seconds) will be cancelled by the system if the import task is not completed within the set timeout time, and will become CANCELLED.
-
-  At present, Insert Into does not support custom import timeout time. All Insert Into imports have a uniform timeout time. The default timeout time is 4 hours. If the imported source file cannot complete the import within the specified time, the parameter `insert_load_default_timeout_second` of FE needs to be adjusted.
-
-  <version since="dev"></version>
-  At the same time, the Insert Into statement receives the restriction of the Session variable `insert_timeout`. You can increase the timeout time by `SET insert_timeout = xxx;` in seconds.
-
-### Session Variables
-
-- enable_insert_strict
-
-  The Insert Into import itself cannot control the tolerable error rate of the import. Users can only use the Session parameter `enable_insert_strict`. When this parameter is set to false, it indicates that at least one data has been imported correctly, and then it returns successfully. When this parameter is set to true, the import fails if there is a data error. The default is false. It can be set by `SET enable_insert_strict = true;`.
-
-- query_timeout
-
-  Insert Into itself is also an SQL command, and the Insert Into statement is restricted by the Session variable <version since="dev" type="inline">`insert_timeout`</version>. You can increase the timeout time by `SET insert_timeout = xxx;` in seconds.
-
-- enable_nereids_dml_with_pipeline
-
-  When set to `true`, the `insert into` statement will attempt to be executed through the Pipeline engine. See the [import](./load-manual) documentation for details.
-
-## Best Practices
-
-### Application scenarios
-
-1. Users want to import only a few false data to verify the functionality of Doris system. The grammar of INSERT INTO VALUES is suitable at this time.
-2. Users want to convert the data already in the Doris table into ETL and import it into a new Doris table, which is suitable for using INSERT INTO SELECT grammar.
-3. Users can create an external table, such as MySQL external table mapping a table in MySQL system. Or create Broker external tables to map data files on HDFS. Then the data from the external table is imported into the Doris table for storage through the INSERT INTO SELECT grammar.
-
-### Data volume
-
-Insert Into has no limitation on the amount of data, and large data imports can also be supported. However, Insert Into has a default timeout time, and the amount of imported data estimated by users is too large, so it is necessary to modify the system's Insert Into import timeout time.
-
-```text
-Import data volume = 36G or less than 3600s*10M/s
-Among them, 10M/s is the maximum import speed limit. Users need to calculate the average import speed according to the current cluster situation to replace 10M/s in the formula.
+```JSON
+Query OK, 5 rows affected (0.308 sec)
+{'label':'label_3e52da787aab4222_9126d2fce8f6d1e5', 'status':'VISIBLE', 'txnId':'9081'}
 ```
 
-### Complete examples
+3. View imported data.
 
-Users have a table store sales in the database sales. Users create a table called bj store sales in the database sales. Users want to import the data recorded in the store sales into the new table bj store sales. The amount of data imported is about 10G.
-
-```text
-large sales scheme
-(id, total, user_id, sale_timestamp, region)
-
-Order large sales schedule:
-(id, total, user_id, sale_timestamp)
+```SQL
+MySQL> SELECT COUNT(*) FROM testdb.test_table;
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.179 sec)
 ```
 
-Cluster situation: The average import speed of current user cluster is about 5M/s
+**INSERT INTO SELECT**
 
-- Step1: Determine whether you want to modify the default timeout of Insert Into
+1. Building upon the above operations, create a new table as the target table (with the same schema as the source table).
 
-  ```text
-  Calculate the approximate time of import
-  10G / 5M /s = 2000s
-  
-  Modify FE configuration
-  insert_load_default_timeout_second = 2000
-  ```
+```SQL
+CREATE TABLE testdb.test_table2 LIKE testdb.test_table;
+```
 
-- Step2: Create Import Tasks
+2. Ingest data into the new table using `INSERT INTO SELECT`.
 
-  Since users want to ETL data from a table and import it into the target table, they should use the Insert in query\stmt mode to import it.
+```SQL
+INSERT INTO testdb.test_table2
+SELECT * FROM testdb.test_table WHERE age < 30;
+Query OK, 3 rows affected (0.544 sec)
+{'label':'label_9c2bae970023407d_b2c5b78b368e78a7', 'status':'VISIBLE', 'txnId':'9084'}
+```
 
-  ```text
-  INSERT INTO bj_store_sales SELECT id, total, user_id, sale_timestamp FROM store_sales where region = "bj";
-  ```
+3. View imported data.
 
-## Common Questions
+```SQL
+MySQL> SELECT COUNT(*) FROM testdb.test_table2;
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.071 sec)
+```
 
-- View the wrong line
+### View INSERT INTO jobs
 
-  Because Insert Into can't control the error rate, it can only tolerate or ignore the error data completely by `enable_insert_strict`. So if `enable_insert_strict` is set to true, Insert Into may fail. If `enable_insert_strict` is set to false, then only some qualified data may be imported. However, in either case, Doris is currently unable to provide the ability to view substandard data rows. Therefore, the user cannot view the specific import error through the Insert Into statement.
+You can use the `SHOW LOAD` command to view the completed INSERT INTO tasks.
 
-  The causes of errors are usually: source data column length exceeds destination data column length, column type mismatch, partition mismatch, column order mismatch, etc. When it's still impossible to check for problems. At present, it is only recommended that the SELECT command in the Insert Into statement be run to export the data to a file, and then import the file through Stream load to see the specific errors.
+```SQL
+MySQL> SHOW LOAD FROM testdb;
++--------+-----------------------------------------+----------+--------------------+--------+---------+----------------------------------------------------------------------+----------+---------------------+---------------------+---------------------+---------------------+---------------------+------+-----------------------------------------------------------------------------------------------------------------------+---------------+--------------+------+---------+
+| JobId  | Label                                   | State    | Progress           | Type   | EtlInfo | TaskInfo                                                             | ErrorMsg | CreateTime          | EtlStartTime        | EtlFinishTime       | LoadStartTime       | LoadFinishTime      | URL  | JobDetails                                                                                                            | TransactionId | ErrorTablets | User | Comment |
++--------+-----------------------------------------+----------+--------------------+--------+---------+----------------------------------------------------------------------+----------+---------------------+---------------------+---------------------+---------------------+---------------------+------+-----------------------------------------------------------------------------------------------------------------------+---------------+--------------+------+---------+
+| 376416 | label_3e52da787aab4222_9126d2fce8f6d1e5 | FINISHED | Unknown id: 376416 | INSERT | NULL    | cluster:N/A; timeout(s):26200; max_filter_ratio:0.0; priority:NORMAL | NULL     | 2024-02-27 01:22:17 | 2024-02-27 01:22:17 | 2024-02-27 01:22:17 | 2024-02-27 01:22:17 | 2024-02-27 01:22:18 |      | {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"LoadBytes":0,"All backends":{},"FileNumber":0,"FileSize":0} | 9081          | {}           | root |         |
+| 376664 | label_9c2bae970023407d_b2c5b78b368e78a7 | FINISHED | Unknown id: 376664 | INSERT | NULL    | cluster:N/A; timeout(s):26200; max_filter_ratio:0.0; priority:NORMAL | NULL     | 2024-02-27 01:39:37 | 2024-02-27 01:39:37 | 2024-02-27 01:39:37 | 2024-02-27 01:39:37 | 2024-02-27 01:39:38 |      | {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"LoadBytes":0,"All backends":{},"FileNumber":0,"FileSize":0} | 9084          | {}           | root |         |
++--------+-----------------------------------------+----------+--------------------+--------+---------+----------------------------------------------------------------------+----------+---------------------+---------------------+---------------------+---------------------+---------------------+------+-----------------------------------------------------------------------------------------------------------------------+---------------+--------------+------+---------+
+```
 
-## more help
+### Cancel INSERT INTO jobs
 
-For more detailed syntax and best practices used by insert into, see [insert](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT.md) command manual, you can also enter `HELP INSERT` in the MySql client command line for more help information.
+You can cancel the currently executing INSERT INTO job via Ctrl-C.
+
+## Manual
+
+### Syntax
+
+The syntax of INSERT INTO is as follows:
+
+1. INSERT INTO SELECT
+
+INSERT INTO SELECT is used to write the query results to the target table.
+
+```SQL
+INSERT INTO target_table SELECT ... FROM source_table;
+```
+
+The SELECT statement above is similar to a regular SELECT query, allowing operations such as WHERE and JOIN.
+
+2. INSERT INTO VALUES
+
+INSERT INTO VALUES is typically used for testing purposes. It is not recommended for production environments.
+
+```SQL
+INSERT INTO target_table (col1, col2, ...)
+VALUES (val1, val2, ...), (val3, val4, ...), ...;
+```
+
+### Parameter configuration
+
+**FE** **configuration**
+
+insert_load_default_timeout_second
+
+- Default value: 14400s (4 hours)
+- Description: Timeout for import tasks, measured in seconds. If the import task does not complete within this timeout period, it will be canceled by the system and marked as CANCELLED.
+
+**Environment parameters**
+
+insert_timeout
+
+- Default value: 14400s (4 hours)
+- Description: Timeout for INSERT INTO as an SQL statement, measured in seconds. 
+
+enable_insert_strict
+
+- Default value: true
+- Description: If this is set to true, INSERT INTO will fail when the task involves invalid data. If set to false, INSERT INTO will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully.
+- Explanation: INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
+
+### Return values
+
+INSERT INTO an SQL statement, and it returns different results based on different query outcomes:
+
+**Empty result set**
+
+If the query result set of the SELECT statement in INSERT INTO is empty, the returned value will be as follows:
+
+```SQL
+mysql> INSERT INTO tbl1 SELECT * FROM empty_tbl;
+Query OK, 0 rows affected (0.02 sec)
+```
+
+`Query OK` indicates successful execution. `0 rows affected` means no data was imported.
+
+**Non-empty result set and successful INSERT**
+
+```SQL
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2;
+Query OK, 4 rows affected (0.38 sec)
+{'label':'INSERT_8510c568-9eda-4173-9e36-6adc7d35291c', 'status':'visible', 'txnId':'4005'}
+
+mysql> INSERT INTO tbl1 WITH LABEL my_label1 SELECT * FROM tbl2;
+Query OK, 4 rows affected (0.38 sec)
+{'label':'my_label1', 'status':'visible', 'txnId':'4005'}
+
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2;
+Query OK, 2 rows affected, 2 warnings (0.31 sec)
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'visible', 'txnId':'4005'}
+
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2;
+Query OK, 2 rows affected, 2 warnings (0.31 sec)
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
+```
+
+`Query OK` indicates successful execution. `4 rows affected` indicates that a total of 4 rows of data have been imported. `2 warnings` indicates the number of rows that were filtered out. 
+
+Additionally, a JSON string is returned:
+
+```Plain
+{'label':'my_label1', 'status':'visible', 'txnId':'4005'}
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
+{'label':'my_label1', 'status':'visible', 'txnId':'4005', 'err':'some other error'}
+```
+
+Parameter description:
+
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| TxnId     | ID of the import transaction                                 |
+| Label     | Label of the import job: can be specified using "INSERT INTO tbl WITH LABEL label..." |
+| Status    | Visibility of the imported data: If it is visible, it will be displayed as "visible." If not, it will be displayed as "committed." In the "committed" state, the import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.`visible`: The import is successful and the data is visible.`committed`: The import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.Label Already Exists: The specified label already exists and needs to be changed to a different one.Fail: The import fails. |
+| Err       | Error message                                                |
+
+You can use the [SHOW LOAD](https://doris.apache.org/docs/sql-manual/sql-reference/Show-Statements/SHOW-LOAD/) statement to view the filtered rows.
+
+```SQL
+SHOW LOAD WHERE label="xxx";
+```
+
+The result of this statement will include a URL that can be used to query the error data. For more details, refer to the "View error rows" section below.
+
+The invisible state of data is temporary, and the data will eventually become visible. 
+
+You can check the visibility status of a batch of data using the [SHOW TRANSACTION](https://doris.apache.org/docs/sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION/) statement.
+
+```SQL
+SHOW TRANSACTION WHERE id=4005;
+```
+
+If the `TransactionStatus` column in the result is `visible`, it indicates that the data is visible.
+
+```SQL
+{'label':'my_label1', 'status':'visible', 'txnId':'4005'}
+{'label':'INSERT_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
+{'label':'my_label1', 'status':'visible', 'txnId':'4005', 'err':'some other error'}
+```
+
+**Non-empty result set but failed INSERT**
+
+Failed execution means that no data was successfully imported. An error message will be returned:
+
+```SQL
+mysql> INSERT INTO tbl1 SELECT * FROM tbl2 WHERE k1 = "a";
+ERROR 1064 (HY000): all partitions have no load data. url: http://10.74.167.16:8042/api/_load_error_log?file=_shard_2/error_loginsert_stmt_ba8bb9e158e4879-ae8de8507c0bf8a2_ba8bb9e158e4879_ae8de8507c0bf8a2
+```
+
+`ERROR 1064 (HY000): all partitions have no load data` indicates the root cause for the failure. The URL provided in the error message can be used to locate the error data. For more details, refer to the "View error rows" section below.
+
+## Best practice
+
+### Data size
+
+INSERT INTO imposes no limitations on data volume and can support large-scale data imports. However, if you are importing a large amount of data, it is recommended to adjust the system's INSERT INTO timeout settings to ensure that `import timeout >= data volume ``/`` estimated import speed`.
+
+1. FE configuration parameter `insert_load_default_timeout_second`
+2. Environment parameter `insert_timeout`
+
+### View error rows
+
+When the INSERT INTO result includes a URL field, you can use the following command to view the error rows:
+
+```SQL
+SHOW LOAD WARNINGS ON "url";
+```
+
+Example:
+
+```SQL
+SHOW LOAD WARNINGS ON "http://ip:port/api/_load_error_log?file=_shard_13/error_loginsert_stmt_d2cac0a0a16d482d-9041c949a4b71605_d2cac0a0a16d482d_9041c949a4b71605";
+```
+
+Common reasons for errors include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
+
+You can control whether INSERT INTO ignores error rows by configuring the environment variable `enable_insert_strict`.
+
+## Ingest external data via Multi-Catalog
+
+Doris supports the creation of external tables. Once created, data from external tables can be imported into Doris internal tables using `INSERT INTO SELECT`, or queried directly using SELECT statements.
+
+With its Multi-Catalog feature, Doris supports connections to various mainstream data lakes and databases including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (Incubating), Elasticsearch, MySQL, Oracle, and SQL Server.
+
+For more information on Multi-Catalog, please refer to [Lakehouse overview](https://doris.apache.org/docs/2.0/lakehouse/lakehouse-overview/#multi-catalog).
+
+The followings illustrate importing data from a Hive external table into a Doris internal table.
+
+### Create Hive Catalog
+
+```SQL
+CREATE CATALOG hive PROPERTIES (
+    'type'='hms',
+    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
+    'hadoop.username' = 'hive',
+    'dfs.nameservices'='your-nameservice',
+    'dfs.ha.namenodes.your-nameservice'='nn1,nn2',
+    'dfs.namenode.rpc-address.your-nameservice.nn1'='172.21.0.2:8088',
+    'dfs.namenode.rpc-address.your-nameservice.nn2'='172.21.0.3:8088',
+    'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+);
+```
+
+### Ingest data
+
+1. Create a target table for the data import in Doris.
+
+```SQL
+CREATE TABLE `target_tbl` (
+  `k1` decimal(9, 3) NOT NULL COMMENT "",
+  `k2` char(10) NOT NULL COMMENT "",
+  `k3` datetime NOT NULL COMMENT "",
+  `k5` varchar(20) NOT NULL COMMENT "",
+  `k6` double NOT NULL COMMENT ""
+)
+COMMENT "Doris Table"
+DISTRIBUTED BY HASH(k1) BUCKETS 2
+PROPERTIES (
+    "replication_num" = "1"
+);
+```
+
+2. For detailed instructions on creating Doris tables, please refer to [CREATE TABLE](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE/).
+
+3. Importing data (from the `hive.db1.source_tbl` table into the `target_tbl` table).
+
+```SQL
+INSERT INTO target_tbl SELECT k1,k2,k3 FROM  hive.db1.source_tbl limit 100;
+```
+
+The INSERT command is a synchronous command. If it returns a result, that indicates successful import.
+
+### Notes
+
+- Ensure that the external data source and the Doris cluster can communicate, including mutual network accessibility between BE nodes and external data sources.
+
+## Ingest data by TVF
+
+Doris can directly query and analyze files stored in object storage or HDFS as tables through the Table Value Functions (TVFs), which supports automatic column type inference. For detailed information, please refer to the Lakehouse/TVF documentation.
+
+### Automatic column type inference
+
+```Plain
+DESC FUNCTION s3 (
+    "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
+    "s3.access_key"= "ak",
+    "s3.secret_key" = "sk",
+    "format" = "parquet",
+    "use_path_style"="true"
+);
++---------------+--------------+------+-------+---------+-------+
+| Field         | Type         | Null | Key   | Default | Extra |
++---------------+--------------+------+-------+---------+-------+
+| p_partkey     | INT          | Yes  | false | NULL    | NONE  |
+| p_name        | TEXT         | Yes  | false | NULL    | NONE  |
+| p_mfgr        | TEXT         | Yes  | false | NULL    | NONE  |
+| p_brand       | TEXT         | Yes  | false | NULL    | NONE  |
+| p_type        | TEXT         | Yes  | false | NULL    | NONE  |
+| p_size        | INT          | Yes  | false | NULL    | NONE  |
+| p_container   | TEXT         | Yes  | false | NULL    | NONE  |
+| p_retailprice | DECIMAL(9,0) | Yes  | false | NULL    | NONE  |
+| p_comment     | TEXT         | Yes  | false | NULL    | NONE  |
++---------------+--------------+------+-------+---------+-------+
+```
+
+In this example of an S3 TVF, the file path, connection information, and authentication information are specified.
+
+You can use the `DESC FUNCTION` syntax to view the schema of this file.
+
+It can be seen that for Parquet files, Doris automatically infers column types based on the metadata within the file.
+
+Currently, Doris supports analysis and column type inference for Parquet, ORC, CSV, and JSON formats.
+
+It can be used in combination with the `INSERT INTO SELECT` syntax to quickly import files into Doris tables for faster analysis.
+
+```Plain
+// 1. Create Doris internal table
+CREATE TABLE IF NOT EXISTS test_table
+(
+    id int,
+    name varchar(50),
+    age int
+)
+DISTRIBUTED BY HASH(id) BUCKETS 4
+PROPERTIES("replication_num" = "1");
+
+// 2. Insert data by S3 Table Value Function
+INSERT INTO test_table (id,name,age)
+SELECT cast(id as INT) as id, name, cast (age as INT) as age
+FROM s3(
+    "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
+    "s3.access_key"= "ak",
+    "s3.secret_key" = "sk",
+    "format" = "parquet",
+    "use_path_style" = "true");
+```
+
+### Notes
+
+- If the URI specified in the `S3 / hdfs` TVF does not match any files, or if all matched files are empty, the `S3 / hdfs` TVF will return an empty result set. In such cases, if you use `DESC FUNCTION` to view the schema of the file, you will see a dummy column `__dummy_col`, which can be ignored.
+- If the format specified for the TVF is CSV and the file being read is not empty but the first line of the file is empty, an error will be prompted: `The first line is empty, can not parse column numbers`. This is because the schema cannot be parsed from the first line of the file.
+
+## More help
+
+For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT/) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.

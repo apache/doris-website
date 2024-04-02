@@ -132,7 +132,7 @@ Please start building the monitoring system after you have completed the deploym
 
 Prometheus
 
-1. Download the latest version of Prometheus on the [Prometheus Website](https://prometheus.io/download/) or [click to download](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/prometheus-2.43.0.linux-amd64.tar.gz). Here we take version 2.43.0-linux-amd64 as an example.
+1. Download the latest version of Prometheus on the [Prometheus Website](https://prometheus.io/download/) Here we take version 2.43.0-linux-amd64 as an example.
 2. Unzip the downloaded tar file on the machine that is ready to run the monitoring service.
 3. Open the configuration file prometheus.yml. Here we provide an example configuration and explain it (the configuration file is in YML format, pay attention to uniform indentation and spaces):
 
@@ -199,7 +199,7 @@ Prometheus
 
 ### Grafana
 
-1. Download the latest version of Grafana on [Grafana's official website](https://grafana.com/grafana/download) or [click to download](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/grafana-enterprise-8.5.22.linux-amd64.tar.gz). Here we take version 8.5.22.linux-amd64 as an example.
+1. Download the latest version of Grafana on [Grafana's official website](https://grafana.com/grafana/download)
 
 2. Unzip the downloaded tar file on the machine that is ready to run the monitoring service.
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation with Docker",
+    "title": "Compilation with Docker(Recommended)",
     "language": "en"
 }
 ---
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-# Compile with Docker (Recommended)
 
 This guide is about how to compile Doris using the official compilation image provided. As this image is maintained by the Apache Doris team and is regularly updated with the necessary dependencies, it is the recommended way of compilation for users.
 
