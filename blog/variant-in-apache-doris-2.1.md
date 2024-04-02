@@ -4,7 +4,7 @@
     'summary': 'Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.',
     'date': '2024-03-26',
     'author': 'Apache Doris',
-    'tags': ['Release Notes'],
+    'tags': ['Tech Sharing'],
     'picked': "true",
     'order': "1",
     "image": '/images/variant-in-apache-doris-2.1.png'
