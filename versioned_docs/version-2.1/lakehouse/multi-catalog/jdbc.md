@@ -83,7 +83,7 @@ In order to prevent the use of a driver JAR package with a disallowed path when 
 
 3. When creating a catalog, you can specify the checksum of the driver package through the `checksum` parameter. Doris will verify the driver package after loading the driver package. If the verification fails, it will refuse to create the catalog.
 
-:::warning
+:::info
 The above verification will only be performed when the catalog is created. For already created catalogs, verification will not be performed again.
 :::
 
