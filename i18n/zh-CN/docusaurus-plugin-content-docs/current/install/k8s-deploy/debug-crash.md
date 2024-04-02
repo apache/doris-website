@@ -68,6 +68,5 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 
 **进入 pod 内部后，需要修改配置文件的端口信息，才能手动启动 相应的 Doris 组件**
 
-- FE 需要修改默认路径为：`/opt/apache-doris/fe/conf/fe.conf` 的 `http_port=8030` 配置。
-- BE 需要修改默认路径为：`/opt/apache-doris/be/conf/be.conf` 的 `webserver_port=8040` 配置。
-
+- FE 需要修改默认路径为：`/opt/apache-doris/fe/conf/fe.conf` 的 `query_port=9030` 配置。
+- BE 需要修改默认路径为：`/opt/apache-doris/be/conf/be.conf` 的 `heartbeat_service_port=9050` 配置。

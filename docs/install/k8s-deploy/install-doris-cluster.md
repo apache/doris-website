@@ -95,6 +95,8 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 
 **Online Deployment**
 
+Before installation, you need to add a deployment warehouse. If it has been added, you can directly install Doris Cluster. Otherwise, please refer to the operation of **Add Deployment Warehouse** when adding [Deploy Doris Operator](<./install-operator.md#Option 3: Helm deploys Doris Operator>)
+
 1. Install Doris Cluster
 
 Install [doriscluster](https://artifacthub.io/packages/helm/doris/doris), using the default configuration this deployment only deploys 3 FE and 3 BE components, using the default `storageClass` to implement PV dynamic provisioning.
