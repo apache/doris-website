@@ -84,7 +84,7 @@ PROPERTIES ("key"="value", ...)
 
 3. 在创建 Catalog 时，可以通过 `checksum` 参数来指定驱动包的校验和，Doris 会在加载驱动包后，对驱动包进行校验，如果校验失败，则会拒绝创建 Catalog。
 
-:::warning
+:::info
 上述的校验只会在创建 Catalog 时进行，对于已经创建的 Catalog，不会再次进行校验。
 :::
 
