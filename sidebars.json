@@ -295,7 +295,15 @@
                 "ecosystem/cloudcanal",
                 "ecosystem/hive-bitmap-udf",
                 "ecosystem/dbt-doris-adapter",
-                "ecosystem/bi-integration/apache-superset",
+                {
+                    "type": "category",
+                    "label": "BI and Database IDE",
+                    "items": [
+                        "ecosystem/bi/apache-superset",
+                        "ecosystem/bi/dbeaver",
+                        "ecosystem/bi/datagrip"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "UDF",
