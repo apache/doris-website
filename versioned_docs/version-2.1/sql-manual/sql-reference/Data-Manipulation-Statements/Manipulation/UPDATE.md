@@ -38,30 +38,12 @@ The UPDATE operation currently only supports updating the Value column. The upda
 #### Syntax
 
 ```sql
-UPDATE target_table [table_alias]
-    SET assignment_list
-    WHERE condition
-
-assignment_list:
-    assignment [, assignment] ...
-
-assignment:
-    col_name = value
-
-value:
-    {expr | DEFAULT}
-```
-
-<version since="dev">
-
-```sql
+[cte]
 UPDATE target_table [table_alias]
     SET assignment_list
     [ FROM additional_tables]
     WHERE condition
 ```
-
-</version>
 
 #### Required Parameters
 
@@ -71,12 +53,9 @@ UPDATE target_table [table_alias]
 
 #### Optional Parameters
 
-<version since="dev">
-
++ cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
-
-</version>
 
 #### Note
 
@@ -97,8 +76,6 @@ UPDATE test SET v1 = 1 WHERE k1=1 and k2=2;
 ```sql
 UPDATE test SET v1 = v1+1 WHERE k1=1;
 ```
-
-<version since="dev">
 
 3. use the result of `t2` join `t3` to update `t1`
 
@@ -157,7 +134,46 @@ the expect result is only update the row where id = 1 in table t1
 +----+----+----+--------+------------+
 ```
 
-</version>
+4. using cte
+
+```sql
+create table orders(
+    o_orderkey bigint,
+    o_totalprice decimal(15, 2)
+) unique key(o_orderkey)
+distributed by hash(o_orderkey) buckets 1 
+properties (
+    "replication_num" = "1"
+);
+
+insert into orders values
+(1, 34.1),
+(2, 432.8);
+
+create table lineitem(
+    l_linenumber int,
+    o_orderkey bigint,
+    l_discount  decimal(15, 2)
+) unique key(l_linenumber)
+distributed by hash(l_linenumber) buckets 1 
+properties (
+    "replication_num" = "1"
+);
+
+insert into lineitem values
+(1, 1, 1.23),
+(2, 1, 3.21),
+(3, 2, 18.08),
+(4, 2, 23.48);
+
+with discount_orders as (
+    select * from orders 
+    where o_totalprice > 100
+)
+update lineitem  set l_discount = l_discount*0.9
+from discount_orders 
+where lineitem.o_orderkey = discount_orders.o_orderkey;
+```
 
 ### Keywords
 

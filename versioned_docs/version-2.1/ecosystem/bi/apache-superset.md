@@ -1,6 +1,6 @@
 ---
 {
-"title": "Apache Superset Integrate",
+"title": "Apache Superset",
 "language": "en"
 }
 ---

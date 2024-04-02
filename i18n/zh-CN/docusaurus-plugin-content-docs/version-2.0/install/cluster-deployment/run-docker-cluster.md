@@ -1,6 +1,6 @@
 ---
 {
-"title": "部署 Docker 集群",
+"title": "Docker 部署",
 "language": "zh-CN"
 }
 ---

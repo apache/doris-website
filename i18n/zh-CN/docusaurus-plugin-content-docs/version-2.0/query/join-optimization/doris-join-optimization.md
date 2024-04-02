@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Join 优化原理",
+    "title": "Join 优化原理",
     "language": "zh-CN"
 }
 

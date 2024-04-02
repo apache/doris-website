@@ -192,6 +192,14 @@ KEY(k1,k2)
 
 `workload_group`：物化视图执行刷新任务时使用的workload_group名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。workload_group创建及使用 [WORKLOAD-GROUP](../../../../admin-manual/workload-group.md)
 
+`partition_sync_limit`：当基表的分区字段为时间时（如果是字符串类型的时间，可以设置partition_date_format），可以用此属性配置同步基表的分区范围，配合`partition_sync_time_unit`一起使用。
+例如设置为 2，`partition_sync_time_unit`设置为 MONTH，代表仅同步基表近2个月的分区和数据。最小值为1。
+随着时间的变化物化视图每次刷新时都会自动增删分区，例如物化视图现在有2，3两个月的数据，下个月的时候，会自动删除2月的数据，增加4月的数据。
+
+`partition_sync_time_unit`：时间单位，支持 DAY/MONTH/YEAR（默认DAY）
+
+`partition_date_format`：分区字段的时间格式，例如"%Y-%m-%d"
+
 ##### query
 
 创建物化视图的查询语句，其结果即为物化视图中的数据

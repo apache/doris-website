@@ -95,6 +95,8 @@ kubectl apply -f ./${cluster_sample}.yaml -n ${namespace}
 
 **在线部署**
 
+在安装开始前，需要添加部署仓库，若已经添加则可直接进行 Doris Cluster 的安装，否则请参考添加[部署 Doris Operator](./install-operator.md#%E6%96%B9%E6%A1%88%E4%B8%89helm-%E9%83%A8%E7%BD%B2-doris-operator) 时 **添加部署仓库** 的操作
+
 1. 安装 Doris Cluster
 
 安装 [doriscluster](https://artifacthub.io/packages/helm/doris/doris)，使用默认配置此部署仅部署 3 个 FE 和 3 个 BE 组件，使用默认 `storageClass` 实现 PV 动态供给。

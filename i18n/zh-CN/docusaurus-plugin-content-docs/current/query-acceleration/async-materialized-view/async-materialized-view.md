@@ -203,6 +203,44 @@ DROP MATERIALIZED VIEW mv1;
 
 具体的语法可查看[DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
 
+## 最佳实践
+### 基表分区过多，物化视图只关注最近一段时间的数据
+创建基表，有三个分区
+```sql
+CREATE TABLE t1 (
+    `k1` INT,
+    `k2` DATE NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`k1`)
+COMMENT 'OLAP'
+PARTITION BY range(`k2`)
+(
+PARTITION p26 VALUES [("2024-03-26"),("2024-03-27")),
+PARTITION p27 VALUES [("2024-03-27"),("2024-03-28")),
+PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
+)
+DISTRIBUTED BY HASH(`k1`) BUCKETS 2
+PROPERTIES (
+'replication_num' = '1'
+);
+```
+创建物化视图，只关注最近一天的数据，如果当前时间为2024-03-28 xx:xx:xx， 这样物化视图会仅有一个分区[("2024-03-28"),("2024-03-29"))
+```sql
+CREATE MATERIALIZED VIEW mv1
+BUILD DEFERRED REFRESH AUTO ON MANUAL
+partition by(`k2`)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES (
+'replication_num' = '1',
+'partition_sync_limit'='1',
+'partition_sync_time_unit'='DAY'
+)
+AS
+SELECT * FROM t1;
+```
+时间又过了一天，当前时间为2024-03-29 xx:xx:xx，`t1`新增一个分区[("2024-03-29"),("2024-03-30"))，如果此时刷新物化视图，刷新完成后，物化视图会仅有一个分区[("2024-03-29"),("2024-03-30"))
+
+
 ## 物化视图的使用
 
 请参阅 [查询异步物化视图](./query-async-materialized-view.md)

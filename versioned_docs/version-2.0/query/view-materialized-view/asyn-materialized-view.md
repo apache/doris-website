@@ -25,5 +25,5 @@ under the License.
 -->
 
 :::tip
-The asynchronous materialized view feature is released in Doris 2.1, see Doris 2.1 documentation.
+The asynchronous materialized view feature is released in Doris 2.1, see [Doris 2.1 documentation](https://doris.apache.org/docs/query-acceleration/async-materialized-view/).
 :::
