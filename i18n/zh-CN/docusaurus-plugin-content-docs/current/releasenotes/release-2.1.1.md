@@ -24,6 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
+亲爱的社区小伙伴们，Apache Doris 2.1.1 版本已于 2024 年 4 月 3 日正式发布。该版本针对 2.1.0 版本出现的问题进行较为全面的优化，提交了若干改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。
+
+立即下载
+- https://doris.apache.org/download/
+
+GitHub Release
+- https://github.com/apache/doris/releases
+
+
 ## 1 行为变更
 
 1. 改变了 Float 类型字段返回值序列化的方式，可以提升大数据量下 Float 返回的性能。
@@ -90,7 +100,7 @@ under the License.
 
    - https://github.com/apache/doris/pull/32101 
 
-9. 支持查询实验会话变量。 
+9. 支持查询 Experimental 的 Session Variable。  
 
    - https://github.com/apache/doris/pull/31837
 

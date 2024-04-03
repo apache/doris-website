@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Dear community members, Apache Doris 2.1.1 has been officially released on April 3, 2024, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.
+
 - **Quick Download:** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 
 - **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
