@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Notes'],
+        title: "Apache Doris 2.1.1 just released",
+        content: `Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.`,
+        to: '/blog/release-note-2.1.1',
+        image: '2.1.1.png',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis",
         content: `Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.`,
         to: '/blog/variant-in-apache-doris-2.1',
         image: 'variant-in-apache-doris-2.1.png',
-    },
-    {
-        tags: ['Release Notes'],
-        title: "Another big leap: Apache Doris 2.1.0 is released",
-        content: `We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.`,
-        to: '/blog/release-note-2.1.0',
-        image: '2.1.0.png',
     },
     {
         tags: ['Best Practice'],
