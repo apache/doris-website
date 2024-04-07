@@ -1331,7 +1331,7 @@
                         "admin-manual/privilege-ldap/user-privilege",
                         "admin-manual/privilege-ldap/ldap",
                         "admin-manual/privilege-ldap/ranger",
-                        "admin-manual/authentication-and-authorization/authentication-and-authorization.md"
+                        "admin-manual/privilege-ldap/authentication-and-authorization.md"
                     ]
                 },
                 {
