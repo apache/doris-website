@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SHOW-PRIVILEGES",
+    "title": "Show Privileges",
     "language": "en"
 }
 ---
