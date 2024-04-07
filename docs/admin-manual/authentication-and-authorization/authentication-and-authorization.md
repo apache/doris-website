@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Noun Interpretation
+## Noun Interpretation
 
 1. User Identity
 
@@ -46,18 +46,18 @@ under the License.
 
    User attributes include but are not limited to: maximum number of user connections, importing cluster configuration, and so on.
 
-# Authentication-and-authorization framework
+## Authentication-and-authorization framework
 
 The process of users logging into Apache Doris is divided into two parts: authentication and authentication.
 
 - Authentication: Perform identity verification based on the credentials provided by the user, such as username, customer single IP, password, etc. After verification, the individual user will be mapped to the User Identity within the system.
 - Authorization: Based on the obtained user ID, check whether the user has the corresponding operation permissions according to the permissions corresponding to the user ID.
 
-# Authentication
+## Authentication
 
 Doris supports built-in authentication schemes as well as authentication schemes for LDAP.
 
-## Doris built-in authentication scheme
+### Doris built-in authentication scheme
 
 Authenticate based on the username, password, and other information stored by Doris itself.
 
@@ -65,7 +65,7 @@ Administrators create users through `create user` and view all created users thr
 
 When a user logs in, they will check if the username, password, and client's IP address are correct.
 
-### Password Policy
+#### Password Policy
 
 Doris supports the following password policies to help users better manage passwords.
 
@@ -83,12 +83,12 @@ Doris supports the following password policies to help users better manage passw
 
    Locked accounts can be actively unlocked through the SUPER USER statement.
 
-## LDAP based authentication scheme
+### LDAP based authentication scheme
 
 [LDAP](../privilege-ldap/ldap.md)
 
-# authorization
-## Permission operation
+## authorization
+### Permission operation
 1. Create user: [CREATE USER](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-USER.md)
 2. Alter user: [ALTER USER](../../sql-manual/sql-reference/Account-Management-Statements/ALTER-USER.md)
 3. Drop user: [DROP USER](../../sql-manual/sql-reference/Account-Management-Statements/DROP-USER.md)
@@ -107,7 +107,7 @@ Doris supports the following password policies to help users better manage passw
 16. View row permission policies: [SHOW ROW POLICY](../../sql-manual/sql-reference/Show-Statements/SHOW-POLICY.md)
 17. Create row permission policy: [CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md)
 
-## Permission type
+### Permission type
 
 Doris currently supports the following types of permissions
 
@@ -155,25 +155,25 @@ Doris currently supports the following types of permissions
 
    priv of Show create view
 
-## privilege level
+### privilege level
 
-### Global Permissions
+#### Global Permissions
 
    The permissions granted on *. *. * through the GRANT statement. The granted permissions apply to any library table in any catalog.
 
-### Catalog Permissions
+#### Catalog Permissions
 
    The permissions granted on ctl. *. * through the GRANT statement. The granted permissions apply to any library table in the specified Catalog.
 
-### Database level permissions
+#### Database level permissions
 
    The permission granted on ctl. db. * through the GRANT statement. The granted permissions apply to any table in the specified database.
 
-### Table level permissions
+#### Table level permissions
 
    The permission granted on ctl. db. tbl through the GRANT statement. The granted permissions apply to any column of the specified table.
 
-### Column level permissions
+#### Column level permissions
 
    Mainly used to restrict user access to certain columns in the data table. Specifically, column permissions allow administrators to set viewing, editing, and other permissions for certain columns to control user access and operations on specific column data.
 
@@ -181,7 +181,7 @@ Doris currently supports the following types of permissions
 
    Currently, column permissions only support Select_priv.
 
-### Row level permissions
+#### Row level permissions
 
    Exercise restrictions allow administrators to define access policies based on certain fields of data, thereby controlling which users can access which data rows.
 
@@ -191,7 +191,7 @@ Doris currently supports the following types of permissions
 
    Starting from version 2.1.2, it is supported to set row permissions through Apache Ranger's Row Level Filter (note: only supported in the Nereids optimizer)
 
-## Usage permissions
+### Usage permissions
 
 #### RESOURCE permissions
 
@@ -203,7 +203,7 @@ Doris currently supports the following types of permissions
 
    Allocating all Workload Groups can be done through ` GRANT USAGE-PRIV ON GROUP '%' to xxx`
 
-## Data Mask
+### Data Mask
 
    Data desensitization is a method of protecting sensitive data by modifying, replacing, or hiding the original data, so that the desensitized data no longer contains sensitive information while maintaining a certain format and characteristics.
 
@@ -211,9 +211,9 @@ Doris currently supports the following types of permissions
 
    Starting from version 2.1.2, it is supported to set desensitization policies for certain columns through Apache Ranger Masking. Currently, only [Doris Ranger](../privilege-ldap/ranger.md) is supported for setting.
 
-## Authentication scheme
+### Authentication scheme
 
-### Doris built-in authentication scheme
+#### Doris built-in authentication scheme
 
    Doris permission design is based on the RBAC (Role Based Access Control) permission management model, where users are associated with roles, roles are associated with permissions, and users are indirectly associated with permissions through roles.
 
@@ -253,13 +253,13 @@ Doris currently supports the following types of permissions
 
    The default role cannot be deleted or assigned to others. When a user is deleted, the default role is also automatically deleted.
    
-### Authentication scheme based on Apache Ranger
+#### Authentication scheme based on Apache Ranger
 
    [Doris Ranger](../privilege-ldap/ranger.md)
 
-# Others
+## Others
 
-## Permission Item Description
+### Permission Item Description
 
 1. Users with ADMIN permission or GRANT permission at the GLOBAL level can perform the following operations:
 - `CREATE USER`
@@ -282,7 +282,7 @@ Doris currently supports the following types of permissions
 - Ordinary users can set their corresponding UserIdentity password. The corresponding UserIdentity can be accessed through ` SELECT CURREN_USER()` Command viewing.
 - ROOT users can change their passwords
 
-## Other instructions
+### Other instructions
 1. When Doris initializes, the following users and roles will be automatically created:
    - `operator` role: This role has all permissions to Doris, namely 'Node_priv' and 'Adminpriv'.
    - `admin` role: This role has' Adminpriv ', which means all permissions except for node changes.

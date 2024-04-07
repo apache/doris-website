@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 名词解释
+## 名词解释
 
 1. 用户标识 User Identity
    
@@ -46,18 +46,18 @@ under the License.
    
    用户属性包括但不限于： 用户最大连接数、导入集群配置等等。
 
-# 认证和鉴权框架
+## 认证和鉴权框架
 
 用户登录 Apache Doris 的过程，分为【认证】和【鉴权】两部分。
 
 - 认证：根据用户提供的凭据（如用户名、客户单IP、密码）等，进行身份验证。验证通过后，会将用户个体映射到系统内的用户标识（User Identity）上。
 - 鉴权：基于获取到的用户标识，根据用户标识所对应的权限，检查用户是否有相应操作的权限。
 
-# 认证
+## 认证
 
 Doris 支持内置认证方案和以及LDAP的认证方案。
 
-## Doris 内置认证方案
+### Doris 内置认证方案
 
 基于Doris自身存储的用户名，密码等信息来认证。
 
@@ -65,7 +65,7 @@ Doris 支持内置认证方案和以及LDAP的认证方案。
 
 用户登录时，会判断用户名，密码及客户端的ip地址是否正确。
 
-### 密码策略
+#### 密码策略
 
 Doris 支持以下密码策略，可以帮助用户更好的进行密码管理。
 
@@ -83,12 +83,12 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
    
    被锁定的账户可以通过 ALTER USER 语句主动解锁。
 
-## 基于LDAP的认证方案
+### 基于LDAP的认证方案
 
 [LDAP](../privilege-ldap/ldap.md)
 
-# 鉴权
-## 权限操作
+## 鉴权
+### 权限操作
 1. 创建用户：[CREATE USER](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-USER.md)
 2. 修改用户：[ALTER USER](../../sql-manual/sql-reference/Account-Management-Statements/ALTER-USER.md)
 3. 删除用户：[DROP USER](../../sql-manual/sql-reference/Account-Management-Statements/DROP-USER.md)
@@ -107,7 +107,7 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 16. 查看行权限策略：[SHOW ROW POLICY](../../sql-manual/sql-reference/Show-Statements/SHOW-POLICY.md)
 17. 创建行权限策略：[CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md)
 
-## 权限类型
+### 权限类型
 
 Doris 目前支持以下几种权限
 
@@ -155,25 +155,25 @@ Doris 目前支持以下几种权限
 
    Show create view的权限
 
-## 权限层级
+### 权限层级
 
-### 全局权限
+#### 全局权限
 
    即通过 GRANT 语句授予的 *.*.* 上的权限。被授予的权限适用于任意Catalog中的任意库表。 
 
-### 数据目录（Catalog）权限
+#### 数据目录（Catalog）权限
 
    即通过 GRANT 语句授予的 ctl.*.* 上的权限。被授予的权限适用于指定Catalog中的任意库表。
 
-### 库级权限
+#### 库级权限
 
    即通过 GRANT 语句授予的 ctl.db.* 上的权限。被授予的权限适用于指定数据库中的任意表。
 
-### 表级权限
+#### 表级权限
 
    即通过 GRANT 语句授予的 ctl.db.tbl 上的权限。被授予的权限适用于指定表的任意列。
 
-### 列级权限
+#### 列级权限
 
    主要用于限制用户对数据表中某些列的访问权限。具体来说，列权限允许管理员设定某些列的查看、编辑等权限，以控制用户对特定列数据的访问和操作。
    
@@ -181,7 +181,7 @@ Doris 目前支持以下几种权限
    
    目前列权限仅支持Select_priv。
 
-### 行级权限
+#### 行级权限
    
    行权限使得管理员能够基于数据的某些字段来定义访问策略，从而控制哪些用户可以访问哪些数据行。
    
@@ -191,7 +191,7 @@ Doris 目前支持以下几种权限
    
    从2.1.2版本开始，支持通过 ApacheRanger 的 Row Level Filter 来设置行权限 （注意：仅支持在Nereids优化器使用）
 
-## 使用权限
+### 使用权限
 
 #### RESOURCE 权限
    
@@ -203,7 +203,7 @@ Doris 目前支持以下几种权限
    
    分配所有WORKLOAD GROUP可以通过 `GRANT USAGE_PRIV ON RESOURCE '%' to xxx`
 
-## 数据脱敏
+### 数据脱敏
    
    数据脱敏是一种保护敏感数据的方法，它通过对原始数据进行修改、替换或隐藏，使得脱敏后的数据在保持一定格式和特性的同时，不再包含敏感信息。
    
@@ -211,9 +211,9 @@ Doris 目前支持以下几种权限
    
    从2.1.2版本开始，支持通过 ApacheRanger 的 Masking 来为某些列设置脱敏策略，目前仅支持[Doris Ranger](../privilege-ldap/ranger.md)来设置。
 
-## 鉴权方案
+### 鉴权方案
 
-### Doris 内置的鉴权方案
+#### Doris 内置的鉴权方案
    
    Doris权限设计基于RBAC(Role-Based Access Control)的权限管理模型,用户和角色关联，角色和权限关联，用户通过角色间接和权限关联。
    
@@ -253,13 +253,13 @@ Doris 目前支持以下几种权限
    
    默认角色不能被删除，不能被分配给其他人，删除用户时，默认角色也自动删除。
    
-### 基于 Apache Ranger的鉴权方案
+#### 基于 Apache Ranger的鉴权方案
 
    [Doris Ranger](../privilege-ldap/ranger.md)
 
-# 其他说明   
+## 其他说明   
 
-## 权限项说明
+### 权限项说明
 
 1. 拥有 `ADMIN` 权限，或 `GLOBAL`层级的 `GRANT` 权限的用户可以进行以下操作：
 - `CREATE USER`
@@ -282,7 +282,7 @@ Doris 目前支持以下几种权限
 - 普通用户可以设置自己对应的 UserIdentity 的密码。自己对应的 UserIdentity 可以通过 `SELECT CURRENT_USER();` 命令查看。
 - ROOT用户可以修改自己的密码
 
-## 其他说明
+### 其他说明
 1. Doris 初始化时，会自动创建如下用户和角色：
    - `operator` 角色：该角色拥有 `Node_priv` 和 `Admin_priv`，即对Doris的所有权限。
    - `admin` 角色：该角色拥有 `Admin_priv`，即除节点变更以外的所有权限。

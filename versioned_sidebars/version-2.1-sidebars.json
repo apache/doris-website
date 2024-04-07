@@ -1335,6 +1335,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "Authentication and Authorization",
+                    "items": [
+                        "admin-manual/authentication-and-authorization/authentication-and-authorization.md"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "System Table",
                     "items": [
                         "admin-manual/system-table/rowsets"
