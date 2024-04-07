@@ -1,6 +1,6 @@
 ---
 {
-"title": "authentication-and-authorization",
+"title": "Authentication and Authorization",
 "language": "en"
 }
 ---
