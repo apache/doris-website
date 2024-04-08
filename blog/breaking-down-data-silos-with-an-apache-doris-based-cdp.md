@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/breaking-down-data-silos-with-an-apache-doris-based-cdp.png'
 }
 

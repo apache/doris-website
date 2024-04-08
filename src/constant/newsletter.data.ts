@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "Auto-increment columns in databases: a simple magic that makes a big difference",
+        content: `Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.`,
+        to: '/blog/auto-increment-columns-in-databases',
+        image: 'auto-increment-columns-in-databases.png',
+    },
+    {
         tags: ['Release Notes'],
         title: "Apache Doris 2.1.1 just released",
         content: `Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.`,
@@ -19,13 +26,6 @@ export const NEWSLETTER_DATA = [
         content: `The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark, Impala, HBase and NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.`,
         to: '/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp',
         image: 'breaking-down-data-silos-with-an-apache-doris-based-cdp.png',
-    },
-    {
-        tags: ['Best Practice'],
-        title: "A financial anti-fraud solution based on the Apache Doris data warehouse",
-        content: `Financial fraud prevention is a race against time. This post will get into details about how a retail bank builds their fraud risk management platform based on Apache Doris and how it performs.`,
-        to: '/blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse',
-        image: 'a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.png',
     },
     // {
     //     tags: ['Best Practice'],

@@ -1214,6 +1214,7 @@
                                 "sql-manual/sql-reference/Show-Statements/SHOW-PROPERTY",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-TRIGGERS",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-PROCESSLIST",
+                                "sql-manual/sql-reference/Show-Statements/SHOW-PRIVILEGES",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-TRASH",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-VIEW",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION",
@@ -1331,7 +1332,7 @@
                         "admin-manual/privilege-ldap/user-privilege",
                         "admin-manual/privilege-ldap/ldap",
                         "admin-manual/privilege-ldap/ranger",
-                        "admin-manual/privilege-ldap/authentication-and-authorization.md"
+                        "admin-manual/privilege-ldap/authentication-and-authorization"
                     ]
                 },
                 {
