@@ -190,6 +190,7 @@
                 "advanced/time-zone",
                 "advanced/sql-mode",
                 "advanced/small-file-mgr",
+                "advanced/com",
                 "advanced/cold-hot-separation",
                 "advanced/is-being-synced",
                 "advanced/lateral-view",
