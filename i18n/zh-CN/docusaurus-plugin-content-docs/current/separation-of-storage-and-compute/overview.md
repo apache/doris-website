@@ -48,17 +48,17 @@ under the License.
 
 下图为存算分离架构部署方式示意图, 除了FE, BE, 还引入一个新模块(Meta-service+Foundationdb)用来管理offload的元数据信息, 实现机节点无状态化.
 
-![Doris 存算分离overview](../../../../../static/images/separation-of-storage-and-compute/overview_arch.png)
+![Doris 存算分离overview](/images/separation-of-storage-and-compute/overview_arch.png)
 
 下图展示了各个模块之间的连接关系, 需要注意的是 meta-service 依赖了一个高性能分布式事务kv [foundationdb](https://github.com/apple/foundationdb) 来存储实际的数据, 这样大大简化了元数据管理的流程, 同时也提供足够的横向的扩展能力. 实际上meta-service也是一无状态化的服务
 
-![Doris 存算分离模块](../../../../../static/images/separation-of-storage-and-compute/arch_modules.png)
+![Doris 存算分离模块](/images/separation-of-storage-and-compute/arch_modules.png)
 
 ## 读写
 
 下图展示了存算分离架构下读写数据流转的流程
 
-![Doris 存算分离数据流](../../../../../static/images/separation-of-storage-and-compute/data_flow.png)
+![Doris 存算分离数据流](/images/separation-of-storage-and-compute/data_flow.png)
 
 导入(s3 load为例): 
 
@@ -98,7 +98,7 @@ under the License.
 
 ## 数据布局
 
-![Doris 存算分离数据布局](../../../../../static/images/separation-of-storage-and-compute/data_layout.png)
+![Doris 存算分离数据布局](/images/separation-of-storage-and-compute/data_layout.png)
 
 存算分离架构下, 数据(包括元数据和数据文件) 存储在3个位置: FE(bdbJE), fdb 以及 共享存储(对象,HDFS等)
 
