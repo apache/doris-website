@@ -26,14 +26,18 @@ under the License.
 
 ### description
 #### Syntax
+`DOUBLE truncate(DOUBLE x, INT d)`  
 
-`DOUBLE truncate(DOUBLE x, INT d)`
-Numerically truncate `x` according to the number of decimal places `d`.
+Numerically truncate `x` according to the number of decimal places `d`.  
 
-The rules are as follows: 
-When `d > 0`: keep `d` decimal places of `x` 
-When `d = 0`: remove the fractional part of `x` and keep only the integer part 
-When `d < 0`: Remove the fractional part of `x`, and replace the integer part with the number `0` according to the number of digits specified by `d`
+The rules are as follows:  
+
+If `d` is literal:  
+When `d > 0`: keep `d` decimal places of `x`  
+When `d = 0`: remove the fractional part of `x` and keep only the integer part  
+When `d < 0`: Remove the fractional part of `x`, and replace the integer part with the number `0` according to the number of digits specified by `d`  
+
+Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
 
 ### example
 
@@ -56,6 +60,17 @@ mysql> select truncate(-124.3867, -2);
 +-------------------------+
 |                    -100 |
 +-------------------------+
+mysql> select cast("123.123456" as Decimal(9,6)), number, truncate(cast ("123.123456" as Decimal(9,6)), number) from numbers("number"="5");
+--------------
++---------------------------------------+--------+----------------------------------------------------------------------+
+| cast('123.123456' as DECIMALV3(9, 6)) | number | truncate(cast('123.123456' as DECIMALV3(9, 6)), cast(number as INT)) |
++---------------------------------------+--------+----------------------------------------------------------------------+
+|                            123.123456 |      0 |                                                           123.000000 |
+|                            123.123456 |      1 |                                                           123.100000 |
+|                            123.123456 |      2 |                                                           123.120000 |
+|                            123.123456 |      3 |                                                           123.123000 |
+|                            123.123456 |      4 |                                                           123.123400 |
++---------------------------------------+--------+----------------------------------------------------------------------+
 ```
 
 ### keywords
