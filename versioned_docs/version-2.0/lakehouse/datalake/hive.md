@@ -36,6 +36,7 @@ In addition to Hive, systems like Iceberg and Hudi also use Hive Metastore for m
 - Managed Tables, External Tables, and part of the Hive Views are supported.
 - It can recognize Hive, Iceberg, and Hudi metadata stored in the Hive Metastore.
 - You should place core-site.xml, hdfs-site.xml, and hive-site.xml in the conf directory of both FE and BE. During reading, the hadoop configuration files in the conf directory are read first, followed by the configuration files related to the HADOOP_CONF_DIR environment variable.
+- If the Hadoop node is configured with hostname, please ensure to add the corresponding mapping relationship to the /etc/hosts file.
 
 ## Create Catalog
 
