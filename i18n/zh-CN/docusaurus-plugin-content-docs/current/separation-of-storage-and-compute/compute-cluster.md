@@ -25,7 +25,7 @@ under the License.
 -->
 
 存算分离架构下, 可以将一个或多个计算节点(BE)组成一个compute cluster (以下简称
-cluster).  本文档描述如何使用cluster(如何创建cluster请参考[链接](deployment.md)):
+cluster).  本文档描述如何使用cluster(如何创建cluster请参考[链接](../separation-of-storage-and-compute/deployment.md)):
 1. 显示所有的clsuter
 2. 如何进行cluster的授权
 3. 如何在用户级别绑定cluster (default_cloud_cluster) 达到用户级别的隔离效果

@@ -26,7 +26,7 @@ under the License.
 
 ## 写在前面
 
-开始部署前请先阅读[Doris存算分离架构说明文档](overview.md).
+开始部署前请先阅读[Doris存算分离架构说明文档](../separation-of-storage-and-compute/overview.md).
 
 Doris存算分离部署总共需要3个模块: FE BE MS(程序名为doris_cloud, 存算分离新引入的模块)
 
@@ -117,7 +117,7 @@ bin/stop.sh
 
 存算分离架构下, 整个数仓的节点构成信息是通过meta-service进行维护的(注册+变更). FE BE 和 Meta-service交互来进行服务发现和身份验证. 
 
-创建存算分离集群主要是和Meta-service交互, 通过http接口, [meta-service 提供了标准的http接口进行资源管理操作](link meta_service_resource_http_api.md).
+创建存算分离集群主要是和Meta-service交互, 通过http接口, [meta-service 提供了标准的http接口进行资源管理操作](../separation-of-storage-and-compute/meta_service_resource_http_api.md).
 
 创建存算分离集群 (以及cluster)的其实就是描述这个存算分离集群里的机器组成, 以下步骤只涉创建一个最基础的存算分离集群所需要进行的交互.
 
@@ -183,7 +183,7 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 
 BE cluster的数量以及 节点数量 根据自己需求调整, 不固定, 不同cluster需要使用不同的 cluster_name 和 cluster_id.
 
-通过调用[meta-service的资源管控API进行操作](meta_service_resource_http_api.md)
+通过调用[meta-service的资源管控API进行操作](../separation-of-storage-and-compute/meta_service_resource_http_api.md)
 
 ```Shell
 # 172.19.0.11
