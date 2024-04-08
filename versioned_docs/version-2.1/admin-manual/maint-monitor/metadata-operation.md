@@ -192,7 +192,7 @@ FE may fail to start bdbje and synchronize between FEs for some reasons. Phenome
 	1. Modify fe.conf
        - If the node is an OBSERVER, first change the `role=OBSERVER` in the `meta_dir/image/ROLE` file to `role=FOLLOWER`. (Recovery from the OBSERVER node will be more cumbersome, first follow the steps here, followed by a separate description)
        - If fe.version < 2.0.2, add configuration in fe.conf: `metadata_failure_recovery=true`.
-	2. Run `sh bin/start_fe.sh  --metadata_failure_recovery` to start the FE
+	2. Run `sh bin/start_fe.sh --metadata_failure_recovery --daemon` to start the FE
 	3. If normal, the FE will start in the role of MASTER, similar to the description in the previous section `Start a single node FE`. You should see the words `transfer from XXXX to MASTER` in fe.log.
 	4. After the start-up is completed, connect to the FE first, and execute some query imports to check whether normal access is possible. If the operation is not normal, it may be wrong. It is recommended to read the above steps carefully and try again with the metadata previously backed up. If not, the problem may be more serious.
 	5. If successful, through the `show frontends;` command, you should see all the FEs you added before, and the current FE is master.

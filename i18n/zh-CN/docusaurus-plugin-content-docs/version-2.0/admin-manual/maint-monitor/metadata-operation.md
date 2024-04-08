@@ -224,7 +224,7 @@ FE 有可能因为某些原因出现无法启动 bdbje、FE 之间无法同步�
       - 如果该节点是一个 OBSERVER，先将 `meta_dir/image/ROLE` 文件中的 `role=OBSERVER` 改为 `role=FOLLOWER`。（从 OBSERVER 节点恢复会比较麻烦，先按这里的步骤操作，后面会有单独说明）)
       - 如果 FE 版本< 2.0.2, 则还需要在 fe.conf 中添加配置：`metadata_failure_recovery=true`。
     
-    2. 执行 `sh bin/start_fe.sh --metadata_failure_recovery` 启动这个 FE。
+    2. 执行 `sh bin/start_fe.sh --metadata_failure_recovery --daemon` 启动这个 FE。
     
     3. 如果正常，这个 FE 会以 MASTER 的角色启动，类似于前面 `启动单节点 FE` 一节中的描述。在 fe.log 应该会看到 `transfer from XXXX to MASTER` 等字样。
     
