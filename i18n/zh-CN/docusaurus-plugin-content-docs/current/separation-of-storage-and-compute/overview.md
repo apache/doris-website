@@ -1,3 +1,29 @@
+---
+{
+    "title": "存算分离overview",
+    "language": "zh-CN"
+}
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 ## 动机
 
 1. 弹性的计算资源: 不同时间点使用不同规模的计算资源服务业务请求, 按需使用计算资源, 节约成本.
@@ -13,14 +39,14 @@
 - FE: doris FE 节点
 - BE: 无状态化的doris BE 节点, BE上会cache一部分tablet元数据和数据以提高查询性能.
 - Cluster: 无状态的计算资源(BE节点)集合, 多个cluster共享一份数据, cluster可以随时弹性加减节点.
-- Meta service: doris存算分离元数据服务, 主要负责处理导入事务, tablet meta, rowset meta 以及集群资源管理. 这是一个可以横向扩展的无状态服务.
+- Meta-service: doris存算分离元数据服务, 主要负责处理导入事务, tablet meta, rowset meta 以及集群资源管理. 这是一个可以横向扩展的无状态服务.
 - Foundationdb: 实际存储元数据的分布式事务kv.
 
-存算分离首先要剥离计算节点的状态(主要是存储在BE rocksdb里的tablet/rowset的元数据以及数据).
+存算分离首先要剥离计算节点的状态(主要是存储在BE Rocksdb里的tablet/rowset的元数据以及数据).
 
 为了实现计算资源的物理隔离, 将计算节点分组管理(cluster), 更合理的组织计算资源. 
 
-下图为存算分离架构部署方式示意图, 除了FE, BE, 还引入一个新模块(meta-service+foundationdb)用来管理offload的元数据信息, 实现机节点无状态化.
+下图为存算分离架构部署方式示意图, 除了FE, BE, 还引入一个新模块(Meta-service+Foundationdb)用来管理offload的元数据信息, 实现机节点无状态化.
 
 ![img](../../../../../static/images/separation-of-storage-and-compute/overview_arch.png)
 
@@ -41,7 +67,7 @@
 3. FE 创建导入规划(具体导入哪些数据到那些表), 启动导入事务
 4. BE 根据执行导入规划从对象上获取需要导入的数据转换成内doris内部格式
 5. BE 将转换完成的数据(segment文件) 上传到对象存储, 数据持久化完成
-6. BE 将对应的rowset meta 通过meta service 持久化
+6. BE 将对应的rowset meta 通过Meta-service 持久化
 7. FE 完成该次导入事务, 导入流程完成
 
 注意: 除了s3load, 存算分离架构支持所有的doris导入方式: stream load, insert into, routine load 等等.

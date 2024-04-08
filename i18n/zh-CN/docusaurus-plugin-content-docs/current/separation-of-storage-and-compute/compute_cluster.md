@@ -1,6 +1,31 @@
+---
+{
+    "title": "存算分离计算集群",
+    "language": "zh-CN"
+}
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
 存算分离架构下, 可以将一个或多个计算节点(BE)组成一个compute cluster (以下简称
-cluster).  本文档描述如何使用cluster(如何创建cluster请参考[链接](this is a reference link)):
+cluster).  本文档描述如何使用cluster(如何创建cluster请参考[链接](deployment.md)):
 1. 显示所有的clsuter
 2. 如何进行cluster的授权
 3. 如何在用户级别绑定cluster (default_cloud_cluster) 达到用户级别的隔离效果
