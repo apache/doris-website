@@ -36,7 +36,7 @@ under the License.
 
 - 将 core-site.xml，hdfs-site.xml 和 hive-site.xml 放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 Hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
 
-- 如果 hadoop 节点配置了 hostname，请确保添加对应的映射关系到 /etc/hosts 文件。
+- 如果 Hadoop 节点配置了 hostname，请确保添加对应的映射关系到 /etc/hosts 文件。
 
 ## 创建 Catalog
 

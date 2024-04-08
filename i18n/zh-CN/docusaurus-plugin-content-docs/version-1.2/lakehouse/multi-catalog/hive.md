@@ -49,7 +49,7 @@ under the License.
    
 </version>
 
-8. 如果 hadoop 节点配置了 hostname，请确保添加对应的映射关系到 /etc/hosts 文件。
+8. 如果 Hadoop 节点配置了 hostname，请确保添加对应的映射关系到 /etc/hosts 文件。
 
 ## 创建 Catalog
 
