@@ -318,8 +318,7 @@
                     "label": "Query Admin",
                     "items": [
                         "admin-manual/query-admin/sql-interception",
-                        "admin-manual/query-admin/kill-query",
-                        "admin-manual/query-admin/job"
+                        "admin-manual/query-admin/kill-query"
                     ]
                 },
                 {
