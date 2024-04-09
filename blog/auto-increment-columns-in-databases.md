@@ -409,4 +409,5 @@ Attention is required regarding:
 
 ## Conclusion
 
-AUTO_INCREMENT brings higher stability and reliability for Doris in large-scale data processing. If it sounds like something you need, download [Apache Doris](https://doris.apache.org/download/) and try it out. For issues you come across along the way, join us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog) and we are happy to help. 
+AUTO_INCREMENT brings higher stability and reliability for Doris in large-scale data processing. If it sounds like something you need, download [Apache Doris](https://doris.apache.org/download/) and try it out. For issues you come across along the way, join us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and we are happy to help. 
+

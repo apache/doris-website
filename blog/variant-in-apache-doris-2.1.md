@@ -428,4 +428,4 @@ The Doris-based solution also delivers lower CPU usage in data writing and highe
 
 The Variant data type has stood the test of many users before the official release of Apache Doris 2.1.0. It is production-available now. In the future, we plan to realize more lightweight changes for Variant to facilitate data modeling. 
 
-For more information about Variant and guides on how to build a semi-structured data analytics solution for your case, come talk to the [Apache Doris developer team](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog).
+For more information about Variant and guides on how to build a semi-structured data analytics solution for your case, come talk to the [Apache Doris developer team](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
