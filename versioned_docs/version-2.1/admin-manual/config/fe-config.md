@@ -485,7 +485,7 @@ The backlog_num for thrift server ， When you enlarge this backlog_num, you sho
 
 #### `thrift_client_timeout_ms`
 
-Default：0
+Default：1000
 
 The connection timeout and socket timeout config for thrift server.
 
