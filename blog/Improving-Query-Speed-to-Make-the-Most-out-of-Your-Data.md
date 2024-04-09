@@ -117,4 +117,4 @@ As we set out to find a single data warehouse that could serve all our needs, we
 
 **Try** [**Apache Doris**](https://github.com/apache/doris) **out!**
 
-It is an open source real-time analytical database based on MPP architecture. It supports both high-concurrency point queries and high-throughput complex analysis. Or you can start your free trial of [**SelectDB**](https://en.selectdb.com/), a cloud-native real-time data warehouse developed based on the Apache Doris open source project by the same key developers.
+It is an open source real-time analytical database based on MPP architecture. It supports both high-concurrency point queries and high-throughput complex analysis.

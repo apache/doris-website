@@ -241,15 +241,11 @@ Doris’ capability of cold and hot data separation provides the foundation of o
 
 # Conclusion
 
-Thank you for scrolling all the way down here and finishing this long read. We’ve shared our cheers and tears, lessons learned, and a few practices that might be of some value to you during our transition from ClickHouse to Doris. We really appreciate the help from the Apache Doris community and the [SelectDB](https://selectdb.com) team, but we might still be chasing them around for a while since we attempt to realize auto-identification of cold and hot data, pre-computation of frequently used tags/metrics, simplification of code logic using Materialized Views, and so on and so forth.
+Thank you for scrolling all the way down here and finishing this long read. We’ve shared our cheers and tears, lessons learned, and a few practices that might be of some value to you during our transition from ClickHouse to Doris. We really appreciate the help from the Apache Doris community, but we might still be chasing them around for a while since we attempt to realize auto-identification of cold and hot data, pre-computation of frequently used tags/metrics, simplification of code logic using Materialized Views, and so on and so forth.
 
 
 
 **# Links**
-
-**SelectDB**:
-
-https://selectdb.com 
 
 **Apache Doris**:
 
@@ -259,4 +255,4 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog)
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ)

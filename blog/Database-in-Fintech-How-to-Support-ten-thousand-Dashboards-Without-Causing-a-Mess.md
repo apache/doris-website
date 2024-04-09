@@ -72,7 +72,7 @@ Analysts often check data reports of the same metrics on a regular basis. These 
 
 The complexity of data analysis in the financial industry lies in the data itself other than the engineering side. Thus, the underlying data architecture should focus on facilitating the unified and efficient management of data. Apache Doris provides the flexibility of simple metric registration and the ability of fast and resource-efficient metric computation. In this case, the user is able to handle 10,000 active financial metrics in 10,000 dashboards with 30% less ETL efforts.
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-1t3wfymur-0soNPATWQ~gbU8xutFOLog).
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
 
 
 
