@@ -331,6 +331,10 @@
     "message": "外部表",
     "description": "The label for category Lakehouse.External Table in sidebar docs"
   },
+  "sidebar.docs.category.Separation of Storage and Compute": {
+    "message": "存算分离",
+    "description": "Separation of Storage and Compute"
+  },
   "sidebar.docs.category.Release notes": {
     "message": "版本发布",
     "description": "The label for category Release notes in sidebar docs"

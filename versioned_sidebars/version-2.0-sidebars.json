@@ -547,6 +547,7 @@
                                 "sql-manual/sql-functions/array-functions/array-last",
                                 "sql-manual/sql-functions/array-functions/arrays-overlap",
                                 "sql-manual/sql-functions/array-functions/array-count",
+                                "sql-manual/sql-functions/array-functions/array-apply",
                                 "sql-manual/sql-functions/array-functions/countequal",
                                 "sql-manual/sql-functions/array-functions/element-at"
                             ]
@@ -600,6 +601,9 @@
                                 "sql-manual/sql-functions/date-time-functions/date-trunc",
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
+                                "sql-manual/sql-functions/date-time-functions/date_floor",
+                                "sql-manual/sql-functions/date-time-functions/date_ceil",
+                                "sql-manual/sql-functions/date-time-functions/microsecond",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-diff",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-sub",
@@ -804,7 +808,9 @@
                                 "sql-manual/sql-functions/aggregate-functions/grouping-id",
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
-                                "sql-manual/sql-functions/aggregate-functions/map-agg"
+                                "sql-manual/sql-functions/aggregate-functions/array-agg",
+                                "sql-manual/sql-functions/aggregate-functions/map-agg",
+                                "sql-manual/sql-functions/aggregate-functions/bitmap-agg"
                             ]
                         },
                         {
@@ -845,6 +851,8 @@
                                 "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-expr-calculate",
                                 "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-expr-calculate-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-hash64",
+                                "sql-manual/sql-functions/bitmap-functions/bitmap-from-base64",
+                                "sql-manual/sql-functions/bitmap-functions/bitmap-to-base64",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-remove"
                             ]
                         },
@@ -949,7 +957,8 @@
                                 "sql-manual/sql-functions/numeric-functions/least",
                                 "sql-manual/sql-functions/numeric-functions/random",
                                 "sql-manual/sql-functions/numeric-functions/mod",
-                                "sql-manual/sql-functions/numeric-functions/running-difference"
+                                "sql-manual/sql-functions/numeric-functions/running-difference",
+                                "sql-manual/sql-functions/numeric-functions/uuid_numeric"
                             ]
                         },
                         {

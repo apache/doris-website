@@ -51,6 +51,8 @@ When connnecting to Hive, Doris:
 
 </version>
 
+8. If the Hadoop node is configured with hostname, please ensure to add the corresponding mapping relationship to the /etc/hosts file.
+
 ## Create Catalog
 
 ```sql

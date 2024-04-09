@@ -310,6 +310,7 @@
                                 "sql-manual/sql-functions/array-functions/array_exists",
                                 "sql-manual/sql-functions/array-functions/array_first_index",
                                 "sql-manual/sql-functions/array-functions/arrays_overlap",
+                                "sql-manual/sql-functions/array-functions/array-apply",
                                 "sql-manual/sql-functions/array-functions/countequal",
                                 "sql-manual/sql-functions/array-functions/element_at"
                             ]
@@ -362,6 +363,7 @@
                                 "sql-manual/sql-functions/date-time-functions/date_format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
                                 "sql-manual/sql-functions/date-time-functions/microseconds_add",
+                                "sql-manual/sql-functions/date-time-functions/microseconds_sub",
                                 "sql-manual/sql-functions/date-time-functions/minutes_add",
                                 "sql-manual/sql-functions/date-time-functions/minutes_diff",
                                 "sql-manual/sql-functions/date-time-functions/minutes_sub",
@@ -526,7 +528,8 @@
                                 "sql-manual/sql-functions/aggregate-functions/sequence_match",
                                 "sql-manual/sql-functions/aggregate-functions/sequence_count",
                                 "sql-manual/sql-functions/aggregate-functions/grouping",
-                                "sql-manual/sql-functions/aggregate-functions/grouping_id"
+                                "sql-manual/sql-functions/aggregate-functions/grouping_id",
+                                "sql-manual/sql-functions/aggregate-functions/histogram"
                             ]
                         },
                         {
@@ -599,6 +602,7 @@
                                 "sql-manual/sql-functions/json-functions/jsonb_type",
                                 "sql-manual/sql-functions/json-functions/get_json_double",
                                 "sql-manual/sql-functions/json-functions/get_json_int",
+                                "sql-manual/sql-functions/json-functions/get_json_bigint",
                                 "sql-manual/sql-functions/json-functions/get_json_string",
                                 "sql-manual/sql-functions/json-functions/json_array",
                                 "sql-manual/sql-functions/json-functions/json_object",
@@ -662,7 +666,8 @@
                                 "sql-manual/sql-functions/math-functions/greatest",
                                 "sql-manual/sql-functions/math-functions/least",
                                 "sql-manual/sql-functions/math-functions/random",
-                                "sql-manual/sql-functions/math-functions/mod"
+                                "sql-manual/sql-functions/math-functions/mod",
+                                "sql-manual/sql-functions/math-functions/running_difference"
                             ]
                         },
                         {
