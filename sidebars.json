@@ -1449,7 +1449,7 @@
                 "separation-of-storage-and-compute/compute-cluster",
                 "separation-of-storage-and-compute/file-cache",
                 "separation-of-storage-and-compute/deployment",
-                "separation-of-storage-and-compute/meta-service-resource-http-api",
+                "separation-of-storage-and-compute/meta-service-resource-http-api"
             ]
         },
         {
@@ -1484,8 +1484,6 @@
                 "releasenotes/release-2.0.2",
                 "releasenotes/release-2.0.1",
                 "releasenotes/release-2.0.0",
-                "releasenotes/release-2.0-Beta",
-                "releasenotes/release-2.0-Alpha",
                 "releasenotes/release-1.2.8",
                 "releasenotes/release-1.2.7",
                 "releasenotes/release-1.2.6",
