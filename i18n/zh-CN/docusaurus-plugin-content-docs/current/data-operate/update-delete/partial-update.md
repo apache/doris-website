@@ -200,10 +200,12 @@ PROPERTIES (
 ```
 
 #### 数据写入
+Aggregate key 模型支持两种类型的部分列更新： 
 
-无论是导入任务还是`INSERT INTO`, 直接写入要更新的字段的数据即可
+1.不指定参数，无论是导入任务还是`INSERT INTO`, 直接写入要更新的字段的数据
 
-#### 示例
+
+示例
 
 与前面例子相同，对应的Stream Load命令为（不需要额外的header）：
 
@@ -215,6 +217,91 @@ curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,o
 
 ```
 INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
+```
+2.指定参数
+
+Stream Load导入添加如下header：
+```
+partial_columns:true
+```
+同时在`columns`中指定要导入的列（必须包含所有key列，不然无法更新）
+
+示例
+
+```
+curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+```
+
+insert into 需要设置如下 session variable
+```
+set enable_agg_key_partial_update=true
+```
+示例
+```
+set enable_agg_key_partial_update=true;
+INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
+```
+```
+set enable_agg_key_partial_update=true;
+INSERT INTO big_tbl (k1, v1) select (k1,v1) from sub_tbl;
+```
+两种导入方式的区别在于对未更新列有默认值的情况，不指定参数的导入方式会用默认值覆盖之前的值，指定参数的导入方式则不会做覆盖。
+举例：
+
+建表
+```
+CREATE TABLE `order_tbl` (
+  `order_id` int(11) NULL,
+  `order_amount` int(11) REPLACE_IF_NOT_NULL NULL,
+  `order_status` varchar(100) REPLACE_IF_NOT_NULL NOT NULL DEFAULT "unknow"
+) ENGINE=OLAP
+AGGREGATE KEY(`order_id`)
+COMMENT 'OLAP'
+DISTRIBUTED BY HASH(`order_id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1"
+);
+```
+正常导入一行
+```
+INSERT INTO order_tbl (order_id, order_amount, order_status) values (1,100,'待发货');
+```
+结果如下
+
+```sql
++----------+--------------+--------------+
+| order_id | order_amount | order_status |
++----------+--------------+--------------+
+| 1        |          100 | 待发货        |
++----------+--------------+--------------+
+1 row in set (0.01 sec)
+```
+如果是未指定参数做部分列更新
+```
+INSERT INTO order_tbl (order_id, order_amount) values (1,200);
+```
+结果如下
+```sql
++----------+--------------+--------------+
+| order_id | order_amount | order_status |
++----------+--------------+--------------+
+| 1        |          200 | unknow       |
++----------+--------------+--------------+
+1 row in set (0.01 sec)
+```
+如果是指定参数做部分列更新
+```
+set enable_agg_key_partial_update=true;
+INSERT INTO order_tbl (order_id, order_amount) values (1,200);
+```
+结果如下
+```sql
++----------+--------------+--------------+
+| order_id | order_amount | order_status |
++----------+--------------+--------------+
+| 1        |          200 | 待发货        |
++----------+--------------+--------------+
+1 row in set (0.01 sec)
 ```
 
 ## 使用限制
