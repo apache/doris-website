@@ -25,6 +25,13 @@ under the License.
 ## pow
 
 ### description
+
+返回第一个参数的值，该值是第二个参数的幂。
+
+:::tip
+另一个函数别名为 `power`
+:::
+
 #### Syntax
 
 `DOUBLE pow(DOUBLE a, DOUBLE b)`
@@ -54,4 +61,4 @@ mysql> select pow(3,2.4);
 ```
 
 ### keywords
-	POW
+	POW, POWER
