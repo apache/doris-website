@@ -190,7 +190,7 @@ KEY(k1,k2)
 
 `refresh_partition_num`：单次insert语句刷新的分区数量，默认为1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个insert语句顺序执行。遇到失败的insert语句，整个任务将停止执行。物化视图保证单个insert语句的事务性，失败的insert语句不会影响到已经刷新成功的分区。
 
-`workload_group`：物化视图执行刷新任务时使用的workload_group名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。workload_group创建及使用 [WORKLOAD-GROUP](../../../../admin-manual/workload-group.md)
+`workload_group`：物化视图执行刷新任务时使用的workload_group名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。workload_group创建及使用 [WORKLOAD-GROUP](../../../../admin-manual/workload-management/workload-group.md)
 
 `partition_sync_limit`：当基表的分区字段为时间时（如果是字符串类型的时间，可以设置partition_date_format），可以用此属性配置同步基表的分区范围，配合`partition_sync_time_unit`一起使用。
 例如设置为 2，`partition_sync_time_unit`设置为 MONTH，代表仅同步基表近2个月的分区和数据。最小值为1。
