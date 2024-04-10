@@ -64,22 +64,23 @@ However, it does not affect the less than value of the time-type partitioned col
 
 Functions affected by time zone:
 
-* `FROM_UNIXTIME`: Given a UTC timestamp, return the date and time of the specified time zone, such as `FROM_UNIXTIME(0)`, return the CST time zone: `1970-01-08:00`.
+- `FROM_UNIXTIME`: Given a UTC timestamp, return its date and time in the time zone specified by Doris session `time_zone`. For example, when `time_zone` is `CST`, `FROM_UNIXTIME(0)` returns `1970-01-01 08: 00:00`.
 
-* `UNIX_TIMESTAMP`: Given a specified time zone date and time, return UTC timestamp, such as CST time zone `UNIX_TIMESTAMP('1970-01 08:00:00')`, return `0`.
+- `UNIX_TIMESTAMP`: Given a date and time, return its UTC timestamp in the time zone specified by Doris session `time_zone`, such as when `time_zone` is `CST` `UNIX_TIMESTAMP('1970-01-01 08:00:00 ')` returns `0`.
 
-* `CURTIME`: Returns the datetime of specified time zone.
+- `CURTIME`: Returns the time in the time zone specified by the current Doris session `time_zone`.
 
-* `NOW`: Returns the specified date and time of specified time zone.
+- `NOW`: Returns the date and time of the current Doris session `time_zone` specified time zone.
 
-* `CONVERT_TZ`: Converts a date and time from one specified time zone to another.
+- `CONVERT_TZ`: Convert a datetime from one specified time zone to another.
 
 ### 2. Values of time types
 
-For `DATE`, `DATEV2`, `DATETIME`, `DATETIMEV2` types, we support time zone conversion when inserting data.
+For `DATE` and `DATETIME` types, we support time zone conversion when importing data.
 
-- If the data comes with a time zone, such as "2020-12-12 12:12:12+08:00", and the current Doris `time_zone = +00:00`, you get the actual value "2020-12-12 04:12:12".
-- If the data does not come with a time zone, such as "2020-12-12 12:12:12", the time is considered to be absolute and no conversion occurs.
+- If the data has a time zone, such as "2020-12-12 12:12:12+08:00", and the current Doris `time_zone = +00:00` or the header `timezone` specified by Stream Load is `+00: 00`, then the data is imported into Doris and the actual value is "2020-12-12 04:12:12".
+
+- If the data does not contain a time zone, such as "2020-12-12 12:12:12", the time is considered to be an absolute time and no conversion occurs.
 
 ### 3. Daylight Saving Time
 
@@ -93,10 +94,15 @@ If you do not want Daylight Saving Time to be turned on, set `time_zone` to `-08
 Time zone values can be given in a variety of formats. The following standard formats are well supported in Doris:
 
 1. standard named time zone formats, such as "Asia/Shanghai", "America/Los_Angeles".
+
 2. standard offset formats, such as "+02:30", "-10:00".
+
 3. abbreviated time zone formats, currently only support:
+
    1. "GMT", "UTC", equivalent to "+00:00" time zone
+
    2. "CST", which is equivalent to the "Asia/Shanghai" time zone
+
 4. single letter Z, for Zulu time zone, equivalent to "+00:00" time zone
 
 Note: Some other formats are currently supported in some imports in Doris due to different implementations. **Production environments should not rely on these formats that are not listed here, and their behaviour may change at any time**, so keep an eye on the relevant changelog for version updates.
@@ -108,75 +114,105 @@ Note: Some other formats are currently supported in some imports in Doris due to
 The time zone issue involves three main influences:
 
 1. session variable `time_zone` -- cluster timezone
+
 2. header `timezone` specified during import(Stream Load, Broker Load etc.) -- importing timezone
+
 3. timezone type literal "+08:00" in "2023-12-12 08:00:00+08:00" -- data timezone
 
 We can understand it as follows:
 
-Doris is currently compatible with importing data into Doris under all time zones. Since time types such as `DATETIME` do not contain time zone information, the time type data in the Doris cluster can be divided into two categories:
+Doris is currently compatible with importing data in various time zones into Doris. Since Doris's own `DATETIME` and other time types do not contain time zone information, and the data will not change with time zone changes after being imported, when time data is imported into Doris, it can be divided into the following two categories:
 
-1. absolute time
-2. time in a specific time zone
+1. Absolute time
 
-Absolute time means that it is associated with a data scenario that is independent of the time zone. For this type of data, it should be imported without any time zone suffix and they will be stored as is. For this type of time, since it is not associated with an actual time zone, taking the result of a function such as `unix_timestamp` is meaningless. Changes to the cluster `time_zone` will not affect its use.
+   Absolute time means that the data scene it is associated with has nothing to do with time zones. This type of data should be imported without any time zone suffix and will be stored as-is.
 
-The time in a particular time zone. This "specific time zone" is our session variable `time_zone`. As a matter of best practice, this variable should be set before data is imported **and never changed**. At this point in time, this type of time data in the Doris cluster will actually mean: time in the `time_zone` time zone. Example:
+2. Time in a specific time zone
 
-```sql
-mysql> select @@time_zone;
-+----------------+
-| @@time_zone    |
-+----------------+
-| Asia/Hong_Kong |
-+----------------+
-1 row in set (0.12 sec)
+   The time in a specific time zone means that the data scenario it is associated with is related to the time zone. For this type of data, it should be imported with a specific time zone suffix. When imported, they will be converted to the Doris cluster `time_zone` time zone or the header `timezone` specified in Stream Load/Broker Load.
 
-mysql> insert into dtv23 values('2020-12-12 12:12:12+02:00'); --- absolute timezone is +02:00
-Query OK, 1 row affected (0.27 sec)
+   This type of data is converted to absolute time storage in the time zone specified during import after import, so subsequent imports and queries should maintain this time zone to avoid confusion in the meaning of the data.
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 18:12:12.000 | --- converted to Doris' cluster timezone Asia/Hong_Kong. This semantics should be maintained. 
-+-------------------------+
-1 row in set (0.19 sec)
+ * For the Insert statement, we can illustrate it through the following example:
 
-mysql> set time_zone = 'America/Los_Angeles';
-Query OK, 0 rows affected (0.15 sec)
+    ```sql
+    Doris > select @@time_zone;
+    +---------------+
+    | @@time_zone   |
+    +---------------+
+    | Asia/Shanghai |
+    +---------------+
+    
+    Doris > insert into dt values('2020-12-12 12:12:12+02:00'); --- The imported data specifies a time zone of +02:00
+    
+    Doris > select * from dt;
+    +---------------------+
+    | dt                  |
+    +---------------------+
+    | 2020-12-12 18:12:12 | --- Is converted to the Doris cluster time zone Asia/Shanghai, subsequent imports and queries should maintain this time zone.
+    +---------------------+
+    
+    Doris > set time_zone = 'America/Los_Angeles';
+    
+    Doris > select * from dt;
+    +---------------------+
+    | dt                  |
+    +---------------------+
+    | 2020-12-12 18:12:12 | --- If time_zone is modified, the time value will not change accordingly, and its meaning during query will be confused.
+    +---------------------+
+    ```
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 18:12:12.000 | --- If time_zone is modified, the time value does not change and its meaning is disturbed.
-+-------------------------+
-1 row in set (0.18 sec)
+ * For import methods such as Stream Load and Broker Load, we can achieve this by specifying header `timezone`. For example, for Stream Load, we can illustrate it through the following example:
 
-mysql> insert into dtv23 values('2020-12-12 12:12:12+02:00');
-Query OK, 1 row affected (0.17 sec)
+    ```shell
+    cat dt.csv
+    2020-12-12 12:12:12+02:00
+    
+    curl --location-trusted -u root: \
+     -H "Expect:100-continue" \
+     -H "strict_mode: true" \
+     -H "timezone: Asia/Shanghai" \
+     -T dt.csv -XPUT \
+     http://127.0.0.1:8030/api/test/dt/_stream_load
+    ```
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 02:12:12.000 |
-| 2020-12-12 18:12:12.000 |
-+-------------------------+ --- the data has been misplaced.
-2 rows in set (0.19 sec)
-```
+    ```sql
+    Doris > select @@time_zone;
+    +---------------+
+    | @@time_zone   |
+    +---------------+
+    | Asia/Shanghai |
+    +---------------+
+    
+    Doris > select * from dt;
+    +---------------------+
+    | dt                  |
+    +---------------------+
+    | 2020-12-12 18:12:12 | --- Is converted to the Doris cluster time zone Asia/Shanghai, subsequent imports and queries should maintain this time zone.
+    +---------------------+
+    ```
 
-In summary, the best practice for dealing with time zone issues is to:
+   :::tip
+    * In import methods such as Stream Load and Broker Load, the header `timezone` will overwrite the Doris cluster `time_zone`, so it should be consistent during import.
+    * In import methods such as Stream Load and Broker Load, the header `timezone` will affect the functions used in import conversion.
+    * If the header `timezone` is not specified when importing, the East Eighth Zone will be used by default.
+   :::
 
-1. Confirm the timezone characterised by the cluster and set the `time_zone` before use, and do not change it afterwards.
-2. Set the header `timezone` on import to match the cluster `time_zone`.
-3. For absolute time, import without a time zone suffix; for time in a time zone, import with a specific time zone suffix, which will be converted to the Doris `time_zone` time zone after import.
+**To sum up, the best practice for dealing with time zone issues is:**
+
+:::info Best Practices
+1. Confirm the time zone represented by the cluster and set `time_zone` before use, and do not change it after that.
+
+2. Set header `timezone` to be consistent with cluster `time_zone` when importing.
+
+3. For absolute time, import without time zone suffix; for time with time zone, import with specific time zone suffix, and it will be converted to Doris `time_zone` time zone after import.
+:::
 
 ### Daylight Saving Time
 
 The start and end times for Daylight Saving Time are taken from the [current time zone data source](#data-source) and may not necessarily correspond exactly to the actual officially recognised times for the current year's time zone location. This data is maintained by ICANN. If you need to ensure that Daylight Saving Time behaves as specified for the current year, please make sure that data source selected by Doris is the latest ICANN published time zone data. See below for download access.
 
-### Data update
+### Information Update
 
 Real-world time zone and daylight saving time data may change from time to time for a variety of reasons, and IANA periodically records these changes and updates the corresponding time zone files. If you want the time zone information in Doris to be up to date with the latest IANA data, do one of the followings:
 
@@ -208,5 +244,7 @@ Please note that all the above operations **must** be restarted **on the corresp
 ## Extended Reading
 
 - [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+
 - [IANA Time Zone Database](https://www.iana.org/time-zones)
+
 - [The tz-announce Archives](https://mm.icann.org/pipermail/tz-announce/)
