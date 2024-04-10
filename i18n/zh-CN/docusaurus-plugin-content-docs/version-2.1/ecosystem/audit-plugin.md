@@ -220,3 +220,27 @@ INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 安装成功后，可以通过 `SHOW PLUGINS` 看到已经安装的插件，并且状态为 `INSTALLED`。
 
 完成后，插件会不断的以指定的时间间隔将审计日志插入到这个表中。
+
+## FAQ
+
+1. 审计日志表中没有数据，或运行一段时间后，不再进入新的数据
+
+    可以通过以下步骤排查：
+
+    - 检查分区是否被正常创建
+
+        审计日志表是一张按天分区的动态分区表，默认会创建未来3天的分区，并保留历史30天的分区。只有分区被正确创建后，才能正常写入审计日志。
+
+        可以通过 `show dynamic partition tables from __internal_schema` 查看动态分区的调度情况，并根据错误原因排查。可能得错误原因包括：
+
+        - 节点数小于所需副本数：审计日志表默认 3 副本，所以至少需要 3 台BE节点。或者通过 `alter table` 语句修改副本数，如：
+
+            `alter table __internal_schema.audit_log set ("dynamic_partition.replication_num" = "2")`
+
+        - 没有合适的存储介质：可以通过 `show create table __internal_schema.audit_log` 查看 `storage_medium` 属性，如果 BE 没有对应的存储介质，则分区可能创建失败。
+
+        - 没有合适的资源组：审计日志表默认在 default 资源组。可以通过 `show backends` 命令查看该资源自是否有足够的节点资源。
+
+    - 在 Master FE 的 `fe.log` 中搜索 `AuditLoad` 字样，查看是否有相关错误日志
+
+        审计日志是通过内部的 stream load 操作导入到表中的，有可能是导入流程出现了问题，这些问题会在 `fe.log` 中打印错误日志。

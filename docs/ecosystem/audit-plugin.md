@@ -217,3 +217,27 @@ Detailed command reference: [INSTALL-PLUGIN.md](../sql-manual/sql-reference/Data
 After successful installation, you can see the installed plug-ins through `SHOW PLUGINS`, and the status is `INSTALLED`.
 
 After completion, the plugin will continuously insert audit logs into this table at specified intervals.
+
+## FAQ
+
+1. There is no data in the audit log table, or no new data is imported after running for a period of time.
+
+     You can check by following these steps:
+
+     - Check whether the partition was created normally
+
+         The audit log table is a dynamic partition table, partitioned by day. By default, partitions for the next 3 days will be created and partitions for the past 30 days will be retained. Only after the partition is created correctly can the audit log be imported normally.
+
+         You can use `show dynamic partition tables from __internal_schema` to check the scheduling of dynamic partitions and troubleshoot according to the cause of the error. Possible reasons for the error include:
+
+         - The number of BE nodes is less than the required number of replicas: the audit log table has 3 replicas by default, so at least 3 BE nodes are required. Or modify the number of replicas through the `alter table` statement, such as:
+
+             `alter table __internal_schema.audit_log set ("dynamic_partition.replication_num" = "2")`
+
+         - No suitable storage medium: You can view the `storage_medium` attribute through `show create table __internal_schema.audit_log`. If BE does not have a corresponding storage medium, the partition creation may fail.
+
+         - No suitable resource group: The audit log table defaults to the `default` resource group. You can use the `show backends` command to check whether the resource has sufficient node resources.
+
+     - Search for the word `AuditLoad` in Master FE's `fe.log` to see if there are related error logs
+
+         The audit log is imported into the table through the internal stream load operation. There may be problems with the import process. These problems will print error logs in `fe.log`.
