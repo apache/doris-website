@@ -74,7 +74,7 @@ array/map类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```�
 :::
 
 :::caution Warning
-在创建函数的时候，不要使用 varchar 代替 string，否则函数可能执行失败。
+在创建函数的时候，不要使用 `varchar` 代替 `string`，否则函数可能执行失败。
 :::
 
 ## 编写 UDF 函数
