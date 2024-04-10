@@ -73,6 +73,9 @@ Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 
 array/map类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
 :::
 
+:::caution Warning
+在创建函数的时候，不要使用 varchar 代替 string，否则函数可能执行失败。
+:::
 
 ## 编写 UDF 函数
 
