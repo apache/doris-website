@@ -527,6 +527,7 @@
                                 "sql-manual/sql-functions/string-functions/replace",
                                 "sql-manual/sql-functions/string-functions/strleft",
                                 "sql-manual/sql-functions/string-functions/strright",
+                                "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/split-part",
                                 "sql-manual/sql-functions/string-functions/split-by-string",
                                 "sql-manual/sql-functions/string-functions/substring-index",
