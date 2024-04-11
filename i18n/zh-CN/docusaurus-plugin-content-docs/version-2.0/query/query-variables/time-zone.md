@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
 Doris 支持自定义时区设置
 
 ## 基本概念
@@ -66,21 +64,21 @@ Doris 内部存在以下两个时区相关参数：
 
 受时区影响的函数：
 
-- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回指定时区的日期时间：如 `FROM_UNIXTIME(0)`，返回 CST 时区：`1970-01-01 08:00:00`。
+- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回其在 Doris session `time_zone` 指定时区的日期时间，如`time_zone`为`CST`时`FROM_UNIXTIME(0)`返回`1970-01-01 08:00:00`。
 
-- `UNIX_TIMESTAMP`：给定一个指定时区日期时间，返回 UTC 时间戳：如 CST 时区 `UNIX_TIMESTAMP('1970-01-01 08:00:00')`，返回 `0`。
+- `UNIX_TIMESTAMP`：给定一个日期时间，返回其在 Doris session `time_zone` 指定时区下的 UTC 时间戳，如`time_zone`为`CST`时`UNIX_TIMESTAMP('1970-01-01 08:00:00')`返回`0`。
 
-- `CURTIME`：返回指定时区时间。
+- `CURTIME`：返回当前 Doris session `time_zone` 指定时区的时间。
 
-- `NOW`：返指定地时区日期时间。
+- `NOW`：返回当前 Doris session `time_zone` 指定时区的日期时间。
 
 - `CONVERT_TZ`：将一个日期时间从一个指定时区转换到另一个指定时区。
 
 ### 2. 时间类型的值
 
-对于`DATE`, `DATEV2`, `DATETIME`, `DATETIMEV2`类型，我们支持插入数据时对时区进行转换。
+对于`DATE`、`DATETIME`类型，我们支持导入数据时对时区进行转换。
 
-- 如果数据带有时区，如 "2020-12-12 12:12:12+08:00"，而当前 Doris `time_zone = +00:00`，则得到实际值 "2020-12-12 04:12:12"。
+- 如果数据带有时区，如 "2020-12-12 12:12:12+08:00"，而当前 Doris `time_zone = +00:00` 或者 Stream Load 指定的 header `timezone` 为 `+00:00` ，则数据导入 Doris 得到实际值为 "2020-12-12 04:12:12"。
 
 - 如果数据不带有时区，如 "2020-12-12 12:12:12"，则认为该时间为绝对时间，不发生任何转换。
 
@@ -123,73 +121,98 @@ Doris 内部存在以下两个时区相关参数：
 
 我们可以做如下理解：
 
-Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 `DATETIME` 等各个时间类型本身不内含时区信息，因此 Doris 集群内的时间类型数据，可以分为两类：
+Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Doris 自身 `DATETIME` 等各个时间类型本身不内含时区信息，且数据在导入后不会随时区变化而变更，因此时间数据导入 Doris 时，可分为如下两类：
 
 1. 绝对时间
 
+    绝对时间是指，它所关联的数据场景与时区无关。对于这类数据，在导入时应该不带有任何时区后缀，它们将被原样存储。
+
 2. 特定时区下的时间
 
-所谓绝对时间是指，它所关联的数据场景与时区无关。对于这类数据，在导入时应该不带有任何时区后缀，它们将被原样存储。对于这类时间，因为不关联到实际的时区，取其 `unix_timestamp` 等函数结果是无实际意义的。而集群 `time_zone` 的改变不会影响它的使用。
+    某个特定时区下的时间是指，它所关联的数据场景与时区有关。对于这类数据，在导入时应该带有具体时区后缀，导入时它们将被转化至 Doris 集群 `time_zone` 时区或 Stream Load/Broker Load 中指定的 header `timezone`。
 
-所谓“某个特定时区下”的时间。这个“特定时区”就是我们的 session variable `time_zone`。就最佳实践而言，该变量应当在数据导入前确定，**且不再更改**。此时 Doris 集群中的该类时间数据，其实际意义为：在 `time_zone` 时区下的时间。例如：
+    这类数据在导入后即被转化至导入时指定时区下的绝对时间存储，故后续导入和查询应当保持此时区，以免数据意义发生紊乱。
 
-```sql
-mysql> select @@time_zone;
-+----------------+
-| @@time_zone    |
-+----------------+
-| Asia/Hong_Kong |
-+----------------+
-1 row in set (0.12 sec)
+ * 对于 Insert 语句，我们可以通过以下例子来说明：
 
-mysql> insert into dtv23 values('2020-12-12 12:12:12+02:00'); --- 绝对时区为 +02:00
-Query OK, 1 row affected (0.27 sec)
+    ```sql
+    Doris > select @@time_zone;
+    +---------------+
+    | @@time_zone   |
+    +---------------+
+    | Asia/Shanghai |
+    +---------------+
+     
+    Doris > insert into dt values('2020-12-12 12:12:12+02:00'); --- 导入的数据中指定了时区为 +02:00
+     
+    Doris > select * from dt;
+    +---------------------+
+    | dt                  |
+    +---------------------+
+    | 2020-12-12 18:12:12 | --- 被转换为 Doris 集群时区 Asia/Shanghai，后续导入和查询应当保持此时区。
+    +---------------------+
+     
+    Doris > set time_zone = 'America/Los_Angeles';
+     
+    Doris > select * from dt;
+    +---------------------+
+    | dt                  |
+    +---------------------+
+    | 2020-12-12 18:12:12 | --- 如果修改 time_zone，时间值不会随之改变，其查询时的意义发生紊乱。
+    +---------------------+
+    ```
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 18:12:12.000 | --- 被转换为 Doris 集群时区 Asia/Hong_Kong，应当保持此语义。
-+-------------------------+
-1 row in set (0.19 sec)
+ * 对于 Stream Load、Broker Load 等导入方式，我们可以通过指定 header `timezone` 来实现。例如，对于 Stream Load，我们可以通过以下例子来说明：
 
-mysql> set time_zone = 'America/Los_Angeles';
-Query OK, 0 rows affected (0.15 sec)
+    ```shell
+    cat dt.csv
+    2020-12-12 12:12:12+02:00
+     
+    curl --location-trusted -u root: \
+     -H "Expect:100-continue" \
+     -H "strict_mode: true" \
+     -H "timezone: Asia/Shanghai" \
+     -T dt.csv -XPUT \
+     http://127.0.0.1:8030/api/test/dt/_stream_load
+    ```
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 18:12:12.000 | --- 如果修改 time_zone，时间值不会随之改变，其意义发生紊乱。
-+-------------------------+
-1 row in set (0.18 sec)
+    ```sql
+    Doris > select @@time_zone;
+    +---------------+
+    | @@time_zone   |
+    +---------------+
+    | Asia/Shanghai |
+    +---------------+
+     
+    Doris > select * from dt;
+    +---------------------+
+    | dt                  |
+    +---------------------+
+    | 2020-12-12 18:12:12 | --- 被转换为 Doris 集群时区 Asia/Shanghai，后续导入和查询应当保持此时区。
+    +---------------------+
+    ```
 
-mysql> insert into dtv23 values('2020-12-12 12:12:12+02:00');
-Query OK, 1 row affected (0.17 sec)
+   :::tip
+    * Stream Load、Broker Load 等导入方式中，header `timezone` 会覆盖 Doris 集群 `time_zone`，因此在导入时应当保持一致。
+    * Stream Load、Broker Load 等导入方式中，header `timezone` 会影响导入转换中使用的函数。
+    * 如果导入时未指定 header `timezone`，则默认使用东八区。
+   :::
 
-mysql> select * from dtv23;
-+-------------------------+
-| k0                      |
-+-------------------------+
-| 2020-12-12 02:12:12.000 |
-| 2020-12-12 18:12:12.000 |
-+-------------------------+ --- 此时可以发现，数据已经发生错乱。
-2 rows in set (0.19 sec)
-```
+**综上所述，处理时区问题最佳的实践是：**
 
-综上所述，处理时区问题最佳的实践是：
-
+:::info 最佳实践
 1. 在使用前确认该集群所表征的时区并设置 `time_zone`，在此之后不再更改。
 
 2. 在导入时设定 header `timezone` 同集群 `time_zone` 一致。
 
 3. 对于绝对时间，导入时不带时区后缀；对于有时区的时间，导入时带具体时区后缀，导入后将被转化至 Doris `time_zone` 时区。
+:::
 
 ### 夏令时
 
 夏令时的起讫时间来自于[当前时区数据源](#数据来源)，不一定与当年度时区所在地官方实际确认时间完全一致。该数据由 ICANN 进行维护。如果需要确保夏令时表现与当年度实际规定一致，请保证 Doris 所选择的数据源为最新的 ICANN 所公布时区数据，下载途径见下文。
 
-### 数据更新
+### 信息更新
 
 真实世界中的时区与夏令时相关数据，将会因各种原因而不定期发生变化。IANA 会定期记录这些变化并更新相应时区文件。如果希望 Doris 中的时区信息与最新的IANA 数据保持一致，请采取下列方式进行更新：
 
