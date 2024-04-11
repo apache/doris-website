@@ -29,7 +29,7 @@ under the License.
 返回第一个参数的值，该值是第二个参数的幂。
 
 :::tip
-另一个函数别名为 `power`
+该函数的其他别名为 `power`、`fpow`、`dpow`
 :::
 
 #### Syntax
@@ -61,4 +61,4 @@ mysql> select pow(3,2.4);
 ```
 
 ### keywords
-	POW, POWER
+	POW, POWER, FPOW, DPOW

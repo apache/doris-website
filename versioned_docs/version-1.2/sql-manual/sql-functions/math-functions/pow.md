@@ -29,7 +29,7 @@ under the License.
 Returns the value of the first argument raised to the power of the second argument.
 
 :::tip
-Another alias is `power`
+The other aliases for this function are `power`, `fpow` and `dpow`.
 :::
 
 #### Syntax
@@ -61,4 +61,4 @@ mysql> select pow(3,2.4);
 ```
 
 ### keywords
-	POW, POWER
+	POW, POWER, FPOW, DPOW
