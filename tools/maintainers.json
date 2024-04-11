@@ -3,7 +3,8 @@
       {
         "path":"docs/*",
          "maintainers": [
-          "luzhijing"
+          "luzhijing",
+          "morningman"
          ]
       }
     ] 
