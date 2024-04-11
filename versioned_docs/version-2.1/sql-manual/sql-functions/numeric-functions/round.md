@@ -31,6 +31,10 @@ under the License.
 Rounds the argument `x` to `d` decimal places. `d` defaults to 0 if not specified. If d is negative, the left d digits of the decimal point are 0. If x or d is null, null is returned.
 2.5 will round up to 3. If you want to round down to 2, please use the round_bankers function.
 
+:::tip
+Another alias for this function is `dround`.
+:::
+
 ### example
 
 ```
@@ -73,4 +77,4 @@ mysql> select round(1667.2725, -2);
 ```
 
 ### keywords
-	ROUND
+	ROUND, DROUND
