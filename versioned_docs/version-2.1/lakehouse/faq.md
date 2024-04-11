@@ -293,6 +293,21 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     You need to check whether `HADOOP_CONF_DIR` is configured correctly, or unset this environment variable.
 
+4. `BlockMissingExcetpion: Could not obtain block: BP-XXXXXXXXX No live nodes contain current block`
+
+    Possible solutions include:
+    - Use `hdfs fsck file -files -blocks -locations` to check if the file is healthy.
+    - Use telnet to check connectivity with the DataNode.
+    - Check the DataNode logs.
+
+    If encountering the following error:
+    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`.
+    It indicates that HDFS is configured for encrypted transmission while the client is not, causing the error.
+
+    You can use any of the following solutions:
+    - Copying hdfs-site.xml and core-site.xml to the be/conf and fe/conf directories. (Recommended)
+    - In hdfs-site.xml, find the corresponding configuration `dfs.data.transfer.protection`, and set this parameter in the catalog.
+
 ## DLF Catalog
 
 1. When using DLF Catalog, BE reads `Invalid address` when fetching JindoFS data and needs to add the domain name to IP mapping that appears in the log in `/ets/hosts`.
