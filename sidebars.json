@@ -1347,8 +1347,7 @@
                         "admin-manual/system-table/rowsets"
                     ]
                 },
-                "admin-manual/workload-management/workload-group",
-                "admin-manual/workload-management/workload-schedule-policy",
+                "admin-manual/workload-group",
                 "admin-manual/multi-tenant",
                 {
                     "type": "category",
