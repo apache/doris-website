@@ -190,7 +190,7 @@ The properties unique to materialized views include:
 
 `refresh_partition_num`: The number of partitions refreshed by a single insert statement is set to 1 by default. When refreshing a materialized view, the system first calculates the list of partitions to be refreshed and then splits it into multiple insert statements that are executed in sequence according to this configuration. If any insert statement fails, the entire task will stop executing. The materialized view ensures the transactionality of individual insert statements, meaning that failed insert statements will not affect partitions that have already been successfully refreshed.
 
-`workload_group`: The name of the workload_group used by the materialized view when performing refresh tasks. This is used to limit the resources used for refreshing data in the materialized view, in order to avoid affecting the operation of other business processes. For details on how to create and use workload_group, refer to [WORKLOAD-GROUP](../../../../admin-manual/workload-group.md)
+`workload_group`: The name of the workload_group used by the materialized view when performing refresh tasks. This is used to limit the resources used for refreshing data in the materialized view, in order to avoid affecting the operation of other business processes. For details on how to create and use workload_group, refer to [WORKLOAD-GROUP](../../../../admin-manual/workload-management/workload-group.md)
 
 `partition_sync_limit`: When the partition field of the base table is time (and if it's a string-type time, `partition_date_format` can be set), this attribute can be used to configure the partition range for synchronizing the base table. It works in conjunction with `partition_sync_time_unit`.
 
