@@ -295,7 +295,7 @@ mysql> SELECT
     ->     cast(repo['name'] as text) as repo_name, count() AS stars
     -> FROM github_events
     -> WHERE type = 'WatchEvent'
-    -> GROUP BY stars 
+    -> GROUP BY repo_name
     -> ORDER BY stars DESC LIMIT 5;
 +--------------------------+-------+
 | repo_name                | stars |
@@ -365,7 +365,6 @@ VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之
 
 其它限制如下：
 
-- 目前不支持 Aggregate 模型
 - VARIANT 列只能创建倒排索引或者bloom filter来加速过滤
 - **推荐使用 RANDOM 模式和[Group Commit](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/group-commit-manual/)模式， 写入性能更高效**
 - 日期、decimal 等非标准 JSON 类型会被默认推断成字符串类型，所以尽可能从 VARIANT 中提取出来，用静态类型，性能更好
