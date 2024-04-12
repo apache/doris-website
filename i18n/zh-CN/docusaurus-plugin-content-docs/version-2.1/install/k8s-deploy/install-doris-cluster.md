@@ -179,7 +179,7 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 ### 检查集群状态
 
-集群部署资源下发后，可以通过以下命令价差集群状态。
+集群部署资源下发后，可以通过以下命令检查集群状态。
 
 ```bash
 kubectl get pods -n ${namespace}
