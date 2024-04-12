@@ -40,12 +40,12 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
 1. Download latest [Doris SQL Convertor](https://www.selectdb.com/tools/doris-sql-convertor)
 2. On any FE node, start the service through the following command:
 
-	`sh start.sh`
+	`sh bin/start.sh`
 	
     :::tip
 	1. This service is a stateless service and can be started and stopped at any time.
 	
-	2. The default startup port is 5001, and the specified port can be configured in config.conf.
+	2. The default startup port is `5001`, and the specified port can be configured in `conf/config.conf`.
 	
 	3. It is recommended to start a separate service on each FE node.
     :::

@@ -46,13 +46,13 @@ under the License.
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
-    `sh start.sh`
+    `sh bin/start.sh`
 
     :::tip
 
     **1. 该服务是一个无状态的服务，可随时启停。**
 
-    2. 默认启动端口是`5001`，可在config.conf中配置指定端口。
+    2. 默认启动端口是`5001`，可在`conf/config.conf`中配置指定端口。
 
     3. 建议在每个 FE 节点都单独启动一个服务。
     :::
