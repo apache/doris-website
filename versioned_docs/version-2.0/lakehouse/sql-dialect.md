@@ -32,21 +32,19 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
 
 :::caution
  1. This function is currently an experimental function. If you encounter any problems during use, you are welcome to provide feedback through the mail group, [GitHub issue](https://github.com/apache/doris/issues), etc. .
-
- 2. This function only supports query statements and does not support other DDL and DML statements including Explain.
 :::
 
 ## Deploy service
 
-1. Download latest [Doris SQL Convertor(1.0.1)](https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/transform-doris-tool/doris-sql-convertor-1.0.1-bin-x86)
+1. Download latest [Doris SQL Convertor](https://www.selectdb.com/download/tools#doris-sql-convertor)
 2. On any FE node, start the service through the following command:
 
-	`nohup ./doris-sql-convertor-1.0.1-bin-x86 run --host=0.0.0.0 --port=5001 &`
+	`sh start.sh`
 	
     :::tip
 	1. This service is a stateless service and can be started and stopped at any time.
 	
-	2. `5001` is the service port and can be arbitrarily specified as an available port.
+	2. The default startup port is 5001, and the specified port can be configured in config.conf.
 	
 	3. It is recommended to start a separate service on each FE node.
     :::
