@@ -32,11 +32,12 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
 
 :::caution
  1. This function is currently an experimental function. If you encounter any problems during use, you are welcome to provide feedback through the mail group, [GitHub issue](https://github.com/apache/doris/issues), etc. .
+
 :::
 
 ## Deploy service
 
-1. Download latest [Doris SQL Convertor](https://www.selectdb.com/download/tools#doris-sql-convertor)
+1. Download latest [Doris SQL Convertor](https://www.selectdb.com/tools/doris-sql-convertor)
 2. On any FE node, start the service through the following command:
 
 	`sh start.sh`

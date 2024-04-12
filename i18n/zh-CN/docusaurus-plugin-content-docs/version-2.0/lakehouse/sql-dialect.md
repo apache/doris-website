@@ -32,11 +32,12 @@ under the License.
 
 :::caution
 1. 该功能目前是实验性功能，您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub Issue](https://github.com/apache/doris/issues) 等方式进行反馈。
+
 :::
 
 ## 部署服务
 
-**1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/download/tools#doris-sql-convertor)**
+**1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/tools/doris-sql-convertor)**
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
