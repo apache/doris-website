@@ -30,6 +30,10 @@ under the License.
 `BIGINT floor(DOUBLE x)`
 Returns the largest integer value less than or equal to `x`.
 
+:::tip
+Another alias for this function is `dfloor`.
+:::
+
 ### example
 
 ```
@@ -54,4 +58,4 @@ mysql> select floor(-10.3);
 ```
 
 ### keywords
-	FLOOR
+	FLOOR, DFLOOR

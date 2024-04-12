@@ -30,6 +30,10 @@ under the License.
 `BIGINT ceil(DOUBLE x)`
 返回大于或等于`x`的最小整数值.
 
+:::tip
+该函数的其他别名为 `dceil` 和 `ceiling`。
+:::
+
 ### example
 
 ```
@@ -54,4 +58,4 @@ mysql> select ceil(-10.3);
 ```
 
 ### keywords
-	CEIL
+	CEIL, DCEIL, CEILING
