@@ -150,10 +150,6 @@ Note: In version 2.1.0, `FUNC_CALL_EXPR` does not need to be surrounded by paren
 
 ### NULL-valued partition
 
-:::info Note
-As of 2.1.2, Doris supports the following features.
-:::
-
 Both LIST and RANGE partitions support NULL columns as partition columns when the session variable `allow_partition_column_nullable` is turned on. When a partition column actually encounters an insert with a NULL value:
 
 1. For an AUTO LIST PARTITION, the corresponding NULL-valued partition is automatically created:
