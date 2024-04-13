@@ -14,10 +14,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 ## WINDOW FUNCTION FIRST_VALUE
 ### description
 
-FIRST_VALUE() 返回窗口范围内的第一个值。
+FIRST_VALUE() 返回窗口范围内的第一个值， ignore_null 决定是否忽略 null 值，参数 ignore_null 默认值为 false 。
 
 ```sql
-FIRST_VALUE(expr) OVER(partition_by_clause order_by_clause [window_clause])
+FIRST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])
 ```
 
 ### example
@@ -26,33 +26,47 @@ FIRST_VALUE(expr) OVER(partition_by_clause order_by_clause [window_clause])
 我们有如下数据
 
 ```sql
- select name, country, greeting from mail_merge;
+ select id, myday, time_col, state from t;
  
- | name    | country | greeting     |
- |---------|---------|--------------|
- | Pete    | USA     | Hello        |
- | John    | USA     | Hi           |
- | Boris   | Germany | Guten tag    |
- | Michael | Germany | Guten morgen |
- | Bjorn   | Sweden  | Hej          |
- | Mats    | Sweden  | Tja          |
+ | id   | myday | time_col    | state |
+ |------|-------|-------------|-------|
+ |    3 |    21 | 04-21-13    |     3 |
+ |    7 |    22 | 04-22-10-24 |  NULL |
+ |    8 |    22 | 04-22-10-25 |     9 |
+ |   10 |    23 | 04-23-12    |    10 |
+ |    4 |    22 | 04-22-10-21 |  NULL |
+ |    9 |    23 | 04-23-11    |  NULL |
+ |    1 |    21 | 04-21-11    |  NULL |
+ |    5 |    22 | 04-22-10-22 |  NULL |
+ |   12 |    24 | 02-24-10-21 |  NULL |
+ |    2 |    21 | 04-21-12    |     2 |
+ |    6 |    22 | 04-22-10-23 |     5 |
+ |   11 |    23 | 04-23-13    |  NULL |
 ```
 
-使用 FIRST_VALUE()，根据 country 分组，返回每个分组中第一个 greeting 的值：
+使用 FIRST_VALUE()，根据 myday 分组，返回每个分组中第一个 state 的值：
 
 ```sql
-select country, name,    
-first_value(greeting)    
-over (partition by country order by name, greeting) as greeting from mail_merge;
+select * , 
+first_value(`state`, 1) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as ignore_null,
+first_value(`state`, 0) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as not_ignore_null,
+first_value(`state`) over(partition by `myday` order by `time_col` rows between 1 preceding and 1 following) as ignore_null_default
+from t order by `id`, `myday`, `time_col`;
 
-| country | name    | greeting  |
-|---------|---------|-----------|
-| Germany | Boris   | Guten tag |
-| Germany | Michael | Guten tag |
-| Sweden  | Bjorn   | Hej       |
-| Sweden  | Mats    | Hej       |
-| USA     | John    | Hi        |
-| USA     | Pete    | Hi        |
+| id   | myday | time_col    | state | ignore_null | not_ignore_null | ignore_null_default |
+|------|-------|-------------|-------|-------------|-----------------|---------------------|
+|    1 |    21 | 04-21-11    |  NULL |           2 |            NULL |                NULL |
+|    2 |    21 | 04-21-12    |     2 |           2 |            NULL |                NULL |
+|    3 |    21 | 04-21-13    |     3 |           2 |               2 |                   2 |
+|    4 |    22 | 04-22-10-21 |  NULL |        NULL |            NULL |                NULL |
+|    5 |    22 | 04-22-10-22 |  NULL |           5 |            NULL |                NULL |
+|    6 |    22 | 04-22-10-23 |     5 |           5 |            NULL |                NULL |
+|    7 |    22 | 04-22-10-24 |  NULL |           5 |               5 |                   5 |
+|    8 |    22 | 04-22-10-25 |     9 |           9 |            NULL |                NULL |
+|    9 |    23 | 04-23-11    |  NULL |          10 |            NULL |                NULL |
+|   10 |    23 | 04-23-12    |    10 |          10 |            NULL |                NULL |
+|   11 |    23 | 04-23-13    |  NULL |          10 |              10 |                  10 |
+|   12 |    24 | 02-24-10-21 |  NULL |        NULL |            NULL |                NULL |
 ```
 
 ### keywords
