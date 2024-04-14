@@ -142,8 +142,6 @@ PROPERTIES (
 
 #### Overwrite Table Partition
 
-> 该功能自 2.1.1 版本起可用。
-
 使用 INSERT OVERWRITE 重写分区时，实际我们是将如下三步操作封装为一个事务并执行，如果中途失败，已进行的操作将会回滚：
 1. 假设指定重写分区 p1，首先创建一个与重写的目标分区结构相同的空临时分区 `pTMP`
 2. 向 `pTMP` 中写入数据
@@ -189,6 +187,8 @@ PROPERTIES (
     ```
 
 #### Overwrite Auto Detect Partition
+
+> 该功能自 2.1.3 版本起可用。
 
 当 INSERT OVERWRITE 命令指定的 PARTITION 子句为 `PARTITION(*)` 时，此次覆写将会自动检测分区数据所在的分区。例如：
 

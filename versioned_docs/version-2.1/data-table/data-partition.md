@@ -379,7 +379,7 @@ Users can also choose for single partitioning, which is about HASH distribution.
 
 #### NULL-valued partition
 
-> Starting from version 2.1.2, Doris LIST and RANGE PARTITION support the following NULL value partitioning usage.
+> Starting from version 2.1.3, Doris LIST and RANGE PARTITION support the following NULL value partitioning usage.
 
 PARTITION columns must be NOT NULL columns by default, if you need to use NULL columns, you should set the session variable `allow_partition_column_nullable = true`. For LIST PARTITION, we support true NULL partitions. For RANGE PARTITION, NULL values are assigned to the **minimal LESS THAN partition**. The partitions are listed below:
 

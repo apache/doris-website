@@ -188,7 +188,7 @@ The following is examples:
 
 #### Overwrite Auto Detect Partition
 
-> This feature is available since version 2.1.1.
+> This feature is available since version 2.1.3.
 
 When the PARTITION clause specified by the INSERT OVERWRITE command is `PARTITION(*)`, this overwrite will automatically detect the partition where the data is located. Example:
 

@@ -151,7 +151,7 @@ PROPERTIES (
 ### NULL 值分区
 
 :::info 备注
-从 2.1.2 开始，Doris 支持以下功能。
+从 2.1.3 开始，Doris 支持以下功能。
 :::
 
 当开启 session variable `allow_partition_column_nullable` 后，LIST 和 RANGE 分区都支持 NULL 列作为分区列。当分区列实际遇到 NULL 值的插入时：
