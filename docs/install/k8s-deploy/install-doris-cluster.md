@@ -179,7 +179,7 @@ doriscluster-helm-be-2   1/1     Running   0          16s
 
 ### Check cluster status
 
-After the cluster deployment resources are delivered, you can use the following command to spread the cluster status.
+After the cluster deployment resources are delivered, you can check the cluster status by running the following command.
 
 ```bash
 kubectl get pods -n ${namespace}

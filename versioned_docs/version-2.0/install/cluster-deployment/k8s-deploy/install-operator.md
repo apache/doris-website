@@ -30,14 +30,14 @@ Doris Operator extends Kubernetes with Custom Resource Definition (CRD). The CRD
 Doris Cluster CRD can be deployed in a Kubernetes environment with the following command:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 ```
 
 If there is no external network, download the CRD file to your local computer first:
 
 ```bash
 wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
-kubectl apply -f ./doris.selectdb.com_dorisclusters.yaml
+kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
 The following is the expected output:
