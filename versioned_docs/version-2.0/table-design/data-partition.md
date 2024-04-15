@@ -883,7 +883,9 @@ To summarize, there are a few principles.
 - If the overall data volume is small, the number of buckets should not be set too high
 - If the overall data volume is large, the number of buckets should be related to the total number of disk blocks, so as to fully utilize the capacity of each BE machine and each disk
 
-NOTE: propertie estimate_partition_size not support alter
+:::tip
+propertie estimate_partition_size not support alter
+:::
 
 ### Initial bucketing projection
 
