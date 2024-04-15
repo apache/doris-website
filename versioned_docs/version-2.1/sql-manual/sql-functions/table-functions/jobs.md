@@ -27,12 +27,10 @@ under the License.
 ## `jobs`
 
 ### Name
-
-<version since="2.1">
-
+:::tip
 jobs
-
-</version>
+- since 2.1
+:::
 
 ### description
 
