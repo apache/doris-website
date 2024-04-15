@@ -179,8 +179,9 @@ SELECT * FROM table_name WHERE logmsg MATCH_ANY 'keyword1 keyword2';
 -- 1.3 logmsg中同时包含keyword1和keyword2的行，后面还可以添加多个keyword
 SELECT * FROM table_name WHERE logmsg MATCH_ALL 'keyword1 keyword2';
 
--- 1.4 logmsg中同时包含keyword1和keyword2的行，并且按照keyword1在前，keyword2在后的顺序
+-- 1.4 不指定slop时短语查询slop为0，keyword1 keyword2位置相邻，可以通过~指定短语查询的slop
 SELECT * FROM table_name WHERE logmsg MATCH_PHRASE 'keyword1 keyword2';
+SELECT * FROM table_name WHERE logmsg MATCH_PHRASE 'keyword1 keyword2 ~3';
 
 -- 1.5 在保持词顺序的前提下，对最后一个词keyword2做前缀匹配，默认找50个前缀词（session变量inverted_index_max_expansions控制）
 SELECT * FROM table_name WHERE logmsg MATCH_PHRASE_PREFIX 'keyword1 keyword2';

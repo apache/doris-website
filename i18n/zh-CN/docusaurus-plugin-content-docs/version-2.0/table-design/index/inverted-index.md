@@ -228,8 +228,9 @@ SELECT * FROM table_name WHERE logmsg MATCH_ANY 'keyword1 keyword2';
 -- 1.3 logmsg 中同时包含 keyword1 和 keyword2 的行，后面还可以添加多个 keyword
 SELECT * FROM table_name WHERE logmsg MATCH_ALL 'keyword1 keyword2';
 
--- 1.4 logmsg 中同时包含 keyword1 和 keyword2 的行，并且按照 keyword1 在前，keyword2 在后的顺序
+-- 1.4 不指定slop时短语查询slop为0，keyword1 keyword2位置相邻，可以通过~指定短语查询的slop
 SELECT * FROM table_name WHERE logmsg MATCH_PHRASE 'keyword1 keyword2';
+SELECT * FROM table_name WHERE logmsg MATCH_PHRASE 'keyword1 keyword2 ~3';
 
 
 -- 2. 普通等值、范围、IN、NOT IN，正常的 SQL 语句即可，例如
