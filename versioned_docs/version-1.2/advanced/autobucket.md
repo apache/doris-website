@@ -54,6 +54,9 @@ As you know from the above, a partitioned bucket is a Tablet at the physical lev
 
 - If the overall data volume is small, the number of buckets should not be set too high
 - If the overall data volume is large, the number of buckets should be related to the total number of disk blocks, so as to fully utilize the capacity of each BE machine and each disk
+
+NOTE: propertie estimate_partition_size not support alter
+
 Initial bucketing projection
 Starting from the principle, it becomes easy to understand the detailed logic of the automatic bucket imputation function.
 First look at the initial bucketing

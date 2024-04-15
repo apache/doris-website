@@ -883,6 +883,8 @@ To summarize, there are a few principles.
 - If the overall data volume is small, the number of buckets should not be set too high
 - If the overall data volume is large, the number of buckets should be related to the total number of disk blocks, so as to fully utilize the capacity of each BE machine and each disk
 
+NOTE: propertie estimate_partition_size not support alter
+
 ### Initial bucketing projection
 
 1. Obtain a number of buckets N based on the data size. Initially, we divide the value of `estimate_partition_size` by 5 (considering a data compression ratio of 5 to 1 when storing data in text format in Doris). The result obtained is
