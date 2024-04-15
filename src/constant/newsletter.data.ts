@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Notes'],
+        title: "Apache Doris 2.1.2 just released",
+        content: `Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.`,
+        to: '/blog/release-note-2.1.2',
+        image: '2.1.2.png',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "Auto-increment columns in databases: a simple magic that makes a big difference",
         content: `Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.`,
         to: '/blog/auto-increment-columns-in-databases',
         image: 'auto-increment-columns-in-databases.png',
-    },
-    {
-        tags: ['Release Notes'],
-        title: "Apache Doris 2.1.1 just released",
-        content: `Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.`,
-        to: '/blog/release-note-2.1.1',
-        image: '2.1.1.png',
     },
     {
         tags: ['Tech Sharing'],
