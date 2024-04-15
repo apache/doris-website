@@ -175,8 +175,9 @@ SELECT * FROM table_name WHERE logmsg MATCH_ANY 'keyword1 keyword2';
 -- 1.3 find rows that logmsg contains both keyword1 and keyword2 and more keywords
 SELECT * FROM table_name WHERE logmsg MATCH_ALL 'keyword1 keyword2';
 
--- 1.4 find rows that logmsg contains both keyword1 and keyword2, and in the order of keyword1 appearing first and keyword2 appearing later.
+-- 1.4 When not specifying a slop for a phrase query, the default slop is 0, meaning "keyword1 keyword2" must be adjacent. You can specify the slop for a phrase query using the tilde (~) symbol.
 SELECT * FROM table_name WHERE logmsg MATCH_PHRASE 'keyword1 keyword2';
+SELECT * FROM table_name WHERE logmsg MATCH_PHRASE 'keyword1 keyword2 ~3';
 
 -- 2. normal equal, range query
 SELECT * FROM table_name WHERE id = 123;
