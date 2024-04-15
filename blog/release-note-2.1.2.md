@@ -1,11 +1,13 @@
 ---
 {
-    'title': 'Apache Doris 2.1.1 just released',
-    'summary': 'Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.',
+    'title': 'Apache Doris 2.1.2 just released',
+    'summary': 'Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.',
     'date': '2024-04-03',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    "image": '/images/2.1.1.png'
+    'picked': "true",
+    'order': "1",
+    "image": '/images/2.1.2.png'
 }
 ---
 
@@ -27,8 +29,7 @@ under the License.
 -->
 
 
-Dear community members, Apache Doris 2.1.1 has been officially released on April 3, 2024, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.
-
+Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.
 
 - **Quick Download:** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 
