@@ -30,6 +30,10 @@ under the License.
 `DOUBLE log10(DOUBLE x)`
 Returns the natural logarithm of `x` to base `10`.
 
+:::tip
+Another alias for this function is `dlog10`.
+:::
+
 ### example
 
 ```
@@ -54,4 +58,4 @@ mysql> select log10(16);
 ```
 
 ### keywords
-	LOG10
+	LOG10, DLOG10

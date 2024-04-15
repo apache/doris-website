@@ -118,7 +118,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 在 Doris 中，使用 CREATE ROUTINE LOAD 命令，创建导入作业
 
-```SQL
+```sql
 CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
 COLUMNS TERMINATED BY ",",
 COLUMNS(user_id, name, age)
@@ -129,7 +129,7 @@ FROM KAFKA(
 );
 ```
 
-### 导入 JSON 数据
+**导入 JSON 数据**
 
 1. 导入样本数据
 
@@ -514,7 +514,7 @@ SHOW [ALL] ROUTINE LOAD [FOR jobName];
 
 如通过 SHOW ROUTINE LOAD 会返回以下结果集示例：
 
-```SQL
+```sql
 mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
 *************************** 1. row ***************************
                   Id: 12025
@@ -575,359 +575,359 @@ ReasonOfStateChanged:
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18
-2,Emily,20
-3,Alexander,22
-```
+    ```sql
+    1,Benjamin,18
+    2,Emily,20
+    3,Alexander,22
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test01 (
-    id       INT             NOT NULL   COMMENT "用户 id",
-    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-    age      INT                        COMMENT "年纪"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test01 (
+        id       INT             NOT NULL   COMMENT "用户 id",
+        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+        age      INT                        COMMENT "年纪"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "max_filter_ratio"="0.5",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad01",
-            "property.group.id" = "kafka_job01",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "max_filter_ratio"="0.5",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad01",
+                "property.group.id" = "kafka_job01",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test01;
-+------+------------+------+
-| id   | name       | age  |
-+------+------------+------+
-|    1 | Benjamin   |   18 |
-|    2 | Emily      |   20 |
-|    3 | Alexander  |   22 |
-+------+------------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test01;
+    +------+------------+------+
+    | id   | name       | age  |
+    +------+------------+------+
+    |    1 | Benjamin   |   18 |
+    |    2 | Emily      |   20 |
+    |    3 | Alexander  |   22 |
+    +------+------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **从指定消费点消费数据**
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18
-2,Emily,20
-3,Alexander,22
-4,Sophia,24
-5,William,26
-6,Charlotte,28
-```
+    ```sql
+    1,Benjamin,18
+    2,Emily,20
+    3,Alexander,22
+    4,Sophia,24
+    5,William,26
+    6,Charlotte,28
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test02 (
-    id       INT             NOT NULL   COMMENT "用户 id",
-    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-    age      INT                        COMMENT "年纪"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test02 (
+        id       INT             NOT NULL   COMMENT "用户 id",
+        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+        age      INT                        COMMENT "年纪"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad02",
-            "property.group.id" = "kafka_job",
-            "kafka_partitions" = "0",
-            "kafka_offsets" = "3"
-        );
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad02",
+                "property.group.id" = "kafka_job",
+                "kafka_partitions" = "0",
+                "kafka_offsets" = "3"
+            );
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test02;
-+------+--------------+------+
-| id   | name         | age  |
-+------+--------------+------+
-|    4 | Sophia       |   24 |
-|    5 | William      |   26 |
-|    6 | Charlotte    |   28 |
-+------+--------------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test02;
+    +------+--------------+------+
+    | id   | name         | age  |
+    +------+--------------+------+
+    |    4 | Sophia       |   24 |
+    |    5 | William      |   26 |
+    |    6 | Charlotte    |   28 |
+    +------+--------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **指定 Consumer Group 的 group.id 与 client.id**
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18
-2,Emily,20
-3,Alexander,22
-```
+    ```sql
+    1,Benjamin,18
+    2,Emily,20
+    3,Alexander,22
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test03 (
-    id       INT             NOT NULL   COMMENT "用户 id",
-    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-    age      INT                        COMMENT "年纪"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test03 (
+        id       INT             NOT NULL   COMMENT "用户 id",
+        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+        age      INT                        COMMENT "年纪"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad01",
-            "property.group.id" = "kafka_job03",
-            "property.client.id" = "kafka_client_03",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad01",
+                "property.group.id" = "kafka_job03",
+                "property.client.id" = "kafka_client_03",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test03;
-+------+------------+------+
-| id   | name       | age  |
-+------+------------+------+
-|    1 | Benjamin   |   18 |
-|    2 | Emily      |   20 |
-|    3 | Alexander  |   22 |
-+------+------------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test03;
+    +------+------------+------+
+    | id   | name       | age  |
+    +------+------------+------+
+    |    1 | Benjamin   |   18 |
+    |    2 | Emily      |   20 |
+    |    3 | Alexander  |   22 |
+    +------+------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **设置导入过滤条件**
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18
-2,Emily,20
-3,Alexander,22
-4,Sophia,24
-5,William,26
-6,Charlotte,28
-```
+    ```sql
+    1,Benjamin,18
+    2,Emily,20
+    3,Alexander,22
+    4,Sophia,24
+    5,William,26
+    6,Charlotte,28
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test04 (
-    id       INT             NOT NULL   COMMENT "用户 id",
-    name     VARCHAR(30)     NOT NULL   COMMENT "名字",
-    age      INT                        COMMENT "年纪"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test04 (
+        id       INT             NOT NULL   COMMENT "用户 id",
+        name     VARCHAR(30)     NOT NULL   COMMENT "名字",
+        age      INT                        COMMENT "年纪"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age),
-        WHERE id >= 3
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad04",
-            "property.group.id" = "kafka_job04",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age),
+            WHERE id >= 3
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad04",
+                "property.group.id" = "kafka_job04",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test04;
-+------+--------------+------+
-| id   | name         | age  |
-+------+--------------+------+
-|    4 | Sophia       |   24 |
-|    5 | William      |   26 |
-|    6 | Charlotte    |   28 |
-+------+--------------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test04;
+    +------+--------------+------+
+    | id   | name         | age  |
+    +------+--------------+------+
+    |    4 | Sophia       |   24 |
+    |    5 | William      |   26 |
+    |    6 | Charlotte    |   28 |
+    +------+--------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **导入指定分区数据**
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18,2024-02-04 10:00:00
-2,Emily,20,2024-02-05 11:00:00
-3,Alexander,22,2024-02-06 12:00:00
-```
+    ```sql
+    1,Benjamin,18,2024-02-04 10:00:00
+    2,Emily,20,2024-02-05 11:00:00
+    3,Alexander,22,2024-02-06 12:00:00
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test05 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-    date    DATETIME                 COMMENT "时间"
-)
-PARTITION BY RANGE(date) ()
-DISTRIBUTED BY HASH(date)
-PROPERTIES
-(        
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "DAY",
-    "dynamic_partition.start" = "-2",
-    "dynamic_partition.end" = "3",
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "1"
-);
-```
+    ```sql
+    CREATE TABLE demo.routine_test05 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+        date    DATETIME                 COMMENT "时间"
+    )
+    PARTITION BY RANGE(date) ()
+    DISTRIBUTED BY HASH(date)
+    PROPERTIES
+    (        
+        "replication_num" = "1",
+        "dynamic_partition.enable" = "true",
+        "dynamic_partition.time_unit" = "DAY",
+        "dynamic_partition.start" = "-2",
+        "dynamic_partition.end" = "3",
+        "dynamic_partition.prefix" = "p",
+        "dynamic_partition.buckets" = "1"
+    );
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age,date),
-        PARTITION(p20240205)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad05",
-            "property.group.id" = "kafka_job05",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        ); 
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age,date),
+            PARTITION(p20240205)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad05",
+                "property.group.id" = "kafka_job05",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            ); 
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test05;
-+------+----------+------+---------------------+
-| id   | name     | age  | date                |
-+------+----------+------+---------------------+
-|    2 | Emily    |   20 | 2024-02-05 11:00:00 |
-+------+----------+------+---------------------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test05;
+    +------+----------+------+---------------------+
+    | id   | name     | age  | date                |
+    +------+----------+------+---------------------+
+    |    2 | Emily    |   20 | 2024-02-05 11:00:00 |
+    +------+----------+------+---------------------+
+    3 rows in set (0.01 sec)
+    ```
 
 **设置导入时区**
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18,2024-02-04 10:00:00
-2,Emily,20,2024-02-05 11:00:00
-3,Alexander,22,2024-02-06 12:00:00
-```
+    ```sql
+    1,Benjamin,18,2024-02-04 10:00:00
+    2,Emily,20,2024-02-05 11:00:00
+    3,Alexander,22,2024-02-06 12:00:00
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test06 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-    date    DATETIME                 COMMENT "时间"
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test06 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+        date    DATETIME                 COMMENT "时间"
+    )
+    DUPLICATE KEY(id)
+    DISTRIBUTED BY HASH(id) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age，date)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false",
-            "timezone"="Asia/Shanghai"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad06",
-            "property.group.id" = "kafka_job06",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age，date)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false",
+                "timezone"="Asia/Shanghai"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad06",
+                "property.group.id" = "kafka_job06",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test06;
-+------+-------------+------+---------------------+
-| id   | name        | age  | date                |
-+------+-------------+------+---------------------+
-|    1 | Benjamin    |   18 | 2024-02-05 10:00:00 |
-|    2 | Emily       |   20 | 2024-02-05 11:00:00 |
-|    3 | Alexander   |   22 | 2024-02-05 12:00:00 |
-+------+-------------+------+---------------------+
-3 rows in set (0.00 sec)
-```
+    ```sql
+    mysql> select * from routine_test06;
+    +------+-------------+------+---------------------+
+    | id   | name        | age  | date                |
+    +------+-------------+------+---------------------+
+    |    1 | Benjamin    |   18 | 2024-02-05 10:00:00 |
+    |    2 | Emily       |   20 | 2024-02-05 11:00:00 |
+    |    3 | Alexander   |   22 | 2024-02-05 12:00:00 |
+    +------+-------------+------+---------------------+
+    3 rows in set (0.00 sec)
+    ```
 
 **指定 merge_type 进行 delete 操作**
 
@@ -1114,170 +1114,170 @@ mysql> SELECT * FROM routine_test09;
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test08 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 1
-PROPERTIES (
-    "function_column.sequence_col" = "age"
-);
-```
+    ```sql
+    CREATE TABLE demo.routine_test08 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(id)
+    DISTRIBUTED BY HASH(id) BUCKETS 1
+    PROPERTIES (
+        "function_column.sequence_col" = "age"
+    );
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job09 ON routine_test09
-        WITH MERGE 
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age),
-        DELETE ON id = 2,
-        ORDER BY age
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad09",
-            "property.group.id" = "kafka_job09",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );   
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job09 ON routine_test09
+            WITH MERGE 
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age),
+            DELETE ON id = 2,
+            ORDER BY age
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad09",
+                "property.group.id" = "kafka_job09",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );   
+    ```
 
 4. 导入结果
 
-```sql
-mysql> SELECT * FROM routine_test09;
-+------+-------------+------+
-| id   | name        | age  |
-+------+-------------+------+
-|    1 | xiaoxiaoli  |   28 |
-|    3 | xiaoxiaoliu |   32 |
-|    4 | dadali      |   34 |
-|    5 | dadawang    |   36 |
-|    6 | dadaliu     |   38 |
-+------+-------------+------+
-5 rows in set (0.00 sec)
-```
+    ```sql
+    mysql> SELECT * FROM routine_test09;
+    +------+-------------+------+
+    | id   | name        | age  |
+    +------+-------------+------+
+    |    1 | xiaoxiaoli  |   28 |
+    |    3 | xiaoxiaoliu |   32 |
+    |    4 | dadali      |   34 |
+    |    5 | dadawang    |   36 |
+    |    6 | dadaliu     |   38 |
+    +------+-------------+------+
+    5 rows in set (0.00 sec)
+    ```
 
 **导入完成列影射与衍生列计算**
 
 1. 导入数据样例
 
-```sql
-1,Benjamin,18
-2,Emily,20
-3,Alexander,22
-```
+    ```sql
+    1,Benjamin,18
+    2,Emily,20
+    3,Alexander,22
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test10 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-    num     INT                      COMMENT "数量"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test10 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+        num     INT                      COMMENT "数量"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(id, name, age, num=age*10)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "max_filter_ratio"="0.5",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad10",
-            "property.group.id" = "kafka_job10",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(id, name, age, num=age*10)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "max_filter_ratio"="0.5",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad10",
+                "property.group.id" = "kafka_job10",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> SELECT * FROM routine_test10;
-+------+----------------+------+------+
-| id   | name           | age  | num  |
-+------+----------------+------+------+
-|    1 | Benjamin       |   18 |  180 |
-|    2 | Emily          |   20 |  200 |
-|    3 | Alexander      |   22 |  220 |
-+------+----------------+------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> SELECT * FROM routine_test10;
+    +------+----------------+------+------+
+    | id   | name           | age  | num  |
+    +------+----------------+------+------+
+    |    1 | Benjamin       |   18 |  180 |
+    |    2 | Emily          |   20 |  200 |
+    |    3 | Alexander      |   22 |  220 |
+    +------+----------------+------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **导入包含包围附的数据**
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "xiaoli", "age":18 }
-{ "id" : 2, "name" : "xiaowang", "age":20 }
-{ "id" : 3, "name" : "xiaoliu", "age":22 }
-```
+    ```sql
+    { "id" : 1, "name" : "xiaoli", "age":18 }
+    { "id" : 2, "name" : "xiaowang", "age":20 }
+    { "id" : 3, "name" : "xiaoliu", "age":22 }
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test12 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test12 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad12",
-            "property.group.id" = "kafka_job12",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad12",
+                "property.group.id" = "kafka_job12",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );
+    ```
 
 4. 导入结果
 
-```sql
-mysql> SELECT * FROM routine_test12;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    3 | Alexander      |   22 |
-+------+----------------+------+
-3 rows in set (0.02 sec)
-```
+    ```sql
+    mysql> SELECT * FROM routine_test12;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.02 sec)
+    ```
 
 ### JSON 格式导入
 
@@ -1285,227 +1285,227 @@ mysql> SELECT * FROM routine_test12;
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18 }
-{ "id" : 2, "name" : "Emily", "age":20 }
-{ "id" : 3, "name" : "Alexander", "age":22 }
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18 }
+    { "id" : 2, "name" : "Emily", "age":20 }
+    { "id" : 3, "name" : "Alexander", "age":22 }
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test12 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test12 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad12",
-            "property.group.id" = "kafka_job12",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad12",
+                "property.group.id" = "kafka_job12",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test12;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    3 | Alexander      |   22 |
-+------+----------------+------+
-3 rows in set (0.02 sec)
-```
+    ```sql
+    mysql> select * from routine_test12;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.02 sec)
+    ```
 
 **匹配模式导入复杂的 JSON 格式数据**
 
 1. 导入数据样例
 
-```sql
-{ "name" : "Benjamin", "id" : 1, "num":180 , "age":18 }
-{ "name" : "Emily", "id" : 2, "num":200 , "age":20 }
-{ "name" : "Alexander", "id" : 3, "num":220 , "age":22 }
-```
+    ```sql
+    { "name" : "Benjamin", "id" : 1, "num":180 , "age":18 }
+    { "name" : "Emily", "id" : 2, "num":200 , "age":20 }
+    { "name" : "Alexander", "id" : 3, "num":220 , "age":22 }
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test13 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-    num     INT                      COMMENT "数字"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test13 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+        num     INT                      COMMENT "数字"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job13 ON routine_test13
-        COLUMNS(name, id, num, age)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false",
-            "jsonpaths" = "[\"$.name\",\"$.id\",\"$.num\",\"$.age\"]"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad13",
-            "property.group.id" = "kafka_job13",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job13 ON routine_test13
+            COLUMNS(name, id, num, age)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false",
+                "jsonpaths" = "[\"$.name\",\"$.id\",\"$.num\",\"$.age\"]"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad13",
+                "property.group.id" = "kafka_job13",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test13;
-+------+----------------+------+------+
-| id   | name           | age  | num  |
-+------+----------------+------+------+
-|    1 | Benjamin       |   18 |  180 |
-|    2 | Emily          |   20 |  200 |
-|    3 | Alexander      |   22 |  220 |
-+------+----------------+------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test13;
+    +------+----------------+------+------+
+    | id   | name           | age  | num  |
+    +------+----------------+------+------+
+    |    1 | Benjamin       |   18 |  180 |
+    |    2 | Emily          |   20 |  200 |
+    |    3 | Alexander      |   22 |  220 |
+    +------+----------------+------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **指定 JSON 根节点导入数据**
 
 1. 导入数据样例
 
-```sql
-{"id": 1231, "source" :{ "id" : 1, "name" : "Benjamin", "age":18 }}
-{"id": 1232, "source" :{ "id" : 2, "name" : "Emily", "age":20 }}
-{"id": 1233, "source" :{ "id" : 3, "name" : "Alexander", "age":22 }}
-```
+    ```sql
+    {"id": 1231, "source" :{ "id" : 1, "name" : "Benjamin", "age":18 }}
+    {"id": 1232, "source" :{ "id" : 2, "name" : "Emily", "age":20 }}
+    {"id": 1233, "source" :{ "id" : 3, "name" : "Alexander", "age":22 }}
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test14 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test14 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false",
-            "json_root" = "$.source"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad14",
-            "property.group.id" = "kafka_job14",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false",
+                "json_root" = "$.source"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad14",
+                "property.group.id" = "kafka_job14",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test14;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    3 | Alexander      |   22 |
-+------+----------------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test14;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **导入完成列影射与衍生列计算**
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18 }
-{ "id" : 2, "name" : "Emily", "age":20 }
-{ "id" : 3, "name" : "Alexander", "age":22 }
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18 }
+    { "id" : 2, "name" : "Emily", "age":20 }
+    { "id" : 3, "name" : "Alexander", "age":22 }
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test15 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-    num     INT                      COMMENT "数字"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test15 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+        num     INT                      COMMENT "数字"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job15 ON routine_test15
-        COLUMNS(id, name, age, num=age*10)
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad15",
-            "property.group.id" = "kafka_job15",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job15 ON routine_test15
+            COLUMNS(id, name, age, num=age*10)
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad15",
+                "property.group.id" = "kafka_job15",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test15;
-+------+----------------+------+------+
-| id   | name           | age  | num  |
-+------+----------------+------+------+
-|    1 | Benjamin       |   18 |  180 |
-|    2 | Emily          |   20 |  200 |
-|    3 | Alexander      |   22 |  220 |
-+------+----------------+------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test15;
+    +------+----------------+------+------+
+    | id   | name           | age  | num  |
+    +------+----------------+------+------+
+    |    1 | Benjamin       |   18 |  180 |
+    |    2 | Emily          |   20 |  200 |
+    |    3 | Alexander      |   22 |  220 |
+    +------+----------------+------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 ### 导入复杂类型
 
@@ -1513,253 +1513,253 @@ mysql> select * from routine_test15;
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18, "array":[1,2,3,4,5]}
-{ "id" : 2, "name" : "Emily", "age":20, "array":[6,7,8,9,10]}
-{ "id" : 3, "name" : "Alexander", "age":22, "array":[11,12,13,14,15]}
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18, "array":[1,2,3,4,5]}
+    { "id" : 2, "name" : "Emily", "age":20, "array":[6,7,8,9,10]}
+    { "id" : 3, "name" : "Alexander", "age":22, "array":[11,12,13,14,15]}
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test16
-(
-    id      INT             NOT NULL  COMMENT "id",
-    name    VARCHAR(30)     NOT NULL  COMMENT "名字",
-    age     INT                       COMMENT "年纪",
-    array   ARRAY<int(11)>  NULL      COMMENT "测试数组列"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test16
+    (
+        id      INT             NOT NULL  COMMENT "id",
+        name    VARCHAR(30)     NOT NULL  COMMENT "名字",
+        age     INT                       COMMENT "年纪",
+        array   ARRAY<int(11)>  NULL      COMMENT "测试数组列"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad16",
-            "property.group.id" = "kafka_job16",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad16",
+                "property.group.id" = "kafka_job16",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test16;
-+------+----------------+------+----------------------+
-| id   | name           | age  | array                |
-+------+----------------+------+----------------------+
-|    1 | Benjamin       |   18 | [1, 2, 3, 4, 5]      |
-|    2 | Emily          |   20 | [6, 7, 8, 9, 10]     |
-|    3 | Alexander      |   22 | [11, 12, 13, 14, 15] |
-+------+----------------+------+----------------------+
-3 rows in set (0.00 sec)
-```
+    ```sql
+    mysql> select * from routine_test16;
+    +------+----------------+------+----------------------+
+    | id   | name           | age  | array                |
+    +------+----------------+------+----------------------+
+    |    1 | Benjamin       |   18 | [1, 2, 3, 4, 5]      |
+    |    2 | Emily          |   20 | [6, 7, 8, 9, 10]     |
+    |    3 | Alexander      |   22 | [11, 12, 13, 14, 15] |
+    +------+----------------+------+----------------------+
+    3 rows in set (0.00 sec)
+    ```
 
 **导入 Map 数据类型**
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18, "map":{"a": 100, "b": 200}}
-{ "id" : 2, "name" : "Emily", "age":20, "map":{"c": 300, "d": 400}}
-{ "id" : 3, "name" : "Alexander", "age":22, "map":{"e": 500, "f": 600}}
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18, "map":{"a": 100, "b": 200}}
+    { "id" : 2, "name" : "Emily", "age":20, "map":{"c": 300, "d": 400}}
+    { "id" : 3, "name" : "Alexander", "age":22, "map":{"e": 500, "f": 600}}
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test17 (
-    id      INT                 NOT NULL  COMMENT "id",
-    name    VARCHAR(30)         NOT NULL  COMMENT "名字",
-    age     INT                           COMMENT "年纪",
-    map     Map<STRING, INT>    NULL      COMMENT "测试列"
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test17 (
+        id      INT                 NOT NULL  COMMENT "id",
+        name    VARCHAR(30)         NOT NULL  COMMENT "名字",
+        age     INT                           COMMENT "年纪",
+        map     Map<STRING, INT>    NULL      COMMENT "测试列"
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
-       PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad17",
-            "property.group.id" = "kafka_job17",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
+        PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad17",
+                "property.group.id" = "kafka_job17",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test17;
-+------+----------------+------+--------------------+
-| id   | name           | age  | map                |
-+------+----------------+------+--------------------+
-|    1 | Benjamin       |   18 | {"a":100, "b":200} |
-|    2 | Emily          |   20 | {"c":300, "d":400} |
-|    3 | Alexander      |   22 | {"e":500, "f":600} |
-+------+----------------+------+--------------------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test17;
+    +------+----------------+------+--------------------+
+    | id   | name           | age  | map                |
+    +------+----------------+------+--------------------+
+    |    1 | Benjamin       |   18 | {"a":100, "b":200} |
+    |    2 | Emily          |   20 | {"c":300, "d":400} |
+    |    3 | Alexander      |   22 | {"e":500, "f":600} |
+    +------+----------------+------+--------------------+
+    3 rows in set (0.01 sec)
+    ```
 
 **导入 Bitmap 数据类型**
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18, "bitmap_id":243}
-{ "id" : 2, "name" : "Emily", "age":20, "bitmap_id":28574}
-{ "id" : 3, "name" : "Alexander", "age":22, "bitmap_id":8573}
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18, "bitmap_id":243}
+    { "id" : 2, "name" : "Emily", "age":20, "bitmap_id":28574}
+    { "id" : 3, "name" : "Alexander", "age":22, "bitmap_id":8573}
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test18 (
-    id        INT            NOT NULL      COMMENT "id",
-    name      VARCHAR(30)    NOT NULL      COMMENT "名字",
-    age       INT                          COMMENT "年纪",
-    bitmap_id INT                          COMMENT "测试",
-    device_id BITMAP         BITMAP_UNION  COMMENT "测试列"
-)
-AGGREGATE KEY (`id`,`name`,`age`,`bitmap_id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test18 (
+        id        INT            NOT NULL      COMMENT "id",
+        name      VARCHAR(30)    NOT NULL      COMMENT "名字",
+        age       INT                          COMMENT "年纪",
+        bitmap_id INT                          COMMENT "测试",
+        device_id BITMAP         BITMAP_UNION  COMMENT "测试列"
+    )
+    AGGREGATE KEY (`id`,`name`,`age`,`bitmap_id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job18 ON routine_test18
-        COLUMNS(id, name, age, bitmap_id, device_id=to_bitmap(bitmap_id))
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad18",
-            "property.group.id" = "kafka_job18",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job18 ON routine_test18
+            COLUMNS(id, name, age, bitmap_id, device_id=to_bitmap(bitmap_id))
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad18",
+                "property.group.id" = "kafka_job18",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select id, BITMAP_UNION_COUNT(pv) over(order by id) uv from(
-    ->    select id, BITMAP_UNION(device_id) as pv
-    ->    from routine_test18 
-    -> group by id 
-    -> ) final;
-+------+------+
-| id   | uv   |
-+------+------+
-|    1 |    1 |
-|    2 |    2 |
-|    3 |    3 |
-+------+------+
-3 rows in set (0.00 sec)
-```
+    ```sql
+    mysql> select id, BITMAP_UNION_COUNT(pv) over(order by id) uv from(
+        ->    select id, BITMAP_UNION(device_id) as pv
+        ->    from routine_test18 
+        -> group by id 
+        -> ) final;
+    +------+------+
+    | id   | uv   |
+    +------+------+
+    |    1 |    1 |
+    |    2 |    2 |
+    |    3 |    3 |
+    +------+------+
+    3 rows in set (0.00 sec)
+    ```
 
 **导入 HLL 数据类型**
 
 1. 导入数据样例
 
-```sql
-2022-05-05,10001,测试01,北京,windows
-2022-05-05,10002,测试01,北京,linux
-2022-05-05,10003,测试01,北京,macos
-2022-05-05,10004,测试01,河北,windows
-2022-05-06,10001,测试01,上海,windows
-2022-05-06,10002,测试01,上海,linux
-2022-05-06,10003,测试01,江苏,macos
-2022-05-06,10004,测试01,陕西,windows
-```
+    ```sql
+    2022-05-05,10001，测试 01，北京，windows
+    2022-05-05,10002，测试 01，北京，linux
+    2022-05-05,10003，测试 01，北京，macos
+    2022-05-05,10004，测试 01，河北，windows
+    2022-05-06,10001，测试 01，上海，windows
+    2022-05-06,10002，测试 01，上海，linux
+    2022-05-06,10003，测试 01，江苏，macos
+    2022-05-06,10004，测试 01，陕西，windows
+    ```
 
 2. 建表结构
 
-```sql
-create table demo.routine_test19 (
-    dt        DATE,
-    id        INT,
-    name      VARCHAR(10),
-    province  VARCHAR(10),
-    os        VARCHAR(10),
-    pv        hll hll_union
-)
-Aggregate KEY (dt,id,name,province,os)
-distributed by hash(id) buckets 10;
-```
+    ```sql
+    create table demo.routine_test19 (
+        dt        DATE,
+        id        INT,
+        name      VARCHAR(10),
+        province  VARCHAR(10),
+        os        VARCHAR(10),
+        pv        hll hll_union
+    )
+    Aggregate KEY (dt,id,name,province,os)
+    distributed by hash(id) buckets 10;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
-        COLUMNS TERMINATED BY ",",
-        COLUMNS(dt, id, name, province, os, pv=hll_hash(id))
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "10.16.10.6:9092",
-            "kafka_topic" = "routineLoad19",
-            "property.group.id" = "kafka_job19",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
+            COLUMNS TERMINATED BY ",",
+            COLUMNS(dt, id, name, province, os, pv=hll_hash(id))
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoad19",
+                "property.group.id" = "kafka_job19",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test19;
-+------------+-------+----------+----------+---------+------+
-| dt         | id    | name     | province | os      | pv   |
-+------------+-------+----------+----------+---------+------+
-| 2022-05-05 | 10001 | 测试01   | 北京     | windows | NULL |
-| 2022-05-06 | 10001 | 测试01   | 上海     | windows | NULL |
-| 2022-05-05 | 10002 | 测试01   | 北京     | linux   | NULL |
-| 2022-05-06 | 10002 | 测试01   | 上海     | linux   | NULL |
-| 2022-05-05 | 10004 | 测试01   | 河北     | windows | NULL |
-| 2022-05-06 | 10004 | 测试01   | 陕西     | windows | NULL |
-| 2022-05-05 | 10003 | 测试01   | 北京     | macos   | NULL |
-| 2022-05-06 | 10003 | 测试01   | 江苏     | macos   | NULL |
-+------------+-------+----------+----------+---------+------+
-8 rows in set (0.01 sec)
+    ```sql
+    mysql> select * from routine_test19;
+    +------------+-------+----------+----------+---------+------+
+    | dt         | id    | name     | province | os      | pv   |
+    +------------+-------+----------+----------+---------+------+
+    | 2022-05-05 | 10001 | 测试 01   | 北京     | windows | NULL |
+    | 2022-05-06 | 10001 | 测试 01   | 上海     | windows | NULL |
+    | 2022-05-05 | 10002 | 测试 01   | 北京     | linux   | NULL |
+    | 2022-05-06 | 10002 | 测试 01   | 上海     | linux   | NULL |
+    | 2022-05-05 | 10004 | 测试 01   | 河北     | windows | NULL |
+    | 2022-05-06 | 10004 | 测试 01   | 陕西     | windows | NULL |
+    | 2022-05-05 | 10003 | 测试 01   | 北京     | macos   | NULL |
+    | 2022-05-06 | 10003 | 测试 01   | 江苏     | macos   | NULL |
+    +------------+-------+----------+----------+---------+------+
+    8 rows in set (0.01 sec)
 
-mysql> SELECT HLL_UNION_AGG(pv) FROM routine_test19;
-+-------------------+
-| hll_union_agg(pv) |
-+-------------------+
-|                 4 |
-+-------------------+
-1 row in set (0.01 sec)
-```
+    mysql> SELECT HLL_UNION_AGG(pv) FROM routine_test19;
+    +-------------------+
+    | hll_union_agg(pv) |
+    +-------------------+
+    |                 4 |
+    +-------------------+
+    1 row in set (0.01 sec)
+    ```
 
 ### Kafka 安全认证
 
@@ -1769,120 +1769,120 @@ mysql> SELECT HLL_UNION_AGG(pv) FROM routine_test19;
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18 }
-{ "id" : 2, "name" : "Emily", "age":20 }
-{ "id" : 3, "name" : "Alexander", "age":22 }
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18 }
+    { "id" : 2, "name" : "Emily", "age":20 }
+    { "id" : 3, "name" : "Alexander", "age":22 }
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test21 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test21 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "192.168.100.129:9092",
-            "kafka_topic" = "routineLoad21",
-            "property.group.id" = "kafka_job21",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING",
-            "property.security.protocol" = "SASL_PLAINTEXT",
-            "property.sasl.kerberos.service.name" = "kafka",
-            "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
-            "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
-            "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "192.168.100.129:9092",
+                "kafka_topic" = "routineLoad21",
+                "property.group.id" = "kafka_job21",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
+                "property.security.protocol" = "SASL_PLAINTEXT",
+                "property.sasl.kerberos.service.name" = "kafka",
+                "property.sasl.kerberos.keytab" = "/etc/krb5.keytab",
+                "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
+                "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test21;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    3 | Alexander      |   22 |
-+------+----------------+------+
-3 rows in set (0.01 sec)
-```
+    ```sql
+    mysql> select * from routine_test21;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.01 sec)
+    ```
 
 **导入 PLAIN 认证的 Kafka 集群**
 
 1. 导入数据样例
 
-```sql
-{ "id" : 1, "name" : "Benjamin", "age":18 }
-{ "id" : 2, "name" : "Emily", "age":20 }
-{ "id" : 3, "name" : "Alexander", "age":22 }
-```
+    ```sql
+    { "id" : 1, "name" : "Benjamin", "age":18 }
+    { "id" : 2, "name" : "Emily", "age":20 }
+    { "id" : 3, "name" : "Alexander", "age":22 }
+    ```
 
 2. 建表结构
 
-```sql
-CREATE TABLE demo.routine_test22 (
-    id      INT            NOT NULL  COMMENT "id",
-    name    VARCHAR(30)    NOT NULL  COMMENT "名字",
-    age     INT                      COMMENT "年纪",
-)
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-```
+    ```sql
+    CREATE TABLE demo.routine_test22 (
+        id      INT            NOT NULL  COMMENT "id",
+        name    VARCHAR(30)    NOT NULL  COMMENT "名字",
+        age     INT                      COMMENT "年纪",
+    )
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
+    ```
 
 3. 导入命令
 
-```sql
-CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
-        PROPERTIES
-        (
-            "desired_concurrent_number"="1",
-            "format" = "json",
-            "strict_mode" = "false"
-        )
-        FROM KAFKA
-        (
-            "kafka_broker_list" = "192.168.100.129:9092",
-            "kafka_topic" = "routineLoad22",
-            "property.group.id" = "kafka_job22",
-            "property.kafka_default_offsets" = "OFFSET_BEGINNING",
-            "property.security.protocol"="SASL_PLAINTEXT",
-            "property.sasl.mechanism"="PLAIN",
-            "property.sasl.username"="admin",
-            "property.sasl.password"="admin"
-        );  
-```
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
+            PROPERTIES
+            (
+                "desired_concurrent_number"="1",
+                "format" = "json",
+                "strict_mode" = "false"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "192.168.100.129:9092",
+                "kafka_topic" = "routineLoad22",
+                "property.group.id" = "kafka_job22",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING",
+                "property.security.protocol"="SASL_PLAINTEXT",
+                "property.sasl.mechanism"="PLAIN",
+                "property.sasl.username"="admin",
+                "property.sasl.password"="admin"
+            );  
+    ```
 
 4. 导入结果
 
-```sql
-mysql> select * from routine_test22;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|    1 | Benjamin       |   18 |
-|    2 | Emily          |   20 |
-|    3 | Alexander      |   22 |
-+------+----------------+------+
-3 rows in set (0.02 sec)
-```
+    ```sql
+    mysql> select * from routine_test22;
+    +------+----------------+------+
+    | id   | name           | age  |
+    +------+----------------+------+
+    |    1 | Benjamin       |   18 |
+    |    2 | Emily          |   20 |
+    |    3 | Alexander      |   22 |
+    +------+----------------+------+
+    3 rows in set (0.02 sec)
+    ```
 
 ### 一流多表导入
 
@@ -1914,7 +1914,7 @@ FROM KAFKA
 
 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。导入任务为严格模式。
 
-```SQL
+```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
 COLUMNS(k1, k2, k3, v1, v2, v3 = k1 * 100),
 PRECEDING FILTER k1 = 1,

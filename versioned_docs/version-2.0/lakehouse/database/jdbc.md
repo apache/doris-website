@@ -674,6 +674,24 @@ DROP CATALOG <catalog_name>;
     SELECT * FROM <table_name>;
     ```
 
+### Time zone
+
+Since the time types of some external data sources have time zone information, but the time types of Doris do not have time zone information, you need to pay attention to the time zone issue when querying the time types of external data sources.
+
+When reading data, it is read through the Java part of BE, so the time zone when reading is the JVM time zone of BE, and the JVM time zone defaults to the time zone of the machine where BE is deployed.
+
+This JVM time zone will affect the time zone when JDBC reads data. If the time type of the external data source has time zone information, it will be converted according to the JVM time zone when reading.
+
+If the JVM time zone is inconsistent with the time zone of the Doris session, it is recommended to set the JVM time zone in JAVA_OPTS in be.conf to be consistent with the `time_zone` in the Doris session.
+
+**Notice:**
+
+For MySQL data sources, when reading timestamp types, the time zone parameters `connectionTimeZone=LOCAL` and `forceConnectionTimeZoneToSession=true` need to be set in the JDBC URL.
+
+In this way, when reading the timestamp type of MySQL, it will be read as the BE JVM time zone of Doris instead of the time zone of the MySQL session.
+
+Note that the above two url parameters are only valid for jdbc driver mysql 8 or above.
+
 ## FAQ
 
 1. Are there any other databases supported besides MySQL, Oracle, PostgreSQL, SQLServer, ClickHouse, SAP HANA, Trino and OceanBase?

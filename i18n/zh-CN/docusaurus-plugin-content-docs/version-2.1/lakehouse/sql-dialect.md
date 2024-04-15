@@ -33,12 +33,11 @@ under the License.
 :::caution
 1. 该功能目前是实验性功能，您在使用过程中如遇到任何问题，欢迎通过邮件组、[GitHub Issue](https://github.com/apache/doris/issues) 等方式进行反馈。
 
-2. 该功能只支持查询语句，不支持 DDL、DML 语句。
 :::
 
 ## 部署服务
 
-1. 下载最新版本的 [SQL 方言转换工具 (1.0.1)](https://doris-build-1308700295.cos.ap-beijing.myqcloud.com/transform-doris-tool/doris-sql-convertor-1.0.1-bin-x86)
+**1. 下载最新版本的 [SQL 方言转换工具](https://www.selectdb.com/tools/doris-sql-convertor)**
 
     > 注：
     >
@@ -47,13 +46,13 @@ under the License.
 
 2.  在任意 FE 节点，通过以下命令启动服务：
 
-    `nohup ./doris-sql-convertor-1.0.1-bin-x86 run --host=0.0.0.0 --port=5001 &`
+    `sh bin/start.sh`
 
     :::tip
 
     **1. 该服务是一个无状态的服务，可随时启停。**
 
-    2. `5001` 是服务端口，可以任意指定为一个可用端口。
+    2. 默认启动端口是`5001`，可在`conf/config.conf`中配置指定端口。
 
     3. 建议在每个 FE 节点都单独启动一个服务。
     :::

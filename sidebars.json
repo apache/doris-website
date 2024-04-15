@@ -526,7 +526,9 @@
                                 "sql-manual/sql-functions/string-functions/find-in-set",
                                 "sql-manual/sql-functions/string-functions/replace",
                                 "sql-manual/sql-functions/string-functions/strleft",
+                                "sql-manual/sql-functions/string-functions/strcmp",
                                 "sql-manual/sql-functions/string-functions/strright",
+                                "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/split-part",
                                 "sql-manual/sql-functions/string-functions/split-by-string",
                                 "sql-manual/sql-functions/string-functions/substring-index",
@@ -839,7 +841,6 @@
                                 "sql-manual/sql-functions/table-functions/catalogs",
                                 "sql-manual/sql-functions/table-functions/frontends_disks",
                                 "sql-manual/sql-functions/table-functions/active_queries",
-                                "sql-manual/sql-functions/table-functions/job",
                                 "sql-manual/sql-functions/table-functions/jobs",
                                 "sql-manual/sql-functions/table-functions/mv_infos",
                                 "sql-manual/sql-functions/table-functions/tasks"

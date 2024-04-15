@@ -73,6 +73,7 @@ jobs:
                   github_token: ${{ github.token }}
                   publish_branch: asf-site
                   publish_dir: ./build
+                  force_orphan: true
                   destination_dir: ./
                   user_name: 'github-actions[bot]'
                   user_email: 'github-actions[bot]@users.noreply.github.com'
@@ -85,6 +86,7 @@ jobs:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_branch: asf-site
                   publish_dir: ./build
+                  force_orphan: true
                   destination_dir: ${{ github.event.inputs.branch }}
                   user_name: 'github-actions[bot]'
                   user_email: 'github-actions[bot]@users.noreply.github.com'

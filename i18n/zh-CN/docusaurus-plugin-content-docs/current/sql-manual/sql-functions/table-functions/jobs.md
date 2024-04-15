@@ -28,7 +28,10 @@ under the License.
 
 ### Name
 
+:::tip
 jobs
+- since 2.1
+:::
 
 ### description
 
@@ -40,6 +43,44 @@ jobs
 
 `jobs("type"="")`
 
+**参数说明**
+
+| 参数名  | 说明   | 类型     | 是否必填 |
+|:-----|:-----|:-------|:-----|
+| type | 作业类型 | string | 是    |
+
+type 支持的类型：
+
+- insert：insert into 类型的任务。
+- mv：物化视图类型的任务。
+##### Insert 任务
+jobs("type"="insert")表结构：
+```
+mysql> desc  function jobs("type"="insert")
++-------------------+------+------+-------+---------+-------+
+| Field             | Type | Null | Key   | Default | Extra |
++-------------------+------+------+-------+---------+-------+
+| Id                | TEXT | No   | false | NULL    | NONE  |
+| Name              | TEXT | No   | false | NULL    | NONE  |
+| Definer           | TEXT | No   | false | NULL    | NONE  |
+| ExecuteType       | TEXT | No   | false | NULL    | NONE  |
+| RecurringStrategy | TEXT | No   | false | NULL    | NONE  |
+| Status            | TEXT | No   | false | NULL    | NONE  |
+| ExecuteSql        | TEXT | No   | false | NULL    | NONE  |
+| CreateTime        | TEXT | No   | false | NULL    | NONE  |
+| Comment           | TEXT | No   | false | NULL    | NONE  |
++-------------------+------+------+-------+---------+-------+
+```
+* Id：job id.
+* Name：job名称.
+* Definer：job定义者.
+* ExecuteType：执行类型
+* RecurringStrategy：循环策略
+* Status：job状态
+* ExecuteSql：执行SQL
+* CreateTime：job 创建时间
+* Comment：job 注释
+##### 物化视图任务
 jobs("type"="mv")表结构：
 ```sql
 mysql> desc function jobs("type"="mv");
@@ -79,12 +120,21 @@ mysql> desc function jobs("type"="mv");
 mysql> select * from jobs("type"="mv");
 ```
 
-2. 查看name为`inner_mtmv_75043`的job
+2. 查看 name 为`inner_mtmv_75043`的 job
 
 ```sql
 mysql> select * from jobs("type"="mv") where Name="inner_mtmv_75043";
 ```
+3. 查看所有 insert 任务
 
+```sql
+mysql> select * from jobs("type"="insert");
+```
+4. 查看 name 为`one_insert_job`的 job
+
+```sql
+mysql> select * from jobs("type"="insert") where Name='one_insert_job';
+```
 ### keywords
 
-    jobs
+    jobs, job, insert, mv, materialized view, schedule

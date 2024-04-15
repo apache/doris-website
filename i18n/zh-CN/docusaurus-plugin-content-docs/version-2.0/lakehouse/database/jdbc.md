@@ -675,6 +675,24 @@ DROP CATALOG <catalog_name>;
     SELECT * FROM <table_name>;
     ```
 
+### 时区
+
+由于某些外部数据源的时间类型是带有时区信息的，而 Doris 的时间类型是不带时区信息的，所以在查询外部数据源的时间类型时，需要注意时区的问题。
+
+读取数据时，是通过 BE 的 Java 部分来读取的，所以读取时的时区是 BE 的 JVM 时区，而 JVM 时区默认为 BE 所部署机器的时区。
+
+这个 JVM 时区会影响 JDBC 读取数据时的时区，如果外部数据源的时间类型是带有时区信息的，那么读取时会根据 JVM 时区进行转换。
+
+如果 JVM 时区和 Doris session 的时区不一致，建议在 be.conf 的 JAVA_OPTS 中设置 JVM 时区和 Doris session 中的 `time_zone` 保持一致。
+
+**注意：**
+
+对于 MySQL 数据源，在读取 timestamp 类型时，需要在 JDBC URL 中设置时区参数 `connectionTimeZone=LOCAL` 和 `forceConnectionTimeZoneToSession=true`。
+
+这样在读取 MySQL 的 timestamp 类型时，会读取为 Doris 的 BE JVM 时区，而不是 MySQL session 的时区。
+
+注意上述两个 url 参数只对 mysql 8 以上的 jdbc driver 有效。
+
 ## 常见问题
 
 1. 除了 MySQL,Oracle,PostgreSQL,SQLServer,ClickHouse,SAP HANA,Trino/Presto,OceanBase 是否能够支持更多的数据库

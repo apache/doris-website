@@ -1,0 +1,11 @@
+{
+    "paths":[
+      {
+        "path":"docs/*",
+         "maintainers": [
+          "luzhijing",
+          "morningman"
+         ]
+      }
+    ] 
+  }

@@ -385,7 +385,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
 
 #### NULL 分区
 
-> 从 2.1.2 版本开始，Doris 的 LIST 和 RANGE PARTITION 开始支持以下 NULL 值分区用法。
+> 从 2.1.3 版本开始，Doris 的 LIST 和 RANGE PARTITION 开始支持以下 NULL 值分区用法。
 
 PARTITION 列默认必须为 NOT NULL 列，如果需要使用 NULL 列，应设置 session variable `allow_partition_column_nullable = true`。对于 LIST PARTITION，我们支持真正的 NULL 分区。对于 RANGE PARTITION，NULL 值会被划归**最小的 LESS THAN 分区**。分列如下：
 

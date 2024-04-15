@@ -31,14 +31,14 @@ Doris Operator 使用自定义资源定义（Custom Resource Definition, CRD）�
 通过以下命令可以在 Kubernetes 环境中部署 Doris Cluster CRD：
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
+kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 ```
 
 如果没有外网，先将 CRD 文件下载到本地：
 
 ```bash
 wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
-kubectl apply -f ./doris.selectdb.com_dorisclusters.yaml
+kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
 以下是期望输出结果：

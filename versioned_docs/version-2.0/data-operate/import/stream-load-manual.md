@@ -498,11 +498,13 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Loading data into specific timezone
 
-As Doris currently does not have a built-in time zone for time types, all DATETIME-related types represent absolute time points without timezone information and are not affected by changes in the Doris system timezone. Therefore, for importing data with timezones, our unified approach is to convert it to data in a specific target timezone. In the Doris system, this refers to the timezone represented by the session variable `time_zone`.
+Since Doris currently does not have a built-in time zone time type, all `DATETIME` related types only represent absolute time points, do not contain time zone information, and will not change due to changes in the Doris system time zone. Therefore, for the import of data with time zones, our unified processing method is to convert it into data in a specific target time zone. In the Doris system, it is the time zone represented by the session variable `time_zone`.
 
-During load job, our target timezone is specified through the parameter `timezone`. This variable overrides the session variable `time_zone` when performing timezone conversions or evaluating timezone-sensitive functions. Thus, unless there are special circumstances, the `timezone` should be set consistently with the current Doris cluster's `time_zone` during the import transaction. This means that all time data with timezones will be converted to this timezone. 
+In the import, our target time zone is specified through the parameter `timezone`. This variable will replace the session variable `time_zone` when time zone conversion occurs and time zone sensitive functions are calculated. Therefore, if there are no special circumstances, the `timezone` should be set in the import transaction to be consistent with the `time_zone` of the current Doris cluster. This means that all time data with a time zone will be converted to this time zone.
 
-For example, if the Doris system timezone is "+08:00" and the imported data contains two time entries: "2012-01-01 01:00:00" and "2015-12-12 12:12:12-08:00", specifying the import transaction's timezone as "+08:00" via `-H "timezone: +08:00"` will result in both entries being converted to this timezone, yielding "2012-01-01 09:00:00" and "2015-12-13 04:12:12".
+For example, the Doris system time zone is "+08:00", and the time column in the imported data contains two pieces of data, namely "2012-01-01 01:00:00+00:00" and "2015-12-12 12 :12:12-08:00", then after we specify the time zone of the imported transaction through `-H "timezone: +08:00"` when importing, both pieces of data will be converted to the time zone to obtain the result." 2012-01-01 09:00:00" and "2015-12-13 04:12:12".
+
+For more information on time zone interpretation, please refer to the document [Time Zone](../../query/query-variables/time-zone.md).
 
 ### Streamingly import
 
