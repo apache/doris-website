@@ -2,7 +2,7 @@
 {
     'title': 'Apache Doris 2.1.2 just released',
     'summary': 'Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.',
-    'date': '2024-04-03',
+    'date': '2024-04-12',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
     'picked': "true",
@@ -28,232 +28,93 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.
 
-- **Quick Download:** [https://doris.apache.org/download/](https://doris.apache.org/download/)
+**Quick Download:** https://doris.apache.org/download/
 
-- **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
-
-
+**GitHub Release:** https://github.com/apache/doris/releases
 
 ## Behavior Changed
 
-1. Change float type output format to improve float type serialization performance.
+1. Set the default value of the `data_consistence` property of EXPORT to partition to make export more stable during load. 
 
-- https://github.com/apache/doris/pull/32049
+- https://github.com/apache/doris/pull/32830
 
-2. Change system table value functions active_queries(), workload_groups() to system tables. 
+2. Some of MySQL Connector (eg, dotnet MySQL.Data) rely on variable's column type to make connection.
 
-- https://github.com/apache/doris/pull/32314
+   eg, select @[@autocommit]([@autocommit](https://github.com/autocommit)) should with column type BIGINT, not BIT, otherwise it will throw error. So we change column type of @[@autocommit](https://github.com/autocommit) to BIGINT. 
 
-3. Disable show query/load profile stmt because there are not so many developers use it and the pipeline and pipelinex engine not support it. 
-
-- https://github.com/apache/doris/pull/32467
-
-4. Upgrade arrow flight version to 15.0.2 to fix some bugs, so that please use ADBC 15.0.2 version to access Doris. 
-
-- https://github.com/apache/doris/pull/32827.
-
+- https://github.com/apache/doris/pull/33282
 
 
 ## Upgrade Problem
 
-1. BE will core when rolling pgrade problem from 2.0.x to 2.1.x.
+1. Normal workload group is not created when upgrade from 2.0 or other old versions. 
 
-- https://github.com/apache/doris/pull/32672
+  - https://github.com/apache/doris/pull/33197
 
-- https://github.com/apache/doris/pull/32444
-
-- https://github.com/apache/doris/pull/32162
-
-2. JDBC Catalog will have query errors when rolling grade rom 2.0.x to 2.1.x. 
-
-- https://github.com/apache/doris/pull/32618
+##  New Feature
 
 
+1. Add processlist table in information_schema database, users could use this table to query active connections. 
 
-## New Feature
+  - https://github.com/apache/doris/pull/32511
 
-1. Enable column auth by default.
+2. Add a new table valued function `LOCAL` to allow access file system like shared storage. 
 
-- https://github.com/apache/doris/pull/32659
-
-
-2. Get correct cores for pipeline and pipelinex engine when running within docker or k8s. 
-
-- https://github.com/apache/doris/pull/32370
-
-3. Support read parquet int96 type. 
-
-- https://github.com/apache/doris/pull/32394
-
-4. Enable proxy protocol to support IP transparency. Using this protocol, IP transparency for load balancing can be achieved, so that after load balancing, Doris can still obtain the client's real IP and implement permission control such as whitelisting. 
-
-- https://github.com/apache/doris/pull/32338/files
-
-5. Add workload group queue related columns for active_queries system table. Uses could use this system to monitor the workload queue usage. 
-
-- https://github.com/apache/doris/pull/32259
-
-6. Add new system table backend_active_tasks to monitor the realtime query statics on every BE. 
-
-- https://github.com/apache/doris/pull/31945
-
-7. Add ipv4 and ipv6 support for spark-doris connector. 
-
-- https://github.com/apache/doris/pull/32240
-
-8. Add inverted index support for CCR. 
-
-- https://github.com/apache/doris/pull/32101
-
-9. Support select experimental session variable. 
-
-- https://github.com/apache/doris/pull/31837
-
-10. Support materialized view with bitmap_union(bitmap_from_array()) case. 
-
-- https://github.com/apache/doris/pull/31962
-
-11. Support partition prune for `HIVE_DEFAULT_PARTITION`. 
-
-- https://github.com/apache/doris/pull/31736
-
-12. Support function in set variable statement. 
-
-- https://github.com/apache/doris/pull/32492
-
-13. Support arrow serialization for varint type. 
-
-- https://github.com/apache/doris/pull/32809
-
+  - https://github.com/apache/doris-website/pull/494
 
 
 ## Optimization
 
-1. Auto resume routine load when be restart or during upgrade. And keep the routine load stable. 
+1. Skip some useless process to make graceful stop more quickly in K8s env. 
 
-- https://github.com/apache/doris/pull/32239
+  - https://github.com/apache/doris/pull/33212
 
-2. Routine Load: optimize allocate task to be algorithm for load balance. 
+2. Add rollup table name in profile to help find the mv selection problem. 
 
-- https://github.com/apache/doris/pull/32021
+  - https://github.com/apache/doris/pull/33137
 
-3. Spark Load: update spark version for spark load to resolve cve problem. 
+3. Add test connection function to DB2 database to allow user check the connection when create DB2 Catalog. 
 
-- https://github.com/apache/doris/pull/30368
+  - https://github.com/apache/doris/pull/33335
 
-4. Skip cooldown if the tablet is dropped. 
+4. Add DNS Cache for FQDN to accelerate the connect process among BEs in K8s env. 
 
-- https://github.com/apache/doris/pull/32079
+  - https://github.com/apache/doris/pull/32869
 
-5. Support using workload group to manage routine load. 
+5. Refresh external table's rowcount async to make the query plan more stable. 
 
-- https://github.com/apache/doris/pull/31671
-
-6. [MTMV ]Improve the performance for query rewritting by materialized view. 
-
-- https://github.com/apache/doris/pull/31886
-
-7. Reduce jvm heap memory consumed by profiles of BrokerLoadJob. 
-
-- https://github.com/apache/doris/pull/31985
-
-8. Imporve the high QPS query by speed up PartitionPrunner. 
-
-- https://github.com/apache/doris/pull/31970
-
-9. Reduce duplicated memory consumption for column name and column path for schema cache. 
-
-- https://github.com/apache/doris/pull/31141
-
-10. Support more join types for query rewriting by materialized view such as INNER JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, FULL OUTER JOIN, LEFT SEMI JOIN, RIGHT SEMI JOIN, LEFT ANTI JOIN, RIGHT ANTI JOIN.
-
-- https://github.com/apache/doris/pull/32909
-
+  - https://github.com/apache/doris/pull/32997
 
 
 ## Bugfix
 
 
-1. Do not push down topn-filter through right/full outer join if the first orderkey is nulls first. 
+1. Fix Iceberg Catalog of HMS and Hadoop do not support Iceberg properties like "io.manifest.cache-enabled" to enable manifest cache in Iceberg. 
 
-- https://github.com/apache/doris/pull/32633
+  - https://github.com/apache/doris/pull/33113
 
-2. Fix memory leak in Java UDF.
+2. The offset params in `LEAD`/`LAG` function could use 0 as offset. 
 
-- https://github.com/apache/doris/pull/32630
+  - https://github.com/apache/doris/pull/33174
 
-3. If some odbc tables use the same resource, and restore not all odbc tables, it will not retain the resource.
-and check some conf for backup/restore 
+3. Fix some timeout issues with load. 
 
-- https://github.com/apache/doris/pull/31989
+  - https://github.com/apache/doris/pull/33077
 
-4. Fold constant will core for variant type. 
+  - https://github.com/apache/doris/pull/33260
 
-- https://github.com/apache/doris/pull/32265
+4. Fix core problem related with `ARRAY`/`MAP`/`STRUCT` compaction process. 
 
-5. Routine load will pause when transaction fail in some cases. 
+  - https://github.com/apache/doris/pull/33130
 
-- https://github.com/apache/doris/pull/32638
+  - https://github.com/apache/doris/pull/33295
 
-6. the result of left semi join with empty right side should be false instead of null. 
+5. Fix runtime filter wait timeout. 
 
-- https://github.com/apache/doris/pull/32477
+  - https://github.com/apache/doris/pull/33369
 
-7. Fix core when build inverted index for a new column with no data. 
+6. Fix `unix_timestamp` core for string input in auto partition. 
 
-- https://github.com/apache/doris/pull/32669
-
-8. Fix be core caused by null-safe-equal join. 
-
-- https://github.com/apache/doris/pull/32623
-
-9. Partial update: fix data correctness risk when load delete sign data into a table with sequence col. 
-
-- https://github.com/apache/doris/pull/32574
-
-10. Select outfile: Fix the column type mapping in the orc/parquet file format. 
-
-- https://github.com/apache/doris/pull/32281
-
-11. Fix BE core during restore stage. 
-
-- https://github.com/apache/doris/pull/32489
-
-12. Use array_agg func after other agg func like count, sum, may make be core. 
-
-- https://github.com/apache/doris/pull/32387
-
-13. Variant type should always nullable or there will some bugs. 
-
-- https://github.com/apache/doris/pull/32248
-
-14. Fix the bug of handling empty blocks in schema change. 
-
-- https://github.com/apache/doris/pull/32396
-
-15. Fix BE will core when use json_length() in some cases. 
-
-- https://github.com/apache/doris/pull/32145
-
-16. Fix error when query iceberg table using date cast predicate 
-
-- https://github.com/apache/doris/pull/32194
-
-17. Fix some bugs when build inverted index for variant type. 
-
-- https://github.com/apache/doris/pull/31992
-
-18. Wrong result of two or more map_agg functions in query. 
-
-- https://github.com/apache/doris/pull/31928
-
-19. Fix wrong result of money_format function. 
-
-- https://github.com/apache/doris/pull/31883
-
-20. Fix connection hang after too many connections. 
-
-- https://github.com/apache/doris/pull/31594
+  - https://github.com/apache/doris/pull/32871
