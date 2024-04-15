@@ -62,8 +62,8 @@ Currently, only users with the ADMIN role can perform this operation.
 
 #### Related Documentation
 
-[PAUSE-JOB](../Alter/PAUSE-JOB.md),[RESUME-JOB](../Alter/RESUME-JOB.md),[DROP-JOB](../Drop/DROP-JOB.md), [TVF-JOB](../../../sql-functions/table-functions/job.md),
-[TVF-TASKS](../../../sql-functions/table-functions/tasks)
+[PAUSE-JOB](../Alter/PAUSE-JOB.md),[RESUME-JOB](../Alter/RESUME-JOB.md),[DROP-JOB](../Drop/DROP-JOB.md), [QUERY-JOB](../../../sql-functions/table-functions/jobs.md),
+[QUERY-TASKS](../../../sql-functions/table-functions/tasks)
 
 ### Grammar
 

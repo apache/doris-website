@@ -27,8 +27,10 @@ under the License.
 ## `jobs`
 
 ### Name
-
+:::tip
 jobs
+- since 2.1
+:::
 
 ### description
 
@@ -39,6 +41,46 @@ This function is used in the from clause.
 #### syntax
 
 `jobs("type"="")`
+
+**parameter description**
+
+| parameter | description | type   | required |
+|:----------|:------------|:-------|:---------|
+| type      | job type    | string | yes      |
+
+the **type** supported types
+- insert: insert into type job
+- mv: materialized view job
+
+##### insert job
+jobs("type"="insert")Table structure:
+```
+mysql> desc  function jobs("type"="insert")
++-------------------+------+------+-------+---------+-------+
+| Field             | Type | Null | Key   | Default | Extra |
++-------------------+------+------+-------+---------+-------+
+| Id                | TEXT | No   | false | NULL    | NONE  |
+| Name              | TEXT | No   | false | NULL    | NONE  |
+| Definer           | TEXT | No   | false | NULL    | NONE  |
+| ExecuteType       | TEXT | No   | false | NULL    | NONE  |
+| RecurringStrategy | TEXT | No   | false | NULL    | NONE  |
+| Status            | TEXT | No   | false | NULL    | NONE  |
+| ExecuteSql        | TEXT | No   | false | NULL    | NONE  |
+| CreateTime        | TEXT | No   | false | NULL    | NONE  |
+| Comment           | TEXT | No   | false | NULL    | NONE  |
++-------------------+------+------+-------+---------+-------+
+```
+* Id: job ID.
+* Name: job name.
+* Definer: job definer.
+* ExecuteType: Execution type
+* RecurringStrategy: recurring strategy
+* Status: Job status
+* ExecuteSql: Execution SQL
+* CreateTime: Job creation time
+* Comment: job comment
+
+##### matterialized view job
 
 jobs("type"="mv")Table structure:
 ```sql
@@ -85,6 +127,17 @@ mysql> select * from jobs("type"="mv");
 mysql> select * from jobs("type"="mv") where Name="inner_mtmv_75043";
 ```
 
+3. View all insert jobs
+
+```sql
+mysql> select * from jobs("type"="insert");
+```
+4. View job with name `one_insert_job`
+
+```sql
+mysql> select * from jobs("type"="insert") where Name='one_insert_job';
+```
+
 ### keywords
 
-    jobs
+    jobs, job, insert, mv, materialized view, schedule
