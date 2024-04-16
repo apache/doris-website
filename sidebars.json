@@ -787,6 +787,7 @@
                                 "sql-manual/sql-functions/numeric-functions/pmod",
                                 "sql-manual/sql-functions/numeric-functions/round",
                                 "sql-manual/sql-functions/numeric-functions/round-bankers",
+                                "sql-manual/sql-functions/numeric-functions/xor",
                                 "sql-manual/sql-functions/numeric-functions/truncate",
                                 "sql-manual/sql-functions/numeric-functions/abs",
                                 "sql-manual/sql-functions/numeric-functions/sqrt",
