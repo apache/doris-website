@@ -526,7 +526,7 @@ In `Doris 2.0`, we have made some enhancements to the expressions supported by t
 
 ## Limitations
 
-1. If the condition column of the delete statement does not exist in the materialized view, the delete operation cannot be performed. If you must delete the data, you need to delete the materialized view before deleting the data.
+1. If the condition column of the delete statement does exist in the materialized view, the delete operation cannot be performed. If you must delete the data, you need to delete the materialized view before deleting the data.
 2. Too many materialized views on a single table will affect the efficiency of import: when importing data, the materialized view and Base table data are updated synchronously. If a table has more than 10 materialized views, the import speed may be slow. slow. This is the same as if a single import needs to import 10 table data at the same time.
 3. For the Unique Key data model, the materialized view can only change the order of the columns and cannot perform aggregation. Therefore, it is not possible to perform coarse-grained aggregation operations on the data by creating a materialized view on the Unique Key model.
 4. At present, the rewriting behavior of some optimizers to SQL may cause the materialized view to fail to be hit. For example, k1+1-1 is rewritten as k1, between is rewritten as <= and >=, and day is rewritten as dayofmonth. In this case, you need to manually adjust the statements of the query and materialized view.
