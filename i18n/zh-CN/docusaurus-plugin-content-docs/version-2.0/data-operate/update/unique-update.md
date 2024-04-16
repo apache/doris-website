@@ -86,4 +86,4 @@ Query OK, 1 row affected (0.11 sec)
 
 ## 更多帮助
 
-关于数据更新使用的更多详细语法，请参阅 [update](../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP UPDATE` 获取更多帮助信息。
+关于数据更新使用的更多详细语法，请参阅 [UPDATE](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) 命令手册，也可以在 MySQL 客户端命令行下输入 `HELP UPDATE` 获取更多帮助信息。

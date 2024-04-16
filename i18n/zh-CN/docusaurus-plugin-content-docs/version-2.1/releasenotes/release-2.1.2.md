@@ -35,7 +35,7 @@ under the License.
 
 - https://github.com/apache/doris/pull/32830
 
-2. 兼容部份 MySQL Connector（如 MySQL.Data for .NET）将 SELECT `@``@autocommit` 的返回值类型变更为 BIGINT。
+2. 兼容部分 MySQL Connector（如 MySQL.Data for .NET）将 SELECT `@``@autocommit` 的返回值类型变更为 BIGINT。
 
 - https://github.com/apache/doris/pull/33282 
 
@@ -51,13 +51,13 @@ under the License.
 
 - https://github.com/apache/doris/pull/32511
 
-2. 增加新的表函数 `LOCAL` 以访问部份共享存储上的文件。
+2. 增加新的表函数 `LOCAL` 以访问部分共享存储上的文件。
 
 - https://github.com/apache/doris-website/pull/494
 
 ## 4 改进与优化
 
-1. 跳过部份不必要检查，加速在 K8s 环境下优雅退出的速度。
+1. 跳过部分不必要检查，加速在 K8s 环境下优雅退出的速度。
 
 - https://github.com/apache/doris/pull/33212
 
@@ -87,13 +87,13 @@ under the License.
 
 - https://github.com/apache/doris/pull/33174
 
-3. 修复部份导入过程中可能出现的 Timeout 的问题。
+3. 修复部分导入过程中可能出现的 Timeout 的问题。
 
 - https://github.com/apache/doris/pull/33077 
 
 - https://github.com/apache/doris/pull/33260
 
-4. 修复部份 `ARRAY` / `MAP` / `STRUCT` 类型在 Compaction 中引起 Core 的问题。
+4. 修复部分 `ARRAY` / `MAP` / `STRUCT` 类型在 Compaction 中引起 Core 的问题。
 
 - https://github.com/apache/doris/pull/33130 https://github.com/apache/doris/pull/33295
 
