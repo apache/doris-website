@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "Arrow Flight SQL in Apache Doris for 10X faster data transfer",
+        content: `Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.`,
+        to: '/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer',
+        image: 'arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png',
+    },
+    {
         tags: ['Release Notes'],
         title: "Apache Doris 2.1.2 just released",
         content: `Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.`,
@@ -20,19 +27,4 @@ export const NEWSLETTER_DATA = [
         to: '/blog/variant-in-apache-doris-2.1',
         image: 'variant-in-apache-doris-2.1.png',
     },
-    {
-        tags: ['Best Practice'],
-        title: "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
-        content: `The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark, Impala, HBase and NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.`,
-        to: '/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp',
-        image: 'breaking-down-data-silos-with-an-apache-doris-based-cdp.png',
-    },
-    // {
-    //     tags: ['Best Practice'],
-    //     title: "The financial sector's choice: fast, secure, and highly available real-time data warehousing based on Apache Doris",
-    //     content: `A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.`,
-    //     to: '/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris',
-    //     image: 'apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png',
-    // },
-
 ];
