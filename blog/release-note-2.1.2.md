@@ -118,3 +118,4 @@ Dear community, Apache Doris 2.1.2 has been officially released on April 12, 202
 6. Fix `unix_timestamp` core for string input in auto partition. 
 
   - https://github.com/apache/doris/pull/32871
+
