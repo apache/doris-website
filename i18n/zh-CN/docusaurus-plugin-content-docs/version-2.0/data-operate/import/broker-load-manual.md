@@ -28,7 +28,7 @@ under the License.
 
 Stream Load 是一种推的方式，即导入的数据依靠客户端读取，并推送到 Doris。Broker Load 则是将导入请求发送给 Doris，有 Doris 主动拉取数据，所以如果数据存储在类似 HDFS 或者 对象存储中，则使用 Broker Load 是最方便的。这样，数据就不需要经过客户端，而有 Doris 直接读取导入。
 
-从 HDFS 或者 S3 直接读取，也可以通过 湖仓一体/T VF 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
+从 HDFS 或者 S3 直接读取，也可以通过 [湖仓一体/TVF]((../../lakehouse/file)) 中的 HDFS TVF 或者 S3 TVF 进行导入。基于 TVF 的 Insert Into 当前为同步导入，Broker Load 是一个异步的导入方式。
 
 Broker Load 适合源数据存储在远程存储系统，比如 HDFS，并且数据量比较大的场景。
 
@@ -591,7 +591,9 @@ WITH BROKER "broker_name"
 
 通常用户需要通过操作命令中的 `WITH BROKER "broker_name"` 子句来指定一个已经存在的 Broker Name。Broker Name 是用户在通过 `ALTER SYSTEM ADD BROKER` 命令添加 Broker 进程时指定的一个名称。一个名称通常对应一个或多个 Broker 进程。Doris 会根据名称选择可用的 Broker 进程。用户可以通过 `SHOW BROKER` 命令查看当前集群中已经存在的 Broker。
 
-注：Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
+:::info 备注
+Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
+:::
 
 **认证信息**
 
