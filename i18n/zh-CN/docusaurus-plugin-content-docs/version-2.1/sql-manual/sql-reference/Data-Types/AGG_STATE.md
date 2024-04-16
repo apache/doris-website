@@ -39,6 +39,17 @@ under the License.
 
 建表示例如下：
   ```sql
+  -- after doris-2.1.1
+  create table a_table(
+      k1 int null,
+      k2 agg_state<max_by(int not null,int)> generic,
+      k3 agg_state<group_concat(string) generic
+  )
+  aggregate key (k1)
+  distributed BY hash(k1) buckets 3
+  properties("replication_num" = "1");  
+
+  -- until doris-2.1.0
   create table a_table(
       k1 int null,
       k2 agg_state max_by(int not null,int),
