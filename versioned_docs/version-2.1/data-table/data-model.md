@@ -304,6 +304,18 @@ CREATE TABLE
 
 ```sql
 set enable_agg_state=true;
+
+-- after doris-2.1.1
+create table aggstate(
+    k1 int null,
+    k2 agg_state<sum(int)> generic,
+    k3 agg_state<group_concat(string)> generic
+)
+aggregate key (k1)
+distributed BY hash(k1) buckets 3
+properties("replication_num" = "1");
+
+-- until doris-2.1.0
 create table aggstate(
     k1 int null,
     k2 agg_state sum(int),
