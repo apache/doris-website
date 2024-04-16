@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-存算分离架构下, 可以将一个或多个计算节点(BE)组成一个compute cluster (以下简称
-cluster).  本文档描述如何使用cluster(如何创建cluster请参考[链接](../separation-of-storage-and-compute/deployment.md)):
-1. 显示所有的clsuter
-2. 如何进行cluster的授权
-3. 如何在用户级别绑定cluster (default_cloud_cluster) 达到用户级别的隔离效果
+存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个 Compute Cluster (以下简称
+Cluster).  本文档描述如何使用 cluster(如何创建 cluster 请参考[链接](../separation-of-storage-and-compute/deployment.md)):
+1. 显示所有的 Cluster
+2. 如何进行 Cluster 的授权
+3. 如何在用户级别绑定 Cluster (`default_cloud_cluster`) 达到用户级别的隔离效果
 
 ## SHOW CLUSTERS
 
-可以通过show clusters，查看当前仓库拥有的所有计算集群。
+可以通过 `show clusters`，查看当前仓库拥有的所有计算集群。
 
-```
+```sql
 mysql> show clusters;
 +-------------------------------+------------+------------+
 | cluster                       | is_current | users      |
@@ -48,17 +48,19 @@ mysql> SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name5';
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-## grant cluster访问权限给用户
+## GRANT CLUSTER 访问权限给用户
 
-1. 使用mysql client创建一个新用户
+**1. 使用 MySQL Client 创建一个新用户**
 
-2. 语法
-```
+**2. 语法**
+
+```sql
 GRANT USAGE_PRIV ON CLUSTER {cluster_name} TO {user}
 ```
 
-3. 示例：
-```
+**3. 示例**
+
+```sql
 // 使用root账号在mysql client中创建jack用户
 mysql> CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
 Query OK, 0 rows affected (0.01 sec)
@@ -105,8 +107,9 @@ Query OK, 1 row affected (7.22 sec)
 ```
 
 
-给jack用户grant一个不存在的cluster，不会报错。但是在use @cluster的时候会报错
-```
+给 jack 用户 GRANT 一个不存在的 Cluster，不会报错。但是在 `use @cluster` 的时候会报错
+
+```sql
 mysql> GRANT USAGE_PRIV ON CLUSTER not_exist_cluster TO jack;
 Query OK, 0 rows affected (0.05 sec)
 
@@ -133,15 +136,17 @@ Current database: *** NONE ***
 ERROR 5091 (42000): Cluster not_exist_cluster not exist
 ```
 
-## revoke 用户访问cluster权限
+## REVOKE 用户访问 Cluster 权限
 
-1. 语法
-```
+**1. 语法**
+
+```sql
 REVOKE USAGE_PRIV ON CLUSTER {cluster_name} FROM {user}
 ```
 
-2. 示例：
-```
+**2. 示例**
+
+```sql
 // 使用root账号在mysql client中创建jack用户
 mysql> REVOKE USAGE_PRIV ON CLUSTER regression_test_cluster_name0 FROM jack;
 Query OK, 0 rows affected (0.01 sec)
@@ -160,59 +165,68 @@ ResourcePrivs: NULL
 1 row in set (0.01 sec)
 ```
 
-## 设置default cluster
+## 设置 default_cluster
 
-1. 语法
+**1. 语法**
 
-为当前用户设置默认cluster
+为当前用户设置默认 Cluster
 
-```
+```sql
 SET PROPERTY 'default_cloud_cluster' = '{clusterName}';
 ```
 
-为其他用户设置默认cluster，注意需要有admin权限
+为其他用户设置默认 Cluster，注意需要有 Admin 权限
 
-```
+```sql
 SET PROPERTY FOR {user} 'default_cloud_cluster' = '{clusterName}';
 ```
 
-展示当前用户默认cluster，default_cloud_cluster的value既是默认cluster
+展示当前用户默认 Cluster，注意需要有，`default_cloud_cluster` 的 Value 既是默认 Cluster
 
-```
+```sql
 SHOW PROPERTY;
 ```
 
-展示其他用户默认cluster，主要当前用户要有相关权限，default_cloud_cluster的value既是默认cluster
+展示其他用户默认 Cluster，主要当前用户要有相关权限，`default_cloud_cluster` 的 Value 既是默认 Cluster
 
-```
+```sql
 SHOW PROPERTY FOR {user};
 ```
 
-展示当前warehouse下所有可用的clusters
+展示当前 Warehouse 下所有可用的 Clusters
 
-```
+```sql
 SHOW CLUSTERS;
 ```
 
-2. 注意：
-- 当前用户拥有admin role，例如：CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
-   - 可以给自己设置default cluster和给其他用户设置default cluster
-   - 可以SHOW自己的PROPERTY和其他用户的PROPERTY
-- 当前用户不拥有admin role， 例如CREATE USER jack1 IDENTIFIED BY '123456';
-   - 可以给自己设置default cluster
-   - 可以SHOW自己的PROPERTY
-   - 不能SHOW CLUSTERS，会提示需要grant ADMIN权限
-- 若当前用户没有配置默认cluster，目前实现在读写数据的时候，会报错。可以使用`use @cluster`设置当前context使用的cluster，也可以使用SET PROPERTY设置默认cluster
-- 若当前用户配置了默认cluster，但是后面此cluster被drop掉了，读写数据会报错，可以使用`use @cluster`设置当前context使用的cluster，也可以使用SET PROPERTY设置默认cluster
+**2. 注意**
 
-3. 示例：
+- 当前用户拥有 Admin Role，例如：`CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`;
+   
+   - 可以给自己设置 Default Cluster 和给其他用户设置 Default Cluster;
+   
+   - 可以 SHOW 自己的 PROPERTY 和其他用户的 PROPERTY;
 
-```
-// 设置当前用户默认cluster
+- 当前用户不拥有 admin role，例如 CREATE USER jack1 IDENTIFIED BY '123456';
+
+   - 可以给自己设置 Default Cluster
+
+   - 可以 SHOW 自己的 PROPERTY
+
+   - 不能 SHOW CLUSTERS，会提示需要 GRANT ADMIN 权限
+
+- 若当前用户没有配置默认 Cluster，目前实现在读写数据的时候，会报错。可以使用 `use @cluster` 设置当前 Context 使用的 Cluster，也可以使用 SET PROPERTY 设置默认 Cluster
+
+- 若当前用户配置了默认 Cluster，但是后面此 Cluster 被 Drop 掉了，读写数据会报错，可以使用 `use @cluster` 设置当前 Context 使用的 Cluster，也可以使用 SET PROPERTY 设置默认 Cluster
+
+**3. 示例**
+
+```sql
+// 设置当前用户默认 Cluster
 mysql> SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name0';
 Query OK, 0 rows affected (0.02 sec)
 
-// 展示当前用户的默认cluster
+// 展示当前用户的默认 Cluster
 mysql> show PROPERTY;
 +------------------------+-------------------------------+
 | Key                    | Value                         |
@@ -237,15 +251,15 @@ mysql> show PROPERTY;
 +------------------------+-------------------------------+
 17 rows in set (0.00 sec)
 
-// 使用root账号在mysql client中创建jack用户
+// 使用 root 账号在 MySQL Client 中创建 jack 用户
 mysql> CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin";
 Query OK, 0 rows affected (0.01 sec)
 
-// 给jack用户设置默认cluster
+// 给 jack 用户设置默认 Cluster
 mysql> SET PROPERTY FOR jack 'default_cloud_cluster' = 'regression_test_cluster_name1';
 Query OK, 0 rows affected (0.00 sec)
 
-// 展示其他用户的默认cluster
+// 展示其他用户的默认 Cluster
 mysql> show PROPERTY for jack;
 +------------------------+-------------------------------+
 | Key                    | Value                         |
@@ -271,9 +285,9 @@ mysql> show PROPERTY for jack;
 17 rows in set (0.00 sec)
 ```
 
-若当前warehouse下不存在将要设置的默认cluster会报错，提示使用show clusters展示当前warehouse下所有有效的cluster，其中cluster列表示clusterName，is_current列表示当前用户是否使用此cluster，users列表示这些用户设置默认cluster为当前行的cluster
+若当前 Warehouse 下不存在将要设置的默认 Cluster 会报错，提示使用 SHOW CLUSTERS 展示当前 Warehouse 下所有有效的 Cluster Cluster 列表示 `clusterName`，`is_current` 列表示当前用户是否使用此 Cluster，Users 列表示这些用户设置默认 Cluster 为当前行的 Cluster
 
-```
+```sql
 mysql> SET PROPERTY 'default_cloud_cluster' = 'not_exist_cluster';
 ERROR 5091 (42000): errCode = 2, detailMessage = Cluster not_exist_cluster not exist, use SQL 'SHOW CLUSTERS' to get a valid cluster
 
@@ -290,52 +304,58 @@ mysql> SET PROPERTY 'default_cloud_cluster' = 'regression_test_cluster_name5';
 Query OK, 0 rows affected (0.01 sec)
 ```
 
-## 未设置default cluster，系统自动选择集群的规则
+## 未设置 default_cluster，系统自动选择集群的规则
 
-如果用户没有设置默认集群，则会找到一个有active后端并且有使用权限的集群。并且在同次会话中，系统选择的集群将一直保持不变。
+如果用户没有设置默认集群，则会找到一个有 active 后端并且有使用权限的集群。并且在同次会话中，系统选择的集群将一直保持不变。
 
 对于不同次的会话，存在以下情况，可能导致系统自动选择的集群发生改变
 * 用户失去了上次选择集群的使用权限
+
 * 有集群被添加或者移除
-* 上次选择的集群不存在active的后端
+
+* 上次选择的集群不存在 Active 的后端
 
 其中，第一种和第二种情况一定会导致系统自动选择的集群发生改变，第三种情况可能会导致系统自动选择的集群发生改变。
 
-## 切换cluster
+## 切换 Cluster
 
 在存算分离版本中，指定使用的数据库和计算集群
 
 **1. 语法**
 
-```
+```sql
 USE { [catalog_name.]database_name[@cluster_name] | @cluster_name }
 ```
-Note: 如果database名字或者cluster名字是保留的关键字, 需要用backtick
+
+:::info Note
+如果 Database 名字或者 Cluster 名字是保留的关键字，需要用 Backtick
 ```
 ` `
 ```
 括起来
+:::
 
 **2. 举例**
 
-1. 指定使用该数据库test_database
-```
-USE test_database
-或者
-USE `test_database`
-```
+1. 指定使用该数据库 test_database
 
-2. 指定使用该计算集群test_cluster
+   ```sql
+   USE test_database
+   或者
+   USE `test_database`
+   ```
 
-```
-USE @test_cluster
-或者
-USE @`test_cluster`
-```
+2. 指定使用该计算集群 test_cluster
 
-3. 同时指定使用该数据库test_database和计算集群test_cluster
+   ```sql
+   USE @test_cluster
+   或者
+   USE @`test_cluster`
+   ```
 
-```
-USE test_database@test_cluster
-USE `test_database`@`test_cluster`
-```
+3. 同时指定使用该数据库 test_database 和计算集群 test_cluster
+
+   ```sql
+   USE test_database@test_cluster
+   USE `test_database`@`test_cluster`
+   ```

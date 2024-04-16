@@ -58,7 +58,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.6.0</version>
+   <version>1.5.2</version>
 </dependency>
 ```
 

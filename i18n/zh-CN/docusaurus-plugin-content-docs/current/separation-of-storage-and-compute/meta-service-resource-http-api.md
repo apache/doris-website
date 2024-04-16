@@ -1,6 +1,6 @@
 ---
 {
-    "title": "存算分离资源管理接口API参考",
+    "title": "存算分离资源管理接口 API 参考",
     "language": "zh-CN"
 }
 ---
@@ -25,9 +25,11 @@ under the License.
 -->
 
 
-本文档描述Meta-service的资源管理接口, 术语介绍:
-* instance 存算分离数仓实例, 类似于一个存算一体的Doris的集群
-* cluster 数仓实例中的计算集群, 一个数仓可以包含多个cluster
+本文档描述 Meta-service 的资源管理接口，术语介绍：
+
+* Instance 存算分离数仓实例，类似于一个存算一体的 Doris 的集群
+
+* Cluster 数仓实例中的计算集群，一个数仓可以包含多个 Cluster
 
 ## 接口目录
 
@@ -45,17 +47,17 @@ PUT /MetaService/http/v1/create_instance?token=<token> HTTP/1.1
 
 为了保证兼容性，之前的接口（即不带 `v1/`）仍然能访问。
 
-## 创建instance
+## 创建 Instance
 
 ### 接口描述
 
-本接口用于创建一个instance. 这个instance不包含任何节点信息，不能多次创建同一个instance_id的instance
+本接口用于创建一个 Instance. 这个 Instance 不包含任何节点信息，不能多次创建同一个 `instance_id` 的 Instance
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
-```
+```bash
 PUT /MetaService/http/create_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
@@ -86,20 +88,20 @@ Content-Type: text/plain
 
 | 参数名                        | 描述                     | 是否必须 | 备注                             |
 |----------------------------|------------------------|------|--------------------------------|
-| instance_id                | instance_id            | 是    | 全局唯一(包括历史上)                    |
+| instance_id                | instance_id            | 是    | 全局唯一 (包括历史上)                    |
 | name                       | instance 别名            | 否    |                                |
-| user_id                    | 用户id                   | 是    |                                |
-| obj_info                   | S3链接配置信息               | 是    |                                |
-| obj_info.ak                | S3的access key          | 是    |                                |
-| obj_info.sk                | S3的secret key          | 是    |                                |
-| obj_info.bucket            | S3的bucket名             | 是    |                                |
-| obj_info.prefix            | S3上数据存放位置前缀            | 否    | 不填的话，在bucket的根目录               |
-| obj_info.endpoint          | S3的endpoint信息          | 是    |                                |
-| obj_info.region            | S3的region信息            | 是    |                                |
-| obj_info.external_endpoint | S3的external endpoint信息 | 否    | 兼容oss，oss有external、 internal区别 |
-| obj_info.provider          | S3的provider信息 | 是    |          |
-| obj_info.user_id           | bucket的user_id  | 否   |   轮转ak sk使用，用于标识哪些obj需更改ak sk        |
-| ram_user | ram_user信息，用于外部bucket授权         | 否    |           |
+| user_id                    | 用户 id                   | 是    |                                |
+| obj_info                   | S3 链接配置信息               | 是    |                                |
+| obj_info.ak                | S3 的 access key          | 是    |                                |
+| obj_info.sk                | S3 的 secret key          | 是    |                                |
+| obj_info.bucket            | S3 的 bucket 名             | 是    |                                |
+| obj_info.prefix            | S3 上数据存放位置前缀            | 否    | 不填的话，在 bucket 的根目录               |
+| obj_info.endpoint          | S3 的 endpoint 信息          | 是    |                                |
+| obj_info.region            | S3 的 region 信息            | 是    |                                |
+| obj_info.external_endpoint | S3 的 external endpoint 信息 | 否    | 兼容 oss，oss 有 external、internal 区别 |
+| obj_info.provider          | S3 的 provider 信息 | 是    |          |
+| obj_info.user_id           | bucket 的 user_id  | 否   |   轮转 ak sk 使用，用于标识哪些 obj 需更改 ak sk        |
+| ram_user | ram_user 信息，用于外部 bucket 授权         | 否    |           |
 | ram_user.user_id |         | 是    |  |
 | ram_user.ak |              | 是    |  |
 | ram_user.sk |              | 是    |  |
@@ -136,7 +138,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -156,13 +158,13 @@ Content-Type: text/plain
 }
 ```
 
-## 删除instance
+## 删除 Instance
 
 ### 接口描述
 
-本接口用于删除一个已存在的instance，标记删除，然后recycler会异步回收资源
+本接口用于删除一个已存在的 Instance，标记删除，然后 Recycler 会异步回收资源
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -179,7 +181,7 @@ Content-Type: text/plain
 
 | 参数名                        | 描述                     | 是否必须 | 备注                             |
 |----------------------------|------------------------|------|--------------------------------|
-| instance_id                | instance_id            | 是    | 全局唯一(包括历史上)                    |
+| instance_id                | instance_id            | 是    | 全局唯一 (包括历史上)                    |
 
 * 请求示例
 
@@ -196,7 +198,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                       |
 |------|-------|------|------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                      |
 
 * 成功返回示例
@@ -216,13 +218,13 @@ Content-Type: text/plain
 }
 ```
 
-## 查询instance信息
+## 查询 Instance 信息
 
 ### 接口描述
 
-本接口用于查询instance下的信息（s3信息、cluster信息、stage信息），用于debug
+本接口用于查询 Instance 下的信息（S3 信息、Cluster 信息、Stage 信息），用于 Debug
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -235,7 +237,7 @@ Content-Type: text/plain
 
 | 参数名                        | 描述                     | 是否必须 | 备注                             |
 |----------------------------|------------------------|------|--------------------------------|
-| instance_id                | instance_id            | 是    | 全局唯一(包括历史上)                    |
+| instance_id                | instance_id            | 是    | 全局唯一 (包括历史上)                    |
 
 * 请求示例
 
@@ -248,17 +250,17 @@ Content-Type: text/plain
 
 | 参数名                | 描述                       | 是否必须 | 备注                                       |
 |--------------------|--------------------------|------|------------------------------------------|
-| code               | 返回状态码                    | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR |
+| code               | 返回状态码                    | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR |
 | msg                | 出错原因                     | 是    | 若出错返回错误原因，未出错返回空字符串                      |
-| result             | instance下的信息             | 是    |                                          |
-| result.user_id     | 创建instance的user id       | 是    |                                          |
-| result.instance_id | 创建instance传入的instance_id | 是    |                                          |
-| result.name        | 创建instance的user name     | 是    |                                          |
-| result.clusters    | instance内的cluster列表      | 是    |                                          |
-| result.mtime       | instance的修改时间            | 是    |                                          |
-| result.obj_info    | instance下的s3信息列表         | 是    |                                          |
-| result.stages      | instance下的stages列表       | 是    |                                          |
-| result.status      | instance的状态信息            | 否    | 若instance被drop，则为"DELETED"               |
+| result             | instance 下的信息             | 是    |                                          |
+| result.user_id     | 创建 instance 的 user id       | 是    |                                          |
+| result.instance_id | 创建 instance 传入的 instance_id | 是    |                                          |
+| result.name        | 创建 instance 的 user name     | 是    |                                          |
+| result.clusters    | instance 内的 cluster 列表      | 是    |                                          |
+| result.mtime       | instance 的修改时间            | 是    |                                          |
+| result.obj_info    | instance 下的 s3 信息列表         | 是    |                                          |
+| result.stages      | instance 下的 stages 列表       | 是    |                                          |
+| result.status      | instance 的状态信息            | 否    | 若 instance 被 drop，则为"DELETED"               |
 
 * 成功返回示例
 
@@ -387,17 +389,17 @@ Content-Type: text/plain
 }
 ```
 
-## 创建cluster
+## 创建 cluster
 
 ### 接口描述
 
-本接口用于创建一个属于instance的cluster. 这个cluster中包含若干（大于等于0个）相同类型节点信息, 此接口不能用同一参数调用
+本接口用于创建一个属于 instance 的 cluster. 这个 cluster 中包含若干（大于等于 0 个）相同类型节点信息，此接口不能用同一参数调用
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
-```
+```sql
 PUT /MetaService/http/add_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
@@ -422,17 +424,17 @@ Content-Type: text/plain
 
 | 参数名                           | 描述                 | 是否必须 | 备注                                                                                                                                                                                   |
 |-------------------------------|--------------------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| instance_id                   | instance_id        | 是    | 全局唯一(包括历史上)                                                                                                                                                                          |
-| cluster                       | cluster对象信息        | 是    |                                                                                                                                                                                      |
-| cluster.cluster_name          | cluster的名字         | 是    | 其中fe的cluster名字特殊，默认RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在fe.conf中配置cloud_observer_cluster_name修改                                                                                    |
-| cluster.cluster_id            | cluster的id         | 是    | 其中fe的cluster id特殊，默认RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在fe.conf中配置cloud_observer_cluster_id修改                                                                                       |
-| cluster.type                  | cluster中节点的类型      | 是    | 支持："SQL","COMPUTE"两种type，"SQL"表示sql service对应fe， "COMPUTE"表示计算机节点对应be                                                                                                                |
-| cluster.nodes                 | cluster中的节点数组      | 是    |                                                                                                                                                                                      |
-| cluster.nodes.cloud_unique_id | 节点的cloud_unique_id | 是    | 是fe.conf、be.conf中的cloud_unique_id配置项                                                                                                                                                 |
-| cluster.nodes.ip              | 节点的ip              | 是    |                                                                                                                                                                                      |
-| cluster.nodes.heartbeat_port  | be的heartbeat port  | 是    | 是be.conf中的heartbeat_service_port配置项                                                                                                                                                  |
-| cluster.nodes.edit_log_port   | fe节点的edit log port | 是    | 是fe.conf中的edit_log_port配置项                                                                                                                                                           |
-| cluster.nodes.node_type       | fe节点的类型            | 是    | 当cluster的type为SQL时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为master， "FE_OBSERVER"表示此节点为observer，注意：一个type为"SQL"的cluster的nodes数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
+| instance_id                   | instance_id        | 是    | 全局唯一 (包括历史上)                                                                                                                                                                          |
+| cluster                       | cluster 对象信息        | 是    |                                                                                                                                                                                      |
+| cluster.cluster_name          | cluster 的名字         | 是    | 其中 fe 的 cluster 名字特殊，默认 RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_name 修改                                                                                    |
+| cluster.cluster_id            | cluster 的 id         | 是    | 其中 fe 的 cluster id 特殊，默认 RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改                                                                                       |
+| cluster.type                  | cluster 中节点的类型      | 是    | 支持："SQL","COMPUTE"两种 type，"SQL"表示 sql service 对应 fe， "COMPUTE"表示计算机节点对应 be                                                                                                                |
+| cluster.nodes                 | cluster 中的节点数组      | 是    |                                                                                                                                                                                      |
+| cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id | 是    | 是 fe.conf、be.conf 中的 cloud_unique_id 配置项                                                                                                                                                 |
+| cluster.nodes.ip              | 节点的 ip              | 是    |                                                                                                                                                                                      |
+| cluster.nodes.heartbeat_port  | be 的 heartbeat port  | 是    | 是 be.conf 中的 heartbeat_service_port 配置项                                                                                                                                                  |
+| cluster.nodes.edit_log_port   | fe 节点的 edit log port | 是    | 是 fe.conf 中的 edit_log_port 配置项                                                                                                                                                           |
+| cluster.nodes.node_type       | fe 节点的类型            | 是    | 当 cluster 的 type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为 master， "FE_OBSERVER"表示此节点为 observer，注意：一个 type 为"SQL"的 cluster 的 nodes 数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
 
 * 请求示例
 
@@ -462,7 +464,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -482,13 +484,13 @@ Content-Type: text/plain
 }
 ```
 
-## 获取cluster
+## 获取 Cluster
 
 ### 接口描述
 
-本接口用于获取一个cluster的信息，此接口可以多次重复调用
+本接口用于获取一个 Cluster 的信息，此接口可以多次重复调用
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -508,10 +510,10 @@ Content-Type: text/plain
 
 | 参数名             | 描述                   | 是否必须 | 备注                                                                          |
 |-----------------|----------------------|------|-----------------------------------------------------------------------------|
-| cloud_unique_id | cloud_unique_id      | 是    | 通过cloud_unique_id去查询instance_id                                             |
-| cluster_name    | cluster的名字           | 否    | 注：cluster_name、cluster_id、mysql_user_name三选一，若三个都不填则返回instance下所有cluster信息  |
-| cluster_id      | cluster的id           | 否    | 注：cluster_name、cluster_id、mysql_user_name三选一 ，若三个都不填则返回instance下所有cluster信息 |
-| mysql_user_name | mysql用户名配置的可用cluster | 否    | 注：cluster_name、cluster_id、mysql_user_name三选一，若三个都不填则返回instance下所有cluster信息  |
+| cloud_unique_id | cloud_unique_id      | 是    | 通过 cloud_unique_id 去查询 instance_id                                             |
+| cluster_name    | cluster 的名字           | 否    | 注：cluster_name、cluster_id、mysql_user_name 三选一，若三个都不填则返回 instance 下所有 cluster 信息  |
+| cluster_id      | cluster 的 id           | 否    | 注：cluster_name、cluster_id、mysql_user_name 三选一，若三个都不填则返回 instance 下所有 cluster 信息 |
+| mysql_user_name | mysql 用户名配置的可用 cluster | 否    | 注：cluster_name、cluster_id、mysql_user_name 三选一，若三个都不填则返回 instance 下所有 cluster 信息  |
 
 * 请求示例
 
@@ -532,7 +534,7 @@ Content-Type: text/plain
 
 | 参数名    | 描述     | 是否必须 | 备注                                                       |
 |--------|--------|------|----------------------------------------------------------|
-| code   | 返回状态码  | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code   | 返回状态码  | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg    | 出错原因   | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 | result | 查询结果对象 | 是    |                                                          |
 
@@ -568,13 +570,13 @@ Content-Type: text/plain
 ```
 
 
-## 删除cluster
+## 删除 Cluster
 
 ### 接口描述
 
-本接口用于删除一个instance下的某个cluster信息， 多次用相同参数删除失败报错
+本接口用于删除一个 Instance 下的某个 Cluster 信息，多次用相同参数删除失败报错
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -596,9 +598,9 @@ Content-Type: text/plain
 | 参数名                  | 描述               | 是否必须 | 备注  |
 |----------------------|------------------|------|-----|
 | instance_id          | instance_id      | 是    |     |
-| cluster              | cluster对象        | 是    |     |
-| cluster.cluster_name | 将删除的cluster name | 是    |     |
-| cluster.cluster_id   | 将删除的cluster id   | 是    |     |
+| cluster              | cluster 对象        | 是    |     |
+| cluster.cluster_name | 将删除的 cluster name | 是    |     |
+| cluster.cluster_id   | 将删除的 cluster id   | 是    |     |
 
 * 请求示例
 
@@ -620,7 +622,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -641,13 +643,13 @@ Content-Type: text/plain
 ```
 
 
-## cluster改名
+## Cluster 改名
 
 ### 接口描述
 
-本接口用于将instance下的某cluster改名，依据传入的cluster_id寻找cluster_name去rename，此接口多次相同参数调用报错
+本接口用于将 Instance 下的某 Cluster 改名，依据传入的 cluster_id 寻找 cluster_name 去 Rename，此接口多次相同参数调用报错
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -669,9 +671,9 @@ Content-Type: text/plain
 | 参数名                  | 描述               | 是否必须 | 备注                                    |
 |----------------------|------------------|------|---------------------------------------|
 | instance_id          | instance_id      | 是    |                                       |
-| cluster              | cluster对象        | 是    |                                       |
-| cluster.cluster_name | 将改名的cluster name | 是    | 新的cluster_name                        |
-| cluster.cluster_id   | 将改名的cluster id   | 是    | 依据此id去寻找cluster，然后rename cluster_name |
+| cluster              | cluster 对象        | 是    |                                       |
+| cluster.cluster_name | 将改名的 cluster name | 是    | 新的 cluster_name                        |
+| cluster.cluster_id   | 将改名的 cluster id   | 是    | 依据此 id 去寻找 cluster，然后 rename cluster_name |
 
 * 请求示例
 
@@ -693,7 +695,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -713,14 +715,14 @@ Content-Type: text/plain
 }
 ```
 
-## cluster添加节点
+## Cluster 添加节点
 
 ### 接口描述
 
-本接口用于将instance下的某cluster添加若干相同类型的节点，此接口多次相同参数调用报错
+本接口用于将 Instance 下的某 Cluster 添加若干相同类型的节点，此接口多次相同参数调用报错
 
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -755,11 +757,11 @@ Content-Type: text/plain
 | 参数名                  | 描述                              | 是否必须 | 备注                    |
 |----------------------|---------------------------------|------|-----------------------|
 | instance_id          | instance_id                     | 是    |                       |
-| cluster              | cluster对象                       | 是    |                       |
-| cluster.cluster_name | 将添加mysql user name的cluster name | 是    |                       |
-| cluster.cluster_id   | 将添加mysql user name的cluster id   | 是    |                       |
-| cluster.type         | cluster的类型，与上文中add_cluster处解释一致 |      |                       |
-| cluster.nodes        | cluster中的节点数组                   | 是    | 与上文add_cluster处字段解释一致 |
+| cluster              | cluster 对象                       | 是    |                       |
+| cluster.cluster_name | 将添加 mysql user name 的 cluster name | 是    |                       |
+| cluster.cluster_id   | 将添加 mysql user name 的 cluster id   | 是    |                       |
+| cluster.type         | cluster 的类型，与上文中 add_cluster 处解释一致 |      |                       |
+| cluster.nodes        | cluster 中的节点数组                   | 是    | 与上文 add_cluster 处字段解释一致 |
 
 * 请求示例
 
@@ -794,7 +796,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -815,13 +817,13 @@ Content-Type: text/plain
 ```
 
 
-## cluster减少节点
+## Cluster 减少节点
 
 ### 接口描述
 
-本接口用于将instance下的某cluster减少若干相同类型的节点
+本接口用于将 Instance 下的某 Cluster 减少若干相同类型的节点
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -856,11 +858,11 @@ Content-Type: text/plain
 | 参数名                  | 描述                              | 是否必须 | 备注  |
 |----------------------|---------------------------------|------|-----|
 | instance_id          | instance_id                     | 是    |     |
-| cluster              | cluster对象                       | 是    |     |
-| cluster.cluster_name | 将添加mysql user name的cluster name | 是    |     |
-| cluster.cluster_id   | 将添加mysql user name的cluster id   | 是    |     |
-| cluster.type         | cluster类型                       | 是    |     |
-| cluster.node         | cluster中节点信息                    | 是    | 数组  |
+| cluster              | cluster 对象                       | 是    |     |
+| cluster.cluster_name | 将添加 mysql user name 的 cluster name | 是    |     |
+| cluster.cluster_id   | 将添加 mysql user name 的 cluster id   | 是    |     |
+| cluster.type         | cluster 类型                       | 是    |     |
+| cluster.node         | cluster 中节点信息                    | 是    | 数组  |
 
 * 请求示例
 
@@ -896,7 +898,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -916,13 +918,13 @@ Content-Type: text/plain
 }
 ```
 
-## 为cluster添加默认user name
+## 为 Cluster 添加默认 user_name
 
 ### 接口描述
 
-本接口用于将instance下的某cluster添加一些用户名，这些用户使用mysql client登录进系统，可以使用默认cluster
+本接口用于将 instance 下的某 cluster 添加一些用户名，这些用户使用 mysql client 登录进系统，可以使用默认 cluster
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -947,9 +949,9 @@ Content-Type: text/plain
 | 参数名                     | 描述                              | 是否必须 | 备注    |
 |-------------------------|---------------------------------|------|-------|
 | instance_id             | instance_id                     | 是    |       |
-| cluster                 | cluster对象                       | 是    |       |
-| cluster.cluster_name    | 将添加mysql user name的cluster name | 是    |       |
-| cluster.cluster_id      | 将添加mysql user name的cluster id   | 是    |       |
+| cluster                 | cluster 对象                       | 是    |       |
+| cluster.cluster_name    | 将添加 mysql user name 的 cluster name | 是    |       |
+| cluster.cluster_id      | 将添加 mysql user name 的 cluster id   | 是    |       |
 | cluster.mysql_user_name | mysql user name                 | 是    | 字符串数组 |
 
 * 请求示例
@@ -976,7 +978,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -997,13 +999,13 @@ Content-Type: text/plain
 ```
 
 
-## 获取cluster配置的S3信息
+## 获取 Cluster 配置的 S3 信息
 
 ### 接口描述
 
-本接口用于获取instance配置的S3的ak、sk信息，可相同参数调用多次
+本接口用于获取 Instance 配置的 S3 的 ak、sk 信息，可相同参数调用多次
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1018,7 +1020,7 @@ Content-Type: text/plain
 
 | 参数名             | 描述                 | 是否必须 | 备注                                        |
 |-----------------|--------------------|------|-------------------------------------------|
-| cloud_unique_id | 节点的cloud_unique_id | 是    | instance下某节点的unique_id查询整个instance配置的S3信息 |
+| cloud_unique_id | 节点的 cloud_unique_id | 是    | instance 下某节点的 unique_id 查询整个 instance 配置的 S3 信息 |
 
 * 请求示例
 
@@ -1034,7 +1036,7 @@ Content-Type: text/plain
 
 | 参数名    | 描述     | 是否必须 | 备注                                                       |
 |--------|--------|------|----------------------------------------------------------|
-| code   | 返回状态码  | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code   | 返回状态码  | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg    | 出错原因   | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 | result | 查询结果对象 | 是    |                                                          |
 
@@ -1071,13 +1073,13 @@ Content-Type: text/plain
 ```
 
 
-## 更新instance的ak、sk信息
+## 更新 Instance 的 ak、sk 信息
 
 ### 接口描述
 
-本接口用于更新instance配置的S3和RAM_USER的ak、sk信息，使用user_id去查询修改项，一般用于aksk轮转，使用相同参数调用此接口会报错
+本接口用于更新 Instance 配置的 S3 和 RAM_USER 的 ak、sk 信息，使用 user_id 去查询修改项，一般用于 ak、sk 轮转，使用相同参数调用此接口会报错
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1112,12 +1114,12 @@ Content-Type: text/plain
 | 参数名             | 描述                              | 是否必须 | 备注        |
 |-----------------|---------------------------------|------|-----------|
 | instance_id     | instance_id                     | 是    |           |
-| internal_bucket_user  | 需修改的bucket_user列表     | 和ram_user至少存在一个   | 数组 |
-| internal_bucket_user.user_id  | 账号user_id        | 是    | |
+| internal_bucket_user  | 需修改的 bucket_user 列表     | 和 ram_user 至少存在一个   | 数组 |
+| internal_bucket_user.user_id  | 账号 user_id        | 是    | |
 | internal_bucket_user.ak  |                        | 是    |           |
 | internal_bucket_user.sk  |                        | 是    |     |
-| ram_user              | 需修改的ram_user   | 和internal_bucket_user至少存在一个   |     |
-| ram_user.user_id  |  账号user_id                   | 是    |     |
+| ram_user              | 需修改的 ram_user   | 和 internal_bucket_user 至少存在一个   |     |
+| ram_user.user_id  |  账号 user_id                   | 是    |     |
 | ram_user.ak  |                                    | 是    |     |
 | ram_user.sk  |                                    | 是    |     |
 
@@ -1154,7 +1156,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -1174,13 +1176,13 @@ Content-Type: text/plain
 }
 ```
 
-## 更新instance的ak、sk信息(2.3版本之前的方法)
+## 更新 Instance 的 ak、sk 信息 (2.3 版本之前的方法)
 
 ### 接口描述
 
-本接口用于更新instance配置的S3的ak、sk信息，使用id去查询修改项，id可以用get_obj_store_info查询得到，多次相同参数调用此接口会报错
+本接口用于更新 Instance 配置的 S3 的 ak、sk 信息，使用 ID 去查询修改项，ID 可以用 get_obj_store_info 查询得到，多次相同参数调用此接口会报错
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1202,10 +1204,10 @@ Content-Type: text/plain
 
 | 参数名             | 描述                              | 是否必须 | 备注        |
 |-----------------|---------------------------------|------|-----------|
-| cloud_unique_id | 节点的cloud_unique_id              | 是    |           |
-| obj             | obj对象                           | 是    | S3信息对象    |
-| obj.id          | 将添加mysql user name的cluster name | 是    | id支持从1到10 |
-| obj.ak          | 将添加mysql user name的cluster id   | 是    |           |
+| cloud_unique_id | 节点的 cloud_unique_id              | 是    |           |
+| obj             | obj 对象                           | 是    | S3 信息对象    |
+| obj.id          | 将添加 mysql user name 的 cluster name | 是    | id 支持从 1 到 10 |
+| obj.ak          | 将添加 mysql user name 的 cluster id   | 是    |           |
 | obj.sk          | mysql user name                 | 是    | 字符串数组     |
 
 * 请求示例
@@ -1229,7 +1231,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -1250,13 +1252,13 @@ Content-Type: text/plain
 ```
 
 
-## 添加instance的S3信息
+## 添加 Instance 的 S3 信息
 
 ### 接口描述
 
-本接口用于添加instance配置的S3的信息，最多支持添加10条s3信息，每条配置最多不超过1024字节大小
+本接口用于添加 Instance 配置的 S3 的信息，最多支持添加 10 条 S3 信息，每条配置最多不超过 1024 字节大小
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1281,14 +1283,14 @@ Content-Type: text/plain
 
 | 参数名             | 描述                 | 是否必须 | 备注     |
 |-----------------|--------------------|------|--------|
-| cloud_unique_id | 节点的cloud_unique_id | 是    |        |
-| obj             | obj对象              | 是    | S3信息对象 |
-| obj.ak          | 将添加S3的ak           | 是    |        |
-| obj.sk          | 将添加S3的sk           | 是    |        |
-| obj.bucket      | 将添加S3的bucket       | 是    |        |
-| obj.prefix      | 将添加S3的prefix       | 是    |        |
-| obj.endpoint    | 将添加S3的endpoint     | 是    |        |
-| obj.region      | 将添加S3的region       | 是    |        |
+| cloud_unique_id | 节点的 cloud_unique_id | 是    |        |
+| obj             | obj 对象              | 是    | S3 信息对象 |
+| obj.ak          | 将添加 S3 的 ak           | 是    |        |
+| obj.sk          | 将添加 S3 的 sk           | 是    |        |
+| obj.bucket      | 将添加 S3 的 bucket       | 是    |        |
+| obj.prefix      | 将添加 S3 的 prefix       | 是    |        |
+| obj.endpoint    | 将添加 S3 的 endpoint     | 是    |        |
+| obj.region      | 将添加 S3 的 region       | 是    |        |
 
 * 请求示例
 
@@ -1314,7 +1316,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                                       |
 |------|-------|------|----------------------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR、ALREADY_EXISTED |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                                      |
 
 * 成功返回示例
@@ -1334,13 +1336,13 @@ Content-Type: text/plain
 }
 ```
 
-## 解码meta service中key的信息
+## 解码 Meta Service 中 Key 的信息
 
 ### 接口描述
 
-本接口用于decode meta service log中的key的信息，调试用
+本接口用于 `decode` Meta Service Log 中的 Key 的信息，调试用
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1353,7 +1355,7 @@ Content-Type: text/plain
 
 | 参数名     | 描述          | 是否必须 | 备注  |
 |---------|-------------|------|-----|
-| key     | 待decode的key | 是    |     |
+| key     | 待 decode 的 key | 是    |     |
 | unicode | 返回格式调整      | 否    |     |
 
 * 请求示例
@@ -1375,13 +1377,13 @@ Content-Type: text/plain
 0110696e7374616e636500011072656772657373696f6e5f696e7374616e6365300001
 ```
 
-## 查询tablet状态
+## 查询 Tablet 状态
 
 ### 接口描述
 
-本接口用于查询tablet状态，调试用
+本接口用于查询 Tablet 状态，调试用
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1404,12 +1406,12 @@ Content-Type: text/plain
 
 | 参数名                     | 描述                     | 是否必须 | 备注  |
 |-------------------------|------------------------|------|-----|
-| cloud_unique_id         | 节点的cloud_unique_id     | 是    |     |
-| tablet_idx              | 待查询tablet列表（数组）        | 是    |     |
-| tablet_idx.table_id     | 待查询tablet的table_id     | 是    |     |
-| tablet_idx.index_id     | 待查询tablet的index_id     | 是    |     |
-| tablet_idx.partition_id | 待查询tablet的partition_id | 是    |     |
-| tablet_idx.tablet_id    | 待查询tablet的tablet_id    | 是    |     |
+| cloud_unique_id         | 节点的 cloud_unique_id     | 是    |     |
+| tablet_idx              | 待查询 tablet 列表（数组）        | 是    |     |
+| tablet_idx.table_id     | 待查询 tablet 的 table_id     | 是    |     |
+| tablet_idx.index_id     | 待查询 tablet 的 index_id     | 是    |     |
+| tablet_idx.partition_id | 待查询 tablet 的 partition_id | 是    |     |
+| tablet_idx.tablet_id    | 待查询 tablet 的 tablet_id    | 是    |     |
 
 * 请求示例
 
@@ -1453,13 +1455,13 @@ tablet_stats {
 }
 ```
 
-## abort 事务
+## Abort 事务
 
 ### 接口描述
 
-本接口用于abort事务，调试用
+本接口用于 Abort 事务，调试用
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1483,10 +1485,10 @@ or
 
 | 参数名               | 描述                   | 是否必须 | 备注                  |
 |-------------------|----------------------|------|---------------------|
-| cloud_unique_id   | 节点的cloud_unique_id   | 是    |                     |
-| txn_id            | 待abort事务id           | 否    |                     |
-| db_id             | 待abort事务所属db_id      | 否    |                     |
-| label             | 待abort事务label        | 否    |                     |
+| cloud_unique_id   | 节点的 cloud_unique_id   | 是    |                     |
+| txn_id            | 待 abort 事务 id           | 否    |                     |
+| db_id             | 待 abort 事务所属 db_id      | 否    |                     |
+| label             | 待 abort 事务 label        | 否    |                     |
 
 * 请求示例
 
@@ -1511,13 +1513,13 @@ status {
 }
 ```
 
-## abort tablet job
+## Abort Tablet Job
 
 ### 接口描述
 
-本接口用于abort tablet上的job，当前只支持compaction job，调试用
+本接口用于 Abort Tablet 上的 Job，当前只支持 Compaction Job，调试用
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1538,12 +1540,12 @@ Content-Type: text/plain
 
 | 参数名               | 描述                   | 是否必须 | 备注                  |
 |-------------------|----------------------|------|---------------------|
-| cloud_unique_id   | 节点的cloud_unique_id   | 是    |                     |
-| job               | 待abort的job事务         | 是    | 当前只支持compaction job |
-| job.idx           | 待abort的idx           | 是    |                     |
-| job.idx.tablet_id | 待abort.idx的tablet_id |      |                     |
-| job.compaction    | 待abort的compaction    |      | 数组                  |
-| job.compaction.id | 待abort.compaction的id |      |                     |
+| cloud_unique_id   | 节点的 cloud_unique_id   | 是    |                     |
+| job               | 待 abort 的 job 事务         | 是    | 当前只支持 compaction job |
+| job.idx           | 待 abort 的 idx           | 是    |                     |
+| job.idx.tablet_id | 待 abort.idx 的 tablet_id |      |                     |
+| job.compaction    | 待 abort 的 compaction    |      | 数组                  |
+| job.compaction.id | 待 abort.compaction 的 id |      |                     |
 
 * 请求示例
 
@@ -1572,13 +1574,13 @@ status {
 ```
 
 
-## 获取cluster下的be节点执行情况
+## 获取 Cluster 下的 BE 节点执行情况
 
 ### 接口描述
 
-本接口用于获取cluster下，be节点运行fragment的情况，注意此接口是请求fe的接口
+本接口用于获取 Cluster 下，BE 节点运行 Fragment 的情况，注意此接口是请求 FE 的接口
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1609,7 +1611,7 @@ curl -u root: http://127.0.0.1:12100/rest/v2/manager/cluster/cluster_info/cloud_
 |------|-------|------|----------------------------------------------------------|
 | code | 返回状态码 | 是    ||
 | msg  | 出错原因  | 是    |                                  |
-|data | 返回的一个map，key为clusterId, value为be列表| |
+|data | 返回的一个 map，key 为 clusterId, value 为 be 列表 | |
 
 * 成功返回示例
 
@@ -1645,13 +1647,13 @@ curl -u root: http://127.0.0.1:12100/rest/v2/manager/cluster/cluster_info/cloud_
 }
 ```
 
-## instance开启对象数据服务端加密
+## Instance 开启对象数据服务端加密
 
 ### 接口描述
 
-本接口用于开启instance对象数据服务端加密
+本接口用于开启 Instance 对象数据服务端加密
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1668,7 +1670,7 @@ Content-Type: text/plain
 
 | 参数名                        | 描述                     | 是否必须 | 备注                             |
 |----------------------------|------------------------|------|--------------------------------|
-| instance_id                | instance_id            | 是    | 全局唯一(包括历史上)                    |
+| instance_id                | instance_id            | 是    | 全局唯一 (包括历史上)                    |
 
 * 请求示例
 
@@ -1685,7 +1687,7 @@ Content-Type: text/plain
 
 | 参数名  | 描述    | 是否必须 | 备注                                       |
 |------|-------|------|------------------------------------------|
-| code | 返回状态码 | 是    | 枚举值，包括OK、INVALID_ARGUMENT、INTERNAL_ERROR |
+| code | 返回状态码 | 是    | 枚举值，包括 OK、INVALID_ARGUMENT、INTERNAL_ERROR |
 | msg  | 出错原因  | 是    | 若出错返回错误原因，未出错返回空字符串                      |
 
 * 成功返回示例
@@ -1709,9 +1711,9 @@ Content-Type: text/plain
 
 ### 接口描述
 
-本接口用于获取多个warehouse下，获取cluster的运行状态
+本接口用于获取多个 Warehouse 下，获取 Cluster 的运行状态
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1728,8 +1730,8 @@ Content-Type: text/plain
 
 | 参数名              | 描述                | 是否必须 | 备注                                              |
 |------------------|-------------------|------|-------------------------------------------------|
-| instance_ids     | 多个warehouse的id    | 是    |                                                 |
-| cloud_unique_ids | 多个cloud_unique_id | 否    | 优先选择instance_ids                                |
+| instance_ids     | 多个 warehouse 的 id    | 是    |                                                 |
+| cloud_unique_ids | 多个 cloud_unique_id | 否    | 优先选择 instance_ids                                |
 | status           | 查询过滤条件 | 否    | 可有"NORMAL", "STOPPED", "TO_RESUME",   不填返回所有状态的 |
 
 
@@ -1748,7 +1750,7 @@ curl '127.0.0.1:5008/MetaService/http/get_cluster_status?token=greedisgood9999' 
 |----------------|-----------------|------|----------------------------------------------------------|
 | code           | 返回状态码           | 是    ||
 | msg            | 出错原因            | 是    |                                  |
-| result.details | 返回clusters的状态列表 | 是    |
+| result.details | 返回 clusters 的状态列表 | 是    |
 
 * 成功返回示例
 
@@ -1787,9 +1789,9 @@ curl '127.0.0.1:5008/MetaService/http/get_cluster_status?token=greedisgood9999' 
 
 ### 接口描述
 
-本接口用于设置某个warehouse下计算节点的cluster的运行状态
+本接口用于设置某个 Warehouse 下计算节点的 Cluster 的运行状态
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
@@ -1812,8 +1814,8 @@ Content-Type: text/plain
 |----------------|-----------------|------|----------------------------------------------------------|
 | cloud_unique_id           |            | 否    ||
 | instance_id            |             | 是    |                                  |
-| cluster_id | 待操作的cluster_id | 是    ||
-| cluster_status | 待操作的cluster状态 | 是    |可有"NORMAL", "STOPPED", "TO_RESUME"|
+| cluster_id | 待操作的 cluster_id | 是    ||
+| cluster_status | 待操作的 cluster 状态 | 是    |可有"NORMAL", "STOPPED", "TO_RESUME"|
 
 * 请求示例
 
@@ -1843,13 +1845,17 @@ curl '127.0.0.1:5008/MetaService/http/set_cluster_status?token=greedisgood9999' 
 }
 ```
 
-* 注意，由于这个接口是云管、fe都会用到的，在设置状态的时候会有个状态变化的限制。
+* 注意，由于这个接口是云管、FE 都会用到的，在设置状态的时候会有个状态变化的限制。
 
 只允许以下状态变换：
-1. ClusterStatus::UNKNOWN -> ClusterStatus::NORMAL （云管创建cluster的时候，将初始状态直接置为NORMAL， add_cluster接口中）
-2. ClusterStatus::NORMAL -> ClusterStatus::SUSPENDED （云管暂停cluster时候设置）
-3. ClusterStatus::SUSPENDED -> ClusterStatus::TO_RESUME （fe唤起cluster时候设置）
-4. ClusterStatus::TO_RESUME -> ClusterStatus::NORMAL （云管将cluster状态拉起后设置）
+
+1. ClusterStatus::UNKNOWN -> ClusterStatus::NORMAL（云管创建 cluster 的时候，将初始状态直接置为 NORMAL，add_cluster 接口中）
+
+2. ClusterStatus::NORMAL -> ClusterStatus::SUSPENDED（云管暂停 cluster 时候设置）
+
+3. ClusterStatus::SUSPENDED -> ClusterStatus::TO_RESUME（fe 唤起 cluster 时候设置）
+
+4. ClusterStatus::TO_RESUME -> ClusterStatus::NORMAL（云管将 cluster 状态拉起后设置）
 
 若不在上面的状态变化中的修改状态会报错：
 ```
@@ -1859,13 +1865,13 @@ curl '127.0.0.1:5008/MetaService/http/set_cluster_status?token=greedisgood9999' 
 }
 ```
 
-## 设置instance状态
+## 设置 Instance 状态
 
 ### 接口描述
 
-本接口用于设置某个warehouse的状态为NORMAL或者OVERDUE
+本接口用于设置某个 Warehouse 的状态为 NORMAL 或者 OVERDUE
 
-### 请求(Request)
+### 请求 (Request)
 
 * 请求语法
 
