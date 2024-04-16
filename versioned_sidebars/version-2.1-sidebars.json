@@ -623,6 +623,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
+                                "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-and",
                                 "sql-manual/sql-functions/aggregate-functions/group-bit-or",
@@ -751,7 +752,9 @@
                             "items": [
                                 "sql-manual/sql-functions/hll-functions/hll-cardinality",
                                 "sql-manual/sql-functions/hll-functions/hll-empty",
-                                "sql-manual/sql-functions/hll-functions/hll-hash"
+                                "sql-manual/sql-functions/hll-functions/hll-from-base64",
+                                "sql-manual/sql-functions/hll-functions/hll-hash",
+                                "sql-manual/sql-functions/hll-functions/hll-to-base64"
                             ]
                         },
                         {
