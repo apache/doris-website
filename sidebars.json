@@ -640,6 +640,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/grouping-id",
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/array-agg",
+                                "sql-manual/sql-functions/aggregate-functions/foreach",
                                 "sql-manual/sql-functions/aggregate-functions/map-agg",
                                 "sql-manual/sql-functions/aggregate-functions/bitmap-agg",
                                 "sql-manual/sql-functions/aggregate-functions/collect-set",
