@@ -338,6 +338,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 ## 编写 UDTF 函数
 <br/>
 UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法， 但是UDTF函数的返回值必须是array类型。
+另外Doris中表函数会因为_outer后缀有不同的表现，可查看[OUTER组合器](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/table-functions/explode-numbers-outer)
 
 
 ```JAVA
