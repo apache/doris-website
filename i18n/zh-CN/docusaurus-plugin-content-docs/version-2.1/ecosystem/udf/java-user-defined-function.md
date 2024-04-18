@@ -74,6 +74,14 @@ Java UDF 为用户提供UDF编写的Java接口，以方便用户使用Java语言
 
 ## 创建 UDF
 
+```JAVA
+public class AddOne extends UDF {
+    public Integer evaluate(Integer value) {
+        return value == null ? null : value + 1;
+    }
+}
+```
+
 ```sql
 CREATE FUNCTION 
 name ([,...])
@@ -324,11 +332,39 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
+<version since="2.1">
+
+## 编写 UDTF 函数
+<br/>
+UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of array type.
+Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/table-functions/explode-numbers-outer)
+
+```JAVA
+public class UDTFStringTest {
+    public ArrayList<String> evaluate(String value, String separator) {
+        if (value == null || separator == null) {
+            return null;
+        } else {
+            return new ArrayList<>(Arrays.asList(value.split(separator)));
+        }
+    }
+}
+```
+
+```sql
+CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    "file"="file:///pathTo/java-udaf.jar",
+    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+);
+```
+
+<br/>
 
 * 实现的jar包可以放在本地也可以存放在远程服务端通过http下载，但必须让每个BE节点都能获取到jar包;
 否则将会返回错误状态信息"Couldn't open file ......".
 
-目前还暂不支持UDTF
 
 <br/>
 
