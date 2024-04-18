@@ -77,7 +77,7 @@ PROPERTIES ("key"="value", ...)
    
    * 通过 FE 配置项 `jdbc_driver_secure_path` 来控制允许的驱动包路径，该配置项可配置多个路径，以分号分隔。当配置了该项时，Doris 会检查 Catalog properties 中 driver_url 的路径是的部分前缀是否在 `jdbc_driver_secure_path` 中，如果不在其中，则会拒绝创建 Catalog。
    * 此参数默认为 `*` ，表示允许所有路径的 Jar 包。
-   * 如果配置 `jdbc_driver_secure_path` 为空，则不允许所有路径的驱动包，也就意味着只能使用上述方式 1 来指定驱动包。
+   * 如果配置 `jdbc_driver_secure_path` 为空，也表示允许所有路径的 Jar 包。
 
    > 如配置 `jdbc_driver_secure_path = "file:///path/to/jdbc_drivers;http://path/to/jdbc_drivers"`, 则只允许以 `file:///path/to/jdbc_drivers` 或 `http://path/to/jdbc_drivers` 开头的驱动包路径。
 
