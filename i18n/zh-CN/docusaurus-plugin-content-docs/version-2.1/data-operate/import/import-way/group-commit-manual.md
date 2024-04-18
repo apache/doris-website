@@ -42,7 +42,7 @@ Doris 根据负载和表的 `group_commit_interval`属性将多个导入在一�
 
 * 异步模式（`async_mode`）
 
-Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
+Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据表配置的提交条件异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
 ## Group Commit 使用方式
 
@@ -62,15 +62,17 @@ PROPERTIES (
 
 ### 使用`JDBC`
 
-当用户使用 JDBC `insert into values`方式写入时，为了减少 SQL 解析和生成规划的开销， 我们在 FE 端支持了 MySQL 协议的`PreparedStatement`特性。当使用`PreparedStatement`时，SQL 和其导入规划将被缓存到 Session 级别的内存缓存中，后续的导入直接使用缓存对象，降低了 FE 的 CPU 压力。下面是在 JDBC 中使用 PreparedStatement 的例子：
+当用户使用 JDBC `insert into values`方式写入时，为了减少 SQL 解析和生成规划的开销， 我们在 FE 端支持了 MySQL 协议的`PreparedStatement`特性。当使用`PreparedStatement`时，SQL 和其导入规划将被缓存到 Session 级别的内存缓存中，后续的导入直接使用缓存对象，降低了 FE 的 CPU 压力。`PreparedStatement`可以独立于`GroupCommit`使用。
+
+下面是在 JDBC 中使用 PreparedStatement 的例子：
 
 1. 设置 JDBC url 并在 Server 端开启 prepared statement
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=10000&prepStmtCacheSize=100&useLocalSessionState=true
 ```
 
-2. 配置 `group_commit` session变量，有如下两种方式：
+2. 如果用户需要同时开启`group_commit`，需要配置 `group_commit` session变量，有如下两种方式：
 
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
@@ -90,7 +92,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=10000&prepStmtCacheSize=100&useLocalSessionState=true";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -124,10 +126,9 @@ private static void groupCommitInsert() throws Exception {
 
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
-    // add rewriteBatchedStatements=true and cachePrepStmts=true in JDBC url
     // set session variables by sessionVariables=group_commit=async_mode in JDBC url
     try (Connection conn = DriverManager.getConnection(
-            String.format(URL_PATTERN + "&rewriteBatchedStatements=true&cachePrepStmts=true&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
+            String.format(URL_PATTERN + "&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
 
         String query = "insert into " + TBL + " values(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -147,6 +148,8 @@ private static void groupCommitInsertBatch() throws Exception {
     }
 }
 ```
+
+另外，开启`group_commit`的`insert`语句不仅可以在Master FE上执行，也可以在其他FE上执行。因此，当FE成为写入瓶颈时，可以水平扩展更多的FE节点来提高写入性能。
 
 关于**JDBC**的更多用法，参考[使用Insert方式同步数据](../import-scenes/jdbc-load.md)。
 
@@ -349,11 +352,11 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 
 ### 修改提交数据量
 
-group commit 的默认提交数据量为 64 MB，用户可以通过修改表的配置调整：
+group commit 的默认提交数据量为 128 MB，用户可以通过修改表的配置调整：
 
 ```sql
-# 修改提交数据量为 128MB
-ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
+# 修改提交数据量为 256MB
+ALTER TABLE dt SET ("group_commit_data_bytes" = "268435456");
 ```
 
 ## 使用限制
@@ -364,11 +367,11 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   + 指定 label，即`INSERT INTO dt WITH LABEL {label} VALUES`
 
-  + VALUES 中包含表达式，即`INSERT INTO dt VALUES (1 + 100)`
-
   + 列更新写入
 
   + 表不支持 light schema change
+
+  + VALUES 中包含表达式，即`INSERT INTO dt VALUES (1 + 100)`
 
 * 当开启了 group commit 模式，系统会判断用户发起的`Stream Load`和`Http Stream`是否符合 group commit 的条件，如果符合，该导入的执行会进入到 group commit 写入中。符合以下条件的会自动退化为非 group commit 方式：
 
@@ -398,13 +401,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND.md)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
 
-  * 对于`async_mode`的 group commit 写入，为了保护磁盘空间，当遇到以下情况时，会切换成`sync_mode`
-
-    * 导入数据量过大，即超过 WAL 单目录的80%空间
-
-    * 不知道数据量的 chunked stream load
-
-    * 导入数据量不大，但磁盘可用空间不足
+  * 对于`async_mode`的 group commit 写入，为了保护磁盘空间，服务端可能会报错`will not write wal because wal disk space usage reach max limit`拒绝写入，或切换成`sync_mode`。此时，用户可以排查`group_commit_wal_path`路径下的 WAL 数据量是否过大，并通过 BE 日志查看导入失败的原因
 
   * 当发生重量级 schema change（目前加减列、修改 varchar 长度和重命名列是轻量级 schema change，其它的是重量级 schema change） 时，为了保证 WAL 能够适配表的 schema，在 schema change 最后的 fe 修改元数据阶段，会拒绝 group commit 写入，客户端收到`insert table ${table_name} is blocked on schema change`异常，客户端重试即可
 

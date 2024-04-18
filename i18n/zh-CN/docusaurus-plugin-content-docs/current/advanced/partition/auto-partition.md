@@ -251,61 +251,11 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 
 ## 与动态分区联用
 
-自动分区支持与[动态分区](./dynamic-partition)同时作用于同一张表上，例如：
+为使分区逻辑清晰，Doris 禁止自动分区（Auto Partition）和动态分区（Dynamic Partition）同时作用于一张表上，这种用法容易引发误用，应当以单独的自动分区功能代替。
 
-```sql
-CREATE TABLE tbl3
-(
-    k1 DATETIME NOT NULL,
-    col1 int 
-)
-AUTO PARTITION BY RANGE (date_trunc(`k1`, 'year')) ()
-DISTRIBUTED BY HASH(k1)
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.create_history_partition"="true",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "year",
-    "dynamic_partition.start" = "-2",
-    "dynamic_partition.end" = "2",
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-); 
-```
-
-当两种功能联用时，它们的原始功能均不受影响，依旧作用于整张表上，行为包括但不限于：
-
-1. 无论创建方式如何，过期的历史分区都会按动态分区功能指定的规则定期清理或转入冷存储
-2. 分区范围不能重叠、冲突。如果动态分区需要创建的新分区范围已经被自动或手动创建的分区覆盖，则该分区创建会失败，但不影响业务过程。
-
-其原则在于，自动分区仅是对创建分区引入的一种补充手段，一个分区无论是手动、经自动分区创建，还是经动态分区创建的，均会受到动态分区的管理。
-
-### 限制
-
-为简化两种分区方式联用的行为模式，当前自动分区和动态分区联用时，两者的**分区间隔必须一致**，否则建表将会失败：
-
-```sql
-mysql > CREATE TABLE tbl3
-        (
-            k1 DATETIME NOT NULL,
-            col1 int 
-        )
-        AUTO PARTITION BY RANGE (date_trunc(`k1`, 'year')) ()
-        DISTRIBUTED BY HASH(k1)
-        PROPERTIES
-        (
-            "replication_num" = "1",
-            "dynamic_partition.create_history_partition"="true",
-            "dynamic_partition.enable" = "true",
-            "dynamic_partition.time_unit" = "HOUR",
-            "dynamic_partition.start" = "-2",
-            "dynamic_partition.end" = "2",
-            "dynamic_partition.prefix" = "p",
-            "dynamic_partition.buckets" = "8"
-        ); 
-ERROR 1105 (HY000): errCode = 2, detailMessage = errCode = 2, detailMessage = If support auto partition and dynamic partition at same time, they must have the same interval unit.
-```
+:::caution
+在 Doris 2.1 的某些早期版本中，该功能未被禁止，但不推荐使用。
+:::
 
 ## 注意事项
 

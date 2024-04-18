@@ -251,61 +251,11 @@ A partition created by the AUTO PARTITION function has the exact same functional
 
 ## Coupled with dynamic partitioning
 
-AUTO PARTITION is supported on the same table as [DYNAMIC PARTITION](./dynamic-partition). for example:
+To make the partitioning logic clear, Doris prohibits Auto Partition and Dynamic Partition from working together on a single table. This usage is prone to misuse and should be replaced by a separate Auto Partition function.
 
-```sql
-CREATE TABLE tbl3
-(
-    k1 DATETIME NOT NULL,
-    col1 int 
-)
-AUTO PARTITION BY RANGE (date_trunc(`k1`, 'year') ())
-DISTRIBUTED BY HASH(k1)
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.create_history_partition"="true",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "year",
-    "dynamic_partition.start" = "-2",
-    "dynamic_partition.end" = "2",
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-); 
-```
-
-When the two functions are used in combination, neither of their original functions is affected and they still act on the entire table. The behavior includes but is not limited to:
-
-1. regardless of the creation method, the expired historical partitions will be periodically cleaned up or transferred to cold storage according to the rules specified by the DYNAMIC PARTITION properties
-2. partition ranges cannot overlap or conflict. If a new partition range that needs to be created by DYNAMIC PARTITION has already been covered by an automatically or manually created partition, the partition creation will fail without affecting the business process.
-
-The principle is that AUTO PARTITION is only a complementary means introduced to the creation of partitions, and that a partition, whether created manually, by AUTO PARTITION, or by DYNAMIC PARTITION, will be governed by DYNAMIC PARTITION functions.
-
-### Constraint
-
-In order to simplify the behavioral pattern of combine two partition methods, when the AUTO PARTITION and DYNAMIC PARTITION are both used, the **partition intervals of the two must be consistent** or the table creating will fail:
-
-```sql
-mysql > CREATE TABLE tbl3
-        (
-            k1 DATETIME NOT NULL,
-            col1 int 
-        )
-        AUTO PARTITION BY RANGE (date_trunc(`k1`, 'year') ())
-        DISTRIBUTED BY HASH(k1)
-        PROPERTIES
-        (
-            "replication_num" = "1",
-            "dynamic_partition.create_history_partition"="true",
-            "dynamic_partition.enable" = "true",
-            "dynamic_partition.time_unit" = "HOUR",
-            "dynamic_partition.start" = "-2",
-            "dynamic_partition.end" = "2",
-            "dynamic_partition.prefix" = "p",
-            "dynamic_partition.buckets" = "8"
-        ); 
-ERROR 1105 (HY000): errCode = 2, detailMessage = errCode = 2, detailMessage = If support auto partition and dynamic partition at same time, they must have the same interval unit.
-```
+:::caution
+In some early versions of Doris 2.1, this feature is not disabled, but is not recommended.
+:::
 
 ## caveat
 

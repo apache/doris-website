@@ -42,7 +42,7 @@ Doris groups multiple loads into one transaction commit based on the `group_comm
 
 * `async_mode`
 
-Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returned. Doris groups multiple loads into one transaction commit based on the `group_commit_interval` table property, and the data is visible after the commit. To prevent excessive disk space usage by the WAL, it automatically switches to `sync_mode`. This is suitable for latency-sensitive and high-frequency writing.
+Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returned. Doris groups multiple loads into one transaction commit based on the table property of group commit conditions, and the data is visible after the commit. To prevent excessive disk space usage by the WAL, it automatically switches to `sync_mode`. This is suitable for latency-sensitive and high-frequency writing.
 
 ## Basic operations
 
@@ -62,20 +62,22 @@ PROPERTIES (
 
 ### Use `JDBC`
 
-To reduce the CPU cost of SQL parsing and query planning, we provide the `PreparedStatement` in the FE. When using `PreparedStatement`, the SQL and its plan will be cached in the session level memory cache and will be reused later on, which reduces the CPU cost of FE. The following is an example of using PreparedStatement in JDBC:
+To reduce the CPU cost of SQL parsing and query planning, we provide the `PreparedStatement` in the FE. When using `PreparedStatement`, the SQL and its plan will be cached in the session level memory cache and will be reused later on, which reduces the CPU cost of FE. 
+
+The following is an example of using PreparedStatement in JDBC:
 
 1. Setup JDBC url and enable server side prepared statement
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=10000&prepStmtCacheSize=100&useLocalSessionState=true
 ```
 
-2. Set `group_commit` session variable, there are two ways to do it:
+2. If users need to enable `group_commit` at the same time, set `group_commit` session variable, there are two ways to do it:
 
 * Add `sessionVariables=group_commit=async_mode` in JDBC url
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&sessionVariables=group_commit=async_mode
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=10000&prepStmtCacheSize=100&useLocalSessionState=true&sessionVariables=group_commit=async_mode
 ```
 
 * Use `SET group_commit = async_mode;` command
@@ -90,7 +92,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=10000&prepStmtCacheSize=100&useLocalSessionState=true";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -124,10 +126,9 @@ private static void groupCommitInsert() throws Exception {
 
 private static void groupCommitInsertBatch() throws Exception {
     Class.forName(JDBC_DRIVER);
-    // add rewriteBatchedStatements=true and cachePrepStmts=true in JDBC url
     // set session variables by sessionVariables=group_commit=async_mode in JDBC url
     try (Connection conn = DriverManager.getConnection(
-            String.format(URL_PATTERN + "&rewriteBatchedStatements=true&cachePrepStmts=true&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
+        String.format(URL_PATTERN + "&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
 
         String query = "insert into " + TBL + " values(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -147,6 +148,8 @@ private static void groupCommitInsertBatch() throws Exception {
     }
 }
 ```
+
+The insert statements with group commit can be executed in Master FE or other FEs. So users can add more FE nodes to improve the write performance.
 
 See [Synchronize Data Using Insert Method](../import-scenes/jdbc-load.md) for more details about **JDBC**.
 
@@ -350,11 +353,11 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 
 ### Modify the data size condition
 
-The default group commit data size is 64 MB. Users can modify the configuration of the table:
+The default group commit data size is 128 MB. Users can modify the configuration of the table:
 
 ```sql
-# Modify the group commit data size to 128MB
-ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
+# Modify the group commit data size to 256MB
+ALTER TABLE dt SET ("group_commit_data_bytes" = "268435456");
 ```
 
 ## Limitations
@@ -365,11 +368,11 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * Specify the label, such as `INSERT INTO dt WITH LABEL {label} VALUES`
 
-  * Expressions within VALUES, such as `INSERT INTO dt VALUES (1 + 100)`
-
   * Column update
 
   * Tables that do not support light schema changes
+
+  * Expressions within VALUES, such as `INSERT INTO dt VALUES (1 + 100)`
 
 * When the group commit is enabled, some `Stream Load` and `Http Stream` are not executed in the group commit way if they meet the following conditions:
 
@@ -399,13 +402,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * When decommissioning a BE node, please use the [`DECOMMISSION`](../../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND.md) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
 
-  * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
-
-    * For an import with large amount of data: exceeding 80% of the disk space of a WAL directory. 
-
-    * Chunked stream loads with an unknown data amount.
-
-    * Insufficient disk space, even with it is an import with small amount of data.
+  * For async_mode group commit writes, to protect disk space, Doris may return an error of `will not write wal because wal disk space usage reach max limit` or switch to `sync_mode`. Users can see the WAL data size in `group_commit_wal_path` directory, and search BE logs to find the reason of loading failed.
 
   * During hard weight schema changes (adding or dropping columns, modifying varchar length, and renaming columns are lightweight schema changes, others are hard weight), to ensure WAL file is compatibility with the table's schema, the final stage of metadata modification in FE will reject group commit writes. Clients get `insert table ${table_name} is blocked on schema change` exception and can retry the import.
 

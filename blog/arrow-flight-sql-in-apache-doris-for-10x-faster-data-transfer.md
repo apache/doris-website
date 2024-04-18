@@ -32,7 +32,7 @@ under the License.
 -->
 
 
-For years, JDBC and ODBC have been commonly adopted norms for database interaction. Now, as we gaze upon the vast expanse of the data realm, the rise of data science and data lake analytics brings bigger and bigger datasets. Correspondingly, we need faster and faster data reading and transmission, so we start to look for better answers than JDBC and ODBC. Thus, we include **Arrow Flight SQL protocol** into [Apache Doris 2.1](https://doris.apache.org), which provides **tens-fold peedups for data transfer**. 
+For years, JDBC and ODBC have been commonly adopted norms for database interaction. Now, as we gaze upon the vast expanse of the data realm, the rise of data science and data lake analytics brings bigger and bigger datasets. Correspondingly, we need faster and faster data reading and transmission, so we start to look for better answers than JDBC and ODBC. Thus, we include **Arrow Flight SQL protocol** into [Apache Doris 2.1](https://doris.apache.org), which provides **tens-fold speedups for data transfer**. 
 
 :::tip Tip
 A [demo](https://www.youtube.com/watch?v=zIqy24gI8DE) of loading data from Apache Doris to Python using Arrow Flight SQL.
