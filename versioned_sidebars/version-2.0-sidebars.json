@@ -160,7 +160,6 @@
                         "query/query-data/select",
                         "query/query-data/complex-type",
                         "query/query-data/subquery",
-                        "query/query-data/common-table-expression",
                         "query/query-data/lateral-view",
                         "query/query-data/window-function",
                         "query/query-data/encryption-function"
