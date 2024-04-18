@@ -531,6 +531,8 @@ Normally, to connect to a Kerberos enabled Hive cluster, you need to add the fol
 - `"yarn.resourcemanager.principal" = "your_principal"`: The principal of Yarn Resource Manager, which can be found in `yarn-site.xml`.
 - `"hive.metastore.kerberos.principal" = "your_principal"`: The principal of the Hive metastore. Can be found in `hive-site.xml`.
 
+> Note: Suggest to use `kinit -kt your_principal /path/to/your_keytab` 以及 `klist -k /path/to/your_keytab` to get the ticket or check its validation.
+
 Examples are as follows:
 
 ```sql

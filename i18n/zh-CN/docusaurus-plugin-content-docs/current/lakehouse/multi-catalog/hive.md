@@ -469,13 +469,13 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 ### 最佳实践
 
-1.在ranger端创建用户user1并授权db1.table1.col1的查询权限
+1. 在ranger端创建用户user1并授权db1.table1.col1的查询权限
 
-2.在ranger端创建角色role1并授权db1.table1.col2的查询权限
+2. 在ranger端创建角色role1并授权db1.table1.col2的查询权限
 
-3.在doris创建同名用户user1，user1将直接拥有db1.table1.col1的查询权限
+3. 在doris创建同名用户user1，user1将直接拥有db1.table1.col1的查询权限
 
-4.在doris创建同名角色role1，并将role1分配给user1，user1将同时拥有db1.table1.col1和col2的查询权限
+4. 在doris创建同名角色role1，并将role1分配给user1，user1将同时拥有db1.table1.col1和col2的查询权限
 
 5. Admin 和 Root 用户的权限不受Apache Ranger 的权限控制
 
@@ -511,6 +511,8 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 -  `"hadoop.kerberos.keytab" = "/path/to/your_keytab"`：HDFS namenode 的 keytab 文件。通常是 `hdfs-site.xml` 的 `dfs.namenode.keytab.file` 配置。注意，这个文件需要部署到所有 FE 和 BE 节点相同的目录下（可自定义）。
 - `"yarn.resourcemanager.principal" = "your_principal"`：Yarn Resource Manager 的 principal，可以在 `yarn-site.xml` 中获取。
 - `"hive.metastore.kerberos.principal" = "your_principal"`：Hive metastore 的 principal。可以再 `hive-site.xml` 中。
+
+> 注：建议使用 `kinit -kt your_principal /path/to/your_keytab` 以及 `klist -k /path/to/your_keytab` 来
 
 示例如下：
 
