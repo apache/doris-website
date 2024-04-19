@@ -167,12 +167,13 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 | DoubleType                            | Double                    |           |
 | VarCharType                           | VarChar                   |           |
 | CharType                              | Char                      |           |
+| VarBinaryType, BinaryType             | String                    |           |
 | DecimalType(precision, scale)         | Decimal(precision, scale) |           |
 | TimestampType,LocalZonedTimestampType | DateTime                  |           |
 | DateType                              | Date                      |           |
-| MapType                               | Map                       | 支持 Map 嵌套   |
-| ArrayType                             | Array                     | 支持 Array 嵌套 |
-| VarBinaryType, BinaryType             | Binary                    |           |
+| ArrayType                             | Array                     | 支持Array嵌套 |
+| MapType                               | Map                       | 支持Map嵌套   |
+| RowType                               | Struct                    | 支持Struct嵌套 |
 
 ## 常见问题
 
