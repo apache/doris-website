@@ -334,10 +334,10 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 
 <version since="2.1">
 
-## 编写 UDTF 函数
+## Create UDTF
 <br/>
-UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of array type.
-Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-functions/table-functions/explode-numbers-outer)
+UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of Array type.
+Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
 
 ```JAVA
 public class UDTFStringTest {
