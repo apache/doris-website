@@ -94,7 +94,7 @@ Write Performance Optimization Recommendations:
 
 The Aggregate Key model does not perform any additional processing during the write process, so its write performance is not affected and is the same as regular data ingestion. However, there is a significant cost associated with aggregation during query execution, with typical aggregation query performance being 5-10 times lower compared to the Merge-on-Write implementation of the Unique Key model.
 
- ## Usage Instructions and Examples
+## Usage Instructions and Examples
 
 ### Unique Key Model
 
@@ -204,9 +204,12 @@ PROPERTIES (
 
 #### Write Data
 
-Whether through load tasks or using `INSERT INTO`, you can directly write the data for the columns you want to update.
 
-#### Example
+The Aggregate key model supports two types of partial column updates:
+
+1.Do not specify parameters, whether through load tasks or using `INSERT INTO`, you can directly write the data for the columns you want to update.
+
+Example
 
 Similar to the previous example, the corresponding Stream Load command (no additional header required) is:
 
@@ -218,6 +221,91 @@ The corresponding `INSERT INTO` statement (no need to set additional session var
 
 ```sql
 INSERT INTO order_tbl (order_id, order_status) values (1,'Pending Delivery');
+```
+2.Specify parameters
+
+Stream Load command including this header:
+```
+partial_columns:true
+```
+Also, specify the columns to be loaded in the `columns` header (it must include all key columns, or else updates cannot be performed).
+
+Example
+
+```
+curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:48037/api/db1/order_tbl/_stream_load
+```
+insert into need to set the following session variable:
+```
+set enable_agg_key_partial_update=true
+```
+Example
+```
+set enable_agg_key_partial_update=true;
+INSERT INTO order_tbl (order_id, order_status) values (1,'Pending Delivery');
+```
+```
+set enable_agg_key_partial_update=true;
+INSERT INTO big_tbl (k1, v1) select (k1,v1) from sub_tbl;
+```
+
+The difference between the two import methods is that if there are default values for columns that have not been updated, the import method without specifying parameters will overwrite the previous values with the default values, while the import method with specifying parameters will not overwrite them.
+
+Example
+
+create table
+```
+CREATE TABLE `order_tbl` (
+  `order_id` int(11) NULL,
+  `order_amount` int(11) REPLACE_IF_NOT_NULL NULL,
+  `order_status` varchar(100) REPLACE_IF_NOT_NULL NOT NULL DEFAULT "unknow"
+) ENGINE=OLAP
+AGGREGATE KEY(`order_id`)
+COMMENT 'OLAP'
+DISTRIBUTED BY HASH(`order_id`) BUCKETS 1
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1"
+);
+```
+import a row normally
+```
+INSERT INTO order_tbl (order_id, order_amount, order_status) values (1,100,'Pending Delivery');
+```
+the result is
+```sql
++----------+--------------+------------------+
+| order_id | order_amount | order_status     |
++----------+--------------+------------------+
+| 1        | 100          | Pending Delivery |
++----------+--------------+------------------+
+1 row in set (0.01 sec)
+```
+If do partial column updates without specified parameters
+```
+INSERT INTO order_tbl (order_id, order_amount) values (1,200);
+```
+the result is
+```sql
++----------+--------------+--------------+
+| order_id | order_amount | order_status |
++----------+--------------+--------------+
+| 1        |          200 | unknow       |
++----------+--------------+--------------+
+1 row in set (0.01 sec)
+```
+If do partial column updates with specified parameters
+```
+set enable_agg_key_partial_update=true;
+INSERT INTO order_tbl (order_id, order_amount) values (1,200);
+```
+the result is
+```sql
++----------+--------------+------------------+
+| order_id | order_amount | order_status     |
++----------+--------------+------------------+
+| 1        | 200          | Pending Delivery |
++----------+--------------+------------------+
+1 row in set (0.01 sec)
 ```
 
 ## Usage Limitations
