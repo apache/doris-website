@@ -1,7 +1,7 @@
 ---
 {
     "title": "Hive Hll UDF",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -26,36 +26,37 @@ under the License.
 
 # Hive Hll UDF
 
- Hive Hll UDF 提供了在 hive 表中生成 Hll 运算等 UDF，Hive 中的 Hll 与 Doris Hll 完全一致 ，Hive 中的 Hll 可以通过 Spark Hll Load 导入 Doris 。关于 Hll 更多介绍可以参考：[使用 HLL 近似去重](../advanced/using-hll.md)
+ The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.：[Approximate Deduplication Using HLL](../advanced/using-hll.md)
 
- 函数简介：
+ Function Introduction:
   1. UDAF
  
-    · to_hll：聚合函数，返回一个 Doris Hll 列，类似于 to_bitmap 函数
+    · to_hll: An aggregate function that returns a Doris HLL column, similar to the to_bitmap function
  
-    · hll_union：聚合函数，功能同 Doris 的BE同名函数，计算分组的并集 ，返回一个 Doris Hll 列，类似于bitmap_union 函数
+    · hll_union：An aggregate function that calculates the union of groups, returning a Doris HLL column, similar to the bitmap_union function
 
   2. UDF
 
-    · hll_cardinality：返回添加到 Hll 的不同元素的数量，类似于 bitmap_count 函数
+    · hll_cardinality: Returns the number of distinct elements added to the HLL, similar to the bitmap_count function
 
- 主要目的：
-  1. 减少数据导入 Doris 时间 , 除去了构建字典、Hll 预聚合等流程；
-  2. 节省 Hive 存储 ，使用 Hll 对数据压缩 ，极大减少了存储成本，相对于 Bitmap 的统计更加节省存储；
-  3. 提供在 Hive 中 Hll 的灵活运算：并集、基数统计 ，计算后的 Hll 也可以直接导入 Doris；
+ Main Purpose：
+  1. Reduce data import time to Doris by eliminating the need for dictionary construction and HLL pre-aggregation
+  2. Save Hive storage by compressing data using HLL, significantly reducing storage costs compared to Bitmap statistics
+  3. Provide flexible HLL operations in Hive, including union and cardinality statistics, and allow the resulting HLL to be directly imported into Doris
  
- 注意事项：
- Hll统计为近似计算有一定误差，大概 1%~2% 左右。
+ Note:
+ HLL statistics are approximate calculations with an error rate of around 1% to 2%.
 
-## 使用方法
 
-### 在 Hive 中创建 Hll 类型和普通表，往普通表插入测试数据
+## Usage
+
+### Create a Hive table and insert test data
 
 ```sql
--- 创建一个测试数据库，以 hive_test 为例：
+-- Create a test database, e.g., hive_test
 use hive_test;
 
--- 例子：创建 Hive Hll 表
+-- Create a Hive HLL table
 CREATE TABLE IF NOT EXISTS `hive_hll_table`(
   `k1`   int       COMMENT '',
   `k2`   String    COMMENT '',
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
   `uuid` binary    COMMENT 'hll'
 ) comment  'comment'
 
--- 例子：创建普通 Hive 表，插入测试数据
+-- Create a normal Hive table and insert test data
 CREATE TABLE IF NOT EXISTS `hive_table`(
     `k1`   int       COMMENT '',
     `k2`   String    COMMENT '',
@@ -77,48 +78,48 @@ insert into hive_table select 2, 'b', 'c', 23456;
 insert into hive_table select 3, 'c', 'd', 34567;
 ```
 
-### Hive Hll UDF 使用：
+### Use Hive HLL UDF:
 
-Hive Hll UDF 需要在 Hive/Spark 中使用，首先需要编译fe得到hive-udf.jar。
-编译准备工作：如果进行过ldb源码编译可直接编译fe，如果没有进行过ldb源码编译，则需要手动安装thrift，可参考：[FE开发环境搭建](/community/developer-guide/fe-idea-dev.md) 中的编译与安装
+Hive HLL UDF needs to be used in Hive/Spark. First, compile the FE to obtain the hive-udf.jar file.
+Compilation preparation: If you have compiled the ldb source code, you can directly compile the FE. If not, you need to manually install thrift, refer to [Setting Up Dec Env for FE - IntelliJ IDEA](/community/developer-guide/fe-idea-dev.md) for compilation and installation.
 
 ```sql
---clone doris源码
+-- Clone the Doris source code
 git clone https://github.com/apache/doris.git
 cd doris
 git submodule update --init --recursive
 
---安装thrift，已安装可略过
---进入fe目录
+-- Install thrift (skip if already installed)
+-- Enter the FE directory
 cd fe
 
---执行maven打包命令（fe的子module会全部打包）
+-- Execute the Maven packaging command (all FE submodules will be packaged)
 mvn package -Dmaven.test.skip=true
---也可以只打hive-udf module
+-- Or package only the hive-udf module
 mvn package -pl hive-udf -am -Dmaven.test.skip=true
 
--- 打包编译完成进入hive-udf目录会有target目录，里面就会有打包完成的hive-udf.jar包
--- 需要将编译好的 hive-udf.jar 包上传至 HDFS ，这里以传至hdfs的根目录为示例：
+-- The packaged hive-udf.jar file will be generated in the target directory
+-- Upload the compiled hive-udf.jar file to HDFS, e.g., to the root directory
 hdfs dfs -put hive-udf/target/hive-udf.jar /
 
 ```
 
-下面进入 Hive 中进行 SQL 语句操作：
+Then, enter Hive and execute the following SQL statements:
 
 ```sql
--- 加载hive hll udf jar包，根据实际情况更改 hostname 和 port  
+-- Load the hive hll udf jar package, modify the hostname and port according to your actual situation
 add jar hdfs://hostname:port/hive-udf.jar;
 
--- 创建UDAF函数
+-- Create UDAF functions
 create temporary function to_hll as 'org.apache.doris.udf.ToHllUDAF' USING JAR 'hdfs://hostname:port/hive-udf.jar';
 create temporary function hll_union as 'org.apache.doris.udf.HllUnionUDAF' USING JAR 'hdfs://hostname:port/hive-udf.jar';
 
 
--- 创建UDF函数
+-- Create UDF functions
 create temporary function hll_cardinality as 'org.apache.doris.udf.HllCardinalityUDF' USING JAR 'hdfs://node:9000/hive-udf.jar';
 
 
--- 例子：通过 to_hll 这个UDAF进行聚合生成 hll 写入 Hive Hll 表
+-- Example: Use the to_hll UDAF to aggregate and generate HLL, and write it to the Hive HLL table
 insert into hive_hll_table
 select 
     k1,
@@ -132,7 +133,7 @@ group by
     k2,
     k3
 
--- 例子：hll_cardinality 计算 hll 中元素个数
+-- Example: Use hll_cardinality to calculate the number of elements in the HLL
 select k1, k2, k3, hll_cardinality(uuid) from hive_hll_table;
 +-----+-----+-----+------+
 | k1  | k2  | k3  | _c3  |
@@ -143,10 +144,10 @@ select k1, k2, k3, hll_cardinality(uuid) from hive_hll_table;
 | 3   | c   | d   | 1    |
 +-----+-----+-----+------+
 
--- 例子：hll_union 用于计算分组后的 hll 并集，将返回3行
+-- Example: Use hll_union to calculate the union of groups, returning 3 rows
 select k1, hll_union(uuid) from hive_hll_table group by k1;
 
--- 例子：也可以合并后继续统计
+-- Example: Also can merge and then continue to statistics
 select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 +-----+------+
 | k3  | _c1  |
@@ -157,27 +158,27 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 +-----+------+
 ```
 
-###  Hive Hll UDF  说明
+###  Hive HLL UDF Explanation
 
-## Hive Hll 导入 doris
+## Importing Hive HLL to Doris
 
 <version dev>
 
-### 方法一：Catalog （推荐）
+### Method 1: Catalog (Recommended)
 
 </version>
 
-对于 Binary 类型，Hive 会以 base64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将 hll 数据通过 [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) 函数插入到 Doris 内部。
+For Binary type, Hive will save it as a base64 encoded string. At this time, you can use the Hive Catalog to directly import the HLL data into Doris using the [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) function.
 
-以下是一个完整的例子：
+Here is a complete example:
 
-1. 在 Hive 中创建 Hive 表
+1. Create a Hive table
 
 ```sql
--- 可以沿用前面的步骤基于普通表使用 to_hll 函数往 hive_hll_table 插入数据，这里不再赘述
+-- reuse the previous steps to create a Hive table using the to_hll function
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/multi-catalog/hive)
+2. [Create a Doris catalog](../lakehouse/multi-catalog/hive)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -186,7 +187,7 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-3. 创建 Doris 内表
+3. Create a Doris internal table
 
 ```sql
 CREATE TABLE IF NOT EXISTS `doris_test`.`doris_hll_table`(
@@ -202,12 +203,12 @@ PROPERTIES (
 );
 ```
 
-4. 从 Hive 插入数据到 Doris 中
+4. Import data from Hive to Doris
 
 ```sql
 insert into doris_hll_table select k1, k2, k3, hll_from_base64(uuid) from hive.hive_test.hive_hll_table;
 
--- 可以查看导入后的数据，结合 hll_to_base64 进行解码
+-- View the imported data, combining hll_to_base64 for decoding
 select *, hll_to_base64(uuid) from doris_hll_table;
 +------+------+------+------+---------------------+
 | k1   | k2   | k3   | uuid | hll_to_base64(uuid) |
@@ -218,7 +219,7 @@ select *, hll_to_base64(uuid) from doris_hll_table;
 |    3 | c    | d    | NULL | AQFYbJB5VpNBhg==    |
 +------+------+------+------+---------------------+
 
--- 也可以进一步使用Doris原生的 Hll 函数进行统计，可以看到和前面在 Hive 中统计的结果一致
+-- Also can use Doris's native HLL functions for statistics, and see that the results are consistent with the previous statistics in Hive
 select k3, hll_cardinality(hll_union(uuid)) from doris_hll_table group by k3;
 +------+----------------------------------+
 | k3   | hll_cardinality(hll_union(uuid)) |
@@ -228,7 +229,7 @@ select k3, hll_cardinality(hll_union(uuid)) from doris_hll_table group by k3;
 | c    |                                2 |
 +------+----------------------------------+
 
--- 此时，查外表的数据，也就是查导入前的数据进行统计、对比也能校验数据正确性
+-- At this time, querying the external table data, i.e., the data before import, can also verify the correctness of the data
 select k3, hll_cardinality(hll_union(hll_from_base64(uuid))) from hive.hive_test.hive_hll_table group by k3;
 +------+---------------------------------------------------+
 | k3   | hll_cardinality(hll_union(hll_from_base64(uuid))) |
@@ -239,6 +240,6 @@ select k3, hll_cardinality(hll_union(hll_from_base64(uuid))) from hive.hive_test
 +------+---------------------------------------------------+
 ```
 
-### 方法二：Spark Load
+### Method 2: Spark Load
 
- 详见: [Spark Load](../data-operate/import/import-way/spark-load-manual.md) -> 基本操作  -> 创建导入 (示例3：上游数据源是hive binary类型情况)
+ See details: [Spark Load](../data-operate/import/import-way/spark-load-manual.md) -> Basic operation -> Creating Load (Example 3: when the upstream data source is hive binary type table)
