@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive Hll UDF",
+    "title": "Hive HLL UDF",
     "language": "zh-CN"
 }
 ---
@@ -24,38 +24,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Hive Hll UDF
+# Hive HLL UDF
 
- Hive Hll UDF 提供了在 hive 表中生成 Hll 运算等 UDF，Hive 中的 Hll 与 Doris Hll 完全一致 ，Hive 中的 Hll 可以通过 Spark Hll Load 导入 Doris 。关于 Hll 更多介绍可以参考：[使用 HLL 近似去重](../advanced/using-hll.md)
+ Hive HLL UDF 提供了在 hive 表中生成 HLL 运算等 UDF，Hive 中的 HLL 与 Doris HLL 完全一致 ，Hive 中的 HLL 可以通过 Spark HLL Load 导入 Doris 。关于 HLL 更多介绍可以参考：[使用 HLL 近似去重](../advanced/using-hll.md)
 
  函数简介：
   1. UDAF
  
     · to_hll：聚合函数，返回一个 Doris Hll 列，类似于 to_bitmap 函数
  
-    · hll_union：聚合函数，功能同 Doris 的BE同名函数，计算分组的并集 ，返回一个 Doris Hll 列，类似于bitmap_union 函数
+    · hll_union：聚合函数，功能同 Doris 的BE同名函数，计算分组的并集 ，返回一个 Doris HLL 列，类似于bitmap_union 函数
 
   2. UDF
 
-    · hll_cardinality：返回添加到 Hll 的不同元素的数量，类似于 bitmap_count 函数
+    · hll_cardinality：返回添加到 HLL 的不同元素的数量，类似于 bitmap_count 函数
 
  主要目的：
-  1. 减少数据导入 Doris 时间 , 除去了构建字典、Hll 预聚合等流程；
-  2. 节省 Hive 存储 ，使用 Hll 对数据压缩 ，极大减少了存储成本，相对于 Bitmap 的统计更加节省存储；
-  3. 提供在 Hive 中 Hll 的灵活运算：并集、基数统计 ，计算后的 Hll 也可以直接导入 Doris；
+  1. 减少数据导入 Doris 时间 , 除去了构建字典、HLL 预聚合等流程；
+  2. 节省 Hive 存储 ，使用 HLL 对数据压缩 ，极大减少了存储成本，相对于 Bitmap 的统计更加节省存储；
+  3. 提供在 Hive 中 HLL 的灵活运算：并集、基数统计 ，计算后的 HLL 也可以直接导入 Doris；
  
  注意事项：
- Hll统计为近似计算有一定误差，大概 1%~2% 左右。
+ HLL统计为近似计算有一定误差，大概 1%~2% 左右。
 
 ## 使用方法
 
-### 在 Hive 中创建 Hll 类型和普通表，往普通表插入测试数据
+### 在 Hive 中创建 HLL 类型和普通表，往普通表插入测试数据
 
 ```sql
 -- 创建一个测试数据库，以 hive_test 为例：
 use hive_test;
 
--- 例子：创建 Hive Hll 表
+-- 例子：创建 Hive HLL 表
 CREATE TABLE IF NOT EXISTS `hive_hll_table`(
   `k1`   int       COMMENT '',
   `k2`   String    COMMENT '',
@@ -77,9 +77,9 @@ insert into hive_table select 2, 'b', 'c', 23456;
 insert into hive_table select 3, 'c', 'd', 34567;
 ```
 
-### Hive Hll UDF 使用：
+### Hive HLL UDF 使用：
 
-Hive Hll UDF 需要在 Hive/Spark 中使用，首先需要编译fe得到hive-udf.jar。
+Hive HLL UDF 需要在 Hive/Spark 中使用，首先需要编译fe得到hive-udf.jar。
 编译准备工作：如果进行过ldb源码编译可直接编译fe，如果没有进行过ldb源码编译，则需要手动安装thrift，可参考：[FE开发环境搭建](/community/developer-guide/fe-idea-dev.md) 中的编译与安装
 
 ```sql
@@ -118,7 +118,7 @@ create temporary function hll_union as 'org.apache.doris.udf.HllUnionUDAF' USING
 create temporary function hll_cardinality as 'org.apache.doris.udf.HllCardinalityUDF' USING JAR 'hdfs://node:9000/hive-udf.jar';
 
 
--- 例子：通过 to_hll 这个UDAF进行聚合生成 hll 写入 Hive Hll 表
+-- 例子：通过 to_hll 这个UDAF进行聚合生成 hll 写入 Hive HLL 表
 insert into hive_hll_table
 select 
     k1,
@@ -157,9 +157,9 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 +-----+------+
 ```
 
-###  Hive Hll UDF  说明
+###  Hive HLL UDF  说明
 
-## Hive Hll 导入 doris
+## Hive HLL 导入 doris
 
 <version dev>
 
@@ -167,7 +167,7 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 </version>
 
-对于 Binary 类型，Hive 会以 base64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将 hll 数据通过 [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) 函数插入到 Doris 内部。
+对于 Binary 类型，Hive 会以 base64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将 HLL 数据通过 [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) 函数插入到 Doris 内部。
 
 以下是一个完整的例子：
 
@@ -218,7 +218,7 @@ select *, hll_to_base64(uuid) from doris_hll_table;
 |    3 | c    | d    | NULL | AQFYbJB5VpNBhg==    |
 +------+------+------+------+---------------------+
 
--- 也可以进一步使用Doris原生的 Hll 函数进行统计，可以看到和前面在 Hive 中统计的结果一致
+-- 也可以进一步使用Doris原生的 HLL 函数进行统计，可以看到和前面在 Hive 中统计的结果一致
 select k3, hll_cardinality(hll_union(uuid)) from doris_hll_table group by k3;
 +------+----------------------------------+
 | k3   | hll_cardinality(hll_union(uuid)) |

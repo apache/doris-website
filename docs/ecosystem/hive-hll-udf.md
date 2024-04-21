@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive Hll UDF",
+    "title": "Hive HLL UDF",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Hive Hll UDF
+# Hive HLL UDF
 
  The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.：[Approximate Deduplication Using HLL](../advanced/using-hll.md)
 

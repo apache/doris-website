@@ -81,7 +81,7 @@ Prerequisites:
 Then, you can use the hll_from_base64 function to import data from Hive to Doris:
 insert into doris_hll_table select k1, k2, k3, hll_from_base64(uuid) from hive.hive_test.hive_hll_table;
 ```
-For more import details, please refer to: [Hive Hll UDF](../../../ecosystem/hive-hll-udf.md)
+For more import details, please refer to: [Hive HLL UDF](../../../ecosystem/hive-hll-udf.md)
 
 ### keywords
 HLL_FROM_BASE64, HLL

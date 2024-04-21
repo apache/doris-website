@@ -80,7 +80,7 @@ mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
 那么，此时可以使用 hll_from_base64 函数从 Hive 插入数据到 Doris 中：
 insert into doris_hll_table select k1, k2, k3, hll_from_base64(uuid) from hive.hive_test.hive_hll_table;
 ```
-更多导入细节可以参考：[Hive Hll UDF](../../../ecosystem/hive-hll-udf.md)
+更多导入细节可以参考：[Hive HLL UDF](../../../ecosystem/hive-hll-udf.md)
 
 ### keywords
 HLL_FROM_BASE64,HLL
