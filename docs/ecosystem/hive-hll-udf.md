@@ -168,14 +168,21 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 </version>
 
-For Binary type, Hive will save it as a base64 encoded string. At this time, you can use the Hive Catalog to directly import the HLL data into Doris using the [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) function.
+Create Hive table specified as TEXT format. For Binary type, Hive will save it as a base64 encoded string. At this time, you can use the Hive Catalog to directly import the HLL data into Doris using the [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) function.
 
 Here is a complete example:
 
 1. Create a Hive table
 
 ```sql
--- reuse the previous steps to create a Hive table using the to_hll function
+CREATE TABLE IF NOT EXISTS `hive_hll_table`(
+`k1`   int       COMMENT '',
+`k2`   String    COMMENT '',
+`k3`   String    COMMENT '',
+`uuid` binary    COMMENT 'hll'
+) stored as textfile
+
+-- then reuse the previous steps to insert data from a normal table into it using the to_hll function
 ```
 
 2. [Create a Doris catalog](../lakehouse/multi-catalog/hive)

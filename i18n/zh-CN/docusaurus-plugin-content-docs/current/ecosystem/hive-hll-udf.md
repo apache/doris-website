@@ -167,14 +167,21 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 </version>
 
-对于 Binary 类型，Hive 会以 base64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将 HLL 数据通过 [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) 函数插入到 Doris 内部。
+创建 Hive 表指定为 TEXT 格式，对于 Binary 类型，Hive 会以 base64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将 HLL 数据通过 [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) 函数插入到 Doris 内部。
 
 以下是一个完整的例子：
 
 1. 在 Hive 中创建 Hive 表
 
 ```sql
--- 可以沿用前面的步骤基于普通表使用 to_hll 函数往 hive_hll_table 插入数据，这里不再赘述
+CREATE TABLE IF NOT EXISTS `hive_hll_table`(
+`k1`   int       COMMENT '',
+`k2`   String    COMMENT '',
+`k3`   String    COMMENT '',
+`uuid` binary    COMMENT 'hll'
+) stored as textfile 
+
+-- 然后可以沿用前面的步骤基于普通表使用 to_hll 函数往 hive_hll_table 插入数据，这里不再赘述
 ```
 
 2. [在 Doris 中创建 Catalog](../lakehouse/multi-catalog/hive)

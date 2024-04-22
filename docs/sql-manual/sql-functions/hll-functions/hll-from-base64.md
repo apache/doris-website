@@ -72,7 +72,7 @@ mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
 ```
 Prerequisites:
 
-1.A Hive table named hive_test.hive_hll_table has been created with fields: k1 int, k2 String, k3 String, uuid binary, and data has been inserted into the table using the to_hll UDF function from a regular table.
+1.A Hive table named hive_test.hive_hll_table, with format textfile, has been created with fields: k1 int, k2 String, k3 String, uuid binary, and data has been inserted into the table using the to_hll UDF function from a regular table.
 
 2.A catalog named hive has been created in Doris to connect to Hive.
 

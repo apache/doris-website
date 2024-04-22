@@ -71,7 +71,7 @@ mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
 #### 数据导入示例：
 ```
 前置条件：
-1. 在 Hive 中已经创建好一个名为 hive_test.hive_hll_table 的 Hive 表（字段为：`k1` int, `k2` String, `k3` String, `uuid` binary），并且已经基于普通表使用 to_hll 的UDF函数往该表插入数据。
+1. 在 Hive 中已经创建好一个名为 hive_test.hive_hll_table 的 Hive 表（格式为 textfile ，字段为：`k1` int, `k2` String, `k3` String, `uuid` binary），并且已经基于普通表使用 to_hll 的UDF函数往该表插入数据。
 
 2. 在 Doris 中创建名为 hive 的 Catalog 用来连接。
 
