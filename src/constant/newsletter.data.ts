@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Notes'],
+        title: "Apache Doris 2.0.9 is released now",
+        content: `Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version.`,
+        to: '/blog/release-note-2.0.9',
+        image: '2.0.9.png',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "Arrow Flight SQL in Apache Doris for 10X faster data transfer",
         content: `Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.`,
         to: '/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer',
         image: 'arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png',
-    },
-    {
-        tags: ['Release Notes'],
-        title: "Apache Doris 2.1.2 just released",
-        content: `Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.`,
-        to: '/blog/release-note-2.1.2',
-        image: '2.1.2.png',
     },
     {
         tags: ['Tech Sharing'],

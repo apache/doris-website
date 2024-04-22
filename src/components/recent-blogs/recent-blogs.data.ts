@@ -1,11 +1,11 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'Auto-increment columns in databases: a simple magic that makes a big difference',
-        link: 'https://doris.apache.org/blog/auto-increment-columns-in-databases',
+        label: `Apache Doris 2.0.9 is released now`,
+        link: 'https://doris.apache.org/blog/release-note-2.0.9',
     },
     {
-        label: `Another big leap: Apache Doris 2.1.0 is released`,
-        link: 'https://doris.apache.org/blog/release-note-2.1.0',
+        label: 'Auto-increment columns in databases: a simple magic that makes a big difference',
+        link: 'https://doris.apache.org/blog/auto-increment-columns-in-databases',
     },
     {
         label: `Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis`,
