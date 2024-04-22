@@ -79,7 +79,7 @@ In order to prevent the use of a driver JAR package with a disallowed path when 
 
    * Control the allowed driver package paths through the FE configuration item `jdbc_driver_secure_path`. This configuration item can configure multiple paths, separated by semicolons. When this item is configured, Doris will check whether the prefix of the `driver_url` path in the catalog properties is in `jdbc_driver_secure_path`. If not, it will refuse to create the catalog.
    * This parameter defaults to `*`, which means JAR packages of all paths are allowed.
-   * If the configuration `jdbc_driver_secure_path` is empty, driver packages for all paths are not allowed, which means that the driver package can only be specified using method 1 above.
+   * If the configuration `jdbc_driver_secure_path` is empty, also means all paths are allowed
 
    > If you configure `jdbc_driver_secure_path = "file:///path/to/jdbc_drivers;http://path/to/jdbc_drivers"`, only `file:///path/to/jdbc_drivers` or `http:// is allowed The driver package path starting with path/to/jdbc_drivers`.
 

@@ -160,7 +160,6 @@
                         "query/query-data/select",
                         "query/query-data/complex-type",
                         "query/query-data/subquery",
-                        "query/query-data/common-table-expression",
                         "query/query-data/lateral-view",
                         "query/query-data/window-function",
                         "query/query-data/encryption-function"
@@ -488,7 +487,8 @@
                     "items": [
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
-                        "ecosystem/bi/datagrip"
+                        "ecosystem/bi/datagrip",
+                        "ecosystem/bi/powerbi"
                     ]
                 }
             ]

@@ -299,7 +299,8 @@
                     "items": [
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
-                        "ecosystem/bi/datagrip"
+                        "ecosystem/bi/datagrip",
+                        "ecosystem/bi/powerbi"
                     ]
                 },
                 {

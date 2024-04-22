@@ -46,16 +46,13 @@ under the License.
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'hadoop.username' = 'hive',
-    'dfs.nameservices'='your-nameservice',
-    'dfs.ha.namenodes.your-nameservice'='nn1,nn2',
-    'dfs.namenode.rpc-address.your-nameservice.nn1'='172.21.0.2:8088',
-    'dfs.namenode.rpc-address.your-nameservice.nn2'='172.21.0.3:8088',
-    'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+    'hadoop.username' = 'hive'
 );
 ```
 
 除了 `type` 和 `hive.metastore.uris` 两个必须参数外，还可以通过更多参数来传递连接所需要的信息。
+
+这些参数大多来自于 hadoop 集群的 `core-site.xml`, `hdfs-site.xml` 和 `hive-site.xml` 配置文件中。
 
 如提供 HDFS HA 信息，示例如下：
 
@@ -72,7 +69,9 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-### Hive On VIEWFS
+> 关于 Kerberos 相关配置，请参阅 `连接 Kerberos 认证的 Hive 集群` 一节。
+
+### Hive On ViewFS
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -90,9 +89,9 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-viewfs 相关参数可以如上面一样添加到 catalog 配置中，也可以添加到 `conf/core-site.xml` 中。
+ViewFS 相关参数可以如上面一样添加到 catalog 配置中，也可以添加到 `conf/core-site.xml` 中。
 
-viewfs 工作原理和参数配置可以参考 hadoop 相关文档，比如 https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html
+ViewFS 工作原理和参数配置可以参考 hadoop 相关文档，比如 https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html
 
 ### Hive On JuiceFS
 
@@ -360,11 +359,11 @@ CREATE CATALOG hive PROPERTIES (
 | `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | 支持嵌套，如 `struct<col1: array<int>, col2: map<int, date>>` |
 | other | unsupported | |
 
-## 是否按照 hive 表的 schema 来截断 char 或者 varchar 列
+> 注：是否按照 hive 表的 schema 来截断 char 或者 varchar 列
 
-如果变量 `truncate_char_or_varchar_columns` 开启，则当 hive 表的 schema 中 char 或者 varchar 列的最大长度和底层 parquet 或者 orc 文件中的 schema 不一致时会按照 hive 表列的最大长度进行截断。
+> 如果会话变量 `truncate_char_or_varchar_columns` 开启，则当 hive 表的 schema 中 char 或者 varchar 列的最大长度和底层 parquet 或者 orc 文件中的 schema 不一致时会按照 hive 表列的最大长度进行截断。
 
-该变量默认为 false。
+> 该变量默认为 false。
 
 ## 使用 broker 访问 HMS
 
@@ -398,7 +397,7 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 	```sql
 	"access_controller.properties.ranger.service.name" = "hive",
-	"access_controller.class" = "org.apache.doris.catalog.authorizer.RangerHiveAccessControllerFactory",
+	"access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory",
 	```
 
 	>注意:
@@ -470,45 +469,50 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 ### 最佳实践
 
-1.在ranger端创建用户user1并授权db1.table1.col1的查询权限
+1. 在ranger端创建用户user1并授权db1.table1.col1的查询权限
 
-2.在ranger端创建角色role1并授权db1.table1.col2的查询权限
+2. 在ranger端创建角色role1并授权db1.table1.col2的查询权限
 
-3.在doris创建同名用户user1，user1将直接拥有db1.table1.col1的查询权限
+3. 在doris创建同名用户user1，user1将直接拥有db1.table1.col1的查询权限
 
-4.在doris创建同名角色role1，并将role1分配给user1，user1将同时拥有db1.table1.col1和col2的查询权限
+4. 在doris创建同名角色role1，并将role1分配给user1，user1将同时拥有db1.table1.col1和col2的查询权限
 
 5. Admin 和 Root 用户的权限不受Apache Ranger 的权限控制
 
-## 使用 Kerberos 进行认证
+## 连接 Kerberos 认证的 Hive 集群
 
-Kerberos是一种身份验证协议。它的设计目的是通过使用私钥加密技术为应用程序提供强身份验证。
+本小节主要介绍如何连接开启 Kerberos 认证的 Hive + HDFS 集群。
 
-### 环境配置
+### 环境准备
 
-1. 当集群中的服务配置了Kerberos认证，配置Hive Catalog时需要获取它们的认证信息。
+- `krb5.conf`
 
-    `hadoop.kerberos.keytab`: 记录了认证所需的principal，Doris集群中的keytab必须是同一个。
+	`krb5.conf` 是 Kerberos 认证协议的配置文件。需将该文件部署在所有 FE 和 BE 节点上。并确保 Doris 集群可以和文件中记录的 KDC 服务连通。
 
-    `hadoop.kerberos.principal`: Doris集群上找对应hostname的principal，如`doris/hostname@HADOOP.COM`，用`klist -kt`检查keytab。
+	默认情况下，该文件位于 Hadoop 集群的 `/etc` 目录下。但请联系 Hadoop 集群管理员获取正确的 `krb5.conf` 文件，并将其部署到所有 FE 和 BE 节点的 `/etc` 目录下。
 
-    `yarn.resourcemanager.principal`: 到Yarn Resource Manager节点，从 `yarn-site.xml` 中获取，用`klist -kt`检查Yarn的keytab。
+	注意，某些情况下，`krb5.conf` 的文件位置可能取决于环境变量 `KRB5_CONFIG` 或 JVM 参数中的 `-Djava.security.krb5.conf` 参数。请检查这些属性以确定 `krb5.conf` 的确切位置。
 
-    `hive.metastore.kerberos.principal`: 到Hive元数据服务节点，从 `hive-site.xml` 中获取，用`klist -kt`检查Hive的keytab。
+- JVM 参数
 
-    `hadoop.security.authentication`: 开启Hadoop Kerberos认证。
+	请在 FE 和 BE 的 JVM 参数中添加如下配置（位于 fe.conf 和 be.conf 中）：
 
-在所有的 `BE`、`FE` 节点下放置 `krb5.conf` 文件和 `keytab` 认证文件，`keytab` 认证文件路径和配置保持一致，`krb5.conf` 文件默认放置在 `/etc/krb5.conf` 路径。同时需确认JVM参数 `-Djava.security.krb5.conf` 和环境变量`KRB5_CONFIG`指向了正确的 `krb5.conf` 文件的路径。
+	- `-Djavax.security.auth.useSubjectCredsOnly=false`
+	- `-Dsun.security.krb5.debug=true`
 
-2. 当配置完成后，如在`FE`、`BE`日志中无法定位到问题，可以开启Kerberos调试。相关错误解决方法课参阅：[常见问题](../faq.md)
+	并重启 FE、BE 节点以确保其生效。
 
- - 在所有的 `FE`、`BE` 节点下，找到部署路径下的`conf/fe.conf`以及`conf/be.conf`。
+### Catalog 配置
 
- - 找到配置文件后，在`JAVA_OPTS`变量中设置JVM参数`-Dsun.security.krb5.debug=true`开启Kerberos调试。
+通常情况下，连接 Kerberos 认证的 Hive 集群，需要在 Catalog 中添加如下属性：
 
- - `FE`节点的日志路径`log/fe.out`可查看FE Kerberos认证调试信息，`BE`节点的日志路径`log/be.out`可查看BE Kerberos认证调试信息。
+- `"hadoop.security.authentication" = "kerberos"`：开启 kerberos 认证方式。
+-  `"hadoop.kerberos.principal" = "your_principal"`：HDFS namenode 的 principal。通常是 `hdfs-site.xml` 的 `dfs.namenode.kerberos.principal` 配置。
+-  `"hadoop.kerberos.keytab" = "/path/to/your_keytab"`：HDFS namenode 的 keytab 文件。通常是 `hdfs-site.xml` 的 `dfs.namenode.keytab.file` 配置。注意，这个文件需要部署到所有 FE 和 BE 节点相同的目录下（可自定义）。
+- `"yarn.resourcemanager.principal" = "your_principal"`：Yarn Resource Manager 的 principal，可以在 `yarn-site.xml` 中获取。
+- `"hive.metastore.kerberos.principal" = "your_principal"`：Hive metastore 的 principal。可以再 `hive-site.xml` 中。
 
-### 最佳实践
+> 注：建议使用 `kinit -kt your_principal /path/to/your_keytab` 以及 `klist -k /path/to/your_keytab` 来
 
 示例如下：
 
@@ -524,8 +528,6 @@ CREATE CATALOG hive_krb PROPERTIES (
     'yarn.resourcemanager.principal' = 'your-rm-principal'
 );
 ```
-
-同时提供 HDFS HA 信息和 Kerberos 认证信息，示例如下：
 
 ```sql
 CREATE CATALOG hive_krb_ha PROPERTIES (
@@ -544,6 +546,11 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
     'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
 );
 ```
+
+### 问题排查
+
+如遇 Kerberos 认证问题，在设置了 JVM 参数 `-Dsun.security.krb5.debug=true` 后，会在 `fe.out` 或 `be.out` 中打印 Kerberos 认证相关信息。可以参考 [FAQ](../faq.md) 中的相关错误进行排查。
+
 ## Hive Transactional 表
 Hive transactional 表是 Hive 中支持 ACID 语义的表。详情可见：https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions
 
