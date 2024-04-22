@@ -4,6 +4,7 @@
             "type": "category",
             "label": "Getting Started",
             "items": [
+                "get-starting/learning-path",
                 "get-starting/what-is-apache-doris",
                 "get-starting/quick-start"
             ]
