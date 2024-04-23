@@ -28,7 +28,11 @@ under the License.
 
 ### Name
 
+<version since="dev">
+
 local
+
+</version>
 
 ### Description
 
@@ -50,50 +54,38 @@ local(
 
 **parameter description**
 
-- Related parameters for accessing local file on be node:
+Related parameters for accessing local file on be node:
 
-    - `file_path`:
-    
-        (required) The path of the file to be read, which is a relative path to the `user_files_secure_path` directory, where `user_files_secure_path` parameter [can be configured on be](../../../admin-manual/config/be-config.md).
-    
-        Can not contains `..` in path. Support using glob syntax to match multi files, such as `log/*.log`
+- `file_path`:
 
-- Related to execution method:
+    (required) The path of the file to be read, which is a relative path to the `user_files_secure_path` directory, where `user_files_secure_path` parameter [can be configured on be](../../../admin-manual/config/be-config.md).
 
-    In versions prior to 2.1.1, Doris only supported specifying a BE node to read local data files on that node.
+    Can not contains `..` in path. Support using glob syntax to match multi files, such as `log/*.log`
 
-    - `backend_id`:
+- `backend_id`:
 
-        The be id where the file is located. `backend_id` can be obtained through the `show backends` command.
+    (required) The backend id where the file resides. The `backend_id` can be obtained by `show backends` command.
 
-    Starting from version 2.1.2, Doris adds a new parameter `shared_storage`.
+File format parameters:
 
-    - `shared_storage`
+- `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
+- `column_separator`: (optional) default `,`.
+- `line_delimiter`: (optional) default `\n`.
+- `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
-        Default is false. If true, the specified file exists on shared storage (such as NAS). Shared storage must be compatible with the POXIS file interface and mounted on all BE nodes at the same time.
+    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md)
 
-        When `shared_storage` is true, you do not need to set `backend_id`, Doris may use all BE nodes for data access. If `backend_id` is set, still only executes on the specified BE node.
+- `read_json_by_line`: (optional) default `"true"`
+- `strip_outer_array`: (optional) default `"false"`
+- `json_root`: (optional) default `""`
+- `json_paths`: (optional) default `""`
+- `num_as_string`: (optional) default `false`
+- `fuzzy_parse`: (optional) default `false`
 
-- File format parameters:
+    <version since="dev">The following 2 parameters are used for loading in csv format</version>
 
-    - `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
-    - `column_separator`: (optional) default `,`.
-    - `line_delimiter`: (optional) default `\n`.
-    - `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
-
-- The following parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md)
-
-    - `read_json_by_line`: (optional) default `"true"`
-    - `strip_outer_array`: (optional) default `"false"`
-    - `json_root`: (optional) default `""`
-    - `json_paths`: (optional) default `""`
-    - `num_as_string`: (optional) default `false`
-    - `fuzzy_parse`: (optional) default `false`
-
-- The following parameters are used for loading in csv format
-
-    - `trim_double_quotes`: Boolean type (optional), the default value is `false`. True means that the outermost double quotes of each field in the csv file are trimmed.
-    - `skip_lines`: Integer type (optional), the default value is 0. It will skip some lines in the head of csv file. It will be disabled when the format is `csv_with_names` or `csv_with_names_and_types`.
+- `trim_double_quotes`: Boolean type (optional), the default value is `false`. True means that the outermost double quotes of each field in the csv file are trimmed.
+- `skip_lines`: Integer type (optional), the default value is 0. It will skip some lines in the head of csv file. It will be disabled when the format is `csv_with_names` or `csv_with_names_and_types`.
 
 ### Examples
 
@@ -133,25 +125,6 @@ mysql> select * from local(
 +------+---------+--------+
 ```
 
-Query files on NAS:
-
-```sql
-mysql> select * from local(
-        "file_path" = "/mnt/doris/prefix_*.txt",
-        "format" = "csv",
-        "column_separator" =",",
-        "shared_storage" = "true");
-+------+------+------+
-| c1   | c2   | c3   |
-+------+------+------+
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-+------+------+------+
-```
-
 Can be used with `desc function` :
 
 ```sql
@@ -170,14 +143,8 @@ mysql> desc function local(
 
 ### Keywords
 
-local, table-valued-function, tvf
+    local, table-valued-function, tvf
 
 ### Best Practice
 
-- For more detailed usage of local tvf, please refer to [S3](./s3.md) tvf, The only difference between them is the way of accessing the storage system.
-
-- Access data on NAS through local tvf
-
-     NAS shared storage allows to be mounted to multiple nodes at the same time. Each node can access files in the shared storage just like local files. Therefore, the NAS can be thought of as a local file system, accessed through local tvf.
-
-     When setting `"shared_storage" = "true"`, Doris will think that the specified file can be accessed from any BE node. When a set of files is specified using wildcards, Doris will distribute requests to access files to multiple BE nodes, so that multiple nodes can be used to perform distributed file scanning and improve query performance.
+  For more detailed usage of local tvf, please refer to [S3](./s3.md) tvf, The only difference between them is the way of accessing the storage system.

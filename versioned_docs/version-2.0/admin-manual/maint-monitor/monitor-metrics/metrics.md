@@ -28,8 +28,8 @@ under the License.
 
 Doris FE process and BE processes provide complete monitoring metrics. Monitoring metrics can be divided into two categories：
 
-1. **Process monitoring**: mainly displays some monitoring values of the Doris process itself .
-2. **Node monitoring**: mainly displays the monitoring of the node machine itself where the Doris process is located, such as CPU , memory, IO , network , etc.
+1.	**Process monitoring**: mainly displays some monitoring values of the Doris process itself .
+2.	**Node monitoring**: mainly displays the monitoring of the node machine itself where the Doris process is located, such as CPU , memory, IO , network , etc.
 
 You can obtain the current monitoring by accessing the http port of the FE or BE node . like :
 
@@ -63,6 +63,7 @@ The vast majority of monitoring metric types are Counter . That is the cumulativ
 
 The query error rate can be obtained by calculating the slope of `doris_fe_query_err`, presented as (error per second).
 
+> 欢迎完善此表格以提供更全面有效的监控指标。
 
 ## FE Monitoring Metrics
 
@@ -155,14 +156,14 @@ The query error rate can be obtained by calculating the slope of `doris_fe_query
 
 | **name**                | **Label**      | **unit**    | **Description**                                                                                                                          | **Impact**                                              | **Grade** |
 | ----------------------- | -------------- | ----------- |------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------| --------- |
-| `jvm_heap_size_bytes`     |                | byte        | JVM memory metrics. The tags include max, used, committed , corresponding to the maximum value, used and requested memory  respectively. | Observe JVM memory usage                                | P0        |
-| `jvm_non_heap_size_bytes` |                | byte        | JVM off-heap memory statistics                                                                                                           |                                                         |           |
-| `<GarbageCollector>`    |                |             | GC metrics .                                                                                                                             | GarbageCollector refers to a specific garbage collector | P0        |
+| jvm_heap_size_bytes     |                | byte        | JVM memory metrics. The tags include max, used, committed , corresponding to the maximum value, used and requested memory  respectively. | Observe JVM memory usage                                | P0        |
+| jvm_non_heap_size_bytes |                | byte        | JVM off-heap memory statistics                                                                                                           |                                                         |           |
+| jvm_old_gc |                |             | GC metrics .                                                                                                                             | GarbageCollector refers to a specific garbage collector | P0        |
 |                         | {type="count"} | Num         | Cumulative value of GC times                                                                                                             |                                                         |           |
 |                         | {type="time"}  | millisecond | Cumulative value of GC time consumption                                                                                                  |                                                         |           |
-| `jvm_old_size_bytes`      |                | byte        | JVM old generation memory statistics                                                                                                     |                                                         | P0        |
-| `jvm_thread`              |                | Num         | JVM thread count statistics                                                                                                              | Observe whether the number of JVM threads is reasonable | P0        |
-| `jvm_young_size_bytes`    |                | byte        | JVM new generation memory statistics                                                                                                     |                                                         | P0        |
+| jvm_old_size_bytes      |                | byte        | JVM old generation memory statistics                                                                                                     |                                                         | P0        |
+| jvm_thread              |                | Num         | JVM thread count statistics                                                                                                              | Observe whether the number of JVM threads is reasonable | P0        |
+| jvm_young_size_bytes    |                | byte        | JVM new generation memory statistics                                                                                                     |                                                         | P0        |
 
 **Machine** **metrics**
 
@@ -234,7 +235,7 @@ The query error rate can be obtained by calculating the slope of `doris_fe_query
 | doris_be_local_file_writer_total                |                                                 | Num            | opened LocalFileWriter cumulative count .                    |                                                              |           |
 | doris_be_mem_consumption                        |                                                 | byte           | Specifies the current memory overhead of the module . For example, {type="compaction"}  represents the current total memory overhead of the compaction module . | Values taken from the same type MemTracker . FIXME           |           |
 | doris_be_memory_allocated_bytes                 |                                                 | byte           | BE process physical memory size, taken from /proc/self/status/ VmRSS |                                                              | P0        |
-| doris_be_memory_jemalloc                        |                                                 | byte           | Jemalloc stats, taken from je_mallctl .                      | [Meaning](https://jemalloc.net/jemalloc.3.html)reference : <https://jemalloc.net/jemalloc.3.html> | P0        |
+| doris_be_memory_jemalloc                        |                                                 | byte           | Jemalloc stats, taken from je_mallctl .                      | [Meaning ](https://jemalloc.net/jemalloc.3.html)reference : https://jemalloc.net/jemalloc.3.html | P0        |
 | doris_be_memory_pool_bytes_total                |                                                 | byte           | all MemPool The size of memory currently occupied. Statistical value, does not represent actual memory usage . |                                                              |           |
 | doris_be_memtable_flush_duration_us             |                                                 | microseconds   | value of the time taken to write memtable to disk            | Write latency can be observed via slope                      | P0        |
 | doris_be_memtable_flush_total                   |                                                 | Num            | number of memtable writes to disk                            | The slope can be used to calculate the frequency of writing to a file | P0        |
@@ -337,3 +338,5 @@ The query error rate can be obtained by calculating the slope of `doris_fe_query
 | doris_be_snmp_tcp_in_segs               |                           | Num            | tcp packets sent . Collected from /proc/net/ snmp            |                                                              |           |
 | doris_be_snmp_tcp_out_segs              |                           | Num            | tcp packets sent. Collected from /proc/net/ snmp             |                                                              |           |
 | doris_be_snmp_tcp_retrans_segs          |                           | Num            | TCP packet retransmissions . Collected from /proc/net/ snmp  |                                                              |           |
+
+ 

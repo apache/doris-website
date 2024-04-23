@@ -36,7 +36,6 @@ In addition to Hive, many other systems also use the Hive Metastore to store met
 2. hive supports version 1/2/3.
 3. Support Managed Table and External Table and part of Hive View.
 4. Can identify hive, iceberg, hudi metadata stored in Hive Metastore.
-5. If the Hadoop node is configured with hostname, please ensure to add the corresponding mapping relationship to the /etc/hosts file.
 
 ## Create Catalog
 
@@ -46,13 +45,16 @@ In addition to Hive, many other systems also use the Hive Metastore to store met
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'hadoop.username' = 'hive'
+    'hadoop.username' = 'hive',
+    'dfs.nameservices'='your-nameservice',
+    'dfs.ha.namenodes.your-nameservice'='nn1,nn2',
+    'dfs.namenode.rpc-address.your-nameservice.nn1'='172.21.0.2:8088',
+    'dfs.namenode.rpc-address.your-nameservice.nn2'='172.21.0.3:8088',
+    'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
 );
 ```
 
 In addition to the two required parameters of `type` and `hive.metastore.uris`, more parameters can be passed to pass the information required for the connection.
-
-Most of this properties can be found in `core-site.xml`, `hdfs-site.xml` and `hive-site.xml`.
 
 If HDFS HA information is provided, the example is as follows:
 
@@ -69,9 +71,31 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-> About Kerberos, please see `Connect to Kerberos enabled Hive`.
+Provide HDFS HA information and Kerberos authentication information at the same time, examples are as follows:
 
-### Hive On ViewFS
+```sql
+CREATE CATALOG hive PROPERTIES (
+    'type'='hms',
+    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
+    'hive.metastore.sasl.enabled' = 'true',
+    'hive.metastore.kerberos.principal' = 'your-hms-principal',
+    'dfs.nameservices'='your-nameservice',
+    'dfs.ha.namenodes.your-nameservice'='nn1,nn2',
+    'dfs.namenode.rpc-address.your-nameservice.nn1'='172.21.0.2:8088',
+    'dfs.namenode.rpc-address.your-nameservice.nn2'='172.21.0.3:8088',
+    'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
+    'hadoop.security.authentication' = 'kerberos',
+    'hadoop.kerberos.keytab' = '/your-keytab-filepath/your.keytab',   
+    'hadoop.kerberos.principal' = 'your-principal@YOUR.COM',
+    'yarn.resourcemanager.principal' = 'your-rm-principal'
+);
+```
+
+Please place the `krb5.conf` file and `keytab` authentication file under all `BE` and `FE` nodes. The path of the `keytab` authentication file is consistent with the configuration. The `krb5.conf` file is placed in `/etc by default /krb5.conf` path.
+
+The value of `hive.metastore.kerberos.principal` needs to be consistent with the property of the same name of the connected hive metastore, which can be obtained from `hive-site.xml`.
+
+### Hive On VIEWFS
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -89,9 +113,9 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-ViewFs related parameters can be added to the catalog configuration as above, or added to `conf/core-site.xml`.
+viewfs related parameters can be added to the catalog configuration as above, or added to `conf/core-site.xml`.
 
-How ViewFs works and parameter configuration, please refer to relevant hadoop documents, for example, https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html
+How viewfs works and parameter configuration, please refer to relevant hadoop documents, for example, https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html
 
 ### Hive On JuiceFS
 
@@ -167,8 +191,6 @@ CREATE CATALOG hive PROPERTIES (
 ```
 
 ### Hive With Glue
-
-> When connecting Glue, if it's not on the EC2 environment, need copy the `~/.aws` from the EC2 environment to the current environment. And can also download and configure the [AWS Cli tools](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), which also creates the `.aws` directory under the current user directory.
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -340,11 +362,7 @@ We need to change to
 
 ## Hive Version
 
-Doris can correctly access the Hive Metastore in different Hive versions. By default, Doris will access the Hive Metastore with a Hive 2.3 compatible interface.
-
-If you meet error message like `Invalid method name: 'get_table_req'`, which means the hive version is mismatch.
-
-You can specify the hive version when creating the Catalog. If accessing Hive 1.1.0 version:
+Doris can correctly access the Hive Metastore in different Hive versions. By default, Doris will access the Hive Metastore with a Hive 2.3 compatible interface. You can also specify the hive version when creating the Catalog. If accessing Hive 1.1.0 version:
 
 ```sql 
 CREATE CATALOG hive PROPERTIES (
@@ -377,11 +395,11 @@ For Hive/Iceberge/Hudi
 | `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | support nested type, for example `struct<col1: array<int>, col2: map<int, date>>` |
 | other | unsupported | |
 
-> Note: Whether to truncate char or varchar columns according to the schema of the hive table
+## Whether to truncate char or varchar columns according to the schema of the hive table
 
-> If the session variable `truncate_char_or_varchar_columns` is enabled, when the maximum length of the char or varchar column in the schema of the hive table is inconsistent with the schema in the underlying parquet or orc file, it will be truncated according to the maximum length of the hive table column.
+If the variable `truncate_char_or_varchar_columns` is enabled, when the maximum length of the char or varchar column in the schema of the hive table is inconsistent with the schema in the underlying parquet or orc file, it will be truncated according to the maximum length of the hive table column.
 
-> The variable default is false.
+The variable default is false.
 
 ## Access HMS with broker
 
@@ -391,22 +409,11 @@ Add following setting when creating an HMS catalog, file splitting and scanning 
 "broker.name" = "test_broker"
 ```
 
-
-Doris has implemented Broker query support for HMS Catalog Iceberg based on the Iceberg `FileIO` interface. If needed, the following configuration can be added when creating the HMS Catalog.
-
-```sql
-"io-impl" = "org.apache.doris.datasource.iceberg.broker.IcebergBrokerIO"
-```
-
 ## Integrate with Apache Ranger
 
 Apache Ranger is a security framework for monitoring, enabling services, and comprehensive data security access management on the Hadoop platform.
 
-Doris supports using Apache Ranger for authentication for a specified External Hive Catalog.
-
-Currently, authentication of database, table, and column is supported. Functions such as encryption, row policy, and data masks are not currently supported.
-
-To use Apache Ranger to authenticate the entire Doris cluster service, please refer to [Apache Ranger Authentication](../../admin-manual/privilege-ldap/ranger.md)
+Currently doris supports ranger library, table, and column permissions, but does not support encryption, row permissions, etc.
 
 ### Settings
 
@@ -414,14 +421,10 @@ To connect to the Hive Metastore with Ranger permission verification enabled, yo
 
 1. When creating a Catalog, add:
 
-	```sql
-	"access_controller.properties.ranger.service.name" = "hive",
-	"access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory",
-	```
-
-	> Note:
-	>
-	> `access_controller.properties.ranger.service.name` refers to the type of service, such as `hive`, `hdfs`, etc. It is not the value of `ranger.plugin.hive.service.name` in the configuration file.
+```sql
+"access_controller.properties.ranger.service.name" = "hive",
+"access_controller.class" = "org.apache.doris.catalog.authorizer.RangerHiveAccessControllerFactory",
+```
 
 2. Configure all FE environments:
 
@@ -495,92 +498,4 @@ To connect to the Hive Metastore with Ranger permission verification enabled, yo
 3. Create a user user1 with the same name in doris, user1 will directly have the query authority of db1.table1.col1
 
 4. Create role1 with the same name in doris, and assign role1 to user1, user1 will have the query authority of db1.table1.col1 and col2 at the same time
-
-5. The permissions of Admin and Root users are not controlled by Apache Ranger.
-
-## Connect to Kerberos enabled Hive
-
-This section mainly introduces how to connect to a Hive + HDFS cluster with Kerberos authentication enabled.
-
-### Environment preparation
-
-- `krb5.conf`
-
-	`krb5.conf` is the configuration file for the Kerberos authentication protocol. This file needs to be deployed on all FE and BE nodes. And ensure that the Doris cluster can connect to the KDC service recorded in this file.
-
-	By default, this file is located in the `/etc` directory of the Hadoop cluster. But please contact the Hadoop cluster administrator to obtain the correct `krb5.conf` file and deploy it to the `/etc` directory of all FE and BE nodes.
-
-	Note that in some cases the file location of `krb5.conf` may depend on the environment variable `KRB5_CONFIG` or the `-Djava.security.krb5.conf` in the JVM parameters. Please check these properties to determine the exact location of `krb5.conf`.
-
-- JVM parameters
-
-	Please add the following options to the JVM of FE and BE (located in `fe.conf` and `be.conf`):
-
-	- `-Djavax.security.auth.useSubjectCredsOnly=false`
-	- `-Dsun.security.krb5.debug=true`
-
-	And restart the FE and BE nodes to ensure it takes effect.
-
-### Catalog configuration
-
-Normally, to connect to a Kerberos enabled Hive cluster, you need to add the following attributes to the Catalog:
-
-- `"hadoop.security.authentication" = "kerberos"`: Enable kerberos authentication method.
-- `"hadoop.kerberos.principal" = "your_principal"`: The principal of the HDFS namenode. Typically the `dfs.namenode.kerberos.principal` configuration of `hdfs-site.xml`.
-- `"hadoop.kerberos.keytab" = "/path/to/your_keytab"`: keytab file of HDFS namenode. Typically the `dfs.namenode.keytab.file` configuration of `hdfs-site.xml`. Note that this file needs to be deployed to the same directory of all FE and BE nodes (can be customized).
-- `"yarn.resourcemanager.principal" = "your_principal"`: The principal of Yarn Resource Manager, which can be found in `yarn-site.xml`.
-- `"hive.metastore.kerberos.principal" = "your_principal"`: The principal of the Hive metastore. Can be found in `hive-site.xml`.
-
-> Note: Suggest to use `kinit -kt your_principal /path/to/your_keytab` 以及 `klist -k /path/to/your_keytab` to get the ticket or check its validation.
-
-Examples are as follows:
-
-```sql
-CREATE CATALOG hive_krb PROPERTIES (
-     'type'='hms',
-     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-     'hive.metastore.sasl.enabled' = 'true',
-     'hive.metastore.kerberos.principal' = 'your-hms-principal',
-     'hadoop.security.authentication' = 'kerberos',
-     'hadoop.kerberos.keytab' = '/your-keytab-filepath/your.keytab',
-     'hadoop.kerberos.principal' = 'your-principal@YOUR.COM',
-     'yarn.resourcemanager.principal' = 'your-rm-principal'
-);
-```
-
-```sql
-CREATE CATALOG hive_krb_ha PROPERTIES (
-     'type'='hms',
-     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-     'hive.metastore.sasl.enabled' = 'true',
-     'hive.metastore.kerberos.principal' = 'your-hms-principal',
-     'hadoop.security.authentication' = 'kerberos',
-     'hadoop.kerberos.keytab' = '/your-keytab-filepath/your.keytab',
-     'hadoop.kerberos.principal' = 'your-principal@YOUR.COM',
-     'yarn.resourcemanager.principal' = 'your-rm-principal',
-     'dfs.nameservices'='your-nameservice',
-     'dfs.ha.namenodes.your-nameservice'='nn1,nn2',
-     'dfs.namenode.rpc-address.your-nameservice.nn1'='172.21.0.2:8088',
-     'dfs.namenode.rpc-address.your-nameservice.nn2'='172.21.0.3:8088',
-     'dfs.client.failover.proxy.provider.your-nameservice'='org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
-);
-```
-
-### Troubleshooting
-
-In case of Kerberos authentication problems, after setting the JVM parameter `-Dsun.security.krb5.debug=true`, Kerberos authentication related information will be printed in `fe.out` or `be.out`. You can refer to the related errors in [FAQ](../faq.md) for troubleshooting.
-
-## Hive Transactional Tables
-
-Hive transactional tables are tables in Hive that support ACID (Atomicity, Consistency, Isolation, Durability) semantics. For more details, you can refer to: [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions).
-
-### Supported Operations for Hive Transactional Tables:
-|Transactional Table Type|Supported Operations in Hive|Hive Table Properties|Supported Hive Versions|
-|---|---|---|---|
-|Full-ACID Transactional Table |Supports insert, update, delete operations|'transactional'='true', 'transactional_properties'='insert_only'|3.x, 2.x (requires major compaction in Hive before loading)|
-|Insert-Only Transactional Table|Supports only Insert operations|'transactional'='true'|3.x, 2.x|
-
-### Current Limitations:
-Currently, it does not support scenarios involving Original Files.
-When a table is transformed into a transactional table, subsequent newly written data files will use the schema of the Hive transactional table. However, existing data files will not be converted to the schema of the transactional table. These existing files are referred to as Original Files.
 

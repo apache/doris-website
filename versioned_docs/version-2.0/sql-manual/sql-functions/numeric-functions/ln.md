@@ -30,10 +30,6 @@ under the License.
 `DOUBLE ln(DOUBLE x)`
 Returns the natural logarithm of `x` to base `e`.
 
-:::tip
-Another alias for this function is `dlog1`.
-:::
-
 ### example
 
 ```
@@ -58,4 +54,4 @@ mysql> select ln(10);
 ```
 
 ### keywords
-	LN, DLOG1
+	LN

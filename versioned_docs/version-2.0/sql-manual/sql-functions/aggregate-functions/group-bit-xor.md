@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## GROUP_BIT_XOR
+## group_bit_xor
 ### description
 #### Syntax
 

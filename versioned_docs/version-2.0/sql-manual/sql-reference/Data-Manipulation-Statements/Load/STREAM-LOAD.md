@@ -156,7 +156,7 @@ separated by commas.
 
 28. comment: <version since="1.2.3" type="inline"> String type, the default value is "". </version>
 
-29. enclose: <version since="dev" type="inline"> When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. Note: when the bracket is `"`, trim\_double\_quotes must be set to true.</version>
+29. enclose: <version since="dev" type="inline"> When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field. </version>
   
 30. escape <version since="dev" type="inline"> Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'". </version>
 
@@ -470,7 +470,3 @@ separated by commas.
    For example, if the Doris system timezone is "+08:00", and the time column in the imported data contains two pieces of data, "2012-01-01 01:00:00Z" and "2015-12-12 12:12:12-08:00", then after we specify the timezone of the imported transaction via `-H "timezone: +08:00"` during import, both pieces of data will be converted to that timezone, resulting in the results "2012-01-01 09:00:00" and "2015-12-13 04:12:12".
 
    For a more detailed understanding, see [time-zone](../../../../advanced/time-zone) document.
-
-11. The Execution Engine Choice
-
-   The Session Variable `enable_pipeline_load` determines whether to attempt to enable the Pipeline engine for Streamload tasks. See [Import](../../../../data-operate/import/load-manual) document for more.

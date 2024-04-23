@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Deploy Doris on Helm Chart",
-  "language": "en"
+"title": "Deploy Doris on Helm Chart",
+"language": "en"
 }
 ---
 

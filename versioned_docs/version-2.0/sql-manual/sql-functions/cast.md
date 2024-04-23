@@ -3,8 +3,6 @@
     "title": "CAST",
     "language": "en"
 }
-
-
 ---
 
 <!-- 
@@ -27,33 +25,30 @@ under the License.
 -->
 
 ## CAST
-
 ### Description
-
-The `CAST` function is used for data type conversion in SQL queries. It is typically used to convert one data type into another, such as converting a string to an integer, converting an integer to a string, and so on.
 
 #### Syntax
 
-`CAST (src_type as dst_type)`
+`T cast (input as Type)`
 
-Converts the src_type to the specified dst_type.
+Converts input to the specified type
 
-### Example
+### example
 
 1. Turn constant, or a column in a table
 
-```mysql
-mysql> select cast('1234' as int);
-+---------------------+
-| cast('1234' as INT) |
-+---------------------+
-|                1234 |
-+---------------------+
+```
+mysql> select cast (1 as BIGINT);
++-------------------+
+| CAST(1 AS BIGINT) |
++-------------------+
+|                 1 |
++-------------------+
 ```
 
 2. Transferred raw data
 
-```shell
+```
 curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=cast(tmp_k1 as BIGINT)"  http://host:port/api/test/bigint/_stream_load
 ```
 
@@ -61,11 +56,9 @@ curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=c
 
 If you want to force this type of raw data cast to int. Look at the following words:
 
-```shell
-curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=cast(cast(tmp_k1 as DOUBLE) as BIGINT)"  http://host:port/api/test/bigint/_stream_load
 ```
+curl --location-trusted -u root: -T ~/user_data/bigint -H "columns: tmp_k1, k1=cast(cast(tmp_k1 as DOUBLE) as BIGINT)"  http://host:port/api/test/bigint/_stream_load
 
-```mysql
 mysql> select cast(cast ("11.2" as double) as bigint);
 +----------------------------------------+
 | CAST(CAST('11.2' AS DOUBLE) AS BIGINT) |
@@ -74,7 +67,7 @@ mysql> select cast(cast ("11.2" as double) as bigint);
 +----------------------------------------+
 1 row in set (0.00 sec)
 
-# For the DECIMALV3 type, the cast operation performs rounding half up.
+For the DECIMALV3 type, the cast operation performs rounding half up.
 mysql> select cast (1.115 as DECIMALV3(16, 2));
 +---------------------------------+
 | cast(1.115 as DECIMALV3(16, 2)) |
@@ -82,7 +75,5 @@ mysql> select cast (1.115 as DECIMALV3(16, 2));
 |                            1.12 |
 +---------------------------------+
 ```
-
-### Keywords
-
+### keywords
 CAST

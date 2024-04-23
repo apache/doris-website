@@ -42,7 +42,7 @@ Check whether the connection cache is available
 
 * `remot_brpc_port`
 
-    Remote brpc port
+    Remot brpc port
 
 * `payload_size`
 
@@ -58,7 +58,7 @@ None
     {
         "msg":"success",
         "code":0,
-        "data": "open brpc connection to {host_to_check}:{remot_brpc_port} success.",
+        "data": "open brpc connection to {host_to_check}:{remot_brpc_port} succcess.",
         "count":0
     }
     ```

@@ -30,10 +30,6 @@ under the License.
 `BIGINT ceil(DOUBLE x)`
 Returns the smallest integer value greater than or equal to `x`.
 
-:::tip
-The other alias for this function are `dceil` and `ceiling`.
-:::
-
 ### example
 
 ```
@@ -58,4 +54,4 @@ mysql> select ceil(-10.3);
 ```
 
 ### keywords
-	CEIL, DCEIL, CEILING
+	CEIL

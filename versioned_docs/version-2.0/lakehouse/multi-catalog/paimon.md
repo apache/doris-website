@@ -46,7 +46,6 @@ Paimon Catalog Currently supports two types of Metastore creation catalogs:
 > For versions 2.0.1 and earlier, please use the following `Create Catalog based on Hive Metastore`.
 
 #### HDFS
-
 ```sql
 CREATE CATALOG `paimon_hdfs` PROPERTIES (
     "type" = "paimon",
@@ -59,21 +58,17 @@ CREATE CATALOG `paimon_hdfs` PROPERTIES (
     "hadoop.username" = "hadoop"
 );
 
-CREATE CATALOG `paimon_kerberos` PROPERTIES (
-    'type'='paimon',
-    "warehouse" = "hdfs://HDFS8000871/user/paimon",
-    "dfs.nameservices" = "HDFS8000871",
-    "dfs.ha.namenodes.HDFS8000871" = "nn1,nn2",
-    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "172.21.0.1:4007",
-    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "172.21.0.2:4007",
-    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    'hadoop.security.authentication' = 'kerberos',
-    'hadoop.kerberos.keytab' = '/doris/hdfs.keytab',   
-    'hadoop.kerberos.principal' = 'hdfs@HADOOP.COM'
-);
 ```
 
 #### MINIO
+
+> Note that.
+>
+> user need download [paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
+>
+> Place it in directory ${DORIS_HOME}/be/lib/java_extensions/preload-extensions and restart be
+>
+> Starting from version 2.0.2, this file can be placed in BE's `custom_lib/` directory (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
 
 ```sql
 CREATE CATALOG `paimon_s3` PROPERTIES (
@@ -83,10 +78,17 @@ CREATE CATALOG `paimon_s3` PROPERTIES (
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk"
 );
-```
 
+```
 #### OBS
 
+> Note that.
+>
+> user need download [paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
+>
+> Place it in directory `${DORIS_HOME}/be/lib/java_extensions/preload-extensions` and restart be
+>
+> Starting from version 2.0.2, this file can be placed in BE's `custom_lib/` directory (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
 ```sql
 CREATE CATALOG `paimon_obs` PROPERTIES (
     "type" = "paimon",
@@ -119,6 +121,7 @@ CREATE CATALOG `paimon_oss` PROPERTIES (
     "oss.access_key" = "ak",
     "oss.secret_key" = "sk"
 );
+
 ```
 
 ### Creating a Catalog Based on Hive Metastore
@@ -137,22 +140,6 @@ CREATE CATALOG `paimon_hms` PROPERTIES (
     "hadoop.username" = "hadoop"
 );
 
-CREATE CATALOG `paimon_kerberos` PROPERTIES (
-    "type" = "paimon",
-    "paimon.catalog.type" = "hms",
-    "warehouse" = "hdfs://HDFS8000871/user/zhangdong/paimon2",
-    "hive.metastore.uris" = "thrift://172.21.0.44:7004",
-    "hive.metastore.sasl.enabled" = "true",
-    "hive.metastore.kerberos.principal" = "hive/xxx@HADOOP.COM",
-    "dfs.nameservices" = "HDFS8000871",
-    "dfs.ha.namenodes.HDFS8000871" = "nn1,nn2",
-    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "172.21.0.1:4007",
-    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "172.21.0.2:4007",
-    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "hadoop.security.authentication" = "kerberos",
-    "hadoop.kerberos.principal" = "hdfs@HADOOP.COM",
-    "hadoop.kerberos.keytab" = "/doris/hdfs.keytab"
-);
 ```
 
 ## Column Type Mapping
@@ -174,22 +161,4 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 | MapType                               | Map                       | Support Map nesting   |
 | ArrayType                             | Array                     | Support Array nesting |
 | VarBinaryType, BinaryType             | Binary                    |           |
-
-## FAQ
-
-1. Kerberos
-
-    - Make sure principal and keytab are correct.
-    - You need to start a scheduled task (such as crontab) on the BE node, and execute the `kinit -kt your_principal your_keytab` command every certain time (such as 12 hours).
-
-2. Unknown type value: UNSUPPORTED
-
-    This is a compatible issue exist in 2.0.2 with Paimon 0.5, you need to upgrade to 2.0.3 or higher to solve this problem. Or [patch](https://github.com/apache/doris/pull/24985) yourself.
-
-3. When accessing object storage (OSS, S3, etc.), encounter "file system does not support".
-
-     In versions before 2.0.5 (inclusive), users need to manually download the following jar package and place it in the `${DORIS_HOME}/be/lib/java_extensions/preload-extensions` directory, and restart BE.
-
-    - OSS: [paimon-oss-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-oss/0.6.0-incubating/paimon-oss-0.6.0-incubating.jar)
-    - Other Object Storage: [paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
 

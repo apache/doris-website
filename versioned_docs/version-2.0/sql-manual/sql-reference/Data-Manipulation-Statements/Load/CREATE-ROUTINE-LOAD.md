@@ -159,9 +159,9 @@ FROM data_source [data_source_properties]
 
      These three parameters represent:
 
-     1. The maximum execution time of each subtask, in seconds. Must be greater than or equal to 1. The default is 10.
+     1. The maximum execution time of each subtask, in seconds. The range is 1 to 60. Default is 10.
      2. The maximum number of lines read by each subtask. Must be greater than or equal to 200000. The default is 200000.
-     3. The maximum number of bytes read by each subtask. The unit is bytes and the range is 100MB to 10GB. The default is 100MB.
+     3. The maximum number of bytes read by each subtask. The unit is bytes and the range is 100MB to 1GB. The default is 100MB.
 
      These three parameters are used to control the execution time and processing volume of a subtask. When either one reaches the threshold, the task ends.
 
@@ -261,7 +261,6 @@ FROM data_source [data_source_properties]
 
   14. `enclose`
       When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field.
-      Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
 
   15. `escape`
       Used to escape characters that appear in a csv field identical to the enclosing characters. For example, if the data is "a,'b,'c'", enclose is "'", and you want "b,'c to be parsed as a field, you need to specify a single-byte escape character, such as "\", and then modify the data to "a,' b,\'c'".

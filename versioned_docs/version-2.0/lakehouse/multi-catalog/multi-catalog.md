@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Multi-Catalog Overview",
+    "title": "Multi-catalog Overview",
     "language": "en"
 }
 ---
@@ -27,7 +27,7 @@ under the License.
 
 # Overview
 
-Multi-Catalog is designed to make it easier to connect to external data catalogs to enhance Doris's data lake analysis and federated data query capabilities.
+Multi-catalog is designed to make it easier to connect to external data catalogs to enhance Doris's data lake analysis and federated data query capabilities.
 
 In older versions of Doris, user data is in a two-tiered structure: database and table. Thus, connections to external catalogs could only be done at the database or table level. For example, users could create a mapping to a table in an external catalog via `create external table`, or to a database via `create external database` . If there were large amounts of databases or tables in the external catalog, users would need to create mappings to them one by one, which could be a heavy workload.
 
@@ -98,12 +98,12 @@ For more information about Hive, please see [Hive](./hive.md).
 	
 	```
 	mysql> SHOW CATALOGS;
-	+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-	| CatalogId | CatalogName | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
-	+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
-	|     10024 | hive        | hms      | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
-	|         0 | internal    | internal |           | UNRECORDED              | NULL                | Doris internal catalog |
-	+-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
+	+-----------+-------------+----------+
+	| CatalogId | CatalogName | Type     |
+	+-----------+-------------+----------+
+	|     10024 | hive        | hms      |
+	|         0 | internal    | internal |
+	+-----------+-------------+----------+
 	```
 	
 	> Syntax Help: [SHOW CATALOGS](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/)

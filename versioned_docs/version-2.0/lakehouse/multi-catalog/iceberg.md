@@ -57,10 +57,6 @@ Use the Iceberg API to access metadata, and support services such as Hadoop File
 
 #### Hadoop Catalog
 
-> Note: The path of `warehouse` should point to the parent path of `Database` level.
->
-> Eg: If you path is like `s3://bucket/path/to/db1/table1`, the `warehouse` should be `s3://bucket/path/to/`
-
 ```sql
 CREATE CATALOG iceberg_hadoop PROPERTIES (
     'type'='iceberg',
@@ -82,17 +78,6 @@ CREATE CATALOG iceberg_hadoop_ha PROPERTIES (
 );
 ```
 
-```sql
-CREATE CATALOG iceberg_s3 PROPERTIES (
-    'type'='iceberg',
-    'iceberg.catalog.type' = 'hadoop',
-    'warehouse' = 's3://bucket/dir/key',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
-    's3.access_key' = 'ak',
-    's3.secret_key' = 'sk'
-);
-```
-
 #### Hive Metastore
 
 ```sql
@@ -111,8 +96,6 @@ CREATE CATALOG iceberg PROPERTIES (
 
 #### AWS Glue
 
-> When connecting Glue, if it's not on the EC2 environment, need copy the `~/.aws` from the EC2 environment to the current environment. And can also download and configure the [AWS Cli tools](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), which also creates the `.aws` directory under the current user directory.
-
 ```sql
 CREATE CATALOG glue PROPERTIES (
     "type"="iceberg",
@@ -123,9 +106,7 @@ CREATE CATALOG glue PROPERTIES (
 );
 ```
 
-1. For Iceberg properties, see [Iceberg Glue Catalog](https://iceberg.apache.org/docs/latest/aws/#glue-catalog).
-
-2. If you do not fill the credentials(`glue.access_key` and `glue.secret_key`) in glue catalog, the default DefaultAWSCredentialsProviderChain will be used, and it will read credentials and the system environment variables or instance profile properties on AWS EC2.
+For Iceberg properties, see [Iceberg Glue Catalog](https://iceberg.apache.org/docs/latest/aws/#glue-catalog)
 
 #### Alibaba Cloud DLF
 
@@ -231,4 +212,4 @@ You can use the `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read hist
 
 `SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;`
 
-In addition, you can use the [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg-meta.md) table function to query the snapshot information of the specified table.
+In addition, you can use the [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg_meta.md) table function to query the snapshot information of the specified table.

@@ -42,8 +42,6 @@ the position of the first character in the string from which the substring is to
 
 If len is less than 1, the result is the empty string.
 
-The function have a alias named `substr`.
-
 ### example
 
 ```
@@ -72,7 +70,7 @@ mysql> select substring('abc1', 5);
 +-----------------------------+
 | substring('abc1', 5)        |
 +-----------------------------+
-|                             |
+| NULL                        |
 +-----------------------------+
 
 mysql> select substring('abc1def', 2, 2);
@@ -84,4 +82,4 @@ mysql> select substring('abc1def', 2, 2);
 ```
 
 ### keywords
-    SUBSTRING, STRING, SUBSTR
+    SUBSTRING, STRING

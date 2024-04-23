@@ -78,9 +78,9 @@ Different types of brokers support different storage systems.
 
 ## Function provided by Broker
 
-1. [Broker Load](../data-operate/import/import-way/broker-load-manual)
-2. [Export](../data-operate/export/export-manual)
-3. [Backup](../admin-manual/data-admin/backup)
+1. [Broker Load](../data-operate/import/import-way/broker-load-manual.md)
+2. [Export](../data-operate/export/export-manual.md)
+3. [Backup](../admin-manual/data-admin/backup.md)
 
 ## Broker Information
 
@@ -222,8 +222,7 @@ Same as Apache HDFS
 ```
 
 #### Baidu Cloud OBS
-
-Currently, when using BOS, it is necessary to download and unzip the SDK, please refer the  [BOS HDFS Congif Manual](https://cloud.baidu.com/doc/BOS/s/fk53rav99), and then move the jar in the lib directory of the broker.
+Currently, when using BOS, it is necessary to download and unzip the [bos-hdfs-sdk-1.0.3-community.jar.zip](https://sdk.bce.baidu.com/console-sdk/bos-hdfs-sdk-1.0.3-community.jar.zip), and then move the jar in the lib directory of the broker.
 
 ```
 (

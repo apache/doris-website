@@ -39,25 +39,14 @@ under the License.
 
 Create table example:
 ```sql
-  -- after doris-2.1.1
-  create table a_table(
-      k1 int null,
-      k2 agg_state<max_by(int not null,int)> generic,
-      k3 agg_state<group_concat(string) generic
-  )
-  aggregate key (k1)
-  distributed BY hash(k1) buckets 3
-  properties("replication_num" = "1");  
-
-  -- until doris-2.1.0
-  create table a_table(
-      k1 int null,
-      k2 agg_state max_by(int not null,int),
-      k3 agg_state group_concat(string)
-  )
-  aggregate key (k1)
-  distributed BY hash(k1) buckets 3
-  properties("replication_num" = "1");
+    create table a_table(
+        k1 int null,
+        k2 agg_state max_by(int not null,int),
+        k3 agg_state group_concat(string)
+    )
+    aggregate key (k1)
+    distributed BY hash(k1) buckets 3
+    properties("replication_num" = "1");
 ```
 Here k2 and k3 use max_by and group_concat as aggregation types respectively.
 

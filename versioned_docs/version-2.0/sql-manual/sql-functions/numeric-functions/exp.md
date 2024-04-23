@@ -30,10 +30,6 @@ under the License.
 `DOUBLE exp(DOUBLE x)`
 Returns `x` raised to the base `e`.
 
-:::tip
-Another alias for this function is `dexp`.
-:::
-
 ### example
 
 ```
@@ -52,4 +48,4 @@ mysql> select exp(3.4);
 ```
 
 ### keywords
-	EXP, DEXP
+	EXP

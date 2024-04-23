@@ -26,9 +26,9 @@ under the License.
 
 # Broker Load
 
-Broker load is an asynchronous import method, and the supported data sources depend on the data sources supported by the [Broker](../../../advanced/broker) process.
+Broker load is an asynchronous import method, and the supported data sources depend on the data sources supported by the [Broker](../../../advanced/broker.md) process.
 
-Because the data in the Doris table is ordered, Broker load uses the doris cluster resources to sort the data when importing data. Complete massive historical data migration relative to Spark load, the Doris cluster resource usage is relatively large. , this method is used when the user does not have Spark computing resources. If there are Spark computing resources, it is recommended to use [Spark load](../../../data-operate/import/import-way/spark-load-manual).
+Because the data in the Doris table is ordered, Broker load uses the doris cluster resources to sort the data when importing data. Complete massive historical data migration relative to Spark load, the Doris cluster resource usage is relatively large. , this method is used when the user does not have Spark computing resources. If there are Spark computing resources, it is recommended to use [Spark load](../../../data-operate/import/import-way/spark-load-manual.md).
 
 Users need to create [Broker load](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD) import through MySQL protocol and import by viewing command to check the import result.
 
@@ -256,7 +256,7 @@ LOAD LABEL demo.label_20220402
         );
 ````
 
-The specific parameters here can refer to: [Broker](../../../advanced/broker.md) and [Broker Load](../../../sql-manual/sql-reference-v2 /Data-Manipulation-Statements/Load/BROKER-LOAD) documentation
+The specific parameters here can refer to: [Broker](../../../advanced/broker) and [Broker Load](../../../sql-manual/sql-reference-v2 /Data-Manipulation-Statements/Load/BROKER-LOAD) documentation
 
 ## View import status
 

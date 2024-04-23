@@ -224,7 +224,9 @@ INSERT INTO order_tbl (order_id, order_status) values (1,'Pending Delivery');
 
 ### Unique Key Merge-on-Write Implementation
 
-All rows in the same batch of data write tasks (whether load tasks or `INSERT INTO`) can only update the same columns. If you need to update different columns of data, you will need to write them in separate batches.
+In version 2.0, all rows in the same batch of data write tasks (whether load tasks or `INSERT INTO`) can only update the same columns. If you need to update different columns of data, you will need to write them in separate batches.
+
+In version 2.1, we will support more flexible column updates, allowing users to update different columns for each row within the same batch load.
 
 ### Aggregate Key Model
 

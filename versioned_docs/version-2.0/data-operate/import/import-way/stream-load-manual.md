@@ -40,7 +40,7 @@ In comparison to single-threaded load using `curl`, Doris Streamloader is a clie
 - **Resilience and continuity:** in case of partial load failures, it can resume data loading from the point of failure.
 - **Automatic retry mechanism:** in case of loading failures, it can automatically retry a default number of times. If the loading remains unsuccessful, it will print the command for manual retry.
 
-See [Doris Streamloader](https://doris.apache.org/docs/ecosystem/doris-streamloader) for detailed instructions and best practices.
+See [Doris Streamloader](https://doris.apache.org/docs/ecosystem/doris-streamloader/) for detailed instructions and best practices.
 :::
 
 ## Basic Principles
@@ -179,11 +179,9 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
   
 + format
 
-  Specify the import data format, support csv, json, arrow, the default is csv
+  Specify the import data format, support csv, json, the default is csv
 
-  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc.</version>
-
-  <version since="2.1.0">supports `arrow` format.</version>
+  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc</version>
 
 + exec\_mem\_limit
 
@@ -200,7 +198,6 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 + enclose
   
   When the csv data field contains row delimiters or column delimiters, to prevent accidental truncation, single-byte characters can be specified as brackets for protection. For example, the column separator is ",", the bracket is "'", and the data is "a,'b,c'", then "b,c" will be parsed as a field.
-  Note: when the bracket is `"`, trim\_double\_quotes must be set to true.
 
 + escape
 
@@ -310,7 +307,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 Examples：
 
 ```
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
+curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream("format" = "CSV", "column_separator" = "," ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
 ```
 
 ### Return results
@@ -408,10 +405,6 @@ By default, BE does not record Stream Load records. If you want to view records 
   The timeout time of the import task (in seconds) will be cancelled by the system if the import task is not completed within the set timeout time, and will become CANCELLED.
 
   At present, Stream load does not support custom import timeout time. All Stream load import timeout time is uniform. The default timeout time is 600 seconds. If the imported source file can no longer complete the import within the specified time, the FE parameter ```stream_load_default_timeout_second``` needs to be adjusted.
-
-+ enable\_pipeline\_load
-
-  Whether or not to enable the Pipeline engine to execute Streamload tasks. See the [Import](../load-manual) documentation.
 
 ### BE configuration
 

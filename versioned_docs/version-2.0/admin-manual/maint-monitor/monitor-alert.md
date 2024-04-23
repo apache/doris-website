@@ -84,10 +84,14 @@ jvm_young_size_bytes{type="max"} 907345920
 jvm_old_size_bytes{type="used"} 114633448
 jvm_old_size_bytes{type="peak_used"} 114633448
 jvm_old_size_bytes{type="max"} 7455834112
-# HELP  jvm_gc jvm gc stat
-# TYPE  jvm_gc gauge
-<GarbageCollector>{type="count"} 247
-<GarbageCollector>{type="time"} 860
+# HELP  jvm_young_gc jvm young gc stat
+# TYPE  jvm_young_gc gauge
+jvm_young_gc{type="count"} 247
+jvm_young_gc{type="time"} 860
+# HELP  jvm_old_gc jvm old gc stat
+# TYPE  jvm_old_gc gauge
+jvm_old_gc{type="count"} 3
+jvm_old_gc{type="time"} 211
 # HELP  jvm_thread jvm thread stat
 # TYPE  jvm_thread gauge
 jvm_thread{type="count"} 162
@@ -132,7 +136,7 @@ Please start building the monitoring system after you have completed the deploym
 
 Prometheus
 
-1. Download the latest version of Prometheus on the [Prometheus Website](https://prometheus.io/download/). Here we take version 2.43.0-linux-amd64 as an example.
+1. Download the latest version of Prometheus on the [Prometheus Website](https://prometheus.io/download/) or [click to download](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/prometheus-2.43.0.linux-amd64.tar.gz). Here we take version 2.43.0-linux-amd64 as an example.
 2. Unzip the downloaded tar file on the machine that is ready to run the monitoring service.
 3. Open the configuration file prometheus.yml. Here we provide an example configuration and explain it (the configuration file is in YML format, pay attention to uniform indentation and spaces):
 
@@ -199,7 +203,7 @@ Prometheus
 
 ### Grafana
 
-1. Download the latest version of Grafana on [Grafana's official website](https://grafana.com/grafana/download). Here we take version 8.5.22.linux-amd64 as an example.
+1. Download the latest version of Grafana on [Grafana's official website](https://grafana.com/grafana/download) or [click to download](https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/monitor/grafana-enterprise-8.5.22.linux-amd64.tar.gz). Here we take version 8.5.22.linux-amd64 as an example.
 
 2. Unzip the downloaded tar file on the machine that is ready to run the monitoring service.
 

@@ -50,7 +50,7 @@ $> cat /proc/cpuinfo
 model name  : Phytium,FT-2000+/64
 ```
 
-2. CentOS 7.9 or higher
+2. CentOS 8.4
 
 ```shell
 $> lsb_release -a
@@ -79,7 +79,7 @@ Codename:	AltArch
 ### Software Environment Installation Command
 
 <Tabs>
-  <TabItem value="CentOS 7.9" label="CentOS 7.9" default>
+  <TabItem value="CentOS 8.4" label="CentOS 8.4" default>
     <p>
 
 1. Create root directories for pacakges
@@ -638,4 +638,3 @@ If you still encounter problems when compiling or starting, please consult the [
   - Check if the ldb-toolchain environment variable is configured
   - Check that the gcc version matches the one recommended in the [compile-with-ldb-toolchain](./compilation-with-ldb-toolchain) documentation.
   - Delete the ldb directory after the `ldb_toolchain_gen.aarch64.sh` script is executed, re-execute and configure the environment variables, and verify the gcc version
-

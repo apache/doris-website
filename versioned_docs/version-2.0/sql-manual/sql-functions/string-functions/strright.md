@@ -32,8 +32,7 @@ under the License.
 `VARCHAR strright (VARCHAR str, INT len)`
 
 
-It returns the right part of a string of specified length, length is char length not the byte size. Another alias for this function is `right`.
-If the parameters contain a NULL value, the function will always return NULL. If the integer parameter is negative, the function will retrieve the portion of the string starting from the left and moving to the right, beginning at the absolute value of len.
+It returns the right part of a string of specified length, length is char length not the byte size. Another alias for this function is [right](./right.md).
 
 ### example
 
@@ -44,24 +43,6 @@ mysql> select strright("Hello doris",5);
 +-------------------------+
 | doris                   |
 +-------------------------+
-mysql> select strright("Hello doris",-7);
-+--------------------------+
-| strright('Hello doris', -7) |
-+--------------------------+
-| doris                    |
-+--------------------------+
-mysql> select strright("Hello doris",NULL);
-+----------------------------+
-| strright('Hello doris', NULL) |
-+----------------------------+
-| NULL                       |
-+----------------------------+
-mysql> select strright(NULL,5);
-+----------------+
-| strright(NULL, 5) |
-+----------------+
-| NULL           |
-+----------------+
 ```
 ### keywords
-    STRRIGHT, RIGHT
+    STRRIGHT

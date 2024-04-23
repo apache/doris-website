@@ -62,11 +62,6 @@ Java UDF provides users with a Java interface written in UDF to facilitate the e
 |```map<Type1,Type2>```|```HashMap<Type1,Type2>```|
 
 * Array/Map types can nested other types, Eg: In Doris: ```array<array<int>>``` corresponds to JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, and so on.
-
-:::caution Warning
-When creating a function, don't use `varchar` instead of `string`, otherwise the function may fail to execute.
-:::
-
 ## Write UDF functions
 
 This section mainly introduces how to develop a Java UDF. Samples for the Java version are provided under `samples/doris-demo/java-udf-demo/` for your reference, Check it out [here](https://github.com/apache/incubator-doris/tree/master/samples/doris-demo/java-udf-demo)
@@ -76,14 +71,6 @@ To use Java UDF, the main entry of UDF must be the `evaluate` function. This is 
 It is worth mentioning that this example is not only the Java UDF supported by Doris, but also the UDF supported by Hive, that's to say, for users, Hive UDF can be directly migrated to Doris.
 
 ## Create UDF
-
-```JAVA
- public class AddOne extends UDF {
-     public Integer evaluate(Integer value) {
-         return value == null ? null : value + 1;
-     }
- }
- ```
 
 ```sql
 CREATE FUNCTION 
@@ -332,40 +319,11 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
-<version since="2.1">
-
-## Create UDTF
-<br/>
-UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of Array type.
-Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
-
-```JAVA
-public class UDTFStringTest {
-    public ArrayList<String> evaluate(String value, String separator) {
-        if (value == null || separator == null) {
-            return null;
-        } else {
-            return new ArrayList<>(Arrays.asList(value.split(separator)));
-        }
-    }
-}
-```
-
-```sql
-CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
-
-<br/>
 
 * The implemented jar package can be stored at local or in a remote server and downloaded via http, And each BE node must be able to obtain the jar package;
 Otherwise, the error status message "Couldn't open file..." will be returned
 
-
+Currently, UDTF are not supported.
 
 <br/>
 
@@ -384,7 +342,7 @@ Examples of Java UDF are provided in the `samples/doris-demo/java-udf-demo/` dir
 
 ## Instructions
 1. Complex data types (HLL, bitmap) are not supported.
-2. Currently, users are allowed to specify the maximum heap size of the JVM. The configuration item is the -Xmx part of JAVA_OPTS in be.conf. The default is 1024m. If you need to aggregate data, it is recommended to increase it to increase performance and reduce the risk of memory overflow.
+2. Currently, users are allowed to specify the maximum heap size of the JVM themselves. The configuration item is jvm_ max_ heap_ size. The configuration item is in the global configuration file 'be.conf' under the installation directory of the BE. The default value is 512M. If data aggregation is required, it is recommended to increase the value to improve performance and reduce the risk of memory overflow.
 3. The udf of char type needs to use the String type when creating a function.
 4. Due to the problem that the jvm loads classes with the same name, do not use multiple classes with the same name as udf implementations at the same time. If you want to update the udf of a class with the same name, you need to restart be to reload the classpath.
 

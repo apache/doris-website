@@ -46,15 +46,18 @@ WHERE
 column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
+<version since="dev">
+
 Syntax 2：This syntax can only used on UNIQUE KEY model
 
 ```sql
-[cte]
 DELETE FROM table_name
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
     WHERE condition
 ```
+
+</version>
 
 #### Required Parameters
 
@@ -62,14 +65,24 @@ DELETE FROM table_name
 + column_name: column belong to table_name
 + op: Logical comparison operator, The optional types of op include: =, >, <, >=, <=, !=, in, not in
 + value | value_list: value or value list used for logial comparison
+
+<version since="dev">
+
 + WHERE condition: Specifies a condition to use to select rows for removal
+
+</version>
+
 
 #### Optional Parameters
 
-+ cte: Common Table Expression, e.g. 'WITH a AS SELECT * FROM tbl'.
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specifies the partition or partitions to select rows for removal
+
+<version since="dev">
+
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
+
+</version>
 
 #### Note
 
@@ -101,6 +114,8 @@ DELETE FROM table_name
    DELETE FROM my_table PARTITIONS (p1, p2)
    WHERE k1 >= 3 AND k2 = "abc";
    ````
+
+<version since="dev">
 
 4. use the result of `t2` join `t3` to romve rows from `t1`,delete table only support unique key model
 
@@ -157,46 +172,7 @@ DELETE FROM table_name
    +----+----+----+--------+------------+
    ```
 
-5. using cte
-
-   ```sql
-   create table orders(
-    o_orderkey bigint,
-    o_totalprice decimal(15, 2)
-   ) unique key(o_orderkey)
-   distributed by hash(o_orderkey) buckets 1
-   properties (
-   "replication_num" = "1"
-   );
-   
-   insert into orders values
-   (1, 34.1),
-   (2, 432.8);
-   
-   create table lineitem(
-   l_linenumber int,
-   o_orderkey bigint,
-   l_discount  decimal(15, 2)
-   ) unique key(l_linenumber)
-   distributed by hash(l_linenumber) buckets 1
-   properties (
-   "replication_num" = "1"
-   );
-   
-   insert into lineitem values
-   (1, 1, 1.23),
-   (2, 1, 3.21),
-   (3, 2, 18.08),
-   (4, 2, 23.48);
-   
-   with discount_orders as (
-   select * from orders
-   where o_totalprice > 100
-   )
-   delete from lineitem
-   using discount_orders
-   where lineitem.o_orderkey = discount_orders.o_orderkey;
-   ```
+</version>
 
 ### Keywords
 

@@ -27,19 +27,6 @@ under the License.
 
 # FAQ
 
-## Certificates
-
-1. If an error is reported: `curl 77: Problem with the SSL CA cert.`, need update your certificate.
-   - Download the latest certificate from `https://curl.haxx.se/docs/caextract.html`.
-   - Place the downloaded cacert-xxx.pem in the `/etc/ssl/certs/` directory. For example: `sudo cp cacert-xxx.pem  /etc/ssl/certs/ca-certificates.crt`.
-
-2. If an error is reported: `ERROR 1105 (HY000): errCode = 2, detailMessage = (x.x.x.x)[CANCELLED][INTERNAL_ERROR]error setting certificate verify locations:  CAfile: /etc/ssl/certs/ca-certificates.crt CApath: none`.
-
-```
-yum install -y ca-certificates
-ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-certificates.crt
-```
-
 ## Kerberos
 
 
@@ -71,11 +58,6 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     - The principal used must exist in the klist, use `klist -kt your.keytab` to check.
     - Ensure the catalog configuration correct, such as missing the `yarn.resourcemanager.principal`.
     - If the preceding checks are correct, the JDK version installed by yum or other package-management utility in the current system maybe have an unsupported encryption algorithm. It is recommended to install JDK by yourself and set `JAVA_HOME` environment variable.
-    - Kerberos uses AES-256 by default for encryption. If you use Oracle JDK, you must install JCE. In the case of OpenJDK, some distributions of OpenJDK automatically provide the JCE Unlimited Strength Jurisdiction Policy Files, so it's not need to install JCE.
-    - The JCE version corresponds to the JDK version. You need to select the JCE according to the JDK version. Download the JCE zip package and decompress it into `$JAVA_HOME/jre/lib/security`:
-       - JDK6：[JCE6](http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html)
-       - JDK7：[JCE7](http://www.oracle.com/technetwork/java/embedded/embedded-se/downloads/jce-7-download-432124.html)
-       - JDK8：[JCE8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
 
 5. An error is reported when using KMS to access HDFS: `java.security.InvalidKeyException: Illegal key size`
    
@@ -286,27 +268,6 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
      `HedgedReadWins`: The number of successful Hedged Reads (numbers initiated and returned faster than the original request)
 
      Note that the value here is the cumulative value of a single HDFS Client, not the value of a single query. The same HDFS Client will be reused by multiple queries.
-
-3. `Couldn't create proxy provider class org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider`
-
-    In the start scripts of FE and BE, the environment variable `HADOOP_CONF_DIR` will be added to CLASSPATH. If `HADOOP_CONF_DIR` is set incorrectly, such as pointing to a non-existent path or an incorrect path, the wrong xxx-site.xml file may be loaded and incorrect information may be read.
-
-    You need to check whether `HADOOP_CONF_DIR` is configured correctly, or unset this environment variable.
-
-4. `BlockMissingExcetpion: Could not obtain block: BP-XXXXXXXXX No live nodes contain current block`
-
-    Possible solutions include:
-    - Use `hdfs fsck file -files -blocks -locations` to check if the file is healthy.
-    - Use telnet to check connectivity with the DataNode.
-    - Check the DataNode logs.
-
-    If encountering the following error:
-    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`.
-    It indicates that HDFS is configured for encrypted transmission while the client is not, causing the error.
-
-    You can use any of the following solutions:
-    - Copying hdfs-site.xml and core-site.xml to the be/conf and fe/conf directories. (Recommended)
-    - In hdfs-site.xml, find the corresponding configuration `dfs.data.transfer.protection`, and set this parameter in the catalog.
 
 ## DLF Catalog
 

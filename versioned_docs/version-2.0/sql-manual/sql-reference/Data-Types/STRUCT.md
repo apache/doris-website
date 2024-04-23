@@ -62,7 +62,7 @@ DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 We have a todo list for future version:
 
 ```
-TODO: Supports nested Struct or other complex types
+TODO:支持嵌套 STRUCT 或其他的复杂类型
 ```
 
 ### example

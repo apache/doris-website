@@ -30,6 +30,8 @@ under the License.
 
 SHOW workload GROUPS
 
+<version since="dev"></version>
+
 ### Description
 
 This statement is used to display the resource groups for which the current user has usage_priv privileges.
@@ -37,7 +39,7 @@ This statement is used to display the resource groups for which the current user
 grammar:
 
 ```sql
-SHOW WORKLOAD GROUPS [LIKE "pattern"];
+SHOW workload GROUPS;
 ```
 
 Description:
@@ -61,21 +63,8 @@ This statement only does a simple display of workload groups, for a more complex
     +----------+--------+--------------------------+---------+
     ```
 
-2. Show workload groups using pattern
-    
-    ```sql
-    mysql> show workload groups like "normal%";
-    +----------+--------+--------------------------+---------+
-    | Id       | Name   | Item                     | Value   |
-    +----------+--------+--------------------------+---------+
-    | 10343386 | normal | cpu_share                | 10      |
-    | 10343386 | normal | memory_limit             | 30%     |
-    | 10343386 | normal | enable_memory_overcommit | true    |
-    +----------+--------+--------------------------+---------+
-    ```
-
 ### Keywords
 
-    SHOW, WORKLOAD, GROUPS, GROUP
+    SHOW, workload, GROUPS, GROUP
 
 ### Best Practice
