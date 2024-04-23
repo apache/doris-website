@@ -294,6 +294,7 @@
                 "ecosystem/audit-plugin",
                 "ecosystem/cloudcanal",
                 "ecosystem/hive-bitmap-udf",
+                "ecosystem/hive-hll-udf",
                 "ecosystem/dbt-doris-adapter",
                 {
                     "type": "category",

@@ -24,13 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Java UDF
-
-<version since="1.2.0">
-
-Java UDF
-
-</version>
 
 Java UDF provides users with a Java interface written in UDF to facilitate the execution of user-defined functions in Java language. Compared with native UDF implementation, Java UDF has the following advantages and limitations:
 1. The advantages
@@ -42,7 +35,7 @@ Java UDF provides users with a Java interface written in UDF to facilitate the e
 * Performance: Compared with native UDF, Java UDF will bring additional JNI overhead, but through batch execution, we have minimized the JNI overhead as much as possible.
 * Vectorized engine: Java UDF is only supported on vectorized engine now.
 
-### Type correspondence
+## Type correspondence
 
 |Type|UDF Argument Type|
 |----|---------|
@@ -92,6 +85,15 @@ Instructions:
 5. `name`: A function belongs to a DB and name is of the form`dbName`.`funcName`. When `dbName` is not explicitly specified, the db of the current session is used`dbName`.
 
 Sample：
+
+```JAVA
+public class AddOne extends UDF {
+    public Integer evaluate(Integer value) {
+        return value == null ? null : value + 1;
+    }
+}
+```
+
 ```sql
 CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
     "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
@@ -105,10 +107,10 @@ CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
 * The "always_nullable" is optional attribute, if there is special treatment for the NULL value in the calculation, it is determined that the result will not return NULL, and it can be set to false, so that the performance may be better in the whole calculation process.
 
 * If you use the local path method, the jar package that the database driver depends on, the FE and BE nodes must be placed here
+
 ## Create UDAF
-<br/>
 When using Java code to write UDAF, there are some functions that must be implemented (mark required) and an inner class State, which will be explained with a specific example below.
-The following SimpleDemo will implement a simple function similar to sum, the input parameter is INT, and the output parameter is INT
+The following SimpleDemo will implement a simple function similar to sum, the input parameter is INT, and the output parameter is INT.
 
 ```JAVA
 package org.apache.doris.udf.demo;
@@ -324,13 +326,35 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
+## Create UDTF
+
+UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of Array type.
+Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
+
+```JAVA
+public class UDTFStringTest {
+    public ArrayList<String> evaluate(String value, String separator) {
+        if (value == null || separator == null) {
+            return null;
+        } else {
+            return new ArrayList<>(Arrays.asList(value.split(separator)));
+        }
+    }
+}
+```
+
+```sql
+CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    "file"="file:///pathTo/java-udaf.jar",
+    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+);
+```
 
 * The implemented jar package can be stored at local or in a remote server and downloaded via http, And each BE node must be able to obtain the jar package;
 Otherwise, the error status message "Couldn't open file..." will be returned
 
-Currently, UDTF are not supported.
-
-<br/>
 
 ## Use UDF
 
