@@ -24,14 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Java UDF
-
-<version since="1.2.0">
-
-Java UDF
-
-</version>
-
 Java UDF provides users with a Java interface written in UDF to facilitate the execution of user-defined functions in Java language. Compared with native UDF implementation, Java UDF has the following advantages and limitations:
 1. The advantages
 * Compatibility: Using Java UDF can be compatible with different Doris versions, so when upgrading Doris version, Java UDF does not need additional migration. At the same time, Java UDF also follows the same programming specifications as hive / spark and other engines, so that users can directly move Hive / Spark UDF jar to Doris.
@@ -113,10 +105,11 @@ CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
 * The "always_nullable" is optional attribute, if there is special treatment for the NULL value in the calculation, it is determined that the result will not return NULL, and it can be set to false, so that the performance may be better in the whole calculation process.
 
 * If you use the local path method, the jar package that the database driver depends on, the FE and BE nodes must be placed here
+
 ## Create UDAF
-<br/>
+
 When using Java code to write UDAF, there are some functions that must be implemented (mark required) and an inner class State, which will be explained with a specific example below.
-The following SimpleDemo will implement a simple function similar to sum, the input parameter is INT, and the output parameter is INT
+The following SimpleDemo will implement a simple function similar to sum, the input parameter is INT, and the output parameter is INT.
 
 ```JAVA
 package org.apache.doris.udf.demo;
@@ -332,10 +325,8 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
-<version since="2.1">
-
 ## Create UDTF
-<br/>
+
 UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of Array type.
 Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
 
@@ -360,14 +351,8 @@ CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIE
 );
 ```
 
-<br/>
-
 * The implemented jar package can be stored at local or in a remote server and downloaded via http, And each BE node must be able to obtain the jar package;
-Otherwise, the error status message "Couldn't open file..." will be returned
-
-
-
-<br/>
+Otherwise, the error status message "Couldn't open file..." will be returned.
 
 ## Use UDF
 
