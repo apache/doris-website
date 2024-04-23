@@ -41,8 +41,9 @@ export default function ConnectBlock() {
                         </div> */}
                         <div className="home-page-text">数据库连接</div>
                     </a>
-
+                    <div></div>
                 </div>
+
 
 
             </div>

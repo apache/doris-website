@@ -43,9 +43,48 @@ export default function PageHero() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div>
-                            <div>技术论坛</div>
+                            <div>数据模型</div>
                         </div>
-                        <div>讨论技术问题、收获技术经验</div>
+                        <div>了解数据模型应对不同业务场景</div>
+                    </a>
+                </div>
+
+                <div className="home-page-hero-right">
+                    <a className="home-page-hero-button" href="../../get-starting/what-is-apache-doris">
+                        <div className="home-page-hero-button-title">
+                            <div className="home-page-hero-button-icon">
+                                <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path className="icon-svg" d="M18.19 11.13l-6.02 8.68c-.13.17-.4.08-.4-.13v-5.73c0-.43-.35-.77-.77-.77H5.97c-.18 0-.28-.2-.18-.35l6.01-8.69c.12-.18.39-.09.39.12V9.98c0 .42.34.76.76.76h5.02c.17 0 .27.19.17.34Zm1.26.87c.8-1.17-.03-2.76-1.45-2.76h-5.03l.76.76V4.277c0-1.73-2.22-2.42-3.2-1.01l-6.02 8.68c-.81 1.16.02 2.75 1.44 2.75h5.02l-.77-.77v5.72c0 1.72 2.21 2.41 3.19 1l6.01-8.69Z"></path>
+                                    <path fill="none" d="M0 0h24v24H0Z"></path>
+                                </svg>
+                            </div>
+                            <div>分区分桶</div>
+                        </div>
+                        <div>介绍建表和数据划分</div>
+                    </a>
+                    <a className="home-page-hero-button" href="/docs/en/getting-started/quick-start">
+                        <div className="home-page-hero-button-title">
+                            <div className="home-page-hero-button-icon">
+                                <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path className="icon-svg" d="M18.19 11.13l-6.02 8.68c-.13.17-.4.08-.4-.13v-5.73c0-.43-.35-.77-.77-.77H5.97c-.18 0-.28-.2-.18-.35l6.01-8.69c.12-.18.39-.09.39.12V9.98c0 .42.34.76.76.76h5.02c.17 0 .27.19.17.34Zm1.26.87c.8-1.17-.03-2.76-1.45-2.76h-5.03l.76.76V4.277c0-1.73-2.22-2.42-3.2-1.01l-6.02 8.68c-.81 1.16.02 2.75 1.44 2.75h5.02l-.77-.77v5.72c0 1.72 2.21 2.41 3.19 1l6.01-8.69Z"></path>
+                                    <path fill="none" d="M0 0h24v24H0Z"></path>
+                                </svg>
+                            </div>
+                            <div>数据导入</div>
+                        </div>
+                        <div>了解多种数据导入方案</div>
+                    </a>
+                    <a className="home-page-hero-button" href="https://ask.selectdb.com/">
+                        <div className="home-page-hero-button-title">
+                            <div className="home-page-hero-button-icon">
+                                <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path className="icon-svg" d="M18.19 11.13l-6.02 8.68c-.13.17-.4.08-.4-.13v-5.73c0-.43-.35-.77-.77-.77H5.97c-.18 0-.28-.2-.18-.35l6.01-8.69c.12-.18.39-.09.39.12V9.98c0 .42.34.76.76.76h5.02c.17 0 .27.19.17.34Zm1.26.87c.8-1.17-.03-2.76-1.45-2.76h-5.03l.76.76V4.277c0-1.73-2.22-2.42-3.2-1.01l-6.02 8.68c-.81 1.16.02 2.75 1.44 2.75h5.02l-.77-.77v5.72c0 1.72 2.21 2.41 3.19 1l6.01-8.69Z"></path>
+                                    <path fill="none" d="M0 0h24v24H0Z"></path>
+                                </svg>
+                            </div>
+                            <div>集群升级</div>
+                        </div>
+                        <div>滚动升级，无需节点全部停机</div>
                     </a>
                 </div>
             </div>

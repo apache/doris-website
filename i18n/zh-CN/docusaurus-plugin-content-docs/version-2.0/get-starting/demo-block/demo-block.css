@@ -26,7 +26,7 @@
     height: fit-content;
     width: 200px;
     margin-right: 16px;
-    padding: 8px 8px 8px 0;
+    padding: 12px 8px 8px 0;
     font-weight: 500;
 }
 
@@ -35,8 +35,8 @@
 .home-page-section {
     border-bottom: 1px solid var(--click-color-stroke);
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;
+    /* justify-content: space-between; */
     /* padding-bottom: 2rem; */
     /* padding-top: 2rem */
 }
@@ -119,18 +119,14 @@ img.home-svg svg path {
 
 .home-page-option {
     display: flex;
-    width: 230px
+    /* width: 230px */
 }
 
 .home-page-button-container:first-child {
     margin-bottom: 4px
 }
 
-.home-page-section {
-    flex-direction: column;
-    /* padding-bottom: 2rem; */
-    /* padding-top: 2rem */
-}
+
 
 .home-page-section-left {
     margin-bottom: 0;

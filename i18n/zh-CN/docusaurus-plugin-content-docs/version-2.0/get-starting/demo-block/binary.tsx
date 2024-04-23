@@ -2,7 +2,7 @@ import React from 'react';
 import './demo-block.css';
 
 
-export default function InstallBlock() {
+export default function BinaryBlock() {
     return (
         <div className="home-page-section">
             <div className="home-page-section-left">
@@ -17,7 +17,7 @@ export default function InstallBlock() {
                             <path fill="none" d="M0 0h24v24H0Z" />
                         </svg>
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>安装部署</div>
+                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>源码编译</div>
                 </div>
 
                 {/* <div style={{ marginBottom: 30, fontSize: 14 }}>了解 Apache Doris，快速安装最新稳定稳定版本</div> */}
@@ -31,26 +31,20 @@ export default function InstallBlock() {
                     <div className="home-page-button-container">
                         <a
                             className="home-page-option-button"
-                            href="../../install/cluster-deployment/standard-deployment"
+                            href="../../install/source-install/compilation-with-docker"
                         >
-                            <div className="home-page-text">手动部署</div>
+                            <div className="home-page-text">使用 Docker 开发编译</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Docker 部署</div>
+                        <a className="home-page-option-button" href="../../install/source-install/compilation-with-ldb-toolchain">
+                            <div className="home-page-text">使用 LDB Toolchain 编译</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">K8s 部署</div>
+                        <a className="home-page-option-button" href="../../install/source-install/compilation-with-ldb-toolchain">
+                            <div className="home-page-text">在其他平台上的编译</div>
                         </a>
 
                     </div>
-                    <div>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Doris on AWS</div>
-                        </a>
-                    </div>
-
-
                 </div>
+
             </div>
         </div>
 
