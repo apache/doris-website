@@ -77,6 +77,14 @@ It is worth mentioning that this example is not only the Java UDF supported by D
 
 ## Create UDF
 
+```JAVA
+ public class AddOne extends UDF {
+     public Integer evaluate(Integer value) {
+         return value == null ? null : value + 1;
+     }
+ }
+ ```
+
 ```sql
 CREATE FUNCTION 
 name ([,...])
@@ -324,11 +332,40 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
+<version since="2.1">
+
+## Create UDTF
+<br/>
+UDTF functions, like UDF functions, require users to implement an `evaluate` method. However, the return value of a UDTF function must be of Array type.
+Additionally, in Doris, table functions behave differently depending on the _outer suffix. You can refer to the [OUTER-Combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
+
+```JAVA
+public class UDTFStringTest {
+    public ArrayList<String> evaluate(String value, String separator) {
+        if (value == null || separator == null) {
+            return null;
+        } else {
+            return new ArrayList<>(Arrays.asList(value.split(separator)));
+        }
+    }
+}
+```
+
+```sql
+CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    "file"="file:///pathTo/java-udaf.jar",
+    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+);
+```
+
+<br/>
 
 * The implemented jar package can be stored at local or in a remote server and downloaded via http, And each BE node must be able to obtain the jar package;
 Otherwise, the error status message "Couldn't open file..." will be returned
 
-Currently, UDTF are not supported.
+
 
 <br/>
 
