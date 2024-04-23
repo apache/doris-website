@@ -14,11 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 ## WINDOW FUNCTION LAST_VALUE
 ### description
 
-:::info Note
-Since 2.0.9 , the ignore_null usage is supported
-:::
-
-LAST_VALUE() returns the last value in the window range . Opposite of FIRST_VALUE() . ignore_null determines whether to ignore null values , the ignore_null of default value is false .
+LAST_VALUE() returns the last value in the window range . Opposite of FIRST_VALUE() , ignore_null determines whether to ignore null values , the ignore_null of default value is false .
 
 ```sql
 LAST_VALUE(expr[, ignore_null]) OVER(partition_by_clause order_by_clause [window_clause])

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Load Balancing",
+    "title": "load balancing",
     "language": "en"
 }
 
@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# load balancing
 
 When deploying multiple FE nodes, users can deploy a load balancing layer on top of multiple FEs to achieve high availability of Doris.
 
@@ -83,7 +83,7 @@ tcp        0      0 0.0.0.0:6033            0.0.0.0:*               LISTEN
 
 ProxySQL has a configuration file `/etc/proxysql.cnf` and a configuration database file `/var/lib/proxysql/proxysql.db`. **Special attention is needed here**: If there is a `"proxysql.db"` file (under the `/var/lib/proxysql` directory), the ProxySQL service will only be read when it is started for the first time The `proxysql.cnf file` and parse it; after startup, the `proxysql.cnf` file will not be read! If you want the configuration in the proxysql.cnf file to take effect after restarting the proxysql service (that is, you want proxysql to read and parse the proxysql.cnf configuration file when it restarts), you need to delete `/var/lib/proxysql/proxysql first. db`database file, and then restart the proxysql service. This is equivalent to initializing the proxysql service, and a pure proxysql.db database file will be produced again (if proxysql related routing rules, etc. are configured before, it will be erased)
 
-**View and modify configuration files**
+#### View and modify configuration files
 
 Here are mainly a few parameters, which have been commented out below, and you can modify them according to your needs
 
@@ -138,7 +138,7 @@ mysql_replication_hostgroups=
 )
 ```
 
-**Connect to the ProxySQL management port test**
+#### Connect to the ProxySQL management port test
 
 ```sql
 # mysql -uadmin -padmin -P6032 -hdoris01
@@ -187,7 +187,7 @@ MySQL [main]> show tables;
 20 rows in set (0.000 sec)
 ```
 
-**ProxySQL configuration backend Doris FE**
+#### ProxySQL configuration backend Doris FE
 
 Use the insert statement to add the host to the mysql_servers table, where: hostgroup_id is 10 for the write group, and 20 for the read group. We don't need to read and write the license here, and it doesn't matter which one can be set randomly.
 
@@ -261,7 +261,7 @@ MySQL [(none)]> save mysql servers to disk;
 Query OK, 0 rows affected (0.348 sec)
 ```
 
-**Monitor Doris FE node configuration**
+#### Monitor Doris FE node configuration
 
 After adding doris fe nodes, you also need to monitor these back-end nodes. For multiple FE high-availability load balancing environments on the backend, this is necessary because ProxySQL needs to be automatically adjusted by the read_only value of each node
 
@@ -294,7 +294,7 @@ Query OK, 94 rows affected (0.079 sec)
  
 Verify the monitoring results: The indicators of the ProxySQL monitoring module are stored in the log table of the monitor library.
 The following is the monitoring of whether the connection is normal (monitoring of connect indicators):
-Note: There may be many connect_errors, this is because there is an error when the monitoring information is not configured. After the configuration, if the result of connect_error is NULL, it means normal。
+Note: There may be many connect_errors, this is because there is an error when the monitoring information is not configured. After the configuration, if the result of connect_error is NULL, it means normal.
 MySQL [(none)]> select * from mysql_server_connect_log;
 +---------------+------+------------------+-------------------------+---------------+
 | hostname      | port | time_start_us    | connect_success_time_us | connect_error |
@@ -330,7 +330,7 @@ MySQL [(none)]> select * from mysql_server_read_only_log;
 Empty set (0.000 sec)
 
 All 3 nodes are in the group with hostgroup_id=10.
-Now, load the modification of the mysql_replication_hostgroups table just now to RUNTIME to take effect。
+Now, load the modification of the mysql_replication_hostgroups table just now to RUNTIME to take effect.
 MySQL [(none)]> load mysql servers to runtime;
 Query OK, 0 rows affected (0.003 sec)
  
@@ -349,7 +349,7 @@ MySQL [(none)]> select hostgroup_id,hostname,port,status,weight from mysql_serve
 3 rows in set (0.000 sec)
 ```
 
-**Configure Doris users**
+#### Configure Doris users
 
 All the above configurations are about the back-end Doris FE node. Now you can configure the SQL statements, including: the user who sends the SQL statement, the routing rules of the SQL statement, the cache of the SQL query, the rewriting of the SQL statement, and so on.
 
@@ -426,7 +426,7 @@ Query OK, 0 rows affected (0.123 sec)
 In this way, you can use the doris username and password to connect to ProxySQL through the sql client
 ```
 
-**Connect to Doris through ProxySQL for testing**
+#### Connect to Doris through ProxySQL for testing
 
 Next, use the root user and doris user to test whether they can be routed to the default hostgroup_id=10 (it is a write group) to read data. The following is connected through the forwarding port 6033, the connection is forwarded to the real back-end database!
 
@@ -543,7 +543,7 @@ cd /usr/local/nginx
 /usr/local/nginx/sbin/nginx -c conf.d/default.conf
 ```
 
-### Verify
+### verify
 
 ```
 mysql -uroot -P6030 -h172.31.7.119

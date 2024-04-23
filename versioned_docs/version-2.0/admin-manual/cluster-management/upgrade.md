@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cluster Upgrade",
+    "title": "Cluster upgrade",
     "language": "en"
 }
 ---
@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Cluster upgrade
 
 ## Overview
 
@@ -32,45 +33,68 @@ To upgrade, please use the steps recommended in this chapter to upgrade the clus
 ## Doris Release Notes
 
 :::tip
-When upgrading Doris, please follow the principle of **not skipping two minor versions** and upgrade sequentially.
 
-For example, if you are upgrading from version 0.15.x to 2.0.x, it is recommended to first upgrade to the latest version of 1.1, then upgrade to the latest version of 1.2, and finally upgrade to the latest version of 2.0.
+For Doris upgrade, please follow the principle of **Do not upgrade across two or more key node versions**. If you want to upgrade across multiple key node versions, first upgrade to the nearest key node version, and then upgrade in turn. If it is not critical node version, it can be ignored and skipped.
+
+Key node version: the version that must be experienced when upgrading, it may be a single version, or a version range, such as `1.1.3 - 1.1.5`, it means that you can continue to upgrade after upgrading to any version in this range .
+
 :::
 
+| Version number | Key node version | LTS version |
+| ------------------------ | ------------ | -------- |
+| 0.12.x | Yes | No |
+| 0.13.x | Yes | No |
+| 0.14.x | Yes | No |
+| 0.15.x | Yes | No |
+| 1.0.0 - 1.1.2 | No | No |
+| 1.1.3 - 1.1.5 | Yes | 1.1-LTS |
+| 1.2.0 - 1.2.5 | Yes | 1.2-LTS |
+| 2.0.0-alpha - 2.0.0-beta | Yes | 2.0-LTS |
 
-## Upgrade Steps
+Example:
+
+The current version is `0.12`, upgrade route to `2.0.0-beta` version
+
+`0.12` -> `0.13` -> `0.14` -> `0.15` -> `1.1.3 - 1.1.5` any version -> `1.2.0 - 1.2.5` any version -> `2.0.0 -beta`
+
+:::tip
+
+LTS version: Long-time Support, LTS version provides long-term support and will be maintained for more than six months. Generally speaking, the version with the larger third digit of the version number is more stable**.
+
+Alpha version: an internal test version, the function has not been fully determined, and there may be major bugs. It is only recommended to use the test cluster for testing, ** it is not recommended to use the production cluster! **
+
+Beta version: public test version, the function has been basically confirmed, there may be non-major bugs, it is only recommended to use the test cluster for testing, ** it is not recommended to use the production cluster! **
+
+Release version: a public release version, which has completed the repair of basic important bugs and verification of functional defect fixes, and is recommended for production clusters.
+
+:::
+
+## Upgrade steps
 
 ### Upgrade Instructions
 
 1. During the upgrade process, since Doris's RoutineLoad, Flink-Doris-Connector, and Spark-Doris-Connector have implemented a retry mechanism in the code, in a multi-BE node cluster, the rolling upgrade will not cause the task to fail .
-
 2. The StreamLoad task requires you to implement a retry mechanism in your own code, otherwise the task will fail.
-
 3. The cluster copy repair and balance function must be closed before and opened after the completion of a single upgrade task, regardless of whether all your cluster nodes have been upgraded.
 
-### Overview of the Upgrade Process
+### Overview of the upgrade process
 
 1. Metadata backup
-
 2. Turn off the cluster copy repair and balance function
-
 3. Compatibility testing
-
 4. Upgrade BE
-
 5. Upgrade FE
-
 6. Turn on the cluster replica repair and balance function
 
-### Upgrade Pre-work
+### Upgrade pre-work
 
 Please perform the upgrade in sequence according to the upgrade process
 
-**01 Metadata Backup (Important)**
+#### metadata backup (important)
 
-**Make a full backup of the `doris-meta` directory of the FE-Master node!**
+** Make a full backup of the `doris-meta` directory of the FE-Master node! **
 
-**02 Turn off the cluster replica repair and balance function**
+#### Turn off the cluster replica repair and balance function
 
 There will be node restart during the upgrade process, so unnecessary cluster balancing and replica repair logic may be triggered, first close it with the following command:
 
@@ -80,32 +104,34 @@ admin set frontend config("disable_colocate_balance" = "true");
 admin set frontend config("disable_tablet_scheduler" = "true");
 ```
 
-**03 Compatibility Testing**
+#### Compatibility testing
 
-:::caution Warning 
+:::tip
 
-**Metadata compatibility is very important, if the upgrade fails due to incompatible metadata, it may lead to data loss! It is recommended to perform a metadata compatibility test before each upgrade!**
+**Metadata compatibility is very important, if the upgrade fails due to incompatible metadata, it may lead to data loss! It is recommended to perform a metadata compatibility test before each upgrade! **
 
 :::
 
-1. FE Compatibility Test
+##### FE Compatibility Test
 
-:::tip Important
+:::tip
+
+**important**
+
 1. It is recommended to do FE compatibility test on your local development machine or BE node.
 
 2. It is not recommended to test on Follower or Observer nodes to avoid link exceptions
-
 3. If it must be on the Follower or Observer node, the started FE process needs to be stopped
+
 :::
 
-
-a. Use the new version alone to deploy a test FE process
+1. Use the new version alone to deploy a test FE process
 
     ```shell
     sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon
     ```
 
-b. Modify the FE configuration file fe.conf for testing
+2. Modify the FE configuration file fe.conf for testing
 
     ```shell
     vi ${DORIS_NEW_HOME}/conf/fe.conf
@@ -123,9 +149,9 @@ b. Modify the FE configuration file fe.conf for testing
     ...
     ```
 
-   Save and exit
+   save and exit
 
-c. Modify fe.conf
+3. Modify fe.conf
 
    - Add ClusterID configuration in fe.conf
 
@@ -138,51 +164,50 @@ c. Modify fe.conf
    echo "metadata_failure_recovery=true" >> ${DORIS_NEW_HOME}/conf/fe.conf
    ```
 
-d. Copy the metadata directory doris-meta of the online environment Master FE to the test environment
+4. Copy the metadata directory doris-meta of the online environment Master FE to the test environment
 
     ```shell
     cp ${DORIS_OLD_HOME}/fe/doris-meta/* ${DORIS_NEW_HOME}/fe/doris-meta
     ```
 
-e. Change the cluster_id in the VERSION file copied to the test environment to 123456 (that is, the same as in step 3)
+5. Change the cluster_id in the VERSION file copied to the test environment to 123456 (that is, the same as in step 3)
 
     ```shell
     vi ${DORIS_NEW_HOME}/fe/doris-meta/image/VERSION
     clusterId=123456
     ```
 
-f. In the test environment, run the startup FE
+6. In the test environment, run the startup FE
 
 - If the version is greater than or equal to 2.0.2, run the following command
 
   ```shell
   sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon --metadata_failure_recovery
   ```
-
 - If the version is less than 2.0.2, run the following command
    ```shell
    sh ${DORIS_NEW_HOME}/bin/start_fe.sh --daemon
    ```
 
-g. Observe whether the startup is successful through the FE log fe.log
+7. Observe whether the startup is successful through the FE log fe.log
 
     ```shell
     tail -f ${DORIS_NEW_HOME}/log/fe.log
     ```
 
-h. If the startup is successful, it means that there is no problem with the compatibility, stop the FE process of the test environment, and prepare for the upgrade
+8. If the startup is successful, it means that there is no problem with the compatibility, stop the FE process of the test environment, and prepare for the upgrade
 
     ```
     sh ${DORIS_NEW_HOME}/bin/stop_fe.sh
     ```
 
-2. BE Compatibility Test
+##### BE Compatibility Test
 
 You can use the grayscale upgrade scheme to upgrade a single BE first. If there is no exception or error, the compatibility is considered normal, and subsequent upgrade actions can be performed
 
 ### Upgrade process
 
-:::tip Tip
+:::tip
 
 Upgrade BE first, then FE
 
@@ -198,9 +223,10 @@ However, when a major version is upgraded, new features may be added or old func
 
 #### Upgrade BE
 
-:::tip Tip
+:::tip
 
 In order to ensure the safety of your data, please use 3 copies to store your data to avoid data loss caused by misoperation or failure of the upgrade
+
 :::
 
 1. Under the premise of multiple copies, select a BE node to stop running and perform grayscale upgrade
@@ -239,9 +265,9 @@ In order to ensure the safety of your data, please use 3 copies to store your da
 
 6. Complete the upgrade of other BE nodes in sequence
 
-**05 Upgrade FE**
+#### Upgrade FE
 
-:::tip Tip
+:::tip
 
 Upgrade the non-Master nodes first, and then upgrade the Master nodes.
 
@@ -283,7 +309,7 @@ Upgrade the non-Master nodes first, and then upgrade the Master nodes.
 
 6. Complete the upgrade of other FE nodes in turn, **finally complete the upgrade of the Master node**
 
-**06 Turn on the cluster replica repair and balance function**
+#### Turn on the cluster replica repair and balance function
 
 After the upgrade is complete and all BE nodes become `Alive`, enable the cluster copy repair and balance function:
 

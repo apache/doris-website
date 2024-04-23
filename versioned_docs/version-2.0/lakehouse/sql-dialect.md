@@ -38,6 +38,11 @@ Starting from version 2.1, Doris can support multiple SQL dialects, such as Pres
 ## Deploy service
 
 1. Download latest [Doris SQL Convertor](https://www.selectdb.com/tools/doris-sql-convertor)
+
+    > Note:
+    >
+    > The SQL convertor tool is based on the open source [SQLGlot](https://github.com/tobymao/sqlglot). For more information about SQLGlot, please refer to [SQLGlot official website](https://sqlglot.com/sqlglot.html)
+
 2. On any FE node, start the service through the following command:
 
 	`sh bin/start.sh`

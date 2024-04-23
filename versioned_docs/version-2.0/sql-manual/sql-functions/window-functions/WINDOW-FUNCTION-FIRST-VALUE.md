@@ -14,10 +14,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 ## WINDOW FUNCTION FIRST_VALUE
 ### description
 
-:::info Note
-Since 2.0.9 , the ignore_null usage is supported
-:::
-
 FIRST_VALUE() returns the first value in the window's range , ignore_null determines whether to ignore null values , the ignore_null of default value is false .
 
 ```sql

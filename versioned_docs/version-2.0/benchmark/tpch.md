@@ -30,7 +30,9 @@ TPC-H is a decision support benchmark (Decision Support Benchmark), which consis
 
 This document mainly introduces the performance of Doris on the TPC-H 1000G test set.
 
-We tested 22 queries on the TPC-H standard test dataset based on Apache Doris 2.0.6.
+On 22 queries on the TPC-H standard test data set, we conducted a comparison test based on Apache Doris 2.1.1-rc03 and Apache Doris 2.0.6 versions.
+
+![TPCDS_1000G](/images/tpch_2.1.png)
 
 ## 1. Hardware Environment
 
@@ -47,7 +49,7 @@ We tested 22 queries on the TPC-H standard test dataset based on Apache Doris 2.
 - Doris Deployed 3BEs and 1FE
 - Kernel Version: Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
 - OS version: Ubuntu 20.04 LTS (Focal Fossa)
-- Doris software version: Apache Doris 2.0.6.
+- Doris software version: Apache Doris 2.1.1-rc03、 Apache Doris 2.0.6.
 - JDK: openjdk version "1.8.0_131"
 
 ## 3. Test Data Volume
@@ -72,33 +74,34 @@ TPCH 22 test query statements ： [TPCH-Query-SQL](https://github.com/apache/dor
 
 ## 5. Test Results
 
-Here we use Apache Doris 2.0.6 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
+Here we use Apache Doris 2.1.1-rc03 and Apache Doris 2.0.6 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
 
-| Query  | Apache Doris 2.0.6 (ms) |
-|--------|-------------------------|
-| Q1     | 7638                    |
-| Q2     | 377                     |
-| Q3     | 4389                    |
-| Q4     | 1903                    |
-| Q5     | 6425                    |
-| Q6     | 150                     |
-| Q7     | 3141                    |
-| Q8     | 2792                    |
-| Q9     | 24732                   |
-| Q10    | 7315                    |
-| Q11    | 395                     |
-| Q12    | 417                     |
-| Q13    | 8095                    |
-| Q14    | 681                     |
-| Q15    | 1459                    |
-| Q16    | 1382                    |
-| Q17    | 1204                    |
-| Q18    | 11386                   |
-| Q19    | 2172                    |
-| Q20    | 1455                    |
-| Q21    | 6570                    |
-| Q22    | 1517                    |
-| **合计** | **95595**               |
+| Query     | Apache Doris 2.1.1-rc03 (ms) | Apache Doris 2.0.6 (ms) |
+|-----------|------------------------------|-------------------------|
+| Q1        | 7240                         | 7638                    |
+| Q2        | 249                          | 377                     |
+| Q3        | 3528                         | 4389                    |
+| Q4        | 1534                         | 1903                    |
+| Q5        | 5457                         | 6425                    |
+| Q6        | 159                          | 150                     |
+| Q7        | 1598                         | 3141                    |
+| Q8        | 2958                         | 2792                    |
+| Q9        | 14803                        | 24732                   |
+| Q10       | 6743                         | 7315                    |
+| Q11       | 414                          | 395                     |
+| Q12       | 371                          | 417                     |
+| Q13       | 6203                         | 8095                    |
+| Q14       | 485                          | 681                     |
+| Q15       | 2246                         | 1459                    |
+| Q16       | 1252                         | 1382                    |
+| Q17       | 1461                         | 1204                    |
+| Q18       | 10428                        | 11386                   |
+| Q19       | 2329                         | 2172                    |
+| Q20       | 569                          | 1455                    |
+| Q21       | 5574                         | 6570                    |
+| Q22       | 1042                         | 1517                    |
+| **Total** | **76643**                    | **95595**               |
+
 
 ## 6. Environmental Preparation
 

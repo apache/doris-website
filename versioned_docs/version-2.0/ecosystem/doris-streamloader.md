@@ -41,14 +41,10 @@ Doris Streamloader is a client tool designed for loading data into Apache Doris.
 
 Source Code: https://github.com/apache/doris-streamloader/
 
-
-
 | Version | Date |  Architecture  |  Link  |
 |---|---|---|---|
 | v1.0   |  20240131 |  x64  | https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz |
 | v1.0   | 20240131  | arm64 | https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz |
-
-
 
 :::note
 The obtained result is the executable binary.
@@ -125,7 +121,7 @@ The parameters above are required, and the following parameters are optional:
 | --u      | Username of the database |  root    |      |
 | --p      | Password |  empty string  |      |
 | --compress      | Whether to compress data upon HTTP transmission |  false    |   Remain as default. Compression and decompression can increase pressure on Doris Streamloader side and the CPU resources on Doris BE side, so it is advised to only enable this when network bandwidth is constrained.   |
-|--timeout    | Timeout of the HTTP request sent to Doris (seconds) |  60\*60\*10  | Remain as default |
+|--timeout    | Timeout of the HTTP request sent to Doris (seconds) |  60\*60\*10    | Remain as default |
 | --batch      | Granularity of batch reading and sending of files (rows) |  4096    | Remain as default |
 | --batch_byte      | Granularity of batch reading and sending of files (byte) |  943718400 (900MB)    | Remain as default |
 | --workers   | Concurrency  level of data loading |  0    |   "0" means the auto mode, in which the streamload speed is based on the data size and disk throughput. You can dial this up for a high-performance cluster, but it is advised to keep it below 10. If you observe excessive memory usage (via the memtracker in log), you can dial this down.   |

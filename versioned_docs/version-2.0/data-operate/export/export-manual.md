@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Export Overview
 
-
-`Export` is a feature provided by Doris that allows for the asynchronous export of data. This feature allows the user to export the data of specified tables or partitions in a specified file format through the Broker process or S3 protocol/ HDFS protocol, to remote storage such as object storage or HDFS.
+ `Export` is a feature provided by Doris that allows for the asynchronous export of data. This feature allows the user to export the data of specified tables or partitions in a specified file format through the Broker process or S3 protocol/ HDFS protocol, to remote storage such as object storage or HDFS.
 
 Currently, `EXPORT` supports exporting Doris local tables / views / external tables and supports exporting to file formats including parquet, orc, csv, csv_with_names, and csv_with_names_and_types.
 
@@ -39,20 +39,20 @@ After a user submits an `Export Job`, Doris will calculate all the Tablets invol
 The overall execution process is as follows:
 
 1. The user submits an Export job to FE.
-
 2. FE calculates all the tablets to be exported and groups them based on the `parallelism` parameter. Each group generates multiple `SELECT INTO OUTFILE` query plans based on the `maximum_number_of_export_partitions` parameter.
 
 3. Based on the parallelism parameter, an equal number of `ExportTaskExecutor` are generated, and each `ExportTaskExecutor` is responsible for a thread, which is scheduled and executed by FE's `Job scheduler` framework.
-
 4. FE's `Job scheduler` schedules and executes the `ExportTaskExecutor`, and each `ExportTaskExecutor` serially executes the multiple `SELECT INTO OUTFILE` query plans it is responsible for.
 
 ## Start Export
 
-For detailed usage of Export, please refer to [EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/EXPORT).
+For detailed usage of Export, please refer to [EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/EXPORT.md).
 
 Export's detailed commands can be passed through `HELP EXPORT;` in mysql client. Examples are as follows:
 
 ### Export to HDFS
+
+**WITH HDFS (Recommended)**
 
 ```sql
 EXPORT TABLE db1.tbl1 
@@ -64,24 +64,42 @@ PROPERTIES
     "label" = "mylabel",
     "column_separator"=",",
     "columns" = "col1,col2",
-    "parallelusm" = "3"
+    "parallelism" = "3"
 )
-WITH BROKER "hdfs"
-(
-    "username" = "user",
-    "password" = "passwd"
+with HDFS (
+"fs.defaultFS"="hdfs://hdfs_host:port",
+"hadoop.username" = "hadoop"
 );
 ```
 
 * `label`: The identifier of this export job. You can use this identifier to view the job status later.
-
 * `column_separator`: Column separator. The default is `\t`. Supports invisible characters, such as'\x07'.
-
 * `column`: columns to be exported, separated by commas, if this parameter is not filled in, all columns of the table will be exported by default.
-
 * `line_delimiter`: Line separator. The default is `\n`. Supports invisible characters, such as'\x07'.
+* `parallelism`：Exporting with 3 concurrent threads.
 
-* `parallelusm`：Exporting with 3 concurrent threads.
+**WITH BROKER**
+
+This requires starting a broker process first.
+
+```sql
+EXPORT TABLE db1.tbl1 
+PARTITION (p1,p2)
+[WHERE [expr]]
+TO "hdfs://host/path/to/export/"
+PROPERTIES
+(
+    "label" = "mylabel",
+    "column_separator"=",",
+    "columns" = "col1,col2",
+    "parallelism" = "3"
+)
+WITH BROKER "broker_name" 
+(
+  "username"="xxx",
+  "password"="yyy"
+);
+```
 
 ### Export to Object Storage (Supports S3 Protocol)
 
@@ -96,14 +114,12 @@ WITH S3 (
 ```
 
 - `s3.access_key`/`s3.secret_key`：Is your key to access the object storage API.
-
 - `s3.endpoint`：Endpoint indicates the access domain name of object storage external services.
-
 - `s3.region`：Region indicates the region where the object storage data center is located.
 
 ### View Export Status
 
-After submitting a job, the job status can be viewed by querying the [SHOW EXPORT](../../sql-manual/sql-reference/Show-Statements/SHOW-EXPORT.md)  command. The results are as follows:
+After submitting a job, the job status can be viewed by querying the   [SHOW EXPORT](../../sql-manual/sql-reference/Show-Statements/SHOW-EXPORT.md)  command. The results are as follows:
 
 ```sql
 mysql> show EXPORT\G;
@@ -133,55 +149,33 @@ FinishTime: 2019-06-25 17:08:34
 
 
 * JobId: The unique ID of the job
-
 * State: Job status:
-
 	* PENDING: Jobs to be Scheduled
-
 	* EXPORTING: Data Export
-
 	* FINISHED: Operation Successful
-
 	* CANCELLED: Job Failure
-
 * Progress: Work progress. The schedule is based on the query plan. Assuming there are 10 threads in total and 3 have been completed, the progress will be 30%.
-
 * TaskInfo: Job information in Json format:
-
 	* db: database name
-
 	* tbl: Table name
-
 	* partitions: Specify the exported partition. `empty` Represents all partitions.
-	
-  * column separator: The column separator for the exported file.
-	
-  * line delimiter: The line separator for the exported file.
-	
-  * tablet num: The total number of tablets involved.
-	
-  * Broker: The name of the broker used.
-  
+	* column separator: The column separator for the exported file.
+	* line delimiter: The line separator for the exported file.
+	* tablet num: The total number of tablets involved.
+	* Broker: The name of the broker used.
     * max_file_size: The maximum size of an export file.
-  
     * delete_existing_files: Whether to delete existing files and directories in the specified export directory. 
-  
     * columns: Specifies the column names to be exported. Empty values represent exporting all columns.
-  
     * format: The file format for export.
-
 * Path: Export path on remote storage.
-
 * CreateTime/StartTime/FinishTime: Creation time, start scheduling time and end time of jobs.
-
 * Timeout: Job timeout. The unit is seconds. This time is calculated from CreateTime.
-
 * Error Msg: If there is an error in the job, the cause of the error is shown here.
-
-* OutfileInfo: If the export job is successful, specific `SELECT INTO OUTFILE` result information will be displayed here.
+* OutfileInfo：If the export job is successful, specific `SELECT INTO OUTFILE` result information will be displayed here.
 
 ### Cancel Export Job
 
+<version since="dev"></version>
 
 After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md)  command. For example:
 
@@ -189,7 +183,7 @@ After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](..
 CANCEL EXPORT
 FROM example_db
 WHERE LABEL like "%example%";
-```
+````
 
 ## Best Practices
 
@@ -202,7 +196,6 @@ The underlying execution logic of an `Export Job `is actually the `SELECT INTO O
 The specific logic for splitting an `Export Job` into multiple `SELECT INTO OUTFILE` is, to evenly distribute all the tablets of the table among all parallel threads. For example:
 
 - If num(tablets) = 40 and parallelism = 3, then the three threads will be responsible for 14, 13, and 13 tablets, respectively.
-
 - If num(tablets) = 2 and parallelism = 3, then Doris automatically sets the parallelism to 2, and each thread is responsible for one tablet.
 
 When the number of tablets responsible for a thread exceeds the `maximum_tablets_of_outfile_in_export` value (default is 10, and can be modified by adding the `maximum_tablets_of_outfile_in_export` parameter in fe.conf), the thread will split the tablets which are responsibled for this thread into multiple `SELECT INTO OUTFILE` statements. For example:
@@ -218,25 +211,15 @@ However, in certain scenarios, such as a query plan that requires scanning too m
 ## Notes
 
 * It is not recommended to export large amounts of data at one time. The maximum amount of exported data recommended by an Export job is tens of GB. Excessive export results in more junk files and higher retry costs.
-
 * If the amount of table data is too large, it is recommended to export it by partition.
-
 * During the operation of the Export job, if FE restarts or cuts the master, the Export job will fail, requiring the user to resubmit.
-
 * If the Export job fails, the temporary files and directory generated in the remote storage will not be deleted, requiring the user to delete them manually.
-
 * Export jobs scan data and occupy IO resources, which may affect the query latency of the system.
-
 * The Export job can export data from  `Doris Base tables`, `View`, and `External tables`, but not from `Rollup Index`.
-
 * When using the EXPORT command, please ensure that the target path exists, otherwise the export may fail.
-
 * When concurrent export is enabled, please configure the thread count and parallelism appropriately to fully utilize system resources and avoid performance bottlenecks.
-
 * When exporting to a local file, pay attention to file permissions and the path, ensure that you have sufficient permissions to write, and follow the appropriate file system path.
-
 * It is possible to monitor progress and performance metrics in real-time during the export process to identify issues promptly and make optimal adjustments.
-
 * It is recommended to verify the integrity and accuracy of the exported data after the export operation is completed to ensure the quality and integrity of the data.
 
 ## Relevant configuration
@@ -247,7 +230,7 @@ However, in certain scenarios, such as a query plan that requires scanning too m
 
 ## More Help
 
-For more detailed syntax and best practices used by Export, please refer to the [Export](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/EXPORT) command manual, You can also enter `HELP EXPORT` at the command line of the MySql client for more help.
+For more detailed syntax and best practices used by Export, please refer to the [Export](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/EXPORT.md) command manual, You can also enter `HELP EXPORT` at the command line of the MySql client for more help.
 
-The underlying implementation of the `EXPORT` command is the `SELECT INTO OUTFILE` statement. For more information about SELECT INTO OUTFILE, please refer to [Export Query Result](../export/outfile) and [SELECT INTO OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE).
+The underlying implementation of the `EXPORT` command is the `SELECT INTO OUTFILE` statement. For more information about SELECT INTO OUTFILE, please refer to [Export Query Result](./outfile.md) and [SELECT INTO OUTFILE](../..//sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE.md).
 

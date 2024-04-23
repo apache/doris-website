@@ -24,93 +24,95 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Compile on MacOS
+# Compilation on MacOS
 
-This guide is about how to compile Doris on MacOS.
+This topic is about how to compile Doris from source with macOS (both x86_64 and arm64).
 
-## Prerequisites
+## Environment Requirements
 
-- MacOS 12 (Monterey) or later (Both **Intel** and **Apple Silicon** are supported.)
-- [Homebrew](https://brew.sh/)
+1. macOS 12 (Monterey) or newer（_**both Intel chip and Apple Silicon chips are supported**_）
+2. [Homebrew](https://brew.sh/)
 
-## Compile source code
+## Steps
 
-1. **Install dependencies using** **[Homebrew](https://brew.sh/)**
+1. Use [Homebrew](https://brew.sh/) to install dependencies.
+    ```shell
+    brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
+        python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@11 npm
+    ```
 
-```Shell
-brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@11 npm
-```
-
-:::tip 
-On MacOS, since Homebrew does not provide an installation package for JDK8, JDK11 is used here instead. Alternatively, you can manually download and install JDK8. 
+:::tip
+The version of jdk installed using brew is 11, because on macOS, the arm64 version of brew does not have version 8 of jdk by default
 :::
 
-2. **Compile source code**
+2. Compile from source.
+    ```shell
+    bash build.sh
+    ```
 
-```Shell
-bash build.sh
-```
+## Third-Party Libraries
 
-:::tip 
-The first step of compiling Doris is to download and compile third-party libraries. You can download the pre-compiled versions of third-party libraries provided by the Doris community. Please refer to the instructions below for downloading **pre-compiled third-party libraries** to speed up the build process. 
-:::
+1. The [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation) page contains the source code of all third-party libraries. You can download [doris-thirdparty-source.tgz](https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-source.tgz) to obtain them.
 
-## Start
+2. You can download the _**precompiled**_ third party library from the [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation) page. You may refer to the following commands:
+    ```shell
+    cd thirdparty
+    rm -rf installed
 
-1. **Increase file descriptors limit**
+    # Intel chips
+    curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-x86_64.tar.xz \
+        -o - | tar -Jxf -
 
-```Shell
-# Increase the file descriptor limit using the ulimit command.
-ulimit -n 65536
+    # Apple Silicon chips
+    curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
+        -o - | tar -Jxf -
 
-# Check if the change is effective.
-$ ulimit -n
+    # Make sure that protoc and thrift can run successfully.
+    cd installed/bin
 
-# Add the configuration to your startup script so that you do not have to set it again every time you open a new terminal session.
-# If you are using bash, execute the following statement:
-echo 'ulimit -n 65536' ~/.bashrc
-# If you are using zsh, execute the following statement:
-echo 'ulimit -n 65536' ~/.zshrc
-```
+    ./protoc --version
+    ./thrift --version
+    ```
+3. When running `protoc` or `thrift`, you may meet an error which says **the app can not be opened because the developer cannot be verified**. Go to `Security & Privacy`. Click the `Open Anyway` button in the `General` pane to confirm your intent to open the app. See [https://support.apple.com/en-us/HT202491](https://support.apple.com/en-us/HT202491).
 
-2. **Start BE**
+## Start-up
 
-```Shell
-cd output/be/bin
-./start_be.sh --daemon
-```
+1. Set `file descriptors` （_**NOTICE: If you have closed the current session, you need to set this variable again**_）.
+    ```shell
+    ulimit -n 65536
+    ```
+    You can also write this configuration into the initialization files so you don't need to set the variables again when opening a new terminal session.
+    ```shell
+    # bash
+    echo 'ulimit -n 65536' >>~/.bashrc
+    
+    # zsh
+    echo 'ulimit -n 65536' >>~/.zshrc
+    ```
+    Check if the configuration works by executing the following command.
+    ```shell
+    $ ulimit -n
+    65536
+    ```
 
-3. **Start** **FE**
+2. Start BE up
+    ```shell
+    cd output/be/bin
+    ./start_be.sh --daemon
+    ```
 
-```Shell
-cd output/fe/bin
-./start_fe.sh --daemon
-```
+3. Start FE up
+    ```shell
+    cd output/fe/bin
+    ./start_fe.sh --daemon
+    ```
 
-## Speed up by using pre-compiled third-party libraries
+## FAQ
 
-Download the pre-compiled third-party libraries from [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation). Refer to the command below: 
+1. Fail to start BE up. The log shows: `fail to open StorageEngine, res=file descriptors limit is too small`
 
-```Bash
-cd thirdparty
-rm -rf installed
+   To fix this, please refer to the "Start-up" section above and reset  `file descriptors`.
 
-# Intel chip
-curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-x86_64.tar.xz \
-    -o - | tar -Jxf -
+2. Java Version
 
-# Apple Silicon chip
-curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
-    -o - | tar -Jxf -
-
-# Check if protoc and thrift functions normally
-cd installed/bin
-
-./protoc --version
-./thrift --version
-```
-
-:::tip 
-When running protoc and thrift, you may encounter an issue where the binary cannot be opened due to developer verification. To resolve this, you can go to "Security & Privacy" settings. In the "General" tab, click on the "Open Anyway" button to confirm your intent to open the binary. Refer to: https://support.apple.com/en-us/102445 
-:::
+   The version of jdk installed with brew is 11, because on macOS, the arm64 version of brew does not have version 8 of jdk by default, and you can also download the jdk installation package for installation

@@ -107,4 +107,4 @@ The Pipeline engine is turned off by default on import, and is enabled by the fo
 
 2. `enable_nereids_dml_with_pipeline` in Session Variable to enable insert into to try to use the Pipeline engine.
 
-Whether or not the Pipeline engine is used when the above variable is enabled still depends on the Session Variables `enable_pipeline_engine`. If this value is `false`, the import will not use the Pipeline engine even if the above variable is set to `true`.
+When the above variables are turned on, whether and which set of Pipeline engine is used still depends on the settings of the other two Session Variables `enable_pipeline_engine` and `enable_pipeline_x_engine`. When both are enabled, PipelineX is selected in preference to the Pipeline Engine. If neither is enabled, the import will not be executed using the Pipeline engine even if the above variables are set to `true`.
