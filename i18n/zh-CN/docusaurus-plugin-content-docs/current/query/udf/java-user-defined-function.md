@@ -404,57 +404,60 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 ## static 变量加载
 当前在 Doris 中，执行一个 UDF 函数，eg: `select udf(col) from table`, 每一个并发instance会加载一次udf.jar包，在该instance结束时卸载掉udf.jar包。
 所以当 udf.jar 文件中需要加载一个几百 MB的文件时，会因为并发的原因，使得占据的内存急剧增大，容易OOM。
+
 解决方法是可以将资源加载代码拆分开，单独生成一个 jar 包文件，其他包直接引用该资源jar包.  
 
 假设已经拆分为了 DictLibrary 和 FunctionUdf 两个文件。
+
 1. 单独编译 DictLibrary 文件，使其生成一个独立的 jar 包,这样可以得到一个资源文件 DictLibrary.jar: 
 ```shell
-javac   ./DictLibrary.java
-jar -cf ./DictLibrary.jar ./DictLibrary.class
+    javac   ./DictLibrary.java
+    jar -cf ./DictLibrary.jar ./DictLibrary.class
 ```
+
 2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
 ```shell
-javac -cp ./DictLibrary.jar  ./FunctionUdf.java
-jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
+    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
+    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
 ```
-3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到 BE 的部署路径 `be/lib/java_extensions/java-udf `下面，
-BE重启之后就可以随着 JVM 的启动加载进来。
+
+3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到 BE 的部署路径 `be/lib/java_extensions/java-udf `下面，BE重启之后就可以随着 JVM 的启动加载进来。
+
 4. 最后利用 create function ... 语句创建一个 UDF 函数，其中 file 的路径指向 FunctionUdf.jar 包, 这样资源包会随着 BE 启动而加载，停止而释放.
 FunctionUdf.jar 的加载与释放则是跟随 SQL 的执行周期。
 
 
 ```java
-public class DictLibrary {
-    private static HashMap<String, String> res = new HashMap<>();
+    public class DictLibrary {
+        private static HashMap<String, String> res = new HashMap<>();
 
-    static {
-        // suppose we built this dictionary from a certain local file.
-        res.put("key1", "value1");
-        res.put("key2", "value2");
-        res.put("key3", "value3");
-        res.put("0", "value4");
-        res.put("1", "value5");
-        res.put("2", "value6");
-    }
-
-    public static String evaluate(String key) {
-        if (key == null) {
-            return null;
+        static {
+            // suppose we built this dictionary from a certain local file.
+            res.put("key1", "value1");
+            res.put("key2", "value2");
+            res.put("key3", "value3");
+            res.put("0", "value4");
+            res.put("1", "value5");
+            res.put("2", "value6");
         }
-        return res.get(key);
+
+        public static String evaluate(String key) {
+            if (key == null) {
+                return null;
+            }
+            return res.get(key);
+        }
     }
-}
 ```
 
 
 ```java
-public class FunctionUdf {
-    public String evaluate(String key) {
-        String value = DictLibrary.evaluate(key);
-        return value;
+    public class FunctionUdf {
+        public String evaluate(String key) {
+            String value = DictLibrary.evaluate(key);
+            return value;
+        }
     }
-}
-
 ```
 
 
