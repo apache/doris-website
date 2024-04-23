@@ -123,7 +123,7 @@ models:
 
 2. 判断 `this_table` 是否不存在，即是首次创建，执行`rename`，将临时表变更为最终表。
 
-3. 若已经存在，则 `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，此操作可以交换表名并且删除`this_table_temp`临时表，[此过程](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE.)通过 Doris 内核的事务机制保证本次操作原子性。
+3. 若已经存在，则 `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，此操作可以交换表名并且删除`this_table_temp`临时表，[此过程](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE)通过 Doris 内核的事务机制保证本次操作原子性。
 ``` 
 优点：table查询速度会比view快。
 缺点：table需要较长时间才能构建或重建，会额外存储数据，而且不能够做增量数据同步。

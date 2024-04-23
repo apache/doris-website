@@ -86,7 +86,7 @@ copy logstash-output-doris-{version}.gem 到 logstash 安装目录下
 `label_prefix` | 导入标识前缀，最终生成的标识为 *{label\_prefix}\_{db}\_{table}\_{time_stamp}*
 
 
-导入相关配置：([参考文档](../data-operate/import/import-way/stream-load-manual.md)
+导入相关配置：([参考文档](../data-operate/import/stream-load-manual)
 
 配置 | 说明
 --- | ---

@@ -33,7 +33,7 @@ under the License.
 
 ### Description
 
-mysql-load: 使用MySql客户端导入本地数据
+mysql-load: 使用 MySql 客户端导入本地数据
 
 ```
 LOAD DATA
@@ -49,20 +49,20 @@ INTO TABLE tbl_name
 [PROPERTIES (key1 = value1 [, key2=value2]) ]
 ```
 
-该语句用于向指定的 table 导入数据，与普通Load区别是，这种导入方式是同步导入。
+该语句用于向指定的 table 导入数据，与普通 Load 区别是，这种导入方式是同步导入。
 
 这种导入方式仍然能够保证一批导入任务的原子性，要么全部数据导入成功，要么全部失败。
 
-1. MySQL Load以语法`LOAD DATA`开头, 无须指定LABEL
-2. 指定`LOCAL`表示读取客户端文件.不指定表示读取FE服务端本地文件. 导入FE本地文件的功能默认是关闭的, 需要在FE节点上设置`mysql_load_server_secure_path`来指定安全路径, 才能打开该功能.
-3. `INFILE`内填写本地文件路径, 可以是相对路径, 也可以是绝对路径.目前只支持单个文件, 不支持多个文件
-4. `INTO TABLE`的表名可以指定数据库名, 如案例所示. 也可以省略, 则会使用当前用户所在的数据库.
+1. MySQL Load 以语法`LOAD DATA`开头，无须指定 LABEL
+2. 指定`LOCAL`表示读取客户端文件。不指定表示读取 FE 服务端本地文件。导入 FE 本地文件的功能默认是关闭的，需要在 FE 节点上设置`mysql_load_server_secure_path`来指定安全路径，才能打开该功能。
+3. `INFILE`内填写本地文件路径，可以是相对路径，也可以是绝对路径。目前只支持单个文件，不支持多个文件
+4. `INTO TABLE`的表名可以指定数据库名，如案例所示。也可以省略，则会使用当前用户所在的数据库。
 5. `PARTITION`语法支持指定分区导入
 6. `COLUMNS TERMINATED BY`指定列分隔符
 7. `LINES TERMINATED BY`指定行分隔符
-8. `IGNORE num LINES`用户跳过CSV的表头, 可以跳过任意行数. 该语法也可以用`IGNORE num ROWS`代替
-9. 列映射语法, 具体参数详见[导入的数据转换](../../../../data-operate/import/import-way/mysql-load-manual.md) 的列映射章节
-10. `PROPERTIES`参数配置, 详见下文
+8. `IGNORE num LINES`用户跳过 CSV 的表头，可以跳过任意行数。该语法也可以用`IGNORE num ROWS`代替
+9. 列映射语法，具体参数详见[导入的数据转换](../../../../data-operate/import/mysql-load-manual) 的列映射章节
+10. `PROPERTIES`参数配置，详见下文
 
 ### PROPERTIES
 
@@ -78,9 +78,9 @@ INTO TABLE tbl_name
 
 6. trim_double_quotes: 布尔类型，默认值为 false，为 true 时表示裁剪掉导入文件每个字段最外层的双引号。
 
-7. enclose: 包围符。当csv数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
+7. enclose: 包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
-8. escape: 转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
+8. escape: 转义符。用于转义在 csv 字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
 
 ### Example
 
@@ -93,7 +93,7 @@ INTO TABLE tbl_name
     PROPERTIES ("timeout"="100")
     ```
 
-2. 将服务端本地文件'/root/testData'(需设置FE配置`mysql_load_server_secure_path`为`/root`)中的数据导入到数据库'testDb'中'testTbl'的表。指定超时时间为 100 秒
+2. 将服务端本地文件'/root/testData'(需设置 FE 配置`mysql_load_server_secure_path`为`/root`) 中的数据导入到数据库'testDb'中'testTbl'的表。指定超时时间为 100 秒
 
     ```sql
     LOAD DATA
@@ -102,7 +102,7 @@ INTO TABLE tbl_name
     PROPERTIES ("timeout"="100")
     ```
 
-3. 将客户端本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表, 允许20%的错误率
+3. 将客户端本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，允许 20% 的错误率
 
     ```sql
     LOAD DATA LOCAL
@@ -111,7 +111,7 @@ INTO TABLE tbl_name
     PROPERTIES ("max_filter_ratio"="0.2")
     ```
 
-4. 将客户端本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表, 允许20%的错误率，并且指定文件的列名
+4. 将客户端本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，允许 20% 的错误率，并且指定文件的列名
 
     ```sql
     LOAD DATA LOCAL
@@ -121,7 +121,7 @@ INTO TABLE tbl_name
     PROPERTIES ("max_filter_ratio"="0.2")
     ```
 
-5. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中的p1, p2分区, 允许20%的错误率。
+5. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中的 p1, p2 分区，允许 20% 的错误率。
 
     ```sql
     LOAD DATA LOCAL
@@ -131,7 +131,7 @@ INTO TABLE tbl_name
     PROPERTIES ("max_filter_ratio"="0.2")
     ```
 
-6. 将本地行分隔符为`0102`,列分隔符为`0304`的CSV文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中。
+6. 将本地行分隔符为`0102`,列分隔符为`0304`的 CSV 文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中。
 
     ```sql
     LOAD DATA LOCAL
@@ -141,7 +141,7 @@ INTO TABLE tbl_name
     LINES TERMINATED BY '0102'
     ```
 
-7. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中的p1, p2分区, 并跳过前面3行。
+7. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中的 p1, p2 分区，并跳过前面 3 行。
 
     ```sql
     LOAD DATA LOCAL
@@ -160,7 +160,7 @@ INTO TABLE tbl_name
     PROPERTIES ("strict_mode"="true", "timezone"="Africa/Abidjan")
     ```
 
-9. 导入数据进行限制导入内存为10GB, 并在10分钟超时
+9. 导入数据进行限制导入内存为 10GB, 并在 10 分钟超时
 
     ```sql
     LOAD DATA LOCAL

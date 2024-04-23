@@ -36,15 +36,15 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 | 硬件   | 配置说明                                 |
 |------|--------------------------------------|
-| 机器数量 | 4 台腾讯云主机（1个FE，3个BE）                  |
-| CPU  | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48核 |
+| 机器数量 | 4 台腾讯云主机（1 个 FE，3 个 BE）                  |
+| CPU  | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48 核 |
 | 内存   | 192G                                 |
 | 网络带宽 | 21Gbps                               |
 | 磁盘   | 高性能云硬盘                               |
 
 ## 2. 软件环境
 
-- Doris部署 3BE 1FE
+- Doris 部署 3BE 1FE
 - 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
 - 操作系统版本：Ubuntu 20.04 LTS (Focal Fossa)
 - Doris 软件版本：Apache Doris 2.0.6
@@ -54,16 +54,16 @@ TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套
 
 整个测试模拟生成 TPCH 1000G 的数据导入到 Apache Doris 2.0.6 版本进行测试，下面是表的相关说明及数据量。
 
-| TPC-H表名  | 行数    | 备注     |
+| TPC-H 表名  | 行数    | 备注     |
 |:---------|:------|:-------|
 | REGION   | 5     | 区域表    |
 | NATION   | 25    | 国家表    |
-| SUPPLIER | 1000万 | 供应商表   |
-| PART     | 2亿    | 零部件表   |
-| PARTSUPP | 8亿    | 零部件供应表 |
-| CUSTOMER | 1.5亿  | 客户表    |
-| ORDERS   | 15亿   | 订单表    |
-| LINEITEM | 60亿   | 订单明细表  |
+| SUPPLIER | 1000 万 | 供应商表   |
+| PART     | 2 亿    | 零部件表   |
+| PARTSUPP | 8 亿    | 零部件供应表 |
+| CUSTOMER | 1.5 亿  | 客户表    |
+| ORDERS   | 15 亿   | 订单表    |
+| LINEITEM | 60 亿   | 订单明细表  |
 
 ## 4. 测试 SQL
 
@@ -102,7 +102,7 @@ TPCH 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/dori
 
 ## 6. 环境准备
 
-请先参照 [官方文档](../install/standard-deployment.md) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
+请先参照 [官方文档](../install/cluster-deployment/standard-deployment) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
 
 ## 7. 数据准备
 
@@ -124,11 +124,11 @@ sh bin/build-tpch-dbgen.sh
 sh bin/gen-tpch-data.sh -s 1000
 ```
 
-> 注1：通过 `sh gen-tpch-data.sh -h` 查看脚本帮助。
+> 注 1：通过 `sh gen-tpch-data.sh -h` 查看脚本帮助。
 >
-> 注2：数据会以 `.tbl` 为后缀生成在  `tpch-data/` 目录下。文件总大小约1000GB。生成时间可能在数分钟到1小时不等。
+> 注 2：数据会以 `.tbl` 为后缀生成在  `tpch-data/` 目录下。文件总大小约 1000GB。生成时间可能在数分钟到 1 小时不等。
 >
-> 注3：默认生成 100G 的标准测试数据集
+> 注 3：默认生成 100G 的标准测试数据集
 
 ### 7.3 建表
 
@@ -200,7 +200,7 @@ sh bin/run-tpch-queries.sh -s 1000
 
 ### 7.6.2 单个 SQL 执行
 
-下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL 。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
+下面是测试时使用的 SQL 语句，你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-H 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpch-tools/queries/sf1000)
 
 ```sql
 --Q1

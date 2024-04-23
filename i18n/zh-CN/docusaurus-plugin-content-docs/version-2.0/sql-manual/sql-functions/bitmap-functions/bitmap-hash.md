@@ -109,4 +109,4 @@ select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 ### Best Practice
 
 还可参见
-- [BITMAP_HASH64](./bitmap_hash64.md)
+- [BITMAP_HASH64](../bitmap-functions/bitmap-hash64)
