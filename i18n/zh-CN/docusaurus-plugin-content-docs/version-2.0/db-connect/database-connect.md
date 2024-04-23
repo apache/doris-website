@@ -29,7 +29,7 @@ Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行�
 
 ## MySQL Client
 
-从 MySQL 官方网站下载 MySQL Client，或者下载我们提供的 Linux 上免安装的 [MySQL 客户端](https://cdn.selectdb.com/download/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)。当前 Doris 主要兼容 MySQL 5.7 及其以上的客户端。
+从 MySQL 官方网站下载 MySQL Client，或者下载我们提供的 Linux 上免安装的 [MySQL 客户端](https://dev.mysql.com/downloads/mysql/)。当前 Doris 主要兼容 MySQL 5.7 及其以上的客户端。
 
 解压下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
 
@@ -97,7 +97,7 @@ try {
 
 Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过内置的 Web UI 进行 SQL 查询和其它相关信息的查看。
 
-在浏览器中输入 http://fe_ip:fe_port,  比如 http://172.20.63.118:8030，打开 Doris 内置的 Web 控制台。
+在浏览器中输入 http://fe_ip:fe_port,  比如 `http://172.20.63.118:8030`，打开 Doris 内置的 Web 控制台。
 
 内置 Web 控制台，主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 
@@ -111,7 +111,7 @@ ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 
 ![Playground](/images/Doris-WebUI-Playground.png)
 
-:::caution
+:::caution 注意
 Playground 中执行这种和具体数据库/表没有关系的语句，务必在左侧库栏里随意选择一个数据库，才能执行成功，这个限制，稍后会去掉。
 
 当前内置的 Web 控制台，还不能执行 SET 类型的 SQL 语句，所以，在 Web 控制台，当前还不能通过执行 SET PASSWORD FOR 'user' = PASSWORD('user_password') `类似语句。

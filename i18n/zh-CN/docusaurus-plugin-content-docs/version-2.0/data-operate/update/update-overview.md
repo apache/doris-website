@@ -72,7 +72,7 @@ Doris 支持 Stream Load、Broker Load、Routine Load、Insert Into 等多种导
 
 - 如果更新的是部分列，主键模型采用的是 MoW，并且设置了 MySQL Session 变量 partial_columns = true 或者 HTTP Header partial_columns:true，则被更新的缺失列的值，不是再使用表 Schema 中缺失列的默认值，而是已经存在记录的对应缺失列的值。
 
-我们会分别在文档 [主键模型的 Update 更新](../update/unique-update) 和 [主键模型的导入更新](../update/unique-load-update) 详细介绍两种更新方式。
+我们会分别在文档 [主键模型的 Update 更新](../update/unique-update) 和 [主键模型的导入更新](../update/update-of-unique-model) 详细介绍两种更新方式。
 
 ### 主键模型的更新事务
 
@@ -90,4 +90,4 @@ New Agg Value = Agg Func ( Old Agg Value + New Column Value)
 
 在定义聚合模型表的时候，如果把 value 列的聚合函数定义为 REPLACE_IF_NULL，也可以间接实现类似主键表的部分列更新能力。
 
-更多内容，请查看 [聚合模型的导入更新](../update/aggregate-load-update)。
+更多内容，请查看 [聚合模型的导入更新](../update/update-of-aggregate-model)。

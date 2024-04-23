@@ -147,7 +147,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import-scenes/jdbc-load.md)。
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../../data-operate/import/insert-into-manual)。
 
 ### INSERT INTO VALUES
 
@@ -403,7 +403,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * 目前 WAL 文件只存储在一个 BE 上，如果这个 BE 磁盘损坏或文件误删等，可能导入丢失部分数据
 
-  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND.md)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
+  * 当下线 BE 节点时，请使用[`DECOMMISSION`](../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND)命令，安全下线节点，防止该节点下线前 WAL 文件还没有全部处理完成，导致部分数据丢失
 
   * 对于`async_mode`的 Group Commit 写入，为了保护磁盘空间，当遇到以下情况时，会切换成`sync_mode`
 
@@ -455,7 +455,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试工具**
 
-* [doris-streamloader](https://doris.apache.org/zh-CN/ecosystem/data-loading)
+* [doris-streamloader](../../ecosystem/doris-streamloader)
 
 **测试方法**
 
