@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Power-BI",
+    "title": "Power BI",
     "language": "en"
 }
 ---
@@ -32,9 +32,9 @@ Apache Doris is highly compatible with MySQL protocol and can be connected to Po
 
 ## Precondition
 
-If you do not have PowerBI desktop installed, you can download it from https://www.microsoft.com/
+If you do not have Power BI desktop installed, you can download it from https://www.microsoft.com/
 
-## Connector configuration of PowerBI and Doris
+## Connector configuration of Power BI and Doris
 :::info Note
 Currently verified using MySQL jdbc connector version 8.0.26
 :::

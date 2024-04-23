@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Power-BI",
-    "language": "zh-CN"
+   "title": "Power BI",
+   "language": "zh-CN"
 }
 ---
 
@@ -34,7 +34,7 @@ Apache Doris 高度兼容 MySQL 协议，可以通过 MySQL 驱动器连接Power
 
 未安装Power BI Desktop可以访问https://www.microsoft.com/ 下载安装Power BI。
 
-## PowerBI与doris的connector配置
+## Power BI与Doris的connector配置
 
 :::info Note
 选择8.0.26版本的MySQL jdbc connector
@@ -58,11 +58,11 @@ MySQL connector 下载
 
    ![get data](/images/powerbi/bi-powerbi-en-3.png)
 
-4. 配置数据库连接信息，在服务器输入框中输入ip:port。doris默认的端口号为9030
+4. 配置数据库连接信息，在服务器输入框中输入ip:port。Doris默认的端口号为9030
 
    ![connection information](/images/powerbi/bi-powerbi-en-4.png)
 
-5. 上一步点击确定后在新的连接窗口处选择"数据库"连接，并在用户名与密码处填写doris的连接信息。
+5. 上一步点击确定后在新的连接窗口处选择"数据库"连接，并在用户名与密码处填写Doris的连接信息。
 
    ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
 
