@@ -1,6 +1,6 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris 2.0.9 is released now`,
+        label: `Apache Doris version 2.0.9 has been released`,
         link: 'https://doris.apache.org/blog/release-note-2.0.9',
     },
     {
