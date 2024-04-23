@@ -76,6 +76,8 @@ To use Java UDF, the main entry of UDF must be the `evaluate` function. This is 
 
 It is worth mentioning that this example is not only the Java UDF supported by Doris, but also the UDF supported by Hive, that's to say, for users, Hive UDF can be directly migrated to Doris.
 
+Additionally, if the defined UDF (User Defined Function) requires loading large resource files or if you wish to define global static variables, you can refer to the loading method for static variables at the bottom of the document.
+
 ## Create UDF
 
 ```sql
@@ -379,6 +381,26 @@ When you no longer need UDF functions, you can delete a UDF function by the foll
 
 ## Example
 Examples of Java UDF are provided in the `samples/doris-demo/java-udf-demo/` directory. See the `README.md` in each directory for details on how to use it, Check it out [here](https://github.com/apache/incubator-doris/tree/master/samples/doris-demo/java-udf-demo)
+
+## Loading static variables
+
+In Doris currently, when executing a UDF (User Defined Function) function, e.g., select udf(col) from table, each concurrent instance will load the udf.jar package once and unload it when the instance ends. Therefore, when a udf.jar file needs to load a resource file that is several hundred MBs in size, the memory occupancy sharply increases due to concurrency, which may lead to Out Of Memory (OOM) errors.
+
+The solution is to separate the resource loading code and generate a standalone jar file. Other packages can then directly reference this resource jar package.
+Assuming the split has been made into two files: DictLibrary and FunctionUdf.
+
+1. Compile the DictLibrary file separately to generate a standalone jar package, which results in a resource file DictLibrary.jar:
+```shell
+javac   ./DictLibrary.java
+jar -cf ./DictLibrary.jar ./DictLibrary.class
+```
+2. Then compile the FunctionUdf file, which can directly reference the resource package obtained in the previous step. This will result in the FunctionUdf.jar package for the UDF:
+```shell
+javac -cp ./DictLibrary.jar  ./FunctionUdf.java
+jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
+```
+3. After these two steps, you will have two jar packages. Since you want the resource jar package to be referenced by all concurrency, you need to place it in the deployment path of the BE under `be/lib/java_extensions/java-udf`. After restarting the BE, it will be loaded along with the JVM startup.
+4. Finally, use the `create function ... `statement to create a UDF function, where the file path points to the FunctionUdf.jar package. This way, the resource package will be loaded with the BE startup and released with the BE shutdown. The loading and unloading of FunctionUdf.jar follow the execution cycle of the SQL.
 
 ## Instructions
 1. Complex data types (HLL, bitmap) are not supported.
