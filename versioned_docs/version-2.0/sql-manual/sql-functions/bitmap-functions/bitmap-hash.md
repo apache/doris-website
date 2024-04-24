@@ -109,4 +109,5 @@ Here is the result.
 ### Best Practice
 
 For more information, see also:
-- [BITMAP_HASH64](./bitmap_hash64.md)
+- [BITMAP_HASH64](../bitmap-functions/bitmap-hash64)
+

@@ -370,6 +370,7 @@ CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIE
 
 
 
+
 ## 使用 UDF
 
 用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
@@ -385,7 +386,7 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 
 ## 使用须知
 1. 不支持复杂数据类型（HLL，Bitmap）。
-2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 `JAVA_OPTS` 的 `-Xmx` 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
+2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 JAVA_OPTS 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
 3. char 类型的 udf 在 create function 时需要使用 String 类型。
 4. 由于 jvm 加载同名类的问题，不要同时使用多个同名类作为 udf 实现，如果想更新某个同名类的 udf，需要重启 be 重新加载 classpath。
 

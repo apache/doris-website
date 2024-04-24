@@ -65,7 +65,7 @@ For example, the table is defined as k1, v1. A batch of imported data is as foll
 
 Then maybe the result of copy 1 is `1, "abc"`, and the result of copy 2 is `1, "def"`. As a result, the query results are inconsistent.
 
-To ensure that the data sequence between different replicas is unique, you can refer to the [Sequence Column](../data-operate/update-delete/sequence-column-manual.md) function.
+To ensure that the data sequence between different replicas is unique, you can refer to the [Sequence Column](../data-operate/update/update-of-unique-model) function.
 
 ### Q5. The problem of querying bitmap/hll type data returns NULL
 
@@ -95,7 +95,7 @@ If the `curl 77: Problem with the SSL CA cert` error appears in the be.INFO log.
 2. Copy the certificate to the specified location: `sudo cp /tmp/cacert.pem /etc/ssl/certs/ca-certificates.crt`
 3. Restart the BE node.
 
-### Q7. import error："Message": "[INTERNAL_ERROR]single replica load is disabled on BE."
+### Q7. import error:"Message": "[INTERNAL_ERROR]single replica load is disabled on BE."
 
 1. Make sure this parameters `enable_single_replica_load` in be.conf is set true
 2.  Restart the BE node.

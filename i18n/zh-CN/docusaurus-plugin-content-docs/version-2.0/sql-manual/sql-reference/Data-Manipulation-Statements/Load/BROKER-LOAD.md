@@ -32,7 +32,7 @@ BROKER LOAD
 
 ### Description
 
-该命令主要用于通过 Broker 服务进程读取远端存储（如S3、HDFS）上的数据导入到 Doris 表里。
+该命令主要用于通过 Broker 服务进程读取远端存储（如 S3、HDFS）上的数据导入到 Doris 表里。
 
 ```sql
 LOAD LABEL load_label
@@ -107,11 +107,11 @@ WITH BROKER broker_name
     指定文件类型，支持 CSV、PARQUET 和 ORC 格式。默认为 CSV。
 
   - `COMPRESS_TYPE AS`
-    指定文件压缩类型, 支持GZ/BZ2/LZ4FRAME。
+    指定文件压缩类型，支持 GZ/BZ2/LZ4FRAME。
 
   - `column list`
 
-    用于指定原始文件中的列顺序。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
+    用于指定原始文件中的列顺序。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/load-data-convert) 文档。
 
     `(k1, k2, tmpk1)`
 
@@ -125,11 +125,11 @@ WITH BROKER broker_name
 
   - `PRECEDING FILTER predicate`
 
-    前置过滤条件。数据首先根据 `column list` 和 `COLUMNS FROM PATH AS` 按顺序拼接成原始数据行。然后按照前置过滤条件进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
+    前置过滤条件。数据首先根据 `column list` 和 `COLUMNS FROM PATH AS` 按顺序拼接成原始数据行。然后按照前置过滤条件进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/load-data-convert) 文档。
 
   - `WHERE predicate`
 
-    根据条件对导入的数据进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
+    根据条件对导入的数据进行过滤。关于这部分详细介绍，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/load-data-convert) 文档。
 
   - `DELETE ON expr`
 
@@ -141,16 +141,16 @@ WITH BROKER broker_name
 
   - `PROPERTIES ("key1"="value1", ...)`
 
-    指定导入的format的一些参数。如导入的文件是`json`格式，则可以在这里指定`json_root`、`jsonpaths`、`fuzzy_parse`等参数。
+    指定导入的 format 的一些参数。如导入的文件是`json`格式，则可以在这里指定`json_root`、`jsonpaths`、`fuzzy_parse`等参数。
 
     - <version since="dev" type="inline"> enclose </version>
   
-      包围符。当csv数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。
+      包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。
       注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
 
     - <version since="dev" type="inline"> escape </version>
 
-      转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
+      转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。
 
 - `WITH BROKER broker_name`
 
@@ -158,7 +158,7 @@ WITH BROKER broker_name
 
 - `broker_properties`
 
-  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker](../../../../advanced/broker.md) 文档。
+  指定 broker 所需的信息。这些信息通常被用于 Broker 能够访问远端存储系统。如 BOS 或 HDFS。关于具体信息，可参阅 [Broker](../../../../data-operate/import/broker-load-manual) 文档。
 
   ```text
   (
@@ -194,11 +194,11 @@ WITH BROKER broker_name
 
     - `timezone`
 
-      指定某些受时区影响的函数的时区，如 `strftime/alignment_timestamp/from_unixtime` 等等，具体请查阅 [时区](../../../../advanced/time-zone.md) 文档。如果不指定，则使用 "Asia/Shanghai" 时区
+      指定某些受时区影响的函数的时区，如 `strftime/alignment_timestamp/from_unixtime` 等等，具体请查阅 [时区](../../../../query/query-variables/time-zone) 文档。如果不指定，则使用 "Asia/Shanghai" 时区
 
     - `load_parallelism`
 
-      导入并发度，默认为1。调大导入并发度会启动多个执行计划同时执行导入任务，加快导入速度。 
+      导入并发度，默认为 1。调大导入并发度会启动多个执行计划同时执行导入任务，加快导入速度。 
 
     - `send_batch_parallelism`
     
@@ -206,7 +206,7 @@ WITH BROKER broker_name
     
     - `load_to_single_tablet`
       
-      布尔类型，为true表示支持一个任务只导入数据到对应分区的一个tablet，默认值为false，作业的任务数取决于整体并发度。该参数只允许在对带有random分桶的olap表导数的时候设置。
+      布尔类型，为 true 表示支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，作业的任务数取决于整体并发度。该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。
 
     - <version since="dev" type="inline"> priority </version>
 
@@ -395,7 +395,7 @@ WITH BROKER broker_name
    k3        INT
    ```
 
-8. 从 HDFS 导入一批数据，指定超时时间和过滤比例。使用明文 my_hdfs_broker 的 broker。简单认证。并且将原有数据中与 导入数据中v2 大于100 的列相匹配的列删除，其他列正常导入
+8. 从 HDFS 导入一批数据，指定超时时间和过滤比例。使用明文 my_hdfs_broker 的 broker。简单认证。并且将原有数据中与 导入数据中 v2 大于 100 的列相匹配的列删除，其他列正常导入
 
    ```sql
    LOAD LABEL example_db.label8
@@ -421,7 +421,7 @@ WITH BROKER broker_name
 
    导入任务的超时时间是 3600 秒，并且允许错误率在 10% 以内。
 
-9. 导入时指定source_sequence列，保证UNIQUE_KEYS表中的替换顺序：
+9. 导入时指定 source_sequence 列，保证 UNIQUE_KEYS 表中的替换顺序：
 
    ```sql
    LOAD LABEL example_db.label9
@@ -490,7 +490,7 @@ WITH BROKER broker_name
     "max_filter_ratio"="0.1"
     );
 
-11. 从腾讯云cos中以csv格式导入数据。
+11. 从腾讯云 cos 中以 csv 格式导入数据。
 
     ```SQL
     LOAD LABEL example_db.label10
@@ -507,7 +507,7 @@ WITH BROKER broker_name
     )
     ```
 
-12. 导入CSV数据时去掉双引号, 并跳过前5行。
+12. 导入 CSV 数据时去掉双引号，并跳过前 5 行。
 
     ```SQL
     LOAD LABEL example_db.label12
@@ -533,29 +533,29 @@ WITH BROKER broker_name
 
 1. 查看导入任务状态
 
-   Broker Load 是一个异步导入过程，语句执行成功仅代表导入任务提交成功，并不代表数据导入成功。导入状态需要通过 [SHOW LOAD](../../Show-Statements/SHOW-LOAD.md) 命令查看。
+   Broker Load 是一个异步导入过程，语句执行成功仅代表导入任务提交成功，并不代表数据导入成功。导入状态需要通过 [SHOW LOAD](../../../sql-reference/Show-Statements/SHOW-LOAD) 命令查看。
 
 2. 取消导入任务
 
-   已提交切尚未结束的导入任务可以通过 [CANCEL LOAD](./CANCEL-LOAD.md) 命令取消。取消后，已写入的数据也会回滚，不会生效。
+   已提交切尚未结束的导入任务可以通过 [CANCEL LOAD](../../../sql-reference/Data-Manipulation-Statements/Load/CANCEL-LOAD) 命令取消。取消后，已写入的数据也会回滚，不会生效。
 
 3. Label、导入事务、多表原子性
 
-   Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../../data-operate/import/import-scenes/load-atomicity.md) 文档。
+   Doris 中所有导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。同时，Doris 还可以通过 Label 的机制来保证数据导入的不丢不重。具体说明可以参阅 [导入事务和原子性](../../../../data-operate/import/load-atomicity) 文档。
 
 4. 列映射、衍生列和过滤
 
-   Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
+   Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。支持绝大多数内置函数和 UDF。关于如何正确的使用这个功能，可参阅 [列的映射，转换与过滤](../../../../data-operate/import/load-data-convert) 文档。
 
 5. 错误数据过滤
 
-   Doris 的导入任务可以容忍一部分格式错误的数据。容忍了通过 `max_filter_ratio` 设置。默认为0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。
+   Doris 的导入任务可以容忍一部分格式错误的数据。容忍了通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。
 
-   关于容忍率的一些计算方式，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/import-scenes/load-data-convert.md) 文档。
+   关于容忍率的一些计算方式，可以参阅 [列的映射，转换与过滤](../../../../data-operate/import/load-data-convert) 文档。
 
 6. 严格模式
 
-   `strict_mode` 属性用于设置导入任务是否运行在严格模式下。该格式会对列映射、转换和过滤的结果产生影响。关于严格模式的具体说明，可参阅 [严格模式](../../../../data-operate/import/import-scenes/load-strict-mode.md) 文档。
+   `strict_mode` 属性用于设置导入任务是否运行在严格模式下。该格式会对列映射、转换和过滤的结果产生影响。关于严格模式的具体说明，可参阅 [严格模式](../../../../data-operate/import/load-strict-mode.md) 文档。
 
 7. 超时时间
 
@@ -563,7 +563,7 @@ WITH BROKER broker_name
 
 8. 数据量和任务数限制
 
-   Broker Load 适合在一个导入任务中导入100GB以内的数据。虽然理论上在一个导入任务中导入的数据量没有上限。但是提交过大的导入会导致运行时间较长，并且失败后重试的代价也会增加。
+   Broker Load 适合在一个导入任务中导入 100GB 以内的数据。虽然理论上在一个导入任务中导入的数据量没有上限。但是提交过大的导入会导致运行时间较长，并且失败后重试的代价也会增加。
 
    同时受限于集群规模，我们限制了导入的最大数据量为 ComputeNode 节点数 * 3GB。以保证系统资源的合理利用。如果有大数据量需要导入，建议分成多个导入任务提交。
 

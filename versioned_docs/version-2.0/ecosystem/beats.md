@@ -104,7 +104,7 @@ Connection doris configuration:
 | table          | Table name                                                                                                                                  |             |
 | label_prefix   | Import the identification prefix, the final generated ID is *{label\_prefix}\_{db}\_{table}\_{time_stamp}*                                  | doris_beats |
 | line_delimiter | Used to specify the newline character in the imported data, the default is \n. Combinations of multiple characters can be used as newlines. | \n          |
-| headers        | Users can pass in [stream-load import parameters](../data-operate/import/import-way/stream-load-manual.md) through the headers.             |             |
+| headers        | Users can pass in [stream-load import parameters](../data-operate/import/stream-load-manual) through the headers.             |             |
 
 Beats configuration:
 

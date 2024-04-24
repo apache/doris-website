@@ -267,7 +267,7 @@ This is a bug in bdbje that has not yet been resolved. In this case, you can onl
 
 ### Q12. Doris compile and install JDK version incompatibility problem
 
-When compiling Doris using Docker, start FE after compiling and installing, and the exception message `java.lang.Suchmethoderror: java.nio.ByteBuffer.limit (I)Ljava/nio/ByteBuffer;` appears, this is because the default in Docker It is JDK 11. If your installation environment is using JDK8, you need to switch the JDK environment to JDK8 in Docker. For the specific switching method, please refer to [Compile Documentation](../install/source-install/compilation-general.md)
+When compiling Doris using Docker, start FE after compiling and installing, and the exception message `java.lang.Suchmethoderror: java.nio.ByteBuffer.limit (I)Ljava/nio/ByteBuffer;` appears, this is because the default in Docker It is JDK 11. If your installation environment is using JDK8, you need to switch the JDK environment to JDK8 in Docker. For the specific switching method, please refer to [Compile Documentation](../install/source-install/compilation-with-docker)
 
 ### Q13. Error starting FE or unit test locally Cannot find external parser table action_table.dat
 Run the following command
@@ -279,13 +279,17 @@ If the same error is reported, Run the following command
 cp fe-core/target/generated-sources/cup/org/apache/doris/analysis/action_table.dat fe-core/target/classes/org/apache/doris/analysis
 ```
 
-### ### Q14. Doris upgrades to version 1.0 or later and reports error ``Failed to set ciphers to use (2026)` in MySQL appearance via ODBC.
+### Q14. Doris upgrades to version 1.0 or later and reports error ``Failed to set ciphers to use (2026)` in MySQL appearance via ODBC.
 This problem occurs after doris upgrades to version 1.0 and uses Connector/ODBC 8.0.x or higher. Connector/ODBC 8.0.x has multiple access methods, such as `/usr/lib64/libmyodbc8w.so` which is installed via yum and relies on ` libssl.so.10` and `libcrypto.so.10`.
 In doris 1.0 onwards, openssl has been upgraded to 1.1 and is built into the doris binary package, so this can lead to openssl conflicts and errors like the following
 ```
 ERROR 1105 (HY000): errCode = 2, detailMessage = driver connect Error: HY000 [MySQL][ODBC 8.0(w) Driver]SSL connection error: Failed to set ciphers to use (2026)
 ```
-The solution is to use the `Connector/ODBC 8.0.28` version of ODBC Connector and select `Linux - Generic` in the operating system, this version of ODBC Driver uses openssl version 1.1. Or use a lower version of ODBC connector, e.g. [Connector/ODBC 5.3.14](https://dev.mysql.com/downloads/connector/odbc/5.3.html). For details, see the [ODBC exterior documentation](../lakehouse/external-table/odbc.md).
+The solution is to use the `Connector/ODBC 8.0.28` version of ODBC Connector and select `Linux - Generic` in the operating system, this version of ODBC Driver uses openssl version 1.1. Or use a lower version of ODBC connector, e.g. [Connector/ODBC 5.3.14](https://dev.mysql.com/downloads/connector/odbc/5.3.html). For details, see the [ODBC exterior documentation](https://doris.apache.org/zh-CN/docs/1.2/lakehouse/external-table/odbc).
+
+:::tip 提示
+ODBC is no supported in version 2.0 or later, it is recommended to use [JDBC Catalog](../lakehouse/database/jdbc).
+:::
 
 You can verify the version of openssl used by MySQL ODBC Driver by
 

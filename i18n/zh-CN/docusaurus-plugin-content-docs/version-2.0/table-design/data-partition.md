@@ -38,7 +38,7 @@ under the License.
 
 -   Column：用于描述一行数据中不同的字段；
 
--   Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris 的 key 列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 key 列，除了 key 列剩下的就是 value 列。从聚合模型的角度来说，Key 列相同的行，会聚合成一行。其中 Value 列的聚合方式由用户在建表时指定。关于更多聚合模型的介绍，可以参阅 [Doris 数据模型](../table-design/data-model/overview.md)。
+-   Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。Doris 的 key 列是建表语句中指定的列，建表语句中的关键字'unique key'或'aggregate key'或'duplicate key'后面的列就是 key 列，除了 key 列剩下的就是 value 列。从聚合模型的角度来说，Key 列相同的行，会聚合成一行。其中 Value 列的聚合方式由用户在建表时指定。关于更多聚合模型的介绍，可以参阅 [Doris 数据模型](../table-design/data-model/overview)。
 
 ### 分区和分桶（Partition & Tablet）
 
@@ -801,7 +801,7 @@ PROPERTIES (
 );
 ```
 
-该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则需要通过 [ALTER-TABLE-PARTITION](../../sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) 对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
+该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则需要通过 [ALTER-TABLE-PARTITION](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) 对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
 
 ## 手动分桶
 
