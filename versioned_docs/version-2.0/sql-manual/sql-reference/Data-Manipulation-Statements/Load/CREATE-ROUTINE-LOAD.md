@@ -34,7 +34,7 @@ CREATE ROUTINE LOAD
 
 The Routine Load function allows users to submit a resident import task, and import data into Doris by continuously reading data from a specified data source.
 
-Currently, only data in CSV or Json format can be imported from Kakfa through unauthenticated or SSL authentication. [Example of importing data in Json format](../../../../data-operate/import/import-way/routine-load-manual.md#Example_of_importing_data_in_Json_format)
+Currently, only data in CSV or Json format can be imported from Kakfa through unauthenticated or SSL authentication. [Example of importing data in Json format](../../../../data-operate/import/load-json-format)
 
 grammar:
 
@@ -322,7 +322,7 @@ FROM data_source [data_source_properties]
 
      When the value of the parameter is a file, you need to add the keyword: "FILE:" before the value.
 
-     For how to create a file, please refer to the [CREATE FILE](../../../Data-Definition-Statements/Create/CREATE-FILE) command documentation.
+     For how to create a file, please refer to the [CREATE FILE](../../../sql-reference/Data-Definition-Statements/Create/CREATE-FILE) command documentation.
 
      For more supported custom parameters, please refer to the configuration items on the client side in the official CONFIGURATION document of librdkafka. Such as:
 

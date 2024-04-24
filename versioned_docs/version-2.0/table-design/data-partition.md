@@ -446,7 +446,7 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   The range of reserved history periods. It should be in the form of `[yyyy-MM-dd,yyyy-MM-dd],[...,...]` while the `dynamic_partition.time_unit` is "DAY, WEEK, MONTH and YEAR". And it should be in the form of `[yyyy-MM-dd HH:mm:ss,yyyy-MM-dd HH:mm:ss],[...,...]` while the dynamic_partition.time_unit` is "HOUR". And no more spaces expected. The default value is `"NULL"`, which means it is not set.
 
-  Let us give an example. Suppose today is 2021-09-06，partitioned by day, and the properties of dynamic partition are set to: 
+  Let us give an example. Suppose today is 2021-09-06, partitioned by day, and the properties of dynamic partition are set to: 
 
   ```time_unit="DAY/WEEK/MONTH/YEAR", end=3, start=-3, reserved_history_periods="[2020-06-01,2020-06-20],[2020-10-31,2020-11-15]"```.
 
@@ -1041,13 +1041,13 @@ According to the above algorithm, the initial number of buckets and the number o
      - Pre-allocated memory failure. This may be because the byte length of a row in the table exceeds 100KB.  
      - `Too many open files`. The number of open file handles exceeds the Linux system limit. You need to modify the handle limit of the Linux system.  
 
-* If there is a timeout when creating data tablets, you can also extend the timeout by setting `tablet_create_timeout_second=xxx` and `max_create_table_timeout_second=xxx` in the fe.conf file. By default, `tablet_create_timeout_second` is set to 1 second, and `max_create_table_timeout_second` is set to 60 seconds. The overall timeout is calculated as `min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)`. For specific parameter settings, please refer to the [FE Configuration](admin-manual/config/fe-config) section.
+* If there is a timeout when creating data tablets, you can also extend the timeout by setting `tablet_create_timeout_second=xxx` and `max_create_table_timeout_second=xxx` in the fe.conf file. By default, `tablet_create_timeout_second` is set to 1 second, and `max_create_table_timeout_second` is set to 60 seconds. The overall timeout is calculated as `min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)`. For specific parameter settings, please refer to the [FE Configuration](../admin-manual/config/fe-config) section.
 
 3. The table creation command does not return results for a long time.
 
 * Doris's table creation command is a synchronous command. The timeout for this command is currently set simply as (tablet num * replication num) seconds. If many data tablets are created and some of them fail to create, it may result in a long wait before returning an error.  
 * Under normal circumstances, the table creation statement should return within a few seconds or tens of seconds. If it exceeds one minute, it is recommended to cancel the operation directly and check the relevant errors in the FE or BE logs.
 
-## Additional Help
+## More Help
 
 For more detailed information on data partitioning, you can refer to the [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE) command manual or enter `HELP CREATE TABLE;` in the MySQL client to get more help information.

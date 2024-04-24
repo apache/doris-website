@@ -68,7 +68,7 @@ Starting from Doris 2.1, write merge will be the default mode for the unique key
 
 - If only some columns are updated and MoW is used in the unique key model, and the MySQL session variable "partial_columns" is set to true, or the HTTP header "partial_columns" is set to true, the missing columns will be updated with the corresponding missing column values from the existing record, instead of using the default values from the table schema.
 
-We will provide detailed explanations of these two update methods in the documentation: [Update in Unique Key Model](../update/unique-update) and [Load Update in Unique Key Model](../update/unique-load-update).
+We will provide detailed explanations of these two update methods in the documentation: [Update in Unique Key Model](../update/unique-update) and [Load Update in Unique Key Model](../update/update-of-unique-model).
 
 ### Update Transactions in Unique Key Model
 
@@ -86,4 +86,4 @@ The update in the aggregate model is only supported through load methods and doe
 
 When defining a table in the aggregate model, if the aggregation function for the value column is defined as REPLACE_IF_NULL, it indirectly achieves partial column update capabilities similar to the unique key model.
 
-For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/aggregate-load-update).
+For more details, please refer to the documentation on [Load Update in the Aggregate Model](../update/update-of-aggregate-model).

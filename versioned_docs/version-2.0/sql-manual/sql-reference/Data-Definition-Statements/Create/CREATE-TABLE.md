@@ -240,7 +240,7 @@ Partition information supports three writing methods:
            
 <version since="1.2.0">
     
-3. MULTI RANGE：Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
+3. MULTI RANGE: Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
 
     ```
     PARTITION BY RANGE(col)
@@ -255,7 +255,7 @@ Partition information supports three writing methods:
 </version>
 
 
-4. MULTI RANGE：Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size。
+4. MULTI RANGE: Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size.
 
     ```
     PARTITION BY RANGE(int_col)
@@ -811,7 +811,7 @@ NOTE: Multi Partition can be mixed with conventional manual creation of partitio
 
 #### Partitioning and bucketing
 
-A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../data-table/data-partition.md) document.
+A table must specify the bucket column, but it does not need to specify the partition. For the specific introduction of partitioning and bucketing, please refer to the [Data Division](../../../../table-design/data-partition) document.
 
 Tables in Doris can be divided into partitioned tables and non-partitioned tables. This attribute is determined when the table is created and cannot be changed afterwards. That is, for partitioned tables, you can add or delete partitions in the subsequent use process, and for non-partitioned tables, you can no longer perform operations such as adding partitions afterwards.
 
@@ -821,7 +821,7 @@ Therefore, it is recommended to confirm the usage method to build the table reas
 
 #### Dynamic Partition
 
-The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../advanced/partition/dynamic-partition.md) document for more help.
+The dynamic partition function is mainly used to help users automatically manage partitions. By setting certain rules, the Doris system regularly adds new partitions or deletes historical partitions. Please refer to [Dynamic Partition](../../../../table-design/data-partition) document for more help.
 
 #### Materialized View
 
@@ -831,7 +831,7 @@ If the materialized view is created when the table is created, all subsequent da
 
 If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
 
-For the introduction of materialized views, please refer to the document [materialized views](../../../../query-acceleration/materialized-view.md).
+For the introduction of materialized views, please refer to the document [materialized views](../../../../query/view-materialized-view/materialized-view).
 
 #### Index
 
