@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_NUM_TO_STRING
 
-<version since="dev">
+### description
 
 IPV4_NUM_TO_STRING
-
-</version>
-
-### description
 
 #### Syntax
 
