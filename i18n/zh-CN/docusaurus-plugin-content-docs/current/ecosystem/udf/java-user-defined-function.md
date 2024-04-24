@@ -111,7 +111,7 @@ CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
 * 如果你是**本地路径**方式，这里数据库驱动依赖的 jar 包，**FE、BE 节点都要放置**
 
 ## 编写 UDAF 函数
-<br/>
+
 
 在使用 Java 代码编写 UDAF 时，有一些必须实现的函数 (标记 required) 和一个内部类 State，下面将以一个具体的实例来说明
 下面的 SimpleDemo 将实现一个类似的 sum 的简单函数，输入参数 INT，输出参数是 INT
@@ -333,10 +333,10 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
+
 :::tip 提示
 该功能从 Doris 2.1 开始支持
 :::
-
 
 ## 编写 UDTF 函数
 
@@ -387,8 +387,12 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 在`samples/doris-demo/java-udf-demo/` 目录中提供了具体示例。具体使用方法见每个目录下的`README.md`，查看点击[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
 
 ## 使用须知
+
 1. 不支持复杂数据类型（HLL，Bitmap）。
+
 2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 JAVA_OPTS 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
+
 3. char 类型的 udf 在 create function 时需要使用 String 类型。
+
 4. 由于 jvm 加载同名类的问题，不要同时使用多个同名类作为 udf 实现，如果想更新某个同名类的 udf，需要重启 be 重新加载 classpath。
 

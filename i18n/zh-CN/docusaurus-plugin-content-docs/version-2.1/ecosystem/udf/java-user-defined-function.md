@@ -332,6 +332,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
+
 :::tip 提示
 该功能从 Doris 2.1 开始支持
 :::

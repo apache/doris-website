@@ -316,8 +316,8 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `max_allowed_packet`
 
-    Used for compatible JDBC connection pool C3P0. No practical effect.
-    
+  For compatibility with JDBC connection pool C3P0. Has no real effect on Doris itself. If you encounter the error `Packet for query is too large (1,514,085 > 1,048,576). You can change this value on the server by setting the 'max_allowed_packet' variable.`, you can use `set GLOBAL max_allowed_packet = 1548576` to increase the value.
+
 * `max_pushdown_conditions_per_column`
 
     For the specific meaning of this variable, please refer to the description of `max_pushdown_conditions_per_column` in [BE Configuration](../../admin-manual/config/be-config). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
