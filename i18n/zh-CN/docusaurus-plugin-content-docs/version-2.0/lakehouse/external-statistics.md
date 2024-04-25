@@ -26,7 +26,7 @@ under the License.
 
 
 
-外表统计信息的收集方式和收集内容与内表基本一致，详细信息可以参考[内表统计信息](../../query/nereids/statistics)。目前支持对 Hive，Iceberg 和 Hudi 等外部表的收集。
+外表统计信息的收集方式和收集内容与内表基本一致，详细信息可以参考[内表统计信息](../query/nereids/statistics)。目前支持对 Hive，Iceberg 和 Hudi 等外部表的收集。
 
 外表暂不支持的功能包括
 
@@ -145,7 +145,7 @@ under the License.
 
 ### 任务管理
 
-任务管理的方式也和内表相同，主要包括查看 job，查看 task，删除 job 等功能。请参考[内表统计信息](../../query/nereids/statistics)任务管理部分。
+任务管理的方式也和内表相同，主要包括查看 job，查看 task，删除 job 等功能。请参考[内表统计信息](../query/nereids/statistics)任务管理部分。
 
 - 查看所有 job 状态
 
@@ -199,7 +199,7 @@ under the License.
 
 ### 信息查看
 
-信息的查看包括表的统计信息（表的行数）查看和列统计信息查看，请参考[内表统计信息](../../query/nereids/statistics)查看统计信息部分。
+信息的查看包括表的统计信息（表的行数）查看和列统计信息查看，请参考[内表统计信息](../query/nereids/statistics)查看统计信息部分。
 
 **表统计信息**
 
@@ -246,7 +246,7 @@ mysql> SHOW COLUMN stats hive.tpch100.orders;
 ### 信息修改
 
 修改信息支持用户手动修改列统计信息。可以修改指定列的 row_count, ndv, num_nulls, min_value, max_value, data_size 等信息。
-请参考[内表统计信息](../../query/nereids/statistics)修改统计信息部分。
+请参考[内表统计信息](../query/nereids/statistics)修改统计信息部分。
 
 ```sql
 mysql> ALTER TABLE hive.tpch100.orders MODIFY COLUMN o_orderstatus SET STATS ('row_count'='6001215');
@@ -271,7 +271,7 @@ mysql> SHOW COLUMN stats hive.tpch100.orders;
 ### 信息删除
 
 删除外表统计信息支持用户删除一张表的表行数信息和列统计信息。如果用户指定了删除的列名，则只删除这些列的信息。如果不指定，则删除整张表所有列的统计信息以及表行数信息。
-请参考[内表统计信息](../../query/nereids/statistics)删除统计信息部分。
+请参考[内表统计信息](../query/nereids/statistics) 删除统计信息部分。
 
 - 删除整张表的信息
 

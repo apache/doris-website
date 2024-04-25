@@ -35,22 +35,18 @@ Doris 提供多种数据导入方案，可以针对不同的数据源进行选�
 | 数据源                               | 导入方式                                                     |
 | ------------------------------------ | ------------------------------------------------------------ |
 | 对象存储（s3）,HDFS                  | [使用 Broker 导入数据](../import/broker-load-manual) |
-| 本地文件                             | [Stream Load](../import/stream-load-manual.), [MySQL Load](../import/mysql-load-manual)         |
-| Kafka                                | [订阅 Kafka 数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-scenes/kafka-load)             |
+| 本地文件                             | [Stream Load](../import/stream-load-manual), [MySQL Load](../import/mysql-load-manual)         |
 | Mysql、PostgreSQL，Oracle，SQLServer | [通过外部表同步数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-scenes/external-table-load) |
-| 通过 JDBC 导入                         | [使用 JDBC 同步数据](../import-scenes/jdbc-load)           |
 | 导入 JSON 格式数据                     | [JSON 格式数据导入](../import/load-json-format)       |
 
 ### 按导入方式划分
 
 | 导入方式名称 | 使用方式                                                     |
 | ------------ | ------------------------------------------------------------ |
-| Spark Load   | [通过 Spark 导入外部数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/spark-load-manual) |
 | Broker Load  | [通过 Broker 导入外部存储数据](../import/broker-load-manual) |
 | Stream Load  | [流式导入数据 (本地文件及内存数据)](../import/stream-load-manual) |
 | Routine Load | [导入 Kafka 数据](https://doris.apache.org/zh-CN/docs/data-operate/import/import-scenes/kafka-load)       |
 | Insert Into  | [外部表通过 INSERT 方式导入数据](../import/insert-into-manual) |
-| S3 Load      | [S3 协议的对象存储数据导入](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/s3-load-manual) |
 | MySQL Load   | [MySQL 客户端导入本地数据](../import/mysql-load-manual) |
 
 ## 支持的数据格式

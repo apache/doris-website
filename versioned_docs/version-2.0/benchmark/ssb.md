@@ -106,7 +106,7 @@ Here we use Apache Doris 2.0.6 for comparative testing. In the test, we use Quer
 
 ## 6. Environment Preparation
 
-Please first refer to the [official documentation](. /install/install-deploy.md) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
+Please first refer to the [official documentation](../install/cluster-deployment/standard-deployment) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
 
 ## 7. Data Preparation
 
@@ -165,7 +165,7 @@ export DB='ssb'
 sh bin/create-ssb-tables.sh -s 1000
 ````
 
-Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql) and [ create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql) and then execute them in the MySQL client.
+Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql) and [create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql) and then execute them in the MySQL client.
 
 ### 7.4 Import data
 

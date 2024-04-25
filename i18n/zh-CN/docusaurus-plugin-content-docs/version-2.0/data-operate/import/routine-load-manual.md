@@ -424,7 +424,7 @@ FROM KAFKA [data_source_properties]
 | WHERE                 | <where_expr>                                                 | 指定 where_expr 可以根据条件过滤导入的数据源。如只希望导入 age > 30 的数据源，可以使用以下命令：`WHERE age > 30` |
 | PARTITION             | <partition_name>                                             | 指定导入目标表中的哪些 partition。如果不指定，会自动导入对应的 partition 中。如希望导入目标表 p1 与 p2 分区，可以使用以下命令：`PARTITION(p1, p2)` |
 | DELETE ON             | <delete_expr>                                                | 在 MERGE 导入模式下，使用 delete_expr 标记哪些列需要被删除。如需要在 MERGE 时删除 age > 30 的列，可以使用，可以使用以下命令：`DELETE ON age > 30` |
-| ORDER BY              | <order_by_column>                                            | 进针对 Unique Key 模型生效。用于指定导入数据中的 Sequence Column 列，以保证数据的顺序。如在 Unique Key 表导入时，需要指定导入的 Sequence Column 为 create_time，可以使用以下命令：`ORDER BY create_time`针对与 Unique Key 模型 Sequence Column 列的描述，可以参考文档[ 数据更新/Sequence 列 ](../../data-operate/update/sequence-column-manual) |
+| ORDER BY              | <order_by_column>                                            | 进针对 Unique Key 模型生效。用于指定导入数据中的 Sequence Column 列，以保证数据的顺序。如在 Unique Key 表导入时，需要指定导入的 Sequence Column 为 create_time，可以使用以下命令：`ORDER BY create_time`针对与 Unique Key 模型 Sequence Column 列的描述，可以参考文档[ 数据更新/Sequence 列 ](../update/update-of-unique-model) |
 
 **job_properties 子句**
 
@@ -451,7 +451,7 @@ job_properties 子句具体参数选项如下：
 | strip_outer_array         | 当导入数据格式为 json 时，strip_outer_array 为 true 表示 Json 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常情况下，Kafka 中的 Json 数据可能以数组形式表示，即在最外层中包含中括号`[]`，此时，可以指定 `"strip_outer_array" = "true"`，以数组模式消费 Topic 中的数据。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
 | send_batch_parallelism    | 用于设置发送批量数据的并行度。如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。 |
 | load_to_single_tablet     | 支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。 |
-| partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[部分列更新](../../data-operate/update/unique-load-update) |
+| partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[部分列更新](../update/update-of-unique-model) |
 | max_filter_ratio          | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 1.0，表示可以容忍任何错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。被 where 条件过滤掉的行不算错误行。 |
 | enclose                   | 指定包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
 | escape                    | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |

@@ -138,7 +138,7 @@ Parameter introduction:
 
 22. send_batch_parallelism: Integer, used to set the parallelism of sending batch data. If the value of parallelism exceeds `max_send_batch_parallelism_per_job` in the BE configuration, the BE as a coordination point will use the value of `max_send_batch_parallelism_per_job`.
 
-23. hidden_columns: Specify hidden column when no `columns` in Headers，multi hidden column shoud be
+23. hidden_columns: Specify hidden column when no `columns` in Headers, multi hidden column shoud be
 separated by commas.
 
        ```
@@ -436,21 +436,21 @@ separated by commas.
 
 4. Label, import transaction, multi-table atomicity
 
-   All import tasks in Doris are atomic. And the import of multiple tables in the same import task can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that the data imported is not lost or heavy. For details, see the [Import Transactions and Atomicity](../../../../data-operate/import/import-scenes/load-atomicity.md) documentation.
+   All import tasks in Doris are atomic. And the import of multiple tables in the same import task can also guarantee atomicity. At the same time, Doris can also use the Label mechanism to ensure that the data imported is not lost or heavy. For details, see the [Import Transactions and Atomicity](../../../../data-operate/import/load-atomicity) documentation.
 
 5. Column mapping, derived columns and filtering
 
-   Doris can support very rich column transformation and filtering operations in import statements. Most built-in functions and UDFs are supported. For how to use this function correctly, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/import-scenes/load-data-convert.md) document.
+   Doris can support very rich column transformation and filtering operations in import statements. Most built-in functions and UDFs are supported. For how to use this function correctly, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
 
 6. Error data filtering
 
    Doris' import tasks can tolerate a portion of malformed data. The tolerance ratio is set via `max_filter_ratio`. The default is 0, which means that the entire import task will fail when there is an error data. If the user wants to ignore some problematic data rows, the secondary parameter can be set to a value between 0 and 1, and Doris will automatically skip the rows with incorrect data format.
 
-   For some calculation methods of the tolerance rate, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/import-scenes/load-data-convert.md) document.
+   For some calculation methods of the tolerance rate, please refer to the [Column Mapping, Conversion and Filtering](../../../../data-operate/import/load-data-convert) document.
 
 7. Strict Mode
 
-   The `strict_mode` attribute is used to set whether the import task runs in strict mode. The format affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial updates. For a detailed description of strict mode, see the [strict mode](../../../../data-operate/import/import-scenes/load-strict-mode.md) documentation.
+   The `strict_mode` attribute is used to set whether the import task runs in strict mode. The format affects the results of column mapping, transformation, and filtering, and it also controls the behavior of partial updates. For a detailed description of strict mode, see the [strict mode](../../../../data-operate/import/load-strict-mode) documentation.
 
 8. Timeout
 
@@ -469,7 +469,7 @@ separated by commas.
    In the import, on the other hand, our target timezone is specified by the parameter `timezone`, which will replace the session variable `time_zone` when timezone conversions occur, and when computing timezone-sensitive functions. Therefore, if there are no special circumstances, `timezone` should be set in the import transaction to match the `time_zone` of the current Doris cluster. This means that all time data with a time zone will be converted to that time zone.
    For example, if the Doris system timezone is "+08:00", and the time column in the imported data contains two pieces of data, "2012-01-01 01:00:00Z" and "2015-12-12 12:12:12-08:00", then after we specify the timezone of the imported transaction via `-H "timezone: +08:00"` during import, both pieces of data will be converted to that timezone, resulting in the results "2012-01-01 09:00:00" and "2015-12-13 04:12:12".
 
-   For a more detailed understanding, see [time-zone](../../../../advanced/time-zone) document.
+   For a more detailed understanding, see [time-zone](../../../../query/query-variables/time-zone) document.
 
 11. The Execution Engine Choice
 

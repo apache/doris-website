@@ -110,7 +110,7 @@ For Iceberg properties, see [Iceberg Glue Catalog](https://iceberg.apache.org/do
 
 #### Alibaba Cloud DLF
 
-see [Alibaba Cloud DLF Catalog](dlf.md)
+see [Alibaba Cloud DLF Catalog](./hive)
 
 #### REST Catalog
 
@@ -212,4 +212,4 @@ You can use the `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read hist
 
 `SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;`
 
-In addition, you can use the [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg_meta.md) table function to query the snapshot information of the specified table.
+In addition, you can use the [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg-meta) table function to query the snapshot information of the specified table.

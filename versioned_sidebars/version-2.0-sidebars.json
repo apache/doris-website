@@ -468,7 +468,6 @@
             "type": "category",
             "label": "Ecosystem",
             "items": [
-                "ecosystem/ecosystem-overview",
                 "ecosystem/spark-doris-connector",
                 "ecosystem/flink-doris-connector",
                 "ecosystem/doris-kafka-connector",

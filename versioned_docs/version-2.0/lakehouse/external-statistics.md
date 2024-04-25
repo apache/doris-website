@@ -26,7 +26,7 @@ under the License.
 
 # External Table Statistics
 
-The collection method and content of the external table statistics are basically the same as those of the internal table. For more information, please refer to [Internal table statistics](../query-acceleration/statistics.md). Currently supports the collection of Hive, Iceberg and Hudi external tables.
+The collection method and content of the external table statistics are basically the same as those of the internal table. For more information, please refer to [Internal table statistics]((../query/nereids/statistics)). Currently supports the collection of Hive, Iceberg and Hudi external tables.
 
 Features that are not currently supported by the external table include
 
@@ -134,7 +134,7 @@ This statement creates a periodic collection job, the cycle is 1 day, and the st
 
 ### Job management
 
-The method of job management is also the same as that of the internal table, including functions such as viewing jobs, viewing tasks, and deleting jobs. Please refer to the manage job section of [Internal table statistics](../query-acceleration/statistics.md)
+The method of job management is also the same as that of the internal table, including functions such as viewing jobs, viewing tasks, and deleting jobs. Please refer to the manage job section of [Internal table statistics](../query/nereids/statistics)
 
 - Show all job status
 
@@ -188,7 +188,7 @@ DROP ANALYZE JOB [JOB_ID]
 
 ### Show statistics
 
-Show statistics includes show table statistics (number of rows) and column statistics. Please refer to View statistics in [Internal Table Statistics](../query-acceleration/statistics.md)
+Show statistics includes show table statistics (number of rows) and column statistics. Please refer to View statistics in [Internal Table Statistics](../query/nereids/statistics)
 
 #### Table statistics
 ```
@@ -234,7 +234,7 @@ mysql> SHOW COLUMN stats hive.tpch100.orders;
 
 Modify statistics supports users to manually modify column statistics. You can modify the row_count, ndv, num_nulls, min_value, max_value, data_size and other information of the specified column.
 
-Please refer to Modify the statistics in [Internal Table Statistics](../query-acceleration/statistics.md)
+Please refer to Modify the statistics in [Internal Table Statistics](../query/nereids/statistics)
 
 ```
 mysql> ALTER TABLE hive.tpch100.orders MODIFY COLUMN o_orderstatus SET STATS ('row_count'='6001215');
@@ -260,7 +260,7 @@ mysql> SHOW COLUMN stats hive.tpch100.orders;
 
 Deleting table statistics supports users to delete table row count and column statistics of a table. If the user specifies the column names to be deleted, only the statistics of these columns will be deleted. If not specified, the statistical information of all columns of the entire table and the number of rows of the table will be deleted.
 
-Please refer to Delete statistics in [Internal Table Statistics](../query-acceleration/statistics.md)
+Please refer to Delete statistics in [Internal Table Statistics](../query/nereids/statistics)
 
 - Delete statistics of the entire table
 

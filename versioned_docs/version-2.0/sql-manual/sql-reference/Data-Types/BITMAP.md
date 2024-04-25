@@ -68,7 +68,7 @@ Query data example:
     group by hour order by 1
     ) final;
 
-When querying, BITMAP can cooperate with `return_object_data_as_binary`. For details, please refer to [variables](../../../advanced/variables.md).
+When querying, BITMAP can cooperate with `return_object_data_as_binary`. For details, please refer to [variables](../../../query/query-variables/variables).
     
 ### keywords
 BITMAP
