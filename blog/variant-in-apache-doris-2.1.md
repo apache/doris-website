@@ -5,8 +5,6 @@
     'date': '2024-03-26',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/variant-in-apache-doris-2.1.png'
 }
 ---

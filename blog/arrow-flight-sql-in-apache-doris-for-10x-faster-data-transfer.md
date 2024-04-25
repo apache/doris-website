@@ -5,7 +5,7 @@
     'date': '2024-04-16',
     'author': 'Apache Doris',
     'picked': "true",
-    'order': "2",
+    'order': "3",
     'tags': ['Tech Sharing'],
     "image": '/images/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png'
 }
