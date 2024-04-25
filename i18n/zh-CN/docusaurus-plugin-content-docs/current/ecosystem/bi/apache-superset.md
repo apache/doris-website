@@ -39,6 +39,22 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 2. 安装 Apache Superset 3.1 及其以上的版本。具体参见[安装 Superset 从 PyPI 库](https://superset.apache.org/docs/installation/installing-superset-from-pypi)或者[通过 Docker 容器的方式安装](https://hub.docker.com/r/apache/superset)
 
 ## 添加数据源
+1. 通过对应的启动端口对Superset进行访问。
+
+   ![login page](/images/bi-superset-en-1.png)
+
+2. 登陆后选择添加数据库连接。
+
+   ![add databases](/images/bi-superset-en-2.png)
+
+3. 在连接的弹窗页面中选择Apache Doris。
+
+   ![select databases](/images/bi-superset-en-3.png)
+
+4. 在连接信息中填写SQLALCHEMY URI，并进行相关的连接验证。
+
+   ![test connection](/images/bi-superset-en-4.png)
+
 当你在 Apache Superset 中创建数据源时需要注意以下两点：
 
 - 在 SUPPORTED DATABASES 里选择 Apache Doris 作为数据源。
