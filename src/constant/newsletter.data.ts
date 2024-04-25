@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Best Practice'],
+        title: "Cross-Cluster Replication for read-write separation: story of a grocery store brand",
+        content: `Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.`,
+        to: '/blog/cross-cluster-replication-for-read-write',
+        image: 'ccr-for-read-write-separation.jpg',
+    },
+    {
         tags: ['Release Notes'],
         title: "Apache Doris version 2.0.9 has been released",
         content: `Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version.`,
@@ -20,11 +27,5 @@ export const NEWSLETTER_DATA = [
         to: '/blog/auto-increment-columns-in-databases',
         image: 'auto-increment-columns-in-databases.png',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: "Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis",
-        content: `Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.`,
-        to: '/blog/variant-in-apache-doris-2.1',
-        image: 'variant-in-apache-doris-2.1.png',
-    },
+
 ];
