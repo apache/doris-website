@@ -2,7 +2,7 @@ import React from 'react';
 import './demo-block.css';
 
 
-export default function InstallBlock() {
+export default function Lakehouse() {
     return (
         <div className="home-page-section">
             <div className="home-page-section-left">
@@ -17,7 +17,7 @@ export default function InstallBlock() {
                             <path fill="none" d="M0 0h24v24H0Z" />
                         </svg>
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>安装部署</div>
+                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>湖仓一体</div>
 
                 </div>
 
@@ -34,19 +34,22 @@ export default function InstallBlock() {
                             className="home-page-option-button"
                             href="../../install/cluster-deployment/standard-deployment"
                         >
-                            <div className="home-page-text">手动部署</div>
+                            <div className="home-page-text">数据湖分析</div>
                         </a>
                         <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Docker 部署</div>
+                            <div className="home-page-text">数据库分析</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">K8s 部署</div>
+                        <a className="home-page-option-button" href="../../data-operate/import/routine-load-manual">
+                            <div className="home-page-text">TVF</div>
                         </a>
 
                     </div>
-                    <div>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Doris on AWS</div>
+                    <div className="home-page-button-container">
+                        <a className="home-page-option-button" href="../../data-operate/import/insert-into-manual">
+                            <div className="home-page-text">文件缓存</div>
+                        </a>
+                        <a className="home-page-option-button" href="../../data-operate/import/group-commit-manual">
+                            <div className="home-page-text">SQL 方言兼容</div>
                         </a>
                     </div>
 

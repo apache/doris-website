@@ -2,7 +2,7 @@ import React from 'react';
 import './demo-block.css';
 
 
-export default function InstallBlock() {
+export default function ExportData() {
     return (
         <div className="home-page-section">
             <div className="home-page-section-left">
@@ -17,7 +17,7 @@ export default function InstallBlock() {
                             <path fill="none" d="M0 0h24v24H0Z" />
                         </svg>
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>安装部署</div>
+                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>数据导出</div>
 
                 </div>
 
@@ -34,21 +34,17 @@ export default function InstallBlock() {
                             className="home-page-option-button"
                             href="../../install/cluster-deployment/standard-deployment"
                         >
-                            <div className="home-page-text">手动部署</div>
+                            <div className="home-page-text">导出数据</div>
                         </a>
                         <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Docker 部署</div>
+                            <div className="home-page-text">导出结果集</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">K8s 部署</div>
+                        <a className="home-page-option-button" href="../../data-operate/import/routine-load-manual">
+                            <div className="home-page-text">导出表结构和数据</div>
                         </a>
 
                     </div>
-                    <div>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Doris on AWS</div>
-                        </a>
-                    </div>
+
 
 
                 </div>

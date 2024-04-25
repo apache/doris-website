@@ -2,7 +2,7 @@ import React from 'react';
 import './demo-block.css';
 
 
-export default function DesignBlock() {
+export default function QueryData() {
     return (
         <div className="home-page-section">
             <div className="home-page-section-left">
@@ -17,7 +17,7 @@ export default function DesignBlock() {
                             <path fill="none" d="M0 0h24v24H0Z" />
                         </svg>
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>数据表设计</div>
+                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>数据查询</div>
 
                 </div>
 
@@ -34,27 +34,60 @@ export default function DesignBlock() {
                             className="home-page-option-button"
                             href="../../install/cluster-deployment/standard-deployment"
                         >
-                            <div className="home-page-text">数据类型</div>
+                            <div className="home-page-text">Select 查询</div>
                         </a>
                         <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">数据模型</div>
+                            <div className="home-page-text">查询变量</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">分区分桶</div>
+                        <a className="home-page-option-button" href="../../data-operate/import/routine-load-manual">
+                            <div className="home-page-text">全新优化器</div>
                         </a>
 
                     </div>
                     <div className="home-page-button-container">
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Schema 变更</div>
+                        <a
+                            className="home-page-option-button"
+                            href="../../install/cluster-deployment/standard-deployment"
+                        >
+                            <div className="home-page-text">Pipeline 执行引擎</div>
                         </a>
                         <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">冷热分层</div>
+                            <div className="home-page-text">查询缓存</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">表索引</div>
+                        <a className="home-page-option-button" href="../../data-operate/import/routine-load-manual">
+                            <div className="home-page-text">视图与物化视图</div>
                         </a>
+
                     </div>
+                    <div className="home-page-button-container">
+                        <a
+                            className="home-page-option-button"
+                            href="../../install/cluster-deployment/standard-deployment"
+                        >
+                            <div className="home-page-text">Join</div>
+                        </a>
+                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
+                            <div className="home-page-text">高效去重</div>
+                        </a>
+                        <a className="home-page-option-button" href="../../data-operate/import/routine-load-manual">
+                            <div className="home-page-text">高并发点查</div>
+                        </a>
+
+                    </div>
+                    <div className="home-page-button-container">
+                        <a
+                            className="home-page-option-button"
+                            href="../../install/cluster-deployment/standard-deployment"
+                        >
+                            <div className="home-page-text">查询分析</div>
+                        </a>
+                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
+                            <div className="home-page-text">自定义函数</div>
+                        </a>
+
+
+                    </div>
+
 
 
                 </div>

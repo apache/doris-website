@@ -2,7 +2,7 @@ import React from 'react';
 import './demo-block.css';
 
 
-export default function InstallBlock() {
+export default function UpdateData() {
     return (
         <div className="home-page-section">
             <div className="home-page-section-left">
@@ -17,7 +17,7 @@ export default function InstallBlock() {
                             <path fill="none" d="M0 0h24v24H0Z" />
                         </svg>
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>安装部署</div>
+                    <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 30, marginTop: 12 }}>数据更新</div>
 
                 </div>
 
@@ -34,19 +34,19 @@ export default function InstallBlock() {
                             className="home-page-option-button"
                             href="../../install/cluster-deployment/standard-deployment"
                         >
-                            <div className="home-page-text">手动部署</div>
+                            <div className="home-page-text">主键模型的 Update 更新</div>
                         </a>
                         <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Docker 部署</div>
+                            <div className="home-page-text">主键模型的导入更新</div>
                         </a>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">K8s 部署</div>
+                        <a className="home-page-option-button" href="../../data-operate/import/routine-load-manual">
+                            <div className="home-page-text">主键模型的更新事务</div>
                         </a>
 
                     </div>
-                    <div>
-                        <a className="home-page-option-button" href="../../install/cluster-deployment/run-docker-cluster">
-                            <div className="home-page-text">Doris on AWS</div>
+                    <div className="home-page-button-container">
+                        <a className="home-page-option-button" href="../../data-operate/import/insert-into-manual">
+                            <div className="home-page-text">聚合模型的导入更新</div>
                         </a>
                     </div>
 

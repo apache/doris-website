@@ -66,7 +66,7 @@ img.home-svg svg path {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    /* margin-top: 1.5rem; */
+    margin-top: 8px;
 }
 
 .docs-doc-id-home-page .docItemCol_src-theme-DocItem-Layout-styles-module {
@@ -97,11 +97,7 @@ img.home-svg svg path {
     width: fit-content
 }
 
-.home-page-hero-button {
-    margin-bottom: 0;
-    margin-right: 30px;
-    width: 260px
-}
+
 
 .home-page-option-button {
     display: flex;
@@ -119,6 +115,7 @@ img.home-svg svg path {
 
 .home-page-option {
     display: flex;
+    padding-top: 8px;
     /* width: 230px */
 }
 
@@ -130,12 +127,28 @@ img.home-svg svg path {
 
 .home-page-section-left {
     margin-bottom: 0;
-    margin-right: 4rem;
+    margin-right: 2rem;
     max-width: 400px;
     min-width: 200px;
     display: flex;
     flex-direction: column;
 }
+
+.home-page-section-right {
+    /* background-color: #f6f6f6; */
+    box-shadow: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0rem 0.5rem 1rem;
+    border: 1px solid black;
+    align-items: center;
+    transition: 0.5s;
+    height: auto;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    justify-content: flex-start;
+    width: fit-content;
+}
+
 
 .home-container {
     padding-left: 4rem !important
@@ -163,6 +176,7 @@ img.home-svg svg path {
     display: flex;
     flex-direction: column;
     padding-bottom: 2rem;
+    padding-top: 2rem;
 }
 
 .home-page-hero-left {
@@ -193,12 +207,14 @@ img.home-svg svg path {
     color: inherit;
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
-    padding: 16px;
+    margin-bottom: 2rem;
+    margin-right: 30px;
+    padding: 18px;
     text-decoration: none;
-    width: 270px;
+    width: 260px;
 
 }
+
 
 .icon-svg,
 .logo-svg,
@@ -235,11 +251,33 @@ img.home-svg svg path {
     color: #4c576c
 }
 
+.markdown a:hover,
+a:active {
+    color: #444fd9;
+    text-decoration: none;
+}
+
+
 .section-border {
     font-size: 1.5rem;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
     /* padding-top: 2rem; */
     border-top: 1px solid #e6e7e9;
     width: 1000px;
 }
+
+
+
+/* 
+
+
+.css {
+    background-color: #e9eaee;
+    bottom: 0;
+    content: '';
+    height: calc(50% - 2rem);
+    left: 3.5rem;
+    position: absolute;
+    width: 1px;
+} */
