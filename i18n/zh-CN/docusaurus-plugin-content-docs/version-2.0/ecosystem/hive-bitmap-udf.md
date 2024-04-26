@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `hive_table`(
 ### Hive Bitmap UDF 使用：
 
 Hive Bitmap UDF 需要在 Hive/Spark 中使用，首先需要编译 fe 得到 hive-udf-jar-with-dependencies.jar。
-编译准备工作：如果进行过 ldb 源码编译可直接编译 fe，如果没有进行过 ldb 源码编译，则需要手动安装 thrift，可参考：[FE 开发环境搭建](../../../docusaurus-plugin-content-docs-community/current/developer-guide/fe-idea-dev) 中的编译与安装
+编译准备工作：如果进行过 ldb 源码编译可直接编译 fe，如果没有进行过 ldb 源码编译，则需要手动安装 thrift，可参考：[FE 开发环境搭建](https://doris.apache.org/zh-CN/community/developer-guide/fe-idea-dev/) 中的编译与安装
 
 ```sql
 --clone doris 源码
