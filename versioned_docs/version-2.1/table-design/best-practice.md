@@ -46,7 +46,7 @@ Because the data model is determined and **immutable** during table creation, it
 
 ### DUPLICATE KEY model
 
-![duplicate-key-model-example](../../../static/images/duplicate-key-model-example.png)
+![duplicate-key-model-example](/images/duplicate-key-model-example.png)
 
 When only the sorting columns are specified, rows with the same key will not be merged.
 
@@ -76,7 +76,7 @@ DISTRIBUTED BY HASH(sessionid, visitorid) BUCKETS 10;
 
 ### AGGREGATE KEY model
 
-![aggregate-key-model-example](../../../static/images/aggregate-key-model-example.png)
+![aggregate-key-model-example](/images/aggregate-key-model-example.png)
 
 Old and new records with the same AGGREGATE KEY will be aggregated. The currently supported aggregation methods are as follows:
 
@@ -340,7 +340,7 @@ Doris supports various field types, including precise deduplication with BITMAP,
 
 ## Create table
 
-![create-table-example](../../../static/images/create-table-example.png)
+![create-table-example](/images/create-table-example.png)
 
 Considerations in creating a table include the setting of data partitions and buckets in addition to data model, index, and field types.
 

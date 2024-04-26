@@ -36,7 +36,7 @@ This post is a deep dive into inverted index and NGram BloomFilter index, provid
 
 The test dataset comprises about 130 million Amazon customer reviews. It is a few Snappy-compressed Parquet files with a total size of 37GB. These are a few samples:
 
-![img](../static/images/sample-dataset.png)
+![img](/images/sample-dataset.png)
 
 Each row includes 15 columns including `customer_id`, `review_id`, `product_id`, `product_category`, `star_rating`, `review_headline`, and `review_body`. 
 
@@ -196,11 +196,11 @@ This time, the query is finished within **0.93 seconds**. That means Ngram Bloom
 
 By skipping the irrelevant pages, the BloomFilter index reduces unnecessary data scanning and thus greatly reduces query latency.
 
-![img](../static/images/data-storage-structure-in-apache-doris.png)
+![img](/images/data-storage-structure-in-apache-doris.png)
 
 <div style={{textAlign:'center'}}> Data storage structure in Apache Doris </div >
 
-![img](../static/images/illustration-of-ngram-bloomfilter.png)
+![img](/images/illustration-of-ngram-bloomfilter.png)
 
 <div style={{textAlign:'center'}}> Illustration of Ngram BloomFilter </div >
 
@@ -308,7 +308,7 @@ Inverted index splits the texts into words and maps each word to a row number. T
 
 This approach avoids line-by-line matching and reduces computational complexity from O(n) to O(logn). That's how inverted index speeds up queries on large datasets. 
 
-![img](../static/images/illustration-of-inverted-index.png)
+![img](/images/illustration-of-inverted-index.png)
 
 
 <div style={{textAlign:'center'}}> Illustration of Inverted Index </div >

@@ -77,11 +77,11 @@ try {
 
 Create a MySQL connection to Apache Doris:
 
-![database-connect-dbeaver](../../../static/images/database-connect-dbeaver.png)
+![database-connect-dbeaver](/images/database-connect-dbeaver.png)
 
 Query in DBeaver:
 
-![query-in-dbeaver](../../../static/images/query-in-dbeaver.png)
+![query-in-dbeaver](/images/query-in-dbeaver.png)
 
 ## Built-in Web UI of Doris
 
@@ -91,7 +91,7 @@ To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_por
 
 The built-in Web console is primarily intended for use by the root account of the cluster. By default, the root account password is empty after installation.
 
-![web-login-username-password](../../../static/images/web-login-username-password.png)
+![web-login-username-password](/images/web-login-username-password.png)
 
 For example, you can execute the following command in the Playground to add a BE node.
 
@@ -99,7 +99,7 @@ For example, you can execute the following command in the Playground to add a BE
 ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-![Doris-Web-UI-Playground-en](../../../static/images/Doris-Web-UI-Playground-en.png)
+![Doris-Web-UI-Playground-en](/images/Doris-Web-UI-Playground-en.png)
 
 :::tip 
 For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later.

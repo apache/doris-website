@@ -77,11 +77,11 @@ When it comes to synchronizing a whole database (containing hundreds or even tho
 
 Under pressure test, the system showed high stability, with key metrics as follows:
 
-![Flink-Doris-Connector](../static/images/FDC_1.png)
+![Flink-Doris-Connector](/images/FDC_1.png)
 
-![Flink-CDC](../static/images/FDC_2.png)
+![Flink-CDC](/images/FDC_2.png)
 
-![Doris-Cluster-Compaction-Score](../static/images/FDC_3.png)
+![Doris-Cluster-Compaction-Score](/images/FDC_3.png)
 
 According to feedback from early adopters, the Connector has also delivered high performance and system stability in 10,000-table database synchronization in their production environment. This proves that the combination of Apache Doris and Flink CDC is capable of large-scale data synchronization with high efficiency and reliability.
 

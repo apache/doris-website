@@ -50,7 +50,7 @@ CCR is applicable to the following scenarios:
 
 ### Architecture description
 
-![ccr-architecture-description](../../../../static/images/ccr-architecture-description.png)
+![ccr-architecture-description](/images/ccr-architecture-description.png)
 
 CCR relies on a lightweight process called syncer. Syncers retrieve binlogs from the source cluster, directly apply the metadata to the target cluster, and notify the target cluster to pull data from the source cluster. CCR allows both full and incremental data migration.
 

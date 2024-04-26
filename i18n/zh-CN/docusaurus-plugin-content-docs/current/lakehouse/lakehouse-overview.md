@@ -97,7 +97,7 @@ Doris 提供了手动同步元数据、定期自动同步元数据、元数据�
 
 - 缓存淘汰（更新）策略：同时当 Doris 发现数据文件对应的元数据更新后，会及时淘汰缓存以保障数据的一致性。
 
-![元数据缓存](../../../../../static/images/remote-file-system.png)
+![元数据缓存](/images/remote-file-system.png)
 
 
 **查询结果缓存和分区缓存**
