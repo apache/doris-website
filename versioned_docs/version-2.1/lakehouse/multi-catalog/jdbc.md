@@ -1067,3 +1067,8 @@ It is recommended to use the following versions of Driver to connect to the corr
     Starting from version 2.0.2, this file can be placed in the `custom_lib/` directory of FE and BE (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
 
 11. If there is a prolonged delay or no response when querying MySQL through JDBC catalog, or if it hangs for an extended period and a significant number of "write lock" logs appear in the fe.warn.log, consider adding a socketTimeout parameter to the URL. For example: `jdbc:mysql://host:port/database?socketTimeout=30000`. This prevents the JDBC client from waiting indefinitely after MySQL closes the connection.
+
+12. When reading DB2 data via JDBC Catalog, an exception Invalid operation: `result set is closed. ERRORCODE=-4470` occurs
+
+    Firstly, delete the existing Catalog. Then, restart the BE (Backend). When creating a new DB2 Catalog, make sure to add the following parameters to the JDBC URL connection string: 
+    `allowNextOnExhaustedResultSet=1;resultSetHoldability=1`. For example: `jdbc:db2://ip:host/db:allowNextOnExhaustedResultSet=1;resultSetHoldability=1`.
