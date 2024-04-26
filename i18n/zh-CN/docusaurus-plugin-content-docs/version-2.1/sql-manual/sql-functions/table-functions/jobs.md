@@ -28,9 +28,10 @@ under the License.
 
 ### Name
 
-<version since="2.1">
+:::tip
 jobs
-</version>
+- since 2.1
+:::
 
 ### description
 

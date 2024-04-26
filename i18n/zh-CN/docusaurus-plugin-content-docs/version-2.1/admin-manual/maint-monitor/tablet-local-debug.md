@@ -24,11 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Tablet 本地调试
 
-Doris线上运行过程中，因为各种原因，可能出现各种各样的bug。例如：副本不一致，数据存在版本diff等。
+Doris 线上运行过程中，因为各种原因，可能出现各种各样的 bug。例如：副本不一致，数据存在版本 diff 等。
 
-这时候需要将线上的tablet的副本数据拷贝到本地环境进行复现，然后进行问题定位。
+这时候需要将线上的 tablet 的副本数据拷贝到本地环境进行复现，然后进行问题定位。
 
 ## 1. 获取有问题的 Tablet 的信息
 
@@ -36,7 +35,7 @@ Doris线上运行过程中，因为各种原因，可能出现各种各样的bug
 
 获取 tablet 所在的 DbId/TableId/PartitionId 等信息。
 
-```
+```sql
 mysql> show tablet 10020\G
 *************************** 1. row ***************************
        DbName: default_cluster:db1
@@ -54,7 +53,7 @@ PartitionName: tbl1
 
 执行上一步中的 `DetailCmd` 获取 BackendId/SchemaHash 等信息。
 
-```
+```sql
 mysql>  SHOW PROC '/dbs/10004/10016/partitions/10015/10017/10020'\G
 *************************** 1. row ***************************
         ReplicaId: 10021
@@ -77,7 +76,7 @@ LstSuccessVersion: 3
 
 创建 tablet 快照并获取建表语句
 
-```
+```sql
 mysql> admin copy tablet 10020 properties("backend_id" = "10003", "version" = "2")\G
 *************************** 1. row ***************************
          TabletId: 10020
@@ -101,23 +100,24 @@ PROPERTIES (
 
 该目下会有一个 tablet id 命名的目录，将这个目录整体打包后备用。（注意，该目录最多保留 60 分钟，之后会自动删除）。
 
-```
+```bash
 cd /path/to/be/storage/snapshot/20220830101353.2.3600
 tar czf 10020.tar.gz 10020/
 ```
 
-该命令还会同时生成这个 tablet 对应的建表语句。注意，这个建表语句并不是原始的建表语句，他的分桶数和副本数都是1，并且指定了 `versionInfo` 字段。该建表语句是用于之后在本地加载 tablet 时使用的。
+该命令还会同时生成这个 tablet 对应的建表语句。注意，这个建表语句并不是原始的建表语句，他的分桶数和副本数都是 1，并且指定了 `versionInfo` 字段。该建表语句是用于之后在本地加载 tablet 时使用的。
 
 至此，我们已经获取到所有必要的信息，清单如下：
 
 1. 打包好的 tablet 数据，如 10020.tar.gz。
+
 2. 建表语句。
 
 ## 2. 本地加载 Tablet
 
 1. 搭建本地调试环境
 
-    在本地部署一个单节点的Doris集群（1FE、1BE），部署版本和线上集群保持一致。如线上部署的版本是DORIS-1.1.1, 本地环境也同样部署DORIS-1.1.1的版本。
+    在本地部署一个单节点的 Doris 集群（1FE、1BE），部署版本和线上集群保持一致。如线上部署的版本是 DORIS-1.1.1, 本地环境也同样部署 DORIS-1.1.1 的版本。
 
 2. 建表
 
@@ -125,9 +125,9 @@ tar czf 10020.tar.gz 10020/
 
 3. 获取新建的表的 tablet 的信息
 
-    因为新建表的分桶数和副本数都为1，所以只会有一个一副本的 tablet：
+    因为新建表的分桶数和副本数都为 1，所以只会有一个一副本的 tablet：
     
-    ```
+    ```sql
     mysql> show tablets from tbl1\G
     *************************** 1. row ***************************
                    TabletId: 10017
@@ -150,7 +150,7 @@ tar czf 10020.tar.gz 10020/
            CompactionStatus: http://192.168.10.1:8040/api/compaction/show?tablet_id=10017
     ```
     
-    ```
+    ```sql
     mysql> show tablet 10017\G
     *************************** 1. row ***************************
            DbName: default_cluster:db1
@@ -169,19 +169,22 @@ tar czf 10020.tar.gz 10020/
     这里我们要记录如下信息：
     
     * TableId
+    
     * PartitionId
+    
     * TabletId
+    
     * SchemaHash
 
-    同时，我们还需要到调试环境BE节点的数据目录下，确认新的 tablet 所在的 shard id：
+    同时，我们还需要到调试环境 BE 节点的数据目录下，确认新的 tablet 所在的 shard id：
     
-    ```
+    ```bash
     cd /path/to/storage/data/*/10017 && pwd
     ```
     
     这个命令会进入 10017 这个 tablet 所在目录并展示路径。这里我们会看到类似如下的路径：
     
-    ```
+    ```bash
     /path/to/storage/data/0/10017
     ```
     
@@ -201,11 +204,11 @@ tar czf 10020.tar.gz 10020/
 
 5. 加载新 tablet
 
-    首先，停止调试环境的 BE 进程（./bin/stop_be.sh）。然后将 10017.hdr.json 文件同级目录所在的所有 .dat 文件，拷贝到 `/path/to/storage/data/0/10017/44622287` 目录下。这个目录既是在第3步中，我们获取到的调试环境tablet所在目录。`10017/44622287` 分别是 tablet id 和 schema hash。
+    首先，停止调试环境的 BE 进程（./bin/stop_be.sh）。然后将 10017.hdr.json 文件同级目录所在的所有 .dat 文件，拷贝到 `/path/to/storage/data/0/10017/44622287` 目录下。这个目录既是在第 3 步中，我们获取到的调试环境 tablet 所在目录。`10017/44622287` 分别是 tablet id 和 schema hash。
     
     通过 `meta_tool` 工具删除原来的 tablet meta。该工具位于 `be/lib` 目录下。
     
-    ```
+    ```bash
     ./lib/meta_tool --root_path=/path/to/storage --operation=delete_meta --tablet_id=10017 --schema_hash=44622287
     ```
     
@@ -213,7 +216,7 @@ tar czf 10020.tar.gz 10020/
     
     通过 `meta_tool` 工具加载新的 tablet meta。
     
-    ```
+    ```bash
     ./lib/meta_tool --root_path=/path/to/storage --operation=load_meta --json_meta_path=/path/to/10017.hdr.json
     ```
     
@@ -221,4 +224,4 @@ tar czf 10020.tar.gz 10020/
     
 6. 验证
 
-    重新启动调试环境的 BE 进程(./bin/start_be.sh)。对表进行查询，如果正确，则可以查询出加载的 tablet的数据，或复现线上问题。
+    重新启动调试环境的 BE 进程 (./bin/start_be.sh)。对表进行查询，如果正确，则可以查询出加载的 tablet 的数据，或复现线上问题。

@@ -31,7 +31,7 @@ under the License.
 Returns the square root of `x`.`x` is required to be greater than or equal to `0`.
 
 :::tip
-Another alias for this function is `dsqrt`.
+Another alias for this function is `dfloor`.
 :::
 
 ### example
