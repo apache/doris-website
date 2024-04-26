@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# User 配置项
+
 
 该文档主要介绍了 User 级别的相关配置项。User 级别的配置生效范围为单个用户。每个用户都可以设置自己的 User property。相互不影响。
 
@@ -38,7 +38,7 @@ FE 启动后，在 MySQL 客户端，通过下面命令查看 User 的配置项�
 
 ## 设置配置项
 
-FE 启动后，在MySQL 客户端，通过下面命令修改 User 的配置项：
+FE 启动后，在 MySQL 客户端，通过下面命令修改 User 的配置项：
 
 `SET PROPERTY [FOR 'user'] 'key' = 'value' [, 'key' = 'value']`
 

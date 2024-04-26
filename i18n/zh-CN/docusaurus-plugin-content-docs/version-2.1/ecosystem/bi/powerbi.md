@@ -42,7 +42,7 @@ Apache Doris 高度兼容 MySQL 协议，可以通过 MySQL 驱动器连接Power
 
 MySQL connector 下载
 
-下载链接：https://downloads.mysql.com/archives/c-net/
+下载链接：https://downloads.mysql.com/archives/c-net/ 
 
 ## 本地加载数据与创建模型
 
