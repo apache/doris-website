@@ -1072,3 +1072,9 @@ CREATE CATALOG `jdbc_db2` PROPERTIES (
 
 11. 如果通过 Jdbc catalog 查询 MySQL 的时候，出现长时间卡住没有返回结果，或着卡住很长时间并且 fe.warn.log 中出现出现大量 write lock 日志，可以尝试在 url 添加 socketTimeout ，例如：`jdbc:mysql://host:port/database?socketTimeout=30000` ， 防止 MySQL 在关闭连接后 Jdbc 客户端无限等待。
 
+12. 通过 JDBC Catalog 读取 DB2 数据时出现 `Invalid operation: result set is closed. ERRORCODE=-4470` 异常
+ 
+    首先，删除现有的 Catalog。接着，重新启动 BE（Backend）。在创建新的 DB2 Catalog 时，需要在 JDBC URL 连接字符串中添加以下参数：`allowNextOnExhaustedResultSet=1;resultSetHoldability=1`。如： 
+    `jdbc:db2://ip:host/db:allowNextOnExhaustedResultSet=1;resultSetHoldability=1`。
+
+
