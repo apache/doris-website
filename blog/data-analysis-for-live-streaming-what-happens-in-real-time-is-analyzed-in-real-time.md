@@ -49,7 +49,7 @@ In this case, the live streaming data analytic platform adopts the Lambda archit
 - **Batching processing**: The user basic information stored in HDFS is written into HBase to form a table.
 - **Streaming**: Real-time generated data from MySQL, collected via Flink CDC, goes into Apache Kafka. Flink works as the computation engine and then the data is stored in Redis.
 
-![database-for-live-shopping-Elasticsearch-HBase](../static/images/xiaoe-tech-1.png)
+![database-for-live-shopping-Elasticsearch-HBase](/images/xiaoe-tech-1.png)
 
 The real-time metrics will be combined with the user profile information to form a flat table, and Elasticsearch will work as the query engine.
 
@@ -66,7 +66,7 @@ They converge the streaming and the batch processing pipelines at Apache Doris. 
 
 With Apache Doris as the data warehouse, the platform architecture becomes neater.
 
-![database-for-live-shopping-Apache-Doris](../static/images/xiaoe-tech-2.png)
+![database-for-live-shopping-Apache-Doris](/images/xiaoe-tech-2.png)
 
 - **Smooth data writing**: Raw data is processed by Flink and written into Apache Doris in real time. The Doris community provides a [Flink-Doris-Connector](https://github.com/apache/doris-flink-connector) with built-in Flink CDC.
 - **Flexible data update**: For data changes, Apache Doris implements [Merge-on-Write](https://doris.apache.org/docs/data-table/data-model/#merge-on-write). This is especially useful in small-batch real-time writing because you don't have to renew the entire flat table. It also supports partial update of columns, which is another way to make data updates more lightweight. In this case, Apache Doris is able to finish Upsert or Insert Overwrite operations for **200,000 rows per second**, and these are all done in large tables with the biggest ones reaching billions of rows. 

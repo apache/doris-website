@@ -45,7 +45,7 @@ We design the Doris lakehouse solution for the following four applicable scenari
 
 Apache Doris can work as a data lakehouse with its [Multi Catalog](https://doris.apache.org/docs/lakehouse/multi-catalog/?_highlight=multi&_highlight=catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
 
-![doris-based-data-lakehouse-architecture](../../../static/images/doris-based-data-lakehouse-architecture.png)
+![doris-based-data-lakehouse-architecture](/images/doris-based-data-lakehouse-architecture.png)
 
 **Data access steps:**
 
@@ -65,7 +65,7 @@ The data connection framework in Apache Doris includes metadata connection and d
 - Metadata connection: Metadata connection is conducted in the frontend of Doris. The MetaData Manager in the frontend can access and manage metadata from Hive Metastore, JDBC, and data files.
 - Data reading: Apache Doris has a NativeReader for efficient data reading from HDFS and object storage. It supports Parquet, ORC, and text data. You can also connect Apache Doris to the Java big data ecosystem via its JNI Connector.
 
-![extensible-connection-framework](../../../static/images/extensible-connection-framework.png)
+![extensible-connection-framework](/images/extensible-connection-framework.png)
 
 ### Efficient caching strategy
 
@@ -75,7 +75,7 @@ Apache Doris caches metadata, data, and query results to improve query performan
 
 Apache Doris supports metadata synchronization by three methods: auto synchronization, periodic synchronization, and metadata subscription (for Hive Metastore only). It accesses metadata from the data lake and stores it in the memory of its frontend. When a user issues a query request, Doris can quickly fetch metadata from its own memory and generate a query plan accordingly. Apache Doris improves synchronization efficiency by merging the concurrent metadata events. It can process over 100 metadata events per second. 
 
-![metadata-caching](../../../static/images/metadata-caching.png)
+![metadata-caching](/images/metadata-caching.png)
 
 **Data caching**
 
@@ -83,25 +83,25 @@ Apache Doris supports metadata synchronization by three methods: auto synchroniz
 - Cache distribution: Apache Doris distributes the cached data across all backend nodes via consistent hashing to avoid cache expiration caused by cluster scaling.
 - Cache eviction(update): When Apache Doris detects changes in the metadata of a data file, it promptly updates its cached data to ensure data consistency.
 
-![data-caching](../../../static/images/data-caching.png)
+![data-caching](/images/data-caching.png)
 
 **Query result caching & partition caching**
 
 - Query result caching: Apache Doris caches the results of previous SQL queries, so it can reuse them when similar queries are launched. It will read the corresponding result from the cache directly and return it to the client. This increases query efficiency and concurrency.
 - Partition caching: Apache Doris allows you to cache part of your data partitions in the backend to increase query efficiency. For example, if you need the data from the past 7 days (counting today), you can cache the data from the previous 6 days and merge it with today's data. This can largely reduce real-time computation burden and increase speed.
 
-![query-result-caching-and-partition-caching](../../../static/images/query-result-caching-and-partition-caching.png)
+![query-result-caching-and-partition-caching](/images/query-result-caching-and-partition-caching.png)
 
 ### Native Reader
 
 - Self-developed Native Reader to avoid data conversion: Apache Doris has its own columnar storage format, which is different from Parquet and ORC. To avoid overheads caused by data format conversion, we have built our own Native Reader for Parquet and ORC files.
 - Lazy materialization: The Native Reader can utilize indexes and filters to improve data reading. For example, when the user needs to do filtering based on the ID column, what the Native Reader does is to read and filter the ID column, take note of the relevant row numbers, and then read the corresponding rows of the other columns based on the row numbers recorded. This reduces data scanning and speeds up data reading.
 
-![native-reader](../../../static/images/native-reader.png)
+![native-reader](/images/native-reader.png)
 
 - Vectorized data reading: We have vectorized data file reading in Apache Doris to increase reading speed.
 
-![vectorized-data-reading](../../../static/images/vectorized-data-reading.png)
+![vectorized-data-reading](/images/vectorized-data-reading.png)
 
 ### Merge I/O
 
@@ -111,7 +111,7 @@ For example, if you decide to merge any I/O requests smaller than 3MB, then inst
 
 The downside of I/O merging is that it might read some irrelevant data, because it merges and reads together some intermediate data that might not be needed. Despite that, I/O merging can still bring a significant increase in overall throughput, especially for use cases with a large number of small files (1KB~1MB). Besides, users can mitigate the downside by adjusting the size of I/O merging.
 
-![merge-io](../../../static/images/merge-io.png)
+![merge-io](/images/merge-io.png)
 
 ### Statistics collection
 
@@ -123,7 +123,7 @@ Meanwhile, to avoid pressure on the Doris backend, we have enabled sampling coll
 
 In some cases, some data is frequently accessed while others are not, so Apache Doris allows partition-based statistics collection, so it can ensure high efficiency in hot data queries while mitigating the impact of statistics collection on the backend.
 
-![statistics-collection](../../../static/images/statistics-collection.png)
+![statistics-collection](/images/statistics-collection.png)
 
 ## Multi-Catalog
 

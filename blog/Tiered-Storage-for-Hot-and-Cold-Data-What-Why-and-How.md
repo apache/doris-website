@@ -45,7 +45,7 @@ Similarly, companies separate hot and cold data for more efficient computation a
 
 In data analytics, tiered storage is implemented by a tiered storage mechanism in the database. For example, Apache Doris supports three-tiered storage: SSD, HDD, and object storage. For newly ingested data, after a specified cooldown period, it will turn from hot data into cold data and be moved to object storage. In addition, object storage only preserves one copy of data, which further cuts down storage costs and the relevant computation/network overheads.
 
-![tiered-storage](../static/images/HCDS_1.png)
+![tiered-storage](/images/HCDS_1.png)
 
 How much can you save by tiered storage? Here is some math.
 
@@ -53,7 +53,7 @@ In public cloud services, cloud disks generally cost 5~10 times as much as objec
 
 Let the percentage of cold data be "rate", the price of object storage be "OS", and the price of cloud disk be "CloudDisk", this is how much you can save by tiered storage instead of putting all your data on cloud disks: 
 
-![cost-calculation-of-tiered-storage](../static/images/HCDS_2.png)
+![cost-calculation-of-tiered-storage](/images/HCDS_2.png)
 
 Now let's put real-world numbers in this formula: 
 
@@ -63,7 +63,7 @@ AWS pricing, US East (Ohio):
 - **Throughput Optimized HDD (st 1)**: 102 USD per TB per month
 - **General Purpose SSD (gp2)**: 158 USD per TB per month
 
-![cost-reduction-by-tiered-storage](../static/images/HCDS_3.png)
+![cost-reduction-by-tiered-storage](/images/HCDS_3.png)
 
 ## How Is Tiered Storage Implemented?
 
@@ -81,7 +81,7 @@ Accessing cold data from object storage will indeed be slow. One solution is to 
 
 The granularity of caching matters, too. A coarse granularity might lead to a waste of cache space, but a fine granularity could be the reason for low I/O efficiency. Apache Doris bases its caching on data blocks. It downloads cold data blocks from object storage onto local Block Cache. This is the "pre-heating" process. With cold data fully pre-heated, queries on tables with tiered storage will be basically as fast as those on tablets without. We drew this conclusion from test results on Apache Doris:
 
-![query-performance-with-tiered-storage](../static/images/HCDS_4.png)
+![query-performance-with-tiered-storage](/images/HCDS_4.png)
 
 - ***Test Data****: SSB SF100 dataset*
 - ***Configuration****: 3 × 16C 64G, a cluster of 1 frontend and 3 backends* 
@@ -94,7 +94,7 @@ In object storage, only one copy of cold data is preserved. Within Apache Doris,
 
 Implementation-wise, the Doris frontend picks a local replica as the Leader. Updates to the Leader will be synchronized to all other local replicas via a regular report mechanism. Also, as the Leader uploads data to object storage, the relevant metadata will be updated to other local replicas, too.
 
-![data-availability-with-tiered-storage](../static/images/HCDS_5.png)
+![data-availability-with-tiered-storage](/images/HCDS_5.png)
 
 ### Reduced I/O and CPU Overhead
 

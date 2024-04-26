@@ -37,7 +37,7 @@ We have adopted Large Language Models (LLM) to empower our Doris-based OLAP serv
 
 Our incentive was to save our internal staff from the steep learning curve of SQL writing. Thus, we used LLM as an intermediate. It transforms natural language questions into SQL statements and sends the SQLs to the OLAP engine for execution.
 
-![LLM-OLAP-solution](../static/images/Tencent_LLM_1.png)
+![LLM-OLAP-solution](/images/Tencent_LLM_1.png)
 
 Like every AI-related experience, we came across some friction:
 
@@ -54,7 +54,7 @@ For problem No.1, we introduce a semantic layer between the LLM and the OLAP eng
 
 Besides that, the semantic layer can optimize the computation logic. When analysts input a question that involves a complicated query, let's say, a multi-table join, the semantic layer can split that into multiple single-table queries to reduce semantic distortion.
 
-![LLM-OLAP-semantic-layer](../static/images/Tencent_LLM_2.png)
+![LLM-OLAP-semantic-layer](/images/Tencent_LLM_2.png)
 
 ### 2. LLM parsing rules
 
@@ -62,7 +62,7 @@ To increase cost-effectiveness in using LLM, we evaluate the computation complex
 
 For example, when an analyst inputs "tell me the earnings of the major musical platforms", the LLM identifies that this question only entails several metrics or dimensions, so it will not further parse it but send it straight for SQL generation and execution. This can largely shorten query response time and reduce API expenses. 
 
-![LLM-OLAP-parsing-rules](../static/images/Tencent_LLM_3.png)
+![LLM-OLAP-parsing-rules](/images/Tencent_LLM_3.png)
 
 ### 3. Schema Mapper and external knowledge base
 
@@ -70,7 +70,7 @@ To empower the LLM with niche knowledge, we added a Schema Mapper upstream from 
 
 We are constantly testing and optimizing the Schema Mapper. We categorize and rate content in the external knowledge base, and do various levels of mapping (full-text mapping and fuzzy mapping) to enable better semantic parsing.
 
-![LLM-OLAP-schema-mapper](../static/images/Tencent_LLM_4.png)
+![LLM-OLAP-schema-mapper](/images/Tencent_LLM_4.png)
 
 ### 4. Plugins
 
@@ -79,7 +79,7 @@ We used plugins to connect the LLM to more fields of information, and we have di
 - **Embedding local files**: This is especially useful when we need to "teach" the LLM the latest regulatory policies, which are often text files. Firstly, the system vectorizes the local text file, executes semantic searches to find matching or similar terms in the local file, extracts the relevant contents and puts them into the LLM parsing window to generate output. 
 - **Third-party plugins**: The marketplace is full of third-party plugins that are designed for all kinds of sectors. With them, the LLM is able to deal with wide-ranging topics. Each plugin has its own prompts and calling function. Once the input question hits a prompt, the relevant plugin will be called.
 
-![LLM-OLAP-plugins](../static/images/Tencent_LLM_5.png)
+![LLM-OLAP-plugins](/images/Tencent_LLM_5.png)
 
 After we are done with above four optimizations, the SuperSonic framework comes into being.
 
@@ -87,7 +87,7 @@ After we are done with above four optimizations, the SuperSonic framework comes 
 
 Now let me walk you through this [framework](https://github.com/tencentmusic/supersonic):
 
-![LLM-OLAP-supersonic-framework](../static/images/Tencent_LLM_6.png)
+![LLM-OLAP-supersonic-framework](/images/Tencent_LLM_6.png)
 
 - An analyst inputs a question.
 - The Schema Mapper maps the question to an external knowledge base.
@@ -98,7 +98,7 @@ Now let me walk you through this [framework](https://github.com/tencentmusic/sup
 
 **Example**
 
-![LLM-OLAP-chatbot-query-interface](../static/images/Tencent_LLM_7.png)
+![LLM-OLAP-chatbot-query-interface](/images/Tencent_LLM_7.png)
 
 To answer whether a certain song can be performed on variety shows, the system retrieves the OLAP data warehouse for details about the song, and presents it with results from the Commercial Use Query third-party plugin.
 
@@ -108,7 +108,7 @@ As for the OLAP part of this framework, after several rounds of architectural ev
 
 Raw data is sorted into tags and metrics, which are custom-defined by the analysts. The tags and metrics are under unified management in order to avoid inconsistent definitions. Then, they are combined into various tagsets and metricsets for various queries. 
 
-![LLM-OLAP-architecture](../static/images/Tencent_LLM_8.png)
+![LLM-OLAP-architecture](/images/Tencent_LLM_8.png)
 
 We have drawn two main takeaways for you from our architectural optimization experience.
 

@@ -33,7 +33,7 @@ Apache Doris has a wide user base. It has been used in production environments o
 
 The figure below shows what Apache Doris can do in a data pipeline. Data sources, after integration and processing, are ingested into the Apache Doris real-time data warehouse and offline data lakehouses such as Hive, Iceberg, and Hudi.  Apache Doris can be used for the following purposes:
 
-![apache-doris-usage-scenarios-pipeline](../../../static/images/apache-doris-usage-scenarios-pipeline.png)
+![apache-doris-usage-scenarios-pipeline](/images/apache-doris-usage-scenarios-pipeline.png)
 
 - **Report analysis**
   - Real-time dashboards

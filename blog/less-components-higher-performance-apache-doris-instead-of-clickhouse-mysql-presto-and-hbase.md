@@ -39,7 +39,7 @@ This post is about building a unified OLAP platform. An insurance company tries 
 
 The user started with Lambda architecture, spliting their data pipeline into a batch processing link and a stream processing link. For real-time data streaming, they apply Flink CDC; for batch import, they incorporate Sqoop, Python, and DataX to build their own data integration tool named Hisen.  
 
-![multi-component-data-warehouse-mysql-clickhouse-hbase-hive-presto](../static/images/multi-component-data-warehouse-mysql-clickhouse-hbase-hive-presto.png)
+![multi-component-data-warehouse-mysql-clickhouse-hbase-hive-presto](/images/multi-component-data-warehouse-mysql-clickhouse-hbase-hive-presto.png)
 
 Then, the real-time and offline data meets in the data warehousing layer, which is made up of five components.
 
@@ -72,7 +72,7 @@ They eventually made up their mind with [Apache Doris](https://doris.apache.org/
 
  Apache Doris is capable of both real-time and offline data analysis, and it supports both high-throughput interactive analysis and high-concurrency point queries. That's why it can replace ClickHouse, MySQL, Presto, and Apache HBase and work as the unified query gateway for the entire data system. 
 
-![unified-data-warehouse-kafka-apache-doris-hive](../static/images/unified-data-warehouse-kafka-apache-doris-hive.png)
+![unified-data-warehouse-kafka-apache-doris-hive](/images/unified-data-warehouse-kafka-apache-doris-hive.png)
 
 The improved data pipeline is a much cleaner Lambda architecture. 
 

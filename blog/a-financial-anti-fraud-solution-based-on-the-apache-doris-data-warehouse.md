@@ -42,7 +42,7 @@ In this platform, **80% of ad-hoc queries** return results in less than **2 seco
 
 This is an overview of the entire platform from an architectural perspective. 
 
-![Fraud Risk Management Platform](../static/images/fraud-risk-management-platform.png)
+![Fraud Risk Management Platform](/images/fraud-risk-management-platform.png)
 
 The **source data** can be roughly categorized as:
 
