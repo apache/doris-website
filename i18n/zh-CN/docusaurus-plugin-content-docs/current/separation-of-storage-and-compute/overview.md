@@ -1,6 +1,6 @@
 ---
 {
-    "title": "存算分离 overview",
+    "title": "存算分离概览",
     "language": "zh-CN"
 }
 ---

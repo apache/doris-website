@@ -24,95 +24,86 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 在 MacOS 平台上编译
 
 本文介绍如何在 macOS 平台上编译源码。
 
 ## 环境要求
 
-1. macOS 12 (Monterey) 及以上（_**Intel和Apple Silicon均支持**_）
-2. [Homebrew](https://brew.sh/)
+-   macOS 12 (Monterey) 及以上（***Intel 和 Apple Silicon 均支持***）
 
-## 编译步骤
+-   [Homebrew](https://brew.sh/)
 
-1. 使用[Homebrew](https://brew.sh/)安装依赖
-    ```shell
-    brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-        python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@11 npm
-    ```
+## 源码编译
 
-:::tip
-使用 brew 安装的 jdk 版本为 11，因为在 macOS上，arm64 版本的 brew 默认没有 8 版本的 jdk
-:::
+**1.  使用 [Homebrew](https://brew.sh/) 安装依赖**
 
-2. 编译源码
-    ```shell
-    bash build.sh
-    ```
+```Shell
+brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@11 npm
+```
 
-## 第三方库
+在 MacOS 上，由于 brew 没有提供 JDK8 的安装包，所以在这里使用了 JDK11。也可以自己手动下载安装 JDK8。
 
-1. [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation)页面有所有第三方库的源码，可以直接下载[doris-thirdparty-source.tgz](https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-source.tgz)获得。
+**2.  编译源码**
 
-2. 可以在[Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation)页面直接下载预编译好的第三方库，省去编译第三方库的过程，参考下面的命令。
-    ```shell
-    cd thirdparty
-    rm -rf installed
+```Shell
+bash build.sh
+```
 
-    # Intel 芯片
-    curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-x86_64.tar.xz \
-        -o - | tar -Jxf -
-
-    # Apple Silicon 芯片
-    curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
-        -o - | tar -Jxf -
-
-    # 保证protoc和thrift能够正常运行
-    cd installed/bin
-
-    ./protoc --version
-    ./thrift --version
-    ```
-3. 运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考[https://support.apple.com/zh-cn/HT202491](https://support.apple.com/zh-cn/HT202491)。
+Doris 源码编译时首先会下载三方库源码进行编译，为了节省编译时间，可以下载社区提供的三方库的预编译版本。参见下面的使用**预编译三方库**提速构建过程。
 
 ## 启动
 
-1. 通过命令设置好`file descriptors`（_**注意：关闭当前终端会话后需要重新设置**_）。
-    ```shell
-    ulimit -n 65536
-    ```
-    也可以将该配置写到到启动脚本中，以便下次打开终端会话时不需要再次设置。
-    ```shell
-    # bash
-    echo 'ulimit -n 65536' >>~/.bashrc
-    
-    # zsh
-    echo 'ulimit -n 65536' >>~/.zshrc
-    ```
-    执行以下命令，查看设置是否生效。
-    ```shell
-    $ ulimit -n
-    65536
-    ```
+**1. 调大 file descriptors limit**
 
-2. 启动BE
-    ```shell
-    cd output/be/bin
-    ./start_be.sh --daemon
-    ```
+```Shell
+# 通过 ulimit 命令调大 file descriptors limit 限制大小
+ulimit -n 65536
+# 查看是否生效
+$ ulimit -n
 
-3. 启动FE
-    ```shell
-    cd output/fe/bin
-    ./start_fe.sh --daemon
-    ```
+# 将该配置写到到启动脚本中，以便下次打开终端会话时不需要再次设置
+# 如果是 bash，执行下面语句
+echo 'ulimit -n 65536' ~/.bashrc
+# 如果是 zsh，执行下面语句
+echo 'ulimit -n 65536' ~/.zshrc
+```
 
-## 常见问题
+**2.  启动 BE**
 
-1. 启动BE失败，日志显示错误`fail to open StorageEngine, res=file descriptors limit is too small`
+```Shell
+cd output/be/bin
+./start_be.sh --daemon
+```
 
-   参考前面提到的设置`file descriptors`。
+**3.  启动 FE**
 
-2. Java版本
+```Shell
+cd output/fe/bin
+./start_fe.sh --daemon
+```
 
-   使用 brew 安装的 jdk 版本为 11，因为在 macOS上，arm64 版本的 brew 默认没有 8 版本的 jdk，也可以自行下载 jdk 的安装包进行安装
+## 使用预编译三方库进行提速
+
+可以在 [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation) 页面直接下载预编译好的第三方库，省去编译第三方库的过程，参考下面的命令。
+
+```Bash
+cd thirdparty
+rm -rf installed
+
+# Intel 芯片
+curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-x86_64.tar.xz \
+    -o - | tar -Jxf -
+
+# Apple Silicon 芯片
+curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
+    -o - | tar -Jxf -
+
+# 保证 protoc 和 thrift 能够正常运行
+cd installed/bin
+
+./protoc --version
+./thrift --version
+```
+
+运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考 https://support.apple.com/zh-cn/HT202491。

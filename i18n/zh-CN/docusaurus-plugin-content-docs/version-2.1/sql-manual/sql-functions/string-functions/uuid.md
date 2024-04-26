@@ -37,7 +37,7 @@ uuid
 
 `VARCHAR uuid()`
 
-返回一个随机的uuid字符串
+返回一个随机的 uuid 字符串
 
 
 ### example

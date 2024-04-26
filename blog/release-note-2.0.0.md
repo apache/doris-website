@@ -189,9 +189,9 @@ To separate storage and computation is a way to realize elastic scaling of resou
 Apache Doris 2.0 provides two solutions to address the needs of the first two types of users.
 
 1. **Compute nodes**. We introduced stateless compute nodes in version 2.0. Unlike the mix nodes, the compute nodes do not save any data and are not involved in workload balancing of data tablets during cluster scaling. Thus, they are able to quickly join the cluster and share the computing pressure during peak times. In addition, in data lakehouse analysis, these nodes will be the first ones to execute queries on remote storage (HDFS/S3) so there will be no resource competition between internal tables and external tables.
-   1.  Doc: https://doris.apache.org/docs/dev/advanced/compute-node
+   1.  [Read more in Docs](https://doris.apache.org/docs/2.0/admin-manual/resource-admin/compute-node/)
 2. **Hot-cold data separation**. Hot/cold data refers to data that is frequently/seldom accessed, respectively. Generally, it makes more sense to store cold data in low-cost storage. Older versions of Apache Doris support lifecycle management of table partitions: As hot data cooled down, it would be moved from SSD to HDD. However, data was stored with multiple replicas on HDD, which was still a waste. Now, in Apache Doris 2.0, cold data can be stored in object storage, which is even cheaper and allows single-copy storage. That reduces the storage costs by 70% and cuts down the computation and network overheads that come with storage.
-   1.  Read more: https://doris.apache.org/blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How
+   1. [Read more in Docs](https://doris.apache.org/blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How)
 
 For neater separate of computation and storage, the VeloDB team is going to contribute the Cloud Compute-Storage-Separation solution to the Apache Doris project. The performance and stability of it has stood the test of hundreds of companies in their production environment. The merging of code will be finished by October this year, and all Apache Doris users will be able to get an early taste of it in September.
 
