@@ -120,7 +120,7 @@ mkdir /opt/software
 ```shell
   cd /opt/tools
   # Download the wget tool, decompress it, and configure the environment variables.
-  wget https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
+  wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
     tar -zxvf apache-maven-3.6.3-bin.tar.gz && \
     mv apache-maven-3.6.3 /opt/software/maven
 ```

@@ -33,8 +33,6 @@ Convert a base64 string(result of function `hll_to_base64`) into a hll. If input
 
 ### example
 
-#### query example 
-
 ```
 mysql> select hll_union_agg(hll_from_base64(hll_to_base64(pv))), hll_union_agg(pv) from test_hll;
 +---------------------------------------------------+-------------------+
@@ -68,20 +66,6 @@ mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
 +-----------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
-#### data import example 
-```
-Prerequisites:
-
-1.A Hive table named hive_test.hive_hll_table, with format textfile, has been created with fields: k1 int, k2 String, k3 String, uuid binary, and data has been inserted into the table using the to_hll UDF function from a regular table.
-
-2.A catalog named hive has been created in Doris to connect to Hive.
-
-3.A Doris internal table named doris_hll_table has been created with fields: k1 int, k2 varchar(10), k3 varchar(10), uuid HLL HLL_UNION.
-
-Then, you can use the hll_from_base64 function to import data from Hive to Doris:
-insert into doris_hll_table select k1, k2, k3, hll_from_base64(uuid) from hive.hive_test.hive_hll_table;
-```
-For more import details, please refer to: [Hive HLL UDF](../../../ecosystem/hive-hll-udf.md)
 
 ### keywords
 HLL_FROM_BASE64, HLL

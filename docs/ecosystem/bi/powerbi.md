@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Power-BI",
-    "language": "en"
+   "title": "Power-BI",
+   "language": "en"
 }
 ---
 
@@ -41,7 +41,7 @@ Currently verified using MySQL jdbc connector version 8.0.26
 
 Download and installation MySQL connector
 Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.26. There are incompatibilities in higher versions
- 
+
 
 ## Load data locally and create models
 
