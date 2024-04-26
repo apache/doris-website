@@ -1072,4 +1072,5 @@ It is recommended to use the following versions of Driver to connect to the corr
 
 12. When reading DB2 data via JDBC Catalog, an exception `Invalid operation: result set is closed. ERRORCODE=-4470` occurs
 
-    Firstly, delete the existing Catalog. Then, restart the BE (Backend). When creating a new DB2 Catalog, make sure to add the following parameters to the JDBC URL connection string: `allowNextOnExhaustedResultSet=1;resultSetHoldability=1`. For example: `jdbc:db2://ip:host/db:allowNextOnExhaustedResultSet=1;resultSetHoldability=1`.
+    Firstly, delete the existing Catalog. Then, restart the BE (Backend). When creating a new DB2 Catalog, make sure to add the following parameters to the JDBC URL connection string: 
+    `allowNextOnExhaustedResultSet=1;resultSetHoldability=1`. For example: `jdbc:db2://ip:host/db:allowNextOnExhaustedResultSet=1;resultSetHoldability=1`.
