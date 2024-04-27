@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Table Value Function (TVF)",
+    "title": "File Analytics",
     "language": "en"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
 
 With the Table Value Function feature, Doris is able to query files in object storage or HDFS as simply as querying Tables. In addition, it supports automatic column type inference.
 
