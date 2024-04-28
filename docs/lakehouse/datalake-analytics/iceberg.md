@@ -231,8 +231,8 @@ The data is stored on Huawei Cloud OBS:
 | string                                     | string       |
 | fixed(L)                                   | char(L)      |
 | binary                                     | string       |
-| struct                                     | struct       |
-| map                                        | map          |
+| struct                                     | struct (since 2.1.3)       |
+| map                                        | map (since 2.1.3)         |
 | list                                       | array        |
 | time                                       | unsupported  |
 

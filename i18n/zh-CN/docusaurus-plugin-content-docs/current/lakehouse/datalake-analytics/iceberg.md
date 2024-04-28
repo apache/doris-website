@@ -232,8 +232,8 @@ CREATE CATALOG iceberg PROPERTIES (
 | string                                     | string       |
 | fixed(L)                                   | char(L)      |
 | binary                                     | string       |
-| struct                                     | struct       |
-| map                                        | map          |
+| struct                                     | struct （2.1.3 版本开始支持）      |
+| map                                        | map （2.1.3 版本开始支持）    |
 | list                                       | array        |
 | time                                       | 不支持        |
 
