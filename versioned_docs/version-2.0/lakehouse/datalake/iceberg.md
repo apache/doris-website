@@ -31,7 +31,7 @@ under the License.
 
 1. Support Iceberg V1/V2.
 2. The V2 format only supports Position Delete, not Equality Delete.
-3. Supports Parquet and Orc file storage.
+3. Supports Parquet format.
 
 ## Create Catalog
 
@@ -206,16 +206,16 @@ The data is stored on Huawei Cloud OBS:
 | double                                     | double       |
 | decimal(p,s)                               | decimal(p,s) |
 | date                                       | date         |
-| time                                       | unsupported  |
 | uuid                                       | string       |
 | timestamp (Timestamp without timezone)     | datetime(6)  |
 | timestamptz (Timestamp with timezone)      | datetime(6)  |
 | string                                     | string       |
 | fixed(L)                                   | char(L)      |
 | binary                                     | string       |
+| list                                       | array        |
 | struct                                     | unsupported  |
 | map                                        | unsupported  |
-| list                                       | array        |
+| time                                       | unsupported  |
 
 ## Time Travel
 
