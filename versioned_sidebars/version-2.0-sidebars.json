@@ -188,7 +188,7 @@
                     "label": "Pipeline",
                     "items": [
                         "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipelinex-execution-engine"
+                        "query/pipeline/pipeline-x-execution-engine"
                     ]
                 },
                 {
@@ -329,7 +329,7 @@
                         "admin-manual/privilege-ldap/certificate",
                         "admin-manual/privilege-ldap/fe-certificate",
                         "admin-manual/privilege-ldap/ldap",
-                        "admin-manual/privilege-ldap/apache-ranger"
+                        "admin-manual/privilege-ldap/ranger"
                     ]
                 },
                 {

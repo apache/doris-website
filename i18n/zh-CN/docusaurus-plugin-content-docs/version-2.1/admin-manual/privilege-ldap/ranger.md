@@ -1,6 +1,6 @@
 ---
 {
-    "title": "集成 Apache Ranger",
+    "title": "基于 Apache Ranger 的鉴权管理",
     "language": "zh-CN"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 # 集成 Apache Ranger
 
-Apache Ranger是一个用来在Hadoop平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
+Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
 
 在 2.1.0 版本中，Doris 支持通过集成 Apache Ranger，进行统一的权限管理。
 
@@ -56,7 +56,7 @@ Apache Ranger是一个用来在Hadoop平台上进行监控，启用服务，以�
 
 4. 下载 [ranger-servicedef-doris.json](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-servicedef-doris.json)
 
-5. 执行以下命令上传定义文件到 Ranger 服务:
+5. 执行以下命令上传定义文件到 Ranger 服务：
 
 	```
 	curl -u user:password -X POST \
@@ -120,7 +120,7 @@ Apache Ranger是一个用来在Hadoop平台上进行监控，启用服务，以�
 
 ![](/images/ranger/ranger2.png)
 
-Config Properties 部分参数含义如下:
+Config Properties 部分参数含义如下：
 
 - `Username`/`Pasword`：Doris 集群的用户名密码，这里建议使用 Admin 用户。
 - `jdbc.driver_class`：连接 Doris 使用的 JDBC 驱动。`com.mysql.cj.jdbc.Driver`
@@ -136,7 +136,7 @@ Config Properties 部分参数含义如下:
 
 ### 配置 Doris 集群
 
-1. 在所有 FE 的 conf 目录创建 `ranger-doris-security.xml` 文件，内容如下:
+1. 在所有 FE 的 conf 目录创建 `ranger-doris-security.xml` 文件，内容如下：
 
 	```
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -175,7 +175,7 @@ Config Properties 部分参数含义如下:
 
 	其中需要将 `ranger.plugin.doris.policy.cache.dir` 和 `ranger.plugin.doris.policy.rest.url` 改为实际值。
 	
-2. 在所有 FE 的 conf 目录创建 `log4j.properties` 文件，内容如下:
+2. 在所有 FE 的 conf 目录创建 `log4j.properties` 文件，内容如下：
 
 	```
 	log4j.rootLogger = debug,stdout,D

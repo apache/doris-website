@@ -112,8 +112,7 @@
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode",
-                        "data-operate/import/min-load-replica-num"
+                        "data-operate/import/load-strict-mode"
                     ]
                 },
                 {
@@ -330,7 +329,6 @@
                     "type": "category",
                     "label": "User Privilege and Ldap",
                     "items": [
-                        "admin-manual/privilege-ldap/authentication-and-authorization",
                         "admin-manual/privilege-ldap/user-privilege",
                         "admin-manual/privilege-ldap/certificate",
                         "admin-manual/privilege-ldap/fe-certificate",
@@ -465,7 +463,6 @@
                     ]
                 },
                 "admin-manual/plugin-development-manual",
-                "admin-manual/audit-plugin",
                 "admin-manual/small-file-mgr",
                 "admin-manual/compaction",
                 "admin-manual/rowsets"

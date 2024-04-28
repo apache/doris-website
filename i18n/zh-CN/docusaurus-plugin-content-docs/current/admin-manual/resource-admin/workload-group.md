@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WORKLOAD GROUP",
+    "title": "Workload Group",
     "language": "zh-CN"
 }
 ---
