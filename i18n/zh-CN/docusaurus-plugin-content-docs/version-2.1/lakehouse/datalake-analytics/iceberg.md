@@ -31,6 +31,8 @@ under the License.
 
 1. 支持 Iceberg V1/V2 表格式。
 2. V2 格式仅支持 Position Delete 方式，不支持 Equality Delete。
+3. 支持 Parquet 文件格式。2.1.3 版本开始支持 ORC 文件格式。
+
 
 ## 创建 Catalog
 
@@ -215,7 +217,26 @@ CREATE CATALOG iceberg PROPERTIES (
 
 ## 列类型映射
 
-和 Hive Catalog 一致，可参阅 [Hive Catalog](./hive.md) 中 **列类型映射** 一节。
+| Iceberg Type                               | Doris Type   |
+|--------------------------------------------|--------------|
+| boolean                                    | boolean      |
+| int                                        | int          |
+| long                                       | bigint       |
+| float                                      | float        |
+| double                                     | double       |
+| decimal(p,s)                               | decimal(p,s) |
+| date                                       | date         |
+| uuid                                       | string       |
+| timestamp (Timestamp without timezone)     | datetime(6)  |
+| timestamptz (Timestamp with timezone)      | datetime(6)  |
+| string                                     | string       |
+| fixed(L)                                   | char(L)      |
+| binary                                     | string       |
+| struct                                     | struct       |
+| map                                        | map          |
+| list                                       | array        |
+| time                                       | 不支持        |
+
 
 ## Time Travel
 

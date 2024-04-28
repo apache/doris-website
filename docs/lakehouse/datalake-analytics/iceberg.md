@@ -31,6 +31,7 @@ under the License.
 
 1. Support Iceberg V1/V2.
 2. The V2 format only supports Position Delete, not Equality Delete.
+3. Supports Parquet format. And ORC format since 2.1.3.
 
 ## Create Catalog
 
@@ -215,7 +216,25 @@ The data is stored on Huawei Cloud OBS:
 
 ## Column type mapping
 
-Consistent with Hive Catalog, please refer to the **column type mapping** section in [Hive Catalog](./hive.md).
+| Iceberg Type                               | Doris Type   |
+|--------------------------------------------|--------------|
+| boolean                                    | boolean      |
+| int                                        | int          |
+| long                                       | bigint       |
+| float                                      | float        |
+| double                                     | double       |
+| decimal(p,s)                               | decimal(p,s) |
+| date                                       | date         |
+| uuid                                       | string       |
+| timestamp (Timestamp without timezone)     | datetime(6)  |
+| timestamptz (Timestamp with timezone)      | datetime(6)  |
+| string                                     | string       |
+| fixed(L)                                   | char(L)      |
+| binary                                     | string       |
+| struct                                     | struct       |
+| map                                        | map          |
+| list                                       | array        |
+| time                                       | unsupported  |
 
 ## Time Travel
 
