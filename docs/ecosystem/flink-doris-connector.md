@@ -58,7 +58,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.5.2</version>
+   <version>1.6.0</version>
 </dependency>
 ```
 
@@ -107,7 +107,7 @@ DorisOptions.Builder builder = DorisOptions.builder()
          .setUsername("root")
          .setPassword("password");
 
-DorisSource<List<?>> dorisSource = DorisSourceBuilder.<List<?>>builder()
+DorisSource<List<?>> dorisSource = DorisSource.<List<?>>builder()
          .setDorisOptions(builder.build())
          .setDorisReadOptions(DorisReadOptions.builder().build())
          .setDeserializer(new SimpleListDeserializationSchema())
@@ -396,7 +396,12 @@ ON a.city = c.city
 | ARRAY      | ARRAY             |
 | MAP        | MAP             |
 | JSON       | STRING             |
+| JSON       | STRING |
+| VARIANT    | STRING |
+| IPV4       | STRING |
+| IPV6       | STRING |
 
+> Starting from version connector-1.6.1, support is added for reading three data types: Variant, IPV6, and IPV4. Reading IPV6 and Variant requires Doris version 2.1.1 or higher.
 
 ## Flink write Metrics
 Where the metrics value of type Counter is the cumulative value of the imported task from the beginning to the current time, you can observe each metric in each table in the Flink Webui metrics.
@@ -541,10 +546,11 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --sink-conf             | All configurations of Doris Sink can be found [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9) View the complete configuration items. |
 | --table-conf            | The configuration items of the Doris table(The exception is table-buckets, non-properties attributes), that is, the content contained in properties. For example `--table-conf replication_num=1`, and the `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"` option specifies the number of buckets for different tables based on the order of regular expressions. If there is no match, the table is created with the default setting of BUCKETS AUTO. |
 | --ignore-default-value  | Turn off the default value of synchronizing mysql table structure. It is suitable for synchronizing mysql data to doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152) |
-| --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
+| --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. since version 1.6.0, the default value has been set to true. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
 | --single-sink           | Whether to use a single Sink to synchronize all tables. When turned on, newly created tables in the upstream can also be automatically recognized and tables automatically created. |
 | --multi-to-one-origin   | When writing multiple upstream tables into the same table, the configuration of the source table, for example: --multi-to-one-origin="a\_.\*｜b_.\*"， Reference [here](https://github.com/apache/doris-flink-connector/pull/208) |
 | --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target="a\|b" |
+| --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
 >Note: When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar
 
