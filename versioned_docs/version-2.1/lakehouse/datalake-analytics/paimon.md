@@ -168,12 +168,13 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 | DoubleType                            | Double                    |           |
 | VarCharType                           | VarChar                   |           |
 | CharType                              | Char                      |           |
+| VarBinaryType, BinaryType             | Binary                    |           |
 | DecimalType(precision, scale)         | Decimal(precision, scale) |           |
 | TimestampType,LocalZonedTimestampType | DateTime                  |           |
 | DateType                              | Date                      |           |
-| MapType                               | Map                       | Support Map nesting   |
 | ArrayType                             | Array                     | Support Array nesting |
-| VarBinaryType, BinaryType             | Binary                    |           |
+| MapType                               | Map                       | Support Map nesting   |
+| RowType                               | Struct                    | Support Struct nesting (since 2.0.10 & 2.1.3) |
 
 ## FAQ
 
@@ -188,8 +189,9 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 
 3. When accessing object storage (OSS, S3, etc.), encounter "file system does not support".
 
-     In versions before 2.0.5 (inclusive), users need to manually download the following jar package and place it in the `${DORIS_HOME}/be/lib/java_extensions/preload-extensions` directory, and restart BE.
+    In versions before 2.0.5 (inclusive), users need to manually download the following jar package and place it in the `${DORIS_HOME}/be/lib/java_extensions/preload-extensions` directory, and restart BE.
 
     - OSS: [paimon-oss-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-oss/0.6.0-incubating/paimon-oss-0.6.0-incubating.jar)
     - Other Object Storage: [paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
 
+    No need to download these jars since 2.0.6. 

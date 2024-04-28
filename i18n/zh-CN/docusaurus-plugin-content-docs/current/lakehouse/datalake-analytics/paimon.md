@@ -173,7 +173,7 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 | DateType                              | Date                      |           |
 | ArrayType                             | Array                     | 支持Array嵌套 |
 | MapType                               | Map                       | 支持Map嵌套   |
-| RowType                               | Struct                    | 支持Struct嵌套 |
+| RowType                               | Struct                    | 支持Struct嵌套（2.0.10 和 2.1.3 版本开始支持）|
 
 ## 常见问题
 
@@ -192,5 +192,7 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 
     - 访问 OSS：[paimon-oss-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-oss/0.6.0-incubating/paimon-oss-0.6.0-incubating.jar)
     - 访问其他对象存储：[paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
+
+    2.0.6 之后的版本不再需要用户手动放置。
 
 
