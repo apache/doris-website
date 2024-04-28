@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 亲爱的社区小伙伴们，Apache Doris 2.1.1 版本已于 2024 年 4 月 3 日正式发布。该版本针对 2.1.0 版本出现的问题进行较为全面的优化，提交了若干改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。
 
 - **立即下载：** https://doris.apache.org/download/
@@ -97,13 +98,13 @@ under the License.
 
 - https://github.com/apache/doris/pull/32101 
 
-9. 支持查询 Experimental 的 Session Variable。 
+9. 支持查询 Experimental 的 Session Variable。  
 
 - https://github.com/apache/doris/pull/31837
 
 10. 支持建立 `bitmap_union(bitmap_from_array())` 函数的物化视图。
 
-- https://github.com/apache/doris/pull/31962
+-https://github.com/apache/doris/pull/31962
 
 11. 支持对 Hive 中 `HIVE_DEFAULT_PARTITION` 分区进行列裁剪。
 
@@ -159,7 +160,7 @@ under the License.
 
 - https://github.com/apache/doris/pull/32909 
 
-## 5 Bug 修复
+## 5 Bugs 修复
 
 1. 修复 TopN 下推导致的问题。
 

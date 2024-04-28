@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Tablet 元数据管理工具 
+
 
 ## 背景
 
@@ -34,7 +34,7 @@ under the License.
 
 其中 http 接口仅用于在线的查看 tablet 的元数据，可以在 BE 进程运行的状态下使用。
 
-而 meta\_tool 工具则仅用于离线的各类元数据管理操作，必须先停止BE进程后，才可使用。
+而 meta\_tool 工具则仅用于离线的各类元数据管理操作，必须先停止 BE 进程后，才可使用。
 
 meta\_tool 工具存放在 BE 的 lib/ 目录下。
 
@@ -44,7 +44,7 @@ meta\_tool 工具存放在 BE 的 lib/ 目录下。
 
 查看 Tablet Meta 信息可以分为在线方法和离线方法
 
-#### 在线
+**在线**
 
 访问 BE 的 http 接口，获取对应的 Tablet Meta 信息：
 
@@ -53,11 +53,13 @@ api：
 `http://{host}:{port}/api/meta/header/{tablet_id}`
 
 
-> host: BE 的 hostname
-> 
-> port: BE 的 http 端口
-> 
-> tablet_id: tablet id
+:::note
+- host: BE 的 hostname
+ 
+- port: BE 的 http 端口
+ 
+- tablet_id: tablet id
+:::
 
 举例：
     
@@ -65,7 +67,7 @@ api：
 
 最终查询成功的话，会将 Tablet Meta 以 json 形式返回。
 
-#### 离线
+**离线**
 
 基于 meta\_tool 工具获取某个盘上的 Tablet Meta。
 
@@ -75,7 +77,9 @@ api：
 ./lib/meta_tool --root_path=/path/to/root_path --operation=get_meta --tablet_id=xxx --schema_hash=xxx
 ```
 
-> root_path: 在 be.conf 中配置的对应的 root_path 路径。
+:::note
+root_path: 在 be.conf 中配置的对应的 root_path 路径。
+:::
 
 结果也是按照 json 的格式展现 Tablet Meta。
 
@@ -85,7 +89,7 @@ api：
 
 命令：
 
-```
+```bash
 ./lib/meta_tool --operation=load_meta --root_path=/path/to/root_path --json_meta_path=path
 ```
 
@@ -93,15 +97,15 @@ api：
 
 为了实现从某个 be 的某个盘中删除某个 tablet 元数据的功能。可以单独删除一个 tablet 的元数据，或者批量删除一组 tablet 的元数据。
 
-删除单个tablet元数据：
+删除单个 tablet 元数据：
 
-```
+```bash
 ./lib/meta_tool --operation=delete_meta --root_path=/path/to/root_path --tablet_id=xxx --schema_hash=xxx
 ```
 
-删除一组tablet元数据：
+删除一组 tablet 元数据：
 
-```
+```bash
 ./lib/meta_tool --operation=batch_delete_meta --tablet_file=/path/to/tablet_file.txt
 ```
 
@@ -113,7 +117,7 @@ api：
 
 `tablet_file` 文件示例：
 
-```
+```bash
 /output/be/data/,14217,352781111
 /output/be/data/,14219,352781111
 /output/be/data/,14223,352781111
@@ -126,21 +130,21 @@ api：
 
 ### 展示 pb 格式的 TabletMeta
 
-这个命令是为了查看旧的基于文件的管理的PB格式的 Tablet Meta，以 json 的格式展示 Tablet Meta。
+这个命令是为了查看旧的基于文件的管理的 PB 格式的 Tablet Meta，以 json 的格式展示 Tablet Meta。
 
 命令：
 
-```
+```bash
 ./lib/meta_tool --operation=show_meta --root_path=/path/to/root_path --pb_header_path=path
 ```
 
 ### 展示 pb 格式的 Segment meta
 
-这个命令是为了查看SegmentV2 的segment meta信息，以json 形式展示出来
+这个命令是为了查看 SegmentV2 的 segment meta 信息，以 json 形式展示出来
 
 命令：
 
-```
+```bash
 ./meta_tool --operation=show_segment_footer --file=/path/to/segment/file
 
 

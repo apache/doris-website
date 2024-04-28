@@ -1,6 +1,6 @@
 ---
 {
-    "title": "权限管理",
+    "title": "认证和鉴权",
     "language": "zh-CN"
 }
 ---
@@ -42,17 +42,17 @@ Doris 新的权限管理系统参照了 Mysql 的权限管理机制，做到了�
 
 3. 角色 Role
 
-   Doris可以创建自定义命名的角色。角色可以被看做是一组权限的集合。新创建的用户可以被赋予某一角色，则自动被赋予该角色所拥有的权限。后续对角色的权限变更，也会体现在所有属于该角色的用户权限上。
+   Doris 可以创建自定义命名的角色。角色可以被看做是一组权限的集合。新创建的用户可以被赋予某一角色，则自动被赋予该角色所拥有的权限。后续对角色的权限变更，也会体现在所有属于该角色的用户权限上。
 
 4. 用户属性 user_property
 
    用户属性直接附属于某一用户，而不是用户标识。即 cmy@'192.%' 和 cmy@['domain'] 都拥有同一组用户属性，该属性属于用户 cmy，而不是 cmy@'192.%' 或 cmy@['domain']。
 
-   用户属性包括但不限于： 用户最大连接数、导入集群配置等等。
+   用户属性包括但不限于：用户最大连接数、导入集群配置等等。
 
 ## 权限框架
 
-Doris权限设计基于RBAC(Role-Based Access Control)的权限管理模型,用户和角色关联，角色和权限关联，用户通过角色间接和权限关联。
+Doris 权限设计基于 RBAC(Role-Based Access Control) 的权限管理模型，用户和角色关联，角色和权限关联，用户通过角色间接和权限关联。
 
 当角色被删除时，用户自动失去该角色的所有权限。
 
@@ -83,9 +83,9 @@ Doris权限设计基于RBAC(Role-Based Access Control)的权限管理模型,用�
 
 如上图所示：
 
-user1和user2都是通过role1拥有了priv1的权限。
+user1 和 user2 都是通过 role1 拥有了 priv1 的权限。
 
-userN通过role3拥有了priv1的权限，通过roleN拥有了priv2和privN的权限，因此userN同时拥有priv1，priv2和privN的权限。
+userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 privN 的权限，因此 userN 同时拥有 priv1，priv2 和 privN 的权限。
 
 为了方便用户操作，是可以直接给用户授权的，底层实现上，是为每个用户创建了一个专属于该用户的默认角色，当给用户授权时，实际上是在给该用户的默认角色授权。
 
@@ -94,17 +94,29 @@ userN通过role3拥有了priv1的权限，通过roleN拥有了priv2和privN的�
 ## 支持的操作
 
 1. 创建用户：[CREATE USER](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-USER.md)
+
 2. 修改用户：[ALTER USER](../../sql-manual/sql-reference/Account-Management-Statements/ALTER-USER.md)
+
 3. 删除用户：[DROP USER](../../sql-manual/sql-reference/Account-Management-Statements/DROP-USER.md)
+
 4. 授权/分配角色：[GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md)
+
 5. 撤权/撤销角色：[REVOKE](../../sql-manual/sql-reference/Account-Management-Statements/REVOKE.md)
+
 6. 创建角色：[CREATE ROLE](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-ROLE.md)
+
 7. 删除角色：[DROP ROLE](../../sql-manual/sql-reference/Account-Management-Statements/DROP-ROLE.md)
+
 8. 查看当前用户权限和角色：[SHOW GRANTS](../../sql-manual/sql-reference/Show-Statements/SHOW-GRANTS.md)
+
 9. 查看所有用户权限和角色：[SHOW ALL GRANTS](../../sql-manual/sql-reference/Show-Statements/SHOW-GRANTS.md)
+
 10. 查看已创建的角色：[SHOW ROLES](../../sql-manual/sql-reference/Show-Statements/SHOW-ROLES.md)
-11. 设置用户属性: [SET PROPERTY](../../sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY.md)
+
+11. 设置用户属性：[SET PROPERTY](../../sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY.md)
+
 12. 查看用户属性：[SHOW PROPERTY](../../sql-manual/sql-reference/Show-Statements/SHOW-PROPERTY.md)
+
 13. 修改密码：[SET PASSWORD](../../sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD.md)
 
 关于以上命令的详细帮助，可以通过 mysql 客户端连接 Doris 后，使用 help + command 获取帮助。如 `HELP CREATE USER`。
@@ -149,116 +161,140 @@ Doris 目前支持以下几种权限
 
 8. Usage_priv
 
-   资源的使用权限<version since="dev" type="inline" >和workload group权限</version>。
+   资源的使用权限<version since="dev" type="inline" >和 workload group 权限</version>。
 
 ## 权限层级
 
 同时，根据权限适用范围的不同，我们将库表的权限分为以下四个层级：
 
 1. GLOBAL LEVEL：全局权限。即通过 GRANT 语句授予的 `*.*.*` 上的权限。被授予的权限适用于任意数据库中的任意表。
-2. CATALOG LEVEL：数据目录（Catalog）级权限。即通过 GRANT 语句授予的 `ctl.*.*` 上的权限。被授予的权限适用于指定Catalog中的任意库表。
+
+2. CATALOG LEVEL：数据目录（Catalog）级权限。即通过 GRANT 语句授予的 `ctl.*.*` 上的权限。被授予的权限适用于指定 Catalog 中的任意库表。
+
 3. DATABASE LEVEL：数据库级权限。即通过 GRANT 语句授予的 `ctl.db.*` 上的权限。被授予的权限适用于指定数据库中的任意表。
+
 4. TABLE LEVEL：表级权限。即通过 GRANT 语句授予的 `ctl.db.tbl` 上的权限。被授予的权限适用于指定数据库中的指定表。
 
 将资源的权限分为以下两个层级：
 
 1. GLOBAL LEVEL：全局权限。即通过 GRANT 语句授予的 `*` 上的权限。被授予的权限适用于资源。
-2. RESOURCE LEVEL： 资源级权限。即通过 GRANT 语句授予的 `resource_name` 上的权限。被授予的权限适用于指定资源。
 
-<version since="dev">
-workload group 只有一个层级：
-1. WORKLOAD GROUP LEVEL：可以通过 GRANT 语句授予 `workload_group_name` 上的权限。被授予的权限适用于指定workload group。workload_group_name 支持 `%`和`_`匹配符，`%`可匹配任意字符串，`_`匹配任意单个字符。
-</version>
+2. RESOURCE LEVEL：资源级权限。即通过 GRANT 语句授予的 `resource_name` 上的权限。被授予的权限适用于指定资源。
+
+
+:::caution
+此功能为实验版本
+
+Workload Group 只有一个层级：
+
+1. WORKLOAD GROUP LEVEL：可以通过 GRANT 语句授予 `workload_group_name` 上的权限。被授予的权限适用于指定 workload group。workload_group_name 支持 `%`和`_`匹配符，`%`可匹配任意字符串，`_`匹配任意单个字符。
+:::
+
 
 ## ADMIN/GRANT 权限说明
 
 ADMIN_PRIV 和 GRANT_PRIV 权限同时拥有**授予权限**的权限，较为特殊。这里对和这两个权限相关的操作逐一说明。
 
-1. CREATE USER
-   - 拥有 ADMIN 权限，或 GLOBAL 和 DATABASE 层级的 GRANT 权限的用户可以创建新用户。
-2. DROP USER
-   - 拥有 ADMIN 权限或全局层级的 GRANT 权限的用户可以删除用户。
-3. CREATE/DROP ROLE
-   - 拥有 ADMIN 权限或全局层级的 GRANT 权限的用户可以创建角色。
-4. GRANT/REVOKE
-   - 拥有 ADMIN 权限，或者 GLOBAL 层级 GRANT 权限的用户，可以授予或撤销任意用户的权限。
-   - 拥有 CATALOG 层级 GRANT 权限的用户，可以授予或撤销任意用户对指定CATALOG的权限。
-   - 拥有 DATABASE 层级 GRANT 权限的用户，可以授予或撤销任意用户对指定数据库的权限。
-   - 拥有 TABLE 层级 GRANT 权限的用户，可以授予或撤销任意用户对指定数据库中指定表的权限。
-5. SET PASSWORD
-   - 拥有 ADMIN 权限，或者 GLOBAL 层级 GRANT 权限的用户，可以设置任意用户的密码。
-   - 普通用户可以设置自己对应的 UserIdentity 的密码。自己对应的 UserIdentity 可以通过 `SELECT CURRENT_USER();` 命令查看。
-   - 拥有非 GLOBAL 层级 GRANT 权限的用户，不可以设置已存在用户的密码，仅能在创建用户时指定密码。
+**1. CREATE USER**
+
+- 拥有 ADMIN 权限，或 GLOBAL 和 DATABASE 层级的 GRANT 权限的用户可以创建新用户。
+
+**2. DROP USER**
+
+- 拥有 ADMIN 权限或全局层级的 GRANT 权限的用户可以删除用户。
+
+**3. CREATE/DROP ROLE**
+- 拥有 ADMIN 权限或全局层级的 GRANT 权限的用户可以创建角色。
+
+**4. GRANT/REVOKE**
+
+- 拥有 ADMIN 权限，或者 GLOBAL 层级 GRANT 权限的用户，可以授予或撤销任意用户的权限。
+
+- 拥有 CATALOG 层级 GRANT 权限的用户，可以授予或撤销任意用户对指定 CATALOG 的权限。
+
+- 拥有 DATABASE 层级 GRANT 权限的用户，可以授予或撤销任意用户对指定数据库的权限。
+
+- 拥有 TABLE 层级 GRANT 权限的用户，可以授予或撤销任意用户对指定数据库中指定表的权限。
+
+**5. SET PASSWORD**
+
+- 拥有 ADMIN 权限，或者 GLOBAL 层级 GRANT 权限的用户，可以设置任意用户的密码。
+
+- 普通用户可以设置自己对应的 UserIdentity 的密码。自己对应的 UserIdentity 可以通过 `SELECT CURRENT_USER();` 命令查看。
+
+- 拥有非 GLOBAL 层级 GRANT 权限的用户，不可以设置已存在用户的密码，仅能在创建用户时指定密码。
 
 ## 一些说明
 
-1. Doris 初始化时，会自动创建如下用户和角色：
-   1. operator 角色：该角色拥有 Node_priv 和 Admin_priv，即对Doris的所有权限。
-   2. admin 角色：该角色拥有 Admin_priv，即除节点变更以外的所有权限。
-   3. root@'%'：root 用户，允许从任意节点登陆，角色为 operator。
-   4. admin@'%'：admin 用户，允许从任意节点登陆，角色为 admin。
-2. 不支持删除或更改默认创建的角色或用户的权限。
+**1. Doris 初始化时，会自动创建如下用户和角色：**
 
-3. operator 角色的用户有且只有一个，即 Root。admin 角色的用户可以创建多个。
+1. operator 角色：该角色拥有 Node_priv 和 Admin_priv，即对 Doris 的所有权限。
+2. admin 角色：该角色拥有 Admin_priv，即除节点变更以外的所有权限。
+3. root@'%'：root 用户，允许从任意节点登陆，角色为 operator。
+4. admin@'%'：admin 用户，允许从任意节点登陆，角色为 admin。
 
-4. 一些可能产生冲突的操作说明
+**2. 不支持删除或更改默认创建的角色或用户的权限。**
 
-   1. 域名与ip冲突：
+**3. operator 角色的用户有且只有一个，即 Root。admin 角色的用户可以创建多个。**
 
-      假设创建了如下用户：
+**4. 一些可能产生冲突的操作说明**
 
-      CREATE USER cmy@['domain'];
+1. 域名与 ip 冲突：
 
-      并且授权：
+   假设创建了如下用户：
 
-      GRANT SELECT_PRIV ON *.* TO cmy@['domain']
+   CREATE USER cmy@['domain'];
 
-      该 domain 被解析为两个 ip：ip1 和 ip2
+   并且授权：
 
-      假设之后，我们对 cmy@'ip1' 进行一次单独授权：
+   GRANT SELECT_PRIV ON *.* TO cmy@['domain']
 
-      GRANT ALTER_PRIV ON *.* TO cmy@'ip1';
+   该 domain 被解析为两个 ip：ip1 和 ip2
 
-      则 cmy@'ip1' 的权限会被修改为 SELECT_PRIV, ALTER_PRIV。并且当我们再次变更 cmy@['domain'] 的权限时，cmy@'ip1' 也不会跟随改变。
+   假设之后，我们对 cmy@'ip1' 进行一次单独授权：
 
-   2. 重复ip冲突：
+   GRANT ALTER_PRIV ON *.* TO cmy@'ip1';
 
-      假设创建了如下用户：
+   则 cmy@'ip1' 的权限会被修改为 SELECT_PRIV, ALTER_PRIV。并且当我们再次变更 cmy@['domain'] 的权限时，cmy@'ip1' 也不会跟随改变。
 
-      CREATE USER cmy@'%' IDENTIFIED BY "12345";
+2. 重复 ip 冲突：
 
-      CREATE USER cmy@'192.%' IDENTIFIED BY "abcde";
+   假设创建了如下用户：
 
-      在优先级上，'192.%' 优先于 '%'，因此，当用户 cmy 从 192.168.1.1 这台机器尝试使用密码 '12345' 登陆 Doris 会被拒绝。
+   CREATE USER cmy@'%' IDENTIFIED BY "12345";
 
-5. 忘记密码
+   CREATE USER cmy@'192.%' IDENTIFIED BY "abcde";
 
-   如果忘记了密码无法登陆 Doris，可以在 FE 的 config 文件中添加 `skip_localhost_auth_check` 参数，并且重启FE，从而无密码在本机通过localhost登陆 Doris：
+   在优先级上，'192.%' 优先于 '%'，因此，当用户 cmy 从 192.168.1.1 这台机器尝试使用密码 '12345' 登陆 Doris 会被拒绝。
+
+**5. 忘记密码**
+
+   如果忘记了密码无法登陆 Doris，可以在 FE 的 config 文件中添加 `skip_localhost_auth_check` 参数，并且重启 FE，从而无密码在本机通过 localhost 登陆 Doris：
 
    `skip_localhost_auth_check = true`
 
    登陆后，可以通过 SET PASSWORD 命令重置密码。
 
-6. 任何用户都不能重置 root 用户的密码，除了 root 用户自己。
+**6. 任何用户都不能重置 root 用户的密码，除了 root 用户自己。**
 
-7. ADMIN_PRIV 权限只能在 GLOBAL 层级授予或撤销。
+**7. ADMIN_PRIV 权限只能在 GLOBAL 层级授予或撤销。**
 
-8. 拥有 GLOBAL 层级 GRANT_PRIV 其实等同于拥有 ADMIN_PRIV，因为该层级的 GRANT_PRIV 有授予任意权限的权限，请谨慎使用。
+**8. 拥有 GLOBAL 层级 GRANT_PRIV 其实等同于拥有 ADMIN_PRIV，因为该层级的 GRANT_PRIV 有授予任意权限的权限，请谨慎使用。**
 
-9. `current_user()` 和 `user()`
+**9. `current_user()` 和 `user()`**
 
-   用户可以通过 `SELECT current_user();` 和 `SELECT user();` 分别查看 `current_user` 和 `user`。其中 `current_user` 表示当前用户是以哪种身份通过认证系统的，而 `user` 则是用户当前实际的 `user_identity`。举例说明：
+用户可以通过 `SELECT current_user();` 和 `SELECT user();` 分别查看 `current_user` 和 `user`。其中 `current_user` 表示当前用户是以哪种身份通过认证系统的，而 `user` 则是用户当前实际的 `user_identity`。举例说明：
 
-   假设创建了 `user1@'192.%'` 这个用户，然后以为来自 192.168.10.1 的用户 user1 登陆了系统，则此时的 `current_user` 为 `user1@'192.%'`，而 `user` 为 `user1@'192.168.10.1'`。
+假设创建了 `user1@'192.%'` 这个用户，然后以为来自 192.168.10.1 的用户 user1 登陆了系统，则此时的 `current_user` 为 `user1@'192.%'`，而 `user` 为 `user1@'192.168.10.1'`。
 
-   所有的权限都是赋予某一个 `current_user` 的，真实用户拥有对应的 `current_user` 的所有权限。
-   
-10. 密码强度
+所有的权限都是赋予某一个 `current_user` 的，真实用户拥有对应的 `current_user` 的所有权限。
 
-	在 1.2 版本中，新增了对用户密码强度的校验功能。该功能由全局变量 `validate_password_policy` 控制。默认为 `NONE/0`，即不检查密码强度。如果设置为 `STRONG/2`，则密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的3项，并且长度必须大于等于8。
+**10. 密码强度**
+
+在 1.2 版本中，新增了对用户密码强度的校验功能。该功能由全局变量 `validate_password_policy` 控制。默认为 `NONE/0`，即不检查密码强度。如果设置为 `STRONG/2`，则密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的 3 项，并且长度必须大于等于 8。
 	
 ## 行级权限
-从1.2版本开始，可以通过 [CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md) 命令创建行级权限。
+从 1.2 版本开始，可以通过 [CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md) 命令创建行级权限。
 
 ## 最佳实践
 
@@ -280,4 +316,4 @@ ADMIN_PRIV 和 GRANT_PRIV 权限同时拥有**授予权限**的权限，较为�
 
 ## 更多帮助
 
- 关于 权限管理 使用的更多详细语法及最佳实践，请参阅 [GRANTS](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP GRANTS` 获取更多帮助信息。
+ 关于 权限管理 使用的更多详细语法及最佳实践，请参阅 [GRANTS](../../sql-manual/sql-reference/Account-Management-Statements/GRANT) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP GRANTS` 获取更多帮助信息。

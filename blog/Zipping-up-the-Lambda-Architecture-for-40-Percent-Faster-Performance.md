@@ -33,7 +33,7 @@ Author: Tongyang Han, Senior Data Engineer at Douyu
 
 The Lambda architecture has been common practice in big data processing. The concept is to separate stream (real time data) and batch (offline data) processing, and that's exactly what we did. These two types of data of ours were processed in two isolated tubes before they were pooled together and ready for searches and queries.
 
-![Lambda-architecture](../static/images/Douyu_1.png)
+![Lambda-architecture](/images/Douyu_1.png)
 
 Then we run into a few problems:
 
@@ -52,7 +52,7 @@ I am going to elaborate on how this is done using our data tagging process as an
 
 Previously, our offline tags were produced by the data warehouse, put into a flat table, and then written in **HBase**, while real-time tags were produced by **Flink**, and put into **HBase** directly. Then **Spark** would work as the computing engine.
 
-![HBase-Redis-Spark](../static/images/Douyu_2.png)
+![HBase-Redis-Spark](/images/Douyu_2.png)
 
 The problem with this stemmed from the low computation efficiency of **Flink** and **Spark**. 
 
@@ -61,25 +61,25 @@ The problem with this stemmed from the low computation efficiency of **Flink** a
 
 As a solution, we replaced **HBase** and **Spark** with **Apache Doris**, a real-time analytic database, and moved part of the computational logic of the foregoing wide-time-range real-time tags from **Flink** to **Apache Doris**.
 
-![Apache-Doris-Redis](../static/images/Douyu_3.png)
+![Apache-Doris-Redis](/images/Douyu_3.png)
 
 Instead of putting our flat tables in HBase, we place them in Apache Doris. These tables are divided into partitions based on time sensitivity. Offline tags will be updated daily while real-time tags will be updated in real time. We organize these tables in the Aggregate Model of Apache Doris, which allows partial update of data.
 
 Instead of using Spark for queries, we parse the query rules into SQL for execution in Apache Doris. For pattern matching, we use Redis to cache the hot data from Apache Doris, so the system can respond to such queries much faster.
 
-![Real-time-and-offline-data-processing-in-Apache-Doris](../static/images/Douyu_4.png)
+![Real-time-and-offline-data-processing-in-Apache-Doris](/images/Douyu_4.png)
 
 ## **Computational Pipeline of Wide-Time-Range Real-Time Tags**
 
 In some cases, the computation of wide-time-range real-time tags entails the aggregation of historical (offline) data with real-time data. The following figure shows our old computational pipeline for these tags. 
 
-![offline-data-processing-link](../static/images/Douyu_5.png)
+![offline-data-processing-link](/images/Douyu_5.png)
 
 As you can see, it required multiple tasks to finish computing one real-time tag. Also, in complicated aggregations that involve a collection of aggregation operations, any improper resource allocation could lead to back pressure or waste of resources. This adds to the difficulty of task scheduling. The maintenance and stability guarantee of such a long pipeline could be an issue, too.
 
 To improve on that, we decided to move such aggregation workload to Apache Doris.
 
-![real-time-data-processing-link](../static/images/Douyu_6.png)
+![real-time-data-processing-link](/images/Douyu_6.png)
 
 We have around 400 million customer tags in our system, and each customer is attached with over 300 tags. We divide customers into more than 10,000 groups, and we have to update 5000 of them on a daily basis. The above improvement has sped up the computation of our wide-time-range real-time queries by **40%**.
 

@@ -25,22 +25,26 @@ under the License.
 -->
 
 
-# 文件分析
 
 通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析。并且支持自动的列类型推断。
 
-## 使用方式
+:::tip
+
+**使用方式**
 
 更多使用方式可参阅 Table Value Function 文档：
 
 * [S3](../sql-manual/sql-functions/table-functions/s3.md)：支持 S3 兼容的对象存储上的文件分析。
+
 * [HDFS](../sql-manual/sql-functions/table-functions/hdfs.md)：支持 HDFS 上的文件分析。
+
+:::
 
 这里我们通过 S3 Table Value Function 举例说明如何进行文件分析。
 
-### 自动推断文件列类型
+## 自动推断文件列类型
 
-```
+```sql
 > DESC FUNCTION s3 (
     "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
     "s3.access_key"= "ak",
@@ -65,7 +69,7 @@ under the License.
 	
 这里我们定义了一个 S3 Table Value Function：
 	
-```
+```sql
 s3(
     "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
     "s3.access_key"= "ak",
@@ -80,7 +84,7 @@ s3(
 
 可以看到，对于 Parquet 文件，Doris 会根据文件内的元信息自动推断列类型。
 
-目前支持对 Parquet、ORC、CSV、Json 格式进行分析和列类型推断。
+目前支持对 Parquet、ORC、CSV、JSON 格式进行分析和列类型推断。
 
 **CSV Schema**
 
@@ -88,7 +92,7 @@ s3(
 
 `name1:type1;name2:type2;...`
 
-对于格式不匹配的列（比如文件中为字符串，用户定义为 int），或缺失列（比如文件中有4列，用户定义了5列），则这些列将返回null。
+对于格式不匹配的列（比如文件中为字符串，用户定义为 int），或缺失列（比如文件中有 4 列，用户定义了 5 列），则这些列将返回 null。
 
 当前支持的列类型为：
 
@@ -123,11 +127,11 @@ s3 (
 )
 ```
 
-### 查询分析
+## 查询分析
 
 你可以使用任意的 SQL 语句对这个文件进行分析
 
-```
+```sql
 SELECT * FROM s3(
     "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
     "s3.access_key"= "ak",
@@ -147,11 +151,12 @@ LIMIT 5;
 ```
 
 Table Value Function 可以出现在 SQL 中，Table 能出现的任意位置。如 CTE 的 WITH 子句中，FROM 子句中。
+
 这样，你可以把文件当做一张普通的表进行任意分析。
 
 你也可以用过 `CREATE VIEW` 语句为 Table Value Function 创建一个逻辑视图。这样，你可以想其他视图一样，对这个 Table Value Function 进行访问、权限管理等操作，也可以让其他用户访问这个 Table Value Function。
 
-```
+```sql
 CREATE VIEW v1 AS 
 SELECT * FROM s3(
     "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
@@ -167,11 +172,11 @@ SELECT * FROM v1;
 GRANT SELECT_PRIV ON db1.v1 TO user1;
 ```
 
-### 数据导入
+## 数据导入
 
 配合 `INSERT INTO SELECT` 语法，我们可以方便将文件导入到 Doris 表中进行更快速的分析：
 
-```
+```sql
 // 1. 创建doris内部表
 CREATE TABLE IF NOT EXISTS test_table
 (
@@ -193,9 +198,9 @@ FROM s3(
     "use_path_style" = "true");
 ```    
 
-### 注意事项
+## 注意事项
 
-1. 如果 `S3 / hdfs` tvf指定的uri匹配不到文件，或者匹配到的所有文件都是空文件，那么 `S3 / hdfs` tvf将会返回空结果集。在这种情况下使用`DESC FUNCTION`查看这个文件的Schema，会得到一列虚假的列`__dummy_col`，可忽略这一列。
+1. 如果 `S3 / hdfs` tvf 指定的 uri 匹配不到文件，或者匹配到的所有文件都是空文件，那么 `S3 / hdfs` tvf 将会返回空结果集。在这种情况下使用`DESC FUNCTION`查看这个文件的 Schema，会得到一列虚假的列`__dummy_col`，可忽略这一列。
 
-2. 如果指定tvf的format为csv，所读文件不为空文件但文件第一行为空，则会提示错误`The first line is empty, can not parse column numbers`, 这因为无法通过该文件的第一行解析出schema。
+2. 如果指定 tvf 的 format 为 csv，所读文件不为空文件但文件第一行为空，则会提示错误`The first line is empty, can not parse column numbers`, 这因为无法通过该文件的第一行解析出 schema。
 

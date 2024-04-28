@@ -79,7 +79,7 @@ Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly
 
 Whether to enable deletion. This option requires Doris table to enable batch delete function (0.15+ version is enabled by default), and only supports Unique model. you can get more detail at this link:
 
-[batch delete](../data-operate/update-delete/batch-delete-manual)
+[batch delete](../data-operate/delete/batch-delete-manual)
 
 `doris.config [map]`
 
@@ -186,7 +186,7 @@ Number of retries after writing to Doris fails
 
 Import parameters for Stream load. For example: 'doris.column_separator' = ', ' etc.
 
-[More Stream Load parameter configuration](../../data-operate/import/import-way/stream-load-manual.md)
+[More Stream Load parameter configuration](../../data-operate/import/stream-load-manual)
 
 #### Examples
 
@@ -271,7 +271,7 @@ Doris number of submissions per batch
 `doris. [string]`
 Doris stream_load properties,you can use 'doris.' prefix + stream_load properties
 
-[More Doris stream_load Configurations](../../data-operate/import/import-way/stream-load-manual.md)
+[More Doris stream_load Configurations](../data-operate/import/stream-load-manual.md)
 
 #### Examples
 

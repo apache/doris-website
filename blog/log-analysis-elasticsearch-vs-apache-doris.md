@@ -47,7 +47,7 @@ A popular log processing solution within the data industry is the **ELK stack: E
 - **Log storage**: Logstash writes logs in JSON format into Elasticsearch for storage.
 - **Log query**: Users search for logs via Kibana visualization or send a query request via Elasticsearch DSL API.
 
-![ELK-Stack](../static/images/LAS_1.png)
+![ELK-Stack](/images/LAS_1.png)
 
 The ELK stack has outstanding real-time processing capabilities, but frictions exist.
 
@@ -55,7 +55,7 @@ The ELK stack has outstanding real-time processing capabilities, but frictions e
 
 The Index Mapping in Elasticsearch defines the table scheme, which includes the field names, data types, and whether to enable index creation.
 
-![index-mapping-in-Elasticsearch](../static/images/LAS_2.png)
+![index-mapping-in-Elasticsearch](/images/LAS_2.png)
 
 Elasticsearch also boasts a Dynamic Mapping mechanism that automatically adds fields to the Mapping according to the input JSON data. This provides some sort of schema-free support, but it's not enough because:
 
@@ -67,7 +67,7 @@ Elasticsearch also boasts a Dynamic Mapping mechanism that automatically adds fi
 
 Elasticsearch has its unique Domain Specific Language (DSL), which is very different from the tech stack that most data engineers and analysts are familiar with, so there is a steep learning curve. Moreover, Elasticsearch has a relatively closed ecosystem so there might be strong resistance in integration with BI tools. Most importantly, Elastisearch only supports single-table analysis and is lagging behind the modern OLAP demands for multi-table join, sub-query, and views.
 
-![Elasticsearch-DSL](../static/images/LAS_3.png)
+![Elasticsearch-DSL](/images/LAS_3.png)
 
 ### High Cost & Low Stability
 
@@ -95,7 +95,7 @@ Reflecting on the strengths and limitations of the Elasticsearch-based solution,
 
 Benchmark tests with ES Rally, the official testing tool for Elasticsearch, showed that Apache Doris was around 5 times as fast as Elasticsearch in data writing, 2.3 times as fast in queries, and it consumed only 1/5 of the storage space that Elasticsearch used. On the test dataset of HTTP logs, it achieved a writing speed of 550 MB/s and a compression ratio of 10:1.
 
-![Elasticsearch-VS-Apache-Doris](../static/images/LAS_4.png)
+![Elasticsearch-VS-Apache-Doris](/images/LAS_4.png)
 
 The below figure show what a typical Doris-based log processing system looks like. It is more inclusive and allows for more flexible usage from data ingestion, analysis, and application:
 
@@ -103,7 +103,7 @@ The below figure show what a typical Doris-based log processing system looks lik
 - **Analysis**: You can put log data in Doris and conduct join queries across logs and other data in the data warehouse.
 - **Application**: Apache Doris is compatible with MySQL protocol, so you can integrate a wide variety of data analytic tools and clients to Doris, such as Grafana and Tableau. You can also connect applications to Doris via JDBC and ODBC APIs. We are planning to build a Kibana-like system to visualize logs.
 
-![Apache-Doris-log-analysis-stack](../static/images/LAS_5.png)
+![Apache-Doris-log-analysis-stack](/images/LAS_5.png)
 
 Moreover, Apache Doris has better scheme-free support and a more user-friendly analytic engine.
 

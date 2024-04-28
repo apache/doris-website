@@ -23,6 +23,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 亲爱的社区小伙伴们，**Apache Doris 2.1.2 版本已于 2024 年 4 月 12 日正式发布**。该版本提交了若干改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。
 
 **官网下载：** https://doris.apache.org/download/
@@ -65,7 +66,7 @@ under the License.
 
 - https://github.com/apache/doris/pull/33137
 
-3. 针对 DB2 Catalog，增加测试链接是否通畅的功能，能够在建立 Catalog 时做部份链接检查。 
+3. 针对 DB2 Catalog，增加测试链接是否通畅的功能，能够在建立 Catalog 时做部分链接检查。 
 
 - https://github.com/apache/doris/pull/33335
 

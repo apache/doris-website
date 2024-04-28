@@ -51,11 +51,11 @@ When the metrics are soundly put in place, you can ingest new data into your dat
 
 As is mentioned, some metrics are produced by combining multiple fields in the source table. In data engineering, that is a multi-table join query. Based on the optimization experience of an Apache Doris user, we recommend flat tables instead of Star/Snowflake Schema. The user reduced the query response time on tables of 100 million rows **from 5s to 63ms** after such a change.
 
-![join-queries](../static/images/Pingan_1.png)
+![join-queries](/images/Pingan_1.png)
 
 The flat table solution also eliminates jitter.
 
-![reduced-jitter](../static/images/Pingan_2.png)
+![reduced-jitter](/images/Pingan_2.png)
 
 ## Enable SQL Caching to Reduce Resource Consumption
 
@@ -66,7 +66,7 @@ Analysts often check data reports of the same metrics on a regular basis. These 
 - A TPS (Transactions Per Second) of 300 is reached, with CPU, memory, disk, and I/O usage under 80%;
 - Under the recommended cluster size, over 10,000 metrics can be cached, which means you can save a lot of computation resources.
 
-![reduced-computation-resources](../static/images/Pingan_3.png)
+![reduced-computation-resources](/images/Pingan_3.png)
 
 ## Conclusion
 
