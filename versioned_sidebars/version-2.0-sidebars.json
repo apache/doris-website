@@ -42,11 +42,7 @@
                                 "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
                                 "install/cluster-deployment/k8s-deploy/root-user-use",
                                 "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                                "install/cluster-deployment/k8s-deploy/debug-crash",
-                                "install/cluster-deployment/k8s-deploy/helm-chart-deploy",
-                                "install/cluster-deployment/k8s-deploy/persistent-volume",
-                                "install/cluster-deployment/k8s-deploy/operator-deploy",
-                                "install/cluster-deployment/k8s-deploy/network"
+                                "install/cluster-deployment/k8s-deploy/debug-crash"
                             ]
                         },
                         "install/cluster-deployment/doris-on-aws"
@@ -164,6 +160,7 @@
                         "query/query-data/select",
                         "query/query-data/complex-type",
                         "query/query-data/subquery",
+                        "query/query-data/cte",
                         "query/query-data/lateral-view",
                         "query/query-data/window-function",
                         "query/query-data/encryption-function"
