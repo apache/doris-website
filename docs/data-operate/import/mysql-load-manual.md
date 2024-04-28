@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MySql Load",
+    "title": "MySQL Load",
     "language": "en"
 }
 ---

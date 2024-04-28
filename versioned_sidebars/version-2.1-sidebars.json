@@ -463,7 +463,6 @@
                     ]
                 },
                 "admin-manual/plugin-development-manual",
-                "admin-manual/audit-plugin",
                 "admin-manual/small-file-mgr",
                 "admin-manual/compaction",
                 "admin-manual/rowsets"

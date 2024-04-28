@@ -1,7 +1,7 @@
 ---
 {
     "title": "Colocation Join",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,39 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Colocation Join
 
+Colocation Join is to provide local optimization for some Join queries to reduce data transmission time between nodes and speed up queries.
 
-Colocation Join 旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，加速查询。本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。  
+Note: This property will not be synchronized by CCR. If this table is copied by CCR, that is, PROPERTIES contains `is_being_synced = true`, this property will be erased in this table.
 
-注意：这个属性不会被 CCR 同步，如果这个表是被 CCR 复制而来的，即 PROPERTIES 中包含`is_being_synced = true`时，这个属性将会在这个表中被擦除。
+## Noun Interpretation
 
-## 名词解释
+* FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.
+* BE: Backend, Doris's back-end node. Responsible for query execution and data storage.
+* Colocation Group (CG): A CG contains one or more tables. Tables within the same group have the same Colocation Group Schema and the same data fragmentation distribution.
+* Colocation Group Schema (CGS): Used to describe table in a CG and general Schema information related to Colocation. Including bucket column type, bucket number and copy number.
 
-- Colocation Group（CG）：一个 CG 中会包含一张及以上的 Table。在同一个 Group 内的 Table 有着相同的 Colocation Group Schema，并且有着相同的数据分片分布。
+## Principle
 
-- Colocation Group Schema（CGS）：用于描述一个 CG 中的 Table，和 Colocation 相关的通用 Schema 信息。包括分桶列类型，分桶数以及副本数等。
+The Colocation Join function is to make a CG of a set of tables with the same CGS. Ensure that the corresponding data fragments of these tables will fall on the same BE node. When tables in CG perform Join operations on bucket columns, local data Join can be directly performed to reduce data transmission time between nodes.
 
-## 原理
+The data of a table will eventually fall into a barrel according to the barrel column value Hash and the number of barrels modeled. Assuming that the number of buckets in a table is 8, there are eight buckets `[0, 1, 2, 3, 4, 5, 6, 7] `Buckets'. We call such a sequence a `Buckets Sequence`. Each Bucket has one or more Tablets. When a table is a single partitioned table, there is only one Tablet in a Bucket. If it is a multi-partition table, there will be more than one.
 
-Colocation Join 功能，是将一组拥有相同 CGS 的 Table 组成一个 CG。并保证这些 Table 对应的数据分片会落在同一个 BE 节点上。使得当 CG 内的表进行分桶列上的 Join 操作时，可以通过直接进行本地数据 Join，减少数据在节点间的传输耗时。
+In order for a table to have the same data distribution, the table in the same CG must ensure the following attributes are the same:
 
-一个表的数据，最终会根据分桶列值 Hash、对桶数取模的后落在某一个分桶内。假设一个 Table 的分桶数为 8，则共有 `[0, 1, 2, 3, 4, 5, 6, 7]` 8 个分桶（Bucket），我们称这样一个序列为一个 `BucketsSequence`。每个 Bucket 内会有一个或多个数据分片（Tablet）。当表为单分区表时，一个 Bucket 内仅有一个 Tablet。如果是多分区表，则会有多个。
+1. Barrel row and number of barrels
 
-为了使得 Table 能够有相同的数据分布，同一 CG 内的 Table 必须保证以下属性相同：
+  Bucket column, that is, the column specified in `DISTRIBUTED BY HASH (col1, col2,...)'in the table building statement. Bucket columns determine which column values are used to Hash data from a table into different Tablets. Tables in the same CG must ensure that the type and number of barrel columns are identical, and the number of barrels is identical, so that the data fragmentation of multiple tables can be controlled one by one.
 
-1. 分桶列和分桶数
+2. Number of copies
 
-   分桶列，即在建表语句中 `DISTRIBUTED BY HASH(col1, col2, ...)` 中指定的列。分桶列决定了一张表的数据通过哪些列的值进行 Hash 划分到不同的 Tablet 中。同一 CG 内的 Table 必须保证分桶列的类型和数量完全一致，并且桶数一致，才能保证多张表的数据分片能够一一对应的进行分布控制。
+  The number of copies of all partitions of all tables in the same CG must be the same. If inconsistent, there may be a copy of a Tablet, and there is no corresponding copy of other table fragments on the same BE.
 
-2. 副本数
+Tables in the same CG do not require consistency in the number, scope, and type of partition columns.
 
-   同一个 CG 内所有表的所有分区（Partition）的副本数必须一致。如果不一致，可能出现某一个 Tablet 的某一个副本，在同一个 BE 上没有其他的表分片的副本对应。
+After fixing the number of bucket columns and buckets, the tables in the same CG will have the same Buckets Sequence. The number of replicas determines the number of replicas of Tablets in each bucket, which BE they are stored on. Suppose that Buckets Sequence is `[0, 1, 2, 3, 4, 5, 6, 7] `, and that BE nodes have `[A, B, C, D] `4. A possible distribution of data is as follows:
 
-同一个 CG 内的表，分区的个数、范围以及分区列的类型不要求一致。
-
-在固定了分桶列和分桶数后，同一个 CG 内的表会拥有相同的 BucketsSequence。而副本数决定了每个分桶内的 Tablet 的多个副本，存放在哪些 BE 上。假设 BucketsSequence 为 `[0, 1, 2, 3, 4, 5, 6, 7]`，BE 节点有 `[A, B, C, D]` 4 个。则一个可能的数据分布如下：
-
-```text
+```
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
 | 0 | | 1 | | 2 | | 3 | | 4 | | 5 | | 6 | | 7 |
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
@@ -68,59 +69,56 @@ Colocation Join 功能，是将一组拥有相同 CGS 的 Table 组成一个 CG�
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
 ```
 
-CG 内所有表的数据都会按照上面的规则进行统一分布，这样就保证了，分桶列值相同的数据都在同一个 BE 节点上，可以进行本地数据 Join。
+The data of all tables in CG will be uniformly distributed according to the above rules, which ensures that the data with the same barrel column value are on the same BE node, and local data Join can be carried out.
 
-## 使用方式
+## Usage
 
-### 建表
+### Establishment of tables
 
-建表时，可以在 `PROPERTIES` 中指定属性 `"colocate_with" = "group_name"`，表示这个表是一个 Colocation Join 表，并且归属于一个指定的 Colocation Group。
+When creating a table, you can specify the attribute `"colocate_with"="group_name"` in `PROPERTIES`, which means that the table is a Colocation Join table and belongs to a specified Colocation Group.
 
-示例：
-
-```sql
-CREATE TABLE tbl (k1 int, v1 int sum)
-DISTRIBUTED BY HASH(k1)
-BUCKETS 8
-PROPERTIES(
-    "colocate_with" = "group1"
-);
-```
-
-如果指定的 Group 不存在，则 Doris 会自动创建一个只包含当前这张表的 Group。如果 Group 已存在，则 Doris 会检查当前表是否满足 Colocation Group Schema。如果满足，则会创建该表，并将该表加入 Group。同时，表会根据已存在的 Group 中的数据分布规则创建分片和副本。Group 归属于一个 Database，Group 的名字在一个 Database 内唯一。在内部存储是 Group 的全名为 `dbId_groupName`，但用户只感知 groupName。
-
-
-
-:::tip
-2.0 版本中，Doris 支持了跨 Database 的 Group。
-:::
-
-在建表时，需使用关键词 `__global__` 作为 Group 名称的前缀。如：
+Examples:
 
 ```
 CREATE TABLE tbl (k1 int, v1 int sum)
 DISTRIBUTED BY HASH(k1)
 BUCKETS 8
 PROPERTIES(
-    "colocate_with" = "__global__group1"
+  "colocate_with" = "group1"
 );
 ```
 
-`__global__` 前缀的 Group 不再归属于一个 Database，其名称也是全局唯一的。
+If the specified group does not exist, Doris automatically creates a group that contains only the current table. If the Group already exists, Doris checks whether the current table satisfies the Colocation Group Schema. If satisfied, the table is created and added to the Group. At the same time, tables create fragments and replicas based on existing data distribution rules in Groups.
+Group belongs to a database, and its name is unique in a database. Internal storage is the full name of Group `dbId_groupName`, but users only perceive groupName.
 
-通过创建 Global Group，可以实现跨 Database 的 Colocate Join。
+<version since="dev">
 
+In version 2.0, Doris supports cross-Database Group. When creating a table, you need to use the keyword `__global__` as a prefix of the Group name. like:
 
+```
+CREATE TABLE tbl (k1 int, v1 int sum)
+DISTRIBUTED BY HASH(k1)
+BUCKETS 8
+PROPERTIES(
+     "colocate_with" = "__global__group1"
+);
+```
 
-### 删表
+The Group prefixed with `__global__` no longer belongs to a Database, and its name is also globally unique.
 
-当 Group 中最后一张表彻底删除后（彻底删除是指从回收站中删除。通常，一张表通过 `DROP TABLE` 命令删除后，会在回收站默认停留一天的时间后，再删除），该 Group 也会被自动删除。
+Cross-Database Colocate Join can be realized by creating a Global Group.
 
-### 查看 Group
+</version>
 
-以下命令可以查看集群内已存在的 Group 信息。
+### Delete table
 
-```sql
+When the last table in Group is deleted completely (deleting completely means deleting from the recycle bin). Usually, when a table is deleted by the `DROP TABLE` command, it will be deleted after the default one-day stay in the recycle bin, and the group will be deleted automatically.
+
+### View Group
+
+The following command allows you to view the existing Group information in the cluster.
+
+```
 SHOW PROC '/colocation_group';
 
 +-------------+--------------+--------------+------------+----------------+----------+----------+
@@ -130,23 +128,17 @@ SHOW PROC '/colocation_group';
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 ```
 
-- GroupId：一个 Group 的全集群唯一标识，前半部分为 db id，后半部分为 group id。
+* GroupId: The unique identity of a group's entire cluster, with DB ID in the first half and group ID in the second half.
+* GroupName: The full name of Group.
+* Tablet Ids: The group contains a list of Tables'ID.
+* Buckets Num: Number of barrels.
+* Replication Num: Number of copies.
+* DistCols: Distribution columns, 
+* IsStable: Is the group stable (for the definition of stability, see section `Collocation replica balancing and repair').
 
-- GroupName：Group 的全名。
+You can further view the data distribution of a group by following commands:
 
-- TabletIds：该 Group 包含的 Table 的 id 列表。
-
-- BucketsNum：分桶数。
-
-- ReplicationNum：副本数。
-
-- DistCols：Distribution columns，即分桶列类型。
-
-- IsStable：该 Group 是否稳定（稳定的定义，见 `Colocation 副本均衡和修复` 一节）。
-
-通过以下命令可以进一步查看一个 Group 的数据分布情况：
-
-```sql
+```
 SHOW PROC '/colocation_group/10005.10008';
 
 +-------------+---------------------+
@@ -163,65 +155,55 @@ SHOW PROC '/colocation_group/10005.10008';
 +-------------+---------------------+
 ```
 
-- BucketIndex：分桶序列的下标。
+* BucketIndex: Subscript to the bucket sequence.
+* Backend Ids: A list of BE node IDs where data fragments are located in buckets.
 
-- BackendIds：分桶中数据分片所在的 BE 节点 id 列表。
+> The above commands require ADMIN privileges. Normal user view is not supported at this time.
 
-:::note
-以上命令需要 ADMIN 权限。暂不支持普通用户查看。
-:::
+### Modify Colocate Group
 
-### 修改表 Colocate Group 属性
+You can modify the Colocation Group property of a table that has been created. Examples:
 
-可以对一个已经创建的表，修改其 Colocation Group 属性。示例：
+`ALTER TABLE tbl SET ("colocate_with" = "group2");`
 
-```sql
-ALTER TABLE tbl SET ("colocate_with" = "group2");
+* If the table has not previously specified a Group, the command checks the Schema and adds the table to the Group (if the Group does not exist, it will be created).
+* If other groups are specified before the table, the command first removes the table from the original group and adds a new group (if the group does not exist, it will be created).
+
+You can also delete the Colocation attribute of a table by following commands:
+
+`ALTER TABLE tbl SET ("colocate_with" = "");`
+
+### Other related operations
+
+When an ADD PARTITION is added to a table with a Colocation attribute and the number of copies is modified, Doris checks whether the modification violates the Colocation Group Schema and rejects it if it does.
+
+## Colocation Duplicate Balancing and Repair
+
+Copy distribution of Colocation tables needs to follow the distribution specified in Group, so it is different from common fragmentation in replica repair and balancing.
+
+Group itself has a Stable attribute, when Stable is true, which indicates that all fragments of the table in the current Group are not changing, and the Colocation feature can be used normally. When Stable is false, it indicates that some tables in Group are being repaired or migrated. At this time, Colocation Join of related tables will degenerate into ordinary Join.
+
+### Replica Repair
+
+Copies can only be stored on specified BE nodes. So when a BE is unavailable (downtime, Decommission, etc.), a new BE is needed to replace it. Doris will first look for the BE with the lowest load to replace it. After replacement, all data fragments on the old BE in the Bucket will be repaired. During the migration process, Group is marked Unstable.
+
+### Duplicate Equilibrium
+
+Doris will try to distribute the fragments of the Collocation table evenly across all BE nodes. For the replica balancing of common tables, the granularity is single replica, that is to say, it is enough to find BE nodes with lower load for each replica alone. The equilibrium of the Colocation table is at the Bucket level, where all replicas within a Bucket migrate together. We adopt a simple equalization algorithm, which distributes Buckets Sequence evenly on all BEs, regardless of the actual size of the replicas, but only according to the number of replicas. Specific algorithms can be referred to the code annotations in `ColocateTableBalancer.java`.
+
+> Note 1: Current Colocation replica balancing and repair algorithms may not work well for heterogeneous deployed Oris clusters. The so-called heterogeneous deployment, that is, the BE node's disk capacity, number, disk type (SSD and HDD) is inconsistent. In the case of heterogeneous deployment, small BE nodes and large BE nodes may store the same number of replicas.
+>
+> Note 2: When a group is in an Unstable state, the Join of the table in it will degenerate into a normal Join. At this time, the query performance of the cluster may be greatly reduced. If you do not want the system to balance automatically, you can set the FE configuration item `disable_colocate_balance` to prohibit automatic balancing. Then open it at the right time. (See Section `Advanced Operations` for details)
+
+## Query
+
+The Colocation table is queried in the same way as ordinary tables, and users do not need to perceive Colocation attributes. If the Group in which the Colocation table is located is in an Unstable state, it will automatically degenerate to a normal Join.
+
+Examples are given to illustrate:
+
+Table 1:
+
 ```
-
-- 如果该表之前没有指定过 Group，则该命令检查 Schema，并将该表加入到该 Group（Group 不存在则会创建）。
-
-- 如果该表之前有指定其他 Group，则该命令会先将该表从原有 Group 中移除，并加入新 Group（Group 不存在则会创建）。
-
-也可以通过以下命令，删除一个表的 Colocation 属性：
-
-```sql
-ALTER TABLE tbl SET ("colocate_with" = "");
-```
-
-### 其他相关操作
-
-当对一个具有 Colocation 属性的表进行增加分区（ADD PARTITION）、修改副本数时，Doris 会检查修改是否会违反 Colocation Group Schema，如果违反则会拒绝。
-
-## Colocation 副本均衡和修复
-
-Colocation 表的副本分布需要遵循 Group 中指定的分布，所以在副本修复和均衡方面和普通分片有所区别。
-
-Group 自身有一个 Stable 属性，当 Stable 为 true 时，表示当前 Group 内的表的所有分片没有正在进行变动，Colocation 特性可以正常使用。当 Stable 为 false 时（Unstable），表示当前 Group 内有部分表的分片正在做修复或迁移，此时，相关表的 Colocation Join 将退化为普通 Join。
-
-### 副本修复
-
-副本只能存储在指定的 BE 节点上。所以当某个 BE 不可用时（宕机、Decommission 等），需要寻找一个新的 BE 进行替换。Doris 会优先寻找负载最低的 BE 进行替换。替换后，该 Bucket 内的所有在旧 BE 上的数据分片都要做修复。迁移过程中，Group 被标记为 Unstable。
-
-### 副本均衡
-
-Doris 会尽力将 Colocation 表的分片均匀分布在所有 BE 节点上。对于普通表的副本均衡，是以单副本为粒度的，即单独为每一个副本寻找负载较低的 BE 节点即可。而 Colocation 表的均衡是 Bucket 级别的，即一个 Bucket 内的所有副本都会一起迁移。我们采用一个简单的均衡算法，即在不考虑副本实际大小，而只根据副本数量，将 BucketsSequence 均匀的分布在所有 BE 上。具体算法可以参阅 `ColocateTableBalancer.java` 中的代码注释。
-
-:::caution
-- 注 1：当前的 Colocation 副本均衡和修复算法，对于异构部署的 Doris 集群效果可能不佳。所谓异构部署，即 BE 节点的磁盘容量、数量、磁盘类型（SSD 和 HDD）不一致。在异构部署情况下，可能出现小容量的 BE 节点和大容量的 BE 节点存储了相同的副本数量。
-
-- 注 2：当一个 Group 处于 Unstable 状态时，其中的表的 Join 将退化为普通 Join。此时可能会极大降低集群的查询性能。如果不希望系统自动均衡，可以设置 FE 的配置项 `disable_colocate_balance` 来禁止自动均衡。然后在合适的时间打开即可。（具体参阅 `高级操作` 一节）
-:::
-
-## 查询
-
-对 Colocation 表的查询方式和普通表一样，用户无需感知 Colocation 属性。如果 Colocation 表所在的 Group 处于 Unstable 状态，将自动退化为普通 Join。
-
-举例说明：
-
-表 1：
-
-```sql
 CREATE TABLE `tbl1` (
     `k1` date NOT NULL COMMENT "",
     `k2` int(11) NOT NULL COMMENT "",
@@ -239,9 +221,9 @@ PROPERTIES (
 );
 ```
 
-表 2：
+Table 2:
 
-```sql
+```
 CREATE TABLE `tbl2` (
     `k1` datetime NOT NULL COMMENT "",
     `k2` int(11) NOT NULL COMMENT "",
@@ -254,9 +236,9 @@ PROPERTIES (
 );
 ```
 
-查看查询计划：
+View the query plan:
 
-```sql
+```
 DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 
 +----------------------------------------------------+
@@ -299,11 +281,11 @@ DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 +----------------------------------------------------+
 ```
 
-如果 Colocation Join 生效，则 Hash Join 节点会显示 `colocate: true`。
+If Colocation Join works, the Hash Join Node will show `colocate: true`.
 
-如果没有生效，则查询计划如下：
+If not, the query plan is as follows:
 
-```sql
+```
 +----------------------------------------------------+
 | Explain String                                     |
 +----------------------------------------------------+
@@ -355,91 +337,90 @@ DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 +----------------------------------------------------+
 ```
 
-HASH JOIN 节点会显示对应原因：`colocate: false, reason: group is not stable`。同时会有一个 EXCHANGE 节点生成。
+The HASH JOIN node displays the corresponding reason: `colocate: false, reason: group is not stable`. At the same time, an EXCHANGE node will be generated.
 
-## 高级操作
 
-### FE 配置项
+## Advanced Operations
 
-- disable_colocate_relocate
+### FE Configuration Item
 
-  是否关闭 Doris 的自动 Colocation 副本修复。默认为 false，即不关闭。该参数只影响 Colocation 表的副本修复，不影响普通表。
+* disable\_colocate\_relocate
 
-- disable_colocate_balance
+Whether to close Doris's automatic Colocation replica repair. The default is false, i.e. not closed. This parameter only affects the replica repair of the Colocation table, but does not affect the normal table.
 
-  是否关闭 Doris 的自动 Colocation 副本均衡。默认为 false，即不关闭。该参数只影响 Colocation 表的副本均衡，不影响普通表。
+* disable\_colocate\_balance
 
-以上参数可以动态修改，设置方式请参阅 `HELP SHOW CONFIG;` 和 `HELP SET CONFIG;`。
+Whether to turn off automatic Colocation replica balancing for Doris. The default is false, i.e. not closed. This parameter only affects the replica balance of the Collocation table, but does not affect the common table.
 
-- disable_colocate_join
+User can set these configurations at runtime. See `HELP ADMIN SHOW CONFIG;` and `HELP ADMIN SET CONFIG;`.
 
-  是否关闭 Colocation Join 功能。在 0.10 及之前的版本，默认为 true，即关闭。在之后的某个版本中将默认为 false，即开启。
+* disable\_colocate\_join
 
-- use_new_tablet_scheduler
+Whether to turn off the Colocation Join function or not. In 0.10 and previous versions, the default is true, that is, closed. In a later version, it will default to false, that is, open.
 
-  在 0.10 及之前的版本中，新的副本调度逻辑与 Colocation Join 功能不兼容，所以在 0.10 及之前版本，如果 `disable_colocate_join = false`，则需设置 `use_new_tablet_scheduler = false`，即关闭新的副本调度器。之后的版本中，`use_new_tablet_scheduler` 将衡为 true。
+* use\_new\_tablet\_scheduler
 
-### HTTP Restful API
+In 0.10 and previous versions, the new replica scheduling logic is incompatible with the Colocation Join function, so in 0.10 and previous versions, if `disable_colocate_join = false`, you need to set `use_new_tablet_scheduler = false`, that is, close the new replica scheduler. In later versions, `use_new_tablet_scheduler` will be equal to true.
 
-Doris 提供了几个和 Colocation Join 有关的 HTTP Restful API，用于查看和修改 Colocation Group。
+###HTTP Restful API
 
-该 API 实现在 FE 端，使用 `fe_host:fe_http_port` 进行访问。需要 ADMIN 权限。
+Doris provides several HTTP Restful APIs related to Colocation Join for viewing and modifying Colocation Group.
 
-1. 查看集群的全部 Colocation 信息
+The API is implemented on the FE side and accessed using `fe_host: fe_http_port`. ADMIN privileges are required.
 
-   ```text
-   GET /api/colocate
-   
-   返回以 Json 格式表示内部 Colocation 信息。
-   
-   {
-       "msg": "success",
-   	"code": 0,
-   	"data": {
-   		"infos": [
-   			["10003.12002", "10003_group1", "10037, 10043", "1", "1", "int(11)", "true"]
-   		],
-   		"unstableGroupIds": [],
-   		"allGroupIds": [{
-   			"dbId": 10003,
-   			"grpId": 12002
-   		}]
-   	},
-   	"count": 0
-   }
-   ```
+1. View all Colocation information for the cluster
 
-2. 将 Group 标记为 Stable 或 Unstable
+    ```
+    GET /api/colocate
+    
+    Return the internal Colocation info in JSON format:
+    
+    {
+        "msg": "success",
+      "code": 0,
+      "data": {
+        "infos": [
+          ["10003.12002", "10003_group1", "10037, 10043", "1", "1", "int(11)", "true"]
+        ],
+        "unstableGroupIds": [],
+        "allGroupIds": [{
+          "dbId": 10003,
+          "grpId": 12002
+        }]
+      },
+      "count": 0 
+    }
+    ```
+2. Mark Group as Stable or Unstable
 
-   - 标记为 Stable
+  * Mark as Stable
 
-     ```text
-     DELETE /api/colocate/group_stable?db_id=10005&group_id=10008
-     
-     返回：200
-     ```
+        ```
+        DELETE /api/colocate/group_stable?db_id=10005&group_id=10008
+        
+        Returns: 200
+        ```
 
-   - 标记为 Unstable
+  * Mark as Unstable
 
-     ```text
-     POST /api/colocate/group_stable?db_id=10005&group_id=10008
-     
-     返回：200
-     ```
+        ```
+        POST /api/colocate/group_stable?db_id=10005&group_id=10008
+        
+        Returns: 200
+        ```
 
-3. 设置 Group 的数据分布
+3. Setting Data Distribution for Group
 
-   该接口可以强制设置某一 Group 的数分布。
+  The interface can force the number distribution of a group.
 
-   ```text
-   POST /api/colocate/bucketseq?db_id=10005&group_id=10008
-   
-   Body:
-   [[10004,10002],[10003,10002],[10002,10004],[10003,10002],[10002,10004],[10003,10002],[10003,10004],[10003,10004],[10003,10004],[10002,10004]]
-   
-   返回 200
-   ```
+    ```
+    POST /api/colocate/bucketseq?db_id=10005&group_id=10008
+    
+    Body:
+    [[10004,10002],[10003,10002],[10002,10004],[10003,10002],[10002,10004],[10003,10002],[10003,10004],[10003,10004],[10003,10004],[10002,10004]]
+    
+    Returns: 200
+    ```
+  Body is a Buckets Sequence represented by a nested array and the ID of the BE where the fragments are distributed in each Bucket.
 
-   其中 Body 是以嵌套数组表示的 BucketsSequence 以及每个 Bucket 中分片分布所在 BE 的 id。
-
-   注意，使用该命令，可能需要将 FE 的配置 `disable_colocate_relocate` 和 `disable_colocate_balance` 设为 true。即关闭系统自动的 Colocation 副本修复和均衡。否则可能在修改后，会被系统自动重置。
+  Note that using this command, you may need to set the FE configuration `disable_colocate_relocate` and `disable_colocate_balance` to true. That is to shut down the system for automatic Colocation replica repair and balancing. Otherwise, it may be automatically reset by the system after modification.

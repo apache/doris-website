@@ -1,7 +1,7 @@
 ---
 {
-    "title": "逻辑视图",
-    "language": "zh-CN"
+    "title": "View",
+    "language": "en"
 }
 ---
 
@@ -24,61 +24,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+## View
 
-视图（逻辑视图）是封装一个或多个 SELECT 语句的存储查询。视图在执行时动态访问并计算数据库数据。视图是只读的，可以引用表和其他视图的任意组合。
+Views (logical views) are stored queries that encapsulate one or multiple SELECT statements. Views dynamically access and compute database data when executed. Views are read-only and can reference any combination of tables and other views.
 
-可以使用视图实现以下用途：
+Views can be used for the following purposes:
 
-- 出于简化访问或安全访问的目的，让用户看不到复杂的 SELECT 语句。例如，可以创建仅显示用户所需的各表中数据的视图，同时隐藏这些表中的敏感数据。
+- To simplify access or provide secure access by hiding complex SELECT statements from users. For example, you can create a view that displays only the data users need from various tables while hiding sensitive data in those tables.
+- To encapsulate details of table structures that may change over time behind a consistent user interface.
 
-- 将可能随时间而改变的表结构的详细信息封装在一致的用户界面后。
+Unlike materialized views, logical views are not materialized, which means they do not store data on disk. Therefore, they have the following limitations:
 
-与物化视图不同，视图不实体化，也就是说，它们不在磁盘上存储数据。因此，存在以下限制：
+- When the underlying table data changes, Doris does not need to refresh the view data. However, accessing and computing data through views can incur some overhead.
+- Views do not support insert, delete, or update operations.
 
-- 当底层表数据发生变更时，Doris 不需要刷新视图数据。但是，访问和计算数据时，视图也会产生一些开销。
+## Creating View
 
-- 视图不支持插入、删除或更新操作。
+The syntax for creating a logical view is as follows:
 
-## 创建视图
-
-用于创建一个逻辑视图的语法如下：
-
-```sql
+```
 CREATE VIEW [IF NOT EXISTS]
  [db_name.]view_name
  (column1[ COMMENT "col comment"][, column2, ...])
 AS query_stmt
 ```
 
-说明：
+Explanation:
 
-- 视图为逻辑视图，没有物理存储。所有在视图上的查询相当于在视图对应的子查询上进行。
+- Views are logical and have no physical storage. All queries on views are equivalent to queries on the corresponding subquery of the view.
+- query_stmt is any supported SQL statement.
 
-- query_stmt 为任意支持的 SQL
+Example:
 
-## 举例
+- Creating a view named `example_view` in the `example_db` database:
 
-- 在 example_db 上创建视图 example_view
+```
+CREATE VIEW example_db.example_view (k1, k2, k3, v1)
+AS
+SELECT c1 as k1, k2, k3, SUM(v1) FROM example_table
+WHERE k1 = 20160112 GROUP BY k1,k2,k3;
+```
 
-    ```sql
-    CREATE VIEW example_db.example_view (k1, k2, k3, v1)
-    AS
-    SELECT c1 as k1, k2, k3, SUM(v1) FROM example_table
-    WHERE k1 = 20160112 GROUP BY k1,k2,k3;
-    ```
+- Creating a view with comments:
 
-- 创建一个包含 comment 的 view
-
-    ```sql
-    CREATE VIEW example_db.example_view
-    (
-        k1 COMMENT "first key",
-        k2 COMMENT "second key",
-        k3 COMMENT "third key",
-        v1 COMMENT "first value"
-    )
-    COMMENT "my first view"
-    AS
-    SELECT c1 as k1, k2, k3, SUM(v1) FROM example_table
-    WHERE k1 = 20160112 GROUP BY k1,k2,k3;
-    ```
+```
+CREATE VIEW example_db.example_view
+(
+    k1 COMMENT "first key",
+    k2 COMMENT "second key",
+    k3 COMMENT "third key",
+    v1 COMMENT "first value"
+)
+COMMENT "my first view"
+AS
+SELECT c1 as k1, k2, k3, SUM(v1) FROM example_table
+WHERE k1 = 20160112 GROUP BY k1,k2,k3;
+```

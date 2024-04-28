@@ -1,7 +1,7 @@
 ---
 {
-    "title": "导入分析",
-    "language": "zh-CN"
+    "title": "Import Analysis",
+    "language": "en"
 }
 ---
 
@@ -25,50 +25,47 @@ under the License.
 -->
 
 
+# Import Analysis
 
-Doris 提供了一个图形化的命令以帮助用户更方便的分析一个具体的导入。本文介绍如何使用该功能。
+Doris provides a graphical command to help users analyze a specific import more easily. This article describes how to use this feature.
 
-:::note
-该功能目前仅针对 Broker Load 的分析。
-:::
+> This function is currently only for Broker Load analysis.
 
-## 导入计划树
+## Import Plan Tree
 
-如果你对 Doris 的查询计划树还不太了解，请先阅读之前的文章 [Doris 查询分析](../query-analysis/query-analysis.md)。
+If you don't know much about Doris' query plan tree, please read the previous article [DORIS/best practices/query analysis](./query-analysis.md).
 
-一个 [Broker Load](../../data-operate/import/broker-load-manual) 请求的执行过程，也是基于 Doris 的查询框架的。一个 Broker Load 作业会根据导入请求中 DATA INFILE 子句的个数将作业拆分成多个子任务。每个子任务可以视为是一个独立的导入执行计划。一个导入计划的组成只会有一个 Fragment，其组成如下：
+The execution process of a [Broker Load](../../data-operate/import/broker-load-manual) request is also based on Doris' query framework. A Broker Load job will be split into multiple subtasks based on the number of DATA INFILE clauses in the import request. Each subtask can be regarded as an independent import execution plan. An import plan consists of only one Fragment, which is composed as follows:
 
 ```sql
-┌─────────────┐
+┌────────────────┐
 │OlapTableSink│
-└─────────────┘
+└────────────────┘
         │
-┌──────────────┐
+┌────────────────┐
 │BrokerScanNode│
-└──────────────┘
-```
+└────────────────┘
+````
 
-BrokerScanNode 主要负责去读源数据并发送给 OlapTableSink，而 OlapTableSink 负责将数据按照分区分桶规则发送到对应的节点，由对应的节点负责实际的数据写入。
+BrokerScanNode is mainly responsible for reading the source data and sending it to OlapTableSink, and OlapTableSink is responsible for sending data to the corresponding node according to the partition and bucketing rules, and the corresponding node is responsible for the actual data writing.
 
-而这个导入执行计划的 Fragment 会根据导入源文件的数量、BE 节点的数量等参数，划分成一个或多个 Instance。每个 Instance 负责一部分数据导入。
+The Fragment of the import execution plan will be divided into one or more Instances according to the number of imported source files, the number of BE nodes and other parameters. Each Instance is responsible for part of the data import.
 
-多个子任务的执行计划是并发执行的，而一个执行计划的多个 Instance 也是并行执行。
+The execution plans of multiple subtasks are executed concurrently, and multiple instances of an execution plan are also executed in parallel.
 
-## 查看导入 Profile
+## View import Profile
 
-用户可以通过以下命令打开会话变量 `is_report_success`：
+The user can open the session variable `is_report_success` with the following command:
 
 ```sql
 SET is_report_success=true;
-```
+````
 
-然后提交一个 Broker Load 导入请求，并等到导入执行完成。Doris 会产生该导入的一个 Profile。Profile 包含了一个导入各个子任务、Instance 的执行详情，有助于我们分析导入瓶颈。
+Then submit a Broker Load import request and wait until the import execution completes. Doris will generate a Profile for this import. Profile contains the execution details of importing each subtask and Instance, which helps us analyze import bottlenecks.
 
-:::note
-目前不支持查看未执行成功的导入作业的 Profile。
-:::
+> Viewing profiles of unsuccessful import jobs is currently not supported.
 
-我们可以通过如下命令先获取 Profile 列表：
+We can get the Profile list first with the following command:
 
 ```sql
 mysql> show load profile "/"\G
@@ -108,17 +105,17 @@ WaitAndFetchResultTime: NULL
        FetchResultTime: 0ns
        WriteResultTime: 0ns
 WaitAndFetchResultTime: N/A
-```
+````
 
-这个命令会列出当前保存的所有导入 Profile。每行对应一个导入。其中 QueryId 列为导入作业的 ID。这个 ID 也可以通过 SHOW LOAD 语句查看拿到。我们可以选择我们想看的 Profile 对应的 QueryId，查看具体情况。
+This command will list all currently saved import profiles. Each line corresponds to one import. where the QueryId column is the ID of the import job. This ID can also be viewed through the SHOW LOAD statement. We can select the QueryId corresponding to the Profile we want to see to see the specific situation.
 
-**查看一个 Profile 分为 3 个步骤：**
+**Viewing a Profile is divided into 3 steps:**
 
-1. 查看子任务总览
+1. View the subtask overview
 
-   通过以下命令查看有导入作业的子任务概况：
+   View an overview of subtasks with imported jobs by running the following command:
 
-   
+
 
    ```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f";
@@ -127,15 +124,15 @@ WaitAndFetchResultTime: N/A
    +-----------------------------------+------------+
    | 980014623046410a-af5d36f23381017f | 3m14s      |
    +-----------------------------------+------------+
-   ```
+   ````
 
-   如上图，表示 `980014623046410a-af5d36f23381017f` 这个导入作业总共有一个子任务，其中 ActiveTime 表示这个子任务中耗时最长的 Instance 的执行时间。
+As shown in the figure above, it means that the import job `980014623046410a-af5d36f23381017f` has a total of one subtask, in which ActiveTime indicates the execution time of the longest instance in this subtask.
 
-2. 查看指定子任务的 Instance 概况
+2. View the Instance overview of the specified subtask
 
-   当我们发现一个子任务耗时较长时，可以进一步查看该子任务的各个 Instance 的执行耗时：
+   When we find that a subtask takes a long time, we can further check the execution time of each instance of the subtask:
 
-   
+
 
    ```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f";
@@ -147,59 +144,59 @@ WaitAndFetchResultTime: N/A
    | 980014623046410a-88e260f0c43031f4 | 10.81.85.89:9067 | 3m10s      |
    | 980014623046410a-88e260f0c43031f5 | 10.81.85.89:9067 | 3m14s      |
    +-----------------------------------+------------------+------------+
-   ```
+   ````
 
-   这里展示了 980014623046410a-af5d36f23381017f 这个子任务的四个 Instance 耗时，并且还展示了 Instance 所在的执行节点。
+This shows the time-consuming of four instances of the subtask 980014623046410a-af5d36f23381017f, and also shows the execution node where the instance is located.
 
-3. 查看具体 Instance
+3. View the specific Instance
 
-   我们可以继续查看某一个具体的 Instance 上各个算子的详细 Profile：
+   We can continue to view the detailed profile of each operator on a specific Instance:
 
-   
+
 
    ```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f/980014623046410a-88e260f0c43031f5"\G
-   *************************** 1. row ***************************
+   **************************** 1. row ******************** ******
    Instance:
          ┌-----------------------------------------┐
-         │[-1: OlapTableSink]                      │
-         │(Active: 2m17s, non-child: 70.91)        │
-         │  - Counters:                            │
-         │      - CloseWaitTime: 1m53s             │
-         │      - ConvertBatchTime: 0ns            │
-         │      - MaxAddBatchExecTime: 1m46s       │
-         │      - NonBlockingSendTime: 3m11s       │
-         │      - NumberBatchAdded: 782            │
-         │      - NumberNodeChannels: 1            │
-         │      - OpenTime: 743.822us              │
-         │      - RowsFiltered: 0                  │
-         │      - RowsRead: 1.599729M (1599729)    │
-         │      - RowsReturned: 1.599729M (1599729)│
-         │      - SendDataTime: 11s761ms           │
-         │      - TotalAddBatchExecTime: 1m46s     │
-         │      - ValidateDataTime: 9s802ms        │
+         │[-1: OlapTableSink] │
+         │(Active: 2m17s, non-child: 70.91) │
+         │ - Counters: │
+         │ - CloseWaitTime: 1m53s │
+         │ - ConvertBatchTime: 0ns │
+         │ - MaxAddBatchExecTime: 1m46s │
+         │ - NonBlockingSendTime: 3m11s │
+         │ - NumberBatchAdded: 782 │
+         │ - NumberNodeChannels: 1 │
+         │ - OpenTime: 743.822us │
+         │ - RowsFiltered: 0 │
+         │ - RowsRead: 1.599729M (1599729) │
+         │ - RowsReturned: 1.599729M (1599729)│
+         │ - SendDataTime: 11s761ms │
+         │ - TotalAddBatchExecTime: 1m46s │
+         │ - ValidateDataTime: 9s802ms │
          └-----------------------------------------┘
                               │
-   ┌-----------------------------------------------------┐
-   │[0: BROKER_SCAN_NODE]                                │
-   │(Active: 56s537ms, non-child: 29.06)                 │
-   │  - Counters:                                        │
-   │      - BytesDecompressed: 0.00                      │
-   │      - BytesRead: 5.77 GB                           │
-   │      - DecompressTime: 0ns                          │
-   │      - FileReadTime: 34s263ms                       │
-   │      - MaterializeTupleTime(*): 45s54ms             │
-   │      - NumDiskAccess: 0                             │
-   │      - PeakMemoryUsage: 33.03 MB                    │
-   │      - RowsRead: 1.599729M (1599729)                │
-   │      - RowsReturned: 1.599729M (1599729)            │
-   │      - RowsReturnedRate: 28.295K /sec               │
-   │      - TotalRawReadTime(*): 1m20s                   │
-   │      - TotalReadThroughput: 30.39858627319336 MB/sec│
-   │      - WaitScannerTime: 56s528ms                    │
-   └-----------------------------------------------------┘
-   ```
+   ┌------------------------------------------------- ----┐
+   │[0: BROKER_SCAN_NODE] │
+   │(Active: 56s537ms, non-child: 29.06) │
+   │ - Counters: │
+   │ - BytesDecompressed: 0.00 │
+   │ - BytesRead: 5.77 GB │
+   │ - DecompressTime: 0ns │
+   │ - FileReadTime: 34s263ms │
+   │ - MaterializeTupleTime(*): 45s54ms │
+   │ - NumDiskAccess: 0 │
+   │ - PeakMemoryUsage: 33.03 MB │
+   │ - RowsRead: 1.599729M (1599729) │
+   │ - RowsReturned: 1.599729M (1599729) │
+   │ - RowsReturnedRate: 28.295K /sec │
+   │ - TotalRawReadTime(*): 1m20s │
+   │ - TotalReadThroughput: 30.39858627319336 MB/sec│
+   │ - WaitScannerTime: 56s528ms │
+   └------------------------------------------------- ----┘
+   ````
 
-   上图展示了子任务 980014623046410a-af5d36f23381017f 中，Instance 980014623046410a-88e260f0c43031f5 的各个算子的具体 Profile。
+The figure above shows the specific profiles of each operator of Instance 980014623046410a-af5d36f23381017f in subtask 980014623046410a-88e260f0c43031f5.
 
-通过以上 3 个步骤，我们可以逐步排查一个导入任务的执行瓶颈。
+Through the above three steps, we can gradually check the execution bottleneck of an import task.

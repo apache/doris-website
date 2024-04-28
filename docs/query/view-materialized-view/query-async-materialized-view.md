@@ -1,7 +1,7 @@
 ---
 {
-  "title": "查询异步物化视图",
-  "language": "zh-CN"
+  "title": "Querying Async Materialized View",
+  "language": "en"
 }
 ---
 
@@ -24,15 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 概述
-Doris 的异步物化视图采用了基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式结构信息来进行透明改写的算法。
+## Overview
 
-Doris 可以分析查询 SQL 的结构信息，自动寻找满足要求的物化视图，并尝试进行透明改写，使用最优的物化视图来表达查询SQL。
+Doris's asynchronous materialized views employ an algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern
+structure information for transparent rewriting.
 
-通过使用预计算的物化视图结果，可以大幅提高查询性能，减少计算成本。
+Doris can analyze the structural information of query SQL, automatically search for suitable materialized views,
+and attempt transparent rewriting, utilizing the optimal materialized view to express the query SQL.
 
-以 TPC-H 的三张 lineitem，orders 和 partsupp 表来描述直接查询物化视图和使用物化视图进行查询透明改写的能力。
-表的定义如下：
+By utilizing precomputed materialized view results,
+significant improvements in query performance and a reduction in computational costs can be achieved.
+
+Using the three tables: lineitem, orders, and partsupp from TPC-H, let's describe the capability of directly querying
+a materialized view and using the materialized view for transparent query rewriting.
 ```sql
 CREATE TABLE IF NOT EXISTS lineitem (
     l_orderkey    integer not null,
@@ -108,14 +112,13 @@ CREATE TABLE IF NOT EXISTS orders  (
     (2, 3, 10, 11.01, 'supply3');
 ```
 
-## 直查物化视图
-物化视图可以看作是表，可以像正常的表一样直接查询。
+## Direct Query of Materialized View
+A materialized view can be considered as a table and can be queried just like a regular table.
 
-**用例1:**
+The syntax for defining a materialized view, details can be found in
+[CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
-物化视图的定义语法，详情见 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
-
-mv 定义:
+Materialized view definition:
 ```sql
 CREATE MATERIALIZED VIEW mv1
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -125,26 +128,31 @@ AS
 SELECT t1.l_linenumber,
        o_custkey,
        o_orderdate
-FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
-LEFT OUTER JOIN orders
-ON l_orderkey = o_orderkey;
+FROM
+    (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
+LEFT OUTER JOIN orders ON l_orderkey = o_orderkey;
 ```
-查询语句:
 
-可以对物化视图添加过滤条件和聚合等，进行直接查询。
+Query statement:
+Direct queries can be performed on the materialized view with additional filtering conditions and aggregations.
 
 ```sql
 SELECT l_linenumber,
        o_custkey
 FROM mv1
-WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
-```
+WHERE l_linenumber > 1 and o_orderdate = '2023-12-31';
+```      
 
-## 透明改写能力
-### JOIN 改写
-Join 改写指的是查询和物化使用的表相同，可以在物化视图和查询 Join 的输入或者 Join 的外层写 where，优化器对此 pattern 的查询会尝试进行透明改写。
+## Transparent Rewriting Capability
+### Join rewriting
 
-支持多表 Join，支持 Join 的类型为:
+
+Join rewriting refers to when the tables used in the query and the materialization are the same.
+In this case, the optimizer will attempt transparent rewriting by either joining the input of the materialized
+view with the query or placing the join in the outer layer of the query's WHERE clause.
+
+This pattern of rewriting is supported for multi-table joins and supported join types is as following:
+
 * INNER JOIN
 * LEFT OUTER JOIN
 * RIGHT OUTER JOIN
@@ -154,11 +162,12 @@ Join 改写指的是查询和物化使用的表相同，可以在物化视图和
 * LEFT ANTI JOIN
 * RIGHT ANTI JOIN
 
-**用例1:**
+**Case 1:**
 
-如下查询可进行透明改写，条件 `l_linenumber > 1`可以上拉，从而进行透明改写，使用物化视图的预计算结果来表达查询。
+The following case can undergo transparent rewriting. The condition `l_linenumber > 1` allows for pull-up,
+enabling transparent rewriting by expressing the query using the precomputed results of the materialized view.
 
-mv 定义:
+Materialized view definition:
 ```sql
 CREATE MATERIALIZED VIEW mv2
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -172,7 +181,8 @@ FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
 LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
-查询语句:
+Query statement:
+
 ```sql
 SELECT l_linenumber,
        o_custkey
@@ -182,13 +192,15 @@ ON l_orderkey = o_orderkey
 WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ```
 
-**用例2:**
+**Case 2:**
 
-JOIN衍生，当查询和物化视图的 JOIN 的类型不一致时，如果物化可以提供查询所需的所有数据时，通过在 JOIN 的外部补偿谓词，也可以进行透明改写，
+JOIN Derivation occurs when the join type between the query and the materialized view does not match.
+In cases where the materialization can provide all the necessary data for the query, transparent rewriting can
+still be achieved by compensating predicates outside the join through predicate push down.
 
-举例如下
+For example:
 
-mv 定义:
+Materialized view definition:
 ```sql
 CREATE MATERIALIZED VIEW mv3
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -196,7 +208,7 @@ DISTRIBUTED BY RANDOM BUCKETS 3
 PROPERTIES ('replication_num' = '1')
 AS
 SELECT
-    l_shipdate, l_suppkey, o_orderdate,
+    l_shipdate, l_suppkey, o_orderdate
     sum(o_totalprice) AS sum_total,
     max(o_totalprice) AS max_total,
     min(o_totalprice) AS min_total,
@@ -210,7 +222,7 @@ l_suppkey,
 o_orderdate;
 ```
 
-查询语句:
+Query statement:
 ```sql
 SELECT
     l_shipdate, l_suppkey, o_orderdate,
@@ -228,16 +240,21 @@ l_suppkey,
 o_orderdate;
 ```
 
-### 聚合改写
-查询和物化视图定义中，聚合的维度可以一致或者不一致，可以使用维度中的字段写 WHERE 对结果进行过滤。
+### Aggregate rewriting
+In the definitions of both the query and the materialized view, the aggregated dimensions can either be consistent or inconsistent.
+Filtering of results can be achieved by using fields from the dimensions in the WHERE clause.
 
-物化视图使用的维度需要包含查询的维度，并且查询使用的指标可以使用物化视图的指标来表示。
+The dimensions used in the materialized view need to encompass those used in the query,
+and the metrics utilized in the query can be expressed using the metrics of the materialized view.
 
-**用例1**
+**Case 1**
 
-如下查询可以进行透明改写，查询和物化使用聚合的维度一致，可以使用维度中的字段进行过滤结果，并且查询会尝试使用物化视图 SELECT 后的表达式。
+The following case can undergo transparent rewriting. The query and the materialized view use consistent dimensions
+for aggregation, allowing the use of fields from the dimensions to filter results. The query will attempt to use the
+expressions after SELECT in the materialized view.
 
-mv 定义:
+Materialized view definition:
+
 ```sql
 CREATE MATERIALIZED VIEW mv4
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -258,7 +275,7 @@ o_shippriority,
 o_comment;
 ```
 
-查询语句:
+Query statement:
 
 ```sql
 SELECT 
@@ -276,14 +293,18 @@ o_shippriority,
 o_comment;
 ```
 
-**用例2**
+**Case 2**
 
-如下查询可以进行透明改写，查询和物化使用聚合的维度不一致，物化视图使用的维度包含查询的维度。 查询可以使用维度中的字段对结果进行过滤，
+The following query can be transparently rewritten: the query and the materialization use aggregated dimensions
+that are inconsistent, but the dimensions used in the materialized view encompass those used in the query.
+The query can filter results using fields from the dimensions.
 
-查询会尝试使用物化视图 SELECT 后的函数进行上卷，如物化视图的 `bitmap_union` 最后会上卷成 `bitmap_union_count`，和查询中
-`count(distinct)` 的语义保持一致。
+The query will attempt to roll up using the functions after SELECT, such as the materialized view's
+bitmap_union will eventually roll up into bitmap_union_count, maintaining consistency with the semantics of
+the count(distinct) in the query.
 
-mv 定义:
+Materialized view definition:
+
 ```sql
 CREATE MATERIALIZED VIEW mv5
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -306,7 +327,8 @@ l_partkey,
 l_suppkey;
 ```
 
-查询语句:
+Query statement:
+
 ```sql
 SELECT
     l_shipdate, l_suppkey,
@@ -323,24 +345,27 @@ l_shipdate,
 l_suppkey;
 ```
 
-暂时目前支持的聚合上卷函数列表如下：
+Temporary support for the aggregation roll-up functions is as follows:
 
-| 查询中函数              | 物化视图中函数       | 函数上卷后               |
-|--------------------|---------------|---------------------|
-| max                | max           | max                 |
-| min                | min           | min                 |
-| sum                | sum           | sum                 |
-| count              | count         | sum                 |
-| count(distinct )   | bitmap_union  | bitmap_union_count  |
-| bitmap_union       | bitmap_union  | bitmap_union        |
-| bitmap_union_count | bitmap_union  | bitmap_union_count  |
+| Functions in Queries | Functions in Materialized Views  | Aggregation Functions After Rewriting |
+|----------------------|----------------------------------|---------------------------------------|
+| max                  | max                              | max                                   |
+| min                  | min                              | min                                   |
+| sum                  | sum                              | sum                                   |
+| count                | count                            | sum                                   |
+| count(distinct )     | bitmap_union                     | bitmap_union_count                    |
+| bitmap_union         | bitmap_union                     | bitmap_union                          |
+| bitmap_union_count   | bitmap_union                     | bitmap_union_count                    |
 
-## Query partial 透明改写（Coming soon）
-当物化视图的表比查询多时，如果物化视图比查询多的表满足 JOIN 消除的条件，那么也可以进行透明改写，如下可以进行透明改写，待支持。
+## Query partial Transparent Rewriting (Coming soon)
+When the number of tables in the materialized view is greater than the query, if the materialized view
+satisfies the conditions for JOIN elimination for tables more than the query, transparent rewriting can also occur.
+For example:
 
-**用例1**
+**Case 1**
 
-mv 定义:
+Materialized view definition:
+
 ```sql
  CREATE MATERIALIZED VIEW mv6
  BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -357,7 +382,7 @@ mv 定义:
  AND l_suppkey = ps_suppkey;
 ```
 
-查询语句：
+Query statement:
 ```sql
  SELECT
      l_linenumber,
@@ -367,12 +392,15 @@ mv 定义:
  LEFT OUTER JOIN orders ON L_ORDERKEY = O_ORDERKEY;
 ```
 
-## Union 改写（Coming soon）
-当物化视图不足以提供查询的所有数据时，可以通过 Union 的方式，将查询原表和物化视图 Union 起来返回数据，如下可以进行透明改写，待支持。
+## Union Rewriting (Coming soon)
+When the materialized view is not sufficient to provide all the data for the query, it can use Union to return
+data by combining the original table and the materialized view.
+For example:
 
-**用例1**
+**Case 1**
 
-mv 定义:
+Materialized view definition:
+
 ```sql
 CREATE MATERIALIZED VIEW mv7
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -388,7 +416,7 @@ FROM orders
 WHERE o_orderkey > 10;
 ```
 
-查询语句：
+Query statement:
 ```sql
 SELECT
     o_orderkey,
@@ -399,7 +427,7 @@ FROM orders
 WHERE o_orderkey > 5;
 ```
 
-改写结果示意：
+Rewriting result:
 ```sql
 SELECT *
 FROM mv
@@ -413,24 +441,36 @@ FROM orders
 WHERE o_orderkey > 5 AND o_orderkey <= 10;
 ```
 
-## 辅助功能
-**透明改写后数据一致性问题**
+## Auxiliary Functions
+**Data Consistency Issues After Transparent Rewriting**
 
-`grace_period` 的单位是秒，指的是容许物化视图和所用基表数据不一致的时间。
-比如 `grace_period` 设置成0，意味要求物化视图和基表数据保持一致，此物化视图才可用于透明改写；对于外表，因为无法感知数据变更，所以物化视图使用了外表，
 
-无论外表的数据是不是最新的，都可以使用此物化视图用于透明改写，如果外表配置了 HMS 元数据源，是可以感知数据变更的，配置数据源和感知数据变更的功能会在后面迭代支持。
+The unit of `grace_period` is seconds, referring to the permissible time for inconsistency between the materialized
+view and the data in the underlying base tables.
 
-如果设置成10，意味物化视图和基表数据允许10s的延迟，如果物化视图的数据和基表的数据有延迟，如果在10s内，此物化视图都可以用于透明改写。
+For example, setting `grace_period` to 0 means requiring the materialized view to be consistent with the base
+table data before it can be used for transparent rewriting. As for external tables,
+since changes in data cannot be perceived, the materialized view is used with them.
+Regardless of whether the data in the external table is up-to-date or not, this materialized view can be used for
+transparent rewriting. If the external table is configured with an HMS metadata source,
+it becomes capable of perceiving data changes. Configuring the metadata source and enabling data change
+perception functionality will be supported in subsequent iterations.
 
-对于物化视图中的内表，可以通过设定 `grace_period` 属性来控制透明改写使用的物化视图所允许数据最大的延迟时间。
-可查看 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+Setting `grace_period` to 10 means allowing a 10-second delay between the data in the materialized view and
+the data in the base tables. If there is a delay of up to 10 seconds between the data in the materialized
+view and the data in the base tables, the materialized view can still be used for transparent rewriting within
+that time frame.
 
-**查询透明改写命中情况查看和调试**
+For internal tables in the materialized view, you can control the maximum delay allowed for the data used by
+the transparent rewriting by setting the `grace_period` property.
+Refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
-可通过如下语句查看物化视图的透明改写命中情况，会展示查询透明改写简要过程信息。
+**Viewing and Debugging Transparent Rewrite Hit Information**
 
-`explain <query_sql>` 返回的信息如下，截取了物化视图相关的信息
+You can use the following statements to view the hit information of transparent rewriting for a materialized view.
+It will display a concise overview of the transparent rewriting process.
+
+`explain <query_sql>` The information returned is as follows, with the relevant information pertaining to materialized views extracted:
 ```text
 | MaterializedView                                                                                                                                                                                                                                      |
 | MaterializedViewRewriteSuccessAndChose:                                                                                                                                                                                                               |
@@ -447,35 +487,51 @@ WHERE o_orderkey > 5 AND o_orderkey <= 10;
 |   Name: mv2                                                                                                                                                                                                                                           |
 |   FailSummary: The columns used by query are not in view, View struct info is invalid
 ```
-**MaterializedViewRewriteSuccessAndChose**：透明改写成功，并且CBO选择的物化视图名称列表。
 
-**MaterializedViewRewriteSuccessButNotChose**：透明改写成功，但是最终CBO没有选择的物化视图名称列表。
+**MaterializedViewRewriteSuccessAndChose**: Transparent rewrite succeeded, and the materialized view names list
+chosen by the CBO.
 
-**MaterializedViewRewriteFail**：列举透明改写失败及原因摘要。
+**MaterializedViewRewriteSuccessButNotChose**: Transparent rewrite succeeded, but the final CBO did not choose the
+materialized view names list.
+
+**MaterializedViewRewriteFail**: Lists transparent rewrite failures and summarizes the reasons.
 
 
-如果想知道物化视图候选，改写和最终选择情况的过程详细信息，可以执行如下语句，会展示透明改写过程详细的信息。
+
+If you want to know the detailed information about materialized view candidates, rewriting, and the final selection process,
+you can execute the following statement. It will provide a detailed breakdown of the transparent rewriting process.
 
 `explain memo plan <query_sql>`
 
-## 相关环境变量
+## Relevant Environment Variables
 
-| 开关                                                                  | 说明                                |
-|---------------------------------------------------------------------|-----------------------------------|
-| SET enable_nereids_planner = true;                                  | 异步物化视图只有在新优化器下才支持，所以需要开启新优化器      |
-| SET enable_materialized_view_rewrite = true;                        | 开启或者关闭查询透明改写，默认关闭                 |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许         |
-| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到CBO候选的最大数量，默认是3个 |
+| Switch                                                              | Description                                                                                                                       |
+|---------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| SET enable_nereids_planner = true;                                  | Asynchronous materialized views are only supported under the new optimizer, so the new optimizer needs to be enabled.             |
+| SET enable_materialized_view_rewrite = true;                        | Enable or disable query transparent rewriting, default is disabled                                                                |
+| SET materialized_view_rewrite_enable_contain_external_table = true; | Whether materialized views participating in transparent rewriting are allowed to contain external tables, default is not allowed  |
+| SET materialized_view_rewrite_success_candidate_num = 3;            | Transparently rewrites the successful result set, allowing the maximum number of CBO candidates to participate, the default is 3  |
 
 
-## 限制
-- 物化视图定义语句中只允许包含 SELECT、FROM、WHERE、JOIN、GROUP BY 语句，JOIN 的输入可以包含简单的 GROUP BY（单表聚合），其中JOIN的支持的类型为
-  INNER 和 LEFT OUTER JOIN 其他类型的 JOIN 操作逐步支持。
-- 基于 External Table 的物化视图不保证查询结果强一致。
-- 不支持使用非确定性函数来构建物化视图，包括 rand、now、current_time、current_date、random、uuid等。
-- 不支持窗口函数的透明改写。
-- 查询和物化视图中有 LIMIT，暂时不支持透明改写。
-- 物化视图的定义暂时不能使用视图和物化视图。
-- 当查询或者物化视图没有数据时，不支持透明改写。
-- 目前 WHERE 条件补偿，支持物化视图没有 WHERE，查询有 WHERE情况的条件补偿；或者物化视图有 WHERE 且查询的 WHERE 条件是物化视图的超集。
-  目前暂时还不支持范围的条件补偿，比如物化视图定义是 a > 5，查询是 a > 10，逐步支持。
+## Limitations
+- The materialized view definition statement only allows SELECT, FROM, WHERE, JOIN, and GROUP BY clauses.
+  The input for JOIN can include simple GROUP BY (aggregation on a single table).
+  Supported types of JOIN operations include INNER and LEFT OUTER JOIN.
+  Support for other types of JOIN operations will be gradually added.
+
+- Materialized views based on External Tables do not guarantee strong consistency in query results.
+
+- The use of non-deterministic functions to build materialized views is not supported,
+  including rand, now, current_time, current_date, random, uuid, etc.
+
+- Transparent rewriting does not support window functions.
+
+- There is LIMIT in queries and materialized views, and transparent rewriting is not supported for the time being.
+
+- Currently, materialized view definitions cannot utilize views or other materialized views.
+
+- When the query or materialized view has no data, transparent rewriting is not supported.
+
+- Currently, WHERE clause compensation supports scenarios where the materialized view does not have a WHERE clause,
+  but the query does, or where the materialized view has a WHERE clause and the query's WHERE clause is a superset
+  of the materialized view's. Range condition compensation is not yet supported but will be added gradually.

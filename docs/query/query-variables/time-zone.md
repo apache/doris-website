@@ -1,7 +1,7 @@
 ---
 {
-    "title": "时区",
-    "language": "zh-CN"
+    "title": "Time Zone",
+    "language": "en"
 }
 ---
 
@@ -24,116 +24,116 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 支持自定义时区设置
+# Time Zone
 
-## 基本概念
+Doris supports custom time zone settings
 
-Doris 内部存在以下两个时区相关参数：
+## Basic concepts
 
-- system_time_zone : 当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。
+The following two time zone related parameters exist within Doris:
 
-- time_zone : 集群当前时区，可以修改。
+- `system_time_zone` : When the server starts up, it will be set automatically according to the time zone set by the machine, and cannot be modified after it is set.
+- `time_zone` : The current time zone of the cluster.
 
-## 具体操作
+## Specific operations
 
-1. `show variables like '%time_zone%'`
+1. `SHOW VARIABLES LIKE '% time_zone%'`
 
-   查看当前时区相关配置
+    View the current time zone related configuration
 
 2. `SET [global] time_zone = 'Asia/Shanghai'`
 
-   该命令可以设置 session 级别的时区，如使用`global`关键字，则 Doris FE 会将参数持久化，之后对所有新 session 生效。
+   This command sets the time zone at the session level. If the `global` keyword is used, Doris FE persists the parameter and it takes effect for all new sessions afterwards.
 
-## 数据来源
+## Data source
 
-时区数据包含时区名、对应时间偏移量、夏令时变化情况等。在 BE 所在机器上，其数据来源依次为：
+The time zone data contains the name of the time zone, the corresponding time offset, and the change of daylight saving time. On the machine where the BE is located, the sources of the data are as follows:
 
-1. `TZDIR` 命令返回的目录，如不支持该命令，则为 `/usr/share/zoneinfo` 目录
+1. the directory returned by command `TZDIR`. If was not supported, the directory `/usr/share/zoneinfo`.
+2. the `zoneinfo` directory generated under the Doris BE deployment directory. The `resource/zoneinfo.tar.gz` directory from the Doris Repository.
 
-2. Doris BE 部署目录下生成的 `zoneinfo` 目录。产生自 Doris Repository 下的 `resource/zoneinfo.tar.gz`
+Look up the above data sources in order and use the current item if found. If the BE configuration item `use_doris_tzfile` is true, the search for the first item is skipped. If neither is found, the Doris BE will fail to start, please rebuild the BE correctly or get the distribution.
 
-按顺序查找以上数据源，如果找到则使用当前项。如果 BE 配置项 `use_doris_tzfile` 为 true，则跳过对第一项的查找。如均未找到，则 Doris BE 将启动失败，请重新正确构建 BE 或获取发行版。
+## Impact of time zone
 
-## 时区的影响
+### 1. functions
 
-### 1. 函数
+Includes values displayed by time functions such as `NOW()` or `CURTIME()`, and also time values in `show load`, `show backends`.
 
-包括`NOW()`或`CURTIME()`等时间函数显示的值，也包括`show load`, `show backends`中的时间值。
+However, it does not affect the less than value of the time-type partitioned columns in `create table`, nor does it affect the display of values stored as `date/datetime` types.
 
-但不会影响 `create table` 中时间类型分区列的 less than 值，也不会影响存储为 `date/datetime` 类型的值的显示。
+Functions affected by time zone:
 
-受时区影响的函数：
+- `FROM_UNIXTIME`: Given a UTC timestamp, return its date and time in the time zone specified by Doris session `time_zone`. For example, when `time_zone` is `CST`, `FROM_UNIXTIME(0)` returns `1970-01-01 08: 00:00`.
 
-- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回其在 Doris session `time_zone` 指定时区的日期时间，如`time_zone`为`CST`时`FROM_UNIXTIME(0)`返回`1970-01-01 08:00:00`。
+- `UNIX_TIMESTAMP`: Given a date and time, return its UTC timestamp in the time zone specified by Doris session `time_zone`, such as when `time_zone` is `CST` `UNIX_TIMESTAMP('1970-01-01 08:00:00 ')` returns `0`.
 
-- `UNIX_TIMESTAMP`：给定一个日期时间，返回其在 Doris session `time_zone` 指定时区下的 UTC 时间戳，如`time_zone`为`CST`时`UNIX_TIMESTAMP('1970-01-01 08:00:00')`返回`0`。
+- `CURTIME`: Returns the time in the time zone specified by the current Doris session `time_zone`.
 
-- `CURTIME`：返回当前 Doris session `time_zone` 指定时区的时间。
+- `NOW`: Returns the date and time of the current Doris session `time_zone` specified time zone.
 
-- `NOW`：返回当前 Doris session `time_zone` 指定时区的日期时间。
+- `CONVERT_TZ`: Convert a datetime from one specified time zone to another.
 
-- `CONVERT_TZ`：将一个日期时间从一个指定时区转换到另一个指定时区。
+### 2. Values of time types
 
-### 2. 时间类型的值
+For `DATE` and `DATETIME` types, we support time zone conversion when importing data.
 
-对于`DATE`、`DATETIME`类型，我们支持导入数据时对时区进行转换。
+- If the data has a time zone, such as "2020-12-12 12:12:12+08:00", and the current Doris `time_zone = +00:00` or the header `timezone` specified by Stream Load is `+00: 00`, then the data is imported into Doris and the actual value is "2020-12-12 04:12:12".
 
-- 如果数据带有时区，如 "2020-12-12 12:12:12+08:00"，而当前 Doris `time_zone = +00:00` 或者 Stream Load 指定的 header `timezone` 为 `+00:00` ，则数据导入 Doris 得到实际值为 "2020-12-12 04:12:12"。
+- If the data does not contain a time zone, such as "2020-12-12 12:12:12", the time is considered to be an absolute time and no conversion occurs.
 
-- 如果数据不带有时区，如 "2020-12-12 12:12:12"，则认为该时间为绝对时间，不发生任何转换。
+### 3. Daylight Saving Time
 
-### 3. 夏令时
+Daylight Saving Time is essentially the actual time offset of a named time zone, which changes on certain dates.
 
-夏令时的本质是具名时区的实际时间偏移量，在一定日期内发生改变。
+For example, the `America/Los_Angeles` time zone contains a Daylight Saving Time adjustment that begins and ends approximately in March and November of each year. That is, the `America/Los_Angeles` actual time zone offset changes from `-08:00` to `-07:00` at the start of Daylight Savings Time in March, and from `-07:00` to `-08:00` at the end of Daylight Savings Time in November.
+If you do not want Daylight Saving Time to be turned on, set `time_zone` to `-08:00` instead of `America/Los_Angeles`.
 
-例如，`America/Los_Angeles`时区包含一次夏令时调整，起止时间为约为每年 3 月至 11 月。即，三月份夏令时开始时，`America/Los_Angeles`实际时区偏移由`-08:00`变为`-07:00`，11 月夏令时结束时，又从`-07:00`变为`-08:00`。
-如果不希望开启夏令时，则应设定 `time_zone` 为 `-08:00` 而非 `America/Los_Angeles`。
+## Usage
 
-## 使用方式
+Time zone values can be given in a variety of formats. The following standard formats are well supported in Doris:
 
-时区值可以使用多种格式给出，以下是 Doris 中完善支持的标准格式：
+1. standard named time zone formats, such as "Asia/Shanghai", "America/Los_Angeles".
 
-1. 标准具名时区格式，如 "Asia/Shanghai", "America/Los_Angeles"
+2. standard offset formats, such as "+02:30", "-10:00".
 
-2. 标准偏移格式，如 "+02:30", "-10:00"
+3. abbreviated time zone formats, currently only support:
 
-3. 缩写时区格式，当前仅支持：
+   1. "GMT", "UTC", equivalent to "+00:00" time zone
 
-   1. "GMT", "UTC"，等同于 "+00:00" 时区
+   2. "CST", which is equivalent to the "Asia/Shanghai" time zone
 
-   2. "CST", 等同于 "Asia/Shanghai" 时区
+4. single letter Z, for Zulu time zone, equivalent to "+00:00" time zone
 
-4. 单字母 Z，代表 Zulu 时区，等同于 "+00:00" 时区
+Note: Some other formats are currently supported in some imports in Doris due to different implementations. **Production environments should not rely on these formats that are not listed here, and their behaviour may change at any time**, so keep an eye on the relevant changelog for version updates.
 
-注意：由于实现方式的不同，当前 Doris 存在部分其他格式在部分导入方式中得到了支持。**生产环境不应当依赖这些未列于此的格式，它们的行为随时可能发生变化**，请关注版本更新时的相关 changelog。
+## Best Practices
 
-## 最佳实践
+### Time Zone Sensitive Data
 
-### 时区敏感数据
+The time zone issue involves three main influences:
 
-时区问题主要涉及三个影响因素：
+1. session variable `time_zone` -- cluster timezone
 
-1. session variable `time_zone` —— 集群时区
+2. header `timezone` specified during import(Stream Load, Broker Load etc.) -- importing timezone
 
-2. Stream Load、Broker Load 等导入时指定的 header `timezone` —— 导入时区
+3. timezone type literal "+08:00" in "2023-12-12 08:00:00+08:00" -- data timezone
 
-3. 时区类型字面量 "2023-12-12 08:00:00+08:00" 中的 "+08:00" —— 数据时区
+We can understand it as follows:
 
-我们可以做如下理解：
+Doris is currently compatible with importing data in various time zones into Doris. Since Doris's own `DATETIME` and other time types do not contain time zone information, and the data will not change with time zone changes after being imported, when time data is imported into Doris, it can be divided into the following two categories:
 
-Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Doris 自身 `DATETIME` 等各个时间类型本身不内含时区信息，且数据在导入后不会随时区变化而变更，因此时间数据导入 Doris 时，可分为如下两类：
+1. Absolute time
 
-1. 绝对时间
+   Absolute time means that the data scene it is associated with has nothing to do with time zones. This type of data should be imported without any time zone suffix and will be stored as-is.
 
-    绝对时间是指，它所关联的数据场景与时区无关。对于这类数据，在导入时应该不带有任何时区后缀，它们将被原样存储。
+2. Time in a specific time zone
 
-2. 特定时区下的时间
+   The time in a specific time zone means that the data scenario it is associated with is related to the time zone. For this type of data, it should be imported with a specific time zone suffix. When imported, they will be converted to the Doris cluster `time_zone` time zone or the header `timezone` specified in Stream Load/Broker Load.
 
-    某个特定时区下的时间是指，它所关联的数据场景与时区有关。对于这类数据，在导入时应该带有具体时区后缀，导入时它们将被转化至 Doris 集群 `time_zone` 时区或 Stream Load/Broker Load 中指定的 header `timezone`。
+   This type of data is converted to absolute time storage in the time zone specified during import after import, so subsequent imports and queries should maintain this time zone to avoid confusion in the meaning of the data.
 
-    这类数据在导入后即被转化至导入时指定时区下的绝对时间存储，故后续导入和查询应当保持此时区，以免数据意义发生紊乱。
-
- * 对于 Insert 语句，我们可以通过以下例子来说明：
+ * For the Insert statement, we can illustrate it through the following example:
 
     ```sql
     Doris > select @@time_zone;
@@ -142,32 +142,32 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
     +---------------+
     | Asia/Shanghai |
     +---------------+
-     
-    Doris > insert into dt values('2020-12-12 12:12:12+02:00'); --- 导入的数据中指定了时区为 +02:00
-     
+    
+    Doris > insert into dt values('2020-12-12 12:12:12+02:00'); --- The imported data specifies a time zone of +02:00
+    
     Doris > select * from dt;
     +---------------------+
     | dt                  |
     +---------------------+
-    | 2020-12-12 18:12:12 | --- 被转换为 Doris 集群时区 Asia/Shanghai，后续导入和查询应当保持此时区。
+    | 2020-12-12 18:12:12 | --- Is converted to the Doris cluster time zone Asia/Shanghai, subsequent imports and queries should maintain this time zone.
     +---------------------+
-     
+    
     Doris > set time_zone = 'America/Los_Angeles';
-     
+    
     Doris > select * from dt;
     +---------------------+
     | dt                  |
     +---------------------+
-    | 2020-12-12 18:12:12 | --- 如果修改 time_zone，时间值不会随之改变，其查询时的意义发生紊乱。
+    | 2020-12-12 18:12:12 | --- If time_zone is modified, the time value will not change accordingly, and its meaning during query will be confused.
     +---------------------+
     ```
 
- * 对于 Stream Load、Broker Load 等导入方式，我们可以通过指定 header `timezone` 来实现。例如，对于 Stream Load，我们可以通过以下例子来说明：
+ * For import methods such as Stream Load and Broker Load, we can achieve this by specifying header `timezone`. For example, for Stream Load, we can illustrate it through the following example:
 
-   ```shell
+    ```shell
     cat dt.csv
     2020-12-12 12:12:12+02:00
-     
+    
     curl --location-trusted -u root: \
      -H "Expect:100-continue" \
      -H "strict_mode: true" \
@@ -183,41 +183,42 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
     +---------------+
     | Asia/Shanghai |
     +---------------+
-     
+    
     Doris > select * from dt;
     +---------------------+
     | dt                  |
     +---------------------+
-    | 2020-12-12 18:12:12 | --- 被转换为 Doris 集群时区 Asia/Shanghai，后续导入和查询应当保持此时区。
+    | 2020-12-12 18:12:12 | --- Is converted to the Doris cluster time zone Asia/Shanghai, subsequent imports and queries should maintain this time zone.
     +---------------------+
     ```
 
    :::tip
-    * Stream Load、Broker Load 等导入方式中，header `timezone` 会覆盖 Doris 集群 `time_zone`，因此在导入时应当保持一致。
-    * Stream Load、Broker Load 等导入方式中，header `timezone` 会影响导入转换中使用的函数。
-    * 如果导入时未指定 header `timezone`，则默认使用东八区。
+    * In import methods such as Stream Load and Broker Load, the header `timezone` will overwrite the Doris cluster `time_zone`, so it should be consistent during import.
+    * In import methods such as Stream Load and Broker Load, the header `timezone` will affect the functions used in import conversion.
+    * If the header `timezone` is not specified when importing, the East Eighth Zone will be used by default.
    :::
 
-**综上所述，处理时区问题最佳的实践是：**
-:::info 最佳实践
-1. 在使用前确认该集群所表征的时区并设置 `time_zone`，在此之后不再更改。
+**To sum up, the best practice for dealing with time zone issues is:**
 
-2. 在导入时设定 header `timezone` 同集群 `time_zone` 一致。
+:::info Best Practices
+1. Confirm the time zone represented by the cluster and set `time_zone` before use, and do not change it after that.
 
-3. 对于绝对时间，导入时不带时区后缀；对于有时区的时间，导入时带具体时区后缀，导入后将被转化至 Doris `time_zone` 时区。
+2. Set header `timezone` to be consistent with cluster `time_zone` when importing.
+
+3. For absolute time, import without time zone suffix; for time with time zone, import with specific time zone suffix, and it will be converted to Doris `time_zone` time zone after import.
 :::
 
-### 夏令时
+### Daylight Saving Time
 
-夏令时的起讫时间来自[当前时区数据源](#数据来源)，不一定与当年度时区所在地官方实际确认时间完全一致。该数据由 ICANN 进行维护。如果需要确保夏令时表现与当年度实际规定一致，请保证 Doris 所选择的数据源为最新的 ICANN 所公布时区数据，下载途径见下文。
+The start and end times for Daylight Saving Time are taken from the [current time zone data source](#data-source) and may not necessarily correspond exactly to the actual officially recognised times for the current year's time zone location. This data is maintained by ICANN. If you need to ensure that Daylight Saving Time behaves as specified for the current year, please make sure that data source selected by Doris is the latest ICANN published time zone data. See below for download access.
 
-### 信息更新
+### Information Update
 
-真实世界中的时区与夏令时相关数据，将会因各种原因而不定期发生变化。IANA 会定期记录这些变化并更新相应时区文件。如果希望 Doris 中的时区信息与最新的IANA 数据保持一致，请采取下列方式进行更新：
+Real-world time zone and daylight saving time data may change from time to time for a variety of reasons, and IANA periodically records these changes and updates the corresponding time zone files. If you want the time zone information in Doris to be up to date with the latest IANA data, do one of the followings:
 
-1. 使用包管理器更新
+1. Use the Package Manager to update
 
-根据当前操作系统使用的包管理器，用户可以使用对应的命令直接更新时区数据：
+Depending on the package manager used by the current operating system, you can update the time zone data directly using the corresponding command:
 
 ```shell
 # yum
@@ -226,24 +227,24 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
 > sudo apt update tzdata
 ```
 
-该方式更新的数据位于系统 `$TZDIR` 下（一般为 `usr/share/zoneinfo`）。如果 `use_doris_tzfile = true`，则用户应当将其覆盖至 BE 部署目录下的 `zoneinfo` 目录。
+The data updated in this way is located under the system `$TZDIR` (typically `usr/share/zoneinfo`). If `use_doris_tzfile = true`, the user should overwrite it to the `zoneinfo` directory in the BE deployment directory.
 
-2. 直接拉取 IANA 时区数据库（推荐）
+2. pull the IANA time zone database manually (recommended)
 
-大多数 Linux 发行版的包管理器，tzdata 的同步并不及时。如果对时区数据准确性要求较高，可以直接拉取 IANA 定期公布的数据：
+Most Linux distributions have a package manager where tzdata is not synchronised in a timely manner. If the accuracy of the time zone data is important, you can pull the data published by IANA on a regular basis:
 
 ```shell
 wget https://www.iana.org/time-zones/repository/tzdb-latest.tar.lz
 ```
 
-然后根据解压后文件夹中的 README 文件，生成具体的 zoneinfo 数据。生成的数据应当拷贝至 `$TZDIR` 还是 BE 部署目录，取决于 BE config `use_doris_tzfile` 的值。
+Then generate the specific zoneinfo data according the README file in the extracted folder. The generated data should be copied to `$TZDIR` or to the BE deployment directory, depending on the value of the BE config `use_doris_tzfile`.
 
-请注意，以上所有操作在 BE 所在机器上完成后，都**必须重启**对应 BE 才能生效。
+Please note that all the above operations **must** be restarted **on the corresponding BE to take effect after they are done on the BE machine.
 
-## 拓展阅读
+## Extended Reading
 
-- 时区格式列表：[List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+- [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 
-- IANA 时区数据库：[IANA Time Zone Database](https://www.iana.org/time-zones)
+- [IANA Time Zone Database](https://www.iana.org/time-zones)
 
-- ICANN 时区数据库：[The tz-announce Archives](https://mm.icann.org/pipermail/tz-announce/)
+- [The tz-announce Archives](https://mm.icann.org/pipermail/tz-announce/)

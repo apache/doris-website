@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Common Table Expressions",
+    "title": "Common Table Expression",
     "language": "en"
 }
 ---

@@ -1,7 +1,7 @@
 ---
 {
     "title": "SQL Cache",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,55 +24,55 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# SQL Cache
 
+The SQL statement will hit the cache if it is completely consistent.
 
-SQL 语句完全一致时将命中缓存。
+## Demand scenarios & solutions
 
-## 需求场景 & 解决方案
+See query-cache.md.
 
-见 [缓存概览](../query-cache/query-cache.md) 文档。
+## Design principles
 
-## 设计原理
+SQLCache stores and obtains the cache based on the SQL signature, the partition ID of the queried table, and the latest version of the partition. The combination of the three determines a cached data set. If any one of them changes, such as the SQL changes, the query fields or conditions are different, or the version changes after the data is updated, the cache will not be hit.
 
-SQLCache 按 SQL 的签名、查询的表的分区 ID、分区最新版本来存储和获取缓存。三者组合确定一个缓存数据集，任何一个变化了，如 SQL 有变化，如查询字段或条件不一样，或数据更新后版本变化了，会导致命中不了缓存。
+If multiple tables are joined, the most recently updated partition ID and latest version number are used. If one of the tables is updated, the partition ID or version number will be different, and the cache will not be hit.
 
-如果多张表 Join，使用最近更新的分区 ID 和最新的版本号，如果其中一张表更新了，会导致分区 ID 或版本号不一样，也一样命中不了缓存。
+SQLCache is more suitable for T+1 update scenarios. Data is updated in the early morning. The first query obtains the results from BE and puts them into the cache. Subsequent queries of the same nature obtain the results from the cache. Real-time update data can also be used, but there may be a problem of low hit rate.
 
-SQLCache，更适合 T+1 更新的场景，凌晨数据更新，首次查询从 BE 中获取结果放入到缓存中，后续相同查询从缓存中获取。实时更新数据也可以使用，但是可能存在命中率低的问题。
+Currently supports OlapTable internal table and Hive external table.
 
-当前支持 OlapTable 内表 和 Hive 外表。
+## Usage
 
-## 使用方式
-
-确保 fe.conf 的 cache_enable_sql_mode=true（默认是 true）
+Make sure cache_enable_sql_mode=true in fe.conf (default is true)
 
 ```text
 vim fe/conf/fe.conf
 cache_enable_sql_mode=true
 ```
 
-在 MySQL 命令行中设置变量
+Set variables in MySQL command line
 
 ```sql
 MySQL [(none)]> set [global] enable_sql_cache=true;
 ```
 
-注：global 是全局变量，不加指当前会话变量
+Note: global is a global variable and does not refer to the current session variable.
 
-## 缓存条件
+## Cache conditions
 
-第一次查询后，如果满足下面三个条件，查询结果就会被缓存。
+After the first query, if the following three conditions are met, the query results will be cached.
 
-1. (当前时间 - 查询的分区最后更新时间) 大于 fe.conf 中的 cache_last_version_interval_second。
+1. (Current time - the last update time of the queried partition) is greater than cache_last_version_interval_second in fe.conf.
 
-2. 查询结果行数 小于 fe.conf 中的 cache_result_max_row_count。
+2. The number of query result rows is less than cache_result_max_row_count in fe.conf.
 
-3. 查询结果 bytes 小于 fe.conf 中的 cache_result_max_data_size。
+3. The query result bytes is less than cache_result_max_data_size in fe.conf.
 
-具体参数介绍和未尽事项见 query-cache.md。
+For detailed parameter introduction and unfinished matters, see query-cache.md.
 
-## 未尽事项
+## Unfinished business
 
-- SQL 中包含产生随机值的函数，比如 random()，使用 QueryCache 会导致查询结果失去随机性，每次执行将得到相同的结果。
+- SQL contains functions that generate random values, such as random(). Using QueryCache will cause the query results to lose their randomness, and the same results will be obtained every time they are executed.
 
-- 类似的 SQL，之前查询了 2 个指标，现在查询 3 个指标，是否可以利用 2 个指标的缓存？目前不支持
+- Similar SQL, 2 indicators were queried before, and now 3 indicators are queried. Can the cache of 2 indicators be used? Not currently supported

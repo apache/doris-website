@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Sql Interception",
+    "title": "SQL Interception",
     "language": "en"
 }
 ---

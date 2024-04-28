@@ -1,7 +1,7 @@
 ---
 {
-    "title": "MySQL 兼容性",
-    "language": "zh-CN"
+    "title": "MySQL Compatibility",
+    "language": "en"
 }
 ---
 
@@ -24,117 +24,114 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL, as outlined below.
 
-Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还是有很多不同的地方，下面给出了他们的差异点介绍。
+## Data Types
 
-## 数据类型
+### Numeric Types
 
-### 数字类型
+| Type         | MySQL                                                        | Doris                                                        |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Boolean      | <p>- Supported</p>  <p>- Range: 0 represents false, 1 represents true</p>  | <p>- Supported</p>  <p>- Keyword: Boolean</p>  <p>- Range: 0 represents false, 1 represents true</p> |
+| Bit          | <p>- Supported</p>  <p>- Range: 1 to 64</p>                                | Not supported                                                |
+| Tinyint      | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range:</p>    <p>- signed: -128 to 127</p>   <p>- unsigned: 0 to 255</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -128 to 127</p>    |
+| Smallint     | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p> - Range:</p>    <p>- signed: -2^15 to 2^15-1</p>   <p>- unsigned: 0 to 2^16-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -32768 to 32767</p> |
+| Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range:</p>    <p>- signed: -2^23 to 2^23-1</p>  <p>- unsigned: 0 to -2^24-1</p> | - Not supported                                              |
+| Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range:</p>    <p>- signed: -2^31 to 2^31-1</p>   <p>- unsigned: 0 to -2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |
+| Bigint       | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p>- Range:</p>    <p>- signed: -2^63 to 2^63-1</p>  <p>- unsigned: 0 to 2^64-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^63 to 2^63-1</p> |
+| Largeint     | - Not supported                                              | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^127 to 2^127-1</p> |
+| Decimal      | <p>- Supported</p>  <p>- Supports signed and unsigned (deprecated after 8.0.17)</p>  <p>- Default: Decimal(10, 0)</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Default: Decimal(9, 0)</p> |
+| Float/Double | <p>-Supported</p>  <p>- Supports signed and unsigned (deprecated after 8.0.17)</p> | <p>- Supported</p>  <p>- Only supports signed</p>                          |
 
-| 类型         | MySQL                                                        | Doris                                                  |
-| ------------ | ------------------------------------------------------------ | ------------------------------------------------------ |
-| Boolean      | <p>- 支持</p> <p>- 范围：0 代表 false，1 代表 true</p>                         | <p>- 支持</p> <p>- 关键字：Boolean</p> <p>- 范围：0 代表 false，1 代表 true</p> |
-| Bit          | <p>- 支持</p> <p>- 范围：1 ~ 64</p>                                        | 不支持                                                 |
-| Tinyint      | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：  - signed: -128 ~ 127</p>  <p>- unsigned: 0 ~ 255</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-128 ~ 127</p>               |
-| Smallint     | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^15 ~ 2^15-1</p> <p>- unsigned: 0 ~ 2^16-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-32768 ~ 32767</p>           |
-| Mediumint    | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^23 ~ 2^23-1</p>  <p>- unsigned: 0 ~ -2^24-1</p> | - 不支持                                               |
-| int          | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^31 ~ 2^31-1</p>  <p>- unsigned: 0 ~ -2^32-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围： -2147483648~ 2147483647</p> |
-| Bigint       | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^63 ~ 2^63-1</p>  <p>- unsigned: 0 ~ 2^64-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围： -2^63 ~ 2^63-1 </p>         |
-| Largeint     | - 不支持                                                     | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-2^127 ~ 2^127-1</p>         |
-| Decimal      | <p>- 支持</p> <p>- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）</p> <p>- 默认值：Decimal(10, 0)</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 默认值：Decimal(9, 0)</p>          |
-| Float/Double | <p>- 支持</p> <p>- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）</p> | <p>- 支持</p> <p>- 只支持 signed</p>                                  |
+### Date Types
 
-### 日期类型
-
-| 类型      | MySQL                                                        | Doris                                                        |
+| Type      | MySQL                                                        | Doris                                                        |
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Date      | <p>- 支持 - 范围：['1000-01-01','9999-12-31']</p> <p>- 格式：YYYY-MM-DD</p> | <p>- 支持</p> <p>- 范围：['0000-01-01', '9999-12-31']</p> <p>- 格式：YYYY-MM-DD</p> |
-| DateTime  | <p>- 支持</p> <p>- DATETIME([P])，可选参数 P 表示精度</p> <p>- 范围：'1000-01-01 00:00:00.000000' ,'9999-12-31 23:59:59.999999'</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- 支持</p> <p>- DATETIME([P])，可选参数 P 表示精度</p> <p>- 范围：['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> |
-| Timestamp | <p>- 支持</p> <p>- Timestamp[(p)]，可选参数 P 表示精度</p> <p>- 范围：['1970-01-01 00:00:01.000000' UTC , '2038-01-19 03:14:07.999999' UTC]</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> | - 不支持                                                     |
-| Time      | <p>- 支持</p> <p>- Time[(p)]</p> <p>- 范围：['-838:59:59.000000' to '838:59:59.000000']</p> <p>- 格式：hh:mm:ss[.fraction]</p> | - 不支持                                                     |
-| Year      | <p>- 支持</p> <p>- 范围：1901 to 2155, or 0000</p> <p>- 格式：yyyy</p>            | - 不支持                                                     |
+| Date      | <p>- Supported</p> <p>- Range: ['1000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD | <p>- Supported</p> <p>- Range: ['0000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD |
+| DateTime  | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  - Range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'  <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  <p>- Range: ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p>   - Format: YYYY-MM-DD hh:mm:ss[.fraction] |
+| Timestamp | <p>- Supported</p> <p>- Timestamp[(p)], where P is an optional parameter defined precision</p> <p>- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]</p>   <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | - Not supported                                              |
+| Time      | <p>- Supported</p> <p>- Time[(p)]</p>  <p>- Range: ['-838:59:59.000000' to '838:59:59.000000']</p>   <p>- Format: hh:mm:ss[.fraction]</p> | - Not supported                                              |
+| Year      | <p>- Supported</p> <p>- Range: 1901 to 2155, or 0000</p>   - Format: yyyy  | - Not supported                                              |
 
-### 字符串类型
+### String Types
 
-| 类型      | MySQL                                                        | Doris                                                        |
+| Type      | MySQL                                                        | Doris                                                        |
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Char      | <p>- 支持</p> <p>- CHAR[(M)，M 为字符长度，缺省表示长度为 1</p> <p>- 定长</p> <p>- 范围：[0,255]，字节大小</p> | <p>- 支持</p> <p>- CHAR[(M)，M 为字节长度</p> <p>- 可变</p> <p>- 范围：[1,255]</p>        |
-| Varchar   | <p>- 支持</p> <p>- VARCHAR(M)，M 为字符长度</p> <p>- 范围：[0,65535]，字节大小</p> | <p>- 支持</p> <p>- VARCHAR(M)，M 为字节长度。</p> <p>- 范围：[1, 65533]</p>        |
-| String    | - 不支持                                                     | <p>- 支持</p> <p>- 1048576 字节（1MB），可调大到 2147483643 字节（2G）</p> |
-| Binary    | <p>- 支持</p> <p>- 类似于 Char</p>                                          | - 不支持                                                     |
-| Varbinary | <p>- 支持</p> <p>- 类似于 Varchar</p>                                       | - 不支持                                                     |
-| Blob      | <p>- 支持</p> <p>- TinyBlob、Blob、MediumBlob、LongBlob</p>                | - 不支持                                                     |
-| Text      | <p>- 支持</p> <p>- TinyText、Text、MediumText、LongText</p>                | - 不支持                                                     |
-| Enum      | <p>- 支持</p> <p>- 最多支持 65535 个 elements</p>                             | - 不支持                                                     |
-| Set       | <p>- 支持</p> <p>- 最多支持 64 个 elements</p>                                | - 不支持                                                     |
+| Char      | <p>-Supported - CHAR[(M)], where M is the character length. If omitted, default length is 1</p>  <p>- Fixed-length</p>  - Range: [0, 255] bytes | <p>- Supported</p> <p>- CHAR[(M)], where M is the byte length</p>  <p>- Variable-length</p>  - Range: [1, 255] |
+| Varchar   | <p>- Supported</p> <p>- VARCHAR(M), where M is the character length</p> <p>- Range: [0, 65535] bytes</p> | <p>- Supported</p> <p>- VARCHAR(M), where M is the byte length</p>  <p>- Range: [1, 65533]</p> |
+| String    | - Not supported                                              | <p>- Supported</p> <p>- 1,048,576 bytes (1MB), can be increased to 2,147,483,643 bytes (2GB)</p> |
+| Binary    | <p>- Supported</p> <p>- Similar to Char</p>                                | - Not supported                                              |
+| Varbinary | <p>- Supported</p> <p>- Similar to Varchar</p>                             | <p>- Not supported</p>                                              |
+| Blob      | <p>- Supported</p> <p>- TinyBlob, Blob, MediumBlob, LongBlob</p>           | - Not supported                                              |
+| Text      | <p>- Supported</p> <p>- TinyText, Text, MediumText, LongText</p>           | - Not supported                                              |
+| Enum      | <p>- Supported</p> <p>- Supports up to 65,535 elements</p>                 | - Not supported                                              |
+| Set       | <p>- Supported</p> <p>- Supports up to 64 elements</p>                     | - Not supported                                              |
 
-### JSON 数据类型
+### JSON Type
 
-| 类型 | MySQL  | Doris  |
-| ---- | ------ | ------ |
-| JSON | - 支持 | - 支持 |
+| Type | MySQL       | Doris     |
+| ---- | ----------- | --------- |
+| JSON | - Supported | Supported |
 
-### Doris 特有的数据类型
+### Doris unique data type
+
+Doris has several unique data types. Here are the details:
 
 - **HyperLogLog**
 
-    HLL 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 HLL_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 HLL 列只能通过配套的 hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 进行查询或使用。
+  HLL (HyperLogLog) is a data type that cannot be used as a key column. It can be used in aggregate, duplicate, and unique models. In an aggregate model table, the corresponding aggregation type for HLL is HLL_UNION. The length and default value do not need to be specified. The length is controlled internally based on the data aggregation level. HLL columns can only be queried or used with `hll_union_agg`, `hll_raw_agg`, `hll_cardinality`, `hll_hash`, and other related functions. 
 
-    HLL 是模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的误差通常在 1% 左右，有时会达到 2%。
+  HLL is used for approximate fuzzy deduplication and performs better than count distinct when dealing with large amounts of data. The typical error rate of HLL is around 1%, sometimes reaching up to 2%.
 
 - **Bitmap**
 
-    BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。在 Unique 表或 duplicate 表中使用时，其必须作为非 key 列使用。在 Aggregate 表中使用时，其必须作为非 key 列使用，且建表时配合的聚合类型为 BITMAP_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 BITMAP 列只能通过配套的 bitmap_union_count、bitmap_union、bitmap_hash、bitmap_hash64 等函数进行查询或使用。
+  Bitmap is another data type in Doris. It can be used in aggregate, unique, or duplicate models. In Unique or Duplicate models, it must be used as a non-key column. In aggregate models, it must also be used as a non-key column, and the corresponding aggregation type during table creation is BITMAP_UNION. Similar to HLL, the length and default values do not need to be specified, and the length is controlled internally based on the data aggregation level. Bitmap columns can only be queried or used with functions like `bitmap_union_count`, `bitmap_union`, `bitmap_hash`, `bitmap_hash64`, and others. 
 
-    离线场景下使用 BITMAP 会影响导入速度，在数据量大的情况下查询速度会慢于 HLL，并优于 Count Distinct。注意：实时场景下 BITMAP 如果不使用全局字典，使用了 bitmap_hash() 可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用 bitmap_hash64。
+  Using BITMAP in traditional scenarios may impact loading speed, but it generally performs better than Count Distinct when dealing with large amounts of data. Please note that in real-time scenarios, using BITMAP without a global dictionary and with bitmap_hash() function may introduce an error of around 0.1%. If this error is not acceptable, you can use bitmap_hash64 instead.
 
 - **QUANTILE_PERCENT**
 
-    QUANTILE_STATE 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 QUANTILE_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 QUANTILE_STATE 列只能通过配套的 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数进行查询或使用。
+  QUANTILE_STATE is another data type in Doris, which cannot be used as a key column. It can be used in aggregate, duplicate, and iuique models. In an aggregate model table, the corresponding aggregation type for QUANTILE_STATE is QUANTILE_UNION. The length and default value do not need to be specified, and the length is controlled internally based on the data aggregation level. QUANTILE_STATE columns can only be queried or used with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, `TO_QUANTILE_STATE`, and others. 
 
-    QUANTILE_STATE 是一种计算分位数近似值的类型，在导入时会对相同的 key，不同 value 进行预聚合，当 value 数量不超过 2048 时采用明细记录所有数据，当 value 数量大于 2048 时采用 [TDigest](https://github.com/tdunning/t-digest/blob/main/docs/t-digest-paper/histo.pdf) 算法，对数据进行聚合（聚类）保存聚类后的质心点。
+  QUANTILE_STATE is used for calculating approximate quantile values. During import, it performs pre-aggregation on the same key with different values. When the number of values does not exceed 2048, it stores all the data in detail. When the number of values exceeds 2048, it uses the TDigest algorithm to aggregate (cluster) the data and save the centroids of the clusters.
 
 - **Array<T\>**
 
-    由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 模型的表中使用，也支持在 Unique 模型的表中非 key 列使用。
+  Array is a data type in Doris that represents an array composed of elements of type T. It cannot be used as a key column. Currently, it supports usage in duplicate models and non-key column usage in unique models. 
 
-    T 类型：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,CHAR, VARCHAR, STRING
+  The supported types for T are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, DATETIME, CHAR, VARCHAR, and STRING.
 
-- **MAP<K, V>**
+- **MAP<K, V\>**
 
-        由 K, V 类型元素组成的 map，不能作为 key 列使用。目前支持在 Duplicate，Unique 模型的表中使用。
+  MAP is a data type in Doris that represents a map composed of elements of types K and V. It cannot be used as a key column and can be used in both duplicate and unique models. 
 
-K,V 支持的类型有：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,  CHAR, VARCHAR, STRING
+  The supported types for K and V are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR`, and `STRING`.
 
-- **STRUCT<field_name:field_type, ... >**
+- **STRUCT<field_name:field_type,...>**
 
-    由多个 Field 组成的结构体，也可被理解为多个列的集合。不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。
+  A structure (STRUCT) is composed of multiple fields. It can also be identified as a collection of multiple columns. It cannot be used as a key and is currently only supported in tables of the duplicate model.
 
-    一个 Struct 中的 Field 的名字和数量固定，总是为 Nullable，一个 Field 通常由下面部分组成。
+  - field_name: The identifier of the field, which must be unique.
+  
+  - field_type: The type of field.
 
-    - field_name: Field 的标识符，不可重复
-
-    - field_type: Field 的类型
-
-    当前可支持的类型有：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING
+  The supported types for fields are `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `DECIMAL`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR`, and `STRING`.
 
 - Agg_State
 
-    AGG_STATE 不能作为 key 列使用，建表时需要同时声明聚合函数的签名。
+ AGG_STATE is a data type in Doris that cannot be used as a key column. During table creation, the signature of the aggregation function needs to be declared. 
 
-    用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
+  The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
 
-    AGG_STATE 只能配合[state](../../sql-manual/sql-functions/combinators/state) /[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union)函数组合器使用。 
+  AGG_STATE can only be used in combination with [state](../../sql-manual/sql-functions/combinators/state) /[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
 
-## 语法区别
+## Syntax
 
 ### DDL
 
-**Create-Table**
+**01 Create Table Syntax in Doris**
 
-**01 Doris 建表语法**
-
-```sql
+```SQL
 CREATE TABLE [IF NOT EXISTS] [database.]table
 (
     column_definition_list
@@ -150,89 +147,89 @@ distribution_desc
 [extra_properties]
 ```
 
-**02 与 MySQL 的不同之处**
+**02 Differences with MySQL**
 
-- column_definition_list 
+- column_definition_list:
+  
+  - Defines the list of columns, and the basic syntax is similar to MySQL. However, there are additional operations for **aggregation types**.
+  
+  - The **aggregation types** mainly support data models such as AGGREGATE and Duplicate.
+  
+  - In MySQL, you can define constraints like primary key and unique key after each column in the column definition list. In Doris, these constraints are defined and calculated through data models.
+
+- index_definition_list:
+  
+  - Defines the list of indexes, and the basic syntax is similar to MySQL. Doris supports bitmap indexes, inverted indexes, and N-Gram indexes, while Bloom filter indexes are set through properties.
+  
+  - MySQL supports B+Tree and Hash indexes.
+
+- engine_type:
+  
+  - Specifies the table engine type, and it is optional.
+  
+  - Currently, Doris mainly supports native engines like OLAP.
+  
+  - MySQL supports storage engines like InnoDB and MyISAM.
+
+- keys_type:
+  
+  - Specifies the data model, and it is optional.
+  
+  - Supported types are:
+  
+    - DUBLICATE KEY (default): The specified columns are sorting columns.
+  
+    - AGGREGATE KEY: The specified columns are dimension columns.
+  
+    - UNIQUE KEY: The specified columns are primary key columns.
+  
+  - MySQL does not have the concept of data models.
+
+- table_comment:
+  
+  - Table comment or description.
+
+- partition_info:
+  
+  - Specifies the partitioning algorithm, and it is optional.
+  
+  - Supported partitioning algorithms are:
+  
+    - LESS THAN: Defines only the upper bound of the partition. The lower bound is determined by the upper bound of the previous partition.
+    
+    - FIXED RANGE: Defines a closed-open interval for the partition.
+    
+    - MULTI RANGE: Creates multiple RANGE partitions in batches, defines closed-open intervals, sets time units and steps. Time units supported are year, month, day, week, and hour.
+    
+    - MULTI RANGE: Creates multiple RANGE partitions for numeric types, defines closed-open intervals, and sets steps.
+  
+  - MySQL supports algorithms like Hash, Range, and List. It also supports subpartitions, but only with the Hash algorithm.
+
+- distribution_desc:
+  
+  - Specifies the bucketing algorithm, and it is mandatory.
+  
+  - Bucketing algorithms:
+  
+    - Hash bucketing syntax: DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num|auto]. It uses the specified key columns for hash bucketing.
+  
+    - Random bucketing syntax: DISTRIBUTED BY RANDOM [BUCKETS num|auto]. It uses random numbers for bucketing.
+  
+  - MySQL does not have bucketing algorithms.
+
+- rollup_list:
  
-  - 字段列表定义，基本语法与 MySQL 类似，会多出一个**聚合类型**的操作
+  - Allows creating multiple materialized views while creating the table, and it is optional.
  
-  - **聚合类型**的操作，主要支持数据模型为 AGGREGATE，Duplicate
+  - Syntax: rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])] [PROPERTIES("key" = "value")]
  
-  - MySQL 可以在建表定义字段列表的时候，还可以在字段后面加上 Index 等约束，例如 primary key,unique key 等，但是 Doris 是通过定义数据模型来约束和计算的。
+  - MySQL does not support this feature.
 
-- index_definition_list 
-
-  - 索引列表定义，基本语法与 MySQL 类似，支持位图索引、倒排索引和 N-Gram 索引，但是布隆过滤器索引是通过属性设置。
-
-  - 而 MySQL 支持的 index 有 B+Tree，Hash。
-
-- engine_type 
-
-  - 表引擎类型，可选
-
-  - 目前支持的表引擎主要是 olap 这种原生引擎。
-
-  - MySQL 支持的存储引擎有：Innodb，MyISAM 等
-
-- keys_type 
-
-  - 数据模型，可选
-
-  - 支持的类型 
-
-    - DUPLICATE KEY（默认）：其后指定的列为排序列。
-
-    - AGGREGATE KEY：其后指定的列为维度列。
-
-    - UNIQUE KEY：其后指定的列为主键列。
-
-  - MySQL 则没有数据模型的概念。
-
-- table_comment 
-
-  - 表注释
-
-- partition_info 
-
-  - 分区算法，可选
-
-  - 支持的分区算法 
-
-    - LESS THAN：仅定义分区上界。下界由上一个分区的上界决定。
-
-    - FIXED RANGE：定义分区的左闭右开区间。
-
-    - MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。
-
-    - MULTI RANGE：批量创建数字类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。
-
-  - MySQL 支持的算法：Hash，Range，List，并且还支持子分区，子分区支持的算法只有 Hash。
-
-- distribution_desc 
-
-  - 分桶算法，必选
-
-  - 分桶算法 
-
-    - Hash 分桶语法：DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num|auto] 说明：使用指定的 key 列进行哈希分桶。
-
-    - Random 分桶语法：DISTRIBUTED BY RANDOM [BUCKETS num|auto] 说明：使用随机数进行分桶。
-
-  - MySQL 没有分桶算法
-
-- rollup_list 
-
-  - 建表的同时可以创建多个物化视图，可选
-
-  - rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])] [PROPERTIES("key" = "value")]
-
-  - MySQL 不支持
-
-- properties: 
-
-  - 表属性
-
-  - 表属性与 MySQL 的表属性不一致，定义表属性的语法也与 MySQL 不一致
+- properties:
+ 
+  - Table properties.
+ 
+  - Table properties in Doris are different from MySQL, and the syntax for defining table properties is also different from MySQL.
 
 **03 Create-Index**
 
@@ -240,9 +237,9 @@ distribution_desc
 CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING BITMAP];
 ```
 
-- 目前支持：位图索引、倒排索引和 N-Gram 索引，布隆过滤器索引（单独的语法设置）
+- Doris currently supports Bitmap index, Inverted index, and N-Gram index. BloomFilter index are supported as well, but they have a separate syntax for setting them.
 
-- MySQL 支持的索引算法有：B+Tree，Hash
+- MySQL supports index algorithms such as B+Tree and Hash.
 
 **04 Create-View**
 
@@ -263,21 +260,21 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
         AS query
 ```
 
-- 基本语法与 MySQL 一致
+- The basic syntax is consistent with MySQL.
 
-- Doris 支持两种物化视图，同步物化视图和异步物化视图（从 v2.1 开始）。Doris 的异步物化视图更加强大。
+- Doris supports two types of materialized views: synchronous materialized views and asynchronous materialized views (supported for v2.1). The asynchronous materialized views in Doris are more powerful.
 
-- MySQL 仅支持异步物化视图
+- MySQL only supports asynchronous materialized views.
 
 **05 Alter-Table/Alter-Index**
 
-Doris Alter 的语法与 MySQL 的基本一致。 
+The syntax of Doris ALTER is basically the same as that of MySQL.
 
-### Drop-Table/Drop-Index
+### **Drop-Table/Drop-Index**
 
-Doris Drop 的语法与 MySQL 的基本一致 
+The syntax of Doris DROP is basically the same as MySQL.
 
-### DML
+### **DML**
 
 **Insert**
 
@@ -290,7 +287,7 @@ INSERT INTO table_name
     { VALUES ( { expression | DEFAULT } [, ...] ) [, ...] | query }
 ```
 
-Doris Insert 语法与 MySQL 的基本一致。
+The Doris INSERT syntax is basically the same as MySQL.
 
 **Update**
 
@@ -309,7 +306,7 @@ value:
     {expr | DEFAULT}
 ```
 
-Doris Update 语法与 MySQL 基本一致，但需要注意的是**必须加上 where 条件。**
+The Doris UPDATE syntax is basically the same as MySQL, but it should be noted that the **`WHERE` condition must be added.**
 
 **Delete**
 
@@ -319,7 +316,7 @@ DELETE FROM table_name [table_alias]
     WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
-Doris 该语法只能指定过滤谓词
+The syntax can only specify filter predicates
 
 ```sql
 DELETE FROM table_name [table_alias]
@@ -328,9 +325,9 @@ DELETE FROM table_name [table_alias]
     WHERE condition
 ```
 
-Doris 该语法只能在 UNIQUE KEY 模型表上使用。
+This syntax can only be used on the UNIQUE KEY model table.
 
-Doris Delete 语法与 MySQL 基本一致。但是由于 Doris 是一个分析数据库，所以删除不能过于频繁。
+The Doris DELTE syntax is basically the same as MySQL. Due to Doris is an analytical database, deletions can't be too frequent.
 
 **Select**
 
@@ -353,8 +350,8 @@ SELECT
     [INTO OUTFILE 'file_name']
 ```
 
-Doris Select 语法与 MySQL 基本一致 
+The Doris SELECT syntax is basically the same as MySQL.
 
 ## SQL Function
 
-Doris Function 基本覆盖绝大部分 MySQL Function。
+Doris Function covers most MySQL functions.

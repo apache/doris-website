@@ -1,7 +1,7 @@
 ---
 {
-    "title": "异步物化视图",
-    "language": "zh-CN"
+    "title": "Asynchronous materialized view",
+    "language": "en"
 }
 ---
 
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 异步物化视图
+# Asynchronous materialized view
 
-## 物化视图的构建和维护
+## Construction and maintenance of materialized views
 
-### 创建物化视图
+### Create materialized views
 
-准备两张表和数据
+Prepare two tables and data
 ```sql
 use tpch;
 
@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS orders  (
     PROPERTIES ("replication_num" = "1");
 
 insert into orders values
-   (1, 1, 'o', 99.5, '2023-10-17', 'a', 'b', 1, 'yy'),
-   (2, 2, 'o', 109.2, '2023-10-18', 'c','d',2, 'mm'),
-   (3, 3, 'o', 99.5, '2023-10-19', 'a', 'b', 1, 'yy');
+   (1, 1, 'ok', 99.5, '2023-10-17', 'a', 'b', 1, 'yy'),
+   (2, 2, 'ok', 109.2, '2023-10-18', 'c','d',2, 'mm'),
+   (3, 3, 'ok', 99.5, '2023-10-19', 'a', 'b', 1, 'yy');
 
 CREATE TABLE IF NOT EXISTS lineitem (
     l_orderkey    integer not null,
@@ -85,7 +85,7 @@ insert into lineitem values
  (2, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
  (3, 2, 3, 6, 7.5, 8.5, 9.5, 10.5, 'k', 'o', '2023-10-19', '2023-10-19', '2023-10-19', 'c', 'd', 'xxxxxxxxx');
 ```
-创建物化视图
+Create materialized views
 ```sql
 CREATE MATERIALIZED VIEW mv1 
         BUILD DEFERRED REFRESH AUTO ON MANUAL
@@ -103,150 +103,111 @@ CREATE MATERIALIZED VIEW mv1
             l_suppkey;
 ```
 
-具体的语法可查看[CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
-### 查看物化视图元信息
+### View materialized view meta information
 
 ```sql
 select * from mv_infos("database"="tpch") where Name="mv1";
 ```
 
-物化视图独有的特性可以通过[mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos.md)查看
+The unique features of materialized views can be viewed through [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos.md)
 
-和table相关的属性，仍通过[SHOW TABLES](../../sql-manual/sql-reference/Show-Statements/SHOW-TABLES.md)来查看
+Properties related to table, still viewed through [SHOW TABLES](../../sql-manual/sql-reference/Show-Statements/SHOW-TABLES.md)
 
-### 刷新物化视图
+### Refresh materialized view
 
-物化视图支持不同刷新策略，如定时刷新和手动刷新。也支持不同的刷新粒度，如全量刷新，分区粒度的增量刷新等。这里我们以手动刷新物化视图的部分分区为例。
+The materialized view supports different refresh strategies, such as scheduled refresh and manual refresh. It also supports different refresh granularity, such as full refresh, incremental refresh of partition granularity, etc. Here we take manually refreshing partial partitions of the materialized view as an example.
 
-首先查看物化视图分区列表
+First, check the list of materialized view partitions
 ```sql
 SHOW PARTITIONS FROM mv1;
 ```
 
-刷新名字为`p_20231017_20231018`的分区
+Refresh partition named `p_20231017_20231018`
 ```sql
 REFRESH MATERIALIZED VIEW mv1 partitions(p_20231017_20231018);
 ```
 
-具体的语法可查看[REFRESH MATERIALIZED VIEW](../../sql-manual/sql-reference/Utility-Statements/REFRESH-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [REFRESH MATERIALIZED VIEW](../../sql-manual/sql-reference/Utility-Statements/REFRESH-MATERIALIZED-VIEW.md)
 
-### 任务管理
+### task management
 
-每个物化视图都会默认有一个job负责刷新数据，job用来描述物化视图的刷新策略等信息，每次触发刷新，都会产生一个task，
-task用来描述具体的一次刷新信息，例如刷新用的时间，刷新了哪些分区等
+Each materialized view defaults to a job responsible for refreshing data, which is used to describe the refresh strategy and other information of the materialized view. Each time a refresh is triggered, a task is generated,
+Task is used to describe specific refresh information, such as the time used for refreshing, which partitions were refreshed, etc
 
-#### 查看物化视图的job
+#### View jobs in materialized views
 
 ```sql
 select * from jobs("type"="mv") order by CreateTime;
 ```
 
-具体的语法可查看[jobs("type"="mv")](../../sql-manual/sql-functions/table-functions/jobs.md)
+Specific syntax can be viewed [jobs("type"="mv")](../../sql-manual/sql-functions/table-functions/jobs.md)
 
-#### 暂停物化视图job定时调度
+#### Pause materialized view job scheduled scheduling
 
 ```sql
 PAUSE MATERIALIZED VIEW JOB ON mv1;
 ```
 
-可以暂停物化视图的定时调度
+Can pause the scheduled scheduling of materialized views
 
-具体的语法可查看[PAUSE MATERIALIZED VIEW JOB](../../sql-manual/sql-reference/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [PAUSE MATERIALIZED VIEW JOB](../../sql-manual/sql-reference/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
 
-#### 恢复物化视图job定时调度
+#### RESUME materialized view job scheduling
 
 ```sql
 RESUME MATERIALIZED VIEW JOB ON mv1;
 ```
 
-可以恢复物化视图的定时调度
+Can RESUME scheduled scheduling of materialized views
 
-具体的语法可查看[RESUME MATERIALIZED VIEW JOB](../../sql-manual/sql-reference/Utility-Statements/RESUME-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [RESUME MATERIALIZED VIEW JOB](../../sql-manual/sql-reference/Utility-Statements/RESUME-MATERIALIZED-VIEW.md)
 
-#### 查看物化视图的task
+#### Viewing tasks in materialized views
 
 ```sql
 select * from tasks("type"="mv");
 ```
 
-具体的语法可查看[tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
+Specific syntax can be viewed [tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
 
-#### 取消物化视图的task
+#### Cancel the task of objectifying the view
 
 ```sql
 CANCEL MATERIALIZED VIEW TASK realTaskId on mv1;
 ```
 
-可以取消本次task的运行
+Can cancel the operation of this task
 
-具体的语法可查看[CANCEL MATERIALIZED VIEW TASK](../../sql-manual/sql-reference/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK.md)
+Specific syntax can be viewed [CANCEL MATERIALIZED VIEW TASK](../../sql-manual/sql-reference/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK.md)
 
-### 修改物化视图
+### Modifying materialized views
 
-修改物化视图的属性
+Modify the properties of materialized views
 ```sql
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3333");
 ```
 
-修改物化视图的名字，物化视图的刷新方式及物化视图特有的property可通过[ALTER ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW.md)来修改
+Modify the name of the materialized view, the refresh method of the materialized view, and the unique properties of the materialized view can be viewed through [ALTER ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW.md)
 
-物化视图本身也是一个 Table，所以 Table 相关的属性，例如副本数，仍通过`ALTER TABLE`相关的语法来修改。
+The materialized view itself is also a Table, so Table related properties, such as the number of copies, are still modified through the syntax related to `ALTER TABLE`.
 
-### 删除物化视图
+### Delete materialized view
 
 ```sql
 DROP MATERIALIZED VIEW mv1;
 ```
 
-物化视图有专门的删除语法，不能通过drop table来删除，
+The materialized view has a dedicated deletion syntax and cannot be deleted through the drop table,
 
-具体的语法可查看[DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
 
-## 最佳实践
-### 基表分区过多，物化视图只关注最近一段时间的数据
-创建基表，有三个分区
-```sql
-CREATE TABLE t1 (
-    `k1` INT,
-    `k2` DATE NOT NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`k1`)
-COMMENT 'OLAP'
-PARTITION BY range(`k2`)
-(
-PARTITION p26 VALUES [("2024-03-26"),("2024-03-27")),
-PARTITION p27 VALUES [("2024-03-27"),("2024-03-28")),
-PARTITION p28 VALUES [("2024-03-28"),("2024-03-29"))
-)
-DISTRIBUTED BY HASH(`k1`) BUCKETS 2
-PROPERTIES (
-'replication_num' = '1'
-);
-```
-创建物化视图，只关注最近一天的数据，如果当前时间为2024-03-28 xx:xx:xx， 这样物化视图会仅有一个分区[("2024-03-28"),("2024-03-29"))
-```sql
-CREATE MATERIALIZED VIEW mv1
-BUILD DEFERRED REFRESH AUTO ON MANUAL
-partition by(`k2`)
-DISTRIBUTED BY RANDOM BUCKETS 2
-PROPERTIES (
-'replication_num' = '1',
-'partition_sync_limit'='1',
-'partition_sync_time_unit'='DAY'
-)
-AS
-SELECT * FROM t1;
-```
-时间又过了一天，当前时间为2024-03-29 xx:xx:xx，`t1`新增一个分区[("2024-03-29"),("2024-03-30"))，如果此时刷新物化视图，刷新完成后，物化视图会仅有一个分区[("2024-03-29"),("2024-03-30"))
+## The use of materialized views
 
+can be viewed [Query async materialized view](./query-async-materialized-view.md)
 
-## 物化视图的使用
+## Notice
 
-请参阅 [查询异步物化视图](./query-async-materialized-view.md)
-
-## 注意事项
-
-- 异步物化视图仅支持在[Nereids 优化器](../nereids.md)使用
-- 当前判断物化视图和基表是否同步仅支持`OlapTable`。对于其它外表，会直接认为是同步的。例如，物化视图的基表全是外表。在查询`mv_infos()`时，SyncWithBaseTables会永远为1（true）。在刷新物化视图时需要手动刷新指定的分区或指定`complete`刷新全部分区
-
+- Asynchronous materialized views are only supported for use in the [Nereids optimizer](../nereids.md)
+- Currently, determining the synchronization between materialized views and base tables is only supported for `OlapTable`. For other types of external tables, they are directly considered to be synchronized. For instance, if the base tables of a materialized view are all external tables, they are assumed to be synchronized. When querying `mv_infos()`, the SyncWithBaseTables flag will always return 1 (true) for these external tables. When refreshing a materialized view, it is necessary to manually refresh specific partitions or specify `complete` to refresh all partitions.

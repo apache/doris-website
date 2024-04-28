@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FAQ",
+    "title": "Lakehouse FAQ",
     "language": "en"
 }
 ---
@@ -236,7 +236,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     </property> 
    ```
 
-10. Error：java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
+10. Error: java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
 
     Entire error info found in FE.log is shown as below:
     ```
