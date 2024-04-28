@@ -396,7 +396,6 @@ ON a.city = c.city
 | ARRAY      | ARRAY             |
 | MAP        | MAP             |
 | JSON       | STRING             |
-| JSON       | STRING |
 | VARIANT    | STRING |
 | IPV4       | STRING |
 | IPV6       | STRING |
