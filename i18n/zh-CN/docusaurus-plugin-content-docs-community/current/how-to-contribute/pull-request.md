@@ -82,7 +82,7 @@ git commit -a -m "<you_commit_message>"
 git push origin <your_branch_name>
 ```
 
-更多 git 使用方法请访问：[git 使用](https://www.atlassian.com/git/tutorials/setting-up-a-repository)，这里不赘述。
+更多 git 使用方法请访问：[git 使用](https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories)，这里不赘述。
 
 ## 3. 创建 PR
 

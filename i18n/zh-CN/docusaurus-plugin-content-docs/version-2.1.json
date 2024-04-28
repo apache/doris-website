@@ -67,6 +67,10 @@
     "message": "数据湖分析",
     "description": "The label for category Data Lake Analytics in sidebar docs"
   },
+  "sidebar.docs.category.Data Lake Building": {
+    "message": "数据湖构建",
+    "description": "The label for category Data Lake Building in sidebar docs"
+  },
   "sidebar.docs.category.Database Analytics": {
     "message": "数据库分析",
     "description": "The label for category Database Analytics.Multi Catalog in sidebar docs"
