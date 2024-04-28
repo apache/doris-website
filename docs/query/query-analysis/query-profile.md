@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Query Profile",
-    "language": "zh-CN"
+    "title": "Statistics of query execution",
+    "language": "en"
 }
 ---
 
@@ -24,44 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Statistics of query execution
 
+This document focuses on introducing the **Running Profile** which recorded runtime status of Doris in query execution. Using these statistical information, we can understand the execution of fragment to become a expert of Doris's **debugging and tuning**.
 
+You can also refer to following statements to view profile in command line:
 
+- [SHOW QUERY PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-QUERY-PROFILE.md)
+- [SHOW LOAD PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD-PROFILE.md)
 
-本文档主要介绍 Doris 在查询执行的统计结果。利用这些统计的信息，可以更好的帮助我们了解 Doris 的执行情况，并有针对性的进行相应**Debug 与调优工作**。
+## Noun Interpretation
 
-也可以参考如下语法在命令行中查看导入和查询的 Profile：
+* **FE**: Frontend, frontend node of Doris. Responsible for metadata management and request access.
 
-- [SHOW QUERY PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-QUERY-PROFILE)
+* **BE**: Backend, backend node of Doris. Responsible for query execution and data storage.
 
-- [SHOW LOAD PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD-PROFILE)
+* **Fragment**: FE will convert the execution of specific SQL statements into corresponding fragments and distribute them to BE for execution. BE will execute corresponding fragments and gather the result of RunningProfile to send back FE.
 
-## 名词解释
+## Basic concepts
 
-* FE：Frontend，Doris 的前端节点。负责元数据管理和请求接入。
+FE splits the query plan into fragments and distributes them to BE for task execution. BE records the statistics of **Running State** when executing fragment. BE print the outputs statistics of fragment execution into the log. FE can also collect these statistics recorded by each fragment and print the results on FE's web page.
 
-* BE：Backend，Doris 的后端节点。负责查询执行和数据存储。
+## Specific operation
 
-* Fragment：FE 会将具体的 SQL 语句的执行转化为对应的 Fragment 并下发到 BE 进行执行。BE 上执行对应 Fragment，并将结果汇聚返回给 FE。
+Turn on the report switch on FE through MySQL command
 
-## 基本原理
-
-FE 将查询计划拆分成为 Fragment 下发到 BE 进行任务执行。BE 在执行 Fragment 时记录了**运行状态时的统计值**，并将 Fragment 执行的统计信息输出到日志之中。FE 也可以通过开关将各个 Fragment 记录的这些统计值进行搜集，并在 FE 的 Web 页面上打印结果。
-
-## 操作流程
-
-通过 Mysql 命令，将 FE 上的 Report 的开关打开
-
-```sql
+```
 mysql> set enable_profile=true; 
 ```
 
-之后执行对应的 SQL 语句之后（旧版本为`is_report_success`），在 FE 的 Web 页面就可以看到对应 SQL 语句执行的 Report 信息：
+After executing the corresponding SQL statement(`is_report_success` in old versions), we can see the report information of the corresponding SQL statement on the FE web page like the picture below.
 ![image.png](/images/running_profile.png)
 
-这里会列出最新执行完成的**100 条语句**，我们可以通过 Profile 查看详细的统计信息。
-
-```sql
+The latest  **100 statements** executed will be listed here. We can view detailed statistics of RunningProfile.
+```
 Query:
   Summary:
     Query ID: 9664061c57e84404-85ae111b8ba7e83a
@@ -75,9 +71,8 @@ Query:
     Default Db: default_cluster:test
     Sql Statement: select max(Bid_Price) from quotes group by Symbol
 ```
-这里详尽的列出了**查询的 ID，执行时间，执行语句**等等的总结信息。接下来内容是打印从 BE 收集到的各个 Fragment 的详细信息。
-
- ```sql
+Here is a detailed list of  ```query ID, execution time, execution statement``` and other summary information. The next step is to print the details of each fragment collected from be.
+ ```
     Fragment 0:
       Instance 9664061c57e84404-85ae111b8ba7e83d (host=TNetworkAddress(hostname:192.168.0.1, port:9060)):(Active: 10s270ms, % non-child: 0.14%)
          - MemoryLimit: 2.00 GB
@@ -94,276 +89,190 @@ Query:
            - MemoryUsed: 0.00 
            - RowsReturnedRate: 811
  ```
-这里列出了 Fragment 的 ID；```hostname```指的是执行 Fragment 的 BE 节点；```Active：10s270ms```表示该节点的执行总时间；```non-child: 0.14%```表示执行节点自身的执行时间（不包含子节点的执行时间）占总时间的百分比；
+The fragment ID is listed here; ``` hostname ``` show the be node executing the fragment; ```active: 10s270ms```show the total execution time of the node;  ```non child: 0.14%``` means the execution time of the execution node itself (not including the execution time of child nodes) as a percentage of the total time. 
+
+`PeakMemoryUsage` indicates the peak memory usage of `EXCHANGE_NODE`; `RowsReturned` indicates the number of rows returned by `EXCHANGE_NODE`; `RowsReturnedRate`=`RowsReturned`/`ActiveTime`; the meaning of these three statistics in other `NODE` the same.
+
+Subsequently, the statistics of the child nodes will be printed in turn. **here you can distinguish the parent-child relationship by intent**.
+
+## Profile statistic analysis
+
+There are many statistical information collected at BE.  so we list the corresponding meanings of profile are below:
+
+#### `Fragment`
+   - AverageThreadTokens: Number of threads used to execute fragment, excluding the usage of thread pool
+   - PeakReservation: Peak memory used by buffer pool
+   - MemoryLimit: Memory limit at query
+   - PeakMemoryUsage: Peak memory usage of instance
+   - RowsProduced: Number of rows that process
+
+#### `BlockMgr`
+  - BlocksCreated: Number of Block be created by BlockMgr
+  - BlocksRecycled: Number of Block be recycled by BlockMgr
+  - BytesWritten: How many bytes be written to spill to disk
+  - MaxBlockSize: Max size of one Block
+  - TotalReadBlockTime: Total time read block from disk
+
+#### `DataStreamSender`
+ - BytesSent: Total bytes data sent
+ - IgnoreRows: Rows filtered
+ - LocalBytesSent: The amount bytes of local node send to it's self during Exchange
+ - OverallThroughput: Total throughput = BytesSent / Time
+ - SerializeBatchTime: Sending data serialization time
+ - UncompressedRowBatchSize: Size of rowbatch before sending data compression
+
+#### `ODBC_TABLE_SINK`
+   - NumSentRows: Total number of rows written to ODBC table
+   - TupleConvertTime: Time consuming of sending data serialization to insert statement
+   - ResultSendTime: Time consuming of writing through ODBC driver
+
+#### `EXCHANGE_NODE`
+  - BytesReceived: Size of bytes received by network
+  - DataArrivalWaitTime: Total waiting time of sender to push data 
+  - MergeGetNext: When there is a sort in the lower level node, exchange node will perform a unified merge sort and output an ordered result. This indicator records the total time consumption of merge sorting, including the time consumption of MergeGetNextBatch.
+  - MergeGetNextBatch: It takes time for merge node to get data. If it is single-layer merge sort, the object to get data is network queue. For multi-level merge sorting, the data object is child merger.
+  - ChildMergeGetNext: When there are too many senders in the lower layer to send data, single thread merge will become a performance bottleneck. Doris will start multiple child merge threads to do merge sort in parallel. The sorting time of child merge is recorded, which is the cumulative value of multiple threads.
+  - ChildMergeGetNextBatch: It takes time for child merge to get data, If the time consumption is too large, the bottleneck may be the lower level data sending node.
+  - FirstBatchArrivalWaitTime: The time waiting for the first batch come from sender
+  - DeserializeRowBatchTimer: Time consuming to receive data deserialization
+  - SendersBlockedTotalTimer(*): When the DataStreamRecv's queue buffer is full, wait time of sender
+  - ConvertRowBatchTime: Time taken to transfer received data to RowBatch
+  - RowsReturned: Number of receiving rows
+  - RowsReturnedRate: Rate of rows received
+
+#### `SORT_NODE`
+  - InMemorySortTime: In memory sort time
+  - InitialRunsCreated: Number of initialize sort run
+  - MergeGetNext: Time cost of MergeSort from multiple sort_run to get the next batch (only show spilled disk)
+  - MergeGetNextBatch: Time cost MergeSort one sort_run to get the next batch (only show spilled disk)
+  - SortDataSize: Total sorted data
+  - TotalMergesPerformed: Number of external sort merges
+
+#### `AGGREGATION_NODE`
+  - PartitionsCreated: Number of partition split by aggregate
+  - GetResultsTime: Time to get aggregate results from each partition
+  - HTResizeTime: Time spent in resizing hashtable
+  - HTResize: Number of times hashtable resizes
+  - HashBuckets: Number of buckets in hashtable
+  - HashBucketsWithDuplicate: Number of buckets with duplicate node in hashtable
+  - HashCollisions: Number of hash conflicts generated 
+  - HashDuplicateNodes: Number of duplicate nodes with the same buckets in hashtable
+  - HashFailedProbe: Number of failed probe operations
+  - HashFilledBuckets: Number of buckets filled data
+  - HashProbe: Number of hashtable probe
+  - HashTravelLength: The number of steps moved when hashtable queries
+
+#### `HASH_JOIN_NODE`
+  - ExecOption: The way to construct a HashTable for the right child (synchronous or asynchronous), the right child in Join may be a table or a subquery, the same is true for the left child
+  - BuildBuckets: The number of Buckets in HashTable
+  - BuildRows: the number of rows of HashTable
+  - BuildTime: Time-consuming to construct HashTable
+  - LoadFactor: Load factor of HashTable (ie the number of non-empty buckets)
+  - ProbeRows: Traverse the number of rows of the left child for Hash Probe
+  - ProbeTime: Time consuming to traverse the left child for Hash Probe, excluding the time consuming to call GetNext on the left child RowBatch
+  - PushDownComputeTime: The calculation time of the predicate pushdown condition
+  - PushDownTime: The total time consumed by the predicate push down. When Join, the right child who meets the requirements is converted to the left child's in query
+
+#### `CROSS_JOIN_NODE`
+  - ExecOption: The way to construct RowBatchList for the right child (synchronous or asynchronous)
+  - BuildRows: The number of rows of RowBatchList (ie the number of rows of the right child)
+  - BuildTime: Time-consuming to construct RowBatchList
+  - LeftChildRows: the number of rows of the left child
+  - LeftChildTime: The time it takes to traverse the left child and find the Cartesian product with the right child, not including the time it takes to call GetNext on the left child RowBatch
+
+#### `UNION_NODE`
+  - MaterializeExprsEvaluateTime: When the field types at both ends of the Union are inconsistent, the time spent to evaluates type conversion exprs and materializes the results 
+
+#### `ANALYTIC_EVAL_NODE`
+  - EvaluationTime: Analysis function (window function) calculation total time
+  - GetNewBlockTime: It takes time to apply for a new block during initialization. Block saves the cache line window or the entire partition for analysis function calculation
+  - PinTime: the time it takes to apply for a new block later or reread the block written to the disk back to the memory
+  - UnpinTime: the time it takes to flush the data of the block to the disk when the memory pressure of the block that is not in use or the current operator is high
+
+#### `OLAP_SCAN_NODE`
 
-`PeakMemoryUsage`表示`EXCHANGE_NODE`内存使用的峰值；`RowsReturned`表示`EXCHANGE_NODE`结果返回的行数；`RowsReturnedRate`=`RowsReturned`/`ActiveTime`；这三个统计信息在其他`NODE`中的含义相同。
+The `OLAP_SCAN_NODE` is responsible for specific data scanning tasks. One `OLAP_SCAN_NODE` will generate one or more `OlapScanner`. Each Scanner thread is responsible for scanning part of the data.
 
-后续依次打印子节点的统计信息，**这里可以通过缩进区分节点之间的父子关系**。
+Some or all of the predicate conditions in the query will be pushed to `OLAP_SCAN_NODE`. Some of these predicate conditions will continue to be pushed down to the storage engine in order to use the storage engine's index for data filtering. The other part will be kept in `OLAP_SCAN_NODE` to filter the data returned from the storage engine.
 
-## Profile 参数解析
+The profile of the `OLAP_SCAN_NODE` node is usually used to analyze the efficiency of data scanning. It is divided into three layers: `OLAP_SCAN_NODE`, `OlapScanner`, and `SegmentIterator` according to the calling relationship.
 
-BE 端收集的统计信息较多，下面列出了各个参数的对应含义：
-
-**`Fragment`**
-
-- AverageThreadTokens: 执行 Fragment 使用线程数目，不包含线程池的使用情况
-
-- Buffer Pool PeakReservation: Buffer Pool 使用的内存的峰值
-
-- MemoryLimit: 查询时的内存限制
-
-- PeakMemoryUsage: 整个 Instance 在查询时内存使用的峰值
-
-- RowsProduced: 处理列的行数
-
-**`BlockMgr`**
-
-- BlocksCreated: BlockMgr 创建的 Blocks 数目
-
-- BlocksRecycled: 重用的 Blocks 数目
-
-- BytesWritten: 总的落盘写数据量
-
-- MaxBlockSize: 单个 Block 的大小
-
-- TotalReadBlockTime: 读 Block 的总耗时
-
-**`DataStreamSender`**
-
-- BytesSent: 发送的总数据量 = 接受者 * 发送数据量
-
-- IgnoreRows: 过滤的行数
-
-- LocalBytesSent: 数据在 Exchange 过程中，记录本机节点的自发自收数据量
-
-- OverallThroughput: 总的吞吐量 = BytesSent / 时间
-
-- SerializeBatchTime: 发送数据序列化消耗的时间
-
-- UncompressedRowBatchSize: 发送数据压缩前的 RowBatch 的大小
-
-**`ODBC_TABLE_SINK`**
-- NumSentRows: 写入外表的总行数
-
-- TupleConvertTime: 发送数据序列化为 Insert 语句的耗时
-
-- ResultSendTime: 通过 ODBC Driver 写入的耗时
-
-**`EXCHANGE_NODE`**
-- BytesReceived: 通过网络接收的数据量大小
-
-- MergeGetNext: 当下层节点存在排序时，会在 EXCHANGE NODE 进行统一的归并排序，输出有序结果。该指标记录了 Merge 排序的总耗时，包含了 MergeGetNextBatch 耗时。
-
-- MergeGetNextBatch：Merge 节点取数据的耗时，如果为单层 Merge 排序，则取数据的对象为网络队列。若为多层 Merge 排序取数据对象为 Child Merger。
-
-- ChildMergeGetNext: 当下层的发送数据的 Sender 过多时，单线程的 Merge 会成为性能瓶颈，Doris 会启动多个 Child Merge 线程并行归并排序。记录了 Child Merge 的排序耗时  该数值是多个线程的累加值。
-
-- ChildMergeGetNextBatch: Child Merge 节点从取数据的耗时，如果耗时过大，可能的瓶颈为下层的数据发送节点。 
-
-- DataArrivalWaitTime: 等待 Sender 发送数据的总时间
-
-- FirstBatchArrivalWaitTime: 等待第一个 batch 从 Sender 获取的时间
-
-- DeserializeRowBatchTimer: 反序列化网络数据的耗时
-
-- SendersBlockedTotalTimer(*): DataStreamRecv 的队列的内存被打满，Sender 端等待的耗时
-
-- ConvertRowBatchTime: 接收数据转为 RowBatch 的耗时
-
-- RowsReturned: 接收行的数目
-
-- RowsReturnedRate: 接收行的速率
-
-**`SORT_NODE`**
-- InMemorySortTime: 内存之中的排序耗时
-
-- InitialRunsCreated: 初始化排序的趟数（如果内存排序的话，该数为 1）
-
-- SortDataSize: 总的排序数据量
-
-- MergeGetNext: MergeSort 从多个 sort_run 获取下一个 batch 的耗时 (仅在落盘时计时）
-
-- MergeGetNextBatch: MergeSort 提取下一个 sort_run 的 batch 的耗时 (仅在落盘时计时）
-
-- TotalMergesPerformed: 进行外排 merge 的次数
-
-**`AGGREGATION_NODE`**
-- PartitionsCreated: 聚合查询拆分成 Partition 的个数
-
-- GetResultsTime: 从各个 partition 之中获取聚合结果的时间
-
-- HTResizeTime:  HashTable 进行 resize 消耗的时间
-
-- HTResize:  HashTable 进行 resize 的次数
-
-- HashBuckets:  HashTable 中 Buckets 的个数
-
-- HashBucketsWithDuplicate:  HashTable 有 DuplicateNode 的 Buckets 的个数
-
-- HashCollisions:  HashTable 产生哈希冲突的次数
-
-- HashDuplicateNodes:  HashTable 出现 Buckets 相同 DuplicateNode 的个数
-
-- HashFailedProbe:  HashTable Probe 操作失败的次数
-
-- HashFilledBuckets:  HashTable 填入数据的 Buckets 数目
-
-- HashProbe:  HashTable 查询的次数
-
-- HashTravelLength:  HashTable 查询时移动的步数
-
-**`HASH_JOIN_NODE`**
-- ExecOption: 对右孩子构造 HashTable 的方式（同步 or 异步），Join 中右孩子可能是表或子查询，左孩子同理
-
-- BuildBuckets: HashTable 中 Buckets 的个数
-
-- BuildRows: HashTable 的行数
-
-- BuildTime: 构造 HashTable 的耗时
-
-- LoadFactor: HashTable 的负载因子（即非空 Buckets 的数量）
-
-- ProbeRows: 遍历左孩子进行 Hash Probe 的行数
-
-- ProbeTime: 遍历左孩子进行 Hash Probe 的耗时，不包括对左孩子 RowBatch 调用 GetNext 的耗时
-
-- PushDownComputeTime: 谓词下推条件计算耗时
-
-- PushDownTime: 谓词下推的总耗时，Join 时对满足要求的右孩子，转为左孩子的 in 查询
-
-**`CROSS_JOIN_NODE`**
-
-- ExecOption: 对右孩子构造 RowBatchList 的方式（同步 or 异步）
-
-- BuildRows: RowBatchList 的行数（即右孩子的行数）
-
-- BuildTime: 构造 RowBatchList 的耗时
-
-- LeftChildRows: 左孩子的行数
-
-- LeftChildTime: 遍历左孩子，和右孩子求笛卡尔积的耗时，不包括对左孩子 RowBatch 调用 GetNext 的耗时
-
-**`UNION_NODE`**
-
-- MaterializeExprsEvaluateTime: Union 两端字段类型不一致时，类型转换表达式计算及物化结果的耗时
-
-**`ANALYTIC_EVAL_NODE`**
-- EvaluationTime: 分析函数（窗口函数）计算总耗时
-
-- GetNewBlockTime: 初始化时申请一个新的 Block 的耗时，Block 用来缓存 Rows 窗口或整个分区，用于分析函数计算
-
-- PinTime: 后续申请新的 Block 或将写入磁盘的 Block 重新读取回内存的耗时
-
-- UnpinTime: 对暂不需要使用的 Block 或当前操作符内存压力大时，将 Block 的数据刷入磁盘的耗时
-
-**`OLAP_SCAN_NODE`**
-
-`OLAP_SCAN_NODE` 节点负责具体的数据扫描任务。一个 `OLAP_SCAN_NODE` 会生成一个或多个 `OlapScanner` 。每个 Scanner 线程负责扫描部分数据。
-
-查询中的部分或全部谓词条件会推送给 `OLAP_SCAN_NODE`。这些谓词条件中一部分会继续下推给存储引擎，以便利用存储引擎的索引进行数据过滤。另一部分会保留在 `OLAP_SCAN_NODE` 中，用于过滤从存储引擎中返回的数据。
-
-`OLAP_SCAN_NODE` 节点的 Profile 通常用于分析数据扫描的效率，依据调用关系分为 `OLAP_SCAN_NODE`、`OlapScanner`、`SegmentIterator` 三层。
-
-一个典型的 `OLAP_SCAN_NODE` 节点的 Profile 如下。部分指标会因存储格式的不同（V1 或 V2）而有不同含义。
+The profile of a typical `OLAP_SCAN_NODE` is as follows. Some indicators will have different meanings depending on the storage format (V1 or V2).
 
 ```
-OLAP_SCAN_NODE (id=0):(Active: 1.2ms, % non-child: 0.00%)
-  - BytesRead: 265.00 B                 # 从数据文件中读取到的数据量。假设读取到了是10个32位整型，则数据量为 10 * 4B = 40 Bytes。这个数据仅表示数据在内存中全展开的大小，并不代表实际的 IO 大小。 
-  - NumDiskAccess: 1                    # 该 ScanNode 节点涉及到的磁盘数量。
-  - NumScanners: 20                     # 该 ScanNode 生成的 Scanner 数量。
-  - PeakMemoryUsage: 0.00               # 查询时内存使用的峰值，暂未使用
-  - RowsRead: 7                         # 从存储引擎返回到 Scanner 的行数，不包括经 Scanner 过滤的行数。
-  - RowsReturned: 7                     # 从 ScanNode 返回给上层节点的行数。
+OLAP_SCAN_NODE (id=0):(Active: 1.2ms,% non-child: 0.00%)
+  - BytesRead: 265.00 B                 # The amount of data read from the data file. Assuming that 10 32-bit integers are read, the amount of data is 10 * 4B = 40 Bytes. This data only represents the fully expanded size of the data in memory, and does not represent the actual IO size.
+  - NumDiskAccess: 1                    # The number of disks involved in this ScanNode node.
+  - NumScanners: 20                     # The number of Scanners generated by this ScanNode.
+  - PeakMemoryUsage: 0.00               # Peak memory usage during query, not used yet
+  - RowsRead: 7                         # The number of rows returned from the storage engine to the Scanner, excluding the number of rows filtered by the Scanner.
+  - RowsReturned: 7                     # The number of rows returned from ScanNode to the upper node.
   - RowsReturnedRate: 6.979K /sec       # RowsReturned/ActiveTime
-  - TabletCount : 20                    # 该 ScanNode 涉及的 Tablet 数量。
-  - TotalReadThroughput: 74.70 KB/sec   # BytesRead除以该节点运行的总时间（从Open到Close），对于IO受限的查询，接近磁盘的总吞吐量。
-  - ScannerBatchWaitTime: 426.886us     # 用于统计transfer 线程等待scanner 线程返回rowbatch的时间。在Pipeline调度中，此值无意义。
-  - ScannerWorkerWaitTime: 17.745us     # 用于统计scanner thread 等待线程池中可用工作线程的时间。
+  - TabletCount: 20                     # The number of Tablets involved in this ScanNode.
+  - TotalReadThroughput: 74.70 KB/sec   # BytesRead divided by the total time spent in this node (from Open to Close). For IO bounded queries, this should be very close to the total throughput of all the disks
+  - ScannerBatchWaitTime: 426.886us     # To count the time the transfer thread waits for the scanner thread to return rowbatch. In pipeline, this value is always 0.
+  - ScannerWorkerWaitTime: 17.745us     # To count the time that the scanner thread waits for the available worker threads in the thread pool.
   OlapScanner:
-    - BlockConvertTime: 8.941us         # 将向量化Block转换为行结构的 RowBlock 的耗时。向量化 Block 在 V1 中为 VectorizedRowBatch，V2中为 RowBlockV2。
-    - BlockFetchTime: 468.974us         # Rowset Reader 获取 Block 的时间。
-    - ReaderInitTime: 5.475ms           # OlapScanner 初始化 Reader 的时间。V1 中包括组建 MergeHeap 的时间。V2 中包括生成各级 Iterator 并读取第一组Block的时间。
-    - RowsDelFiltered: 0                # 包括根据 Tablet 中存在的 Delete 信息过滤掉的行数，以及 unique key 模型下对被标记的删除行过滤的行数。
-    - RowsPushedCondFiltered: 0         # 根据传递下推的谓词过滤掉的条件，比如 Join 计算中从 BuildTable 传递给 ProbeTable 的条件。该数值不准确，因为如果过滤效果差，就不再过滤了。
-    - ScanTime: 39.24us                 # 从 ScanNode 返回给上层节点的时间。
-    - ShowHintsTime_V1: 0ns             # V2 中无意义。V1 中读取部分数据来进行 ScanRange 的切分。
+    - BlockConvertTime: 8.941us         # The time it takes to convert a vectorized Block into a RowBlock with a row structure. The vectorized Block is VectorizedRowBatch in V1 and RowBlockV2 in V2.
+    - BlockFetchTime: 468.974us         # Rowset Reader gets the time of the Block.
+    - ReaderInitTime: 5.475ms           # The time when OlapScanner initializes Reader. V1 includes the time to form MergeHeap. V2 includes the time to generate various Iterators and read the first group of blocks.
+    - RowsDelFiltered: 0                # Including the number of rows filtered out according to the Delete information in the Tablet, and the number of rows filtered for marked deleted rows under the unique key model.
+    - RowsPushedCondFiltered: 0         # Filter conditions based on the predicates passed down, such as the conditions passed from BuildTable to ProbeTable in Join calculation. This value is not accurate, because if the filtering effect is poor, it will no longer be filtered.
+    - ScanTime: 39.24us                 # The time returned from ScanNode to the upper node.
+    - ShowHintsTime_V1: 0ns             # V2 has no meaning. Read part of the data in V1 to perform ScanRange segmentation.
     SegmentIterator:
-      - BitmapIndexFilterTimer: 779ns   # 利用 bitmap 索引过滤数据的耗时。
-      - BlockLoadTime: 415.925us        # SegmentReader(V1) 或 SegmentIterator(V2) 获取 block 的时间。
-      - BlockSeekCount: 12              # 读取 Segment 时进行 block seek 的次数。
-      - BlockSeekTime: 222.556us        # 读取 Segment 时进行 block seek 的耗时。
-      - BlocksLoad: 6                   # 读取 Block 的数量
-      - CachedPagesNum: 30              # 仅 V2 中，当开启 PageCache 后，命中 Cache 的 Page 数量。
-      - CompressedBytesRead: 0.00       # V1 中，从文件中读取的解压前的数据大小。V2 中，读取到的没有命中 PageCache 的 Page 的压缩前的大小。
-      - DecompressorTimer: 0ns          # 数据解压耗时。
-      - IOTimer: 0ns                    # 实际从操作系统读取数据的 IO 时间。
-      - IndexLoadTime_V1: 0ns           # 仅 V1 中，读取 Index Stream 的耗时。
-      - NumSegmentFiltered: 0           # 在生成 Segment Iterator 时，通过列统计信息和查询条件，完全过滤掉的 Segment 数量。
-      - NumSegmentTotal: 6              # 查询涉及的所有 Segment 数量。
-      - RawRowsRead: 7                  # 存储引擎中读取的原始行数。详情见下文。
-      - RowsBitmapIndexFiltered: 0      # 仅 V2 中，通过 Bitmap 索引过滤掉的行数。
-      - RowsBloomFilterFiltered: 0      # 仅 V2 中，通过 BloomFilter 索引过滤掉的行数。
-      - RowsKeyRangeFiltered: 0         # 仅 V2 中，通过 SortkeyIndex 索引过滤掉的行数。
-      - RowsStatsFiltered: 0            # V2 中，通过 ZoneMap 索引过滤掉的行数，包含删除条件。V1 中还包含通过 BloomFilter 过滤掉的行数。
-      - RowsConditionsFiltered: 0       # 仅 V2 中，通过各种列索引过滤掉的行数。
-      - RowsVectorPredFiltered: 0       # 通过向量化条件过滤操作过滤掉的行数。
-      - TotalPagesNum: 30               # 仅 V2 中，读取的总 Page 数量。
-      - UncompressedBytesRead: 0.00     # V1 中为读取的数据文件解压后的大小（如果文件无需解压，则直接统计文件大小）。V2 中，仅统计未命中 PageCache 的 Page 解压后的大小（如果Page无需解压，直接统计Page大小）
-      - VectorPredEvalTime: 0ns         # 向量化条件过滤操作的耗时。
-      - ShortPredEvalTime: 0ns          # 短路谓词过滤操作的耗时。
-      - PredColumnReadTime: 0ns         # 谓词列读取的耗时。
-      - LazyReadTime: 0ns               # 非谓词列读取的耗时。
-      - OutputColumnTime: 0ns           # 物化列的耗时。
+      - InvertedIndexFilterTimer: 779ns # Use inverted index to filter data time-consuming.
+      - BlockLoadTime: 415.925us        # SegmentReader(V1) or SegmentIterator(V2) gets the time of the block.
+      - BlockSeekCount: 12              # The number of block seeks when reading Segment.
+      - BlockSeekTime: 222.556us        # It takes time to block seek when reading Segment.
+      - BlocksLoad: 6                   # read the number of blocks
+      - CachedPagesNum: 30              # In V2 only, when PageCache is enabled, the number of Pages that hit the Cache.
+      - CompressedBytesRead: 0.00       # In V1, the size of the data read from the file before decompression. In V2, the pre-compressed size of the read page that did not hit the PageCache.
+      - DecompressorTimer: 0ns          # Data decompression takes time.
+      - IOTimer: 0ns                    # IO time for actually reading data from the operating system.
+      - IndexLoadTime_V1: 0ns           # Only in V1, it takes time to read Index Stream.
+      - NumSegmentFiltered: 0           # When generating Segment Iterator, the number of Segments that are completely filtered out through column statistics and query conditions.
+      - NumSegmentTotal: 6              # Query the number of all segments involved.
+      - RawRowsRead: 7                  # The number of raw rows read in the storage engine. See below for details.
+      - RowsInvertedIndexFiltered: 0    # Only in V2, the number of rows filtered by the Inverted index.
+      - RowsBloomFilterFiltered: 0      # Only in V2, the number of rows filtered by BloomFilter index.
+      - RowsKeyRangeFiltered: 0         # In V2 only, the number of rows filtered out by SortkeyIndex index.
+      - RowsStatsFiltered: 0            # In V2, the number of rows filtered by the ZoneMap index, including the deletion condition. V1 also contains the number of rows filtered by BloomFilter.
+      - RowsConditionsFiltered: 0       # Only in V2, the number of rows filtered by various column indexes.
+      - RowsVectorPredFiltered: 0       # The number of rows filtered by the vectorized condition filtering operation.
+      - TotalPagesNum: 30               # Only in V2, the total number of pages read.
+      - UncompressedBytesRead: 0.00     # V1 is the decompressed size of the read data file (if the file does not need to be decompressed, the file size is directly counted). In V2, only the decompressed size of the Page that missed PageCache is counted (if the Page does not need to be decompressed, the Page size is directly counted)
+      - VectorPredEvalTime: 0ns         # Time-consuming of vectorized condition filtering operation.
 ```
 
-通过 Profile 中数据行数相关指标可以推断谓词条件下推和索引使用情况。以下仅针对 Segment V2 格式数据读取流程中的 Profile 进行说明。Segment V1 格式中，这些指标的含义略有不同。
+The predicate push down and index usage can be inferred from the related indicators of the number of data rows in the profile. The following only describes the profile in the reading process of segment V2 format data. In segment V1 format, the meaning of these indicators is slightly different.
 
-1. 当读取一个 V2 格式的 Segment 时，若查询存在 key_ranges（前缀 key 组成的查询范围），首先通过 SortkeyIndex 索引过滤数据，过滤的行数记录在 `RowsKeyRangeFiltered`。
+  - When reading a segment V2, if the query has key_ranges (the query range composed of prefix keys), first filter the data through the SortkeyIndex index, and the number of filtered rows is recorded in `RowsKeyRangeFiltered`.
+  - After that, use the Inverted index to perform precise filtering on the columns containing the inverted index in the query condition, and the number of filtered rows is recorded in `RowsInvertedIndexFiltered`.
+  - After that, according to the equivalent (eq, in, is) condition in the query condition, use the BloomFilter index to filter the data and record it in `RowsBloomFilterFiltered`. The value of `RowsBloomFilterFiltered` is the difference between the total number of rows of the Segment (not the number of rows filtered by the Inverted index) and the number of remaining rows after BloomFilter, so the data filtered by BloomFilter may overlap with the data filtered by inverted index.
+  - After that, use the ZoneMap index to filter the data according to the query conditions and delete conditions and record it in `RowsStatsFiltered`.
+  - `RowsConditionsFiltered` is the number of rows filtered by various indexes, including the values ​​of `RowsBloomFilterFiltered` and `RowsStatsFiltered`.
+  - So far, the Init phase is completed, and the number of rows filtered by the condition to be deleted in the Next phase is recorded in `RowsDelFiltered`. Therefore, the number of rows actually filtered by the delete condition are recorded in `RowsStatsFiltered` and `RowsDelFiltered` respectively.
+  - `RawRowsRead` is the final number of rows to be read after the above filtering.
+  - `RowsRead` is the number of rows finally returned to Scanner. `RowsRead` is usually smaller than `RawRowsRead`, because returning from the storage engine to the Scanner may go through a data aggregation. If the difference between `RawRowsRead` and `RowsRead` is large, it means that a large number of rows are aggregated, and aggregation may be time-consuming.
+  - `RowsReturned` is the number of rows finally returned by ScanNode to the upper node. `RowsReturned` is usually smaller than `RowsRead`. Because there will be some predicate conditions on the Scanner that are not pushed down to the storage engine, filtering will be performed once. If the difference between `RowsRead` and `RowsReturned` is large, it means that many rows are filtered in the Scanner. This shows that many highly selective predicate conditions are not pushed to the storage engine. The filtering efficiency in Scanner is worse than that in storage engine.
 
-2. 之后，对查询条件中含有 bitmap 索引的列，使用 Bitmap 索引进行精确过滤，过滤的行数记录在 `RowsBitmapIndexFiltered`。
-
-3. 之后，按查询条件中的等值（eq，in，is）条件，使用 BloomFilter 索引过滤数据，记录在 `RowsBloomFilterFiltered`。`RowsBloomFilterFiltered` 的值是 Segment 的总行数（而不是 Bitmap 索引过滤后的行数）和经过 BloomFilter 过滤后剩余行数的差值，因此 BloomFilter 过滤的数据可能会和 Bitmap 过滤的数据有重叠。
-
-4. 之后，按查询条件和删除条件，使用 ZoneMap 索引过滤数据，记录在 `RowsStatsFiltered`。
-
-5. `RowsConditionsFiltered` 是各种索引过滤的行数，包含了 `RowsBloomFilterFiltered` 和 `RowsStatsFiltered` 的值。
-
-6, 至此 Init 阶段完成，Next 阶段删除条件过滤的行数，记录在 `RowsDelFiltered`。因此删除条件实际过滤的行数，分别记录在 `RowsStatsFiltered` 和 `RowsDelFiltered` 中。
-
-7. `RawRowsRead` 是经过上述过滤后，最终需要读取的行数。
-
-8. `RowsRead` 是最终返回给 Scanner 的行数。`RowsRead` 通常小于 `RawRowsRead`，是因为从存储引擎返回到 Scanner，可能会经过一次数据聚合。如果 `RawRowsRead` 和 `RowsRead` 差距较大，则说明大量的行被聚合，而聚合可能比较耗时。
-
-9. `RowsReturned` 是 ScanNode 最终返回给上层节点的行数。`RowsReturned` 通常也会小于`RowsRead`。因为在 Scanner 上会有一些没有下推给存储引擎的谓词条件，会进行一次过滤。如果 `RowsRead` 和 `RowsReturned` 差距较大，则说明很多行在 Scanner 中进行了过滤。这说明很多选择度高的谓词条件并没有推送给存储引擎。而在 Scanner 中的过滤效率会比在存储引擎中过滤效率差。
-
-通过以上指标，可以大致分析出存储引擎处理的行数以及最终过滤后的结果行数大小。通过 `RowsFiltered` 这组指标，也可以分析查询条件是否下推到了存储引擎，以及不同索引的过滤效果。此外还可以通过以下几个方面进行简单的分析。
+Through the above indicators, you can roughly analyze the number of rows processed by the storage engine and the size of the final filtered result row. Through the `Rows***Filtered` group of indicators, it is also possible to analyze whether the query conditions are pushed down to the storage engine, and the filtering effects of different indexes. In addition, a simple analysis can be made through the following aspects.
     
-1.  `OlapScanner` 下的很多指标，如 `IOTimer`，`BlockFetchTime` 等都是所有 Scanner 线程指标的累加，因此数值可能会比较大。并且因为 Scanner 线程是异步读取数据的，所以这些累加指标只能反映 Scanner 累加的工作时间，并不直接代表 ScanNode 的耗时。ScanNode 在整个查询计划中的耗时占比为 `Active` 字段记录的值。有时会出现比如 `IOTimer` 有几十秒，而 `Active` 实际只有几秒钟。这种情况通常因为：
-  
-- `IOTimer` 为多个 Scanner 的累加时间，而 Scanner 数量较多。
+  - Many indicators under `OlapScanner`, such as `IOTimer`, `BlockFetchTime`, etc., are the accumulation of all Scanner thread indicators, so the value may be relatively large. And because the Scanner thread reads data asynchronously, these cumulative indicators can only reflect the cumulative working time of the Scanner, and do not directly represent the time consumption of the ScanNode. The time-consuming ratio of ScanNode in the entire query plan is the value recorded in the `Active` field. Sometimes it appears that `IOTimer` has tens of seconds, but `Active` is actually only a few seconds. This situation is usually due to:
+    - `IOTimer` is the accumulated time of multiple Scanners, and there are more Scanners.
+    - The upper node is time-consuming. For example, the upper node takes 100 seconds, while the lower ScanNode only takes 10 seconds. The field reflected in `Active` may be only a few milliseconds. Because while the upper layer is processing data, ScanNode has performed data scanning asynchronously and prepared the data. When the upper node obtains data from ScanNode, it can obtain the prepared data, so the Active time is very short.
+  - `NumScanners` represents the number of Tasks submitted by the Scanner to the thread pool. It is scheduled by the thread pool in `RuntimeState`. The two parameters `doris_scanner_thread_pool_thread_num` and `doris_scanner_thread_pool_queue_size` control the size of the thread pool and the queue length respectively. Too many or too few threads will affect query efficiency. At the same time, some summary indicators can be divided by the number of threads to roughly estimate the time consumption of each thread.
+  - `TabletCount` indicates the number of tablets to be scanned. Too many may mean a lot of random read and data merge operations.
+  - `UncompressedBytesRead` indirectly reflects the amount of data read. If the value is large, it means that there may be a lot of IO operations.
+  - `CachedPagesNum` and `TotalPagesNum` can check the hitting status of PageCache. The higher the hit rate, the less time-consuming IO and decompression operations.  
 
-- 上层节点比较耗时。比如上层节点耗时 100 秒，而底层 ScanNode 只需 10 秒。则反映在 `Active` 的字段可能只有几毫秒。因为在上层处理数据的同时，ScanNode 已经异步的进行了数据扫描并准备好了数据。当上层节点从 ScanNode 获取数据时，可以获取到已经准备好的数据，因此 Active 时间很短。
+#### `Buffer pool`
+ - AllocTime: Memory allocation time
+ - CumulativeAllocationBytes: Cumulative amount of memory allocated
+ - CumulativeAllocations: Cumulative number of memory allocations
+ - PeakReservation: Peak of reservation
+ - PeakUnpinnedBytes: Amount of memory data of unpin
+ - PeakUsedReservation: Peak usage of reservation
+ - ReservationLimit: Limit of reservation of bufferpool
 
-2. `NumScanners` 表示 Scanner 提交到线程池的 Task 个数，由 `RuntimeState` 中的线程池调度，`doris_scanner_thread_pool_thread_num` 和 `doris_scanner_thread_pool_queue_size` 两个参数分别控制线程池的大小和队列长度。线程数过多或过少都会影响查询效率。同时可以用一些汇总指标除以线程数来大致的估算每个线程的耗时。
-
-- `TabletCount` 表示需要扫描的 tablet 数量。数量过多可能意味着需要大量的随机读取和数据合并操作。
-
-- `UncompressedBytesRead` 间接反映了读取的数据量。如果该数值较大，说明可能有大量的 IO 操作。
-
-- `CachedPagesNum` 和 `TotalPagesNum` 可以查看命中 PageCache 的情况。命中率越高，说明 IO 和解压操作耗时越少。
-
-**`Buffer pool`**
-
-- AllocTime: 内存分配耗时
-
-- CumulativeAllocationBytes: 累计内存分配的量
-
-- CumulativeAllocations: 累计的内存分配次数
-
-- PeakReservation: Reservation 的峰值
-
-- PeakUnpinnedBytes: unpin 的内存数据量
-
-- PeakUsedReservation: Reservation 的内存使用量
-
-- ReservationLimit: BufferPool 的 Reservation 的限制量

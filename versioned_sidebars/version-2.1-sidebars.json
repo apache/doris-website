@@ -42,11 +42,7 @@
                                 "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
                                 "install/cluster-deployment/k8s-deploy/root-user-use",
                                 "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                                "install/cluster-deployment/k8s-deploy/debug-crash",
-                                "install/cluster-deployment/k8s-deploy/helm-chart-deploy",
-                                "install/cluster-deployment/k8s-deploy/persistent-volume",
-                                "install/cluster-deployment/k8s-deploy/operator-deploy",
-                                "install/cluster-deployment/k8s-deploy/network"
+                                "install/cluster-deployment/k8s-deploy/debug-crash"
                             ]
                         },
                         "install/cluster-deployment/doris-on-aws"
@@ -116,8 +112,7 @@
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode",
-                        "data-operate/import/min-load-replica-num"
+                        "data-operate/import/load-strict-mode"
                     ]
                 },
                 {
@@ -165,6 +160,7 @@
                         "query/query-data/select",
                         "query/query-data/complex-type",
                         "query/query-data/subquery",
+                        "query/query-data/cte",
                         "query/query-data/lateral-view",
                         "query/query-data/window-function",
                         "query/query-data/encryption-function"
@@ -193,7 +189,7 @@
                     "label": "Pipeline",
                     "items": [
                         "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipelinex-execution-engine"
+                        "query/pipeline/pipeline-x-execution-engine"
                     ]
                 },
                 {
@@ -340,7 +336,6 @@
                     "type": "category",
                     "label": "User Privilege and Ldap",
                     "items": [
-                        "admin-manual/privilege-ldap/authentication-and-authorization",
                         "admin-manual/privilege-ldap/user-privilege",
                         "admin-manual/privilege-ldap/certificate",
                         "admin-manual/privilege-ldap/fe-certificate",
@@ -475,7 +470,6 @@
                     ]
                 },
                 "admin-manual/plugin-development-manual",
-                "admin-manual/audit-plugin",
                 "admin-manual/small-file-mgr",
                 "admin-manual/compaction",
                 "admin-manual/rowsets"

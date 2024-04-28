@@ -1,4 +1,30 @@
-# join hint using document
+---
+{
+    "title": "Join Hint using Document",
+    "language": "en"
+}
+---
+
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
 
 In the database, "Hint" is an instruction that instructs the query optimizer to execute a plan. By embedding hints in SQL statements, you can influence the optimizer's decision to select the desired execution path. Here is a background example using Hint:
 
@@ -45,7 +71,8 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 In this example, the Hint /*+ leading(t2 t1) */ is used. This Hint tells the optimizer to use the specified table (t2) as the driver table in the execution plan, before (t1).
 
 This document mainly describes how to use join related hints in Doris: leading hint, ordered hint and distribute hint
-# Leading hint
+
+## Leading hint
 Leading Hint is used to guide the optimizer in determining the join order of the query plan. In a query, the join order of the tables can affect query performance. Leading Hint allows you to specify the order of table joins that you want the optimizer to follow.
 
 In doris, the syntax is /*+LEADING(tablespec [tablespec]... ) */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement. Note that the '/' after leading and the selectlist need to be separated by at least one separator such as a space. At least two more tables need to be written before the leadinghint is justified. And any join can be bracketed to explicitly specify the shape of the joinTree. Example:
@@ -345,7 +372,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2
 +--------------------------------------------------------------------------------------+
 19 rows in set (0.02 sec)
   ```
-## Non-inner join：
+## Non-inner join:
 When non-inner-joins are encountered, such as Outer join or semi/anti join, leading hint automatically deduces the join mode of each join according to the original sql semantics. If leading hints that differ from the original sql semantics or cannot be generated, they are placed in unused, but do not affect the generation of the normal flow of the plan.
 
 Here are examples of things that can't be exchanged:   
@@ -495,7 +522,7 @@ mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join
 ```
  # OrderedHint
 - Using ordered hint causes the join tree to be fixed in shape and displayed in text order
-- The syntax is /*+ ORDERED */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement, for example：
+- The syntax is /*+ ORDERED */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement, for example:
 ```sql
   explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
      join
@@ -588,7 +615,7 @@ mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
   11 rows in set (0.01 sec)
   ```
 
-  after use distribute hint：
+  after use distribute hint:
   ```sql
 mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast] t1 on t1.c1 = t2.c2;
   +----------------------------------------------------------------------------------+

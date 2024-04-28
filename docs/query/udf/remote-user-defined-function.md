@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Remote UDF",
-    "language": "zh-CN"
+    "title": "Remote User Defined Function Service",
+    "language": "en"
 }
 ---
 
@@ -24,76 +24,79 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 ## Remote UDF
 
-Remote UDF Service 支持通过 RPC 的方式访问用户提供的 UDF Service，以实现用户自定义函数的执行。相比于 Native 的 UDF 实现，Remote UDF Service 有如下优势和限制：
+Remote UDF Service supports accessing user-provided UDF Services via RPC to execute user-defined functions. Compared to native UDF implementation, Remote UDF Service has the following advantages and limitations:
 
-**1. 优势**
+**1. Advantages**
 
-* 跨语言：可以用 Protobuf 支持的各类语言编写 UDF Service。
+* Cross-language: UDF Services can be written in various languages supported by Protobuf.
 
-* 安全：UDF 执行失败或崩溃，仅会影响 UDF Service 自身，而不会导致 Doris 进程崩溃。
+* Security: UDF failures or crashes only affect the UDF Service itself and do not cause Doris process crashes.
 
-* 灵活：UDF Service 中可以调用任意其他服务或程序库类，以满足更多样的业务需求。
+* Flexibility: UDF Services can invoke any other services or library classes to meet diverse business requirements.
 
-**2. 使用限制**
+**2. Usage Limitations**
 
-* 性能：相比于 Native UDF，UDF Service 会带来额外的网络开销，因此性能会远低于 Native UDF。同时，UDF Service 自身的实现也会影响函数的执行效率，用户需要自行处理高并发、线程安全等问题。
+* Performance: Compared to native UDFs, UDF Service introduces additional network overhead, resulting in lower performance. Additionally, the UDF Service implementation itself can impact function execution efficiency, and users need to handle issues like high concurrency and thread safety.
 
-* 单行模式和批处理模式：Doris 原先的基于行存的查询执行框架会对每一行数据执行一次 UDF RPC 调用，因此执行效率非常差，而在新的向量化执行框架下，会对每一批数据（默认 2048 行）执行一次 UDF RPC 调用，因此性能有明显提升。实际测试中，基于向量化和批处理方式的 Remote UDF 性能和基于行存的 Native UDF 性能相当，可供参考。
+* Single-row mode and batch processing mode: In Doris' original row-based query execution framework, UDF RPC calls are made for each row of data, resulting in poor performance. However, in the new vectorized execution framework, UDF RPC calls are made for each batch of data (default: 2048 rows), leading to significant performance improvements. In actual testing, the performance of Remote UDF based on vectorization and batch processing is comparable to that of native UDF based on row storage.
 
-## 编写 UDF 函数
+## Writing UDF Functions
 
+This section provides instructions on how to develop a Remote RPC service. A Java version example is provided in `samples/doris-demo/udf-demo/` for reference.
 
-本小节主要介绍如何开发一个 Remote RPC service。在 `samples/doris-demo/udf-demo/` 下提供了 Java 版本的示例，可供参考。
+### Copying the Proto Files
 
-### 拷贝 proto 文件
-
-拷贝 gensrc/proto/function_service.proto 和 gensrc/proto/types.proto 到 Rpc 服务中
+Copy `gensrc/proto/function_service.proto` and `gensrc/proto/types.proto` to the RPC service.
 
 **function_service.proto**
-    
+
 - PFunctionCallRequest
 
-  - function_name：函数名称，对应创建函数时指定的 symbol
+   - function_name: Function name, corresponding to the symbol specified during function creation.
 
-  - args：方法传递的参数
+   - args: Arguments passed to the method.
 
-  - context：查询上下文信息
+   - context: Query context information.
 
 - PFunctionCallResponse
 
-  - result：结果
+   - result: Result.
 
-  - status：状态，0 代表正常
+   - status: Status, where 0 represents normal.
 
 - PCheckFunctionRequest
 
-  - function：函数相关信息
+   - function: Function-related information.
 
-  - match_type：匹配类型
+   - match_type: Matching type.
 
 - PCheckFunctionResponse
 
-  - status：状态，0 代表正常
+   - status: Status, where 0 represents normal.
 
-### 生成接口
+### Generating Interfaces
 
-通过 protoc 生成代码，具体参数通过 protoc -h 查看
+Generate code using protoc. Refer to `protoc -h` for specific parameters.
 
-### 实现接口
+### Implementing Interfaces
 
-共需要实现以下三个方法
+The following three methods need to be implemented:
 
-- fnCall：用于编写计算逻辑
+- fnCall: Used to write the calculation logic.
 
-- checkFn：用于创建 UDF 时校验，校验函数名/参数/返回值等是否合法
+- checkFn: Used for UDF creation validation, checking if the function name, parameters, return values, etc., are valid.
 
-- handShake：用于接口探活
+- handShake: Used for interface probing.
 
-## 创建 UDF
 
-目前暂不支持 UDTF
+--- 
+
+## Creating UDF
+
+Currently, UDTF is not supported.
 
 ```sql
 CREATE FUNCTION 
@@ -102,17 +105,18 @@ name ([,...])
 PROPERTIES (["key"="value"][,...])	
 ```
 
-说明：
+Note:
 
-1. PROPERTIES 中`symbol`表示的是 rpc 调用传递的方法名，这个参数是必须设定的。
+1. The `symbol` in the PROPERTIES represents the method name passed in the RPC call, and this parameter must be set.
 
-2. PROPERTIES 中`object_file`表示的 rpc 服务地址，目前支持单个地址和 brpc 兼容格式的集群地址，集群连接方式 参考 [格式说明](https://github.com/apache/incubator-brpc/blob/master/docs/cn/client.md#%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4)。
+2. The `object_file` in the PROPERTIES represents the RPC service address. Currently, it supports a single address and cluster addresses in the brpc-compatible format. For cluster connection methods, refer to the [Format Specification](https://github.com/apache/incubator-brpc/blob/master/docs/cn/client.md#%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4) (Chinese).
 
-3. PROPERTIES 中`type`表示的 UDF 调用类型，默认为 Native，使用 Rpc UDF 时传 RPC。
+3. The `type` in the PROPERTIES represents the UDF invocation type, which is set to Native by default. Use RPC to pass when using RPC UDF.
 
-4. name: 一个 function 是要归属于某个 DB 的，name 的形式为`dbName`.`funcName`。当`dbName`没有明确指定的时候，就是使用当前 session 所在的 db 作为`dbName`。
+4. `name`: A function belongs to a specific database. The name is in the form of `dbName`.`funcName`. When `dbName` is not explicitly specified, the current session's database is used as `dbName`.
 
-示例：
+Example:
+
 ```sql
 CREATE FUNCTION rpc_add_two(INT,INT) RETURNS INT PROPERTIES (
   "SYMBOL"="add_int_two",
@@ -131,20 +135,20 @@ CREATE FUNCTION rpc_add_string(varchar(30)) RETURNS varchar(30) PROPERTIES (
 );
 ```
 
-## 使用 UDF
+## Using UDF
 
-用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
+Users must have the `SELECT` privilege on the corresponding database to use UDF.
 
-UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函数的作用域是全局的，而 UDF 的作用域是 DB 内部。当链接 session 位于数据内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName`.`funcName`。
+The usage of UDF is similar to regular functions, with the only difference being that the scope of built-in functions is global, while the scope of UDF is within the database. When the session is connected to a database, simply use the UDF name to search for the corresponding UDF within the current database. Otherwise, the user needs to explicitly specify the database name of the UDF, such as `dbName`.`funcName`.
 
-## 删除 UDF
+## Deleting UDF
 
-当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 `DROP FUNCTION`。
+When you no longer need a UDF function, you can delete it using the `DROP FUNCTION` command.
 
-## 示例
+## Example
 
-在`samples/doris-demo/` 目录中提供和 cpp/java/python 语言的 rpc server 实现示例。具体使用方法见每个目录下的`README.md`
-例如 rpc_add_string
+The `samples/doris-demo/` directory provides examples of RPC server implementations in CPP, Java, and Python languages. Please refer to the `README.md` file in each directory for specific usage instructions.
+For example, `rpc_add_string`:
 
 ```sql
 mysql >select rpc_add_string('doris');
@@ -154,9 +158,9 @@ mysql >select rpc_add_string('doris');
 | doris_rpc_test          |
 +-------------------------+
 ```
-日志会显示
+The log will display:
 
-```text
+```json
 INFO: fnCall request=function_name: "add_string"
 args {
   type {
@@ -176,6 +180,3 @@ status {
   status_code: 0
 }
 ```
-
-
-

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Multi-tenancy",
+    "title": "Resource Group",
     "language": "en"
 }
 ---

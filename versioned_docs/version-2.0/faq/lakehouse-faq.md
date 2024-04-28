@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FAQ",
+    "title": "Lakehouse FAQ",
     "language": "en"
 }
 ---
@@ -218,7 +218,7 @@ under the License.
     </property> 
    ```
 
-10. Error：java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
+10. Error: java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
 
     Entire error info found in FE.log is shown as below:
     ```

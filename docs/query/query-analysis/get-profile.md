@@ -1,7 +1,7 @@
 ---
 {
-    "title": "获取 Profile",
-    "language": "zh-CN"
+  "title": "Get Profile",
+  "language": "en"
 }
 ---
 
@@ -23,28 +23,29 @@ under the License.
 -->
 
 
-## 背景
 
-我们时常遇到对应 SQL 执行时间不及预期的情况，为了优化 SQL 达到预期查询时延，通过 Profile 我们能够看出可以做哪些优化。现在说明在不同环境下应该如何拿到对应 Query 的 Profile。
+## Background
 
-## 请求
+We often encounter situations where the execution time of the corresponding SQL is less than expected. In order to optimize the SQL to achieve the expected Query delay, through the Profile we can see what optimizations can be done. Now we will explain how to get the Profile corresponding to the Query in different environments.
+
+## Request
 
 `HTTP://FE_IP:HTTP_PORT`
 `GET /API/Profile`
 
 
-## Doris 集群能够正常访问外网
+## The Doris cluster can normally access the external network
 
-1. 开启 Profile 上报参数 enable_profile
+1. Enable profile reporting parameters enable_profile
 
-   该参数开启的是 session 变量，此变量不建议全局开启。
+   This parameter turns on the session variable. It is not recommended to turn this variable on globally.
 
     ```
-    --开启变量
+    --open variable
     mysql> set enable_profile=true;
     Query OK, 0 rows affected (0.00 sec)
     
-    --确认变量是否正常开启
+    --Confirm whether the variable is opened normally
     mysql> show variables like '%profile%';
     +----------------+-------+---------------+---------+
     | Variable_name  | Value | Default_Value | Changed |
@@ -54,15 +55,15 @@ under the License.
     1 row in set (0.00 sec)
     ```
 
-2. 执行对应 Query
+2. Execute the corresponding query
 
-   集群在多个 FE 的情况下，需要到开启 Profile 上报参数的 FE 上执行对应 Query, 参数并没有全局生效。
+   In the case of a cluster with multiple fes, you need to execute the corresponding query on the fes that enable profile reporting parameters. The parameters do not take effect globally.
 
     ```
-    --开启变量
+    --open variable
     mysql> set enable_profile=true;
     Query OK, 0 rows affected (0.00 sec)
-    --确认变量是否正常开启
+    --Confirm whether the variable is opened normally
     mysql> show variables like '%profile%';
     +----------------+-------+---------------+---------+
     | Variable_name  | Value | Default_Value | Changed |
@@ -71,7 +72,7 @@ under the License.
     +----------------+-------+---------------+---------+
     1 row in set (0.00 sec)
     
-    --执行对应 Query
+    --Execute the corresponding Query
     mysql> select id,name from test.test where name like "%RuO%";
     +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
     | id                        | name                                                                                                                        |
@@ -81,23 +82,23 @@ under the License.
     1 row in set (0.01 sec)
     ```
 
-3. 获取 Profile
+3. Get Profile
 
-   集群在多个 FE 的情况下，需要访问执行对应 Query 的 FE HTTP 界面 ( HTTP://FE_IP:HTTP_PORT ) 的 QueryProfile 页面，点击对应 Profile ID 查看对应 Profile，还可以在 Profile 界面下载对应 Profile。
+   When the cluster has multiple fes, you need to access the QueryProfile page of the FE HTTP interface (HTTP://FE_IP:HTTP_PORT) that executes the corresponding query. Click the corresponding Profile ID to view the corresponding Profile. You can also download the corresponding Profile in the Profile interface.
 
    ![profile1.png](/images/profile1.png)
    ![profile2.png](/images/profile2.png)
 
-## Doris 集群访问外网受到限制
+## Doris cluster’s access to the external network is restricted
 
-集群不能正常访问外网时，需要通过 API 的方式拿到对应 Profile (HTTP://FE_IP:HTTP_PORT/API/Profile?Query_ID=),IP 和端口是指执行对应 Query 的 FE 对应 IP 和端口。此时获取对应 Query 的 Profile 步骤前两步和正常访问外网时是一样的，第三步获取 Profile 时会有差别。
+When the cluster cannot access the external network normally, it needs to obtain the corresponding profile through the API (HTTP://FE_IP:HTTP_PORT/API/Profile?Query_ID=). The IP and PORT refer to the IP and PORT corresponding to FE that executes the corresponding Query. At this time, the first two steps of obtaining the Profile corresponding to the Query are the same as when accessing the external network normally. There will be a difference in the third step of obtaining the Profile.
 
-**获取 Porfile**
+**Get Profile**
 
-- 找到对应 Query ID
+- Find the corresponding Profile ID
 
     ```
-    --根据对应 Query 找到 Profile ID
+    --Find the Profile ID according to the corresponding query
     mysql> show query profile "/";
     +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
     | Profile ID                        | Task Type | Start Time          | End Time            | Total | Task State | User | Default Db | Sql Statement                                         |
@@ -108,10 +109,10 @@ under the License.
     2 rows in set (0.00 sec)
     ```
 
-- 查询 Profile 并将 Profile 重定向到一个文本中
+- Query Profile and redirect Profile to a text
 
     ```
-    模板：CURL -X GET -u user:password http://fe_ip:http_port/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
+    template: curl -X GET -u user:password http://fe_ip:http_port/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
     
     [user@VM-10-6-centos profile]$ curl -X GET -u root:root http://127.0.0.1:8030/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -119,7 +120,7 @@ under the License.
     100  1211    0  1211    0     0   168k      0 --:--:-- --:--:-- --:--:--  168k
     ```
 
-- 返回的 Profile 换行符为 \ \n 分析起来很不方便，可以在文本编辑工具中将 \ \n 替换为 \n
+- The returned Profile line break is \ \n, which is inconvenient to analyze. You can replace \ \n with \n in a text editing tool.
 
     ```
     [user@VM-10-6-centos profile]$ cat test.profile
@@ -140,7 +141,7 @@ under the License.
     - Total Instances Num: 0\n     - Instances Num Per BE: \n     
     - Parallel Fragment Exec Instance Num: 48\n     - Trace ID: \n"},"count":0}
     ```
-- 替换后的效果如下
+- The effect after replacement is as follows
 
     ```
     {"msg":"success","code":0,"data":{"profile":"Query:

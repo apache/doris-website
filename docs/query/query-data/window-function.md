@@ -1,7 +1,7 @@
 ---
 {
-    "title": "分析 (窗口) 函数",
-    "language": "zh-CN"
+    "title": "Window Function",
+    "language": "en"
 }
 ---
 
@@ -24,54 +24,52 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-分析函数是一类特殊的内置函数。和聚合函数类似，分析函数也是对于多个输入行做计算得到一个数据值。不同的是，分析函数是在一个特定的窗口内对输入数据做处理，而不是按照 group by 来分组计算。每个窗口内的数据可以用 over() 从句进行排序和分组。分析函数会对结果集的每一行计算出一个单独的值，而不是每个 group by 分组计算一个值。这种灵活的方式允许用户在 select 从句中增加额外的列，给用户提供了更多的机会来对结果集进行重新组织和过滤。分析函数只能出现在 select 列表和最外层的 order by 从句中。在查询过程中，分析函数会在最后生效，就是说，在执行完 join，where 和 group by 等操作之后再执行。分析函数在金融和科学计算领域经常被使用到，用来分析趋势、计算离群值以及对大量数据进行分桶分析等。
+## Window function
 
-分析函数的语法：
+Window functions are a special type of built-in functions in databases. Similar to aggregate functions, window functions perform calculations on multiple input rows to obtain a single data value. However, the difference lies in the fact that window functions process the input data within a specific window, rather than grouping and calculating based on the `GROUP BY` clause. The data within each window can be sorted and grouped using the `OVER()` clause. Window functions calculate a separate value for each row of the result set, rather than a single value for each `GROUP BY`. This flexible approach allows users to add additional columns in the `SELECT` clause, providing more opportunities to reorganize and filter the result set. Window functions can only appear in the select list and the outermost `ORDER BY` clause. During the query process, window functions take effect at the end, meaning they are executed after operations such as `JOIN`, `WHERE`, and `GROUP BY`. Window functions are often used in finance and scientific computing to analyze trends, calculate outliers, and perform bucket analysis on large amounts of data.
 
-```sql
+The syntax of window functions as follows:
+
+```
 function(args) OVER(partition_by_clause order_by_clause [window_clause])    
 partition_by_clause ::= PARTITION BY expr [, expr ...]    
 order_by_clause ::= ORDER BY expr [ASC | DESC] [, expr [ASC | DESC] ...]
 ```
 
-## Function
+#### Function
 
-目前支持的 Function 包括 AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER() 和 SUM()。
+The currently supported functions include `AVG(), COUNT(), DENSE_RANK(), FIRST_VALUE(), LAG(), LAST_VALUE(), LEAD(), MAX(), MIN(), RANK(), ROW_NUMBER(), SUM().`
 
-## PARTITION BY 从句
+#### PARTITION BY clause
 
-Partition By 从句和 Group By 类似。它把输入行按照指定的一列或多列分组，相同值的行会被分到一组。
+The `Partition By` clause is similar to `Group By`. It groups input rows based on the specified one or more columns, where rows with the same values are placed in the same group.
 
-## ORDER BY 从句
+#### ORDER BY clause
 
-Order By 从句和外层的 Order By 基本一致。它定义了输入行的排列顺序，如果指定了 Partition By，则 Order By 定义了每个 Partition 分组内的顺序。与外层 Order By 的唯一不同点是，OVER 从句中的 Order By n（n 是正整数）相当于不做任何操作，而外层的 Order By n 表示按照第 n 列排序。
+The `Order By` clause within a window function behaves similarly to the outer-level `Order By`. It defines the arrangement of input rows, and when `Partition By` is specified, the `Order By` determines the order within each partition. The only difference from the outer `Order By` is that within the `OVER` clause, using `Order By n` (where n is a positive integer) effectively does nothing, whereas in the outer context, `Order By n` signifies sorting based on the nth column.
 
-举例：
+This example demonstrates adding an `id` column to the select list, where its values are 1, 2, 3, and so on, sorted according to the `date_and_time` column in the `events` table.
 
-这个例子展示了在 select 列表中增加一个 id 列，它的值是 1，2，3 等等，顺序按照 events 表中的 date_and_time 列排序。
-
-```sql
+```
 SELECT   
 row_number() OVER (ORDER BY date_and_time) AS id,   
 c1, c2, c3, c4   
 FROM events;
 ```
 
-## Window 从句
+#### Window clause
 
-Window 从句用来为分析函数指定一个运算范围，以当前行为准，前后若干行作为分析函数运算的对象。Window 从句支持的方法有：AVG(), COUNT(), FIRST_VALUE(), LAST_VALUE() 和 SUM()。对于 MAX() 和 MIN(), window 从句可以指定开始范围 UNBOUNDED PRECEDING
+The Window clause is used to specify a computational range for window functions. It considers the current row and a specified number of rows before and after it as the target for the window function's operation. The methods supported by the Window clause include: AVG(), COUNT(), FIRST_VALUE(), LAST_VALUE(), and SUM(). For MAX() and MIN(), the Window clause can specify a starting range of UNBOUNDED PRECEDING.
 
-语法：
-
-```sql
+```
 ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]
 ```
 
-## 举例
+#### Example 
 
-假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
+Taking the following stock data as an example, the stock code is JDR, and the "closing price" refers to the daily closing quotation.
 
-```sql
+```
 create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
@@ -86,9 +84,9 @@ select * from stock_ticker order by stock_symbol, closing_date
  | JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
-这个查询使用分析函数产生 moving_average 这一列，它的值是 3 天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
+This query utilizes a window function to generate the `moving_average `column, which calculates the average stock price over a three-day span, specifically the previous day, the current day, and the next day. Since there is no previous day's data for the first day and no next day's data for the last day, the average is only calculated based on two days for those rows. In this case, the `Partition By` clause is not relevant because all the data pertains to the stock JDR. However, if there was additional stock information, `Partition By` would ensure that the window function operates exclusively within each partition.
 
-```sql
+```
 select stock_symbol, closing_date, closing_price,    
 avg(closing_price) over (partition by stock_symbol order by closing_date    
 rows between 1 preceding and 1 following) as moving_average    
@@ -104,6 +102,6 @@ from stock_ticker;
  | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
-## 更多帮助
+#### See more
 
-更多窗口函数，参见 SQL 手册 / SQL 函数 / [分析（窗口）函数](../../sql-manual/sql-functions/window-functions/WINDOW-FUNCTION)。
+For more window functions, refer to [Window Functions](../../sql-manual/sql-functions/window-functions/WINDOW-FUNCTION).

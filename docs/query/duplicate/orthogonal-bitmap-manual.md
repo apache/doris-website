@@ -1,7 +1,7 @@
 ---
 {
-    "title": "BITMAP 精准去重",
-    "language": "zh-CN"
+    "title": "Orthogonal BITMAP Calculation",
+    "language": "en"
 }
 ---
 
@@ -24,44 +24,40 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Orthogonal BITMAP Calculation
 
+## Background
 
-## 背景
+The original bitmap aggregate function designed by Doris is more general, but it has poor performance for the intersection and union of bitmap large cardinality above 100 million level. There are two main reasons for checking the bitmap aggregate function logic of the back-end be. First, when the bitmap cardinality is large, if the bitmap data size exceeds 1g, the network / disk IO processing time is relatively long; second, after the scan data, all the back-end be instances are transmitted to the top-level node for intersection and union operation, which brings pressure on the top-level single node and becomes the processing bottleneck.
 
-Doris 原有的 Bitmap 聚合函数设计比较通用，但对亿级别以上 bitmap 大基数的交并集计算性能较差。排查后端 be 的 bitmap 聚合函数逻辑，发现主要有两个原因。一是当 bitmap 基数较大时，如 bitmap 大小超过 1g，网络/磁盘 IO 处理时间比较长；二是后端 be 实例在 scan 数据后全部传输到顶层节点进行求交和并运算，给顶层单节点带来压力，成为处理瓶颈。
+The solution is to divide the bitmap column values according to the range, and the values of different ranges are stored in different buckets, so as to ensure that the bitmap values of different buckets are orthogonal and the data distribution is more uniform. In the case of query, the orthogonal bitmap in different buckets is firstly aggregated and calculated, and then the top-level node directly combines and summarizes the aggregated calculated values and outputs them. This will greatly improve the computing efficiency and solve the bottleneck problem of the top single node computing.
 
-解决思路是将 bitmap 列的值按照 range 划分，不同 range 的值存储在不同的分桶中，保证了不同分桶的 bitmap 值是正交的。当查询时，先分别对不同分桶中的正交 bitmap 进行聚合计算，然后顶层节点直接将聚合计算后的值合并汇总，并输出。如此会大大提高计算效率，解决了顶层单节点计算瓶颈问题。
+## User guide
 
-## 使用指南
-
-1. 建表，增加 hid 列，表示 bitmap 列值 id 范围，作为 hash 分桶列
-
-2. 使用场景
+1. Create a table and add hid column to represent bitmap column value ID range as hash bucket column
+2. Usage scenarios
 
 ### Create table
 
-建表时需要使用聚合模型，数据类型是 bitmap , 聚合函数是 bitmap_union
-
-```sql
+We need to use the aggregation model when building tables. The data type is bitmap, and the aggregation function is bitmap_ union
+```
 CREATE TABLE `user_tag_bitmap` (
-  `tag` bigint(20) NULL COMMENT "用户标签",
-  `hid` smallint(6) NULL COMMENT "分桶id",
+  `tag` bigint(20) NULL COMMENT "user tag",
+  `hid` smallint(6) NULL COMMENT "Bucket ID",
   `user_id` bitmap BITMAP_UNION NULL COMMENT ""
 ) ENGINE=OLAP
 AGGREGATE KEY(`tag`, `hid`)
 COMMENT "OLAP"
 DISTRIBUTED BY HASH(`hid`) BUCKETS 3
 ```
+The HID column is added to the table schema to indicate the ID range as a hash bucket column.
 
-表 schema 增加 hid 列，表示 id 范围，作为 hash 分桶列。
+Note: the HID number and buckets should be set reasonably, and the HID number should be set at least 5 times of buckets, so as to make the data hash bucket division as balanced as possible
 
-:::note
-注：hid 数和 BUCKETS 要设置合理，hid 数设置至少是 BUCKETS 的 5 倍以上，以使数据 hash 分桶尽量均衡
-:::
 
 ### Data Load
 
-```sql
+``` 
 LOAD LABEL user_tag_bitmap_test
 (
 DATA INFILE('hdfs://abc')
@@ -74,13 +70,12 @@ hid = ceil(tmp_user_id/5000000),
 user_id = to_bitmap(tmp_user_id)
 )
 )
-注意：5000000这个数不固定，可按需调整
 ...
 ```
 
-数据格式：
+Data format:
 
-```text
+``` 
 11111111,1
 11111112,2
 11111113,3
@@ -88,125 +83,120 @@ user_id = to_bitmap(tmp_user_id)
 ...
 ```
 
-:::note
-注：第一列代表用户标签，由中文转换成数字
-:::
+Note: the first column represents the user tags, which have been converted from Chinese into numbers
 
-load 数据时，对用户 bitmap 值 range 范围纵向切割，例如，用户 id 在 1-5000000 范围内的 hid 值相同，hid 值相同的行会分配到一个分桶内，如此每个分桶内到的 bitmap 都是正交的。可以利用桶内 bitmap 值正交特性，进行交并集计算，计算结果会被 shuffle 至 top 节点聚合。
+When loading data, vertically cut the bitmap value range of the user. For example, the hid value of the user ID in the range of 1-5000000 is the same, and the row with the same HID value will be allocated into a sub-bucket, so that the bitmap value in each sub-bucket is orthogonal. On the UDAF implementation of bitmap, the orthogonal feature of bitmap value in the bucket can be used to perform intersection union calculation, and the calculation results will be shuffled to the top node for aggregation.
 
-:::note
-注：正交 bitmap 函数不能用在分区表，因为分区表分区内正交，分区之间的数据是无法保证正交的，则计算结果也是无法预估的。
-:::
+Note: The orthogonal bitmap function cannot be used in the partitioned table. Because the partitions of the partitioned table are orthogonal, the data between partitions cannot be guaranteed to be orthogonal, so the calculation result cannot be estimated.
 
-**orthogonal_bitmap_intersect**
+#### orthogonal_bitmap_intersect 
 
-求 bitmap 交集函数
+The bitmap intersection function
 
-- 语法：
+Syntax:
 
 orthogonal_bitmap_intersect(bitmap_column, column_to_filter, filter_values)
 
-- 参数：
+Parameters:
 
-第一个参数是 Bitmap 列，第二个参数是用来过滤的维度列，第三个参数是变长参数，含义是过滤维度列的不同取值
+the first parameter is the bitmap column, the second parameter is the dimension column for filtering, and the third parameter is the variable length parameter, which means different values of the filter dimension column
 
-- 说明：
+Explain:
 
-查询规划上聚合分 2 层，在第一层 be 节点（update、serialize）先按 filter_values 为 key 进行 hash 聚合，然后对所有 key 的 bitmap 求交集，结果序列化后发送至第二层 be 节点 (merge、finalize)，在第二层 be 节点对所有来源于第一层节点的 bitmap 值循环求并集
+on the basis of this table schema, this function has two levels of aggregation in query planning. In the first layer, be nodes (update and serialize) first press filter_ Values are used to hash aggregate the keys, and then the bitmaps of all keys are intersected. The results are serialized and sent to the second level be nodes (merge and finalize). In the second level be nodes, all the bitmap values from the first level nodes are combined circularly
 
-样例：
+Example:
 
-```sql
+```
 select BITMAP_COUNT(orthogonal_bitmap_intersect(user_id, tag, 13080800, 11110200)) from user_tag_bitmap  where tag in (13080800, 11110200);
+
 ```
 
-**orthogonal_bitmap_intersect_count**
+#### orthogonal_bitmap_intersect_count 
 
-求 bitmap 交集 count 函数，语法同原版 intersect_count，但实现不同
+To calculate the bitmap intersection count function, the syntax is the same as the original Intersect_Count, but the implementation is different
 
-- 语法：
+Syntax:
 
 orthogonal_bitmap_intersect_count(bitmap_column, column_to_filter, filter_values)
 
-- 参数：
+Parameters:
 
-第一个参数是 Bitmap 列，第二个参数是用来过滤的维度列，第三个参数开始是变长参数，含义是过滤维度列的不同取值
+The first parameter is the bitmap column, the second parameter is the dimension column for filtering, and the third parameter is the variable length parameter, which means different values of the filter dimension column
 
-- 说明：
+Explain:
 
-查询规划聚合上分 2 层，在第一层 be 节点（update、serialize）先按 filter_values 为 key 进行 hash 聚合，然后对所有 key 的 bitmap 求交集，再对交集结果求 count，count 值序列化后发送至第二层 be 节点（merge、finalize），在第二层 be 节点对所有来源于第一层节点的 count 值循环求 sum
+on the basis of this table schema, the query planning aggregation is divided into two layers. In the first layer, be nodes (update and serialize) first press filter_ Values are used to hash aggregate the keys, and then the intersection of bitmaps of all keys is performed, and then the intersection results are counted. The count values are serialized and sent to the second level be nodes (merge and finalize). In the second level be nodes, the sum of all the count values from the first level nodes is calculated circularly
 
-**orthogonal_bitmap_union_count**
 
-求 bitmap 并集 count 函数，语法同原版 bitmap_union_count，但实现不同。
+#### orthogonal_bitmap_union_count 
 
-- 语法：
+Figure out the bitmap union count function, syntax with the original bitmap_union_count, but the implementation is different.
+
+Syntax:
 
 orthogonal_bitmap_union_count(bitmap_column)
 
-- 参数：
+Explain:
 
-参数类型是 bitmap，是待求并集 count 的列
+on the basis of this table schema, this function is divided into two layers. In the first layer, be nodes (update and serialize) merge all the bitmaps, and then count the resulting bitmaps. The count values are serialized and sent to the second level be nodes (merge and finalize). In the second layer, the be nodes are used to calculate the sum of all the count values from the first level nodes
 
-- 说明：
+#### orthogonal_bitmap_expr_calculate
 
-查询规划上分 2 层，在第一层 be 节点（update、serialize）对所有 bitmap 求并集，再对并集的结果 bitmap 求 count，count 值序列化后发送至第二层 be 节点（merge、finalize），在第二层 be 节点对所有来源于第一层节点的 count 值循环求 sum
+Compute the function by computing the intersection, union and difference set of the expression bitmap.
 
-**orthogonal_bitmap_expr_calculate**
-
-求表达式 bitmap 交并差集合计算函数。
-
-- 语法：
+Syntax:
 
 orthogonal_bitmap_expr_calculate(bitmap_column, filter_column, input_string)
 
-- 参数：
+Parameters:
 
-第一个参数是 Bitmap 列，第二个参数是用来过滤的维度列，即计算的 key 列，第三个参数是计算表达式字符串，含义是依据 key 列进行 bitmap 交并差集表达式计算
+the first parameter is the Bitmap column, the second parameter is the dimension column used for filtering, that is, the calculated key column, and the third parameter is the calculation expression string, which means that the bitmap intersection and union difference expression is calculated according to the key column
 
-表达式支持的计算符：& 代表交集计算，| 代表并集计算，- 代表差集计算，^ 代表异或计算，\ 代表转义字符
+the calculators supported by the expression: & represents intersection calculation, | represents union calculation, - represents difference calculation, ^ represents XOR calculation, and \ represents escape characters
 
-- 说明：
+Explain:
 
-查询规划上聚合分 2 层，第一层 be 聚合节点计算包括 init、update、serialize 步骤，第二层 be 聚合节点计算包括 merge、finalize 步骤。在第一层 be 节点，init 阶段解析 input_string 字符串，转换为后缀表达式（逆波兰式），解析出计算 key 值，并在 map<key, bitmap>结构中初始化；update 阶段，底层内核 scan 维度列（filter_column）数据后回调 update 函数，然后以计算 key 为单位对上一步的 map 结构中的 bitmap 进行聚合；serialize 阶段，根据后缀表达式，解析出计算 key 列的 bitmap，利用栈结构先进后出原则，进行 bitmap 交并差集合计算，然后对最终的结果 bitmap 序列化后发送至第二层聚合 be 节点。在第二层聚合 be 节点，对所有来源于第一层节点的 bitmap 值求并集，并返回最终 bitmap 结果
+the aggregation of query planning is divided into two layers. The first layer of be aggregation node calculation includes init, update, and serialize steps. The second layer of be aggregation node calculation includes merge and finalize steps. In the first layer of be node, the input string is parsed in the init phase, which is converted into a suffix expression (inverse Polish), parses the calculated key value, and initializes it in the map<key, bitmap>structure; In the update phase, the underlying kernel scan dimension column (filter_column) calls back the update function, and then aggregates the bitmap in the map structure of the previous step in the unit of computing key; In the serialize stage, the bitmap of the key column is parsed according to the suffix expression, and the bitmap intersection, merge and difference set is calculated using the first in, last out principle of the stack structure. Then the final bitmap is serialized and sent to the aggregation be node in the second layer. Aggregates be nodes in the second layer, finds the union set of all bitmap values from the first layer nodes, and returns the final bitmap results
 
-**orthogonal_bitmap_expr_calculate_count**
+#### orthogonal_bitmap_expr_calculate_count
 
-求表达式 bitmap 交并差集合计算 count 函数，语法和参数同 orthogonal_bitmap_expr_calculate。
+Compute the count function by computing the intersection, union and difference set of the expression bitmap. The syntax and parameters is the same as orthogonal_bitmap_expr_calculate
 
-- 语法：
+Syntax:
 
 orthogonal_bitmap_expr_calculate_count(bitmap_column, filter_column, input_string)
 
-- 说明：
+Explain:
 
-查询规划上聚合分 2 层，第一层 be 聚合节点计算包括 init、update、serialize 步骤，第二层 be 聚合节点计算包括 merge、finalize 步骤。在第一层 be 节点，init 阶段解析 input_string 字符串，转换为后缀表达式（逆波兰式），解析出计算 key 值，并在 map<key, bitmap>结构中初始化；update 阶段，底层内核 scan 维度列（filter_column）数据后回调 update 函数，然后以计算 key 为单位对上一步的 map 结构中的 bitmap 进行聚合；serialize 阶段，根据后缀表达式，解析出计算 key 列的 bitmap，利用栈结构先进后出原则，进行 bitmap 交并差集合计算，然后对最终的结果 bitmap 的 count 值序列化后发送至第二层聚合 be 节点。在第二层聚合 be 节点，对所有来源于第一层节点的 count 值求加和，并返回最终 count 结果。
+the aggregation of query planning is divided into two layers. The first layer of be aggregation node calculation includes init, update, and serialize steps. The second layer of be aggregation node calculation includes merge and finalize steps. In the first layer of be node, the input string is parsed in the init phase, converted to suffix expression Formula (inverse Polish formula), parse the calculated key value and initialize it in the map<key, bitmap>structure; In the update phase, the underlying kernel scan dimension column (filter_column) calls back the update function, and then aggregates the bitmap in the map structure of the previous step in the unit of computing key; In the serialize stage, the bitmap of the key column is parsed according to the suffix expression, and the bitmap intersection, merge and difference set is calculated using the first in, last out principle of the stack structure. Then the count value of the final bitmap is serialized and sent to the aggregation be node in the second layer.> Aggregates be nodes in the second layer, adds and sums all count values from the first layer nodes, and returns the final count result.
 
-### 使用场景
+### Suitable for the scene
 
-符合对 bitmap 进行正交计算的场景，如在用户行为分析中，计算留存，漏斗，用户画像等。
+It is consistent with the scenario of orthogonal calculation of bitmap, such as calculation retention, funnel, user portrait, etc.
 
-人群圈选：
+Crowd selection:
 
-```sql
- select orthogonal_bitmap_intersect_count(user_id, tag, 13080800, 11110200) from user_tag_bitmap where tag in (13080800, 11110200);
- 注：13080800、11110200代表用户标签
+```
+select orthogonal_bitmap_intersect_count(user_id, tag, 13080800, 11110200) from user_tag_bitmap where tag in (13080800, 11110200);
+
+Note: 13080800 and 11110200 represent user labels
 ```
 
-计算 user_id 的去重值：
+Calculate the deduplication value for user_id:
 
-```sql
+```
 select orthogonal_bitmap_union_count(user_id) from user_tag_bitmap where tag in (13080800, 11110200);
 ```
 
-bitmap 交并差集合混合计算：
+Bitmap cross merge difference set hybrid computing:
 
-```sql
+```
 select orthogonal_bitmap_expr_calculate_count(user_id, tag, '(833736|999777)&(1308083|231207)&(1000|20000-30000)') from user_tag_bitmap where tag in (833736,999777,130808,231207,1000,20000,30000);
-注：1000、20000、30000等整形tag，代表用户不同标签
+Note: 1000, 20000, 30000 plastic tags represent different labels of users
 ```
 
-```sql
+```
 select orthogonal_bitmap_expr_calculate_count(user_id, tag, '(A:a/b|B:2\\-4)&(C:1-D:12)&E:23') from user_str_tag_bitmap where tag in ('A:a/b', 'B:2-4', 'C:1', 'D:12', 'E:23');
- 注：'A:a/b', 'B:2-4'等是字符串类型tag，代表用户不同标签, 其中'B:2-4'需要转义成'B:2\\-4'
+Note: 'A:a/b', 'B:2-4', etc. are string types tag, representing different labels of users, where 'B:2-4' needs to be escaped as'B:2\\-4'
 ```

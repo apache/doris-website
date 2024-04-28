@@ -1,7 +1,7 @@
 ---
 {
     "title": "Runtime Filter",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -26,25 +26,21 @@ under the License.
 
 # Runtime Filter
 
-Runtime Filter 旨在为某些 Join 查询在运行时动态生成过滤条件，来减少扫描的数据量，避免不必要的 I/O 和网络传输，从而加速查询。
+Runtime Filter is designed to dynamically generate filter conditions for certain Join queries at runtime to reduce the amount of scanned data, avoid unnecessary I/O and network transmission, and speed up the query.
 
-## 名词解释
+## Noun Interpretation
 
-- 左表：Join 查询时，左边的表。进行 Probe 操作。可被 Join Reorder 调整顺序。
+* Left table: the table on the left during Join query. Perform Probe operation. The order can be adjusted by Join Reorder.
+* Right table: the table on the right during Join query. Perform the Build operation. The order can be adjusted by Join Reorder.
+* Fragment: FE will convert the execution of specific SQL statements into corresponding fragments and send them to BE for execution. The corresponding Fragment is executed on the BE, and the results are aggregated and returned to the FE.
+* Join on clause: `Aa=Bb` in `A join B on Aa=Bb`, based on this to generate join conjuncts during query planning, including expr used by join Build and Probe, where Build expr is called in Runtime Filter src expr, Probe expr are called target expr in Runtime Filter.
 
-- 右表：Join 查询时，右边的表。进行 Build 操作。可被 Join Reorder 调整顺序。
+## Principle
 
-- Fragment：FE 会将具体的 SQL 语句的执行转化为对应的 Fragment 并下发到 BE 进行执行。BE 上执行对应 Fragment，并将结果汇聚返回给 FE。
+Runtime Filter is generated during query planning, constructed in HashJoinNode, and applied in ScanNode.
 
-- Join on clause: `A join B on A.a=B.b`中的`A.a=B.b`，在查询规划时基于此生成 join conjuncts，包含 join Build 和 Probe 使用的 expr，其中 Build expr 在 Runtime Filter 中称为 src expr，Probe expr 在 Runtime Filter 中称为 target expr。
-
-## 原理
-
-Runtime Filter 在查询规划时生成，在 HashJoinNode 中构建，在 ScanNode 中应用。
-
-举个例子，当前存在 T1 表与 T2 表的 Join 查询，它的 Join 方式为 HashJoin，T1 是一张事实表，数据行数为 100000，T2 是一张维度表，数据行数为 2000，Doris join 的实际情况是：
-
-```text
+For example, there is currently a Join query between the T1 table and the T2 table. Its Join mode is HashJoin. T1 is a fact table with 100,000 rows of data. T2 is a dimension table with 2000 rows of data. Doris join The actual situation is:
+```
 |          >      HashJoinNode     <
 |         |                         |
 |         | 100000                  | 2000
@@ -55,10 +51,8 @@ Runtime Filter 在查询规划时生成，在 HashJoinNode 中构建，在 ScanN
 |        T1                        T2
 |
 ```
-
-显而易见对 T2 扫描数据要远远快于 T1，如果我们主动等待一段时间再扫描 T1，等 T2 将扫描的数据记录交给 HashJoinNode 后，HashJoinNode 根据 T2 的数据计算出一个过滤条件，比如 T2 数据的最大和最小值，或者构建一个 Bloom Filter，接着将这个过滤条件发给等待扫描 T1 的 ScanNode，后者应用这个过滤条件，将过滤后的数据交给 HashJoinNode，从而减少 probe hash table 的次数和网络开销，这个过滤条件就是 Runtime Filter，效果如下：
-
-```text
+Obviously, scanning data for T2 is much faster than T1. If we take the initiative to wait for a while and then scan T1, after T2 sends the scanned data record to HashJoinNode, HashJoinNode calculates a filter condition based on the data of T2, such as the maximum value of T2 data And the minimum value, or build a Bloom Filter, and then send this filter condition to ScanNode waiting to scan T1, the latter applies this filter condition and delivers the filtered data to HashJoinNode, thereby reducing the number of probe hash tables and network overhead. This filter condition is Runtime Filter, and the effect is as follows:
+```
 |          >      HashJoinNode     <
 |         |                         |
 |         | 6000                    | 2000
@@ -69,10 +63,8 @@ Runtime Filter 在查询规划时生成，在 HashJoinNode 中构建，在 ScanN
 |        T1                        T2
 |
 ```
-
-如果能将过滤条件（Runtime Filter）下推到存储引擎，则某些情况下可以利用索引来直接减少扫描的数据量，从而大大减少扫描耗时，效果如下：
-
-```text
+If the filter condition (Runtime Filter) can be pushed down to the storage engine, in some cases, the index can be used to directly reduce the amount of scanned data, thereby greatly reducing the scanning time. The effect is as follows:
+```
 |          >      HashJoinNode     <
 |         |                         |
 |         | 6000                    | 2000
@@ -83,165 +75,140 @@ Runtime Filter 在查询规划时生成，在 HashJoinNode 中构建，在 ScanN
 |        T1                        T2
 |
 ```
+It can be seen that, unlike predicate push-down and partition cutting, Runtime Filter is a filter condition dynamically generated at runtime, that is, when the query is run, the join on clause is parsed to determine the filter expression, and the expression is broadcast to ScanNode that is reading the left table , Thereby reducing the amount of scanned data, thereby reducing the number of probe hash table, avoiding unnecessary I/O and network transmission.
 
-可见，和谓词下推、分区裁剪不同，Runtime Filter 是在运行时动态生成的过滤条件，即在查询运行时解析 join on clause 确定过滤表达式，并将表达式广播给正在读取左表的 ScanNode，从而减少扫描的数据量，进而减少 probe hash table 的次数，避免不必要的 I/O 和网络传输。
+Runtime Filter is mainly used to optimize joins for large tables. If the amount of data in the left table is too small, or the amount of data in the right table is too large, the Runtime Filter may not achieve the expected effect.
 
-Runtime Filter 主要用于大表 join 小表的优化，如果左表的数据量太小，或者右表的数据量太大，则 Runtime Filter 可能不会取得预期效果。
+## Usage
 
-## 使用方式
+### Runtime Filter query options
 
-### Runtime Filter 查询选项
+For query options related to Runtime Filter, please refer to the following sections:
 
-与 Runtime Filter 相关的查询选项信息，请参阅以下部分：
+- The first query option is to adjust the type of Runtime Filter used. In most cases, you only need to adjust this option, and keep the other options as default.
 
-- 第一个查询选项是调整使用的 Runtime Filter 类型，大多数情况下，您只需要调整这一个选项，其他选项保持默认即可。
-  
-  - `runtime_filter_type`: 包括 Bloom Filter、MinMax Filter、IN predicate、IN Or Bloom Filter、Bitmap Filter，默认会使用 IN Or Bloom Filter，部分情况下同时使用 Bloom Filter、MinMax Filter、IN predicate 时性能更高。
+  - `runtime_filter_type`: Including Bloom Filter, MinMax Filter, IN predicate, IN_OR_BLOOM Filter and Bitmap_Filter. By default, only IN_OR_BLOOM Filter will be used. In some cases, the performance will be higher when both Bloom Filter, MinMax Filter and IN predicate are used at the same time.
 
-- 其他查询选项通常仅在某些特定场景下，才需进一步调整以达到最优效果。通常只在性能测试后，针对资源密集型、运行耗时足够长且频率足够高的查询进行优化。
+- Other query options usually only need to be further adjusted in certain specific scenarios to achieve the best results. Usually only after performance testing, optimize for resource-intensive, long enough running time and high enough frequency queries.
 
-  - `runtime_filter_mode`: 用于调整 Runtime Filter 的下推策略，包括 OFF、LOCAL、GLOBAL 三种策略，默认设置为 GLOBAL 策略
+  - `runtime_filter_mode`: Used to adjust the push-down strategy of Runtime Filter, including three strategies of OFF, LOCAL, and GLOBAL. The default setting is the GLOBAL strategy
 
-  - `runtime_filter_wait_time_ms`: 左表的 ScanNode 等待每个 Runtime Filter 的时间，默认 1000ms
+  - `runtime_filter_wait_time_ms`: the time that ScanNode in the left table waits for each Runtime Filter, the default is 1000ms
 
-  - `runtime_filters_max_num`: 每个查询可应用的 Runtime Filter 中 Bloom Filter 的最大数量，默认 10
+  - `runtime_filters_max_num`: The maximum number of Bloom Filters in the Runtime Filter that can be applied to each query, the default is 10
 
-  - `runtime_bloom_filter_min_size`: Runtime Filter 中 Bloom Filter 的最小长度，默认 1048576（1M）
+  - `runtime_bloom_filter_min_size`: the minimum length of Bloom Filter in Runtime Filter, default 1048576 (1M)
 
-  - `runtime_bloom_filter_max_size`: Runtime Filter 中 Bloom Filter 的最大长度，默认 16777216（16M）
+  - `runtime_bloom_filter_max_size`: the maximum length of Bloom Filter in Runtime Filter, the default is 16777216 (16M)
 
-  - `runtime_bloom_filter_size`: Runtime Filter 中 Bloom Filter 的默认长度，默认 2097152（2M）
+  - `runtime_bloom_filter_size`: The default length of Bloom Filter in Runtime Filter, the default is 2097152 (2M)
 
-  - `runtime_filter_max_in_num`: 如果 join 右表数据行数大于这个值，我们将不生成 IN predicate，默认 1024
-  
-  - `runtime_filter_wait_infinitely`: 如果参数为 true，那么左表的scan节点将会一直等待直到接收到 runtime filer或者查询超超时，默认为false
+  - `runtime_filter_max_in_num`: If the number of rows in the right table of the join is greater than this value, we will not generate an IN predicate, the default is 1024
 
-下面对查询选项做进一步说明。
+The query options are further explained below.
 
-**1. runtime_filter_type**
+#### 1.runtime_filter_type
+Type of Runtime Filter used.
 
-使用的 Runtime Filter 类型。
-
-**类型**: 数字(1, 2, 4, 8, 16)或者相对应的助记符字符串(IN, BLOOM_FILTER, MIN_MAX, IN_OR_BLOOM_FILTER, BITMAP_FILTER)，默认12(MIN_MAX,IN_OR_BLOOM_FILTER)，使用多个时用逗号分隔，注意需要加引号，或者将任意多个类型的数字相加，例如:
-
-```sql
+**Type**: Number (1, 2, 4, 8, 16) or the corresponding mnemonic string (IN, BLOOM_FILTER, MIN_MAX, IN_OR_BLOOM_FILTER, BITMAP_FILTER), the default is 8 (IN_OR_BLOOM FILTER), use multiple commas to separate, pay attention to the need to add quotation marks , Or add any number of types, for example:
+```
 set runtime_filter_type="BLOOM_FILTER,IN,MIN_MAX";
 ```
-
-等价于：
-
-```sql
+Equivalent to:
+```
 set runtime_filter_type=7;
 ```
 
-**使用注意事项**
+**Precautions for use**
 
-- **IN or Bloom Filter**: 根据右表在执行过程中的真实行数，由系统自动判断使用 IN predicate 还是 Bloom Filter
-  
-  - 默认在右表数据行数少于 102400 时会使用 IN predicate（可通过 session 变量中的`runtime_filter_max_in_num`调整），否则使用 Bloom filter。
+- **IN or Bloom Filter**: According to the actual number of rows in the right table during execution, the system automatically determines whether to use IN predicate or Bloom Filter.
+    - By default, IN Predicate will be used when the number of data rows in the right table is less than 102400 (which can be adjusted by ` runtime_filter_max_in_num 'in the session variable). Otherwise, use bloom filter.
+- **Bloom Filter**: There is a certain misjudgment rate, which results in the filtered data being a little less than expected, but it will not cause the final result to be inaccurate. In most cases, Bloom Filter can improve performance or has no significant impact on performance, but in some cases Under circumstances will cause performance degradation.
+    - Bloom Filter construction and application overhead is high, so when the filtering rate is low, or the amount of data in the left table is small, Bloom Filter may cause performance degradation.
+    - At present, only the Key column of the left table can be pushed down to the storage engine if the Bloom Filter is applied, and the test results show that the performance of the Bloom Filter is often reduced when the Bloom Filter is not pushed down to the storage engine.
+    - Currently Bloom Filter only has short-circuit logic when using expression filtering on ScanNode, that is, when the false positive rate is too high, the Bloom Filter will not continue to be used, but there is no short-circuit logic when the Bloom Filter is pushed down to the storage engine , So when the filtration rate is low, it may cause performance degradation.
 
-- **Bloom Filter**: 有一定的误判率，导致过滤的数据比预期少一点，但不会导致最终结果不准确，在大部分情况下 Bloom Filter 都可以提升性能或对性能没有显著影响，但在部分情况下会导致性能降低。
+- **MinMax Filter**: Contains the maximum value and the minimum value, thereby filtering data smaller than the minimum value and greater than the maximum value. The filtering effect of the MinMax Filter is related to the type of the Key column in the join on clause and the data distribution of the left and right tables.
+    - When the type of the Key column in the join on clause is int/bigint/double, etc., in extreme cases, if the maximum and minimum values ​​of the left and right tables are the same, there is no effect, otherwise the maximum value of the right table is less than the minimum value of the left table, or the minimum of the right table The value is greater than the maximum value in the left table, the effect is best.
+    - When the type of the Key column in the join on clause is varchar, etc., applying the MinMax Filter will often cause performance degradation.
 
-  - Bloom Filter 构建和应用的开销较高，所以当过滤率较低时，或者左表数据量较少时，Bloom Filter 可能会导致性能降低。
-
-  - 目前只有左表的 Key 列应用 Bloom Filter 才能下推到存储引擎，而测试结果显示 Bloom Filter 不下推到存储引擎时往往会导致性能降低。
-
-  - 目前 Bloom Filter 仅在 ScanNode 上使用表达式过滤时有短路 (short-circuit) 逻辑，即当假阳性率过高时，不继续使用 Bloom Filter，但当 Bloom Filter 下推到存储引擎后没有短路逻辑，所以当过滤率较低时可能导致性能降低。
-
-- **MinMax Filter**: 包含最大值和最小值，从而过滤小于最小值和大于最大值的数据，MinMax Filter 的过滤效果与 join on clause 中 Key 列的类型和左右表数据分布有关。
-
-  - 当 join on clause 中 Key 列的类型为 int/bigint/double 等时，极端情况下，如果左右表的最大最小值相同则没有效果，反之右表最大值小于左表最小值，或右表最小值大于左表最大值，则效果最好。
-
-  - 当 join on clause 中 Key 列的类型为 varchar 等时，应用 MinMax Filter 往往会导致性能降低。
-
-- **IN predicate**: 根据 join on clause 中 Key 列在右表上的所有值构建 IN predicate，使用构建的 IN predicate 在左表上过滤，相比 Bloom Filter 构建和应用的开销更低，在右表数据量较少时往往性能更高。
-
-  - 目前 IN predicate 已实现合并方法。
-
-  - 当同时指定 In predicate 和其他 filter，并且 in 的过滤数值没达到 runtime_filter_max_in_num 时，会尝试把其他 filter 去除掉。原因是 In predicate 是精确的过滤条件，即使没有其他 filter 也可以高效过滤，如果同时使用则其他 filter 会做无用功。目前仅在 Runtime filter 的生产者和消费者处于同一个 fragment 时才会有去除非 in filter 的逻辑。
+- **IN predicate**: Construct IN predicate based on all the values ​​of Key listed in the join on clause on the right table, and use the constructed IN predicate to filter on the left table. Compared with Bloom Filter, the cost of construction and application is lower. The amount of data in the right table is lower. When it is less, it tends to perform better.
+    - Currently IN predicate already implement a merge method.
+    - When IN predicate and other filters are specified at the same time, and the filtering value of IN predicate does not reach runtime_filter_max_in_num will try to remove other filters. The reason is that IN predicate is an accurate filtering condition. Even if there is no other filter, it can filter efficiently. If it is used at the same time, other filters will do useless work. Currently, only when the producer and consumer of the runtime filter are in the same fragment can there be logic to remove the Non-IN predicate.
 
 - **Bitmap Filter**:
+    - Currently, the bitmap filter is used only when the subquery in the [in subquery](../../sql-manual/sql-reference/Operators/in.md) operation returns a bitmap column.
+    - Currently, bitmap filter is only supported in vectorization engine.
 
-  - 当前仅当[in subquery](../../sql-manual/sql-reference/Operators/in.md)操作中的子查询返回 bitmap 列时会使用 bitmap filter.
+#### 2.runtime_filter_mode
+Used to control the transmission range of Runtime Filter between instances.
 
-  - 当前仅在向量化引擎中支持 bitmap filter.
+**Type**: Number (0, 1, 2) or corresponding mnemonic string (OFF, LOCAL, GLOBAL), default 2 (GLOBAL).
 
-**2. runtime_filter_mode**
+**Precautions for use**
 
-用于控制 Runtime Filter 在 instance 之间传输的范围。
+LOCAL: Relatively conservative, the constructed Runtime Filter can only be used in the same Fragment on the same instance (the smallest unit of query execution), that is, the Runtime Filter producer (the HashJoinNode that constructs the Filter) and the consumer (the ScanNode that uses the RuntimeFilter) The same Fragment, such as the general scene of broadcast join;
 
-**类型**: 数字 (0, 1, 2) 或者相对应的助记符字符串 (OFF, LOCAL, GLOBAL)，默认 2(GLOBAL)。
+GLOBAL: Relatively radical. In addition to satisfying the scenario of the LOCAL strategy, the Runtime Filter can also be combined and transmitted to different Fragments on different instances via the network. For example, the Runtime Filter producer and consumer are in different Fragments, such as shuffle join.
 
-**使用注意事项**
+In most cases, the GLOBAL strategy can optimize queries in a wider range of scenarios, but in some shuffle joins, the cost of generating and merging Runtime Filters exceeds the performance advantage brought to the query, and you can consider changing to the LOCAL strategy.
 
-LOCAL：相对保守，构建的 Runtime Filter 只能在同一个 instance（查询执行的最小单元）上同一个 Fragment 中使用，即 Runtime Filter 生产者（构建 Filter 的 HashJoinNode）和消费者（使用 RuntimeFilter 的 ScanNode）在同一个 Fragment，比如 broadcast join 的一般场景；
+If the join query involved in the cluster does not improve performance due to Runtime Filter, you can change the setting to OFF to completely turn off the function.
 
-GLOBAL：相对激进，除满足 LOCAL 策略的场景外，还可以将 Runtime Filter 合并后通过网络传输到不同 instance 上的不同 Fragment 中使用，比如 Runtime Filter 生产者和消费者在不同 Fragment，比如 shuffle join。
+When building and applying Runtime Filters on different Fragments, the reasons and strategies for merging Runtime Filters can be found in [ISSUE 6116](https://github.com/apache/incubator-doris/issues/6116)
 
-大多数情况下 GLOBAL 策略可以在更广泛的场景对查询进行优化，但在有些 shuffle join 中生成和合并 Runtime Filter 的开销超过给查询带来的性能优势，可以考虑更改为 LOCAL 策略。
+#### 3.runtime_filter_wait_time_ms
+Waiting for Runtime Filter is time consuming.
 
-如果集群中涉及的 join 查询不会因为 Runtime Filter 而提高性能，您可以将设置更改为 OFF，从而完全关闭该功能。
+**Type**: integer, default 1000, unit ms
 
-在不同 Fragment 上构建和应用 Runtime Filter 时，需要合并 Runtime Filter 的原因和策略可参阅 [ISSUE 6116(opens new window)](https://github.com/apache/incubator-doris/issues/6116)
+**Precautions for use**
 
-**3. runtime_filter_wait_time_ms**
+After the Runtime Filter is turned on, the ScanNode in the table on the left will wait for a period of time for each Runtime Filter assigned to itself before scanning the data, that is, if the ScanNode is assigned 3 Runtime Filters, it will wait at most 3000ms.
 
-Runtime Filter 的等待耗时。
+Because it takes time to build and merge the Runtime Filter, ScanNode will try to push down the Runtime Filter that arrives within the waiting time to the storage engine. If the waiting time is exceeded, ScanNode will directly start scanning data using the Runtime Filter that has arrived.
 
-**类型**: 整数，默认 1000，单位 ms
+If the Runtime Filter arrives after ScanNode starts scanning, ScanNode will not push the Runtime Filter down to the storage engine. Instead, it will use expression filtering on ScanNode based on the Runtime Filter for the data that has been scanned from the storage engine. The scanned data will not apply the Runtime Filter, so the intermediate data size obtained will be larger than the optimal solution, but serious cracking can be avoided.
 
-**使用注意事项**
+If the cluster is busy and there are many resource-intensive or long-time-consuming queries on the cluster, consider increasing the waiting time to avoid missing optimization opportunities for complex queries. If the cluster load is light, and there are many small queries on the cluster that only take a few seconds, you can consider reducing the waiting time to avoid an increase of 1s for each query.
 
-在开启 Runtime Filter 后，左表的 ScanNode 会为每一个分配给自己的 Runtime Filter 等待一段时间再扫描数据，即如果 ScanNode 被分配了 3 个 Runtime Filter，那么它最多会等待 3000ms。
+#### 4.runtime_filters_max_num
+The upper limit of the number of Bloom Filters in the Runtime Filter generated by each query.
 
-因为 Runtime Filter 的构建和合并均需要时间，ScanNode 会尝试将等待时间内到达的 Runtime Filter 下推到存储引擎，如果超过等待时间后，ScanNode 会使用已经到达的 Runtime Filter 直接开始扫描数据。
+**Type**: integer, default 10
 
-如果 Runtime Filter 在 ScanNode 开始扫描之后到达，则 ScanNode 不会将该 Runtime Filter 下推到存储引擎，而是对已经从存储引擎扫描上来的数据，在 ScanNode 上基于该 Runtime Filter 使用表达式过滤，之前已经扫描的数据则不会应用该 Runtime Filter，这样得到的中间数据规模会大于最优解，但可以避免严重的裂化。
+**Precautions for use**
+Currently, only the number of Bloom Filters is limited, because the construction and application of Bloom Filters are more expensive than MinMax Filter and IN predicate.
 
-如果集群比较繁忙，并且集群上有许多资源密集型或长耗时的查询，可以考虑增加等待时间，以避免复杂查询错过优化机会。如果集群负载较轻，并且集群上有许多只需要几秒的小查询，可以考虑减少等待时间，以避免每个查询增加 1s 的延迟。
-
-**4. runtime_filters_max_num**
-
-每个查询生成的 Runtime Filter 中 Bloom Filter 数量的上限。
-
-**类型**: 整数，默认 10
-
-**使用注意事项** 目前仅对 Bloom Filter 的数量进行限制，因为相比 MinMax Filter 和 IN predicate，Bloom Filter 构建和应用的代价更高。
-
-如果生成的 Bloom Filter 超过允许的最大数量，则保留选择性大的 Bloom Filter，选择性大意味着预期可以过滤更多的行。这个设置可以防止 Bloom Filter 耗费过多的内存开销而导致潜在的问题。
-
-```text
-选择性=(HashJoinNode Cardinality / HashJoinNode left child Cardinality)
--- 因为目前 FE 拿到 Cardinality 不准，所以这里 Bloom Filter 计算的选择性与实际不准，因此最终可能只是随机保留了部分 Bloom Filter。
+If the number of Bloom Filters generated exceeds the maximum allowable number, then the Bloom Filter with a large selectivity is retained. A large selectivity means that more rows are expected to be filtered. This setting can prevent Bloom Filter from consuming too much memory overhead and causing potential problems.
 ```
+Selectivity = (HashJoinNode Cardinality / HashJoinNode left child Cardinality)
+- Because the cardinality of FE is currently inaccurate, the selectivity of Bloom Filter calculation here is inaccurate, so in the end, it may only randomly reserve part of Bloom Filter.
+```
+This query option needs to be adjusted only when tuning some long-consuming queries involving joins between large tables.
 
-仅在对涉及大表间 join 的某些长耗时查询进行调优时，才需要调整此查询选项。
+#### 5. Bloom Filter length related parameters
+Including `runtime_bloom_filter_min_size`, `runtime_bloom_filter_max_size`, `runtime_bloom_filter_size`, used to determine the size (in bytes) of the Bloom Filter data structure used by the Runtime Filter.
 
-**5. Bloom Filter 长度相关参数**
+**Type**: Integer
 
-包括`runtime_bloom_filter_min_size`、`runtime_bloom_filter_max_size`、`runtime_bloom_filter_size`，用于确定 Runtime Filter 使用的 Bloom Filter 数据结构的大小（以字节为单位）。
+**Precautions for use**
+Because it is necessary to ensure that the length of the Bloom Filter constructed by each HashJoinNode is the same to be merged, the length of the Bloom Filter is currently calculated in the FE query planning.
 
-**类型**: 整数
+If you can get the number of data rows (Cardinality) in the statistical information of the join right table, it will try to estimate the optimal size of the Bloom Filter based on Cardinality, and round to the nearest power of 2 (log value with the base 2). If the Cardinality of the table on the right cannot be obtained, the default Bloom Filter length `runtime_bloom_filter_size` will be used. `runtime_bloom_filter_min_size` and `runtime_bloom_filter_max_size` are used to limit the minimum and maximum length of the final Bloom Filter.
 
-**使用注意事项** 因为需要保证每个 HashJoinNode 构建的 Bloom Filter 长度相同才能合并，所以目前在 FE 查询规划时计算 Bloom Filter 的长度。
+Larger Bloom Filters are more effective when processing high-cardinality input sets, but require more memory. If the query needs to filter high cardinality columns (for example, containing millions of different values), you can consider increasing the value of `runtime_bloom_filter_size` for some benchmark tests, which will help make the Bloom Filter filter more accurate, so as to obtain the expected Performance improvement.
 
-如果能拿到 join 右表统计信息中的数据行数 (Cardinality)，会尝试根据 Cardinality 估计 Bloom Filter 的最佳大小，并四舍五入到最接近的 2 的幂 (以 2 为底的 log 值)。如果无法拿到右表的 Cardinality，则会使用默认的 Bloom Filter 长度`runtime_bloom_filter_size`。`runtime_bloom_filter_min_size`和`runtime_bloom_filter_max_size`用于限制最终使用的 Bloom Filter 长度最小和最大值。
+The effectiveness of Bloom Filter depends on the data distribution of the query, so it is usually only for some specific queries to additionally adjust the length of the Bloom Filter, rather than global modification, generally only for some long time-consuming queries involving joins between large tables. Only when you need to adjust this query option.
 
-更大的 Bloom Filter 在处理高基数的输入集时更有效，但需要消耗更多的内存。假如查询中需要过滤高基数列（比如含有数百万个不同的取值），可以考虑增加`runtime_bloom_filter_size`的值进行一些基准测试，这有助于使 Bloom Filter 过滤的更加精准，从而获得预期的性能提升。
+### View Runtime Filter generated by query
 
-Bloom Filter 的有效性取决于查询的数据分布，因此通常仅对一些特定查询额外调整其 Bloom Filter 长度，而不是全局修改，一般仅在对涉及大表间 join 的某些长耗时查询进行调优时，才需要调整此查询选项。
+The query plan that can be displayed by the `explain` command includes the join on clause information used by each Fragment, as well as comments on the generation and use of the Runtime Filter by the Fragment, so as to confirm whether the Runtime Filter is applied to the desired join on clause.
+- The comment contained in the Fragment that generates the Runtime Filter, such as `runtime filters: filter_id[type] <- table.column`.
+- Use the comment contained in the fragment of Runtime Filter such as `runtime filters: filter_id[type] -> table.column`.
 
-### 查看 query 生成的 Runtime Filter
-
-`explain`命令可以显示的查询计划中包括每个 Fragment 使用的 join on clause 信息，以及 Fragment 生成和使用 Runtime Filter 的注释，从而确认是否将 Runtime Filter 应用到了期望的 join on clause 上。
-
-- 生成 Runtime Filter 的 Fragment 包含的注释例如`runtime filters: filter_id[type] <- table.column`。
-
-- 使用 Runtime Filter 的 Fragment 包含的注释例如`runtime filters: filter_id[type] -> table.column`。
-
-下面例子中的查询使用了一个 ID 为 RF000 的 Runtime Filter。
-
-```sql
+The query in the following example uses a Runtime Filter with ID RF000.
+```
 CREATE TABLE test (t1 INT) DISTRIBUTED BY HASH (t1) BUCKETS 2 PROPERTIES("replication_num" = "1");
 INSERT INTO test VALUES (1), (2), (3), (4);
 
@@ -279,49 +246,38 @@ EXPLAIN SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2;
 |   1:OlapScanNode                                                  |
 |      TABLE: test2                                                 |
 +-------------------------------------------------------------------+
--- 上面`runtime filters`的行显示了`PLAN FRAGMENT 1`的`2:HASH JOIN`生成了 ID 为 RF000 的 IN predicate，
--- 其中`test2`.`t2`的 key values 仅在运行时可知，
--- 在`0:OlapScanNode`使用了该 IN predicate 用于在读取`test`.`t1`时过滤不必要的数据。
+-- The line of `runtime filters` above shows that `2:HASH JOIN` of `PLAN FRAGMENT 1` generates IN predicate with ID RF000,
+-- Among them, the key values of `test2`.`t2` are only known at runtime,
+-- This IN predicate is used in `0:OlapScanNode` to filter unnecessary data when reading `test`.`t1`.
 
 SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2; 
--- 返回 2 行结果 [3, 4];
+-- Return 2 rows of results [3, 4];
 
--- 通过 query 的 profile（set enable_profile=true;）可以查看查询内部工作的详细信息，
--- 包括每个 Runtime Filter 是否下推、等待耗时、以及 OLAP_SCAN_NODE 从 prepare 到接收到 Runtime Filter 的总时长。
+-- Through the query profile (set enable_profile=true;) you can view the detailed information of the internal work of the query,
+-- Including whether each Runtime Filter is pushed down, waiting time, 
+-- and the total time from prepare to receiving Runtime Filter for OLAP_SCAN_NODE.
 RuntimeFilter:in:
     -  HasPushDownToEngine:  true
     -  AWaitTimeCost:  0ns
     -  EffectTimeCost:  2.76ms
 
--- 此外，在 profile 的 OLAP_SCAN_NODE 中还可以查看 Runtime Filter 下推后的过滤效果和耗时。
+-- In addition, in the OLAP_SCAN_NODE of the profile, you can also view the filtering effect 
+-- and time consumption after the Runtime Filter is pushed down.
     -  RowsVectorPredFiltered:  9.320008M  (9320008)
     -  VectorPredEvalTime:  364.39ms
 ```
 
-## Runtime Filter 的规划规则
-
-1. 只支持对 join on clause 中的等值条件生成 Runtime Filter，不包括 Null-safe 条件，因为其可能会过滤掉 join 左表的 null 值。
-
-2. 不支持将 Runtime Filter 下推到 left outer、full outer、anti join 的左表；
-
-3. 不支持 src expr 或 target expr 是常量；
-
-4. 不支持 src expr 和 target expr 相等；
-
-5. 不支持 src expr 的类型等于`HLL`或者`BITMAP`；
-
-6. 目前仅支持将 Runtime Filter 下推给 OlapScanNode；
-
-7. 不支持 target expr 包含 NULL-checking 表达式，比如`COALESCE/IFNULL/CASE`，因为当 outer join 上层其他 join 的 join on clause 包含 NULL-checking 表达式并生成 Runtime Filter 时，将这个 Runtime Filter 下推到 outer join 的左表时可能导致结果不正确；
-
-8. 不支持 target expr 中的列（slot）无法在原始表中找到某个等价列；
-
-9. 不支持列传导，这包含两种情况：
-
-   - 一是例如 join on clause 包含 A.k = B.k and B.k = C.k 时，目前 C.k 只可以下推给 B.k，而不可以下推给 A.k；
-
-   - 二是例如 join on clause 包含 A.a + B.b = C.c，如果 A.a 可以列传导到 B.a，即 A.a 和 B.a 是等价的列，那么可以用 B.a 替换 A.a，然后可以尝试将 Runtime Filter 下推给 B（如果 A.a 和 B.a 不是等价列，则不能下推给 B，因为 target expr 必须与唯一一个 join 左表绑定）；
-
-10. Target expr 和 src expr 的类型必须相等，因为 Bloom Filter 基于 hash，若类型不等则会尝试将 target expr 的类型转换为 src expr 的类型；
-
-11. 不支持`PlanNode.Conjuncts`生成的 Runtime Filter 下推，与 HashJoinNode 的`eqJoinConjuncts`和`otherJoinConjuncts`不同，`PlanNode.Conjuncts`生成的 Runtime Filter 在测试中发现可能会导致错误的结果，例如`IN`子查询转换为 join 时，自动生成的 join on clause 将保存在`PlanNode.Conjuncts`中，此时应用 Runtime Filter 可能会导致结果缺少一些行。
+## Runtime Filter planning rules
+1. Only support the generation of Runtime Filter for the equivalent conditions in the join on clause, excluding the Null-safe condition, because it may filter out the null value of the join left table.
+2. Does not support pushing down Runtime Filter to the left table of left outer, full outer, and anti join;
+3. Does not support src expr or target expr is constant;
+4. The equality of src expr and target expr is not supported;
+5. The type of src expr is not supported to be equal to `HLL` or `BITMAP`;
+6. Currently only supports pushing down Runtime Filter to OlapScanNode;
+7. Target expr does not support NULL-checking expressions, such as `COALESCE/IFNULL/CASE`, because when the join on clause of other joins at the upper level of the outer join contains NULL-checking expressions and a Runtime Filter is generated, this Runtime Filter is downloaded Pushing to the left table of outer join may cause incorrect results;
+8. The column (slot) in target expr is not supported, and an equivalent column cannot be found in the original table;
+9. Column conduction is not supported. This includes two cases:
+    - First, when the join on clause contains A.k = B.k and B.k = C.k, currently C.k can only be pushed down to B.k, but not to A.k;
+    - Second, for example, the join on clause contains Aa + Bb = Cc. If Aa can be transmitted to Ba, that is, Aa and Ba are equivalent columns, then you can replace Aa with Ba, and then you can try to push the Runtime Filter down to B ( If Aa and Ba are not equivalent columns, they cannot be pushed down to B, because target expr must be bound to the only join left table);
+10. The types of Target expr and src expr must be equal, because Bloom Filter is based on hash, if the types are not equal, it will try to convert the type of target expr to the type of src expr;
+11. The Runtime Filter generated by `PlanNode.Conjuncts` is not supported. Unlike HashJoinNode's `eqJoinConjuncts` and `otherJoinConjuncts`, the Runtime Filter generated by `PlanNode.Conjuncts` found in the test that it may cause incorrect results, such as ` When an IN` subquery is converted to a join, the automatically generated join on clause will be stored in `PlanNode.Conjuncts`. At this time, applying Runtime Filter may result in missing some rows in the result.

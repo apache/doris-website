@@ -1,7 +1,7 @@
 ---
 {
-    "title": "查询分析",
-    "language": "zh-CN"
+    "title": "Query Analysis",
+    "language": "en"
 }
 ---
 
@@ -25,94 +25,88 @@ under the License.
 -->
 
 
+# Query Analysis
 
-Doris 提供了一个图形化的命令以帮助用户更方便的分析一个具体的查询或导入。本文介绍如何使用该功能。
+Doris provides a graphical command to help users analyze a specific query or import more easily. This article describes how to use this feature.
 
-## 查询计划树
+## Query Plan Tree
 
-SQL 是一个描述性语言，用户通过一个 SQL 来描述想获取的数据。而一个 SQL 的具体执行方式依赖于数据库的实现。而查询规划器就是用来决定数据库如何具体执行一个 SQL 的。
+SQL is a descriptive language, and users describe the data they want to get through a SQL. The specific execution mode of a SQL depends on the implementation of the database. The query planner is used to determine how the database executes a SQL.
 
-比如用户指定了一个 Join 算子，则查询规划器需要决定具体的 Join 算法，比如是 Hash Join，还是 Merge Sort Join；是使用 Shuffle 还是 Broadcast；Join 顺序是否需要调整以避免笛卡尔积；以及确定最终的在哪些节点执行等等。
+For example, if the user specifies a Join operator, the query planner needs to decide the specific Join algorithm, such as Hash Join or Merge Sort Join; whether to use Shuffle or Broadcast; whether the Join order needs to be adjusted to avoid Cartesian product; on which nodes to execute and so on.
 
-Doris 的查询规划过程是先将一个 SQL 语句转换成一个单机执行计划树。
+Doris' query planning process is to first convert an SQL statement into a single-machine execution plan tree.
 
-```text
+````text
      ┌────┐
      │Sort│
      └────┘
         │
-  ┌───────────┐
+  ┌──────────────┐
   │Aggregation│
-  └───────────┘
+  └──────────────┘
         │
      ┌────┐
      │Join│
      └────┘
-    ┌───┴────┐
+    ┌────┴────┐
 ┌──────┐ ┌──────┐
 │Scan-1│ │Scan-2│
 └──────┘ └──────┘
-```
+````
 
-之后，查询规划器会根据具体的算子执行方式、数据的具体分布，将单机查询计划转换为分布式查询计划。分布式查询计划是由多个 Fragment 组成的，每个 Fragment 负责查询计划的一部分，各个 Fragment 之间会通过 ExchangeNode 算子进行数据的传输。
+After that, the query planner will convert the single-machine query plan into a distributed query plan according to the specific operator execution mode and the specific distribution of data. The distributed query plan is composed of multiple fragments, each fragment is responsible for a part of the query plan, and the data is transmitted between the fragments through the ExchangeNode operator.
 
-```text
+````text
         ┌────┐
         │Sort│
-        │F1  │
+        │F1 │
         └────┘
            │
-     ┌───────────┐
+     ┌──────────────┐
      │Aggregation│
-     │F1         │
-     └───────────┘
+     │F1 │
+     └──────────────┘
            │
         ┌────┐
         │Join│
-        │F1  │
+        │F1 │
         └────┘
     ┌──────┴────┐
 ┌──────┐ ┌────────────┐
 │Scan-1│ │ExchangeNode│
-│F1    │ │F1          │
+│F1 │ │F1 │
 └──────┘ └────────────┘
                 │
-          ┌──────────────┐
-          │DataStreamSink│
-          │F2            │
-          └──────────────┘
+          ┌────────────────┐
+          │DataStreamDink│
+          │F2 │
+          └────────────────┘
                 │
             ┌──────┐
             │Scan-2│
-            │F2    │
+            │F2 │
             └──────┘
-```
+````
 
-如上图，我们将单机计划分成了两个 Fragment：F1 和 F2。两个 Fragment 之间通过一个 ExchangeNode 节点传输数据。
+As shown above, we divided the stand-alone plan into two Fragments: F1 and F2. Data is transmitted between two Fragments through an ExchangeNode.
 
-而一个 Fragment 会进一步的划分为多个 Instance。Instance 是最终具体的执行实例。划分成多个 Instance 有助于充分利用机器资源，提升一个 Fragment 的执行并发度。
+And a Fragment will be further divided into multiple Instances. Instance is the final concrete execution instance. Dividing into multiple Instances helps to make full use of machine resources and improve the execution concurrency of a Fragment.
 
-## 查看查询计划
+## View Query Plan
 
-可以通过以下三种命令查看一个 SQL 的执行计划。
+You can view the execution plan of a SQL through the following three commands.
 
-- `EXPLAIN GRAPH select ...;` 或者 `DESC GRAPH select ...;`：这些命令提供了执行计划的图形表示。它们帮助我们可视化查询执行的流程，包括关联路径和数据访问方法。
+- `EXPLAIN GRAPH select ...;` OR `DESC GRAPH select ...;` These commands provide a graphical representation of the execution plan. 
+- `EXPLAIN select ...;` This command displays a textual representation of the execution plan for the specified SQL query. 
+- `EXPLAIN VERBOSE select ...;` Similar to the previous command, this command provides a more detailed output.
+- `EXPLAIN PARSED PLAN select ...;` This command returns the parsed execution plan of the SQL query. It displays the plan trees and information about the logical operators involved in query processing.
+- `EXPLAIN ANALYZED PLAN select ...;` This command returns the analyzed execution plan for the SQL query.
+- `EXPLAIN REWRITTEN PLAN select ...;` This command shows the rewritten execution plan after applying any query transformations or optimizations performed by the database engine.
+- `EXPLAIN OPTIMIZED PLAN select ...;` This command shows the best execution plan after CBO.
+- `EXPLAIN SHAPE PLAN select ...;` This command presents the simplified execution plan with a focus on how the query is shaped and structured.
 
-- `EXPLAIN select ...;`：这个命令显示指定 SQL 查询的执行计划的文本表示形式。它提供了有关查询优化步骤的信息，例如操作的顺序、执行算法和访问方法等。
-
-- `EXPLAIN VERBOSE select ...;`：与前一个命令类似，这个命令提供了更详细的输出结果。
-
-- `EXPLAIN PARSED PLAN select ...;`：这个命令返回 SQL 查询的解析后的执行计划。它显示了计划树和查询处理中涉及的逻辑操作符的信息。
-
-- `EXPLAIN ANALYZED PLAN select ...;`：这个命令返回 SQL 查询的分析后的执行计划。
-
-- `EXPLAIN REWRITTEN PLAN select ...;`：这个命令在数据库引擎对查询进行任何查询转换或优化后显示了重写后的执行计划。它提供了查询为了提高性能而进行的修改的见解。
-
-- `EXPLAIN OPTIMIZED PLAN select ...;` 这个命令返回了 CBO 中得到的最优计划
-
-- `EXPLAIN SHAPE PLAN select ...;`：这个命令以查询的形状和结构为重点，呈现了简化后的最优执行计划。
-
-其中第一个命令以图形化的方式展示一个查询计划，这个命令可以比较直观的展示查询计划的树形结构，以及 Fragment 的划分情况：
+The first command displays a query plan graphically. This command can more intuitively display the tree structure of the query plan and the division of Fragments:
 
 ```sql
 mysql> explain graph select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl2.k1 group by tbl1.k1 order by tbl1.k1;
@@ -195,9 +189,9 @@ mysql> explain graph select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1
 +---------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-从图中可以看出，查询计划树被分为了 5 个 Fragment：0、1、2、3、4。如 `OlapScanNode` 节点上的 `[Fragment: 0]` 表示这个节点属于 Fragment 0。每个 Fragment 之间都通过 DataStreamSink 和 ExchangeNode 进行数据传输。
+As can be seen from the figure, the query plan tree is divided into 5 fragments: 0, 1, 2, 3, and 4. For example, `[Fragment: 0]` on the `OlapScanNode` node indicates that this node belongs to Fragment 0. Data is transferred between each Fragment through DataStreamSink and ExchangeNode.
 
-图形命令仅展示简化后的节点信息，如果需要查看更具体的节点信息，如下推到节点上的过滤条件等，则需要通过第二个命令查看更详细的文字版信息：
+The graphics command only displays the simplified node information. If you need to view more specific node information, such as the filter conditions pushed to the node as follows, you need to view the more detailed text version information through the second command:
 
 ```sql
 mysql> explain select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl2.k1 group by tbl1.k1 order by tbl1.k1;
@@ -299,7 +293,7 @@ mysql> explain select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl
 +----------------------------------------------------------------------------------+
 ```
 
-第三个命令`EXPLAIN VERBOSE select ...;`相比第二个命令可以查看更详细的执行计划信息。
+The third command `explain verbose select ...;` gives you more details than the second command.
 
 ```sql
 mysql> explain verbose select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl2.k1 group by tbl1.k1 order by tbl1.k1;
@@ -470,26 +464,23 @@ mysql> explain verbose select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.
 160 rows in set (0.00 sec)
 ```
 
+> The information displayed in the query plan is still being standardized and improved, and we will introduce it in detail in subsequent articles.
 
-:::note
-查询计划中显示的信息还在不断规范和完善中，我们将在后续的文章中详细介绍。
-:::
+## View Query Profile
 
-## 查看查询 Profile
-
-用户可以通过以下命令打开会话变量 `is_report_success`：
+The user can open the session variable `is_report_success` with the following command:
 
 ```sql
 SET is_report_success=true;
-```
+````
 
-然后执行查询，则 Doris 会产生该查询的一个 Profile。Profile 包含了一个查询各个节点的具体执行情况，有助于我们分析查询瓶颈。
+Then execute the query, and Doris will generate a Profile of the query. Profile contains the specific execution of a query for each node, which helps us analyze query bottlenecks.
 
-执行完查询后，我们可以通过如下命令先获取 Profile 列表：
+After executing the query, we can first get the Profile list with the following command:
 
 ```sql
 mysql> show query profile "/"\G
-*************************** 1. row ***************************
+**************************** 1. row ******************** ******
    QueryId: c257c52f93e149ee-ace8ac14e8c9fef9
       User: root
  DefaultDb: default_cluster:db1
@@ -499,16 +490,15 @@ mysql> show query profile "/"\G
    EndTime: 2021-04-08 11:30:50
  TotalTime: 9ms
 QueryState: EOF
-```
+````
 
-这个命令会列出当前保存的所有 Profile。每行对应一个查询。我们可以选择我们想看的 Profile 对应的 QueryId，查看具体情况。
+This command will list all currently saved profiles. Each row corresponds to a query. We can select the QueryId corresponding to the Profile we want to see to see the specific situation.
 
-查看一个 Profile 分为 3 个步骤：
+Viewing a Profile is divided into 3 steps:
 
-1. 查看整体执行计划树
+1. View the overall execution plan tree
 
-   这一步主要用于从整体分析执行计划，并查看每个 Fragment 的执行耗时。
-
+   This step is mainly used to analyze the execution plan as a whole and view the execution time of each Fragment.
    ```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9"\G
    *************************** 1. row ***************************
@@ -589,14 +579,13 @@ QueryState: EOF
    
    1 row in set (0.02 sec)
    ```
+   As shown in the figure above, each node is marked with the Fragment to which it belongs, and at the Sender node of each Fragment, the execution time of the Fragment is marked. This time-consuming is the longest of all Instance execution times under Fragment. This helps us find the most time-consuming Fragment from an overall perspective.
 
-   如上图，每个节点都标注了自己所属的 Fragment，并且在每个 Fragment 的 Sender 节点，标注了该 Fragment 的执行耗时。这个耗时，是 Fragment 下所有 Instance 执行耗时中最长的一个。这个有助于我们从整体角度发现最耗时的 Fragment。
+2. View the Instance list under the specific Fragment
 
-2. 查看具体 Fragment 下的 Instance 列表
-
-   比如我们发现 Fragment 1 耗时最长，则可以继续查看 Fragment 1 的 Instance 列表：
+   For example, if we find that Fragment 1 takes the longest time, we can continue to view the Instance list of Fragment 1:
    
-   ```sql
+    ```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9/1";
    +-----------------------------------+-------------------+------------+
    | Instances                         | Host              | ActiveTime |
@@ -606,83 +595,82 @@ QueryState: EOF
    | c257c52f93e149ee-ace8ac14e8c9ff04 | 10.200.00.03:9060 | 5.358ms    |
    +-----------------------------------+-------------------+------------+ 
    ```
-   
-   这里展示了 Fragment 1 上所有的 3 个 Instance 所在的执行节点和耗时。
+This shows the execution nodes and time consumption of all three Instances on Fragment 1.
 
-3. 查看具体 Instance
+1. View the specific Instance
 
-   我们可以继续查看某一个具体的 Instance 上各个算子的详细 Profile：
+   We can continue to view the detailed profile of each operator on a specific Instance:
 
    ```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9/1/c257c52f93e149ee-ace8ac14e8c9ff03"\G
-   *************************** 1. row ***************************
+   **************************** 1. row ******************** ******
    Instance:
-    ┌───────────────────────────────────────┐
-    │[9: DataStreamSender]                  │
-    │(Active: 37.222us, non-child: 0.40)    │
-    │  - Counters:                          │
-    │      - BytesSent: 0.00                │
-    │      - IgnoreRows: 0                  │
-    │      - OverallThroughput: 0.0 /sec    │
-    │      - PeakMemoryUsage: 8.00 KB       │
-    │      - SerializeBatchTime: 0ns        │
-    │      - UncompressedRowBatchSize: 0.00 │
-    └───────────────────────────────────────┘
+    ┌────────────────────────────────────────────┐
+    │[9: DataStreamSender] │
+    │(Active: 37.222us, non-child: 0.40) │
+    │ - Counters: │
+    │ - BytesSent: 0.00 │
+    │ - IgnoreRows: 0 │
+    │ - OverallThroughput: 0.0 /sec │
+    │ - PeakMemoryUsage: 8.00 KB │
+    │ - SerializeBatchTime: 0ns │
+    │ - UncompressedRowBatchSize: 0.00 │
+    └──────────────────────────────────────────┘
                         └┐
                          │
-       ┌──────────────────────────────────┐
-       │[4: SORT_NODE]                    │
+       ┌──────────────────────────────────────┐
+       │[4: SORT_NODE] │
        │(Active: 5.421ms, non-child: 0.71)│
-       │  - Counters:                     │
-       │      - PeakMemoryUsage: 12.00 KB │
-       │      - RowsReturned: 0           │
-       │      - RowsReturnedRate: 0       │
-       └──────────────────────────────────┘
+       │ - Counters: │
+       │ - PeakMemoryUsage: 12.00 KB │
+       │ - RowsReturned: 0 │
+       │ - RowsReturnedRate: 0 │
+       └──────────────────────────────────────┘
                         ┌┘
                         │
-      ┌───────────────────────────────────┐
-      │[8: AGGREGATION_NODE]              │
+      ┌──────────────────────────────────────┐
+      │[8: AGGREGATION_NODE] │
       │(Active: 5.355ms, non-child: 10.68)│
-      │  - Counters:                      │
-      │      - BuildTime: 3.701us         │
-      │      - GetResultsTime: 0ns        │
-      │      - HTResize: 0                │
-      │      - HTResizeTime: 1.211us      │
-      │      - HashBuckets: 0             │
-      │      - HashCollisions: 0          │
-      │      - HashFailedProbe: 0         │
-      │      - HashFilledBuckets: 0       │
-      │      - HashProbe: 0               │
-      │      - HashTravelLength: 0        │
-      │      - LargestPartitionPercent: 0 │
-      │      - MaxPartitionLevel: 0       │
-      │      - NumRepartitions: 0         │
-      │      - PartitionsCreated: 16      │
-      │      - PeakMemoryUsage: 34.02 MB  │
-      │      - RowsProcessed: 0           │
-      │      - RowsRepartitioned: 0       │
-      │      - RowsReturned: 0            │
-      │      - RowsReturnedRate: 0        │
-      │      - SpilledPartitions: 0       │
-      └───────────────────────────────────┘
+      │ - Counters: │
+      │ - BuildTime: 3.701us │
+      │ - GetResultsTime: 0ns │
+      │ - HTResize: 0 │
+      │ - HTResizeTime: 1.211us │
+      │ - HashBuckets: 0 │
+      │ - HashCollisions: 0 │
+      │ - HashFailedProbe: 0 │
+      │ - HashFilledBuckets: 0 │
+      │ - HashProbe: 0 │
+      │ - HashTravelLength: 0 │
+      │ - LargestPartitionPercent: 0 │
+      │ - MaxPartitionLevel: 0 │
+      │ - NumRepartitions: 0 │
+      │ - PartitionsCreated: 16 │
+      │ - PeakMemoryUsage: 34.02 MB │
+      │ - RowsProcessed: 0 │
+      │ - RowsRepartitioned: 0 │
+      │ - RowsReturned: 0 │
+      │ - RowsReturnedRate: 0 │
+      │ - SpilledPartitions: 0 │
+      └──────────────────────────────────────┘
                         └┐
                          │
-   ┌──────────────────────────────────────────┐
-   │[7: EXCHANGE_NODE]                        │
-   │(Active: 4.360ms, non-child: 46.84)       │
-   │  - Counters:                             │
-   │      - BytesReceived: 0.00               │
-   │      - ConvertRowBatchTime: 387ns        │
-   │      - DataArrivalWaitTime: 4.357ms      │
-   │      - DeserializeRowBatchTimer: 0ns     │
-   │      - FirstBatchArrivalWaitTime: 4.356ms│
-   │      - PeakMemoryUsage: 0.00             │
-   │      - RowsReturned: 0                   │
-   │      - RowsReturnedRate: 0               │
-   │      - SendersBlockedTotalTimer(*): 0ns  │
-   └──────────────────────────────────────────┘
-   ```
+   ┌────────────────────────────────────────────────────┐
+   │[7: EXCHANGE_NODE] │
+   │(Active: 4.360ms, non-child: 46.84) │
+   │ - Counters: │
+   │ - BytesReceived: 0.00 │
+   │ - ConvertRowBatchTime: 387ns │
+   │ - DataArrivalWaitTime: 4.357ms │
+   │ - DeserializeRowBatchTimer: 0ns │
+   │ - FirstBatchArrivalWaitTime: 4.356ms│
+   │ - PeakMemoryUsage: 0.00 │
+   │ - RowsReturned: 0 │
+   │ - RowsReturnedRate: 0 │
+   │ - SendersBlockedTotalTimer(*): 0ns │
+   └────────────────────────────────────────────────────┘
+   ````
 
-   上图展示了 Fragment 1 中，Instance c257c52f93e149ee-ace8ac14e8c9ff03 的各个算子的具体 Profile。
+   The above figure shows the specific profiles of each operator of Instance c257c52f93e149ee-ace8ac14e8c9ff03 in Fragment 1.
 
-通过以上 3 个步骤，我们可以逐步排查一个 SQL 的性能瓶颈。
+Through the above three steps, we can gradually check the performance bottleneck of a SQL.

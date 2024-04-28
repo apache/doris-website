@@ -26,13 +26,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 关于SeaTunnel
 
-SeaTunnel是一个非常简单易用的超高性能分布式数据集成平台，支持海量数据的实时同步。每天稳定高效地同步数百亿数据
+
+SeaTunnel 是一个非常简单易用的超高性能分布式数据集成平台，支持海量数据的实时同步。每天稳定高效地同步数百亿数据
 
 ## Connector-V2
 
-2.3.1版本的 [Apache SeaTunnel Connector-V2](https://seatunnel.apache.org/docs/2.3.1/category/sink-v2) 支持了Doris Sink，并且支持exactly-once的精准一次写入和CDC数据同步
+2.3.1 版本的 [Apache SeaTunnel Connector-V2](https://seatunnel.apache.org/docs/2.3.1/category/sink-v2) 支持了 Doris Sink，并且支持 exactly-once 的精准一次写入和 CDC 数据同步
 
 ### 插件代码
 
@@ -69,27 +69,27 @@ Doris 表名称，格式为 DBName.TableName
 
 `sink.label-prefix [string]`
 
-Stream Load 导入使用的标签前缀。在2pc场景下，需要全局唯一性来保证SeaTunnel的EOS语义
+Stream Load 导入使用的标签前缀。在 2pc 场景下，需要全局唯一性来保证 SeaTunnel 的 EOS 语义
 
 `sink.enable-2pc [bool]`
 
-是否启用两阶段提交(2pc)，默认为true，以确保exact - once语义。关于两阶段提交，请参考[这里](../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
+是否启用两阶段提交 (2pc)，默认为 true，以确保 exact - once 语义。关于两阶段提交，请参考[这里](../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
 `sink.enable-delete [bool]`
 
-是否启用删除。该选项需要Doris表开启批量删除功能(默认开启0.15+版本)，且只支持Unique表模型。你可以在这个链接获得更多细节:
+是否启用删除。该选项需要 Doris 表开启批量删除功能 (默认开启 0.15+ 版本)，且只支持 Unique 表模型。你可以在这个链接获得更多细节：
 
-[批量删除](../data-operate/update-delete/batch-delete-manual)
+[批量删除](../data-operate/delete/batch-delete-manual)
 
 `doris.config [map]`
 
-Stream Load `data_desc` 的参数，你可以在这个链接获得更多细节:
+Stream Load `data_desc` 的参数，你可以在这个链接获得更多细节：
 
-[更多Stream Load 参数](../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
+[更多 Stream Load 参数](../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md)
 
 ### 使用示例
 
-使用JSON格式导入数据
+使用 JSON 格式导入数据
 
 ```
 sink {
@@ -109,7 +109,7 @@ sink {
 
 ```
 
-使用CSV格式导入数据
+使用 CSV 格式导入数据
 
 ```
 sink {
@@ -131,15 +131,15 @@ sink {
 
 ## Connector-V1
 
-2.1.0的 Apache SeaTunnel 支持 Doris 的连接器, SeaTunnel 可以通过 Spark 引擎和 Flink 引擎同步数据至 Doris 中.
+2.1.0 的 Apache SeaTunnel 支持 Doris 的连接器，SeaTunnel 可以通过 Spark 引擎和 Flink 引擎同步数据至 Doris 中。
 
 ### Flink Doris Sink 
 
-#### 插件代码
+**插件代码**
 
 Seatunnel Flink Sink Doris [插件代码](https://github.com/apache/incubator-seatunnel)
 
-#### 参数列表
+**参数列表**
 
 | 配置项 | 类型 | 必填 | 默认值 | 支持引擎 |
 | --- | --- | --- | --- | --- |
@@ -155,7 +155,7 @@ Seatunnel Flink Sink Doris [插件代码](https://github.com/apache/incubator-se
 
 `fenodes [string]`
 
-Doris Fe Http访问地址, eg: 127.0.01:8030
+Doris Fe Http 访问地址，eg: 127.0.01:8030
 
 `database [string]`
 
@@ -175,23 +175,23 @@ Doris 访问用户密码
 
 `batch_size [int]`
 
-单次写Doris的最大行数,默认值100
+单次写 Doris 的最大行数，默认值 100
 
 `interval [int]`
 
-flush 间隔时间(毫秒)，超过该时间后异步线程将 缓存中数据写入Doris。设置为0表示关闭定期写入。
+flush 间隔时间 (毫秒)，超过该时间后异步线程将 缓存中数据写入 Doris。设置为 0 表示关闭定期写入。
 
 `max_retries [int]`
 
-写Doris失败之后的重试次数
+写 Doris 失败之后的重试次数
 
 `doris.* [string]`
 
 Stream load 的导入参数。例如:'doris.column_separator' = ', '等
 
-[更多 Stream Load 参数配置](../../data-operate/import/import-way/stream-load-manual.md)
+[更多 Stream Load 参数配置](../data-operate/import/stream-load-manual)
 
-#### Examples
+**Examples**
 
 Socket 数据写入 Doris
 ```
@@ -222,18 +222,18 @@ sink {
 }
 
 ```
-#### 启动命令
+**启动命令**
 ```
 sh bin/start-seatunnel-flink.sh --config config/flink.streaming.conf
 ```
 
 ### Spark Sink Doris
 
-#### 插件代码
+**插件代码**
 
 Spark Sink Doris 的插件代码在[这里](https://github.com/apache/incubator-seatunnel)
 
-#### 参数列表
+**参数列表**
 
 | 参数名 | 参数类型 | 是否必要 | 默认值 | 引擎类型 |
 | --- | --- | --- | --- | --- |
@@ -247,7 +247,7 @@ Spark Sink Doris 的插件代码在[这里](https://github.com/apache/incubator-
 
 `fenodes [string]`
 
-Doris Fe节点地址:8030
+Doris Fe 节点地址:8030
 
 
 `database [string]`
@@ -268,15 +268,15 @@ Doris 访问用户密码
 
 `batch_size [string]`
 
-Spark 通过 Stream Load 方式写入,每个批次提交条数
+Spark 通过 Stream Load 方式写入，每个批次提交条数
 
 `doris. [string]`
 
-Stream Load 方式写入的 Http 参数优化,在官网参数前加上'Doris.'前缀
+Stream Load 方式写入的 Http 参数优化，在官网参数前加上'Doris.'前缀
 
-[更多 Stream Load 参数配置](../../data-operate/import/import-way/stream-load-manual.md)
+[更多 Stream Load 参数配置](../data-operate/import/stream-load-manual.md)
 
-#### Examples
+**Examples**
 
 Hive 迁移数据至 Doris
 ```
@@ -318,7 +318,7 @@ Doris {
 }
 ```
 
-#### 启动命令
+**启动命令**
 
 ```
 sh bin/start-waterdrop-spark.sh --master local[4] --deploy-mode client --config ./config/spark.conf
