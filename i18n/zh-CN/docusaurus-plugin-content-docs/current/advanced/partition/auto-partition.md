@@ -38,7 +38,7 @@ under the License.
 
 以时间类型分区列为例，在[动态分区](./dynamic-partition)功能中，我们支持了按特定时间周期自动创建新分区以容纳实时数据。对于实时的用户行为日志等场景该功能基本能够满足需求。但在一些更复杂的场景下，例如处理非实时数据时，分区列与当前系统时间无关，且包含大量离散值。此时为提高效率我们希望依据此列对数据进行分区，但数据实际可能涉及的分区无法预先掌握，或者预期所需分区数量过大。这种情况下动态分区或者手动创建分区无法满足我们的需求，自动分区功能很好地覆盖了此类需求。
 
-假设我们的表DDL如下：
+假设我们的表 DDL 如下：
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
@@ -79,7 +79,7 @@ PROPERTIES (
 );
 ```
 
-该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，我们需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了2022年的数据，则我们需要通过[ALTER-TABLE-PARTITION](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用AUTO PARTITION改写该表DDL。
+该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，我们需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则我们需要通过[ALTER-TABLE-PARTITION](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
 
 ## 语法
 
@@ -206,7 +206,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't su
 
 ## 场景示例
 
-在使用场景一节中的示例，在使用AUTO PARTITION后，该表DDL可以改写为：
+在使用场景一节中的示例，在使用 AUTO PARTITION 后，该表 DDL 可以改写为：
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
@@ -247,7 +247,7 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 3 rows in set (0.12 sec)
 ```
 
-经过自动分区功能所创建的PARTITION，与手动创建的PARTITION具有完全一致的功能性质。
+经过自动分区功能所创建的 PARTITION，与手动创建的 PARTITION 具有完全一致的功能性质。
 
 ## 与动态分区联用
 
@@ -259,9 +259,9 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 
 ## 注意事项
 
-- 如同普通分区表一样，AUTO PARTITION支持多列分区，语法并无区别。
+- 如同普通分区表一样，AUTO PARTITION 支持多列分区，语法并无区别。
 - 在数据的插入或导入过程中如果创建了分区，而整个导入过程没有完成（失败或被取消），被创建的分区不会被自动删除。
-- 使用AUTO PARTITION的表，只是分区创建方式上由手动转为了自动。表及其所创建分区的原本使用方法都与非AUTO PARTITION的表或分区相同。
-- 为防止意外创建过多分区，我们通过[FE配置项](../../admin-manual/config/fe-config)中的`max_auto_partition_num`控制了一个AUTO PARTITION表最大容纳分区数。如有需要可以调整该值
-- 向开启了AUTO PARTITION的表导入数据时，Coordinator发送数据的轮询间隔与普通表有所不同。具体请见[BE配置项](../../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。
-- 在使用[insert-overwrite](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE)插入数据时，如果指定了覆写的partition，则AUTO PARTITION表在此过程中表现得如同普通表，不创建新的分区。
+- 使用 AUTO PARTITION 的表，只是分区创建方式上由手动转为了自动。表及其所创建分区的原本使用方法都与非 AUTO PARTITION 的表或分区相同。
+- 为防止意外创建过多分区，我们通过[FE 配置项](../../admin-manual/config/fe-config)中的`max_auto_partition_num`控制了一个 AUTO PARTITION 表最大容纳分区数。如有需要可以调整该值
+- 向开启了 AUTO PARTITION 的表导入数据时，Coordinator 发送数据的轮询间隔与普通表有所不同。具体请见[BE 配置项](../../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。
+- 在使用[insert-overwrite](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE)插入数据时，如果指定了覆写的 partition，则 AUTO PARTITION 表在此过程中表现得如同普通表，不创建新的分区。

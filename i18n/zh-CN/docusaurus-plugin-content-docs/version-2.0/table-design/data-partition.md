@@ -60,7 +60,7 @@ Doris 支持两层的数据划分。第一层是分区（Partition），支持 R
 
 ### 建表举例
 
-Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
+Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
 
 这里给出了一个采用了 Range 分区 和 Hash 分桶的建表举例。
 
@@ -1042,4 +1042,4 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-DATABASE) 命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

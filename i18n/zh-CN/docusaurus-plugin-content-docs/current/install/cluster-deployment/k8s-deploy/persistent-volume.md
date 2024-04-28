@@ -123,7 +123,7 @@ spec:
 ```
 
 ## 定制化 ConfigMap
-Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。 在部署 `doriscluster` 之前需要提前在同 `namespace` 下部署想要使用的 `ConfigMap`，以下样例展示了 FE 使用名称为 fe-configmap 的 `ConfigMap`， BE 使用名称为 be-configmap 的 `ConfigMap` 的集群相关 yaml:  
+Doris 在 Kubernetes 使用 `ConfigMap` 实现配置文件和服务解耦。在部署 `doriscluster` 之前需要提前在同 `namespace` 下部署想要使用的 `ConfigMap`，以下样例展示了 FE 使用名称为 fe-configmap 的 `ConfigMap`，BE 使用名称为 be-configmap 的 `ConfigMap` 的集群相关 yaml:  
 
 FE 的 ConfigMap 样例
 ```yaml
@@ -162,7 +162,7 @@ data:
     enable_fqdn_mode = true
 ```
 
-注意，使用 FE 的 ConfigMap ，必须为 `fe.conf` 添加 `enable_fqdn_mode = true`，具体原因可参考 [此处文档](https://doris.apache.org/zh-CN/docs/dev/admin-manual/cluster-management/fqdn)
+注意，使用 FE 的 ConfigMap，必须为 `fe.conf` 添加 `enable_fqdn_mode = true`，具体原因可参考 [此处文档](https://doris.apache.org/zh-CN/docs/dev/admin-manual/cluster-management/fqdn)
 
 BE 的 ConfigMap 样例
 ```yaml
@@ -200,7 +200,7 @@ data:
     heartbeat_service_port = 9050
     brpc_port = 8060
 ```
-使用以上两个 `ConfigMap` 的 `doriscluster` 部署样例:
+使用以上两个 `ConfigMap` 的 `doriscluster` 部署样例：
 ```yaml
 apiVersion: doris.selectdb.com/v1
 kind: DorisCluster
@@ -250,10 +250,10 @@ spec:
       resolveKey: apache_hdfs_broker.conf
 
 ```
-这里的 `resolveKey` 是传入配置文件名（必须是`fe.conf`，`be.conf` 或 `apache_hdfs_broker.conf`，cn 节点也是 `be.conf`） 用以解析传入的 Doris 集群配置的文件，doris-operator 会去解析该文件去指导 doriscluster 的定制化部署。
+这里的 `resolveKey` 是传入配置文件名（必须是`fe.conf`，`be.conf` 或 `apache_hdfs_broker.conf`，cn 节点也是 `be.conf`）用以解析传入的 Doris 集群配置的文件，doris-operator 会去解析该文件去指导 doriscluster 的定制化部署。
 
 ## 为 conf 目录添加特殊配置文件
-本段落用来供参考 需要在 Doris 节点的 conf 目录放置配置其他文件的容器化部署方案。比如常见的 [数据湖联邦查询](https://doris.apache.org/zh-CN/docs/dev/lakehouse/multi-catalog/hive) 的 hdfs 配置文件映射。
+本段落用来供参考 需要在 Doris 节点的 conf 目录放置配置其他文件的容器化部署方案。比如常见的 [数据湖联邦查询](../../../lakehouse/datalake/hive) 的 hdfs 配置文件映射。
 
 这里以 BE 的 ConfigMap 和 需要添加的 core-site.xml 文件为例：
 ```yaml
@@ -294,7 +294,7 @@ data:
 ## BE 多盘配置
 Doris 的 BE 服务支持多盘挂载，在服务器时代能够很好满足一个计算资源和存储资源不匹配的问题，同时使用多盘也能够很好提高 Doris 的存储效率。在 Kubernetes 上 Doris 同样可以挂载多盘来实现存储效益最大化。在 Kubernetes 上使用多盘需要配合配置文件一起使用。
 为实现服务和配置解耦，Doris 采用 `ConfigMap` 来作为配置的承载，实现配置文件动态挂载给服务使用。
-以下为 BE 服务使用 `ConfigMap` 来承载配置文件，挂载两块盘供BE使用的 doriscluster 配置：
+以下为 BE 服务使用 `ConfigMap` 来承载配置文件，挂载两块盘供 BE 使用的 doriscluster 配置：
 ```yaml
 apiVersion: doris.selectdb.com/v1
 kind: DorisCluster

@@ -240,7 +240,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
 ### 查看导入作业
 
-默认情况下，Stream Load 是同步返回给 Client，所以系统模式是不记录 Stream Load 历史作业的。如果需要记录，则在 be.conf 中添加配置 enable_stream_load_record=true。具体配置可以参考 [BE 配置项](https://doris.apache.org/zh-CN/docs/admin-manual/config/be-config)。
+默认情况下，Stream Load 是同步返回给 Client，所以系统模式是不记录 Stream Load 历史作业的。如果需要记录，则在 be.conf 中添加配置 enable_stream_load_record=true。具体配置可以参考 [BE 配置项](../../admin-manual/config/be-config)。
 
 配置后，可以通过 show stream load 命令查看已完成的 Stream Load 任务。
 
@@ -511,7 +511,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00+00:00" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
 
-更多关于时区解读可参考文档 [时区](../../query/query-variables/time-zone.md)。
+更多关于时区解读可参考文档 [时区](../../query/query-variables/time-zone)。
 
 ### 使用 Streaming 方式导入
 

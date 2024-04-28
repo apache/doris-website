@@ -75,11 +75,11 @@ Stream Load 支持导入 CSV、JSON、Parquet 与 ORC 格式的数据。
 
 Stream Load 通过 HTTP 协议提交和传输。下例以 curl 工具为例，演示通过 Stream Load 提交导入作业。
 
-详细语法可以参见 [STREAM LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
+详细语法可以参见 [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD)
 
 ### 前置检查
 
-Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT) 命令给用户授权。
+Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，可以通过 [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) 命令给用户授权。
 
 ### 创建导入作业
 
@@ -310,7 +310,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | label                        | 用于指定 Doris 该次导入的标签，标签相同的数据无法多次导入。如果不指定 label，Doris 会自动生成一个标签。用户可以通过指定 label 的方式来避免一份数据重复导入的问题。Doris 默认保留三天内的导入作业标签，可以 `label_keep_max_second` 调整保留时长。例如，指定本次导入 label 为 123，需要指定命令 `-H "label:123"`。label 的使用，可以防止用户重复导入相同的数据。强烈推荐用户同一批次数据使用相同的 label。这样同一批次数据的重复请求只会被接受一次，保证了 At-Most-Once 当 label 对应的导入作业状态为 CANCELLED 时，该 label 可以再次被使用。 |
 | column_separator             | 用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
 | line_delimiter               | 用于指定导入文件中的换行符，默认为 \n。可以使用做多个字符的组合作为换行符。例如，指定换行符为 \n，需要指定命令 `-H "line_delimiter:\n"`。 |
-| columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../data-operate/import/load-data-convert)。 |
+| columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../import/load-data-convert)。 |
 | where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入大于 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
 | max_filter_ratio             | 最大容忍可过滤（数据不规范等原因）的数据比例，默认零容忍。取值范围是 0~1。当导入的错误率超过该值，则导入失败。数据不规范不包括通过 where 条件过滤掉的行。例如，最大程度保证所有正确的数据都可以导入（容忍度 100%），需要指定命令 `-H "max_filter_ratio:1"`。 |
 | partitions                   | 用于指定这次导入所涉及的 partition。如果用户能够确定数据对应的 partition，推荐指定该项。不满足这些分区的数据将被过滤掉。例如，指定导入到 p1, p2 分区，需要指定命令 `-H "partitions: p1, p2"`。 |
@@ -1064,7 +1064,7 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 启用严格模式导入
 
-`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../../data-operate/import/load-strict-mode) 文档。
+`strict_mode` 属性用于设置导入任务是否运行在严格模式下。该属性会对列映射、转换和过滤的结果产生影响，它同时也将控制部分列更新的行为。关于严格模式的具体说明，可参阅 [严格模式](../import/load-strict-mode) 文档。
 
 ### 导入时进行部分列更新
 
@@ -1072,4 +1072,4 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ## 更多帮助
 
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。
+关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP STREAM LOAD` 获取更多帮助信息。
