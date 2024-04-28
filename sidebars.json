@@ -264,12 +264,18 @@
                     "type": "category",
                     "label": "Data Lake Analytics",
                     "items": [
-                        "lakehouse/datalake/hive",
-                        "lakehouse/datalake/hudi",
-                        "lakehouse/datalake/iceberg",
-                        "lakehouse/datalake/paimon",
-                        "lakehouse/datalake/dlf",
-                        "lakehouse/datalake/cloud-auth"
+                        "lakehouse/datalake-analytics/hive",
+                        "lakehouse/datalake-analytics/hudi",
+                        "lakehouse/datalake-analytics/iceberg",
+                        "lakehouse/datalake-analytics/paimon",
+                        "lakehouse/datalake-analytics/dlf"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Lake Building",
+                    "items": [
+                        "lakehouse/datalake-building/hive-build"
                     ]
                 },
                 {
@@ -284,6 +290,7 @@
                 "lakehouse/file",
                 "lakehouse/filecache",
                 "lakehouse/external-statistics",
+                "lakehouse/cloud-auth",
                 "lakehouse/sql-dialect"
             ]
         },
