@@ -56,7 +56,7 @@ type 支持的类型：
 ##### Insert 任务
 jobs("type"="insert")表结构：
 ```
-mysql> desc  function jobs("type"="insert")
+mysql> desc  function jobs("type"="insert");
 +-------------------+------+------+-------+---------+-------+
 | Field             | Type | Null | Key   | Default | Extra |
 +-------------------+------+------+-------+---------+-------+
@@ -68,8 +68,12 @@ mysql> desc  function jobs("type"="insert")
 | Status            | TEXT | No   | false | NULL    | NONE  |
 | ExecuteSql        | TEXT | No   | false | NULL    | NONE  |
 | CreateTime        | TEXT | No   | false | NULL    | NONE  |
+| SucceedTaskCount  | TEXT | No   | false | NULL    | NONE  |
+| FailedTaskCount   | TEXT | No   | false | NULL    | NONE  |
+| CanceledTaskCount | TEXT | No   | false | NULL    | NONE  |
 | Comment           | TEXT | No   | false | NULL    | NONE  |
 +-------------------+------+------+-------+---------+-------+
+12 rows in set (0.01 sec)
 ```
 * Id：job id.
 * Name：job名称.
@@ -79,7 +83,12 @@ mysql> desc  function jobs("type"="insert")
 * Status：job状态
 * ExecuteSql：执行SQL
 * CreateTime：job 创建时间
+* SucceedTaskCount：成功任务数量
+* FailedTaskCount：失败任务数量
+* CanceledTaskCount：取消任务数量
 * Comment：job 注释
+
+SuccessTaskCount, FailedTaskCount, and CanceledTaskCount 新增于 2.1.4.
 ##### 物化视图任务
 jobs("type"="mv")表结构：
 ```sql
