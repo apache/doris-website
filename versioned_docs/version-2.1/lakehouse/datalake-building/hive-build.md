@@ -187,7 +187,8 @@ This article introduces Hive operations supported in Doris, including syntax and
 
 - Storage Medium
 
-	- Currently, only HDFS is supported, future versions will support object storage.
+	- HDFS
+    - Object Storage
 
 ## Data Operations
 
