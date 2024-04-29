@@ -260,6 +260,63 @@ For example, in a transaction involving multiple partition modifications of a Hi
 
 If any anomalies occur during the transaction commit process, the transaction will be directly rolled back, including modifications to HDFS files and metadata in the Hive Metastore, without requiring further action from the user.
 
+### HDFS File Operations
+
+Data in Hive tables on HDFS is usually written first to a temporary directory, then operations like `rename` are used to commit the files finally. Here, we detail the specific operations on files in HDFS during different data operations.
+
+The format of the temporary directory is: `/tmp/.doris_staging/<username>/<uuid>`
+
+The format of the written data file names is: `<query-id>_<uuid>-<index>.<compress-type>.<file-type>`
+
+Below, we describe the file operations in various cases.
+
+1. Non-partitioned table
+
+    - Append
+
+        - Target table directory: `hdfs://ns/usr/hive/warehouse/example.db/table1`
+        - Temporary file: `hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+
+        During the commit phase, all temporary files are moved to the target table directory.
+
+    - Overwrite
+
+        - Target table directory: `hdfs://ns/usr/hive/warehouse/example.db/table1`
+        - Temporary file: `hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+
+        Commit phase:
+
+        1. The target table directory is renamed to a temporary target table directory: `hdfs://ns/usr/hive/warehouse/example.db/_temp_b35fdbcea3a4e39-86d1f36987ef1492_table1`
+        2. The temporary directory is renamed to the target table directory.
+        3. The temporary target table directory is deleted.
+
+2. Partitioned table
+
+    - Add (Add to a new partition)
+
+        - Target table directory: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+        - Temporary file: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+        During the commit phase, the temporary directory is renamed to the target table directory.
+
+    - Append (Write data to an existing partition)
+
+        - Target table directory: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+        - Temporary file: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+        During the commit phase, files from the temporary directory are moved to the target table directory.
+
+    - Overwrite (Overwrite an existing partition)
+
+        - Target table directory: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+        - Temporary file: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+        Commit phase:
+
+        1. The target table partition directory is renamed to a temporary partition directory: `hdfs://ns/usr/hive/warehouse/example.db/table2/_temp_d678a74d232345e0-b659e2fb58e86ffd_part_col=2024-01-01`
+        2. The temporary partition directory is renamed to the target table partition directory.
+        3. The temporary partition directory is deleted.
+
 ## Relevant Parameters
 
 ### FE

@@ -259,6 +259,67 @@ TODO
 
 在事务提交过程中出现任何异常，都会直接回退该事务，包括对 HDFS 文件的修改、以及对 Hive Metastore 元数据的修改，不需要用户做其他处理。
 
+### HDFS 文件操作
+
+在 HDFS 上的 Hive 表数据通常会先写入到临时目录，然后通过 `rename` 等文件系统操作进行最终的文件提交。这里我们详细介绍不同数据操作中，HDFS 上文件的具体操作。
+
+数据的临时目录格式为：`/tmp/.doris_staging/<username>/<uuid>`
+
+写入的数据文件名称格式为：`<query-id>_<uuid>-<index>.<compress-type>.<file-type>`
+
+下面举例说明各种情况下的文件操作。
+
+1. 非分区表
+
+    - Append（追加写入）
+
+        - 目标表目录：`hdfs://ns/usr/hive/warehouse/example.db/table1`
+        - 临时文件：`hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+        
+        提交阶段会把所有临时文件移动到目标表目录下。
+
+    - Overwrite（覆盖写）
+
+        - 目标表目录：`hdfs://ns/usr/hive/warehouse/example.db/table1`
+        - 临时文件：`hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+
+        提交阶段：
+
+        1. 目标表目录重命名为目标表临时目录：`hdfs://ns/usr/hive/warehouse/example.db/_temp_b35fdbcea3a4e39-86d1f36987ef1492_table1`
+        2. 临时目录重命名为目标表目录。
+        3. 删除目标表临时目录。
+
+2. 分区表
+
+    - Add（添加到新分区）
+
+        - 目标表目录：`hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+        - 临时文件：`hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+        提交阶段，会将临时目录重命名为目标表目录
+
+    - Append（写入数据到已存在的分区）
+
+        - 目标表目录：`hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+        - 临时文件：`hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+        提交阶段，会将临时目录下的文件，移动到目标表目录下。
+        
+    - Overwrite（覆盖已有分区）
+
+        - 目标表目录：`hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+        - 临时文件：`hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+        提交阶段：
+
+        1. 目标表分区目录重命名为目标表临时分区目录：`hdfs://ns/usr/hive/warehouse/example.db/table2/_temp_d678a74d232345e0-b659e2fb58e86ffd_part_col=2024-01-01`
+        2. 临时分区目录重命名为目标表分区目录。
+        3. 删除目标表临时分区目。
+    
+### 对象存储文件操作
+
+TODO
+
 ## 相关参数
 
 ### FE
