@@ -31,7 +31,8 @@ under the License.
 
 1. Support Iceberg V1/V2.
 2. The V2 format only supports Position Delete, not Equality Delete.
-3. Supports Parquet format. And ORC format since 2.1.3.
+3. Supports Parquet format. 
+4. Supports ORC format since 2.1.3.
 
 ## Create Catalog
 
