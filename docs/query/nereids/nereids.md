@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Nereids 全新优化器",
-    "language": "zh-CN"
+    "title": "Nereids-the Brand New Planner",
+    "language": "en"
 }
 ---
 
@@ -24,63 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Nereids 全新优化器
+# Nereids-the Brand New Planner
 
 <version since="dev"></version>
 
-## 研发背景
+## R&D background
 
-现代查询优化器面临更加复杂的查询语句、更加多样的查询场景等挑战。同时，用户也越来越迫切的希望尽快获得查询结果。旧优化器的陈旧架构，难以满足今后快速迭代的需要。基于此，我们开始着手研发现代架构的全新查询优化器。在更高效的处理当前Doris场景的查询请求的同时，提供更好的扩展性，为处理今后 Doris 所需面临的更复杂的需求打下良好的基础。
+Modern query optimizers face challenges such as more complex query statements and more diverse query scenarios. At the same time, users are more and more eager to obtain query results as soon as possible. The outdated architecture of the old optimizer is difficult to meet the needs of rapid iteration in the future. Based on this, we set out to develop a new query optimizer for modern architectures. While processing the query requests of the current Doris scene more efficiently, it provides better scalability and lays a good foundation for handling the more complex requirements that Doris will face in the future.
 
-## 新优化器的优势
+## Advantages of the new optimizer
 
-### 更智能
+### Smarter
 
-新优化器将每个 RBO 和 CBO 的优化点以规则的形式呈现。对于每一个规则，新优化器都提供了一组用于描述查询计划形状的模式，可以精确的匹配可优化的查询计划。基于此，新优化器可以更好的支持诸如多层子查询嵌套等更为复杂的查询语句。
+The new optimizer presents the optimization points of each RBO and CBO in the form of rules. For each rule, the new optimizer provides a set of patterns used to describe the shape of the query plan, which can exactly match the query plan that can be optimized. Based on this, the new optimizer can better support more complex query statements such as multi-level subquery nesting.
 
-同时新优化器的 CBO 基于先进的 Cascades 框架，使用了更为丰富的数据统计信息，并应用了维度更科学的代价模型。这使得新优化器在面对多表 Join 的查询时，更加得心应手。
+At the same time, the CBO of the new optimizer is based on the advanced cascades framework, uses richer data statistics, and applies a cost model with more scientific dimensions. This makes the new optimizer more handy when faced with multi-table join queries.
 
-TPC-H SF100 查询速度比较。环境为 3BE，新优化器使用原始 SQL ，执行 SQL 前收集了统计信息。旧优化器使用手工调优 SQL。可以看到，新优化器在无需手工优化查询的情况下，总体查询时间与旧优化器手工优化后的查询时间相近。
+TPC-H SF100 query speed comparison. The environment is 3BE, the new optimizer uses the original SQL, and the statistical information is collected before executing the SQL. Old optimizers use hand-tuned SQL. It can be seen that the new optimizer does not need to manually optimize the query, and the overall query time is similar to that of the old optimizer after manual optimization.
 
 ![execution time comparison](/images/nereids-tpch.png)
 
-### 更健壮
+### more robust
 
-新优化器的所有优化规则，均在逻辑执行计划树上完成。当查询语法语义解析完成后，变转换为一棵树状结构。相比于旧优化器的内部数据结构更为合理、统一。以子查询处理为例，新优化器基于新的数据结构，避免了旧优化器中众多规则对子查询的单独处理。进而减少了优化规则出现逻辑错误的可能。
+All optimization rules of the new optimizer are completed on the logical execution plan tree. After the query syntax and semantic analysis is completed, it will be transformed into a tree structure. Compared with the internal data structure of the old optimizer, it is more reasonable and unified. Taking subquery processing as an example, the new optimizer is based on a new data structure, which avoids separate processing of subqueries by many rules in the old optimizer. In turn, the possibility of logic errors in optimization rules is reduced.
 
-### 更灵活
+### more flexible
 
-新优化器的架构设计更合理，更现代。可以方便地扩展优化规则和处理阶段。能够更为迅速的响应用户的需求。
+The architectural design of the new optimizer is more reasonable and modern. Optimization rules and processing stages can be easily extended. Can more quickly respond to user needs.
 
-## 使用方法
+## How to use
 
-开启新优化器
+Turn on Nereids
 
 ```sql
 SET enable_nereids_planner=true;
 ```
 
-开启自动回退到旧优化器
+Turn on auto fall back to legacy planner
 
 ```sql
 SET enable_fallback_to_original_planner=true;
 ```
 
-为了能够充分利用新优化器的CBO能力，强烈建议对查询延迟敏感的表，执行analyze语句，以收集列统计信息。
+Executing analyze on table before query is highly recommended when query performance is critical so that we can fully utilize Nereids's CBO capability.
 
-## 已知问题和暂不支持的功能
+## Known issues and temporarily unsupported features
 
-### 暂不支持的功能
+### temporarily unsupported features
 
-> 如果开启了自动回退，则会自动回退到旧优化器执行
+> If automatic fallback is enabled, it will automatically fall back to the old optimizer execution
 
-- Json、Array、Map、Struct 类型：查询的表含有以上类型，或者查询中的函数会输出以上类型
-- DML：仅支持如下DML：Insert Into Select, Update, Delete
-- 带过滤条件的物化视图
-- 别名函数
-- Java UDF 和 HDFS UDF
-- 高并发点查询优化
+- Json、Array、Map and Struct types: The table in the query contains the above types, or the expressions in the query outputs the above types
+- DML: Only support below DML statements: Insert Into Select, Update and Delete
+- Matrialized view with predicates
+- Function alias
+- Java UDF and HDFS UDF
+- High concurrent point query optimize
 
-### 已知问题
+### known issues
 
-- 不支持命中 Partition Cache
+- Cannot use partition cache to accelarate query

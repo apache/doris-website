@@ -1,6 +1,6 @@
 ---
 {
-    "title": "load balancing",
+    "title": "Load Balancing",
     "language": "en"
 }
 

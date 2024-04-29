@@ -1,7 +1,7 @@
 ---
 {
-    "title": "缓存概览",
-    "language": "zh-CN"
+    "title": "Query Cache",
+    "language": "en"
 }
 ---
 
@@ -24,84 +24,76 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Query Cache
 
+## Demand scenario
 
-## 需求场景
+Most data analysis scenarios are to write less and read more. The data is written once and read multiple times frequently. For example, the dimensions and indicators involved in a report are calculated once in the early morning, but hundreds or even thousands of times a day. Page access, so it is very suitable for caching the result set. In data analysis or BI applications, the following business scenarios exist:
 
-大部分数据分析场景是写少读多，数据写入一次，多次频繁读取，比如一张报表涉及的维度和指标，数据在凌晨一次性计算好，但每天有数百甚至数千次的页面访问，因此非常适合把结果集缓存起来。在数据分析或 BI 应用中，存在下面的业务场景：
+- **High concurrency scenario**, Doris can better support high concurrency, but a single server cannot carry too high QPS
+- **Complex Chart Kanban**, complex Dashboard or large-screen application, data comes from multiple tables, and each page has dozens of queries. Although each query only takes tens of milliseconds, the overall query time will be several seconds.
+- **Trend Analysis**, for queries within a given date range, indicators are displayed on a daily basis, such as querying the trend of the number of users in the last 7 days. This type of query has a large amount of data, a wide query range, and the query time often takes tens of seconds.
+- **User repeated query**, if the product does not have an anti-refresh mechanism, the user repeatedly refreshes the page due to manual error or other reasons, resulting in a large number of repeated SQL submissions.
 
-- **高并发场景**，Doris 可以较好的支持高并发，但单台服务器无法承载太高的 QPS
+In the above four scenarios, the solution at the application layer puts the query results into Redis and periodically updates the cache or the user manually refreshes the cache. However, this solution has the following problems:
 
-- **复杂图表的看板**，复杂的 Dashboard 或者大屏类应用，数据来自多张表，每个页面有数十个查询，虽然每个查询只有数十毫秒，但是总体查询时间会在数秒
+- **Inconsistent data**, unable to detect data updates, causing users to often see old data
+- **Low hit rate**, the entire query result is cached. If the data is written in real time, the cache fails frequently, the hit rate is low and the system load is heavy.
+- **Additional Cost**, introducing external cache components will bring system complexity and increase additional costs.
 
-- **趋势分析**，给定日期范围的查询，指标按日显示，比如查询最近 7 天内的用户数的趋势，这类查询数据量大，查询范围广，查询时间往往需要数十秒
+## solution
 
-- **用户重复查询**，如果产品没有防重刷机制，用户因手误或其他原因重复刷新页面，导致提交大量的重复的 SQL
+This partition cache strategy can solve the above problems, giving priority to ensuring data consistency, and on this basis, refining the cache granularity and improving the hit rate, so it has the following characteristics:
 
-以上四种场景，在应用层的解决方案，把查询结果放到 Redis 中，周期性的更新缓存或者用户手工刷新缓存，但是这个方案有如下问题：
+- Users do not need to worry about data consistency. Cache invalidation is controlled through versioning. The cached data is consistent with the data queried from BE.
+- There are no additional components and costs, the cache results are stored in BE's memory, and users can adjust the cache memory size as needed
+- Implemented two caching strategies, SQLCache and PartitionCache, the latter has a finer cache granularity
+- Use consistent hashing to solve the problem of BE nodes going online and offline. The caching algorithm in BE is an improved LRU
 
-- **数据不一致**，无法感知数据的更新，导致用户经常看到旧的数据
+## scenes to be used
 
-- **命中率低**，缓存整个查询结果，如果数据实时写入，缓存频繁失效，命中率低且系统负载较重
+Currently, it supports two methods: SQL Cache and Partition Cache, and supports OlapTable internal table and Hive external table.
 
-- **额外成本**，引入外部缓存组件，会带来系统复杂度，增加额外成本
+SQL Cache: Only SQL statements that are completely consistent will hit the cache. For details, see: sql-cache-manual.md
 
-## 解决方案
+Partition Cache: Multiple SQLs can hit the cache using the same table partition, so it has a higher hit rate than SQL Cache. For details, see: partition-cache-manual.md
 
-本分区缓存策略可以解决上面的问题，优先保证数据一致性，在此基础上细化缓存粒度，提升命中率，因此有如下特点：
+## Monitoring
 
-- 用户无需担心数据一致性，通过版本来控制缓存失效，缓存的数据和从 BE 中查询的数据是一致的
-
-- 没有额外的组件和成本，缓存结果存储在 BE 的内存中，用户可以根据需要调整缓存内存大小
-
-- 实现了两种缓存策略，SQLCache 和 PartitionCache，后者缓存粒度更细
-
-- 用一致性哈希解决 BE 节点上下线的问题，BE 中的缓存算法是改进的 LRU
-
-## 使用场景
-
-当前支持 SQL Cache 和 Partition Cache 两种方式，支持 OlapTable 内表 和 Hive 外表。
-
-SQL Cache: 只有 SQL 语句完全一致才会命中缓存，详情见：sql-cache-manual.md
-
-Partition Cache: 多个 SQL 使用相同的表分区即可命中缓存，所以相比 SQL Cache 有更高的命中率，详情见：partition-cache-manual.md
-
-## 监控
-
-FE 的监控项：
+FE monitoring items:
 
 ```text
-query_table            //Query 中有表的数量
-query_olap_table       //Query 中有 Olap 表的数量
-cache_mode_sql         //识别缓存模式为 sql 的 Query 数量
-cache_hit_sql          //模式为 sql 的 Query 命中 Cache 的数量
-query_mode_partition   //识别缓存模式为 Partition 的 Query 数量
-cache_hit_partition    //通过 Partition 命中的 Query 数量
-partition_all          //Query 中扫描的所有分区
-partition_hit          //通过 Cache 命中的分区数量
+query_table //The number of tables in Query
+query_olap_table //The number of Olap tables in Query
+cache_mode_sql //Identify the number of Query whose cache mode is sql
+cache_hit_sql //The number of Query hits in Cache with mode sql
+query_mode_partition //The number of queries that identify the cache mode as Partition
+cache_hit_partition //The number of Query hits through Partition
+partition_all //All partitions scanned in Query
+partition_hit //Number of partitions hit through Cache
 
-Cache 命中率     = （cache_hit_sql + cache_hit_partition) / query_olap_table
-Partition 命中率 = partition_hit / partition_all
+Cache hit rate = (cache_hit_sql + cache_hit_partition) / query_olap_table
+Partition hit rate = partition_hit / partition_all
 ```
 
-BE 的监控项：
+BE monitoring items:
 
 ```text
-query_cache_memory_total_byte       //Cache 内存大小
-query_query_cache_sql_total_count   //Cache 的 SQL 的数量
-query_cache_partition_total_count   //Cache 分区数量
+query_cache_memory_total_byte //Cache memory size
+query_query_cache_sql_total_count //The number of SQL cached
+query_cache_partition_total_count //Number of Cache partitions
 
-SQL 平均数据大小       = cache_memory_total / cache_sql_total
-Partition 平均数据大小 = cache_memory_total / cache_partition_total
+SQL average data size = cache_memory_total / cache_sql_total
+Partition average data size = cache_memory_total / cache_partition_total
 ```
 
-其他监控：可以从 Grafana 中查看 BE 节点的 CPU 和内存指标，Query 统计中的 Query Percentile 等指标，配合 Cache 参数的调整来达成业务目标。
+Other monitoring: You can view the CPU and memory indicators of the BE node, Query Percentile and other indicators in the Query statistics from Grafana, and adjust the Cache parameters to achieve business goals.
 
-## 相关参数
+## Related parameters
 
 1. cache_result_max_row_count
 
-查询结果集放入缓存的最大行数，默认 3000。
+The maximum number of rows that the query result set can put into the cache. The default is 3000.
 
 ```text
 vim fe/conf/fe.conf
@@ -110,7 +102,7 @@ cache_result_max_row_count=3000
 
 2. cache_result_max_data_size
 
-查询结果集放入缓存的最大数据大小，默认 30M，可以根据实际情况调整，但建议不要设置过大，避免过多占用内存，超过这个大小的结果集不会被缓存。
+The maximum data size of the query result set placed in the cache is 30M by default. It can be adjusted according to the actual situation, but it is recommended not to set it too large to avoid excessive memory usage. Result sets exceeding this size will not be cached.
 
 ```text
 vim fe/conf/fe.conf
@@ -119,18 +111,18 @@ cache_result_max_data_size=31457280
 
 3. cache_last_version_interval_second
 
-缓存的查询分区最新版本离现在的最小时间间隔，只有大于这个间隔没有被更新的分区的查询结果才会被缓存，默认 30，单位秒。
+The minimum time interval between the latest version of the cached query partition and the current version. Only the query results of partitions that are larger than this interval and have not been updated will be cached. The default is 30, in seconds.
 
 ```text
 vim fe/conf/fe.conf
 cache_last_version_interval_second=30
 ```
 
-4. query_cache_max_size_mb 和 query_cache_elasticity_size
+4. query_cache_max_size_mb and query_cache_elasticity_size
 
-query_cache_max_size_mb 缓存的内存上限，query_cache_elasticity_size 缓存可拉伸的内存大小，BE 上的缓存总大小超过 query_cache_max_size + cache_elasticity_size 后会开始清理，并把内存控制到 query_cache_max_size 以下。
+query_cache_max_size_mb is the upper memory limit of the cache, query_cache_elasticity_size is the memory size that the cache can stretch. When the total cache size on BE exceeds query_cache_max_size + cache_elasticity_size, it will start to be cleaned up and the memory will be controlled below query_cache_max_size.
 
-可以根据 BE 节点数量，节点内存大小，和缓存命中率来设置这两个参数。计算方法：假如缓存 10000 个 Query，每个 Query 缓存 1000 行，每行是 128 个字节，分布在 10 台 BE 上，则每个 BE 需要约 128M 内存（10000 * 1000 * 128/10）。
+These two parameters can be set according to the number of BE nodes, node memory size, and cache hit rate. Calculation method: If 10,000 Queries are cached, each Query caches 1,000 rows, each row is 128 bytes, and is distributed on 10 BEs, then each BE requires about 128M memory (10,000 * 1,000 * 128/10).
 
 ```text
 vim be/conf/be.conf
@@ -140,7 +132,7 @@ query_cache_elasticity_size_mb=128
 
 5. cache_max_partition_count
 
-Partition Cache 独有的参数。BE 最大分区数量，指每个 SQL 对应的最大分区数，如果是按日期分区，能缓存 2 年多的数据，假如想保留更长时间的缓存，请把这个参数设置得更大，同时修改参数 cache_result_max_row_count 和 cache_result_max_data_size。
+Parameters unique to Partition Cache. The maximum number of BE partitions refers to the maximum number of partitions corresponding to each SQL. If it is partitioned by date, it can cache data for more than 2 years. If you want to keep the cache for a longer time, please set this parameter larger and modify the parameters at the same time. cache_result_max_row_count and cache_result_max_data_size.
 
 ```text
 vim be/conf/be.conf

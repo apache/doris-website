@@ -1,7 +1,7 @@
 ---
 {
-    "title": "用户自定义变量",
-    "language": "zh-CN"
+    "title": "User Defined Variables",
+    "language": "en"
 }
 ---
 
@@ -25,49 +25,52 @@ under the License.
 -->
 
 
-自定义变量指的是用户可以根据自身需求通过SQL语句将值存储在自定义的变量中，然后该变量可以被其他SQL语句引用。通过这种方式既可以实现值的传递，又可以简化SQL的编写。
+User-defined variables refer to values that users can store in custom variables using SQL statements, and these variables can be referenced by other SQL statements. This approach facilitates value passing and simplifies SQL writing.
 
-## 使用指南
-用户自定义的变量形式为：@var_name，其中变量名称由字母、数字、“.”、“_”、“¥”、“$”组成。不过，在以字符串或者标识符引用时也可以包含其他字符（例如：@\`var-name`），不支持纯数字和单独“.”的变量。
+## Usage
 
-## 语法
-用户自定义变量可以通过set语句定义
+User-defined variable takes the form: @var_name, where the variable name consists of letters, numbers, ".", "_", "¥", and "$". However, when referenced as a string or identifier, it can also include other characters (e.g. @\`var-name\`), excluding pure numbers and the standalone ".".
+
+## Grammer
+
+User-defined variables can be defined using the SET statement:
 
 ```sql
 SET @var_name = expr [, @var_name = expr ...];
 ```
 
-也可以使用:= 用作赋值运算符
+Or, using `:=` as the assignment operator:
 
 ```sql
 SET @var_name := expr [, @var_name = expr ...];
 ```
 
-- 声明自定义变量时，必须加前缀 @;
-- 可同时声明多个自定义变量，多个变量之间用逗号 (,) 隔开;
-- 支持多次声明同一自定义变量，新声明的值会覆盖原有值;
-- expr暂不支持表达式;
-- 如在一个 SQL 语句中引用了没有声明过的变量，该变量值默认为 NULL 且为 STRING 类型；
+- When declaring a user-defined variable, the @ prefix is mandatory.
+- Multiple user-defined variables can be declared simultaneously, separated by commas (,).
+- Multiple declarations of the same variable are allowed, and the newly declared value will override the original value.
+- The `expr` currently does not support expressions.
+- If an undeclared variable is referenced in a SQL statement, its value defaults to NULL, and its type is STRING.
 
-读取用户自定义变量可以通过select语句查询
+User-defined variables can be queried using the SELECT statement:
 
 ```sql
 SELECT @var_name [, @var_name ...];
 ```
 
-## 使用限制
-- 暂不支持查看用户已有的自定义变量；
-- 暂不支持通过变量给变量赋值；
-- 暂不支持声明 BITMAP、HLL、PERCENTILE 和 ARRAY 类型的自定义变量，JSON 类型的自定义变量会转换为 STRING 类型进行存储；
-- 用户自定义变量属于会话级别的变量，当客户端断开时，其所有的会话变量会被释放；
+## Use restrictions
 
-## 示例
+- Viewing existing user-defined variables is not currently supported.
+- Assigning a variable to another variable is not currently supported.
+- Declaring BITMAP, HLL, PERCENTILE, and ARRAY type variables is not currently supported. JSON type variables are converted to STRING for storage.
+- User-defined variables are session-level variables, and all session variables are released when the client disconnects.
+
+## Example
 
 ```sql
 mysql> SET @v1=1, @v2:=2;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql> select @v1,@v2;
+mysql> SELECT @v1,@v2;
 +------+------+
 | @v1  | @v2  |
 +------+------+
@@ -75,7 +78,7 @@ mysql> select @v1,@v2;
 +------+------+
 1 row in set (0.00 sec)
 
-mysql> select @v1+@v2;
+mysql> SELECT @v1+@v2;
 +-------------+
 | (@v1 + @v2) |
 +-------------+
@@ -83,10 +86,10 @@ mysql> select @v1+@v2;
 +-------------+
 1 row in set (0.01 sec)
 
-mysql> set @`var-name`=2;
+mysql> SET @`var-name`=2;
 Query OK, 0 rows affected (0.00 sec)
 
-mysql> select @`var-name`;
+mysql> SELECT @`var-name`;
 +-----------+
 | @var-name |
 +-----------+
@@ -97,12 +100,16 @@ mysql> select @`var-name`;
 mysql> SET @j := '{"a": 1, "b": 2, "c": {"d": 4}}';
 Query OK, 0 rows affected (0.00 sec)
 
-mysql> select @j;
+mysql> SELECT @j;
 +---------------------------------+
 | @j                              |
 +---------------------------------+
 | {"a": 1, "b": 2, "c": {"d": 4}} |
 +---------------------------------+
 1 row in set (0.00 sec)
+
 ```
- 
+
+
+
+

@@ -1,4 +1,28 @@
-# join hint using document
+---
+{
+    "title": "Join Hint using Document",
+    "language": "en"
+}
+---
+
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 
 <version since="2.0.4"></version> 
 
@@ -47,7 +71,8 @@ mysql> explain shape plan select /*+ leading(t2 t1) */ * from t1 join t2 on c1 =
 In this example, the Hint /*+ leading(t2 t1) */ is used. This Hint tells the optimizer to use the specified table (t2) as the driver table in the execution plan, before (t1).
 
 This document mainly describes how to use join related hints in Doris: leading hint, ordered hint and distribute hint
-# Leading hint
+
+## Leading hint
 Leading Hint is used to guide the optimizer in determining the join order of the query plan. In a query, the join order of the tables can affect query performance. Leading Hint allows you to specify the order of table joins that you want the optimizer to follow.
 
 In doris, the syntax is /*+LEADING(tablespec [tablespec]... ) */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement. Note that the '/' after leading and the selectlist need to be separated by at least one separator such as a space. At least two more tables need to be written before the leadinghint is justified. And any join can be bracketed to explicitly specify the shape of the joinTree. Example:
@@ -347,7 +372,7 @@ mysql> explain shape plan select /*+ leading(t1 {t2 t3} t4) */ * from t1 join t2
 +--------------------------------------------------------------------------------------+
 19 rows in set (0.02 sec)
   ```
-## Non-inner join：
+## Non-inner join:
 When non-inner-joins are encountered, such as Outer join or semi/anti join, leading hint automatically deduces the join mode of each join according to the original sql semantics. If leading hints that differ from the original sql semantics or cannot be generated, they are placed in unused, but do not affect the generation of the normal flow of the plan.
 
 Here are examples of things that can't be exchanged:   
@@ -464,9 +489,40 @@ mysql>  explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2
 +--------------------------------------------------------------------------------+
 18 rows in set (0.02 sec)
   ```
+## Limitation
+- The current version supports only one leadingHint. If leadinghint is used with a subquery, the query will report an error. Example (This example explain will report an error, but will follow the normal path generation plan) :
+```sql
+mysql>  explain shape plan select /*+ leading(alias t1) */ count(*) from t1 join (select /*+ leading(t3 t2) */ c2 from t2 join t3 on t2.c2 = t3.c3) as alias on t1.c1 = alias.c2;
+  +----------------------------------------------------------------------------------------+
+  | Explain String(Nereids Planner)                                                        |
+  +----------------------------------------------------------------------------------------+
+  | PhysicalResultSink                                                                     |
+  | --hashAgg[GLOBAL]                                                                      |
+  | ----PhysicalDistribute[DistributionSpecGather]                                         |
+  | ------hashAgg[LOCAL]                                                                   |
+  | --------PhysicalProject                                                                |
+  | ----------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = alias.c2)) otherCondition=()    |
+  | ------------PhysicalProject                                                            |
+  | --------------PhysicalOlapScan[t1]                                                     |
+  | ------------PhysicalDistribute[DistributionSpecHash]                                   |
+  | --------------PhysicalProject                                                          |
+  | ----------------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=() |
+  | ------------------PhysicalProject                                                      |
+  | --------------------PhysicalOlapScan[t2]                                               |
+  | ------------------PhysicalDistribute[DistributionSpecHash]                             |
+  | --------------------PhysicalProject                                                    |
+  | ----------------------PhysicalOlapScan[t3]                                             |
+  |                                                                                        |
+  | Hint log:                                                                              |
+  | Used:                                                                                  |
+  | UnUsed: leading(alias t1)                                                              |
+  | SyntaxError: leading(t3 t2) Msg:one query block can only have one leading clause       |
+  +----------------------------------------------------------------------------------------+
+  21 rows in set (0.01 sec)
+```
  # OrderedHint
 - Using ordered hint causes the join tree to be fixed in shape and displayed in text order
-- The syntax is /*+ ORDERED */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement, for example：
+- The syntax is /*+ ORDERED */,leading is surrounded by "/*+" and "*/" and placed directly behind the select in the select statement, for example:
 ```sql
   explain shape plan select /*+ ORDERED */ t1.c1 from t2 join t1 on t1.c1 = t2.c2 join t3 on c2 = c3;
      join
@@ -559,7 +615,7 @@ mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
   11 rows in set (0.01 sec)
   ```
 
-  after use distribute hint：
+  after use distribute hint:
   ```sql
 mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast] t1 on t1.c1 = t2.c2;
   +----------------------------------------------------------------------------------+
@@ -585,70 +641,6 @@ mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast]
   16 rows in set (0.01 sec)
   ```
 - the Explain shape plan will display inside distribute operator related information, including DistributionSpecReplicated said the operator will be corresponding data into a copy of all be node, DistributionSpecGather indicates that data is gathered to fe nodes, and DistributionSpecHash indicates that data is dispersed to different be nodes according to a specific hashKey and algorithm.
-# Leading Hint mixed with Distribute Hint
-When we want more flexible using of leading which we want to control distribute type when useing hint and distribute hint together.  
-For example: we want to use hint to make plan like:
-```sql
-mysql> explain shape plan select /*+ leading(t3 broadcast {t2 shuffle t1}) */ count(*) from t1 left outer join t2 on c1 = c2 join t3 on c2 = c3;
-+----------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                        |
-+----------------------------------------------------------------------------------------+
-| PhysicalResultSink                                                                     |
-| --hashAgg[GLOBAL]                                                                      |
-| ----PhysicalDistribute[DistributionSpecGather]                                         |
-| ------hashAgg[LOCAL]                                                                   |
-| --------PhysicalProject                                                                |
-| ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()       |
-| ------------PhysicalProject                                                            |
-| --------------PhysicalOlapScan[t3]                                                     |
-| ------------PhysicalDistribute[DistributionSpecHash]                                   |
-| --------------PhysicalProject                                                          |
-| ----------------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| ------------------PhysicalProject                                                      |
-| --------------------PhysicalOlapScan[t2]                                               |
-| ------------------PhysicalDistribute[DistributionSpecHash]                             |
-| --------------------PhysicalProject                                                    |
-| ----------------------PhysicalOlapScan[t1]                                             |
-|                                                                                        |
-| Hint log:                                                                              |
-| Used:  leading(t3 { t2 shuffle t1 } )                                                  |
-| UnUsed: [broadcast]_2                                                                  |
-| SyntaxError:                                                                           |
-+----------------------------------------------------------------------------------------+
-21 rows in set (0.06 sec)
-```
-which means we can make plan like: leading(t3 { t2 shuffle t1 } ) but [broadcast]_2 can not be used because of changing the meaning of original query  
-When we have Distribute hint and Leading Hint + Distribute Hint together, we would try leading hint first. When leading hint is used all separate distribute hints turn to unused:
-```sql
-mysql> explain shape plan select /*+ leading(t3 {t2 t1}) */ count(*) from t1 left outer join [shuffle] t2 on c1 = c2 join [broadcast] t3 on c2 = c3;
-+----------------------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                                        |
-+----------------------------------------------------------------------------------------+
-| PhysicalResultSink                                                                     |
-| --hashAgg[GLOBAL]                                                                      |
-| ----PhysicalDistribute[DistributionSpecGather]                                         |
-| ------hashAgg[LOCAL]                                                                   |
-| --------PhysicalProject                                                                |
-| ----------hashJoin[INNER_JOIN] hashCondition=((t2.c2 = t3.c3)) otherCondition=()       |
-| ------------PhysicalProject                                                            |
-| --------------PhysicalOlapScan[t3]                                                     |
-| ------------PhysicalDistribute[DistributionSpecHash]                                   |
-| --------------PhysicalProject                                                          |
-| ----------------hashJoin[INNER_JOIN] hashCondition=((t1.c1 = t2.c2)) otherCondition=() |
-| ------------------PhysicalProject                                                      |
-| --------------------PhysicalOlapScan[t2]                                               |
-| ------------------PhysicalDistribute[DistributionSpecHash]                             |
-| --------------------PhysicalProject                                                    |
-| ----------------------PhysicalOlapScan[t1]                                             |
-|                                                                                        |
-| Hint log:                                                                              |
-| Used: leading(t3 { t2 t1 } )                                                           |
-| UnUsed: [shuffle]_2 [broadcast]_3                                                      |
-| SyntaxError:                                                                           |
-+----------------------------------------------------------------------------------------+
-21 rows in set (0.02 sec)
-```
-
 # To be supported
 - leadingHint indicates that the current query cannot be mixed with the subquery after it is promoted. A hint is required to control whether the subquery can be unnested
 

@@ -1,7 +1,7 @@
 ---
 {
-    "title": "加密和脱敏",
-    "language": "zh-CN"
+    "title": "Encrption and Masking Function ",
+    "language": "en"
 }
 ---
 
@@ -24,12 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-Doris 内置了如下加密和脱敏函数。详细使用，请参考 SQL 手册。
+Doris provides the following built-in encryption and masking functions. For detailed usage, please refer to the SQL manual.
 
 ## AES_ENCRYPT
 
-Aes 加密函数。该函数与 MySQL 中的 `AES_ENCRYPT` 函数行为一致。默认采用 AES_128_ECB 算法，padding 模式为 PKCS7。底层使用 OpenSSL 库进行加密。Reference: https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#function_aes-decrypt
+An AES encryption function. 
+
+This function behaves the same as the` AES_ENCRYPT` function in MySQL. It uses the AES_128_ECB algorithm by default, with PKCS7 padding mode. Encryption is performed using the OpenSSL library as the underlying mechanism. Reference: https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#function_aes-decrypt
 
 ```sql
 select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
@@ -44,7 +45,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3'));
 
 ## AES_DECRYPT
 
-Aes 解密函数。该函数与 MySQL 中的 `AES_DECRYPT` 函数行为一致。默认采用 AES_128_ECB 算法，padding 模式为 PKCS7。底层使用 OpenSSL 库进行加密。
+An AES decryption function. This function behaves the same as the `AES_DECRYPT` function in MySQL. It uses the AES_128_ECB algorithm by default, with PKCS7 padding mode. Decryption is performed using the OpenSSL library as the underlying mechanism.
 
 ```sql
 select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B830D21A390C3');
@@ -58,9 +59,9 @@ select aes_decrypt(from_base64('wr2JEDVXzL9+2XtRhgIloA=='),'F3229A0B371ED2D9441B
 
 ## MD5
 
-计算 MD5 128-bit
+Calculates the MD5 128-bit hash.
 
-```Plain
+```sql
 MySQL [(none)]> select md5("abc");
 +----------------------------------+
 | md5('abc')                       |
@@ -72,9 +73,9 @@ MySQL [(none)]> select md5("abc");
 
 ## MD5SUM
 
-计算多个字符串 MD5 128-bit
+Calculates the MD5 128-bit hash for multiple strings.
 
-```Plain
+```sql
 MySQL > select md5("abcd");
 +----------------------------------+
 | md5('abcd')                      |
@@ -94,9 +95,9 @@ MySQL > select md5sum("ab","cd");
 
 ## SM4_ENCRYPT
 
-SM4 加密函数
+SM4 encryption function.
 
-```Plain
+```sql
 MySQL > select TO_BASE64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3'));
 +--------------------------------+
 | to_base64(sm4_encrypt('text')) |
@@ -119,9 +120,9 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 
 ## SM3
 
-计算 SM3 256-bit
+Calculates the SM3 256-bit hash for multiple strings.
 
-```Plain
+```sql
 MySQL > select sm3("abcd");
 +------------------------------------------------------------------+
 | sm3('abcd')                                                      |
@@ -133,9 +134,9 @@ MySQL > select sm3("abcd");
 
 ## SM3SUM
 
-计算多个字符串 SM3 256-bit
+Calculates the SM3 256-bit hash for multiple strings.
 
-```Plain
+```sql
 MySQL > select sm3("abcd");
 +------------------------------------------------------------------+
 | sm3('abcd')                                                      |
@@ -155,21 +156,11 @@ MySQL > select sm3sum("ab","cd");
 
 ## SHA
 
-使用 SHA1 算法对信息进行摘要处理。
-
-```sql
-mysql> select sha("123");
-+------------------------------------------+
-| sha1('123')                              |
-+------------------------------------------+
-| 40bd001563085fc35165329ea1ff5c5ecbdbbeef |
-+------------------------------------------+
-1 row in set (0.13 sec)
-```
+Calculates the SHA1 hash using the SHA1 algorithm.
 
 ## SHA2
 
-使用 SHA2 对信息进行摘要处理。
+Calculates the SHA2 hash using SHA2 algorithm.
 
 ```sql
 mysql> select sha2('abc', 224);
@@ -199,11 +190,9 @@ mysql> select sha2(NULL, 512);
 
 ## DIGITAL_MASKING
 
-别名函数，原始函数为 `concat(left(id,3),'****',right(id,4))`。
+An alias function with the original function being `CONCAT(LEFT(id,3),'****',RIGHT(id,4))`. Performs data masking on the input `digital_number` and returns the masked result. 
 
-将输入的 `digital_number` 进行脱敏处理，返回遮盖脱敏后的结果。`digital_number` 为 `BIGINT` 数据类型。
-
-将手机号码进行脱敏处理
+The `digital_number` is of type `BIGINT`.
 
 ```sql
 mysql select digital_masking(13812345678);

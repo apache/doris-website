@@ -1,7 +1,7 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Best Practice'],
-        title: "Cross-Cluster Replication for read-write separation: story of a grocery store brand",
+        title: "Cross-cluster replication for read-write separation: story of a grocery store brand",
         content: `Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.`,
         to: '/blog/cross-cluster-replication-for-read-write',
         image: 'ccr-for-read-write-separation.jpg',

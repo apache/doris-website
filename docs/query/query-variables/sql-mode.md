@@ -1,7 +1,7 @@
 ---
 {
 "title": "SQL Mode",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 
@@ -24,64 +24,53 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# SQL Mode
 
+The sql mode newly supported by Doris refers to the sql mode management mechanism of Mysql. Each client can set its own sql mode, and database administrators with Admin privileges can set the global sql mode.
+## sql mode introduce
 
-Doris 新支持的 SQL Mode 参照了 Mysql 的 SQL Mode 管理机制，每个客户端都能设置自己的 SQL Mode，拥有 Admin 权限的数据库管理员可以设置全局 SQL Mode。
+sql mode enables users to switch between different styles of sql syntax and data validation strictness, making Doris more compatible with other databases. For example, in some databases, the '||' symbol is a string concatenator, but in Doris it is equivalent to 'or', then users only need to use sql mode to switch to the style they want. Each client can set the sql mode, which is valid in the current session. Only users with Admin privileges can set the global sql mode.
+## principle
 
-## SQL Mode 介绍
+The sql mode is stored in SessionVariables with a 64-bit Long type. Each bit of this address represents the enable/disable (1 means open, 0 means disable) state of a mode, as long as you know where each mode is. Bit, we can easily and quickly perform checksum operations on sql mode through bit operations.
 
-SQL Mode 使用户能在不同风格的 sql 语法和数据校验严格度间做切换，使 Doris 对其他数据库有更好的兼容性。例如在一些数据库里，'||'符号是一个字符串连接符，但在 Doris 里却是与'or'等价的，这时用户只需要使用 SQL Mode 切换到自己想要的风格。每个客户端都能设置 SQL Mode，并在当前对话中有效，只有拥有 Admin 权限的用户可以设置全局 SQL Mode。
+Every time you query the sql mode, the Long type will be parsed and turned into a user-readable string. Similarly, the sql mode string sent by the user to the server will be parsed into a string that can be stored in SessionVariables. Long type.
 
-## 原理
+The global sql mode that has been set will be persisted, so the operation on the global sql mode always only needs to be performed once, and the last global sql mode can be restored even after the program is restarted.
 
-SQL Mode 用一个 64 位的 Long 型存储在 SessionVariables 中，这个地址的每一位都代表一个 mode 的开启/禁用 (1 表示开启，0 表示禁用) 状态，只要知道每一种 mode 具体是在哪一位，我们就可以通过位运算方便快速的对 SQL Mode 进行校验和操作。
+## Operation method
 
-每一次对 SQL Mode 的查询，都会对此 Long 型进行一次解析，变成用户可读的字符串形式，同理，用户发送给服务器的 SQL Mode 字符串，会被解析成能够存储在 SessionVariables 中的 Long 型。
-
-已被设置好的全局 SQL Mode 会被持久化，因此对全局 SQL Mode 的操作总是只需一次，即使程序重启后仍可以恢复上一次的全局 SQL Mode。
-
-## 操作方式
-
-1. 设置 SQL Mode
-
-```sql
+1. Set sql mode
+```
 set global sql_mode = "DEFAULT"
 set session sql_mode = "DEFAULT"
 ```
-:::note
-- 目前 Doris 的默认 SQL Mode 是 DEFAULT（但马上会在后续修改中会改变）。
+>Currently Doris's default sql mode is DEFAULT (but this will be changed in subsequent revisions soon).
+>Setting global sql mode requires Admin privileges and will affect all clients connecting thereafter.
+>Setting session sql mode will only affect the current dialog client, the default is session mode.
 
-- 设置 global SQL Mode 需要 Admin 权限，并会影响所有在此后连接的客户端。
+2. Query sql mode
 
-- 设置 session SQL Mode 只会影响当前对话客户端，默认为 session 方式。
-:::
-
-2. 查询 SQL Mode
-
-```sql
+```
 select @@global.sql_mode
 select @@session.sql_mode
 ```
-
-:::note
-除了这种方式，你还可以通过下面方式返回所有 session variables 来查看当前 sql mode
-:::
-
-```sql
+>In addition to this way, you can also check the current sql mode by returning all session variables in the following way
+```
 show global variables
 show session variables
 ```
 
-## 已支持 mode
+## mode is supported
 
 1. `PIPES_AS_CONCAT`
 
-   在此模式下，'||'符号是一种字符串连接符号（同 CONCAT() 函数），而不是'OR'符号的同义词。(e.g., `'a'||'b' = 'ab'`, `1||0 = '10'`)
+In this mode, the '||' symbol is a string concatenation symbol (same as the CONCAT() function), not a synonym for the 'OR' symbol. (e.g., `'a'||'b' = 'ab'`, `1||0 = '10'`)
 
 2. `NO_BACKSLASH_ESCAPES`
 
-   启用此模式将禁用反斜杠字符（\）作为字符串和标识符中的转义字符。启用此模式后，反斜杠将变成一个普通字符，与其他字符一样。(e.g., `\b = \\b`, )
+Enabling this mode disables the backslash character (\\) from functioning as an escape character within strings and identifiers. When this mode is enabled, the backslash is treated as a regular character without any special meaning
 
-## 复合 mode
+## composite mode
 
-（待补充）
+(subsequent additions)

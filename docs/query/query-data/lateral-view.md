@@ -1,7 +1,7 @@
 ---
 {
-    "title": "列转行 (Literal Views)",
-    "language": "zh-CN"
+    "title": "Row to Column",
+    "language": "en"
 }
 ---
 
@@ -24,31 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Row to Column
 
+Used in conjunction with generator functions such as `EXPLODE`, will generate a virtual table containing one or more rows. `LATERAL VIEW` applies rows to each raw output row.
 
-与生成器函数（例如 `EXPLODE`）结合使用，将生成包含一个或多个行的虚拟表。 `LATERAL VIEW` 将行应用于每个原始输出行。
-
-## 语法
+## Grammar
 
 ```sql
-LATERAL VIEW generator_function ( expression [, ...] ) [ table_identifier ] AS column_identifier [, ...]
+LATERAL VIEW  generator_function ( expression [, ...] ) [ table_identifier ] AS column_identifier [, ...]
 ```
 
-## 参数
+## Parameters
 
 - generator_function
 
-  生成器函数（EXPLODE、EXPLODE_SPLIT 等）。
+   Generator functions (EXPLODE, EXPLODE_SPLIT, etc.).
 
 - table_identifier
 
-  `generator_function` 的别名，它是可选项。
+   Alias for `generator_function`, which is optional.
 
 - column_identifier
 
-  列出列别名 `generator_function`，它可用于输出行。列标识符的数目必须与 generator 函数返回的列数匹配。
+   List column alias `generator_function`, which can be used to output rows. The number of column identifiers must match the number of columns returned by the generator function.
 
-## 示例
+## Example
 
 ```sql
 CREATE TABLE `person` (

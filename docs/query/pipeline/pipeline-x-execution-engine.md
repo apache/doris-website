@@ -1,13 +1,13 @@
 ---
 {
-    "title": "PipelineX 执行引擎",
-    "language": "zh-CN",
+    "title": "PipelineX Execution Engine",
+    "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4
 }
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -26,33 +26,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# PipelineX 执行引擎
+# PipelineX Execution Engine
 
 <version since="2.1.0"></version>
 
-## 背景
-PipelineX 执行引擎 是 Doris 在 2.1 版本加入的实验性功能。目标是为了解决Doris pipeline引擎的四大问题：
-1. 执行并发上，当前Doris执行并发收到两个因素的制约，一个是fe设置的参数，另一个是受存储层bucket数量的限制，这样的静态并发使得执行引擎无法充分利用机器资源。
-2. 执行逻辑上，当前Doris有一些固定的额外开销，例如表达式部分各个instance彼此独立，而instance的初始化参数有很多公共部分，所以需要额外进行很多重复的初始化步骤。
-3. 调度逻辑上，当前pipeline的调度器会把阻塞task全部放入一个阻塞队列中，由一个线程负责轮询并从阻塞队列中取出可执行task放入runnable队列，所以在有查询执行的过程中，会固定有一个核的资源作为调度的开销。
-4. profile方面，目前pipeline无法为用户提供简单易懂的指标。
+## Background
 
-它的具体设计、实现和效果可以参阅 [DSIP-035]([DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation](https://cwiki.apache.org/confluence/display/DORIS/DSIP-035%3A+PipelineX+Execution+Engine))。
+The PipelineX execution engine is an experimental feature in Doris 2.1.0, expected to address the four major issues of the Doris pipeline engine:
+1. In terms of execution concurrency, Doris is currently constrained by two factors: one is the parameters set by FE, and the other is limited by the number of buckets. This concurrent strategy prevents the execution engine from fully utilizing machine resources.
+2. In terms of execution logic, Doris currently has some fixed additional overhead. For example, the common expression for all instances will be initialized multiple times due to independence between all instances.
+3. In terms of scheduling logic, the scheduler of the current pipeline will put all blocking tasks into a blocking queue, and a blocking queue scheduler will be responsible for polling and extracting executable tasks from the blocking queue and placing them in the runnable queue. Therefore, during the query execution process, a CPU core will always be occupied to do scheduling instead of execution.
+4. In terms of profile, currently the pipeline cannot provide users concise and clear metrics.
 
-## 预期效果
+Its specific design and implementation can be found in [DSIP-035]([DSIP-035: PipelineX Execution Engine - DORIS - Apache Software Foundation](https://cwiki.apache.org/confluence/display/DORIS/DSIP-035%3A+PipelineX+Execution+Engine)).
 
-1. 执行并发上，依赖local exchange使pipelinex充分并发，可以让数据被均匀分布到不同的task中，尽可能减少数据倾斜，此外，pipelineX也将不再受存储层tablet数量的制约。
-2. 执行逻辑上，多个pipeline task共享同一个pipeline的全部共享状态，例如表达式和一些const变量，消除了额外的初始化开销。
-3. 调度逻辑上，所有pipeline task的阻塞条件都使用Dependency进行了封装，通过外部事件（例如rpc完成）触发task的执行逻辑进入runnable队列，从而消除了阻塞轮询线程的开销。
-4. profile：为用户提供简单易懂的指标。
+## Goals
 
-## 用户接口变更
+1. In terms of execution concurrency, pipelineX introduces local exchange optimization to fully utilize CPU resources, and distribute data evenly across different tasks to minimize data skewing. In addition, pipelineX will no longer be constrained by the number of tablets.
+2. Logically, multiple pipeline tasks share all shared states of the same pipeline and eliminate additional initialization overhead, such as expressions and some const variables.
+3. In terms of scheduling logic, the blocking conditions of all pipeline tasks are encapsulated using Dependency, and the execution logic of the tasks is triggered by external events (such as rpc completion) to enter the runnable queue, thereby eliminating the overhead of blocking polling threads.
+4. Profile: Provide users with simple and easy to understand metrics.
 
-### 设置Session变量
+## User Interface changes
+
+### Set session variable
 
 #### enable_pipeline_x_engine
 
-将session变量`enable_pipeline_x_engine` 设置为`true`，则 BE 在进行查询执行时就会默认将 SQL 的执行模型转变 PipelineX 的执行方式。如果 Pipeline 和 PipelineX 引擎都设置为开启，Doris 将优先使用 PipelineX 引擎。
+Set `enable_pipeline_x_engine ` to `true`, BE will use PipelineX to execute by default.
 
 ```
 set enable_pipeline_x_engine = true;
@@ -60,7 +61,7 @@ set enable_pipeline_x_engine = true;
 
 #### enable_local_shuffle
 
-设置`enable_local_shuffle`为true则打开local shuffle优化。local shuffle将尽可能将数据均匀分布给不同的pipeline task从而尽可能避免数据倾斜。
+Set `enable_local_shuffle` to true will enable local shuffle optimization. Local shuffle will try to evenly distribute data among different pipeline tasks to avoid data skewing as much as possible.
 
 ```
 set enable_local_shuffle = true;
@@ -68,12 +69,12 @@ set enable_local_shuffle = true;
 
 #### ignore_storage_data_distribution
 
-设置`ignore_storage_data_distribution`为true则表示忽略存储层的数据分布。结合local shuffle一起使用，则pipelineX引擎的并发能力将不再受到存储层tablet数量的制约，从而充分利用机器资源。
+Settings `ignore_storage_data_distribution` is true, it means ignoring the data distribution of the storage layer. When used in conjunction with local shuffle, the concurrency capability of the pipelineX engine will no longer be constrained by the number of storage layer tables, thus fully utilizing machine resources.
 
 ```
 set ignore_storage_data_distribution = true;
 ```
 
-### 导入
+### Load
 
-导入的引擎选择设置，详见[导入](../data-operate/import/load-manual)文档。
+The engine selected for import are detailed in the [Import](../data-operate/import/load-manual) documentation.

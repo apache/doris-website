@@ -1,7 +1,7 @@
 ---
 {
-    "title": "同步物化视图",
-    "language": "zh-CN"
+    "title": "Materialized View",
+    "language": "en"
 }
 ---
 
@@ -24,121 +24,110 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Materialized View
+A materialized view is a data set that is pre-calculated (according to a defined SELECT statement) and stored in a special table in Doris.
 
+The emergence of materialized views is mainly to satisfy users. It can analyze any dimension of the original detailed data, but also can quickly analyze and query fixed dimensions.
 
-物化视图是将预先计算（根据定义好的 SELECT 语句）好的数据集，存储在 Doris 中的一个特殊的表。
+## When to use materialized view
 
-物化视图的出现主要是为了满足用户，既能对原始明细数据的任意维度分析，也能快速的对固定维度进行分析查询。
++ Analyze requirements to cover both detailed data query and fixed-dimensional query.
++ The query only involves a small part of the columns or rows in the table.
++ The query contains some time-consuming processing operations, such as long-time aggregation operations.
++ The query needs to match different prefix indexes.
 
-## 适用场景
+## Advantage
 
-- 分析需求覆盖明细数据查询以及固定维度查询两方面。
++ For those queries that frequently use the same sub-query results repeatedly, the performance is greatly improved
++ Doris automatically maintains the data of the materialized view, whether it is a new import or delete operation, it can ensure the data consistency of the base table and the materialized view table. No need for any additional labor maintenance costs.
++ When querying, it will automatically match the optimal materialized view and read data directly from the materialized view.
 
-- 查询仅涉及表中的很小一部分列或行。
+*Automatic maintenance of materialized view data will cause some maintenance overhead, which will be explained in the limitations of materialized views later.*
 
-- 查询包含一些耗时处理操作，比如：时间很久的聚合操作等。
+## Materialized View VS Rollup
 
-- 查询需要匹配不同前缀索引。
+Before the materialized view function, users generally used the Rollup function to improve query efficiency through pre-aggregation. However, Rollup has certain limitations. It cannot do pre-aggregation based on the detailed model.
 
-## 优势
+Materialized views cover the functions of Rollup while also supporting richer aggregate functions. So the materialized view is actually a superset of Rollup.
 
-- 对于那些经常重复的使用相同的子查询结果的查询性能大幅提升。
+In other words, the functions previously supported by the `ALTER TABLE ADD ROLLUP` syntax can now be implemented by `CREATE MATERIALIZED VIEW`.
 
-- Doris 自动维护物化视图的数据，无论是新的导入，还是删除操作都能保证 Base 表和物化视图表的数据一致性，无需任何额外的人工维护成本。
+## Use materialized views
 
-- 查询时，会自动匹配到最优物化视图，并直接从物化视图中读取数据。
+The Doris system provides a complete set of DDL syntax for materialized views, including creating, viewing, and deleting. The syntax of DDL is consistent with PostgreSQL and Oracle.
 
-:::note
-_自动维护物化视图的数据会造成一些维护开销，会在后面的物化视图的局限性中展开说明。_
-:::
+### Create a materialized view
 
-## 物化视图 VS Rollup
+Here you must first decide what kind of materialized view to create based on the characteristics of your query statement. This is not to say that your materialized view definition is exactly the same as one of your query statements. There are two principles here:
 
-在没有物化视图功能之前，用户一般都是使用 Rollup 功能通过预聚合方式提升查询效率的。但是 Rollup 具有一定的局限性，他不能基于明细模型做预聚合。
+1. **Abstract** from the query statement, the grouping and aggregation methods shared by multiple queries are used as the definition of the materialized view.
+2. It is not necessary to create materialized views for all dimension combinations.
 
-物化视图则在覆盖了 Rollup 的功能的同时，还能支持更丰富的聚合函数。所以物化视图其实是 Rollup 的一个超集。
+First of all, the first point, if a materialized view is abstracted, and multiple queries can be matched to this materialized view. This materialized view works best. Because the maintenance of the materialized view itself also consumes resources.
 
-也就是说，之前 [ALTER TABLE ADD ROLLUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-ROLLUP) 语法支持的功能现在均可以通过 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 实现。
+If the materialized view only fits a particular query, and other queries do not use this materialized view. As a result, the materialized view is not cost-effective, which not only occupies the storage resources of the cluster, but cannot serve more queries.
 
-## 使用物化视图
+Therefore, users need to combine their own query statements and data dimension information to abstract the definition of some materialized views.
 
-Doris 系统提供了一整套对物化视图的 DDL 语法，包括创建，查看，删除。DDL 的语法和 PostgreSQL, Oracle 都是一致的。
+The second point is that in the actual analysis query, not all dimensional analysis will be covered. Therefore, it is enough to create a materialized view for the commonly used combination of dimensions, so as to achieve a space and time balance.
 
-### 创建物化视图
+Creating a materialized view is an asynchronous operation, which means that after the user successfully submits the creation task, Doris will calculate the existing data in the background until the creation is successful.
 
-这里首先你要根据你的查询语句的特点来决定创建一个什么样的物化视图。这里并不是说你的物化视图定义和你的某个查询语句一模一样就最好。这里有两个原则：
+The specific syntax can be viewed through the following command:
 
-1. 从查询语句中**抽象**出，多个查询共有的分组和聚合方式作为物化视图的定义。
+```
+HELP CREATE MATERIALIZED VIEW
+```
 
-2. 不需要给所有维度组合都创建物化视图。
+<version since="2.0.0"></version>
 
-首先第一个点，一个物化视图如果抽象出来，并且多个查询都可以匹配到这张物化视图。这种物化视图效果最好。因为物化视图的维护本身也需要消耗资源。
+In `Doris 2.0` we made some enhancements to materialized views (described in `Best Practice 4` of this article). We recommend that users check whether the expected query can hit the desired materialized view in the test environment before using the materialized view in the official production environment.
 
-如果物化视图只和某个特殊的查询很贴合，而其他查询均用不到这个物化视图。则会导致这张物化视图的性价比不高，既占用了集群的存储资源，还不能为更多的查询服务。
+If you don't know how to verify that a query hits a materialized view, you can read `Best Practice 1` of this article.
 
-所以用户需要结合自己的查询语句，以及数据维度信息去抽象出一些物化视图的定义。
+At the same time, we do not recommend that users create multiple materialized views with similar shapes on the same table, which may cause conflicts between multiple materialized views and cause query hit failures (this problem will be improved in the new optimizer ). It is recommended that users first verify whether materialized views and queries meet the requirements and can be used normally in the test environment.
+### Support aggregate functions
 
-第二点就是，在实际的分析查询中，并不会覆盖到所有的维度分析。所以给常用的维度组合创建物化视图即可，从而到达一个空间和时间上的平衡。
+The aggregate functions currently supported by the materialized view function are:
 
-创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，Doris 会在后台对存量的数据进行计算，直到创建成功。
++ SUM, MIN, MAX (Version 0.12)
 
-具体的语法可查看[CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 。
++ COUNT, BITMAP\_UNION, HLL\_UNION (Version 0.13)
 
++ [AGG_STATE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Types/AGG_STATE?_highlight=agg_state) (Version 2.0)
 
+  Some aggregation functions that are not originally supported will be converted to the agg_state type to achieve pre-aggregation.
 
-:::tip
-自 Doris 2.0 版本起支持以下功能
-:::
+### Update strategy
 
-在`Doris 2.0`版本中我们对物化视图的做了一些增强 (在本文的`最佳实践4`中有具体描述)。我们建议用户在正式的生产环境中使用物化视图前，先在测试环境中确认是预期中的查询能否命中想要创建的物化视图。
+In order to ensure the data consistency between the materialized view table and the Base table, Doris will import, delete and other operations on the Base table are synchronized to the materialized view table. And through incremental update to improve update efficiency. To ensure atomicity through transaction.
 
-如果不清楚如何验证一个查询是否命中物化视图，可以阅读本文的`最佳实践1`。
+For example, if the user inserts data into the base table through the INSERT command, this data will be inserted into the materialized view synchronously. When both the base table and the materialized view table are written successfully, the INSERT command will return successfully.
 
-与此同时，我们不建议用户在同一张表上建多个形态类似的物化视图，这可能会导致多个物化视图之间的冲突使得查询命中失败 (在新优化器中这个问题会有所改善)。建议用户先在测试环境中验证物化视图和查询是否满足需求并能正常使用。
+### Query automatic matching
 
-### 支持聚合函数
+After the materialized view is successfully created, the user's query does not need to be changed, that is, it is still the base table of the query. Doris will automatically select an optimal materialized view based on the current query statement, read data from the materialized view and calculate it.
 
-目前物化视图创建语句支持的聚合函数有：
+Users can use the EXPLAIN command to check whether the current query uses a materialized view.
 
-- SUM, MIN, MAX (Version 0.12)
+The matching relationship between the aggregation in the materialized view and the aggregation in the query:
 
-- COUNT, BITMAP_UNION, HLL_UNION (Version 0.13)
+| Materialized View Aggregation | Query Aggregation |
+| ---------- | -------- |
+| sum | sum |
+| min | min |
+| max | max |
+| count | count |
+| bitmap\_union | bitmap\_union, bitmap\_union\_count, count(distinct) |
+| hll\_union | hll\_raw\_agg, hll\_union\_agg, ndv, approx\_count\_distinct |
 
-- [通用聚合](https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Types/AGG_STATE?_highlight=agg_state) (Version 2.0)
+After the aggregation functions of bitmap and hll match the materialized view in the query, the aggregation operator of the query will be rewritten according to the table structure of the materialized view. See example 2 for details.
 
-  一些不在原有的支持范围内的聚合函数，会被转化为agg_state类型来实现预聚合。
+### Query materialized views
 
+Check what materialized views the current table has, and what their table structure is. Through the following command:
 
-### 更新策略
-
-为保证物化视图表和 Base 表的数据一致性，Doris 会将导入，删除等对 Base 表的操作都同步到物化视图表中。并且通过增量更新的方式来提升更新效率。通过事务方式来保证原子性。
-
-比如如果用户通过 INSERT 命令插入数据到 Base 表中，则这条数据会同步插入到物化视图中。当 Base 表和物化视图表均写入成功后，INSERT 命令才会成功返回。
-
-### 查询自动匹配
-
-物化视图创建成功后，用户的查询不需要发生任何改变，也就是还是查询的 Base 表。Doris 会根据当前查询的语句去自动选择一个最优的物化视图，从物化视图中读取数据并计算。
-
-用户可以通过 EXPLAIN 命令来检查当前查询是否使用了物化视图。
-
-物化视图中的聚合和查询中聚合的匹配关系：
-
-| 物化视图聚合 | 查询中聚合                                             |
-| ------------ | ------------------------------------------------------ |
-| sum          | sum                                                    |
-| min          | min                                                    |
-| max          | max                                                    |
-| count        | count                                                  |
-| bitmap_union | bitmap_union, bitmap_union_count, count(distinct)      |
-| hll_union    | hll_raw_agg, hll_union_agg, ndv, approx_count_distinct |
-
-其中 bitmap 和 hll 的聚合函数在查询匹配到物化视图后，查询的聚合算子会根据物化视图的表结构进行改写。详细见实例 2。
-
-### 查询物化视图
-
-查看当前表都有哪些物化视图，以及他们的表结构都是什么样的。通过下面命令：
-
-```sql
+```
 MySQL [test]> desc mv_test all;
 +-----------+---------------+-----------------+----------+------+-------+---------+--------------+
 | IndexName | IndexKeysType | Field           | Type     | Null | Key   | Default | Extra        |
@@ -162,107 +151,105 @@ MySQL [test]> desc mv_test all;
 +-----------+---------------+-----------------+----------+------+-------+---------+--------------+
 ```
 
-可以看到当前 `mv_test` 表一共有三张物化视图：mv_1, mv_2 和 mv_3，以及他们的表结构。
+You can see that the current `mv_test` table has three materialized views: mv\_1, mv\_2 and mv\_3, and their table structure.
 
-### 删除物化视图
+### Delete materialized view
 
-如果用户不再需要物化视图，则可以通过命令删除物化视图。
+If the user no longer needs the materialized view, you can delete the materialized view by 'DROP' commen.
 
-具体的语法可查看[DROP MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 
+You can view the specific syntax[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW)
 
-### 查看已创建的物化视图
+### View the materialized view that has been created
 
-用户可以通过命令查看已创建的物化视图的
+Users can view the created materialized views by using commands
 
-具体的语法可查看[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW)
+You can view the specific syntax[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW)
 
-### 取消创建物化视图
+### Cancel Create materialized view
 
 ```text
- CANCEL ALTER TABLE MATERIALIZED VIEW FROM db_name.table_name
+CANCEL ALTER TABLE MATERIALIZED VIEW FROM db_name.table_name
 ```
 
-## 最佳实践 1
 
-使用物化视图一般分为以下几个步骤：
+## Best Practice 1
 
-1. 创建物化视图
+The use of materialized views is generally divided into the following steps:
 
-2. 异步检查物化视图是否构建完成
+1. Create a materialized view
+2. Asynchronously check whether the materialized view has been constructed
+3. Query and automatically match materialized views
 
-3. 查询并自动匹配物化视图
+**First is the first step: Create a materialized view**
 
-**首先是第一步：创建物化视图**
+Assume that the user has a sales record list, which stores the transaction id, salesperson, sales store, sales time, and amount of each transaction. The table building statement and insert data statement is:
 
-
-假设用户有一张销售记录明细表，存储了每个交易的交易 id，销售员，售卖门店，销售时间，以及金额。建表语句和插入数据语句为：
-
-```sql
+```
 create table sales_records(record_id int, seller_id int, store_id int, sale_date date, sale_amt bigint) distributed by hash(record_id) properties("replication_num" = "1");
 insert into sales_records values(1,1,1,"2020-02-02",1);
 ```
+The table structure of this `sales_records` is as follows:
 
-这张 `sales_records` 的表结构如下：
-
-```sql
+```
 MySQL [test]> desc sales_records;
-+-----------+--------+------+-------+---------+-------+
-| Field     | Type   | Null | Key   | Default | Extra |
-+-----------+--------+------+-------+---------+-------+
-| record_id | INT    | Yes  | true  | NULL    |       |
-| seller_id | INT    | Yes  | true  | NULL    |       |
-| store_id  | INT    | Yes  | true  | NULL    |       |
-| sale_date | DATE   | Yes  | false | NULL    | NONE  |
-| sale_amt  | BIGINT | Yes  | false | NULL    | NONE  |
-+-----------+--------+------+-------+---------+-------+
++-----------+--------+------+-------+---------+--- ----+
+| Field | Type | Null | Key | Default | Extra |
++-----------+--------+------+-------+---------+--- ----+
+| record_id | INT | Yes | true | NULL | |
+| seller_id | INT | Yes | true | NULL | |
+| store_id | INT | Yes | true | NULL | |
+| sale_date | DATE | Yes | false | NULL | NONE |
+| sale_amt | BIGINT | Yes | false | NULL | NONE |
++-----------+--------+------+-------+---------+--- ----+
 ```
 
-这时候如果用户经常对不同门店的销售量进行一个分析查询，则可以给这个 `sales_records` 表创建一张以售卖门店分组，对相同售卖门店的销售额求和的一个物化视图。创建语句如下：
+At this time, if the user often performs an analysis query on the sales volume of different stores, you can create a materialized view for the `sales_records` table to group the sales stores and sum the sales of the same sales stores. The creation statement is as follows:
 
-```sql
+```
 MySQL [test]> create materialized view store_amt as select store_id, sum(sale_amt) from sales_records group by store_id;
 ```
 
-后端返回下图，则说明创建物化视图任务提交成功。
+The backend returns to the following figure, indicating that the task of creating a materialized view is submitted successfully.
 
-```sql
+```
 Query OK, 0 rows affected (0.012 sec)
 ```
 
-**第二步：检查物化视图是否构建完成**
+**Step 2: Check whether the materialized view has been built**
 
-由于创建物化视图是一个异步的操作，用户在提交完创建物化视图任务后，需要异步的通过命令检查物化视图是否构建完成。命令如下：
+Since the creation of a materialized view is an asynchronous operation, after the user submits the task of creating a materialized view, he needs to asynchronously check whether the materialized view has been constructed through a command. The command is as follows:
 
-```sql
+```
 SHOW ALTER TABLE ROLLUP FROM db_name; (Version 0.12)
 SHOW ALTER TABLE MATERIALIZED VIEW FROM db_name; (Version 0.13)
 ```
 
-这个命令中 `db_name` 是一个参数，你需要替换成自己真实的 db 名称。命令的结果是显示这个 db 的所有创建物化视图的任务。结果如下：
+In this command, `db_name` is a parameter, you need to replace it with your real db name. The result of the command is to display all the tasks of creating a materialized view of this db. The results are as follows:
 
-```sql
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-----------+-------------------------------------------------------------------------------------------------------------------------+----------+---------+
-| JobId | TableName     | CreateTime          | FinishedTime        | BaseIndexName | RollupIndexName | RollupId | TransactionId | State     | Msg                                                                                                                     | Progress | Timeout |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-----------+-------------------------------------------------------------------------------------------------------------------------+----------+---------+
-| 22036 | sales_records | 2020-07-30 20:04:28 | 2020-07-30 20:04:57 | sales_records | store_amt       | 22037    | 5008          | FINISHED  |                                                                                                                         | NULL     | 86400   |
-+-------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+-----------+-------------------------------------------------------------------------------------------------------------------------+----------+---------+
+```
++-------+---------------+---------------------+--- ------------------+---------------+--------------- --+----------+---------------+-----------+-------- -------------------------------------------------- -------------------------------------------------- -------------+----------+---------+
+| JobId | TableName | CreateTime | FinishedTime | BaseIndexName | RollupIndexName | RollupId | TransactionId | State | Msg | Progress | Timeout |
++-------+---------------+---------------------+--- ------------------+---------------+--------------- --+----------+---------------+-----------+-------- -------------------------------------------------- -------------------------------------------------- -------------+----------+---------+
+| 22036 | sales_records | 2020-07-30 20:04:28 | 2020-07-30 20:04:57 | sales_records | store_amt | 22037 | 5008 | FINISHED | | NULL | 86400 |
++-------+---------------+---------------------+--- ------------------+---------------+--------------- --+----------+---------------+-----------+-------- ----------------------------------------
+
 ```
 
-其中 TableName 指的是物化视图的数据来自于哪个表，RollupIndexName 指的是物化视图的名称叫什么。其中比较重要的指标是 State。
+Among them, TableName refers to which table the data of the materialized view comes from, and RollupIndexName refers to the name of the materialized view. One of the more important indicators is State.
 
-当创建物化视图任务的 State 已经变成 FINISHED 后，就说明这个物化视图已经创建成功了。这就意味着，查询的时候有可能自动匹配到这张物化视图了。
+When the State of the task of creating a materialized view has become FINISHED, it means that the materialized view has been created successfully. This means that it is possible to automatically match this materialized view when querying.
 
-**第三步：查询**
+**Step 3: Query**
 
-当创建完成物化视图后，用户再查询不同门店的销售量时，就会直接从刚才创建的物化视图 `store_amt` 中读取聚合好的数据。达到提升查询效率的效果。
+After the materialized view is created, when users query the sales volume of different stores, they will directly read the aggregated data from the materialized view `store_amt` just created. To achieve the effect of improving query efficiency.
 
-用户的查询依旧指定查询 `sales_records` 表，比如：
+The user's query still specifies the query `sales_records` table, for example:
 
-```sql
+```
 SELECT store_id, sum(sale_amt) FROM sales_records GROUP BY store_id;
 ```
 
-上面查询就能自动匹配到 `store_amt`。用户可以通过下面命令，检验当前查询是否匹配到了合适的物化视图。
+The above query will automatically match `store_amt`. The user can use the following command to check whether the current query matches the appropriate materialized view.
 
 ```sql
 EXPLAIN SELECT store_id, sum(sale_amt) FROM sales_records GROUP BY store_id;
@@ -316,24 +303,23 @@ EXPLAIN SELECT store_id, sum(sale_amt) FROM sales_records GROUP BY store_id;
 |      cardinality=1, avgRowSize=1520.0, numNodes=1                                            |
 +----------------------------------------------------------------------------------------------+
 ```
-从最底部的`test.sales_records(store_amt)`可以表明这个查询命中了`store_amt`这个物化视图。值得注意的是，如果表中没有数据，那么可能不会命中物化视图。
+From the bottom `test.sales_records(store_amt)`, it can be shown that this query hits the `store_amt` materialized view. It is worth noting that if there is no data in the table, then the materialized view may not be hit.
 
-## 最佳实践 2（UV，PV）
+## Best Practice 2 PV,UV
 
-业务场景：计算广告的 UV，PV。
+Business scenario: Calculate the UV and PV of advertising
 
-假设用户的原始广告点击数据存储在 Doris，那么针对广告 PV, UV 查询就可以通过创建 `bitmap_union` 的物化视图来提升查询速度。
+Assuming that the user's original ad click data is stored in Doris, then for ad PV and UV queries, the query speed can be improved by creating a materialized view of `bitmap_union`.
 
-通过下面语句首先创建一个存储广告点击数据明细的表，包含每条点击的点击时间，点击的是什么广告，通过什么渠道点击，以及点击的用户是谁。
+Use the following statement to first create a table that stores the details of the advertisement click data, including the click event of each click, what advertisement was clicked, what channel clicked, and who was the user who clicked.
 
-```sql
-create table advertiser_view_record(time date, advertiser varchar(10), channel varchar(10), user_id int) distributed by hash(time) properties("replication_num" = "1");
+```
+MySQL [test]> create table advertiser_view_record(time date, advertiser varchar(10), channel varchar(10), user_id int) distributed by hash(time) properties("replication_num" = "1");
 insert into advertiser_view_record values("2020-02-02",'a','a',1);
 ```
+The original ad click data table structure is:
 
-原始的广告点击数据表结构为：
-
-```sql
+```
 MySQL [test]> desc advertiser_view_record;
 +------------+-------------+------+-------+---------+-------+
 | Field      | Type        | Null | Key   | Default | Extra |
@@ -346,62 +332,60 @@ MySQL [test]> desc advertiser_view_record;
 4 rows in set (0.001 sec)
 ```
 
-1. 创建物化视图
+1. Create a materialized view
 
-   由于用户想要查询的是广告的 UV 值，也就是需要对相同广告的用户进行一个精确去重，则查询一般为：
+	Since the user wants to query the UV value of the advertisement, that is, a precise de-duplication of users of the same advertisement is required, the user's query is generally:
 
-   ```sql
-   SELECT advertiser, channel, count(distinct user_id) FROM advertiser_view_record GROUP BY advertiser, channel;
-   ```
+	```
+	SELECT advertiser, channel, count(distinct user_id) FROM advertiser_view_record GROUP BY advertiser, channel;
+	```
 
-   针对这种求 UV 的场景，我们就可以创建一个带 `bitmap_union` 的物化视图从而达到一个预先精确去重的效果。
+	For this kind of UV-seeking scene, we can create a materialized view with `bitmap_union` to achieve a precise deduplication effect in advance.
 
-   在 Doris 中，`count(distinct)` 聚合的结果和 `bitmap_union_count`聚合的结果是完全一致的。而`bitmap_union_count` 等于 `bitmap_union` 的结果求 count，所以如果查询中**涉及到 `count(distinct)` 则通过创建带 `bitmap_union` 聚合的物化视图方可加快查询**。
+	In Doris, the result of `count(distinct)` aggregation is exactly the same as the result of `bitmap_union_count` aggregation. And `bitmap_union_count` is equal to the result of `bitmap_union` to calculate count, so if the query ** involves `count(distinct)`, you can speed up the query by creating a materialized view with `bitmap_union` aggregation.**
 
-   针对这个 Case，则可以创建一个根据广告和渠道分组，对 `user_id` 进行精确去重的物化视图。
+	For this case, you can create a materialized view that accurately deduplicate `user_id` based on advertising and channel grouping.
 
-   ```sql
-   MySQL [test]> create materialized view advertiser_uv as select advertiser, channel, bitmap_union(to_bitmap(user_id)) from advertiser_view_record group by advertiser, channel;
-   Query OK, 0 rows affected (0.012 sec)
-   ```
+	```
+	MySQL [test]> create materialized view advertiser_uv as select advertiser, channel, bitmap_union(to_bitmap(user_id)) from advertiser_view_record group by advertiser, channel;
+	Query OK, 0 rows affected (0.012 sec)
+	```
 
-   :::caution
-   注意：因为本身 user_id 是一个 INT 类型，所以在 Doris 中需要先将字段通过函数 `to_bitmap` 转换为 bitmap 类型然后才可以进行 `bitmap_union` 聚合。
-   :::
+	*Note: Because the user\_id itself is an INT type, it is called `bitmap_union` directly in Doris. The fields need to be converted to bitmap type through the function `to_bitmap` first, and then `bitmap_union` can be aggregated. *
 
-   创建完成后，广告点击明细表和物化视图表的表结构如下：
+	After the creation is complete, the table structure of the advertisement click schedule and the materialized view table is as follows:
 
-   ```sql
-   MySQL [test]> desc advertiser_view_record all;
-   +------------------------+---------------+----------------------+-------------+------+-------+---------+--------------+
-   | IndexName              | IndexKeysType | Field                | Type        | Null | Key   | Default | Extra        |
-   +------------------------+---------------+----------------------+-------------+------+-------+---------+--------------+
-   | advertiser_view_record | DUP_KEYS      | time                 | DATE        | Yes  | true  | NULL    |              |
-   |                        |               | advertiser           | VARCHAR(10) | Yes  | true  | NULL    |              |
-   |                        |               | channel              | VARCHAR(10) | Yes  | false | NULL    | NONE         |
-   |                        |               | user_id              | INT         | Yes  | false | NULL    | NONE         |
-   |                        |               |                      |             |      |       |         |              |
-   | advertiser_uv          | AGG_KEYS      | advertiser           | VARCHAR(10) | Yes  | true  | NULL    |              |
-   |                        |               | channel              | VARCHAR(10) | Yes  | true  | NULL    |              |
-   |                        |               | to_bitmap(`user_id`) | BITMAP      | No   | false |         | BITMAP_UNION |
-   +------------------------+---------------+----------------------+-------------+------+-------+---------+--------------+
-   ```
+	```
+	MySQL [test]> desc advertiser_view_record all;
+	+------------------------+---------------+----------------------+-------------+------+-------+---------+--------------+
+	| IndexName              | IndexKeysType | Field                | Type        | Null | Key   | Default | Extra        |
+	+------------------------+---------------+----------------------+-------------+------+-------+---------+--------------+
+	| advertiser_view_record | DUP_KEYS      | time                 | DATE        | Yes  | true  | NULL    |              |
+	|                        |               | advertiser           | VARCHAR(10) | Yes  | true  | NULL    |              |
+	|                        |               | channel              | VARCHAR(10) | Yes  | false | NULL    | NONE         |
+	|                        |               | user_id              | INT         | Yes  | false | NULL    | NONE         |
+	|                        |               |                      |             |      |       |         |              |
+	| advertiser_uv          | AGG_KEYS      | advertiser           | VARCHAR(10) | Yes  | true  | NULL    |              |
+	|                        |               | channel              | VARCHAR(10) | Yes  | true  | NULL    |              |
+	|                        |               | to_bitmap(`user_id`) | BITMAP      | No   | false |         | BITMAP_UNION |
+	+------------------------+---------------+----------------------+-------------+------+-------+---------+--------------+
+	```
 
-2. 查询自动匹配
+2. Automatic query matching
 
-   当物化视图表创建完成后，查询广告 UV 时，Doris 就会自动从刚才创建好的物化视图 `advertiser_uv` 中查询数据。比如原始的查询语句如下：
+	When the materialized view table is created, when querying the advertisement UV, Doris will automatically query the data from the materialized view `advertiser_uv` just created. For example, the original query statement is as follows:
 
-   ```sql
-   SELECT advertiser, channel, count(distinct user_id) FROM advertiser_view_record GROUP BY advertiser, channel;
-   ```
+	```
+	SELECT advertiser, channel, count(distinct user_id) FROM advertiser_view_record GROUP BY advertiser, channel;
+	```
 
-   在选中物化视图后，实际的查询会转化为：
+	After the materialized view is selected, the actual query will be transformed into:
 
-   ```sql
-   SELECT advertiser, channel, bitmap_union_count(to_bitmap(user_id)) FROM advertiser_uv GROUP BY advertiser, channel;
-   ```
+	```
+	SELECT advertiser, channel, bitmap_union_count(to_bitmap(user_id)) FROM advertiser_uv GROUP BY advertiser, channel;
+	```
 
-   通过 EXPLAIN 命令可以检验到 Doris 是否匹配到了物化视图：
+	Through the EXPLAIN command, you can check whether Doris matches the materialized view:
 
    ```sql
    mysql [test]>explain SELECT advertiser, channel, count(distinct user_id) FROM  advertiser_view_record GROUP BY advertiser, channel;
@@ -457,112 +441,103 @@ MySQL [test]> desc advertiser_view_record;
    +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
 
-   在 EXPLAIN 的结果中，首先可以看到 `VOlapScanNode` 命中了 `advertiser_uv`。也就是说，查询会直接扫描物化视图的数据。说明匹配成功。
+	In the result of EXPLAIN, you can first see that `VOlapScanNode` hits `advertiser_uv`. That is, the query scans the materialized view's data directly. Indicates that the match is successful.
 
-   其次对于 `user_id` 字段求 `count(distinct)` 被改写为求 `bitmap_union_count(to_bitmap)`。也就是通过 Bitmap 的方式来达到精确去重的效果。
-
-## 最佳实践 3
-
-业务场景：匹配更丰富的前缀索引
-
-用户的原始表有（k1, k2, k3）三列。其中 k1, k2 为前缀索引列。这时候如果用户查询条件中包含 `where k1=1 and k2=2` 就能通过索引加速查询。
-
-但是有些情况下，用户的过滤条件无法匹配到前缀索引，比如 `where k3=3`。则无法通过索引提升查询速度。
-
-创建以 k3 作为第一列的物化视图就可以解决这个问题。
-
-1. 创建物化视图
-
-   ```sql
-   CREATE MATERIALIZED VIEW mv_1 as SELECT k3, k2, k1 FROM tableA ORDER BY k3;
-   ```
-
-   通过上面语法创建完成后，物化视图中既保留了完整的明细数据，且物化视图的前缀索引为 k3 列。表结构如下：
-
-   ```sql
-   MySQL [test]> desc tableA all;
-   +-----------+---------------+-------+------+------+-------+---------+-------+
-   | IndexName | IndexKeysType | Field | Type | Null | Key   | Default | Extra |
-   +-----------+---------------+-------+------+------+-------+---------+-------+
-   | tableA    | DUP_KEYS      | k1    | INT  | Yes  | true  | NULL    |       |
-   |           |               | k2    | INT  | Yes  | true  | NULL    |       |
-   |           |               | k3    | INT  | Yes  | true  | NULL    |       |
-   |           |               |       |      |      |       |         |       |
-   | mv_1      | DUP_KEYS      | k3    | INT  | Yes  | true  | NULL    |       |
-   |           |               | k2    | INT  | Yes  | false | NULL    | NONE  |
-   |           |               | k1    | INT  | Yes  | false | NULL    | NONE  |
-   +-----------+---------------+-------+------+------+-------+---------+-------+
-   ```
-
-2. 查询匹配
-
-   这时候如果用户的查询存在 k3 列的过滤条件是，比如：
-
-   ```sql
-   select k1, k2, k3 from table A where k3=3;
-   ```
-
-   这时候查询就会直接从刚才创建的 mv_1 物化视图中读取数据。物化视图对 k3 是存在前缀索引的，查询效率也会提升。
-
-## 最佳实践 4
+	Secondly, the calculation of `count(distinct)` for the `user_id` field is rewritten as `bitmap_union_count`. That is to achieve the effect of precise deduplication through bitmap.
 
 
+## Best Practice 3
 
-在`Doris 2.0`中，我们对物化视图所支持的表达式做了一些增强，本示例将主要体现新版本物化视图对各种表达式的支持和提前过滤。
+Business scenario: matching a richer prefix index
 
-1. 创建一个 Base 表并插入一些数据。
-```sql
-create table d_table (
-   k1 int null,
-   k2 int not null,
-   k3 bigint null,
-   k4 date null
-)
-duplicate key (k1,k2,k3)
-distributed BY hash(k1) buckets 3
-properties("replication_num" = "1");
+The user's original table has three columns (k1, k2, k3). Among them, k1, k2 are prefix index columns. At this time, if the user query condition contains `where k1=a and k2=b`, the query can be accelerated through the index.
 
-insert into d_table select 1,1,1,'2020-02-20';
-insert into d_table select 2,2,2,'2021-02-20';
-insert into d_table select 3,-3,null,'2022-02-20';
-```
+But in some cases, the user's filter conditions cannot match the prefix index, such as `where k3=c`. Then the query speed cannot be improved through the index.
 
-2. 创建一些物化视图。
+This problem can be solved by creating a materialized view with k3 as the first column.
 
-```sql
-create materialized view k1a2p2ap3ps as select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1;
-create materialized view kymd as select year(k4),month(k4) from d_table where year(k4) = 2020; // 提前用where表达式过滤以减少物化视图中的数据量。
-```
+1. Create a materialized view
 
-3. 用一些查询测试是否成功命中物化视图。
+	```
+	CREATE MATERIALIZED VIEW mv_1 as SELECT k3, k2, k1 FROM tableA ORDER BY k3;
+	```
 
-```sql
-select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1; // 命中k1a2p2ap3ps
-select bin(abs(k1)+k2+1),sum(abs(k2+2)+k3+3) from d_table group by bin(abs(k1)+k2+1); // 命中k1a2p2ap3ps
-select year(k4),month(k4) from d_table; // 无法命中物化视图，因为where条件不匹配
-select year(k4)+month(k4) from d_table where year(k4) = 2020; // 命中kymd
-```
+	After the creation of the above grammar is completed, the complete detail data is retained in the materialized view, and the prefix index of the materialized view is the k3 column. The table structure is as follows:
 
-## 局限性
+	```
+	MySQL [test]> desc tableA all;
+	+-----------+---------------+-------+------+------+-------+---------+-------+
+	| IndexName | IndexKeysType | Field | Type | Null | Key   | Default | Extra |
+	+-----------+---------------+-------+------+------+-------+---------+-------+
+	| tableA    | DUP_KEYS      | k1    | INT  | Yes  | true  | NULL    |       |
+	|           |               | k2    | INT  | Yes  | true  | NULL    |       |
+	|           |               | k3    | INT  | Yes  | true  | NULL    |       |
+	|           |               |       |      |      |       |         |       |
+	| mv_1      | DUP_KEYS      | k3    | INT  | Yes  | true  | NULL    |       |
+	|           |               | k2    | INT  | Yes  | false | NULL    | NONE  |
+	|           |               | k1    | INT  | Yes  | false | NULL    | NONE  |
+	+-----------+---------------+-------+------+------+-------+---------+-------+
+	```
 
-1. 如果删除语句的条件列，在物化视图中不存在，则不能进行删除操作。如果一定要删除数据，则需要先将物化视图删除，然后方可删除数据。
+2. Query matching
 
-2. 单表上过多的物化视图会影响导入的效率：导入数据时，物化视图和 Base 表数据是同步更新的，如果一张表的物化视图表超过 10 张，则有可能导致导入速度很慢。这就像单次导入需要同时导入 10 张表数据是一样的。
+	At this time, if the user's query has k3 column, the filter condition is, for example:
 
-3. 物化视图针对 Unique Key 数据模型，只能改变列顺序，不能起到聚合的作用，所以在 Unique Key 模型上不能通过创建物化视图的方式对数据进行粗粒度聚合操作
+	```
+	select k1, k2, k3 from table A where k3=1;
+	```
 
-4. 目前一些优化器对 sql 的改写行为可能会导致物化视图无法被命中，例如 k1+1-1 被改写成 k1，between 被改写成<=和>=，day 被改写成 dayofmonth，遇到这种情况需要手动调整下查询和物化视图的语句。
+	At this time, the query will read data directly from the mv_1 materialized view just created. The materialized view has a prefix index on k3, and query efficiency will also be improved.
 
-## 异常错误
+## Best Practice 4
 
-**1. DATA_QUALITY_ERROR: "The data quality does not satisfy, please check your data"**
+<version since="2.0.0"></version>
 
-由于数据质量问题或者 Schema Change 内存使用超出限制导致物化视图创建失败。如果是内存问题，调大`memory_limitation_per_thread_for_schema_change_bytes`参数即可。
+In `Doris 2.0`, we have made some enhancements to the expressions supported by the materialized view. This example will mainly reflect the support and early filtering of the new version of the materialized view for various expressions.
 
-:::caution
-注意：to_bitmap 的参数仅支持正整型，如果原始数据中存在负数，会导致物化视图创建失败。String 类型的字段可使用 bitmap_hash 或 bitmap_hash64 计算 Hash 值，并返回 Hash 值的 bitmap。
-:::
+1. Create a base table and insert some data.
+    ```sql
+    create table d_table (
+       k1 int null,
+       k2 int not null,
+       k3 bigint null,
+       k4 date null
+    )
+    duplicate key (k1,k2,k3)
+    distributed BY hash(k1) buckets 3
+    properties("replication_num" = "1");
+   
+    insert into d_table select 1,1,1,'2020-02-20';
+    insert into d_table select 2,2,2,'2021-02-20';
+    insert into d_table select 3,-3,null,'2022-02-20';
+    ```
+   
+2. Create some materialized views.
+    ```sql
+    create materialized view k1a2p2ap3ps as select abs(k1)+k2+1,sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1;
+    create materialized view kymd as select year(k4),month(k4) from d_table where year(k4) = 2020; // Filter with where expression in advance to reduce the amount of data in the materialized view.
+    ```
 
-## 更多帮助
+3. Use some queries to test if the materialized view was successfully hit.
+    ```sql
+    select abs(k1)+k2+1, sum(abs(k2+2)+k3+3) from d_table group by abs(k1)+k2+1; // hit k1a2p2ap3ps
+    select bin(abs(k1)+k2+1), sum(abs(k2+2)+k3+3) from d_table group by bin(abs(k1)+k2+1); // hit k1a2p2ap3ps
+    select year(k4),month(k4),day(k4) from d_table; // cannot hit the materialized view because the where condition does not match
+    select year(k4)+month(k4) from d_table where year(k4) = 2020; // hit kymd
+    ```
 
-关于物化视图使用的更多详细语法及最佳实践，请参阅 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 和 [DROP MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP CREATE MATERIALIZED VIEW` 和`HELP DROP MATERIALIZED VIEW`  获取更多帮助信息。
+## Limitations
+
+1. If the condition column of the delete statement does not exist in the materialized view, the delete operation cannot be performed. If you must delete the data, you need to delete the materialized view before deleting the data.
+2. Too many materialized views on a single table will affect the efficiency of import: when importing data, the materialized view and Base table data are updated synchronously. If a table has more than 10 materialized views, the import speed may be slow. slow. This is the same as if a single import needs to import 10 table data at the same time.
+3. For the Unique Key data model, the materialized view can only change the order of the columns and cannot perform aggregation. Therefore, it is not possible to perform coarse-grained aggregation operations on the data by creating a materialized view on the Unique Key model.
+4. At present, the rewriting behavior of some optimizers to SQL may cause the materialized view to fail to be hit. For example, k1+1-1 is rewritten as k1, between is rewritten as <= and >=, and day is rewritten as dayofmonth. In this case, you need to manually adjust the statements of the query and materialized view.
+
+## Error
+1. DATA_QUALITY_ERROR: "The data quality does not satisfy, please check your data"
+Materialized view creation failed due to data quality issues or Schema Change memory usage exceeding the limit. If it is a memory problem, increase the `memory_limitation_per_thread_for_schema_change_bytes` parameter.
+Note: The bitmap type only supports positive integers. If there are negative Numbers in the original data, the materialized view will fail to be created
+
+## More Help
+
+For more detailed syntax and best practices for using materialized views, see [CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) and [DROP MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW.md) command manual, you can also Enter `HELP CREATE MATERIALIZED VIEW` and `HELP DROP MATERIALIZED VIEW` at the command line of the MySql client for more help information.
