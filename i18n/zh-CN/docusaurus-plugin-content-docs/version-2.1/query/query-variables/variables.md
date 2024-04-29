@@ -62,7 +62,7 @@ SET time_zone = "Asia/Shanghai";
 SET GLOBAL exec_mem_limit = 137438953472
 ```
 
-> 注1：只有 ADMIN 用户可以设置变量的全局生效。
+> 注 1：只有 ADMIN 用户可以设置变量的全局生效。
 
 既支持当前会话生效又支持全局生效的变量包括：
 
@@ -94,24 +94,24 @@ SET forward_to_master = concat('tr', 'u', 'e');
 
 ### 在查询语句中设置变量
 
-在一些场景中，我们可能需要对某些查询有针对性的设置变量。 通过使用SET_VAR提示可以在查询中设置会话变量（在单个语句内生效）。例子：
+在一些场景中，我们可能需要对某些查询有针对性的设置变量。通过使用 SET_VAR 提示可以在查询中设置会话变量（在单个语句内生效）。例子：
 
 ```sql
 SELECT /*+ SET_VAR(exec_mem_limit = 8589934592) */ name FROM people ORDER BY name;
 SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 ```
 
-注意注释必须以/*+ 开头，并且只能跟随在SELECT之后。
+注意注释必须以/*+ 开头，并且只能跟随在 SELECT 之后。
 
 ## 支持的变量
 
 - `SQL_AUTO_IS_NULL`
 
-  用于兼容 JDBC 连接池 C3P0。 无实际作用。
+  用于兼容 JDBC 连接池 C3P0。无实际作用。
 
 - `auto_increment_increment`
 
-  用于兼容 MySQL 客户端。无实际作用。虽然 Doris 已经有了 [AUTO_INCREMENT](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE#column_definition_list) 功能，但这个参数并不会对 AUTO_INCREMENT 的行为产生影响。auto_increment_offset 也是如此。
+  用于兼容 MySQL 客户端。无实际作用。虽然 Doris 已经有了 [AUTO_INCREMENT](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE#column_definition_list) 功能，但这个参数并不会对 AUTO_INCREMENT 的行为产生影响。auto_increment_offset 也是如此。
 
 - `autocommit`
 
@@ -127,15 +127,15 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
   `shuffle join` 是指将小表和大表都按照 Join 的 key 进行 Hash，然后进行分布式的 Join。
 
-  当小表的数据量较小时，`broadcast join` 拥有更好的性能。反之，则shuffle join拥有更好的性能。
+  当小表的数据量较小时，`broadcast join` 拥有更好的性能。反之，则 shuffle join 拥有更好的性能。
 
-  系统会自动尝试进行 Broadcast Join，也可以显式指定每个join算子的实现方式。系统提供了可配置的参数 `auto_broadcast_join_threshold`，指定使用 `broadcast join` 时，hash table 使用的内存占整体执行内存比例的上限，取值范围为0到1，默认值为0.8。当系统计算hash table使用的内存会超过此限制时，会自动转换为使用 `shuffle join`
+  系统会自动尝试进行 Broadcast Join，也可以显式指定每个 join 算子的实现方式。系统提供了可配置的参数 `auto_broadcast_join_threshold`，指定使用 `broadcast join` 时，hash table 使用的内存占整体执行内存比例的上限，取值范围为 0 到 1，默认值为 0.8。当系统计算 hash table 使用的内存会超过此限制时，会自动转换为使用 `shuffle join`
 
   这里的整体执行内存是：查询优化器做估算的一个比例
 
   >注意：
   >
-  >不建议用这个参数来调整，如果必须要使用某一种join，建议使用hint，比如 join[shuffle]
+  >不建议用这个参数来调整，如果必须要使用某一种 join，建议使用 hint，比如 join[shuffle]
 
 - `batch_size`
 
@@ -191,11 +191,11 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `disable_colocate_join`
 
-  控制是否启用 [Colocation Join](../query-acceleration/join-optimization/colocation-join.md) 功能。默认为 false，表示启用该功能。true 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Colocation Join。
+  控制是否启用 [Colocation Join](../../query/join-optimization/colocation-join) 功能。默认为 false，表示启用该功能。true 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Colocation Join。
 
 - `enable_bucket_shuffle_join`
 
-  控制是否启用 [Bucket Shuffle Join](../query-acceleration/join-optimization/bucket-shuffle-join.md) 功能。默认为 true，表示启用该功能。false 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Bucket Shuffle Join。
+  控制是否启用 [Bucket Shuffle Join](../../query/join-optimization/bucket-shuffle-join) 功能。默认为 true，表示启用该功能。false 表示禁用该功能。当该功能被禁用后，查询规划将不会尝试执行 Bucket Shuffle Join。
 
 - `disable_streaming_preaggregations`
 
@@ -203,7 +203,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `enable_insert_strict`
 
-  用于设置通过 INSERT 语句进行数据导入时，是否开启 `strict` 模式。默认为 false，即不开启 `strict` 模式。关于该模式的介绍，可以参阅 [这里](../data-operate/import/import-way/insert-into-manual.md)。
+  用于设置通过 INSERT 语句进行数据导入时，是否开启 `strict` 模式。默认为 false，即不开启 `strict` 模式。关于该模式的介绍，可以参阅 [这里](../../data-operate/import/insert-into-manual)。
 
 - `enable_spilling`
 
@@ -215,7 +215,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `exec_mem_limit`
 
-  用于设置单个查询的内存限制。默认为 2GB，单位为B/K/KB/M/MB/G/GB/T/TB/P/PB, 默认为B。
+  用于设置单个查询的内存限制。默认为 2GB，单位为 B/K/KB/M/MB/G/GB/T/TB/P/PB, 默认为 B。
 
   该参数用于限制一个查询计划中，单个查询计划的实例所能使用的内存。一个查询计划可能有多个实例，一个 BE 节点可能执行一个或多个实例。所以该参数并不能准确限制一个查询在整个集群的内存使用，也不能准确限制一个查询在单一 BE 节点上的内存使用。具体需要根据生成的查询计划判断。
 
@@ -227,7 +227,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `forward_to_master`
 
-  用户设置是否将一些show 类命令转发到 Master FE 节点执行。默认为 `true`，即转发。Doris 中存在多个 FE 节点，其中一个为 Master 节点。通常用户可以连接任意 FE 节点进行全功能操作。但部分信息查看指令，只有从 Master FE 节点才能获取详细信息。
+  用户设置是否将一些 show 类命令转发到 Master FE 节点执行。默认为 `true`，即转发。Doris 中存在多个 FE 节点，其中一个为 Master 节点。通常用户可以连接任意 FE 节点进行全功能操作。但部分信息查看指令，只有从 Master FE 节点才能获取详细信息。
 
   如 `SHOW BACKENDS;` 命令，如果不转发到 Master FE 节点，则仅能看到节点是否存活等一些基本信息，而转发到 Master FE 则可以获取包括节点启动时间、最后一次心跳时间等更详细的信息。
 
@@ -265,11 +265,11 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
   用于设置是否需要查看查询的 profile。默认为 false，即不需要 profile。
 
-  默认情况下，只有在查询发生错误时，BE 才会发送 profile 给 FE，用于查看错误。正常结束的查询不会发送 profile。发送 profile 会产生一定的网络开销，对高并发查询场景不利。 当用户希望对一个查询的 profile 进行分析时，可以将这个变量设为 true 后，发送查询。查询结束后，可以通过在当前连接的 FE 的 web 页面查看到 profile：
+  默认情况下，只有在查询发生错误时，BE 才会发送 profile 给 FE，用于查看错误。正常结束的查询不会发送 profile。发送 profile 会产生一定的网络开销，对高并发查询场景不利。当用户希望对一个查询的 profile 进行分析时，可以将这个变量设为 true 后，发送查询。查询结束后，可以通过在当前连接的 FE 的 web 页面查看到 profile：
 
   `fe_host:fe_http_port/query`
 
-  其中会显示最近100条，开启 `enable_profile` 的查询的 profile。
+  其中会显示最近 100 条，开启 `enable_profile` 的查询的 profile。
 
 - `language`
 
@@ -283,10 +283,10 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
   用于控制用户表表名大小写是否敏感。
 
-  值为 0 时，表名大小写敏感。默认为0。
+  值为 0 时，表名大小写敏感。默认为 0。
 
-  值为 1 时，表名大小写不敏感，doris在存储和查询时会将表名转换为小写。
-  优点是在一条语句中可以使用表名的任意大小写形式，下面的sql是正确的：
+  值为 1 时，表名大小写不敏感，doris 在存储和查询时会将表名转换为小写。
+  优点是在一条语句中可以使用表名的任意大小写形式，下面的 sql 是正确的：
 
   ```sql
   mysql> show tables;  
@@ -301,28 +301,28 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
   缺点是建表后无法获得建表语句中指定的表名，`show tables` 查看的表名为指定表名的小写。
 
-  值为 2 时，表名大小写不敏感，doris存储建表语句中指定的表名，查询时转换为小写进行比较。 优点是`show tables` 查看的表名为建表语句中指定的表名；
+  值为 2 时，表名大小写不敏感，doris 存储建表语句中指定的表名，查询时转换为小写进行比较。优点是`show tables` 查看的表名为建表语句中指定的表名；
   缺点是同一语句中只能使用表名的一种大小写形式，例如对`cost` 表使用表名 `COST` 进行查询：
 
   ```sql
   mysql> select * from COST where COST.id < 100 order by COST.id;
   ```
 
-  该变量兼容MySQL。需在集群初始化时通过fe.conf 指定 `lower_case_table_names=`进行配置，集群初始化完成后无法通过`set` 语句修改该变量，也无法通过重启、升级集群修改该变量。
+  该变量兼容 MySQL。需在集群初始化时通过 fe.conf 指定 `lower_case_table_names=`进行配置，集群初始化完成后无法通过`set` 语句修改该变量，也无法通过重启、升级集群修改该变量。
 
-  information_schema中的系统视图表名不区分大小写，当`lower_case_table_names`值为 0 时，表现为 2。
+  information_schema 中的系统视图表名不区分大小写，当`lower_case_table_names`值为 0 时，表现为 2。
 
 - `max_allowed_packet`
 
-  用于兼容 JDBC 连接池 C3P0。 无实际作用。
+  用于兼容 JDBC 连接池 C3P0。无实际作用。
 
 - `max_pushdown_conditions_per_column`
 
-  该变量的具体含义请参阅 [BE 配置项](../admin-manual/config/be-config.md) 中 `max_pushdown_conditions_per_column` 的说明。该变量默认置为 -1，表示使用 `be.conf` 中的配置值。如果设置大于 0，则当前会话中的查询会使用该变量值，而忽略 `be.conf` 中的配置值。
+  该变量的具体含义请参阅 [BE 配置项](../../admin-manual/config/be-config) 中 `max_pushdown_conditions_per_column` 的说明。该变量默认置为 -1，表示使用 `be.conf` 中的配置值。如果设置大于 0，则当前会话中的查询会使用该变量值，而忽略 `be.conf` 中的配置值。
 
 - `max_scan_key_num`
 
-  该变量的具体含义请参阅 [BE 配置项](../admin-manual/config/be-config.md) 中 `doris_max_scan_key_num` 的说明。该变量默认置为 -1，表示使用 `be.conf` 中的配置值。如果设置大于 0，则当前会话中的查询会使用该变量值，而忽略 `be.conf` 中的配置值。
+  该变量的具体含义请参阅 [BE 配置项](../../admin-manual/config/be-config) 中 `doris_max_scan_key_num` 的说明。该变量默认置为 -1，表示使用 `be.conf` 中的配置值。如果设置大于 0，则当前会话中的查询会使用该变量值，而忽略 `be.conf` 中的配置值。
 
 - `net_buffer_length`
 
@@ -338,7 +338,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `parallel_exchange_instance_num`
 
-  用于设置执行计划中，一个上层节点接收下层节点数据所使用的 exchange node 数量。默认为 -1，即表示 exchange node 数量等于下层节点执行实例的个数（默认行为）。当设置大于0，并且小于下层节点执行实例的个数，则 exchange node 数量等于设置值。
+  用于设置执行计划中，一个上层节点接收下层节点数据所使用的 exchange node 数量。默认为 -1，即表示 exchange node 数量等于下层节点执行实例的个数（默认行为）。当设置大于 0，并且小于下层节点执行实例的个数，则 exchange node 数量等于设置值。
 
   在一个分布式的查询执行计划中，上层节点通常有一个或多个 exchange node 用于接收来自下层节点在不同 BE 上的执行实例的数据。通常 exchange node 数量等于下层节点执行实例数量。
 
@@ -350,7 +350,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
   一个查询计划通常会产生一组 scan range，即需要扫描的数据范围。这些数据分布在多个 BE 节点上。一个 BE 节点会有一个或多个 scan range。默认情况下，每个 BE 节点的一组 scan range 只由一个执行实例处理。当机器资源比较充裕时，可以将增加该变量，让更多的执行实例同时处理一组 scan range，从而提升查询效率。
 
-  而 scan 实例的数量决定了上层其他执行节点，如聚合节点，join 节点的数量。因此相当于增加了整个查询计划执行的并发度。修改该参数会对大查询效率提升有帮助，但较大数值会消耗更多的机器资源，如CPU、内存、磁盘IO。
+  而 scan 实例的数量决定了上层其他执行节点，如聚合节点，join 节点的数量。因此相当于增加了整个查询计划执行的并发度。修改该参数会对大查询效率提升有帮助，但较大数值会消耗更多的机器资源，如 CPU、内存、磁盘 IO。
 
 - `query_cache_size`
 
@@ -358,14 +358,14 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `query_cache_type`
 
-  用于兼容 JDBC 连接池 C3P0。 无实际作用。
+  用于兼容 JDBC 连接池 C3P0。无实际作用。
 
 - `query_timeout`
 
-  用于设置查询超时。该变量会作用于当前连接中所有的查询语句，对于 INSERT 语句推荐使用insert_timeout。默认为 15 分钟，单位为秒。
+  用于设置查询超时。该变量会作用于当前连接中所有的查询语句，对于 INSERT 语句推荐使用 insert_timeout。默认为 15 分钟，单位为秒。
 
 - `insert_timeout`
-  <version since="dev"></version>用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效, 以兼容旧版本用户的习惯。
+  <version since="dev"></version>用于设置针对 INSERT 语句的超时。该变量仅作用于 INSERT 语句，建议在 INSERT 行为易持续较长时间的场景下设置。默认为 4 小时，单位为秒。由于旧版本用户会通过延长 query_timeout 来防止 INSERT 语句超时，insert_timeout 在 query_timeout 大于自身的情况下将会失效，以兼容旧版本用户的习惯。
 
 - `resource_group`
 
@@ -417,7 +417,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `performance_schema`
 
-  用于兼容 8.0.16及以上版本的MySQL JDBC。无实际作用。
+  用于兼容 8.0.16 及以上版本的 MySQL JDBC。无实际作用。
 
 - `version_comment`
 
@@ -433,35 +433,35 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `use_v2_rollup`
 
-  用于控制查询使用segment v2存储格式的rollup索引获取数据。该变量用于上线segment v2的时候，进行验证使用；其他情况，不建议使用。
+  用于控制查询使用 segment v2 存储格式的 rollup 索引获取数据。该变量用于上线 segment v2 的时候，进行验证使用；其他情况，不建议使用。
 
 - `rewrite_count_distinct_to_bitmap_hll`
 
-  是否将 bitmap 和 hll 类型的 count distinct 查询重写为 bitmap_union_count 和 hll_union_agg 。
+  是否将 bitmap 和 hll 类型的 count distinct 查询重写为 bitmap_union_count 和 hll_union_agg。
 
 - `prefer_join_method`
 
-  在选择join的具体实现方式是broadcast join还是shuffle join时，如果broadcast join cost和shuffle join cost相等时，优先选择哪种join方式。
+  在选择 join 的具体实现方式是 broadcast join 还是 shuffle join 时，如果 broadcast join cost 和 shuffle join cost 相等时，优先选择哪种 join 方式。
 
   目前该变量的可选值为"broadcast" 或者 "shuffle"。
 
 - `allow_partition_column_nullable`
 
-  建表时是否允许分区列为NULL。默认为true，表示允许为NULL。false 表示分区列必须被定义为NOT NULL
+  建表时是否允许分区列为 NULL。默认为 true，表示允许为 NULL。false 表示分区列必须被定义为 NOT NULL
 
 - `insert_visible_timeout_ms`
 
-  在执行insert语句时，导入动作(查询和插入)完成后，还需要等待事务提交，使数据可见。此参数控制等待数据可见的超时时间，默认为10000，最小为1000。
+  在执行 insert 语句时，导入动作 (查询和插入) 完成后，还需要等待事务提交，使数据可见。此参数控制等待数据可见的超时时间，默认为 10000，最小为 1000。
 
 - `enable_exchange_node_parallel_merge`
 
-  在一个排序的查询之中，一个上层节点接收下层节点有序数据时，会在exchange node上进行对应的排序来保证最终的数据是有序的。但是单线程进行多路数据归并时，如果数据量过大，会导致exchange node的单点的归并瓶颈。
+  在一个排序的查询之中，一个上层节点接收下层节点有序数据时，会在 exchange node 上进行对应的排序来保证最终的数据是有序的。但是单线程进行多路数据归并时，如果数据量过大，会导致 exchange node 的单点的归并瓶颈。
 
-  Doris在这部分进行了优化处理，如果下层的数据节点过多。exchange node会启动多线程进行并行归并来加速排序过程。该参数默认为False，即表示 exchange node 不采取并行的归并排序，来减少额外的CPU和内存消耗。
+  Doris 在这部分进行了优化处理，如果下层的数据节点过多。exchange node 会启动多线程进行并行归并来加速排序过程。该参数默认为 False，即表示 exchange node 不采取并行的归并排序，来减少额外的 CPU 和内存消耗。
 
 - `extract_wide_range_expr`
 
-  用于控制是否开启 「宽泛公因式提取」的优化。取值有两种：true 和 false 。默认情况下开启。
+  用于控制是否开启「宽泛公因式提取」的优化。取值有两种：true 和 false。默认情况下开启。
 
 - `enable_fold_constant_by_be`
 
@@ -469,9 +469,9 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `cpu_resource_limit`
 
-  用于限制一个查询的资源开销。这是一个实验性质的功能。目前的实现是限制一个查询在单个节点上的scan线程数量。限制了scan线程数，从底层返回的数据速度变慢，从而限制了查询整体的计算资源开销。假设设置为 2，则一个查询在单节点上最多使用2个scan线程。
+  用于限制一个查询的资源开销。这是一个实验性质的功能。目前的实现是限制一个查询在单个节点上的 scan 线程数量。限制了 scan 线程数，从底层返回的数据速度变慢，从而限制了查询整体的计算资源开销。假设设置为 2，则一个查询在单节点上最多使用 2 个 scan 线程。
 
-  该参数会覆盖 `parallel_fragment_exec_instance_num` 的效果。即假设 `parallel_fragment_exec_instance_num` 设置为4，而该参数设置为2。则单个节点上的4个执行实例会共享最多2个扫描线程。
+  该参数会覆盖 `parallel_fragment_exec_instance_num` 的效果。即假设 `parallel_fragment_exec_instance_num` 设置为 4，而该参数设置为 2。则单个节点上的 4 个执行实例会共享最多 2 个扫描线程。
 
   该参数会被 user property 中的 `cpu_resource_limit` 配置覆盖。
 
@@ -481,7 +481,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
   用于关闭所有系统自动的 join reorder 算法。取值有两种：true 和 false。默认行况下关闭，也就是采用系统自动的 join reorder 算法。设置为 true 后，系统会关闭所有自动排序的算法，采用 SQL 原始的表顺序，执行 join
 
-- `return_object_data_as_binary` 用于标识是否在select 结果中返回bitmap/hll 结果。在 select into outfile 语句中，如果导出文件格式为csv 则会将 bimap/hll 数据进行base64编码，如果是parquet 文件格式 将会把数据作为byte array 存储。下面将展示 Java 的例子，更多的示例可查看[samples](https://github.com/apache/doris/tree/master/samples/read_bitmap).
+- `return_object_data_as_binary` 用于标识是否在 select 结果中返回 bitmap/hll 结果。在 select into outfile 语句中，如果导出文件格式为 csv 则会将 bimap/hll 数据进行 base64 编码，如果是 parquet 文件格式 将会把数据作为 byte array 存储。下面将展示 Java 的例子，更多的示例可查看[samples](https://github.com/apache/doris/tree/master/samples/read_bitmap).
 
 ```java
 try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/test?user=root");
@@ -509,7 +509,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 }
 ```
 
-- `block_encryption_mode` 可以通过block_encryption_mode参数，控制块加密模式，默认值为：空。当使用AES算法加密时相当于`AES_128_ECB`, 当时用SM3算法加密时相当于`SM3_128_ECB` 可选值：
+- `block_encryption_mode` 可以通过 block_encryption_mode 参数，控制块加密模式，默认值为：空。当使用 AES 算法加密时相当于`AES_128_ECB`, 当时用 SM3 算法加密时相当于`SM3_128_ECB` 可选值：
 
 ```text
   AES_128_ECB,
@@ -549,11 +549,11 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 - `trim_tailing_spaces_for_external_table_query`
 
-    用于控制查询Hive外表时是否过滤掉字段末尾的空格。默认为false。
+    用于控制查询 Hive 外表时是否过滤掉字段末尾的空格。默认为 false。
 
 * `skip_storage_engine_merge`
 
-    用于调试目的。在向量化执行引擎中，当发现读取Aggregate Key模型或者Unique Key模型的数据结果有问题的时候，把此变量的值设置为`true`，将会把Aggregate Key模型或者Unique Key模型的数据当成Duplicate Key模型读取。
+    用于调试目的。在向量化执行引擎中，当发现读取 Aggregate Key 模型或者 Unique Key 模型的数据结果有问题的时候，把此变量的值设置为`true`，将会把 Aggregate Key 模型或者 Unique Key 模型的数据当成 Duplicate Key 模型读取。
 
 * `skip_delete_predicate`
 
@@ -561,7 +561,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `skip_delete_bitmap`
 
-    用于调试目的。在Unique Key MoW表中，当发现读取表的数据结果有误的时候，把此变量的值设置为`true`，将会把被delete bitmap标记删除的数据当成正常数据读取。
+    用于调试目的。在 Unique Key MoW 表中，当发现读取表的数据结果有误的时候，把此变量的值设置为`true`，将会把被 delete bitmap 标记删除的数据当成正常数据读取。
 
 * `skip_missing_version`
 
@@ -569,83 +569,84 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `skip_bad_tablet`
 
-    在某些情况下，用户某张单副本表中有大量数据，如果其中某个Tablet损坏，将导致整张表无法查询。如果用户不关心数据的完整性，他们可以使用此变量暂时跳过坏的Tablet进行查询，并将剩余数据导入到新表中。
+    在某些情况下，用户某张单副本表中有大量数据，如果其中某个 Tablet 损坏，将导致整张表无法查询。如果用户不关心数据的完整性，他们可以使用此变量暂时跳过坏的 Tablet 进行查询，并将剩余数据导入到新表中。
 
 * `default_password_lifetime`
 
  	默认的密码过期时间。默认值为 0，即表示不过期。单位为天。该参数只有当用户的密码过期属性为 DEFAULT 值时，才启用。如：
  	
- 	```
+ 	```sql
  	CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_EXPIRE DEFAULT;
  	ALTER USER user1 PASSWORD_EXPIRE DEFAULT;
 	```
+
 * `password_history`
 
-	默认的历史密码次数。默认值为0，即不做限制。该参数只有当用户的历史密码次数属性为 DEFAULT 值时，才启用。如：
+	默认的历史密码次数。默认值为 0，即不做限制。该参数只有当用户的历史密码次数属性为 DEFAULT 值时，才启用。如：
 
-	```
- 	CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
- 	ALTER USER user1 PASSWORD_HISTORY DEFAULT;
-	```
+  ```sql
+  CREATE USER user1 IDENTIFIED BY "12345" PASSWORD_HISTORY DEFAULT;
+  ALTER USER user1 PASSWORD_HISTORY DEFAULT;
+  ```
 
 * `validate_password_policy`
 
-	密码强度校验策略。默认为 `NONE` 或 `0`，即不做校验。可以设置为 `STRONG` 或 `2`。当设置为 `STRONG` 或 `2` 时，通过 `ALTER USER` 或 `SET PASSWORD` 命令设置密码时，密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的3项，并且长度必须大于等于8。特殊字符包括：`~!@#$%^&*()_+|<>,.?/:;'[]{}"`。
+	密码强度校验策略。默认为 `NONE` 或 `0`，即不做校验。可以设置为 `STRONG` 或 `2`。当设置为 `STRONG` 或 `2` 时，通过 `ALTER USER` 或 `SET PASSWORD` 命令设置密码时，密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的 3 项，并且长度必须大于等于 8。特殊字符包括：`~!@#$%^&*()_+|<>,.?/:;'[]{}"`。
 
 * `group_concat_max_len`
 
-    为了兼容某些BI工具能正确获取和设置该变量，变量值实际并没有作用。
+    为了兼容某些 BI 工具能正确获取和设置该变量，变量值实际并没有作用。
 
 * `rewrite_or_to_in_predicate_threshold`
 
-    默认的改写OR to IN的OR数量阈值。默认值为2，即表示有2个OR的时候，如果可以合并，则会改写成IN。
+    默认的改写 OR to IN 的 OR 数量阈值。默认值为 2，即表示有 2 个 OR 的时候，如果可以合并，则会改写成 IN。
 
 *   `group_by_and_having_use_alias_first`
 
-    指定group by和having语句是否优先使用列的别名，而非从From语句里寻找列的名字。默认为false。
+    指定 group by 和 having 语句是否优先使用列的别名，而非从 From 语句里寻找列的名字。默认为 false。
 
 * `enable_file_cache`
 
-    控制是否启用block file cache，默认 false。该变量只有在be.conf中enable_file_cache=true时才有效，如果be.conf中enable_file_cache=false，该BE节点的block file cache处于禁用状态。
+    控制是否启用 block file cache，默认 false。该变量只有在 be.conf 中 enable_file_cache=true 时才有效，如果 be.conf 中 enable_file_cache=false，该 BE 节点的 block file cache 处于禁用状态。
 
 * `file_cache_base_path`
 
-    指定block file cache在BE上的存储路径，默认 'random'，随机选择BE配置的存储路径。
+    指定 block file cache 在 BE 上的存储路径，默认 'random'，随机选择 BE 配置的存储路径。
 
 * `enable_inverted_index_query`
 
-    控制是否启用inverted index query，默认 true.
+    控制是否启用 inverted index query，默认 true.
 
 	
 * `topn_opt_limit_threshold`
 
-    设置topn优化的limit阈值 (例如：SELECT * FROM t ORDER BY k LIMIT n). 如果limit的n小于等于阈值，topn相关优化（动态过滤下推、两阶段获取结果、按key的顺序读数据）会自动启用，否则会禁用。默认值是1024。
+    设置 topn 优化的 limit 阈值 (例如：SELECT * FROM t ORDER BY k LIMIT n). 如果 limit 的 n 小于等于阈值，topn 相关优化（动态过滤下推、两阶段获取结果、按 key 的顺序读数据）会自动启用，否则会禁用。默认值是 1024。
 
 * `drop_table_if_ctas_failed`
 
-    控制create table as select在写入发生错误时是否删除已创建的表，默认为true。
+    控制 create table as select 在写入发生错误时是否删除已创建的表，默认为 true。
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
+    
 
     控制是否在 `show roles` 的结果里显示每个用户隐式对应的角色。默认为 false。
 
 * `use_fix_replica`
 
-    <version since="1.2.0"></version>
+    
 
-    使用固定replica进行查询。replica从0开始，如果use_fix_replica为0，则使用最小的，如果use_fix_replica为1，则使用第二个最小的，依此类推。默认值为-1，表示未启用。
+    使用固定 replica 进行查询。replica 从 0 开始，如果 use_fix_replica 为 0，则使用最小的，如果 use_fix_replica 为 1，则使用第二个最小的，依此类推。默认值为 -1，表示未启用。
 
 * `dry_run_query`
 
-    <version since="dev"></version>
+    
 
-    如果设置为true，对于查询请求，将不再返回实际结果集，而仅返回行数。对于导入和insert，Sink 丢掉了数据，不会有实际的写发生。额默认为 false。
+    如果设置为 true，对于查询请求，将不再返回实际结果集，而仅返回行数。对于导入和 insert，Sink 丢掉了数据，不会有实际的写发生。额默认为 false。
 
     该参数可以用于测试返回大量数据集时，规避结果集传输的耗时，重点关注底层查询执行的耗时。
 
-    ```
+    ```sql
     mysql> select * from bigtable;
     +--------------+
     | ReturnedRows |
@@ -664,7 +665,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `enable_strong_consistency_read`
 
-  用以开启强一致读。Doris 默认支持同一个会话内的强一致性，即同一个会话内对数据的变更操作是实时可见的。如需要会话间的强一致读，则需将此变量设置为true。
+  用以开启强一致读。Doris 默认支持同一个会话内的强一致性，即同一个会话内对数据的变更操作是实时可见的。如需要会话间的强一致读，则需将此变量设置为 true。
 
 * `truncate_char_or_varchar_columns`
 
@@ -680,18 +681,23 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * `enable_memtable_on_sink_node`
 
-  <version since="2.1.0">
+  :::info 备注
+  该变量自 Doris 2.1.0 版本起支持。
+  :::
+
   是否在数据导入中启用 MemTable 前移，默认为 true
-  </version>
 
   在 DataSink 节点上构建 MemTable，并通过 brpc streaming 发送 segment 到其他 BE。
   该方法减少了多副本之间的重复工作，并且节省了数据序列化和反序列化的时间。
 
 * `enable_unique_key_partial_update`
 
-  <version since="2.0.2">
-  是否在对insert into语句启用部分列更新的语义，默认为 false。需要注意的是，控制insert语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为true，即insert语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的key。所以，在使用insert语句进行部分列更新的时候如果希望能插入不存在的key，需要在`enable_unique_key_partial_update`设置为true的基础上同时将`enable_insert_strict`设置为false。
-  </version>
+  :::info 备注
+  该变量自 Doris 2.0.2 版本起支持。
+  :::
+
+  是否在对 insert into 语句启用部分列更新的语义，默认为 false。需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
+  
 
 * `describe_extend_variant_column`
 
@@ -703,7 +709,7 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
 * 控制手段
 
-    目前doris支持通过`variable`和`user property`两种体系来进行超时控制。其中均包含`qeury_timeout`和`insert_timeout`。
+    目前 doris 支持通过`variable`和`user property`两种体系来进行超时控制。其中均包含`qeury_timeout`和`insert_timeout`。
 
 * 优先次序
 

@@ -146,7 +146,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
+具体可以参考 Docs 目录下[RESOURCE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
 :::
 
 ### 一些限制

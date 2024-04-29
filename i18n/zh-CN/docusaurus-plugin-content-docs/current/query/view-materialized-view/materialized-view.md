@@ -58,7 +58,7 @@ _自动维护物化视图的数据会造成一些维护开销，会在后面的�
 
 物化视图则在覆盖了 Rollup 的功能的同时，还能支持更丰富的聚合函数。所以物化视图其实是 Rollup 的一个超集。
 
-也就是说，之前 [ALTER TABLE ADD ROLLUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-ROLLUP) 语法支持的功能现在均可以通过 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 实现。
+也就是说，之前 [ALTER TABLE ADD ROLLUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-ROLLUP) 语法支持的功能现在均可以通过 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 实现。
 
 ## 使用物化视图
 
@@ -82,7 +82,7 @@ Doris 系统提供了一整套对物化视图的 DDL 语法，包括创建，查
 
 创建物化视图是一个异步的操作，也就是说用户成功提交创建任务后，Doris 会在后台对存量的数据进行计算，直到创建成功。
 
-具体的语法可查看[CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 。
+具体的语法可查看[CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 。
 
 
 
@@ -104,9 +104,9 @@ Doris 系统提供了一整套对物化视图的 DDL 语法，包括创建，查
 
 - COUNT, BITMAP_UNION, HLL_UNION (Version 0.13)
 
-- [通用聚合](https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Types/AGG_STATE?_highlight=agg_state) (Version 2.0)
+- [通用聚合](../../sql-manual/sql-types/Data-Types/AGG_STATE) (Version 2.0)
 
-  一些不在原有的支持范围内的聚合函数，会被转化为agg_state类型来实现预聚合。
+  一些不在原有的支持范围内的聚合函数，会被转化为 agg_state 类型来实现预聚合。
 
 
 ### 更新策略
@@ -168,13 +168,13 @@ MySQL [test]> desc mv_test all;
 
 如果用户不再需要物化视图，则可以通过命令删除物化视图。
 
-具体的语法可查看[DROP MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 
+具体的语法可查看[DROP MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 
 
 ### 查看已创建的物化视图
 
 用户可以通过命令查看已创建的物化视图的
 
-具体的语法可查看[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW)
+具体的语法可查看[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW)
 
 ### 取消创建物化视图
 
@@ -565,4 +565,4 @@ select year(k4)+month(k4) from d_table where year(k4) = 2020; // 命中kymd
 
 ## 更多帮助
 
-关于物化视图使用的更多详细语法及最佳实践，请参阅 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 和 [DROP MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP CREATE MATERIALIZED VIEW` 和`HELP DROP MATERIALIZED VIEW`  获取更多帮助信息。
+关于物化视图使用的更多详细语法及最佳实践，请参阅 [CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW) 和 [DROP MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP CREATE MATERIALIZED VIEW` 和`HELP DROP MATERIALIZED VIEW`  获取更多帮助信息。

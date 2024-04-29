@@ -80,7 +80,7 @@ under the License.
    );
    ```
 
-4. [INSERT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT)
+4. [INSERT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT)
 
    通过[会话变量](../../query/query-variables/variables)设置：
 

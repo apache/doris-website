@@ -62,7 +62,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
 $ vim doriscluster-sample.yaml
 ```
 
-2. 保存修改后应用本次修改进行be升级:
+2. 保存修改后应用本次修改进行 be 升级：
 ```
 $ kubectl apply -f doriscluster-sample.yaml -n doris
 ```
@@ -90,7 +90,7 @@ $ kubectl get pod -n doris
 
 ### 升级 FE 
 
-如果保留了集群的 crd （ Doris-Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
+如果保留了集群的 crd（Doris-Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
 
 1. 修改 `spec.feSpec.image`
 
@@ -99,7 +99,7 @@ $ kubectl get pod -n doris
 $ vim doriscluster-sample.yaml
 ```
 
-2. 保存修改后应用本次修改进行be升级:
+2. 保存修改后应用本次修改进行 be 升级：
 ```
 $ kubectl apply -f doriscluster-sample.yaml -n doris
 ```
@@ -121,7 +121,7 @@ $ kubectl get pod -n doris
 
 ## 升级完成后
 ### 验证集群节点状态
-通过  [访问 Doris 集群](https://doris.apache.org/zh-CN/docs/dev/install/k8s-deploy/network) 文档提供的方式，通过 `mysql-client` 访问 Doris。 
+通过  [访问 Doris 集群](../k8s-deploy/install-access-cluster) 文档提供的方式，通过 `mysql-client` 访问 Doris。 
 使用 `show frontends` 和 `show backends` 等 SQL 查看各个组件的 版本 和 状态。
 ```
 mysql> show frontends\G;
