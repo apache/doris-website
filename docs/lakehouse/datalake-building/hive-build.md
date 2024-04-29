@@ -34,160 +34,160 @@ This article introduces Hive operations supported in Doris, including syntax and
 
 - Create
 
-	```
-	CREATE CATALOG [IF NOT EXISTS] hive PROPERTIES (
-	    "type"="hms",
-	    "hive.metastore.uris" = "thrift://172.21.16.47:7004",
-	    "hadoop.username" = "hadoop",
-	    "fs.defaultFS" = "hdfs://172.21.16.47:4007"
-	);
-	```
+    ```
+    CREATE CATALOG [IF NOT EXISTS] hive PROPERTIES (
+        "type"="hms",
+        "hive.metastore.uris" = "thrift://172.21.16.47:7004",
+        "hadoop.username" = "hadoop",
+        "fs.defaultFS" = "hdfs://172.21.16.47:4007"
+    );
+    ```
 
-	Note, if you need to create Hive tables or write data through Doris, you must explicitly include the `fs.defaultFS` property in the Catalog properties. If creating the Catalog is only for querying, this parameter can be omitted.
+    Note, if you need to create Hive tables or write data through Doris, you must explicitly include the `fs.defaultFS` property in the Catalog properties. If creating the Catalog is only for querying, this parameter can be omitted.
 
-	For more parameters, please refer to [Hive Catalog](../datalake-analytics/hive.md)
+    For more parameters, please refer to [Hive Catalog](../datalake-analytics/hive.md)
 
 - Drop
 
-	```
-	DROP CATALOG [IF EXISTS] hive;
-	```
+    ```
+    DROP CATALOG [IF EXISTS] hive;
+    ```
 
-	Deleting a Catalog does not delete any database or table information in Hive. It merely removes the mapping to this Hive cluster in Doris.
+    Deleting a Catalog does not delete any database or table information in Hive. It merely removes the mapping to this Hive cluster in Doris.
 
 ### Database
 
 - Create
 
-	You can switch to the corresponding Catalog and execute the `CREATE DATABASE` statement:
+    You can switch to the corresponding Catalog and execute the `CREATE DATABASE` statement:
 
-	```
-	SWITCH hive;
-	CREATE DATABASE [IF NOT EXISTS] hive_db;
-	```
+    ```
+    SWITCH hive;
+    CREATE DATABASE [IF NOT EXISTS] hive_db;
+    ```
 
-	You can also create using the fully qualified name or specify the location, as:
+    You can also create using the fully qualified name or specify the location, as:
 
-	```
-	CREATE DATABASE [IF NOT EXISTS] hive.hive_db;
+    ```
+    CREATE DATABASE [IF NOT EXISTS] hive.hive_db;
 
-	CREATE DATABASE [IF NOT EXISTS] hive.hive_db
-	PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
-	```
+    CREATE DATABASE [IF NOT EXISTS] hive.hive_db
+    PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
+    ```
 
-	Later, you can view the Database's Location information using the `SHOW CREATE DATABASE` command:
+    Later, you can view the Database's Location information using the `SHOW CREATE DATABASE` command:
 
-	```
-	mysql> SHOW CREATE DATABASE hive_db;
-	+----------+---------------------------------------------------------------------------------------------+
-	| Database | Create Database                                                                             |
-	+----------+---------------------------------------------------------------------------------------------+
-	| hive_db  | CREATE DATABASE `hive_db` LOCATION 'hdfs://172.21.16.47:4007/usr/hive/warehouse/hive_db.db' |
-	+----------+---------------------------------------------------------------------------------------------+
-	```
+    ```
+    mysql> SHOW CREATE DATABASE hive_db;
+    +----------+---------------------------------------------------------------------------------------------+
+    | Database | Create Database                                                                             |
+    +----------+---------------------------------------------------------------------------------------------+
+    | hive_db  | CREATE DATABASE `hive_db` LOCATION 'hdfs://172.21.16.47:4007/usr/hive/warehouse/hive_db.db' |
+    +----------+---------------------------------------------------------------------------------------------+
+    ```
 
 - Drop
 
-	```
-	DROP DATABASE [IF EXISTS] hive.hive_db;
-	```
+    ```
+    DROP DATABASE [IF EXISTS] hive.hive_db;
+    ```
 
-	Note that for Hive Databases, all tables within the Database must be deleted first, otherwise an error will occur. This operation will also delete the corresponding Database in Hive.
+    Note that for Hive Databases, all tables within the Database must be deleted first, otherwise an error will occur. This operation will also delete the corresponding Database in Hive.
 
 ### Table
 
 - Create
 
-	Doris supports creating partitioned or non-partitioned tables in Hive.
+    Doris supports creating partitioned or non-partitioned tables in Hive.
 
-	```
-	-- Create unpartitioned hive table
-	CREATE TABLE unpartitioned_table (
-	  `col1` BOOLEAN COMMENT 'col1',
-	  `col2` INT COMMENT 'col2',
-	  `col3` BIGINT COMMENT 'col3',
-	  `col4` CHAR(10) COMMENT 'col4',
-	  `col5` FLOAT COMMENT 'col5',
-	  `col6` DOUBLE COMMENT 'col6',
-	  `col7` DECIMAL(9,4) COMMENT 'col7',
-	  `col8` VARCHAR(11) COMMENT 'col8',
-	  `col9` STRING COMMENT 'col9'
-	)  ENGINE=hive
-	PROPERTIES (
-	  'file_format'='parquet'
-	);
+    ```
+    -- Create unpartitioned hive table
+    CREATE TABLE unpartitioned_table (
+      `col1` BOOLEAN COMMENT 'col1',
+      `col2` INT COMMENT 'col2',
+      `col3` BIGINT COMMENT 'col3',
+      `col4` CHAR(10) COMMENT 'col4',
+      `col5` FLOAT COMMENT 'col5',
+      `col6` DOUBLE COMMENT 'col6',
+      `col7` DECIMAL(9,4) COMMENT 'col7',
+      `col8` VARCHAR(11) COMMENT 'col8',
+      `col9` STRING COMMENT 'col9'
+    )  ENGINE=hive
+    PROPERTIES (
+      'file_format'='parquet'
+    );
 
-	-- Create partitioned hive table
-	-- The partition columns must be in table's column definition list
-	CREATE TABLE partition_table (
-	  `col1` BOOLEAN COMMENT 'col1',
-	  `col2` INT COMMENT 'col2',
-	  `col3` BIGINT COMMENT 'col3',
-	  `col4` DECIMAL(2,1) COMMENT 'col4',
-	  `pt1` VARCHAR COMMENT 'pt1',
-	  `pt2` VARCHAR COMMENT 'pt2'
-	)  ENGINE=hive
-	PARTITION BY LIST (pt1, pt2) ()
-	PROPERTIES (
-	  'file_format'='orc'
-	);
-	```
+    -- Create partitioned hive table
+    -- The partition columns must be in table's column definition list
+    CREATE TABLE partition_table (
+      `col1` BOOLEAN COMMENT 'col1',
+      `col2` INT COMMENT 'col2',
+      `col3` BIGINT COMMENT 'col3',
+      `col4` DECIMAL(2,1) COMMENT 'col4',
+      `pt1` VARCHAR COMMENT 'pt1',
+      `pt2` VARCHAR COMMENT 'pt2'
+    )  ENGINE=hive
+    PARTITION BY LIST (pt1, pt2) ()
+    PROPERTIES (
+      'file_format'='orc'
+    );
+    ```
 
-	After creation, you can view the Hive table creation statement using the `SHOW CREATE TABLE` command.
+    After creation, you can view the Hive table creation statement using the `SHOW CREATE TABLE` command.
 
-	Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema.
+    Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema.
 
 - Drop
 
-	You can drop a Hive table using the `DROP TABLE` statement. Currently, deleting the table also removes the data, including partition data.
+    You can drop a Hive table using the `DROP TABLE` statement. Currently, deleting the table also removes the data, including partition data.
 
 - Column Types
 
-	The column types used when creating Hive tables in Doris correspond to those in Hive as follows:
+    The column types used when creating Hive tables in Doris correspond to those in Hive as follows:
 
-	| Doris | Hive |
-	|---|---|
-	| BOOLEAN    | BOOLEAN |
-	| TINYINT    | TINYINT |
-	| SMALLINT   | SMALLINT |
-	| INT        | INT |
-	| BIGINT     | BIGINT |
-	| DATE     | DATE |
-	| DATETIME | TIMESTAMP |
-	| FLOAT      | FLOAT |
-	| DOUBLE     | DOUBLE |
-	| CHAR       | CHAR |
-	| VARCHAR    | STRING |
-	| STRING     | STRING |
-	| DECIMAL  | DECIMAL |
-	| ARRAY      | ARRAY |
-	| MAP        | MAP |
-	| STRUCT     | STRUCT |
+    | Doris | Hive |
+    |---|---|
+    | BOOLEAN    | BOOLEAN |
+    | TINYINT    | TINYINT |
+    | SMALLINT   | SMALLINT |
+    | INT        | INT |
+    | BIGINT     | BIGINT |
+    | DATE     | DATE |
+    | DATETIME | TIMESTAMP |
+    | FLOAT      | FLOAT |
+    | DOUBLE     | DOUBLE |
+    | CHAR       | CHAR |
+    | VARCHAR    | STRING |
+    | STRING     | STRING |
+    | DECIMAL  | DECIMAL |
+    | ARRAY      | ARRAY |
+    | MAP        | MAP |
+    | STRUCT     | STRUCT |
 
-	> - Column types can only be nullable by default, NOT NULL is not supported.
+    > - Column types can only be nullable by default, NOT NULL is not supported.
 
-	> - Hive 3.0 supports setting default values. If you need to set default values, you need to explicitly add `"hive.version" = "3.0.0"` in the Catalog properties.
-	
-	> - After inserting data, if the types are not compatible, such as `'abc'` being inserted into a numeric type, it will be converted to a null value before insertion.
+    > - Hive 3.0 supports setting default values. If you need to set default values, you need to explicitly add `"hive.version" = "3.0.0"` in the Catalog properties.
+    
+    > - After inserting data, if the types are not compatible, such as `'abc'` being inserted into a numeric type, it will be converted to a null value before insertion.
 
 - Partitions
 
-	The partition types in Hive correspond to the List partition in Doris. Therefore, when creating a Hive partitioned table in Doris, you need to use the List partition table creation statement, but there is no need to explicitly enumerate each partition. When writing data, Doris will automatically create the corresponding Hive partition based on the values of the data.
+    The partition types in Hive correspond to the List partition in Doris. Therefore, when creating a Hive partitioned table in Doris, you need to use the List partition table creation statement, but there is no need to explicitly enumerate each partition. When writing data, Doris will automatically create the corresponding Hive partition based on the values of the data.
 
-	Supports creating single-column or multi-column partitioned tables.
+    Supports creating single-column or multi-column partitioned tables.
 
 - File Formats
 
-	- Parquet
-	- ORC (default format)
+    - Parquet
+    - ORC (default format)
 
 - Compression Formats
 
-	TODO
+    TODO
 
 - Storage Medium
 
-	- HDFS
+    - HDFS
     - Object Storage
 
 ## Data Operations

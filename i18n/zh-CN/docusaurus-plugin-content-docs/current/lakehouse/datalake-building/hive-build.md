@@ -34,159 +34,159 @@ under the License.
 
 - 创建
 
-	```
-	CREATE CATALOG [IF NOT EXISTS] hive PROPERTIES (
-	    "type"="hms",
-	    "hive.metastore.uris" = "thrift://172.21.16.47:7004",
-	    "hadoop.username" = "hadoop",
-	    "fs.defaultFS" = "hdfs://172.21.16.47:4007"
-	);
-	```
-		
-	注意，如如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显示增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
-	
-	更多参数，请参阅 [Hive Catalog](../datalake-analytics/hive.md)
+    ```
+    CREATE CATALOG [IF NOT EXISTS] hive PROPERTIES (
+        "type"="hms",
+        "hive.metastore.uris" = "thrift://172.21.16.47:7004",
+        "hadoop.username" = "hadoop",
+        "fs.defaultFS" = "hdfs://172.21.16.47:4007"
+    );
+    ```
+        
+    注意，如如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显示增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
+    
+    更多参数，请参阅 [Hive Catalog](../datalake-analytics/hive.md)
 
 - 删除
 
-	```
-	DROP CATALOG [IF EXISTS] hive;
-	```
-	
-	删除 Catalog 并不会删除 hive 中的任何库表信息。仅仅是在 Doris 中移除了对这个 Hive 集群的映射。
-	
+    ```
+    DROP CATALOG [IF EXISTS] hive;
+    ```
+    
+    删除 Catalog 并不会删除 hive 中的任何库表信息。仅仅是在 Doris 中移除了对这个 Hive 集群的映射。
+    
 ### Database
 
 - 创建
 
-	可以通过 `SWITCH` 语句切换到对应的 Catalog 下，执行 `CREATE DATABASE` 语句：
-		
-	```
-	SWITCH hive;
-	CREATE DATABASE [IF NOT EXISTS] hive_db;
-	```
-		
-	也可以使用全限定名创建，或指定 location，如：
-		
-	```
-	CREATE DATABASE [IF NOT EXISTS] hive.hive_db;
-		
-	CREATE DATABASE [IF NOT EXISTS] hive.hive_db
-	PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
-	```
-		
-	之后可以通过 `SHOW CREATE DATABASE` 命令可以查看 Database 的 Location 信息：
-		
-	```
-	mysql> SHOW CREATE DATABASE hive_db;
-	+----------+---------------------------------------------------------------------------------------------+
-	| Database | Create Database                                                                             |
-	+----------+---------------------------------------------------------------------------------------------+
-	| hive_db  | CREATE DATABASE `hive_db` LOCATION 'hdfs://172.21.16.47:4007/usr/hive/warehouse/hive_db.db' |
-	+----------+---------------------------------------------------------------------------------------------+
-	```
+    可以通过 `SWITCH` 语句切换到对应的 Catalog 下，执行 `CREATE DATABASE` 语句：
+        
+    ```
+    SWITCH hive;
+    CREATE DATABASE [IF NOT EXISTS] hive_db;
+    ```
+        
+    也可以使用全限定名创建，或指定 location，如：
+        
+    ```
+    CREATE DATABASE [IF NOT EXISTS] hive.hive_db;
+        
+    CREATE DATABASE [IF NOT EXISTS] hive.hive_db
+    PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
+    ```
+        
+    之后可以通过 `SHOW CREATE DATABASE` 命令可以查看 Database 的 Location 信息：
+        
+    ```
+    mysql> SHOW CREATE DATABASE hive_db;
+    +----------+---------------------------------------------------------------------------------------------+
+    | Database | Create Database                                                                             |
+    +----------+---------------------------------------------------------------------------------------------+
+    | hive_db  | CREATE DATABASE `hive_db` LOCATION 'hdfs://172.21.16.47:4007/usr/hive/warehouse/hive_db.db' |
+    +----------+---------------------------------------------------------------------------------------------+
+    ```
 
 - 删除
 
-	```
-	DROP DATABASE [IF EXISTS] hive.hive_db;
-	```
-		
-	注意，对于 Hive Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错。这个操作会同步删除 Hive 中对应的 Database。
+    ```
+    DROP DATABASE [IF EXISTS] hive.hive_db;
+    ```
+        
+    注意，对于 Hive Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错。这个操作会同步删除 Hive 中对应的 Database。
 
-	
+    
 ### Table
 
 - 创建
 
-	Doris 支持在 Hive 中创建分区或非分区表。
-	
-	```
-	-- Create unpartitioned hive table
-	CREATE TABLE unpartitioned_table (
-	  `col1` BOOLEAN COMMENT 'col1',
-	  `col2` INT COMMENT 'col2',
-	  `col3` BIGINT COMMENT 'col3',
-	  `col4` CHAR(10) COMMENT 'col4',
-	  `col5` FLOAT COMMENT 'col5',
-	  `col6` DOUBLE COMMENT 'col6',
-	  `col7` DECIMAL(9,4) COMMENT 'col7',
-	  `col8` VARCHAR(11) COMMENT 'col8',
-	  `col9` STRING COMMENT 'col9'
-	)  ENGINE=hive
-	PROPERTIES (
-	  'file_format'='parquet'
-	);
-	
-	-- Create partitioned hive table
-	-- The partition columns must be in table's column definition list
-	CREATE TABLE partition_table (
-	  `col1` BOOLEAN COMMENT 'col1',
-	  `col2` INT COMMENT 'col2',
-	  `col3` BIGINT COMMENT 'col3',
-	  `col4` DECIMAL(2,1) COMMENT 'col4',
-	  `pt1` VARCHAR COMMENT 'pt1',
-	  `pt2` VARCHAR COMMENT 'pt2'
-	)  ENGINE=hive
-	PARTITION BY LIST (pt1, pt2) ()
-	PROPERTIES (
-	  'file_format'='orc'
-	);
-	```
-	
-	创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Hive 的建表语句。
-	
-	注意，不同于 Hive 中的建表语句。在 Doris 中创建 Hive 分区表时，分区列也必须写到 Table 的 Schema 中。
+    Doris 支持在 Hive 中创建分区或非分区表。
+    
+    ```
+    -- Create unpartitioned hive table
+    CREATE TABLE unpartitioned_table (
+      `col1` BOOLEAN COMMENT 'col1',
+      `col2` INT COMMENT 'col2',
+      `col3` BIGINT COMMENT 'col3',
+      `col4` CHAR(10) COMMENT 'col4',
+      `col5` FLOAT COMMENT 'col5',
+      `col6` DOUBLE COMMENT 'col6',
+      `col7` DECIMAL(9,4) COMMENT 'col7',
+      `col8` VARCHAR(11) COMMENT 'col8',
+      `col9` STRING COMMENT 'col9'
+    )  ENGINE=hive
+    PROPERTIES (
+      'file_format'='parquet'
+    );
+    
+    -- Create partitioned hive table
+    -- The partition columns must be in table's column definition list
+    CREATE TABLE partition_table (
+      `col1` BOOLEAN COMMENT 'col1',
+      `col2` INT COMMENT 'col2',
+      `col3` BIGINT COMMENT 'col3',
+      `col4` DECIMAL(2,1) COMMENT 'col4',
+      `pt1` VARCHAR COMMENT 'pt1',
+      `pt2` VARCHAR COMMENT 'pt2'
+    )  ENGINE=hive
+    PARTITION BY LIST (pt1, pt2) ()
+    PROPERTIES (
+      'file_format'='orc'
+    );
+    ```
+    
+    创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Hive 的建表语句。
+    
+    注意，不同于 Hive 中的建表语句。在 Doris 中创建 Hive 分区表时，分区列也必须写到 Table 的 Schema 中。
 
 - 删除
 
-	可以通过 `DROP TABLE` 语句删除一个 Hive 表。当前删除表后，会同时删除数据，包括分区数据。
-	
+    可以通过 `DROP TABLE` 语句删除一个 Hive 表。当前删除表后，会同时删除数据，包括分区数据。
+    
 - 列类型
 
-	在 Doris 中创建 Hive 表所使用的列类型，和 Hive 中的列类型对应关系如下
-	
-	| Doris | Hive |
-	|---|---|
-	| BOOLEAN    | BOOLEAN |
-	| TINYINT    | TINYINT |
-	| SMALLINT   | SMALLINT |
-	| INT        | INT |
-	| BIGINT     | BIGINT |
-	| DATE     | DATE |
-	| DATETIME | TIMESTAMP |
-	| FLOAT      | FLOAT |
-	| DOUBLE     | DOUBLE |
-	| CHAR       | CHAR |
-	| VARCHAR    | STRING |
-	| STRING     | STRING |
-	| DECIMAL  | DECIMAL |
-	| ARRAY      | ARRAY |
-	| MAP        | MAP |
-	| STRUCT     | STRUCT |
-	
-	- 列类型只能为默认的 nullable，不支持  NOT NULL。
-	- Hive 3.0 支持设置默认值。如果需要设置默认值，则需要再 Catalog 属性中显示的添加 `"hive.version" = "3.0.0"`
-	- 插入数据后，如果类型不能够兼容，例如 `'abc'` 插入到数值类型，则会转为 null 值后插入。
+    在 Doris 中创建 Hive 表所使用的列类型，和 Hive 中的列类型对应关系如下
+    
+    | Doris | Hive |
+    |---|---|
+    | BOOLEAN    | BOOLEAN |
+    | TINYINT    | TINYINT |
+    | SMALLINT   | SMALLINT |
+    | INT        | INT |
+    | BIGINT     | BIGINT |
+    | DATE     | DATE |
+    | DATETIME | TIMESTAMP |
+    | FLOAT      | FLOAT |
+    | DOUBLE     | DOUBLE |
+    | CHAR       | CHAR |
+    | VARCHAR    | STRING |
+    | STRING     | STRING |
+    | DECIMAL  | DECIMAL |
+    | ARRAY      | ARRAY |
+    | MAP        | MAP |
+    | STRUCT     | STRUCT |
+    
+    - 列类型只能为默认的 nullable，不支持  NOT NULL。
+    - Hive 3.0 支持设置默认值。如果需要设置默认值，则需要再 Catalog 属性中显示的添加 `"hive.version" = "3.0.0"`
+    - 插入数据后，如果类型不能够兼容，例如 `'abc'` 插入到数值类型，则会转为 null 值后插入。
 
 - 分区
 
-	Hive 中的分区类型对应 Doris 中的 List 分区。因此，在 Doris 中 创建 Hive 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Doris 会根据数据的值，自动创建对应的 Hive 分区。
+    Hive 中的分区类型对应 Doris 中的 List 分区。因此，在 Doris 中 创建 Hive 分区表，需使用 List 分区的建表语句，但无需显式的枚举各个分区。在写入数据时，Doris 会根据数据的值，自动创建对应的 Hive 分区。
 
-	支持创建单列或多列分区表。
-	
+    支持创建单列或多列分区表。
+    
 - 文件格式
 
-	- Parquet
-	- ORC（默认格式）
+    - Parquet
+    - ORC（默认格式）
 
 - 压缩格式
 
-	TODO
+    TODO
 
 - 存储介质
 
-	- HDFS
+    - HDFS
     - 对象存储
 
 ## 数据操作
@@ -221,25 +221,25 @@ INSERT OVERWRITE TABLE hive.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM 
 ```
 
 ### CTAS(CREATE TABLE AS SELECT)
-	
+    
 可以通过 `CTAS(CREATE TABLE AS SELECT)` 语句创建 Hive 表并写入数据：
-	
+    
 ```
 CREATE TABLE hive_ctas ENGINE=hive AS SELECT * FROM other_table;
 ```
-	
+    
 CTAS 支持指定文件格式、分区方式等信息，如：
-	
+    
 ```
 CREATE TABLE hive_ctas ENGINE=hive
 PARTITION BY LIST (pt1, pt2) ()
 AS SELECT col1,pt1,pt2 FROM part_ctas_src WHERE col1>0;
-	
+    
 CREATE TABLE hive.hive_db.hive_ctas (col1,col2,pt1) ENGINE=hive
 PARTITION BY LIST (pt1) ()
 PROPERTIES (
-	"file_format"="parquet",
-	"parquet.compression"="zstd"
+    "file_format"="parquet",
+    "parquet.compression"="zstd"
 )
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
