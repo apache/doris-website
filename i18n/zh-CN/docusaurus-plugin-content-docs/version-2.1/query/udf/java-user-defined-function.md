@@ -363,8 +363,8 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
   :::
 
 ## 编写 UDTF 函数
-UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法， 但是 UDTF 函数的返回值必须是 Array 类型。
-另外Doris中表函数会因为 _outer 后缀有不同的表现，可查看[OUTER 组合器](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
+UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，但是 UDTF 函数的返回值必须是 Array 类型。
+另外 Doris 中表函数会因为 _outer 后缀有不同的表现，可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer)
 
 
 ```JAVA
@@ -406,7 +406,7 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 
 1. 不支持复杂数据类型（HLL，Bitmap）。
 
-2. 当前允许用户自己指定JVM最大堆大小，配置项是 be.conf 中的 JAVA_OPTS 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
+2. 当前允许用户自己指定 JVM 最大堆大小，配置项是 be.conf 中的 JAVA_OPTS 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
 
 3. Char 类型的 UDF 在 create function 时需要使用 String 类型。
 

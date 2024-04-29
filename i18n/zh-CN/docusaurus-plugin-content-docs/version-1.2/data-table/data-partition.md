@@ -38,7 +38,7 @@ under the License.
 
 - Row：即用户的一行数据；
 
-- Column： 用于描述一行数据中不同的字段。
+- Column：用于描述一行数据中不同的字段。
 
   Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Value 可以分别对应维度列和指标列。从聚合模型的角度来说，Key 列相同的行，会聚合成一行。其中 Value 列的聚合方式由用户在建表时指定。关于更多聚合模型的介绍，可以参阅 [Doris 数据模型](data-model.md)。
 
@@ -54,7 +54,7 @@ under the License.
 
 我们以一个建表操作来说明 Doris 的数据划分。
 
-Doris 的建表是一个同步命令，SQL执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)，也可以通过 `HELP CREATE TABLE;` 查看更多帮助。
+Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)，也可以通过 `HELP CREATE TABLE;` 查看更多帮助。
 
 本小节通过一个例子，来介绍 Doris 的建表方式。
 
@@ -168,7 +168,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
    
    - 通过 `VALUES [...)` 同时指定上下界比较容易理解。这里举例说明，当使用 `VALUES LESS THAN (...)` 语句进行分区的增删操作时，分区范围的变化情况：
 
-     - 如上 `example_range_tbl` 示例，当建表完成后，会自动生成如下3个分区：
+     - 如上 `example_range_tbl` 示例，当建表完成后，会自动生成如下 3 个分区：
 
        ```text
        p201701: [MIN_VALUE,  2017-02-01)
@@ -226,7 +226,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
 
    综上，分区的删除不会改变已存在分区的范围。删除分区可能出现空洞。通过 `VALUES LESS THAN` 语句增加分区时，分区的下界紧接上一个分区的上界。
 
-   Range分区除了上述我们看到的单列分区，也支持**多列分区**，示例如下：
+   Range 分区除了上述我们看到的单列分区，也支持**多列分区**，示例如下：
 
    ```text
    PARTITION BY RANGE(`date`, `id`)
@@ -261,7 +261,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
    ```
 <version since="1.2.0">
 
-   Range分区同样支持**批量分区**， 通过语句 `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY` 批量创建按天划分的分区：2022-01-03到2022-01-06（不含2022-01-06日），分区结果如下：
+   Range 分区同样支持**批量分区**，通过语句 `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY` 批量创建按天划分的分区：2022-01-03 到 2022-01-06（不含 2022-01-06 日），分区结果如下：
 
    ```text
    p20220103:    [2022-01-03,  2022-01-04)
@@ -279,7 +279,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
 
    - 下面通过示例说明，进行分区的增删操作时，分区的变化。
 
-     - 如上 `example_list_tbl` 示例，当建表完成后，会自动生成如下3个分区：
+     - 如上 `example_list_tbl` 示例，当建表完成后，会自动生成如下 3 个分区：
 
        ```text
        p_cn: ("Beijing", "Shanghai", "Hong Kong")
@@ -304,7 +304,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
        p_uk: ("London")
        ```
 
-   List分区也支持**多列分区**，示例如下：
+   List 分区也支持**多列分区**，示例如下：
 
    ```text
    PARTITION BY LIST(`id`, `city`)
@@ -341,8 +341,8 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
    - 分桶列可以是多列，Aggregate 和 Unique 模型必须为 Key 列，Duplicate 模型可以是 key 列和 value 列。分桶列可以和 Partition 列相同或不同。
    - 分桶列的选择，是在 **查询吞吐** 和 **查询并发** 之间的一种权衡：
      1. 如果选择多个分桶列，则数据分布更均匀。如果一个查询条件不包含所有分桶列的等值条件，那么该查询会触发所有分桶同时扫描，这样查询的吞吐会增加，单个查询的延迟随之降低。这个方式适合大吞吐低并发的查询场景。
-     2. 如果仅选择一个或少数分桶列，则对应的点查询可以仅触发一个分桶扫描。此时，当多个点查询并发时，这些查询有较大的概率分别触发不同的分桶扫描，各个查询之间的IO影响较小（尤其当不同桶分布在不同磁盘上时），所以这种方式适合高并发的点查询场景。
-   - AutoBucket: 根据数据量，计算分桶数。 对于分区表，可以根据历史分区的数据量、机器数、盘数，确定一个分桶。
+     2. 如果仅选择一个或少数分桶列，则对应的点查询可以仅触发一个分桶扫描。此时，当多个点查询并发时，这些查询有较大的概率分别触发不同的分桶扫描，各个查询之间的 IO 影响较小（尤其当不同桶分布在不同磁盘上时），所以这种方式适合高并发的点查询场景。
+   - AutoBucket: 根据数据量，计算分桶数。对于分区表，可以根据历史分区的数据量、机器数、盘数，确定一个分桶。
    - 分桶的数量理论上没有上限。
 
 3. **关于 Partition 和 Bucket 的数量和数据量的建议。**
@@ -353,13 +353,13 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
    - 当 Tablet 的数据量原则和数量原则冲突时，建议优先考虑数据量原则。
    - 在建表时，每个分区的 Bucket 数量统一指定。但是在动态增加分区时（`ADD PARTITION`），可以单独指定新分区的 Bucket 数量。可以利用这个功能方便的应对数据缩小或膨胀。
    - 一个 Partition 的 Bucket 数量一旦指定，不可更改。所以在确定 Bucket 数量时，需要预先考虑集群扩容的情况。比如当前只有 3 台 host，每台 host 有 1 块盘。如果 Bucket 的数量只设置为 3 或更小，那么后期即使再增加机器，也不能提高并发度。
-   - 举一些例子：假设在有10台BE，每台BE一块磁盘的情况下。如果一个表总大小为 500MB，则可以考虑4-8个分片。5GB：8-16个分片。50GB：32个分片。500GB：建议分区，每个分区大小在 50GB 左右，每个分区16-32个分片。5TB：建议分区，每个分区大小在 50GB 左右，每个分区16-32个分片。
+   - 举一些例子：假设在有 10 台 BE，每台 BE 一块磁盘的情况下。如果一个表总大小为 500MB，则可以考虑 4-8 个分片。5GB：8-16 个分片。50GB：32 个分片。500GB：建议分区，每个分区大小在 50GB 左右，每个分区 16-32 个分片。5TB：建议分区，每个分区大小在 50GB 左右，每个分区 16-32 个分片。
 
    > 注：表的数据量可以通过 [`SHOW DATA`](../sql-manual/sql-reference/Show-Statements/SHOW-DATA.md) 命令查看，结果除以副本数，即表的数据量。
 
 4. **关于 Random Distribution 的设置以及使用场景。**   
-    - 如果 OLAP 表没有更新类型的字段，将表的数据分桶模式设置为 RANDOM，则可以避免严重的数据倾斜(数据在导入表对应的分区的时候，单次导入作业每个 batch 的数据将随机选择一个tablet进行写入)。
-    - 当表的分桶模式被设置为RANDOM 时，因为没有分桶列，无法根据分桶列的值仅对几个分桶查询，对表进行查询的时候将对命中分区的全部分桶同时扫描，该设置适合对表数据整体的聚合查询分析而不适合高并发的点查询。
+    - 如果 OLAP 表没有更新类型的字段，将表的数据分桶模式设置为 RANDOM，则可以避免严重的数据倾斜 (数据在导入表对应的分区的时候，单次导入作业每个 batch 的数据将随机选择一个 tablet 进行写入)。
+    - 当表的分桶模式被设置为 RANDOM 时，因为没有分桶列，无法根据分桶列的值仅对几个分桶查询，对表进行查询的时候将对命中分区的全部分桶同时扫描，该设置适合对表数据整体的聚合查询分析而不适合高并发的点查询。
     - 如果 OLAP 表的是 Random Distribution 的数据分布，那么在数据导入的时候可以设置单分片导入模式（将 `load_to_single_tablet` 设置为 true），那么在大数据量的导入的时候，一个任务在将数据写入对应的分区时将只写入一个分片，这样将能提高数据导入的并发度和吞吐量，减少数据导入和 Compaction
     导致的写放大问题，保障集群的稳定性。 
 
@@ -373,14 +373,14 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
 以下场景推荐使用复合分区
 
 - 有时间维度或类似带有有序值的维度，可以以这类维度列作为分区列。分区粒度可以根据导入频次、分区数据量等进行评估。
-- 历史数据删除需求：如有删除历史数据的需求（比如仅保留最近N 天的数据）。使用复合分区，可以通过删除历史分区来达到目的。也可以通过在指定分区内发送 DELETE 语句进行数据删除。
-- 解决数据倾斜问题：每个分区可以单独指定分桶数量。如按天分区，当每天的数据量差异很大时，可以通过指定分区的分桶数，合理划分不同分区的数据,分桶列建议选择区分度大的列。
+- 历史数据删除需求：如有删除历史数据的需求（比如仅保留最近 N 天的数据）。使用复合分区，可以通过删除历史分区来达到目的。也可以通过在指定分区内发送 DELETE 语句进行数据删除。
+- 解决数据倾斜问题：每个分区可以单独指定分桶数量。如按天分区，当每天的数据量差异很大时，可以通过指定分区的分桶数，合理划分不同分区的数据，分桶列建议选择区分度大的列。
 
 用户也可以不使用复合分区，即使用单分区。则数据只做 HASH 分布。
 
 ### PROPERTIES
 
-在建表语句的最后 PROPERTIES 中，关于PROPERTIES中可以设置的相关参数，我们可以查看[CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)中查看详细的介绍。
+在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，我们可以查看[CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)中查看详细的介绍。
 
 ### ENGINE
 
@@ -415,7 +415,7 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
      - 预分配内存失败。可能是表中一行的字节长度超过了 100KB。
      - `Too many open files`。打开的文件句柄数超过了 Linux 系统限制。需修改 Linux 系统的句柄数限制。
 
-   如果创建数据分片时超时，也可以通过在 fe.conf 中设置 `tablet_create_timeout_second=xxx` 以及 `max_create_table_timeout_second=xxx` 来延长超时时间。其中 `tablet_create_timeout_second` 默认是1秒, `max_create_table_timeout_second` 默认是60秒，总体的超时时间为min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)，具体参数设置可参阅 [FE配置项](../admin-manual/config/fe-config.md) 。
+   如果创建数据分片时超时，也可以通过在 fe.conf 中设置 `tablet_create_timeout_second=xxx` 以及 `max_create_table_timeout_second=xxx` 来延长超时时间。其中 `tablet_create_timeout_second` 默认是 1 秒，`max_create_table_timeout_second` 默认是 60 秒，总体的超时时间为 min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)，具体参数设置可参阅 [FE 配置项](../admin-manual/config/fe-config.md) 。
 
 3. 建表命令长时间不返回结果。
 
@@ -425,4 +425,4 @@ Doris 支持两层的数据划分。第一层是 Partition，支持 Range 和 Li
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在[CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md)命令手册中查阅，也可以在Mysql客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在[CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

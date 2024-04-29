@@ -137,7 +137,7 @@ set runtime_filter_type=7;
     - When IN predicate and other filters are specified at the same time, and the filtering value of IN predicate does not reach runtime_filter_max_in_num will try to remove other filters. The reason is that IN predicate is an accurate filtering condition. Even if there is no other filter, it can filter efficiently. If it is used at the same time, other filters will do useless work. Currently, only when the producer and consumer of the runtime filter are in the same fragment can there be logic to remove the Non-IN predicate.
 
 - **Bitmap Filter**:
-    - Currently, the bitmap filter is used only when the subquery in the [in subquery](../../sql-manual/sql-reference/Operators/in.md) operation returns a bitmap column.
+    - Currently, the bitmap filter is used only when the subquery in the [in subquery](../../sql-manual/sql-statements/Operators/in) operation returns a bitmap column.
     - Currently, bitmap filter is only supported in vectorization engine.
 
 #### 2.runtime_filter_mode
