@@ -119,7 +119,11 @@ Query OK, 0 rows affected (1.02 sec)
 {'label':'txn_insert_b55db21aad7451b-b5b6c339704920c5', 'status':'VISIBLE', 'txnId':'10013'}
 ```
 
-也可以参考 [Insert Into](load-atomicity.md#insert-into)。 
+这种写入方式不仅可以实现写入的原子性，而且在 Doris 中，能提升 `INSERT INTO VALUES` 的写入性能。
+
+如果用户同时开启了 Group Commit 和事务写，事务写生效。
+
+也可以参考 [Insert Into](load-atomicity.md#insert-into)获取更多信息。 
 
 ### 多表多次`INSERT INTO SELECT`, `UPDATE`, `DELETE`写入
 
@@ -365,7 +369,7 @@ mysql> select * from  dt3;
 
 * 写入的多表必须属于同一个 Database，否则会遇到错误 `Transaction insert must be in the same database`
 
-* `INSERT INTO SELECT` 和 `INSET INTO VALUES` 不能混用，否则会遇到错误 `Transaction insert can not insert into values and insert into select at the same time`
+  * 两种事务写入`INSERT INTO SELECT`, `UPDATE`, `DELETE` 和 `INSET INTO VALUES` 不能混用，否则会遇到错误 `Transaction insert can not insert into values and insert into select at the same time`
 
 * 当从 `BEGIN` 开始的导入耗时超出 Doris 配置的 timeout 时，会导致事务回滚，导入失败。目前 timeout 使用的是 Session 变量 `insert_timeout` 和 `query_timeout` 的最大值
 

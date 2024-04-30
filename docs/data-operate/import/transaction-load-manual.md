@@ -119,6 +119,10 @@ Query OK, 0 rows affected (1.02 sec)
 {'label':'txn_insert_b55db21aad7451b-b5b6c339704920c5', 'status':'VISIBLE', 'txnId':'10013'}
 ```
 
+This method not only achieves atomicity, but also in Doris, it enhances the writing performance of `INSERT INTO VALUES`.
+
+If user enables `Group Commit` and transaction insert at the same time, the transaction insert will work. 
+
 See [Insert Into](load-atomicity.md#insert-into) for more details.
 
 ### Multiple `INSERT INTO SELECT`, `UPDATE`, `DELETE` for multiple tables
@@ -231,7 +235,7 @@ mysql> select * from  dt3;
 
 #### Isolation Level
 
-Doris provides the `REPEATABLE READ` isolation level. Please note the following:
+Doris provides the `READ COMMITTED` isolation level. Please note the following:
 
 * In a transaction, each statement reads the data that was committed at the time the statement began executing:
 
@@ -365,7 +369,7 @@ mysql> select * from  dt3;
 
 * Writing to multiple tables must belong to the same Database; otherwise, you will encounter the error `Transaction insert must be in the same database`
 
-* Mixing `INSERT INTO SELECT` and `INSERT INTO VALUES` is not allowed; otherwise, you will encounter the error `Transaction insert can not insert into values and insert into select at the same time`.
+* Mixing the two transaction load of `INSERT INTO SELECT`, `UPDATE`, `DELETE` and `INSERT INTO VALUES` is not allowed; otherwise, you will encounter the error `Transaction insert can not insert into values and insert into select at the same time`.
 
 * If the time-consuming from `BEGIN` statement exceeds the timeout configured in Doris, the transaction will be rolled back. Currently, the timeout uses the maximum value of session variables `insert_timeout` and `query_timeout`.
 
