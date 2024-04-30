@@ -130,7 +130,8 @@ under the License.
     )  ENGINE=hive
     PARTITION BY LIST (pt1, pt2) ()
     PROPERTIES (
-      'file_format'='orc'
+      'file_format'='orc',
+      'compression'='zlib'
     );
     ```
     
@@ -178,11 +179,12 @@ under the License.
 - 文件格式
 
     - Parquet
-    - ORC（默认格式）
+    - ORC（默认）
 
 - 压缩格式
 
-    TODO
+    - Parquet：snappy（默认），zlib，zstd
+    - ORC：snappy，zlib（默认），zstd
 
 - 存储介质
 

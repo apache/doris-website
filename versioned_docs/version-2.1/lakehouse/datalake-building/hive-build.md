@@ -129,7 +129,8 @@ This article introduces Hive operations supported in Doris, including syntax and
     )  ENGINE=hive
     PARTITION BY LIST (pt1, pt2) ()
     PROPERTIES (
-      'file_format'='orc'
+      'file_format'='orc',
+      'compression'='zlib'
     );
     ```
 
@@ -179,11 +180,12 @@ This article introduces Hive operations supported in Doris, including syntax and
 - File Formats
 
     - Parquet
-    - ORC (default format)
+    - ORC (default)
 
 - Compression Formats
 
-    TODO
+    - Parquet: snappy(default), zlib, zstd
+    - ORC: snappy, zlib(default), zstd
 
 - Storage Medium
 
