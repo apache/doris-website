@@ -95,7 +95,7 @@ ViewFS 工作原理和参数配置可以参考 hadoop 相关文档，比如 http
 
 ### Hive On JuiceFS
 
-数据存储在JuiceFS，示例如下：
+数据存储在 JuiceFS，示例如下：
 
 （需要把 `juicefs-hadoop-x.x.x.jar` 放在 `fe/lib/` 和 `apache_hdfs_broker/lib/` 下）
 
@@ -126,9 +126,9 @@ CREATE CATALOG hive PROPERTIES (
 
 可选属性：
 
-* s3.connection.maximum： s3最大连接数，默认50
-* s3.connection.request.timeout：s3请求超时时间，默认3000ms
-* s3.connection.timeout： s3连接超时时间，默认1000ms
+* s3.connection.maximum：s3 最大连接数，默认 50
+* s3.connection.request.timeout：s3 请求超时时间，默认 3000ms
+* s3.connection.timeout：s3 连接超时时间，默认 1000ms
 
 ### Hive On OSS
 
@@ -168,7 +168,7 @@ CREATE CATALOG hive PROPERTIES (
 
 ### Hive With Glue
 
-> 连接Glue时，如果是在非EC2环境，需要将EC2环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载[AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)工具进行配置，这种方式也会在当前用户目录下创建`.aws`目录。
+> 连接 Glue 时，如果是在非 EC2 环境，需要将 EC2 环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载[AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)工具进行配置，这种方式也会在当前用户目录下创建`.aws`目录。
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -191,7 +191,7 @@ CREATE CATALOG hive PROPERTIES (
 
 以上缓存信息不会持久化到 Doris 中，所以在 Doris 的 FE 节点重启、切主等操作，都可能导致缓存失效。缓存失效后，Doris 会直接访问 Hive MetaStore 获取信息，并重新填充缓存。
 
-元数据缓可以根据用户的需要，进行自动、手动，或配置 TTL（Time-to-Live） 的方式进行更新。
+元数据缓可以根据用户的需要，进行自动、手动，或配置 TTL（Time-to-Live）的方式进行更新。
 
 ### 默认行为和 TTL
 
@@ -217,7 +217,7 @@ CREATE CATALOG hive PROPERTIES (
 
 ### 手动刷新
 
-用户需要通过 [REFRESH](../../sql-manual/sql-reference/Utility-Statements/REFRESH.md) 命令手动刷新元数据。
+用户需要通过 [REFRESH](../../sql-manual/sql-statements/Utility-Statements/REFRESH.md) 命令手动刷新元数据。
 
 1. REFRESH CATALOG：刷新指定 Catalog。
 
@@ -269,13 +269,13 @@ CREATE CATALOG hive PROPERTIES (
 
 ### 自动刷新
 
-自动刷新目前仅支持 Hive Metastore 元数据服务。通过让 FE 节点定时读取 HMS 的 notification event 来感知 Hive 表元数据的变更情况，目前支持处理如下event：
+自动刷新目前仅支持 Hive Metastore 元数据服务。通过让 FE 节点定时读取 HMS 的 notification event 来感知 Hive 表元数据的变更情况，目前支持处理如下 event：
 
 |事件 | 事件行为和对应的动作 |
 |---|---|
 | CREATE DATABASE | 在对应数据目录下创建数据库。 |
 | DROP DATABASE | 在对应数据目录下删除数据库。 |
-| ALTER DATABASE  | 此事件的影响主要有更改数据库的属性信息，注释及默认存储位置等，这些改变不影响doris对外部数据目录的查询操作，因此目前会忽略此event。 |
+| ALTER DATABASE  | 此事件的影响主要有更改数据库的属性信息，注释及默认存储位置等，这些改变不影响 doris 对外部数据目录的查询操作，因此目前会忽略此 event。 |
 | CREATE TABLE | 在对应数据库下创建表。 |
 | DROP TABLE  | 在对应数据库下删除表，并失效表的缓存。 |
 | ALTER TABLE | 如果是重命名，先删除旧名字的表，再用新名字创建表，否则失效该表的缓存。 |
@@ -283,17 +283,17 @@ CREATE CATALOG hive PROPERTIES (
 | DROP PARTITION | 在对应表缓存的分区列表里删除分区，并失效该分区的缓存。 |
 | ALTER PARTITION | 如果是重命名，先删除旧名字的分区，再用新名字创建分区，否则失效该分区的缓存。 |
 
-> 当导入数据导致文件变更,分区表会走ALTER PARTITION event逻辑，不分区表会走ALTER TABLE event逻辑。
+> 当导入数据导致文件变更，分区表会走 ALTER PARTITION event 逻辑，不分区表会走 ALTER TABLE event 逻辑。
 > 
-> 如果绕过HMS直接操作文件系统的话，HMS不会生成对应事件，doris因此也无法感知
+> 如果绕过 HMS 直接操作文件系统的话，HMS 不会生成对应事件，doris 因此也无法感知
 
 该特性在 fe.conf 中有如下参数：
 
-1. `enable_hms_events_incremental_sync`: 是否开启元数据自动增量同步功能,默认关闭。
+1. `enable_hms_events_incremental_sync`: 是否开启元数据自动增量同步功能，默认关闭。
 2. `hms_events_polling_interval_ms`: 读取 event 的间隔时间，默认值为 10000，单位：毫秒。
 3. `hms_events_batch_size_per_rpc`: 每次读取 event 的最大数量，默认值为 500。
 
-如果想使用该特性(华为MRS除外)，需要更改HMS的 hive-site.xml 并重启HMS和HiveServer2：
+如果想使用该特性 (华为 MRS 除外)，需要更改 HMS 的 hive-site.xml 并重启 HMS 和 HiveServer2：
 
 ```
 <property>
@@ -311,7 +311,7 @@ CREATE CATALOG hive PROPERTIES (
 
 ```
 
-华为的MRS需要更改hivemetastore-site.xml 并重启HMS和HiveServer2：
+华为的 MRS 需要更改 hivemetastore-site.xml 并重启 HMS 和 HiveServer2：
 
 ```
 <property>
@@ -381,7 +381,7 @@ Doris 基于 Iceberg `FileIO` 接口实现了 Broker 查询 HMS Catalog Iceberg 
 
 ## 集成 Apache Ranger
 
-Apache Ranger是一个用来在Hadoop平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
+Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
 
 Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权。
 
@@ -400,15 +400,15 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 	"access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory",
 	```
 
-	>注意:
+	>注意：
 	>
 	> `access_controller.properties.ranger.service.name` 指的是 service 的类型，例如 `hive`，`hdfs` 等。并不是配置文件中 `ranger.plugin.hive.service.name` 的值。
 
 2. 配置所有 FE 环境：
 
-    1. 将 HMS conf 目录下的配置文件ranger-hive-audit.xml,ranger-hive-security.xml,ranger-policymgr-ssl.xml复制到 FE 的 conf 目录下。
+    1. 将 HMS conf 目录下的配置文件 ranger-hive-audit.xml,ranger-hive-security.xml,ranger-policymgr-ssl.xml 复制到 FE 的 conf 目录下。
 
-    2. 修改 ranger-hive-security.xml 的属性,参考配置如下：
+    2. 修改 ranger-hive-security.xml 的属性，参考配置如下：
 
         ```sql
         <?xml version="1.0" encoding="UTF-8"?>
@@ -469,15 +469,15 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 ### 最佳实践
 
-1. 在ranger端创建用户user1并授权db1.table1.col1的查询权限
+1. 在 ranger 端创建用户 user1 并授权 db1.table1.col1 的查询权限
 
-2. 在ranger端创建角色role1并授权db1.table1.col2的查询权限
+2. 在 ranger 端创建角色 role1 并授权 db1.table1.col2 的查询权限
 
-3. 在doris创建同名用户user1，user1将直接拥有db1.table1.col1的查询权限
+3. 在 doris 创建同名用户 user1，user1 将直接拥有 db1.table1.col1 的查询权限
 
-4. 在doris创建同名角色role1，并将role1分配给user1，user1将同时拥有db1.table1.col1和col2的查询权限
+4. 在 doris 创建同名角色 role1，并将 role1 分配给 user1，user1 将同时拥有 db1.table1.col1 和 col2 的查询权限
 
-5. Admin 和 Root 用户的权限不受Apache Ranger 的权限控制
+5. Admin 和 Root 用户的权限不受 Apache Ranger 的权限控制
 
 ## 连接 Kerberos 认证的 Hive 集群
 
@@ -549,13 +549,13 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
 ### 问题排查
 
-如遇 Kerberos 认证问题，在设置了 JVM 参数 `-Dsun.security.krb5.debug=true` 后，会在 `fe.out` 或 `be.out` 中打印 Kerberos 认证相关信息。可以参考 [FAQ](../faq.md) 中的相关错误进行排查。
+如遇 Kerberos 认证问题，在设置了 JVM 参数 `-Dsun.security.krb5.debug=true` 后，会在 `fe.out` 或 `be.out` 中打印 Kerberos 认证相关信息。可以参考 [FAQ](../../faq/lakehouse-faq) 中的相关错误进行排查。
 
 ## Hive Transactional 表
 Hive transactional 表是 Hive 中支持 ACID 语义的表。详情可见：https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions
 
 ### Hive Transactional 表支持情况：
-|表类型|在 Hive 中支持的操作|Hive 表属性|支持的Hive 版本|
+|表类型 | 在 Hive 中支持的操作|Hive 表属性 | 支持的 Hive 版本|
 |---|---|---|---|
 |Full-ACID Transactional Table |支持 Insert, Update, Delete 操作|'transactional'='true', 'transactional_properties'='insert_only'|3.x，2.x，其中 2.x 需要在 Hive 中执行完 major compaction 才可以加载|
 |Insert-Only Transactional Table|只支持 Insert 操作|'transactional'='true'|3.x，2.x|

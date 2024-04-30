@@ -26,22 +26,22 @@ under the License.
 
 # 外表统计信息
 
-外表统计信息的收集方式和收集内容与内表基本一致，详细信息可以参考[统计信息](../query-acceleration/statistics.md)。
-2.0.3版本之后，Hive外表支持了自动和采样收集。
+外表统计信息的收集方式和收集内容与内表基本一致，详细信息可以参考[统计信息](../query/nereids/statistics)。
+2.0.3 版本之后，Hive 外表支持了自动和采样收集。
 
 # 注意事项
 
-1. 目前(2.0.3)只有Hive外表支持自动和采样收集。HMS类型的Iceberg和Hudi外表，以及JDBC外表只支持手动全量收集。其他类型的外表暂不支持统计信息收集。
+1. 目前 (2.0.3) 只有 Hive 外表支持自动和采样收集。HMS 类型的 Iceberg 和 Hudi 外表，以及 JDBC 外表只支持手动全量收集。其他类型的外表暂不支持统计信息收集。
 
-2. 外表默认关闭自动统计信息收集功能，需要在创建Catalog的时候添加属性来打开，或者通过设置Catalog属性来开启或关闭。
+2. 外表默认关闭自动统计信息收集功能，需要在创建 Catalog 的时候添加属性来打开，或者通过设置 Catalog 属性来开启或关闭。
 
-### 创建Catalog时打开自动收集的属性(默认是false）：
+### 创建 Catalog 时打开自动收集的属性 (默认是 false）：
 
 ```SQL
 'enable.auto.analyze' = 'true'
 ```
 
-### 通过修改Catalog属性控制是否开启自动收集：
+### 通过修改 Catalog 属性控制是否开启自动收集：
 
 ```sql
 ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='true'); // 打开自动收集
