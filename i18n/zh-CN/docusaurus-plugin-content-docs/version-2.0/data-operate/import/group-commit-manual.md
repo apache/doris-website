@@ -147,7 +147,7 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../../data-operate/import/insert-into-manual)。
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import/insert-into-manual)。
 
 ### INSERT INTO VALUES
 

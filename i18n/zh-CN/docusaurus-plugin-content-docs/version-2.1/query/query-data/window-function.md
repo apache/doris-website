@@ -106,4 +106,4 @@ from stock_ticker;
 
 ## 更多帮助
 
-更多窗口函数，参见 SQL 手册 / SQL 函数 / [分析（窗口）函数](../../sql-manual/sql-functions/window-functions/WINDOW-FUNCTION)。
+更多窗口函数，参见 SQL 手册 / SQL 函数 / [分析（窗口）函数](../../sql-manual/sql-statements/window-functions/WINDOW-FUNCTION)。

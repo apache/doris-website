@@ -33,7 +33,7 @@ under the License.
 
 - 可以使用 Spark / Flink 系统，利用 AP 系统的 Connector 来读取数据，然后调用 Doris Connector 写入 Doris
 
-除了以上三种方式，[SelectDB](www.selectdb.com) 提供了免费的可视化的数据迁移工具 X2Doris。
+除了以上三种方式，[SelectDB](https://www.selectdb.com/tools/x2doris) 提供了免费的可视化的数据迁移工具 X2Doris。
 
 X2Doris 是 SelectDB 开发的，专门用于将各种离线数据迁移到 Apache Doris 中的核心工具，该工具集 `自动建 Doris 表` 和 `数据迁移` 为一体，目前支持了 Apache Doris/Hive/Kudu、StarRocks 数据库往 Doris 迁移的工作，整个过程可视化的平台操作，非常简单易用，减轻数据同步到 Doris 中的门槛。
 

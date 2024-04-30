@@ -269,7 +269,7 @@ SHOW LOAD WHERE label="xxx";
 
 数据不可见是一个临时状态，这批数据最终是一定可见的
 
-可以通过[ SHOW TRANSACTION f](../../sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
+可以通过[ SHOW TRANSACTION ](../../sql-manual/sql-reference/Show-Statements/SHOW-TRANSACTION)语句查看这批数据的可见状态：
 
 ```sql
 SHOW TRANSACTION WHERE id=4005;
