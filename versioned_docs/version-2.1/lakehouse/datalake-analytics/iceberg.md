@@ -29,10 +29,11 @@ under the License.
 
 ## Limitations
 
-1. Support Iceberg V1/V2.
-2. The V2 format only supports Position Delete, not Equality Delete.
-3. Supports Parquet format. 
-4. Supports ORC format since 2.1.3.
+1. Supports Iceberg V1/V2.
+2. Supports Position Delete
+3. Supports Equality Delete since 2.1.3
+4. Supports Parquet format.
+5. Supports ORC format since 2.1.3.
 
 ## Create Catalog
 

@@ -30,9 +30,10 @@ under the License.
 ## 使用限制
 
 1. 支持 Iceberg V1/V2 表格式。
-2. V2 格式仅支持 Position Delete 方式，不支持 Equality Delete。
-3. 支持 Parquet 文件格式
-4. 2.1.3 版本开始支持 ORC 文件格式。
+2. 支持 Position Delete。
+3. 2.1.3 版本开始支持 Equality Delete。
+4. 支持 Parquet 文件格式
+5. 2.1.3 版本开始支持 ORC 文件格式。
 
 
 ## 创建 Catalog
