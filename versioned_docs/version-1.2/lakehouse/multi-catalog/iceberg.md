@@ -33,6 +33,8 @@ When connecting to Iceberg, Doris:
 
 1. Supports Iceberg V1/V2 table formats;
 2. Supports Position Delete but not Equality Delete for V2 format;
+3. Supports Parquet formmat;
+
 
 <version since="dev">
 
@@ -131,7 +133,25 @@ If you want to use S3 storage, the following properties need to be set.
 
 ## Column Type Mapping
 
-Same as that in Hive Catalogs. See the relevant section in [Hive](./hive.md).
+| Iceberg Type                               | Doris Type   |
+|--------------------------------------------|--------------|
+| boolean                                    | boolean      |
+| int                                        | int          |
+| long                                       | bigint       |
+| float                                      | float        |
+| double                                     | double       |
+| decimal(p,s)                               | decimal(p,s) |
+| date                                       | date         |
+| uuid                                       | string       |
+| timestamp (Timestamp without timezone)     | datetime(6)  |
+| timestamptz (Timestamp with timezone)      | datetime(6)  |
+| string                                     | string       |
+| fixed(L)                                   | char(L)      |
+| binary                                     | string       |
+| list                                       | array        |
+| struct                                     | unsupported  |
+| map                                        | unsupported  |
+| time                                       | unsupported  |
 
 ## Time Travel
 
