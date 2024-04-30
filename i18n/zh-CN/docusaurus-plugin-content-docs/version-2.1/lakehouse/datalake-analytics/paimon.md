@@ -25,25 +25,22 @@ under the License.
 -->
 
 
-# Paimon
-
-<version since="dev">
-</version>
-
 ## 使用须知
 
-1. 数据放在hdfs时，需要将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
-2. 当前适配的paimon版本为0.6.0
+1. 数据放在 hdfs 时，需要将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
+2. 当前适配的 paimon 版本为 0.6.0
 
 ## 创建 Catalog
 
-Paimon Catalog 当前支持两种类型的Metastore创建Catalog:
-* filesystem（默认），同时存储元数据和数据在filesystem。
-* hive metastore，它还将元数据存储在Hive metastore中。用户可以直接从Hive访问这些表。
+Paimon Catalog 当前支持两种类型的 Metastore 创建 Catalog:
+* filesystem（默认），同时存储元数据和数据在 filesystem。
+* hive metastore，它还将元数据存储在 Hive metastore 中。用户可以直接从 Hive 访问这些表。
 
-### 基于FileSystem创建Catalog
+### 基于 FileSystem 创建 Catalog
 
-> 2.0.1 及之前版本，请使用后面的 `基于Hive Metastore创建Catalog`。
+:::tips 提示
+2.0.1 及之前版本，请使用后面的 `基于Hive Metastore创建Catalog`。
+:::
 
 #### HDFS
 
@@ -122,7 +119,7 @@ CREATE CATALOG `paimon_oss` PROPERTIES (
 
 ```
 
-### 基于Hive Metastore创建Catalog
+### 基于 Hive Metastore 创建 Catalog
 
 ```sql
 CREATE CATALOG `paimon_hms` PROPERTIES (
@@ -172,8 +169,8 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 | DecimalType(precision, scale)         | Decimal(precision, scale) |           |
 | TimestampType,LocalZonedTimestampType | DateTime                  |           |
 | DateType                              | Date                      |           |
-| MapType                               | Map                       | 支持Map嵌套   |
-| ArrayType                             | Array                     | 支持Array嵌套 |
+| MapType                               | Map                       | 支持 Map 嵌套   |
+| ArrayType                             | Array                     | 支持 Array 嵌套 |
 | VarBinaryType, BinaryType             | Binary                    |           |
 
 ## 常见问题
@@ -181,7 +178,7 @@ CREATE CATALOG `paimon_kerberos` PROPERTIES (
 1. Kerberos 问题
 
     - 确保 principal 和 keytab 配置正确。
-    - 需在 BE 节点启动定时任务（如 crontab），每隔一定时间（如 12小时），执行一次 `kinit -kt your_principal your_keytab` 命令。
+    - 需在 BE 节点启动定时任务（如 crontab），每隔一定时间（如 12 小时），执行一次 `kinit -kt your_principal your_keytab` 命令。
 
 2. Unknown type value: UNSUPPORTED
 
