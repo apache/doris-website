@@ -261,6 +261,26 @@ For example, in a transaction involving multiple partition modifications of a Hi
 
 If any anomalies occur during the transaction commit process, the transaction will be directly rolled back, including modifications to HDFS files and metadata in the Hive Metastore, without requiring further action from the user.
 
+### Concurrent Writing Mechanism
+
+Currently, Doris supports concurrent writing using multiple insert statements. However, it is important to note that users need to control concurrent writing to avoid potential conflicts.
+
+As ordinary non-transactional Hive tables lack a complete transaction mechanism. From the Doris transaction mechanism described earlier, we know that the current implementation in Doris can only make efforts to minimize the possible inconsistency time window and cannot guarantee true ACID properties. Therefore, concurrent writing to Hive in Doris may lead to data consistency issues.
+
+1. `INSERT` Concurrent Operations
+
+    `INSERT` is a data append operation. When `INSERT` is executed concurrently, it will not cause conflicts, and the operations will produce the expected results.
+
+2. `INSERT OVERWRITE` Concurrent Operations
+
+    If `INSERT OVERWRITE` is used for concurrent writing to the same table or partition, it may lead to data loss or corruption, and the result may be uncertain.
+
+    There are generally the following solutions:
+
+    - For partitioned tables, data can be written into different partitions, and concurrent operations on different partitions will not cause conflicts.
+    - For non-partitioned tables, `INSERT` can be executed simultaneously without using `INSERT OVERWRITE`, thus avoiding conflicts.
+    - For potentially conflicting operations, users need to control on the business side to ensure that only one write operation is being performed at the same time.
+
 ### HDFS File Operations
 
 Data in Hive tables on HDFS is usually written first to a temporary directory, then operations like `rename` are used to commit the files finally. Here, we detail the specific operations on files in HDFS during different data operations.
