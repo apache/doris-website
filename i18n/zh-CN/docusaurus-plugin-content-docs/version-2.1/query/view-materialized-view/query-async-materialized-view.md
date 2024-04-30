@@ -27,7 +27,7 @@ under the License.
 ## 概述
 Doris 的异步物化视图采用了基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式结构信息来进行透明改写的算法。
 
-Doris 可以分析查询 SQL 的结构信息，自动寻找满足要求的物化视图，并尝试进行透明改写，使用最优的物化视图来表达查询SQL。
+Doris 可以分析查询 SQL 的结构信息，自动寻找满足要求的物化视图，并尝试进行透明改写，使用最优的物化视图来表达查询 SQL。
 
 通过使用预计算的物化视图结果，可以大幅提高查询性能，减少计算成本。
 
@@ -111,11 +111,11 @@ CREATE TABLE IF NOT EXISTS orders  (
 ## 直查物化视图
 物化视图可以看作是表，可以像正常的表一样直接查询。
 
-**用例1:**
+**用例 1:**
 
-物化视图的定义语法，详情见 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+物化视图的定义语法，详情见 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
-mv 定义:
+mv 定义：
 ```sql
 CREATE MATERIALIZED VIEW mv1
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -129,7 +129,7 @@ FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
 LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
-查询语句:
+查询语句：
 
 可以对物化视图添加过滤条件和聚合等，进行直接查询。
 
@@ -144,7 +144,7 @@ WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ### JOIN 改写
 Join 改写指的是查询和物化使用的表相同，可以在物化视图和查询 Join 的输入或者 Join 的外层写 where，优化器对此 pattern 的查询会尝试进行透明改写。
 
-支持多表 Join，支持 Join 的类型为:
+支持多表 Join，支持 Join 的类型为：
 * INNER JOIN
 * LEFT OUTER JOIN
 * RIGHT OUTER JOIN
@@ -154,11 +154,11 @@ Join 改写指的是查询和物化使用的表相同，可以在物化视图和
 * LEFT ANTI JOIN
 * RIGHT ANTI JOIN
 
-**用例1:**
+**用例 1:**
 
 如下查询可进行透明改写，条件 `l_linenumber > 1`可以上拉，从而进行透明改写，使用物化视图的预计算结果来表达查询。
 
-mv 定义:
+mv 定义：
 ```sql
 CREATE MATERIALIZED VIEW mv2
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -172,7 +172,7 @@ FROM (SELECT * FROM lineitem WHERE l_linenumber > 1) t1
 LEFT OUTER JOIN orders
 ON l_orderkey = o_orderkey;
 ```
-查询语句:
+查询语句：
 ```sql
 SELECT l_linenumber,
        o_custkey
@@ -182,13 +182,13 @@ ON l_orderkey = o_orderkey
 WHERE l_linenumber > 1 and o_orderdate = '2023-10-18';
 ```
 
-**用例2:**
+**用例 2:**
 
-JOIN衍生，当查询和物化视图的 JOIN 的类型不一致时，如果物化可以提供查询所需的所有数据时，通过在 JOIN 的外部补偿谓词，也可以进行透明改写，
+JOIN 衍生，当查询和物化视图的 JOIN 的类型不一致时，如果物化可以提供查询所需的所有数据时，通过在 JOIN 的外部补偿谓词，也可以进行透明改写，
 
 举例如下
 
-mv 定义:
+mv 定义：
 ```sql
 CREATE MATERIALIZED VIEW mv3
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -210,7 +210,7 @@ l_suppkey,
 o_orderdate;
 ```
 
-查询语句:
+查询语句：
 ```sql
 SELECT
     l_shipdate, l_suppkey, o_orderdate,
@@ -233,11 +233,11 @@ o_orderdate;
 
 物化视图使用的维度需要包含查询的维度，并且查询使用的指标可以使用物化视图的指标来表示。
 
-**用例1**
+**用例 1**
 
 如下查询可以进行透明改写，查询和物化使用聚合的维度一致，可以使用维度中的字段进行过滤结果，并且查询会尝试使用物化视图 SELECT 后的表达式。
 
-mv 定义:
+mv 定义：
 ```sql
 CREATE MATERIALIZED VIEW mv4
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -258,7 +258,7 @@ o_shippriority,
 o_comment;
 ```
 
-查询语句:
+查询语句：
 
 ```sql
 SELECT 
@@ -276,14 +276,14 @@ o_shippriority,
 o_comment;
 ```
 
-**用例2**
+**用例 2**
 
-如下查询可以进行透明改写，查询和物化使用聚合的维度不一致，物化视图使用的维度包含查询的维度。 查询可以使用维度中的字段对结果进行过滤，
+如下查询可以进行透明改写，查询和物化使用聚合的维度不一致，物化视图使用的维度包含查询的维度。查询可以使用维度中的字段对结果进行过滤，
 
 查询会尝试使用物化视图 SELECT 后的函数进行上卷，如物化视图的 `bitmap_union` 最后会上卷成 `bitmap_union_count`，和查询中
 `count(distinct)` 的语义保持一致。
 
-mv 定义:
+mv 定义：
 ```sql
 CREATE MATERIALIZED VIEW mv5
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -306,7 +306,7 @@ l_partkey,
 l_suppkey;
 ```
 
-查询语句:
+查询语句：
 ```sql
 SELECT
     l_shipdate, l_suppkey,
@@ -338,9 +338,9 @@ l_suppkey;
 ## Query partial 透明改写（Coming soon）
 当物化视图的表比查询多时，如果物化视图比查询多的表满足 JOIN 消除的条件，那么也可以进行透明改写，如下可以进行透明改写，待支持。
 
-**用例1**
+**用例 1**
 
-mv 定义:
+mv 定义：
 ```sql
  CREATE MATERIALIZED VIEW mv6
  BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -370,9 +370,9 @@ mv 定义:
 ## Union 改写（Coming soon）
 当物化视图不足以提供查询的所有数据时，可以通过 Union 的方式，将查询原表和物化视图 Union 起来返回数据，如下可以进行透明改写，待支持。
 
-**用例1**
+**用例 1**
 
-mv 定义:
+mv 定义：
 ```sql
 CREATE MATERIALIZED VIEW mv7
 BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
@@ -417,14 +417,14 @@ WHERE o_orderkey > 5 AND o_orderkey <= 10;
 **透明改写后数据一致性问题**
 
 `grace_period` 的单位是秒，指的是容许物化视图和所用基表数据不一致的时间。
-比如 `grace_period` 设置成0，意味要求物化视图和基表数据保持一致，此物化视图才可用于透明改写；对于外表，因为无法感知数据变更，所以物化视图使用了外表，
+比如 `grace_period` 设置成 0，意味要求物化视图和基表数据保持一致，此物化视图才可用于透明改写；对于外表，因为无法感知数据变更，所以物化视图使用了外表，
 
 无论外表的数据是不是最新的，都可以使用此物化视图用于透明改写，如果外表配置了 HMS 元数据源，是可以感知数据变更的，配置数据源和感知数据变更的功能会在后面迭代支持。
 
-如果设置成10，意味物化视图和基表数据允许10s的延迟，如果物化视图的数据和基表的数据有延迟，如果在10s内，此物化视图都可以用于透明改写。
+如果设置成 10，意味物化视图和基表数据允许 10s 的延迟，如果物化视图的数据和基表的数据有延迟，如果在 10s 内，此物化视图都可以用于透明改写。
 
 对于物化视图中的内表，可以通过设定 `grace_period` 属性来控制透明改写使用的物化视图所允许数据最大的延迟时间。
-可查看 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+可查看 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
 **查询透明改写命中情况查看和调试**
 
@@ -447,9 +447,9 @@ WHERE o_orderkey > 5 AND o_orderkey <= 10;
 |   Name: mv2                                                                                                                                                                                                                                           |
 |   FailSummary: The columns used by query are not in view, View struct info is invalid
 ```
-**MaterializedViewRewriteSuccessAndChose**：透明改写成功，并且CBO选择的物化视图名称列表。
+**MaterializedViewRewriteSuccessAndChose**：透明改写成功，并且 CBO 选择的物化视图名称列表。
 
-**MaterializedViewRewriteSuccessButNotChose**：透明改写成功，但是最终CBO没有选择的物化视图名称列表。
+**MaterializedViewRewriteSuccessButNotChose**：透明改写成功，但是最终 CBO 没有选择的物化视图名称列表。
 
 **MaterializedViewRewriteFail**：列举透明改写失败及原因摘要。
 
@@ -465,17 +465,17 @@ WHERE o_orderkey > 5 AND o_orderkey <= 10;
 | SET enable_nereids_planner = true;                                  | 异步物化视图只有在新优化器下才支持，所以需要开启新优化器      |
 | SET enable_materialized_view_rewrite = true;                        | 开启或者关闭查询透明改写，默认关闭                 |
 | SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许         |
-| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到CBO候选的最大数量，默认是3个 |
+| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3 个 |
 
 
 ## 限制
-- 物化视图定义语句中只允许包含 SELECT、FROM、WHERE、JOIN、GROUP BY 语句，JOIN 的输入可以包含简单的 GROUP BY（单表聚合），其中JOIN的支持的类型为
+- 物化视图定义语句中只允许包含 SELECT、FROM、WHERE、JOIN、GROUP BY 语句，JOIN 的输入可以包含简单的 GROUP BY（单表聚合），其中 JOIN 的支持的类型为
   INNER 和 LEFT OUTER JOIN 其他类型的 JOIN 操作逐步支持。
 - 基于 External Table 的物化视图不保证查询结果强一致。
-- 不支持使用非确定性函数来构建物化视图，包括 rand、now、current_time、current_date、random、uuid等。
+- 不支持使用非确定性函数来构建物化视图，包括 rand、now、current_time、current_date、random、uuid 等。
 - 不支持窗口函数的透明改写。
 - 查询和物化视图中有 LIMIT，暂时不支持透明改写。
 - 物化视图的定义暂时不能使用视图和物化视图。
 - 当查询或者物化视图没有数据时，不支持透明改写。
-- 目前 WHERE 条件补偿，支持物化视图没有 WHERE，查询有 WHERE情况的条件补偿；或者物化视图有 WHERE 且查询的 WHERE 条件是物化视图的超集。
+- 目前 WHERE 条件补偿，支持物化视图没有 WHERE，查询有 WHERE 情况的条件补偿；或者物化视图有 WHERE 且查询的 WHERE 条件是物化视图的超集。
   目前暂时还不支持范围的条件补偿，比如物化视图定义是 a > 5，查询是 a > 10，逐步支持。

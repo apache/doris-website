@@ -93,7 +93,7 @@ PROPERTIES (
 
 对一个表，如果表属性 `min_load_replica_num` 有效（即大于 0），那么该表将会忽略全局配置`min_load_replica_num`。否则，如果全局配置 `min_load_replica_num` 有效（即大于 0），那么该表的最小写入副本数将等于 `min(FE.conf.min_load_replica_num，table.replication_num/2 + 1)`。
 
-对于 FE 配置项的查看和修改，可以参考[这里](../../admin-manual/config/fe-config.md)。
+对于 FE 配置项的查看和修改，可以参考[这里](../../admin-manual/config/fe-config)。
 
 ### 其余情况
 

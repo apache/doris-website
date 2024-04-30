@@ -57,26 +57,37 @@ type 支持的类型：
 ##### Insert tasks
 `tasks("type"="insert");`表结构：
 ```
-mysql> desc  function tasks("type"="insert");
+mysql> desc  function tasks("type"="insert");;
 +---------------+------+------+-------+---------+-------+
 | Field         | Type | Null | Key   | Default | Extra |
 +---------------+------+------+-------+---------+-------+
 | TaskId        | TEXT | No   | false | NULL    | NONE  |
 | JobId         | TEXT | No   | false | NULL    | NONE  |
+| JobName       | TEXT | No   | false | NULL    | NONE  |
 | Label         | TEXT | No   | false | NULL    | NONE  |
 | Status        | TEXT | No   | false | NULL    | NONE  |
-| EtlInfo       | TEXT | No   | false | NULL    | NONE  |
-| TaskInfo      | TEXT | No   | false | NULL    | NONE  |
 | ErrorMsg      | TEXT | No   | false | NULL    | NONE  |
-| CreateTimeMs  | TEXT | No   | false | NULL    | NONE  |
-| FinishTimeMs  | TEXT | No   | false | NULL    | NONE  |
+| CreateTime    | TEXT | No   | false | NULL    | NONE  |
+| FinishTime    | TEXT | No   | false | NULL    | NONE  |
 | TrackingUrl   | TEXT | No   | false | NULL    | NONE  |
 | LoadStatistic | TEXT | No   | false | NULL    | NONE  |
 | User          | TEXT | No   | false | NULL    | NONE  |
 +---------------+------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
+11 row in set (0.01 sec)
 ```
+- TaskId：task id
+- JobId：job id
+- JobName：job 名称
+- Label：label
+- Status：task 状态
+- ErrorMsg：task 失败信息
+- CreateTime：task 创建时间
+- FinishTime：task 结束时间
+- TrackingUrl：task tracking url
+- LoadStatistic：task 统计信息
+- User：执行用户
 
+JobName 在 2.1.4 版本中新增.
 ##### MV tasks
 ```sql
 mysql> desc function tasks("type"="mv");

@@ -81,7 +81,7 @@ set enable_pipeline_engine = true;
 set parallel_pipeline_task_num = 0;
 ```
 
-可以通过设置 `max_instance_num` 来限制自动设置的并发数(默认为64)
+可以通过设置 `max_instance_num` 来限制自动设置的并发数 (默认为 64)
 
 ### 导入
 

@@ -32,9 +32,9 @@ under the License.
 
 也可以参考如下语法在命令行中查看导入和查询的 Profile：
 
-- [SHOW QUERY PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-QUERY-PROFILE)
+- [SHOW QUERY PROFILE](../../sql-manual/sql-statements/Show-Statements/SHOW-QUERY-PROFILE)
 
-- [SHOW LOAD PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD-PROFILE)
+- [SHOW LOAD PROFILE](../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD-PROFILE)
 
 ## 名词解释
 

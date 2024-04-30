@@ -114,7 +114,7 @@ Runtime Filter 主要用于大表 join 小表的优化，如果左表的数据�
 
   - `runtime_filter_max_in_num`: 如果 join 右表数据行数大于这个值，我们将不生成 IN predicate，默认 1024
   
-  - `runtime_filter_wait_infinitely`: 如果参数为 true，那么左表的scan节点将会一直等待直到接收到 runtime filer或者查询超超时，默认为false
+  - `runtime_filter_wait_infinitely`: 如果参数为 true，那么左表的 scan 节点将会一直等待直到接收到 runtime filer 或者查询超超时，默认为 false
 
 下面对查询选项做进一步说明。
 
@@ -122,7 +122,7 @@ Runtime Filter 主要用于大表 join 小表的优化，如果左表的数据�
 
 使用的 Runtime Filter 类型。
 
-**类型**: 数字(1, 2, 4, 8, 16)或者相对应的助记符字符串(IN, BLOOM_FILTER, MIN_MAX, IN_OR_BLOOM_FILTER, BITMAP_FILTER)，默认12(MIN_MAX,IN_OR_BLOOM_FILTER)，使用多个时用逗号分隔，注意需要加引号，或者将任意多个类型的数字相加，例如:
+**类型**: 数字 (1, 2, 4, 8, 16) 或者相对应的助记符字符串 (IN, BLOOM_FILTER, MIN_MAX, IN_OR_BLOOM_FILTER, BITMAP_FILTER)，默认 12(MIN_MAX,IN_OR_BLOOM_FILTER)，使用多个时用逗号分隔，注意需要加引号，或者将任意多个类型的数字相加，例如：
 
 ```sql
 set runtime_filter_type="BLOOM_FILTER,IN,MIN_MAX";
@@ -162,7 +162,7 @@ set runtime_filter_type=7;
 
 - **Bitmap Filter**:
 
-  - 当前仅当[in subquery](../../sql-manual/sql-reference/Operators/in.md)操作中的子查询返回 bitmap 列时会使用 bitmap filter.
+  - 当前仅当[in subquery](../../sql-manual/sql-statements/Operators/in)操作中的子查询返回 bitmap 列时会使用 bitmap filter.
 
   - 当前仅在向量化引擎中支持 bitmap filter.
 

@@ -55,7 +55,7 @@ the **type** supported types
 ##### insert job
 jobs("type"="insert")Table structure:
 ```
-mysql> desc  function jobs("type"="insert")
+mysql> desc  function jobs("type"="insert");
 +-------------------+------+------+-------+---------+-------+
 | Field             | Type | Null | Key   | Default | Extra |
 +-------------------+------+------+-------+---------+-------+
@@ -67,8 +67,12 @@ mysql> desc  function jobs("type"="insert")
 | Status            | TEXT | No   | false | NULL    | NONE  |
 | ExecuteSql        | TEXT | No   | false | NULL    | NONE  |
 | CreateTime        | TEXT | No   | false | NULL    | NONE  |
+| SucceedTaskCount  | TEXT | No   | false | NULL    | NONE  |
+| FailedTaskCount   | TEXT | No   | false | NULL    | NONE  |
+| CanceledTaskCount | TEXT | No   | false | NULL    | NONE  |
 | Comment           | TEXT | No   | false | NULL    | NONE  |
 +-------------------+------+------+-------+---------+-------+
+12 rows in set (0.01 sec)
 ```
 * Id: job ID.
 * Name: job name.
@@ -78,8 +82,12 @@ mysql> desc  function jobs("type"="insert")
 * Status: Job status
 * ExecuteSql: Execution SQL
 * CreateTime: Job creation time
+* SucceedTaskCount: Number of successful tasks
+* FailedTaskCount: Number of failed tasks
+* CanceledTaskCount: Number of canceled tasks
 * Comment: job comment
 
+SuccessTaskCount, FailedTaskCount, and CanceledTaskCount are invalid for 2.1.4 and earlier versions.
 ##### matterialized view job
 
 jobs("type"="mv")Table structure:

@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Nereids 全新优化器
 
-<version since="dev"></version>
 
 ## 研发背景
 
