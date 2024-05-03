@@ -64,9 +64,9 @@ $ ulimit -n
 
 # 将该配置写到到启动脚本中，以便下次打开终端会话时不需要再次设置
 # 如果是 bash，执行下面语句
-echo 'ulimit -n 65536' ~/.bashrc
+echo 'ulimit -n 65536' >>~/.bashrc
 # 如果是 zsh，执行下面语句
-echo 'ulimit -n 65536' ~/.zshrc
+echo 'ulimit -n 65536' >>~/.zshrc
 ```
 
 **2.  启动 BE**
