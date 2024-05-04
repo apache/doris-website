@@ -72,8 +72,8 @@ to generate a json file that can be displayed. For more detailed instructions, s
 
 Pipeline Tracing is visualised using [Perfetto](https://ui.perfetto.dev/). After generating a file in the legal format, select "Open trace file" on its page to open the file and view the results:
 
-![](/static/images/tracing1.png)
+![](/images/tracing1.png)
 
 The tool is very powerful. For example, it is easy to see how the same Task is scheduled across cores.
 
-![](/static/images/tracing2.png)
+![](/images/tracing2.png)

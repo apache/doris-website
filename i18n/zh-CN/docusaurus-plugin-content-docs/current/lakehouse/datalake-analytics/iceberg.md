@@ -217,6 +217,23 @@ CREATE CATALOG iceberg PROPERTIES (
 "obs.region" = "cn-north-4"
 ```
 
+## 示例
+
+```
+-- MinIO & Rest Catalog
+CREATE CATALOG `iceberg` PROPERTIES (
+    "type" = "iceberg",
+    "iceberg.catalog.type" = "rest",
+    "uri" = "http://10.0.0.1:8181",
+    "warehouse" = "s3://bucket",
+    "token" = "token123456",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "http://10.0.0.1:9000",
+    "s3.region" = "us-east-1"
+);
+```
+
 ## 列类型映射
 
 | Iceberg Type                               | Doris Type   |
