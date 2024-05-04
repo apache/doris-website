@@ -72,8 +72,8 @@ python3 origin-to-show.py -s <SOURCE_FILE> -d <DEST>.json
 
 Pipeline Tracing 的可视化使用 [Perfetto](https://ui.perfetto.dev/)。生成对应格式的文件后，在其页面上选择 "Open trace file" 打开该文件，即可查看结果：
 
-![](/static/images/tracing1.png)
+![](/images/tracing1.png)
 
 该工具的功能非常强大，例如可以方便查看同一个 Task 在各个核间的调度情况。
 
-![](/static/images/tracing2.png)
+![](/images/tracing2.png)
