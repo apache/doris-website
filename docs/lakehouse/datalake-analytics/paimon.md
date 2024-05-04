@@ -27,23 +27,19 @@ under the License.
 
 # Paimon
 
-<version since="dev">
-</version>
-
 ## Instructions for use
 
 1. When data in hdfs,need to put core-site.xml, hdfs-site.xml and hive-site.xml in the conf directory of FE and BE. First read the hadoop configuration file in the conf directory, and then read the related to the environment variable `HADOOP_CONF_DIR` configuration file.
-2. The currently adapted version of the payment is 0.6.0
+2. The currently adapted version of the payment is 0.7.
 
 ## Create Catalog
 
 Paimon Catalog Currently supports two types of Metastore creation catalogs:
+
 * filesystem(default),Store both metadata and data in the file system.
 * hive metastore,It also stores metadata in Hive metastore. Users can access these tables directly from Hive.
 
 ### Creating a Catalog Based on FileSystem
-
-> For versions 2.0.1 and earlier, please use the following `Create Catalog based on Hive Metastore`.
 
 #### HDFS
 
