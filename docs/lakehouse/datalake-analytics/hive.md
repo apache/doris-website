@@ -406,7 +406,7 @@ Doris supports using Apache Ranger for authentication for a specified External H
 
 Currently, authentication of database, table, and column is supported. Functions such as encryption, row policy, and data masks are not currently supported.
 
-To use Apache Ranger to authenticate the entire Doris cluster service, please refer to [Apache Ranger Authentication](../../admin-manual/privilege-ldap/ranger.md)
+To use Apache Ranger to authenticate the entire Doris cluster service, please refer to [Apache Ranger](../../admin-manual/auth/ranger.md)
 
 ### Settings
 

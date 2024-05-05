@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris 新的权限管理系统参照了 Mysql 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。
+Doris 的权限管理系统参照了 Mysql 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。
 
 ## 名词解释
 
@@ -82,7 +82,7 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
 2. `PASSWORD_EXPIRE`
 
-    设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值（单位为 天）。默认为 NEVER（或0），表示不会过期。
+    设置当前用户密码的过期时间。如 `PASSWORD_EXPIRE INTERVAL 10 DAY` 表示密码会在 10 天后过期。`PASSWORD_EXPIRE NEVER` 表示密码不过期。如果设置为 `PASSWORD_EXPIRE DEFAULT`，则会使用全局变量 `default_password_lifetime` 中的值（单位为 天）。默认为 NEVER（或 0），表示不会过期。
 
     示例：
 
@@ -99,7 +99,7 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
 4. 密码强度
 
-    该功能由全局变量 `validate_password_policy` 控制。默认为 `NONE/0`，即不检查密码强度。如果设置为 `STRONG/2`，则密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的3项，并且长度必须大于等于8。
+    该功能由全局变量 `validate_password_policy` 控制。默认为 `NONE/0`，即不检查密码强度。如果设置为 `STRONG/2`，则密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的 3 项，并且长度必须大于等于 8。
 
     示例：
 
@@ -185,11 +185,11 @@ Doris 目前支持以下几种权限
 
 #### 全局权限
 
-即通过 GRANT 语句授予的 `*.*.*` 上的权限。被授予的权限适用于任意Catalog中的任意库表。
+即通过 GRANT 语句授予的 `*.*.*` 上的权限。被授予的权限适用于任意 Catalog 中的任意库表。
 
 #### 数据目录（Catalog）权限
 
-即通过 GRANT 语句授予的 `ctl.*.*` 上的权限。被授予的权限适用于指定Catalog中的任意库表。
+即通过 GRANT 语句授予的 `ctl.*.*` 上的权限。被授予的权限适用于指定 Catalog 中的任意库表。
 
 #### 库级权限
 
@@ -241,7 +241,7 @@ Doris 目前支持以下几种权限
 
 ### Doris 内置的鉴权方案
 
-Doris权限设计基于 RBAC（Role-Based Access Control）的权限管理模型,用户和角色关联，角色和权限关联，用户通过角色间接和权限关联。
+Doris 权限设计基于 RBAC（Role-Based Access Control）的权限管理模型，用户和角色关联，角色和权限关联，用户通过角色间接和权限关联。
 
 当角色被删除时，用户自动失去该角色的所有权限。
 
@@ -280,9 +280,9 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
 
 默认角色不能被删除，不能被分配给其他人，删除用户时，默认角色也自动删除。
 
-### 基于 Apache Ranger的鉴权方案
+### 基于 Apache Ranger 的鉴权方案
 
-请参阅[基于 Apache Ranger的鉴权方案](./ranger.md)
+请参阅[基于 Apache Ranger 的鉴权方案](./ranger.md)
 
 ## 常见问题
 
@@ -308,7 +308,7 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
 
 3. SET PASSWORD
 
-    - 拥有 ADMIN 权限，或者 GLOBAL 层级 GRANT 权限的用户，可以设置非ROOT用户的密码。
+    - 拥有 ADMIN 权限，或者 GLOBAL 层级 GRANT 权限的用户，可以设置非 ROOT 用户的密码。
     - 普通用户可以设置自己对应的 User Identity 的密码。自己对应的 User Identity 可以通过 `SELECT CURRENT_USER()` 命令查看。
     - ROOT 用户可以修改自己的密码。
 
@@ -327,7 +327,7 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
 
 4. 一些可能产生冲突的操作说明
 
-    1. 域名与ip冲突：
+    1. 域名与 ip 冲突：
 
         假设创建了如下用户：
 
@@ -345,7 +345,7 @@ userN 通过 role3 拥有了 priv1 的权限，通过 roleN 拥有了 priv2 和 
 
         则 `user1@'ip1'` 的权限会被修改为 Select_priv 和 Alter_priv。并且当我们再次变更 `user1@['domain']` 的权限时，`user1@'ip1'` 也不会跟随改变。
 
-    2. 重复ip冲突：
+    2. 重复 ip 冲突：
 
         假设创建了如下用户：
 

@@ -1,7 +1,7 @@
 ---
 {
-"title": "Authentication and Authorization",
-"language": "en"
+    "title": "Authentication and Authorization",
+    "language": "en"
 }
 ---
 
@@ -24,321 +24,372 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Noun Interpretation
+The Doris permission management system is modeled after the MySQL permission management mechanism. It supports fine-grained permission control at the row and column level, role-based access control, and also supports a whitelist mechanism.
+
+## Glossary
 
 1. User Identity
 
-   In a permission system, a user is identified as a User Identity. The user identity consists of two parts: username and userhost. Where username is the username, composed of uppercase and lowercase in English. Userhost represents the IP address from which the user link comes. User Identity is presented as username @'userhost ', representing the username from userhost.
+   Within a permission system, a user is identified as a User Identity. A User Identity consists of two parts: `username` and `host`. The `username` is the user's name, consisting of English letters (both uppercase and lowercase). `host` represents the IP from which the user connection originates. User Identity is represented as `username@'host'`, indicating `username` from `host`.
 
-   Another representation of User Identity is username @ ['domain '], where domain is a domain name that can be resolved into a set of IPs through DNS or BNS (Baidu Name Service). The final representation is a set of username @'userhost ', so we will use username @'userhost' to represent it uniformly.
+   Another representation of User Identity is `username@['domain']`, where `domain` refers to a domain name that can be resolved into a set of IPs through DNS. Eventually, this is represented as a set of `username@'host'`, hence moving forward, we uniformly use `username@'host'` to denote it.
 
 2. Privilege
 
-   The objects of permission are nodes, data directories, databases, or tables. Different permissions represent different operating permissions.
-   
+   Privileges apply to nodes, data directories, databases, or tables. Different privileges represent different operation permissions.
+
 3. Role
 
-   Doris can create custom named characters. A role can be seen as a collection of permissions. If a newly created user can be assigned a certain role, they will be automatically granted the permissions that the role possesses. Subsequent permission changes to the role will also be reflected in the permissions of all users belonging to that role.
+   Doris allows the creation of custom-named roles. A role can be viewed as a collection of privileges. Newly created users can be assigned a role, automatically inheriting the privileges of that role. Subsequent changes to the role's privileges will also reflect on the permissions of all users associated with that role.
 
-5. User Property
+4. User Property
 
-   User attributes are directly associated with a user, rather than a user ID. Both user1 @'192.% 'and user1 @ ['domain'] have the same set of user attributes, which belong to user user1, rather than user1 @'192.% 'or user1 @ ['domain'].
+   User properties are directly affiliated with a user, not the User Identity. Meaning, both `user@'192.%'` and `user@['domain']` share the same set of user properties, which belong to the user `user`, not to `user@'192.%'` or `user@['domain']`.
 
-   User attributes include but are not limited to: maximum number of user connections, importing cluster configuration, and so on.
+   User properties include but are not limited to: maximum number of user connections, import cluster configurations, etc.
 
-## Authentication-and-authorization framework
+## Authentication and Authorization Framework
 
-The process of users logging into Apache Doris is divided into two parts: authentication and authentication.
+The process of a user logging into Apache Doris is divided into two parts: **Authentication** and **Authorization**.
 
-- Authentication: Perform identity verification based on the credentials provided by the user, such as username, customer single IP, password, etc. After verification, the individual user will be mapped to the User Identity within the system.
-- Authorization: Based on the obtained user ID, check whether the user has the corresponding operation permissions according to the permissions corresponding to the user ID.
+- Authentication: Identity verification is conducted based on the credentials provided by the user (such as username, client IP, password). Once verified, the individual user is mapped to a system-defined User Identity.
+- Authorization: Based on the acquired User Identity, it checks whether the user has the necessary permissions for the intended operations, according to the privileges associated with that User Identity.
 
 ## Authentication
 
-Doris supports built-in authentication schemes as well as authentication schemes for LDAP.
+Doris supports built-in authentication schemes as well as LDAP authentication.
 
-### Doris built-in authentication scheme
+### Doris Built-in Authentication Scheme
 
-Authenticate based on the username, password, and other information stored by Doris itself.
+Authentication is based on usernames, passwords, and other information stored within Doris itself.
 
-Administrators create users through `create user` and view all created users through `show all grants`
+Administrators create users with the `CREATE USER` command and view all created users with the `SHOW ALL GRANTS` command.
 
-When a user logs in, they will check if the username, password, and client's IP address are correct.
+When a user logs in, the system verifies whether the username, password, and client IP address are correct.
 
 #### Password Policy
 
-Doris supports the following password policies to help users better manage passwords.
+Doris supports the following password policies to assist users in better password management.
 
 1. `PASSWORD_HISTORY`
 
-   Allow the current user to use historical passwords when resetting their password. For example, `PASSWORd_HISTORY 10` means that the password set in the past 10 times is prohibited from being used as a new password. If set to `PASSWORd_HISTORY DEFAULT`, the value in the global variable `password_history` will be used `0` indicates that this feature is not enabled. The default is 0.
+    Determines whether a user can reuse a historical password when resetting their current password. For example, `PASSWORD_HISTORY 10` means the last 10 passwords cannot be reused as a new password. Setting `PASSWORD_HISTORY DEFAULT` will use the value from the global variable `password_history`. A setting of 0 disables this feature. The default is 0.
 
-3. `PASSWORD_EXPIRE`
+    Examples:
 
-   Set the expiration time for the current user's password. For example, `PASSWORD.EXIRE INTERVAL 10 DAY` indicates that the password will expire in 10 days `PASSWORd_EXIRE NEVER` indicates that the password does not expire. If set to `PASSWORDEXPIRE DEFAULT`, the value in the global variable `default_passwordlifetime` will be used. The default is NEVER (or 0), indicating that it will not expire.
+    - Set a global variable: `SET GLOBAL password_history = 10`
+    - Set for a user: `ALTER USER user1@'ip' PASSWORD_HISTORY 10`
 
-4. `FAILED_LOGIN_ATTEMPTS` 和 `PASSWORD_LOCK_TIME`
+2. `PASSWORD_EXPIRE`
 
-   When setting the current user login, if the wrong password is used n times to log in, the account will be locked and the lock time will be set. For example, `FAILED-LOGIN-ATTEMPTS 3 PASSWORL_LOCK TIME 1 DAY` indicates that if there are 3 incorrect logins, the account will be locked for one day.
+    Sets the expiration time for the current user's password. For instance, `PASSWORD_EXPIRE INTERVAL 10 DAY` means the password will expire after 10 days. `PASSWORD_EXPIRE NEVER` indicates the password never expires. Setting `PASSWORD_EXPIRE DEFAULT` will use the value from the global variable `default_password_lifetime` (in days). The default is NEVER (or 0), indicating it does not expire.
 
-   Locked accounts can be actively unlocked through the SUPER USER statement.
+    Examples:
 
-### LDAP based authentication scheme
+    - Set a global variable: `SET GLOBAL default_password_lifetime = 1`
+    - Set for a user: `ALTER USER user1@'ip' PASSWORD_EXPIRE INTERVAL 10 DAY`
 
-[LDAP](../privilege-ldap/ldap.md)
+3. `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
 
-## authorization
-### Permission operation
-1. Create user: [CREATE USER](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-USER.md)
-2. Alter user: [ALTER USER](../../sql-manual/sql-reference/Account-Management-Statements/ALTER-USER.md)
-3. Drop user: [DROP USER](../../sql-manual/sql-reference/Account-Management-Statements/DROP-USER.md)
-4. Grant/Assign roles: [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md)
-5. Revoke/Revoke roles: [REVOKE](../../sql-manual/sql-reference/Account-Management-Statements/REVOKE.md)
-6. Create role: [CREATE ROLE](../../sql-manual/sql-reference/Account-Management-Statements/CREATE-ROLE.md)
-7. Drop role: [DROP ROLE](../../sql-manual/sql-reference/Account-Management-Statements/DROP-ROLE.md)
-8. Alter role: [ALTER ROLE](../../sql-manual/sql-reference/Account-Management-Statements/ALTER-ROLE.md)
-9. View current user privileges: [SHOW GRANTS](../../sql-manual/sql-reference/Show-Statements/SHOW-GRANTS.md)
-10. View all user privileges: [SHOW ALL GRANTS](../../sql-manual/sql-reference/Show-Statements/SHOW-GRANTS.md)
-11. View the created roles: [SHOW ROLES](../../sql-manual/sql-reference/Show-Statements/SHOW-ROLES.md)
-12. Set user properties: [SET PROPERTY](../../sql-manual/sql-reference/Account-Management-Statements/SET-PROPERTY.md)
-13. View user properties: [SHOW PROPERTY](../../sql-manual/sql-reference/Show-Statements/SHOW-PROPERTY.md)
-14. Change password: [SET PASSWORD](../../sql-manual/sql-reference/Account-Management-Statements/SET-PASSWORD.md)
-15. View all supported permission items: [SHOW PRIVILEGES](../../sql-manual/sql-reference/Show-Statements/SHOW-PRIVILEGES.md)
-16. View row permission policies: [SHOW ROW POLICY](../../sql-manual/sql-reference/Show-Statements/SHOW-POLICY.md)
-17. Create row permission policy: [CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md)
+    Configures the number of incorrect password attempts after which the user account will be locked and sets the lock duration. For example, `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` means if there are 3 incorrect logins, the account will be locked for one day. Administrators can unlock the account using the `ALTER USER` statement.
 
-### Permission type
+    Example:
 
-Doris currently supports the following types of permissions
+    - Set for a user: `ALTER USER user1@'ip' FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY`
 
-1. Node_priv
+4. Password Strength
 
-   Node change permissions. Including operations such as adding, deleting, and offline FE, BE, and BROKER nodes.
+    This is controlled by the global variable `validate_password_policy`. The default is `NONE/0`, which means no password strength checking. If set to `STRONG/2`, the password must include at least three of the following: uppercase letters, lowercase letters, numbers, and special characters, and must be at least 8 characters long.
 
-   Root users have this permission by default. Users who have both Grant_priv and Node.priv can grant this permission to other users.
+    Example:
 
-   This permission can only be granted at the Global level.
+    - `SET validate_password_policy=STRONG`
 
-2. Grant_priv
+For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md).
 
-   Permission change permission. Allow operations including authorization, revocation, adding/deleting/changing users/roles.
+### LDAP-based Authentication Scheme
 
-   When granting authorization to other users/roles, the current user only needs the corresponding level of grant priv permission before 2.1.2, and after 2.1.2, the current user must also have the permissions they want to authorize.
+Please refer to [LDAP-based Authentication Scheme](./ldap.md).
 
-   When assigning roles to other users, grant _priv permission at the global level is required
+## Authorization
 
-3. Select_priv
+### Permission Operations
 
-   Read only permissions on data directories, databases, tables, and columns.
+- Create user: [CREATE USER](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-USER.md)
+- Modify user: [ALTER USER](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-USER.md)
+- Delete user: [DROP USER](../../sql-manual/sql-statements/Account-Management-Statements/DROP-USER.md)
+- Grant/Assign role: [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)
+- Revoke/Withdraw role: [REVOKE](../../sql-manual/sql-statements/Account-Management-Statements/REVOKE.md)
+- Create role: [CREATE ROLE](../../sql-manual/sql-statements/Account-Management-Statements/CREATE-ROLE.md)
+- Delete role: [DROP ROLE](../../sql-manual/sql-statements/Account-Management-Statements/DROP-ROLE.md)
+- Modify role: [ALTER ROLE](../../sql-manual/sql-statements/Account-Management-Statements/ALTER-ROLE.md)
+- View current user's permissions and roles: [SHOW GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
+- View all users' permissions and roles: [SHOW ALL GRANTS](../../sql-manual/sql-statements/Show-Statements/SHOW-GRANTS.md)
+- View created roles: [SHOW ROLES](../../sql-manual/sql-statements/Show-Statements/SHOW-ROLES.md)
+- Set user property: [SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
+- View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
+- Change password: [SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
+- View all supported privileges: [SHOW PRIVILEGES]()
+- View row policy: [SHOW ROW POLICY]()
+- Create row policy: [CREATE ROW POLICY]()
 
-4. Load_priv
+### Types of Permissions
 
-   Write permissions for data directories, databases, and tables. Including Load, Insert, Delete, etc.
+Doris currently supports the following permissions:
 
-5. Alter_priv
+1. `Node_priv`
 
-   Change permissions for data directories, databases, and tables. This includes operations such as renaming libraries/tables, adding/deleting/changing columns, and adding/deleting partitions.
+    Node modification permission. Includes adding, deleting, and offlining FE, BE, BROKER nodes.
 
-7. Create_priv
+    Root users have this permission by default. Users who possess both `Grant_priv` and `Node_priv` can grant this permission to other users.
 
-   Create permissions for data directories, databases, tables, and views.
+    This permission can only be granted at the Global level.
 
-7. Drop_priv
+2. `Grant_priv`
 
-   Delete permissions for data directories, databases, tables, and views.
+    Permission modification authority. Allows execution of operations including granting, revoking, adding/deleting/modifying users/roles.
 
-8. Usage_priv
+    Before version 2.1.2, when granting permissions to other users/roles, the current user only needed the respective level's `Grant_priv` permission. After version 2.1.2, the current user also needs permission for the resource they wish to grant.
 
-   The usage and workload group permissions of the resource.
+    When assigning roles to other users, Global level `Grant_priv` permission is required.
 
-9. Show_view_priv
+3. `Select_priv`
 
-   priv of Show create view
+    Read-only permission for data directories, databases, and tables.
 
-### privilege level
+4. `Load_priv`
+
+    Write permission for data directories, databases, and tables. Includes Load, Insert, Delete, etc.
+
+5. `Alter_priv`
+
+    Alteration permissions for data directories, databases, and tables. Includes renaming libraries/tables, adding/deleting/modifying columns, adding/deleting partitions, etc.
+
+6. `Create_priv`
+
+    Permission to create data directories, databases, tables, and views.
+
+7. `Drop_priv`
+
+    Permission to delete data directories, databases, tables, and views.
+
+8. `Usage_priv`
+
+    Usage permissions for Resources and Workload Groups.
+
+9. `Show_view_priv`
+
+    Permission to execute `SHOW CREATE VIEW`.
+
+### Permission Levels
 
 #### Global Permissions
 
-   The permissions granted on *. *. * through the GRANT statement. The granted permissions apply to any library table in any catalog.
+Permissions granted through the GRANT statement with `*.*.*` scope. These permissions apply to any table within any catalog.
 
 #### Catalog Permissions
 
-   The permissions granted on ctl. *. * through the GRANT statement. The granted permissions apply to any library table in the specified Catalog.
+Permissions granted through the GRANT statement with `ctl.*.*` scope. These permissions apply to any table within the specified catalog.
 
-#### Database level permissions
+#### Database Permissions
 
-   The permission granted on ctl. db. * through the GRANT statement. The granted permissions apply to any table in the specified database.
+Permissions granted through the GRANT statement with `ctl.db.*` scope. These permissions apply to any table within the specified database.
 
-#### Table level permissions
+#### Table Permissions
 
-   The permission granted on ctl. db. tbl through the GRANT statement. The granted permissions apply to any column of the specified table.
+Permissions granted through the GRANT statement with `ctl.db.tbl` scope. These permissions apply to any column within the specified table.
 
-#### Column level permissions
+#### Column Permissions
 
-   Mainly used to restrict user access to certain columns in the data table. Specifically, column permissions allow administrators to set viewing, editing, and other permissions for certain columns to control user access and operations on specific column data.
+Column permissions are primarily used to restrict user access to certain columns within a table. Specifically, column permissions allow administrators to set viewing, editing, and other rights for certain columns, controlling user access and manipulation of specific column data.
 
-   Partial column permissions for a specified table can be granted through GRANT Select_priv (col1, col2) to ctl. db. tbl.
+Permissions for specific columns of a table can be granted with `GRANT Select_priv(col1,col2) ON ctl.db.tbl TO user1`.
 
-   Currently, column permissions only support Select_priv.
+Currently, column permissions support only `Select_priv`.
 
-#### Row level permissions
+#### Row-Level Permissions
 
-   Exercise restrictions allow administrators to define access policies based on certain fields of data, thereby controlling which users can access which data rows.
+Row Policies enable administrators to define access policies based on fields within the data, controlling which users can access which rows.
 
-   Specifically, Row Policy allows administrators to create rules that can filter or restrict user access to rows based on actual values stored in the data.
+Specifically, Row Policies allow administrators to create rules that can filter or restrict user access to rows based on actual values stored in the data.
 
-   Starting from version 1.2, row level permissions can be created using the [CREATE ROW POLICY](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY.md).
+From version 1.2, row-level permissions can be created with the `CREATE ROW POLICY` command.
 
-   Starting from version 2.1.2, it is supported to set row permissions through Apache Ranger's Row Level Filter (note: only supported in the Nereids optimizer)
+From version 2.1.2, support for setting row-level permissions through Apache Ranger's `Row Level Filter` is available.
 
-### Usage permissions
+#### Usage Permissions
 
-#### RESOURCE permissions
+- Resource Permissions
 
-   The Resource permission is a permission set separately for resources, which is not related to permissions such as databases and tables. Only USAGE and GRANT permissions can be assigned, and assigning all Resources can be done through the `GRANT USAGE-PRIV ON Resource 'to xxx`
+    Resource permissions are set specifically for Resources, unrelated to permissions for databases or tables, and can only assign `Usage_priv` and `Grant_priv`.
 
-#### WORKLOAD GROUP permissions
+    Permissions for all Resources can be granted with the `GRANT USAGE_PRIV ON RESOURCE '%' TO user1`.
 
-   The Workload Group permission is a separate permission set for Workload Group, which is not related to permissions such as databases and tables. Only USAGE and GRANT permissions can be assigned
+- Workload Group Permissions
 
-   Allocating all Workload Groups can be done through ` GRANT USAGE-PRIV ON GROUP '%' to xxx`
+    Workload Group permissions are set specifically for Workload Groups, unrelated to permissions for databases or tables, and can only assign `Usage_priv` and `Grant_priv`.
 
-### Data Mask
+    Permissions for all Workload Groups can be granted with `GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO user1`.
 
-   Data desensitization is a method of protecting sensitive data by modifying, replacing, or hiding the original data, so that the desensitized data no longer contains sensitive information while maintaining a certain format and characteristics.
+### Data Masking
 
-   For example, the administrator can choose to replace some or all numbers of sensitive fields such as credit card number and ID number with asterisks (*) or other characters, or replace the real name with a pseudonym.
+Data masking is a method to protect sensitive data by modifying, replacing, or hiding the original data, such that the masked data retains certain formats and characteristics while no longer containing sensitive information.
 
-   Starting from version 2.1.2, it is supported to set desensitization policies for certain columns through Apache Ranger Masking. Currently, only [Doris Ranger](../privilege-ldap/ranger.md) is supported for setting.
+For example, administrators may choose to replace part or all of the digits of sensitive fields like credit card numbers or ID numbers with asterisks `*` or other characters, or replace real names with pseudonyms.
 
-### Authentication scheme
+From version 2.1.2, support for setting data masking policies for certain columns through Apache Ranger's Data Masking is available, currently only configurable via [Apache Ranger](./ranger.md).
 
-#### Doris built-in authentication scheme
+### Doris Built-in Authorization Scheme
 
-   Doris permission design is based on the RBAC (Role Based Access Control) permission management model, where users are associated with roles, roles are associated with permissions, and users are indirectly associated with permissions through roles.
+Doris's permission design is based on the RBAC (Role-Based Access Control) model, where users are associated with roles, and roles are associated with permissions. Users are indirectly linked to permissions through their roles.
 
-   When a role is deleted, the user automatically loses all permissions for that role.
+When a role is deleted, users automatically lose all permissions associated with that role.
 
-   When a user and a role are disassociated, the user automatically loses all permissions of the role.
+When a user is disassociated from a role, they automatically lose all permissions of that role.
 
-   When the permissions of a role are added or removed, the user's permissions will also change accordingly. 
-   
-   ```
-   ┌────────┐        ┌────────┐         ┌────────┐
-   │  user1 ├────┬───►  role1 ├────┬────►  priv1 │
-   └────────┘    │   └────────┘    │    └────────┘
-                 │                 │
-                 │                 │
-                 │   ┌────────┐    │
-                 │   │  role2 ├────┤
-   ┌────────┐    │   └────────┘    │    ┌────────┐
-   │  user2 ├────┘                 │  ┌─►  priv2 │
-   └────────┘                      │  │ └────────┘
-                     ┌────────┐    │  │
-              ┌──────►  role3 ├────┘  │
-              │      └────────┘       │
-              │                       │
-              │                       │
-   ┌────────┐ │      ┌────────┐       │ ┌────────┐
-   │  userN ├─┴──────►  roleN ├───────┴─►  privN │
-   └────────┘        └────────┘         └────────┘
-   ```
-   As shown in the above figure:
+When permissions are added to or removed from a role, the permissions of the users associated with that role change accordingly.
 
-   Both user1 and user2 have priv1 permissions through role1.
+```
+┌────────┐        ┌────────┐         ┌────────┐
+│  user1 ├────┬───►  role1 ├────┬────►  priv1 │
+└────────┘    │   └────────┘    │    └────────┘
+              │                 │
+              │                 │
+              │   ┌────────┐    │
+              │   │  role2 ├────┤
+┌────────┐    │   └────────┘    │    ┌────────┐
+│  user2 ├────┘                 │  ┌─►  priv2 │
+└────────┘                      │  │ └────────┘
+                  ┌────────┐    │  │
+           ┌──────►  role3 ├────┘  │
+           │      └────────┘       │
+           │                       │
+           │                       │
+┌────────┐ │      ┌────────┐       │ ┌────────┐
+│  userN ├─┴──────►  roleN ├───────┴─►  privN │
+└────────┘        └────────┘         └────────┘
+```
 
-   UserN has the permission to priv1 through role3, and priv2 and privN through roleN. Therefore, userN has the permission to priv1, priv2, and privN simultaneously.
+As shown above:
 
-   For the convenience of user operation, it is possible to directly authorize users. In the underlying implementation, a default role dedicated to each user is created. When authorizing a user, it is actually authorizing the user's default role.
+User1 and user2 both have permission `priv1` through `role1`.
 
-   The default role cannot be deleted or assigned to others. When a user is deleted, the default role is also automatically deleted.
-   
-#### Authentication scheme based on Apache Ranger
+UserN has permission `priv1` through `role3`, and permissions `priv2` and `privN` through `roleN`. Thus, userN has permissions `priv1`, `priv2`, and `privN` simultaneously.
 
-   [Doris Ranger](../privilege-ldap/ranger.md)
+For ease of user operations, it is possible to directly grant permissions to a user. Internally, a unique default role is created for each user. When permissions are granted to a user, it is essentially granting permissions to the user's default role.
 
-## Others
+The default role cannot be deleted, nor can it be assigned to someone else. When a user is deleted, their default role is automatically deleted as well.
 
-### Permission Item Description
+### Authorization Scheme Based on Apache Ranger
 
-1. Users with ADMIN permission or GRANT permission at the GLOBAL level can perform the following operations:
-- `CREATE USER`
-- `DROP USER`
-- `ALTER USER`
-- `SHOW GRANTS`
-- `CREATE ROLE`
-- `DROP ROLE`
-- `ALTER ROLE`
-- `SHOW ROLES`
-- `SHOW PROPERTY FOR USER`
+Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
 
-2. `GRANT/REVOKE`
-- Having the ADMIN permission allows for granting or revoking permissions to any user.
-- Having the 'ADMIN' or 'GLOBAL' hierarchical 'GRANT' permission allows roles to be assigned to users.
-- Simultaneously possessing the corresponding level of 'GRANT' permissions and the permissions to be assigned, permissions can be assigned to users/roles.
+## Common Questions
 
-3. `SET PASSWORD`
-- Users with ADMIN permission or GLOBAL level GRANT permission can set passwords for non ROOT users.
-- Ordinary users can set their corresponding UserIdentity password. The corresponding UserIdentity can be accessed through ` SELECT CURREN_USER()` Command viewing.
-- ROOT users can change their passwords
+### Explanation of Permissions
 
-### Other instructions
-1. When Doris initializes, the following users and roles will be automatically created:
-   - `operator` role: This role has all permissions to Doris, namely 'Node_priv' and 'Adminpriv'.
-   - `admin` role: This role has' Adminpriv ', which means all permissions except for node changes.
-   - `root@'%'`：`root` user，Allow login from any node with the role of 'operator'.
-   - `admin@'%'`：`admin` user，Allow login from any node with the role of 'admin'.
-2. Deleting or changing the permissions of default created roles or users is not supported.
-3. There is only one user in the role of `operator`, namely `'Root'` Users with the `admin` role can create multiple.
-4. Some possible conflicting operation instructions
+1. Users with ADMIN privileges or GRANT privileges at the GLOBAL level can perform the following operations:
 
-   1. Domain name and IP conflict:
+    - CREATE USER
+    - DROP USER
+    - ALTER USER
+    - SHOW GRANTS
+    - CREATE ROLE
+    - DROP ROLE
+    - ALTER ROLE
+    - SHOW ROLES
+    - SHOW PROPERTY FOR USER
 
-   Assuming the following users are created:
+2. GRANT/REVOKE
 
-   `CREATE USER user1@['domain'];`
+    - Users with ADMIN privileges can grant or revoke permissions for any user.
+    - Users with ADMIN or GLOBAL level GRANT privileges can assign roles to users.
+    - Users who have the corresponding level of GRANT privilege and the permissions to be assigned can distribute those permissions to users/roles.
 
-   And authorize:
+3. SET PASSWORD
 
-   `GRANT SELECT_PRIV ON *.* TO user1@['domain']`
+    - Users with ADMIN privileges or GLOBAL level GRANT privileges can set passwords for non-ROOT users.
+    - Ordinary users can set the password for their corresponding User Identity. Their corresponding User Identity can be viewed with the `SELECT CURRENT_USER()` command.
+    - ROOT users can change their own password.
 
-   The domain is parsed into two IPs: 'ip1' and 'ip2'`
+### Additional Information
 
-   Assuming that after that, we will grant a separate authorization to 'user1 @'ip1':
+1. When Doris is initialized, the following users and roles are automatically created:
 
-   `GRANT ALTER_PRIV ON *.* TO user1@'ip1';`
+    - operator role: This role has `Node_priv` and `Admin_priv`, i.e., all permissions in Doris.
+    - admin role: This role has `Admin_priv`, i.e., all permissions except for node changes.
+    - root@'%': root user, allowed to log in from any node, with the operator role.
+    - admin@'%': admin user, allowed to log in from any node, with the admin role.
 
-   The permission for 'user1 @'ip1' will be modified to `SELECT-PRIV, Alter-PRIV`. And when we change the permissions of 'user1 @ ['domain'] again, 'user1 @'ip1' will not follow the change.
+2. It is not supported to delete or change the permissions of roles or users created by default.
 
-   2. Duplicate IP conflict:
+3. There is only one user with the operator role, which is Root. There can be multiple users with the admin role.
 
-   Assuming the following users are created:
+4. Some potentially conflicting operations are explained as follows:
 
-   `CREATE USER user1@'%' IDENTIFIED BY "12345";`
+    1. Domain and IP conflict:
 
-   `CREATE USER user1@'192.%' IDENTIFIED BY "abcde";`
+        Suppose the following user is created:
 
-   In terms of priority, '192.%' takes precedence over '%'. Therefore, when user 'user1' attempts to log in to Doris using the password '12345' from the machine '192.168.1.1', it will be rejected.
+        `CREATE USER user1@['domain'];`
 
-5. forgot password
+        And granted:
 
-   If you forget your password and are unable to log in to Doris, you can add the `skip_localhost_auth_check` parameter to the FE's config file and restart FE to log in to Doris locally through localhost without a password:
-   `skip_localhost_auth_check = true`
+        `GRANT SELECT_PRIV ON *.* TO user1@['domain']`
 
-   After logging in, the password can be reset using the 'SET PASSWORD' command.
+        This domain is resolved to two IPs: ip1 and ip2.
 
-6. No user can reset the password of the root user, except for the root user themselves.
+        Suppose later, we grant a separate permission to `user1@'ip1'`:
 
-7. `ADMIN-PRIV permission can only be granted or revoked at the GLOBAL level.
+        `GRANT ALTER_PRIV ON . TO user1@'ip1';`
+
+        Then `user1@'ip1'` will have permissions for both Select_priv and Alter_priv. And when we change the permissions for `user1@['domain']` again, `user1@'ip1'` will not follow the change.
+
+    2. Duplicate IP conflict:
+
+        Suppose the following users are created:
+
+        ```
+        CREATE USER user1@'%' IDENTIFIED BY "12345";
+        CREATE USER user1@'192.%' IDENTIFIED BY "abcde";
+        ```
+
+        In terms of priority, `'192.%'` takes precedence over `'%'`, so when user `user1` from machine `192.168.1.1` tries to log into Doris using password `'12345'`, access will be denied.
+
+5. Forgotten Password
+
+    If you forget the password and cannot log into Doris, you can add `skip_localhost_auth_check=true` to the FE's config file and restart the FE, thus logging into Doris as root without a password from the local machine.
+
+    After logging in, you can reset the password using the `SET PASSWORD` command.
+
+6. No user can reset the root user's password except for the root user themselves.
+
+7. `Admin_priv` permissions can only be granted or revoked at the GLOBAL level.
 
 8. `current_user()` and `user()`
 
-   Users can use ` SELECT current_user()` And ` SELECT user()` View 'current_user' and 'user' separately. Among them, 'current_user' represents the identity of the current user through the authentication system, while 'user' is the actual 'user_identity' of the user. For example:
+    Users can view their `current_user` and `user` by executing `SELECT current_user()` and `SELECT user()` respectively. Here, `current_user` indicates the identity the user authenticated with, while `user` is the actual User Identity at the moment.
 
-   Assuming a user named 'user1 @'192.%' is created, and it is assumed that user 'user1' from '192.168.10.1' has logged into the system, then the 'current_user' is' user1 @'192.% ', and the' user 'is' user1 @'192.168.10.1'.
+    For example:
 
-   All permissions are assigned to a certain 'current_user', and real users have all the corresponding permissions for the 'current_user'.
+    Suppose `user1@'192.%'` is created, and then user `user1` logs in from `192.168.10.1`, then the `current_user` would be `user1@'192.%'`, and `user` would be `user1@'192.168.10.1'`.
 
-9. Password strength
+    All permissions are granted to a specific `current_user`, and the real user has all the permissions of the corresponding `current_user`.
 
-   In version 1.2, a verification function for user password strength has been added. This feature is controlled by the global variable 'validate.password_policy'. The default is' NONE/0 ', which means password strength is not checked. If set to 'STRING/2', the password must contain three items: 'uppercase letters',' lowercase letters', 'numbers', and' special characters', and the length must be greater than or equal to 8.
+## Best Practices
+
+Here are some examples of use cases for the Doris permission system.
+
+1. Scenario 1
+
+   Users of the Doris cluster are divided into administrators (Admin), development engineers (RD), and users (Client). Administrators have all permissions over the entire cluster, primarily responsible for cluster setup and node management. Development engineers are responsible for business modeling, including creating databases and tables, importing, and modifying data. Users access different databases and tables to retrieve data.
+
+   In this scenario, administrators can be granted ADMIN or GRANT privileges. RDs can be granted CREATE, DROP, ALTER, LOAD, and SELECT permissions for any or specific databases and tables. Clients can be granted SELECT permissions for any or specific databases and tables. Additionally, different roles can be created to simplify the authorization process for multiple users.
+
+2. Scenario 2
+
+   A cluster may contain multiple businesses, each potentially using one or more datasets. Each business needs to manage its users. In this scenario, an administrative user can create a user with DATABASE-level GRANT privileges for each database. This user can only authorize users for the specified database.
+
+3. Blacklist
+
+   Doris itself does not support a blacklist, only a whitelist, but we can simulate a blacklist through certain means. Suppose a user named `user@'192.%'` is created, allowing users from `192.*` to log in. If you want to prohibit a user from `192.168.10.1` from logging in, you can create another user `cmy@'192.168.10.1'` with a new password. Since `192.168.10.1` has higher priority than `192.%`, the user from `192.168.10.1` will no longer be able to log in with the old password.
