@@ -27,6 +27,7 @@ concurrency:
 
 jobs:
     build-and-deploy:
+        name: BuildDeploy
         runs-on: ubuntu-latest
         environment: Production
         steps:
