@@ -34,7 +34,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 > 
 > - 目前该功能是实验性功能，在 Ranger 中可配置的资源对象和权限可能会在之后的版本中有所变化。
 > 
-> - Apache Ranger 版本需在 2.1.0 以上。
+> - Apache Ranger 版本需在 2.4.0 以上。
 
 ## 安装步骤
 
@@ -54,7 +54,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	
 3. 重启 Ranger 服务。
 
-4. 下载 [ranger-servicedef-doris.json](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-servicedef-doris.json)
+4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. 执行以下命令上传定义文件到 Ranger 服务：
 
@@ -101,7 +101,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	http://172.21.0.32:6080/service/plugins/definitions/207
 	```
 	
-	其中 `207` 是创建时返回的 id。删除前，需在 Ranger WebUI 界面删除已创建的 Doris 服务。
+	其中 `207` 是创建时返回的 id。删除前，需在 Ranger WebUI 界面删除已创建的 Doris 服务。删除前，需先在 UI 界面上删除已经创建的 Doris 服务。
 	
 	也可以通过以下命令列举当前已添加的服务定义，以便获取 id：
 	
@@ -174,8 +174,17 @@ Config Properties 部分参数含义如下：
 	```
 
 	其中需要将 `ranger.plugin.doris.policy.cache.dir` 和 `ranger.plugin.doris.policy.rest.url` 改为实际值。
+
+2. 在所有 FE 的 conf 目录创建 `ranger-doris-audit.xml` 文件，内容如下：
+
+    ```
+    <?xml version="1.0" encoding="UTF-8"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+    </configuration>
+    ```
 	
-2. 在所有 FE 的 conf 目录创建 `log4j.properties` 文件，内容如下：
+3. 在所有 FE 的 conf 目录创建 `log4j.properties` 文件，内容如下：
 
 	```
 	log4j.rootLogger = debug,stdout,D
@@ -195,11 +204,11 @@ Config Properties 部分参数含义如下：
 	
 	其中 `log4j.appender.D.File` 改为实际值，用于存放 Ranger 插件的日志。
 
-3. 在所有 FE 的 fe.conf 中添加配置：
+4. 在所有 FE 的 fe.conf 中添加配置：
 
 	`access_controller_type=ranger-doris`
 
-4. 重启所有 FE 节点即可。
+5. 重启所有 FE 节点即可。
 
 ## 资源和权限
 
@@ -225,10 +234,11 @@ Config Properties 部分参数含义如下：
 	- `ALTER_CREATE_DROP`
 	- `DROP`
 	- `SELECT`
+	- `USAGE`
 
 ## 最佳实践
 
-### 示例 1
+### 配置权限
 
 1. 在 Doris 中创建 `user1`。
 2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
@@ -244,6 +254,24 @@ Config Properties 部分参数含义如下：
 
 7. 使用 `user1` 登录 Doris。该用户可以查看或查询 `hive` catalog 下，所有以 `tpch` 开头的 database 下的所有表。
 
-## 常见问题
+### Row Policy 示例
 
-1. 暂不支持 Ranger 中的列权限、行权限以及 Data Mask 功能。
+> 2.1.3 版本支持
+
+1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
+2. 在 Ranger 中添加一个 Row Level Filter policy
+
+    ![](/images/ranger/ranger-row-policy.jpeg)
+
+3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，只能看到满足 `id > 3` 且 `age = 2` 的数据。
+
+### Data Mask 示例
+
+> 2.1.3 版本支持
+
+1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
+2. 在 Ranger 中添加一个 Masking policy
+
+    ![](/images/ranger/ranger-data-mask.jpeg)
+
+3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，看到的 phone 是按照指定规则脱敏后的数据。
