@@ -47,7 +47,7 @@ github:
         # if strict is true, means "Require branches to be up to date before merging".
         strict: false
         contexts:
-          - BuildDeploy
+          - Build Check
   features:
     issues: true
 notifications:
