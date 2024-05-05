@@ -338,7 +338,7 @@
                     "items": [
                         "admin-manual/auth/authentication-and-authorization",
                         "admin-manual/auth/ldap",
-                        "admin-manual/auth/rangera",
+                        "admin-manual/auth/ranger",
                         "admin-manual/auth/certificate",
                         "admin-manual/auth/fe-certificate"
                     ]
