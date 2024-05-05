@@ -101,7 +101,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	http://172.21.0.32:6080/service/plugins/definitions/207
 	```
 	
-	其中 `207` 是创建时返回的 id。删除前，需在 Ranger WebUI 界面删除已创建的 Doris 服务。删除前，需先在 UI 界面上删除已经创建的 Doris 服务。
+	其中 `207` 是创建时返回的 id。删除前，需在 Ranger WebUI 界面删除已创建的 Doris 服务。
 	
 	也可以通过以下命令列举当前已添加的服务定义，以便获取 id：
 	

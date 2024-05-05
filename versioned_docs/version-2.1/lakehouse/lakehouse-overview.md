@@ -360,7 +360,7 @@ You can find more details of the mapping of various data sources (Hive, Iceberg,
 
 When using Doris to access the data in the External Catalog, by default, it relies on Doris's own permission access management function.
 
-Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Privilege Management](https://doris.apache.org/docs/2.0/admin-manual/privilege-ldap/user-privilege) for details).
+Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for details).
 
 Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
 

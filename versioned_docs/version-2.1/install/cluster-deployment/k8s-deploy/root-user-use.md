@@ -28,7 +28,7 @@ Doris-Operator uses the root account without password mode when deploying and ma
 
 ## Modify root account and password
 
-1. Refer to the [Privilege Management](../../admin-manual/privilege-ldap/user-privilege) document, modify or create the corresponding password or account name, and give the account the permission to manage nodes in Doris.
+1. Refer to the [Authentication and Authorization](../../admin-manual/auth/authentication-and-authorization.md) document, modify or create the corresponding password or account name, and give the account the permission to manage nodes in Doris.
 
 2. An example of adding spec.adminUser.* to the configuration in the DorisCluster CRD file is as follows:
 
