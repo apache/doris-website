@@ -272,6 +272,6 @@ Config Properties 部分参数含义如下：
 1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
 2. 在 Ranger 中添加一个 Masking policy
 
-    ![](/images/ranger/ranger-data-mask.jpeg)
+    ![](/images/ranger/ranger-data-mask.png)
 
 3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，看到的 phone 是按照指定规则脱敏后的数据。
