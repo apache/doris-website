@@ -129,9 +129,9 @@ Please refer to [LDAP-based Authentication Scheme](./ldap.md).
 - Set user property: [SET PROPERTY](../../sql-manual/sql-statements/Account-Management-Statements/SET-PROPERTY.md)
 - View user property: [SHOW PROPERTY](../../sql-manual/sql-statements/Show-Statements/SHOW-PROPERTY.md)
 - Change password: [SET PASSWORD](../../sql-manual/sql-statements/Account-Management-Statements/SET-PASSWORD.md)
-- View all supported privileges: [SHOW PRIVILEGES]()
-- View row policy: [SHOW ROW POLICY]()
-- Create row policy: [CREATE ROW POLICY]()
+- View all supported privileges: [SHOW PRIVILEGES]
+- View row policy: [SHOW ROW POLICY]
+- Create row policy: [CREATE ROW POLICY]
 
 ### Types of Permissions
 
