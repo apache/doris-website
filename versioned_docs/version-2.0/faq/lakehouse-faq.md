@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# FAQ
-
 ## Kerberos
-
 
 1. What to do with the `GSS initiate failed` error when connecting to Hive Metastore with Kerberos authentication?
 
@@ -232,6 +228,27 @@ under the License.
     ```
     
     Try to update FE node CA certificates, use command `update-ca-trust (CentOS/RockyLinux)`, then restart FE process.
+
+11. BE report error: `java.lang.InternalError`
+
+    If you see error in `be.INFO` like:
+
+    ```
+    W20240506 15:19:57.553396 266457 jni-util.cpp:259] java.lang.InternalError
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.init(Native Method)
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.<init>(ZlibDecompressor.java:114)
+            at org.apache.hadoop.io.compress.GzipCodec$GzipZlibDecompressor.<init>(GzipCodec.java:229)
+            at org.apache.hadoop.io.compress.GzipCodec.createDecompressor(GzipCodec.java:188)
+            at org.apache.hadoop.io.compress.CodecPool.getDecompressor(CodecPool.java:183)
+            at org.apache.parquet.hadoop.CodecFactory$HeapBytesDecompressor.<init>(CodecFactory.java:99)
+            at org.apache.parquet.hadoop.CodecFactory.createDecompressor(CodecFactory.java:223)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:212)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:43)
+    ```
+
+    This is because the conflict between system libz.so and Doris' libz.a.
+
+    To solve it, execute `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` and restart BE.
 
 ## HDFS
 
