@@ -43,7 +43,7 @@ under the License.
     );
     ```
         
-    注意，如如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显示增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
+    注意，如如果需要通过 Doris 创建 Hive 表或写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
     
     更多参数，请参阅 [Hive Catalog](../datalake-analytics/hive.md)
 
