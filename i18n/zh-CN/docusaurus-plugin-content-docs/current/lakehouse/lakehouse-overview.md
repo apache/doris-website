@@ -387,7 +387,7 @@ select k1, k4 from table;           // Query OK.
 
 使用 Doris 对 External Catalog 中库表进行访问时，默认情况下，依赖 Doris 自身的权限访问管理功能。
 
-Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [权限管理](../admin-manual/privilege-ldap/user-privilege) 文档。
+Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../../../admin-manual/auth/authentication-and-authorization.md) 文档。
 
 用户也可以通过 `access_controller.class` 属性指定自定义的鉴权类。如通过指定：
 
