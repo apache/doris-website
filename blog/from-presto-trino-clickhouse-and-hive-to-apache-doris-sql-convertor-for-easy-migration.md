@@ -161,11 +161,9 @@ Follow these steps to deploy the visual conversion interface:
 After deployment, you can access the service by `ip:8080` via your local browser. `8080` is the default port. You can change the mapping port. On the visual interface, you can select the source dialect type and target dialect type, and then click "Convert".
 
 :::note
-
 1. For batch conversion, each SQL statement should end with `; `.
 
 2. The Doris SQL Convertor supports 239 UNION ALL conversions at most.
-
 :::
 
 Join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) to seek guidance from the Doris makers or provide your feedback!
