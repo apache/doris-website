@@ -5,7 +5,7 @@
     'date': '2024-04-25',
     'author': 'Apache Doris',
     'picked': "true",
-    'order': "1",
+    'order': "2",
     'tags': ['Best Practice'],
     "image": '/images/ccr-for-read-write-separation.jpg'
 }
