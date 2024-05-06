@@ -35,7 +35,7 @@ Use SHA2 to digest the message.
 #### Arguments
 
 - `str`: content to be encrypted
-- `digest_length`: the length of the digest
+- `digest_length`: the length of the digest. Support 224, 256, 384, 512
 
 ### example
 
@@ -67,4 +67,4 @@ mysql> select sha2(NULL, 512);
 
 ### keywords
 
-    SHA2
+    SHA2, SHA224, SHA256, SHA384, SHA512
