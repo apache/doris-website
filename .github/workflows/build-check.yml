@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
     build-and-deploy:
-        name: BuildDeploy
+        name: Build Check
         runs-on: ubuntu-latest
         environment: Production
         steps:
