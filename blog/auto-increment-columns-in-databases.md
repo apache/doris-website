@@ -5,8 +5,6 @@
     'date': '2024-04-08',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/auto-increment-columns-in-databases.png'
 }
 
