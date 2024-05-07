@@ -32,13 +32,13 @@ under the License.
 
 显式事务需要用户主动的开启，提交或回滚事务。 在 Doris 中，提供了 2 种显式事务：
 
-1. 本文中介绍的事务写方式，即
+1. 本文中介绍的事务写方式，即：
 
-```sql
-begin; 
-[INSERT, UPDATE, DELETE statement]
-COMMIT; / ROLLBACK;
-```
+    ```sql
+    BEGIN; 
+    [INSERT, UPDATE, DELETE statement]
+    COMMIT; / ROLLBACK;
+    ```
 
 2. [Stream Load 2PC](load-atomicity.md#stream-load)
 
@@ -88,9 +88,9 @@ ROLLBACK;
 
 ```sql
 CREATE TABLE `dt` (
-    `id` int(11) NOT NULL,
-    `name` varchar(50) NULL,
-    `score` int(11) NULL
+    `id` INT(11) NOT NULL,
+    `name` VARCHAR(50) NULL,
+    `score` INT(11) NULL
 ) ENGINE=OLAP
 UNIQUE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 1
@@ -121,7 +121,7 @@ Query OK, 0 rows affected (1.02 sec)
 
 这种写入方式不仅可以实现写入的原子性，而且在 Doris 中，能提升 `INSERT INTO VALUES` 的写入性能。
 
-如果用户同时开启了 Group Commit 和事务写，事务写生效。
+如果用户同时开启了 `Group Commit` 和事务写，事务写生效。
 
 也可以参考 [Insert Into](load-atomicity.md#insert-into)获取更多信息。 
 
@@ -130,7 +130,7 @@ Query OK, 0 rows affected (1.02 sec)
 假设有`dt1`, `dt2`, `dt3` 3 张表，表结构同上，表中数据为：
 
 ```sql
-mysql> select * from dt1;
+mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 | id   | name      | score |
 +------+-----------+-------+
@@ -142,7 +142,7 @@ mysql> select * from dt1;
 +------+-----------+-------+
 5 rows in set (0.04 sec)
 
-mysql> select * from dt2;
+mysql> SELECT * FROM dt2;
 +------+---------+-------+
 | id   | name    | score |
 +------+---------+-------+
@@ -154,7 +154,7 @@ mysql> select * from dt2;
 +------+---------+-------+
 5 rows in set (0.03 sec)
 
-mysql> select * from dt3;
+mysql> SELECT * FROM dt3;
 Empty set (0.03 sec)
 ```
 
@@ -166,15 +166,15 @@ Query OK, 0 rows affected (0.00 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':''}
 
 # 导入任务的状态是 PREPARE
-mysql> INSERT INTO dt3 SELECT * from dt1;
+mysql> INSERT INTO dt3 SELECT * FROM dt1;
 Query OK, 5 rows affected (0.07 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11024'}
 
-mysql> INSERT INTO dt3 SELECT * from dt2;
+mysql> INSERT INTO dt3 SELECT * FROM dt2;
 Query OK, 5 rows affected (0.08 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11025'}
 
-mysql> UPDATE dt1 SET score = score + 10 where id >= 4;
+mysql> UPDATE dt1 SET score = score + 10 WHERE id >= 4;
 Query OK, 2 rows affected (0.07 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11026'}
 
@@ -191,7 +191,7 @@ Query OK, 0 rows affected (0.03 sec)
 
 ```sql
 # id >= 4 的分数加 10
-mysql> select * from  dt1;
+mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 | id   | name      | score |
 +------+-----------+-------+
@@ -204,7 +204,7 @@ mysql> select * from  dt1;
 5 rows in set (0.01 sec)
 
 # id >= 9 的数据被删除
-mysql> select * from  dt2;
+mysql> SELECT * FROM dt2;
 +------+---------+-------+
 | id   | name    | score |
 +------+---------+-------+
@@ -215,7 +215,7 @@ mysql> select * from  dt2;
 3 rows in set (0.02 sec)
 
 # dt1 和 dt2 中已提交的数据被写入到 dt3 中
-mysql> select * from  dt3;
+mysql> SELECT * FROM dt3;
 +------+-----------+-------+
 | id   | name      | score |
 +------+-----------+-------+
@@ -239,86 +239,86 @@ mysql> select * from  dt3;
 
 * 事务中的多个语句，每个语句会读取到本语句开始执行时已提交的数据，如:
 
-```sql
- timestamp | ------------ Session 1 ------------  |  ------------ Session 2 ------------
-   t1      | BEGIN;                               | 
-   t2      | # read n rows from dt1 table         |
-           | INSERT INTO dt3 SELECT * from dt1;   |
-   t3      |                                      | # write 2 rows to dt1 table
-           |                                      | INSERT INTO dt1 VALUES(...), (...);
-   t4      | # read n + 2 rows from dt1 table     |
-           | INSERT INTO dt3 SELECT * from dt1;   |
-   t5      | COMMIT;                              |
-```
+    ```sql
+     timestamp | ------------ Session 1 ------------  |  ------------ Session 2 ------------
+       t1      | BEGIN;                               | 
+       t2      | # read n rows from dt1 table         |
+               | INSERT INTO dt3 SELECT * FROM dt1;   |
+       t3      |                                      | # write 2 rows to dt1 table
+               |                                      | INSERT INTO dt1 VALUES(...), (...);
+       t4      | # read n + 2 rows from dt1 table     |
+               | INSERT INTO dt3 SELECT * FROM dt1;   |
+       t5      | COMMIT;                              |
+    ```
 
 * 事务中的多个语句，每个语句不能读到本事务内其它语句做出的修改，如：
 
-假如事务开启前，表 dt1 有 5行，表 dt2 有 5 行，表 dt3 为空，执行以下语句： 
+    假如事务开启前，表 `dt1` 有 5 行，表 `dt2` 有 5 行，表 `dt3` 为空，执行以下语句： 
 
-```sql
-BEGIN;
-# dt2 中写入 5 行，事务提交后共 10 行
-INSERT INTO dt2 SELECT * FROM dt1;
-# dt3 中写入 5 行，不能读出上一步中 dt2 中新写入的数据
-INSERT INTO dt3 SELECT * FROM dt2;
-COMMIT;
-```
+    ```sql
+    BEGIN;
+    # dt2 中写入 5 行，事务提交后共 10 行
+    INSERT INTO dt2 SELECT * FROM dt1;
+    # dt3 中写入 5 行，不能读出上一步中 dt2 中新写入的数据
+    INSERT INTO dt3 SELECT * FROM dt2;
+    COMMIT;
+    ```
 
-具体的例子为：
+    具体的例子为：
 
-```sql
-# 建表并写入数据
-CREATE TABLE `dt1` (
-    `id` int(11) NOT NULL,
-    `name` varchar(50) NULL,
-    `score` int(11) NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1
-PROPERTIES (
-    "replication_num" = "1"
-);
-create table dt2 like dt1;
-create table dt3 like dt1;
-INSERT INTO dt1 VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
-INSERT INTO dt2 VALUES (6, "William", 69), (7, "Sophia", 32), (8, "James", 64), (9, "Emma", 37), (10, "Liam", 64);
+    ```sql
+    # 建表并写入数据
+    CREATE TABLE `dt1` (
+        `id` INT(11) NOT NULL,
+        `name` VARCHAR(50) NULL,
+        `score` INT(11) NULL
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES (
+        "replication_num" = "1"
+    );
+    CREATE TABLE dt2 LIKE dt1;
+    CREATE TABLE dt3 LIKE dt1;
+    INSERT INTO dt1 VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
+    INSERT INTO dt2 VALUES (6, "William", 69), (7, "Sophia", 32), (8, "James", 64), (9, "Emma", 37), (10, "Liam", 64);
 
-# 事务写
-BEGIN;
-INSERT INTO dt2 SELECT * FROM dt1;
-INSERT INTO dt3 SELECT * FROM dt2;
-COMMIT;
+    # 事务写
+    BEGIN;
+    INSERT INTO dt2 SELECT * FROM dt1;
+    INSERT INTO dt3 SELECT * FROM dt2;
+    COMMIT;
 
-# 查询
-mysql> SELECT * from dt2;
-+------+-----------+-------+
-| id   | name      | score |
-+------+-----------+-------+
-|    6 | William   |    69 |
-|    7 | Sophia    |    32 |
-|    8 | James     |    64 |
-|    9 | Emma      |    37 |
-|   10 | Liam      |    64 |
-|    1 | Emily     |    25 |
-|    2 | Benjamin  |    35 |
-|    3 | Olivia    |    28 |
-|    4 | Alexander |    60 |
-|    5 | Ava       |    17 |
-+------+-----------+-------+
-10 rows in set (0.01 sec)
+    # 查询
+    mysql> SELECT * FROM dt2;
+    +------+-----------+-------+
+    | id   | name      | score |
+    +------+-----------+-------+
+    |    6 | William   |    69 |
+    |    7 | Sophia    |    32 |
+    |    8 | James     |    64 |
+    |    9 | Emma      |    37 |
+    |   10 | Liam      |    64 |
+    |    1 | Emily     |    25 |
+    |    2 | Benjamin  |    35 |
+    |    3 | Olivia    |    28 |
+    |    4 | Alexander |    60 |
+    |    5 | Ava       |    17 |
+    +------+-----------+-------+
+    10 rows in set (0.01 sec)
 
-mysql> SELECT * from dt3;
-+------+---------+-------+
-| id   | name    | score |
-+------+---------+-------+
-|    6 | William |    69 |
-|    7 | Sophia  |    32 |
-|    8 | James   |    64 |
-|    9 | Emma    |    37 |
-|   10 | Liam    |    64 |
-+------+---------+-------+
-5 rows in set (0.01 sec)
-```
+    mysql> SELECT * FROM dt3;
+    +------+---------+-------+
+    | id   | name    | score |
+    +------+---------+-------+
+    |    6 | William |    69 |
+    |    7 | Sophia  |    32 |
+    |    8 | James   |    64 |
+    |    9 | Emma    |    37 |
+    |   10 | Liam    |    64 |
+    +------+---------+-------+
+    5 rows in set (0.01 sec)
+    ```
 
 #### 事务中执行失败的语句
 
@@ -350,8 +350,8 @@ Query OK, 0 rows affected (0.02 sec)
 查询：
 
 ```sql
-# dt1 的数据被写入到 dt3 中，dt2中 id = 7的数据写入成功，其它写入失败
-mysql> select * from  dt3;
+# dt1 的数据被写入到 dt3 中，dt2 中 id = 7的数据写入成功，其它写入失败
+mysql> SELECT * FROM dt3;
 +------+----------+-------+
 | id   | name     | score |
 +------+----------+-------+
@@ -369,7 +369,7 @@ mysql> select * from  dt3;
 
 * 写入的多表必须属于同一个 Database，否则会遇到错误 `Transaction insert must be in the same database`
 
-  * 两种事务写入`INSERT INTO SELECT`, `UPDATE`, `DELETE` 和 `INSET INTO VALUES` 不能混用，否则会遇到错误 `Transaction insert can not insert into values and insert into select at the same time`
+* 两种事务写入`INSERT INTO SELECT`, `UPDATE`, `DELETE` 和 `INSET INTO VALUES` 不能混用，否则会遇到错误 `Transaction insert can not insert into values and insert into select at the same time`
 
 * 当从 `BEGIN` 开始的导入耗时超出 Doris 配置的 timeout 时，会导致事务回滚，导入失败。目前 timeout 使用的是 Session 变量 `insert_timeout` 和 `query_timeout` 的最大值
 

@@ -32,13 +32,13 @@ A transaction is an operation that contains one or more SQL statements. The exec
 
 Explicit transactions require users to actively start, commit, or roll back transactions. Doris provides two types of explicit transactions:
 
-1. The transaction write method introduced in this document, that is
+1. The transaction write method introduced in this document :
 
-```sql
-begin;
-[INSERT, UPDATE, DELETE statement]
-COMMIT; / ROLLBACK;
-```
+    ```sql
+    BEGIN;
+    [INSERT, UPDATE, DELETE statement]
+    COMMIT; / ROLLBACK;
+    ```
 
 2. [Stream Load 2PC](load-atomicity.md#stream-load)
 
@@ -88,9 +88,9 @@ Suppose the table schema is:
 
 ```sql
 CREATE TABLE `dt` (
-    `id` int(11) NOT NULL,
-    `name` varchar(50) NULL,
-    `score` int(11) NULL
+    `id` INT(11) NOT NULL,
+    `name` VARCHAR(50) NULL,
+    `score` INT(11) NULL
 ) ENGINE=OLAP
 UNIQUE KEY(`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS 1
@@ -130,7 +130,7 @@ See [Insert Into](load-atomicity.md#insert-into) for more details.
 Suppose there are 3 tables: `dt1`, `dt2`, `dt3`, with the same schema as above, and the data in the tables are:
 
 ```sql
-mysql> select * from dt1;
+mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 | id   | name      | score |
 +------+-----------+-------+
@@ -142,7 +142,7 @@ mysql> select * from dt1;
 +------+-----------+-------+
 5 rows in set (0.04 sec)
 
-mysql> select * from dt2;
+mysql> SELECT * FROM dt2;
 +------+---------+-------+
 | id   | name    | score |
 +------+---------+-------+
@@ -154,7 +154,7 @@ mysql> select * from dt2;
 +------+---------+-------+
 5 rows in set (0.03 sec)
 
-mysql> select * from dt3;
+mysql> SELECT * FROM dt3;
 Empty set (0.03 sec)
 ```
 
@@ -166,15 +166,15 @@ Query OK, 0 rows affected (0.00 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':''}
 
 # 导入任务的状态是 PREPARE
-mysql> INSERT INTO dt3 SELECT * from dt1;
+mysql> INSERT INTO dt3 SELECT * FROM dt1;
 Query OK, 5 rows affected (0.07 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11024'}
 
-mysql> INSERT INTO dt3 SELECT * from dt2;
+mysql> INSERT INTO dt3 SELECT * FROM dt2;
 Query OK, 5 rows affected (0.08 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11025'}
 
-mysql> UPDATE dt1 SET score = score + 10 where id >= 4;
+mysql> UPDATE dt1 SET score = score + 10 WHERE id >= 4;
 Query OK, 2 rows affected (0.07 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11026'}
 
@@ -191,7 +191,7 @@ Select data:
 
 ```sql
 # the score column of id >= 4 records is updated 
-mysql> select * from  dt1;
+mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 | id   | name      | score |
 +------+-----------+-------+
@@ -204,7 +204,7 @@ mysql> select * from  dt1;
 5 rows in set (0.01 sec)
 
 # the records of id >= 9 are deleted
-mysql> select * from  dt2;
+mysql> SELECT * FROM dt2;
 +------+---------+-------+
 | id   | name    | score |
 +------+---------+-------+
@@ -215,7 +215,7 @@ mysql> select * from  dt2;
 3 rows in set (0.02 sec)
 
 # the data of dt1 and dt2 is written to dt3
-mysql> select * from  dt3;
+mysql> SELECT * FROM dt3;
 +------+-----------+-------+
 | id   | name      | score |
 +------+-----------+-------+
@@ -239,86 +239,86 @@ Doris provides the `READ COMMITTED` isolation level. Please note the following:
 
 * In a transaction, each statement reads the data that was committed at the time the statement began executing:
 
-```sql
- timestamp | ------------ Session 1 ------------  |  ------------ Session 2 ------------
-   t1      | BEGIN;                               | 
-   t2      | # read n rows from dt1 table         |
-           | INSERT INTO dt3 SELECT * from dt1;   |
-   t3      |                                      | # write 2 rows to dt1 table
-           |                                      | INSERT INTO dt1 VALUES(...), (...);
-   t4      | # read n + 2 rows from dt1 table     |
-           | INSERT INTO dt3 SELECT * from dt1;   |
-   t5      | COMMIT;                              |
-```
+    ```sql
+     timestamp | ------------ Session 1 ------------  |  ------------ Session 2 ------------
+       t1      | BEGIN;                               | 
+       t2      | # read n rows from dt1 table         |
+               | INSERT INTO dt3 SELECT * FROM dt1;   |
+       t3      |                                      | # write 2 rows to dt1 table
+               |                                      | INSERT INTO dt1 VALUES(...), (...);
+       t4      | # read n + 2 rows FROM dt1 table     |
+               | INSERT INTO dt3 SELECT * FROM dt1;   |
+       t5      | COMMIT;                              |
+    ```
 
 * In a transaction, each statement cannot read the modifications made by other statements within the same transactio:
 
-Suppose dt1 has 5 rows, dt2 has 5 rows, dt3 has 0 rows. And execute the following SQL:
+    Suppose `dt1` has 5 rows, `dt2` has 5 rows, `dt3` has 0 rows. And execute the following SQL:
 
-```sql
-BEGIN;
-# write 5 rows to dt2, 
-INSERT INTO dt2 SELECT * FROM dt1;
-# write 5 rows to dt3, and cannot read the new data written to dt2 in the previous step
-INSERT INTO dt3 SELECT * FROM dt2;
-COMMIT;
-```
+    ```sql
+    BEGIN;
+    # write 5 rows to dt2, 
+    INSERT INTO dt2 SELECT * FROM dt1;
+    # write 5 rows to dt3, and cannot read the new data written to dt2 in the previous step
+    INSERT INTO dt3 SELECT * FROM dt2;
+    COMMIT;
+    ```
 
-One example:
+    One example:
 
-```sql
-# create table and insert data
-CREATE TABLE `dt1` (
-    `id` int(11) NOT NULL,
-    `name` varchar(50) NULL,
-    `score` int(11) NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1
-PROPERTIES (
-    "replication_num" = "1"
-);
-create table dt2 like dt1;
-create table dt3 like dt1;
-INSERT INTO dt1 VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
-INSERT INTO dt2 VALUES (6, "William", 69), (7, "Sophia", 32), (8, "James", 64), (9, "Emma", 37), (10, "Liam", 64);
-
-# Do transaction write
-BEGIN;
-INSERT INTO dt2 SELECT * FROM dt1;
-INSERT INTO dt3 SELECT * FROM dt2;
-COMMIT;
-
-# Select data
-mysql> SELECT * from dt2;
-+------+-----------+-------+
-| id   | name      | score |
-+------+-----------+-------+
-|    6 | William   |    69 |
-|    7 | Sophia    |    32 |
-|    8 | James     |    64 |
-|    9 | Emma      |    37 |
-|   10 | Liam      |    64 |
-|    1 | Emily     |    25 |
-|    2 | Benjamin  |    35 |
-|    3 | Olivia    |    28 |
-|    4 | Alexander |    60 |
-|    5 | Ava       |    17 |
-+------+-----------+-------+
-10 rows in set (0.01 sec)
-
-mysql> SELECT * from dt3;
-+------+---------+-------+
-| id   | name    | score |
-+------+---------+-------+
-|    6 | William |    69 |
-|    7 | Sophia  |    32 |
-|    8 | James   |    64 |
-|    9 | Emma    |    37 |
-|   10 | Liam    |    64 |
-+------+---------+-------+
-5 rows in set (0.01 sec)
-```
+    ```sql
+    # create table and insert data
+    CREATE TABLE `dt1` (
+        `id` INT(11) NOT NULL,
+        `name` VARCHAR(50) NULL,
+        `score` INT(11) NULL
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES (
+        "replication_num" = "1"
+    );
+    CREATE TABLE dt2 LIKE dt1;
+    CREATE TABLE dt3 LIKE dt1;
+    INSERT INTO dt1 VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
+    INSERT INTO dt2 VALUES (6, "William", 69), (7, "Sophia", 32), (8, "James", 64), (9, "Emma", 37), (10, "Liam", 64);
+    
+    # Do transaction write
+    BEGIN;
+    INSERT INTO dt2 SELECT * FROM dt1;
+    INSERT INTO dt3 SELECT * FROM dt2;
+    COMMIT;
+    
+    # Select data
+    mysql> SELECT * FROM dt2;
+    +------+-----------+-------+
+    | id   | name      | score |
+    +------+-----------+-------+
+    |    6 | William   |    69 |
+    |    7 | Sophia    |    32 |
+    |    8 | James     |    64 |
+    |    9 | Emma      |    37 |
+    |   10 | Liam      |    64 |
+    |    1 | Emily     |    25 |
+    |    2 | Benjamin  |    35 |
+    |    3 | Olivia    |    28 |
+    |    4 | Alexander |    60 |
+    |    5 | Ava       |    17 |
+    +------+-----------+-------+
+    10 rows in set (0.01 sec)
+    
+    mysql> SELECT * FROM dt3;
+    +------+---------+-------+
+    | id   | name    | score |
+    +------+---------+-------+
+    |    6 | William |    69 |
+    |    7 | Sophia  |    32 |
+    |    8 | James   |    64 |
+    |    9 | Emma    |    37 |
+    |   10 | Liam    |    64 |
+    +------+---------+-------+
+    5 rows in set (0.01 sec)
+    ```
 
 #### Failed Statements Within a Transaction
 
@@ -351,7 +351,7 @@ Select data:
 
 ```sql
 # The data in dt1 is written to dt3, the data with id = 7 in dt2 is written successfully, and the other data is written failed
-mysql> select * from  dt3;
+mysql> SELECT * FROM dt3;
 +------+----------+-------+
 | id   | name     | score |
 +------+----------+-------+
