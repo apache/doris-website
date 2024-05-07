@@ -70,9 +70,22 @@ illustrate:
     +-----------+------------------------------------------------------------------------------------+                         
     1 row in set (0.01 sec)  
     ```
-   
+
+3. View the creation of the test database in doris(with comment)
+
+    ```sql
+    mysql> SHOW CREATE DATABASE test;
+    +----------+--------------------------------------------------+
+    | Database | Create Database                                  |
+    +----------+--------------------------------------------------+
+    | test     | CREATE DATABASE `test`                           |
+    |          | COMMENT "this is comment"                        |
+    +----------+--------------------------------------------------+
+    1 row in set (0.00 sec)
+    ````
+
 ### Keywords
 
-     SHOW, CREATE, DATABASE
+     SHOW, CREATE, DATABASE, COMMENT
 
 ### Best Practice

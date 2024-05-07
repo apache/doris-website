@@ -69,6 +69,21 @@ SHOW CREATE DATABASE db_name;
     +-----------+------------------------------------------------------------------------------------+                         
     1 row in set (0.01 sec)  
     ```
+
+
+3. 查看doris中test数据库的创建情况（带有库注释）
+
+    ```sql
+    mysql> SHOW CREATE DATABASE test;
+    +----------+--------------------------------------------------+
+    | Database | Create Database                                  |
+    +----------+--------------------------------------------------+
+    | test     | CREATE DATABASE `test`                           |
+    |          | COMMENT "this is comment"                        |
+    +----------+--------------------------------------------------+
+    1 row in set (0.00 sec)
+    ````
+
 ### Keywords
 
     SHOW, CREATE, DATABASE
