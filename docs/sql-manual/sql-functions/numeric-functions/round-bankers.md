@@ -30,6 +30,8 @@ under the License.
 `T round_bankers(T x[, d])`
 Rounds the argument `x` to `d` specified decimal places. `d` defaults to 0 if not specified. If d is negative, the left d digits of the decimal point are 0. If x or d is null, null is returned.
 
+If `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
+
 + If the rounding number is halfway between two numbers, the function uses banker’s rounding.
 + In other cases, the function rounds numbers to the nearest integer.
 
@@ -74,6 +76,18 @@ mysql> select round_bankers(1667.2725, -2);
 +------------------------------+
 |                         1700 |
 +------------------------------+
+mysql> SELECT number
+    -> , round_bankers(number * 2.5, number - 1) AS rb_decimal_column
+    -> , round_bankers(number * 2.5, 0) AS rb_decimal_literal
+    -> , round_bankers(cast(number * 2.5 AS DOUBLE), number - 1) AS rb_double_column
+    -> , round_bankers(cast(number * 2.5 AS DOUBLE), 0) AS rb_double_literal
+    -> FROM test_enhanced_round
+    -> WHERE rid = 1;
++--------+-------------------+--------------------+------------------+-------------------+
+| number | rb_decimal_column | rb_decimal_literal | rb_double_column | rb_double_literal |
++--------+-------------------+--------------------+------------------+-------------------+
+|      1 |               2.0 |                  2 |                2 |                 2 |
++--------+-------------------+--------------------+------------------+-------------------+
 ```
 
 ### keywords
