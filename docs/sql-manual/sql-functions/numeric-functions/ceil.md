@@ -34,7 +34,7 @@ Otherwise, returns the smallest round number that is less than or equal to `x` a
 
 If `d` is specified as literal:  
 `d` = 0: just like without `d`
-`d` > 0 or `d` < 0: the round number would be a multiple of `1/10d`, or the nearest number of the appropriate data type if `1/10d` isn't exact.
+`d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
 
 Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
 
