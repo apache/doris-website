@@ -87,7 +87,7 @@ Without configuring cgroup, users can use all functions of the workload group ex
 chmod 770 /sys/fs/cgroup/cpu/doris
 
 // Assign the ownership of this directory to Doris's account
-chonw -R doris:doris /sys/fs/cgroup/cpu/doris
+chown -R doris:doris /sys/fs/cgroup/cpu/doris
 ```
 
 4 Modify the configuration of BE and specify the path to cgroup
