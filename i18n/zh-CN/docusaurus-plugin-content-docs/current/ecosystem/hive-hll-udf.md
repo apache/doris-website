@@ -26,12 +26,12 @@ under the License.
 
 # Hive HLL UDF
 
- Hive HLL UDF 提供了在 hive 表中生成 HLL 运算等 UDF，Hive 中的 HLL 与 Doris HLL 完全一致 ，Hive 中的 HLL 可以通过 Spark HLL Load 导入 Doris 。关于 HLL 更多介绍可以参考：[使用 HLL 近似去重](../advanced/using-hll.md)
+ Hive HLL UDF 提供了在 hive 表中生成 HLL 运算等 UDF，Hive 中的 HLL 与 Doris HLL 完全一致 ，Hive 中的 HLL 可以通过 Spark HLL Load 导入 Doris 。关于 HLL 更多介绍可以参考：[使用 HLL 近似去重](../query/duplicate/using-hll.md)
 
  函数简介：
   1. UDAF
  
-    · to_hll：聚合函数，返回一个 Doris Hll 列，类似于 to_bitmap 函数
+    · to_hll：聚合函数，返回一个 Doris HLL 列，类似于 to_bitmap 函数
  
     · hll_union：聚合函数，功能同 Doris 的BE同名函数，计算分组的并集 ，返回一个 Doris HLL 列，类似于bitmap_union 函数
 
@@ -80,7 +80,7 @@ insert into hive_table select 3, 'c', 'd', 34567;
 ### Hive HLL UDF 使用：
 
 Hive HLL UDF 需要在 Hive/Spark 中使用，首先需要编译fe得到hive-udf.jar。
-编译准备工作：如果进行过ldb源码编译可直接编译fe，如果没有进行过ldb源码编译，则需要手动安装thrift，可参考：[FE开发环境搭建](/community/developer-guide/fe-idea-dev.md) 中的编译与安装
+编译准备工作：如果进行过ldb源码编译可直接编译fe，如果没有进行过ldb源码编译，则需要手动安装thrift，可参考：[FE开发环境搭建](https://doris.apache.org/zh-CN/community/developer-guide/fe-idea-dev/) 中的编译与安装
 
 ```sql
 --clone doris源码
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
 -- 然后可以沿用前面的步骤基于普通表使用 to_hll 函数往 hive_hll_table 插入数据，这里不再赘述
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/multi-catalog/hive)
+2. [在 Doris 中创建 Catalog](../lakehouse/datalake-analytics/hive.md)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
