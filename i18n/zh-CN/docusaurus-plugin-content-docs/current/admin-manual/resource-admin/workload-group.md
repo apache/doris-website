@@ -85,7 +85,7 @@ Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但
 chmod 770 /sys/fs/cgroup/cpu/doris
 
 // 把这个目录的归属划分给doris的账户
-chonw -R doris:doris /sys/fs/cgroup/cpu/doris
+chown -R doris:doris /sys/fs/cgroup/cpu/doris
 ```
 
 4 修改 BE 的配置，指定 cgroup 的路径
