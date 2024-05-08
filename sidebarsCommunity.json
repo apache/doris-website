@@ -50,6 +50,7 @@
                 "developer-guide/debug-tool",
                 "developer-guide/docker-dev",
                 "developer-guide/benchmark-tool",
+                "developer-guide/pipeline-tracing",
                 "developer-guide/fe-eclipse-dev",
                 "developer-guide/fe-idea-dev",
                 "developer-guide/fe-vscode-dev",

@@ -1,6 +1,6 @@
 ---
 {
-"title": "Upgrade Apache Doris cluster deployed by Doris-Operator",
+"title": "Upgrade Apache Doris cluster deployed by Doris Operator",
 "language": "en"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This document describes how to use updates to upgrade an Apache Doris cluster based on a Doris-Operator deployment.
+This document describes how to use updates to upgrade an Apache Doris cluster based on a Doris Operator deployment.
 
-Similar to conventionally deployed cluster upgrades, Doris clusters deployed by Doris-Operator still require rolling upgrades from BE to FE nodes. Doris-Operator is based on Kubernetes'  [Performing a Rolling Update](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) provides rolling upgrade capabilities.
+Similar to conventionally deployed cluster upgrades, Doris clusters deployed by Doris Operator still require rolling upgrades from BE to FE nodes. Doris Operator is based on Kubernetes'  [Performing a Rolling Update](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) provides rolling upgrade capabilities.
 
 ## Things to note before upgrading
 
@@ -52,7 +52,7 @@ It is recommended to modify the `image` of the corresponding cluster components 
 
 ### Upgrade BE
 
-If you retain the cluster's crd (Doris-Operator defines the abbreviation of `DorisCluster` type resource name) file, you can upgrade by modifying the configuration file and running the `kubectl apply` command.
+If you retain the cluster's crd (Doris Operator defines the abbreviation of `DorisCluster` type resource name) file, you can upgrade by modifying the configuration file and running the `kubectl apply` command.
 
 1. Modify `spec.beSpec.image`
 
@@ -90,7 +90,7 @@ When all Pods are rebuilt and enter the Running state, the upgrade is complete.
 
 ### Upgrade FE
 
-If you retain the cluster's crd (Doris-Operator defines the abbreviation of the `DorisCluster` type resource name) file, you can upgrade by modifying the configuration file and running the `kubectl apply` command.
+If you retain the cluster's crd (Doris Operator defines the abbreviation of the `DorisCluster` type resource name) file, you can upgrade by modifying the configuration file and running the `kubectl apply` command.
 
 1. Modify `spec.feSpec.image`
 

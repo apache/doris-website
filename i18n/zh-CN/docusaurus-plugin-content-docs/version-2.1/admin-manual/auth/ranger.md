@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Integration with Apache Ranger",
-    "language": "en"
+    "title": "基于 Apache Ranger 的鉴权管理",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,39 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Integration with Apache Ranger
+# 集成 Apache Ranger
 
-Apache Ranger is a security framework used to monitor, enable services, and manage all-round data security access on the Hadoop platform.
+Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。
 
-In version 2.1.0, Doris supports unified permission management by integrating Apache Ranger.
+在 2.1.0 版本中，Doris 支持通过集成 Apache Ranger，进行统一的权限管理。
 
-> Note: 
+> 注意：
 > 
-> - This feature is currently experimental, and the resource objects and permissions configurable in Ranger may change in subsequent versions.
+> - 目前该功能是实验性功能，在 Ranger 中可配置的资源对象和权限可能会在之后的版本中有所变化。
 > 
-> - Apache Ranger version needs to be above 2.1.0.
+> - Apache Ranger 版本需在 2.4.0 以上。
 
-## Installation
+## 安装步骤
 
-### Install Doris Ranger plug-in
+### 安装 Doris Ranger 插件
 
-1. Download the following files
+1. 下载以下文件
 
 	- [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
 	- [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
-2. Place the downloaded file in the plugins directory of the Ranger service, such as:
+2. 将下载好的文件放到 Ranger 服务的 plugins 目录下，如：
 
 	```
 	/usr/local/service/ranger/ews/webapp/WEB-INF/classes/ranger-plugins/doris/ranger-doris-plugin-3.0.0-SNAPSHOT.jar
 	/usr/local/service/ranger/ews/webapp/WEB-INF/classes/ranger-plugins/doris/mysql-connector-java-8.0.25.jar
 	```
 	
-3. Restart the Ranger service.
+3. 重启 Ranger 服务。
 
-4. Download [ranger-servicedef-doris.json](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-servicedef-doris.json)
+4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
-5. Execute the following command to upload the definition file to the Ranger service:
+5. 执行以下命令上传定义文件到 Ranger 服务：
 
 	```
 	curl -u user:password -X POST \
@@ -66,11 +66,11 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 		-d@ranger-servicedef-doris.json
 	```
 	
-	The username and password are the username and password used to log in to Ranger WebUI.
+	其中用户名密码是登录 Ranger WebUI 所使用的用户名密码。
 
-	The service address port can be viewed in the `ranger.service.http.port` configuration item of the `ranger-admin-site.xml` configuration file.
+	服务地址端口可以再 `ranger-admin-site.xml` 配置文件的 `ranger.service.http.port` 配置项查看。
 
-	If the execution is successful, the service definition in Json format will be returned, such as:
+	如执行成功，会返回 Json 格式的服务定义，如：
 	
 	```
 	{
@@ -94,49 +94,49 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 	}
 	```
 
-	If you want to recreate it, you can use the following command to delete the service definition and then upload it again:
+	如想重新创建，则可以使用以下命令删除服务定义后，再重新上传：
 	
 	```
 	curl -v -u user:password -X DELETE \
 	http://172.21.0.32:6080/service/plugins/definitions/207
 	```
 	
-	Where `207` is the id returned when created. Before deletion, you need to delete the created Doris service in the Ranger WebUI.
+	其中 `207` 是创建时返回的 id。删除前，需在 Ranger WebUI 界面删除已创建的 Doris 服务。
 	
-	You can also use the following command to list the currently added service definitions in order to obtain the id:
+	也可以通过以下命令列举当前已添加的服务定义，以便获取 id：
 	
 	```
 	curl -v -u user:password -X GET \
 	http://172.21.0.32:6080/service/plugins/definitions/
 	```
 
-### Configure the Doris Ranger plug-in
+### 配置 Doris Ranger 插件
 
-After the installation is complete, open the Ranger WebUI and you can see the Apache Doris plug-in in the Service Manger interface:
+安装完毕后，打开 Ranger WebUI，可以再 Service Manger 界面中看到 Apache Doris 插件：
 
 ![](/images/ranger/ranger1.png)
 
-Click the `+` button next to the plugin to add a Doris service:
+点击插件旁边的 `+` 号添加一个  Doris 服务：
 
 ![](/images/ranger/ranger2.png)
 
-The meaning of some parameters of Config Properties is as follows:
+Config Properties 部分参数含义如下：
 
-- `Username`/`Password`: the username and password of the Doris cluster. It is recommended to use the Admin user here.
-- `jdbc.driver_class`: Connect to the JDBC driver used by Doris. `com.mysql.cj.jdbc.Driver`
-- `jdbc.url`: JDBC url connection string of Doris cluster. `jdbc:mysql://172.21.0.101:9030?useSSL=false`
-- Additional parameters:
-	- `resource.lookup.timeout.value.in.ms`: timeout for obtaining meta-information. It is recommended to fill in `10000`, which is 10 seconds.
+- `Username`/`Pasword`：Doris 集群的用户名密码，这里建议使用 Admin 用户。
+- `jdbc.driver_class`：连接 Doris 使用的 JDBC 驱动。`com.mysql.cj.jdbc.Driver`
+- `jdbc.url`：Doris 集群的 JDBC url 连接串。`jdbc:mysql://172.21.0.101:9030?useSSL=false`
+- 额外参数：
+	- `resource.lookup.timeout.value.in.ms`：获取元信息的超时时间，建议填写 `10000`，即 10 秒。
 
-You can click `Test Connection` to check whether the connection can be made.
+可以点击 `Test Connection` 检查是否可以联通。
 
-Then click `Add` to add the service.
+之后点击 `Add` 添加服务。
 
-Afterwards, you can see the created service in the Apache Doris plug-in on the Service Manger page. Click on the service to start configuring Ranger.
+之后，可以在 Service Manger 界面的 Apache Doris 插件中看到创建的服务，点击服务，即可开始配置 Ranger。
 
-### Configure Doris cluster
+### 配置 Doris 集群
 
-1. Create a `ranger-doris-security.xml` file in the conf directory of all FEs with the following content:
+1. 在所有 FE 的 conf 目录创建 `ranger-doris-security.xml` 文件，内容如下：
 
 	```
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -173,9 +173,18 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 	</configuration>
 	```
 
-	You need to change `ranger.plugin.doris.policy.cache.dir` and `ranger.plugin.doris.policy.rest.url` to actual values.
+	其中需要将 `ranger.plugin.doris.policy.cache.dir` 和 `ranger.plugin.doris.policy.rest.url` 改为实际值。
+
+2. 在所有 FE 的 conf 目录创建 `ranger-doris-audit.xml` 文件，内容如下：
+
+    ```
+    <?xml version="1.0" encoding="UTF-8"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+    </configuration>
+    ```
 	
-2. Create a `log4j.properties` file in the conf directory of all FEs with the following content:
+3. 在所有 FE 的 conf 目录创建 `log4j.properties` 文件，内容如下：
 
 	```
 	log4j.rootLogger = debug,stdout,D
@@ -193,17 +202,17 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 	log4j.appender.D.layout.ConversionPattern = %-d{yyyy-MM-dd HH:mm:ss}  [ %t:%r ] - [ %p ]  %m%n
 	```
 	
-	You need to change `log4j.appender.D.File` to the actual value, which is used to store the log of the Ranger plug-in.
+	其中 `log4j.appender.D.File` 改为实际值，用于存放 Ranger 插件的日志。
 
-3. Add configuration in fe.conf of all FEs:
+4. 在所有 FE 的 fe.conf 中添加配置：
 
 	`access_controller_type=ranger-doris`
 
-4. Restart all FE nodes.
+5. 重启所有 FE 节点即可。
 
-## Resources and permissions
+## 资源和权限
 
-1. Doris resources currently supported in Ranger include:
+1. 目前 Ranger 中支持的 Doris 资源包括：
 
 	- `Catalog`
 	- `Database`
@@ -212,7 +221,7 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 	- `Resource`
 	- `Workload Group`
 
-2. Doris permissions currently supported in Ranger include:
+2. 目前 Ranger 中支持的 Doris 权限包括：
 
 	- `SHOW`
 	- `SHOW_VIEW`
@@ -225,25 +234,44 @@ Afterwards, you can see the created service in the Apache Doris plug-in on the S
 	- `ALTER_CREATE_DROP`
 	- `DROP`
 	- `SELECT`
+	- `USAGE`
 
-## Best Practices
+## 最佳实践
 
-### Example 1
+### 配置权限
 
-1. Create `user1` in Doris.
-2. In Doris, first create a Catalog: `hive` using the `admin` user.
-3. Create `user1` in Ranger.
-4. Add a Policy in Ranger: `show_hive_catalog`
+1. 在 Doris 中创建 `user1`。
+2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
+3. 在 Ranger 中创建 `user1`。
+4. 在 Ranger 中添加一个 Policy：`show_hive_catalog`
 
 	![](/images/ranger/ranger3.png)
 
-5. Use `user1` to log in to Doris and execute `show catalogs`. Only the `hive` catalog can be seen.
-6. Add a Policy in Ranger: `select_hive_catalog`
+5. 使用 `user1` 登录 Doris，执行 `show catalogs`，只能看到 `hive` catalog。
+6. 在 Ranger 中添加一个 Policy：`select_hive_catalog`
 
 	![](/images/ranger/ranger4.png)
 
-7. Log in to Doris using `user1`. This user can view or query all tables under the `hive` catalog and all databases starting with `tpch`.
+7. 使用 `user1` 登录 Doris。该用户可以查看或查询 `hive` catalog 下，所有以 `tpch` 开头的 database 下的所有表。
 
-## FAQ
+### Row Policy 示例
 
-1. The column permissions, row permissions and Data Mask in Ranger are not supported yet.
+> 2.1.3 版本支持
+
+1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
+2. 在 Ranger 中添加一个 Row Level Filter policy
+
+    ![](/images/ranger/ranger-row-policy.jpeg)
+
+3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，只能看到满足 `id > 3` 且 `age = 2` 的数据。
+
+### Data Mask 示例
+
+> 2.1.3 版本支持
+
+1. 参考 配置权限 给 user1 分配 internal.db1.user 表的 select 权限。
+2. 在 Ranger 中添加一个 Masking policy
+
+    ![](/images/ranger/ranger-data-mask.png)
+
+3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，看到的 phone 是按照指定规则脱敏后的数据。

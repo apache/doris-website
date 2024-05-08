@@ -216,6 +216,23 @@ The data is stored on Huawei Cloud OBS:
 "obs.region" = "cn-north-4"
 ```
 
+## Example
+
+```
+-- MinIO & Rest Catalog
+CREATE CATALOG `iceberg` PROPERTIES (
+    "type" = "iceberg",
+    "iceberg.catalog.type" = "rest",
+    "uri" = "http://10.0.0.1:8181",
+    "warehouse" = "s3://bucket",
+    "token" = "token123456",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "http://10.0.0.1:9000",
+    "s3.region" = "us-east-1"
+);
+```
+
 ## Column type mapping
 
 | Iceberg Type                               | Doris Type   |

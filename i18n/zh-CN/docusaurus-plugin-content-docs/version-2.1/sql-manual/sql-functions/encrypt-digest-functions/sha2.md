@@ -35,7 +35,7 @@ under the License.
 #### Arguments
 
 - `str`: 待加密的内容
-- `digest_length`: 摘要长度
+- `digest_length`: 摘要长度，支持 224, 256, 384, 512
 
 ### example
 
@@ -67,4 +67,4 @@ mysql> select sha2(NULL, 512);
 
 ### keywords
 
-    SHA2
+    SHA2, SHA224, SHA256, SHAA384, SHA512

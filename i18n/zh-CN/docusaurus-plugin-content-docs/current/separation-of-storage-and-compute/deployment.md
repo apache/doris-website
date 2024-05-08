@@ -69,7 +69,7 @@ version:{doris_cloud-0.0.0-debug} code_version:{commit=b9c1d057f07dd874ad32501ff
 
 Recycler 和 Meta-service 是同个程序的不同进程，通过启动参数来确定运行的 Recycler 或者是 Meta-service.
 
-这两个进程依赖 FDB, FDB 的部署请参考[FDB 安装章节](#FDB安装)
+这两个进程依赖 FDB, FDB 的部署请参考[FDB 安装文档](../separation-of-storage-and-compute/install-fdb.md)
 
 ### 配置
 
@@ -118,37 +118,113 @@ bin/stop.sh
 
 存算分离架构下，整个数仓的节点构成信息是通过 Meta-service 进行维护的 (注册 + 变更). FE BE 和 Meta-service 交互来进行服务发现和身份验证。
 
-创建存算分离集群主要是和 Meta-service 交互，通过 HTTP 接口，[meta-service 提供了标准的 http 接口进行资源管理操作](../separation-of-storage-and-compute/meta_service_resource_http_api.md).
+创建存算分离集群主要是和 Meta-service 交互，通过 HTTP 接口，[meta-service 提供了标准的 http 接口进行资源管理操作](../separation-of-storage-and-compute/meta-service-resource-http-api.md).
 
 创建存算分离集群 (以及 Cluster) 的其实就是描述这个存算分离集群里的机器组成，以下步骤只涉创建一个最基础的存算分离集群所需要进行的交互。
 
-### 创建存算分离集群
+主要分为两步: 1. 注册一个仓库(FE) 2. 注册一个或者多个计集群(BE)
 
-一个存算分离集群需要有计算和存储的基础资源，所以创建这个集群需要在 Meta-service 里注册这些资源。
+### 创建存算分离集群FE
 
-**1. 对象信息，obj_info 的 Bucket 信息 按照机器所在 Region 实际填写，Prefix 使用自己比较有针对性的前缀，比如加个业务的名字**
+#### 存算分离集群及其存储后端
 
-**2. 再添加 FE 机器信息，一般来说只需要建一个 FE 即可，信息主要包括**
+这个步骤主要目的是在meta-service注册一个存算分离模式的Doris数仓(一套meta-service可以支持多个不同的Doris数仓(多套FE-BE)).
+主要需要描述一个仓库使用什么样的存储后端([Storage Vault](../separation-of-storage-and-compute/storage-vault.md)), 可以选择S3 或者 HDFS. 
 
-- 节点的 cloud_unique_id 是一个唯一字符串，是每个节点的唯一 ID 以及身份标识，根据自己喜好选一个，这个值需要和 fe.conf 的 cloud_unique_id 配置值相同。
+调用meta-servicde的create_instance接口. 主要参数 
+1. instance_id: 存算分离模式Doris数仓的id, 要求历史唯一uuid, 例如6ADDF03D-4C71-4F43-9D84-5FC89B3514F8. **本文档中为了简化使用普通字符串**.
+2. name: 数仓名字, 按需填写
+3. user_id: 用户id, 是一个字符串, 按需填写
+4. vault: HDFS或者S3的存储后端的信息, 比如HDFS的属性, s3 bucket信息等.
 
-- ip edit_log_port 按照 fe.conf 里实际填写，FE 集群的 cluster_name cluster_id 是固定的 (RESERVED_CLUSTER_NAME_FOR_SQL_SERVER, RESERVED_CLUSTER_ID_FOR_SQL_SERVER) 不能改动
+更多信息请参考[meta-service API create instance章节](../separation-of-storage-and-compute/meta-service-resource-http-api.md).
+
+##### 创建基于HDFS的存算分离Doris
+
+示例
 
 ```Shell
-# create 存算分离集群
-# 注意配置S3信息
-curl '127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999' -d '{"instance_id":"cloud_instance0","name":"cloud_instance0","user_id":"user-id",
-"obj_info": {
-        "ak": "${ak}",
-        "sk": "${sk}",
-        "bucket": "sample-bucket",
-        "prefix": "${your_prefix}",
-        "endpoint": "cos.ap-beijing.myqcloud.com",
-        "external_endpoint": "cos.ap-beijing.myqcloud.com",
-        "region": "ap-beijing",
-        "provider": "COS"
-}}'
+curl -s "${META_SERVICE_ENDPOINT}/MetaService/http/create_instance?token=greedisgood9999" \
+                        -d '{
+  "instance_id": "doris_master_asan_hdfs_multi_cluster_autoscale",
+  "name": "doris_master_asan_hdfs_multi_cluster_autoscale",
+  "user_id": "sample-user-id",
+  "vault": {
+    "hdfs_info" : {
+      "build_conf": {
+        "fs_name": "hdfs://172.21.0.44:4007",
+        "user": "hadoop",
+        "hdfs_kerberos_keytab": "/etc/emr.keytab",
+        "hdfs_kerberos_principal": "hadoop/172.30.0.178@EMR-D46OBYMH",
+        "hdfs_confs" : [
+                  {
+                    "key": "hadoop.security.authentication",
+                    "value": "kerberos"
+                  }
+                ]
+      },
+      "prefix": "doris_master_asan_hdfs_multi_cluster_autoscale-0404"
+    }
+  }
+}'
+```
 
+##### 创建基于Se的存算分离Doris
+
+示例(腾讯云的cos)
+
+```Shell
+curl -s "${META_SERVICE_ENDPOINT}/MetaService/http/create_instance?token=greedisgood9999" \
+                        -d '{
+  "instance_id": "doris_master_asan_hdfs_multi_cluster_autoscale",
+  "name": "doris_master_asan_hdfs_multi_cluster_autoscale",
+  "user_id": "sample-user-id",
+  "vault": {
+    "obj_info": {
+      "ak": "${ak}",
+      "sk": "${sk}",
+      "bucket": "doris-build-1308700295",
+      "prefix": "${your_prefix}",
+      "endpoint": "cos.ap-beijing.myqcloud.com",
+      "external_endpoint": "cos.ap-beijing.myqcloud.com",
+      "region": "ap-beijing",
+      "provider": "COS"
+    }
+  }
+}'
+```
+
+启动后在FE输入show storage vault会看到built_in_storage_vault,并且这个vault的属性就和刚刚传递的属性相同.
+
+```Shell
+mysql> show storage vault;
++------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
+| StorageVaultName       | StorageVaultId | Propeties                                                                                       | IsDefault |
++------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
+| built_in_storage_vault | 1              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_1CF80628-16CF-0A46-54EE-2C4A54AB1519" | false     |
++------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
+2 rows in set (0.00 sec)
+```
+
+**注意：**
+
+Storage Vault模式和非Vault模式是不能同时创建的，如果用户同时指定了obj_info和vault，那么只会创建非vault模式的集群。Vault模式必须在创建instance的时候就传递vault信息，否则会默认为非vault模式.
+
+只有Vault模式才支持对应的vault stmt.
+
+#### 添加FE
+
+存算分离模式FE的管理方式和BE 是类似的都是分了组, 所以也是通过add_cluster等接口来进行操作.
+
+一般来说只需要建一个FE即可, 如果需要多加几个FE, 
+
+cloud_unique_id是一个唯一字符串, 格式为 `1:<instance_id>:<string>`, 根据自己喜好选一个.
+ip edit_log_port 按照fe.conf里实际填写.
+注意, FE集群的cluster_name cluster_id是固定, 恒定为
+"cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER"
+"cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
+
+```Shell
 # 添加FE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     "instance_id":"cloud_instance0",
@@ -158,7 +234,7 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
         "cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER",
         "nodes":[
             {
-                "cloud_unique_id":"cloud_unique_id_sql_server00",
+                "cloud_unique_id":"1:cloud_instance0:cloud_unique_id_sql_server00",
                 "ip":"172.21.16.21",
                 "edit_log_port":12103,
                 "node_type":"FE_MASTER"
@@ -170,25 +246,23 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
 # 创建成功 get 出来确认一下
 curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
     "instance_id":"cloud_instance0",
-    "cloud_unique_id":"regression-cloud-unique-id-fe-1",
+    "cloud_unique_id":"1:cloud_instance0:regression-cloud-unique-id-fe-1",
     "cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER",
     "cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
 }'
 ```
 
-### 创建 Compute Cluster (BE Cluster)
+### 创建compute cluster (BE)
 
-一个计算集群由多个计算节点组成，主要包含以下关键信息：
+用户可以创建一个或者多个计算集群, 一个计算机群由任意多个计算阶段组成.
 
-1. 计算集群的 cluster_name cluster_id 按照自己的实际情况偏好填写，需要确保唯一。
+一个计算集群组成有多个几个关键信息:
 
-2. 节点的 cloud_unique_id 是一个唯一字符串，是每个节点的唯一 ID 以及身份标识，根据自己喜好选一个，这个值需要和 be.conf 的 cloud_unique_id 配置值相同。
+1. cloud_unique_id是一个唯一字符串, 格式为 `1:<instance_id>:<string>`, 根据自己喜好选一个. 这个值需要和be.conf的cloud_unique_id配置值相同.
+2. cluster_name cluster_id 按照自己的实际情况偏好填写
+3. ip根据实际情况填写, heartbeat_port 是BE的心跳端口.
 
-3. IP 根据实际情况填写，heartbeat_port 是 BE 的心跳端口。
-
-BE cluster 的数量以及 节点数量 根据自己需求调整，不固定，不同 cluster 需要使用不同的 cluster_name 和 cluster_id.
-
-通过调用[Meta-service 的资源管控 API 进行操作](../separation-of-storage-and-compute/meta_service_resource_http_api.md)
+BE cluster的数量以及 节点数量 根据自己需求调整, 不固定, 不同cluster需要使用不同的 cluster_name 和 cluster_id.
 
 ```Shell
 # 172.19.0.11
@@ -201,7 +275,7 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
         "cluster_id":"cluster_id0",
         "nodes":[
             {
-                "cloud_unique_id":"cloud_unique_id_compute_node0",
+                "cloud_unique_id":"1:cloud_instance0:cloud_unique_id_compute_node0",
                 "ip":"172.21.16.21",
                 "heartbeat_port":9455
             }
@@ -212,15 +286,23 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
 # 创建成功 get 出来确认一下
 curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
     "instance_id":"cloud_instance0",
-    "cloud_unique_id":"regression-cloud-unique-id0",
+    "cloud_unique_id":"1:cloud_instance0:regression-cloud-unique-id0",
     "cluster_name":"regression_test_cluster_name0",
     "cluster_id":"regression_test_cluster_id0"
 }'
 ```
 
-### FE/BE 配置
+### 计算集群操作
 
-FE/BE 配置相比 Doris 多了一些配置，一个是 Meta-service 的地址另外一个是 cloud_unique_id (根据之前创建存算分离集群 的时候实际值填写)
+TBD
+
+加减节点: FE BE 
+
+Drop cluster 
+
+### FE/BE配置
+
+FE BE 配置相比doris多了一些配置, 一个是meta service 的地址另外一个是 cloud_unique_id (根据之前创建存算分离集群 的时候实际值填写)
 
 fe.conf
 
@@ -228,23 +310,23 @@ fe.conf
 # cloud HTTP data api port
 cloud_http_port = 8904
 meta_service_endpoint = 127.0.0.1:5000
-cloud_unique_id = cloud_unique_id_sql_server00
+cloud_unique_id = 1:cloud_instance0:cloud_unique_id_sql_server00
 ```
 
 be.conf
 
 ```Shell
 meta_service_endpoint = 127.0.0.1:5000
-cloud_unique_id = cloud_unique_id_compute_node0
+cloud_unique_id = 1:cloud_instance0:cloud_unique_id_compute_node0
 meta_service_use_load_balancer = false
 enable_file_cache = true
 file_cache_path = [{"path":"/mnt/disk3/doris_cloud/file_cache","total_size":104857600,"query_limit":104857600}]
 tmp_file_dirs = [{"path":"/mnt/disk3/doris_cloud/tmp","max_cache_bytes":104857600,"max_upload_bytes":104857600}]
 ```
 
-### 启停 FE/BE
+### 启停FE/BE
 
-FE/BE 启停和 Doris 保持一致，
+FE BE启停和doris存算一体启停方式保持一致, 
 
 ```Shell
 bin/start_be.sh --daemon
@@ -254,112 +336,8 @@ bin/stop_be.sh
 bin/start_fe.sh --daemon
 bin/stop_fe.sh
 ```
-:::caution 注意
-**Doris Cloud 模式 FE 会自动发现对应的 BE, 千万不要用 ALTER SYSTEM ADD 或者 DROP BACKEND**
-:::
 
-## FDB 安装
+Doris **cloud模式****FE****会自动发现对应的BE, 不需通过 alter system add 或者drop backend 操作节点.**
 
-请使用 7.1.x 的版本
-
-### ubuntu 安装
-
-```Plain
-apt-get install foundationdb
-```
-
-默认安装的相关路径信息
-
-配置文件
-
-/etc/foundationdb/fdb.cluster
-
-/etc/foundationdb/foundationdb.conf
-
-日志路径 (会自动滚动，但是要关注/的使用率)
-
-/var/log/foundationdb/
-
-### 使用 rpm 包安装
-
-安装&使用参考
-
-https://apple.github.io/foundationdb/getting-started-linux.html
-
-https://github.com/apple/foundationdb/tags
-
-### FDB 注意事项
-
-如果默认 FDB 使用 Memory 作为存储引擎，该引擎适合小数据量存储，要是做压力测试或者存大量数据，需切换 FDB 的存储引擎为 SSD（一般使用 SSD 盘），步骤如下：
-
-1. 新建存放目录 Data 和 Log，并使其有 `foundationdb` 用户的访问权限：
-
-    ```Shell
-    $ chown -R foundationdb:foundationdb /mnt/disk1/foundationdb/data/ /mnt/disk1/foundationdb/log
-    ```
-
-2. 修改 `/etc/foundationdb/foundationdb.conf` 中 datadir 和 logdir 路径：
-
-    ```Shell
-    ## Default parameters for individual fdbserver processes
-    [fdbserver]
-    logdir = /mnt/disk1/foundationdb/log
-    datadir = /mnt/disk1/foundationdb/data/$ID
-
-
-    [backup_agent]
-    command = /usr/lib/foundationdb/backup_agent/backup_agent
-    logdir = /mnt/disk1/foundationdb/log
-
-    [backup_agent.1]
-    ```
-
-3. 调用 `fdbcli` 生成一个以 SSD 为存储引擎的数据库：
-
-    ```Shell
-    user@host$ fdbcli
-    Using cluster file `/etc/foundationdb/fdb.cluster'.
-
-    The database is unavailable; type `status' for more information.
-
-    Welcome to the fdbcli. For help, type `help'.
-    fdb> configure new single ssd
-    Database created
-    ```
-
-## 测试数据清理 (清理所有数据，仅适用于调试环境)
-
-### 清理集群
-
-正常删掉 doris-meta 和 Storage 信息
-
-清空 FDB 信息 `${instance_id}` 需要用实际的值替代
-
-1. 清理 instance 的信息 (包括 instance 和 cluster 的信息)
-
-2. 清理 meta 信息
-
-3. 清理 Version 信息
-
-4. 清理 txn 信息
-
-5. 清理 stats
-
-6. 清理 job 信息
-
-```shell
-fdbcli --exec "writemode on;clearrange \x01\x10instance\x00\x01\x10${instance_id}\x00\x01 \x01\x10instance\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10meta\x00\x01\x10${instance_id}\x00\x01 \x01\x10meta\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10txn\x00\x01\x10${instance_id}\x00\x01 \x01\x10txn\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10version\x00\x01\x10${instance_id}\x00\x01 \x01\x10version\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10stats\x00\x01\x10${instance_id}\x00\x01 \x01\x10stats\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10recycle\x00\x01\x10${instance_id}\x00\x01 \x01\x10recycle\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10job\x00\x01\x10${instance_id}\x00\x01 \x01\x10job\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-fdbcli --exec "writemode on;clearrange \x01\x10copy\x00\x01\x10${instance_id}\x00\x01 \x01\x10copy\x00\x01\x10${instance_id}\x00\xff\x00\x01"
-```
-
-### 清理集群 (清理除 KV 外的数据)
-
-请按照实际配置的对象存储或者 HDFS 存储的前缀或者目录，直接调用对应存储系统的接口进行前缀或者目录删除。
-
+启动后观察日志.
 

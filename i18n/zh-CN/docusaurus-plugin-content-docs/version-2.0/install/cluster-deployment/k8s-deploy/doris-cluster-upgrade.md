@@ -1,6 +1,6 @@
 ---
 {
-"title": "升级基于 Doris-Operator 部署的 Apache Doris 集群",
+"title": "升级基于 Doris Operator 部署的 Apache Doris 集群",
 "language": "zh-CN"
 }
 ---
@@ -25,9 +25,9 @@ under the License.
 -->
 
 
-本文介绍如何使用 更新来升级 基于 Doris-Operator 部署的 Apache Doris 集群。
+本文介绍如何使用 更新来升级 基于 Doris Operator 部署的 Apache Doris 集群。
 
-和常规部署的集群升级类似，Doris-Operator 部署的 Doris 集群依然需要 BE 到 FE 节点滚动升级，Doris-Operator 基于 Kubernetes 的 [滚动更新功能](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) 提供了滚动升级能力。
+和常规部署的集群升级类似，Doris Operator 部署的 Doris 集群依然需要 BE 到 FE 节点滚动升级，Doris Operator 基于 Kubernetes 的 [滚动更新功能](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) 提供了滚动升级能力。
 
 ## 升级前注意事项
 
@@ -58,7 +58,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
 
 ### 升级 BE 
 
-如果保留了集群的 crd（Doris-Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
+如果保留了集群的 crd（Doris Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
  
 1. 修改 `spec.beSpec.image`  
 
@@ -95,7 +95,7 @@ $ kubectl get pod -n doris
 
 ### 升级 FE 
 
-如果保留了集群的 crd（Doris-Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
+如果保留了集群的 crd（Doris Operator 定义了 `DorisCluster` 类型资源名称的简写）文件，则可以通过修改该配置文件并且 `kubectl apply` 的命令来进行升级。
 
 1. 修改 `spec.feSpec.image`
 

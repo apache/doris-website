@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# 常见问题
-
 ## 证书问题
 
 1. 查询时报错 `curl 77: Problem with the SSL CA cert.`。说明当前系统证书过旧，需要更新本地证书。
@@ -104,6 +101,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
    将 `-Djava.security.krb5.conf=/your-path` 配置项添加到 Broker Load 启动脚本的 `start_broker.sh` 的 `JAVA_OPTS`里。
 
 8. 当在 Catalog 里使用 Kerberos 配置时，不能同时使用`hadoop.username`属性。
+
+9. 使用 JDK 17 访问 Kerberos
+
+    如果使用 JDK 17 运行 Doris 并访问 Kerberos 服务，可能会出现因使用已废弃的加密算法而导致无法访问的现象。需要在 krb5.conf 中添加 `allow_weak_crypto=true` 属性。或升级 Kerberos 的加密算法。
+
+    详情参阅：https://seanjmullan.org/blog/2021/09/14/jdk17#kerberos 
 
 ## JDBC Catalog
 
@@ -243,6 +246,27 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     ```
 
     尝试更新FE节点CA证书，使用 `update-ca-trust（CentOS/RockyLinux）`，然后重启FE进程即可。
+
+11. BE 报错: `java.lang.InternalError`
+
+    如果在 `be.INFO` 中看到类似如下错误：
+
+    ```
+    W20240506 15:19:57.553396 266457 jni-util.cpp:259] java.lang.InternalError
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.init(Native Method)
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.<init>(ZlibDecompressor.java:114)
+            at org.apache.hadoop.io.compress.GzipCodec$GzipZlibDecompressor.<init>(GzipCodec.java:229)
+            at org.apache.hadoop.io.compress.GzipCodec.createDecompressor(GzipCodec.java:188)
+            at org.apache.hadoop.io.compress.CodecPool.getDecompressor(CodecPool.java:183)
+            at org.apache.parquet.hadoop.CodecFactory$HeapBytesDecompressor.<init>(CodecFactory.java:99)
+            at org.apache.parquet.hadoop.CodecFactory.createDecompressor(CodecFactory.java:223)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:212)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:43)
+    ```
+
+    是因为 Doris 自带的 libz.a 和系统环境中的 libz.so 冲突了。
+
+    为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
 
 ## HDFS
 

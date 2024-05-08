@@ -30,7 +30,7 @@ under the License.
 
 ### Description
 
-This command is used to create a table. The subject of this document describes the syntax for creating Doris self-maintained tables. For external table syntax, please refer to the [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md) document.
+This command is used to create a table. The subject of this document describes the syntax for creating Doris self-maintained tables.
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table
@@ -184,7 +184,7 @@ Index list definition:
 
 #### engine_type
 
-Table engine type. All types in this document are OLAP. For other external table engine types, see [CREATE EXTERNAL TABLE](./CREATE-EXTERNAL-TABLE.md) document. Example:
+Table engine type. All types in this document are OLAP. Example:
 
     `ENGINE=olap`
 

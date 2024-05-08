@@ -69,9 +69,9 @@ $ ulimit -n
 
 # Add the configuration to your startup script so that you do not have to set it again every time you open a new terminal session.
 # If you are using bash, execute the following statement:
-echo 'ulimit -n 65536' ~/.bashrc
+echo 'ulimit -n 65536' >>~/.bashrc
 # If you are using zsh, execute the following statement:
-echo 'ulimit -n 65536' ~/.zshrc
+echo 'ulimit -n 65536' >>~/.zshrc
 ```
 
 2. **Start BE**

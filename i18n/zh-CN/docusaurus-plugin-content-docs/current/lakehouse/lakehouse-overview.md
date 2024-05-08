@@ -172,13 +172,13 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 - External Catalog
 
-    可以通过 [CREATE CATALOG](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG) 命令创建一个 External Catalog。创建后，可以通过 [SHOW CATALOGS](../../sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS) 命令查看已创建的 Catalog。
+    可以通过 [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG) 命令创建一个 External Catalog。创建后，可以通过 [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS) 命令查看已创建的 Catalog。
 
 - 切换 Catalog
 
     用户登录 Doris 后，默认进入 Internal Catalog，因此默认的使用和之前版本并无差别，可以直接使用 `SHOW DATABASES`，`USE DB` 等命令查看和切换数据库。
 
-    用户可以通过 [SWITCH](../../sql-manual/sql-reference/Utility-Statements/SWITCH) 命令切换 Catalog。如：
+    用户可以通过 [SWITCH](../sql-manual/sql-statements/Utility-Statements/SWITCH) 命令切换 Catalog。如：
 
     ```Plain
     SWITCH internal;
@@ -189,7 +189,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 - 删除 Catalog
 
-    可以通过 [DROP CATALOG](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-CATALOG) 命令删除一个 External Catalog，Internal Catalog 无法删除。该操作仅会删除 Doris 中该 Catalog 的映射信息，并不会修改或变更任何外部数据目录的内容。
+    可以通过 [DROP CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-CATALOG) 命令删除一个 External Catalog，Internal Catalog 无法删除。该操作仅会删除 Doris 中该 Catalog 的映射信息，并不会修改或变更任何外部数据目录的内容。
 
 ### 连接示例
 
@@ -197,7 +197,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 这里我们通过连接一个 Hive 集群说明如何使用 Catalog 功能。
 
-更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake/hive)
+更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 **1. 创建 Catalog**
 
@@ -208,7 +208,7 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-更多查看：[CREATE CATALOG 语法帮助](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG)
+更多查看：[CREATE CATALOG 语法帮助](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG)
 
 **2. 查看 Catalog**
 
@@ -224,11 +224,11 @@ mysql> SHOW CATALOGS;
 +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-- [SHOW CATALOGS 语法帮助](../../sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS)
+- [SHOW CATALOGS 语法帮助](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS)
 
-- 可以通过 [SHOW CREATE CATALOG](../../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
+- 可以通过 [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG) 查看创建 Catalog 的语句。
 
-- 可以通过 [ALTER CATALOG](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-CATALOG) 修改 Catalog 的属性。
+- 可以通过 [ALTER CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-CATALOG) 修改 Catalog 的属性。
 
 **4. 切换 Catalog**
 
@@ -251,7 +251,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-查看更多：[SWITCH 语法帮助](../../sql-manual/sql-reference/Utility-Statements/SWITCH)
+查看更多：[SWITCH 语法帮助](../sql-manual/sql-statements/Utility-Statements/SWITCH)
 
 **5. 使用 Catalog**
 
@@ -387,7 +387,7 @@ select k1, k4 from table;           // Query OK.
 
 使用 Doris 对 External Catalog 中库表进行访问时，默认情况下，依赖 Doris 自身的权限访问管理功能。
 
-Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [权限管理](../../admin-manual/privilege-ldap/user-privilege) 文档。
+Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参阅 [认证和鉴权](../../../admin-manual/auth/authentication-and-authorization.md) 文档。
 
 用户也可以通过 `access_controller.class` 属性指定自定义的鉴权类。如通过指定：
 
@@ -395,7 +395,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 "access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"
 ```
 
-则可以使用 Apache Range 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../../lakehouse/datalake/hive)
+则可以使用 Apache Range 对 Hive Catalog 进行鉴权管理。详细信息请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
 
 ### 指定需要同步的数据库
 
@@ -419,7 +419,7 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 
 #### 手动刷新
 
-用户需要通过 [REFRESH](../../sql-manual/sql-reference/Utility-Statements/REFRESH) 命令手动刷新元数据。
+用户需要通过 [REFRESH](../sql-manual/sql-statements/Utility-Statements/REFRESH) 命令手动刷新元数据。
 
 #### 定时刷新
 
@@ -442,4 +442,4 @@ CREATE CATALOG es PROPERTIES (
 
 #### 自动刷新
 
-自动刷新目前仅支持 [Hive Catalog](../lakehouse/datalake/hive)。
+自动刷新目前仅支持 [Hive Catalog](../lakehouse/datalake-analytics/hive)。

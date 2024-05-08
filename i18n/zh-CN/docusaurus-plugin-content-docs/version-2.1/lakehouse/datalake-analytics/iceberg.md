@@ -35,6 +35,7 @@ under the License.
 4. 支持 Parquet 文件格式
 5. 2.1.3 版本开始支持 ORC 文件格式。
 
+
 ## 创建 Catalog
 
 ### 基于Hive Metastore创建Catalog
@@ -216,6 +217,23 @@ CREATE CATALOG iceberg PROPERTIES (
 "obs.region" = "cn-north-4"
 ```
 
+## 示例
+
+```
+-- MinIO & Rest Catalog
+CREATE CATALOG `iceberg` PROPERTIES (
+    "type" = "iceberg",
+    "iceberg.catalog.type" = "rest",
+    "uri" = "http://10.0.0.1:8181",
+    "warehouse" = "s3://bucket",
+    "token" = "token123456",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "http://10.0.0.1:9000",
+    "s3.region" = "us-east-1"
+);
+```
+
 ## 列类型映射
 
 | Iceberg Type                               | Doris Type   |
@@ -233,8 +251,8 @@ CREATE CATALOG iceberg PROPERTIES (
 | string                                     | string       |
 | fixed(L)                                   | char(L)      |
 | binary                                     | string       |
-| struct                                     | struct  （2.1.3 版本开始支持）     |
-| map                                        | map （2.1.3 版本开始支持）  |
+| struct                                     | struct （2.1.3 版本开始支持）      |
+| map                                        | map （2.1.3 版本开始支持）    |
 | list                                       | array        |
 | time                                       | 不支持        |
 
