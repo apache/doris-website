@@ -1,6 +1,6 @@
 ---
 {
-    'title': "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
+    'title': "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL Convertor for easy migration",
     'summary': "Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.",
     'date': '2024-05-06',
     'author': 'Apache Doris',
@@ -51,11 +51,11 @@ Currently, Presto, Trino, Hive, ClickHouse, and PostgreSQL dialects are supporte
 
 2. On any frontend (FE) node, start the service using the following command.
 
-   - The SQL conversion service is stateless and can be started or stopped at any time.
+- The SQL conversion service is stateless and can be started or stopped at any time.
 
-   - `port=5001` in the command specifies the service port. (You can use any available port.)
+- `port=5001` in the command specifies the service port. (You can use any available port.)
 
-   - It is advisable to start a service individually for each FE node.
+- It is advisable to start a service individually for each FE node.
 
 ```Shell
 nohup ./doris-sql-convertor-1.0.1-bin-x86 run --host=0.0.0.0 --port=5001 &
@@ -73,7 +73,7 @@ After deployment, you can execute SQL directly in the command line. You can star
 
 - Presto
 
-```SQL
+```sql
 mysql> set sql_dialect=presto;                                                                                                                                                                                                             
 Query OK, 0 rows affected (0.00 sec) 
 
@@ -100,7 +100,7 @@ mysql> SELECT cast(start_time as varchar(20)) as col1,
 
 - ClickHouse
 
-```SQL
+```sql
 mysql> set sql_dialect=clickhouse;                                                                                                                                             
 Query OK, 0 rows affected (0.00 sec)                                                                                                                                           
                                                                                                                                                                                
@@ -132,35 +132,44 @@ For large-scale conversion, it is recommended to use the visual interface, on wh
 Follow these steps to deploy the visual conversion interface:
 
 1. Environment: Docker, Docker-Compose
+
 2. Get Doris-SQL-Convertor Docker image
+
 3. Create a network for the image
-   1. ```Bash
-      docker network create app_network
-      ```
+
+```Bash
+docker network create app_network
+```
+
 4. Decompress the package
-   1. ```Bash
-      tar xzvf doris-sql-convertor-1.0.1.tar.gz
-      
-      cd doris-sql-convertor
-      ```
+
+```Bash
+tar xzvf doris-sql-convertor-1.0.1.tar.gz
+
+cd doris-sql-convertor
+```
+
 5. Edit the environment variables
-   1. ```Bash
-      FLASK_APP=server/app.py
-      FLASK_DEBUG=1
-      API_HOST=http://doris-sql-convertor-api:5000
-      
-      # DOCKER TAG
-      API_TAG=latest
-      WEB_TAG=latest
-      ```
+
+```Bash
+FLASK_APP=server/app.py
+FLASK_DEBUG=1
+API_HOST=http://doris-sql-convertor-api:5000
+
+# DOCKER TAG
+API_TAG=latest
+WEB_TAG=latest
+```
+
 6. Start it up
-   1. ```Bash
-      sh start.sh
-      ```
+   
+```Bash
+sh start.sh
+```
 
 After deployment, you can access the service by `ip:8080` via your local browser. `8080` is the default port. You can change the mapping port. On the visual interface, you can select the source dialect type and target dialect type, and then click "Convert".
 
-:::note
+:::info Note
 1. For batch conversion, each SQL statement should end with `; `.
 
 2. The Doris SQL Convertor supports 239 UNION ALL conversions at most.
