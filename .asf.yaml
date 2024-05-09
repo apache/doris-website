@@ -51,4 +51,4 @@ github:
   features:
     issues: true
 notifications:
-  pullrequests_status:  commits@doris.apache.org
+    pullrequests_status:  commits@doris.apache.org
