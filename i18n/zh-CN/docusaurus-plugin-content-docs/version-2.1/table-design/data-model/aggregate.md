@@ -314,4 +314,8 @@ mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
 
 用户可以通过 agg_state 做出更细致的聚合函数操作。
 
-注意 agg_state 存在一定的性能开销。
+:::caution 注意
+
+agg_state 存在一定的性能开销。
+
+:::
