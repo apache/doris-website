@@ -362,32 +362,6 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 
   :::
 
-## 编写 UDTF 函数
-UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，但是 UDTF 函数的返回值必须是 Array 类型。
-另外 Doris 中表函数会因为 _outer 后缀有不同的表现，可查看[OUTER 组合器](../../sql-manual/sql-functions/table-functions/explode-numbers-outer)
-
-
-```JAVA
-public class UDTFStringTest {
-    public ArrayList<String> evaluate(String value, String separator) {
-        if (value == null || separator == null) {
-            return null;
-        } else {
-            return new ArrayList<>(Arrays.asList(value.split(separator)));
-        }
-    }
-}
-```
-
-```sql
-CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
-
 
 ## 使用 UDF
 

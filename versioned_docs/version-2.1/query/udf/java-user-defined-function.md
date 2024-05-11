@@ -337,33 +337,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 * The implemented jar package can be stored at local or in a remote server and downloaded via http, And each BE node must be able to obtain the jar package;
 Otherwise, the error status message "Couldn't open file..." will be returned
 
-## Create UDTF
-
-UDTF, just like UDF functions, requires users to independently implement an `evaluate` method. However, the return value of a UDTF function must be of Array type.
-
-In addition, table functions in Doris behave differently depending on the presence of the _outer suffix. You can refer to [explode-numbers-outer](../sql-manual/sql-functions/table-functions/explode-numbers-outer).
-
-
-```JAVA
-public class UDTFStringTest {
-    public ArrayList<String> evaluate(String value, String separator) {
-        if (value == null || separator == null) {
-            return null;
-        } else {
-            return new ArrayList<>(Arrays.asList(value.split(separator)));
-        }
-    }
-}
-```
-
-```sql
-CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
+Currently, UDTF are not supported.
 
 ## Use UDF
 
