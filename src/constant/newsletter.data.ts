@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
+        content: `Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.`,
+        to: '/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
+        image: 'sql-convertor-feature.jpeg',
+    },
+    {
         tags: ['Best Practice'],
         title: "Cross-cluster replication for read-write separation: story of a grocery store brand",
         content: `Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.`,
@@ -20,12 +27,6 @@ export const NEWSLETTER_DATA = [
         to: '/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer',
         image: 'arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: "Auto-increment columns in databases: a simple magic that makes a big difference",
-        content: `Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.`,
-        to: '/blog/auto-increment-columns-in-databases',
-        image: 'auto-increment-columns-in-databases.png',
-    },
+
 
 ];
