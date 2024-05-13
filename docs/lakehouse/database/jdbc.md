@@ -364,7 +364,12 @@ DROP CATALOG <catalog_name>;
 ## SQL Passthrough
 
 In versions prior to Doris 2.0.3, users could only perform query operations (SELECT) through the JDBC catalog.
+
 Starting from version Doris 2.0.4, users can perform DDL (Data Definition Language) and DML (Data Manipulation Language) operations on JDBC data sources using the `CALL` command.
+
+Starting from version Doris 2.1.4, users can perform data query operations on JDBC data sources through the `query` table function.
+
+### Passthrough of DDL and DML
 
 ```
 CALL EXECUTE_STMT("catalog_name", "raw_stmt_string");
@@ -383,6 +388,24 @@ CALL EXECUTE_STMT("jdbc_catalog", "delete from db1.tbl1 where k1 = 2");
 CALL EXECUTE_STMT("jdbc_catalog", "create table db1.tbl2 (k1 int)");
 ```
 
+### Passthrough query
+
+```sql
+query(
+  "catalog" = "catalog_name",
+  "query" = "select * from db_name.table_name where condition"
+  );
+```
+
+The `query` table function takes two parameters:
+
+- `catalog`: (required) catalog name, which needs to be filled in according to the name of the catalog.
+- `query`: (required) The query statement to be executed.
+
+```sql
+select * from query("catalog" = "jdbc", "query" = "select * from db_name.table_name where condition");
+```
+
 ### Principles and Limitations
 
 Through the `CALL EXECUTE_STMT()` command, Doris directly sends the SQL statements written by the user to the JDBC data source associated with the catalog for execution. Therefore, this operation has the following limitations:
@@ -390,10 +413,11 @@ Through the `CALL EXECUTE_STMT()` command, Doris directly sends the SQL statemen
 - The SQL statements must be in the syntax specific to the data source, as Doris does not perform syntax and semantic checks.
 - It is recommended that table names in SQL statements be fully qualified, i.e., in the `db.tbl` format. If the `db` is not specified, the db name specified in the JDBC catalog JDBC URL will be used.
 - SQL statements cannot reference tables outside of the JDBC data source, nor can they reference Doris's tables. However, they can reference tables within the JDBC data source that have not been synchronized to the Doris JDBC catalog.
-- When executing DML statements, it is not possible to obtain the number of rows inserted, updated, or deleted; success of the command execution can only be confirmed.
-- Only users with LOAD permissions on the catalog can execute this command.
+- Only users with LOAD permissions on the Catalog can execute the `CALL EXECUTE_STMT()` command.
+- Only users with SELECT permissions on Catalog can execute the `query()` table function.
+- The supported data types of the data read by the `query` table function are consistent with the data types supported by the queried catalog type.
 
-### Time zone
+## Time zone
 
 Since the time types of some external data sources have time zone information, but the time types of Doris do not have time zone information, you need to pay attention to the time zone issue when querying the time types of external data sources.
 

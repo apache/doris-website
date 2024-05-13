@@ -35,7 +35,7 @@ Doris 提供多种数据导入方案，可以针对不同的数据源进行选�
 | 数据源                               | 导入方式                                                     |
 | ------------------------------------ | ------------------------------------------------------------ |
 | 对象存储（s3）,HDFS                  | [使用 Broker 导入数据](../import/broker-load-manual) |
-| 本地文件                             | [Stream Load](../import/stream-load-manual), [MySQL Load](../import/mysql-load-manual)         |
+| 本地文件                             | [Stream Load](../import/stream-load-manual), [MySQL Load](../../data-operate/import/mysql-load-manual)         |
 | Kafka                                | [订阅 Kafka 数据](../import/routine-load-manual)             |
 | Mysql、PostgreSQL，Oracle，SQLServer | [通过外部表同步数据](../import/insert-into-manual) |
 | 通过 JDBC 导入                         | [使用 JDBC 同步数据](../../lakehouse/database/jdbc)           |

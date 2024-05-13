@@ -34,19 +34,19 @@ Assume that the business has the following data table schema:
 
 | ColumnName      | Type         | AggregationType | Comment                     |
 | --------------- | ------------ | --------------- | --------------------------- |
-| userid          | LARGEINT     |                 | user id                     |
+| user_id          | LARGEINT     |                 | user id                     |
 | date            | DATE         |                 | date of data filling        |
-| City            | VARCHAR (20) |                 | User City                   |
+| city            | VARCHAR (20) |                 | User City                   |
 | age             | SMALLINT     |                 | User age                    |
 | sex             | TINYINT      |                 | User gender                 |
-| Last_visit_date | DATETIME     | REPLACE         | Last user access time       |
-| Cost            | BIGINT       | SUM             | Total User Consumption      |
-| max dwell time  | INT          | MAX             | Maximum user residence time |
-| min dwell time  | INT          | MIN             | User minimum residence time |
+| last_visit_date | DATETIME     | REPLACE         | Last user access time       |
+| cost            | BIGINT       | SUM             | Total User Consumption      |
+| max_dwell_time  | INT          | MAX             | Maximum user residence time |
+| min_dwell_time  | INT          | MIN             | User minimum residence time |
 
 The corresponding to CREATE TABLE statement would be as follows (omitting the Partition and Distribution information):
 
-```
+```sql
 CREATE DATABASE IF NOT EXISTS example_db;
 
 CREATE TABLE IF NOT EXISTS example_db.example_tbl_agg1
@@ -75,11 +75,17 @@ The columns in the table are divided into Key (dimension) columns and Value (ind
 When data are imported, rows with the same contents in the Key columns will be aggregated into one row, and their values in the Value columns will be aggregated as their `AggregationType` specify. Currently, there are several aggregation methods and "agg_state" options available:
 
 - SUM: Accumulate the values in multiple rows.
+
 - REPLACE: The newly imported value will replace the previous value.
+
 - MAX: Keep the maximum value.
+
 - MIN: Keep the minimum value.
+
 - REPLACE_IF_NOT_NULL: Non-null value replacement. Unlike REPLACE, it does not replace null values.
+
 - HLL_UNION: Aggregation method for columns of HLL type, using the HyperLogLog algorithm for aggregation.
+
 - BITMAP_UNION: Aggregation method for columns of BITMAP type, performing a union aggregation of bitmaps.
 
 :::tip
@@ -118,7 +124,7 @@ This is a table recording the user behaviors when visiting a certain commodity p
 
 | Data             | Description                              |
 | ---------------- | ---------------------------------------- |
-| 10000            | User id, each user uniquely identifies id |
+| 10000            | User ID, each user uniquely identifies id |
 | 2017-10-01       | Data storage time, accurate to date      |
 | Beijing          | User City                                |
 | 20               | User Age                                 |
