@@ -41,7 +41,7 @@ under the License.
 jdbc:mysql:loadbalance://[host:port],[host:port].../[database][?propertyName1][=propertyValue1][&propertyName2][=propertyValue
 ```
 
-详细可以参考[Mysql 官网文档](https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
+详细可以参考[MySQL 官网文档](https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
 
 ## ProxySQL 方式
 
@@ -649,7 +649,7 @@ mysql> show databases;
 
    
 
-3. 通过代理连接Doris
+3. 通过代理连接 Doris
 
    ```sql
    mysql -uroot -P6030 -h172.31.7.119 
@@ -674,3 +674,135 @@ mysql> show databases;
    如果在 `Host` 列看到的真实的客户端 IP，则说明验证成功。否则，只能看到代理服务的 IP 地址。
 
    同时，在 fe.audit.log 中也会记录真实的客户端 IP。
+
+
+## Haproxy 方式
+HAProxy是一个使用C语言编写的自由及开放源代码软件，其提供高可用性、负载均衡，以及基于TCP和HTTP的应用程序代理。
+
+### 安装
+1. 下载 HAProxy
+
+   下载地址：https://src.fedoraproject.org/repo/pkgs/haproxy/
+
+2. 解压
+   ```
+   tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
+   mv haproxy-2.6.15 haproxy
+   ```
+
+3. 编译
+
+   进入到 haproxy 目录中
+   ```
+   yum install gcc gcc-c++ -y
+
+   make TARGET=linux-glibc PREFIX=/usr/local/haproxy
+
+   make install PREFIX=/usr/local/haproxy
+   ```
+
+### 配置
+1. 配置 haproxy.conf 文件
+
+   vim /etc/rsyslog.d/haproxy.conf
+   ```
+   $ModLoad imudp 
+   $UDPServerRun 514
+   local0.* /usr/local/haproxy/logs/haproxy.log
+   &~
+   ```
+
+2. 开启远程日志
+
+   vim /etc/sysconfig/rsyslog
+
+   `SYSLOGD_OPTIONS="-c 2 -r -m 0" `
+
+   参数解析：
+
+   - -c 2 使用兼容模式，默认是 -c 5。 -r 开启远程日志
+
+   - -m 0 标记时间戳。单位是分钟，为0时，表示禁用该功能
+
+3. 使修改生效
+
+   `systemctl restart rsyslog`
+
+
+4. 编辑负载均衡文件
+
+   vim /usr/local/haproxy/haproxy.cfg
+
+   ```
+   #
+   # haproxy 部署在 172.16.0.3，这台机器上，用来代理 172.16.0.8,172.16.0.6,172.16.0.4 这三台部署 fe 的机器
+   #
+   
+   global
+   maxconn         2000
+   ulimit-n        40075
+   log             127.0.0.1 local0 info
+   uid             200
+   gid             200
+   chroot          /var/empty
+   daemon
+   group           haproxy
+   user            haproxy
+   
+   
+   defaults
+   # 应用全局的日志配置
+   log global
+   mode http
+   retries 3          # 健康检查。3次连接失败就认为服务器不可用，主要通过后面的check检查
+   option redispatch  # 服务不可用后重定向到其他健康服务器
+   # 超时配置
+   timeout connect 5000
+   timeout client 5000
+   timeout server 5000
+   timeout check 2000
+   
+   frontend agent-front
+   bind *:9030             # 代理机器上的转换端口
+   mode tcp
+   default_backend forward-fe
+   
+   backend forward-fe
+   mode tcp
+   balance roundrobin
+   server fe-1 172.16.0.8:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-2 172.16.0.4:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-3 172.16.0.6:9030 weight 1 check inter 3000 rise 2 fall 3
+   
+   listen http_front              # haproxy的客户页面
+   bind *:8888                    # HAProxy WEB 的IP地址
+   mode http
+   log 127.0.0.1 local0 err
+   option httplog
+   stats uri /haproxy             # 自定义页面的 url（即访问时地址为：172.16.0.3:8888/haproxy）
+   stats auth admin:admin         # 控制面板账号密码 账号：admin
+   stats refresh 10s
+   stats enable
+   ```
+
+### 启动
+
+1. 启动服务
+
+   ` /opt/haproxy/haproxy -f /usr/local/haproxy/haproxy.cfg`
+
+2. 查看服务状态
+
+   `netstat -lnatp | grep -i haproxy`
+
+3. WEB 访问
+
+   ip:8888/haproxy
+
+   登陆密码：admin : admin
+
+   注意：WEB 登陆的端口、账户、密码需要在 haproxy.cfg 文件中配置
+
+4. 测试端口是否转换成功
+
+   `mysql -h 172.16.0.3 -uroot -P3307 -p`
