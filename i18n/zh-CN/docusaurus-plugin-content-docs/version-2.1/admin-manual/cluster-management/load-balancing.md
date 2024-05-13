@@ -41,7 +41,7 @@ under the License.
 jdbc:mysql:loadbalance://[host:port],[host:port].../[database][?propertyName1][=propertyValue1][&propertyName2][=propertyValue
 ```
 
-详细可以参考[Mysql 官网文档](https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
+详细可以参考[MySQL 官网文档](https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
 
 ## ProxySQL 方式
 
@@ -649,7 +649,7 @@ mysql> show databases;
 
    
 
-3. 通过代理连接Doris
+3. 通过代理连接 Doris
 
    ```sql
    mysql -uroot -P6030 -h172.31.7.119 
