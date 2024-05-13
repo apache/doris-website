@@ -331,6 +331,7 @@ Determines whether to enable the Pipeline engine to execute Streamload tasks. Se
 | comment                      | It is a String type, with an empty string as the default value. Used to add additional information to the task. |
 | enclose                      | Specify the enclosure character. When a CSV data field contains a row delimiter or column delimiter, to prevent unexpected truncation, you can specify a single-byte character as the enclosure for protection. For example, if the column delimiter is "," and the enclosure is "'", the data "a,'b,c'" will have "b,c" parsed as a single field. Note: When the enclosure is set to a double quote ("), make sure to set `trim_double_quotes` to true. |
 | escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
+| memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
 
 ### Load return value
 
