@@ -38,8 +38,8 @@ ADMIN SET CONFIG
 语法：
 
 ```sql
- ADMIN SET [ALL] FRONTEND CONFIG ("key" = "value");
-```
+  ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
+  ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");```
 
 说明：  
   

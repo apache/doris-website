@@ -38,7 +38,8 @@ The settable configuration items can be viewed through the ADMIN SHOW FRONTEND C
 grammar:
 
 ```sql
-  ADMIN SET [ALL] FRONTEND CONFIG ("key" = "value");
+  ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
+  ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 ````
 
 illustrate:
