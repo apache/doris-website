@@ -38,9 +38,13 @@ ADMIN SET CONFIG
 语法：
 
 ```sql
- ADMIN SET FRONTEND CONFIG ("key" = "value");
-```
+  ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
+  ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");```
 
+说明：  
+  
+    1. 使用ALL关键字后配置参数将应用于所有FE(除 master_only 参数外)
+    
 ### Example
 
 1. 设置 'disable_balance' 为 true
