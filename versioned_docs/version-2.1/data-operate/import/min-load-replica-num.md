@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Min Load Replica Num",
+    "title": "Minimum Number of Replicas Loading",
     "language": "en"
 }
 ---

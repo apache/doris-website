@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Elastic scaling",
+    "title": "Elastic Scaling",
     "language": "en"
 }
 

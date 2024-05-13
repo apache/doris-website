@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Partition",
+    "title": "Data Partitioning",
     "language": "en"
 }
 ---
@@ -259,7 +259,7 @@ It is also possible to use one layer of data partitioning, If you do not write t
 <version since="1.2.0">
     
 
-Range partitioning also supports batch partitioning. For example, you can create multiple partitions that are divided by day at a time using the `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY`：2022-01-03 to 2022-01-06 (not including 2022-01-06), the results will be as follows:
+Range partitioning also supports batch partitioning. For example, you can create multiple partitions that are divided by day at a time using the `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY`: 2022-01-03 to 2022-01-06 (not including 2022-01-06), the results will be as follows:
 
     p20220103:    [2022-01-03,  2022-01-04)
     p20220104:    [2022-01-04,  2022-01-05)

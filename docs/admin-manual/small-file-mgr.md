@@ -1,6 +1,6 @@
 ---
 {
-    "title": "File Manager",
+    "title": "Small File Manager",
     "language": "en"
 }
 ---

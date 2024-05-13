@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Partition Cache
 
 Cache hits can occur when multiple SQLs use the same table partition.
 

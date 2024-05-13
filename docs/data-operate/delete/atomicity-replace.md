@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Atomicity Replace",
+    "title": "Replacing Atomic Table",
     "language": "en"
 }
 ---

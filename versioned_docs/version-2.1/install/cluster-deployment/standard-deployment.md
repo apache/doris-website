@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Standard Deployment",
+    "title": "Manual Deployment",
     "language": "en"
 }
 ---
@@ -223,7 +223,7 @@ For a production cluster, it is generally recommended to deploy at least 3 FE no
 - Follower nodes participate in elections. If the Master node fails, an available Follower node will be selected as the new Master.
 - Observer nodes only synchronize metadata from the Leader node and do not participate in elections. They can be scaled to provide scalable metadata read services.
 
-Typically, it is advised to deploy 3 Follower nodes. In high-concurrency scenarios, you can scale the Observer nodes.。
+Typically, it is advised to deploy 3 Follower nodes. In high-concurrency scenarios, you can scale the Observer nodes..
 
 **Plan the BE nodes**
 

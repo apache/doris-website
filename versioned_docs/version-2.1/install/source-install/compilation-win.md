@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation on Windows",
+    "title": "Compiling on Windows",
     "language": "en"
 }
 ---

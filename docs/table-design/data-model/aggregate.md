@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Aggregate Key",
+    "title": "Aggregate Key Model",
     "language": "en"
 }
 ---

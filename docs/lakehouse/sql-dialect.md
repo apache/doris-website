@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SQL Dialect",
+    "title": "SQL Dialect Convertor",
     "language": "zh-CN"
 }
 ---

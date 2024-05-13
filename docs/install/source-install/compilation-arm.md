@@ -1,6 +1,6 @@
 ---
 {
-"title": "Compilation with Arm",
+"title": "Compiling with Arm",
 "language": "en"
 }
 ---

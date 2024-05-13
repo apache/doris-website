@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Update Transaction of Unique Model",
+    "title": "Updating Transaction",
     "language": "en"
 }
 ---
