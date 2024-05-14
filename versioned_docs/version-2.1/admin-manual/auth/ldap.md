@@ -64,12 +64,15 @@ In LDAP, data is organized in a tree structure.
 
 ## Enable LDAP Authentication
 ### Server-side Configuration
+Starting from 2.1.3, Configure the authentication method in the 'fe/conf/fe.conf' file as ldap 'authentication_type=ldap'.
 
-You need to configure the LDAP basic information in the fe/conf/ldap.conf file, and the LDAP administrator password needs to be set using sql statements.
+You need to configure the LDAP basic information in the fe/conf/ldap.conf file, 
+
+and the LDAP administrator password needs to be set using sql statements.
 
 #### Configure the fe/conf/ldap.conf file：
 * ldap_authentication_enabled = false  
-  Set the value to "true" to enable LDAP authentication; when the value is "false", LDAP authentication is not enabled and all other configuration items of this profile are invalid.Set the value to "true" to enable LDAP authentication; when the value is "false", LDAP authentication is not enabled and all other configuration items of this profile are invalid.
+  Set the value to "true" to enable LDAP authentication; when the value is "false", LDAP authentication is not enabled and all other configuration items of this profile are invalid.Set the value to "true" to enable LDAP authentication; when the value is "false", LDAP authentication is not enabled and all other configuration items of this profile are invalid.(Note: Starting from 2.1.3, no configuration required)
 
 * ldap_host = 127.0.0.1  
   LDAP service ip.
