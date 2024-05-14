@@ -274,6 +274,10 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 
 `GET /rest/v2/manager/query/profile/fragments/{query_id}`
 
+:::caution
+自 2.1.1 起，此接口被弃用。你仍然可以从 http://<fe_ip>:<fe_http_port>/QueryProfile 上下载 profile 文件。
+:::
+
 ### Description
 
 用于获取指定 query id 的 fragment 名称，instance id、主机 IP 及端口和执行时长。

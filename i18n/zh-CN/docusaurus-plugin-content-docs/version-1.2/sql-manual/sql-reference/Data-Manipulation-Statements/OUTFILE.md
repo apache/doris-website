@@ -32,7 +32,7 @@ OURFILE
 
 ### description
 
-该语句用于使用 `SELECT INTO OUTFILE` 命令将查询结果的导出为文件。目前支持通过 Broker 进程, 通过 S3 协议, 或直接通过 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
+`SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程, 通过 S3 协议, 或直接通过 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
     
 语法：
 
