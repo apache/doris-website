@@ -168,7 +168,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
 1. 创建导入数据
 
-    创建 CSV 文件 streamload_example.json 文件。具体内容如下
+    创建 JSON 文件 streamload_example.json。具体内容如下
 
     ```sql
     [
