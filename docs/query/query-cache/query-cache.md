@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Caches Overview",
+    "title": "Query Caches Overview",
     "language": "en"
 }
 ---

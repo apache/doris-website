@@ -27,13 +27,13 @@ under the License.
 
 Cache hits can occur when multiple SQLs use the same table partition.
 
-```
+:::caution Caution
 **Partition Cache is an experimental feature and is not well maintained. Use it with caution**
-```
+:::
 
 ## Demand scenarios & solutions
 
-See query-cache.md.
+See [Query Caches Overview](../query-cache/query-cache.md)
 
 ## Design principles
 
