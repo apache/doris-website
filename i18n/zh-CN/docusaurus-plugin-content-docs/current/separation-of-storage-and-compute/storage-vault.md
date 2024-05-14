@@ -61,7 +61,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
         "type"="hdfs", -- required
         "fs.defaultFS"="hdfs://127.0.0.1:8020", -- required
-        "path_prefix"="prefix", -- optional -> Gavin希望是required
+        "path_prefix"="prefix", -- optional
         "hadoop.username"="user" -- optional
         "hadoop.security.authentication"="kerberos" -- optional
         "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional

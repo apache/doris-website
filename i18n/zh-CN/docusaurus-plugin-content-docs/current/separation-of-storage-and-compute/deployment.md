@@ -28,13 +28,20 @@ under the License.
 
 开始部署前请先阅读[Doris 存算分离架构说明文档](../separation-of-storage-and-compute/overview.md).
 
-Doris 存算分离部署总共需要 3 个模块：FE BE MS(程序名为 doris_cloud, 存算分离新引入的模块)
+存算分离Doris部署总共需要 3 个模块：FE BE MS(程序名为 doris_cloud, 存算分离模式新增模块)
+
+存算分离Doris依赖两个额外的开源项目, 开始部署前请将这两个依赖提前安装好
+1. foundationdb (fdb), 安装文档参考[FDB 安装文档](../separation-of-storage-and-compute/install-fdb.md)
+2. openjdk17, 需要安装到所有的节点上, 从这里获取安装 <https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz>
+
 
 ms 模块程序启动有两个角色，通过启动参数确定它的角色：
 1. Meta-service 元数据管理
 2. Recycler 数据回收
 
 ## 编译
+
+`--cloud` 是编译存算分离ms模块的参数
 
 ```bash
 sh build.sh --fe --be --cloud 
@@ -182,8 +189,13 @@ bin/stop.sh
 
 ##### 创建基于HDFS的存算分离Doris
 
-示例
+创建基于HDFS的存算分离Doris, 需要描述正确所有信息以及保证所有的节点(FE BE MS RE)
+都能够有权限访问所声明的HDFS, 例如提前给机器做好kerbros授权配置等, 并做好连通性
+检查(可以在对应的每个节点上使用hadoop client进行测试).
 
+prefix 字段按需填写, 一般以数仓的服务业务来命名.
+
+示例
 ```Shell
 curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" -d \
 '{
@@ -212,9 +224,15 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 
 ##### 创建基于S3的存算分离Doris
 
-示例(腾讯云的cos), 基于对象存储的所有属性均为必填, 其中external_endpoint保持
-和endpoint值相同即可.
+基于对象存储的所有属性均为必填, 其中
+* 使用minio等支持S3协议的对象存储时, 需要自行测试连通性以及aksk的正确性.
+	具体做法可以参考 [使用aws cli 验证minio是否工作](https://min.io/docs/minio/linux/integrations/aws-cli-with-minio.html)
+	这个教程进行检查
+* bucket字段的值就是一个bucket的名字, 是不带scheme(例如s3://)的.
+* external_endpoint保持和endpoint值相同即可.
+* 如果不是云厂商提供的对象存储, region 和 provider 的值可以任意填写
 
+示例(腾讯云的cos)
 ```Shell
 curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" -d \
 '{
@@ -236,7 +254,9 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 }'
 ```
 
-后续启动FE成功后, 可以在FE输入SQL show storage vault
+##### 查看存储后端
+
+执行完后续步骤, 启动FE成功后, 可以在FE输入SQL show storage vault
 可以看到built_in_storage_vault, 并且这个vault的属性上述的属性值相同.
 
 以下为hdfs的一个示例
@@ -334,7 +354,9 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 ### FE/BE配置
 
 FE BE 配置相比doris多了一些配置, 其中比较关键的是
-meta service的地址以及 cloud_unique_id, 根据之前创建存算分离集群的时候实际值填写即可.
+* meta_service_endpoint, 这个配置是meta service的地址, FE BE都要填写
+* cloud_unique_id, 根据之前创建存算分离集群的时候发往meta-service请求里的实际值填写即可, Doris是通过这个配置是否有值来决定是否工作在存算分离模式
+
 
 #### fe.conf
 
@@ -378,7 +400,6 @@ bin/stop_fe.sh
 Doris **cloud模式****FE****会自动发现对应的BE, 不需通过 alter system add 或者drop backend 操作节点.**
 
 启动后观察日志, 如果上述缓解配置都是正确的, 则进入正常工作模式, 可以通过MySQL客户端连上FE进行访问.
-
 
 ### 计算集群操作
 
@@ -495,4 +516,29 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
      }
 }'
 ```
+
+## 清理集群(**正式环境请勿使用**)
+
+有时候我们需要创建一些测试用的存算分离Doris, 其中有一些步骤弄错了, 或者想完全重
+新搭建. 则需要清除环境, 重新执行上述创建存算分离的Doris的步骤.
+和存算一体的Doris 手动清除集群方式类似主要分为两步: 清除元数据以及清除数据
+
+1. 手动强制清除元数据: 删掉FE的meta目录以及fdb里的元数据, 删除fdb里的数据需要使
+	 用到fdb的命令行工具fdbcli. 以下命令都要执行, 其中`${instance_id}`需要替成实际
+	 的值
+	```
+	fdbcli --exec "writemode on;clearrange \x01\x10instance\x00\x01\x10${instance_id}\x00\x01 \x01\x10instance\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10meta\x00\x01\x10${instance_id}\x00\x01 \x01\x10meta\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10txn\x00\x01\x10${instance_id}\x00\x01 \x01\x10txn\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10version\x00\x01\x10${instance_id}\x00\x01 \x01\x10version\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10stats\x00\x01\x10${instance_id}\x00\x01 \x01\x10stats\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10recycle\x00\x01\x10${instance_id}\x00\x01 \x01\x10recycle\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10job\x00\x01\x10${instance_id}\x00\x01 \x01\x10job\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10copy\x00\x01\x10${instance_id}\x00\x01 \x01\x10copy\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	fdbcli --exec "writemode on;clearrange \x01\x10storage_vault\x00\x01\x10${instance_id}\x00\x01 \x01\x10storage_vault\x00\x01\x10${instance_id}\x00\xff\x00\x01"
+	```
+2. 手动强制删除BE的缓存目录(主要是file_cache_path这个配置对应的几个目录)
+3. 重启meta-service 以及 recycler
+
+## 常见问题
 
