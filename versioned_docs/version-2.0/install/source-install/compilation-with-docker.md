@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation with Docker(Recommended)",
+    "title": "Compling with Docker (Recommended)",
     "language": "en"
 }
 ---
