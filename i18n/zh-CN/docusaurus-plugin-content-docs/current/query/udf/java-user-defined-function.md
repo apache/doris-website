@@ -36,7 +36,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 
 ## 创建 UDF
 
-实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 BE 节点都能获取到 jar 包。
+实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 FE 和 BE 节点都能获取到 jar 包。
 
 否则将会返回错误状态信息 `Couldn't open file ......`。
 
@@ -67,7 +67,7 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 ### UDTF
 
 :::tip
-UDTF 自 Doris 2.1.3 版本开始支持
+UDTF 自 Doris 3.0 版本开始支持
 :::
 
 ```sql
@@ -107,8 +107,9 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 |Datetime|LocalDateTime|
 |String|String|
 |Decimal|BigDecimal|
-|```array<Type>```|```ArrayList<Type>``` 支持嵌套|
-|```map<Type1,Type2>```|```HashMap<Type1,Type2>``` 支持嵌套|
+|```array<Type>```|```ArrayList<Type>``` 支持嵌套 |
+|```map<Type1,Type2>```|```HashMap<Type1,Type2>``` 支持嵌套 |
+|```struct<Type...>```|```ArrayList<Object>``` 3.0.0 版本开始支持 |
 
 :::tip
 `array/map` 类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
