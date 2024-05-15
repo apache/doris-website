@@ -112,7 +112,7 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 |```struct<Type...>```|```ArrayList<Object>``` 3.0.0 版本开始支持 |
 
 :::tip
-`array/map` 类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
+`array/map/struct` 类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
 :::
 
 :::caution Warning
