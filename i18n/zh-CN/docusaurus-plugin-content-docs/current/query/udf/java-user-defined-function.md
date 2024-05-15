@@ -66,6 +66,7 @@ Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 
 |Datetime|LocalDateTime|
 |String|String|
 |Decimal|BigDecimal|
+|```struct<Type...>```|```ArrayList<Object>```|
 |```array<Type>```|```ArrayList<Type>```|
 |```map<Type1,Type2>```|```HashMap<Type1,Type2>```|
 
@@ -128,6 +129,11 @@ CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
 * "always_nullable"可选属性，如果在计算中对出现的 NULL 值有特殊处理，确定结果中不会返回 NULL，可以设为 false，这样在整个查询计算过程中性能可能更好些。
 
 * 如果你是**本地路径**方式，这里数据库驱动依赖的 jar 包，**FE、BE 节点都要放置**
+
+:::tip
+实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 FE/BE 节点都能获取到 jar 包;
+- 否则将会返回错误状态信息"Couldn't open file ......".
+:::
 
 ## 编写 UDAF 函数
 
@@ -352,15 +358,6 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
     "type"="JAVA_UDF"
 );
 ```
-
-:::tip
-实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 BE 节点都能获取到 jar 包;
-
-- 否则将会返回错误状态信息"Couldn't open file ......".
-
-- 目前还暂不支持 UDTF
-
-  :::
 
 ## 编写 UDTF 函数
 UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法，但是 UDTF 函数的返回值必须是 Array 类型。

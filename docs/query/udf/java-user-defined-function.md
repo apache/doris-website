@@ -58,6 +58,7 @@ Java UDF provides users with a Java interface written in UDF to facilitate the e
 |Datetime|LocalDateTime|
 |String|String|
 |Decimal|BigDecimal|
+|```struct<Type...>```|```ArrayList<Object>```|
 |```array<Type>```|```ArrayList<Type>```|
 |```map<Type1,Type2>```|```HashMap<Type1,Type2>```|
 
@@ -114,6 +115,10 @@ CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
 * The "always_nullable" is optional attribute, if there is special treatment for the NULL value in the calculation, it is determined that the result will not return NULL, and it can be set to false, so that the performance may be better in the whole calculation process.
 
 * If you use the local path method, the jar package that the database driver depends on, the FE and BE nodes must be placed here
+
+* The implemented jar package can be stored at local or in a remote server and downloaded via http, And each FE/BE node must be able to obtain the jar package;
+Otherwise, the error status message "Couldn't open file..." will be returned
+
 ## Create UDAF
 <br/>
 When using Java code to write UDAF, there are some functions that must be implemented (mark required) and an inner class State, which will be explained with a specific example below.
@@ -333,9 +338,6 @@ CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES
 );
 ```
 
-
-* The implemented jar package can be stored at local or in a remote server and downloaded via http, And each BE node must be able to obtain the jar package;
-Otherwise, the error status message "Couldn't open file..." will be returned
 
 ## Create UDTF
 
