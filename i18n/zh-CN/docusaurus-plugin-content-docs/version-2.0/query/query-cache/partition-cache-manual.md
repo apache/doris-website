@@ -29,7 +29,7 @@ under the License.
 多个 SQL 使用相同的表分区时可命中缓存。
 
 :::caution
-Partition Cache 是试验性功能，没有得到很好的维护，谨慎使用
+Partition Cache 是试验性功能，没有得到很好的维护，将在2.1版本中删除，请谨慎使用。
 :::
 
 ## 需求场景 & 解决方案

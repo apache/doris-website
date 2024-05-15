@@ -46,16 +46,14 @@ This partition cache strategy can solve the above problems, giving priority to e
 
 - Users do not need to worry about data consistency. Cache invalidation is controlled through versioning. The cached data is consistent with the data queried from BE.
 - There are no additional components and costs, the cache results are stored in BE's memory, and users can adjust the cache memory size as needed
-- Implemented two caching strategies, SQLCache and PartitionCache, the latter has a finer cache granularity
+- Implemented one caching strategy, SQLCache
 - Use consistent hashing to solve the problem of BE nodes going online and offline. The caching algorithm in BE is an improved LRU
 
 ## scenes to be used
 
-Currently, it supports two methods: SQL Cache and Partition Cache, and supports OlapTable internal table and Hive external table.
+Currently, it supports one method: SQL Cache, and supports OlapTable internal table and Hive external table.
 
 SQL Cache: Only SQL statements that are completely consistent will hit the cache. For details, see: sql-cache-manual.md
-
-Partition Cache: Multiple SQLs can hit the cache using the same table partition, so it has a higher hit rate than SQL Cache. For details, see: partition-cache-manual.md
 
 ## Monitoring
 
@@ -66,13 +64,8 @@ query_table //The number of tables in Query
 query_olap_table //The number of Olap tables in Query
 cache_mode_sql //Identify the number of Query whose cache mode is sql
 cache_hit_sql //The number of Query hits in Cache with mode sql
-query_mode_partition //The number of queries that identify the cache mode as Partition
-cache_hit_partition //The number of Query hits through Partition
-partition_all //All partitions scanned in Query
-partition_hit //Number of partitions hit through Cache
 
-Cache hit rate = (cache_hit_sql + cache_hit_partition) / query_olap_table
-Partition hit rate = partition_hit / partition_all
+Cache hit rate = cache_hit_sql / query_olap_table
 ```
 
 BE monitoring items:
@@ -80,10 +73,8 @@ BE monitoring items:
 ```text
 query_cache_memory_total_byte //Cache memory size
 query_query_cache_sql_total_count //The number of SQL cached
-query_cache_partition_total_count //Number of Cache partitions
 
 SQL average data size = cache_memory_total / cache_sql_total
-Partition average data size = cache_memory_total / cache_partition_total
 ```
 
 Other monitoring: You can view the CPU and memory indicators of the BE node, Query Percentile and other indicators in the Query statistics from Grafana, and adjust the Cache parameters to achieve business goals.
@@ -127,13 +118,4 @@ These two parameters can be set according to the number of BE nodes, node memory
 vim be/conf/be.conf
 query_cache_max_size_mb=256
 query_cache_elasticity_size_mb=128
-```
-
-5. cache_max_partition_count
-
-Parameters unique to Partition Cache. The maximum number of BE partitions refers to the maximum number of partitions corresponding to each SQL. If it is partitioned by date, it can cache data for more than 2 years. If you want to keep the cache for a longer time, please set this parameter larger and modify the parameters at the same time. cache_result_max_row_count and cache_result_max_data_size.
-
-```text
-vim be/conf/be.conf
-cache_max_partition_count=1024
 ```
