@@ -33,17 +33,20 @@ under the License.
 
 ## 1. 安装
 
-每台机器都需先安装fdb服务。安装包下载地址 https://github.com/apple/foundationdb/releases，选择一个版本，目前一般用的版本 [7.1.38](https://github.com/apple/foundationdb/releases/tag/7.1.38)。
+每台机器都需先安装fdb服务。安装包下载地址 <https://github.com/apple/foundationdb/releases>，选择一个版本，目前一般用的版本 [7.1.38](https://github.com/apple/foundationdb/releases/tag/7.1.38)。
 
 一般关注centos(redhat) 和 ubuntu 的即可
+这里是原链接
+<https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-clients-7.1.38-1.el7.x86_64.rpm>
+<https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-server-7.1.38-1.el7.x86_64.rpm>
+<https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-clients_7.1.38-1_amd64.deb>
+<https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-server_7.1.38-1_amd64.deb>
 
-https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-clients_7.1.38-1_amd64.deb
-
-https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-server_7.1.38-1_amd64.deb
-
-https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-clients-7.1.38-1.el7.x86_64.rpm
-
-https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-server-7.1.38-1.el7.x86_64.rpm
+这里镜像
+<https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/toolkit/fdb/foundationdb-clients-7.1.38-1.el7.x86_64.rpm>
+<https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/toolkit/fdb/foundationdb-server-7.1.38-1.el7.x86_64.rpm>
+<https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/toolkit/fdb/foundationdb-server_7.1.38-1_amd64.deb>
+<https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/toolkit/fdb/foundationdb-clients_7.1.38-1_amd64.deb>
 
 安装fdb
 
