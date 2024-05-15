@@ -1,6 +1,6 @@
 ---
 {
-"title": "TPCH
+"title": "TPCH",
 "language": "zh-CN"
 }
 ---
@@ -26,13 +26,15 @@ under the License.
 
 ## 使用须知
 
-TPCH Catalog 通过 Trino Connector 兼容框架，使用 [TPCH Connector](https://trino.io/docs/current/connector/tpch.html) 来快速构建 TPCH 测试集。
+TPCH Catalog 通过 [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide) 兼容框架，使用 [TPCH Connector](https://trino.io/docs/current/connector/tpch.html) 来快速构建 TPCH 测试集。
 
 :::tip
-该功能自 Doris 3.0.0 版本开始支持
+该功能自 Doris 3.0.0 版本开始支持。
 :::
 
 ## 编译 TPCH Connector
+
+> 需要 JDK 17 版本。
 
 ```shell
 git clone https://github.com/trinodb/trino.git
@@ -41,7 +43,7 @@ cd trino/plugin/trino-tpch
 mvn clean install -DskipTest
 ```
 
-完成编译后，会在 `trino/plugin/trino-tpch/target/` 下得到 `trino-tpch-435/` 目录
+完成编译后，会在 `trino/plugin/trino-tpch/target/` 下得到 `trino-tpch-435/` 目录。
 
 ## 部署 TPCH Connector
 
@@ -55,7 +57,7 @@ mvn clean install -DskipTest
 ...
 ```
 
-部署完成后，建议重启 FE、BE 节点以确保 Connector 可以被正确加载
+部署完成后，建议重启 FE、BE 节点以确保 Connector 可以被正确加载。
 
 ## 创建 TPCH Catalog
 
