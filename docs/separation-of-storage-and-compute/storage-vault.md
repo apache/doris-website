@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Storage Backend - Storage Vault",
+    "title": "Storage Vault for Storage Backend",
     "language": "en-US"
 }
 ---

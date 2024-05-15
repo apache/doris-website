@@ -246,4 +246,4 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 ## 更多帮助
 
- 关于 BACKUP 使用的更多详细语法及最佳实践，请参阅 [BACKUP](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP BACKUP` 获取更多帮助信息。
+ 关于 BACKUP 使用的更多详细语法及最佳实践，请参阅 [BACKUP](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP BACKUP` 获取更多帮助信息。

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Separation of Storage and Compute - Compute Cluster",
+    "title": "Computing Cluster",
     "language": "en-US"
 }
 ---
