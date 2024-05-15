@@ -66,12 +66,15 @@ mvn clean install -DskipTest
 ```sql
 CREATE CATALOG `tpch` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpch"
-    "tpch.splits-per-node" = "32",
+    "connector.name" = "tpch",
+    "tpch.column-naming" = "STANDARD",
+    "tpch.splits-per-node" = "32"
 );
 ```
 
 其中 `tpch.splits-per-node` 为并发数，建议设置为 BE 单机核数的 2 倍，可以获得最优的并发度。提升数据生成效率。
+
+`"tpch.column-naming" = "STANDARD"` 时，TPCH 表中的列名，都会以表名缩写开头，比如 `l_orderkey`，否则，是 `orderkey`。
 
 ## 使用 TPCH Catalog
 

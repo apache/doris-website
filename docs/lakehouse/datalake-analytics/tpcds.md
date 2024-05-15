@@ -66,7 +66,7 @@ After deployment, it is recommended to restart the FE and BE nodes to ensure the
 ```sql
 CREATE CATALOG `tpcds` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpcds"
+    "connector.name" = "tpcds",
     "tpcds.split-count" = "32"
 );
 ```

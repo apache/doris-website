@@ -66,12 +66,15 @@ After deployment, it is recommended to restart the FE and BE nodes to ensure the
 ```sql
 CREATE CATALOG `tpch` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpch"
-    "tpch.splits-per-node" = "32",
+    "connector.name" = "tpch",
+    "tpch.column-naming" = "STANDARD",
+    "tpch.splits-per-node" = "32"
 );
 ```
 
 The `tpch.splits-per-node` property sets the level of concurrency. It is recommended to set it to twice the number of cores per BE node to achieve optimal concurrency and improve data generation efficiency.
+
+When `"tpch.column-naming" = "STANDARD"`, the column names in the TPCH table will start with the abbreviation of the table name, such as `l_orderkey`, otherwise, it is `orderkey`.
 
 ## Using the TPCH Catalog
 

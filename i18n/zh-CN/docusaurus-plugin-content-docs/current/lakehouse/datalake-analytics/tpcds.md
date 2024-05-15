@@ -66,7 +66,7 @@ mvn clean install -DskipTest
 ```sql
 CREATE CATALOG `tpcds` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpcds"
+    "connector.name" = "tpcds",
     "tpcds.split-count" = "32"
 );
 ```
