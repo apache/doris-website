@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Separation of Storage and Compute - Overview",
+    "title": "Overview",
     "language": "en-US"
 }
 ---

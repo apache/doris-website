@@ -279,7 +279,7 @@ http {
 
 这是 bdbje 的一个 bug，尚未解决。遇到这种情况，只能通过[元数据运维文档](../admin-manual/maint-monitor/metadata-operation.md) 中的 故障恢复 进行操作来恢复元数据了。
 
-### Q12. Doris 编译安装 JDK 版本不兼容问题
+### Q12. 
 
 在自己使用 Docker 编译 Doris 的时候，编译完成安装以后启动 FE，出现 `java.lang.Suchmethoderror: java.nio. ByteBuffer. limit (I)Ljava/nio/ByteBuffer;` 异常信息，这是因为 Docker 里默认是 JDK 11，如果你的安装环境是使用 JDK8，需要在 Docker 里 JDK 环境切换成 JDK8，具体切换方法参照[编译文档](../install/source-install/compilation-with-docker)
 

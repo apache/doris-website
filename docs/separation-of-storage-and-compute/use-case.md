@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Separation of Storage and Compute - Use Case",
+    "title": "Use Cases",
     "language": "en-US"
 }
 ---

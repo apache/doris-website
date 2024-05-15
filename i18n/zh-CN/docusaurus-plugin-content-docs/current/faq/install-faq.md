@@ -281,7 +281,7 @@ http {
 
 ### Q12. Doris 编译安装 JDK 版本不兼容问题
 
-在自己使用 Docker 编译 Doris 的时候，编译完成安装以后启动 FE，出现 `java.lang.Suchmethoderror: java.nio. ByteBuffer. limit (I)Ljava/nio/ByteBuffer;` 异常信息，这是因为 Docker 里默认是 JDK 11，如果你的安装环境是使用 JDK8，需要在 Docker 里 JDK 环境切换成 JDK8，具体切换方法参照[编译文档](../install/source-install/compilation-general.md)
+在自己使用 Docker 编译 Doris 的时候，编译完成安装以后启动 FE，出现 `java.lang.Suchmethoderror: java.nio. ByteBuffer. limit (I)Ljava/nio/ByteBuffer;` 异常信息，这是因为 Docker 里默认是 JDK 11，如果你的安装环境是使用 JDK8，需要在 Docker 里 JDK 环境切换成 JDK8，具体切换方法参照[编译文档](../install/source-install/compilation-with-docker)
 
 ### Q13. 本地启动 FE 或者启动单元测试报错 Cannot find external parser table action_table.dat
 执行如下命令
@@ -299,7 +299,7 @@ cp fe-core/target/generated-sources/cup/org/apache/doris/analysis/action_table.d
 ```
 ERROR 1105 (HY000): errCode = 2, detailMessage = driver connect Error: HY000 [MySQL][ODBC 8.0(w) Driver]SSL connection error: Failed to set ciphers to use (2026)
 ```
-解决方式是使用`Connector/ODBC 8.0.28` 版本的 ODBC Connector，并且在操作系统处选择 `Linux - Generic`, 这个版本的 ODBC Driver 使用 openssl 1.1 版本。或者使用低版本的 ODBC Connector，比如[Connector/ODBC 5.3.14](https://dev.mysql.com/downloads/connector/odbc/5.3.html)。具体使用方式见 [ODBC 外表使用文档](../lakehouse/external-table/odbc.md)。
+解决方式是使用`Connector/ODBC 8.0.28` 版本的 ODBC Connector，并且在操作系统处选择 `Linux - Generic`, 这个版本的 ODBC Driver 使用 openssl 1.1 版本。或者使用低版本的 ODBC Connector，比如[Connector/ODBC 5.3.14](https://dev.mysql.com/downloads/connector/odbc/5.3.html)。具体使用方式见 [ODBC 外表使用文档](https://doris.apache.org/zh-CN/docs/1.2/lakehouse/external-table/odbc)。
 
 可以通过如下方式验证 MySQL ODBC Driver 使用的 openssl 版本
 

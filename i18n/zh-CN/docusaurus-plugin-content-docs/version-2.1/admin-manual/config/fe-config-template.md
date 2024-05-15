@@ -27,11 +27,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris FE配置参数
+# Doris FE 配置参数
 
 该文档主要介绍 FE 的相关配置项。
 
-FE 的配置文件 `fe.conf` 通常存放在 FE 部署路径的 `conf/` 目录下。 而在 0.14 版本中会引入另一个配置文件 `fe_custom.conf`。该配置文件用于记录用户在运行时动态配置并持久化的配置项。
+FE 的配置文件 `fe.conf` 通常存放在 FE 部署路径的 `conf/` 目录下。而在 0.14 版本中会引入另一个配置文件 `fe_custom.conf`。该配置文件用于记录用户在运行时动态配置并持久化的配置项。
 
 FE 进程启动后，会先读取 `fe.conf` 中的配置项，之后再读取 `fe_custom.conf` 中的配置项。`fe_custom.conf` 中的配置项会覆盖 `fe.conf` 中相同的配置项。
 
@@ -39,10 +39,10 @@ FE 进程启动后，会先读取 `fe.conf` 中的配置项，之后再读取 `f
 
 ## 注意事项
 
-**1.** 出于简化架构的目的，目前通过```mysql协议修改Config```的方式修改配置只会修改本地FE内存中的数据，而不会把变更同步到所有FE。
-对于只会在Master FE生效的Config项，修改请求会自动转发到Master节点
+**1.** 出于简化架构的目的，目前通过```mysql协议修改Config```的方式修改配置只会修改本地 FE 内存中的数据，而不会把变更同步到所有 FE。
+对于只会在 Master FE 生效的 Config 项，修改请求会自动转发到 Master 节点
 
-**2.** 需要注意```forward_to_master```选项会影响```show frontend config```的展示结果，如果```forward_to_master=true```，那么只会展示Master的配置（即使您此时连接的是Follower FE节点），这可能导致您无法看到对本地FE配置的修改；如果期望show config返回本地FE的配置项，那么执行命令```set forward_to_master=false```
+**2.** 需要注意```forward_to_master```选项会影响```show frontend config```的展示结果，如果```forward_to_master=true```，那么只会展示 Master 的配置（即使您此时连接的是 Follower FE 节点），这可能导致您无法看到对本地 FE 配置的修改；如果期望 show config 返回本地 FE 的配置项，那么执行命令```set forward_to_master=false```
 
 ## 查看配置项
 
@@ -63,7 +63,7 @@ FE 的配置项有两种方式进行查看：
    - Key：配置项名称。
    - Value：当前配置项的值。
    - Type：配置项值类型，如果整型、字符串。
-   - IsMutable：是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果false，则表示该配置项只能在 `fe.conf` 中配置并且重启 FE 后生效。
+   - IsMutable：是否可以动态配置。如果为 true，表示该配置项可以在运行时进行动态配置。如果 false，则表示该配置项只能在 `fe.conf` 中配置并且重启 FE 后生效。
    - MasterOnly：是否为 Master FE 节点独有的配置项。如果为 true，则表示该配置项仅在 Master FE 节点有意义，对其他类型的 FE 节点无意义。如果为 false，则表示该配置项在所有 FE 节点中均有意义。
    - Comment：配置项的描述。
 
@@ -91,7 +91,7 @@ FE 的配置项有两种方式进行配置：
 
 3. 通过 HTTP 协议动态配置
 
-   具体请参阅 [Set Config Action](../http-actions/fe/set-config-action.md)
+   具体请参阅 [Set Config Action](../../admin-manual/fe/set-config-action.md)
 
    该方式也可以持久化修改后的配置项。配置项将持久化在 `fe_custom.conf` 文件中，在 FE 重启后仍会生效。
 

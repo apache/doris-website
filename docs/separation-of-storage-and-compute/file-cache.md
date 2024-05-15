@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Separation of Storage and Compute - File Cache",
+    "title": "File Caches",
     "language": "en-US"
 }
 ---
