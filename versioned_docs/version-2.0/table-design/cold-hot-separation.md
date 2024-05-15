@@ -1,6 +1,6 @@
 ---
 {
-"title": "Cold Hot Separation",
+"title": "Tiered Storage",
 "language": "en"
 }
 ---

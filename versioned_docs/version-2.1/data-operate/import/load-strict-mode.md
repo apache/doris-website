@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Import Strict Mode",
+    "title": "Loading Strict Mode",
     "language": "en"
 }
 ---

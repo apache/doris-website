@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Export Overview",
+    "title": "Exporting Overview",
     "language": "en"
 }
 ---
@@ -171,7 +171,7 @@ FinishTime: 2019-06-25 17:08:34
 * CreateTime/StartTime/FinishTime: Creation time, start scheduling time and end time of jobs.
 * Timeout: Job timeout. The unit is seconds. This time is calculated from CreateTime.
 * Error Msg: If there is an error in the job, the cause of the error is shown here.
-* OutfileInfo：If the export job is successful, specific `SELECT INTO OUTFILE` result information will be displayed here.
+* OutfileInfo: If the export job is successful, specific `SELECT INTO OUTFILE` result information will be displayed here.
 
 ### Cancel Export Job
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Audit Log Plugin",
+    "title": "Using Audit Log Plugin",
     "language": "en"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Audit Log Plugin
 
 Doris's audit log plugin was developed based on FE's plugin framework. Is an optional plugin. Users can install or uninstall this plugin at runtime.
 

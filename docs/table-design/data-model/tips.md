@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Usage Guidelines",
+    "title": "Usage Notes",
     "language": "en"
 }
 ---

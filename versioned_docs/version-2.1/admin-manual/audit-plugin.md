@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Audit Log Plugin",
+    "title": "Using Audit Log Plugin",
     "language": "en"
 }
 ---

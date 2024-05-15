@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Cluster Upgrade",
+    "title": "Upgrading Cluster",
     "language": "en"
 }
 ---

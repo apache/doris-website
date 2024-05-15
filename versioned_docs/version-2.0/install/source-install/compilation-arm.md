@@ -1,6 +1,6 @@
 ---
 {
-"title": "Compilation with Arm",
+"title": "Compling with Arm",
 "language": "en"
 }
 ---
@@ -326,8 +326,8 @@ After examining the logs, it is found that the issue is related to the compilati
 
 Cause: Possible causes of compilation error of `libxml2` include: 
 
-- 1）Exceptions in loading environment variables in the Ubuntu system, resulting in the ldb directory's index not being successfully loaded.
-- 2）Failure to retrieve environment variables during libxml2 compilation, causing the compilation process to not find the ldb/aclocal directory.
+- 1) Exceptions in loading environment variables in the Ubuntu system, resulting in the ldb directory's index not being successfully loaded.
+- 2) Failure to retrieve environment variables during libxml2 compilation, causing the compilation process to not find the ldb/aclocal directory.
 
 Solution: Copy the `pkg.m4` file from the ldb/aclocal directory to the libxml2/m4 directory and recompile the third-party library.
 

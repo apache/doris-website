@@ -1,6 +1,6 @@
 ---
 {
-    "title": "File Manager",
+    "title": "Small File Manager",
     "language": "en"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# File Manager
 
 Some functions in Doris require some user-defined files. For example, public keys, key files, certificate files and so on are used to access external data sources. The File Manager provides a function that allows users to upload these files in advance and save them in Doris system, which can then be referenced or accessed in other commands.
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Load Balancing",
+    "title": "Loading Balance",
     "language": "en"
 }
 
@@ -25,7 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# load balancing
 
 When deploying multiple FE nodes, users can deploy a load balancing layer on top of multiple FEs to achieve high availability of Doris.
 
