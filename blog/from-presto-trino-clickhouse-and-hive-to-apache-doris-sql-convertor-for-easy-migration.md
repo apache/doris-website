@@ -5,7 +5,7 @@
     'date': '2024-05-06',
     'author': 'Apache Doris',
     'picked': "true",
-    'order': "3",
+    'order': "2",
     'tags': ['Tech Sharing'],
     "image": '/images/sql-convertor-feature.jpeg'
 }
