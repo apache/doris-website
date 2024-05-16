@@ -14,17 +14,17 @@ export const NEWSLETTER_DATA = [
         image: 'sql-convertor-feature.jpeg',
     },
     {
-        tags: ['Tech Sharing'],
-        title: "Arrow Flight SQL for 10X faster data transfer",
-        content: `Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.`,
-        to: '/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer',
-        image: 'arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png',
-    },
-    {
         tags: ['Best Practice'],
         title: "Cross-cluster replication for read-write separation: story of a grocery store brand",
         content: `Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.`,
         to: '/blog/cross-cluster-replication-for-read-write',
         image: 'ccr-for-read-write-separation.jpg',
+    },
+    {
+        tags: ['Tech Sharing'],
+        title: "Arrow Flight SQL for 10X faster data transfer",
+        content: `Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.`,
+        to: '/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer',
+        image: 'arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png',
     },
 ];
