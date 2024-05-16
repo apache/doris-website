@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Partition",
+    "title": "Data Partitioning",
     "language": "en"
 }
 ---

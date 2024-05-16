@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Workload Group",
-    "language": "en"
+  "title": "Workload Group",
+  "language": "en"
 }
 ---
 
@@ -73,6 +73,8 @@ Doris 2.0 version uses Doris scheduling to limit CPU resources, but since versio
 
 If users use the Workload Group software limit in version 2.0 and upgrade to version 2.1, they also need to configure CGroup, Otherwise, cpu soft limit may not work.
 
+If using CGroup within a container, the container needs to have permission to operate the host.
+
 Without configuring cgroup, users can use all functions of the workload group except for CPU limitations.
 
 1 Firstly, confirm that the CGgroup v1 version has been installed on the node where BE is located, and the path ```/sys/fs/cgroup/cpu/``` exists.
@@ -100,44 +102,20 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 It should be noted that the current workload group does not support the deployment of multiple BE on same machine.
 
 ## Workload group usage
-
-1. Manually create a workload group named normal, which is the default workload group in the system and cannot be deleted.
-```
-create workload group if not exists normal 
-properties (
-	'cpu_share'='1024',
-	'memory_limit'='30%',
-	'enable_memory_overcommit'='true'
-);
-```
-The function of a normal group is that when you do not specify a Workload Group for a query, the query will use normal Group, thus avoiding query failures.
-
-2. Enable the experimental_enable_workload_group configuration, set in fe.conf to
-```
-experimental_enable_workload_group=true
-```
-The system will automatically create a default workload group named ``normal`` after this configuration is enabled. 
-
-3. If you expect to use other groups for testing, you can create a custom workload group,
+1. First, create a custom workload group.
 ```
 create workload group if not exists g1
 properties (
-    "cpu_share"="1024".
-    "memory_limit"="30%".
+    "cpu_share"="1024",
+    "memory_limit"="30%",
     "enable_memory_overcommit"="true"
-).
+);
 ```
-This configured CPU limit to the soft limit.
+This is soft CPU limit. Since version 2.1, the system will automatically create a group named ` ` normal ` `, which cannot be deleted.
 
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP); to view the workload group, refer to: [WORKLOAD_GROUPS()](../sql-manual/sql-functions/table-functions/workload-group.md) and [SHOW-WORKLOAD-GROUPS](../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS).
+For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP); to view the workload group, you can visit doris system table ```information_schema.workload_groups``` or [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS).
 
-
-4. turn on the pipeline execution engine, the workload group cpu isolation is based on the implementation of the pipeline execution engine, so you need to turn on the session variable:
-```
-set experimental_enable_pipeline_engine = true.
-```
-
-5. Bind the workload group.
+2. Bind the workload group.
 * Bind the user to the workload group by default by setting the user property to ``normal``.
 ```
 set property 'default_workload_group' = 'g1'.
@@ -145,17 +123,17 @@ set property 'default_workload_group' = 'g1'.
 The current user's query will use 'g1' by default.
 * Specify the workload group via the session variable, which defaults to null.
 ```
-set workload_group = 'g2'.
+set workload_group = 'g1'.
 ```
 session variable `workload_group` takes precedence over user property `default_workload_group`, in case `workload_group` is empty, the query will be bound to `default_workload_group`, in case session variable ` workload_group` is not empty, the query will be bound to `workload_group`.
 
-If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../sql-manual/sql-reference/Account-Management-Statements/GRANT).
+If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-statements/Account-Management-Statements/GRANT).
 
 6. Execute the query, which will be associated with the g1 workload group.
 
 ### Query Queue
 ```
-create workload group if not exists test_group
+create workload group if not exists queue_group
 properties (
     "cpu_share"="10",
     "memory_limit"="30%",
@@ -184,18 +162,18 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 
 2 modify cpu_hard_limit
 ```
-alter workload group group1 properties ( 'cpu_hard_limit'='20%' );
+alter workload group g1 properties ( 'cpu_hard_limit'='20%' );
 ```
 
 3 Viewing the current configuration of the Workload Group, it can be seen that although the cpu_share may not be 0, but due to the hard limit mode being enabled, the query will also follow the CPU's hard limit during execution. That is to say, the switch of CPU software and hardware limits does not affect workload group modification.
 ```
-mysql [(none)]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_hard_limit from workload_groups() where name='group1';
-+--------+-----------+--------------+--------------------------+----------------+
-| Name   | cpu_share | memory_limit | enable_memory_overcommit | cpu_hard_limit |
-+--------+-----------+--------------+--------------------------+----------------+
-| group1 |        10 | 45%          | true                     | 20%            |
-+--------+-----------+--------------+--------------------------+----------------+
-1 row in set (0.03 sec)
+mysql [information_schema]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_hard_limit from information_schema.workload_groups where name='g1';
++------+-----------+--------------+--------------------------+----------------+
+| name | cpu_share | memory_limit | enable_memory_overcommit | cpu_hard_limit |
++------+-----------+--------------+--------------------------+----------------+
+| g1   |      1024 | 30%          | true                     | 20%            |
++------+-----------+--------------+--------------------------+----------------+
+1 row in set (0.02 sec)
 ```
 
 ### How to switch CPU limit node between soft limit and hard limit
@@ -205,7 +183,7 @@ Users can switch between two modes, and the main switching methods are as follow
 
 1 If the current cluster configuration is set to the default CPU soft limit and it is expected to be changed to the CPU hard limit, then cpu_hard_limit should be set to a valid value first.
 ```
-alter workload group group1 properties ( 'cpu_hard_limit'='20%' );
+alter workload group test_group properties ( 'cpu_hard_limit'='20%' );
 ```
 It is necessary to modify cpu_hard_limit of all Workload Groups in the current cluster, sum of all Workload Group's cpu_hard_limit cannot exceed 100%.
 Due to the CPU's hard limit can not being able to provide a valid default value, if only the switch is turned on without modifying cpu_hard_limit, the CPU's hard limit will not work.
@@ -220,4 +198,4 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 ```
 
 If user expects to switch back from cpu hard limit to cpu soft limit, then they only need to set ```enable_cpu_hard_limit=false```.
-CPU Soft Limit property ```cpu_shared``` will be filled with a valid value of 1024 by default(If the user has never set the cpu_share before), and users can adjust cpu_share based on the priority of Workload Group.
+CPU Soft Limit property ```cpu_share``` will be filled with a valid value of 1024 by default(If the user has never set the cpu_share before), and users can adjust cpu_share based on the priority of Workload Group.

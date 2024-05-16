@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Min Load Replica Num",
+    "title": "Minimum Number of Replicas Loading",
     "language": "en"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Min Load Replica Num
 
 Importing data requires more than half of the replicas to be written successfully. However, it is not flexible enough and may cause inconvenience in some scenarios.
 

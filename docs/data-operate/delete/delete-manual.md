@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Delete",
+    "title": "Deleting Data with DELETE Command",
     "language": "en"
 }
 

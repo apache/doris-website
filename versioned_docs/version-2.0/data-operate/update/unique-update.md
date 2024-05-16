@@ -1,6 +1,6 @@
 ---
 {
-    "title": "UPDATE Command to Update Data in Unique Model",
+    "title": "Updating Data with UPDATE Command",
     "language": "en"
 }
 ---

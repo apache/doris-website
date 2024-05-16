@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Plugin Development Manual",
+    "title": "Developing Plugins",
     "language": "en"
 }
 ---

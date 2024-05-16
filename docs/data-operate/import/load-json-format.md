@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Importing Data in JSON Format",
+    "title": "Loading Data in JSON Format",
     "language": "en"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Importing Data in JSON Format
 
 Doris supports importing data in JSON format. This document mainly describes the precautions when importing data in JSON format.
 
@@ -283,10 +282,10 @@ The above example will import the value of k1 multiplied by 100. The final impor
 +------+------+
 ````
 
-Import statement 3：
+Import statement 3:
 
 Compared with the  import statement 1 and import statement 2, the columns field `k1_copy` is added here.
-Table Structure：
+Table Structure:
 
 ```
 k2 int, k1 int, k1_copy int
@@ -308,9 +307,9 @@ The above example will extract the fields in the order specified by the JSON Pat
 +------+------+---------+
 ```
 
-Import statement 4：
+Import statement 4:
 
-Data content：
+Data content:
 
 ```json
 {"k1" : 1, "k2": 2, "k3": {"k1" : 31, "k1_nested" : {"k1" : 32} } }
@@ -533,7 +532,7 @@ code INT NULL
       {"id": 103, "city": "chongqing", "code" : 4}
       ```
 
- 	 StreamLoad import：
+ 	 StreamLoad import:
 
 ```bash
 curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load

@@ -72,7 +72,7 @@ Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类
 
 Pod 意外重启后，K8s 不能保证 Pod 的 IP 不发生变化，但是能保证域名不变，基于这一特性，Doris 开启 FQDN 时，能保证 Pod 意外重启后，还能正常提供服务。
 
-K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../install/cluster-deployment/k8s-deploy/operator-deploy)
+K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../install/cluster-deployment/k8s-deploy/install-doris-cluster)
 
 ### 服务器变更 IP
 
@@ -99,14 +99,14 @@ K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../install/cluster-depl
 
 3. 为节点设置 FQDN: `ALTER SYSTEM MODIFY FRONTEND "<fe_ip>:<edit_log_port>" HOSTNAME "<fe_hostname>"`（停掉 master 后，会选举出新的 master 节点，用新的 master 节点来执行 sql 语句）
 
-4. 修改节点配置。修改 FE 根目录中的`conf/fe.conf`文件，添加配置：`enable_fqdn_mode = true`。如果在刚停止的节点对应fe.conf 添加了配置后无法正常启动，请在所有fe.conf 中添加配置`enable_fqdn_mode = true`后再启动刚刚停止的fe节点
+4. 修改节点配置。修改 FE 根目录中的`conf/fe.conf`文件，添加配置：`enable_fqdn_mode = true`。如果在刚停止的节点对应 fe.conf 添加了配置后无法正常启动，请在所有 fe.conf 中添加配置`enable_fqdn_mode = true`后再启动刚刚停止的 fe 节点
 
 5. 启动节点。
   
 
 **2. BE 节点启用 FQDN 只需要通过 MySQL 执行以下命令，不需要对 BE 执行重启操作。**
 
-`ALTER SYSTEM MODIFY BACKEND "<backend_ip>:<HeartbeatPort>" HOSTNAME "<be_hostname>"`，如果你不知道端口HeartbeatPort是多少，请使用show backends命令来帮助寻找此端口;
+`ALTER SYSTEM MODIFY BACKEND "<backend_ip>:<HeartbeatPort>" HOSTNAME "<be_hostname>"`，如果你不知道端口 HeartbeatPort 是多少，请使用 show backends 命令来帮助寻找此端口;
 
 
 ## 常见问题

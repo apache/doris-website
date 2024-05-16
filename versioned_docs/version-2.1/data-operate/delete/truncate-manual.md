@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Truncate",
+    "title": "Deleting Data with TRUNCATE Command",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Type",
+    "title": "Data Types",
     "language": "en"
 }
 ---

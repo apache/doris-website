@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Install FDB",
+    "title": "Installing FDB",
     "language": "en-US"
 }
 ---

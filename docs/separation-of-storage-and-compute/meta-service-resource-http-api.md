@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Separation of Storage and Compute - Meta Service Resource HTTP API Reference",
+    "title": "Meta Service Resource HTTP API Reference",
     "language": "en-US"
 }
 ---

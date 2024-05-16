@@ -1,6 +1,6 @@
 ---
 {
-    "title": "AUTO_INCREMENT Column",
+    "title": "Using AUTO_INCREMENT",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# AUTO_INCREMENT Column
+
 
 <version since="2.1">
 
