@@ -69,17 +69,13 @@ LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 Role，如果用�
 ## 启用 LDAP 认证
 
 ### server 端配置
-从2.1.3开始，需要在`fe/conf/fe.conf` 文件中配置认证方式为ldap `authentication_type=ldap`。
+在`fe/conf/fe.conf` 文件中配置认证方式为ldap `authentication_type=ldap`。
 
 在 `fe/conf/ldap.conf` 文件中配置 LDAP 基本信息，
 
 另有 LDAP 管理员密码需要使用 sql 语句进行设置。
 
 #### 配置 `fe/conf/ldap.conf` 文件
-
-- `ldap_authentication_enabled = false`
-
-  设置值为“true”启用 LDAP 验证；当值为“false”时，不启用 LDAP 验证，该配置文件的其他配置项都无效。（注：2.1.3开始，无需配置）
 
 - `ldap_host = 127.0.0.1`
 
