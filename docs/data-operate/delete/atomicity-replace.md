@@ -31,7 +31,7 @@ Doris supports atomic table replacement operations for two tables. This is only 
 ## Applicable scenarios
 
 - Atomic overwrite operations
-- In certain cases, users may want to rewrite data in a table. However, the "delete and load" approach causes a data invisibility window. To solve that, Doris allows users to create a new table of the same schema using the CREATE TABLE LIKE statement, import the new data into this new table, and then atomically replace the old table with the new table. For atomic replacement at the partition level, please refer to the [temporary partition](https://doris.apache.org/docs/2.0/data-operate/delete/table-temp-partition/)documentation.
+- In certain cases, users may want to rewrite data in a table. However, the "delete and load" approach causes a data invisibility window. To solve that, Doris allows users to create a new table of the same schema using the CREATE TABLE LIKE statement, import the new data into this new table, and then atomically replace the old table with the new table. For atomic replacement at the partition level, please refer to the [temporary partition](../../data-operate/delete/table-temp-partition/)documentation.
 
 ## Syntax
 

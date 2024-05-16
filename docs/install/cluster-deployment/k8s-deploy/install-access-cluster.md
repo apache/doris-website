@@ -1,6 +1,6 @@
 ---
 {
-"title": "Access Doris Cluster",
+"title": "Accessing Doris Cluster",
 "language": "en"
 }
 ---
@@ -182,7 +182,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ## Stream Load ErrorURL Redirect
 
-[Stream Load](../../data-operate/import/import-way/stream-load-manual) is a synchronous import mode provided by Doris. It is an efficient way to import local files into Doris. In the case of physical or virtual machine deployment, directly use http to initiate an import data request to FE, and FE will redirect the request to the BE service through the 301 mechanism to execute the write request. On Kubernetes, FE and BE use [Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/) as the method of service discovery. In situations where a proxy is used to mask the internal real address to provide service discovery, the address of the BE (the real address used for internal communication within the service) returned using FE 301 cannot be accessed. On Kubernetes, you need to use BE's Service address to import data.
+[Stream Load](../../../data-operate/import/stream-load-manual) is a synchronous import mode provided by Doris. It is an efficient way to import local files into Doris. In the case of physical or virtual machine deployment, directly use http to initiate an import data request to FE, and FE will redirect the request to the BE service through the 301 mechanism to execute the write request. On Kubernetes, FE and BE use [Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/) as the method of service discovery. In situations where a proxy is used to mask the internal real address to provide service discovery, the address of the BE (the real address used for internal communication within the service) returned using FE 301 cannot be accessed. On Kubernetes, you need to use BE's Service address to import data.
 
 As in the following example, Stream Load ErrorUrl returns the result `http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e`
 
