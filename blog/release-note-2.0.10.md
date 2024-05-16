@@ -7,7 +7,7 @@
     'tags': ['Release Notes'],
     'picked': "true",
     'order': "2",
-    "image": '/images/2.0.9.png'
+    "image": '/images/2.0.10.jpg'
 }
 ---
 

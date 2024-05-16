@@ -11,7 +11,7 @@ export const NEWSLETTER_DATA = [
         title: "Apache Doris version 2.0.10 has been released",
         content: `Thanks to our community users and developers, about 83 improvements and bug fixes have been made in Doris 2.0.10 version.`,
         to: '/blog/release-note-2.0.10',
-        image: '2.0.9.png',
+        image: '2.0.10.jpg',
     },
     {
         tags: ['Tech Sharing'],
