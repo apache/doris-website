@@ -34,22 +34,22 @@ Doris provides a variety of data import solutions, and you can choose different 
 
 | Data Source                          | Loading Method                                                |
 | ------------------------------------ | ------------------------------------------------------------ |
-| Object Storage (s3), HDFS            | [Import data using Broker](../import/broker-load-manual#s3-load) |
-| Local file                           | [Import local data](../import/routine-load-manual#supported-data-file-formats)    |
-| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](../import/mysql-load-manual) |
-| Loading via JDBC                      | [Sync data using JDBC](../import/group-commit-manual#use-jdbc)       |
-| Loading JSON format data              | [JSON format data import](../import/load-json-format) |
+| Object Storage (s3), HDFS            | [Import data using Broker](./broker-load-manual#s3-load) |
+| Local file                           | [Import local data](./routine-load-manual#supported-data-file-formats)    |
+| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./mysql-load-manual) |
+| Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc.md)       |
+| Loading JSON format data              | [JSON format data import](./load-json-format) |
 
 ### By Loading Method
 
 | Loading method name | Use method                                                   |
 | ------------------ | ------------------------------------------------------------ |
-| Broker Load        | [Import external storage data via Broker](../import/broker-load-manual) |
-| Stream Load        | [Stream import data (local file and memory data)](./import-way/stream-load-manual.md) |
-| Routine Load       | [Import Kafka data](../import/stream-load-manual)   |
-| Insert Into        | [External table imports data through INSERT](../import/insert-into-manual) |
-| S3 Load            | [Object storage data import of S3 protocol](../import/broker-load-manual#s3-load) |
-| MySQL Load         | [Local data import of MySql protocol](../import/mysql-load-) |
+| Broker Load        | [Import external storage data via Broker](./broker-load-manual) |
+| Stream Load        | [Stream import data (local file and memory data)](./stream-load-manual.md) |
+| Routine Load       | [Import Kafka data](./stream-load-manual)   |
+| Insert Into        | [External table imports data through INSERT](./insert-into-manual) |
+| S3 Load            | [Object storage data import of S3 protocol](./broker-load-manual#s3-load) |
+| MySQL Load         | [Local data import of MySql protocol](./mysql-load-) |
 
 ## Supported Data Formats
 
