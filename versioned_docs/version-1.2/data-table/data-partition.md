@@ -38,7 +38,7 @@ A table contains rows and columns.
 
 Row refers to a row of data about the user. Column is used to describe different fields in a row of data.
 
-Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and metric columns, respectively. In the Aggregate Model, rows with the same values in Key columns will be aggregated into one row. The way how Value columns are aggregated is specified by the user when the table is built. For more information about the Aggregate Model, please see the [Data Model](./data-model.md).
+Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and metric columns, respectively. In the Aggregate Model, rows with the same values in Key columns will be aggregated into one row. The way how Value columns are aggregated is specified by the user when the table is built. For more information about the Aggregate Model, please see the [Data Model](../table-design/data-model/overview.md).
 
 ### Tablet & Partition
 
@@ -125,7 +125,7 @@ PROPERTIES
 
 ### Definition of Column
 
-Here we only use the AGGREGATE KEY data model as an example. See [Doris Data Model](./data-model.md) for more information.
+ See [Doris Data Model](./data-model.md) for more information.
 
 You can view the basic types of columns by executing `HELP CREATE TABLE;` in MySQL Client.
 
@@ -255,7 +255,7 @@ It is also possible to use one layer of data partitioning. In this case, it only
 <version since="1.2.0">
     
 
-Range partitioning also supports batch partitioning. For example, you can create multiple partitions that are divided by day at a time using the `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY`：2022-01-03 to 2022-01-06 (not including 2022-01-06), the results will be as follows:
+Range partitioning also supports batch partitioning. For example, you can create multiple partitions that are divided by day at a time using the `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY`: 2022-01-03 to 2022-01-06 (not including 2022-01-06), the results will be as follows:
 
     p20220103:    [2022-01-03,  2022-01-04)
     p20220104:    [2022-01-04,  2022-01-05)

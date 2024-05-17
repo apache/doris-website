@@ -77,4 +77,4 @@ set ignore_storage_data_distribution = true;
 
 ### Load
 
-The engine selected for import are detailed in the [Import](../data-operate/import/load-manual) documentation.
+The engine selected for import are detailed in the [Import](../../data-operate/import/load-manual) documentation.

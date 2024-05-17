@@ -48,7 +48,7 @@ Doris ensures that the values generated on the auto-increment column are dense, 
 
 ## Syntax
 
-To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to the corresponding column during table creation ([CREATE-TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)). To manually specify the starting value for an auto-increment column, you can do so by using the `AUTO_INCREMENT(start_value)` statement when creating the table. If not specified, the default starting value is 1.
+To use auto-increment columns, you need to add the `AUTO_INCREMENT` attribute to the corresponding column during table creation ([CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)). To manually specify the starting value for an auto-increment column, you can do so by using the `AUTO_INCREMENT(start_value)` statement when creating the table. If not specified, the default starting value is 1.
 
 ### Examples
 

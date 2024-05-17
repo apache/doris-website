@@ -518,7 +518,7 @@ Place the `krb5.conf` file and `keytab` authentication file on all BE and FE nod
 - On all FE and BE nodes, locate the `conf/fe.conf` and `conf/be.conf` files in the deployment path.
 - After finding the configuration files, set the JVM parameter `-Dsun.security.krb5.debug=true` in the `JAVA_OPTS` variable to enable Kerberos debugging.
 - The FE Kerberos authentication debug information can be found in the FE log path `log/fe.out`, and the BE Kerberos authentication debug information can be found in the BE log path `log/be.out`.
-- For solutions to more common issues, refer to [FAQ](https://doris.apache.org/docs/dev/lakehouse/faq/).
+- For solutions to more common issues, refer to [FAQ](../../faq/lakehouse-faq).
 
 ### Best practice
 

@@ -104,4 +104,4 @@ from stock_ticker;
 
 #### See more
 
-For more window functions, refer to [Window Functions](../../sql-manual/sql-functions/window-functions/WINDOW-FUNCTION).
+For more window functions, refer to [Window Functions](../../sql-manual/sql-functions/window-functions/window-function).
