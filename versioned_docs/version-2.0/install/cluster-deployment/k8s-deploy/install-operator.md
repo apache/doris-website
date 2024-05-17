@@ -1,6 +1,6 @@
 ---
 {
-"title": "Deploy Doris Operator",
+"title": "Deploying Doris Operator",
 "language": "en"
 }
 ---

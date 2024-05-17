@@ -86,4 +86,4 @@ The updated result is as follows:
 
 ## More Details
 
-For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more information and assistance.
+For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more information and assistance.

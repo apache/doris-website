@@ -103,7 +103,7 @@ CREATE MATERIALIZED VIEW mv1
             l_suppkey;
 ```
 
-Specific syntax can be viewed [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
 ### View materialized view meta information
 
@@ -113,7 +113,7 @@ select * from mv_infos("database"="tpch") where Name="mv1";
 
 The unique features of materialized views can be viewed through [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos.md)
 
-Properties related to table, still viewed through [SHOW TABLES](../../sql-manual/sql-reference/Show-Statements/SHOW-TABLES.md)
+Properties related to table, still viewed through [SHOW TABLES](../../sql-manual/sql-statements/Show-Statements/SHOW-TABLES.md)
 
 ### Refresh materialized view
 
@@ -129,7 +129,7 @@ Refresh partition named `p_20231017_20231018`
 REFRESH MATERIALIZED VIEW mv1 partitions(p_20231017_20231018);
 ```
 
-Specific syntax can be viewed [REFRESH MATERIALIZED VIEW](../../sql-manual/sql-reference/Utility-Statements/REFRESH-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [REFRESH MATERIALIZED VIEW](../../sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW.md)
 
 ### task management
 
@@ -152,7 +152,7 @@ PAUSE MATERIALIZED VIEW JOB ON mv1;
 
 Can pause the scheduled scheduling of materialized views
 
-Specific syntax can be viewed [PAUSE MATERIALIZED VIEW JOB](../../sql-manual/sql-reference/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [PAUSE MATERIALIZED VIEW JOB](../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
 
 #### RESUME materialized view job scheduling
 
@@ -162,7 +162,7 @@ RESUME MATERIALIZED VIEW JOB ON mv1;
 
 Can RESUME scheduled scheduling of materialized views
 
-Specific syntax can be viewed [RESUME MATERIALIZED VIEW JOB](../../sql-manual/sql-reference/Utility-Statements/RESUME-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [RESUME MATERIALIZED VIEW JOB](../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW.md)
 
 #### Viewing tasks in materialized views
 
@@ -180,7 +180,7 @@ CANCEL MATERIALIZED VIEW TASK realTaskId on mv1;
 
 Can cancel the operation of this task
 
-Specific syntax can be viewed [CANCEL MATERIALIZED VIEW TASK](../../sql-manual/sql-reference/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK.md)
+Specific syntax can be viewed [CANCEL MATERIALIZED VIEW TASK](../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK.md)
 
 ### Modifying materialized views
 
@@ -189,7 +189,7 @@ Modify the properties of materialized views
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3333");
 ```
 
-Modify the name of the materialized view, the refresh method of the materialized view, and the unique properties of the materialized view can be viewed through [ALTER ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW.md)
+Modify the name of the materialized view, the refresh method of the materialized view, and the unique properties of the materialized view can be viewed through [ALTER ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW.md)
 
 The materialized view itself is also a Table, so Table related properties, such as the number of copies, are still modified through the syntax related to `ALTER TABLE`.
 
@@ -201,7 +201,7 @@ DROP MATERIALIZED VIEW mv1;
 
 The materialized view has a dedicated deletion syntax and cannot be deleted through the drop table,
 
-Specific syntax can be viewed [DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
+Specific syntax can be viewed [DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
 
 ## The use of materialized views
 
@@ -209,5 +209,5 @@ can be viewed [Query async materialized view](./query-async-materialized-view.md
 
 ## Notice
 
-- Asynchronous materialized views are only supported for use in the [Nereids optimizer](../nereids.md)
+- Asynchronous materialized views are only supported for use in the [Nereids optimizer](../nereids/nereids.md)
 - Currently, determining the synchronization between materialized views and base tables is only supported for `OlapTable`. For other types of external tables, they are directly considered to be synchronized. For instance, if the base tables of a materialized view are all external tables, they are assumed to be synchronized. When querying `mv_infos()`, the SyncWithBaseTables flag will always return 1 (true) for these external tables. When refreshing a materialized view, it is necessary to manually refresh specific partitions or specify `complete` to refresh all partitions.
