@@ -217,7 +217,7 @@ You can also set this value to 0 to disable file caching, which will fetch file 
 
 ### Manual refresh
 
-Users need to manually refresh the metadata through the [REFRESH](../../sql-manual/sql-reference/Utility-Statements/REFRESH.md) command.
+Users need to manually refresh the metadata through the [REFRESH](../../sql-manual/sql-statements/Utility-Statements/REFRESH.md) command.
 
 1. REFRESH CATALOG: Refresh the specified Catalog.
 
@@ -568,7 +568,7 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
 ### Troubleshooting
 
-In case of Kerberos authentication problems, after setting the JVM parameter `-Dsun.security.krb5.debug=true`, Kerberos authentication related information will be printed in `fe.out` or `be.out`. You can refer to the related errors in [FAQ](../faq.md) for troubleshooting.
+In case of Kerberos authentication problems, after setting the JVM parameter `-Dsun.security.krb5.debug=true`, Kerberos authentication related information will be printed in `fe.out` or `be.out`. You can refer to the related errors in [FAQ](../../faq/lakehouse-faq) for troubleshooting.
 
 ## Hive Transactional Tables
 

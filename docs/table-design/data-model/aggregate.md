@@ -233,7 +233,7 @@ properties("replication_num" = "1");
 
 Please note that `agg_state` is a data type, similar to `int`, `array`, or `string`.
 
-`agg_state` can only be used in conjunction with the [state](../sql-manual/sql-functions/combinators/state.md)/[merge](../sql-manual/sql-functions/combinators/merge.md)/[union](../sql-manual/sql-functions/combinators/union.md) function combinators.
+`agg_state` can only be used in conjunction with the [state](../../sql-manual/sql-functions/combinators/state.md)/[merge](../../sql-manual/sql-functions/combinators/merge.md)/[union](../../sql-manual/sql-functions/combinators/union.md) function combinators.
 
 `agg_state` represents an intermediate result of an aggregation function. For example, with the aggregation function `sum`, `agg_state` can represent the intermediate state of summing values like `sum(1, 2, 3, 4, 5)`, rather than the final result.
 

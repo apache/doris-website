@@ -40,7 +40,7 @@ The implemented jar package can be placed locally or stored on a remote server f
 
 Otherwise, an error message `Couldn't open file ......` will be returned.
 
-For more syntax help, refer to [CREATE FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+For more syntax help, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
 
 ### UDF
 
@@ -89,7 +89,7 @@ When the session is linked within the database, directly using the UDF name will
 
 ## Dropping UDF
 
-If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md).
+If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION).
 
 ## Type Correspondence
 
@@ -353,7 +353,7 @@ public class MedianUDAF {
 
 Similar to UDFs, UDTFs require users to implement an `evaluate` method. However, the return value of a UDTF must be of the Array type.
 
-Additionally, table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
+Additionally, table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
 
 ```JAVA
 public class UDTFStringTest {

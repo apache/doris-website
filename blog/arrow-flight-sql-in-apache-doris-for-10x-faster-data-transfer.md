@@ -4,8 +4,6 @@
     'summary': "Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.",
     'date': '2024-04-16',
     'author': 'Apache Doris',
-    'picked': "true",
-    'order': "4",
     'tags': ['Tech Sharing'],
     "image": '/images/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png'
 }

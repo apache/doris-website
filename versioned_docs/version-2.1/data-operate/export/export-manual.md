@@ -46,7 +46,7 @@ The overall execution process is as follows:
 
 ## Start Export
 
-For detailed usage of Export, please refer to [EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/EXPORT.md).
+For detailed usage of Export, please refer to [EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md).
 
 Export's detailed commands can be passed through `HELP EXPORT;` in mysql client. Examples are as follows:
 
@@ -119,7 +119,7 @@ WITH S3 (
 
 ### View Export Status
 
-After submitting a job, the job status can be viewed by querying the   [SHOW EXPORT](../../sql-manual/sql-reference/Show-Statements/SHOW-EXPORT.md)  command. The results are as follows:
+After submitting a job, the job status can be viewed by querying the   [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md)  command. The results are as follows:
 
 ```sql
 mysql> show EXPORT\G;
@@ -175,15 +175,13 @@ FinishTime: 2019-06-25 17:08:34
 
 ### Cancel Export Job
 
-<version since="dev"></version>
-
-After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md)  command. For example:
+After submitting a job, the job can be canceled by using the  [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md)  command. For example:
 
 ```sql
 CANCEL EXPORT
 FROM example_db
 WHERE LABEL like "%example%";
-````
+```
 
 ## Best Practices
 
@@ -230,7 +228,7 @@ However, in certain scenarios, such as a query plan that requires scanning too m
 
 ## More Help
 
-For more detailed syntax and best practices used by Export, please refer to the [Export](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/EXPORT.md) command manual, You can also enter `HELP EXPORT` at the command line of the MySql client for more help.
+For more detailed syntax and best practices used by Export, please refer to the [Export](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md) command manual, You can also enter `HELP EXPORT` at the command line of the MySql client for more help.
 
-The underlying implementation of the `EXPORT` command is the `SELECT INTO OUTFILE` statement. For more information about SELECT INTO OUTFILE, please refer to [Export Query Result](./outfile.md) and [SELECT INTO OUTFILE](../..//sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE.md).
+The underlying implementation of the `EXPORT` command is the `SELECT INTO OUTFILE` statement. For more information about SELECT INTO OUTFILE, please refer to [Export Query Result](./outfile.md) and [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md).
 

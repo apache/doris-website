@@ -1,6 +1,6 @@
 ---
 {
-"title": "Access Doris Cluster",
+"title": "Accessing Doris Cluster",
 "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-"title": "Deploy Doris Cluster",
+"title": "Deploying Doris Cluster",
 "language": "en"
 }
 ---

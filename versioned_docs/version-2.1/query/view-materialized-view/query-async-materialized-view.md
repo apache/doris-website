@@ -463,7 +463,7 @@ that time frame.
 
 For internal tables in the materialized view, you can control the maximum delay allowed for the data used by
 the transparent rewriting by setting the `grace_period` property.
-Refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+Refer to [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 
 **Viewing and Debugging Transparent Rewrite Hit Information**
 

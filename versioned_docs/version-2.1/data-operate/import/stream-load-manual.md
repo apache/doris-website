@@ -1066,7 +1066,7 @@ For how to express partial column updates during import, please refer to the Dat
 
 ## More help
 
-For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
+For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
 
 
 

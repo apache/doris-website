@@ -112,7 +112,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `auto_increment_increment`
 
-    Used for compatibility with MySQL clients. No practical effect. Although Doris already has [AUTO_INCREMENT](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE#column_definition_list) feature, but this parameter does not affect the behavior of 'AUTO_INCREMENT'. Same as auto_increment_offset.
+    Used for compatibility with MySQL clients. No practical effect. Although Doris already has [AUTO_INCREMENT](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE#column_definition_list) feature, but this parameter does not affect the behavior of 'AUTO_INCREMENT'. Same as auto_increment_offset.
     
 * `autocommit`
 
@@ -193,11 +193,11 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `disable_colocate_join`
 
-    Controls whether the [Colocation Join](../query-acceleration/join-optimization/colocation-join.md) function is enabled. The default is false, which means that the feature is enabled. True means that the feature is disabled. When this feature is disabled, the query plan will not attempt to perform a Colocation Join.
+    Controls whether the [Colocation Join](../join-optimization/colocation-join.md) function is enabled. The default is false, which means that the feature is enabled. True means that the feature is disabled. When this feature is disabled, the query plan will not attempt to perform a Colocation Join.
     
 * `enable_bucket_shuffle_join`
 
-    Controls whether the [Bucket Shuffle Join](../query-acceleration/join-optimization/bucket-shuffle-join.md) function is enabled. The default is true, which means that the feature is enabled. False means that the feature is disabled. When this feature is disabled, the query plan will not attempt to perform a Bucket Shuffle Join.
+    Controls whether the [Bucket Shuffle Join](../join-optimization/bucket-shuffle-join.md) function is enabled. The default is true, which means that the feature is enabled. False means that the feature is disabled. When this feature is disabled, the query plan will not attempt to perform a Bucket Shuffle Join.
 
 * `disable_streaming_preaggregations`
 
@@ -205,7 +205,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `enable_insert_strict`
 
-    Used to set the `strict` mode when loading data via INSERT statement. The default is false, which means that the `strict` mode is not turned on. For an introduction to this mode, see [here](../data-operate/import/import-way/insert-into-manual.md).
+    Used to set the `strict` mode when loading data via INSERT statement. The default is false, which means that the `strict` mode is not turned on. For an introduction to this mode, see [here](../../data-operate/import/insert-into-manual.md).
 
 * `enable_spilling`
 
@@ -320,11 +320,11 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `max_pushdown_conditions_per_column`
 
-    For the specific meaning of this variable, please refer to the description of `max_pushdown_conditions_per_column` in [BE Configuration](../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
+    For the specific meaning of this variable, please refer to the description of `max_pushdown_conditions_per_column` in [BE Configuration](../../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
 
 * `max_scan_key_num`
 
-    For the specific meaning of this variable, please refer to the description of `doris_max_scan_key_num` in [BE Configuration](../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
+    For the specific meaning of this variable, please refer to the description of `doris_max_scan_key_num` in [BE Configuration](../../admin-manual/config/be-config.md). This variable is set to -1 by default, which means that the configuration value in `be.conf` is used. If the setting is greater than 0, the query in the current session will use the variable value, and ignore the configuration value in `be.conf`.
 
 * `net_buffer_length`
 

@@ -31,9 +31,9 @@ Doris supports importing data in JSON format. This document mainly describes the
 
 Currently, only the following import methods support data import in JSON format:
 
-- Through [S3 table function](../../../sql-manual/sql-functions/table-functions/s3.md) import statement: insert into table select * from S3();
-- Import the local JSON format file through [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md).
-- Subscribe and consume JSON format in Kafka via [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) information.
+- Through [S3 table function](../../sql-manual/sql-functions/table-functions/s3.md) import statement: insert into table select * from S3();
+- Import the local JSON format file through [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md).
+- Subscribe and consume JSON format in Kafka via [ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) information.
 
 Other ways of importing data in JSON format are not currently supported.
 
@@ -96,11 +96,11 @@ Currently only the following three JSON formats are supported:
 
 Some data formats, such as JSON, cannot be split. Doris must read all the data into the memory before parsing can begin. Therefore, this value is used to limit the maximum amount of data that can be loaded in a single Stream load.
 
-The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../../admin-manual/config/be-config.md).
+The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../admin-manual/config/be-config.md).
 
 ### fuzzy_parse parameters
 
-In [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
+In [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
 
 This parameter is usually used to import the format of **multi-line data represented by Array**, so it is generally used with `strip_outer_array=true`.
 
