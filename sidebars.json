@@ -265,7 +265,9 @@
                         "lakehouse/datalake-analytics/hudi",
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
-                        "lakehouse/datalake-analytics/dlf"
+                        "lakehouse/datalake-analytics/dlf",
+                        "lakehouse/datalake-analytics/tpch",
+                        "lakehouse/datalake-analytics/tpcds"
                     ]
                 },
                 {
