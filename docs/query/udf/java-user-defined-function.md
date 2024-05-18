@@ -369,7 +369,7 @@ public class UDTFStringTest {
 
 ## Best Practices
 
-## Loading static variables
+### Loading static variables
 
 Currently, in Doris, executing a UDF function, e.g., `select udf(col) from table`, will load the udf.jar package for each concurrent instance, and unload the udf.jar package when the instance ends. If the udf.jar file needs to load a file of several hundred MBs, the memory usage will increase sharply due to concurrency, potentially leading to OOM (Out of Memory).
 
