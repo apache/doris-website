@@ -105,9 +105,9 @@ Stream Load requires `INSERT` privileges on the target table. If there are no `I
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -188,9 +188,9 @@ Create a JSON file named `streamload_example.json` . The specific content is as 
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -784,9 +784,9 @@ For example, if the table is defined as follows:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
