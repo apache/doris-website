@@ -35,7 +35,7 @@ Download the latest TGZ package from [AutoMQ Releases](https://github.com/AutoMQ
 Refer to the AutoMQ [official deployment documentation](https://docs.automq.com/docs/automq-opensource/EvqhwAkpriAomHklOUzcUtybn7g) to deploy a functional cluster, ensuring network connectivity between AutoMQ and Apache Doris.
 Quickly create a topic named example_topic in AutoMQ and write a test JSON data to it by following these steps.
 
-#### Create Topic
+**Create Topic**
 
 Use the Apache Kafka® command line tool in AutoMQ to create the topic, ensuring that you have access to a Kafka environment and that the Kafka service is running. Here is an example command to create a topic:
 ```
@@ -48,7 +48,7 @@ After creating the topic, you can use the following command to verify that the t
 $AUTOMQ_HOME/bin/kafka-topics.sh --describe example_topic --bootstrap-server 127.0.0.1:9092
 ```
 
-#### Generate test data
+**Generate test data**
 
 Create a JSON-formatted test data entry, corresponding to the table mentioned earlier.
 ```
@@ -59,7 +59,7 @@ Create a JSON-formatted test data entry, corresponding to the table mentioned ea
   "status": "active"
 }
 ```
-#### Write test data
+**Write test data**
 
 Use Kafka's command-line tools or a programming approach to write the test data to a topic named `example_topic`. Below is an example using the command-line tool:
 ```

@@ -35,7 +35,7 @@ CREATE TABLE automq_db.users (
 参考 AutoMQ [官方部署文档](https://docs.automq.com/docs/automq-opensource/EvqhwAkpriAomHklOUzcUtybn7g)部署一套可用的集群，确保 AutoMQ 与 Apache Doris 之间保持网络连通。
 在 AutoMQ 中快速创建一个名为 example_topic 的主题，并向其中写入一条测试 JSON 数据，按照以下步骤操作。
 
-#### 创建 Topic
+**创建 Topic**
 
 使用 Apache Kafka 命令行工具创建主题，需要确保当前拥有 Kafka 环境的访问权限并且 Kafka 服务正在运行。以下是创建主题的命令示例：
 ```
@@ -46,7 +46,7 @@ $AUTOMQ_HOME/bin/kafka-topics.sh --create --topic exampleto_topic --bootstrap-se
 ```
 $AUTOMQ_HOME/bin/kafka-topics.sh --describe example_topic --bootstrap-server 127.0.0.1:9092
 ```
-#### 生成测试数据
+**生成测试数据**
 
 生成一条 JSON 格式的测试数据，和前文的表需要对应。
 ```
@@ -57,7 +57,7 @@ $AUTOMQ_HOME/bin/kafka-topics.sh --describe example_topic --bootstrap-server 127
   "status": "active"
 }
 ```
-#### 写入测试数据
+**写入测试数据**
 
 通过 Kafka 的命令行工具或编程方式将测试数据写入到名为 example_topic 的主题中。下面是一个使用命令行工具的示例：
 ```
