@@ -370,7 +370,7 @@ public class UDTFStringTest {
 
 ## 最佳实践
 
-## static 变量加载
+### static 变量加载
 
 当前在 Doris 中，执行一个 UDF 函数，eg: `select udf(col) from table`, 每一个并发instance会加载一次udf.jar包，在该instance结束时卸载掉udf.jar包。
 所以当 udf.jar 文件中需要加载一个几百 MB的文件时，会因为并发的原因，使得占据的内存急剧增大，容易OOM。
