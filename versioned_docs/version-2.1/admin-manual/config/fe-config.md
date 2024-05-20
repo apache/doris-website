@@ -48,7 +48,7 @@ There are two ways to view the configuration items of FE:
 
 2. View by command
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-reference/Database-Administration-Statements/SHOW-CONFIG.md):
+    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md):
 
     `SHOW FRONTEND CONFIG;`
 
@@ -85,7 +85,7 @@ There are two ways to configure FE configuration items:
 
 3. Dynamic configuration via HTTP protocol
 
-    For details, please refer to [Set Config Action](../http-actions/fe/set-config-action.md)
+    For details, please refer to [Set Config Action](../fe/set-config-action)
 
     This method can also persist the modified configuration items. The configuration items will be persisted in the `fe_custom.conf` file and will still take effect after FE is restarted.
 
@@ -177,13 +177,13 @@ Num of thread to handle grpc events in grpc_threadmgr.
 
 Default：10  (s)
 
-The replica ack timeout when writing to bdbje ， When writing some relatively large logs, the ack time may time out, resulting in log writing failure.  At this time, you can increase this value appropriately.
+The replica ack timeout when writing to bdbje , When writing some relatively large logs, the ack time may time out, resulting in log writing failure.  At this time, you can increase this value appropriately.
 
 #### `bdbje_lock_timeout_second`
 
 Default：5
 
-The lock timeout of bdbje operation， If there are many LockTimeoutException in FE WARN log, you can try to increase this value
+The lock timeout of bdbje operation, If there are many LockTimeoutException in FE WARN log, you can try to increase this value
 
 #### `bdbje_heartbeat_timeout_second`
 
@@ -195,7 +195,7 @@ The heartbeat timeout of bdbje between master and follower. the default is 30 se
 
 Default：SIMPLE_MAJORITY
 
-OPTION：ALL, NONE, SIMPLE_MAJORITY
+OPTION: ALL, NONE, SIMPLE_MAJORITY
 
 Replica ack policy of bdbje. more info, see: http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/je/Durability.ReplicaAckPolicy.html
 
@@ -236,7 +236,7 @@ This is helpful when you try to stop the Master FE for a relatively long time fo
 
 #### `meta_delay_toleration_second`
 
-Default：300 （5 min）
+Default: 300 (5 min)
 
 Non-master FE will stop offering service  if meta data delay gap exceeds *meta_delay_toleration_second*
 
@@ -324,7 +324,7 @@ Default：true
 
 IsMutable：true
 
-The multi cluster feature will be deprecated in version 0.12 ，set this config to true will disable all operations related to cluster feature, include:
+The multi cluster feature will be deprecated in version 0.12 , set this config to true will disable all operations related to cluster feature, include:
 
 1. create/drop cluster
 2. add free backend/add backend to cluster/decommission cluster balance
@@ -416,7 +416,7 @@ Default value: 0.0.0.0
 
 Default：none
 
-Declare a selection strategy for those servers have many ips.  Note that there should at most one ip match this list.  this is a list in semicolon-delimited format, in CIDR notation, e.g. 10.10.10.0/24 ， If no ip match this rule, will choose one randomly.
+Declare a selection strategy for those servers have many ips.  Note that there should at most one ip match this list.  this is a list in semicolon-delimited format, in CIDR notation, e.g. 10.10.10.0/24 , If no ip match this rule, will choose one randomly.
 
 #### `http_port`
 
@@ -481,7 +481,7 @@ The thrift server max worker threads
 
 Default：1024
 
-The backlog_num for thrift server ， When you enlarge this backlog_num, you should ensure it's value larger than the linux /proc/sys/net/core/somaxconn config
+The backlog_num for thrift server , When you enlarge this backlog_num, you should ensure it's value larger than the linux /proc/sys/net/core/somaxconn config
 
 #### `thrift_client_timeout_ms`
 
@@ -557,7 +557,7 @@ MasterOnly：true
 
 #### `max_backend_down_time_second`
 
-Default：3600  （1 hour）
+Default: 3600  (1 hour)
 
 IsMutable：true
 
@@ -637,7 +637,7 @@ Default：30000  （ms）
 
 IsMutable：true
 
-The timeout of executing async remote fragment.  In normal case, the async remote fragment will be executed in a short time. If system are under high load condition，try to set this timeout longer.
+The timeout of executing async remote fragment.  In normal case, the async remote fragment will be executed in a short time. If system are under high load condition, try to set this timeout longer.
 
 #### `auth_token`
 
@@ -647,7 +647,7 @@ Cluster token used for internal authentication.
 
 #### `enable_http_server_v2`
 
-Default：The default is true after the official 0.14.0 version is released, and the default is false before
+Default: The default is true after the official 0.14.0 version is released, and the default is false before
 
 HTTP Server V2 is implemented by SpringBoot. It uses an architecture that separates the front and back ends. Only when HTTPv2 is enabled can users use the new front-end UI interface.
 
@@ -1009,7 +1009,7 @@ Default：1
 
 IsMutable：true
 
-Colocote join PlanFragment instance的memory_limit = exec_mem_limit / min (query_colocate_join_memory_limit_penalty_factor, instance_num)
+Colocote join PlanFragment instance 的 memory_limit = exec_mem_limit / min (query_colocate_join_memory_limit_penalty_factor, instance_num)
 
 #### `rewrite_count_distinct_to_bitmap_hll`
 
@@ -1115,7 +1115,7 @@ IsMutable：true
 
 MasterOnly：true
 
-Max number of load jobs, include PENDING、ETL、LOADING、QUORUM_FINISHED. If exceed this number, load job is not allowed to be submitted
+Max number of load jobs, include PENDING, ETL, LOADING, QUORUM_FINISHED. If exceed this number, load job is not allowed to be submitted
 
 #### `db_used_data_quota_update_interval_secs`
 
@@ -1257,7 +1257,7 @@ IsMutable：true
 
 MasterOnly：true
 
-Default number of waiting jobs for routine load and version 2 of load ， This is a desired number.  In some situation, such as switch the master, the current number is maybe more than desired_max_waiting_jobs.
+Default number of waiting jobs for routine load and version 2 of load , This is a desired number.  In some situation, such as switch the master, the current number is maybe more than desired_max_waiting_jobs.
 
 #### `disable_hadoop_load`
 
@@ -1345,7 +1345,7 @@ Min stream load timeout applicable to all type of load
 
 #### `max_stream_load_timeout_second`
 
-Default：259200 （3 day）
+Default: 259200 (3 day)
 
 IsMutable：true
 
@@ -1355,7 +1355,7 @@ This configuration is specifically used to limit timeout setting for stream load
 
 #### `max_load_timeout_second`
 
-Default：259200 （3 day）
+Default: 259200 (3 day)
 
 IsMutable：true
 
@@ -1365,7 +1365,7 @@ Max load timeout applicable to all type of load except for stream load
 
 #### `stream_load_default_timeout_second`
 
-Default：86400 * 3 （3 day）
+Default: 86400 * 3 (3 day)
 
 IsMutable：true
 
@@ -1396,7 +1396,7 @@ When HTTP header `memtable_on_sink_node` is not set.
 
 #### `insert_load_default_timeout_second`
 
-Default：3600（1 hour）
+Default: 3600 (1 hour)
 
 IsMutable：true
 
@@ -1406,7 +1406,7 @@ Default insert load timeout
 
 #### `mini_load_default_timeout_second`
 
-Default：3600（1 hour）
+Default: 3600 (1 hour)
 
 IsMutable：true
 
@@ -1416,7 +1416,7 @@ Default non-streaming mini load timeout
 
 #### `broker_load_default_timeout_second`
 
-Default：14400（4 hour）
+Default: 14400 (4 hour)
 
 IsMutable：true
 
@@ -1426,7 +1426,7 @@ Default broker load timeout
 
 #### `spark_load_default_timeout_second`
 
-Default：86400  (1 day)
+Default: 86400  (1 day)
 
 IsMutable：true
 
@@ -1436,7 +1436,7 @@ Default spark load timeout
 
 #### `hadoop_load_default_timeout_second`
 
-Default：86400 * 3   (3 day)
+Default: 86400 * 3   (3 day)
 
 IsMutable：true
 
@@ -1530,7 +1530,7 @@ In the case of high concurrent writes, if there is a large backlog of jobs and c
 
 #### `streaming_label_keep_max_second`
 
-Default：43200 （12 hour）
+Default: 43200 (12 hour)
 
 IsMutable：true
 
@@ -1540,7 +1540,7 @@ For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD
 
 #### `label_clean_interval_second`
 
-Default：1 * 3600  （1 hour）
+Default：1 * 3600  (1 hour)
 
 Load label cleaner will run every *label_clean_interval_second* to clean the outdated jobs.
 
@@ -1564,7 +1564,7 @@ Whether it is a configuration item unique to the Master FE node: true
 
 Data synchronization job running status check.
 
-Default: 10（s）
+Default: 10 (s)
 
 #### `max_sync_task_threads_num`
 
@@ -1620,7 +1620,7 @@ Number of tablets per export query plan
 
 #### `export_task_default_timeout_second`
 
-Default：2 * 3600   （2 hour）
+Default: 2 * 3600   (2 hour)
 
 IsMutable：true
 
@@ -1654,7 +1654,7 @@ The max size of one sys log and audit log
 
 #### `sys_log_dir`
 
-Default：DorisFE.DORIS_HOME_DIR + "/log"
+Default: DorisFE.DORIS_HOME_DIR + "/log"
 
 sys_log_dir:
 
@@ -1667,7 +1667,7 @@ fe.warn.log  all WARNING and ERROR log of FE process.
 
 Default：INFO
 
-log level：INFO, WARN, ERROR, FATAL
+log level: INFO, WARN, ERROR, FATAL
 
 #### `sys_log_roll_num`
 
@@ -1741,7 +1741,7 @@ Slow query contains all queries which cost exceed *qe_slow_log_ms*
 
 #### `qe_slow_log_ms`
 
-Default：5000 （5 seconds）
+Default: 5000 (5 seconds)
 
 If the response time of a query exceed this threshold, it will be recorded in audit log as slow_query.
 
@@ -1749,8 +1749,8 @@ If the response time of a query exceed this threshold, it will be recorded in au
 
 Default：DAY
 
-DAY:  logsuffix is ：yyyyMMdd
-HOUR: logsuffix is ：yyyyMMddHH
+DAY:  logsuffix is : yyyyMMdd
+HOUR: logsuffix is : yyyyMMddHH
 
 #### `audit_log_delete_age`
 
@@ -1838,7 +1838,7 @@ Set to true so that Doris will automatically use blank replicas to fill tablets 
 
 #### `min_clone_task_timeout_sec` `And max_clone_task_timeout_sec`
 
-Default：Minimum 3 minutes, maximum two hours
+Default: Minimum 3 minutes, maximum two hours
 
 IsMutable：true
 
@@ -1876,7 +1876,7 @@ IsMutable：true
 
 MasterOnly：true
 
-Valid only if use PartitionRebalancer，
+Valid only if use PartitionRebalancer,
 
 #### `partition_rebalance_move_expire_after_access`
 
@@ -1938,7 +1938,7 @@ if set to true, TabletScheduler will not do disk balance.
 
 #### `balance_load_score_threshold`
 
-Default：0.1 (10%)
+Default: 0.1 (10%)
 
 IsMutable：true
 
@@ -1948,7 +1948,7 @@ the threshold of cluster balance score, if a backend's load score is 10% lower t
 
 #### `capacity_used_percent_high_water`
 
-Default：0.75  （75%）
+Default: 0.75  (75%)
 
 IsMutable：true
 
@@ -1958,7 +1958,7 @@ The high water of disk capacity used percent. This is used for calculating load 
 
 #### `clone_distribution_balance_threshold`
 
-Default：0.2
+Default: 0.2
 
 IsMutable：true
 
@@ -1968,7 +1968,7 @@ Balance threshold of num of replicas in Backends.
 
 #### `clone_capacity_balance_threshold`
 
-Default：0.2
+Default: 0.2
 
 IsMutable：true
 
@@ -2179,7 +2179,7 @@ MasterOnly：true
 
 #### `catalog_trash_expire_second`
 
-Default：86400L (1 day)
+Default: 86400L (1 day)
 
 IsMutable：true
 
@@ -2212,7 +2212,7 @@ Is it a configuration item unique to the Master FE node: true
 
 #### `check_consistency_default_timeout_second`
 
-Default：600 （10 minutes）
+Default: 600 (10 minutes)
 
 IsMutable：true
 
@@ -2294,7 +2294,7 @@ Maximal timeout for delete job, in seconds.
 
 #### `alter_table_timeout_second`
 
-Default：86400 * 30（1 month）
+Default: 86400 * 30 (1 month)
 
 IsMutable：true
 
@@ -2462,9 +2462,9 @@ Default：{
 
 #### `yarn_config_dir`
 
-Default：DorisFE.DORIS_HOME_DIR + "/lib/yarn-config"
+Default: DorisFE.DORIS_HOME_DIR + "/lib/yarn-config"
 
-Default yarn config file directory ，Each time before running the yarn command, we need to check that the  config file exists under this path, and if not, create them.
+Default yarn config file directory , Each time before running the yarn command, we need to check that the  config file exists under this path, and if not, create them.
 
 #### `yarn_client_path`
 
@@ -2492,7 +2492,7 @@ Default spark home dir
 
 #### `spark_dpp_version`
 
-Default：1.0.0
+Default: 1.0.0
 
 Default spark dpp version
 
@@ -2500,13 +2500,13 @@ Default spark dpp version
 
 #### `tmp_dir`
 
-Default：DorisFE.DORIS_HOME_DIR + "/temp_dir"
+Default: DorisFE.DORIS_HOME_DIR + "/temp_dir"
 
 temp dir is used to save intermediate results of some process, such as backup and restore process.  file in this dir will be cleaned after these process is finished.
 
 #### `custom_config_dir`
 
-Default：DorisFE.DORIS_HOME_DIR + "/conf"
+Default: DorisFE.DORIS_HOME_DIR + "/conf"
 
 Custom configuration file directory
 
@@ -2579,7 +2579,7 @@ This threshold is to avoid piling up too many report task in FE, which may cause
 
 #### `backup_job_default_timeout_ms`
 
-Default：86400 * 1000  (1 day)
+Default: 86400 * 1000  (1 day)
 
 IsMutable：true
 
@@ -2659,7 +2659,7 @@ IsMutable：true
 
 MasterOnly：false
 
-Whether to push the filter conditions with functions down to MYSQL, when execute query of ODBC、JDBC external tables
+Whether to push the filter conditions with functions down to MYSQL, when execute query of ODBC, JDBC external tables
 
 #### `jdbc_drivers_dir`
 

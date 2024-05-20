@@ -747,8 +747,8 @@
                                     "type": "category",
                                     "label": "Fuzzy Match",
                                     "items": [
-                                        "sql-manual/sql-functions/string-functions/like/like",
-                                        "sql-manual/sql-functions/string-functions/like/not-like"
+                                        "sql-manual/sql-functions/string-functions/fuzzy-match/like",
+                                        "sql-manual/sql-functions/string-functions/fuzzy-match/not-like"
                                     ]
                                 },
                                 {
