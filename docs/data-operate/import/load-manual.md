@@ -32,15 +32,15 @@ Doris provides a variety of data import solutions, and you can choose different 
 
 ### By Scene
 
-| Data Source                          | Loading Method                                                |
-| ------------------------------------ | ------------------------------------------------------------ |
-| Object Storage (s3), HDFS            | [Loading data using Broker](./broker-load-manual) |
-| Local file                           | [Loading local data](./stream-load-manual)    |
-| Kafka                                | [Subscribing to Kafka data](./routine-load-manual)   |
-| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./mysql-load-manual) |
-| Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc)       |
-| Loading JSON format data              | [JSON format data Loading](./load-json-format) |
-| AutoMQ                            | [AutoMQ Load](./import-scenes/automq-load.md)            |
+| Data Source                          | Loading Method                                        |
+| ------------------------------------ |-------------------------------------------------------|
+| Object Storage (s3), HDFS            | [Loading data using Broker](./broker-load-manual)     |
+| Local file                           | [Loading local data](./stream-load-manual)            |
+| Kafka                                | [Subscribing to Kafka data](./routine-load-manual)    |
+| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./mysql-load-manual)   |
+| Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc) |
+| Loading JSON format data              | [JSON format data Loading](./load-json-format)        |
+| AutoMQ                            | [AutoMQ Load](./automq-load.md)                       |
 
 ### By Loading Method
 
