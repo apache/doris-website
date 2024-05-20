@@ -1656,8 +1656,6 @@ load 标签清理器将每隔 `label_clean_interval_second` 运行一次以清�
 
 默认值：DorisFE.DORIS_HOME_DIR + "/log"
 
-sys_log_dir:
-
 这指定了 FE 日志目录。FE 将产生 2 个日志文件：
 
 1. fe.log：FE 进程的所有日志。

@@ -1656,8 +1656,6 @@ The max size of one sys log and audit log
 
 Default: DorisFE.DORIS_HOME_DIR + "/log"
 
-sys_log_dir:
-
 This specifies FE log dir. FE will produces 2 log files:
 
 fe.log:      all logs of FE process.
