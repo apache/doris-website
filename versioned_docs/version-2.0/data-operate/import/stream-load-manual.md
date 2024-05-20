@@ -908,8 +908,8 @@ Load data into the following table structure:
 ```sql
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT          NOT NULL COMMENT "ID",
-    name       VARCHAR(20)     NULL     COMMENT "名称",
-    arr        ARRAY<int(10)>  NULL     COMMENT "数组"
+    name       VARCHAR(20)     NULL     COMMENT "Name",
+    arr        ARRAY<int(10)>  NULL     COMMENT "Array"
 )
 DUPLICATE KEY(typ_id)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -950,7 +950,7 @@ Load data into the following table structure:
 ```sql
 CREATE TABLE testdb.test_streamload(
     user_id            BIGINT       NOT NULL COMMENT "ID",
-    namemap            Map<STRING, INT>  NULL     COMMENT "名称"
+    namemap            Map<STRING, INT>  NULL     COMMENT "Name"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
