@@ -29,7 +29,7 @@ under the License.
 [DBT(Data Build Tool)](https://docs.getdbt.com/docs/introduction) is a component that focuses on doing T (Transform) in ELT (extraction, loading, transformation) - the "transformation data" link
 The `dbt-doris` adapter is developed based on `dbt-core` 1.5.0 and relies on the `mysql-connector-python` driver to convert data to doris.
 
-git：https://github.com/apache/doris/tree/master/extension/dbt-doris
+git: https://github.com/apache/doris/tree/master/extension/dbt-doris
 
 ## version
 
@@ -41,15 +41,15 @@ git：https://github.com/apache/doris/tree/master/extension/dbt-doris
 ## dbt-doris adapter Instructions
 
 ### dbt-doris adapter install
-use pip install：
+use pip install:
 ```shell
 pip install dbt-doris
 ```
-check version：
+check version:
 ```shell
 dbt --version
 ```
-if command not found: dbt：
+if command not found: dbt:
 ```shell
 ln -s /usr/local/python3/bin/dbt /usr/bin/dbt
 ```
@@ -63,7 +63,7 @@ Users need to prepare the following information to init dbt project
 | name     |  default | meaning                                                                                                                                   |  
 |----------|------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | project  |      | project name                                                                                                                              | 
-| database |      | Enter the corresponding number to select the adapter （选择doris）                                                                            | 
+| database |      | Enter the corresponding number to select the adapter（选择 doris）                                                                            | 
 | host     |      | doris host                                                                                                                                | 
 | port     | 9030 | doris MySQL Protocol Port                                                                                                                 |
 | schema   |      | In dbt-doris, it is equivalent to database, Database name                                                                                 |
@@ -114,7 +114,7 @@ When using the `table` materialization mode, your model is rebuilt as a table at
 For the tablet materialization of dbt, dbt-doris uses the following steps to ensure the atomicity of data changes:
 1. first create a temporary table: `create table this_table_temp as {{ model sql}}`.
 2. Determine whether `this_table` does not exist, that is, it is created for the first time, execute `rename`, and change the temporary table to the final table.
-3. if already exists, then `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，This operation can exchange the table name and delete the `this_table_temp` temporary table，[this](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE.md) guarantees the atomicity of this operation through the transaction mechanism of the Doris.
+3. if already exists, then `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，This operation can exchange the table name and delete the `this_table_temp` temporary table,[this](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE.md) guarantees the atomicity of this operation through the transaction mechanism of the Doris.
 
 ``` 
 Advantages: table query speed will be faster than view.

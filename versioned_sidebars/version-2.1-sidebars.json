@@ -197,8 +197,7 @@
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
-                        "query/query-cache/sql-cache-manual",
-                        "query/query-cache/partition-cache-manual"
+                        "query/query-cache/sql-cache-manual"
                     ]
                 },
                 {
