@@ -407,7 +407,7 @@ PROPERTIES (
 :::
 
 :::note
-See doc: https://doris.apache.org/docs/advanced/partition/auto-partition/
+See doc: https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E8%87%AA%E5%8A%A8%E5%88%86%E5%8C%BA
 :::
 
 ### 100% faster INSERT INTO SELECT
