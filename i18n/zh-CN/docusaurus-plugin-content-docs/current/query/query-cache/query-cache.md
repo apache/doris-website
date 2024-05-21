@@ -54,17 +54,15 @@ under the License.
 
 - 没有额外的组件和成本，缓存结果存储在 BE 的内存中，用户可以根据需要调整缓存内存大小
 
-- 实现了两种缓存策略，SQLCache 和 PartitionCache，后者缓存粒度更细
+- 实现了一种缓存策略，SQLCache
 
 - 用一致性哈希解决 BE 节点上下线的问题，BE 中的缓存算法是改进的 LRU
 
 ## 使用场景
 
-当前支持 SQL Cache 和 Partition Cache 两种方式，支持 OlapTable 内表 和 Hive 外表。
+当前支持 SQL Cache，支持 OlapTable 内表 和 Hive 外表。
 
 SQL Cache: 只有 SQL 语句完全一致才会命中缓存，详情见：sql-cache-manual.md
-
-Partition Cache: 多个 SQL 使用相同的表分区即可命中缓存，所以相比 SQL Cache 有更高的命中率，详情见：partition-cache-manual.md
 
 ## 监控
 
@@ -75,13 +73,8 @@ query_table            //Query 中有表的数量
 query_olap_table       //Query 中有 Olap 表的数量
 cache_mode_sql         //识别缓存模式为 sql 的 Query 数量
 cache_hit_sql          //模式为 sql 的 Query 命中 Cache 的数量
-query_mode_partition   //识别缓存模式为 Partition 的 Query 数量
-cache_hit_partition    //通过 Partition 命中的 Query 数量
-partition_all          //Query 中扫描的所有分区
-partition_hit          //通过 Cache 命中的分区数量
 
-Cache 命中率     = （cache_hit_sql + cache_hit_partition) / query_olap_table
-Partition 命中率 = partition_hit / partition_all
+Cache 命中率     = cache_hit_sql / query_olap_table
 ```
 
 BE 的监控项：
@@ -89,10 +82,8 @@ BE 的监控项：
 ```text
 query_cache_memory_total_byte       //Cache 内存大小
 query_query_cache_sql_total_count   //Cache 的 SQL 的数量
-query_cache_partition_total_count   //Cache 分区数量
 
 SQL 平均数据大小       = cache_memory_total / cache_sql_total
-Partition 平均数据大小 = cache_memory_total / cache_partition_total
 ```
 
 其他监控：可以从 Grafana 中查看 BE 节点的 CPU 和内存指标，Query 统计中的 Query Percentile 等指标，配合 Cache 参数的调整来达成业务目标。
@@ -136,13 +127,4 @@ query_cache_max_size_mb 缓存的内存上限，query_cache_elasticity_size 缓�
 vim be/conf/be.conf
 query_cache_max_size_mb=256
 query_cache_elasticity_size_mb=128
-```
-
-5. cache_max_partition_count
-
-Partition Cache 独有的参数。BE 最大分区数量，指每个 SQL 对应的最大分区数，如果是按日期分区，能缓存 2 年多的数据，假如想保留更长时间的缓存，请把这个参数设置得更大，同时修改参数 cache_result_max_row_count 和 cache_result_max_data_size。
-
-```text
-vim be/conf/be.conf
-cache_max_partition_count=1024
 ```
