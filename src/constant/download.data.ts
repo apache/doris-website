@@ -957,6 +957,11 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.Flink,
         children: [
             {
+                label: '1.6.0',
+                value: '1.6.0',
+                gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.6.1.tar.gz',
+            },
+            {
                 label: '1.5.2',
                 value: '1.5.2',
                 gz: 'https://github.com/apache/doris-flink-connector/archive/refs/tags/1.5.2.tar.gz',
