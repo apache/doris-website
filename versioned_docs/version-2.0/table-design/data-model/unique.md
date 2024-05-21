@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Unique Key",
+    "title": "Unique Key Model",
     "language": "en"
 }
 ---

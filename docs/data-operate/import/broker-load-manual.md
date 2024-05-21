@@ -58,11 +58,11 @@ WITH [HDFS|S3|BROKER broker_name]
 [COMMENT "comments"];
 ```
 
-For the specific syntax for usage, please refer to [BROKER LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
+For the specific syntax for usage, please refer to [BROKER LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) in the SQL manual.
 
 ## Checking import status
 
-Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD) command.
+Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD) command.
 
 ```Plain
 mysql> show load order by createtime desc limit 1\G;
@@ -87,7 +87,7 @@ LoadFinishTime: 2022-04-01 18:59:11
 
 ## Cancelling an Import
 
-When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CANCEL-LOAD).
+When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CANCEL-LOAD).
 
 For example: To cancel the import job with the label "broker_load_2022_03_23" on the DEMO database.
 
@@ -717,4 +717,4 @@ In general, user environments may not reach speeds of 10M/s, so it is recommende
 
 ## More Help
 
-For more detailed syntax and best practices for using  [Broker Load](../..//sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+For more detailed syntax and best practices for using  [Broker Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.

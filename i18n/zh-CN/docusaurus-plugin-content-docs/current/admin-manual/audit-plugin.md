@@ -56,9 +56,9 @@ Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一�
 
 ### 相关配置
 
-审计日志表是一张动态分区表，按天分区，默认保留最近30天的数据。
+审计日志表是一张动态分区表，按天分区，默认保留最近 30 天的数据。
 
-以下3个全局变量可以控制审计日志表的一些写入行为：
+以下 3 个全局变量可以控制审计日志表的一些写入行为：
 
 - `audit_plugin_max_batch_interval_sec`：审计日志表的最大写入间隔。默认 60 秒。
 - `audit_plugin_max_batch_bytes`：审计日志表每批次最大写入数据量。默认 50MB。
@@ -93,19 +93,19 @@ Doris 2.1 版本之前的用户，请参阅如下方式使用审计日志插件�
     * plugin.properties：插件属性文件。
     * plugin.conf：插件配置文件。
 
-您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`)到所有 FE 的指定目录下。这里我们使用后者。  
-该插件的安装可以参阅 [INSTALL](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN.md)  
-执行install后会自动生成AuditLoader目录
+您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`) 到所有 FE 的指定目录下。这里我们使用后者。  
+该插件的安装可以参阅 [INSTALL](../sql-manual/sql-statements/Database-Administration-Statements/INSTALL-PLUGIN.md)  
+执行 install 后会自动生成 AuditLoader 目录
 
 3. 修改 plugin.conf 
 
     以下配置可供修改：
 
-    * frontend_host_port：FE 节点 IP 地址和 HTTP 端口，格式为 <fe_ip>:<fe_http_port>。 默认值为 127.0.0.1:8030。
+    * frontend_host_port：FE 节点 IP 地址和 HTTP 端口，格式为 <fe_ip>:<fe_http_port>。默认值为 127.0.0.1:8030。
     * database：审计日志库名。
     * audit_log_table：审计日志表名。
     * slow_log_table：慢查询日志表名。
-    * enable_slow_log：是否开启慢查询日志导入功能。默认值为 false。可以在FE配置项中配置慢查询的阈值，参数为 qe_slow_log_ms ，默认5s。
+    * enable_slow_log：是否开启慢查询日志导入功能。默认值为 false。可以在 FE 配置项中配置慢查询的阈值，参数为 qe_slow_log_ms，默认 5s。
     * user：集群用户名。该用户必须具有对应表的 INSERT 权限。
     * password：集群用户密码。
 
@@ -201,7 +201,7 @@ properties(
 
 >**注意**
 >
-> 上面表结构中：stmt string ，这个只能在0.15及之后版本中使用，之前版本，字段类型使用varchar
+> 上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
 
 ### 部署
 
@@ -215,7 +215,7 @@ properties(
 INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 ```
 
-详细命令参考：[INSTALL-PLUGIN](https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN)
+详细命令参考：[INSTALL-PLUGIN](../sql-manual/sql-statements/Database-Administration-Statements/INSTALL-PLUGIN)
 
 安装成功后，可以通过 `SHOW PLUGINS` 看到已经安装的插件，并且状态为 `INSTALLED`。
 
@@ -229,11 +229,11 @@ INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 
     - 检查分区是否被正常创建
 
-        审计日志表是一张按天分区的动态分区表，默认会创建未来3天的分区，并保留历史30天的分区。只有分区被正确创建后，才能正常写入审计日志。
+        审计日志表是一张按天分区的动态分区表，默认会创建未来 3 天的分区，并保留历史 30 天的分区。只有分区被正确创建后，才能正常写入审计日志。
 
         可以通过 `show dynamic partition tables from __internal_schema` 查看动态分区的调度情况，并根据错误原因排查。可能得错误原因包括：
 
-        - 节点数小于所需副本数：审计日志表默认 3 副本，所以至少需要 3 台BE节点。或者通过 `alter table` 语句修改副本数，如：
+        - 节点数小于所需副本数：审计日志表默认 3 副本，所以至少需要 3 台 BE 节点。或者通过 `alter table` 语句修改副本数，如：
 
             `alter table __internal_schema.audit_log set ("dynamic_partition.replication_num" = "2")`
 

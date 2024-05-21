@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Export Query Result with SELECT INTO OUTFILE",
+    "title": "Exporting Data or Table Structures",
     "language": "en"
 }
 ---
@@ -26,7 +26,7 @@ under the License.
 
 
 
-This document describes how to use the  [SELECT INTO OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE)  command to export query results.
+This document describes how to use the  [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE)  command to export query results.
 
 `SELECT INTO OUTFILE` is a synchronous command, which means that the operation is completed when the command returns. It also returns a row of results to show the execution result of the export.
 
@@ -57,7 +57,7 @@ select * from tbl1 limit 10
 INTO OUTFILE "file:///home/work/path/result_";
 ```
 
-For more usage, see [OUTFILE documentation](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE).
+For more usage, see [OUTFILE documentation](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE).
 
 ## Concurrent Export
 
@@ -110,7 +110,7 @@ Planning example for concurrent export:
 
 ## Usage Examples
 
-For details, please refer to [OUTFILE Document](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE).
+For details, please refer to [OUTFILE Document](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE).
 
 ## Return Results
 
@@ -178,4 +178,4 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 ## More Help
 
-For more detailed syntax and best practices for using OUTFILE, please refer to the [OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE) command manual, you can also More help information can be obtained by typing `HELP OUTFILE` at the command line of the MySql client.
+For more detailed syntax and best practices for using OUTFILE, please refer to the [OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE) command manual, you can also More help information can be obtained by typing `HELP OUTFILE` at the command line of the MySql client.

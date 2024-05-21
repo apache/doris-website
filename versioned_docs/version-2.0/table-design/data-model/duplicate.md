@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Duplicate Key",
+    "title": "Duplicate Key Model",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Update for Aggregate Load",
+    "title": "Updaing Data on Aggregate Key Model",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Update for Aggregate Load
+
 
 This guide is about ingestion-based data updates for the Aggregate Key model in Doris.
 

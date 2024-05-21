@@ -28,11 +28,11 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 workload_groups
 
-</version>
+:::caution
+自 2.1.1 起，此表函数移到 information_schema.workload_groups 表。
+:::
 
 ### description
 

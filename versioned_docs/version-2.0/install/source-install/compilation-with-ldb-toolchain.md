@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compiling with LDB Toolchain (Recommended)",
+    "title": "Compling with LDB Toolchain (Recommended)",
     "language": "en"
 }
 ---

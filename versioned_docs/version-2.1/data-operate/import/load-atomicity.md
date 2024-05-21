@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Load Transaction and Atomicity",
+    "title": "Loading Transaction and Atomicity",
     "language": "en"
 }
 ---

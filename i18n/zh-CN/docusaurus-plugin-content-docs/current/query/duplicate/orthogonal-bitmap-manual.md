@@ -110,6 +110,15 @@ orthogonal_bitmap_intersect(bitmap_column, column_to_filter, filter_values)
 
 第一个参数是 Bitmap 列，第二个参数是用来过滤的维度列，第三个参数是变长参数，含义是过滤维度列的不同取值
 
+```
+mysql> select orthogonal_bitmap_intersect(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
++-------------------------------------------------------------------------------+
+| orthogonal_bitmap_intersect(`members`, `tag_group`, 1150000, 1150001, 390006) |
++-------------------------------------------------------------------------------+
+| NULL                                                                          |
++-------------------------------------------------------------------------------+
+```
+
 - 说明：
 
 查询规划上聚合分 2 层，在第一层 be 节点（update、serialize）先按 filter_values 为 key 进行 hash 聚合，然后对所有 key 的 bitmap 求交集，结果序列化后发送至第二层 be 节点 (merge、finalize)，在第二层 be 节点对所有来源于第一层节点的 bitmap 值循环求并集
@@ -132,6 +141,15 @@ orthogonal_bitmap_intersect_count(bitmap_column, column_to_filter, filter_values
 
 第一个参数是 Bitmap 列，第二个参数是用来过滤的维度列，第三个参数开始是变长参数，含义是过滤维度列的不同取值
 
+```
+mysql> select orthogonal_bitmap_intersect_count(members, tag_group, 1150000, 1150001, 390006) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
++-------------------------------------------------------------------------------------+
+| orthogonal_bitmap_intersect_count(`members`, `tag_group`, 1150000, 1150001, 390006) |
++-------------------------------------------------------------------------------------+
+|                                                                                   0 |
++-------------------------------------------------------------------------------------+
+```
+
 - 说明：
 
 查询规划聚合上分 2 层，在第一层 be 节点（update、serialize）先按 filter_values 为 key 进行 hash 聚合，然后对所有 key 的 bitmap 求交集，再对交集结果求 count，count 值序列化后发送至第二层 be 节点（merge、finalize），在第二层 be 节点对所有来源于第一层节点的 count 值循环求 sum
@@ -147,6 +165,15 @@ orthogonal_bitmap_union_count(bitmap_column)
 - 参数：
 
 参数类型是 bitmap，是待求并集 count 的列
+
+```
+mysql> select orthogonal_bitmap_union_count(members) from tag_map where  tag_group in ( 1150000, 1150001, 390006);
++------------------------------------------+
+| orthogonal_bitmap_union_count(`members`) |
++------------------------------------------+
+|                                286957811 |
++------------------------------------------+
+```
 
 - 说明：
 
@@ -166,6 +193,16 @@ orthogonal_bitmap_expr_calculate(bitmap_column, filter_column, input_string)
 
 表达式支持的计算符：& 代表交集计算，| 代表并集计算，- 代表差集计算，^ 代表异或计算，\ 代表转义字符
 
+```sql
+select orthogonal_bitmap_expr_calculate(user_id, tag, '(833736|999777)&(1308083|231207)&(1000|20000-30000)') from user_tag_bitmap where tag in (833736,999777,130808,231207,1000,20000,30000);
+注：1000、20000、30000等整形tag，代表用户不同标签
+```
+
+```sql
+select orthogonal_bitmap_expr_calculate(user_id, tag, '(A:a/b|B:2\\-4)&(C:1-D:12)&E:23') from user_str_tag_bitmap where tag in ('A:a/b', 'B:2-4', 'C:1', 'D:12', 'E:23');
+ 注：'A:a/b', 'B:2-4'等是字符串类型tag，代表用户不同标签, 其中'B:2-4'需要转义成'B:2\\-4'
+```
+
 - 说明：
 
 查询规划上聚合分 2 层，第一层 be 聚合节点计算包括 init、update、serialize 步骤，第二层 be 聚合节点计算包括 merge、finalize 步骤。在第一层 be 节点，init 阶段解析 input_string 字符串，转换为后缀表达式（逆波兰式），解析出计算 key 值，并在 map<key, bitmap>结构中初始化；update 阶段，底层内核 scan 维度列（filter_column）数据后回调 update 函数，然后以计算 key 为单位对上一步的 map 结构中的 bitmap 进行聚合；serialize 阶段，根据后缀表达式，解析出计算 key 列的 bitmap，利用栈结构先进后出原则，进行 bitmap 交并差集合计算，然后对最终的结果 bitmap 序列化后发送至第二层聚合 be 节点。在第二层聚合 be 节点，对所有来源于第一层节点的 bitmap 值求并集，并返回最终 bitmap 结果
@@ -177,6 +214,16 @@ orthogonal_bitmap_expr_calculate(bitmap_column, filter_column, input_string)
 - 语法：
 
 orthogonal_bitmap_expr_calculate_count(bitmap_column, filter_column, input_string)
+
+```sql
+select orthogonal_bitmap_expr_calculate_count(user_id, tag, '(833736|999777)&(1308083|231207)&(1000|20000-30000)') from user_tag_bitmap where tag in (833736,999777,130808,231207,1000,20000,30000);
+注：1000、20000、30000等整形tag，代表用户不同标签
+```
+
+```sql
+select orthogonal_bitmap_expr_calculate_count(user_id, tag, '(A:a/b|B:2\\-4)&(C:1-D:12)&E:23') from user_str_tag_bitmap where tag in ('A:a/b', 'B:2-4', 'C:1', 'D:12', 'E:23');
+ 注：'A:a/b', 'B:2-4'等是字符串类型tag，代表用户不同标签, 其中'B:2-4'需要转义成'B:2\\-4'
+```
 
 - 说明：
 

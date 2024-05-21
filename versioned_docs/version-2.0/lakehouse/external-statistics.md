@@ -26,7 +26,7 @@ under the License.
 
 # External Table Statistics
 
-The collection method and content of the external table statistics are basically the same as those of the internal table. For more information, please refer to [Internal table statistics]((../query/nereids/statistics)). Currently supports the collection of Hive, Iceberg and Hudi external tables.
+The collection method and content of the external table statistics are basically the same as those of the internal table. For more information, please refer to [Internal table statistics](../query/nereids/statistics.md). Currently supports the collection of Hive, Iceberg and Hudi external tables.
 
 Features that are not currently supported by the external table include
 

@@ -30,6 +30,10 @@ under the License.
 
 SHOW LOAD PROFILE
 
+:::caution
+自 2.1.1 起，此语法被弃用。
+:::
+
 ### Description
 
 该语句是用来查看导入操作的Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation on MacOS",
+    "title": "Compling on MacOS",
     "language": "en"
 }
 ---

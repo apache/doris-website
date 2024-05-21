@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-LATERAL VIEW generator_function ( expression [, ...] ) [ table_identifier ] AS column_identifier [, ...]
+LATERAL VIEW generator_function ( expression [, ...] ) table_identifier AS column_identifier [, ...]
 ```
 
 ## 参数
@@ -42,7 +42,7 @@ LATERAL VIEW generator_function ( expression [, ...] ) [ table_identifier ] AS c
 
 - table_identifier
 
-  `generator_function` 的别名，它是可选项。
+  `generator_function` 的别名。
 
 - column_identifier
 

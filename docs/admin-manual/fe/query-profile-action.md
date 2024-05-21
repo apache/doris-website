@@ -274,6 +274,10 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 
 `GET /rest/v2/manager/query/profile/fragments/{query_id}`
 
+:::caution
+Since 2.1.1, this API is deprecated. You can still download profile from http://<fe_ip>:<fe_http_port>/QueryProfile
+:::
+
 ### Description
 
 Get the fragment name, instance id, host ip/port and execution time for the specified query id.

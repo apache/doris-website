@@ -30,8 +30,8 @@ This document focuses on introducing the **Running Profile** which recorded runt
 
 You can also refer to following statements to view profile in command line:
 
-- [SHOW QUERY PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-QUERY-PROFILE.md)
-- [SHOW LOAD PROFILE](../../sql-manual/sql-reference/Show-Statements/SHOW-LOAD-PROFILE.md)
+- [SHOW QUERY PROFILE](../../sql-manual/sql-statements/Show-Statements/SHOW-QUERY-PROFILE.md)
+- [SHOW LOAD PROFILE](../../sql-manual/sql-statements/Show-Statements/SHOW-LOAD-PROFILE.md)
 
 ## Noun Interpretation
 

@@ -1,6 +1,6 @@
 ---
 {
-"title": "Doris on AWS",
+"title": "Deploying on AWS",
 "language": "en"
 }
 ---

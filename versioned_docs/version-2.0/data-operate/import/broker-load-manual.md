@@ -717,4 +717,4 @@ In general, user environments may not reach speeds of 10M/s, so it is recommende
 
 ## More Help
 
-For more detailed syntax and best practices for using  [Broker Load](../..//sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+For more detailed syntax and best practices for using  [Broker Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.

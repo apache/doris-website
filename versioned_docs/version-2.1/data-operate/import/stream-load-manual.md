@@ -105,9 +105,9 @@ Stream Load requires `INSERT` privileges on the target table. If there are no `I
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -188,9 +188,9 @@ Create a JSON file named `streamload_example.json` . The specific content is as 
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -331,6 +331,7 @@ Determines whether to enable the Pipeline engine to execute Streamload tasks. Se
 | comment                      | It is a String type, with an empty string as the default value. Used to add additional information to the task. |
 | enclose                      | Specify the enclosure character. When a CSV data field contains a row delimiter or column delimiter, to prevent unexpected truncation, you can specify a single-byte character as the enclosure for protection. For example, if the column delimiter is "," and the enclosure is "'", the data "a,'b,c'" will have "b,c" parsed as a single field. Note: When the enclosure is set to a double quote ("), make sure to set `trim_double_quotes` to true. |
 | escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
+| memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
 
 ### Load return value
 
@@ -783,9 +784,9 @@ For example, if the table is defined as follows:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "用户 ID",
-    name               VARCHAR(20)           COMMENT "用户姓名",
-    age                INT                   COMMENT "用户年龄"
+    user_id            BIGINT       NOT NULL COMMENT "User ID",
+    name               VARCHAR(20)           COMMENT "User name",
+    age                INT                   COMMENT "User age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -908,8 +909,8 @@ Load data into the following table structure:
 ```sql
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT          NOT NULL COMMENT "ID",
-    name       VARCHAR(20)     NULL     COMMENT "名称",
-    arr        ARRAY<int(10)>  NULL     COMMENT "数组"
+    name       VARCHAR(20)     NULL     COMMENT "Name",
+    arr        ARRAY<int(10)>  NULL     COMMENT "Array"
 )
 DUPLICATE KEY(typ_id)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
@@ -950,7 +951,7 @@ Load data into the following table structure:
 ```sql
 CREATE TABLE testdb.test_streamload(
     user_id            BIGINT       NOT NULL COMMENT "ID",
-    namemap            Map<STRING, INT>  NULL     COMMENT "名称"
+    namemap            Map<STRING, INT>  NULL     COMMENT "Name"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -1065,7 +1066,7 @@ For how to express partial column updates during import, please refer to the Dat
 
 ## More help
 
-For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
+For more detailed syntax and best practices on using Stream Load, please refer to the [Stream Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD) Command Manual. You can also enter HELP STREAM LOAD in the MySql client command line to get more help information.
 
 
 

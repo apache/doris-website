@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Standard Deployment",
+    "title": "Manual Deployment",
     "language": "en"
 }
 ---
@@ -272,9 +272,9 @@ This is a CIDR representation that specifies the IP used by the FE. In environme
    JAVA_OPTS="-Xmx16384m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$DATE"
    ```
 
-6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](https://doris.apache.org/docs/2.0/advanced/variables/) documentation for more details on the `lower_case_table_names` setting.
+6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](../../query/query-variables/variables) documentation for more details on the `lower_case_table_names` setting.
 
-**Start** **FE** **process**
+**Start FE process**
 
 Start FE process by executing the following command
 
@@ -284,7 +284,7 @@ bin/start_fe.sh --daemon
 
 After FE process is started, it runs in the background. The log files are stored by default in the `log/` directory. In the case of startup failure, you can check the error messages in `log/fe.log` or `log/fe.out`.
 
-**Check** **FE** **status**
+**Check FE status**
 
 To check the FE startup status, you can connect to the Doris cluster using a MySQL client. The initial user is `root` with an empty password.
 
@@ -306,11 +306,11 @@ In a production cluster, it is recommended to deploy at least three Follower nod
 
 Refer to the deployment of the FE Master node and create the "doris-meta" directory.
 
-**Modify** **FE** **Follower node configuration**
+**Modify FE Follower node configuration**
 
 Refer to the deployment of the FE Master node and modify the FE configuration file. In most cases, you can directly copy the configuration file from the FE Master node.
 
-**Register the New** **FE** **Follower node in the Doris cluster**
+**Register the New FE Follower node in the Doris cluster**
 
 Before starting the new FE node, you need to register it in the FE cluster.
 
@@ -337,7 +337,7 @@ ALTER SYSTEM ADD OBSERVER "<fe_ip_address>:<fe_edit_log_port>"
 3. Typically, one FE node can handle around 10-20 BE nodes. It is recommended to keep the total number of FE nodes below 10.
 :::
 
-**Start** **FE** **Follower node**
+**Start FE Follower node**
 
 Execute the following command to start FE Follower node and synchronize metadata automatically.
 

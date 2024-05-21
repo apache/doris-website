@@ -30,7 +30,7 @@ The SQL statement will hit the cache if it is completely consistent.
 
 ## Demand scenarios & solutions
 
-See query-cache.md.
+See [Query Caches Overview](../query-cache/query-cache.md)
 
 ## Design principles
 
@@ -58,6 +58,15 @@ MySQL [(none)]> set [global] enable_sql_cache=true;
 ```
 
 Note: global is a global variable and does not refer to the current session variable.
+
+In versions 2.1.3 and above, the Nereids optimizer saves cached key information, such as non-deterministic functions and their evaluation values, in the memory of FE. It can skip SQL parsing when the key information remains unchanged, optimizing the query speed of SQL cache.
+
+The number of key information and elimination time can be controlled to reduce memory consumption on FE through the frontend configuration items sql_cache_manageNum and expires_sql_cache_in_fe_second.
+
+```sql
+MySQL [(none)]> ADMIN SET FRONTEND CONFIG ('sql_cache_manage_num' = '100');
+MySQL [(none)]> ADMIN SET FRONTEND CONFIG ('expire_sql_cache_in_fe_second' = '300');
+```
 
 ## Cache conditions
 

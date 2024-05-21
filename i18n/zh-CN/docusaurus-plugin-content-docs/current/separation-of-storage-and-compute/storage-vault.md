@@ -1,6 +1,6 @@
 ---
 {
-    "title": "storage-vault(存储后端)",
+    "title": "Storage Vault(存储后端)",
     "language": "zh-CN"
 }
 ---
@@ -26,13 +26,13 @@ under the License.
 
 ## 概览
 
-Storage Vault 是doris存算分离模式使用的远程共享存储。用户可以配置一个或者多个 Storage Vault ，不同表允许存储在不同 Storage Vault 上。
+Storage Vault 是 doris 存算分离模式使用的远程共享存储。用户可以配置一个或者多个 Storage Vault，不同表允许存储在不同 Storage Vault 上。
 
 ## 名词解释
 
 vault name：每个 Storage Vault 有一个数仓实例内全局唯一的名称，除 built-in vault 外，vault name 由用户创建 Storage Vault 时指定。
 
-built-in vault：存算分离模式用于存储 Doris 系统表的远程共享存储，必须在创建数仓实例时就配置好。built-in vault 有固定 vault name "built_in_storage_vault"。必须配置 built-in vault，数仓(FE) 才能启动。
+built-in vault：存算分离模式用于存储 Doris 系统表的远程共享存储，必须在创建数仓实例时就配置好。built-in vault 有固定 vault name "built_in_storage_vault"。必须配置 built-in vault，数仓 (FE) 才能启动。
 
 default vault：数仓实例级别的默认 Storage Vault，用户可以指定某个 Storage Vault 为 default vault，包括 built-in vault 也可以作为 default vault。由于存算分离模式中，数据必须要存储在某个远程共享存储上，如果用户建表时没有在 table properties 中指定 vault_name，则该表数据会存储在 default vault 上。default vault 可以被重新设置，但是已经创建的表所使用的 Storage Vault 不会因此改变。
 
@@ -61,7 +61,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
         "type"="hdfs", -- required
         "fs.defaultFS"="hdfs://127.0.0.1:8020", -- required
-        "path_prefix"="prefix", -- optional -> Gavin希望是required
+        "path_prefix"="prefix", -- optional
         "hadoop.username"="user" -- optional
         "hadoop.security.authentication"="kerberos" -- optional
         "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
@@ -106,7 +106,7 @@ Properties 参数
 SHOW STORAGE VAULT
 ```
 
-show出来4列，一列是name 一列是id 一列是属性 一列是是否是default
+show 出来 4 列，一列是 name 一列是 id 一列是属性 一列是是否是 default
 
 ```SQL
 mysql> show storage vault;
@@ -152,9 +152,9 @@ PROPERTIES (
 
 ### Built-in storage vault
 
-用户在创建create instance的时候可以选择vault mode或者非vault mode，如果选择的是vault mode，传递进去的vault则会被设置为built-in storage vault. Built-in storage vault是用来保存内部表的信息的（比如统计信息表），在vault模式下如果没有创建built-in storage vault则FE是无法正常启动的。
+用户在创建 create instance 的时候可以选择 vault mode 或者非 vault mode，如果选择的是 vault mode，传递进去的 vault 则会被设置为 built-in storage vault. Built-in storage vault 是用来保存内部表的信息的（比如统计信息表），在 vault 模式下如果没有创建 built-in storage vault 则 FE 是无法正常启动的。
 
-用户也可以选择将自己的新的表的数据存储在built-in storage vault之上，可以通过将built-in storage vault设置为default storage vault或者在建表的时候将表的storage_vault_name属性设置为builtin storage vault实现.
+用户也可以选择将自己的新的表的数据存储在 built-in storage vault 之上，可以通过将 built-in storage vault 设置为 default storage vault 或者在建表的时候将表的 storage_vault_name 属性设置为 builtin storage vault 实现。
 
 ### Alter Storage Vault
 

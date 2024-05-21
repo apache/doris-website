@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MySql Load",
+    "title": "MySQL Load",
     "language": "en"
 }
 ---
@@ -266,4 +266,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## More help
 
-For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Manipulation-Statements/Load/MYSQL-LOAD/) command manual.
+For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/MYSQL-LOAD/) command manual.

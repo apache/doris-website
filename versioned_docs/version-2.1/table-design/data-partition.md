@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Partition",
+    "title": "Data Partitioning",
     "language": "en"
 }
 ---
@@ -38,7 +38,7 @@ A table contains rows and columns.
 
 Row refers to a row of user data. Column is used to describe different fields in a row of data.
 
-Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and metric columns, respectively. The key column of Doris is the column specified in the table creation statement. The column after the keyword 'unique key' or 'aggregate key' or 'duplicate key' in the table creation statement is the key column, and the rest except the key column is the value column. In the Aggregate Model, rows with the same values in Key columns will be aggregated into one row. The way how Value columns are aggregated is specified by the user when the table is built. For more information about the Aggregate Model, please see the [Data Model](./data-model.md).
+Columns can be divided into two categories: Key and Value. From a business perspective, Key and Value correspond to dimension columns and metric columns, respectively. The key column of Doris is the column specified in the table creation statement. The column after the keyword 'unique key' or 'aggregate key' or 'duplicate key' in the table creation statement is the key column, and the rest except the key column is the value column. In the Aggregate Model, rows with the same values in Key columns will be aggregated into one row. The way how Value columns are aggregated is specified by the user when the table is built. For more information about the Aggregate Model, please see the [Data Model](../table-design/data-model/overview.md).
 
 ### Tablet & Partition
 
@@ -52,7 +52,7 @@ A Table is formed of multiple Partitions. Partition can be thought of as the sma
 
 The following illustrates on data partitioning in Doris using the example of a CREATE TABLE operation.
 
-CREATE TABLE in Doris is a synchronous command. It returns results after the SQL execution is completed. Successful returns indicate successful table creation. For more information on the syntax, please refer to [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md), or input  the `HELP CREATE TABLE;` command. 
+CREATE TABLE in Doris is a synchronous command. It returns results after the SQL execution is completed. Successful returns indicate successful table creation. For more information on the syntax, please refer to [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md), or input  the `HELP CREATE TABLE;` command. 
 
 This section introduces how to create tables in Doris.
 
@@ -125,7 +125,7 @@ PROPERTIES
 
 ### Definition of Column
 
-Here we only use the AGGREGATE KEY data model as an example. See [Doris Data Model](./data-model.md) for more information.
+Here we only use the AGGREGATE KEY data model as an example. See [Doris Data Model](../table-design/data-model/overview) for more information.
 
 You can view the basic types of columns by executing `HELP CREATE TABLE;` in MySQL Client.
 
@@ -259,7 +259,7 @@ It is also possible to use one layer of data partitioning, If you do not write t
 <version since="1.2.0">
     
 
-Range partitioning also supports batch partitioning. For example, you can create multiple partitions that are divided by day at a time using the `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY`：2022-01-03 to 2022-01-06 (not including 2022-01-06), the results will be as follows:
+Range partitioning also supports batch partitioning. For example, you can create multiple partitions that are divided by day at a time using the `FROM ("2022-01-03") TO ("2022-01-06") INTERVAL 1 DAY`: 2022-01-03 to 2022-01-06 (not including 2022-01-06), the results will be as follows:
 
     p20220103:    [2022-01-03,  2022-01-04)
     p20220104:    [2022-01-04,  2022-01-05)
@@ -354,7 +354,7 @@ Range partitioning also supports batch partitioning. For example, you can create
    * Once you have specified the number of Buckets for a Partition, you may not change it afterwards. Therefore, when determining the number of Buckets, you need to consider the need of cluster expansion in advance. For example, if there are only 3 hosts, and each host has only 1 disk, and you have set the number of Buckets is only set to 3 or less, then no amount of newly added machines can increase concurrency.
    * For example, suppose that there are 10 BEs and each BE has one disk, if the total size of a table is 500MB, you can consider dividing it into 4-8 tablets; 5GB: 8-16 tablets; 50GB: 32 tablets; 500GB: you may consider dividing it into partitions, with each partition about 50GB in size, and 16-32 tablets per partition; 5TB: divided into partitions of around 50GB and 16-32 tablets per partition.
 
-   > Note: You can check the data volume of the table using the [show data](../sql-manual/sql-reference/Show-Statements/SHOW-DATA.md) command. Divide the returned result by the number of copies, and you will know the data volume of the table.
+   > Note: You can check the data volume of the table using the [show data](../sql-manual/sql-statements/Show-Statements/SHOW-DATA.md) command. Divide the returned result by the number of copies, and you will know the data volume of the table.
 
 4. About the settings and usage scenarios of Random Distribution:
 
@@ -455,11 +455,11 @@ mysql> insert into null_range2 values (null);
 ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 ```
 
-Auto Partition's handling of NULL partition values is detailed in its documentation [corresponding section](../advanced/partition/auto-partition/#null-valued-partition)。
+Auto Partition's handling of NULL partition values is detailed in its documentation [corresponding section](../table-design/data-partition)。
 
 ### PROPERTIES
 
-In the `PROPERTIES` section at the last of the CREATE TABLE statement, you can set the relevant parameters. Please see [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md) for a detailed introduction.
+In the `PROPERTIES` section at the last of the CREATE TABLE statement, you can set the relevant parameters. Please see [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) for a detailed introduction.
 
 ### ENGINE
 
@@ -488,11 +488,11 @@ In this example, the ENGINE is of OLAP type, which is the default ENGINE type. I
    1. In fe.log, find the `Failed to create partition` log of the corresponding time point. In that log, find a number pair that looks like `{10001-10010}` . The first number of the pair is the Backend ID and the second number is the Tablet ID. As for `{10001-10010}`, it means that on Backend ID 10001, the creation of Tablet ID 10010 failed.
    2. After finding the target Backend, go to the corresponding be.INFO log and find the log of the target tablet, and then check the error message.
    3. A few common tablet creation failures include but not limited to:
-      * The task is not received by BE. In this case, the tablet ID related information will be found in be.INFO, or the creation is successful in BE but it still reports a failure. To solve the above problems, see [Installation and Deployment](https://doris.apache.org/docs/dev/install/standard-deployment/) about how to check the connectivity of FE and BE.
+      * The task is not received by BE. In this case, the tablet ID related information will be found in be.INFO, or the creation is successful in BE but it still reports a failure. To solve the above problems, see [Installation and Deployment](../install/cluster-deployment/standard-deployment) about how to check the connectivity of FE and BE.
       * Pre-allocated memory failure. It may be that the length of a row in the table exceeds 100KB.
       * `Too many open files`. The number of open file descriptors exceeds the Linux system limit. In this case, you need to change the open file descriptor limit of the Linux system.
 
-   If it is a timeout error, you can set `tablet_create_timeout_second=xxx` and `max_create_table_timeout_second=xxx` in fe.conf. The default value of `tablet_create_timeout_second=xxx` is 1 second, and that of `max_create_table_timeout_second=xxx`  is 60 seconds. The overall timeout would be min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second). For detailed parameter settings, please check [FE Configuration](https://doris.apache.org/docs/dev/admin-manual/config/fe-config/).
+   If it is a timeout error, you can set `tablet_create_timeout_second=xxx` and `max_create_table_timeout_second=xxx` in fe.conf. The default value of `tablet_create_timeout_second=xxx` is 1 second, and that of `max_create_table_timeout_second=xxx`  is 60 seconds. The overall timeout would be min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second). For detailed parameter settings, please check [FE Configuration](../admin-manual/config/fe-config).
 
 3. The build table command does not return results for a long time.
 
@@ -502,4 +502,4 @@ In this example, the ENGINE is of OLAP type, which is the default ENGINE type. I
 
 ## More Help
 
-For more detailed instructions on data partitioning, please refer to the [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE.md) command manual, or enter `HELP CREATE TABLE;` in MySQL Client.
+For more detailed instructions on data partitioning, please refer to the [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) command manual, or enter `HELP CREATE TABLE;` in MySQL Client.

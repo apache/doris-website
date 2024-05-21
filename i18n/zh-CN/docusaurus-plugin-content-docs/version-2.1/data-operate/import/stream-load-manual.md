@@ -168,7 +168,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
 1. 创建导入数据
 
-    创建 CSV 文件 streamload_example.json 文件。具体内容如下
+    创建 JSON 文件 streamload_example.json。具体内容如下
 
     ```sql
     [
@@ -337,6 +337,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | comment                      | 字符串类型，默认值为空。给任务增加额外的信息。               |
 | enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
 | escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
+| memtable_on_sink_node        | 导入数据的时候是否开启 MemTable 前移，默认为 false。 |
 
 ### 导入返回值
 

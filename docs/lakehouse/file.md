@@ -1,6 +1,6 @@
 ---
 {
-    "title": "File Analytics",
+    "title": "Analyzing File",
     "language": "en"
 }
 ---

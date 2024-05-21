@@ -249,7 +249,7 @@ PROPERTIES (
    2. Queries will filter based on the high-frequency values in the column, and the filtering conditions are mostly "in" and "=".
    3. Unlike Bitmap indexes, BloomFilter indexes are suitable for high-cardinality columns, such as UserID. If created on low-cardinality columns like "gender", each block will contain almost all values, rendering the BloomFilter index meaningless.
    4. It is suitable for cases with data cardinality around half of the total range.
-   5. For high-cardinality columns with equality (=) queries, such as ID numbers, using Bitmap indexes can greatly accelerate performance.
+   5. For high-cardinality columns with equality (=) queries, such as ID numbers, using BloomFilter indexes can greatly accelerate performance.
 :::
 
 ### **Ngram BloomFilter index**

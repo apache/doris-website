@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Export Query Result with SELECT INTO OUTFILE",
+    "title": "Exporting Query Result",
     "language": "en"
 }
 ---

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation on Linux",
+    "title": "Compling on Linux",
     "language": "en"
 }
 ---

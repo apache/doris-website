@@ -38,8 +38,13 @@ The settable configuration items can be viewed through the SHOW FRONTEND CONFIG;
 grammar:
 
 ```sql
-  ADMIN SET FRONTEND CONFIG ("key" = "value");
+  ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
+  ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
 ````
+
+illustrate:
+
+1. If `ALL` keyword is used, this config will be applied to all FE(except master_only configuration)
 
 ### Example
 

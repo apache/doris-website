@@ -78,7 +78,7 @@ The specific process of Routine Load is illustrated in the following diagram:
 
 ### Create Job
 
-In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTINE LOAD` command. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). Routine Load supports consuming data in CSV and JSON formats.
+In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTINE LOAD` command. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). Routine Load supports consuming data in CSV and JSON formats.
 
 **Loading CSV Data**
 
@@ -232,7 +232,7 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 
 ### Pausing Jobs
 
-You can pause an load job using the [PAUSE ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD) command. When a job is paused, it enters the PAUSED state, but the load job is not terminated and can be resumed using the RESUME ROUTINE LOAD command.
+You can pause an load job using the [PAUSE ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/PAUSE-ROUTINE-LOAD) command. When a job is paused, it enters the PAUSED state, but the load job is not terminated and can be resumed using the RESUME ROUTINE LOAD command.
 
 To pause the `testdb.example_routine_load_csv` load job, you can use the following command:
 
@@ -242,7 +242,7 @@ PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### Resuming Jobs
 
-You can resume a paused load job using the [RESUME ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) command.
+You can resume a paused load job using the [RESUME ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/RESUME-ROUTINE-LOAD) command.
 
 To resume the `testdb.example_routine_load_csv` job, you can use the following command:
 
@@ -252,7 +252,7 @@ RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### Modifying Jobs
 
-You can modify a created loading job using the [ALTER ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD) command. Before modifying the job, you need to pause it using the` PAUSE ROUTINE LOAD` command, and after making the modifications, you can resume it using the `RESUME ROUTINE LOAD` command.
+You can modify a created loading job using the [ALTER ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/ALTER-ROUTINE-LOAD) command. Before modifying the job, you need to pause it using the` PAUSE ROUTINE LOAD` command, and after making the modifications, you can resume it using the `RESUME ROUTINE LOAD` command.
 
 To modify the `desired_concurrent_number` parameter for the job and update the Kafka topic information, you can use the following command:
 
@@ -269,7 +269,7 @@ FROM KAFKA(
 
 ### Canceling Jobs
 
-You can stop and delete a Routine Load job using the [STOP ROUTINE LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) command. Once deleted, the load job cannot be recovered and cannot be viewed using the `SHOW ROUTINE LOAD` command.
+You can stop and delete a Routine Load job using the [STOP ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STOP-ROUTINE-LOAD) command. Once deleted, the load job cannot be recovered and cannot be viewed using the `SHOW ROUTINE LOAD` command.
 
 To stop and delete the `testdb.example_routine_load_csv` load job, you can use the following command:
 
@@ -430,8 +430,8 @@ Here are the available parameters for the job_properties clause:
 | max_batch_interval          | The maximum running time for each subtask, in seconds. The range is from 1s to 60s, with a default value of 10s. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_batch_rows              | The maximum number of rows read by each subtask. Must be greater than or equal to 200,000. The default value is 200,000. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
 | max_batch_size              | The maximum number of bytes read by each subtask. The unit is bytes, and the range is from 100MB to 1GB. The default value is 100MB. max_batch_interval/max_batch_rows/max_batch_size together form the execution threshold for subtasks. If any of these parameters reaches the threshold, the load subtask ends and a new one is generated. |
-| max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
-| strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../sql-manual/sql-reference/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../data-operate/import/load-strict-mode).</li></ul> |
+| max_error_number            | The maximum number of error rows allowed within a sampling window. Must be greater than or equal to 0. The default value is 0, which means no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows within the sampling window exceeds `max_error_number`, the regular job will be paused and manual intervention is required to check for data quality issues using the [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD) command and `ErrorLogUrls`. Rows filtered out by the WHERE condition are not counted as error rows. |
+| strict_mode                 | Whether to enable strict mode. The default value is disabled. Strict mode applies strict filtering to type conversions during the load process. If enabled, non-null original data that results in a NULL after type conversion will be filtered out. The filtering rules in strict mode are as follows:<ul><li>Derived columns (generated by functions) are not affected by strict mode.</li><li>If a column's type needs to be converted, any data with an incorrect data type will be filtered out. You can check the filtered columns due to data type errors in the `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/Show-Statements/SHOW-ROUTINE-LOAD).</li><li>For columns with range restrictions, if the original data can be successfully converted but falls outside the declared range, strict mode does not affect it. For example, if the type is decimal(1,0) and the original data is 10, it can be converted but is not within the range declared for the column. Strict mode does not affect this type of data. For more details, see [Strict Mode](../../data-operate/import/load-strict-mode).</li></ul> |
 | timezone                    | Specifies the time zone used by the load job. The default is to use the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the load. |
 | format                      | Specifies the data format for the load. The default is csv, and JSON format is supported. |
 | jsonpaths                   | When the data format is JSON, jsonpaths can be used to specify the JSON paths to extract data from nested structures. It is a JSON array of strings, where each string represents a JSON path. |
@@ -479,7 +479,7 @@ The available options for the data_source_properties clause are as follows:
 | kafka_topic       | Specifies the Kafka topic to subscribe to. A load job can only consume one Kafka topic. |
 | kafka_partitions  | Specifies the Kafka partitions to subscribe to. If not specified, all partitions are consumed by default. |
 | kafka_offsets     | Specifies the starting consumption offset for Kafka partitions. If a timestamp is specified, consumption starts from the nearest offset equal to or greater than that timestamp. The offset can be a specific offset greater than or equal to 0, or it can use the following formats:<ul><li>OFFSET_BEGINNING: Starts consuming from the position where there is data.</li><li>OFFSET_END: Starts consuming from the end.</li><li>Timestamp format, e.g., "2021-05-22 11:00:00"</li><li>If not specified, consumption starts from `OFFSET_END` for all partitions under the topic.</li><li>Multiple starting consumption offsets can be specified, separated by commas, such as `"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"` or `"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</li><li>Note that timestamp format cannot be mixed with OFFSET format.</li></ul> |
-| property          | Specifies custom Kafka parameters. This is equivalent to the "--property" parameter in the Kafka shell. When the value of a parameter is a file, the keyword "FILE:" needs to be added before the value. For creating a file, you can refer to the [CREATE FILE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-FILE) command documentation. For more supported custom parameters, you can refer to the client-side configuration options in the official [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) documentation of librdkafka. For example: `"property.client.id" = "12345"`, `"property.group.id" = "group_id_0"`, `"property.ssl.ca.location" = "FILE:ca.pem"` |
+| property          | Specifies custom Kafka parameters. This is equivalent to the "--property" parameter in the Kafka shell. When the value of a parameter is a file, the keyword "FILE:" needs to be added before the value. For creating a file, you can refer to the [CREATE FILE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FILE) command documentation. For more supported custom parameters, you can refer to the client-side configuration options in the official [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) documentation of librdkafka. For example: `"property.client.id" = "12345"`, `"property.group.id" = "group_id_0"`, `"property.ssl.ca.location" = "FILE:ca.pem"` |
 
 By configuring the Kafka property parameter in the `data_source_properties`, you can set up security access options. Currently, Doris supports various Kafka security protocols such as plaintext (default), SSL, PLAIN, and Kerberos.
 
@@ -1943,4 +1943,4 @@ FROM KAFKA
 
 ## More Details
 
-Refer to the SQL manual on [Routine Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line for more help.
+Refer to the SQL manual on [Routine Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line for more help.

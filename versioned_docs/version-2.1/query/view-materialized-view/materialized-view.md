@@ -94,7 +94,7 @@ The aggregate functions currently supported by the materialized view function ar
 
 + COUNT, BITMAP\_UNION, HLL\_UNION (Version 0.13)
 
-+ [AGG_STATE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Types/AGG_STATE?_highlight=agg_state) (Version 2.0)
++ [AGG_STATE](../../sql-manual/sql-types/Data-Types/AGG_STATE) (Version 2.0)
 
   Some aggregation functions that are not originally supported will be converted to the agg_state type to achieve pre-aggregation.
 
@@ -157,13 +157,13 @@ You can see that the current `mv_test` table has three materialized views: mv\_1
 
 If the user no longer needs the materialized view, you can delete the materialized view by 'DROP' commen.
 
-You can view the specific syntax[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW)
+You can view the specific syntax[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW)
 
 ### View the materialized view that has been created
 
 Users can view the created materialized views by using commands
 
-You can view the specific syntax[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW)
+You can view the specific syntax[SHOW CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW)
 
 ### Cancel Create materialized view
 
@@ -540,4 +540,4 @@ Note: The bitmap type only supports positive integers. If there are negative Num
 
 ## More Help
 
-For more detailed syntax and best practices for using materialized views, see [CREATE MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) and [DROP MATERIALIZED VIEW](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW.md) command manual, you can also Enter `HELP CREATE MATERIALIZED VIEW` and `HELP DROP MATERIALIZED VIEW` at the command line of the MySql client for more help information.
+For more detailed syntax and best practices for using materialized views, see [CREATE MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW.md) and [DROP MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-MATERIALIZED-VIEW.md) command manual, you can also Enter `HELP CREATE MATERIALIZED VIEW` and `HELP DROP MATERIALIZED VIEW` at the command line of the MySql client for more help information.

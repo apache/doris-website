@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Docker Cluster",
+    "title": "Deploying with Docker",
     "language": "en"
 }
 ---
@@ -23,11 +23,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# Deploy with Docker
+
 
 This guide is about how to create a running image of Apache Doris using a Dockerfile. It allows for the quick pulling of an Apache Doris image to create and run a cluster, either with container orchestration tools or for a quick test.
 
-# Prerequisites
+## Prerequisites
 
 **Overview**
 
@@ -41,9 +41,9 @@ Recommended configuration: 4 cores, 16GB memory.
 
 Docker version: 20.10 or later.
 
-# Build image
+## Build image
 
-## Preparation
+### Preparation
 
 **Dockerfile script writing**
 
@@ -60,7 +60,7 @@ About the Dockerfile script used for compiling the Docker image, there are two w
 
 The former method produces a Docker image of smaller size, but if the build fails, the download operation may be repeated, leading to longer build times. The latter method is suitable for environments with unstable network conditions. Here, we will provide an example using the second method.
 
-## **Build** **FE** **Image**
+### **Build** **FE** **Image**
 
 1. Environment directory for building the FE image:
 
@@ -117,7 +117,7 @@ cd ./docker-build/fe
 docker build . -t ${fe-tagName}
 ```
 
-## Build BE image
+### Build BE image
 
 1. Environment directory for building the BE image:
 
@@ -168,7 +168,7 @@ cd ./docker-build/be
 docker build . -t ${be-tagName}
 ```
 
-## Push the image to DockerHub or a private repository
+### Push the image to DockerHub or a private repository
 
 Log in to DockerHub
 
@@ -182,13 +182,13 @@ Upon successful login, a "Success" prompt will be displayed. After that, you can
 docker push ${tagName}
 ```
 
-# Deploy Docker cluster
+## Deploy Docker cluster
 
 The following is a brief overview of how to quickly create a complete Doris testing cluster using the `docker run` or `docker-compose up` commands.
 
 It is advisable to avoid containerized solutions for Doris deployment in production environments. Instead, when deploying Doris on Kubernetes (K8s), it is recommended to utilize the Doris Operator for deployment.
 
-## Prerequisite
+### Prerequisite
 
 **Software**
 
@@ -210,11 +210,11 @@ It is advisable to avoid containerized solutions for Doris deployment in product
 sysctl -w vm.max_map_count=2000000
 ```
 
-## Docker Compose
+### Docker Compose
 
 The required image varies depending on the platform. The following takes the `X86_64` platform as an example.
 
-### Network mode
+**Network mode**
 
 Doris Docker supports two network modes:
 
@@ -223,7 +223,7 @@ Doris Docker supports two network modes:
 
 For demonstration purposes, this section will only show scripts written for the subnet bridge mode.
 
-### Interface description
+**Interface description**
 
 Since `Apache Doris 2.0.3 Docker Image`, the interface list for each process image is as follows:
 
@@ -246,7 +246,7 @@ Note that the above interfaces must be specified with relevant information; othe
 >
 > The BROKER_ADDR interface follows the rule: `BROKER_HOST:BROKER_IPC_PORT`
 
-### Script template
+**Script template**
 
 #### Docker Run command
 
@@ -314,7 +314,7 @@ services:
 
 Download the Docker Compose command template for 3 FE & 3 BE from [here](https://github.com/apache/doris/blob/master/docker/runtime/docker-compose-demo/build-cluster/docker-compose/3fe_3be/docker-compose.yaml) if needed.
 
-## Deploy Doris Docker
+### Deploy Doris Docker
 
 Choose one of the following deployment methods:
 
