@@ -54,7 +54,7 @@ export default function Download() {
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.2');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.3');
 
     const changeVersion = (val: string) => {
         setVersion(val);

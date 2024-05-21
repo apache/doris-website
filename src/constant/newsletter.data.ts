@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Note'],
+        title: "Apache Doris version 2.1.3 just released",
+        content: `This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.`,
+        to: '/blog/release-note-2.1.3',
+        image: '2.1.3.jpg',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "Multi-tenant workload isolation: a better balance between isolation and utilization",
         content: `Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.`,
         to: '/blog/multi-tenant-workload-isolation-in-apache-doris',
         image: 'multi-tenant-workload-group.jpg',
-    },
-    {
-        tags: ['Release Note'],
-        title: "Apache Doris version 2.0.10 has been released",
-        content: `Thanks to our community users and developers, about 83 improvements and bug fixes have been made in Doris 2.0.10 version.`,
-        to: '/blog/release-note-2.0.10',
-        image: '2.0.10.jpg',
     },
     {
         tags: ['Tech Sharing'],
