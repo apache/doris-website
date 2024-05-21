@@ -1048,16 +1048,16 @@ export const RUN_ANYWHERE = [
     {
         title: 'Doris on bare metal',
         description: 'A platform for visualized cluster deployment on bare metal or VM.',
-        link: 'https://doris.apache.org/docs/install/standard-deployment',
+        link: 'https://doris.apache.org/docs/install/cluster-deployment/standard-deployment',
     },
     {
         title: 'Doris on Kubernetes',
         description: 'Create, configure and manage Doris clusters on Kubernetes',
-        link: 'https://doris.apache.org/docs/install/k8s-deploy/operator-deploy',
+        link: 'https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-env',
     },
     {
         title: 'Doris on AWS',
         description: 'Deploy Doris on AWS with CloudFormation templates',
-        link: 'https://doris.apache.org/docs/install/doris-on-aws',
+        link: 'https://doris.apache.org/docs/install/cluster-deployment/doris-on-aws',
     },
 ];
