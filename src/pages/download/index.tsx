@@ -332,7 +332,7 @@ export default function Download() {
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/standard-deployment"
+                                to="/docs/install/cluster-deployment/standard-deployment"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',
