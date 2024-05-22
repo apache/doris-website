@@ -113,7 +113,8 @@
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-strict-mode",
+                        "data-operate/import/automq-load"
                     ]
                 },
                 {
