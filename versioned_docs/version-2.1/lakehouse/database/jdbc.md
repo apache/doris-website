@@ -367,7 +367,7 @@ In versions prior to Doris 2.0.3, users could only perform query operations (SEL
 
 Starting from version Doris 2.0.4, users can perform DDL (Data Definition Language) and DML (Data Manipulation Language) operations on JDBC data sources using the `CALL` command.
 
-Starting from version Doris 2.1.4, users can perform data query operations on JDBC data sources through the `query` table function.
+Starting from version Doris 2.1.3, users can perform data query operations on JDBC data sources through the `query` table function.
 
 ### Passthrough of DDL and DML
 
@@ -440,21 +440,6 @@ Note that the above two url parameters are only valid for jdbc driver mysql 8 or
 ### MySQL
 
 #### Example
-
-* mysql 5.7
-
-```sql
-CREATE CATALOG jdbc_mysql PROPERTIES (
-    "type" = "jdbc",
-    "user" = "root",
-    "password" = "123456",
-    "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/demo",
-    "driver_url" = "mysql-connector-java-5.1.49.jar",
-    "driver_class" = "com.mysql.jdbc.Driver"
-)
-```
-
-* mysql 8
 
 ```sql
 CREATE CATALOG jdbc_mysql PROPERTIES (
@@ -658,21 +643,6 @@ As for data mapping from SQLServer to Doris, one Database in Doris corresponds t
 ### Doris
 
 The JDBC catalog supports connecting to another Doris database:
-
-* MySQL 5.7 driver
-
-```sql
-CREATE CATALOG jdbc_doris PROPERTIES (
-    "type" = "jdbc",
-    "user" = "root",
-    "password" = "123456",
-    "jdbc_url" = "jdbc:mysql://127.0.0.1:9030?useSSL=false",
-    "driver_url" = "mysql-connector-java-5.1.49.jar",
-    "driver_class" = "com.mysql.jdbc.Driver"
-)
-```
-
-* MySQL 8 driver
 
 ```sql
 CREATE CATALOG jdbc_doris PROPERTIES (
@@ -939,19 +909,18 @@ When mapping DB2, Doris's Database corresponds to a Schema under the specified D
 
 It is recommended to use the following versions of Driver to connect to the corresponding database. Other versions of the Driver have not been tested and may cause unexpected problems.
 
-|    Source    |                        JDBC Driver Version                        |
-|:------------:|:-----------------------------------------------------------------:|
-| MySQL 5.x    |                  mysql-connector-java-5.1.49.jar                  |
-|  MySQL 8.x   |                  mysql-connector-java-8.0.25.jar                  |
-|  PostgreSQL  |                       postgresql-42.5.1.jar                       |
-|    Oracle    |                            ojdbc8.jar                             |
-|  SQLServer   |                    mssql-jdbc-11.2.3.jre8.jar                     |
-|    Doris     | mysql-connector-java-5.1.49.jar / mysql-connector-java-8.0.25.jar |
-|  Clickhouse  |                   clickhouse-jdbc-0.4.2-all.jar                   |
-|   SAP HAHA   |                             ngdbc.jar                             |
-| Trino/Presto |            trino-jdbc-389.jar / presto-jdbc-0.280.jar             |
-|  OceanBase   |                    oceanbase-client-2.4.2.jar                     |
-|     DB2      |                         jcc-11.5.8.0.jar                          |
+|    Source    |            JDBC Driver Version             |
+|:------------:|:------------------------------------------:|
+|    MySQL     |      mysql-connector-java-8.0.25.jar       |
+|  PostgreSQL  |           postgresql-42.5.1.jar            |
+|    Oracle    |                 ojdbc8.jar                 |
+|  SQLServer   |         mssql-jdbc-11.2.3.jre8.jar         |
+|    Doris     |      mysql-connector-java-8.0.25.jar       |
+|  Clickhouse  |       clickhouse-jdbc-0.4.2-all.jar        |
+|   SAP HAHA   |                 ngdbc.jar                  |
+| Trino/Presto | trino-jdbc-389.jar / presto-jdbc-0.280.jar |
+|  OceanBase   |         oceanbase-client-2.4.2.jar         |
+|     DB2      |              jcc-11.5.8.0.jar              |
 
 ## FAQ
 

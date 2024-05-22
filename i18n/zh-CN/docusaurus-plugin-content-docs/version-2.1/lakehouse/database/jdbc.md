@@ -364,15 +364,15 @@ DROP CATALOG <catalog_name>;
     SELECT * FROM <table_name>;
     ```
 
-### SQL 透传
+## SQL 透传
 
 在 Doris 2.0.3 之前的版本中，用户只能通过 JDBC Catalog 进行查询操作（SELECT）。
 
 在 Doris 2.0.4 版本之后，用户可以通过 `CALL` 命令，对 JDBC 数据源进行 DDL 和 DML 操作。
 
-在 Doris 2.1.4 版本之后，用户可以通过 `query` 表函数，对 JDBC 数据源进行数据查询操作。
+在 Doris 2.1.3 版本之后，用户可以通过 `query` 表函数，对 JDBC 数据源进行数据查询操作。
 
-#### 透传 DDL 和 DML
+### 透传 DDL 和 DML
 
 ```
 CALL EXECUTE_STMT("catalog_name", "raw_stmt_string");
@@ -391,7 +391,7 @@ CALL EXECUTE_STMT(jdbc_catalog", "delete from db1.tbl1 where k1 = 2");
 CALL EXECUTE_STMT(jdbc_catalog", "create table dbl1.tbl2 (k1 int)");
 ```
 
-#### 透传查询
+### 透传查询
 
 ```sql
 query(
@@ -409,7 +409,7 @@ query(
 select * from query("catalog" = "jdbc", "query" = "select * from db_name.table_name where condition");
 ```
 
-#### 原理和限制
+### 原理和限制
 
 通过 `CALL EXECUTE_STMT()` 命令，Doris 会直接将用户编写的 SQL 语句发送给 Catalog 对应的 JDBC 数据源进行执行。因此，这个操作有如下限制：
 
@@ -444,21 +444,6 @@ select * from query("catalog" = "jdbc", "query" = "select * from db_name.table_n
 ### MySQL
 
 #### 创建示例
-
-* mysql 5.7
-
-    ```sql
-    CREATE CATALOG jdbc_mysql PROPERTIES (
-        "type"="jdbc",
-        "user"="root",
-        "password"="123456",
-        "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/demo",
-        "driver_url" = "mysql-connector-java-5.1.49.jar",
-        "driver_class" = "com.mysql.jdbc.Driver"
-    )
-    ```
-
-* mysql 8
 
     ```sql
     CREATE CATALOG jdbc_mysql PROPERTIES (
@@ -663,21 +648,6 @@ CREATE CATALOG jdbc_sqlserve PROPERTIES (
 ### Doris
 
 Jdbc Catalog 也支持连接另一个Doris数据库：
-
-* mysql 5.7 Driver
-
-```sql
-CREATE CATALOG jdbc_doris PROPERTIES (
-    "type"="jdbc",
-    "user"="root",
-    "password"="123456",
-    "jdbc_url" = "jdbc:mysql://127.0.0.1:9030?useSSL=false",
-    "driver_url" = "mysql-connector-java-5.1.49.jar",
-    "driver_class" = "com.mysql.jdbc.Driver"
-)
-```
-
-* mysql 8 Driver
 
 ```sql
 CREATE CATALOG jdbc_doris PROPERTIES (
@@ -944,19 +914,18 @@ CREATE CATALOG `jdbc_db2` PROPERTIES (
 
 推荐使用以下版本的 Driver 连接对应的数据库。其他版本的 Driver 未经测试，可能导致非预期的问题。
 
-|    Source    |                        JDBC Driver Version                        |
-|:------------:|:-----------------------------------------------------------------:|
-|  MySQL 5.x   |                  mysql-connector-java-5.1.49.jar                  |
-|  MySQL 8.x   |                  mysql-connector-java-8.0.25.jar                  |
-|  PostgreSQL  |                       postgresql-42.5.1.jar                       |
-|    Oracle    |                            ojdbc8.jar                             |
-|  SQLServer   |                    mssql-jdbc-11.2.3.jre8.jar                     |
-|    Doris     | mysql-connector-java-5.1.49.jar / mysql-connector-java-8.0.25.jar |
-|  Clickhouse  |                   clickhouse-jdbc-0.4.2-all.jar                   |
-|   SAP HAHA   |                             ngdbc.jar                             |
-| Trino/Presto |            trino-jdbc-389.jar / presto-jdbc-0.280.jar             |
-|  OceanBase   |                    oceanbase-client-2.4.2.jar                     |
-|     DB2      |                         jcc-11.5.8.0.jar                          |
+|    Source    |            JDBC Driver Version             |
+|:------------:|:------------------------------------------:|
+|    MySQL     |      mysql-connector-java-8.0.25.jar       |
+|  PostgreSQL  |           postgresql-42.5.1.jar            |
+|    Oracle    |                 ojdbc8.jar                 |
+|  SQLServer   |         mssql-jdbc-11.2.3.jre8.jar         |
+|    Doris     |      mysql-connector-java-8.0.25.jar       |
+|  Clickhouse  |       clickhouse-jdbc-0.4.2-all.jar        |
+|   SAP HAHA   |                 ngdbc.jar                  |
+| Trino/Presto | trino-jdbc-389.jar / presto-jdbc-0.280.jar |
+|  OceanBase   |         oceanbase-client-2.4.2.jar         |
+|     DB2      |              jcc-11.5.8.0.jar              |
 
 ## 常见问题
 

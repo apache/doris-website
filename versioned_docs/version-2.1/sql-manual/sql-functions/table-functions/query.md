@@ -35,7 +35,7 @@ query
 Query table function (table-valued-function, tvf) can be used to transparently transmit query statements directly to a catalog for data query
 
 :::info note
-Supported by Doris version 2.1.4, currently only transparent query jdbc catalog is supported.
+Supported by Doris version 2.1.3, currently only transparent query jdbc catalog is supported.
 You need to create the corresponding catalog in Doris first.
 :::
 

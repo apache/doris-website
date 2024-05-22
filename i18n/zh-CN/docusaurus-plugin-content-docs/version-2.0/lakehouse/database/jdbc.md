@@ -165,21 +165,6 @@ set enable_odbc_transcation = true;
 
 **创建示例**
 
-* mysql 5.7
-
-    ```sql
-    CREATE CATALOG jdbc_mysql PROPERTIES (
-        "type"="jdbc",
-        "user"="root",
-        "password"="123456",
-        "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/demo",
-        "driver_url" = "mysql-connector-java-5.1.47.jar",
-        "driver_class" = "com.mysql.jdbc.Driver"
-    )
-    ```
-
-* mysql 8
-
     ```sql
     CREATE CATALOG jdbc_mysql PROPERTIES (
         "type"="jdbc",
@@ -383,21 +368,6 @@ CREATE CATALOG jdbc_sqlserve PROPERTIES (
 ### Doris
 
 JDBC Catalog 也支持连接另一个 Doris 数据库：
-
-* mysql 5.7 Driver
-
-    ```sql
-    CREATE CATALOG jdbc_doris PROPERTIES (
-        "type"="jdbc",
-        "user"="root",
-        "password"="123456",
-        "jdbc_url" = "jdbc:mysql://127.0.0.1:9030?useSSL=false",
-        "driver_url" = "mysql-connector-java-5.1.47.jar",
-        "driver_class" = "com.mysql.jdbc.Driver"
-    )
-    ```
-
-* mysql 8 Driver
 
     ```sql
     CREATE CATALOG jdbc_doris PROPERTIES (
