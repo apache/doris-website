@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-**Apache Doris 2.1.3 版本已于 2024 年 5 月 21 日正式发布**。包括支持向 Hive 回写数据、物化视图、新函数等功能，同时改善权限管理并修复若干问题，进一步提升了系统的性能及稳定性，欢迎大家下载体验。
+**Apache Doris 2.1.3 版本已于 2024 年 5 月 21 日正式发布**。该版本更新带来了若干改进项，包括支持向 Hive 回写数据、物化视图、新函数等功能，同时改善权限管理并修复若干问题，进一步提升了系统的性能及稳定性，欢迎大家下载体验。
 
 **官网下载：** https://doris.apache.org/download/
 
@@ -124,11 +124,11 @@ Variant 数据类型能够存储多种数据类型，在此优化中允许对 Va
 
 **1. 授权（Authorization）**
 
-- **Grant_priv 权限更改**：`Grant_priv`不能再被任意授予。执行 `GRANT` 操作时，用户不仅需要具有`Grant_priv`，还需要具有要授予的权限。例如，如果想要授予对`table1`的 `SELECT` 权限，那么该用户不仅需要具有 `GRANT` 权限，还需要具有对`table1`的 `SELECT` 权限，这增加了权限管理的安全性和一致性。 #32825
+- **Grant_priv 权限更改**：`Grant_priv`不能再被任意授予。执行 `GRANT` 操作时，用户不仅需要具有`Grant_priv`，还需要具有要授予的权限。例如，如果想要授予对`table1`的 `SELECT` 权限，那么该用户不仅需要具有 `GRANT` 权限，还需要具有对`table1`的 `SELECT` 权限，这增加了权限管理的安全性和一致性。
 
-- **Workload Group 和 Resource 的 Usage_priv**：`Usage_priv` 对 Workload Group 和 Resource 的权限不再是全局级别的，而是仅限于 Resource 和 Workload Group 内，权限的授予和使用将更加具体。#32907
+- **Workload Group 和 Resource 的 Usage_priv**：`Usage_priv` 对 Workload Group 和 Resource 的权限不再是全局级别的，而是仅限于 Resource 和 Workload Group 内，权限的授予和使用将更加具体。
 
-- **操作的授权**：之前未被授权的操作现在都有了相应的授权，以实现更加细致和全面地操作权限控制。 #33347
+- **操作的授权**：之前未被授权的操作现在都有了相应的授权，以实现更加细致和全面地操作权限控制。
 
 **2. LOG 目录配置**
 
@@ -136,11 +136,11 @@ FE 和 BE 的日志目录配置现在统一使用`LOG_DIR`环境变量，所有�
 
 **3. S3 表函数（TVF）**
 
-由于之前的解析方式在某些情况下可能无法正确识别或处理 S3 的 URL，因此将对象存储路径的解析逻辑进行重构。对于 S3 表函数中的文件路径，需要传递`force_parsing_by_standard_uri`参数来确保被正确解析。#33858
+由于之前的解析方式在某些情况下可能无法正确识别或处理 S3 的 URL，因此将对象存储路径的解析逻辑进行重构。对于 S3 表函数中的文件路径，需要传递`force_parsing_by_standard_uri`参数来确保被正确解析。
 
 ## 升级问题
 
-由于许多用户将某些关键字用作列名或属性值，因此将如下关键字设置为非保留关键字，允许用户将其用作标识符使用。 #34613
+由于许多用户将某些关键字用作列名或属性值，因此将如下关键字设置为非保留关键字，允许用户将其用作标识符使用。 
 
 ## 问题修复
 
