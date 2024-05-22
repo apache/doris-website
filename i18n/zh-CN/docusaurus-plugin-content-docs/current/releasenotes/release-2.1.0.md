@@ -416,7 +416,7 @@ PROPERTIES (
 :::
 
 :::note
-参考文档：https://doris.apache.org/zh-CN/docs/advanced/partition/auto-partition/
+参考文档：https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E8%87%AA%E5%8A%A8%E5%88%86%E5%8C%BA
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%

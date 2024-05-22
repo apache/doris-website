@@ -59,6 +59,15 @@ MySQL [(none)]> set [global] enable_sql_cache=true;
 
 注：global 是全局变量，不加指当前会话变量
 
+在2.1.3及以上版本，Nereids优化器在fe的内存中保存缓存的关键信息，比如非确定函数及其评估值，在关键信息未发生变化时可以跳过sql解析，优化了sql cache的查询速度。
+
+可以通过fe配置项sql_cache_manage_num和expire_sql_cache_in_fe_second来控制这些关键信息的个数以及淘汰时间来减少对fe的内存消耗。
+
+```sql
+MySQL [(none)]> ADMIN SET FRONTEND CONFIG ('sql_cache_manage_num' = '100');
+MySQL [(none)]> ADMIN SET FRONTEND CONFIG ('expire_sql_cache_in_fe_second' = '300');
+```
+
 ## 缓存条件
 
 第一次查询后，如果满足下面三个条件，查询结果就会被缓存。

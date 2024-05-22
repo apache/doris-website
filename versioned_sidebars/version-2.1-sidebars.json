@@ -197,8 +197,7 @@
                     "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
-                        "query/query-cache/sql-cache-manual",
-                        "query/query-cache/partition-cache-manual"
+                        "query/query-cache/sql-cache-manual"
                     ]
                 },
                 {
@@ -1476,6 +1475,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",
                 "releasenotes/release-2.1.0"
