@@ -5,7 +5,7 @@
     'date': '2024-05-14',
     'author': 'Apache Doris',
     'picked': "true",
-    'order': "2",
+    'order': "3",
     'tags': ['Tech Sharing'],
     "image": '/images/multi-tenant-workload-group.jpg'
 }

@@ -1,5 +1,9 @@
 export const RECENT_BLOGS_POSTS = [
     {
+        label: 'Apache Doris 2.1.3 just released',
+        link: 'https://doris.apache.org/blog/release-note-2.1.3',
+    },
+    {
         label: 'Multi-tenant workload isolation: a better balance between isolation and utilization',
         link: 'https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris',
     },
@@ -11,10 +15,7 @@ export const RECENT_BLOGS_POSTS = [
         label: `Cross-cluster replication for read-write separation: story of a grocery store brand`,
         link: 'https://doris.apache.org/blog/cross-cluster-replication-for-read-write',
     },
-    {
-        label: 'Auto-increment columns in databases: a simple magic that makes a big difference',
-        link: 'https://doris.apache.org/blog/auto-increment-columns-in-databases',
-    },
+
 
 
 ];
