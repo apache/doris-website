@@ -59,7 +59,7 @@ under the License.
     
     其中 `.jdb` 后缀的是 bdbje 的数据文件。这些数据文件会随着元数据 journal 的不断增多而越来越多。当 Doris 定期做完 image 后，旧的日志就会被删除。所以正常情况下，这些数据文件的总大小从几 MB 到几 GB 不等（取决于使用 Doris 的方式，如导入频率等）。当数据文件的总大小大于 10GB，则可能需要怀疑是否是因为 image 没有成功，或者分发 image 失败导致的历史 journal 一直无法删除。
     
-    `je.info.0` 是 bdbje 的运行日志。这个日志中的时间是 UTC+0 时区的。我们可能在后面的某个版本中修复这个问题。通过这个日志，也可以查看一些 bdbje 的运行情况。
+    `je.info.0` 是 bdbje 的运行日志。这个日志中的时间是 UTC+0 时区的。通过这个日志，也可以查看一些 bdbje 的运行情况。
 
 2. image 目录
 
@@ -85,7 +85,7 @@ under the License.
 
     1. 假设在 fe.conf 中指定的 `meta_dir` 的路径为 `/path/to/doris-meta`。
     2. 确保 `/path/to/doris-meta` 已存在，权限正确，且目录为空。
-    3. 直接通过 `sh bin/start_fe.sh` 即可启动。
+    3. 直接通过 `bash bin/start_fe.sh --daemon` 即可启动。
     4. 启动后，你应该可以在 fe.log 中看到如下日志：
     
         * Palo FE starting...
@@ -104,7 +104,7 @@ under the License.
 
 2. 重启
 
-    1. 直接使用 `sh bin/start_fe.sh` 可以重新启动已经停止的 FE 节点。
+    1. 直接使用 `bash bin/start_fe.sh` 可以重新启动已经停止的 FE 节点。
     2. 重启后，你应该可以在 fe.log 中看到如下日志：
 
         * Palo FE starting...
@@ -169,63 +169,13 @@ under the License.
 * 对于 FOLLOWER 类型的 FE。首先，应保证在有奇数个 FOLLOWER 的情况下（3 个或以上），开始删除操作。
 
     1. 如果删除非 MASTER 角色的 FE，建议连接到 MASTER FE，执行 DROP 命令，再杀死进程即可。
-    2. 如果要删除 MASTER FE，先确认有奇数个 FOLLOWER FE 并且运行正常。然后先杀死 MASTER FE 的进程。这时会有某一个 FE 被选举为 MASTER。在确认剩下的 FE 运行正常后，连接到新的 MASTER FE，执行 DROP 命令删除之前老的 MASTER FE 即可。
+    2. 如果要删除 MASTER FE，先确认有`奇数个` FOLLOWER FE `并且运行正常`。然后先杀死 MASTER FE 的进程。这时会有某一个 FE 被选举为 MASTER。在确认剩下的 FE 运行正常后，连接到新的 MASTER FE，执行 DROP 命令删除之前老的 MASTER FE 即可。
 
 ## 高级操作
 
-### 故障恢复
+### FE 元数据恢复模式
 
-FE 有可能因为某些原因出现无法启动 bdbje、FE 之间无法同步等问题。现象包括无法进行元数据写操作、没有 MASTER 等等。这时，我们需要手动操作来恢复 FE。手动恢复 FE 的大致原理，是先通过当前 `meta_dir` 中的元数据，启动一个新的 MASTER，然后再逐台添加其他 FE。请严格按照如下步骤操作：
-
-1. 首先，**停止所有 FE 进程，同时停止一切业务访问**。保证在元数据恢复期间，不会因为外部访问导致其他不可预期的问题。(如果没有停止所有 FE 进程，后续流程可能出现脑裂现象)
-
-2. 确认哪个 FE 节点的元数据是最新：
-
-    * 首先，**务必先备份所有 FE 的 `meta_dir` 目录。**
-    * 通常情况下，Master FE 的元数据是最新的。可以查看 `meta_dir/image` 目录下，image.xxxx 文件的后缀，数字越大，则表示元数据越新。
-    * 通常，通过比较所有 FOLLOWER FE 的 image 文件，找出最新的元数据即可。
-    * 之后，我们要使用这个拥有最新元数据的 FE 节点，进行恢复。
-    * 如果使用 OBSERVER 节点的元数据进行恢复会比较麻烦，建议尽量选择 FOLLOWER 节点。
-
-3. 以下操作都在由第 2 步中选择出来的 FE 节点上进行。
-
-    1. 修改 `fe.conf` 
-      - 如果该节点是一个 OBSERVER，先将 `meta_dir/image/ROLE` 文件中的 `role=OBSERVER` 改为 `role=FOLLOWER`。
-      - 如果 FE 版本< 2.0.2, 则还需要在 fe.conf 中添加配置：`metadata_failure_recovery=true`。
-    
-    2. 执行 `sh bin/start_fe.sh --metadata_failure_recovery --daemon` 启动这个 FE。（如果是从 OBSERVER 节点恢复，执行完这一步后跳转到后续的 OBSERVER 文档）
-    
-    3. 如果正常，这个 FE 会以 MASTER 的角色启动，类似于前面 `启动单节点 FE` 一节中的描述。在 fe.log 应该会看到 `transfer from XXXX to MASTER` 等字样。
-    
-    4. 启动完成后，先连接到这个 FE，执行一些查询导入，检查是否能够正常访问。如果不正常，有可能是操作有误，建议仔细阅读以上步骤，用之前备份的元数据再试一次。如果还是不行，问题可能就比较严重了。
-    
-    5. 如果成功，通过 `show frontends;` 命令，应该可以看到之前所添加的所有 FE，并且当前 FE 是 master。
-    
-    6. 后重启这个 FE（**重要**）。
-    
-    7. **如果 FE 版本 < 2.0.2**，将 fe.conf 中的 `metadata_failure_recovery=true` 配置项删除，或者设置为 `false`，然后重启这个 FE（**重要**）。
-
-    :::tip
-    如果你是从一个 OBSERVER 节点的元数据进行恢复的，那么完成上述第二步后，通过 `show frontends;` 语句你会发现，当前这个 FE 的角色为 OBSERVER，但是 `IsMaster` 显示为 `true`。这是因为，这里看到的“OBSERVER”是记录在 Doris 的元数据中的，而是否是 master，是记录在 bdbje 的元数据中的。因为我们是从一个 OBSERVER 节点恢复的，所以这里出现了不一致。请按如下步骤修复这个问题（这个问题我们会在之后的某个版本修复）：
-    
-    1. 先把除了这个“OBSERVER”以外的所有 FE 节点 DROP 掉。
-    
-    2. 通过 `ADD FOLLOWER` 命令，添加一个新的 FOLLOWER FE，假设在 hostA 上。
-    
-    3. 在 hostA 上启动一个全新的 FE，通过 `--helper` 的方式加入集群。
-    
-    4. 启动成功后，通过 `show frontends;` 语句，你应该能看到两个 FE，一个是之前的  OBSERVER，一个是新添加的 FOLLOWER，并且 OBSERVER 是 master。
-    
-    5. 确认这个新的 FOLLOWER 是可以正常工作之后，用这个新的 FOLLOWER 的元数据，重新执行一遍故障恢复操作。
-    
-    6. 以上这些步骤的目的，其实就是人为的制造出一个 FOLLOWER 节点的元数据，然后用这个元数据，重新开始故障恢复。这样就避免了从 OBSERVER 恢复元数据所遇到的不一致的问题。
-    
-    `metadata_failure_recovery` 的含义是，清空 "bdbje" 的元数据。这样 bdbje 就不会再联系之前的其他 FE 了，而作为一个独立的 FE 启动。这个参数只有在恢复启动时才需要设置为 true。恢复完成后，一定要设置为 false，否则一旦重启，bdbje 的元数据又会被清空，导致其他 FE 无法正常工作。
-    :::
-
-4. 第 3 步执行成功后，我们再通过 `ALTER SYSTEM DROP FOLLOWER/OBSERVER` 命令，将之前的其他的 FE 从元数据删除后，按加入新 FE 的方式，重新把这些 FE 添加一遍。
-
-5. 如果以上操作正常，则恢复完毕。
+`元数据恢复模式`使用不当或操作错误容易造成生产环境不可恢复的数据损坏，因此不再提供`元数据恢复模式`的操作文档；如果确有需求，请联系Doris社区的开发者
 
 ### FE 类型变更
 
@@ -238,15 +188,16 @@ FE 有可能因为某些原因出现无法启动 bdbje、FE 之间无法同步�
 1. 非 MASTER 节点的 FOLLOWER，或者 OBSERVER 迁移
 
     直接添加新的 FOLLOWER/OBSERVER 成功后，删除旧的 FOLLOWER/OBSERVER 即可。
-    
+
 2. 单节点 MASTER 迁移
 
-    当只有一个 FE 时，参考 `故障恢复` 一节。将 FE 的 doris-meta 目录拷贝到新节点上，按照 `故障恢复` 一节中，步骤 3 的方式启动新的 MASTER
-    
+    如果你是开发者，这可通过`元数据恢复模式`进行操作，如果你是使用者，不建议使用`元数据恢复模式`，建议通过重新搭建环境通过
+    外表的方式转移数据
+
 3. 一组 FOLLOWER 从一组节点迁移到另一组新的节点
 
     在新的节点上部署 FE，通过添加 FOLLOWER 的方式先加入新节点。再逐台 DROP 掉旧节点即可。在逐台 DROP 的过程中，MASTER 会自动选择在新的 FOLLOWER 节点上。
-    
+
 ### 更换 FE 端口
 
 FE 目前有以下几个端口
@@ -259,12 +210,12 @@ FE 目前有以下几个端口
 
 1. edit_log_port
 
-    如果需要更换这个端口，则需要参照 `故障恢复` 一节中的操作，进行恢复。因为该端口已经被持久化到 bdbje 自己的元数据中（同时也记录在 Doris 自己的元数据中），需要启动 FE 时通过指定 `--metadata_failure_recovery` 来清空 bdbje 的元数据。
-    
+    如果需要更换这个端口，如果是多节点可按节点扩缩容的步骤下线旧节点，重新加入修改配置后的新节点；如果是单节点，参见FE迁移中"单节点 MASTER 迁移"
+
 2. http_port
 
-    所有 FE 的 http_port 必须保持一致。所以如果要修改这个端口，则所有 FE 都需要修改并重启。修改这个端口，在多 FOLLOWER 部署的情况下会比较复杂（涉及到鸡生蛋蛋生鸡的问题...），所以不建议有这种操作。如果必须，直接按照 `故障恢复` 一节中的操作吧。
-    
+    所有 FE 的 http_port 必须保持一致。所以如果要修改这个端口，则所有 FE 都需要同时停机修改后并重启。
+
 3. rpc_port
 
     修改配置后，直接重启 FE 即可。Master FE 会通过心跳将新的端口告知 BE。只有 Master FE 的这个端口会被使用。但仍然建议所有 FE 的端口保持一致。
@@ -277,45 +228,11 @@ FE 目前有以下几个端口
 
     修改配置后，直接重启 FE 即可。这个只影响到 Arrow Flight SQL 的连接目标。
 
-### 从 FE 内存中恢复元数据
-
-在某些极端情况下，磁盘上 image 文件可能会损坏，但是内存中的元数据是完好的，此时我们可以先从内存中 dump 出元数据，再替换掉磁盘上的 image 文件，来恢复元数据，整个**不停查询服务**的操作步骤如下：
-1. 集群停止所有 Load,Create,Alter 操作
-2. 执行以下命令，从 Master FE 内存中 dump 出元数据：(下面称为 image_mem)
-```
-curl -u $root_user:$password http://$master_hostname:8030/dump
-```
-
-3. 用 image_mem 文件替换掉 OBSERVER FE 节点上`meta_dir/image`目录下的 image 文件，重启 OBSERVER FE 节点，
-验证 image_mem 文件的完整性和正确性（可以在 FE Web 页面查看 DB 和 Table 的元数据是否正常，查看 fe.log 是否有异常，是否在正常 replayed journal）
-
-    自 1.2.0 版本起，推荐使用以下功能验证 `image_mem` 文件：
-
-    ```
-    sh start_fe.sh --image path_to_image_mem
-    ```
-
-    > 注意：`path_to_image_mem` 是 image_mem 文件的路径。
-    >
-    > 如果文件有效会输出 `Load image success. Image file /absolute/path/to/image.xxxxxx is valid`。
-    >
-    > 如果文件无效会输出 `Load image failed. Image file /absolute/path/to/image.xxxxxx is invalid`。
-
-4. 依次用 image_mem 文件替换掉 FOLLOWER FE 节点上`meta_dir/image`目录下的 image 文件，重启 FOLLOWER FE 节点，
-确认元数据和查询服务都正常
-
-5. 用 image_mem 文件替换掉 Master FE 节点上`meta_dir/image`目录下的 image 文件，重启 Master FE 节点，
-确认 FE Master 切换正常，Master FE 节点可以通过 checkpoint 正常生成新的 image 文件
-6. 集群恢复所有 Load,Create,Alter 操作
-
-**注意：如果 Image 文件很大，整个操作过程耗时可能会很长，所以在此期间，要确保 Master FE 不会通过 checkpoint 生成新的 image 文件。
-当观察到 Master FE 节点上 `meta_dir/image`目录下的 `image.ckpt` 文件快和 `image.xxx` 文件一样大时，可以直接删除掉`image.ckpt` 文件。**
-
-### 查看 BDBJE 中的数据
+### 查看 BDBJE 中的数据(仅用于调试)
 
 FE 的元数据日志以 Key-Value 的方式存储在 BDBJE 中。某些异常情况下，可能因为元数据错误而无法启动 FE。在这种情况下，Doris 提供一种方式可以帮助用户查询 BDBJE 中存储的数据，以方便进行问题排查。
 
-首先需在 fe.conf 中增加配置：`enable_bdbje_debug_mode=true`，之后通过 `sh start_fe.sh --daemon` 启动 FE。
+首先需在 fe.conf 中增加配置：`enable_bdbje_debug_mode=true`，之后通过 `bash start_fe.sh --daemon` 启动 FE。
 
 此时，FE 将进入 debug 模式，仅会启动 http server 和 MySQL server，并打开 BDBJE 实例，但不会进行任何元数据的加载及后续其他启动流程。
 
@@ -369,7 +286,7 @@ mysql> show proc "/bdbje/110589/114861";
 
 FE 的部署推荐，在 [安装与部署文档](../../install/cluster-deployment/standard-deployment) 中有介绍，这里再做一些补充。
 
-* **如果你并不十分了解 FE 元数据的运行逻辑，或者没有足够 FE 元数据的运维经验，我们强烈建议在实际使用中，只部署一个 FOLLOWER 类型的 FE 作为 MASTER，其余 FE 都是 OBSERVER，这样可以减少很多复杂的运维问题！** 不用过于担心 MASTER 单点故障导致无法进行元数据写操作。首先，如果你配置合理，FE 作为 java 进程很难挂掉。其次，如果 MASTER 磁盘损坏（概率非常低），我们也可以用 OBSERVER 上的元数据，通过 `故障恢复` 的方式手动恢复。
+* **如果你并不十分了解 FE 元数据的运行逻辑，或者没有足够 FE 元数据的运维经验，我们强烈建议在实际使用中，只部署一个 FOLLOWER 类型的 FE 作为 MASTER，其余 FE 都是 OBSERVER，这样可以减少很多复杂的运维问题！** 不用过于担心 MASTER 单点故障导致无法进行元数据写操作。首先，如果你配置合理，FE 作为 java 进程很难挂掉。其次，如果 MASTER 磁盘损坏（概率非常低），我们也可以用 OBSERVER 上的元数据，通过 `元数据恢复模式` 的方式手动恢复。
 
 * FE 进程的 JVM 一定要保证足够的内存。我们**强烈建议** FE 的 JVM 内存至少在 10GB 以上，推荐 32GB 至 64GB。并且部署监控来监控 JVM 的内存使用情况。因为如果 FE 出现 OOM，可能导致元数据写入失败，造成一些**无法恢复**的故障！
 
@@ -379,7 +296,7 @@ FE 的部署推荐，在 [安装与部署文档](../../install/cluster-deploymen
 
 1. fe.log 中一直滚动 `meta out of date. current time: xxx, synchronized time: xxx, has log: xxx, fe type: xxx`
 
-    这个通常是因为 FE 无法选举出 Master。比如配置了 3 个 FOLLOWER，但是只启动了一个 FOLLOWER，则这个 FOLLOWER 会出现这个问题。通常，只要把剩余的 FOLLOWER 启动起来就可以了。如果启动起来后，仍然没有解决问题，那么可能需要按照 `故障恢复` 一节中的方式，手动进行恢复。
+    这个通常是因为 FE 无法选举出 Master。比如配置了 3 个 FOLLOWER，但是只启动了一个 FOLLOWER，则这个 FOLLOWER 会出现这个问题。通常，只要同时重新启动所有 FOLLOWER 就可以了。如果启动起来后，仍然没有解决问题，那么可能需要进一步排查是否有其他未知问题。
     
 2. `Clock delta: xxxx ms. between Feeder: xxxx and this Replica exceeds max permissible delta: xxxx ms.`
 
