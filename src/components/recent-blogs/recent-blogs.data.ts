@@ -1,7 +1,7 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'Apache Doris version 2.0.10 has been released',
-        link: 'https://doris.apache.org/blog/release-note-2.0.10',
+        label: 'Multi-tenant workload isolation: a better balance between isolation and utilization',
+        link: 'https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris',
     },
     {
         label: `From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration`,

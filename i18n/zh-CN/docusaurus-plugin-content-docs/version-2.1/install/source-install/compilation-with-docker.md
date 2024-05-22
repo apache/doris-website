@@ -76,7 +76,7 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 export PATH=$JAVA_HOME/bin/:$PATH
 
-# 切换到 JDK 11
+# 切换到 JDK 17
 export JAVA_HOME=/usr/lib/jvm/jdk-17.0.2/
 export PATH=$JAVA_HOME/bin/:$PATH
 ```

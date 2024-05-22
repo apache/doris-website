@@ -59,7 +59,7 @@ Let's assume that the path of `meta_dir` specified in fe.conf is `path/to/doris-
 
 	The `.jdb` suffix is the data file of bdbje. These data files will increase with the increasing number of metadata journals. When Doris regularly completes the image, the old log is deleted. So normally, the total size of these data files varies from several MB to several GB (depending on how Doris is used, such as import frequency). When the total size of the data file is larger than 10GB, you may need to wonder whether the image failed or the historical journals that failed to distribute the image could not be deleted.
 
-	` je.info.0 ` is the running log of bdbje. The time in this log is UTC + 0 time zone. We may fix this in a later version. From this log, you can also see how some bdbje works.
+	` je.info.0 ` is the running log of bdbje. The time in this log is UTC + 0 time zone. From this log, you can also see how some bdbje works.
 
 2. image directory
 
@@ -85,7 +85,7 @@ Single node FE is the most basic deployment mode. A complete Doris cluster requi
 
 	1. Suppose the path of `meta_dir` specified in fe.conf is `path/to/doris-meta`.
 	2. Ensure that `path/to/doris-meta` already exists, that the permissions are correct and that the directory is empty.
-	3. Start directly through `sh bin/start_fe.sh`.
+	3. Start directly through `bash bin/start_fe.sh --daemon`.
 	4. After booting, you should be able to see the following log in fe.log:
 
 		* Palo FE starting...
@@ -104,7 +104,7 @@ Single node FE is the most basic deployment mode. A complete Doris cluster requi
 
 2. Restart
 
-	1. Stopped FE nodes can be restarted by using `sh bin/start_fe.sh`.
+	1. Stopped FE nodes can be restarted by using `bash bin/start_fe.sh`.
 	2. After restarting, you should be able to see the following log in fe.log:
 
 		* Palo FE starting...
@@ -169,56 +169,13 @@ The corresponding type of FE can be deleted by the `ALTER SYSTEM DROP FOLLOWER/O
 * For FOLLOWER type FE. First, you should make sure that you start deleting an odd number of FOLLOWERs (three or more).
 
 	1. If the FE of non-MASTER role is deleted, it is recommended to connect to MASTER FE, execute DROP command, and then kill the process.
-	2. If you want to delete MASTER FE, first confirm that there are odd FOLLOWER FE and it works properly. Then kill the MASTER FE process first. At this point, a FE will be elected MASTER. After confirming that the remaining FE is working properly, connect to the new MASTER FE and execute the DROP command to delete the old MASTER FE.
+	2. If you want to delete MASTER FE, first confirm that there are `odd` FOLLOWER FE `and it works properly`. Then kill the MASTER FE process first. At this point, a FE will be elected MASTER. After confirming that the remaining FE is working properly, connect to the new MASTER FE and execute the DROP command to delete the old MASTER FE.
 
 ## Advanced Operations
 
-### Failure recovery
+### FE Metadata Recovery Mode
 
-FE may fail to start bdbje and synchronize between FEs for some reasons. Phenomena include the inability to write metadata, the absence of MASTER, and so on. At this point, we need to manually restore the FE. The general principle of manual recovery of FE is to start a new MASTER through metadata in the current `meta_dir`, and then add other FEs one by one. Please follow the following steps strictly:
-
-1. First, **stop all FE processes and all business access**. Make sure that during metadata recovery, external access will not lead to other unexpected problems.(if not, this may cause split-brain problem)
-
-2. Identify which FE node's metadata is up-to-date:
-
-	* First of all, **be sure to back up all FE's `meta_dir` directories first.**
-	* Usually, Master FE's metadata is up to date. You can see the suffix of image.xxxx file in the `meta_dir/image` directory. The larger the number, the newer the metadata.
-	* Usually, by comparing all FOLLOWER FE image files, you can find the latest metadata.
-	* After that, we use the FE node with the latest metadata to recover.
-	* If using metadata of OBSERVER node to recover will be more troublesome, it is recommended to choose FOLLOWER node as far as possible.
-
-3. The following operations are performed on the FE nodes selected in step 2.
-
-	1. Modify fe.conf
-       - If the node is an OBSERVER, first change the `role=OBSERVER` in the `meta_dir/image/ROLE` file to `role=FOLLOWER`. (Recovery from the OBSERVER node will be more cumbersome, first follow the steps here, followed by a separate description)
-       - If fe.version < 2.0.2, add configuration in fe.conf: `metadata_failure_recovery=true`.
-	2. Run `sh bin/start_fe.sh --metadata_failure_recovery --daemon` to start the FE. (If you are recovering from an OBSERVER node, jump to the subsequent OBSERVER document after this step.)
-	3. If normal, the FE will start in the role of MASTER, similar to the description in the previous section `Start a single node FE`. You should see the words `transfer from XXXX to MASTER` in fe.log.
-	4. After the start-up is completed, connect to the FE first, and execute some query imports to check whether normal access is possible. If the operation is not normal, it may be wrong. It is recommended to read the above steps carefully and try again with the metadata previously backed up. If not, the problem may be more serious.
-	5. If successful, through the `show frontends;` command, you should see all the FEs you added before, and the current FE is master.
-    6. **If FE version < 2.0.2**, delete the `metadata_failure_recovery=true` configuration item in fe.conf, or set it to `false`, and restart the FE (**Important**).
-
-	:::tip
-	 If you are recovering metadata from an OBSERVER node, after completing the above steps, you will find that the current FE role is OBSERVER, but `IsMaster` appears as `true`. This is because the "OBSERVER" seen here is recorded in Doris's metadata, but whether it is master or not, is recorded in bdbje's metadata. Because we recovered from an OBSERVER node, there was inconsistency. Please take the following steps to fix this problem (we will fix it in a later version):
-
-	 1. First, all FE nodes except this "OBSERVER" are DROPed out.
-
-	 2. A new FOLLOWER FE is added through the `ADD FOLLOWER` command, assuming that it is on hostA.
-
-	 3. Start a new FE on hostA and join the cluster by `helper`.
-
-	 4. After successful startup, you should see two FEs through the `show frontends;` statement, one is the previous OBSERVER, the other is the newly added FOLLOWER, and the OBSERVER is the master.
-
-	 5. After confirming that the new FOLLOWER is working properly, the new FOLLOWER metadata is used to perform a failure recovery operation again.
-	 
-	 6. The purpose of the above steps is to manufacture a metadata of FOLLOWER node artificially, and then use this metadata to restart fault recovery. This avoids inconsistencies in recovering metadata from OBSERVER.
-
-	The meaning of `metadata_failure_recovery` is to empty the metadata of `bdbje`. In this way, bdbje will not contact other FEs before, but start as a separate FE. This parameter needs to be set to true only when restoring startup. After recovery, it must be set to false. Otherwise, once restarted, the metadata of bdbje will be emptied again, which will make other FEs unable to work properly.
-	:::
-
-4. After the successful execution of step 3, we delete the previous FEs from the metadata by using the `ALTER SYSTEM DROP FOLLOWER/OBSERVER` command and add them again by adding new FEs.
-
-5. If the above operation is normal, it will be restored.
+Improper use or incorrect operations of the `metadata recovery mode` can lead to irreversible data damage in the production environment. Therefore, documentation for operating the `metadata recovery mode` is no longer provided. If there is a genuine need, please contact the developers in the Doris community for assistance.
 
 ### FE type change
 
@@ -234,7 +191,7 @@ If you need to migrate one FE from the current node to another, there are severa
 
 2. Single-node MASTER migration
 
-	When there is only one FE, refer to the `Failure Recovery` section. Copy the doris-meta directory of FE to the new node and start the new MASTER in Step 3 of the `Failure Recovery` section
+    If you are a developer, you can perform operations using the `metadata recovery mode`. However, if you are a user, it is not recommended to use the `metadata recovery mode` It is suggested to transfer data by rebuilding the environment and using external tables.
 
 3. A set of FOLLOWER migrates from one set of nodes to another set of new nodes
 
@@ -252,11 +209,11 @@ FE currently has the following ports
 
 1. edit_log_port
 
-	If this port needs to be replaced, it needs to be restored with reference to the operations in the `Failure Recovery` section. Because the port has been persisted into bdbje's own metadata (also recorded in Doris's own metadata), it is necessary to clear bdbje's metadata by setting `metadata_failure_recovery` when Fe start.
+	If this port needs to be replaced, if multiple fe nodes are deployed, you can delete the old node and add the new node by node management step. if it is a single node, you can migrate a single Master fe node refer to "Single-node MASTER migration" in the above
 
 2. http_port
 
-	All FE http_ports must be consistent. So if you want to modify this port, all FEs need to be modified and restarted. Modifying this port will be more complex in the case of multiple FOLLOWER deployments (involving laying eggs and laying hens...), so this operation is not recommended. If necessary, follow the operation in the `Failure Recovery` section directly.
+	All FE http_ports must be consistent. So if you want to modify this port, all FEs need to be stop, then be modified and restarted at the same time. 
 
 3. rpc_port
 
@@ -270,42 +227,11 @@ FE currently has the following ports
 
 	After modifying the configuration, restart FE directly. This only affects arrow flight sql server connection target.
 
-### Recover metadata from FE memory
-In some extreme cases, the image file on the disk may be damaged, but the metadata in the memory is intact. At this point, we can dump the metadata from the memory and replace the image file on the disk to recover the metadata. the entire non-stop query service operation steps are as follows:
-
-1. Stop all Load, Create, Alter operations.
-
-2. Execute the following command to dump metadata from the Master FE memory: (hereafter called image_mem)
-```
-curl -u $root_user:$password http://$master_hostname:8030/dump
-```
-3. Replace the image file in the `meta_dir/image` directory on the OBSERVER FE node with the image_mem file, restart the OBSERVER FE node, and verify the integrity and correctness of the image_mem file. You can check whether the DB and Table metadata are normal on the FE Web page, whether there is an exception in `fe.log`, whether it is in a normal replayed jour.
-
-    Since 1.2.0, it is recommended to use following method to verify the `image_mem` file:
-
-    ```
-    sh start_fe.sh --image path_to_image_mem
-    ```
-
-    > Notice: `path_to_image_mem` is the path of `image_mem`.
-    >
-    > If verify succeed, it will print: `Load image success. Image file /absolute/path/to/image.xxxxxx is valid`.
-    >
-    > If verify failed, it will print: `Load image failed. Image file /absolute/path/to/image.xxxxxx is invalid`.
-
-4. Replace the image file in the `meta_dir/image` directory on the FOLLOWER FE node with the image_mem file in turn, restart the FOLLOWER FE node, and confirm that the metadata and query services are normal.
-
-5. Replace the image file in the `meta_dir/image` directory on the Master FE node with the image_mem file, restart the Master FE node, and then confirm that the FE Master switch is normal and The Master FE node can generate a new image file through checkpoint.
-
-6. Recover all Load, Create, Alter operations.
-
-**Note: If the Image file is large, the entire process can take a long time, so during this time, make sure Master FE does not generate a new image file via checkpoint. When the image.ckpt file in the meta_dir/image directory on the Master FE node is observed to be as large as the image.xxx file, the image.ckpt file can be deleted directly.**
-
-### View data in BDBJE
+### View data in BDBJE (only used by debug)
 
 The metadata log of FE is stored in BDBJE in the form of Key-Value. In some abnormal situations, FE may not be started due to metadata errors. In this case, Doris provides a way to help users query the data stored in BDBJE to facilitate troubleshooting.
 
-First, you need to add configuration in fe.conf: `enable_bdbje_debug_mode=true`, and then start FE through `sh start_fe.sh --daemon`.
+First, you need to add configuration in fe.conf: `enable_bdbje_debug_mode=true`, and then start FE through `bash start_fe.sh --daemon`.
 
 At this time, FE will enter the debug mode, only start the http server and MySQL server, and open the BDBJE instance, but will not load any metadata and other subsequent startup processes.
 
@@ -359,7 +285,7 @@ The third level can display the value information of the specified key.
 
 The deployment recommendation of FE is described in the Installation and [Deployment Document](../../install/cluster-deployment/standard-deployment.md). Here are some supplements.
 
-* **If you don't know the operation logic of FE metadata very well, or you don't have enough experience in the operation and maintenance of FE metadata, we strongly recommend that only one FOLLOWER-type FE be deployed as MASTER in practice, and the other FEs are OBSERVER, which can reduce many complex operation and maintenance problems.** Don't worry too much about the failure of MASTER single point to write metadata. First, if you configure it properly, FE as a java process is very difficult to hang up. Secondly, if the MASTER disk is damaged (the probability is very low), we can also use the metadata on OBSERVER to recover manually through `fault recovery`.
+* **If you don't know the operation logic of FE metadata very well, or you don't have enough experience in the operation and maintenance of FE metadata, we strongly recommend that only one FOLLOWER-type FE be deployed as MASTER in practice, and the other FEs are OBSERVER, which can reduce many complex operation and maintenance problems.** Don't worry too much about the failure of MASTER single point to write metadata. First, if you configure it properly, FE as a java process is very difficult to hang up. Secondly, if the MASTER disk is damaged (the probability is very low), we can also use the metadata on OBSERVER to recover manually through `metadata recovery mode`.
 
 * The JVM of the FE process must ensure sufficient memory. We **strongly recommend** that FE's JVM memory should be at least 10GB and 32GB to 64GB. And deploy monitoring to monitor JVM memory usage. Because if OOM occurs in FE, metadata writing may fail, resulting in some failures that **cannot recover**!
 
@@ -369,7 +295,7 @@ The deployment recommendation of FE is described in the Installation and [Deploy
 
 1. Output `meta out of date. current time: xxx, synchronized time: xxx, has log: xxx, fe type: xxx` in fe.log 
 
-	This is usually because the FE cannot elect Master. For example, if three FOLLOWERs are configured, but only one FOLLOWER is started, this FOLLOWER will cause this problem. Usually, just start the remaining FOLLOWER. If the problem has not been solved after the start-up, manual recovery may be required in accordance with the way in the `Failure Recovery` section.
+	This is usually because the FE cannot elect Master. For example, if three FOLLOWERs are configured, but only one FOLLOWER is started, this FOLLOWER will cause this problem. Usually, just restart all the FOLLOWER at the same time. If the problem has not been solved after the start-up, we need check if there is an unknown problem.
 
 2. `Clock delta: xxxx ms. between Feeder: xxxx and this Replica exceeds max permissible delta: xxxx ms.`
 

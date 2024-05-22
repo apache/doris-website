@@ -23,7 +23,7 @@ export default function Connectors() {
                         <>
                             <ExternalLink
                                 href="https://github.com/apache/doris-flink-connector/releases"
-                                label="Download"
+                                label="GitHub"
                             ></ExternalLink>
                             <ExternalLink
                                 href="https://doris.apache.org/docs/ecosystem/flink-doris-connector"
@@ -46,7 +46,7 @@ export default function Connectors() {
                         <>
                             <ExternalLink
                                 href="https://github.com/apache/doris-spark-connector/releases"
-                                label="Download"
+                                label="GitHub"
                             ></ExternalLink>
 
                             <ExternalLink
@@ -68,7 +68,7 @@ export default function Connectors() {
                     rightContent={<img src={require(`@site/static/images/ecomsystem/dbt.png`).default} alt="" />}
                     moreLink={
                         <>
-                            <ExternalLink href="https://github.com/selectdb/dbt-doris" label="Download"></ExternalLink>
+                            <ExternalLink href="https://github.com/selectdb/dbt-doris" label="GitHub"></ExternalLink>
                             <ExternalLink
                                 href="https://doris.apache.org/docs/ecosystem/dbt-doris-adapter"
                                 className="sub-btn"
