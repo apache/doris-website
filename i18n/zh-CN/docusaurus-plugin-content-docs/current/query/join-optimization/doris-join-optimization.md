@@ -48,7 +48,7 @@ Doris 支持 4 种 Shuffle 方式
 
    它适用的场景是比较通用的，同时能够支持 Hash Join 和 Nest loop Join，它的网络开销 N * T(R)。
 
-   ![image-20220523152004731](/images/join/image-20220523152004731.png)
+   ![BroadCast Join](/images/broadcast-join.png)
 
    左表数据不移动，右表数据发送到左表数据的扫描节点。
 
@@ -58,7 +58,8 @@ Doris 支持 4 种 Shuffle 方式
 
    它的网络开销则是：T（S） + T（R），但它只能支持 Hash Join，因为它是根据 Join 的条件也去做计算分桶的。
 
-   ![image-20220523151902368](/images/join/image-20220523151902368.png)
+   ![Shuffle Join](/images/shuffle-join.png)
+
 
    左右表数据根据分区，计算的结果发送到不同的分区节点上。
 
@@ -68,7 +69,7 @@ Doris 支持 4 种 Shuffle 方式
 
    它的网络开销则是：T（R）相当于只 Shuffle 右表的数据就可以了。
 
-   ![image-20220523151653562](/images/join/image-20220523151653562.png)
+   ![Bucket Shuffle Join](/images/bucket-shuffle-join.png)
 
    左表数据不移动，右表数据根据分区计算的结果发送到左表扫表的节点
 
@@ -76,7 +77,7 @@ Doris 支持 4 种 Shuffle 方式
 
    它与 Bucket Shuffle Join 相似，相当于在数据导入的时候，根据预设的 Join 列的场景已经做好了数据的 Shuffle。那么实际查询的时候就可以直接进行 Join 计算而不需要考虑数据的 Shuffle 问题了。
 
-   ![image-20220523151619754](/images/join/image-20220523151619754.png)
+   ![Colocation Join](/images/colocation-join.png)
 
    数据已经预先分区，直接在本地进行 Join 计算
 
@@ -139,7 +140,7 @@ Doris 提供了三种不同的 Runtime Filter 类型：
 
 接下来看右图，把 Join 的顺序调整了一下。把 a 表先与 c 表 Join，生成的中间结果只有 100，然后最终再与 b 表 Join 计算。最终的 Join 结果是一样的，但是它生成的中间结果有 20 倍的差距，这就会产生一个很大的性能 Diff 了。
 
-![image-20220523152639123](/images/join/image-20220523152639123.png)
+![Join Reorder](/images/join-reorder.png)
 
 Doris 目前支持基于规则的 Join Reorder 算法。它的逻辑是：
 

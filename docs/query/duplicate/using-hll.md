@@ -113,17 +113,17 @@ PROPERTIES(
        -H "columns:dt,id,name,province,os, pv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
    ```
 
-   The sample data is as follows（test_hll.csv）：
+   The sample data is as follows (test_hll.csv):
 
-   ```
-   2022-05-05,10001,测试01,北京,windows
-   2022-05-05,10002,测试01,北京,linux
-   2022-05-05,10003,测试01,北京,macos
-   2022-05-05,10004,测试01,河北,windows
-   2022-05-06,10001,测试01,上海,windows
-   2022-05-06,10002,测试01,上海,linux
-   2022-05-06,10003,测试01,江苏,macos
-   2022-05-06,10004,测试01,陕西,windows
+   ```text
+  2022-05-05,10001,Testing01,Beijing,Windows  
+  2022-05-05,10002,Testing01,Beijing,Linux  
+  2022-05-05,10003,Testing01,Beijing,MacOS  
+  2022-05-05,10004,Testing01,Hebei,Windows  
+  2022-05-06,10001,Testing01,Shanghai,Windows  
+  2022-05-06,10002,Testing01,Shanghai,Linux  
+  2022-05-06,10003,Testing01,Jiangsu,MacOS  
+  2022-05-06,10004,Testing01,Shaanxi,Windows
    ```
 
    The import result is as follows:
