@@ -515,22 +515,22 @@ vim /usr/local/nginx/conf/default.conf
 Then add the following in it
 
 ```bash
-events {
-worker_connections 1024;
-}
-stream {
-  upstream mysqld {
-      hash $remote_addr consistent;
-      server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
-      ##注意这里如果是多个FE，加载这里就行了
-  }
-  ###这里是配置代理的端口，超时时间等
-  server {
-      listen 6030;
-      proxy_connect_timeout 300s;
-      proxy_timeout 300s;
-      proxy_pass mysqld;
-  }
+events {  
+worker_connections 1024;  
+}  
+stream {  
+  upstream mysqld {  
+      hash $remote_addr consistent;  
+      server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;  
+      ## Note: If there are multiple FEs, just load them here.  
+  }  
+  ### Configuration for proxy port, timeout, etc.  
+  server {  
+      listen 6030;  
+      proxy_connect_timeout 300s;  
+      proxy_timeout 300s;  
+      proxy_pass mysqld;  
+  }  
 }
 ```
 

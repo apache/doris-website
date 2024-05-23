@@ -194,7 +194,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Doris and hive currently query hudi differently. Doris needs to add partition fields to the avsc file of the hudi table structure. If not added, it will cause Doris to query partition_ Val is empty (even if home. datasource. live_sync. partition_fields=partition_val is set)
 
-    ```
+    ```json
     {
         "type": "record",
         "name": "record",
@@ -210,12 +210,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
             {
             "name": "name",
             "type": "string",
-            "doc": "名称"
+            "doc": "Name"
             },
             {
             "name": "create_time",
             "type": "string",
-            "doc": "创建时间"
+            "doc": "Creation time"
             }
         ]
     }

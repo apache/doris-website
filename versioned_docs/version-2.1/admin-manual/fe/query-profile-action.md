@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Query Profile Action
+
 
 ## Request
 
@@ -71,75 +71,78 @@ Gets information about select queries for all fe nodes in the cluster.
 
 ### Response
 
-```
+```json
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "Query ID",
-            "FE节点",
-            "查询用户",
-            "执行数据库",
-            "Sql",
-            "查询类型",
-            "开始时间",
-            "结束时间",
-            "执行时长",
-            "状态"
-        ],
-        "rows": [
-            [
-                ...
-            ]
-        ]
-    },
-    "count": 0
+   "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Query ID",  
+            "FE Node",  
+            "Query User",  
+            "Execution Database",  
+            "Sql",  
+            "Query Type",  
+            "Start Time",  
+            "End Time",  
+            "Execution Duration",  
+            "Status"  
+        ],  
+        "rows": [  
+            [  
+                ...  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
-<version since="1.2">
+:::info Note
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。
+Since Doris Version 1.2, Admin and Root users can view all queries. Regular users can only view their own submitted queries.
 
-</version>
+:::
+
+
 
 ### Examples
-```
+
+```json
 GET /rest/v2/manager/query/query_info
 
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "Query ID",
-            "FE节点",
-            "查询用户",
-            "执行数据库",
-            "Sql",
-            "查询类型",
-            "开始时间",
-            "结束时间",
-            "执行时长",
-            "状态"
-        ],
-        "rows": [
-            [
-                "d7c93d9275334c35-9e6ac5f295a7134b",
-                "127.0.0.1:8030",
-                "root",
-                "default_cluster:testdb",
-                "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id",
-                "Query",
-                "2021-07-29 16:59:12",
-                "2021-07-29 16:59:12",
-                "109ms",
-                "EOF"
-            ]
-        ]
-    },
-    "count": 0
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Query ID",  
+            "FE Node",  
+            "Query User",  
+            "Execution Database",  
+            "Sql",  
+            "Query Type",  
+            "Start Time",  
+            "End Time",  
+            "Execution Duration",  
+            "Status"  
+        ],  
+        "rows": [  
+            [  
+                "d7c93d9275334c35-9e6ac5f295a7134b",  
+                "127.0.0.1:8030",  
+                "root",  
+                "default_cluster:testdb",  
+                "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id",  
+                "Query",  
+                "2021-07-29 16:59:12",  
+                "2021-07-29 16:59:12",  
+                "109ms",  
+                "EOF"  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
@@ -167,7 +170,7 @@ After executing the Query within the same Session, the query id can be obtained 
 
 ### Response
 
-```
+```json
 {
     "msg": "success", 
     "code": 0, 
@@ -176,11 +179,11 @@ After executing the Query within the same Session, the query id can be obtained 
 }
 ```
 
-<version since="1.2">
+:::note Info
 
-Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
-```
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -188,8 +191,8 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
     "count": 0
 }
 ```
+:::
 
-</version>
 
 ## Get the sql and text profile for the specified query
 
@@ -215,7 +218,7 @@ Get the sql and profile text for the specified query id.
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -226,7 +229,7 @@ Get the sql and profile text for the specified query id.
 }
 ```
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -237,11 +240,11 @@ Get the sql and profile text for the specified query id.
 }
 ```
 
-<version since="1.2">
+:::note Info
 
-Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
-```
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -250,13 +253,13 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 }
 ```
 
-</version>
+:::
     
 ### Examples
 
 1. get sql.
 
-    ```
+    ```json
     GET /rest/v2/manager/query/sql/d7c93d9275334c35-9e6ac5f295a7134b
     
     Response:
@@ -275,7 +278,9 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
 `GET /rest/v2/manager/query/profile/fragments/{query_id}`
 
 :::caution
+
 Since 2.1.1, this API is deprecated. You can still download profile from http://<fe_ip>:<fe_http_port>/QueryProfile
+
 :::
 
 ### Description
@@ -296,7 +301,7 @@ Get the fragment name, instance id, host ip/port and execution time for the spec
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -316,11 +321,11 @@ Get the fragment name, instance id, host ip/port and execution time for the spec
 }
 ```
 
-<version since="1.2">
+:::note Info
 
-Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
-```
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -328,12 +333,12 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
     "count": 0
 }
 ```
+:::
 
-</version>
     
 ### Examples
 
-```
+```json
 GET /rest/v2/manager/query/profile/fragments/d7c93d9275334c35-9e6ac5f295a7134b
 
 Response:
@@ -408,7 +413,7 @@ Get the tree profile information of the specified query id, same as `show query 
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
@@ -419,11 +424,11 @@ Get the tree profile information of the specified query id, same as `show query 
 }
 ```
 
-<version since="1.2">
+:::note Info
 
-Admin and Root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
+Since Doris version 1.2, admin and root user can view all queries. Ordinary users can only view the Query sent by themselves. If the specified trace id does not exist or has no permission, it will return Bad Request:
 
-```
+```json
 {
     "msg": "Bad Request", 
     "code": 403, 
@@ -431,8 +436,9 @@ Admin and Root user can view all queries. Ordinary users can only view the Query
     "count": 0
 }
 ```
+:::
 
-</version>
+
 
 ## Current running queries
 
@@ -452,7 +458,7 @@ Same as `show proc "/current_query_stmts"`, return current running queries.
 
 ### Response
 
-```
+```json
 {
 	"msg": "success",
 	"code": 0,
@@ -485,7 +491,7 @@ Cancel query of specified connection.
 
 ### Response
 
-```
+```json
 {
     "msg": "success",
     "code": 0,
