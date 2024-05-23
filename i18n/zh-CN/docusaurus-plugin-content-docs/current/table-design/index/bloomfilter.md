@@ -40,7 +40,7 @@ BloomFilter 是由 Bloom 在 1970 年提出的一种多哈希函数映射的快�
 
 下图所示出一个 m=18, k=3（m 是该 Bit 数组的大小，k 是 Hash 函数的个数）的 Bloom Filter 示例。集合中的 x、y、z 三个元素通过 3 个不同的哈希函数散列到位数组中。当查询元素 w 时，通过 Hash 函数计算之后因为有一个比特为 0，因此 w 不在该集合中。
 
-![Bloom_filter.svg](https://doris.apache.org/images/Bloom_filter.svg.png)
+![Bloom_filter.svg](/images/Bloom_filter.svg.png)
 
 
 同样是如果某个元素经过哈希函数计算后得到所有的偏移位置，若这些位置全都为 1，则判断这个元素在这个集合中。
