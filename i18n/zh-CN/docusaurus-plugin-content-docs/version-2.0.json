@@ -143,7 +143,7 @@
     "message": "集群管理",
     "description": "The label for category cluster management in sidebar docs"
   },
-  "sidebar.docs.category.Manging Data": {
+  "sidebar.docs.category.Managing Data": {
     "message": "数据管理",
     "description": "The label for category Manging Data in sidebar docs"
   },
