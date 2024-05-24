@@ -64,7 +64,7 @@ $ kubectl delete pod ${pod_name} --namespace ${namespace}
 
 
 
-## 注意事项
+## Notes
 
 **After entering the pod, you need to modify the port information of the configuration file before you can manually start the corresponding Doris component.**
 

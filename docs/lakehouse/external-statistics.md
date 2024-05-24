@@ -26,7 +26,7 @@ under the License.
 
 # External Table Statistics
 
-The collection method and content of external table statistical information are basically the same as those of internal tables. For detailed information, please refer to the [statistical information](../query-acceleration/statistics.md). After version 2.0.3, Hive tables support automatic and sampling collection.
+The collection method and content of external table statistical information are basically the same as those of internal tables. For detailed information, please refer to the [statistical information](../query/nereids/statistics.md). After version 2.0.3, Hive tables support automatic and sampling collection.
 
 # Note
 

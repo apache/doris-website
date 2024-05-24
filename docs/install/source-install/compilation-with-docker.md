@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation with Docker(Recommended)",
+    "title": "Compling with Docker (Recommended)",
     "language": "en"
 }
 ---
@@ -67,18 +67,16 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 - `apache/doris:build-env-ldb-toolchain-latest` is used for compiling the latest master code and is updated along with the master. You can check the update time in the `docker/README.md` file.
 - Images with "no-avx2" in their names contain third-party libraries that can run on CPUs that do not support AVX2 instructions. Using these images, you can compile Doris with the "USE_AVX2=0".
 - For information about changes in the compilation image, please see [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
-- The Docker compilation image includes both OpenJDK 8 and OpenJDK 11. You can check the default JDK version by running `java -version`, and switch between versions using the following commands (JDK 8 as the default version is recommended).
+- The Docker compilation image includes both JDK 8 and JDK 17. You can check the default JDK version by running `java -version`, and switch between versions using the following commands (JDK 8 as the default version is recommended).
 
 ```Bash
 # Switch to JDK 8
-alternatives --set java java-1.8.0-openjdk.x86_64
-alternatives --set javac java-1.8.0-openjdk.x86_64
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export PATH=$JAVA_HOME/bin/:$PATH
 
-# Switch to JDK 11
-alternatives --set java java-11-openjdk.x86_64
-alternatives --set javac java-11-openjdk.x86_64
-export JAVA_HOME=/usr/lib/jvm/java-11
+# Switch to JDK 17
+export JAVA_HOME=/usr/lib/jvm/jdk-17.0.2/
+export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
 ## Compile Doris

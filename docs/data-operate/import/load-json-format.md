@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Importing Data in JSON Format",
+    "title": "Loading Data in JSON Format",
     "language": "en"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Importing Data in JSON Format
 
 Doris supports importing data in JSON format. This document mainly describes the precautions when importing data in JSON format.
 
@@ -32,9 +31,9 @@ Doris supports importing data in JSON format. This document mainly describes the
 
 Currently, only the following import methods support data import in JSON format:
 
-- Through [S3 table function](../../../sql-manual/sql-functions/table-functions/s3.md) import statement: insert into table select * from S3();
-- Import the local JSON format file through [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md).
-- Subscribe and consume JSON format in Kafka via [ROUTINE LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) information.
+- Through [S3 table function](../../sql-manual/sql-functions/table-functions/s3.md) import statement: insert into table select * from S3();
+- Import the local JSON format file through [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md).
+- Subscribe and consume JSON format in Kafka via [ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) information.
 
 Other ways of importing data in JSON format are not currently supported.
 
@@ -97,11 +96,11 @@ Currently only the following three JSON formats are supported:
 
 Some data formats, such as JSON, cannot be split. Doris must read all the data into the memory before parsing can begin. Therefore, this value is used to limit the maximum amount of data that can be loaded in a single Stream load.
 
-The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../../admin-manual/config/be-config.md).
+The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../admin-manual/config/be-config.md).
 
 ### fuzzy_parse parameters
 
-In [STREAM LOAD](../../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
+In [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
 
 This parameter is usually used to import the format of **multi-line data represented by Array**, so it is generally used with `strip_outer_array=true`.
 
@@ -283,10 +282,10 @@ The above example will import the value of k1 multiplied by 100. The final impor
 +------+------+
 ````
 
-Import statement 3：
+Import statement 3:
 
 Compared with the  import statement 1 and import statement 2, the columns field `k1_copy` is added here.
-Table Structure：
+Table Structure:
 
 ```
 k2 int, k1 int, k1_copy int
@@ -308,9 +307,9 @@ The above example will extract the fields in the order specified by the JSON Pat
 +------+------+---------+
 ```
 
-Import statement 4：
+Import statement 4:
 
-Data content：
+Data content:
 
 ```json
 {"k1" : 1, "k2": 2, "k3": {"k1" : 31, "k1_nested" : {"k1" : 32} } }
@@ -533,7 +532,7 @@ code INT NULL
       {"id": 103, "city": "chongqing", "code" : 4}
       ```
 
- 	 StreamLoad import：
+ 	 StreamLoad import:
 
 ```bash
 curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load

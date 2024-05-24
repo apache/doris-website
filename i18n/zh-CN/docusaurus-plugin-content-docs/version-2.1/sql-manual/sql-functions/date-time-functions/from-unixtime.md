@@ -37,8 +37,6 @@ under the License.
 
 传入的是整型，返回的是字符串类型
 
-其余 `string_format` 格式是非法的，返回 NULL
-
 目前支持的 `unix_timestamp` 范围为 `[0, 32536771199]`，超出范围的 `unix_timestamp` 将会得到 NULL
 
 

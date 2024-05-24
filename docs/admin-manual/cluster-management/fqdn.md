@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# FQDN
 
-<version since="dev"></version>
 
 This article introduces how to enable the use of Apache Doris based on FQDN (Fully Qualified Domain Name). FQDN is the complete domain name of a specific computer or host on the Internet.
 
@@ -58,14 +56,14 @@ After Doris supports FQDN, communication between nodes is entirely based on FQDN
    ```
 4. Verification: It can 'ping fe2' on FE1, and can resolve the correct IP address and ping it, indicating that the network environment is available.
 5. fe.conf settings for each FE node ` enable_ fqdn_ mode = true`.
-6. Refer to[Standard deployment](../../install/standard-deployment.md)
+6. Refer to[Standard deployment](../../install/cluster-deployment/standard-deployment)
 7. Select several machines to deploy broker on six machines as needed, and execute `ALTER SYSTEM ADD BROKER broker_name "fe1:8000","be1:8000",...;`.
 
 ### Deployment of Doris for K8S
 
 After an unexpected restart of the Pod, K8s cannot guarantee that the Pod's IP will not change, but it can ensure that the domain name remains unchanged. Based on this feature, when Doris enables FQDN, it can ensure that the Pod can still provide services normally after an unexpected restart.
 
-Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/k8s-deploy/operator-deploy.md)
+Please refer to the method for deploying Doris in K8s[Kubernetes Deployment](../../install/cluster-deployment/k8s-deploy/install-operator)
 
 ### Server change IP
 

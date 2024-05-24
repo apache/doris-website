@@ -31,6 +31,8 @@ under the License.
 将`x`四舍五入后保留d位小数，d默认为0。如果d为负数，则小数点左边d位为0。如果x或d为null，返回null。
 2.5会舍入到3，如果想要舍入到2的算法，请使用round_bankers函数。
 
+如果 d 为一个列，并且第一个参数为 Decimal 类型，那么结果 Decimal 会跟入参 Decimal 具有相同的小数部分长度。
+
 :::tip
 该函数的另一个别名为 `dround`。
 :::
@@ -74,6 +76,18 @@ mysql> select round(1667.2725, -2);
 +----------------------+
 |                 1700 |
 +----------------------+
+mysql> SELECT number
+    -> , round(number * 2.5, number - 1) AS r_decimal_column
+    -> , round(number * 2.5, 0) AS r_decimal_literal
+    -> , round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
+    -> , round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
+    -> FROM test_enhanced_round
+    -> WHERE rid = 1;
++--------+------------------+-------------------+-----------------+------------------+
+| number | r_decimal_column | r_decimal_literal | r_double_column | r_double_literal |
++--------+------------------+-------------------+-----------------+------------------+
+|      1 |              3.0 |                 3 |               3 |                3 |
++--------+------------------+-------------------+-----------------+------------------+
 ```
 
 ### keywords

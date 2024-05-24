@@ -28,11 +28,11 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 workload_groups
 
-</version>
+:::caution
+Since 2.1.1, this table function has been moved to the information_schema.workload_groups.
+:::
 
 ### description
 

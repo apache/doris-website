@@ -71,75 +71,78 @@ Gets information about select queries for all fe nodes in the cluster.
 
 ### Response
 
-```
+```json
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "Query ID",
-            "FE节点",
-            "查询用户",
-            "执行数据库",
-            "Sql",
-            "查询类型",
-            "开始时间",
-            "结束时间",
-            "执行时长",
-            "状态"
-        ],
-        "rows": [
-            [
-                ...
-            ]
-        ]
-    },
-    "count": 0
+   "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Query ID",  
+            "FE Node",  
+            "Query User",  
+            "Execution Database",  
+            "Sql",  
+            "Query Type",  
+            "Start Time",  
+            "End Time",  
+            "Execution Duration",  
+            "Status"  
+        ],  
+        "rows": [  
+            [  
+                ...  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
-<version since="1.2">
+:::info Note
 
-Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。
+Since Doris Version 1.2, Admin and Root users can view all queries. Regular users can only view their own submitted queries.
 
-</version>
+:::
+
+
 
 ### Examples
-```
+
+```json
 GET /rest/v2/manager/query/query_info
 
 {
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "Query ID",
-            "FE节点",
-            "查询用户",
-            "执行数据库",
-            "Sql",
-            "查询类型",
-            "开始时间",
-            "结束时间",
-            "执行时长",
-            "状态"
-        ],
-        "rows": [
-            [
-                "d7c93d9275334c35-9e6ac5f295a7134b",
-                "127.0.0.1:8030",
-                "root",
-                "default_cluster:testdb",
-                "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id",
-                "Query",
-                "2021-07-29 16:59:12",
-                "2021-07-29 16:59:12",
-                "109ms",
-                "EOF"
-            ]
-        ]
-    },
-    "count": 0
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Query ID",  
+            "FE Node",  
+            "Query User",  
+            "Execution Database",  
+            "Sql",  
+            "Query Type",  
+            "Start Time",  
+            "End Time",  
+            "Execution Duration",  
+            "Status"  
+        ],  
+        "rows": [  
+            [  
+                "d7c93d9275334c35-9e6ac5f295a7134b",  
+                "127.0.0.1:8030",  
+                "root",  
+                "default_cluster:testdb",  
+                "select c.id, c.name, p.age, p.phone, c.date, c.cost from cost c join people p on c.id = p.id where p.age > 20 order by c.id",  
+                "Query",  
+                "2021-07-29 16:59:12",  
+                "2021-07-29 16:59:12",  
+                "109ms",  
+                "EOF"  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 

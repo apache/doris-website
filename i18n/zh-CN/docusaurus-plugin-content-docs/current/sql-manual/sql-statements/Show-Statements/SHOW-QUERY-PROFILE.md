@@ -30,6 +30,10 @@ under the License.
 
 SHOW QUERY PROFILE
 
+:::caution
+自 2.1.1 起，此语法被弃用。你仍然可以从 http://<fe_ip>:<fe_http_port>/QueryProfile 上下载 profile 文件。
+:::
+
 ### Description
 
 该语句是用来查看QUERY操作的树状Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：

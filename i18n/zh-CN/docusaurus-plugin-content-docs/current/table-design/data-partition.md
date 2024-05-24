@@ -380,13 +380,13 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
 ## 动态分区
 
-动态分区旨在对表级别的分区实现生命周期管理 (TTL)，减少用户的使用负担。
+开启动态分区的表，将会按照设定的规则添加、删除分区，从而对表的分区实现生命周期管理(TTL)，减少用户的使用负担。
 
-在某些使用场景下，用户会将表按照天进行分区划分，每天定时执行例行任务，这时需要使用方手动管理分区，否则可能由于使用方没有创建分区导致数据导入失败，这给使用方带来了额外的维护成本。
+动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区。
 
-通过动态分区功能，用户可以在建表时设定动态分区的规则。FE 会启动一个后台线程，根据用户指定的规则创建或删除分区。用户也可以在运行时对现有规则进行变更。
+动态分区适用于分区列的时间数据随现实世界同步增长的情况。此时可以灵活的按照与现实世界同步的时间维度对数据进行分区，自动地根据设置对数据进行冷热分层或者回收。
 
-动态分区只支持 Range 分区。目前实现了动态添加分区及动态删除分区的功能。
+对于更为灵活，适用场景更多的数据入库分区，请参阅[自动分区](#自动分区)功能。
 
 :::caution
 注意：动态分区功能在被 CCR 同步时将会失效。
@@ -450,7 +450,7 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
 - `dynamic_partition.start`
 
-  动态分区的起始偏移，为负数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。如果不填写，则默认为 `-2147483648`，即不删除历史分区。
+  动态分区的起始偏移，为负数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。如果不填写，则默认为 `-2147483648`，即不删除历史分区。此偏移之后至当前时间的历史分区如不存在，是否创建取决于 `dynamic_partition.create_history_partition`。
 
 - `dynamic_partition.end`**（必选参数）**
 
@@ -715,6 +715,25 @@ p202005: ["2020-05-28", "2020-06-28")
 p202006: ["2020-06-28", "2020-07-28")
 ```
 
+### 原理与控制行为
+
+Doris FE 中有固定的 dynamic partition 控制线程，持续以特定时间间隔（即 `dynamic_partition_check_interval_seconds`）进行 dynamic partition 表的分区检查，完成需要的分区创建与删除操作。
+
+具体而言，自动分区将会进行如下检查与操作（我们称此时该表分区的起始包含时间为 `START`，末尾包含时间为 `END`）：
+1. `START` 时间之前的所有分区，全部被删除。
+2. 如果 `dynamic_partition.create_history_partition` 为 `true`，创建 `START` 到 `END` 之间的所有分区；如果 `dynamic_partition.create_history_partition` 为 `false`，创建当前时间到 `END` 之间的所有分区。
+
+需要注意的是：
+1. 如果分区时间范围与 `[START, END]` 范围相交，则认为**属于**当前 dynamic partition 时间范围。
+2. 如果尝试创建的新分区和现有分区冲突，则保留当前分区，不创建该新分区。
+
+因此，自动分区表在系统自动维护后，呈现的状态是：
+1. `START` 时间之前**不包含**任何分区；
+2. 保留所有 `END` 时间以后**手动创建的**分区。
+3. 除手动删除或意外丢失的分区外，表包含**特定范围**内的全部分区；如果其中某一段范围有手动创建的分区，则这部分分区被保留；其他范围均被dynamic partition 按照 `dynamic_partition.time_unit` 为单位创建的单位分区覆盖。
+    - 如果 `dynamic_partition.create_history_partition` 为 `true`，则**特定范围**为 `[START, END]`；
+    - 如果 `dynamic_partition.create_history_partition` 为 `false`，则**特定范围**为 `[当前时间, END]`，同时包含 `[START, 当前时间)` 中既存的分区。
+
 ### 修改动态分区属性
 
 通过如下命令可以修改动态分区的属性：
@@ -800,23 +819,9 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 对于一个表来说，动态分区和手动分区可以自由转换，但二者不能同时存在，有且只有一种状态。
 
-- 手动分区转换为动态分区
+通过执行 `ALTER TABLE tbl_name SET ("dynamic_partition.enable" = "<true/false>")` 即可调整动态分区开关状态。
 
-  如果一个表在创建时未指定动态分区，可以通过 `ALTER TABLE` 在运行时修改动态分区相关属性来转化为动态分区，具体示例可以通过 `HELP ALTER TABLE` 查看。
-
-  开启动态分区功能后，Doris 将不再允许用户手动管理分区，会根据动态分区属性来自动管理分区。
-
-  注意：如果已设定 `dynamic_partition.start`，分区范围在动态分区起始偏移之前的历史分区将会被删除。
-
-- 动态分区转换为手动分区
-
-  通过执行 `ALTER TABLE tbl_name SET ("dynamic_partition.enable" = "false")` 即可关闭动态分区功能，将其转换为手动分区表。
-
-  关闭动态分区功能后，Doris 将不再自动管理分区，需要用户手动通过 `ALTER TABLE` 的方式创建或删除分区。
-
-### 注意事项
-
-动态分区使用过程中，如果因为一些意外情况导致 `dynamic_partition.start` 和 `dynamic_partition.end` 之间的某些分区丢失，那么当前时间与 `dynamic_partition.end` 之间的丢失分区会被重新创建，`dynamic_partition.start`与当前时间之间的丢失分区不会重新创建。
+关闭动态分区功能后，Doris 将不再自动管理分区，需要用户手动通过 `ALTER TABLE` 的方式创建或删除分区。动态分区开启后，可能立即根据动态分区规则清理多余分区。
 
 ## 自动分区
 

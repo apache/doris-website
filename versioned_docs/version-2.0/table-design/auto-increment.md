@@ -1,6 +1,6 @@
 ---
 {
-    "title": "AUTO_INCREMENT Column",
+    "title": "Using AUTO_INCREMENT",
     "language": "en"
 }
 ---

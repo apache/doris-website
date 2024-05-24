@@ -1,6 +1,6 @@
 ---
 {
-"title": "Upgrade Apache Doris cluster deployed by Doris Operator",
+"title": "Upgrading Apache Doris cluster deployed by Doris Operator",
 "language": "en"
 }
 ---
@@ -121,7 +121,7 @@ When all Pods are rebuilt and enter the Running state, the upgrade is complete.
 
 ## After the upgrade is completed
 ### Verify cluster node status
-Access Doris through `mysql-client` through the method provided in the [Access Doris Cluster](https://doris.apache.org/docs/dev/install/k8s-deploy/network) document.
+Access Doris through `mysql-client` through the method provided in the [Access Doris Cluster](../k8s-deploy/install-access-cluster) document.
 Use SQL such as `show frontends` and `show backends` to view the version and status of each component.
 ```
 mysql> show frontends\G;

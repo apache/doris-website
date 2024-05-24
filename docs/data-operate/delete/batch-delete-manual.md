@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Batch Delete",
+    "title": "Batch Deletion",
     "language": "en"
 }
 ---

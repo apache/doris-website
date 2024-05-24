@@ -10,7 +10,7 @@
         },
         {
             "type": "category",
-            "label": "Install and Deploy",
+            "label": "Installation and Deployment",
             "items": [
                 {
                     "type": "category",
@@ -32,7 +32,7 @@
                         "install/cluster-deployment/run-docker-cluster",
                         {
                             "type": "category",
-                            "label": "Deploy on Kubernetes",
+                            "label": "Deploying on Kunbernets",
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-operator",
@@ -52,19 +52,19 @@
         },
         {
             "type": "category",
-            "label": "Database Connect",
+            "label": "Database Connection",
             "items": [
                 "db-connect/database-connect"
             ]
         },
         {
             "type": "category",
-            "label": "Table Design",
+            "label": "Data Table Design",
             "items": [
                 "table-design/data-type",
                 {
                     "type": "category",
-                    "label": "Data Model",
+                    "label": "Data Models",
                     "items": [
                         "table-design/data-model/overview",
                         "table-design/data-model/duplicate",
@@ -78,7 +78,7 @@
                 "table-design/cold-hot-separation",
                 {
                     "type": "category",
-                    "label": "Index",
+                    "label": "Table Indexes",
                     "items": [
                         "table-design/index/index-overview",
                         "table-design/index/prefix-index",
@@ -94,11 +94,11 @@
         },
         {
             "type": "category",
-            "label": "Data Operation",
+            "label": "Data Manipulation",
             "items": [
                 {
                     "type": "category",
-                    "label": "Import",
+                    "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
                         "data-operate/import/stream-load-manual",
@@ -106,6 +106,7 @@
                         "data-operate/import/routine-load-manual",
                         "data-operate/import/insert-into-manual",
                         "data-operate/import/mysql-load-manual",
+                        "data-operate/import/transaction-load-manual",
                         "data-operate/import/load-json-format",
                         "data-operate/import/migrate-data-from-other-olap",
                         "data-operate/import/group-commit-manual",
@@ -117,7 +118,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Update",
+                    "label": "Updating Data",
                     "items": [
                         "data-operate/update/update-overview",
                         "data-operate/update/unique-update",
@@ -128,7 +129,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Delete",
+                    "label": "Deleting Data",
                     "items": [
                         "data-operate/delete/delete-manual",
                         "data-operate/delete/batch-delete-manual",
@@ -139,7 +140,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Export",
+                    "label": "Exporting Data",
                     "items": [
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
@@ -150,11 +151,11 @@
         },
         {
             "type": "category",
-            "label": "Query",
+            "label": "Data Queries",
             "items": [
                 {
                     "type": "category",
-                    "label": "Query Data",
+                    "label": "Quering Data",
                     "items": [
                         "query/query-data/mysql-compatibility",
                         "query/query-data/select",
@@ -168,7 +169,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Query Variables",
+                    "label": "Quering Variables",
                     "items": [
                         "query/query-variables/variables",
                         "query/query-variables/sql-mode",
@@ -178,7 +179,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Nereids",
+                    "label": "Cost-Based Optimizer",
                     "items": [
                         "query/nereids/nereids",
                         "query/nereids/statistics"
@@ -186,7 +187,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Pipeline",
+                    "label": "Pipeline Execution Engine",
                     "items": [
                         "query/pipeline/pipeline-execution-engine",
                         "query/pipeline/pipeline-x-execution-engine"
@@ -194,11 +195,10 @@
                 },
                 {
                     "type": "category",
-                    "label": "Cache",
+                    "label": "Caches",
                     "items": [
                         "query/query-cache/query-cache",
-                        "query/query-cache/sql-cache-manual",
-                        "query/query-cache/partition-cache-manual"
+                        "query/query-cache/sql-cache-manual"
                     ]
                 },
                 {
@@ -213,7 +213,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Join Optimization",
+                    "label": "Join Queries",
                     "items": [
                         "query/join-optimization/doris-join-optimization",
                         "query/join-optimization/bucket-shuffle-join",
@@ -224,7 +224,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Duplicate",
+                    "label": "Duplicating Query Results",
                     "items": [
                         "query/duplicate/orthogonal-bitmap-manual",
                         "query/duplicate/using-hll"
@@ -233,7 +233,7 @@
                 "query/high-concurrent-point-query",
                 {
                     "type": "category",
-                    "label": "Query Analysis",
+                    "label": "Analyzing Query",
                     "items": [
                         "query/query-analysis/get-profile",
                         "query/query-analysis/query-profile",
@@ -243,7 +243,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "UDF",
+                    "label": "User Defined Functions",
                     "items": [
                         "query/udf/java-user-defined-function",
                         "query/udf/remote-user-defined-function"
@@ -258,25 +258,27 @@
                 "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Data Lake Analytics",
+                    "label": "Analyzing Data Lake",
                     "items": [
                         "lakehouse/datalake-analytics/hive",
                         "lakehouse/datalake-analytics/hudi",
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
-                        "lakehouse/datalake-analytics/dlf"
+                        "lakehouse/datalake-analytics/dlf",
+                        "lakehouse/datalake-analytics/tpch",
+                        "lakehouse/datalake-analytics/tpcds"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Data Lake Building",
+                    "label": "Building Data Lake",
                     "items": [
                         "lakehouse/datalake-building/hive-build"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Database Analytics",
+                    "label": "Analyzing Database",
                     "items": [
                         "lakehouse/database/es",
                         "lakehouse/database/jdbc",
@@ -292,11 +294,11 @@
         },
         {
             "type": "category",
-            "label": "Admin Manual",
+            "label": "Managing Doris",
             "items": [
                 {
                     "type": "category",
-                    "label": "Cluster Management",
+                    "label": "Managing Cluster",
                     "items": [
                         "admin-manual/cluster-management/upgrade",
                         "admin-manual/cluster-management/elastic-expansion",
@@ -306,7 +308,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Data Admin",
+                    "label": "Managing Data",
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
@@ -317,16 +319,18 @@
                 },
                 {
                     "type": "category",
-                    "label": "Resource Admin",
+                    "label": "Managing Resource",
                     "items": [
                         "admin-manual/resource-admin/workload-group",
+                        "admin-manual/resource-admin/workload-policy",
+                        "admin-manual/resource-admin/workload-system-table",
                         "admin-manual/resource-admin/multi-tenant",
                         "admin-manual/resource-admin/compute-node"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Query Admin",
+                    "label": "Managing Query",
                     "items": [
                         "admin-manual/query-admin/sql-interception",
                         "admin-manual/query-admin/kill-query"
@@ -334,7 +338,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "User Privilege and Ldap",
+                    "label": "Managing User Privilege",
                     "items": [
                         "admin-manual/auth/authentication-and-authorization",
                         "admin-manual/auth/ldap",
@@ -345,7 +349,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Memory Management",
+                    "label": "Managing Memory",
                     "items": [
                         "admin-manual/memory-management/memory-tracker",
                         "admin-manual/memory-management/memory-limit-exceeded-analysis",
@@ -354,7 +358,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Maintenance and Monitor",
+                    "label": "Maintenance",
                     "items": [
                         {
                             "type": "category",
@@ -377,7 +381,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Config",
+                    "label": "Managing Configuration",
                     "items": [
                         "admin-manual/config/config-dir",
                         "admin-manual/config/fe-config",
@@ -506,7 +510,7 @@
         },
         {
             "type": "category",
-            "label": "SQL Manual",
+            "label": "SQL Reference",
             "items": [
                 {
                     "type": "category",
@@ -755,8 +759,8 @@
                                     "type": "category",
                                     "label": "Fuzzy Match",
                                     "items": [
-                                        "sql-manual/sql-functions/string-functions/like/like",
-                                        "sql-manual/sql-functions/string-functions/like/not-like"
+                                        "sql-manual/sql-functions/string-functions/fuzzy-match/like",
+                                        "sql-manual/sql-functions/string-functions/fuzzy-match/not-like"
                                     ]
                                 },
                                 {
@@ -864,7 +868,6 @@
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-and-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-and-not-count",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-union-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-xor-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-or-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-contains",
@@ -874,10 +877,6 @@
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-min",
                                 "sql-manual/sql-functions/bitmap-functions/intersect-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-intersect",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-intersect-count",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-expr-calculate",
-                                "sql-manual/sql-functions/bitmap-functions/orthogonal-bitmap-expr-calculate-count",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-hash64",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-from-base64",
                                 "sql-manual/sql-functions/bitmap-functions/bitmap-to-base64",
@@ -1038,7 +1037,8 @@
                                 "sql-manual/sql-functions/table-functions/active_queries",
                                 "sql-manual/sql-functions/table-functions/jobs",
                                 "sql-manual/sql-functions/table-functions/mv_infos",
-                                "sql-manual/sql-functions/table-functions/tasks"
+                                "sql-manual/sql-functions/table-functions/tasks",
+                                "sql-manual/sql-functions/table-functions/query"
                             ]
                         },
                         {
@@ -1227,7 +1227,6 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT",
-                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-EXTERNAL-TABLE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-INDEX",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-VIEW",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-MATERIALIZED-VIEW",
@@ -1500,9 +1499,11 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",
                 "releasenotes/release-2.1.0",
+                "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",
                 "releasenotes/release-2.0.8",
                 "releasenotes/release-2.0.7",

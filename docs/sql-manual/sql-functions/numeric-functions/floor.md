@@ -27,8 +27,16 @@ under the License.
 ### description
 #### Syntax
 
-`BIGINT floor(DOUBLE x)`
-Returns the largest integer value less than or equal to `x`.
+`T floor(T x[, d])`
+
+If not specified `d`: returns the largest integer value less than or equal to `x`, which is **the most common usage**.
+Otherwise, returns the largest round number that is less than or equal to `x` and flowing the rules:
+
+If `d` is specified as literal:  
+`d` = 0: just like without `d`
+`d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
+
+Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
 
 :::tip
 Another alias for this function is `dfloor`.
@@ -55,6 +63,24 @@ mysql> select floor(-10.3);
 +--------------+
 |          -11 |
 +--------------+
+mysql> select floor(123.45, 1), floor(123.45), floor(123.45, 0), floor(123.45, -1);
++------------------+---------------+------------------+-------------------+
+| floor(123.45, 1) | floor(123.45) | floor(123.45, 0) | floor(123.45, -1) |
++------------------+---------------+------------------+-------------------+
+|            123.4 |           123 |              123 |               120 |
++------------------+---------------+------------------+-------------------+
+mysql> SELECT number
+    -> , floor(number * 2.5, number - 1) AS f_decimal_column
+    -> , floor(number * 2.5, 0) AS f_decimal_literal
+    -> , floor(cast(number * 2.5 AS DOUBLE), number - 1) AS f_double_column
+    -> , floor(cast(number * 2.5 AS DOUBLE), 0) AS f_double_literal
+    -> FROM test_enhanced_round
+    -> WHERE rid = 1;
++--------+------------------+-------------------+-----------------+------------------+
+| number | f_decimal_column | f_decimal_literal | f_double_column | f_double_literal |
++--------+------------------+-------------------+-----------------+------------------+
+|      1 |              2.0 |                 2 |               2 |                2 |
++--------+------------------+-------------------+-----------------+------------------+
 ```
 
 ### keywords

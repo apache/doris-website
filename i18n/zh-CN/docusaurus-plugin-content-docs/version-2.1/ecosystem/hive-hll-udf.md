@@ -26,14 +26,14 @@ under the License.
 
 # Hive HLL UDF
 
- Hive HLL UDF 提供了在 hive 表中生成 HLL 运算等 UDF，Hive 中的 HLL 与 Doris HLL 完全一致 ，Hive 中的 HLL 可以通过 Spark HLL Load 导入 Doris 。关于 HLL 更多介绍可以参考：[使用 HLL 近似去重](../advanced/using-hll.md)
+ Hive HLL UDF 提供了在 hive 表中生成 HLL 运算等 UDF，Hive 中的 HLL 与 Doris HLL 完全一致，Hive 中的 HLL 可以通过 Spark HLL Load 导入 Doris。关于 HLL 更多介绍可以参考：[使用 HLL 近似去重](../query/duplicate/using-hll.md)
 
  函数简介：
   1. UDAF
  
     · to_hll：聚合函数，返回一个 Doris Hll 列，类似于 to_bitmap 函数
  
-    · hll_union：聚合函数，功能同 Doris 的BE同名函数，计算分组的并集 ，返回一个 Doris HLL 列，类似于bitmap_union 函数
+    · hll_union：聚合函数，功能同 Doris 的 BE 同名函数，计算分组的并集，返回一个 Doris HLL 列，类似于 bitmap_union 函数
 
   2. UDF
 
@@ -41,11 +41,11 @@ under the License.
 
  主要目的：
   1. 减少数据导入 Doris 时间 , 除去了构建字典、HLL 预聚合等流程；
-  2. 节省 Hive 存储 ，使用 HLL 对数据压缩 ，极大减少了存储成本，相对于 Bitmap 的统计更加节省存储；
-  3. 提供在 Hive 中 HLL 的灵活运算：并集、基数统计 ，计算后的 HLL 也可以直接导入 Doris；
+  2. 节省 Hive 存储，使用 HLL 对数据压缩，极大减少了存储成本，相对于 Bitmap 的统计更加节省存储；
+  3. 提供在 Hive 中 HLL 的灵活运算：并集、基数统计，计算后的 HLL 也可以直接导入 Doris；
  
  注意事项：
- HLL统计为近似计算有一定误差，大概 1%~2% 左右。
+ HLL 统计为近似计算有一定误差，大概 1%~2% 左右。
 
 ## 使用方法
 
@@ -79,26 +79,26 @@ insert into hive_table select 3, 'c', 'd', 34567;
 
 ### Hive HLL UDF 使用：
 
-Hive HLL UDF 需要在 Hive/Spark 中使用，首先需要编译fe得到hive-udf.jar。
-编译准备工作：如果进行过ldb源码编译可直接编译fe，如果没有进行过ldb源码编译，则需要手动安装thrift，可参考：[FE开发环境搭建](/community/developer-guide/fe-idea-dev.md) 中的编译与安装
+Hive HLL UDF 需要在 Hive/Spark 中使用，首先需要编译 fe 得到 hive-udf.jar。
+编译准备工作：如果进行过 ldb 源码编译可直接编译 fe，如果没有进行过 ldb 源码编译，则需要手动安装 thrift，可参考：[FE 开发环境搭建](https://doris.apache.org/zh-CN/community/developer-guide/fe-idea-dev/) 中的编译与安装
 
 ```sql
---clone doris源码
+--clone doris 源码
 git clone https://github.com/apache/doris.git
 cd doris
 git submodule update --init --recursive
 
---安装thrift，已安装可略过
---进入fe目录
+--安装 thrift，已安装可略过
+--进入 fe 目录
 cd fe
 
---执行maven打包命令（fe的子module会全部打包）
+--执行 maven 打包命令（fe 的子 module 会全部打包）
 mvn package -Dmaven.test.skip=true
---也可以只打hive-udf module
+--也可以只打 hive-udf module
 mvn package -pl hive-udf -am -Dmaven.test.skip=true
 
--- 打包编译完成进入hive-udf目录会有target目录，里面就会有打包完成的hive-udf.jar包
--- 需要将编译好的 hive-udf.jar 包上传至 HDFS ，这里以传至hdfs的根目录为示例：
+-- 打包编译完成进入 hive-udf 目录会有 target 目录，里面就会有打包完成的 hive-udf.jar 包
+-- 需要将编译好的 hive-udf.jar 包上传至 HDFS，这里以传至 hdfs 的根目录为示例：
 hdfs dfs -put hive-udf/target/hive-udf.jar /
 
 ```
@@ -106,19 +106,19 @@ hdfs dfs -put hive-udf/target/hive-udf.jar /
 下面进入 Hive 中进行 SQL 语句操作：
 
 ```sql
--- 加载hive hll udf jar包，根据实际情况更改 hostname 和 port  
+-- 加载 hive hll udf jar 包，根据实际情况更改 hostname 和 port  
 add jar hdfs://hostname:port/hive-udf.jar;
 
--- 创建UDAF函数
+-- 创建 UDAF 函数
 create temporary function to_hll as 'org.apache.doris.udf.ToHllUDAF' USING JAR 'hdfs://hostname:port/hive-udf.jar';
 create temporary function hll_union as 'org.apache.doris.udf.HllUnionUDAF' USING JAR 'hdfs://hostname:port/hive-udf.jar';
 
 
--- 创建UDF函数
+-- 创建 UDF 函数
 create temporary function hll_cardinality as 'org.apache.doris.udf.HllCardinalityUDF' USING JAR 'hdfs://node:9000/hive-udf.jar';
 
 
--- 例子：通过 to_hll 这个UDAF进行聚合生成 hll 写入 Hive HLL 表
+-- 例子：通过 to_hll 这个 UDAF 进行聚合生成 hll 写入 Hive HLL 表
 insert into hive_hll_table
 select 
     k1,
@@ -143,7 +143,7 @@ select k1, k2, k3, hll_cardinality(uuid) from hive_hll_table;
 | 3   | c   | d   | 1    |
 +-----+-----+-----+------+
 
--- 例子：hll_union 用于计算分组后的 hll 并集，将返回3行
+-- 例子：hll_union 用于计算分组后的 hll 并集，将返回 3 行
 select k1, hll_union(uuid) from hive_hll_table group by k1;
 
 -- 例子：也可以合并后继续统计
@@ -163,7 +163,7 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 <version dev>
 
-### 方法一：Catalog （推荐）
+### 方法一：Catalog（推荐）
 
 </version>
 
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
 -- 然后可以沿用前面的步骤基于普通表使用 to_hll 函数往 hive_hll_table 插入数据，这里不再赘述
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/multi-catalog/hive)
+2. [在 Doris 中创建 Catalog](../lakehouse/datalake-analytics/hive.md)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -225,7 +225,7 @@ select *, hll_to_base64(uuid) from doris_hll_table;
 |    3 | c    | d    | NULL | AQFYbJB5VpNBhg==    |
 +------+------+------+------+---------------------+
 
--- 也可以进一步使用Doris原生的 HLL 函数进行统计，可以看到和前面在 Hive 中统计的结果一致
+-- 也可以进一步使用 Doris 原生的 HLL 函数进行统计，可以看到和前面在 Hive 中统计的结果一致
 select k3, hll_cardinality(hll_union(uuid)) from doris_hll_table group by k3;
 +------+----------------------------------+
 | k3   | hll_cardinality(hll_union(uuid)) |
@@ -248,4 +248,4 @@ select k3, hll_cardinality(hll_union(hll_from_base64(uuid))) from hive.hive_test
 
 ### 方法二：Spark Load
 
- 详见: [Spark Load](../data-operate/import/import-way/spark-load-manual.md) -> 基本操作  -> 创建导入 (示例3：上游数据源是hive binary类型情况)
+ 详见：[Spark Load](https://doris.apache.org/zh-CN/docs/1.2/data-operate/import/import-way/spark-load-manual) -> 基本操作  -> 创建导入 (示例 3：上游数据源是 hive binary 类型情况)

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Database Connect",
+    "title": "Connecting to Database",
     "language": "en"
 }
 ---

@@ -188,7 +188,7 @@ After compiling, you can see the datax.tar.gz package under `datax/target/Datax`
 
 * **loadProps**
 
-  - Description: The request parameter of StreamLoad. For details, refer to the StreamLoad introduction page. [Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/stream-load-manual)
+  - Description: The request parameter of StreamLoad. For details, refer to the StreamLoad introduction page. [Stream load - Apache Doris](https://doris.apache.org/docs/data-operate/import/stream-load-manual)
 
     This includes the imported data format: format, etc. The imported data format defaults to csv, which supports JSON. For details, please refer to the type conversion section below, or refer to the official information of Stream load above.
 
@@ -312,7 +312,7 @@ my_import.json
 >1. Here we use JSON format to import data
 >2. `line_delimiter` defaults to a newline character, which may conflict with the value in the data, we can use some special characters or invisible characters to avoid import errors
 >3. strip_outer_array : Represents multiple rows of data in a batch of imported data. Doris will expand the array when parsing, and then parse each Object in it as a row of data in turn.
->4. For more parameters of Stream load, please refer to [Stream load document]([Stream load - Apache Doris](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way /stream-load-manual))
+>4. For more parameters of Stream load, please refer to [Stream load document]([Stream load - Apache Doris](https://doris.apache.org/docs/data-operate/import/stream-load-manual))
 >5. If it is in CSV format, we can use it like this
 >
 >```json
@@ -381,13 +381,13 @@ Wed Nov 16 14:29:04 GMT+08:00 2022 WARN: Establishing SSL connection without ser
 2022-11-16 14:29:04.205 [job-0] INFO  JobContainer - PerfTrace not enable!
 2022-11-16 14:29:04.206 [job-0] INFO  StandAloneJobContainerCommunicator - Total 2 records, 214 bytes | Speed 21B/s, 0 records/s | Error 0 records, 0 bytes |  All Task WaitWriterTime 0.000s |  All Task WaitReaderTime 0.000s | Percentage 100.00%
 2022-11-16 14:29:04.206 [job-0] INFO  JobContainer - 
-任务启动时刻                    : 2022-11-16 14:28:53
-任务结束时刻                    : 2022-11-16 14:29:04
-任务总计耗时                    :                 10s
-任务平均流量                    :               21B/s
-记录写入速度                    :              0rec/s
-读出记录总数                    :                   2
-读写失败总数                    :                   0
+Task Start Time                        : 2022-11-16 14:28:53
+Task End Time                          : 2022-11-16 14:29:04
+Total Task Duration                    : 10s
+Average Task Throughput                : 21B/s
+Record Write Speed                     : 0rec/s
+Total Records Read                     : 2
+Total Read/Write Failures              : 0
 
 ```
 

@@ -106,7 +106,7 @@ output.doris:
 | table          | 表名                                                                                            |             |
 | label_prefix   | 导入标识前缀，最终生成的标识为 *{label\_prefix}\_{db}\_{table}\_{time_stamp}*                                | doris_beats |
 | line_delimiter | 用于指定导入数据中的换行符，可以使用做多个字符的组合作为换行符。                                                              | \n          |
-| headers        | 用户可以通过 headers 传入 [stream-load 导入参数](../data-operate/import/import-way/stream-load-manual.md) |             |
+| headers        | 用户可以通过 headers 传入 [stream-load 导入参数](../data-operate/import/stream-load-manual.md) |             |
 
 Beats 配置：
 

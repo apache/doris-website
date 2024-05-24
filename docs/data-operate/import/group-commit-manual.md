@@ -397,7 +397,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
   * Currently, WAL files are stored only on one disk of one BE. If the BE's disk is damaged or the file is mistakenly deleted, it may result in data loss.
 
-  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../sql-manual/sql-reference/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
+  * When decommissioning a BE node, please use the [`DECOMMISSION`](../../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-DECOMMISSION-BACKEND) command to safely decommission the node. This prevents potential data loss if the WAL files are not processed before the node is taken offline.
 
   * For async_mode group commit writes, to protect disk space, it switches to sync_mode under the following conditions:
 

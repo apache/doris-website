@@ -69,14 +69,13 @@ LDAP 组授权是将 LDAP 中的 group 映射到 Doris 中的 Role，如果用�
 ## 启用 LDAP 认证
 
 ### server 端配置
+在`fe/conf/fe.conf` 文件中配置认证方式为ldap `authentication_type=ldap`。
 
-需要在 `fe/conf/ldap.conf` 文件中配置 LDAP 基本信息，另有 LDAP 管理员密码需要使用 sql 语句进行设置。
+在 `fe/conf/ldap.conf` 文件中配置 LDAP 基本信息，
+
+另有 LDAP 管理员密码需要使用 sql 语句进行设置。
 
 #### 配置 `fe/conf/ldap.conf` 文件
-
-- `ldap_authentication_enabled = false`
-
-  设置值为“true”启用 LDAP 验证；当值为“false”时，不启用 LDAP 验证，该配置文件的其他配置项都无效。
 
 - `ldap_host = 127.0.0.1`
 
@@ -263,7 +262,7 @@ member: uid=jack,ou=aidp,dc=domain,dc=com
 
 ### LDAP 信息缓存
 
-为了避免频繁访问 LDAP 服务，Doris 会将 LDAP 信息缓存到内存中，可以通过 ldap.conf 中的`ldap_user_cache_timeout_s`配置项指定 LDAP 用户的缓存时间，默认为 12 小时；在修改了 LDAP 服务中的信息或者修改了 Doris 中 LDAP 用户组对应的 Role 权限后，可能因为缓存而没有及时生效，可以通过 refresh ldap 语句刷新缓存，详细查看[REFRESH-LDAP](../../sql-manual/sql-reference/Utility-Statements/REFRESH-LDAP.md)。
+为了避免频繁访问 LDAP 服务，Doris 会将 LDAP 信息缓存到内存中，可以通过 ldap.conf 中的`ldap_user_cache_timeout_s`配置项指定 LDAP 用户的缓存时间，默认为 12 小时；在修改了 LDAP 服务中的信息或者修改了 Doris 中 LDAP 用户组对应的 Role 权限后，可能因为缓存而没有及时生效，可以通过 refresh ldap 语句刷新缓存，详细查看[REFRESH-LDAP](../../sql-manual/sql-statements/Utility-Statements/REFRESH-LDAP.md)。
 
 ## LDAP 验证的局限
 

@@ -73,19 +73,19 @@ Stream Load 导入使用的标签前缀。在 2pc 场景下，需要全局唯一
 
 `sink.enable-2pc [bool]`
 
-是否启用两阶段提交 (2pc)，默认为 true，以确保 exact - once 语义。关于两阶段提交，请参考[这里](../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD)
+是否启用两阶段提交 (2pc)，默认为 true，以确保 exact - once 语义。关于两阶段提交，请参考[这里](../data-operate/import/stream-load-manual.md)
 
 `sink.enable-delete [bool]`
 
 是否启用删除。该选项需要 Doris 表开启批量删除功能 (默认开启 0.15+ 版本)，且只支持 Unique 表模型。你可以在这个链接获得更多细节：
 
-[批量删除](../data-operate/delete/batch-delete-manual)
+[批量删除](../data-operate/delete/batch-delete-manual.md)
 
 `doris.config [map]`
 
 Stream Load `data_desc` 的参数，你可以在这个链接获得更多细节：
 
-[更多 Stream Load 参数](../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD.md)
+[更多 Stream Load 参数](../data-operate/import/stream-load-manual.md)
 
 ### 使用示例
 
@@ -189,7 +189,7 @@ flush 间隔时间 (毫秒)，超过该时间后异步线程将 缓存中数据�
 
 Stream load 的导入参数。例如:'doris.column_separator' = ', '等
 
-[更多 Stream Load 参数配置](../data-operate/import/stream-load-manual)
+[更多 Stream Load 参数配置](../data-operate/import/stream-load-manual.md)
 
 **Examples**
 

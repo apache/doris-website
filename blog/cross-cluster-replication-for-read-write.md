@@ -4,8 +4,6 @@
     'summary': "Cross-cluster replication (CCR) in Apache Doris is proven to be fast, stable, and easy to use. It secures a real-time data synchronization latency of 1 second.",
     'date': '2024-04-25',
     'author': 'Apache Doris',
-    'picked': "true",
-    'order': "1",
     'tags': ['Best Practice'],
     "image": '/images/ccr-for-read-write-separation.jpg'
 }

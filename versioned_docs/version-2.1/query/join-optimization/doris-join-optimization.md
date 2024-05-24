@@ -32,15 +32,15 @@ As a distributed MPP database, data shuffle needs to be performed during the Joi
 
 ## Doris Shuffle way
 
-1. Doris supports 4 Shuffle methods
+Doris supports 4 Shuffle methods
 
-    1. BroadCast Join
+1. BroadCast Join
 
-        It requires the full data of the right table to be sent to the left table, that is, each node participating in Join has the full data of the right table, that is, T(R).
+    It requires the full data of the right table to be sent to the left table, that is, each node participating in Join has the full data of the right table, that is, T(R).
 
-        Its applicable scenarios are more general, and it can support Hash Join and Nest loop Join at the same time, and its network overhead is N \* T(R).
+    Its applicable scenarios are more general, and it can support Hash Join and Nest loop Join at the same time, and its network overhead is N \* T(R).
 
-    ![image-20220523152004731](/images/join/image-20220523152004731.png)
+    ![BroadCast Join](/images/broadcast-join.png)
 
     The data in the left table is not moved, and the data in the right table is sent to the scanning node of the data in the left table.
 
@@ -50,7 +50,7 @@ As a distributed MPP database, data shuffle needs to be performed during the Joi
 
     Its network overhead is: T(S) + T(R), but it can only support Hash Join, because it also calculates buckets according to the conditions of Join.
 
-    ![image-20220523151902368](/images/join/image-20220523151902368.png)
+    ![Shuffle Join](/images/shuffle-join.png)
 
     The left and right table data are sent to different partition nodes according to the partition, and the calculated demerits are sent.
 
@@ -60,7 +60,7 @@ As a distributed MPP database, data shuffle needs to be performed during the Joi
 
     Its network overhead is: T(R) is equivalent to only Shuffle the data in the right table.
 
-    ![image-20220523151653562](/images/join/image-20220523151653562.png)
+    ![Bucket Shuffle Join](/images/bucket-shuffle-join.png)
 
     The data in the left table does not move, and the data in the right table is sent to the node that scans the table in the left table according to the result of the partition calculation.
 
@@ -68,7 +68,7 @@ As a distributed MPP database, data shuffle needs to be performed during the Joi
 
     It is similar to Bucket Shuffle Join, which means that the data has been shuffled according to the preset Join column scenario when data is imported. Then the join calculation can be performed directly without considering the Shuffle problem of the data during the actual query.
 
-    ![image-20220523151619754](/images/join/image-20220523151619754.png)
+    ![Colocation Join](/images/colocation-join.png)
 
     The data has been pre-partitioned, and the Join calculation is performed directly locally
 
@@ -96,12 +96,15 @@ If the left table is a large table and the right table is a small table, then us
 Currently Doris supports three types of RuntimeFilter
 
 -   One is IN-IN, which is well understood, and pushes a hashset down to the data scanning node.
+
 -   The second is BloomFilter, which uses the data of the hash table to construct a BloomFilter, and then pushes the BloomFilter down to the scanning node that queries the data. .
+
 -   The last one is MinMax, which is a Range range. After the Range range is determined by the data in the right table, it is pushed down to the data scanning node.
 
 There are two requirements for the applicable scenarios of Runtime Filter:
 
 -   The first requirement is that the right table is large and the left table is small, because building a Runtime Filter needs to bear the computational cost, including some memory overhead.
+
 -   The second requirement is that there are few results from the join of the left and right tables, indicating that this join can filter out most of the data in the left table.
 
 When the above two conditions are met, turning on the Runtime Filter can achieve better results
@@ -112,10 +115,13 @@ Delayed materialization is simply like this: if you need to scan three columns A
 
 ### Runtime Filter Type
 
--   Doris provides three different Runtime Filter types:
-    -   The advantage of **IN** is that the effect filtering effect is obvious and fast. Its shortcomings are: First, it only applies to BroadCast. Second, when the right table exceeds a certain amount of data, it will fail. The current Doris configuration is 1024, that is, if the right table is larger than 1024, the Runtime Filter of IN will directly failed.
-    -   The advantage of **MinMax** is that the overhead is relatively small. Its disadvantage is that it has a relatively good effect on numeric columns, but basically no effect on non-numeric columns.
-    -   The feature of **Bloom Filter** is that it is universal, suitable for various types, and the effect is better. The disadvantage is that its configuration is more complicated and the calculation is high.
+Doris provides three different Runtime Filter types:
+
+-   The advantage of **IN** is that the effect filtering effect is obvious and fast. Its shortcomings are: First, it only applies to BroadCast. Second, when the right table exceeds a certain amount of data, it will fail. The current Doris configuration is 1024, that is, if the right table is larger than 1024, the Runtime Filter of IN will directly failed.
+
+-   The advantage of **MinMax** is that the overhead is relatively small. Its disadvantage is that it has a relatively good effect on numeric columns, but basically no effect on non-numeric columns.
+
+-   The feature of **Bloom Filter** is that it is universal, suitable for various types, and the effect is better. The disadvantage is that its configuration is more complicated and the calculation is high.
 
 ## Join Reader
 
@@ -123,20 +129,26 @@ Once the database involves multi-table Join, the order of Join has a great impac
 
 Next, look at the picture on the right and adjust the order of Join. Join the a table with the c table first, the intermediate result generated is only 100, and then finally join with the b table for calculation. The final join result is the same, but the intermediate result it generates has a 20x difference, which results in a big performance diff.
 
-![image-20220523152639123](/images/join/image-20220523152639123.png)
+![Join Reorder](/images/join-reorder.png)
 
--   Doris currently supports the rule-based Join Reorder algorithm. Its logic is:
-    -   Make joins with large tables and small tables as much as possible, and the intermediate results it generates are as small as possible.
-    -   Put the conditional join table forward, that is to say, try to filter the conditional join table
-    -   Hash Join has higher priority than Nest Loop Join, because Hash Join itself is much faster than Nest Loop Join.
+Doris currently supports the rule-based Join Reorder algorithm. Its logic is:
+
+-   Make joins with large tables and small tables as much as possible, and the intermediate results it generates are as small as possible.
+
+-   Put the conditional join table forward, that is to say, try to filter the conditional join table
+
+-   Hash Join has higher priority than Nest Loop Join, because Hash Join itself is much faster than Nest Loop Join.
 
 ## Doris Join optimization method
 
 Doris Join tuning method:
 
 -   Use the Profile provided by Doris itself to locate the bottleneck of the query. Profile records various information in Doris' entire query, which is first-hand information for performance tuning. .
+
 -   Understand the Join mechanism of Doris, which is also the content shared with you in the second part. Only by knowing why and understanding its mechanism can we analyze why it is slow.
+
 -   Use Session variables to change some behaviors of Join, so as to realize the tuning of Join.
+
 -   Check the Query Plan to analyze whether this tuning is effective.
 
 The above 4 steps basically complete a standard Join tuning process, and then it is to actually query and verify it to see what the effect is.
@@ -209,7 +221,11 @@ The following figure is an SQL statement after the rewrite is completed. A Join 
 Finally, we summarize four suggestions for optimization and tuning of Doris Join:
 
 -   The first point: When doing Join, try to select columns of the same type or simple type. If the same type is used, reduce its data cast, and the simple type itself joins the calculation quickly.
+
 -   The second point: try to choose the Key column for Join. The reason is also introduced in the Runtime Filter. The Key column can play a better effect on delayed materialization.
+
 -   The third point: Join between large tables, try to make it Co-location, because the network overhead between large tables is very large, if you need to do Shuffle, the cost is very high.
+
 -   Fourth point: Use Runtime Filter reasonably, which is very effective in scenarios with high join filtering rate. But it is not a panacea, but has certain side effects, so it needs to be switched according to the granularity of specific SQL.
+
 -   Finally: When it comes to multi-table Join, it is necessary to judge the rationality of Join. Try to ensure that the left table is a large table and the right table is a small table, and then Hash Join will be better than Nest Loop Join. If necessary, you can use SQL Rewrite to adjust the order of Join using Hint.

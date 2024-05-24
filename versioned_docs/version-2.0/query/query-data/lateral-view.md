@@ -31,7 +31,7 @@ Used in conjunction with generator functions such as `EXPLODE`, will generate a 
 ## Grammar
 
 ```sql
-LATERAL VIEW  generator_function ( expression [, ...] ) [ table_identifier ] AS column_identifier [, ...]
+LATERAL VIEW  generator_function ( expression [, ...] ) table_identifier AS column_identifier [, ...]
 ```
 
 ## Parameters
@@ -42,7 +42,7 @@ LATERAL VIEW  generator_function ( expression [, ...] ) [ table_identifier ] AS 
 
 - table_identifier
 
-   Alias for `generator_function`, which is optional.
+   Alias for `generator_function`.
 
 - column_identifier
 

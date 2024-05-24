@@ -26,7 +26,7 @@ under the License.
 
 # Hive HLL UDF
 
- The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.：[Approximate Deduplication Using HLL](../advanced/using-hll.md)
+ The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL. Hive HLL can be imported into Doris through Spark HLL Load. For more information about HLL, please refer to Using HLL for Approximate Deduplication.:[Approximate Deduplication Using HLL](../query/duplicate/using-hll.md)
 
  Function Introduction:
   1. UDAF
@@ -39,7 +39,7 @@ under the License.
 
     · hll_cardinality: Returns the number of distinct elements added to the HLL, similar to the bitmap_count function
 
- Main Purpose：
+ Main Purpose:
   1. Reduce data import time to Doris by eliminating the need for dictionary construction and HLL pre-aggregation
   2. Save Hive storage by compressing data using HLL, significantly reducing storage costs compared to Bitmap statistics
   3. Provide flexible HLL operations in Hive, including union and cardinality statistics, and allow the resulting HLL to be directly imported into Doris
@@ -81,7 +81,7 @@ insert into hive_table select 3, 'c', 'd', 34567;
 ### Use Hive HLL UDF:
 
 Hive HLL UDF needs to be used in Hive/Spark. First, compile the FE to obtain the hive-udf.jar file.
-Compilation preparation: If you have compiled the ldb source code, you can directly compile the FE. If not, you need to manually install thrift, refer to [Setting Up Dec Env for FE - IntelliJ IDEA](/community/developer-guide/fe-idea-dev.md) for compilation and installation.
+Compilation preparation: If you have compiled the ldb source code, you can directly compile the FE. If not, you need to manually install thrift, refer to [Setting Up Dec Env for FE - IntelliJ IDEA](https://doris.apache.org/community/developer-guide/fe-idea-dev/) for compilation and installation.
 
 ```sql
 -- Clone the Doris source code
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `hive_hll_table`(
 -- then reuse the previous steps to insert data from a normal table into it using the to_hll function
 ```
 
-2. [Create a Doris catalog](../lakehouse/multi-catalog/hive)
+2. [Create a Doris catalog](../lakehouse/datalake-analytics/hive.md)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -249,4 +249,4 @@ select k3, hll_cardinality(hll_union(hll_from_base64(uuid))) from hive.hive_test
 
 ### Method 2: Spark Load
 
- See details: [Spark Load](../data-operate/import/import-way/spark-load-manual.md) -> Basic operation -> Creating Load (Example 3: when the upstream data source is hive binary type table)
+ See details: [Spark Load](https://doris.apache.org/zh-CN/docs/1.2/data-operate/import/import-way/spark-load-manual) -> Basic operation -> Creating Load (Example 3: when the upstream data source is hive binary type table)

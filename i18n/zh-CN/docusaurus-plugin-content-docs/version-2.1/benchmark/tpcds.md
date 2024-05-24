@@ -40,18 +40,18 @@ TPC-DS 的设计目标是模拟现实世界中的复杂决策支持工作负载�
 
 | 硬件   | 配置说明                                 |
 |------|--------------------------------------|
-| 机器数量 | 4 台腾讯云主机（1个FE，3个BE）                  |
-| CPU  | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48核 |
+| 机器数量 | 4 台腾讯云主机（1 个 FE，3 个 BE）                  |
+| CPU  | AMD EPYC™ Milan(2.55GHz/3.5GHz)  48 核 |
 | 内存   | 192G                                 |
 | 网络带宽 | 21Gbps                               |
 | 磁盘   | 高性能云硬盘                               |
 
 ## 2. 软件环境
 
-- Doris部署 3BE 1FE
+- Doris 部署 3BE 1FE
 - 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
 - 操作系统版本：Ubuntu 20.04 LTS (Focal Fossa)
-- Doris 软件版本： Apache Doris 2.1.1-rc03、 Apache Doris 2.0.6
+- Doris 软件版本：Apache Doris 2.1.1-rc03、Apache Doris 2.0.6
 - JDK：openjdk version "1.8.0_131"
 
 ## 3. 测试数据量
@@ -85,9 +85,9 @@ TPC-DS 的设计目标是模拟现实世界中的复杂决策支持工作负载�
 | ship_mode              | 20            |
 | customer               | 12,000,000    |
 
-## 4. 测试SQL
+## 4. 测试 SQL
 
-TPC-DS 99 个测试查询语句 ： [TPC-DS-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpcds-tools/queries/sf1000)
+TPC-DS 99 个测试查询语句： [TPC-DS-Query-SQL](https://github.com/apache/doris/tree/master/tools/tpcds-tools/queries/sf1000)
 
 
 ## 5. 测试结果
@@ -199,7 +199,7 @@ TPC-DS 99 个测试查询语句 ： [TPC-DS-Query-SQL](https://github.com/apache
 
 ## 6. 环境准备
 
-请先参照 [官方文档](../install/standard-deployment.md) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
+请先参照 [官方文档](../install/cluster-deployment/standard-deployment) 进行 Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
 
 ## 7. 数据准备
 
@@ -219,11 +219,11 @@ sh bin/build-tpcds-tools.sh
 sh bin/gen-tpcds-data.sh -s 1000
 ```
 
-> 注1：通过 `sh gen-tpcds-data.sh -h` 查看脚本帮助。
+> 注 1：通过 `sh gen-tpcds-data.sh -h` 查看脚本帮助。
 >
-> 注2：数据会以 `.dat` 为后缀生成在  `tpcds-data/` 目录下。文件总大小约1000GB。生成时间可能在数分钟到1小时不等。
+> 注 2：数据会以 `.dat` 为后缀生成在  `tpcds-data/` 目录下。文件总大小约 1000GB。生成时间可能在数分钟到 1 小时不等。
 >
-> 注3：默认生成 100G 的标准测试数据集
+> 注 3：默认生成 100G 的标准测试数据集
 
 ### 7.3 建表
 
@@ -279,5 +279,5 @@ sh bin/run-tpcds-queries.sh -s 1000
 
 ### 7.5.2 单个 SQL 执行
 
-你也可以从代码库里获取最新的 SQL 。最新测试查询语句地址：[TPC-DS 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpcds-tools/queries/sf1000)
+你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-DS 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpcds-tools/queries/sf1000)
 

@@ -30,6 +30,10 @@ under the License.
 
 SHOW QUERY PROFILE
 
+:::caution
+Since 2.1.1, this syntax is deprecated. You can still download profile from http://<fe_ip>:<fe_http_port>/QueryProfile
+:::
+
 ### Description
 
 This statement is used to view the tree profile information of the query operation,this function requires the user to open profile settings.

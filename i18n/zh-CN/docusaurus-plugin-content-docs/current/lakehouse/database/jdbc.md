@@ -364,10 +364,15 @@ DROP CATALOG <catalog_name>;
     SELECT * FROM <table_name>;
     ```
 
-### SQL 透传
+## SQL 透传
 
 在 Doris 2.0.3 之前的版本中，用户只能通过 JDBC Catalog 进行查询操作（SELECT）。
+
 在 Doris 2.0.4 版本之后，用户可以通过 `CALL` 命令，对 JDBC 数据源进行 DDL 和 DML 操作。
+
+在 Doris 2.1.3 版本之后，用户可以通过 `query` 表函数，对 JDBC 数据源进行数据查询操作。
+
+### 透传 DDL 和 DML
 
 ```
 CALL EXECUTE_STMT("catalog_name", "raw_stmt_string");
@@ -386,7 +391,25 @@ CALL EXECUTE_STMT(jdbc_catalog", "delete from db1.tbl1 where k1 = 2");
 CALL EXECUTE_STMT(jdbc_catalog", "create table dbl1.tbl2 (k1 int)");
 ```
 
-#### 原理和限制
+### 透传查询
+
+```sql
+query(
+  "catalog" = "catalog_name", 
+  "query" = "select * from db_name.table_name where condition"
+  );
+```
+
+`query` 表函数有两个参数：
+
+- `catalog`： (必填) catalog名称，需要按照catalog的名称填写。
+- `query`： (必填) 需要执行的查询语句。
+
+```sql
+select * from query("catalog" = "jdbc", "query" = "select * from db_name.table_name where condition");
+```
+
+### 原理和限制
 
 通过 `CALL EXECUTE_STMT()` 命令，Doris 会直接将用户编写的 SQL 语句发送给 Catalog 对应的 JDBC 数据源进行执行。因此，这个操作有如下限制：
 
@@ -394,9 +417,11 @@ CALL EXECUTE_STMT(jdbc_catalog", "create table dbl1.tbl2 (k1 int)");
 - SQL 语句中引用的表名建议是全限定名，即 `db.tbl` 这种格式。如果未指定 db，则会使用 JDBC Catalog 的 JDBC url 中指定的 db 名称。
 - SQL 语句中不可引用 JDBC 数据源之外的库表，也不可以引用 Doris 的库表。但可以引用在 JDBC 数据源内的，但是没有同步到 Doris JDBC Catalog 的库表。
 - 执行 DML 语句，无法获取插入、更新或删除的行数，只能获取命令是否执行成功。
-- 只有对 Catalog 有 LOAD 权限的用户，才能执行这个命令。
+- 只有对 Catalog 有 LOAD 权限的用户，才能执行`CALL EXECUTE_STMT()`命令。
+- 只有对 Catalog 有 SELECT 权限的用户，才能执行`query()`表函数。
+- `query` 表函数读取到的的数据，数据类型的支持与所查询的 catalog 类型支持的数据类型一致。
 
-### 时区
+## 时区
 
 由于某些外部数据源的时间类型是带有时区信息的，而 Doris 的时间类型是不带时区信息的，所以在查询外部数据源的时间类型时，需要注意时区的问题。
 
@@ -419,21 +444,6 @@ CALL EXECUTE_STMT(jdbc_catalog", "create table dbl1.tbl2 (k1 int)");
 ### MySQL
 
 #### 创建示例
-
-* mysql 5.7
-
-    ```sql
-    CREATE CATALOG jdbc_mysql PROPERTIES (
-        "type"="jdbc",
-        "user"="root",
-        "password"="123456",
-        "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/demo",
-        "driver_url" = "mysql-connector-java-5.1.49.jar",
-        "driver_class" = "com.mysql.jdbc.Driver"
-    )
-    ```
-
-* mysql 8
 
     ```sql
     CREATE CATALOG jdbc_mysql PROPERTIES (
@@ -638,21 +648,6 @@ CREATE CATALOG jdbc_sqlserve PROPERTIES (
 ### Doris
 
 Jdbc Catalog 也支持连接另一个Doris数据库：
-
-* mysql 5.7 Driver
-
-```sql
-CREATE CATALOG jdbc_doris PROPERTIES (
-    "type"="jdbc",
-    "user"="root",
-    "password"="123456",
-    "jdbc_url" = "jdbc:mysql://127.0.0.1:9030?useSSL=false",
-    "driver_url" = "mysql-connector-java-5.1.49.jar",
-    "driver_class" = "com.mysql.jdbc.Driver"
-)
-```
-
-* mysql 8 Driver
 
 ```sql
 CREATE CATALOG jdbc_doris PROPERTIES (
@@ -919,19 +914,18 @@ CREATE CATALOG `jdbc_db2` PROPERTIES (
 
 推荐使用以下版本的 Driver 连接对应的数据库。其他版本的 Driver 未经测试，可能导致非预期的问题。
 
-|    Source    |                        JDBC Driver Version                        |
-|:------------:|:-----------------------------------------------------------------:|
-|  MySQL 5.x   |                  mysql-connector-java-5.1.49.jar                  |
-|  MySQL 8.x   |                  mysql-connector-java-8.0.25.jar                  |
-|  PostgreSQL  |                       postgresql-42.5.1.jar                       |
-|    Oracle    |                            ojdbc8.jar                             |
-|  SQLServer   |                    mssql-jdbc-11.2.3.jre8.jar                     |
-|    Doris     | mysql-connector-java-5.1.49.jar / mysql-connector-java-8.0.25.jar |
-|  Clickhouse  |                   clickhouse-jdbc-0.4.2-all.jar                   |
-|   SAP HAHA   |                             ngdbc.jar                             |
-| Trino/Presto |            trino-jdbc-389.jar / presto-jdbc-0.280.jar             |
-|  OceanBase   |                    oceanbase-client-2.4.2.jar                     |
-|     DB2      |                         jcc-11.5.8.0.jar                          |
+|    Source    |            JDBC Driver Version             |
+|:------------:|:------------------------------------------:|
+|    MySQL     |      mysql-connector-java-8.0.25.jar       |
+|  PostgreSQL  |           postgresql-42.5.1.jar            |
+|    Oracle    |                 ojdbc8.jar                 |
+|  SQLServer   |         mssql-jdbc-11.2.3.jre8.jar         |
+|    Doris     |      mysql-connector-java-8.0.25.jar       |
+|  Clickhouse  |       clickhouse-jdbc-0.4.2-all.jar        |
+|   SAP HAHA   |                 ngdbc.jar                  |
+| Trino/Presto | trino-jdbc-389.jar / presto-jdbc-0.280.jar |
+|  OceanBase   |         oceanbase-client-2.4.2.jar         |
+|     DB2      |              jcc-11.5.8.0.jar              |
 
 ## 常见问题
 
