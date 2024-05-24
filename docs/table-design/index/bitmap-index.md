@@ -26,7 +26,7 @@ under the License.
 
 Bitmap Index is an index represented by bitmaps, where a bitmap is created for each key value in a column. Compared to other indexes, it occupies very little storage space and is very fast to create and use. However, it has a disadvantage of having a large lock granularity for modification operations, making it unsuitable for frequent updates.
 
-![bitmap index](/images/bitmap-index.png)
+![bitmap index](/images/bitmap-index-example.png)
 
 ## Applicable scenarios
 

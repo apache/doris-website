@@ -29,7 +29,7 @@ under the License.
 
 如下图，bitmap 索引将每个被索引的列的值作为 KEY，使用每个 BIT 表示一行，当这行中包含这个值时，设置为 1，否则设置为 0。
 
-![Bitmap Index](/images/bitmap-index.png)
+![Bitmap Index](/images/bitmap-index-example.png)
 
 ## 适用场景
 
