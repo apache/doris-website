@@ -40,7 +40,7 @@ Doris 提供多种数据导入方案，可以针对不同的数据源进行选�
 | Mysql、PostgreSQL，Oracle，SQLServer | [通过外部表同步数据](../import/insert-into-manual)                                              |
 | 通过 JDBC 导入                         | [使用 JDBC 同步数据](../../lakehouse/database/jdbc)                                          |
 | 导入 JSON 格式数据                     | [JSON 格式数据导入](../import/load-json-format)                                              |
-| AutoMQ                            | [订阅 AutoMQ 数据](../import/automq-load.md)                                                |
+| AutoMQ                            | [订阅 AutoMQ 数据](../../ecosystem/automq-load.md)                                                |
 
 ### 按导入方式划分
 

@@ -41,7 +41,7 @@ Doris 提供多种数据导入方案，可以针对不同的数据源进行选�
 | 通过JDBC导入                          | [使用JDBC同步数据](./import-scenes/jdbc-load.md)               |
 | 导入JSON格式数据                        | [JSON格式数据导入](./import-way/load-json-format.md)           |
 | MySQL Binlog                      | [Binlog Load](./import-way/binlog-load-manual.md)        |
-| AutoMQ                            | [AutoMQ Load](./import-scenes/automq-load.md)            |
+| AutoMQ                            | [AutoMQ Load](../../ecosystem/automq-load.md)            |
 
 ### 按导入方式划分
 

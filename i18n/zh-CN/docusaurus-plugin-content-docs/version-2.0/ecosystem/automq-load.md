@@ -1,6 +1,6 @@
 ---
 {
-  "title": "AutoMQ Load",
+  "title": "AutoMQ 数据导入",
   "language": "zh-CN"
 }
 
@@ -26,7 +26,7 @@ CREATE TABLE automq_db.users (
 
 ) DISTRIBUTED BY hash (id) PROPERTIES ('replication_num' = '1');
 ```
-### 准备 AutoMQ 命令行工具
+### 准备 Kafka 命令行工具
 
 从 [AutoMQ Releases](https://github.com/AutoMQ/automq) 下载最新的 TGZ 包并解压。假设解压目录为 $AUTOMQ_HOME，在本文中将会使用 $AUTOMQ_HOME/bin 下的工具命令来创建主题和生成测试数据。
 

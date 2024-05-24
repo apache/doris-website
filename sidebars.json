@@ -113,8 +113,7 @@
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode",
-                        "data-operate/import/automq-load"
+                        "data-operate/import/load-strict-mode"
                     ]
                 },
                 {
@@ -507,7 +506,8 @@
                         "ecosystem/bi/datagrip",
                         "ecosystem/bi/powerbi"
                     ]
-                }
+                },
+                "ecosystem/automq",
             ]
         },
         {
