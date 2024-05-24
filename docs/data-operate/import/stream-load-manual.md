@@ -60,7 +60,7 @@ When using Stream Load, it is necessary to initiate an import job through the HT
 
 The following figure shows the main flow of Stream load, omitting some import details.
 
-![Stream Load 基本原理](/images/stream-load.png)
+![Basic principles](/images/stream-load.png)
 
 1. The client submits a Stream Load import job request to the FE (Frontend).
 2. The FE randomly selects a BE (Backend) as the Coordinator node, which is responsible for scheduling the import job, and then returns an HTTP redirect to the client.

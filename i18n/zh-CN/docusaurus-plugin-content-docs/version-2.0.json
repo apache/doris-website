@@ -67,7 +67,7 @@
     "message": "数据湖分析",
     "description": "The label for category Data Lake Analytics in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Databas": {
+  "sidebar.docs.category.Analyzing Database": {
     "message": "数据库分析",
     "description": "The label for category Database Analytics.Multi Catalog in sidebar docs"
   },
@@ -143,7 +143,7 @@
     "message": "集群管理",
     "description": "The label for category cluster management in sidebar docs"
   },
-  "sidebar.docs.category.Manging Data": {
+  "sidebar.docs.category.Managing Data": {
     "message": "数据管理",
     "description": "The label for category Manging Data in sidebar docs"
   },

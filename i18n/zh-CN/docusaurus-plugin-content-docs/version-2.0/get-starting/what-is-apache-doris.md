@@ -36,7 +36,7 @@ Apache Doris 如今在中国乃至全球范围内都拥有着广泛的用户群�
 
 如下图所示，数据源经过各种数据集成和加工处理后，通常会入库到实时数据仓库 Apache Doris 和离线湖仓（Hive, Iceberg, Hudi 中），Apache Doris 被广泛应用在以下场景中。
 
-![Apache Doris 的使用场景](/images/doris-scenario.png)
+![Apache Doris 的使用场景](/images/apache-doris-usage-scenarios-pipeline.png)
 
 -   报表分析
 
@@ -63,7 +63,7 @@ Doris **整体架构**如下图所示，Doris 架构非常简单，只有两类�
 
 这两类进程都是可以横向扩展的，单集群可以支持到数百台机器，数十 PB 的存储容量。并且这两类进程通过一致性协议来保证服务的高可用和数据的高可靠。这种高度集成的架构设计极大的降低了一款分布式系统的运维成本。
 
-![整体架构和技术特点](/images/doris-architecture.png)
+![整体架构和技术特点](/images/apache-doris-technical-overview.png)
 
 ### 使用接口
 
@@ -97,12 +97,12 @@ Doris 也支持**强一致的物化视图**，物化视图的更新和选择都�
 
 在**查询引擎**方面，Doris 采用 MPP 的模型，节点间和节点内都并行执行，也支持多个大表的分布式 Shuffle Join，从而能够更好应对复杂查询。
 
-![查询引擎](/images/doris-query-engine.png)
+![查询引擎](/images/apache-doris-query-engine-1.png)
 
 **Doris 查询引擎是向量化**的查询引擎，所有的内存结构能够按照列式布局，能够达到大幅减少虚函数调用、提升 Cache 命中率，高效利用 SIMD 指令的效果。在宽表聚合场景下性能是非向量化引擎的 5-10 倍。
 
 
-![Doris 查询引擎是向量化](/images/doris-query-engine-mpp.png)
+![Doris 查询引擎是向量化](/images/apache-doris-query-engine-2.png)
 
 **Doris 采用了 Adaptive Query Execution 技术，** 可以根据 Runtime Statistics 来动态调整执行计划，比如通过 Runtime Filter 技术能够在运行时生成 Filter 推到 Probe 侧，并且能够将 Filter 自动穿透到 Probe 侧最底层的 Scan 节点，从而大幅减少 Probe 的数据量，加速 Join 性能。Doris 的 Runtime Filter 支持 In/Min/Max/Bloom Filter。
 

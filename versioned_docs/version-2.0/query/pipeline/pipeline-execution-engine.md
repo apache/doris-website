@@ -36,14 +36,14 @@ Its specific design, implementation and effects can be found in [DSIP-027]([DSIP
 
 ## Principle
 
-The current Doris SQL execution engine is designed based on the traditional volcano model, which has the following problems in a single multi-core scenario：
+The current Doris SQL execution engine is designed based on the traditional volcano model, which has the following problems in a single multi-core scenario:
 * Inability to take full advantage of multi-core computing power to improve query performance,**most scenarios require manual setting of parallelism** for performance tuning, which is almost difficult to set in production environments.
 
 * Each instance of a standalone query corresponds to one thread of the thread pool, which introduces two additional problems.
   * Once the thread pool is hit full. **Doris' query engine will enter a pseudo-deadlock** and will not respond to subsequent queries. **At the same time there is a certain probability of entering a logical deadlock** situation: for example, all threads are executing an instance's probe task.
   * Blocking arithmetic will take up thread resources,**blocking thread resources can not be yielded to instances that can be scheduled**, the overall resource utilization does not go up.
 
-* Blocking arithmetic relies on the OS thread scheduling mechanism, **thread switching overhead (especially in the scenario of system mixing)）**
+* Blocking arithmetic relies on the OS thread scheduling mechanism, **thread switching overhead (especially in the scenario of system mixing))**
 
 The resulting set of problems drove Doris to implement an execution engine adapted to the architecture of modern multi-core CPUs.
 
