@@ -338,3 +338,9 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 2. When reading data is not authorized, use the `hadoop.username` property to specify the authorized user.
 
 3. The metadata in the DLF Catalog is consistent with the DLF. When DLF is used to manage metadata, newly imported Hive partitions may not be synchronized by DLF, resulting in inconsistency between the DLF and Hive metadata. In this case, ensure firstly that the Hive metadata is fully synchronized by DLF.
+
+## Others
+
+1. After the Binary type is mapped to Doris, the query is garbled
+
+    Doris does not natively support the Binary type, so the Binary type in various data lakes or databases is mapped to Doris, usually using the String type for mapping. The String type can only display printable characters. If you need to query the contents of Binary, you can use the `TO_BASE64()` function to convert it to Base64 encoding before proceeding to the next step.
