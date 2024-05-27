@@ -91,6 +91,7 @@ hdfs(
 
 其他参数：
 - `path_partition_keys`：（选填）指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写`path_partition_keys="city,date"`，将会自动从路径中读取相应列名和列值进行导入。
+- `resource`：（选填）指定resource名，hdfs tvf 可以利用已有的 hdfs resource 来直接访问hdfs。创建 hdfs resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md)
 
 ### Examples
 
