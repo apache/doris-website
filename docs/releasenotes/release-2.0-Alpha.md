@@ -71,7 +71,7 @@ It's recommended to deploy 2.0 Alpha version in a new test cluster for testing b
 - Users can set the hot and cold data strategy through SQL, so as to move historical data to cheap storage such as object storage to reduce storage costs.
 - Cold data can still be accessed, and Doris provides a local cache to speed up the access efficiency of cold data.
 
-	Refer to: [https://doris.apache.org/docs/dev/advanced/cold_hot_separation](https://doris.apache.org/docs/dev/advanced/cold_hot_separation)
+	Refer to: <https://doris.apache.org/zh-CN/docs/dev/table-design/cold-hot-separation>
 
 
 ### 5. Pipeline Execution Engine Adapted to the Architecture of Modern Multi-Core CPUs (disable by default)
