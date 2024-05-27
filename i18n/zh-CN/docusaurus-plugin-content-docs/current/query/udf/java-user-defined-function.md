@@ -386,17 +386,6 @@ public class UDTFStringTest {
     jar -cf ./DictLibrary.jar ./DictLibrary.class
     ```
 
-2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
-
-    ```shell
-    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
-    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
-    ```
-
-3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到 BE 的部署路径 `be/lib/java_extensions/java-udf `下面，BE重启之后就可以随着 JVM 的启动加载进来。
-
-4. 最后利用 `create function` 语句创建一个 UDF 函数，其中 file 的路径指向 FunctionUdf.jar 包, 这样资源包会随着 BE 启动而加载，停止而释放。FunctionUdf.jar 的加载与释放则是跟随 SQL 的执行周期。
-
     ```java
     public class DictLibrary {
         private static HashMap<String, String> res = new HashMap<>();
@@ -428,6 +417,29 @@ public class UDTFStringTest {
         }
     }
     ```
+
+2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
+
+    ```shell
+    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
+    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
+    ```
+
+3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到指定路径 `fe/custom_lib` 和 `be/custom_lib` 下面，服务重启之后就可以随着 JVM 的启动加载进来。
+
+4. 最后利用 `create function` 语句创建一个 UDF 函数
+   
+   ```sql
+   CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+    "symbol"="org.apache.doris.udf.FunctionUdf",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+   );
+   ```
+
+使用该加载方式时，FunctionUdf.jar和DictLibrary.jar都在FE和BE的custom_lib路径下，因此都会随着服务启动而加载，停止而释放，不再需要指定file 的路径。
+
+也可以使用 file:/// 方式自定义FunctionUdf.jar的路径，但是DictLibrary.jar 只能放在custom_lib下。
 
 ## 使用须知
 
