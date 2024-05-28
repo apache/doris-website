@@ -476,7 +476,8 @@
                 "admin-manual/plugin-development-manual",
                 "admin-manual/small-file-mgr",
                 "admin-manual/compaction",
-                "admin-manual/rowsets"
+                "admin-manual/rowsets",
+                "admin-manual/table_options"
             ]
         },
         {
