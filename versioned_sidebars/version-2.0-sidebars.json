@@ -479,6 +479,7 @@
                 "ecosystem/logstash",
                 "ecosystem/beats",
                 "ecosystem/cloudcanal",
+                "ecosystem/automq-load",
                 "ecosystem/doris-streamloader",
                 "ecosystem/hive-bitmap-udf",
                 {
