@@ -561,7 +561,7 @@ stream {
 
 ```
 cd /usr/local/nginx
-/usr/local/nginx/sbin/nginx -c conf.d/default.conf
+/usr/local/nginx/sbin/nginx -c conf/default.conf
 ```
 
 ### 验证
