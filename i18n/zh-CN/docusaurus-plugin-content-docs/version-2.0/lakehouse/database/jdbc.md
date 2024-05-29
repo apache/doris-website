@@ -274,6 +274,8 @@ Doris 通过 sql 语句 `select nspname from pg_namespace where has_schema_privi
  | uuid                                    | STRING         |                                               |
  | Other                                   | UNSUPPORTED    |                                               |
 
+**注意：** PostgreSQL 无精度 numeric 会被映射为 String 类型，进行数值计算时需要先转换为 DECIMAL 类型，且不支持回写。
+
 ### Oracle
 
 **创建示例**

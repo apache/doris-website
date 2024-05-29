@@ -274,6 +274,8 @@ Doris obtains all schemas that PG user can access through the SQL statement: `se
  | uuid                                    | STRING         |                                           |
  | Other                                   | UNSUPPORTED    |                                           |
 
+**Note:** PostgreSQL non-precision numeric will be mapped to the String type. When performing numerical calculations, it needs to be converted to the DECIMAL type first, and insert is not supported.
+
 ### Oracle
 
 #### Example
