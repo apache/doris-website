@@ -225,7 +225,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Search in the hadoop environment hadoop-lzo-*.jar, and put it under "${DORIS_HOME}/fe/lib/",then restart fe.
 
-    Starting from version 2.0.2, this file can be placed in BE's `custom_lib/` directory (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
+    Starting from version 2.0.2, this file can be placed in FE's `custom_lib/` directory (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
 
 9. Create a hive table specifying `serde` as `org.apache.hadoop.hive.contrib.serde2.MultiDelimitserDe`, and an error is reported when accessing the table: `storage schema reading not supported`
 
