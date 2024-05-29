@@ -28,6 +28,10 @@ Starting from version 2.1.3, Doris supports DDL and DML operations for Hive. Use
 
 This article introduces Hive operations supported in Doris, including syntax and usage notes.
 
+:::tip
+This is an experimental feature.
+:::
+
 ## Metadata Creation and Deletion
 
 ### Catalog
