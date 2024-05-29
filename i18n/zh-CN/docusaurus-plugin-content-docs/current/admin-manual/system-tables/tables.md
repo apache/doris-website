@@ -35,7 +35,7 @@ under the License.
 ## 表信息
 
 | 列名 | 类型 | 说明 |
-|---|---|---|---|
+|---|---|---|
 | TABLE_CATALOG   | VARCHAR(512)  | 所属 Catalog  | 
 | TABLE_SCHEMA    | VARCHAR(64)   | 所属 Database  | 
 | TABLE_NAME      | VARCHAR(64)   | 表名称  | 

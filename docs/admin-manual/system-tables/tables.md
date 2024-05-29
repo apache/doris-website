@@ -35,7 +35,7 @@ Stores all table information under the current catalog.
 ## Table Information
 
 | Column | Type | Description |
-|---|---|---|---|
+|---|---|---|
 | TABLE_CATALOG   | VARCHAR(512)  | Catalog  | 
 | TABLE_SCHEMA    | VARCHAR(64)   | Database  | 
 | TABLE_NAME      | VARCHAR(64)   | Table  | 
