@@ -389,6 +389,13 @@
                         "admin-manual/config/user-property"
                     ]
                 },
+                {
+                    "type": "category",
+                    "label": "System Tables",
+                    "items": [
+                        "admin-manual/system-tables/tables"
+                    ]
+                },
                 "admin-manual/audit-plugin",
                 {
                     "type": "category",
