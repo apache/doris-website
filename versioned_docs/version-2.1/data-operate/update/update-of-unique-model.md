@@ -154,6 +154,6 @@ Suggestions for improving load performance:
 "store_row_column" = "true"
 ```
 
-In version 2.0, all rows in a batch write task (whether it is an load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
+Now, all rows in a batch write task (whether it is an load task or `INSERT INTO`) can only update the same columns. If you need to update different columns, you will need to perform separate batch writes.
 
-In version 2.1, flexible column updates will be supported, allowing users to update different columns for each row within the same batch load.
+In the future, flexible column updates will be supported, allowing users to update different columns for each row within the same batch load.
