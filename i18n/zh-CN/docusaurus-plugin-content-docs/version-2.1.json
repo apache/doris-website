@@ -19,7 +19,7 @@
     "message": "集群部署",
     "description": "The label for category Cluster Deployment in sidebar docs"
   },
-  "sidebar.docs.category.Deploying on Kubernets": {
+  "sidebar.docs.category.Deploying on Kubernetes": {
     "message": "K8s 部署",
     "description": "The label for category Deploying on Kubernets in sidebar docs"
   },
