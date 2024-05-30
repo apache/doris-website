@@ -24,24 +24,26 @@ under the License.
 
 ## IPV6_NUM_TO_STRING
 
-<version since="dev">
-
 IPV6_NUM_TO_STRING
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
 `VARCHAR IPV6_NUM_TO_STRING(VARCHAR ipv6_num)`
 
+`VARCHAR INET6_NTOA(VARCHAR ipv6_num)`
+
 Takes an IPv6 address in binary format of type String. Returns the string of this address in text format.
 The IPv4 address mapped by IPv6 starts with ::ffff:111.222.33. 
 
-### example
+#### Notice
 
-```
+If the input string is not the binary encoding of a valid IPv6 address, `NULL` is returned. This function has an alias `INET6_NTOA`.
+
+### Example
+
+```sql
 mysql> select ipv6_num_to_string(unhex('2A0206B8000000000000000000000011')) as addr;
 +--------------+
 | addr         |
@@ -49,8 +51,16 @@ mysql> select ipv6_num_to_string(unhex('2A0206B8000000000000000000000011')) as a
 | 2a02:6b8::11 |
 +--------------+
 1 row in set (0.01 sec)
+
+mysql> select ipv6_num_to_string("-23vno12i34nlfwlsj");
++------------------------------------------+
+| ipv6_num_to_string('-23vno12i34nlfwlsj') |
++------------------------------------------+
+| NULL                                     |
++------------------------------------------+
+1 row in set (0.14 sec)
 ```
 
-### keywords
+### Keywords
 
-IPV6_NUM_TO_STRING, IP
+IPV6_NUM_TO_STRING, INET6_NTOA, IP
