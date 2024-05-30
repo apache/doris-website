@@ -35,8 +35,8 @@ ARRAY<T> array_reverse_split(ARRAY<T> arg, Array<Boolean> cond)
 ARRAY<T> array_reverse_split(lambda, ARRAY<T0> arg0...)
 ```
 
-1. 传入两个长度相等的 `ARRAY` 且第二个为 `Array<Boolean>`，则将 `cond` 反转之后，按照 `cond` 中为 `true` 的位置作为分割点，分割 `arg` 。
-2. 高阶函数，传入一个 lambda 表达式和至少一个 `ARRAY arg0`，则按照 lambda 表达式运算得到的 `Array<Boolean>` 结果，将该结果反转之后，其中为 `true` 的位置作为分割点，分割 `arg0` 。
+1. 传入两个长度相等的 `ARRAY` 且第二个为 `Array<Boolean>`，按照 `cond` 中为 `true` 的位置右侧作为分割点，分割 `arg` 。
+2. 高阶函数，传入一个 lambda 表达式和至少一个 `ARRAY arg0`，则按照 lambda 表达式运算得到的 `Array<Boolean>` 结果，其中为 `true` 的位置右侧作为分割点，分割 `arg0` 。
 
 ### example
 

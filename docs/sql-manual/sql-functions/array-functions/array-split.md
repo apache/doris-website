@@ -35,8 +35,8 @@ ARRAY<T> array_split(ARRAY<T> arg, Array<Boolean> cond)
 ARRAY<T> array_split(lambda, ARRAY<T0> arg0...)
 ```
 
-1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, and split the `arg` according to the position of `true` in the `cond`.
-2. Higher-order functions, passed a lambda expression and at least one `ARRAY arg0`, split `arg0` by the `Array<Boolean>` result of the lambda expression, with the position of `true` in `cond` as the split point.
+1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, and split the `arg` according to the split point to the left of the position in the `cond` where `true` is found.
+2. Higher-order functions, passed a lambda expression and at least one `ARRAY arg0`, split `arg0` by the left-hand side of the `true` position in the `Array<Boolean>` result of the lambda expression operation.
 
 ### example
 

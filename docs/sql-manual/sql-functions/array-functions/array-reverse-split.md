@@ -35,8 +35,8 @@ ARRAY<T> array_reverse_split(ARRAY<T> arg, Array<Boolean> cond)
 ARRAY<T> array_reverse_split(lambda, ARRAY<T0> arg0...)
 ```
 
-1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, then `cond` is inverted and the `arg` is split according to the position of `true` in it.
-2. Higher-order function, pass a lambda expression and at least one `ARRAY arg0`, then split `arg0` according to the `Array<Boolean>` result of the operation on the lambda expression which is inverted firstly, with the `true` position in it as the split point.
+1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, and split the `arg` according to the split point to the right of the position in the `cond` that is `true`.
+2. Higher-order functions, passed a lambda expression and at least one `ARRAY arg0`, split `arg0` by the right-hand side of the `true` position in the `cond` of the `Array<Boolean>` result of the operation on the lambda expression.
 
 ### example
 
