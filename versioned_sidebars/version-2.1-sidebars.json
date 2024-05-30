@@ -32,7 +32,7 @@
                         "install/cluster-deployment/run-docker-cluster",
                         {
                             "type": "category",
-                            "label": "Deploying on Kunbernets",
+                            "label": "Deploying on Kubernetes",
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-operator",
