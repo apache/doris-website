@@ -28,6 +28,10 @@ under the License.
 
 本文介绍在 Doris 中支持的 Hive 操作，语法和使用须知。
 
+:::tip
+这是一个实验功能。
+:::
+
 ## 元数据创建与删除
 
 ### Catalog

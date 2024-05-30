@@ -39,7 +39,6 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 ## Kerberos
 
-
 1. What to do with the `GSS initiate failed` error when connecting to Hive Metastore with Kerberos authentication?
 
    Usually it is caused by incorrect Kerberos authentication information, you can troubleshoot by the following steps:
@@ -103,6 +102,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
    Add `-Djava.security.krb5.conf=/your-path` to the `JAVA_OPTS` of the broker startup script `start_broker.sh`.
 
 8. When using Kerberos configuration in the Catalog, the `hadoop.username` property cannot be appeared in Catalog properties.
+
+9. Use JDK 17 to access Kerberos.
+
+    If you use JDK 17 to run Doris and access the Kerberos service, you may experience inaccessibility due to the use of obsolete encryption algorithms. The `allow_weak_crypto=true` attribute needs to be added to krb5.conf. Or upgrade the Kerberos encryption algorithm.
+
+    See: https://seanjmullan.org/blog/2021/09/14/jdk17#kerberos 
 
 ## JDBC Catalog
 
@@ -189,7 +194,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Doris and hive currently query hudi differently. Doris needs to add partition fields to the avsc file of the hudi table structure. If not added, it will cause Doris to query partition_ Val is empty (even if home. datasource. live_sync. partition_fields=partition_val is set)
 
-    ```
+     ```json
     {
         "type": "record",
         "name": "record",
@@ -205,12 +210,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
             {
             "name": "name",
             "type": "string",
-            "doc": "名称"
+            "doc": "Name"
             },
             {
             "name": "create_time",
             "type": "string",
-            "doc": "创建时间"
+            "doc": "Creation time"
             }
         ]
     }
@@ -220,7 +225,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Search in the hadoop environment hadoop-lzo-*.jar, and put it under "${DORIS_HOME}/fe/lib/",then restart fe.
 
-    Starting from version 2.0.2, this file can be placed in BE's `custom_lib/` directory (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
+    Starting from version 2.0.2, this file can be placed in FE's `custom_lib/` directory (if it does not exist, just create it manually) to prevent the file from being lost due to the replacement of the lib directory when upgrading the cluster.
 
 9. Create a hive table specifying `serde` as `org.apache.hadoop.hive.contrib.serde2.MultiDelimitserDe`, and an error is reported when accessing the table: `storage schema reading not supported`
 
@@ -333,3 +338,9 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 2. When reading data is not authorized, use the `hadoop.username` property to specify the authorized user.
 
 3. The metadata in the DLF Catalog is consistent with the DLF. When DLF is used to manage metadata, newly imported Hive partitions may not be synchronized by DLF, resulting in inconsistency between the DLF and Hive metadata. In this case, ensure firstly that the Hive metadata is fully synchronized by DLF.
+
+## Others
+
+1. After the Binary type is mapped to Doris, the query is garbled
+
+    Doris does not natively support the Binary type, so the Binary type in various data lakes or databases is mapped to Doris, usually using the String type for mapping. The String type can only display printable characters. If you need to query the contents of Binary, you can use the `TO_BASE64()` function to convert it to Base64 encoding before proceeding to the next step.

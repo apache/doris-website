@@ -165,21 +165,6 @@ The transaction mechanism ensures the atomicity of data writing to JDBC External
 
 #### Example
 
-* MySQL 5.7
-
-```sql
-CREATE CATALOG jdbc_mysql PROPERTIES (
-    "type" = "jdbc",
-    "user" = "root",
-    "password" = "123456",
-    "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/demo",
-    "driver_url" = "mysql-connector-java-5.1.47.jar",
-    "driver_class" = "com.mysql.jdbc.Driver"
-)
-```
-
-* MySQL 8
-
 ```sql
 CREATE CATALOG jdbc_mysql PROPERTIES (
     "type" = "jdbc",
@@ -289,6 +274,8 @@ Doris obtains all schemas that PG user can access through the SQL statement: `se
  | uuid                                    | STRING         |                                           |
  | Other                                   | UNSUPPORTED    |                                           |
 
+**Note:** PostgreSQL non-precision numeric will be mapped to the String type. When performing numerical calculations, it needs to be converted to the DECIMAL type first, and insert is not supported.
+
 ### Oracle
 
 #### Example
@@ -382,21 +369,6 @@ As for data mapping from SQLServer to Doris, one Database in Doris corresponds t
 ### Doris
 
 Jdbc Catalog also support to connect another Doris database:
-
-* MySQL 5.7 Driver
-
-```sql
-CREATE CATALOG jdbc_doris PROPERTIES (
-    "type" = "jdbc",
-    "user" = "root",
-    "password" = "123456",
-    "jdbc_url" = "jdbc:mysql://127.0.0.1:9030?useSSL=false",
-    "driver_url" = "mysql-connector-java-5.1.47.jar",
-    "driver_class" = "com.mysql.jdbc.Driver"
-)
-```
-
-* MySQL 8 Driver
 
 ```sql
 CREATE CATALOG jdbc_doris PROPERTIES (

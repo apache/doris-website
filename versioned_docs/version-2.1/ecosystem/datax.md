@@ -381,13 +381,13 @@ Wed Nov 16 14:29:04 GMT+08:00 2022 WARN: Establishing SSL connection without ser
 2022-11-16 14:29:04.205 [job-0] INFO  JobContainer - PerfTrace not enable!
 2022-11-16 14:29:04.206 [job-0] INFO  StandAloneJobContainerCommunicator - Total 2 records, 214 bytes | Speed 21B/s, 0 records/s | Error 0 records, 0 bytes |  All Task WaitWriterTime 0.000s |  All Task WaitReaderTime 0.000s | Percentage 100.00%
 2022-11-16 14:29:04.206 [job-0] INFO  JobContainer - 
-任务启动时刻                    : 2022-11-16 14:28:53
-任务结束时刻                    : 2022-11-16 14:29:04
-任务总计耗时                    :                 10s
-任务平均流量                    :               21B/s
-记录写入速度                    :              0rec/s
-读出记录总数                    :                   2
-读写失败总数                    :                   0
+Task Start Time                        : 2022-11-16 14:28:53
+Task End Time                          : 2022-11-16 14:29:04
+Total Task Duration                    : 10s
+Average Task Throughput                : 21B/s
+Record Write Speed                     : 0rec/s
+Total Records Read                     : 2
+Total Read/Write Failures              : 0
 
 ```
 

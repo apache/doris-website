@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Node Action
+
 
 ## Request
 
@@ -220,7 +220,8 @@ node is used to specify which node's configuration information is returned, the 
 
 ### Response
 `GET /rest/v2/manager/node/configuration_name`  
-``` 
+
+```json 
 {
     "msg": "success",
     "code": 0,
@@ -237,7 +238,8 @@ node is used to specify which node's configuration information is returned, the 
 ```
 
 `GET /rest/v2/manager/node/node_list` 
-``` 
+
+```json 
 {
     "msg": "success",
     "code": 0,
@@ -254,27 +256,28 @@ node is used to specify which node's configuration information is returned, the 
 ```
 
 `POST /rest/v2/manager/node/configuration_info?type=fe`
-```
-{
-    "msg": "success",
-    "code": 0,
-    "data": {
-        "column_names": [
-            "配置项",
-            "节点",
-            "节点类型",
-            "配置值类型",
-            "MasterOnly",
-            "配置值",
-            "可修改"
-        ],
-        "rows": [
-            [
-                ""
-            ]
-        ]
-    },
-    "count": 0
+
+```json
+{  
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Configuration Item",  
+            "Node",  
+            "Node Type",  
+            "Configuration Value Type",  
+            "MasterOnly",  
+            "Configuration Value",  
+            "Modifiable"  
+        ],  
+        "rows": [  
+            [  
+                ""  
+            ]  
+        ]  
+    },  
+    "count": 0  
 }
 ```
 
@@ -285,12 +288,12 @@ node is used to specify which node's configuration information is returned, the 
     "code": 0,
     "data": {
         "column_names": [
-            "配置项",
-            "节点",
-            "节点类型",
-            "配置值类型",
-            "配置值",
-            "可修改"
+            "Configuration Item",
+            "Node",
+            "Node Type",
+            "Configuration Value Type",
+            "Configuration Value",
+            "Modifiable"
         ],
         "rows": [
             [
@@ -308,7 +311,8 @@ node is used to specify which node's configuration information is returned, the 
 
     POST /rest/v2/manager/node/configuration_info?type=fe  
     body:
-    ```
+
+    ```json
     {
         "conf_name":[
             "agent_task_resend_wait_time_ms"
@@ -317,33 +321,34 @@ node is used to specify which node's configuration information is returned, the 
     ```
     
     Response:
-    ```
-    {
-        "msg": "success",
-        "code": 0,
-        "data": {
-            "column_names": [
-                "配置项",
-                "节点",
-                "节点类型",
-                "配置值类型",
-                "MasterOnly",
-                "配置值",
-                "可修改"
-            ],
-            "rows": [
-                [
-                    "agent_task_resend_wait_time_ms",
-                    "127.0.0.1:8030",
-                    "FE",
-                    "long",
-                    "true",
-                    "50000",
-                    "true"
-                ]
-            ]
-        },
-        "count": 0
+
+    ```json
+    {  
+    "msg": "success",  
+    "code": 0,  
+    "data": {  
+        "column_names": [  
+            "Configuration Item",  
+            "Node",  
+            "Node Type",  
+            "Configuration Value Type",  
+            "MasterOnly",  
+            "Configuration Value",  
+            "Modifiable"  
+        ],  
+        "rows": [  
+            [  
+                "agent_task_resend_wait_time_ms",  
+                "127.0.0.1:8030",  
+                "FE",  
+                "long",  
+                "true",  
+                "50000",  
+                "true"  
+            ]  
+        ]  
+    },  
+    "count": 0  
     }
     ```
 
@@ -358,7 +363,8 @@ node is used to specify which node's configuration information is returned, the 
 Used to modify fe or be node configuration values
 
 ### Request body
-```
+
+```json
 {
 	"config_name":{
 		"node":[
@@ -377,7 +383,8 @@ persist is true for permanent modification and false for temporary modification.
 
 ### Response
 `GET /rest/v2/manager/node/configuration_name`  
-``` 
+
+``` json
 {
 	"msg": "",
 	"code": 0,
@@ -403,7 +410,8 @@ failed Indicates a configuration message that failed to be modified.
 
     POST /rest/v2/manager/node/set_config/fe
     body:
-    ```
+
+    ```json
     {
         "agent_task_resend_wait_time_ms":{
             "node":[
@@ -454,7 +462,8 @@ Used to add/drop/offline be node
 action：ADD/DROP/DECOMMISSION
 
 ### Request body
-```
+
+```json
 {
     "hostPorts": ["127.0.0.1:9050"],
     "properties": {
@@ -467,7 +476,8 @@ properties The configuration passed in when adding a node is only used to config
 ```
 
 ### Response
-```
+
+```json
 {
     "msg": "Error",
     "code": 1,
@@ -486,14 +496,16 @@ data ""/Error message
 
    post /rest/v2/manager/node/ADD/be
    Request body
-    ```
+
+    ```json
     {
         "hostPorts": ["127.0.0.1:9050"]
     }
     ```
 
    Response
-    ```
+
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -506,14 +518,16 @@ data ""/Error message
 
    post /rest/v2/manager/node/DROP/be
    Request body
-    ```
+
+    ```json
     {
         "hostPorts": ["127.0.0.1:9050"]
     }
     ```
 
    Response
-    ```
+
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -526,14 +540,14 @@ data ""/Error message
 
    post /rest/v2/manager/node/DECOMMISSION/be
    Request body
-    ```
+    ```json
     {
         "hostPorts": ["127.0.0.1:9050"]
     }
     ```
 
    Response
-    ```
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -553,7 +567,7 @@ Used to add/drop fe node
 action：ADD/DROP
 
 ### Request body
-```
+```json
 {
     "role": "FOLLOWER",
     "hostPort": "127.0.0.1:9030"
@@ -564,7 +578,7 @@ hostPort The address of the fe node to be operated, ip:edit_log_port
 ```
 
 ### Response
-```
+```json
 {
     "msg": "Error",
     "code": 1,
@@ -583,7 +597,7 @@ data ""/Error message
 
    post /rest/v2/manager/node/ADD/fe
    Request body
-    ```
+    ```json
     {
         "role": "FOLLOWER",
         "hostPort": "127.0.0.1:9030"
@@ -591,7 +605,7 @@ data ""/Error message
     ```
 
    Response
-    ```
+    ```json
     {
         "msg": "success",
         "code": 0,
@@ -604,7 +618,7 @@ data ""/Error message
 
    post /rest/v2/manager/node/DROP/fe
    Request body
-    ```
+    ```json
     {
         "role": "FOLLOWER",
         "hostPort": "127.0.0.1:9030"
@@ -612,7 +626,7 @@ data ""/Error message
     ```
 
    Response
-    ```
+    ```json
     {
         "msg": "success",
         "code": 0,

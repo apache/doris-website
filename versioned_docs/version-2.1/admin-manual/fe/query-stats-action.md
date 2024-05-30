@@ -24,20 +24,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Query Stats Action
 
-<version since="dev"></version>
 
 ## Request
 
 ```
-查看
-get api/query_stats/<catalog_name>
-get api/query_stats/<catalog_name>/<db_name>
-get api/query_stats/<catalog_name>/<db_name>/<tbl_name>
-
-清空
-delete api/query_stats/<catalog_name>/<db_name>
+View  
+get api/query_stats/<catalog_name>  
+get api/query_stats/<catalog_name>/<db_name>  
+get api/query_stats/<catalog_name>/<db_name>/<tbl_name>  
+  
+Clear  
+delete api/query_stats/<catalog_name>/<db_name>  
 delete api/query_stats/<catalog_name>/<db_name>/<tbl_name>
 ```
 

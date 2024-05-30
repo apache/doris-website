@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/2.1.3.jpg'
 }
 ---
@@ -126,23 +126,23 @@ Supporting the decimal256 type in row-based storage extends the system's ability
 
 **1. Authorization**
 
-- **Grant_priv permission changes**: `Grant_priv` can no longer be arbitrarily granted. When performing a `GRANT` operation, the user not only needs to have `Grant_priv` but also the permissions to be granted. For example, to grant `SELECT` permission on `table1`, the user needs both `GRANT` permission and `SELECT` permission on `table1`, enhancing security and consistency in permission management. #32825
+- **Grant_priv permission changes**: `Grant_priv` can no longer be arbitrarily granted. When performing a `GRANT` operation, the user not only needs to have `Grant_priv` but also the permissions to be granted. For example, to grant `SELECT` permission on `table1`, the user needs both `GRANT` permission and `SELECT` permission on `table1`, enhancing security and consistency in permission management.
 
-- **Workload group and resource usage_priv**: `Usage_priv` for Workload Group and Resource is no longer global but limited to Resource and Workload Group, making permission granting and usage more specific. #32907
+- **Workload group and resource usage_priv**: `Usage_priv` for Workload Group and Resource is no longer global but limited to Resource and Workload Group, making permission granting and usage more specific.
 
-- **Authorization for operations**: Operations that were previously unauthorized now have corresponding authorizations for more detailed and comprehensive operational permission control. #33347
+- **Authorization for operations**: Operations that were previously unauthorized now have corresponding authorizations for more detailed and comprehensive operational permission control.
 
 **2. LOG directory configuration**
 
-The log directory configuration for FE and BE now uniformly uses the `LOG_DIR` environment variable. All other different types of logs will be stored with `LOG_DIR` as the root directory. To maintain compatibility between versions, the previous configuration item `sys_log_dir` can still be used. #32933
+The log directory configuration for FE and BE now uniformly uses the `LOG_DIR` environment variable. All other different types of logs will be stored with `LOG_DIR` as the root directory. To maintain compatibility between versions, the previous configuration item `sys_log_dir` can still be used.
 
 **3. S3 Table Function (TVF)**
 
-Due to issues with correctly recognizing or processing S3 URLs in certain cases, the parsing logic for object storage paths has been refactored. For file paths in S3 table functions, the `force_parsing_by_standard_uri` parameter needs to be passed to ensure correct parsing. #33858
+Due to issues with correctly recognizing or processing S3 URLs in certain cases, the parsing logic for object storage paths has been refactored. For file paths in S3 table functions, the `force_parsing_by_standard_uri` parameter needs to be passed to ensure correct parsing.
 
 ## Upgrade Issues
 
-Since many users use certain keywords as column names or attribute values, the following keywords have been set as non-reserved, allowing users to use them as identifiers. #34613
+Since many users use certain keywords as column names or attribute values, the following keywords have been set as non-reserved, allowing users to use them as identifiers.
 
 ## Bug Fixes
 
