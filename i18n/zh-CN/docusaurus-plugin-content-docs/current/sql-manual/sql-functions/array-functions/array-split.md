@@ -31,8 +31,8 @@ array_split
 #### Syntax
 
 ```sql
-ARRAY<T> array_split(ARRAY<T> arg, Array<Boolean> cond)
-ARRAY<T> array_split(lambda, ARRAY<T0> arg0...)
+ARRAY<ARRAY<T>> array_split(ARRAY<T> arg, Array<Boolean> cond)
+ARRAY<ARRAY<T>> array_split(lambda, ARRAY<T0> arg0...)
 ```
 
 1. 传入两个长度相等的 `ARRAY` 且第二个为 `Array<Boolean>`，则按照 `cond` 中为 `true` 的位置左侧作为分割点，分割 `arg` 。

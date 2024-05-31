@@ -31,8 +31,8 @@ array_split
 #### Syntax
 
 ```sql
-ARRAY<T> array_split(ARRAY<T> arg, Array<Boolean> cond)
-ARRAY<T> array_split(lambda, ARRAY<T0> arg0...)
+ARRAY<ARRAY<T>> array_split(ARRAY<T> arg, Array<Boolean> cond)
+ARRAY<ARRAY<T>> array_split(lambda, ARRAY<T0> arg0...)
 ```
 
 1. pass in two `ARRAY` of equal length, the second of which is an `Array<Boolean>`, and split the `arg` according to the split point to the left of the position in the `cond` where `true` is found.
