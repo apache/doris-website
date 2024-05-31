@@ -1420,6 +1420,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-TABLE-ID",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SMALL-FILES",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-POLICY",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOG-RECYCLE-BIN",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-QUERY-STATS"
                             ]
