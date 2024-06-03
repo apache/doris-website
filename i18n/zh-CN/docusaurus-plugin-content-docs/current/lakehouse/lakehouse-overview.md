@@ -162,6 +162,8 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 - Apache Paimon(Incubating)
 
+- LakeSoul
+
 该功能将作为之前外表连接方式（External Table）的补充和增强，帮助用户进行快速的多数据目录联邦查询。
 
 ### 基础概念
