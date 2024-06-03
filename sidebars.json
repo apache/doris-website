@@ -1280,7 +1280,8 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Drop/TRUNCATE-TABLE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-JOB"
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-JOB",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-CATALOG-RECYCLE-BIN"
                                     ]
                                 },
                                 {
