@@ -64,13 +64,13 @@ illustrate:
 
 ### Example
 
-1. Delete the database with id example_db_id
+1. Delete the database(include tables and partitions with same DbId) with id example_db_id
 
   ```sql
   DROP CATALOG RECYCLE BIN WHERE 'DbId' = example_db_id;
   ```
 
-2. Delete the table with id example_tbl_id
+2. Delete the table(include partitions with same TableId) with id example_tbl_id
 
   ```sql
   DROP CATALOG RECYCLE BIN WHERE 'TableId' = example_tbl_id;

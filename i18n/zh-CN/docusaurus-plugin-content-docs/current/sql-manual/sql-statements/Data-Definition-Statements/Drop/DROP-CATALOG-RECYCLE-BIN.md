@@ -64,13 +64,13 @@ DROP CATALOG RECYCLE BIN
 
 ### Example
 
-1. 删除 id 为 example_db_id 的数据库
+1. 删除 DbId 为 example_db_id 的数据库、表和分区
 
   ```sql
   DROP CATALOG RECYCLE BIN WHERE 'DbId' = example_db_id;
   ```
 
-2. 删除 id 为 example_tbl_id 的表
+2. 删除 TableId 为 example_tbl_id 的表和分区
 
   ```sql
   DROP CATALOG RECYCLE BIN WHERE 'TableId' = example_tbl_id;
