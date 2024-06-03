@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Power BI",
-    "language": "en"
+   "title": "Power BI",
+   "language": "en"
 }
 ---
 
