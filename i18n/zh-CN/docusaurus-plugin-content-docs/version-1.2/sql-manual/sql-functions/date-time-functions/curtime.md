@@ -36,7 +36,7 @@ under the License.
 
 ### Examples
 
-```
+```sql
 mysql> select current_time();
 +----------------+
 | current_time() |
