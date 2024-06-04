@@ -278,8 +278,16 @@
                     "label": "Analyzing Database",
                     "items": [
                         "lakehouse/database/es",
-                        "lakehouse/database/jdbc",
-                        "lakehouse/database/max-compute"
+                        "lakehouse/database/max-compute",
+                        "lakehouse/database/jdbc-overview",
+                        "lakehouse/database/mysql",
+                        "lakehouse/database/postgresql",
+                        "lakehouse/database/oracle",
+                        "lakehouse/database/sqlserver",
+                        "lakehouse/database/ibm-db2",
+                        "lakehouse/database/clickhouse",
+                        "lakehouse/database/sap-hana",
+                        "lakehouse/database/oceanbase"
                     ]
                 },
                 "lakehouse/file",
