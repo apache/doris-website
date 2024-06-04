@@ -58,9 +58,10 @@ The policy used in FE is mainly used to modify the session variable, and current
 
 ### Policy used in BE
 1. Condition
-   * be_scan_rows，The number of rows scanned by an SQL within a single BE process, and if there are multiple concurrency, it is the cumulative value of multiple concurrency.
-   * be_scan_bytes，The number of bytes scanned by an SQL within a single BE process, and if there are multiple concurrency, it is the cumulative value of multiple concurrency.
+   * be_scan_rows，The number of rows scanned by an SQL within a single BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency.
+   * be_scan_bytes，The number of bytes scanned by an SQL within a single BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency, measured in bytes.
    * query_time，The running time of an SQL on a single BE process, measured in milliseconds.
+   * query_be_memory_bytes, supported since version 2.1.5, The memory used by an SQL within a BE process, if the SQL is executed concurrently on the BE, it is the cumulative value of multiple concurrency, measured in bytes.
 
 2. Action
    * cancel_query，cancel query
