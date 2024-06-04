@@ -56,7 +56,7 @@ plugin.path=$KAFKA_HOME/plugins
 ```
 
 配置 doris-connector-sink.properties
-</br>
+<br />
 在 config 目录下创建 doris-connector-sink.properties，并配置如下内容：
 
 ```properties
@@ -214,7 +214,7 @@ errors.deadletterqueue.topic.replication.factor=1
 
 ## 类型映射
 Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类型。
-</br>原始类型是指使用 Kafka connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
+<br />原始类型是指使用 Kafka connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
 
 | Kafka 原始类型   | Doris 类型 |
 |--------------|----------|

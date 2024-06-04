@@ -44,7 +44,7 @@ maven dependencies
 
 ### Standalone mode startup
 Create the plugins directory under $KAFKA_HOME and put the downloaded doris-kafka-connector jar package into it
-</br>
+<br />
 Configure config/connect-standalone.properties
 
 ```properties
@@ -56,7 +56,7 @@ plugin.path=$KAFKA_HOME/plugins
 ```
 
 Configure doris-connector-sink.properties
-</br>
+<br />
 Create doris-connector-sink.properties in the config directory and configure the following content:
 
 ```properties
@@ -213,7 +213,7 @@ For other Kafka Connect Sink common configuration items, please refer to: [conne
 
 ## Type mapping
 Doris-kafka-connector uses logical or primitive type mapping to resolve the column's data type.
-</br>Primitive types refer to simple data types represented using Kafka connect's `Schema`. Logical data types usually use the `Struct` structure to represent complex types, or date and time types.
+<br />Primitive types refer to simple data types represented using Kafka connect's `Schema`. Logical data types usually use the `Struct` structure to represent complex types, or date and time types.
 
 
 | Kafka Primitive Type     | Doris Type |
