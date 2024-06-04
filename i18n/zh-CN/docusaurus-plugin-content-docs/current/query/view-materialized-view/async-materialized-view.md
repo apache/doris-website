@@ -534,6 +534,7 @@ select ... from t1;
 ## 问题定位
 ### 定位手段
 olapTable的常用命令都适用于物化视图，例如`show partitions`，`desc table`，`show data`等。
+
 物化视图独有的命令主要有以下几个：
 #### 查看物化视图元信息
 [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos)
