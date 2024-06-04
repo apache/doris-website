@@ -44,7 +44,7 @@ maven dependencies
 
 ### Standalone mode startup
 Create the plugins directory under $KAFKA_HOME and put the downloaded doris-kafka-connector jar package into it
-
+</br>
 Configure config/connect-standalone.properties
 
 ```properties
