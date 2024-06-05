@@ -325,16 +325,16 @@ l_suppkey;
 
 暂时目前支持的聚合上卷函数列表如下：
 
-| 查询中函数                                                      | 物化视图中函数                  | 函数上卷后              |
-|------------------------------------------------------------|--------------------------|--------------------|
-| max                                                        | max                      | max                |
-| min                                                        | min                      | min                |
-| sum                                                        | sum                      | sum                |
-| count                                                      | count                    | sum                |
-| count(distinct )                                           | bitmap_union             | bitmap_union_count |
-| bitmap_union                                               | bitmap_union             | bitmap_union       |
-| bitmap_union_count                                         | bitmap_union             | bitmap_union_count |
-| hll_union_agg，approx_count_distinct， <br/> hll_cardinality | hll_union 或者 hll_raw_agg | hll_union_agg      |
+| 查询中函数                                                 | 物化视图中函数                     | 函数上卷后              |
+|-------------------------------------------------------|-----------------------------|--------------------|
+| max                                                   | max                         | max                |
+| min                                                   | min                         | min                |
+| sum                                                   | sum                         | sum                |
+| count                                                 | count                       | sum                |
+| count(distinct )                                      | bitmap_union                | bitmap_union_count |
+| bitmap_union                                          | bitmap_union                | bitmap_union       |
+| bitmap_union_count                                    | bitmap_union                | bitmap_union_count |
+| hll_union_agg, approx_count_distinct, hll_cardinality | hll_union 或者 hll_raw_agg    | hll_union_agg      |
 
 ## Query partial 透明改写（Coming soon）
 当物化视图的表比查询多时，如果物化视图比查询多的表满足 JOIN 消除的条件，那么也可以进行透明改写，如下可以进行透明改写，待支持。
