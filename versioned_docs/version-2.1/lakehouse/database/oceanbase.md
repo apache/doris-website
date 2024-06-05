@@ -41,7 +41,7 @@ To connect to the OceanBase database you need
 ```sql
 CREATE CATALOG oceanbase PROPERTIES (
     "type"="jdbc",
-    "user"="default"
+    "user"="root",
     "password"="password",
     "jdbc_url" = "jdbc:oceanbase://host:port/db",
     "driver_url" = "oceanbase-client-2.4.8.jar",
