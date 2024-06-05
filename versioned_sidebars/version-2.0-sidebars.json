@@ -1393,6 +1393,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.0.11",
                 "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",
                 "releasenotes/release-2.0.8",
