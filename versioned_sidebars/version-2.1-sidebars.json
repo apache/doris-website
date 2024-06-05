@@ -1216,7 +1216,6 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-DATABASE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE",
-                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-INDEX",

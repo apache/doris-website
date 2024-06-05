@@ -21,7 +21,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# 建表和生成列
 CREATE TABLE 支持指定生成列，生成列的值是从列定义中指定的表达式中计算得到的。
 下面是一个使用生成列的例子：
 ```sql
@@ -32,12 +31,12 @@ quantity INT,
 total_value DECIMAL(10,2) GENERATED ALWAYS AS (price * quantity)
 ) DISTRIBUTED BY HASH(product_id) PROPERTIES ("replication_num" = "1");
 
-insert into products values(1, 10.00, 10, default);
-insert into products(product_id, price, quantity) values(1, 20.00, 10);
+INSERT INTO products VALUES(1, 10.00, 10, default);
+INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
 从表中查询数据：
 ```sql
-mysql> select * from products;
+mysql> SELECT * FROM products;
 +------------+-------+----------+-------------+
 | product_id | price | quantity | total_value |
 +------------+-------+----------+-------------+
@@ -63,11 +62,11 @@ col_name data_type [GENERATED ALWAYS] AS (expr)
 ### INSERT
 指定列时，指定的列不能包含生成列，否则将报错。
 ```sql
-insert into products(product_id, price, quantity) values(1, 20.00, 10);
+INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
 没有指定列时，生成列需要使用default关键字进行占位。
 ```sql
-insert into products values(1, 10.00, 10, default);
+INSERT INTO products VALUES(1, 10.00, 10, default);
 ```
 
 ### LOAD
@@ -75,7 +74,7 @@ insert into products values(1, 10.00, 10, default);
 #### STREAM LOAD
 创建表:
 ```sql
-mysql> create table gen_col_stream_load(a int,b int,c double generated always as (abs(a+b)) not null)
+mysql> CREATE TABLE gen_col_stream_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) not null)
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
@@ -114,7 +113,7 @@ curl --location-trusted -u root: \
 ```
 查看数据导入结果:
 ```sql
-mysql> select * from gen_col_stream_load;
+mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
 | a    | b    | c    |
 +------+------+------+
@@ -127,7 +126,7 @@ mysql> select * from gen_col_stream_load;
 #### HTTP STREAM LOAD
 创建表:
 ```sql
-mysql> create table gencol_refer_gencol_http_load(a int,c double generated always as (abs(a+b)) not null,b int, d int generated always as(c+1))
+mysql> CREATE TABLE gencol_refer_gencol_http_load(a INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL,b INT, d INT GENERATED ALWAYS AS(c+1))
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
@@ -158,7 +157,7 @@ http://127.0.0.1:8030/api/_http_stream
 ```
 查看数据导入结果:
 ```sql
-mysql> select * from gencol_refer_gencol_http_load;                                                                                                                          +------+------+------+------+
+mysql> SELECT * FROM gencol_refer_gencol_http_load;                                                                                                                          +------+------+------+------+
 | a    | c    | b    | d    |
 +------+------+------+------+
 |    2 |   11 |    9 |   12 |
@@ -169,7 +168,7 @@ mysql> select * from gencol_refer_gencol_http_load;                             
 ```
 #### MYSQL LOAD
 ```sql
-mysql> create table gen_col_mysql_load(a int,b int,c double generated always as (abs(a+b)) not null)
+mysql> CREATE TABLE gen_col_mysql_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL)
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 
@@ -181,7 +180,7 @@ COLUMNS TERMINATED BY ','
 Query OK, 3 rows affected (0.14 sec)
 Records: 3  Deleted: 0  Skipped: 0  Warnings: 0
 
-mysql> select * from gen_col_mysql_load;
+mysql> SELECT * FROM gen_col_mysql_load;
 +------+------+------+
 | a    | b    | c    |
 +------+------+------+
@@ -196,7 +195,7 @@ BROKER LOAD, ROUTINE LOAD等方式都可以将数据导入有生成列的表，�
 
 ## 删除生成列
 ```sql
-alter table products drop column total_value;
+ALTER TABLE products DROP COLUMN total_value;
 ```
 注意事项：
 如果表中某列（生成列或者普通列）被其它生成列引用，需要先删除其它生成列后，才能删除此被引用的生成列或者普通列。
