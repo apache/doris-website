@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-亲爱的社区小伙伴们，**[Apache Doris 2.0.11](https://doris.apache.org/download/) 版本已于 2024 年 6 月 5 日正式与大家见面**，该版本提交了 123 个改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。
+亲爱的社区小伙伴们，[Apache Doris 2.0.11](https://doris.apache.org/download/) 版本已于 2024 年 6 月 5 日正式与大家见面，该版本提交了 123 个改进项以及问题修复，欢迎大家下载体验。
 
 **官网下载：** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 
