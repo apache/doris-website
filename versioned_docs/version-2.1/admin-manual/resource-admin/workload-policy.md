@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<version since="2.1.3"></version>
+
 ## Backgroup
 The Workload Group solves the problem of isolation between different workload, but it cannot solve negative impact of large queries on stability within the same Group. When users encounter large queries that affect cluster stability, they can only manually handle them.
 
@@ -44,6 +46,7 @@ Workload Policy mainly includes the following concepts:
 * properties，defined the properties of the current policy, including whether it is enabled and its priority.
 
 The meaning of the policy in the above example is to create a policy named test_cancel_policy, which will cancel queries in the cluster that have been running for more than 1 second, and it's enabled.
+CREATE POLICY needs admin_priv.
 
 ## Basic Usage
 Due to the fact that some actions can only take effect in FE and others can only take effect in BE, so the policy also needs to be distinguished between the policy of FE and the policy of BE.
