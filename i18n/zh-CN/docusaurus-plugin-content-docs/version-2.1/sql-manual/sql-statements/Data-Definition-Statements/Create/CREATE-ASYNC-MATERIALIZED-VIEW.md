@@ -105,10 +105,10 @@ AUTO：尽量增量刷新，如果不能分区增量刷新，就全量刷新
 - 物化视图使用的  base table 分区表，必须使用 list 或者 range 分区策略。
 - 物化视图定义 SQL 中 partition by 分区列只能有一个分区字段。
 - 物化视图的 SQL 中 partition by 的分区列，要在 Select 后。
-- 如果使用了group by，分区列的字段一定要在 group by 后。
-- 如果使用了 window 函数，分区列的字段一定要在 partition by 后。
+- 物化视图定义 SQL，如果使用了group by，分区列的字段一定要在 group by 后。
+- 物化视图定义 SQL，如果使用了 window 函数，分区列的字段一定要在 partition by 后。
 - 数据变更应发生在分区表上，如果发生在非分区表，物化视图需要全量构建。
-- 物化视图使用 Join 的 null 产生端的字段作为分区字段，不能分区增量更新，例如对于 LEFT OUTER JOIN 分区字段需要在左侧。
+- 物化视图使用 Join 的 null 产生端的字段作为分区字段，不能分区增量更新，例如对于 LEFT OUTER JOIN 分区字段需要在左侧，在右侧则不行。
 
 ```sql
 refreshMethod
