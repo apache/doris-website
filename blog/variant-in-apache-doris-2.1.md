@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis',
-    'summary': 'Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.',
+    'description': 'Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.',
     'date': '2024-03-26',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.1.1 just released',
-    'summary': 'Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.',
+    'description': 'Dear community, Apache Doris 2.1.1 is now available, with several enhancements and bug fixes based on 2.1.0, enabling smoother user experience.',
     'date': '2024-04-03',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

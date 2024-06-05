@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Say goodbye to OOM crashes',
-    'summary': "A more robust and flexible memory management solution with optimizations in memory allocation, memory tracking, and memory limit.",
+    'description': "A more robust and flexible memory management solution with optimizations in memory allocation, memory tracking, and memory limit.",
     'date': '2023-06-16',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

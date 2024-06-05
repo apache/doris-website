@@ -384,13 +384,17 @@ export default function Home(): JSX.Element {
 
     return (
         <Layout
-            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open-Source Real-Time Data Warehouse' })}
+            title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message:
-                    'Apache Doris is a next-generation open-source real-time data warehouse  based on MPP architecture, with easier use and higher performance for big data analytics.',
+                    'Apache Doris is an open-source database based on MPP architecture,with easier use and higher performance.  As a modern data warehouse, apache doris empowers your Olap query and database analytics.',
             })}
             showAnnouncementBar={true}
+            keywords={translate({
+                id: 'homepage.keywords',
+                message: 'Open Source database, OLAP, data warehouse, database analytics'
+            })}
         >
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />

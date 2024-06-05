@@ -107,10 +107,10 @@ export default function Download() {
     // }
     return (
         <Layout
-            title={translate({ id: 'download.title', message: 'Download' })}
+            title={translate({ id: 'download.title', message: 'Apache Doris - Download | Easily deploy Doris anywhere' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message: 'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
             })}
             wrapperClassName="download"
         >
