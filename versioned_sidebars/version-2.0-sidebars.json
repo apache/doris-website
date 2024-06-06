@@ -268,8 +268,15 @@
                     "type": "category",
                     "label": "Analyzing Database",
                     "items": [
-                        "lakehouse/database/es",
                         "lakehouse/database/jdbc",
+                        "lakehouse/database/mysql",
+                        "lakehouse/database/postgresql",
+                        "lakehouse/database/oracle",
+                        "lakehouse/database/sqlserver",
+                        "lakehouse/database/clickhouse",
+                        "lakehouse/database/sap-hana",
+                        "lakehouse/database/oceanbase",
+                        "lakehouse/database/es",
                         "lakehouse/database/max-compute"
                     ]
                 },
@@ -1342,6 +1349,7 @@
                                 "sql-manual/sql-reference/Show-Statements/SHOW-TABLE-ID",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-SMALL-FILES",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-POLICY",
+                                "sql-manual/sql-reference/Show-Statements/SHOW-STORAGE-POLICY-USING",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-CATALOG-RECYCLE-BIN",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-QUERY-STATS"
                             ]
@@ -1393,6 +1401,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.0.11",
                 "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",
                 "releasenotes/release-2.0.8",

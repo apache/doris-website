@@ -52,7 +52,7 @@ The time zone data contains the name of the time zone, the corresponding time of
 1. the directory returned by command `TZDIR`. If was not supported, the directory `/usr/share/zoneinfo`.
 2. the `zoneinfo` directory generated under the Doris BE deployment directory. The `resource/zoneinfo.tar.gz` directory from the Doris Repository.
 
-Look up the above data sources in order and use the current item if found. If the BE configuration item `use_doris_tzfile` is true, the search for the first item is skipped. If neither is found, the Doris BE will fail to start, please rebuild the BE correctly or get the distribution.
+Look up the above data sources in order and use the current item if found. If neither is found, the Doris BE will fail to start, please rebuild the BE correctly or get the distribution.
 
 ## Impact of time zone
 
@@ -227,7 +227,7 @@ Depending on the package manager used by the current operating system, you can u
 > sudo apt update tzdata
 ```
 
-The data updated in this way is located under the system `$TZDIR` (typically `usr/share/zoneinfo`). If `use_doris_tzfile = true`, the user should overwrite it to the `zoneinfo` directory in the BE deployment directory.
+The data updated in this way is located under the system `$TZDIR` (typically `usr/share/zoneinfo`).
 
 2. pull the IANA time zone database manually (recommended)
 
@@ -237,7 +237,7 @@ Most Linux distributions have a package manager where tzdata is not synchronised
 wget https://www.iana.org/time-zones/repository/tzdb-latest.tar.lz
 ```
 
-Then generate the specific zoneinfo data according the README file in the extracted folder. The generated data should be copied to `$TZDIR` or to the BE deployment directory, depending on the value of the BE config `use_doris_tzfile`.
+Then generate the specific zoneinfo data according the README file in the extracted folder. The generated data should be copied to override `$TZDIR` folder.
 
 Please note that all the above operations **must** be restarted **on the corresponding BE to take effect after they are done on the BE machine.
 

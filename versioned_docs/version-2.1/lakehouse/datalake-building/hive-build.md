@@ -140,7 +140,7 @@ This is an experimental feature.
 
     After creation, you can view the Hive table creation statement using the `SHOW CREATE TABLE` command.
 
-    Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema.
+    Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema. At the same time, the partition columns must be at the end of all schemas and in the same order.
 
 - Drop
 

@@ -62,6 +62,7 @@ The following 3 global variables can control some writing behaviors of the audit
 - `audit_plugin_max_batch_interval_sec`: The maximum write interval for the audit log table. Default 60 seconds.
 - `audit_plugin_max_batch_bytes`: The maximum amount of data written in each batch of the audit log table. Default 50MB.
 - `audit_plugin_max_sql_length`: The maximum length of statements recorded in the audit log table. Default 4096.
+- `audit_plugin_load_timeout`: The default timeout of audit log load job. Default 600 seconds.
 
 Can be set via `set global xxx=yyy`.
 
