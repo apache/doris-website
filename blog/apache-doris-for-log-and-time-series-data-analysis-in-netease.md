@@ -161,7 +161,7 @@ streaming_load_json_max_mb=250
 
 During peak times, the data platform is undertaking up to 1 million TPS and a writing throughput of 1GB/s. This is demanding for the system. Meanwhile, at peak time, a large number of concurrent write operations are loading data into lots of tables, but each individual write operation only involves a small amount of data. Thus, it takes a long time to accumulate a batch, which is contradictory to the data freshness requirement from the query side.
 
-As a result, the data platform was bottlenecked by data backlogs in Apache Kafka. NetEase adopts the [Stream Load](https://doris.apache.org/docs/2.0/data-operate/import/stream-load-manual) method to ingest data from Kafka to Doris. So the key was to accelerate Stream Load. After talking to the [Apache Doris developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ), NetEase adopted two optimizations for their log and time series data analysis:
+As a result, the data platform was bottlenecked by data backlogs in Apache Kafka. NetEase adopts the [Stream Load](https://doris.apache.org/docs/2.0/data-operate/import/stream-load-manual) method to ingest data from Kafka to Doris. So the key was to accelerate Stream Load. After talking to the [Apache Doris developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA), NetEase adopted two optimizations for their log and time series data analysis:
 
 - **Single replica data loading**: Load one data replica and pull data from it to generate more replicas. This avoids the overhead of ranking and creating indexes for multiple replicas.
 
@@ -234,4 +234,4 @@ If you want to enable `support_phrase` for existing tables that have already bee
 
 ## Conclusion
 
-Apache Doris supports the log and time series data analytic workloads of NetEase with higher query performance and less storage consumption. Beyond these, Apache Doris has other capabilities such as data lake analysis since it is designed as an all-in-one big data analytic platform. If you want a quick evaluation of whether Doris is right for your use case, come talk to the Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+Apache Doris supports the log and time series data analytic workloads of NetEase with higher query performance and less storage consumption. Beyond these, Apache Doris has other capabilities such as data lake analysis since it is designed as an all-in-one big data analytic platform. If you want a quick evaluation of whether Doris is right for your use case, come talk to the Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
