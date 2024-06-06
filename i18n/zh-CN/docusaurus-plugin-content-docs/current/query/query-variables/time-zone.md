@@ -52,7 +52,7 @@ Doris 内部存在以下两个时区相关参数：
 
 2. Doris BE 部署目录下生成的 `zoneinfo` 目录。产生自 Doris Repository 下的 `resource/zoneinfo.tar.gz`
 
-按顺序查找以上数据源，如果找到则使用当前项。如果 BE 配置项 `use_doris_tzfile` 为 true，则跳过对第一项的查找。如均未找到，则 Doris BE 将启动失败，请重新正确构建 BE 或获取发行版。
+按顺序查找以上数据源，如果找到则使用当前项。如均未找到，则 Doris BE 将启动失败，请重新正确构建 BE 或获取发行版。
 
 ## 时区的影响
 
@@ -226,7 +226,7 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
 > sudo apt update tzdata
 ```
 
-该方式更新的数据位于系统 `$TZDIR` 下（一般为 `usr/share/zoneinfo`）。如果 `use_doris_tzfile = true`，则用户应当将其覆盖至 BE 部署目录下的 `zoneinfo` 目录。
+该方式更新的数据位于系统 `$TZDIR` 下（一般为 `usr/share/zoneinfo`）。
 
 2. 直接拉取 IANA 时区数据库（推荐）
 
@@ -236,7 +236,7 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
 wget https://www.iana.org/time-zones/repository/tzdb-latest.tar.lz
 ```
 
-然后根据解压后文件夹中的 README 文件，生成具体的 zoneinfo 数据。生成的数据应当拷贝至 `$TZDIR` 还是 BE 部署目录，取决于 BE config `use_doris_tzfile` 的值。
+然后根据解压后文件夹中的 README 文件，生成具体的 zoneinfo 数据。生成的数据应当拷贝并覆盖 `$TZDIR` 目录。
 
 请注意，以上所有操作在 BE 所在机器上完成后，都**必须重启**对应 BE 才能生效。
 

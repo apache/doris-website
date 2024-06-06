@@ -385,17 +385,6 @@ Assume the files have been split into DictLibrary and FunctionUdf.
     jar -cf ./DictLibrary.jar ./DictLibrary.class
     ```
 
-2. Then compile the FunctionUdf file, directly referencing the resource package from the previous step, resulting in the FunctionUdf.jar package:
-
-    ```shell
-    javac -cp ./DictLibrary.jar ./FunctionUdf.java
-    jar -cvf ./FunctionUdf.jar ./FunctionUdf.class
-    ```
-
-3. After the above two steps, you will get two jar packages. To allow the resource jar package to be referenced by all concurrent instances, place it in the BE deployment path `be/lib/java_extensions/java-udf`. After restarting BE, it will be loaded with the JVM startup.
-
-4. Finally, use the `create function` statement to create a UDF function, with the file path pointing to the FunctionUdf.jar package. This way, the resource package will be loaded and released with the BE startup and shutdown. The FunctionUdf.jar will be loaded and released with the SQL execution cycle.
-
     ```java
     public class DictLibrary {
         private static HashMap<String, String> res = new HashMap<>();
@@ -427,6 +416,29 @@ Assume the files have been split into DictLibrary and FunctionUdf.
         }
     }
     ```
+
+2. Then compile the FunctionUdf file, directly referencing the resource package from the previous step, resulting in the FunctionUdf.jar package:
+
+    ```shell
+    javac -cp ./DictLibrary.jar ./FunctionUdf.java
+    jar -cvf ./FunctionUdf.jar ./FunctionUdf.class
+    ```
+
+3. After the above two steps, you will get two jar packages. To allow the resource jar package to be referenced by all concurrent instances, place it in the deployment path `fe/custom_lib` 和 `be/custom_lib`. After the restarting, it will be loaded with the JVM startup.
+
+4. Finally, use the `create function` statement to create a UDF function
+
+   ```sql
+   CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+    "symbol"="org.apache.doris.udf.FunctionUdf",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+   );
+   ```
+
+In this loading mode, both FunctionUdf.jar and DictLibrary.jar are in the custom_lib path of FE and BE. This way, the packages will be loaded and released with the service startup and shutdown.
+
+You can also customize the path to FunctionUdf.jar using file:///, but only under custom_lib.
 
 ## Usage Notes
 

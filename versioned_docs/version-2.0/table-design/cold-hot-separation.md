@@ -211,8 +211,6 @@ Furthermore, the garbage data on objects is not immediately cleaned up. The BE p
 
 ## TODOs
 
-- Currently, there is no way to query tables associated with a specific storage policy.
-
 - Some remote occupancy metrics may not have comprehensive update retrieval.
 
 ## FAQs

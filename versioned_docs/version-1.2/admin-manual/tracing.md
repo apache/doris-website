@@ -24,9 +24,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# tracing
+
 
 Tracing records the life cycle of a request execution in the system, including the request and its sub-procedure call links, execution time and statistics, which can be used for slow query location, performance bottleneck analysis, etc.
+
+:::caution
+Please note that Tracing is only supported in Doris 1.2 and is no longer avialable since Doris 2.0.
+:::
+
 
 ## Principle
 

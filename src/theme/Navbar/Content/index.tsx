@@ -128,7 +128,7 @@ export default function NavbarContent({ mobile }) {
                     </Link>
                     <Link
                         className="slack-btn desktop header-right-button-slack"
-                        href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ"
+                        href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA"
                         target="_blank"
                     ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">

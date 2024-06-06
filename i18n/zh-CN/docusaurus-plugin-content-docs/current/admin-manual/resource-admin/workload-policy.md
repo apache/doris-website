@@ -44,6 +44,7 @@ Workload Policy主要包含以下几个概念：
 * properties，定义了当前policy的属性，包括是否启用和优先级。
 
 上面例子中policy的含义是，创建一个名为`test_cancel_policy`的policy，它会取消掉集群中运行时间超过1s的查询，当前状态为启用。
+创建 Workload Policy 需要 admin_priv 权限。
 
 ## 基本用法
 由于action的行为有的只能在FE生效，有的只能在BE生效，因此policy本身也有FE和BE的区别。

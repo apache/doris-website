@@ -28,6 +28,10 @@ under the License.
 
 本文介绍在 Doris 中支持的 Hive 操作，语法和使用须知。
 
+:::tip
+这是一个实验功能。
+:::
+
 ## 元数据创建与删除
 
 ### Catalog
@@ -137,7 +141,7 @@ under the License.
     
     创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Hive 的建表语句。
     
-    注意，不同于 Hive 中的建表语句。在 Doris 中创建 Hive 分区表时，分区列也必须写到 Table 的 Schema 中。
+    注意，不同于 Hive 中的建表语句。在 Doris 中创建 Hive 分区表时，分区列也必须写到 Table 的 Schema 中。同时，分区列必须在所有 Schema 的最后，且顺序保持一致。
 
 - 删除
 

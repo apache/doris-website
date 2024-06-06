@@ -67,7 +67,3 @@ User 级别的配置项只会对指定用户生效，并不会影响其他用户
 ### resource
 
 ### quota
-
-### default_load_cluster
-
-### load_cluster

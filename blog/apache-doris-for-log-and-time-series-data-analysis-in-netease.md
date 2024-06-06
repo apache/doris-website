@@ -1,12 +1,12 @@
 ---
 {
     'title': 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
-    'summary': "NetEase has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.",
+    'summary': "NetEase (NASDAQ: NTES) has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.",
     'date': '2024-05-23',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/doris-for-log-and-time-series-data-analysis-in-netease.jpg'
 }
 
@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-For most people looking for a log management and analytics solution, Elasticsearch is the go-to choice. The same applies to InfluxDB for time series data analysis. These were exactly the choices of NetEase, one of the world's highest-yielding game companies but more than that. As NetEase expands its business horizons, the logs and time series data it receives explode, and problems like surging storage costs and declining stability come. As NetEase's pick among all big data components for platform upgrades, [Apache Doris](https://doris.apache.org) fits into both scenarios and brings much faster query performance.  
+For most people looking for a log management and analytics solution, Elasticsearch is the go-to choice. The same applies to InfluxDB for time series data analysis. These were exactly the choices of [NetEase,Inc. *(NASDAQ: NTES)*](https://finance.yahoo.com/quote/NTES/), one of the world's highest-yielding game companies but more than that. As NetEase expands its business horizons, the logs and time series data it receives explode, and problems like surging storage costs and declining stability come. As NetEase's pick among all big data components for platform upgrades, [Apache Doris](https://doris.apache.org) fits into both scenarios and brings much faster query performance.  
 
 We list the gains of NetEase after adopting Apache Doris in their monitoring platform and time series data platform, and share their best practice with users who have similar needs.
 
@@ -161,7 +161,7 @@ streaming_load_json_max_mb=250
 
 During peak times, the data platform is undertaking up to 1 million TPS and a writing throughput of 1GB/s. This is demanding for the system. Meanwhile, at peak time, a large number of concurrent write operations are loading data into lots of tables, but each individual write operation only involves a small amount of data. Thus, it takes a long time to accumulate a batch, which is contradictory to the data freshness requirement from the query side.
 
-As a result, the data platform was bottlenecked by data backlogs in Apache Kafka. NetEase adopts the [Stream Load](https://doris.apache.org/docs/2.0/data-operate/import/stream-load-manual) method to ingest data from Kafka to Doris. So the key was to accelerate Stream Load. After talking to the [Apache Doris developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ), NetEase adopted two optimizations for their log and time series data analysis:
+As a result, the data platform was bottlenecked by data backlogs in Apache Kafka. NetEase adopts the [Stream Load](https://doris.apache.org/docs/2.0/data-operate/import/stream-load-manual) method to ingest data from Kafka to Doris. So the key was to accelerate Stream Load. After talking to the [Apache Doris developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA), NetEase adopted two optimizations for their log and time series data analysis:
 
 - **Single replica data loading**: Load one data replica and pull data from it to generate more replicas. This avoids the overhead of ranking and creating indexes for multiple replicas.
 
@@ -234,4 +234,4 @@ If you want to enable `support_phrase` for existing tables that have already bee
 
 ## Conclusion
 
-Apache Doris supports the log and time series data analytic workloads of NetEase with higher query performance and less storage consumption. Beyond these, Apache Doris has other capabilities such as data lake analysis since it is designed as an all-in-one big data analytic platform. If you want a quick evaluation of whether Doris is right for your use case, come talk to the Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+Apache Doris supports the log and time series data analytic workloads of NetEase with higher query performance and less storage consumption. Beyond these, Apache Doris has other capabilities such as data lake analysis since it is designed as an all-in-one big data analytic platform. If you want a quick evaluation of whether Doris is right for your use case, come talk to the Doris makers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).

@@ -32,7 +32,7 @@
                         "install/cluster-deployment/run-docker-cluster",
                         {
                             "type": "category",
-                            "label": "Deploying on Kunbernets",
+                            "label": "Deploying on Kubernetes",
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-operator",
@@ -280,8 +280,16 @@
                     "type": "category",
                     "label": "Analyzing Database",
                     "items": [
-                        "lakehouse/database/es",
                         "lakehouse/database/jdbc",
+                        "lakehouse/database/mysql",
+                        "lakehouse/database/postgresql",
+                        "lakehouse/database/oracle",
+                        "lakehouse/database/sqlserver",
+                        "lakehouse/database/ibm-db2",
+                        "lakehouse/database/clickhouse",
+                        "lakehouse/database/sap-hana",
+                        "lakehouse/database/oceanbase",
+                        "lakehouse/database/es",
                         "lakehouse/database/max-compute"
                     ]
                 },
@@ -389,6 +397,13 @@
                         "admin-manual/config/user-property"
                     ]
                 },
+                {
+                    "type": "category",
+                    "label": "System Tables",
+                    "items": [
+                        "admin-manual/system-tables/tables"
+                    ]
+                },
                 "admin-manual/audit-plugin",
                 {
                     "type": "category",
@@ -493,6 +508,7 @@
                 "ecosystem/logstash",
                 "ecosystem/beats",
                 "ecosystem/cloudcanal",
+                "ecosystem/automq-load",
                 "ecosystem/doris-streamloader",
                 "ecosystem/hive-bitmap-udf",
                 "ecosystem/hive-hll-udf",
@@ -533,6 +549,8 @@
                                 "sql-manual/sql-functions/array-functions/array-sort",
                                 "sql-manual/sql-functions/array-functions/array-reverse-sort",
                                 "sql-manual/sql-functions/array-functions/array-sortby",
+                                "sql-manual/sql-functions/array-functions/array-split",
+                                "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
                                 "sql-manual/sql-functions/array-functions/array-except",
@@ -822,6 +840,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
+                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
@@ -1284,7 +1303,8 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Drop/TRUNCATE-TABLE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW",
-                                        "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-JOB"
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-JOB",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-CATALOG-RECYCLE-BIN"
                                     ]
                                 },
                                 {
@@ -1429,6 +1449,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-TABLE-ID",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SMALL-FILES",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-POLICY",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOG-RECYCLE-BIN",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-QUERY-STATS"
                             ]
@@ -1503,6 +1524,7 @@
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",
                 "releasenotes/release-2.1.0",
+                "releasenotes/release-2.0.11",
                 "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",
                 "releasenotes/release-2.0.8",
