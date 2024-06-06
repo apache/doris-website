@@ -549,6 +549,8 @@
                                 "sql-manual/sql-functions/array-functions/array-sort",
                                 "sql-manual/sql-functions/array-functions/array-reverse-sort",
                                 "sql-manual/sql-functions/array-functions/array-sortby",
+                                "sql-manual/sql-functions/array-functions/array-split",
+                                "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
                                 "sql-manual/sql-functions/array-functions/array-except",
