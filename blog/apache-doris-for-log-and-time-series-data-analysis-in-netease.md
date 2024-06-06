@@ -1,12 +1,12 @@
 ---
 {
     'title': 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
-    'summary': "NetEase has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.",
+    'summary': "NetEase (NASDAQ: NTES) has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.",
     'date': '2024-05-23',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/doris-for-log-and-time-series-data-analysis-in-netease.jpg'
 }
 
@@ -31,7 +31,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-For most people looking for a log management and analytics solution, Elasticsearch is the go-to choice. The same applies to InfluxDB for time series data analysis. These were exactly the choices of NetEase, one of the world's highest-yielding game companies but more than that. As NetEase expands its business horizons, the logs and time series data it receives explode, and problems like surging storage costs and declining stability come. As NetEase's pick among all big data components for platform upgrades, [Apache Doris](https://doris.apache.org) fits into both scenarios and brings much faster query performance.  
+For most people looking for a log management and analytics solution, Elasticsearch is the go-to choice. The same applies to InfluxDB for time series data analysis. These were exactly the choices of [NetEase,Inc. *(NASDAQ: NTES)*](https://finance.yahoo.com/quote/NTES/), one of the world's highest-yielding game companies but more than that. As NetEase expands its business horizons, the logs and time series data it receives explode, and problems like surging storage costs and declining stability come. As NetEase's pick among all big data components for platform upgrades, [Apache Doris](https://doris.apache.org) fits into both scenarios and brings much faster query performance.  
 
 We list the gains of NetEase after adopting Apache Doris in their monitoring platform and time series data platform, and share their best practice with users who have similar needs.
 
