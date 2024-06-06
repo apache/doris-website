@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Best Practice'],
+        title: "Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation",
+        content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
+        to: '/blog/job-scheduler-for-task-automation',
+        image: 'job-scheduler-for-task-automation.jpg',
+    },
+    {
         tags: ['Release Note'],
         title: "Apache Doris version 2.0.11 just released",
         content: `Thanks to our community users and developers, about 123 improvements and bug fixes have been made in Doris 2.0.11 version.`,
@@ -20,11 +27,5 @@ export const NEWSLETTER_DATA = [
         to: '/blog/multi-tenant-workload-isolation-in-apache-doris',
         image: 'multi-tenant-workload-group.jpg',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
-        content: `Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.`,
-        to: '/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
-        image: 'sql-convertor-feature.jpeg',
-    },
+
 ];
