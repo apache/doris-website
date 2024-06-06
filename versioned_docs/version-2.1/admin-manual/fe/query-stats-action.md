@@ -66,12 +66,12 @@ GET /api/query_stats/default_cluster/test_query_db/baseall?summary=false
     "msg": "success",
     "code": 0,
     "data": {
-        "description": {
+        "summary": {
             "query": 2
         },
         "detail": {
             "baseall": {
-                "description": {
+                "summary": {
                     "query": 2
                 }
             }
