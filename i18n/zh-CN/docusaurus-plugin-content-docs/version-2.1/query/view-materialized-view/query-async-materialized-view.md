@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS lineitem (
     )
     DUPLICATE KEY(l_orderkey, l_partkey, l_suppkey, l_linenumber)
     PARTITION BY RANGE(l_shipdate)
-(FROM ('2023-10-17') TO ('2023-10-20') INTERVAL 1 DAY)
+(FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
     DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3
     PROPERTIES ("replication_num" = "1");
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS orders  (
     )
     DUPLICATE KEY(o_orderkey, o_custkey)
     PARTITION BY RANGE(o_orderdate)(
-    FROM ('2023-10-17') TO ('2023-10-20') INTERVAL 1 DAY)
+    FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
     DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
     PROPERTIES ("replication_num" = "1");
 
@@ -369,7 +369,7 @@ mv 定义：
 ```
 
 ## Union 改写
-当物化视图不足以提供查询的所有数据时，可以通过 union all 的方式，将查询原表和物化视图 union all 起来返回数据响应查询。
+当物化视图不足以提供查询的所有数据时，可以使用 union all 的方式，将查询原表和物化视图的数据结合作为最终返回结果。
 目前需要物化视图是分区物化视图，可以对分区字段的过滤条件使用 union all 补全数据。
 
 **用例 1**
@@ -385,27 +385,30 @@ as
 select l_shipdate, o_orderdate, l_partkey,
        l_suppkey, sum(o_totalprice) as sum_total
 from lineitem
-       left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
-where l_shipdate > '2024-06-01'
+         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
 group by
-  l_shipdate,
-  o_orderdate,
-  l_partkey,
-  l_suppkey;
+    l_shipdate,
+    o_orderdate,
+    l_partkey,
+    l_suppkey;
 ```
 
-查询语句：
+当基表新增分区 `2023-10-21` 时，并且物化视图还未刷新时，可以通过物化视图 union all 原表的方式返回结果
 ```sql
-select l_shipdate, o_orderdate, l_partkey,
-       l_suppkey, sum(o_totalprice) as sum_total
+insert into lineitem values
+    (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-21', '2023-10-21', '2023-10-21', 'a', 'b', 'yyyyyyyyy');
+```
+
+运行查询语句：
+```sql
+select l_shipdate, o_orderdate, l_partkey, l_suppkey, sum(o_totalprice) as sum_total
 from lineitem
-       left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
-where l_shipdate > '2024-05-01'
+         left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
 group by
-  l_shipdate,
-  o_orderdate,
-  l_partkey,
-  l_suppkey;
+    l_shipdate,
+    o_orderdate,
+    l_partkey,
+    l_suppkey;
 ```
 
 改写结果示意：
@@ -413,17 +416,20 @@ group by
 SELECT *
 FROM mv7
 union all
-select l_shipdate, o_orderdate, l_partkey,
-       l_suppkey, sum(o_totalprice) as sum_total
-from lineitem
-       left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
-where l_shipdate > '2024-05-01' and l_shipdate <= '2024-06-01'
+select t1.l_shipdate, o_orderdate, t1.l_partkey, t1.l_suppkey, sum(o_totalprice) as sum_total
+from (select * from lineitem where l_shipdate = '2023-10-21') t1
+         left join orders on t1.l_orderkey = orders.o_orderkey and t1.l_shipdate = o_orderdate
 group by
-  l_shipdate,
-  o_orderdate,
-  l_partkey,
-  l_suppkey;
+    t1.l_shipdate,
+    o_orderdate,
+    t1.l_partkey,
+    t1.l_suppkey;
 ```
+
+注意：
+物化视图带 where 条件，以上述为例，构建物化的过滤条件是 `where l_shipdate > '2023-10-19'` 查询是 `where l_shipdate > '2023-10-18'`
+目前这种还无法通过union补偿，待支持
+
 
 ## 嵌套物化视图改写
 物化视图的定义SQL可以使用物化视图，此物化视图称为嵌套物化视图，嵌套的层数理论上没有限制，此物化视图可以直查，也可以进行透明改写。
@@ -666,13 +672,29 @@ show partitions from mv_name;
 CREATE MATERIALIZED VIEW mv9
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 partition by(l_shipdate)
-DISTRIBUTED BY HASH(uuid) BUCKETS 10
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
+PROPERTIES ('replication_num' = '1') 
 AS
 SELECT l_shipdate, l_orderkey, O_ORDERDATE,
        count(O_ORDERDATE) over (partition by l_shipdate order by l_orderkey) as window_count
 FROM lineitem
 LEFT OUTER JOIN orders on l_orderkey = o_orderkey
-GROUP BY l_shipdate, l_orderkey, O_ORDERDATE
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
+```
+如下的物化视图是不可以进行分区增量更新的，因为 `l_shipdate` 来自 `LEFT OUTER JOIN` 的右侧 null 产生端。
+
+```sql
+CREATE MATERIALIZED VIEW mv10
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(l_shipdate)
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
+PROPERTIES ('replication_num' = '1') 
+AS
+SELECT l_shipdate, l_orderkey, O_ORDERDATE,
+       count(O_ORDERDATE) over (partition by l_shipdate order by l_orderkey) as window_count
+FROM orders 
+LEFT OUTER JOIN lineitem on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 ```
 
 
@@ -695,15 +717,74 @@ select * from tasks("type"="mv") where JobName = 'job_name';
 
 ## 6. 物化视图使用的基表数据变了，但是此时物化视图还没有刷新，透明改写的行为是？
 异步物化视图的数据时效性和基表是有一定时延的。
-对于内表和可以感知数据变化的外表（比如hive），当基表的数据变更时，此物化视图是否可用是通过 `grace_period` 的阈值来决定的。
+对于内表和可以感知数据变化的外表（比如hive），当基表的数据变更时，此物化视图是否可用于透明改写是通过 `grace_period` 的阈值来决定的。
 `grace_period` 指的是容许物化视图和所用基表数据不一致的时间。 
 
 比如 grace_period 设置成 0，意味要求物化视图和基表数据保持一致，此物化视图才可用于透明改写；
-对于外表（除 hive 外），因为无法感知数据变更，所以物化视图使用了外表，无论外表的数据是不是最新的，都可以使用此物化视图用于透明改写（数据会不一致）。
+对于外表（除 hive 外），因为无法感知数据变更，所以物化视图使用了外表，无论外表的数据是不是最新的，都可以使用此物化视图用于透明改写（此种情况数据会不一致）。
    
 如果设置成 10，意味物化视图和基表数据允许 10s 的延迟，如果物化视图的数据和基表的数据有延迟，如果在 10s 内，此物化视图都可以用于透明改写。
 
 如果物化视图是分区物化视图，如果部分分区失效。有如下两种情况
-1. 查询没有使用失效的分区数据，那么此物化视图依然可用。
+1. 查询没有使用失效的分区数据，那么此物化视图依然可用于透明改写。
 2. 查询使用了失效分区的数据，并且数据时效在 `grace_period` 范围内，那么此物化视图依然可用。如果物化视图数据时效不在 `grace_period` 范围内。
-可以通过 union all 原表和物化视图来响应查询。需要打开 `SET enable_materialized_view_union_rewrite = true`（允许union改写）开关。
+可以通过 union all 原表和物化视图来响应查询。
+
+## 7. 怎么确认是否命中，如果不命中怎么查看原因？
+可以通过 `explain query_sql` 的方式查看是否命中和不命中的摘要信息，例如如下物化视图
+```sql
+CREATE MATERIALIZED VIEW mv11
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(l_shipdate)
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
+PROPERTIES ('replication_num' = '1')
+AS
+SELECT l_shipdate, l_orderkey, O_ORDERDATE, count(*)
+FROM lineitem  
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
+```
+
+查询如下
+
+```sql
+explain
+SELECT l_shipdate, l_linestatus, O_ORDERDATE, count(*)
+FROM orders
+LEFT OUTER JOIN lineitem on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
+```
+
+Explain 显示信息可以看到 `MaterializedViewRewriteFail` 有失败的摘要信息，
+`The graph logic between query and view is not consistent` 表示查询和物化join的逻辑不一致，上述查询和物化 join的表顺序不一致所以会报这个错。
+```text
+| MaterializedView                                                                                                          |
+| MaterializedViewRewriteSuccessAndChose:                                                                                   |
+|                                                                                                                           |
+| MaterializedViewRewriteSuccessButNotChose:                                                                                |
+|                                                                                                                           |
+| MaterializedViewRewriteFail:                                                                                              |
+|   Name: internal#doc_test#mv11                                                                                            |
+|   FailSummary: View struct info is invalid, The graph logic between query and view is not consistent
+```
+
+来看另一个查询
+```sql
+explain
+SELECT l_shipdate, l_linestatus, O_ORDERDATE, count(*)
+FROM lineitem  
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
+```
+Explain 显示信息如下
+```text
+| MaterializedView                                                                                                          |
+| MaterializedViewRewriteSuccessAndChose:                                                                                   |
+|                                                                                                                           |
+| MaterializedViewRewriteSuccessButNotChose:                                                                                |
+|                                                                                                                           |
+| MaterializedViewRewriteFail:                                                                                              |
+|   Name: internal#doc_test#mv11                                                                                            |
+|   FailSummary: View struct info is invalid, View dimensions doesn't not cover the query dimensions    
+```
+失败的摘要信息为 `View dimensions doesn't not cover the query dimensions`，表示查询中 `group by` 的字段不能从物化 `group by` 中获取，会报这个错。
