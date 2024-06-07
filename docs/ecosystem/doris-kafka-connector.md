@@ -81,8 +81,6 @@ When using Kafka-connector-doris to import data in Debezium Struct format from a
 ```properties
 # The upstream data in Kafka comes from Debezium
 converter.mode=debezium_ingestion
-key.converter.schemas.enable=true
-value.converter.schemas.enable=true
 ```
 
 For example, to import data from the Kafka topic `pg_test.doris_test.all_types` into the `all_types` table in Apache Doris, the `doris-connector-sink.properties` configuration is as follows:
@@ -105,8 +103,6 @@ doris.password=123456
 doris.database=doris_test
 key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
-key.converter.schemas.enable=true
-value.converter.schemas.enable=true
 tasks.max=5
 ```
 
