@@ -76,6 +76,39 @@ doris.database=test_db
 key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
 ```
+When using Kafka-connector-doris to import data in Debezium Struct format from a Kafka topic, the following configuration needs to be added:
+
+```properties
+# The upstream data in Kafka comes from Debezium
+converter.mode=debezium_ingestion
+key.converter.schemas.enable=true
+value.converter.schemas.enable=true
+```
+
+For example, to import data from the Kafka topic `pg_test.doris_test.all_types` into the `all_types` table in Apache Doris, the `doris-connector-sink.properties` configuration is as follows:
+
+```properties
+name=test-doris-sink
+connector.class=org.apache.doris.kafka.connector.DorisSinkConnector
+topics=pg_test.doris_test.all_types
+doris.topic2table.map=pg_test.doris_test.all_types:all_types
+converter.mode=debezium_ingestion
+debezium.schema.evolution=basic
+buffer.count.records=100000
+buffer.flush.time=120
+buffer.size.bytes=50000000
+doris.urls=10.10.10.1
+doris.http.port=8030
+doris.query.port=9030
+doris.user=root
+doris.password=123456
+doris.database=doris_test
+key.converter=org.apache.kafka.connect.storage.StringConverter
+value.converter=org.apache.kafka.connect.json.JsonConverter
+key.converter.schemas.enable=true
+value.converter.schemas.enable=true
+tasks.max=5
+```
 
 Start Standalone
 
