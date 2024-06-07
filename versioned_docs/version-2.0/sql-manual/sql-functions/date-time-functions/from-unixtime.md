@@ -36,8 +36,6 @@ Input is an big integer and return is a string type
 
 Support `date_format`'s format, and default is `%Y-%m-%d %H:%i:%s`
 
-Other `string_format` is illegal and will returns NULL.
-
 The current supported range for `unix_timestamp` is `[0, 32536771199]`. `unix_timestamp` values that fall outside of this range will be returned as NULL
 
 ### example

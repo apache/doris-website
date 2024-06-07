@@ -28,11 +28,11 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 active_queries
 
-</version>
+:::caution
+自 2.1.1 起，此表函数移到 information_schema.active_queries 表。
+:::
 
 ### description
 

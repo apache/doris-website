@@ -40,7 +40,7 @@ Dear Apache Doris community, we are thrilled to announce the advent of Apache Do
 
 - **Better workload management**: optimizations of the Workload Group mechanism for higher performance stability and the display of SQL resource consumption in the runtime.
 
-We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback. We will keep aiming for the stars with our agile release planning, and we appreciate your feedback in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ). 
+We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback. We will keep aiming for the stars with our agile release planning, and we appreciate your feedback in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). 
 
 
 **Download from GitHub**: https://github.com/apache/doris/releases
@@ -407,7 +407,7 @@ PROPERTIES (
 :::
 
 :::note
-See doc: https://doris.apache.org/docs/advanced/partition/auto-partition/
+See doc: https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E8%87%AA%E5%8A%A8%E5%88%86%E5%8C%BA
 :::
 
 ### 100% faster INSERT INTO SELECT

@@ -1,6 +1,6 @@
 ---
 {
-"title": "Configure Doris Cluster",
+"title": "Configuring Doris Cluster",
 "language": "en"
 }
 ---

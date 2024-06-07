@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-本文档介绍如何使用 [SELECT INTO OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE) 命令进行查询结果的导出操作。
+本文档介绍如何使用 [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE) 命令进行查询结果的导出操作。
 
 `SELECT INTO OUTFILE` 是一个同步命令，命令返回即表示操作结束，同时会返回一行结果来展示导出的执行结果。
 
@@ -56,7 +56,7 @@ select * from tbl1 limit 10
 INTO OUTFILE "file:///home/work/path/result_";
 ```
 
-更多用法可查看[OUTFILE 文档](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE)。
+更多用法可查看[OUTFILE 文档](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE)。
 
 ## 并发导出
 
@@ -171,4 +171,4 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 ## 更多帮助
 
-关于 OUTFILE 使用的更多详细语法及最佳实践，请参阅 [OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP OUTFILE` 获取更多帮助信息。
+关于 OUTFILE 使用的更多详细语法及最佳实践，请参阅 [OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP OUTFILE` 获取更多帮助信息。

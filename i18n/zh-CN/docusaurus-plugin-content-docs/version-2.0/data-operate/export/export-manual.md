@@ -184,6 +184,13 @@ FinishTime: 2019-06-25 17:08:34
 
 ### 取消导出任务
 
+:::info 备注
+
+`CANCEL EXPORT` 命令自 Doris 1.2.2 版本起支持。
+
+:::
+
+
 提交作业后，可以通过 [CANCEL EXPORT](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT) 命令取消导出作业。取消命令举例如下：
 
 ```sql

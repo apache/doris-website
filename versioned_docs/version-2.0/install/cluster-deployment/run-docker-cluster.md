@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Docker Cluster",
+    "title": "Deploying with Docker",
     "language": "en"
 }
 ---

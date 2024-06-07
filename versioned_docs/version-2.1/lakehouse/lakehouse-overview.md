@@ -43,7 +43,7 @@ We design the Doris lakehouse solution for the following four applicable scenari
 
 ## Doris-based data lakehouse architecture
 
-Apache Doris can work as a data lakehouse with its [Multi Catalog](https://doris.apache.org/docs/lakehouse/multi-catalog/?_highlight=multi&_highlight=catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
+Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
 
 ![doris-based-data-lakehouse-architecture](/images/doris-based-data-lakehouse-architecture.png)
 
@@ -150,7 +150,7 @@ Existing databases and tables in Doris are all under the Internal Catalog, which
 
 - External Catalog
 
-Users can create an External Catalog using the [CREATE CATALOG](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/) command.
+Users can create an External Catalog using the [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS/) command.
 
 - Switch Catalog
 
@@ -167,7 +167,7 @@ After switching catalog, you can view or switch to your target database in that 
 
 - Delete Catalog
 
-You cand delete an External Catalog via the [DROP CATALOG](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
+You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
 
 ### Examples
 
@@ -175,7 +175,7 @@ You cand delete an External Catalog via the [DROP CATALOG](https://doris.apache.
 
 The following is the instruction on how to connect to a Hive catalog using the Catalog feature.
 
-For more information about connecting to Hive, please see [Hive](https://doris.apache.org/docs/2.0/lakehouse/datalake/hive).
+For more information about connecting to Hive, please see [Hive](../lakehouse/datalake-analytics/hive).
 
 1. Create Catalog
 
@@ -186,7 +186,7 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-Syntax help: [CREATE CATALOG](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG/)
+Syntax help: [CREATE CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG/)
 
 1. View Catalog
 2. View existing Catalogs via the `SHOW CATALOGS` command:
@@ -201,9 +201,9 @@ mysql> SHOW CATALOGS;
 +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-- [SHOW CATALOGS](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/)
-- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Show-Statements/SHOW-CREATE-CATALOG).
-- You can modify the Catalog PROPERTIES via [ALTER CATALOG](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-CATALOG).
+- [SHOW CATALOGS](../sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS/)
+- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](../sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG).
+- You can modify the Catalog PROPERTIES via [ALTER CATALOG](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-CATALOG).
 
 1. Switch Catalog
 
@@ -226,7 +226,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-Syntax help: [SWITCH](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Utility-Statements/SWITCH/)
+Syntax help: [SWITCH](../sql-manual/sql-statements/Utility-Statements/SWITCH/)
 
 1. Use the Catalog
 
@@ -360,11 +360,11 @@ You can find more details of the mapping of various data sources (Hive, Iceberg,
 
 When using Doris to access the data in the External Catalog, by default, it relies on Doris's own permission access management function.
 
-Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Privilege Management](https://doris.apache.org/docs/2.0/admin-manual/privilege-ldap/user-privilege) for details).
+Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for details).
 
 Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
 
-`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive](https://doris.apache.org/docs/2.0/lakehouse/datalake/hive)
+`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive](../lakehouse/datalake-analytics/hive)
 
 ### Database synchronization management
 
@@ -376,7 +376,7 @@ Set `include_database_list` and `exclude_database_list` in Catalog properties to
 
 > If there is overlap between `include_database_list` and `exclude_database_list`, `exclude_database_list`will take precedence over `include_database_list`.
 >
-> To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](https://doris.apache.org/docs/2.0/lakehouse/database/jdbc) for more details.
+> To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](../lakehouse/database/jdbc) for more details.
 
 ### Metadata refresh
 
@@ -386,7 +386,7 @@ Users can refresh metadata in the following ways.
 
 #### Manual refresh
 
-Users need to manually refresh the metadata through the [REFRESH](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Utility-Statements/REFRESH) command.
+Users need to manually refresh the metadata through the [REFRESH](../sql-manual/sql-statements/Utility-Statements/REFRESH) command.
 
 #### Regular refresh
 
@@ -407,4 +407,4 @@ CREATE CATALOG es PROPERTIES (
 
 #### Auto Refresh
 
-Currently Doris supports auto-refresh for [Hive](https://doris.apache.org/docs/2.0/lakehouse/datalake/hive) Catalog.
+Currently Doris supports auto-refresh for [Hive](../lakehouse/datalake-analytics/hive) Catalog.

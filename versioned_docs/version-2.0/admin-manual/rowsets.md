@@ -1,6 +1,6 @@
 ---
 {
-    "title": "rowsets",
+    "title": "Using rowsets",
     "language": "en"
 }
 ---

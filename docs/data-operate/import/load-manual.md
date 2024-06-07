@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Import Overview",
+    "title": "Loading Overview",
     "language": "en"
 }
 ---
@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Import Overview
+
 
 ## Supported Data Sources
 
@@ -32,26 +32,26 @@ Doris provides a variety of data import solutions, and you can choose different 
 
 ### By Scene
 
-| Data Source                          | Import Method                                                |
-| ------------------------------------ | ------------------------------------------------------------ |
-| Object Storage (s3), HDFS            | [Import data using Broker](./import-scenes/external-storage-load.md) |
-| Local file                           | [Import local data](./import-scenes/local-file-load.md)    |
-| Kafka                                | [Subscribe to Kafka data](./import-scenes/kafka-load.md)   |
-| Mysql, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./import-scenes/external-table-load.md) |
-| Import via JDBC                      | [Sync data using JDBC](./import-scenes/jdbc-load.md)       |
-| Import JSON format data              | [JSON format data import](./import-way/load-json-format.md) |
+| Data Source                          | Loading Method                                        |
+| ------------------------------------ |-------------------------------------------------------|
+| Object Storage (s3), HDFS            | [Loading data using Broker](./broker-load-manual)     |
+| Local file                           | [Loading local data](./stream-load-manual)            |
+| Kafka                                | [Subscribing to Kafka data](./routine-load-manual)    |
+| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./mysql-load-manual)   |
+| Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc) |
+| Loading JSON format data              | [JSON format data Loading](./load-json-format)        |
+| AutoMQ                            | [AutoMQ Load](../../ecosystem/automq-load.md)                       |
 
-### Divided by Import Method
+### By Loading Method
 
-| Import method name | Use method                                                   |
+| Loading method name | Use method                                                   |
 | ------------------ | ------------------------------------------------------------ |
-| Spark Load         | [Import external data via Spark](./import-way/spark-load-manual.md) |
-| Broker Load        | [Import external storage data via Broker](./import-way/broker-load-manual.md) |
-| Stream Load        | [Stream import data (local file and memory data)](./import-way/stream-load-manual.md) |
-| Routine Load       | [Import Kafka data](./import-way/routine-load-manual.md)   |
-| Insert Into        | [External table imports data through INSERT](./import-way/insert-into-manual.md) |
-| S3 Load            | [Object storage data import of S3 protocol](./import-way/s3-load-manual.md) |
-| MySql Load         | [Local data import of MySql protocol](./import-way/mysql-load-manual.md) |
+| Broker Load        | [Import external storage data via Broker](./broker-load-manual) |
+| Stream Load        | [Stream import data (local file and memory data)](./stream-load-manual) |
+| Routine Load       | [Import Kafka data](./routine-load-manual)   |
+| Insert Into        | [External table imports data through INSERT](./insert-into-manual) |
+| S3 Load            | [Object storage data import of S3 protocol](./broker-load-manual) |
+| MySQL Load         | [Local data import of MySql protocol](./mysql-load-manual) |
 
 ## Supported Data Formats
 

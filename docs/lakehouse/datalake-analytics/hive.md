@@ -217,7 +217,7 @@ You can also set this value to 0 to disable file caching, which will fetch file 
 
 ### Manual refresh
 
-Users need to manually refresh the metadata through the [REFRESH](../../sql-manual/sql-reference/Utility-Statements/REFRESH.md) command.
+Users need to manually refresh the metadata through the [REFRESH](../../sql-manual/sql-statements/Utility-Statements/REFRESH.md) command.
 
 1. REFRESH CATALOG: Refresh the specified Catalog.
 
@@ -406,7 +406,7 @@ Doris supports using Apache Ranger for authentication for a specified External H
 
 Currently, authentication of database, table, and column is supported. Functions such as encryption, row policy, and data masks are not currently supported.
 
-To use Apache Ranger to authenticate the entire Doris cluster service, please refer to [Apache Ranger Authentication](../../admin-manual/privilege-ldap/ranger.md)
+To use Apache Ranger to authenticate the entire Doris cluster service, please refer to [Apache Ranger](../../admin-manual/auth/ranger.md)
 
 ### Settings
 
@@ -568,7 +568,7 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
 ### Troubleshooting
 
-In case of Kerberos authentication problems, after setting the JVM parameter `-Dsun.security.krb5.debug=true`, Kerberos authentication related information will be printed in `fe.out` or `be.out`. You can refer to the related errors in [FAQ](../faq.md) for troubleshooting.
+In case of Kerberos authentication problems, after setting the JVM parameter `-Dsun.security.krb5.debug=true`, Kerberos authentication related information will be printed in `fe.out` or `be.out`. You can refer to the related errors in [FAQ](../../faq/lakehouse-faq) for troubleshooting.
 
 ## Hive Transactional Tables
 

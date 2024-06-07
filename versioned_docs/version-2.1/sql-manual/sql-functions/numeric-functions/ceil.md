@@ -27,8 +27,16 @@ under the License.
 ### description
 #### Syntax
 
-`BIGINT ceil(DOUBLE x)`
-Returns the smallest integer value greater than or equal to `x`.
+`T ceil(T x[, d])`
+
+If not specified `d`: returns the smallest integer value less than or equal to `x`, which is **the most common usage**.
+Otherwise, returns the smallest round number that is less than or equal to `x` and flowing the rules:
+
+If `d` is specified as literal:  
+`d` = 0: just like without `d`
+`d` > 0 or `d` < 0: the round number would be a multiple of `1/(10^d)`, or the nearest number of the appropriate data type if `1/(10^d)` isn't exact.
+
+Else if `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
 
 :::tip
 The other alias for this function are `dceil` and `ceiling`.
@@ -55,6 +63,24 @@ mysql> select ceil(-10.3);
 +-------------+
 |         -10 |
 +-------------+
+mysql> select ceil(123.45, 1), ceil(123.45), ceil(123.45, 0), ceil(123.45, -1);
++-----------------+--------------+-----------------+------------------+
+| ceil(123.45, 1) | ceil(123.45) | ceil(123.45, 0) | ceil(123.45, -1) |
++-----------------+--------------+-----------------+------------------+
+|           123.5 |          124 |             124 |              130 |
++-----------------+--------------+-----------------+------------------+
+mysql> SELECT number
+    -> , ceil(number * 2.5, number - 1) AS c_decimal_column
+    -> , ceil(number * 2.5, 0) AS c_decimal_literal
+    -> , ceil(cast(number * 2.5 AS DOUBLE), number - 1) AS c_double_column
+    -> , ceil(cast(number * 2.5 AS DOUBLE), 0) AS c_double_literal
+    -> FROM test_enhanced_round
+    -> WHERE rid = 1;
++--------+------------------+-------------------+-----------------+------------------+
+| number | c_decimal_column | c_decimal_literal | c_double_column | c_double_literal |
++--------+------------------+-------------------+-----------------+------------------+
+|      1 |              3.0 |                 3 |               3 |                3 |
++--------+------------------+-------------------+-----------------+------------------+
 ```
 
 ### keywords

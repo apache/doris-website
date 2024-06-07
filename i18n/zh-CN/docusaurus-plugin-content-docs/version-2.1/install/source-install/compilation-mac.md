@@ -64,9 +64,9 @@ $ ulimit -n
 
 # 将该配置写到到启动脚本中，以便下次打开终端会话时不需要再次设置
 # 如果是 bash，执行下面语句
-echo 'ulimit -n 65536' ~/.bashrc
+echo 'ulimit -n 65536' >>~/.bashrc
 # 如果是 zsh，执行下面语句
-echo 'ulimit -n 65536' ~/.zshrc
+echo 'ulimit -n 65536' >>~/.zshrc
 ```
 
 **2.  启动 BE**
@@ -106,4 +106,19 @@ cd installed/bin
 ./thrift --version
 ```
 
-运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考 https://support.apple.com/zh-cn/HT202491。
+## 常见错误
+
+1. 运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考 https://support.apple.com/zh-cn/HT202491。
+
+2. 使用M3芯片的Mac编译时报编译proto文件失败
+失败日志如下
+```Shell
+[ERROR] ... [0:0]: --grpc-java_out: protoc-gen-grpc-java: Plugin failed with status code 1.
+```
+此错误的原因可能是由于Apple基于arm的芯片不支持x86平台的软件导致。
+可从https://repo.maven.apache.org/maven2/io/grpc/protoc-gen-grpc-java/下载编译用到的protoc-gen-grpc-java软件验证，版本信息可从fe/fe-core/pom.xml中protoc_rosetta profile下的grpc.java.artifact属性查看。
+下载后执行如果报错如下错误则表示当前Mac不能执行基于x86编译的软件：
+```Shell
+zsh: bad CPU type in executable: ./protoc-gen-grpc-java-1.34.0-osx-x86_64.exe
+```
+可参考Apple官方文档https://support.apple.com/en-us/102527，安装Rosetta解决该问题。

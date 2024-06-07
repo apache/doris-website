@@ -184,7 +184,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ## Stream Load ErrorURL 重定向
 
-[Stream Load](../../data-operate/import/import-way/stream-load-manual) 是 Doris 提供的一种同步导入模式，是一种高效导入本地文件到 Doris 的方式。在物理机或虚机部署的情况下，直接使用 http 的方式向 FE 发起导入数据请求，FE 通过 301 机制将请求重定向到 BE 服务，执行写入请求。在 Kubernetes 上 FE 和 BE 使用 [Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/) 作为服务发现的方式。在使用代理屏蔽内部真实地址来提供服务发现的情形下，使用 FE 301 返回的 BE 的地址(服务内部通信使用的真实的地址)无法访问。在 Kubernetes 上需要使用 BE 的 Service 地址导入数据。
+[Stream Load](../../../data-operate/import/stream-load-manual) 是 Doris 提供的一种同步导入模式，是一种高效导入本地文件到 Doris 的方式。在物理机或虚机部署的情况下，直接使用 http 的方式向 FE 发起导入数据请求，FE 通过 301 机制将请求重定向到 BE 服务，执行写入请求。在 Kubernetes 上 FE 和 BE 使用 [Service](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/) 作为服务发现的方式。在使用代理屏蔽内部真实地址来提供服务发现的情形下，使用 FE 301 返回的 BE 的地址 (服务内部通信使用的真实的地址) 无法访问。在 Kubernetes 上需要使用 BE 的 Service 地址导入数据。
 
 如在下例中，Stream Load ErrorUrl 返回结果 `http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e`
 
@@ -200,9 +200,9 @@ curl http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.c
 
 ### 在容器外部查看 ErrorURL
 
-从 Kubernetes 外部使用 Stream Load 导入数据过程中发生错误，返回的错误地址无法直接在 Kubernetes 外部访问获取详细的错误报告。在 Kubernetes 环境中需要使用定制的 Service 代理发生错误的 pod ，将定制的 Service 配置为外部可访问的模式，通过访问代理 Service 来获取详细的错误报告。
+从 Kubernetes 外部使用 Stream Load 导入数据过程中发生错误，返回的错误地址无法直接在 Kubernetes 外部访问获取详细的错误报告。在 Kubernetes 环境中需要使用定制的 Service 代理发生错误的 pod，将定制的 Service 配置为外部可访问的模式，通过访问代理 Service 来获取详细的错误报告。
 
-定制化 Service 模板如下:
+定制化 Service 模板如下：
 
 ```yaml
 apiVersion: v1
@@ -243,7 +243,7 @@ spec:
 
 1. 部署 NodePort Service
 
-按照上例中的 service 将 CR 中的 ${podName} 替换成 doriscluster-sample-be-2，将 ${ServiceType} 替换为 NodePort 。通过 kubectl apply 命令，在于 doris 集群相同的 namespace 中创建 service 服务。
+按照上例中的 service 将 CR 中的 ${podName} 替换成 doriscluster-sample-be-2，将 ${ServiceType} 替换为 NodePort。通过 kubectl apply 命令，在于 doris 集群相同的 namespace 中创建 service 服务。
 
 ```bash
 kubectl -n {namespace} apply -f strem_load_get_error.yaml
@@ -264,7 +264,7 @@ NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   POR
 doriscluster-detail-error         NodePort    10.152.183.35    <none>        8040:31201/TCP     32s
 ```
 
-`Stream Load` 访问的 BE 端口为 8040， 上述 Service 中 8040 对应的宿主机端口( NodePort )为 31201 。
+`Stream Load` 访问的 BE 端口为 8040，上述 Service 中 8040 对应的宿主机端口 ( NodePort ) 为 31201。
 
 获取 K8s 管控的宿主机地址：
 
@@ -280,7 +280,7 @@ vm-10-8-centos   Ready    <none>   226d   v1.28.7   10.16.10.8    <none>        
 vm-10-7-centos   Ready    <none>   19d    v1.28.7   10.16.10.7    <none>        TencentOS Server 3.1 (Final)   5.4.119-19.0009.25   containerd://1.6.28
 ```
 
-使用上述宿主机中任何一个 `INTERNAL-IP` 和获得宿主机端口构建使用 NodePort 模式获取错误详情的访问地址。`NodePort` 模式下，获取错误详情的地址拼接为 `宿主机 IP:NodePort` , 则案例可访问地址为 `10.16.10.8:31201` ， 替换返回错误地址信息中的访问地址，获得可访问错误信息详情的可使用地址 :
+使用上述宿主机中任何一个 `INTERNAL-IP` 和获得宿主机端口构建使用 NodePort 模式获取错误详情的访问地址。`NodePort` 模式下，获取错误详情的地址拼接为 `宿主机 IP:NodePort` , 则案例可访问地址为 `10.16.10.8:31201` ，替换返回错误地址信息中的访问地址，获得可访问错误信息详情的可使用地址 :
 
 ```text
 http://10.16.10.8:31201/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e
@@ -299,7 +299,7 @@ http://10.16.10.8:31201/api/_load_error_log?file=__shard_1/error_log_insert_stmt
 http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e
 ```
 
-上述地址的域名地址为 `doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local` 在 `Kubernetes` 上 `Doris Operator` 部署的 pod 使用的域名中，三级域名为  pod 的名称。将上述模板中 {podName} 替换为真实的 `pod` 名称，将 {serviceType} 替换为 `LoadBalancer` ， 更改后保存到新建的 `stream_load_get_error.yaml` 文件中。使用如下命令部署 service ：
+上述地址的域名地址为 `doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local` 在 `Kubernetes` 上 `Doris Operator` 部署的 pod 使用的域名中，三级域名为  pod 的名称。将上述模板中 {podName} 替换为真实的 `pod` 名称，将 {serviceType} 替换为 `LoadBalancer` ，更改后保存到新建的 `stream_load_get_error.yaml` 文件中。使用如下命令部署 service：
 
 ```bash
 kubectl -n {namespace} apply -f strem_load_get_error.yaml
@@ -320,7 +320,7 @@ NAME                         TYPE          CLUSTER-IP       EXTERNAL-IP         
 doriscluster-detail-error    LoadBalancer  172.20.183.136   ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com  8040:32003/TCP    14s
 ```
 
-上述 Service 获得由 K8s 集群分配的 LoadBalancer 地址为 `ac4828493dgrftb884g67wg4tb68gyut``-1137856348.us-east-1.elb.amazonaws.com`，在使用 LoadBalancer 模式中端口仍然为部署部署监听的端口，`LoadBalancer` 模式下，获取错误详情的地址拼接为 “EXTERNAL-IP:listener-port”。上例中可获取错误详情的地址为 `ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com:8040`，获取详细错误信息的地址如下:
+上述 Service 获得由 K8s 集群分配的 LoadBalancer 地址为 `ac4828493dgrftb884g67wg4tb68gyut``-1137856348.us-east-1.elb.amazonaws.com`，在使用 LoadBalancer 模式中端口仍然为部署部署监听的端口，`LoadBalancer` 模式下，获取错误详情的地址拼接为“EXTERNAL-IP:listener-port”。上例中可获取错误详情的地址为 `ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com:8040`，获取详细错误信息的地址如下：
 
 ```text
 http://ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e

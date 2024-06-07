@@ -1,19 +1,20 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris version 2.0.9 has been released`,
-        link: 'https://doris.apache.org/blog/release-note-2.0.9',
+        label: 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
+        link: 'https://doris.apache.org/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
     },
     {
-        label: 'Arrow Flight SQL in Apache Doris for 10X faster data transfer',
-        link: 'https://doris.apache.org/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer',
+        label: 'Apache Doris 2.1.3 just released',
+        link: 'https://doris.apache.org/blog/release-note-2.1.3',
     },
     {
-        label: 'Auto-increment columns in databases: a simple magic that makes a big difference',
-        link: 'https://doris.apache.org/blog/auto-increment-columns-in-databases',
+        label: 'Multi-tenant workload isolation: a better balance between isolation and utilization',
+        link: 'https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris',
     },
     {
-        label: `Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis`,
-        link: 'https://doris.apache.org/blog/variant-in-apache-doris-2.1',
+        label: `From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration`,
+        link: 'https://doris.apache.org/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
     },
+
 
 ];

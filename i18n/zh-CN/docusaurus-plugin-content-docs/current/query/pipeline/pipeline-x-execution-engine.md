@@ -26,9 +26,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# PipelineX 执行引擎
-
-
 
 ## 背景
 PipelineX 执行引擎 是 Doris 在 2.1 版本加入的实验性功能。目标是为了解决 Doris pipeline 引擎的四大问题：
@@ -76,4 +73,4 @@ set ignore_storage_data_distribution = true;
 
 ### 导入
 
-导入的引擎选择设置，详见[导入](../data-operate/import/load-manual)文档。
+导入的引擎选择设置，详见[导入](../../data-operate/import/load-manual)文档。

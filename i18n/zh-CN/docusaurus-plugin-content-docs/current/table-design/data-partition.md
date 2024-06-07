@@ -60,7 +60,7 @@ Doris 支持两层的数据划分。第一层是分区（Partition），支持 R
 
 ### 建表举例
 
-Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
+Doris 的建表是一个同步命令，SQL 执行完成即返回结果，命令返回成功即表示建表成功。具体建表语法可以参考[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)，也可以通过 `HELP CREATE TABLE` 查看更多帮助。
 
 这里给出了一个采用了 Range 分区 和 Hash 分桶的建表举例。
 
@@ -97,7 +97,7 @@ PROPERTIES
 
 这里以 AGGREGATE KEY 数据模型为例进行说明。AGGREGATE KEY 数据模型中，所有没有指定聚合方式（SUM、REPLACE、MAX、MIN）的列视为 Key 列。而其余则为 Value 列。
 
-在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，可以查看[CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)中的详细介绍。
+在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，可以查看[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)中的详细介绍。
 
 ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 mysql、broker、es 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
 
@@ -380,13 +380,13 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
 ## 动态分区
 
-动态分区旨在对表级别的分区实现生命周期管理 (TTL)，减少用户的使用负担。
+开启动态分区的表，将会按照设定的规则添加、删除分区，从而对表的分区实现生命周期管理(TTL)，减少用户的使用负担。
 
-在某些使用场景下，用户会将表按照天进行分区划分，每天定时执行例行任务，这时需要使用方手动管理分区，否则可能由于使用方没有创建分区导致数据导入失败，这给使用方带来了额外的维护成本。
+动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区。
 
-通过动态分区功能，用户可以在建表时设定动态分区的规则。FE 会启动一个后台线程，根据用户指定的规则创建或删除分区。用户也可以在运行时对现有规则进行变更。
+动态分区适用于分区列的时间数据随现实世界同步增长的情况。此时可以灵活的按照与现实世界同步的时间维度对数据进行分区，自动地根据设置对数据进行冷热分层或者回收。
 
-动态分区只支持 Range 分区。目前实现了动态添加分区及动态删除分区的功能。
+对于更为灵活，适用场景更多的数据入库分区，请参阅[自动分区](#自动分区)功能。
 
 :::caution
 注意：动态分区功能在被 CCR 同步时将会失效。
@@ -450,7 +450,7 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
 - `dynamic_partition.start`
 
-  动态分区的起始偏移，为负数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。如果不填写，则默认为 `-2147483648`，即不删除历史分区。
+  动态分区的起始偏移，为负数。根据 `time_unit` 属性的不同，以当天（星期/月）为基准，分区范围在此偏移之前的分区将会被删除。如果不填写，则默认为 `-2147483648`，即不删除历史分区。此偏移之后至当前时间的历史分区如不存在，是否创建取决于 `dynamic_partition.create_history_partition`。
 
 - `dynamic_partition.end`**（必选参数）**
 
@@ -715,6 +715,25 @@ p202005: ["2020-05-28", "2020-06-28")
 p202006: ["2020-06-28", "2020-07-28")
 ```
 
+### 原理与控制行为
+
+Doris FE 中有固定的 dynamic partition 控制线程，持续以特定时间间隔（即 `dynamic_partition_check_interval_seconds`）进行 dynamic partition 表的分区检查，完成需要的分区创建与删除操作。
+
+具体而言，自动分区将会进行如下检查与操作（我们称此时该表分区的起始包含时间为 `START`，末尾包含时间为 `END`）：
+1. `START` 时间之前的所有分区，全部被删除。
+2. 如果 `dynamic_partition.create_history_partition` 为 `true`，创建 `START` 到 `END` 之间的所有分区；如果 `dynamic_partition.create_history_partition` 为 `false`，创建当前时间到 `END` 之间的所有分区。
+
+需要注意的是：
+1. 如果分区时间范围与 `[START, END]` 范围相交，则认为**属于**当前 dynamic partition 时间范围。
+2. 如果尝试创建的新分区和现有分区冲突，则保留当前分区，不创建该新分区。
+
+因此，自动分区表在系统自动维护后，呈现的状态是：
+1. `START` 时间之前**不包含**任何分区；
+2. 保留所有 `END` 时间以后**手动创建的**分区。
+3. 除手动删除或意外丢失的分区外，表包含**特定范围**内的全部分区；如果其中某一段范围有手动创建的分区，则这部分分区被保留；其他范围均被dynamic partition 按照 `dynamic_partition.time_unit` 为单位创建的单位分区覆盖。
+    - 如果 `dynamic_partition.create_history_partition` 为 `true`，则**特定范围**为 `[START, END]`；
+    - 如果 `dynamic_partition.create_history_partition` 为 `false`，则**特定范围**为 `[当前时间, END]`，同时包含 `[START, 当前时间)` 中既存的分区。
+
 ### 修改动态分区属性
 
 通过如下命令可以修改动态分区的属性：
@@ -800,23 +819,9 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 对于一个表来说，动态分区和手动分区可以自由转换，但二者不能同时存在，有且只有一种状态。
 
-- 手动分区转换为动态分区
+通过执行 `ALTER TABLE tbl_name SET ("dynamic_partition.enable" = "<true/false>")` 即可调整动态分区开关状态。
 
-  如果一个表在创建时未指定动态分区，可以通过 `ALTER TABLE` 在运行时修改动态分区相关属性来转化为动态分区，具体示例可以通过 `HELP ALTER TABLE` 查看。
-
-  开启动态分区功能后，Doris 将不再允许用户手动管理分区，会根据动态分区属性来自动管理分区。
-
-  注意：如果已设定 `dynamic_partition.start`，分区范围在动态分区起始偏移之前的历史分区将会被删除。
-
-- 动态分区转换为手动分区
-
-  通过执行 `ALTER TABLE tbl_name SET ("dynamic_partition.enable" = "false")` 即可关闭动态分区功能，将其转换为手动分区表。
-
-  关闭动态分区功能后，Doris 将不再自动管理分区，需要用户手动通过 `ALTER TABLE` 的方式创建或删除分区。
-
-### 注意事项
-
-动态分区使用过程中，如果因为一些意外情况导致 `dynamic_partition.start` 和 `dynamic_partition.end` 之间的某些分区丢失，那么当前时间与 `dynamic_partition.end` 之间的丢失分区会被重新创建，`dynamic_partition.start`与当前时间之间的丢失分区不会重新创建。
+关闭动态分区功能后，Doris 将不再自动管理分区，需要用户手动通过 `ALTER TABLE` 的方式创建或删除分区。动态分区开启后，可能立即根据动态分区规则清理多余分区。
 
 ## 自动分区
 
@@ -826,7 +831,7 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 以时间类型分区列为例，在动态分区功能中，我们支持了按特定时间周期自动创建新分区以容纳实时数据。对于实时的用户行为日志等场景该功能基本能够满足需求。但在一些更复杂的场景下，例如处理非实时数据时，分区列与当前系统时间无关，且包含大量离散值。此时为提高效率我们希望依据此列对数据进行分区，但数据实际可能涉及的分区无法预先掌握，或者预期所需分区数量过大。这种情况下动态分区或者手动创建分区无法满足我们的需求，自动分区功能很好地覆盖了此类需求。
 
-假设我们的表DDL如下：
+假设我们的表 DDL 如下：
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
@@ -869,11 +874,11 @@ PROPERTIES (
 
 
 
-该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，我们需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了2022年的数据，则我们需要通过[ALTER-TABLE-PARTITION](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用AUTO PARTITION改写该表DDL。
+该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，我们需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则我们需要通过[ALTER-TABLE-PARTITION](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION)对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
 
 ### 语法
 
-建表时，使用以下语法填充[CREATE-TABLE](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)时的`partition_info`部分：
+建表时，使用以下语法填充[CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)时的`partition_info`部分：
 
 1. AUTO RANGE PARTITION:
 
@@ -1010,7 +1015,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't su
 
 ### 场景示例
 
-在使用场景一节中的示例，在使用AUTO PARTITION后，该表DDL可以改写为：
+在使用场景一节中的示例，在使用 AUTO PARTITION 后，该表 DDL 可以改写为：
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
@@ -1056,7 +1061,7 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
                                                                                                   
 ```
 
-经过自动分区功能所创建的PARTITION，与手动创建的PARTITION具有完全一致的功能性质。
+经过自动分区功能所创建的 PARTITION，与手动创建的 PARTITION 具有完全一致的功能性质。
 
 ### 与动态分区联用
 
@@ -1066,12 +1071,13 @@ mysql> show partitions from `DAILY_TRADE_VALUE`;
 
 ### 注意事项
 
-- 如同普通分区表一样，AUTO PARTITION支持多列分区，语法并无区别。
+- 如同普通分区表一样，AUTO LIST PARTITION 支持多列分区，语法并无区别。
 - 在数据的插入或导入过程中如果创建了分区，而整个导入过程没有完成（失败或被取消），被创建的分区不会被自动删除。
-- 使用AUTO PARTITION的表，只是分区创建方式上由手动转为了自动。表及其所创建分区的原本使用方法都与非AUTO PARTITION的表或分区相同。
-- 为防止意外创建过多分区，我们通过[FE配置项](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/fe-config)中的`max_auto_partition_num`控制了一个AUTO PARTITION表最大容纳分区数。如有需要可以调整该值
-- 向开启了AUTO PARTITION的表导入数据时，Coordinator发送数据的轮询间隔与普通表有所不同。具体请见[BE配置项](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。
-- 在使用[insert-overwrite](https://doris.apache.org/zh-CN/docs/dev/sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE)插入数据时，如果指定了覆写的partition，则AUTO PARTITION表在此过程中表现得如同普通表，不创建新的分区。
+- 使用 AUTO PARTITION 的表，只是分区创建方式上由手动转为了自动。表及其所创建分区的原本使用方法都与非 AUTO PARTITION 的表或分区相同。
+- 为防止意外创建过多分区，我们通过[FE 配置项](../admin-manual/config/fe-config)中的`max_auto_partition_num`控制了一个 AUTO PARTITION 表最大容纳分区数。如有需要可以调整该值
+- 向开启了 AUTO PARTITION 的表导入数据时，Coordinator 发送数据的轮询间隔与普通表有所不同。具体请见[BE 配置项](../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。开启前移（`enable_memtable_on_sink_node = true`）后该变量不产生影响。
+- 在使用[insert-overwrite](../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/INSERT-OVERWRITE)插入数据时，如果指定了覆写的 partition，则 AUTO PARTITION 表在此过程中表现得如同普通表，不创建新的分区。
+- 如果导入创建分区时，该表涉及其他元数据操作（如 Schema Change、Rebalance），则导入可能失败。
 
 ## 手动分桶
 
@@ -1315,4 +1321,4 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Audit Log Plugin",
+    "title": "Using Audit Log Plugin",
     "language": "en"
 }
 ---
@@ -63,6 +63,7 @@ The following 3 global variables can control some writing behaviors of the audit
 - `audit_plugin_max_batch_interval_sec`: The maximum write interval for the audit log table. Default 60 seconds.
 - `audit_plugin_max_batch_bytes`: The maximum amount of data written in each batch of the audit log table. Default 50MB.
 - `audit_plugin_max_sql_length`: The maximum length of statements recorded in the audit log table. Default 4096.
+- `audit_plugin_load_timeout`: The default timeout of audit log load job. Default 600 seconds.
 
 Can be set via `set global xxx=yyy`.
 
@@ -91,7 +92,7 @@ The audit log plug-in framework is enabled by default in Doris and is controlled
     * plugin.conf: plugin configuration file.
 
 You can place this file on an http download server or copy(or unzip) it to the specified directory of all FEs. Here we use the latter.  
-The installation of this plugin can be found in [INSTALL](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN.md)  
+The installation of this plugin can be found in [INSTALL](../sql-manual/sql-statements/Database-Administration-Statements/INSTALL-PLUGIN.md)  
 After executing install, the AuditLoader directory will be automatically generated.
 
 3. Modify plugin.conf
@@ -212,7 +213,7 @@ Install the audit loader plugin:
 INSTALL PLUGIN FROM [source] [PROPERTIES ("key"="value", ...)]
 ```
 
-Detailed command reference: [INSTALL-PLUGIN.md](../sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN)
+Detailed command reference: [INSTALL-PLUGIN.md](../sql-manual/sql-statements/Database-Administration-Statements/INSTALL-PLUGIN)
 
 After successful installation, you can see the installed plug-ins through `SHOW PLUGINS`, and the status is `INSTALLED`.
 

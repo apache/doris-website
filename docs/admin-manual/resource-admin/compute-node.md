@@ -133,7 +133,7 @@ Moreover, as compute nodes are stateless Backend (BE) nodes, they can be easily 
 
 3. Can compute nodes and mix nodes configure a file cache directory?
 
-    [File cache](./filecache.md) accelerates subsequent queries for the same data by caching data files from recently accessed remote storage systems (HDFS or object storage).
+    [File cache](../../lakehouse/filecache) accelerates subsequent queries for the same data by caching data files from recently accessed remote storage systems (HDFS or object storage).
     
     Both compute and mix nodes can set up a file cache directory, which needs to be created in advance.
     

@@ -53,7 +53,7 @@ Apache Doris has a simple and neat architecture with only two types of processes
 
 Both frontend and backend processes are scalable, supporting up to hundreds of machines and tens of petabytes of storage capacity in a single cluster. Both types of processes guarantee high service availability and high data reliability through consistency protocols. This highly integrated architecture design greatly reduces the operation and maintenance costs of a distributed system.
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/mnz20ae3s23vv3e9ltmi.png)
+![Technical overview](/images/apache-doris-technical-overview.png)
 
 ## Interface
 
@@ -82,11 +82,11 @@ Doris also supports **strongly consistent materialized views**. Materialized vie
 
 Doris has an MPP-based query engine for parallel execution between and within nodes. It supports distributed shuffle join for large tables to better handle complicated queries.
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/vjlmumwyx728uymsgcw0.png)
+![Query engine](/images/apache-doris-query-engine-1.png)
 
 The Doris query engine is fully vectorized, with all memory structures laid out in a columnar format. This can largely reduce virtual function calls, increase cache hit rates, and make efficient use of SIMD instructions. Doris delivers a 5~10 times higher performance in wide table aggregation scenarios than non-vectorized engines.
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ck2m3kbnodn28t28vphp.png)
+![Query engine](/images/apache-doris-query-engine-2.png)
 
 Doris uses **adaptive query execution** technology to dynamically adjust the execution plan based on runtime statistics. For example, it can generate a runtime filter and push it to the probe side. Specifically, it pushes the filters to the lowest-level scan node on the probe side, which largely reduces the data amount to be processed and increases join performance. The Doris runtime filter supports In/Min/Max/Bloom Filter.
 

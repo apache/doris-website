@@ -57,15 +57,17 @@ MySQL > select to_base64(SM4_ENCRYPT('text','F3229A0B371ED2D9441B830D21A390C3', 
 
 ### keywords
 
-SM4_ENCRYPT
+    SM4, SM4_ENCRYPT
 
 ## SM4_DECRYPT
 
 ### description
-Aes 解密函数
+
+SM4 解密函数
+
 #### Syntax
 
-`VARCHAR AES_DECRYPT(str,key_str[,init_vector])`
+`VARCHAR SM4_DECRYPT(str,key_str[,init_vector])`
 
 返回解密后的结果
 
@@ -94,4 +96,4 @@ MySQL > select SM4_DECRYPT(FROM_BASE64('G7yqOKfEyxdagboz6Qf01A=='),'F3229A0B371E
 
 ### keywords
 
-    SM4_DECRYPT
+    SM4, SM4_DECRYPT

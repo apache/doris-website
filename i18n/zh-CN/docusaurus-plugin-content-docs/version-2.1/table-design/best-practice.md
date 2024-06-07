@@ -51,7 +51,7 @@ Doris 数据表模型上目前分为三类：DUPLICATE KEY, UNIQUE KEY, AGGREGAT
 ### 01 DUPLICATE KEY 表模型
 
 
-![DUPLICATE KEY 表模型](/images/duplicate-key.png)
+![DUPLICATE KEY 表模型](/images/duplicate-key-model-example.png)
 
 只指定排序列，相同的 KEY 行不会合并。
 
@@ -83,7 +83,7 @@ DISTRIBUTED BY HASH(sessionid, visitorid) BUCKETS 10;
 ### 02 AGGREGATE KEY 表模型
 
 
-![AGGREGATE KEY 表模型](/images/agg-key.png)
+![AGGREGATE KEY 表模型](/images/aggregate-key-model-example.png)
 
 AGGREGATE KEY 相同时，新旧记录进行聚合，目前支持的聚合方式：
 
@@ -284,7 +284,7 @@ PROPERTIES (
     
     d. 数据基数在一半左右
     
-    e. 类似身份证号这种基数特别高并且查询是等值（=）查询，使用 Bitmap 索引能极大加速
+    e. 类似身份证号这种基数特别高并且查询是等值（=）查询，使用 BloomFilter 索引能极大加速
 :::
 
 ### 05 NGram BloomFilter 索引
@@ -395,7 +395,7 @@ Doris 支持多种字段类型，例如精确去重 BITMAP、模糊去重 HLL、
 ## 4 数据表创建
 
 
-![数据表创建](/images/create-data-table.png)
+![数据表创建](/images/create-table-example.png)
 
 建表时除了要注意数据表模型、索引和字段类型的选择还需要注意分区分桶的设置。
 

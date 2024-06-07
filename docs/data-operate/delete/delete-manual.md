@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Delete",
+    "title": "Deleting Data with DELETE Command",
     "language": "en"
 }
 
@@ -30,7 +30,7 @@ The DELETE statement conditionally deletes data from a specified table or partit
 
 The DELETE statement generally requires the specification of tables and partitions as well as deletion conditions to filter the data to be deleted, and will delete data from both the base and rollup tables.
 
-The syntax of the DELETE statement is detailed in the [DELETE](../../sql-manual/sql-reference/Data-Manipulation-Statements/Manipulation/DELETE) syntax. Unlike the Insert into command, Delete cannot specify `label` manually. For the concept of `label` , refer to the [Insert Into](../../data-operate/import/import-way/insert-into-manual) documentation.
+The syntax of the DELETE statement is detailed in the [DELETE](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/DELETE) syntax. Unlike the Insert into command, Delete cannot specify `label` manually. For the concept of `label` , refer to the [Insert Into](../../data-operate/import/insert-into-manual) documentation.
 
 ### Delete by Specifying a Filter Predicate
 

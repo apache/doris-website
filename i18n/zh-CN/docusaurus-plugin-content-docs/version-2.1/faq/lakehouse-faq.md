@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# 常见问题
-
 ## 证书问题
 
 1. 查询时报错 `curl 77: Problem with the SSL CA cert.`。说明当前系统证书过旧，需要更新本地证书。
@@ -104,6 +101,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
    将 `-Djava.security.krb5.conf=/your-path` 配置项添加到 Broker Load 启动脚本的 `start_broker.sh` 的 `JAVA_OPTS`里。
 
 8. 当在 Catalog 里使用 Kerberos 配置时，不能同时使用`hadoop.username`属性。
+
+9. 使用 JDK 17 访问 Kerberos
+
+    如果使用 JDK 17 运行 Doris 并访问 Kerberos 服务，可能会出现因使用已废弃的加密算法而导致无法访问的现象。需要在 krb5.conf 中添加 `allow_weak_crypto=true` 属性。或升级 Kerberos 的加密算法。
+
+    详情参阅：https://seanjmullan.org/blog/2021/09/14/jdk17#kerberos 
 
 ## JDBC Catalog
 
@@ -216,7 +219,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
    去 hadoop 环境搜索`hadoop-lzo-*.jar`放在`"${DORIS_HOME}/fe/lib/"`目录下并重启 fe。
 
-   从 2.0.2 版本起，可以将这个文件放置在 BE 的 `custom_lib/` 目录下（如不存在，手动创建即可），以防止升级集群时因为 lib 目录被替换而导致文件丢失。
+   从 2.0.2 版本起，可以将这个文件放置在 FE 的 `custom_lib/` 目录下（如不存在，手动创建即可），以防止升级集群时因为 lib 目录被替换而导致文件丢失。
 
 9. 创建 hive 表指定 serde 为 `org.apache.hadoop.hive.contrib.serde2.MultiDelimitserDe`，访问表时报错：`storage schema reading not supported`
 
@@ -243,6 +246,27 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     ```
 
     尝试更新FE节点CA证书，使用 `update-ca-trust（CentOS/RockyLinux）`，然后重启FE进程即可。
+
+11. BE 报错: `java.lang.InternalError`
+
+    如果在 `be.INFO` 中看到类似如下错误：
+
+    ```
+    W20240506 15:19:57.553396 266457 jni-util.cpp:259] java.lang.InternalError
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.init(Native Method)
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.<init>(ZlibDecompressor.java:114)
+            at org.apache.hadoop.io.compress.GzipCodec$GzipZlibDecompressor.<init>(GzipCodec.java:229)
+            at org.apache.hadoop.io.compress.GzipCodec.createDecompressor(GzipCodec.java:188)
+            at org.apache.hadoop.io.compress.CodecPool.getDecompressor(CodecPool.java:183)
+            at org.apache.parquet.hadoop.CodecFactory$HeapBytesDecompressor.<init>(CodecFactory.java:99)
+            at org.apache.parquet.hadoop.CodecFactory.createDecompressor(CodecFactory.java:223)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:212)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:43)
+    ```
+
+    是因为 Doris 自带的 libz.a 和系统环境中的 libz.so 冲突了。
+
+    为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
 
 ## HDFS
 
@@ -312,3 +336,9 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 2. 读取数据无权限时，使用`hadoop.username`属性指定有权限的用户。
 
 3. DLF Catalog 中的元数据和 DLF 保持一致。当使用 DLF 管理元数据时，Hive 新导入的分区，可能未被 DLF 同步，导致出现 DLF 和 Hive 元数据不一致的情况，对此，需要先保证 Hive 元数据被 DLF 完全同步。
+
+## 其他问题
+
+1. Binary 类型映射到 Doris 后，查询乱码
+
+    Doris 原生不支持 Binary 类型，所以各类数据湖或数据库中的 Binary 类型映射到 Doris 中，通常使用 String 类型进行映射。String 类型只能展示可打印字符。如果需要查询 Binary 的内容，可以使用 `TO_BASE64()` 函数转换为 Base64 编码后，在进行下一步处理。

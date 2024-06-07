@@ -146,7 +146,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 注意，如果用户在建表时给整张 Table 和部分 Partition 指定了不同的 Storage Policy，Partition 设置的 Storage policy 会被无视，整张表的所有 Partition 都会使用 table 的 Policy. 如果您需要让某个 Partition 的 Policy 和别的不同，则可以使用上文中对一个已存在的 Partition，关联 Storage policy 的方式修改。
 
-具体可以参考 Docs 目录下[RESOURCE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
+具体可以参考 Docs 目录下[RESOURCE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE)、 [POLICY](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY)、 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)、 [ALTER TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)等文档，里面有详细介绍。
 :::
 
 ### 一些限制
@@ -208,8 +208,6 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 另外，对象上的垃圾数据并不会立即清理掉。BE 参数`remove_unused_remote_files_interval_sec`可以设置冷数据的垃圾回收的时间间隔，默认是 21600，单位：秒，即 6 个小时。
 
 ## 未尽事项
-
--   目前暂无方式查询特定 storage policy 关联的表。
 
 -   一些远端占用指标更新获取不够完善
 

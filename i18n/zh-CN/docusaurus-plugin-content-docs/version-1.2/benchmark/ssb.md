@@ -28,27 +28,27 @@ under the License.
 
 [Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) 是一个轻量级的数仓场景下的性能测试集。SSB 基于 [TPC-H](http://www.tpc.org/tpch/) 提供了一个简化版的星型模型数据集，主要用于测试在星型模型下，多表关联查询的性能表现。另外，业界内通常也会将 SSB 打平为宽表模型（以下简称：SSB flat），来测试查询引擎的性能，参考[Clickhouse](https://clickhouse.com/docs/zh/getting-started/example-datasets/star-schema)。
 
-本文档主要介绍Apache Doris 在 SSB 100G 测试集上的性能表现。
+本文档主要介绍 Apache Doris 在 SSB 100G 测试集上的性能表现。
 
 > 注 1：包括 SSB 在内的标准测试集通常和实际业务场景差距较大，并且部分测试会针对测试集进行参数调优。所以标准测试集的测试结果仅能反映数据库在特定场景下的性能表现。建议用户使用实际业务数据进行进一步的测试。
 >
 > 注 2：本文档涉及的操作都在 Ubuntu Server 20.04 环境进行，CentOS 7 也可测试。
 
-在 SSB 标准测试数据集上的 13 个查询上，我们基于 Apache Doris 1.2.0-rc01， Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行了对别测试。
+在 SSB 标准测试数据集上的 13 个查询上，我们基于 Apache Doris 1.2.0-rc01，Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行了对别测试。
 
-在 SSB FlAT 宽表上， Apache Doris 1.2.0-rc01上相对 Apache Doris 1.1.3 整体性能提升了将近4倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近10倍 。
+在 SSB FlAT 宽表上，Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近 4 倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 10 倍。
 
 ![ssb_v11_v015_compare](/images/ssb_flat.png)
 
-在标准的 SSB 测试SQL上， Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近2倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 31 倍 。
+在标准的 SSB 测试 SQL 上，Apache Doris 1.2.0-rc01 上相对 Apache Doris 1.1.3 整体性能提升了将近 2 倍，相对于 Apache Doris 0.15.0 RC04 ,性能提升了将近 31 倍。
 
 ![ssb_12_11_015](/images/ssb.png)
 
 ## 1. 硬件环境
 
-| 机器数量 | 4 台腾讯云主机（1个FE，3个BE）       |
+| 机器数量 | 4 台腾讯云主机（1 个 FE，3 个 BE）       |
 | -------- | ------------------------------------ |
-| CPU      | AMD EPYC™ Milan(2.55GHz/3.5GHz) 16核 |
+| CPU      | AMD EPYC™ Milan(2.55GHz/3.5GHz) 16 核 |
 | 内存     | 64G                                  |
 | 网络带宽  | 7Gbps                               |
 | 磁盘     | 高性能云硬盘                         |
@@ -57,13 +57,13 @@ under the License.
 
 - Doris 部署 3BE 1FE；
 - 内核版本：Linux version 5.4.0-96-generic (buildd@lgw01-amd64-051)
-- 操作系统版本：Ubuntu Server 20.04 LTS 64位
-- Doris 软件版本： Apache Doris 1.2.0-rc01、Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04
+- 操作系统版本：Ubuntu Server 20.04 LTS 64 位
+- Doris 软件版本：Apache Doris 1.2.0-rc01、Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04
 - JDK：openjdk version "11.0.14" 2022-01-18
 
 ## 3. 测试数据量
 
-| SSB表名        | 行数       | 备注             |
+| SSB 表名        | 行数       | 备注             |
 | :------------- | :--------- | :--------------- |
 | lineorder      | 600,037,902 | 商品订单明细表表 |
 | customer       | 3,000,000    | 客户信息表       |
@@ -74,7 +74,7 @@ under the License.
 
 ## 4. SSB 宽表测试结果
 
-这里我们使用 Apache Doris 1.2.0-rc01、 Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
+这里我们使用 Apache Doris 1.2.0-rc01、Apache Doris 1.1.3 及 Apache Doris 0.15.0 RC04 版本进行对比测试，测试结果如下：
 
 
 | Query | Apache Doris 1.2.0-rc01(ms) | Apache Doris 1.1.3(ms) | Apache Doris 0.15.0 RC04(ms) |
@@ -123,14 +123,14 @@ under the License.
 
 **结果说明**
 
-- 测试结果对应的数据集为scale 100, 约6亿条。
-- 测试环境配置为用户常用配置，云服务器4台，16核 64G SSD，1 FE 3 BE 部署。
+- 测试结果对应的数据集为 scale 100, 约 6 亿条。
+- 测试环境配置为用户常用配置，云服务器 4 台，16 核 64G SSD，1 FE 3 BE 部署。
 - 选用用户常见配置测试以降低用户选型评估成本，但整个测试过程中不会消耗如此多的硬件资源。
 
 
 ## 6. 环境准备
 
-请先参照 [官方文档](../install/standard-deployment.md) 进行 Apache Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
+请先参照 [官方文档](../install/cluster-deployment/standard-deployment) 进行 Apache Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
 
 以下文档中涉及的脚本都存放在 Apache Doris 代码库：[ssb-tools](https://github.com/apache/doris/tree/master/tools/ssb-tools)
 
@@ -154,20 +154,20 @@ sh build-ssb-dbgen.sh
 sh gen-ssb-data.sh -s 100 -c 100
 ```
 
-> 注1：通过 `sh gen-ssb-data.sh -h` 查看脚本帮助。
+> 注 1：通过 `sh gen-ssb-data.sh -h` 查看脚本帮助。
 >
-> 注2：数据会以 `.tbl` 为后缀生成在  `ssb-data/` 目录下。文件总大小约60GB。生成时间可能在数分钟到1小时不等。
+> 注 2：数据会以 `.tbl` 为后缀生成在  `ssb-data/` 目录下。文件总大小约 60GB。生成时间可能在数分钟到 1 小时不等。
 >
-> 注3：`-s 100` 表示测试集大小系数为 100，`-c 100` 表示并发100个线程生成 lineorder 表的数据。`-c` 参数也决定了最终 lineorder 表的文件数量。参数越大，文件数越多，每个文件越小。
+> 注 3：`-s 100` 表示测试集大小系数为 100，`-c 100` 表示并发 100 个线程生成 lineorder 表的数据。`-c` 参数也决定了最终 lineorder 表的文件数量。参数越大，文件数越多，每个文件越小。
 
 在 `-s 100` 参数下，生成的数据集大小为：
 
 | Table     | Rows             | Size | File Number |
 | --------- | ---------------- | ---- | ----------- |
-| lineorder | 6亿（600037902） | 60GB | 100         |
-| customer  | 300万（3000000） | 277M | 1           |
-| part      | 140万（1400000） | 116M | 1           |
-| supplier  | 20万（200000）   | 17M  | 1           |
+| lineorder | 6 亿（600037902） | 60GB | 100         |
+| customer  | 300 万（3000000） | 277M | 1           |
+| part      | 140 万（1400000） | 116M | 1           |
+| supplier  | 20 万（200000）   | 17M  | 1           |
 | date      | 2556             | 228K | 1           |
 
 ### 7.3 建表
@@ -176,7 +176,7 @@ sh gen-ssb-data.sh -s 100 -c 100
 
 在调用导入脚本前，需要将 FE 的 ip 端口等信息写在 `doris-cluster.conf` 文件中。
 
-文件位置在 `${DORIS_HOME}/tools/ssb-tools/conf/` 目录下 。
+文件位置在 `${DORIS_HOME}/tools/ssb-tools/conf/` 目录下。
 
 文件内容包括 FE 的 ip，HTTP 端口，用户名，密码以及待导入数据的 DB 名称：
 
@@ -196,7 +196,7 @@ sh create-ssb-tables.sh
 ```
 或者复制 [create-ssb-tables.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-tables.sql)  和 [create-ssb-flat-table.sql](https://github.com/apache/incubator-doris/tree/master/tools/ssb-tools/ddl/create-ssb-flat-table.sql)  中的建表语句，在 MySQL 客户端中执行。
 
-下面是 `lineorder_flat` 表建表语句。在上面的 `create-ssb-flat-table.sh`  脚本中创建 `lineorder_flat` 表，并进行了默认分桶数（48个桶)。您可以删除该表，根据您的集群规模节点配置对这个分桶数进行调整，这样可以获取到更好的一个测试效果。
+下面是 `lineorder_flat` 表建表语句。在上面的 `create-ssb-flat-table.sh`  脚本中创建 `lineorder_flat` 表，并进行了默认分桶数（48 个桶)。您可以删除该表，根据您的集群规模节点配置对这个分桶数进行调整，这样可以获取到更好的一个测试效果。
 
 ```sql
 CREATE TABLE `lineorder_flat` (
@@ -267,11 +267,11 @@ PROPERTIES (
 sh bin/load-ssb-data.sh -c 10
 ```
 
-`-c 5` 表示启动 10 个并发线程导入（默认为 5）。在单 BE 节点情况下，由 `sh gen-ssb-data.sh -s 100 -c 100` 生成的 lineorder 数据，同时会在最后生成ssb-flat表的数据，如果开启更多线程，可以加快导入速度，但会增加额外的内存开销。
+`-c 5` 表示启动 10 个并发线程导入（默认为 5）。在单 BE 节点情况下，由 `sh gen-ssb-data.sh -s 100 -c 100` 生成的 lineorder 数据，同时会在最后生成 ssb-flat 表的数据，如果开启更多线程，可以加快导入速度，但会增加额外的内存开销。
 
 > 注：
 >
-> 1. 为获得更快的导入速度，你可以在 be.conf 中添加 `flush_thread_num_per_store=5` 后重启BE。该配置表示每个数据目录的写盘线程数，默认为2。较大的数据可以提升写数据吞吐，但可能会增加 IO Util。（参考值：1块机械磁盘，在默认为2的情况下，导入过程中的 IO Util 约为12%，设置为5时，IO Util 约为26%。如果是 SSD 盘，则几乎为 0）。
+> 1. 为获得更快的导入速度，你可以在 be.conf 中添加 `flush_thread_num_per_store=5` 后重启 BE。该配置表示每个数据目录的写盘线程数，默认为 2。较大的数据可以提升写数据吞吐，但可能会增加 IO Util。（参考值：1 块机械磁盘，在默认为 2 的情况下，导入过程中的 IO Util 约为 12%，设置为 5 时，IO Util 约为 26%。如果是 SSD 盘，则几乎为 0）。
 >
 > 2. flat 表数据采用 'INSERT INTO ... SELECT ... ' 的方式导入。
 
@@ -291,19 +291,19 @@ select count(*) from lineorder_flat;
 
 | Table          | Rows             | Origin Size | Compacted Size(1 Replica) |
 | -------------- | ---------------- | ----------- | ------------------------- |
-| lineorder_flat | 6亿（600037902） |             | 59.709 GB                 |
-| lineorder      | 6亿（600037902） | 60 GB       | 14.514 GB                 |
-| customer       | 300万（3000000） | 277 MB      | 138.247 MB                |
-| part           | 140万（1400000） | 116 MB      | 12.759 MB                 |
-| supplier       | 20万（200000）   | 17 MB       | 9.143 MB                  |
+| lineorder_flat | 6 亿（600037902） |             | 59.709 GB                 |
+| lineorder      | 6 亿（600037902） | 60 GB       | 14.514 GB                 |
+| customer       | 300 万（3000000） | 277 MB      | 138.247 MB                |
+| part           | 140 万（1400000） | 116 MB      | 12.759 MB                 |
+| supplier       | 20 万（200000）   | 17 MB       | 9.143 MB                  |
 | date           | 2556             | 228 KB      | 34.276 KB                 |
 
 ### 7.6 查询测试
 
-SSB-FlAT 查询语句 ：[ssb-flat-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-flat-queries)
+SSB-FlAT 查询语句：[ssb-flat-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-flat-queries)
 
 
-标准 SSB 查询语句 ：[ssb-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-queries)
+标准 SSB 查询语句：[ssb-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-queries)
 
 #### 7.6.1 SSB FLAT 测试 SQL
 

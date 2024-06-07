@@ -36,7 +36,7 @@ under the License.
 | Copy On Write  | Snapshot Query, Time Travel, Icremental Read |
 | Merge On Read  | Snapshot Queries, Read Optimized Queries, Time Travel, Icremental Read |
 
-2. 目前支持 Hive Metastore 和兼容 Hive Metastore 类型(例如[AWS Glue](./hive.md)/[Alibaba DLF](./dlf.md))的 Catalog。
+2. 目前支持 Hive Metastore 和兼容 Hive Metastore 类型 (例如[AWS Glue](./hive.md)/[Alibaba DLF](./dlf.md)) 的 Catalog。
 
 ## 创建 Catalog
 
@@ -57,9 +57,9 @@ CREATE CATALOG hudi PROPERTIES (
 
 可选配置参数：
 
-|参数名|说明|默认值|
+|参数名 | 说明 | 默认值|
 |---|---|---|
-|use_hive_sync_partition|使用hms已同步的分区数据|false|
+|use_hive_sync_partition|使用 hms 已同步的分区数据|false|
 
 ## 列类型映射
 
@@ -71,7 +71,7 @@ Spark 在创建 hudi mor 表的时候，会创建 `_ro` 后缀的 read optimize 
 
 ## 查询优化
 
-Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java SDK(通过JNI调用hudi-bundle) 读取 MOR 表的数据文件。在 upsert 场景下，MOR 依然会有数据文件没有被更新，这部分文件可以通过 parquet native reader读取，用户可以通过 [explain](../../advanced/best-practice/query-analysis.md) 命令查看 hudi scan 的执行计划，`hudiNativeReadSplits` 表示有多少 split 文件通过 parquet native reader 读取。
+Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java SDK(通过 JNI 调用 hudi-bundle) 读取 MOR 表的数据文件。在 upsert 场景下，MOR 依然会有数据文件没有被更新，这部分文件可以通过 parquet native reader 读取，用户可以通过 [explain](../../query/query-analysis/query-analysis) 命令查看 hudi scan 的执行计划，`hudiNativeReadSplits` 表示有多少 split 文件通过 parquet native reader 读取。
 ```
 |0:VHUDI_SCAN_NODE                                                             |
 |      table: minbatch_mor_rt                                                  |
@@ -81,7 +81,7 @@ Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java S
 |      numNodes=6                                                              |
 |      hudiNativeReadSplits=717/810                                            |
 ```
-用户可以通过 [profile](../../admin-manual/http-actions/fe/profile-action.md) 查看 Java SDK 的性能，例如:
+用户可以通过 [profile](../../admin-manual/fe/profile-action) 查看 Java SDK 的性能，例如：
 ```
 -  HudiJniScanner:  0ns
   -  FillBlockTime:  31.29ms
@@ -98,7 +98,7 @@ Doris 使用 parquet native reader 读取 COW 表的数据文件，使用 Java S
 
 每一次对 Hudi 表的写操作都会产生一个新的快照，Time Travel 支持读取 Hudi 表指定的 Snapshot。默认情况下，查询请求只会读取最新版本的快照。
 
-可以使用 `FOR TIME AS OF` 语句，根据快照的时间([时间格式](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#timetravel)和Hudi官网保持一致)读取历史版本的数据。示例如下：
+可以使用 `FOR TIME AS OF` 语句，根据快照的时间 ([时间格式](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#timetravel)和 Hudi 官网保持一致) 读取历史版本的数据。示例如下：
 ```
 SELECT * FROM hudi_tbl FOR TIME AS OF "2022-10-07 17:20:37";
 SELECT * FROM hudi_tbl FOR TIME AS OF "20221007172037";
@@ -113,9 +113,9 @@ Doris 提供了 `@incr` 语法支持 Incremental Read:
 ```
 SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.read.timeline.holes.resolution.policy'='FAIL'], ...);
 ```
-`beginTime` 是必须的，时间格式和 hudi 官网 [hudi_table_changes](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#incremental-query) 保持一致，支持 "earliest"。`endTime` 选填，默认最新commitTime。兼容 [Spark Read Options](https://hudi.apache.org/docs/0.14.0/configurations#Read-Options)。
+`beginTime` 是必须的，时间格式和 hudi 官网 [hudi_table_changes](https://hudi.apache.org/docs/0.14.0/quick-start-guide/#incremental-query) 保持一致，支持 "earliest"。`endTime` 选填，默认最新 commitTime。兼容 [Spark Read Options](https://hudi.apache.org/docs/0.14.0/configurations#Read-Options)。
 
-支持 Incremental Read 需要开启[新优化器](../../query-acceleration/nereids.md)，新优化器默认打开。通过 `desc` 查看执行计划，可以发现 Doris 将 `@incr` 转化为 `predicates` 下推给 `VHUDI_SCAN_NODE`:
+支持 Incremental Read 需要开启[新优化器](../../query/nereids/nereids)，新优化器默认打开。通过 `desc` 查看执行计划，可以发现 Doris 将 `@incr` 转化为 `predicates` 下推给 `VHUDI_SCAN_NODE`:
 ```
 |   0:VHUDI_SCAN_NODE(113)                                                                                            |
 |      table: lineitem_mor                                                                                            |

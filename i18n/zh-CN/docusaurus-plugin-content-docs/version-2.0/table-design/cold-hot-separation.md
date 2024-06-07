@@ -209,8 +209,6 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 
 ## 未尽事项
 
--   目前暂无方式查询特定 storage policy 关联的表。
-
 -   一些远端占用指标更新获取不够完善
 
 ## 常见问题

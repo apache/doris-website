@@ -357,7 +357,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `doris_max_scan_key_num`
 
 * 类型：int
-* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../advanced/variables.md) 中 `max_scan_key_num` 的说明。
+* 描述：用于限制一个查询请求中，scan node 节点能拆分的最大 scan key 的个数。当一个带有条件的查询请求到达 scan node 节点时，scan node 会尝试将查询条件中 key 列相关的条件拆分成多个 scan key range。之后这些 scan key range 会被分配给多个 scanner 线程进行数据扫描。较大的数值通常意味着可以使用更多的 scanner 线程来提升扫描操作的并行度。但在高并发场景下，过多的线程可能会带来更大的调度开销和系统负载，反而会降低查询响应速度。一个经验数值为 50。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../query/query-variables/variables.md) 中 `max_scan_key_num` 的说明。
   - 当在高并发场景下发下并发度无法提升时，可以尝试降低该数值并观察影响。
 * 默认值：48
 
@@ -411,7 +411,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `max_pushdown_conditions_per_column`
 
 * 类型：int
-* 描述：用于限制一个查询请求中，针对单个列，能够下推到存储引擎的最大条件数量。在查询计划执行的过程中，一些列上的过滤条件可以下推到存储引擎，这样可以利用存储引擎中的索引信息进行数据过滤，减少查询需要扫描的数据量。比如等值条件、IN 谓词中的条件等。这个参数在绝大多数情况下仅影响包含 IN 谓词的查询。如 `WHERE colA IN (1,2,3,4,...)`。较大的数值意味值 IN 谓词中更多的条件可以推送给存储引擎，但过多的条件可能会导致随机读的增加，某些情况下可能会降低查询效率。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../advanced/variables.md) 中 `max_pushdown_conditions_per_column ` 的说明。
+* 描述：用于限制一个查询请求中，针对单个列，能够下推到存储引擎的最大条件数量。在查询计划执行的过程中，一些列上的过滤条件可以下推到存储引擎，这样可以利用存储引擎中的索引信息进行数据过滤，减少查询需要扫描的数据量。比如等值条件、IN 谓词中的条件等。这个参数在绝大多数情况下仅影响包含 IN 谓词的查询。如 `WHERE colA IN (1,2,3,4,...)`。较大的数值意味值 IN 谓词中更多的条件可以推送给存储引擎，但过多的条件可能会导致随机读的增加，某些情况下可能会降低查询效率。该配置可以单独进行会话级别的配置，具体可参阅 [变量](../../query/query-variables/variables.md) 中 `max_pushdown_conditions_per_column ` 的说明。
 * 默认值：1024
 
 * 示例
@@ -480,7 +480,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `max_base_compaction_threads`
 
 * 类型：int32
-* 描述：Base Compaction线程池中线程数量的最大值, -1 表示每个磁盘一个线程。
+* 描述：Base Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。
 * 默认值：4
 
 #### `generate_compaction_tasks_interval_ms`
@@ -621,7 +621,7 @@ BaseCompaction:546859:
 #### `max_cumu_compaction_threads`
 
 * 类型：int32
-* 描述：Cumulative Compaction线程池中线程数量的最大值, -1 表示每个磁盘一个线程。
+* 描述：Cumulative Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。
 * 默认值：-1
 
 #### `enable_segcompaction`
@@ -694,7 +694,7 @@ BaseCompaction:546859:
 #### `max_single_replica_compaction_threads`
 
 * 类型：int32
-* 描述：Single Replica Compaction 线程池中线程数量的最大值, -1 表示每个磁盘一个线程。
+* 描述：Single Replica Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。
 * 默认值：-1
 
 #### `update_replica_infos_interval_seconds`
@@ -738,8 +738,8 @@ BaseCompaction:546859:
 
 #### `load_error_log_limit_bytes`
 
-* 描述: load错误日志大小超过此值将被截断
-* 默认值: 209715200 (byte)
+* 描述：load 错误日志大小超过此值将被截断
+* 默认值：209715200 (byte)
 
 #### `load_process_max_memory_limit_percent`
 
@@ -790,7 +790,7 @@ BaseCompaction:546859:
 #### `multi_table_max_wait_tables`
 
 * 类型：int32
-* 描述：一流多表使用该配置，如果等待执行的表的数量大于此阈值，将请求并执行所有相关表的计划。该参数旨在避免一次同时请求和执行过多的计划。将导入过程的多表进行小批处理，可以减少单次rpc的压力，同时可以提高导入数据处理的实时性。
+* 描述：一流多表使用该配置，如果等待执行的表的数量大于此阈值，将请求并执行所有相关表的计划。该参数旨在避免一次同时请求和执行过多的计划。将导入过程的多表进行小批处理，可以减少单次 rpc 的压力，同时可以提高导入数据处理的实时性。
 * 默认值：5
 
 #### `single_replica_load_download_num_workers`
@@ -844,12 +844,12 @@ BaseCompaction:546859:
 
 #### `olap_table_sink_send_interval_microseconds`.
 
-* 描述： 数据导入时，Coordinator 的 sink 节点有一个轮询线程持续向对应BE发送数据。该线程将每隔 `olap_table_sink_send_interval_microseconds` 微秒检查是否有数据要发送。
+* 描述：数据导入时，Coordinator 的 sink 节点有一个轮询线程持续向对应 BE 发送数据。该线程将每隔 `olap_table_sink_send_interval_microseconds` 微秒检查是否有数据要发送。
 * 默认值：1000
 
 #### `olap_table_sink_send_interval_auto_partition_factor`.
 
-* 描述： 如果我们向一个启用了自动分区的表导入数据，那么 `olap_table_sink_send_interval_microseconds` 的时间间隔就会太慢。在这种情况下，实际间隔将乘以该系数。
+* 描述：如果我们向一个启用了自动分区的表导入数据，那么 `olap_table_sink_send_interval_microseconds` 的时间间隔就会太慢。在这种情况下，实际间隔将乘以该系数。
 * 默认值：0.001
 
 
@@ -1479,28 +1479,23 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `enable_java_support`
 
-* 描述: BE 是否开启使用java-jni，开启后允许 c++ 与 java 之间的相互调用。目前已经支持hudi、java-udf、jdbc、max-compute、paimon、preload、avro
-* 默认值: true
+* 描述：BE 是否开启使用 java-jni，开启后允许 c++ 与 java 之间的相互调用。目前已经支持 hudi、java-udf、jdbc、max-compute、paimon、preload、avro
+* 默认值：true
 
 #### `group_commit_wal_path`
 
-* 描述:  group commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/import-way/group-commit-manual.md)
-* 默认值: 默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
+* 描述：group commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
   ```
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
 #### `group_commit_memory_rows_for_max_filter_ratio`
 
-* 描述:  当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/import-way/group-commit-manual.md)
-* 默认值: 10000
+* 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 默认值：10000
 
 #### `default_tzfiles_path`
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
 * 默认值："${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* 描述：是否直接使用 Doris 自带的时区数据库。开启后不再尝试查找系统目录。
-* 默认值：false

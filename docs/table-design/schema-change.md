@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Schema Change",
+    "title": "Schema Evolution",
     "language": "en"
 }
 ---
@@ -76,7 +76,7 @@ The basic process of executing schema change is to generate a new schema table f
 
 Before starting to convert historical data, Doris will obtain a latest transaction ID and wait for all import transactions before this transaction ID to complete. This transaction ID becomes a watershed. This means that Doris ensures that all import tasks after the watershed will generate data for the original table  /Index  and the new table  /Index  at the same time. This way, when the historical data conversion is completed, the data in the new table can be guaranteed to be complete.
 
-The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
+The specific syntax for creating schema changes can be found in the schema change section of the help [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN)
 
 ## Adding a column at a specified position to a specified index
 
@@ -416,7 +416,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 - Only one schema change job can run on a table at a time.
 
-- Schema change operations do not block import and query operations.
+- Schema change operations do not block import and query operations. Unless the operation affects the table's metadata (e.g., a partition is created during an auto partition table's import)
 
 - Partition and bucket columns cannot be modified.
 
@@ -484,4 +484,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## More Details
 
-For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual. You can also enter `HELP ALTER TABLE COLUMN `in the MySQL client command line for more help information.
+For more detailed syntax and best practices regarding Schema Change, please refer to the [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) command manual. You can also enter `HELP ALTER TABLE COLUMN `in the MySQL client command line for more help information.

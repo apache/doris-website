@@ -24,33 +24,74 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 :::tip
 Java UDF 功能自 Doris 1.2 版本开始支持
 :::
 
 ## Java UDF 介绍
-Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 语言进行自定义函数的执行。相比于 Native 的 UDF 实现，Java UDF 有如下优势和限制：
 
-**1. 优势**
+Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 语言进行自定义函数的执行。
 
-* 兼容性：使用 Java UDF 可以兼容不同的 Doris 版本，所以在进行 Doris 版本升级时，Java UDF 不需要进行额外的迁移操作。与此同时，Java UDF 同样遵循了和 Hive/Spark 等引擎同样的编程规范，使得用户可以直接将 Hive/Spark 的 UDF jar 包迁移至 Doris 使用。
+Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。
 
-* 安全：Java UDF 执行失败或崩溃仅会导致 JVM 报错，而不会导致 Doris 进程崩溃。
+## 创建 UDF
 
-* 灵活：Java UDF 中用户通过把第三方依赖打进用户 jar 包，而不需要额外处理引入的三方库。
+实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 FE 和 BE 节点都能获取到 jar 包。
 
-**2. 使用限制**
+否则将会返回错误状态信息 `Couldn't open file ......`。
 
-* 性能：相比于 Native UDF，Java UDF 会带来额外的 JNI 开销，不过通过批式执行的方式，我们已经尽可能的将 JNI 开销降到最低。
+更多语法帮助可参阅 [CREATE FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
 
-* 向量化引擎：Java UDF 当前只支持向量化引擎。
+### UDF
 
+```sql
+CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
+    "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
+    "symbol"="org.apache.doris.udf.AddOne",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+);
+```
 
+### UDAF
 
-**3. 类型对应关系**
+```sql
+CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES (
+    "file"="file:///pathTo/java-udaf.jar",
+    "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+);
+```
+
+### UDTF
+
+:::tip
+UDTF 自 Doris 3.0 版本开始支持
+:::
+
+```sql
+CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    "file"="file:///pathTo/java-udaf.jar",
+    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
+    "always_nullable"="true",
+    "type"="JAVA_UDF"
+);
+```
+
+## 使用 UDF
+
+用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
+
+UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函数的作用域是全局的，而 UDF 的作用域是 DB 内部。
+
+当链接 session 位于数据内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName.funcName`。
+
+## 删除 UDF
+
+当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
+
+## 类型对应关系
 
 |Type|UDF Argument Type|
 |----|---------|
@@ -66,47 +107,32 @@ Java UDF 为用户提供 UDF 编写的 Java 接口，以方便用户使用 Java 
 |Datetime|LocalDateTime|
 |String|String|
 |Decimal|BigDecimal|
-|```array<Type>```|```ArrayList<Type>```|
-|```map<Type1,Type2>```|```HashMap<Type1,Type2>```|
+|```array<Type>```|```ArrayList<Type>``` 支持嵌套 |
+|```map<Type1,Type2>```|```HashMap<Type1,Type2>``` 支持嵌套 |
+|```struct<Type...>```|```ArrayList<Object>``` 3.0.0 版本开始支持 |
 
 :::tip
-array/map类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
+`array/map/struct` 类型可以嵌套其它类型，例如 Doris: ```array<array<int>>```对应 JAVA UDF Argument Type: ```ArrayList<ArrayList<Integer>>```, 其他依此类推
 :::
 
 :::caution Warning
 在创建函数的时候，不要使用 `varchar` 代替 `string`，否则函数可能执行失败。
 :::
 
-## 编写 UDF 函数
+## UDF 的编写
 
 本小节主要介绍如何开发一个 Java UDF。在 `samples/doris-demo/java-udf-demo/` 下提供了示例，可供参考，查看点击[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
 
 使用 Java 代码编写 UDF，UDF 的主入口必须为 `evaluate` 函数。这一点与 Hive 等其他引擎保持一致。在本示例中，我们编写了 `AddOne` UDF 来完成对整型输入进行加一的操作。
+
 值得一提的是，本例不只是 Doris 支持的 Java UDF，同时还是 Hive 支持的 UDF，也就是说，对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 
-## 创建 UDF
+另外，如果定义的 UDF 中需要加载很大的资源文件，或者希望可以定义全局的 static 变量，可以参照文档下方的 static 变量加载方式。
 
-```sql
-CREATE FUNCTION 
-name ([,...])
-[RETURNS] rettype
-PROPERTIES (["key"="value"][,...])	
-```
-说明：
 
-1. PROPERTIES 中`symbol`表示的是包含 UDF 类的类名，这个参数是必须设定的。
+### UDF
 
-2. PROPERTIES 中`file`表示的包含用户 UDF 的 jar 包，这个参数是必须设定的。
-
-3. PROPERTIES 中`type`表示的 UDF 调用类型，默认为 Native，使用 Java UDF 时传 JAVA_UDF。
-
-4. PROPERTIES 中`always_nullable`表示的 UDF 返回结果中是否有可能出现 NULL 值，是可选参数，默认值为 true。
-
-5. name: 一个 function 是要归属于某个 DB 的，name 的形式为`dbName`.`funcName`。当`dbName`没有明确指定的时候，就是使用当前 session 所在的 db 作为`dbName`。
-
-示例：
-
-```JAVA
+```java
 public class AddOne extends UDF {
     public Integer evaluate(Integer value) {
         return value == null ? null : value + 1;
@@ -114,26 +140,13 @@ public class AddOne extends UDF {
 }
 ```
 
-```sql
-CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
-    "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
-    "symbol"="org.apache.doris.udf.AddOne",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
+### UDAF
 
-* "file"="http://IP:port/udf-code.jar", 当在多机环境时，也可以使用 http 的方式下载 jar 包
+在使用 Java 代码编写 UDAF 时，有一些必须实现的函数 (标记 required) 和一个内部类 State，下面将以一个具体的实例来说明。
 
-* "always_nullable"可选属性，如果在计算中对出现的 NULL 值有特殊处理，确定结果中不会返回 NULL，可以设为 false，这样在整个查询计算过程中性能可能更好些。
+#### 示例1
 
-* 如果你是**本地路径**方式，这里数据库驱动依赖的 jar 包，**FE、BE 节点都要放置**
-
-## 编写 UDAF 函数
-
-
-在使用 Java 代码编写 UDAF 时，有一些必须实现的函数 (标记 required) 和一个内部类 State，下面将以一个具体的实例来说明
-下面的 SimpleDemo 将实现一个类似的 sum 的简单函数，输入参数 INT，输出参数是 INT
+下面的 SimpleDemo 将实现一个类似的 sum 的简单函数，输入参数 INT，输出参数是 INT。
 
 ```java
 package org.apache.doris.udf.demo;
@@ -221,14 +234,7 @@ public class SimpleDemo  {
 
 ```
 
-```sql
-CREATE AGGREGATE FUNCTION simple_sum(INT) RETURNS INT PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.SimpleDemo",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
+#### 示例2
 
 ```java
 package org.apache.doris.udf.demo;
@@ -344,28 +350,11 @@ public class MedianUDAF {
 
 ```
 
-```sql
-CREATE AGGREGATE FUNCTION middle_quantiles(DOUBLE,INT) RETURNS DOUBLE PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.MiddleNumberUDAF",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-);
-```
+### UDTF
 
-:::tip
-实现的 jar 包可以放在本地也可以存放在远程服务端通过 HTTP 下载，但必须让每个 BE 节点都能获取到 jar 包;
-
-- 否则将会返回错误状态信息"Couldn't open file ......".
-
-- 目前还暂不支持 UDTF
-
-  :::
-
-## 编写 UDTF 函数
 UDTF 和 UDF 函数一样，需要用户自主实现一个 `evaluate` 方法， 但是 UDTF 函数的返回值必须是 Array 类型。
-另外Doris中表函数会因为 _outer 后缀有不同的表现，可查看[OUTER 组合器](../sql-manual/sql-functions/table-functions/explode-numbers-outer)
 
+另外Doris中表函数会因为 `_outer` 后缀有不同的表现，可查看[OUTER 组合器](../sql-manual/sql-functions/table-functions/explode-numbers-outer.md)
 
 ```JAVA
 public class UDTFStringTest {
@@ -379,34 +368,84 @@ public class UDTFStringTest {
 }
 ```
 
-```sql
-CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
-    "file"="file:///pathTo/java-udaf.jar",
-    "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
+## 最佳实践
+
+### static 变量加载
+
+当前在 Doris 中，执行一个 UDF 函数，eg: `select udf(col) from table`, 每一个并发instance会加载一次udf.jar包，在该instance结束时卸载掉udf.jar包。
+所以当 udf.jar 文件中需要加载一个几百 MB的文件时，会因为并发的原因，使得占据的内存急剧增大，容易OOM。
+
+解决方法是可以将资源加载代码拆分开，单独生成一个 jar 包文件，其他包直接引用该资源jar包.  
+
+假设已经拆分为了 DictLibrary 和 FunctionUdf 两个文件。
+
+1. 单独编译 DictLibrary 文件，使其生成一个独立的 jar 包,这样可以得到一个资源文件 DictLibrary.jar: 
+
+    ```shell
+    javac   ./DictLibrary.java
+    jar -cf ./DictLibrary.jar ./DictLibrary.class
+    ```
+
+    ```java
+    public class DictLibrary {
+        private static HashMap<String, String> res = new HashMap<>();
+
+        static {
+            // suppose we built this dictionary from a certain local file.
+            res.put("key1", "value1");
+            res.put("key2", "value2");
+            res.put("key3", "value3");
+            res.put("0", "value4");
+            res.put("1", "value5");
+            res.put("2", "value6");
+        }
+
+        public static String evaluate(String key) {
+            if (key == null) {
+                return null;
+            }
+            return res.get(key);
+        }
+    }
+    ```
+
+    ```java
+    public class FunctionUdf {
+        public String evaluate(String key) {
+            String value = DictLibrary.evaluate(key);
+            return value;
+        }
+    }
+    ```
+
+2. 然后编译 FunctionUdf 文件，可以直接引用上一步的到的资源包, 这样可以得到 udf 的 FunctionUdf.jar包。
+
+    ```shell
+    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
+    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
+    ```
+
+3. 经过上面两步之后，会得到两个 jar 包，由于想让资源 jar 包被所有的并发引用，所以需要将它放到指定路径 `fe/custom_lib` 和 `be/custom_lib` 下面，服务重启之后就可以随着 JVM 的启动加载进来。
+
+4. 最后利用 `create function` 语句创建一个 UDF 函数
+
+   ```sql
+   CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+    "symbol"="org.apache.doris.udf.FunctionUdf",
     "always_nullable"="true",
     "type"="JAVA_UDF"
-);
-```
+   );
+   ```
 
+使用该加载方式时，FunctionUdf.jar和DictLibrary.jar都在FE和BE的custom_lib路径下，因此都会随着服务启动而加载，停止而释放，不再需要指定file 的路径。
 
-## 使用 UDF
-
-用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
-
-UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函数的作用域是全局的，而 UDF 的作用域是 DB 内部。当链接 session 位于数据内部时，直接使用 UDF 名字会在当前 DB 内部查找对应的 UDF。否则用户需要显示的指定 UDF 的数据库名字，例如 `dbName`.`funcName`。
-
-## 删除 UDF
-
-当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 `DROP FUNCTION`。
-
-## 示例
-在`samples/doris-demo/java-udf-demo/` 目录中提供了具体示例。具体使用方法见每个目录下的`README.md`，查看点击[这里](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo)
+也可以使用 file:/// 方式自定义FunctionUdf.jar的路径，但是DictLibrary.jar 只能放在custom_lib下。
 
 ## 使用须知
 
 1. 不支持复杂数据类型（HLL，Bitmap）。
 
-2. 当前允许用户自己指定JVM最大堆大小，配置项是 be.conf 中的 JAVA_OPTS 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
+2. 当前允许用户自己指定JVM最大堆大小，配置项是 be.conf 中的 `JAVA_OPTS` 的 -Xmx 部分。默认 1024m，如果需要聚合数据，建议调大一些，增加性能，减少内存溢出风险。
 
 3. Char 类型的 UDF 在 create function 时需要使用 String 类型。
 

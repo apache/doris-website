@@ -27,13 +27,13 @@ under the License.
 
 # 阿里云 MaxCompute
 
-MaxCompute是阿里云上的企业级SaaS（Software as a Service）模式云数据仓库。
+MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。
 
 > [什么是 MaxCompute](https://help.aliyun.com/zh/maxcompute/product-overview/what-is-maxcompute?spm=a2c4g.11174283.0.i1)
 
 ## 使用须知
-1. Max Compute Catalog基于[Max Compute Tunnel SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-28?spm=a2c4g.11186623.0.0.376d66c2FNv6aS)开发。查询性能有一定限制。
-2. 在一次查询中，每个Scan都会创建Max Compute的DownloadSession对象，并行访问Max Compute时性能会下降，建议使用Max Compute Catalog时，尽量减少查询的分区数量和数据大小。
+1. Max Compute Catalog 基于[Max Compute Tunnel SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-28?spm=a2c4g.11186623.0.0.376d66c2FNv6aS)开发。查询性能有一定限制。
+2. 在一次查询中，每个 Scan 都会创建 Max Compute 的 DownloadSession 对象，并行访问 Max Compute 时性能会下降，建议使用 Max Compute Catalog 时，尽量减少查询的分区数量和数据大小。
 
 ## 连接 Max Compute
 
@@ -47,31 +47,31 @@ CREATE CATALOG mc PROPERTIES (
 );
 ```
 
-* `mc.region`：MaxCompute开通的地域。可以从Endpoint中找到对应的Region，参阅[Endpoints](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints?spm=a2c4g.11186623.0.0)。
-* `mc.default.project`：MaxCompute项目。可以在[MaxCompute项目列表](https://maxcompute.console.aliyun.com/cn-beijing/project-list)中创建和管理。
+* `mc.region`：MaxCompute 开通的地域。可以从 Endpoint 中找到对应的 Region，参阅[Endpoints](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints?spm=a2c4g.11186623.0.0)。
+* `mc.default.project`：MaxCompute 项目。可以在[MaxCompute 项目列表](https://maxcompute.console.aliyun.com/cn-beijing/project-list)中创建和管理。
 * `mc.access_key`：AccessKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。
 * `mc.secret_key`：SecretKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。
 * `mc.public_access`: 当配置了`"mc.public_access"="true"`，可以开启公网访问，建议测试时使用。
 
 ## 限额
 
-连接MaxCompute时，按量付费的Quota查询并发和使用量有限，如需增加资源，请参照MaxCompute文档。参见[配额管理](https://help.aliyun.com/zh/maxcompute/user-guide/manage-quotas-in-the-new-maxcompute-console).
+连接 MaxCompute 时，按量付费的 Quota 查询并发和使用量有限，如需增加资源，请参照 MaxCompute 文档。参见[配额管理](https://help.aliyun.com/zh/maxcompute/user-guide/manage-quotas-in-the-new-maxcompute-console).
 
 ## 列类型映射
 
-和 Hive Catalog 一致，可参阅 [Hive Catalog](./hive.md) 中 **列类型映射** 一节。
+和 Hive Catalog 一致，可参阅 [Hive Catalog](../datalake-analytics/hive) 中 **列类型映射** 一节。
 
 ## 自定义服务地址
 
-默认情况下，Max Compute Catalog根据region去默认生成公网的endpoint。
+默认情况下，Max Compute Catalog 根据 region 去默认生成公网的 endpoint。
 
-除了默认的endpoint地址外，Max Compute Catalog也支持在属性中自定义服务地址。
+除了默认的 endpoint 地址外，Max Compute Catalog 也支持在属性中自定义服务地址。
 
 使用以下两个属性：
 * `mc.odps_endpoint`：Max Compute Endpoint。
-* `mc.tunnel_endpoint`: Tunnel Endpoint，Max Compute Catalog使用Tunnel SDK获取数据。
+* `mc.tunnel_endpoint`: Tunnel Endpoint，Max Compute Catalog 使用 Tunnel SDK 获取数据。
 
-Max Compute Endpoint和Tunnel Endpoint的配置请参见[各地域及不同网络连接方式下的Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)
+Max Compute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)
 
 示例：
 

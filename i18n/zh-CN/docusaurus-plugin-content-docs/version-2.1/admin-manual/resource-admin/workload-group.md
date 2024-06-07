@@ -71,6 +71,8 @@ Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但
 
 用户如果在 2.0 版本使用了 Workload Group 的软限并升级到了 2.1 版本，那么也需要配置 CGroup，否则可能导致软限失效。
 
+如果是在容器内使用 CGroup，需要容器具备操作宿主机的权限。
+
 在不配置 cgroup 的情况下，用户可以使用 workload group 除 CPU 限制外的所有功能。
 
 1 首先确认 BE 所在节点已经安装好 CGroup v1 版本，确认存在路径```/sys/fs/cgroup/cpu/```即可
@@ -85,7 +87,7 @@ Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但
 chmod 770 /sys/fs/cgroup/cpu/doris
 
 // 把这个目录的归属划分给doris的账户
-chonw -R doris:doris /sys/fs/cgroup/cpu/doris
+chown -R doris:doris /sys/fs/cgroup/cpu/doris
 ```
 
 4 修改 BE 的配置，指定 cgroup 的路径
@@ -98,24 +100,7 @@ doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 需要注意的是，目前的 workload group 暂时不支持一个机器多个 BE 的部署方式。
 
 ## workload group 使用
-
-1. 手动创建一个名为 normal 的 Workload Group，这个 Workload Group 为系统默认的 Workload Group，不可删除。
-```
-create workload group if not exists normal 
-properties (
-	'cpu_share'='1024',
-	'memory_limit'='30%',
-	'enable_memory_overcommit'='true'
-);
-```
-normal Group 的作用在于，当你不为查询指定 Workload Group 时，查询会默认使用该 Group，从而避免查询失败。
-
-2. 开启 experimental_enable_workload_group 配置项，在 fe.conf 中设置：
-```
-experimental_enable_workload_group=true
-```
-
-3. 如果期望使用其他 group 进行测试，那么可以创建一个自定义的 workload group，
+1. 首先创建一个自定义的 workload group。
 ```
 create workload group if not exists g1
 properties (
@@ -124,16 +109,11 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-此时配置的 CPU 限制为软限。
+此时配置的 CPU 限制为软限。自2.1版本起，系统会自动创建一个名为```normal```的group，不可删除。
 
-创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，另删除 workload group 可参考[DROP-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看 workload group 可参考：[WORKLOAD_GROUPS()](../sql-manual/sql-functions/table-functions/workload-group)和[SHOW-WORKLOAD-GROUPS](../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看workload group可访问Doris系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
 
-4. 开启 pipeline 执行引擎，workload group cpu 隔离基于 pipeline 执行引擎实现，因此需开启 session 变量：
-```
-set experimental_enable_pipeline_engine = true;
-```
-
-5. 绑定 workload group。
+2. 绑定 workload group。
 * 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`:
 ```
 set property 'default_workload_group' = 'g1';
@@ -141,17 +121,17 @@ set property 'default_workload_group' = 'g1';
 当前用户的查询将默认使用'g1'。
 * 通过 session 变量指定 workload group, 默认为空：
 ```
-set workload_group = 'g2';
+set workload_group = 'g1';
 ```
 session 变量`workload_group`优先于 user property `default_workload_group`, 在`workload_group`为空时，查询将绑定到`default_workload_group`, 在 session 变量`workload_group`不为空时，查询将绑定到`workload_group`。
 
-如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../sql-manual/sql-reference/Account-Management-Statements/GRANT)。
+如果是非admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
 
 6. 执行查询，查询将关联到指定的 workload group。
 
 ### 查询排队功能
 ```
-create workload group if not exists test_group
+create workload group if not exists queue_group
 properties (
     "cpu_share"="10",
     "memory_limit"="30%",
@@ -181,18 +161,18 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 
 2 修改 Workload Group 的 cpu_hard_limit 属性
 ```
-alter workload group group1 properties ( 'cpu_hard_limit'='20%' );
+alter workload group g1 properties ( 'cpu_hard_limit'='20%' );
 ```
 
 3 查看当前的 Workload Group 的配置，可以看到尽管此时 cpu_share 的值可能不为 0，但是由于开启了硬限模式，那么查询在执行时也会走 CPU 的硬限。也就是说 CPU 软硬限的开关不影响元数据的修改。
 ```
-mysql [(none)]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_hard_limit from workload_groups() where name='group1';
-+--------+-----------+--------------+--------------------------+----------------+
-| Name   | cpu_share | memory_limit | enable_memory_overcommit | cpu_hard_limit |
-+--------+-----------+--------------+--------------------------+----------------+
-| group1 |        10 | 45%          | true                     | 20%            |
-+--------+-----------+--------------+--------------------------+----------------+
-1 row in set (0.03 sec)
+mysql [information_schema]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_hard_limit from information_schema.workload_groups where name='g1';
++------+-----------+--------------+--------------------------+----------------+
+| name | cpu_share | memory_limit | enable_memory_overcommit | cpu_hard_limit |
++------+-----------+--------------+--------------------------+----------------+
+| g1   |      1024 | 30%          | true                     | 20%            |
++------+-----------+--------------+--------------------------+----------------+
+1 row in set (0.02 sec)
 ```
 
 ### CPU 软硬限模式切换的说明
@@ -201,7 +181,7 @@ mysql [(none)]>select name, cpu_share,memory_limit,enable_memory_overcommit,cpu_
 
 1 假如当前的集群配置是默认的 CPU 软限制，然后期望改成 CPU 的硬限，那么首先需要把 Workload Group 的 cpu_hard_limit 参数修改成一个有效的值
 ```
-alter workload group group1 properties ( 'cpu_hard_limit'='20%' );
+alter workload group test_group properties ( 'cpu_hard_limit'='20%' );
 ```
 需要修改当前集群中所有的 Workload Group 的这个属性，所有 Workload Group 的 cpu_hard_limit 的累加值不能超过 100%
 由于 CPU 的硬限无法给出一个有效的默认值，因此如果只打开开关但是不修改属性，那么 CPU 的硬限也无法生效。

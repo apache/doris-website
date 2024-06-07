@@ -41,7 +41,17 @@ github:
     squash:  true
     merge:   false
     rebase:  false
+  protected_branches:
+    master:
+      required_status_checks:
+        # if strict is true, means "Require branches to be up to date before merging".
+        strict: false
+        contexts:
+          - Build Check
   features:
     issues: true
 notifications:
-  pullrequests_status:  commits@doris.apache.org
+    commits:              commits@foo.apache.org
+    issues:               commits@doris.apache.org
+    pullrequests_comment: commits@doris.apache.org
+    pullrequests_status:  commits@doris.apache.org

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Min Load Replica Num",
+    "title": "Minimum Number of Replicas Loading",
     "language": "en"
 }
 ---
@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Min Load Replica Num
 
 Importing data requires more than half of the replicas to be written successfully. However, it is not flexible enough and may cause inconvenience in some scenarios.
 
@@ -94,7 +93,7 @@ You can set FE configuration item `min_load_replica_num` for all olap tables. Th
 
 For a table, if the table property `min_load_replica_num` is valid (>0), then the table will ignore the global configuration `min_load_replica_num`. Otherwise, if the global configuration `min_load_replica_num` is valid (>0), then the minimum number of load replicas for the table will be equal to `min(FE.conf.min_load_replica_num, table.replication_num/2 + 1)`.
 
-For viewing and modification of FE configuration items, you can refer to [here](../../../admin-manual/config/fe-config.md).
+For viewing and modification of FE configuration items, you can refer to [here](../../admin-manual/config/fe-config.md).
 
 ### Other cases
 

@@ -48,7 +48,7 @@ Doris 支持的常规分布式 Join 方式包括了 shuffle join 和 broadcast j
 
 在 FE 之中保存了 Doris 每个表的数据分布信息，如果 join 语句命中了表的数据分布列，我们应该使用数据分布信息来减少 join 语句的网络与内存开销，这就是 Bucket Shuffle Join 的思路来源。
 
-![image.png](https://doris.apache.org/images/bucket_shuffle_join.png)
+![Shuffle Join.png](/images/bucket_shuffle_join.png)
 
 上面的图片展示了 Bucket Shuffle Join 的工作原理。SQL 语句为 A 表 join B 表，并且 join 的等值表达式命中了 A 的数据分布列。而 Bucket Shuffle Join 会根据 A 表的数据分布信息，将 B 表的数据发送到对应的 A 表的数据存储计算节点。Bucket Shuffle Join 开销如下：
 

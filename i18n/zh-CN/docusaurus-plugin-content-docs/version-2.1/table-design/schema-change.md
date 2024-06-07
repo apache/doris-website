@@ -76,7 +76,7 @@ under the License.
 
 在开始转换历史数据之前，Doris 会获取一个最新的 Transaction ID。并等待这个 Transaction ID 之前的所有导入事务完成。这个 Transaction ID 成为分水岭。意思是，Doris 保证在分水岭之后的所有导入任务，都会同时为原表 /Index 和新表 /Index 生成数据。这样当历史数据转换完成后，可以保证新的表中的数据是完整的。
 
-创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
+创建 Schema Change 的具体语法可以查看帮助 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 中 Schema Change 部分的说明。
 
 ## 向指定 Index 的指定位置添加一列
 
@@ -416,7 +416,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 -   一张表在同一时间只能有一个 Schema Change 作业在运行。
 
--   Schema Change 操作不阻塞导入和查询操作。
+-   Schema Change 操作不阻塞导入和查询操作。除非操作本身影响了表的元数据（例如自动分区表导入过程中创建了分区）
 
 -   分区列和分桶列不能修改。
 
@@ -486,4 +486,4 @@ ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
 
 ## 更多参考
 
-关于 Schema Change 使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP ALTER TABLE COLUMN` 获取更多帮助信息。
+关于 Schema Change 使用的更多详细语法及最佳实践，请参阅 [ALTER TABLE COLUMN](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN) 命令手册，你也可以在 MySQL 客户端命令行下输入 `HELP ALTER TABLE COLUMN` 获取更多帮助信息。

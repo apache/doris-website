@@ -230,9 +230,9 @@ INTO TABLE testDb.testTbl
 ```sql
 LOAD DATA LOCAL
 INFILE 'testData'
+INTO TABLE testDb.testTbl
 COLUMNS TERMINATED BY ','
-LINES TERMINATED BY '\n'
-INTO TABLE testDb.testTbl;
+LINES TERMINATED BY '\n';
 ```
 
 ### 指定导入分区
@@ -270,4 +270,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## 更多帮助
 
-关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。
+关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。

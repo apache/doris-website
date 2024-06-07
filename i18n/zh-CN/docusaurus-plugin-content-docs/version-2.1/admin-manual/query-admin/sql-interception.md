@@ -39,7 +39,7 @@ under the License.
 
 对 SQL 规则增删改查
 
-- 创建 SQL 阻止规则，更多创建语法请参阅[CREATE SQL BLOCK RULE](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE)
+- 创建 SQL 阻止规则，更多创建语法请参阅[CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE)
 
     - sql：匹配规则 (基于正则匹配，特殊字符需要转译)，可选，默认值为 "NULL"
 
@@ -83,13 +83,13 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule:
   CREATE SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "30", "cardinality"="10000000000","global"="false","enable"="true")
   ```
 
-- 查看已配置的 SQL 阻止规则，不指定规则名则为查看所有规则，具体语法请参阅 [SHOW SQL BLOCK RULE](../../sql-manual/sql-reference/Show-Statements/SHOW-SQL-BLOCK-RULE)
+- 查看已配置的 SQL 阻止规则，不指定规则名则为查看所有规则，具体语法请参阅 [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE)
 
   ```sql
   SHOW SQL_BLOCK_RULE [FOR RULE_NAME]
   ```
 
-- 修改 SQL 阻止规则，允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改，具体语法请参阅[ALTER SQL BLOCK  RULE](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE)
+- 修改 SQL 阻止规则，允许对 sql/sqlHash/partition_num/tablet_num/cardinality/global/enable 等每一项进行修改，具体语法请参阅[ALTER SQL BLOCK  RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE)
 
     - sql 和 sqlHash 不能同时被设置。这意味着，如果一个 rule 设置了 sql 或者 sqlHash，则另一个属性将无法被修改
 
@@ -103,7 +103,7 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule:
     ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
     ```
 
-- 删除 SQL 阻止规则，支持多规则，以`,`隔开，具体语法请参阅 [DROP SQL BLOCK RULE](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE)
+- 删除 SQL 阻止规则，支持多规则，以`,`隔开，具体语法请参阅 [DROP SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE)
 
   ```
   DROP SQL_BLOCK_RULE test_rule1,test_rule2

@@ -29,8 +29,7 @@ under the License.
 ## 使用须知
 
 1. 数据放在 hdfs 时，需要将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
-
-2. 当前适配的 paimon 版本为 0.6.0
+2. 当前最新适配的 Paimon 版本为 0.7。
 
 ## 创建 Catalog
 
@@ -41,10 +40,6 @@ Paimon Catalog 当前支持两种类型的 Metastore 创建 Catalog:
 * Hive Metastore，它还将元数据存储在 Hive Metastore 中。用户可以直接从 Hive 访问这些表。
 
 ### 基于 FileSystem 创建 Catalog
-
-:::tip
-2.0.1 及之前版本，请使用后面的 `基于 Hive Metastore 创建 Catalog`。
-:::
 
 **HDFS**
 
@@ -162,23 +157,33 @@ CREATE CATALOG `paimon_hms` PROPERTIES (
 | DoubleType                            | Double                    |           |
 | VarCharType                           | VarChar                   |           |
 | CharType                              | Char                      |           |
+| VarBinaryType, BinaryType             | Binary                    |           |
 | DecimalType(precision, scale)         | Decimal(precision, scale) |           |
 | TimestampType,LocalZonedTimestampType | DateTime                  |           |
 | DateType                              | Date                      |           |
-| MapType                               | Map                       | 支持 Map 嵌套   |
 | ArrayType                             | Array                     | 支持 Array 嵌套 |
-| VarBinaryType, BinaryType             | Binary                    |           |
+| MapType                               | Map                       | 支持 Map 嵌套   |
+| RowType                               | Struct                    | 支持Struct嵌套（2.0.10 版本开始支持）|
 
 
-:::caution
-访问对象存储（OSS、S3 等）报错文件系统不支持
+## 常见问题
 
-在 2.0.5（含）之前的版本，用户需手动下载以下 jar 包并放置在 `${DORIS_HOME}/be/lib/java_extensions/preload-extensions` 目录下，重启 BE。
+1. Kerberos 问题
 
-- 访问 OSS：[paimon-oss-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-oss/0.6.0-incubating/paimon-oss-0.6.0-incubating.jar)
+    - 确保 principal 和 keytab 配置正确。
+    - 需在 BE 节点启动定时任务（如 crontab），每隔一定时间（如 12 小时），执行一次 `kinit -kt your_principal your_keytab` 命令。
 
-- 访问其他对象存储：[paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
+2. Unknown type value: UNSUPPORTED
 
-:::
+    这是 Doris 2.0.2 版本和 Paimon 0.5 版本的一个兼容性问题，需要升级到 2.0.3 或更高版本解决，或自行 [patch](https://github.com/apache/doris/pull/24985)
+
+3. 访问对象存储（OSS、S3 等）报错文件系统不支持
+
+    在 2.0.5（含）之前的版本，用户需手动下载以下 jar 包并放置在 `${DORIS_HOME}/be/lib/java_extensions/preload-extensions` 目录下，重启 BE。
+
+    - 访问 OSS：[paimon-oss-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-oss/0.6.0-incubating/paimon-oss-0.6.0-incubating.jar)
+    - 访问其他对象存储：[paimon-s3-0.6.0-incubating.jar](https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/0.6.0-incubating/paimon-s3-0.6.0-incubating.jar)
+
+    2.0.6 之后的版本不再需要用户手动放置。
 
 

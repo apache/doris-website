@@ -93,7 +93,7 @@ There are two ways to configure FE configuration items:
     
 3. Dynamic configuration via HTTP protocol
 
-    For details, please refer to [Set Config Action](../http-actions/fe/set-config-action.md)
+    For details, please refer to [Set Config Action](../fe/set-config-action)
 
     This method can also persist the modified configuration items. The configuration items will be persisted in the `fe_custom.conf` file and will still take effect after FE is restarted.
 

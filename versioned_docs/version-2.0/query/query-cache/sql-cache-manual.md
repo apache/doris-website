@@ -30,7 +30,7 @@ The SQL statement will hit the cache if it is completely consistent.
 
 ## Demand scenarios & solutions
 
-See query-cache.md.
+See [Query Caches Overview](../query-cache/query-cache.md)
 
 ## Design principles
 

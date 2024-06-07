@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compilation on MacOS",
+    "title": "Compiling on MacOS",
     "language": "en"
 }
 ---
@@ -69,9 +69,9 @@ $ ulimit -n
 
 # Add the configuration to your startup script so that you do not have to set it again every time you open a new terminal session.
 # If you are using bash, execute the following statement:
-echo 'ulimit -n 65536' ~/.bashrc
+echo 'ulimit -n 65536' >>~/.bashrc
 # If you are using zsh, execute the following statement:
-echo 'ulimit -n 65536' ~/.zshrc
+echo 'ulimit -n 65536' >>~/.zshrc
 ```
 
 2. **Start BE**
@@ -114,3 +114,17 @@ cd installed/bin
 :::tip 
 When running protoc and thrift, you may encounter an issue where the binary cannot be opened due to developer verification. To resolve this, you can go to "Security & Privacy" settings. In the "General" tab, click on the "Open Anyway" button to confirm your intent to open the binary. Refer to: https://support.apple.com/en-us/102445 
 :::
+
+## Common Errors
+1. When running `protoc` and `thrift`, you may encounter an issue where the binary cannot be opened due to developer verification. To resolve this, you can go to "Security & Privacy" settings. In the "General" tab, click on the "Open Anyway" button to confirm your intent to open the binary. Refer to: https://support.apple.com/en-us/102445.
+2. When compiling with a Mac with an M3 chip, the compilation of the proto file fails.
+The failure log is as follows:
+```Shell
+[ERROR] ... [0:0]: --grpc-java_out: protoc-gen-grpc-java: Plugin failed with status code 1.
+```
+The reason for this error may be that the Apple arm-based chip does not support software on the x86 platform. 
+You can download the protoc-gen-grpc-java software used from https://repo.maven.apache.org/maven2/io/grpc/protoc-gen-grpc-java/, and the version information can be viewed from the grpc.java.artifact property under the protoc_rosetta profile in fe/fe-core/pom.xml. If the following error is reported after downloading and executing, it means that the current Mac cannot execute software based on x86 compiled software.
+```Shell
+zsh: bad CPU type in executable:./protoc-gen-grpc-java-1.34.0-osx-x86_64.exe
+```
+You can refer to the official documentation https://support.apple.com/en-us/102527 and install `Rosetta` to solve this problem.

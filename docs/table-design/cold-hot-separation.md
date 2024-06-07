@@ -1,6 +1,6 @@
 ---
 {
-"title": "Cold Hot Separation",
+"title": "Tiered Storage",
 "language": "en"
 }
 ---
@@ -147,7 +147,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET ("storage_policy" = 
 :::tip
 If you specify different storage policies for the entire table and some partitions during table creation, the storage policy set for the partitions will be ignored, and all partitions of the table will use the table's storage policy. If you want a specific partition to have a different storage policy than the others, you can use the method mentioned above to modify the association for that specific partition.
 
-For more details, please refer to the following documents in the Docs directory: [RESOURCE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-RESOURCE), [POLICY](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-POLICY), [CREATE TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE), [ALTER TABLE](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN), which provide detailed explanations.
+For more details, please refer to the following documents in the Docs directory: [RESOURCE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE), [POLICY](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-POLICY), [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE), [ALTER TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COLUMN), which provide detailed explanations.
 :::
 
 ### Limitations
@@ -210,8 +210,6 @@ Garbage data for cold data refers to data that is not used by any replica. The f
 Furthermore, the garbage data on objects is not immediately cleaned up. The BE parameter `remove_unused_remote_files_interval_sec` sets the time interval for garbage collection of cold data. The default value is 21600 seconds (6 hours).
 
 ## TODOs
-
-- Currently, there is no way to query tables associated with a specific storage policy.
 
 - Some remote occupancy metrics may not have comprehensive update retrieval.
 

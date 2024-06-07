@@ -226,9 +226,9 @@ You can specify the column and row delimiters using the `COLUMNS TERMINATED BY` 
 ```SQL
 LOAD DATA LOCAL
 INFILE 'testData'
+INTO TABLE testDb.testTbl
 COLUMNS TERMINATED BY ','
-LINES TERMINATED BY '\n'
-INTO TABLE testDb.testTbl;
+LINES TERMINATED BY '\n';
 ```
 
 ### Specify target partition
@@ -266,4 +266,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## More help
 
-For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Manipulation-Statements/Load/MYSQL-LOAD/) command manual.
+For more detailed syntax and best practices related to MySQL Load, refer to the [MySQL Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD/) command manual.
