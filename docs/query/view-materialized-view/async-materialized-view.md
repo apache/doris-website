@@ -477,7 +477,7 @@ CREATE MATERIALIZED VIEW mv1
     AS
     SELECT * FROM t1;
 ```
-If the partition field is of string type, you can set the materialized view property 'partition_date_format', for example, '%Y-%m-%d'.
+Note: When the partition is a string, the way it is rolled up is still being designed. The current behavior may change, it is best not to use it
 
 ## Data refreshing
 ### Refresh principle

@@ -477,7 +477,7 @@ CREATE MATERIALIZED VIEW mv1
     AS
     SELECT * FROM t1;
 ```
-如果分区字段是字符串类型，可以设置物化视图属性'partition_date_format',例如'%Y-%m-%d'
+注意：分区是字符串时，上卷的方式还在设计中。现在的行为有可能变动，最好不要使用
 
 ## 数据刷新
 ### 刷新原理
