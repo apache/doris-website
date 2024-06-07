@@ -80,8 +80,6 @@ value.converter=org.apache.kafka.connect.json.JsonConverter
 ```properties
 #Kafka上游的数据来自debezium
 converter.mode=debezium_ingestion
-key.converter.schemas.enable=true
-value.converter.schemas.enable=true
 ```
 
 例如将 Kafka 中 topic 为 pg_test.doris_test.all_types 的数据导入到 Apache Doris 中 all_types的表，doris-connector-sink.properties 配置如下：
@@ -103,8 +101,6 @@ doris.password=123456
 doris.database=doris_test
 key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
-key.converter.schemas.enable=true
-value.converter.schemas.enable=true
 tasks.max=5
 ```
 
