@@ -427,7 +427,7 @@ group by
 ```
 
 注意：
-物化视图带 where 条件，以上述为例，构建物化的过滤条件是 `where l_shipdate > '2023-10-19'` 查询是 `where l_shipdate > '2023-10-18'`
+物化视图带 where 条件，以上述为例，如果构建物化的过滤条件加上 `where l_shipdate > '2023-10-19'` 查询是 `where l_shipdate > '2023-10-18'`
 目前这种还无法通过union补偿，待支持
 
 
