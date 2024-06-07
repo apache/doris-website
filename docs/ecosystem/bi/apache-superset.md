@@ -55,12 +55,12 @@ When creating a data source in Apache Superset, please pay attention to the foll
 
   ```doris://<User>:<Password>@<Host>:<Port>/<Catalog>.<Database>```
 - URI parameters are explained as follows:
-  - User: The username for logging into the Doris cluster, e.g., admin.
-  - Password: The password for logging into the Doris cluster.
-  - Host: The IP address of the FE (Frontend) host in the Doris cluster.
-  - Port: The query port of the FE in the Doris cluster, e.g. 9030.
-  - Catalog: The target Catalog in the Doris cluster. Both Internal Catalog and External Catalog are supported.
-  - Database: The target database in the Doris cluster. Both internal and external databases are supported.
+   - User: The username for logging into the Doris cluster, e.g., admin.
+   - Password: The password for logging into the Doris cluster.
+   - Host: The IP address of the FE (Frontend) host in the Doris cluster.
+   - Port: The query port of the FE in the Doris cluster, e.g. 9030.
+   - Catalog: The target Catalog in the Doris cluster. Both Internal Catalog and External Catalog are supported.
+   - Database: The target database in the Doris cluster. Both internal and external databases are supported.
 
 
 :::tip

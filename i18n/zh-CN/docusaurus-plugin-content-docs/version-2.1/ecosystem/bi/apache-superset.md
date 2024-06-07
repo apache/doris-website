@@ -65,17 +65,17 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 
 - URI 参数说明如下：
 
-  - User：用于登录 Doris 集群的用户名，如 admin。
+   - User：用于登录 Doris 集群的用户名，如 admin。
 
-  - Password：用于登录 Doris 集群的用户密码。
+   - Password：用于登录 Doris 集群的用户密码。
 
-  - Host：Doris 集群的 FE 主机 IP 地址。
+   - Host：Doris 集群的 FE 主机 IP 地址。
 
-  - Port：Doris 集群的 FE 查询端口，如 9030。
+   - Port：Doris 集群的 FE 查询端口，如 9030。
 
-  - Catalog：Doris 集群中的目标 Catalog。Internal Catalog 和 External Catalog 均支持。
+   - Catalog：Doris 集群中的目标 Catalog。Internal Catalog 和 External Catalog 均支持。
 
-  - Database：Doris 集群中的目标数据库。内部数据库和外部数据库均支持。
+   - Database：Doris 集群中的目标数据库。内部数据库和外部数据库均支持。
 
 
 :::tip
