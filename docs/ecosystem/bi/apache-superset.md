@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Apache Superset",
-  "language": "en"
+"title": "Apache Superset",
+"language": "en"
 }
 ---
 
@@ -66,4 +66,4 @@ When creating a data source in Apache Superset, please pay attention to the foll
 :::tip
 1. When deploying Superset using the latest Docker image, if you encounter the issue of not finding the Apache Doris data source, it may be because the default [Superset Docker image](https://hub.docker.com/r/apache/superset) includes only basic data source builds. You need to manually install the pydoris package. You can refer to the 'How to extend this image' section in the Superset Docker tutorial for the deployment steps of Superset.
 2. It is recommended to use Apache Doris 2.0.4 and above.
-   :::
+:::
