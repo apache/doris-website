@@ -77,6 +77,39 @@ key.converter=org.apache.kafka.connect.storage.StringConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
 ```
 
+当我们使用Kafka-connector-doris导入Kafka topic中 Debezium Struct格式的数据时， 需要添加如下如下配置：
+```properties
+# Kafka上游的数据来自debezium
+converter.mode=debezium_ingestion
+key.converter.schemas.enable=true
+value.converter.schemas.enable=true
+```
+
+例如将 Kafka 中 topic 为 pg_test.doris_test.all_types 的数据导入到 Apache Doris 中 all_types的表，doris-connector-sink.properties 配置如下：
+
+```
+name=test-doris-sink
+connector.class=org.apache.doris.kafka.connector.DorisSinkConnector
+topics=pg_test.doris_test.all_types
+doris.topic2table.map=pg_test.doris_test.all_types:all_types
+converter.mode=debezium_ingestion
+debezium.schema.evolution=basic
+buffer.count.records=100000
+buffer.flush.time=120
+buffer.size.bytes=50000000
+doris.urls= 10.10.10.1
+doris.http.port=8030
+doris.query.port=9030
+doris.user=root
+doris.password=123456
+doris.database=doris_test
+key.converter=org.apache.kafka.connect.storage.StringConverter
+value.converter=org.apache.kafka.connect.json.JsonConverter
+key.converter.schemas.enable=true
+value.converter.schemas.enable=true
+tasks.max=5
+```
+
 启动 Standalone
 
 ```shell
