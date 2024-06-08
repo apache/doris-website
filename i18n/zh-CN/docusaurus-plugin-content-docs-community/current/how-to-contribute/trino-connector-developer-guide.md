@@ -28,7 +28,7 @@ under the License.
 
 ## 背景
 
-从 4.0 版本开始，Doris 支持对接 Trino Connector 插件。通过丰富的 Trino Connector 插件以及 Doris 的 `Trino-Connector` Catalog 功能可以让 Doris 支持更多的数据源。
+从 3.0 版本开始，Doris 支持对接 Trino Connector 插件。通过丰富的 Trino Connector 插件以及 Doris 的 `Trino-Connector` Catalog 功能可以让 Doris 支持更多的数据源。
 
 Trino Connector 兼容框架的目的在于帮助 Doris 快速对接更多的数据源，以满足用户需求。
 对于 Hive、Iceberg、Hudi、Paimon、JDBC 等数据源，我们仍然建议使用 Doris 内置的 Catalog 进行连接，已获得更好的性能、稳定性和兼容性。

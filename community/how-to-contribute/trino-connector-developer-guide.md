@@ -29,7 +29,7 @@ under the License.
 
 ## Background
 
-Starting from version 4.0, Doris supports docking with the Trino Connector plugin. Through the rich Trino Connector plugin and Doris' Trino-Connector Catalog function, Doris can query more data sources.
+Starting from version 3.0, Doris supports docking with the Trino Connector plugin. Through the rich Trino Connector plugin and Doris' Trino-Connector Catalog function, Doris can query more data sources.
 
 The purpose of the Trino Connector compatibility framework is to help Doris quickly connect to more data sources to meet user needs.
 
