@@ -83,12 +83,12 @@ After completing the previous two steps, we can use the Trino-Connector Catalog 
 
     ```sql
     create catalog kafka_tpch properties (
-    "type"="trino-connector",
-    -- The following four properties are derived from trino and are consistent with the properties in etc/catalog/kakfa.properties of trino
-    "connector.name"="kafka",
-    "kafka.table-names"="tpch.customer,tpch.orders,tpch.lineitem,tpch.part,tpch.partsupp,tpch.supplier,tpch.nation,tpch.region",
-    "kafka.nodes"="localhost:9092",
-    "kafka.table-description-dir" = "/mnt/datadisk1/fangtiewei"
+        "type"="trino-connector",
+        -- The following four properties are derived from trino and are consistent with the properties in etc/catalog/kakfa.properties of trino. But need to add "trino." prefix
+        "trino.connector.name"="kafka",
+        "trino.kafka.table-names"="tpch.customer,tpch.orders,tpch.lineitem,tpch.part,tpch.partsupp,tpch.supplier,tpch.nation,tpch.region",
+        "trino.kafka.nodes"="localhost:9092",
+        "trino.kafka.table-description-dir" = "/mnt/datadisk1/fangtiewei"
     );
     ```
 
@@ -109,27 +109,24 @@ The following are the Doris Trino-Connector catalog configuration of several com
     ```sql
     create catalog emr_hive properties (
         "type"="trino-connector",
-
-        "connector.name"="hive",
-        "hive.metastore.uri"="thrift://ip:port",
-        "hive.config.resources"="/path/to/core-site.xml,/path/to/hdfs-site.xml"
+        "trino.connector.name"="hive",
+        "trino.hive.metastore.uri"="thrift://ip:port",
+        "trino.hive.config.resources"="/path/to/core-site.xml,/path/to/hdfs-site.xml"
     );
     ```
 
     > Note:
     > - You should add Hadoop's user name in the JVM parameters: -DHADOOP_USER_NAME=ftw, which can be configured at the end of the JAVA_OPTS_FOR_JDK_17 parameter in the fe.conf / be.conf file, such as JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=ftw"
 
-
 2. Mysql
 
     ```sql
     create catalog trino_mysql properties (
         "type"="trino-connector",
-        
-        "connector.name"="mysql",
-        "connection-url" = "jdbc:mysql://ip:port",
-        "connection-user" = "user",
-        "connection-password" = "password"
+        "trino.connector.name"="mysql",
+        "trino.connection-url" = "jdbc:mysql://ip:port",
+        "trino.connection-user" = "user",
+        "trino.connection-password" = "password"
     );
     ```
 
@@ -141,24 +138,22 @@ The following are the Doris Trino-Connector catalog configuration of several com
     ```sql
     create catalog kafka properties (
         "type"="trino-connector",
-        
-        "connector.name"="kafka",
-        "kafka.nodes"="localhost:9092",
-        "kafka.table-description-supplier"="CONFLUENT",
-        "kafka.confluent-schema-registry-url"="http://localhost:8081",
-        "kafka.hide-internal-columns" = "false"
+        "trino.connector.name"="kafka",
+        "trino.kafka.nodes"="localhost:9092",
+        "trino.kafka.table-description-supplier"="CONFLUENT",
+        "trino.kafka.confluent-schema-registry-url"="http://localhost:8081",
+        "trino.kafka.hide-internal-columns" = "false"
     );
     ```
-
 
 4. BigQuery
 
     ```sql
     create catalog bigquery_catalog properties (
         "type"="trino-connector",
-
-        "connector.name"="bigquery",
-        "bigquery.project-id"="steam-circlet-388406",
-        "bigquery.credentials-file"="/path/to/application_default_credentials.json"
+        "trino.connector.name"="bigquery",
+        "trino.bigquery.project-id"="steam-circlet-388406",
+        "trino.bigquery.credentials-file"="/path/to/application_default_credentials.json"
     );
     ```
+
