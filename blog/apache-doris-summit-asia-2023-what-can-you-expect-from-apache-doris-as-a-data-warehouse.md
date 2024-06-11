@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris Summit Asia 2023: what can you expect from apache doris as a data warehouse?',
-    'summary': "The past year marks a breakthrough of Apache Doris, an open-source real-time data warehouse that has just undergone an overall upgrade after long consistent incremental optimizations.",
+    'description': "The past year marks a breakthrough of Apache Doris, an open-source real-time data warehouse that has just undergone an overall upgrade after long consistent incremental optimizations.",
     'date': '2023-11-10',
     'author': 'Apache Doris',
     'tags': ['Top News'],

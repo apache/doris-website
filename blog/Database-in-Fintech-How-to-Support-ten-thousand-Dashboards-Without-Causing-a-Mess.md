@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Database in fintech: how to support 10,000 dashboards without causing a mess',
-    'summary': "This article introduces the lifecycle of financial metrics in a database, from how they're produced to how they're efficiently presented in data reports.",
+    'description': "This article introduces the lifecycle of financial metrics in a database, from how they're produced to how they're efficiently presented in data reports.",
     'date': '2023-08-05',
     'author': 'Hou Lan',
     'tags': ['Best Practice'],

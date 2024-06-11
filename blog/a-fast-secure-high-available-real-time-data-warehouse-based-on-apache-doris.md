@@ -1,7 +1,7 @@
 ---
 {
     'title': "Financial data warehousing: fast, secure, and highly available with Apache Doris",
-    'summary': "A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.",
+    'description': "A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.",
     'date': '2024-01-08',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],

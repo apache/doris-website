@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Replacing Apache Hive, Elasticsearch and PostgreSQL with Apache Doris',
-    'summary': "How does a data service company build its data warehouse? Simplicity is the best policy. See how a due diligence platform increased data writing efficiency by 75%.",
+    'description': "How does a data service company build its data warehouse? Simplicity is the best policy. See how a due diligence platform increased data writing efficiency by 75%.",
     'date': '2023-07-01',
     'author': 'Tao Wang',
     'tags': ['Best Practice'],

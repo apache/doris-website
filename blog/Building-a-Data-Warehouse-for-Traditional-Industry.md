@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building a data warehouse for traditional industry',
-    'summary': "The best component for you is the one that suits you most. In Midland Realty, we don't have too much data to process but want a data platform easy to use and maintain.",
+    'description': "The best component for you is the one that suits you most. In Midland Realty, we don't have too much data to process but want a data platform easy to use and maintain.",
     'date': '2023-05-12',
     'author': 'Herman Seah',
     'tags': ['Best Practice'],

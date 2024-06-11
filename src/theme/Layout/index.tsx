@@ -20,6 +20,7 @@ export default function CustomLayout(props) {
         title,
         description,
         isPage,
+        keywords,
         showAnnouncementBar,
     } = props;
     useKeyboardNavigation();
@@ -27,7 +28,7 @@ export default function CustomLayout(props) {
 
     return (
         <Layout>
-            <PageMetadata title={title} description={description} />
+            <PageMetadata title={title} description={description} keywords={keywords} />
 
             <SkipToContent />
 

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Is your latest data really the latest? check the data update mechanism of your database',
-    'summary': "This is about how to support both row update and partial column update in a database in a way that is simple in execution and efficient in data quality guarantee.",
+    'description': "This is about how to support both row update and partial column update in a database in a way that is simple in execution and efficient in data quality guarantee.",
     'date': '2023-07-24',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.1.2 just released',
-    'summary': 'Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.',
+    'description': 'Dear community, Apache Doris 2.1.2 has been officially released on April 12, 2024. This version submits several enhancements and bug fixes to further improve the performance and stability.',
     'date': '2024-04-12',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

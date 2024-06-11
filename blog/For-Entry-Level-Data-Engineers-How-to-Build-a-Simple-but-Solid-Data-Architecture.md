@@ -1,7 +1,7 @@
 ---
 {
     'title': 'For entry-level data engineers: how to build a simple but solid data architecture',
-    'summary': "This article aims to provide reference for non-tech companies who are seeking to empower your business with data analytics.",
+    'description': "This article aims to provide reference for non-tech companies who are seeking to empower your business with data analytics.",
     'date': '2023-07-31',
     'author': 'Zhenwei Liu',
     'tags': ['Best Practice'],

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'A deep dive into inverted index: how it speeds up text searches by 40 times',
-    'summary': "As an open-source real-time data warehouse, Apache Doris provides a rich choice of indexes to speed up data scanning and filtering.This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.",
+    'description': "As an open-source real-time data warehouse, Apache Doris provides a rich choice of indexes to speed up data scanning and filtering.This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.",
     'date': '2024-02-01',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

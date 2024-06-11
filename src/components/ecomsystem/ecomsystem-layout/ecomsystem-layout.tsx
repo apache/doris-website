@@ -11,11 +11,11 @@ export default function EcomsystemLayout(props: PropsWithChildren) {
     const { children } = props;
     return (
         <Layout
-            title={translate({ id: 'ecosystem.title', message: 'Ecosystem' })}
+            title={translate({ id: 'ecosystem.title', message: 'Apache Doris - Ecosystem | Tools for quickly big data analytics' })}
             // TODO update description
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message: 'Apache Doris provides the rich ecosystem for real-time data integartion and cluster manangement, smooth your big data analytics and data ingestion quickly and effortlessly. ',
             })}
             wrapperClassName="ecosystem"
         >
