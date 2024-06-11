@@ -11,7 +11,7 @@
 
 Apache Doris is a modern, high-performance and real-time analytical database based on MPP. It is well known for its high-performance and easy-to-use. It can return query results under massive data within only sub-seconds. It can support not only high concurrent point query scenarios, but also complex analysis scenarios with high throughput. Based on this, Apache Doris can be well applied in many business fields, such as multi-dimensional reporting, user portrait, ad-hoc query, real-time dashboard and so on.
 
-Apache Doris was first born in the Palo Project within Baidu's advertising report business and officially opened source in 2017. It was donated by Baidu to Apache foundation for incubation in July 2018, and then incubated and operated by members of the podling project management committee（PPMC）under the guidance of Apache incubator mentors.
+Apache Doris was first born in the Palo Project within Baidu's advertising report business and officially opened source in 2017. It was donated by Baidu to Apache foundation for incubation in July 2018, and then incubated and operated by members of the podling project management committee (PPMC) under the guidance of Apache incubator mentors.
 
 We are very proud that Doris graduated from Apache incubator successfully. It is an important milestone. In the whole incubating period, with the guidance of Apache Way and the help of incubator mentors, we learned how to develop our project and community in Apache Way, and have achieved great growth in this process.
 
@@ -39,7 +39,7 @@ Apache Doris will carry out more challenging and meaningful work in the future, 
 
 Once again, we sincerely thank all contributors who participated in the construction of Apache Doris community and all users who use Apache Doris and constantly put forward improvement suggestions. At the same time, we also thank our incubator mentors, IPMC members and friends in various open source project communities who have continuously encouraged, supported and helped us all the way.
 
-**Apache Doris GitHub：**
+**Apache Doris GitHub:**
 
 [https://github.com/apache/doris](https://github.com/apache/doris)
 
