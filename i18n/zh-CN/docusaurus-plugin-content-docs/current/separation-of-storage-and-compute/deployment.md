@@ -228,8 +228,9 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 * 使用minio等支持S3协议的对象存储时, 需要自行测试连通性以及aksk的正确性.
 	具体做法可以参考 [使用aws cli 验证minio是否工作](https://min.io/docs/minio/linux/integrations/aws-cli-with-minio.html)
 	这个教程进行检查
-* bucket字段的值就是一个bucket的名字, 是不带scheme(例如s3://)的.
-* external_endpoint保持和endpoint值相同即可.
+* bucket字段的值就是一个bucket的名字, 不带scheme前缀, 例如s3://.
+* endpoint字段是个域名或者IP:端口, 例如cos.ap-beijing.myqcloud.com或者192.168.1.1:9000, 不带http://或者https://这种scheme 前缀
+* external_endpoint如果没有特殊需求保持和endpoint值相同即可.
 * 如果不是云厂商提供的对象存储, region 和 provider 的值可以任意填写
 
 示例(腾讯云的cos)
@@ -318,7 +319,7 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 一个计算集群组成有多个几个关键信息:
 
 1. cloud_unique_id是一个唯一字符串, 格式为 `1:<instance_id>:<string>`, 根据自己喜好选一个. 这个值需要和be.conf的cloud_unique_id配置值相同.
-2. cluster_name cluster_id 按照自己的实际情况偏好填写
+2. cluster_name cluster_id 按照自己的实际情况偏好填写, 需要符合正则 `[a-zA-Z][0-9A-Za-z_]+`.
 3. ip根据实际情况填写, heartbeat_port 是BE的心跳端口.
 
 BE cluster的数量以及 节点数量 根据自己需求调整, 不固定, 不同cluster需要使用不同的 cluster_name 和 cluster_id.
@@ -372,9 +373,9 @@ cloud_unique_id = 1:sample_instance_id:cloud_unique_id_sql_server00
 
 file_cache_path 是一个json数组(根据实际cache盘的个数配置), 它的各个字段含义
 * path, 缓存数据存放的路径, 类似于存算一体的storage_root_path
-* total_size, 期望使用的缓存空间上限
+* total_size, 期望使用的缓存空间上限, 单位字节.
 * query_limit, 单个query在cache miss时最多能淘汰的缓存数据量 (为了防止大查询把缓存全部冲掉)
-cache中存放的是数据, 所以最好使用SSD等高性能的磁盘作为缓存存储.
+cache中存放的是数据, 所以最好使用SSD等高性能的磁盘作为缓存存储. 单位字节.
 
 ```Shell
 meta_service_endpoint = 127.0.0.1:5000
