@@ -100,7 +100,7 @@ function Footer() {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-28il1o2wk-DD6LsLOz3v4aD92Mu0S0aQ"
+                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA"
                                     title="slack"
                                     target="_blank"
                                     className="item"

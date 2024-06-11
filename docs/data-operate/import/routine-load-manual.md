@@ -62,7 +62,7 @@ When a Routine Load job is created in Doris, it generates a persistent load job 
 
 The specific process of Routine Load is illustrated in the following diagram:
 
-![Routine Load](/images/routine-load.jpeg)
+![Routine Load](/images/routine-load.png)
 
 1. The Client submits a Routine Load job to the FE to establish a persistent Routine Load Job.
 

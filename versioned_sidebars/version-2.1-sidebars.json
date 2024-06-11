@@ -32,7 +32,7 @@
                         "install/cluster-deployment/run-docker-cluster",
                         {
                             "type": "category",
-                            "label": "Deploying on Kunbernets",
+                            "label": "Deploying on Kubernetes",
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
                                 "install/cluster-deployment/k8s-deploy/install-operator",
@@ -277,8 +277,16 @@
                     "type": "category",
                     "label": "Analyzing Database",
                     "items": [
-                        "lakehouse/database/es",
                         "lakehouse/database/jdbc",
+                        "lakehouse/database/mysql",
+                        "lakehouse/database/postgresql",
+                        "lakehouse/database/oracle",
+                        "lakehouse/database/sqlserver",
+                        "lakehouse/database/ibm-db2",
+                        "lakehouse/database/clickhouse",
+                        "lakehouse/database/sap-hana",
+                        "lakehouse/database/oceanbase",
+                        "lakehouse/database/es",
                         "lakehouse/database/max-compute"
                     ]
                 },
@@ -490,6 +498,7 @@
                 "ecosystem/logstash",
                 "ecosystem/beats",
                 "ecosystem/cloudcanal",
+                "ecosystem/automq-load",
                 "ecosystem/doris-streamloader",
                 "ecosystem/hive-bitmap-udf",
                 "ecosystem/hive-hll-udf",
@@ -807,6 +816,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
+                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
@@ -1419,6 +1429,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-TABLE-ID",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SMALL-FILES",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-POLICY",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOG-RECYCLE-BIN",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-QUERY-STATS"
                             ]
@@ -1475,6 +1486,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",
                 "releasenotes/release-2.1.0"

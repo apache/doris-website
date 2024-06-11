@@ -53,7 +53,7 @@ syncer：一个轻量级的进程
 ### 架构说明
 
 
-![CCR 架构说明](/images/ccr-architecture.png)
+![ccr 架构说明](/images/ccr-architecture-description.png)
 
 CCR 工具主要依赖一个轻量级进程：Syncers。Syncers 会从源集群获取 binlog，直接将元数据应用于目标集群，通知目标集群从源集群拉取数据。从而实现全量和增量迁移。
 

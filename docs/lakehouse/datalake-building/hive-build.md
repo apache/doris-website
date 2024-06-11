@@ -28,6 +28,10 @@ Starting from version 2.1.3, Doris supports DDL and DML operations for Hive. Use
 
 This article introduces Hive operations supported in Doris, including syntax and usage notes.
 
+:::tip
+This is an experimental feature.
+:::
+
 ## Metadata Creation and Deletion
 
 ### Catalog
@@ -136,7 +140,24 @@ This article introduces Hive operations supported in Doris, including syntax and
 
     After creation, you can view the Hive table creation statement using the `SHOW CREATE TABLE` command.
 
-    Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema.
+    Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema. At the same time, the partition columns must be at the end of all schemas and in the same order.
+
+    :::tip
+
+    对于某些默认开启 ACID 事务特性的 Hive 集群，使用 Doris 建表后，表属性 `transactional` 会为 true。而 Doris 只支持部分 Hive 事务表的特性，因此可能会导致 Doris 创建的 Hive，Doris 本身无法读取的问题。因此，需要在建表的属性中，显式增加：`"transactional" = "false"`，来创建非事务的 Hive 表：
+    For some Hive clusters that enable ACID transaction features by default, after using Doris to create a table, the table attribute `transactional` will be true. However, Doris only supports some features of Hive transaction tables, which may cause the problem that Doris itself cannot read the Hive created by Doris. Therefore, it is necessary to explicitly add: `"transactional" = "false"` in the table creation properties to create a non-transactional Hive table:
+
+    ```
+    CREATE TABLE non_acid_table(
+      `col1` BOOLEAN COMMENT 'col1',
+      `col2` INT COMMENT 'col2',
+      `col3` BIGINT COMMENT 'col3'
+    )  ENGINE=hive
+    PROPERTIES (
+      'transactional'='false',
+    );
+    ```
+    :::
 
 - Drop
 

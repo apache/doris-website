@@ -66,9 +66,9 @@ mvn clean install -DskipTest
 ```sql
 CREATE CATALOG `tpch` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpch",
-    "tpch.column-naming" = "STANDARD",
-    "tpch.splits-per-node" = "32"
+    "trino.connector.name" = "tpch",
+    "trino.tpch.column-naming" = "STANDARD",
+    "trino.tpch.splits-per-node" = "32"
 );
 ```
 
@@ -121,7 +121,7 @@ mysql> SHOW TABLES;
 
 通过 SELECT 语句可以直接查询这些表。
 
-:::tips
+:::tip
 这些预制数据集的数据，并没有实际存储，而是在查询时实时生成的。所以这些预制数据集不适合用来直接进行 Benchmark 测试。适用于通过 `INSERT INTO SELECT` 将数据集写入到其他目的表（如 Doris 内表、Hive、Iceberg 等所有 Doris 支持写入的数据源）后，对目的表进行性能测试。
 :::
 
@@ -142,7 +142,7 @@ CREATE TABLE hive.tpch100.region   PROPERTIES("file_format" = "parquet") AS SELE
 CREATE TABLE hive.tpch100.supplier PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpch.sf100.supplier  ;
 ```
 
-:::tips
+:::tip
 在包含 3 个 16C BE 节点的 Doris 集群上，创建一个 TPCH 1000 的 Hive 数据集，大约需要 25 分钟，TPCH 10000 大约需要 4 到 5 个小时。
 :::
 

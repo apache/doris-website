@@ -62,7 +62,7 @@ Routine Load 会持续消费 Kafka Topic 中的数据，写入 Doris 中。
 
 Routine Load 的导入具体流程如下图展示：
 
-![Routine Load](/images/routine-load.jpeg)
+![Routine Load](/images/routine-load.png)
 
 1. Client 向 FE 提交 Routine Load 常驻 Routine Load Job
 

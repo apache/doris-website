@@ -52,7 +52,7 @@ Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
 Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
 
 
-![基于 Doris 的湖仓一体架构](/images/lakehouse-architecture.png)
+![基于 Doris 的湖仓一体架构](/images/doris-based-data-lakehouse-architecture.png)
 
 其数据湖的主要对接流程为：
 
@@ -77,7 +77,7 @@ Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache
 - 数据读取：通过 NativeReader 可以高效的读取存放在 HDFS、对象存储上的 Parquet、ORC、Text 格式数据。也可以通过 JniConnector 对接 Java 大数据生态。
 
 
-![可扩展的连接框架](/images/connector.png)
+![可扩展的连接框架](/images/extensible-connection-framework.png)
 
 ### 高效缓存策略
 
@@ -87,7 +87,7 @@ Doris 通过元数据缓存、数据缓存和查询结果缓存来提升查询�
 
 Doris 提供了手动同步元数据、定期自动同步元数据、元数据订阅（只支持 HiveMetastore）三种方式来同步数据湖的元数据信息到 Doris，并将元数据存储在 Doris 的 FE 的内存中。当用户发起查询后 Doris 直接从内存中获取元数据并快速生成查询规划。保障了元数据的实时和高效。在元数据同步上 Doris 通过并发的元数据事件合并实现高效的元数据同步，其每秒可以处理 100 个以上的元数据事件。
 
-![元数据缓存](/images/metadata-syncer-for-hive-metastore.png)
+![元数据缓存](/images/metadata-caching.png)
 
 **高效的数据缓存**
 
@@ -97,7 +97,7 @@ Doris 提供了手动同步元数据、定期自动同步元数据、元数据�
 
 - 缓存淘汰（更新）策略：同时当 Doris 发现数据文件对应的元数据更新后，会及时淘汰缓存以保障数据的一致性。
 
-![元数据缓存](/images/remote-file-system.png)
+![元数据缓存](/images/data-caching.png)
 
 
 **查询结果缓存和分区缓存**
@@ -106,7 +106,7 @@ Doris 提供了手动同步元数据、定期自动同步元数据、元数据�
 
 - 分区缓存：Doris 还支持将部分分区数据缓存在 BE 端提升查询效率。比如查询最近 7 天的数据，可以将前 6 天的计算后的缓存结果，和当天的事实计算结果进行合并，得到最终查询结果，最大限度减少实时计算的数据量，提升查询效率。
 
-![查询结果缓存和分区缓存](/images/remote-file-system-2.png)
+![查询结果缓存和分区缓存](/images/query-result-caching-and-partition-caching.png)
 
 ### 高效的 Native Reader
 
@@ -118,7 +118,7 @@ Doris 提供了手动同步元数据、定期自动同步元数据、元数据�
 
 - 向量化读取数据：同时在文件数据的读取过程中我们引入向量化的方式读取数据，极大加速了数据读取效率。
 
-![向量化读取数据](/images/vectorized-block-reader.png)
+![向量化读取数据](/images/vectorized-data-reading.png)
 
 ### Merge IO
 
@@ -128,7 +128,7 @@ Doris 提供了手动同步元数据、定期自动同步元数据、元数据�
 
 Merge IO 的确定是它可能会读取一些不必要的数据，因为它把中间可能不必要读取的数据合并起来一块读过来了。但是从整体的吞吐上来讲其性能有很大的提高，在碎文件（比如：1KB - 1MB）较多的场景优化效果很明显。同时我们通过控制 Merge IO 的大小来达到整体的平衡。
 
-![Merge IO](/images/mergeIO.png)
+![Merge IO](/images/merge-io.png)
 
 ### 统计信息提高查询规划效果
 
@@ -140,7 +140,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 在一些场景下用户历史数据可能很少查找，但是热数据会被经常访问，因此我们也提供了基于分区的统计信息收集在保障热数据高效的查询效率和统计信息收集对 BE 产生负载的中间取得平衡。
 
-![统计信息提高查询规划效果](/images/CBO-Optimizer.png)
+![统计信息提高查询规划效果](/images/statistics-collection.png)
 
 ## 多源数据目录
 
@@ -417,11 +417,11 @@ Doris 的权限管理功能提供了对 Catalog 层级的扩展，具体可参�
 
 用户可以通过以下几种方式刷新元数据。
 
-#### 手动刷新
+**手动刷新**
 
 用户需要通过 [REFRESH](../sql-manual/sql-statements/Utility-Statements/REFRESH) 命令手动刷新元数据。
 
-#### 定时刷新
+**定时刷新**
 
 在创建 catalog 时，在 properties 中指定刷新时间参数`metadata_refresh_interval_sec` ，以秒为单位，若在创建 catalog 时设置了该参数，FE 的 master 节点会根据参数值定时刷新该 catalog。目前支持三种类型
 
@@ -440,6 +440,6 @@ CREATE CATALOG es PROPERTIES (
 );
 ```
 
-#### 自动刷新
+**自动刷新**
 
 自动刷新目前仅支持 [Hive Catalog](../lakehouse/datalake-analytics/hive)。

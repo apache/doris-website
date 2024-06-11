@@ -66,12 +66,12 @@ After deployment, it is recommended to restart the FE and BE nodes to ensure the
 ```sql
 CREATE CATALOG `tpcds` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpcds",
-    "tpcds.split-count" = "32"
+    "trino.connector.name" = "tpcds",
+    "trino.tpcds.split-count" = "32"
 );
 ```
 
-The `tpcds.split-count` property sets the level of concurrency. It is recommended to set it to twice the number of cores per BE node to achieve optimal concurrency and improve data generation efficiency.
+The `trino.tpcds.split-count` property sets the level of concurrency. It is recommended to set it to twice the number of cores per BE node to achieve optimal concurrency and improve data generation efficiency.
 
 ## Using the TPCDS Catalog
 

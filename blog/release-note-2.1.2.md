@@ -44,6 +44,13 @@ Dear community, Apache Doris 2.1.2 has been officially released on April 12, 202
 
 - https://github.com/apache/doris/pull/33282
 
+3. Auto Partition syntax changes, see https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E8%87%AA%E5%8A%A8%E5%88%86%E5%8C%BA
+
+- https://github.com/apache/doris/pull/32737
+
+4. Auto Partition prohibits the simultaneous use of Dynamic Partition on a single table.
+
+- https://github.com/apache/doris/pull/33736
 
 ## Upgrade Problem
 

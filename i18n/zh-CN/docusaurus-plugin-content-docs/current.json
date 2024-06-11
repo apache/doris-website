@@ -19,7 +19,7 @@
     "message": "集群部署",
     "description": "The label for category Cluster Deployment in sidebar docs"
   },
-  "sidebar.docs.category.Deploying on Kunbernets": {
+  "sidebar.docs.category.Deploying on Kubernetes": {
     "message": "K8s 部署",
     "description": "The label for category Deploying on Kubernetes in sidebar docs"
   },
@@ -178,6 +178,10 @@
   "sidebar.docs.category.Managing Configuration": {
     "message": "配置管理",
     "description": "The label for category Config in sidebar docs"
+  },
+  "sidebar.docs.category.System Tables": {
+    "message": "系统表",
+    "description": "The label for category System Table in sidebar docs"
   },
   "sidebar.docs.category.FE OPEN API": {
     "message": "FE OPEN API",

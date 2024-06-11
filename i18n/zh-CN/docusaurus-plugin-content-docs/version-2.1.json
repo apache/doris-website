@@ -21,7 +21,7 @@
   },
   "sidebar.docs.category.Deploying on Kubernetes": {
     "message": "K8s 部署",
-    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+    "description": "The label for category Deploying on Kubernets in sidebar docs"
   },
   "sidebar.docs.category.Database Connection": {
     "message": "数据库连接",
