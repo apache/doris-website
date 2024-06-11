@@ -200,17 +200,17 @@ echo never > /sys/kernel/mm/transparent_hugepage/defrag
 
 Doris instances communicate directly over the network, requiring the following ports for normal operation. Administrators can adjust Doris ports according to their environment:
 
-| Instance | Port                   | Default Port | Communication Direction     | Description                                                  |
-| -------- | ---------------------- | ------------ | --------------------------- | ------------------------------------------------------------ |
-| BE       | be_port                | 9060         | FE --> BE                   | thrift server port on BE, receiving requests from FE         |
-| BE       | webserver_port         | 8040         | BE <--> BE                  | http server port on BE                                       |
-| BE       | heartbeat_service_port | 9050         | FE --> BE                   | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
-| BE       | brpc_port              | 8060         | FE <--> BEBE <--> BE        | brpc port on BE, used for communication between BEs          |
-| FE       | http_port              | 8030         | FE <--> FEClient <--> FE    | http server port on FE                                       |
-| FE       | rpc_port               | 9020         | BE --> FEFE <--> FE         | thrift server port on FE, configuration of each FE should be consistent |
-| FE       | query_port             | 9030         | Client <--> FE              | MySQL server port on FE                                      |
-| FE       | edit_log_port          | 9010         | FE <--> FE                  | port on FE for bdbje communication                           |
-| Broker   | broker_ipc_port        | 8000         | FE --> Broker BE --> Broker | thrift server on Broker, receiving requests                  |
+| Instance | Port                   | Default Port | Communication Direction    | Description                                                  |
+| -------- | ---------------------- | ------------ | -------------------------- | ------------------------------------------------------------ |
+| BE       | be_port                | 9060         | FE --> BE                  | thrift server port on BE, receiving requests from FE         |
+| BE       | webserver_port         | 8040         | BE <--> BE                 | http server port on BE                                       |
+| BE       | heartbeat_service_port | 9050         | FE --> BE                  | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
+| BE       | brpc_port              | 8060         | FE <--> BE，BE <--> BE       | brpc port on BE, used for communication between BEs          |
+| FE       | http_port              | 8030         | FE <--> FE，Client <--> FE   | http server port on FE                                       |
+| FE       | rpc_port               | 9020         | BE --> FE，FE <--> FE        | thrift server port on FE, configuration of each FE should be consistent |
+| FE       | query_port             | 9030         | Client <--> FE             | MySQL server port on FE                                      |
+| FE       | edit_log_port          | 9010         | FE <--> FE                 | port on FE for bdbje communication                           |
+| Broker   | broker_ipc_port        | 8000         | FE --> Broker，BE --> Broker | thrift server on Broker, receiving requests                  |
 
 ### Plan the nodes
 
