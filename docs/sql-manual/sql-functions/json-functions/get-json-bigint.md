@@ -39,6 +39,10 @@ If the json_string format is incorrect, or the json_path format is incorrect, or
 
 In addition, it is recommended to use the jsonb type and jsonb_extract_XXX function performs the same function.
 
+Exception handling is as follows:
+- if the field specified by json_path does not exist, return NULL
+- if datatype of the field specified by json_path is not the same with type of json_extract_t, return t if it can be cast to t else NULL
+
 ### example
 
 1. Get the value of key as "k1"
