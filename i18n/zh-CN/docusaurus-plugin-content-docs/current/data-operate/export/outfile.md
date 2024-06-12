@@ -150,10 +150,8 @@ PROPERTIES(
 );
 ```
 > 注意：
-
-> 导出到本地文件的功能不适用于公有云用户，仅适用于私有化部署的用户。并且默认用户对集群节点有完全的控制权限。Doris 对于用户填写的导出路径不会做合法性检查。如果 Doris 的进程用户对该路径无写权限，或路径不存在，则会报错。同时处于安全性考虑，如果该路径已存在同名的文件，则也会导出失败。
-
-> Doris 不会管理导出到本地的文件，也不会检查磁盘空间等。这些文件需要用户自行管理，如清理等。
+ 导出到本地文件的功能不适用于公有云用户，仅适用于私有化部署的用户。并且默认用户对集群节点有完全的控制权限。Doris 对于用户填写的导出路径不会做合法性检查。如果 Doris 的进程用户对该路径无写权限，或路径不存在，则会报错。同时处于安全性考虑，如果该路径已存在同名的文件，则也会导出失败。
+ Doris 不会管理导出到本地的文件，也不会检查磁盘空间等。这些文件需要用户自行管理，如清理等。
 
 # 最佳实践
 ## 生成导出成功标识文件
@@ -171,7 +169,7 @@ INTO OUTFILE "s3://my_bucket/path/my_file_"
 FORMAT AS CSV
 PROPERTIES
 (
-    "s3.endpoint" = "https://cos.ap-beijing.myqcloud.com",
+    "s3.endpoint" = "${endpoint}",
     "s3.region" = "ap-beijing",
     "s3.access_key"= "ak",
     "s3.secret_key" = "sk",
@@ -236,10 +234,10 @@ INTO OUTFILE "s3://my_bucket/export/my_file_"
 FORMAT AS CSV
 PROPERTIES
 (
-    "s3.endpoint" = "https://cos.ap-beijing.myqcloud.com",
-    "s3.region" = "ap-beijing",
-    "s3.access_key"= "AKIDpTrysVrwjGXXFhqnVyB8pGSO4UfbHgph",
-    "s3.secret_key" = "dz4tRiiSs65pMdePvBAuOcaIlyua8SYN",
+    "s3.endpoint" = "${endpoint}",
+    "s3.region" = "region",
+    "s3.access_key"= "ak",
+    "s3.secret_key" = "sk",
     "column_separator" = ",",
     "line_delimiter" = "\n",
     "delete_existing_files" = "true"
@@ -264,7 +262,7 @@ PROPERTIES(
     "max_file_size" = "2048MB"
 );
 ```
-由于指定了 `"max_file_size" = "``2048``MB"` 最终生成文件如如果不大于 2GB，则只有一个文件。 如果大于 2GB，则有多个文件。
+由于指定了 `"max_file_size" = "2048MB"` 最终生成文件如如果不大于 2GB，则只有一个文件。 如果大于 2GB，则有多个文件。
 
 # 注意事项
 1. 导出数据量和导出效率
