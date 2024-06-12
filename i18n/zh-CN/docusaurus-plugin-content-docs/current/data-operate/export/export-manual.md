@@ -1,6 +1,6 @@
 ---
 {
-    "title": "数据导出",
+    "title": "Export",
     "language": "zh-CN"
 }
 ---
@@ -24,130 +24,87 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 数据导出
+# Export
+本文档将介绍如何使用`EXPORT`命令导出 Doris 中存储的数据。
 
-异步导出（Export）是 Doris 提供的一种将数据异步导出的功能。该功能可以将用户指定的表或分区的数据，以指定的文件格式，通过 Broker 进程或 S3 协议/HDFS 协议 导出到远端存储上，如 对象存储 / HDFS 等。
+有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
 
-当前，EXPORT 支持导出 Doris 本地表 / View 视图 / 外表，支持导出到 parquet / orc / csv / csv_with_names / csv_with_names_and_types 文件格式。
+# 概述
+`Export` 是 Doris 提供的一种将数据异步导出的功能。该功能可以将用户指定的表或分区的数据，以指定的文件格式，导出到目标存储系统中，包括对象存储、HDFS 或本地文件系统。
 
-本文档主要介绍 Export 的基本原理、使用方式、最佳实践以及注意事项。
+`Export` 是一个异步执行的命令，命令执行成功后，立即返回结果，用户可以通过`Show Export` 命令查看该 Export 任务的详细信息。
 
-## 原理
-
-用户提交一个 Export 作业后。Doris 会统计这个作业涉及的所有 Tablet。然后根据`parallelism`参数（由用户指定）对这些 Tablet 进行分组。每个线程负责一组 tablets，生成若干个`SELECT INTO OUTFILE`查询计划。该查询计划会读取所包含的 Tablet 上的数据，然后通过 S3 协议 / HDFS 协议 / Broker 将数据写到远端存储指定的路径中。
-
-总体的执行流程如下：
-
-1. 用户提交一个 Export 作业到 FE。
-2. FE 会统计要导出的所有 Tablets，然后根据`parallelism`参数将所有 Tablets 分组，每一组再根据`maximum_number_of_export_partitions`参数生成若干个`SELECT INTO OUTFILE`查询计划
-3. 根据`parallelism`参数，生成相同个数的`ExportTaskExecutor`，每一个`ExportTaskExecutor`由一个线程负责，线程由 FE 的 Job 调度框架去调度执行。
-4. FE 的 Job 调度器会去调度`ExportTaskExecutor`并执行，每一个`ExportTaskExecutor`会串行地去执行由它负责的若干个`SELECT INTO OUTFILE`查询计划。
-
-## 开始导出
-
-Export 的详细用法可参考 [EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT) 。
+关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-view.md)。
 
 
-### 导出到 HDFS
 
-**WITH HDFS(推荐使用)**
-```sql
-EXPORT TABLE db1.tbl1 
-PARTITION (p1,p2)
-[WHERE [expr]]
-TO "hdfs://host/path/to/export/" 
-PROPERTIES
-(
-    "label" = "mylabel",
-    "column_separator"=",",
-    "columns" = "col1,col2",
-    "parallelism" = "3"
-)
-with HDFS (
-"fs.defaultFS"="hdfs://hdfs_host:port",
-"hadoop.username" = "hadoop"
-);
+`EXPORT` 当前支持导出以下类型的表或视图
+
+* Doris 内表
+* Doris 逻辑视图
+* Doris Catalog 表
+
+
+
+`EXPORT` 目前支持以下导出格式
+
+* Parquet
+* ORC
+* csv
+* csv\_with\_names
+* csv\_with\_names\_and\_types
+
+不支持压缩格式的导出。
+
+
+
+示例：
+
+```Plain Text
+mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
+    -> PROPERTIES(
+    ->     "format" = "csv",
+    ->     "max_file_size" = "2048MB"
+    -> )
+    -> WITH s3 (
+    ->   "s3.endpoint" = "${endpoint}",
+    ->   "s3.region" = "${region}",
+    ->   "s3.secret_key"="${sk}",
+    ->   "s3.access_key" = "${ak}"
+    -> );
 ```
+提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
 
-* `label`：本次导出作业的标识。后续可以使用这个标识查看作业状态。
-* `column_separator`：列分隔符。默认为 `\t`。支持不可见字符，比如 '\x07'。
-* `columns`：要导出的列，使用英文状态逗号隔开，如果不填这个参数默认是导出表的所有列。
-* `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 '\x07'。
-* `parallelism`：并发 3 个线程去导出。
-
-**WITH BROKER**
-
-需要先启动一个 BROKER 进程。
-
-```sql
-EXPORT TABLE db1.tbl1 
-PARTITION (p1,p2)
-[WHERE [expr]]
-TO "hdfs://host/path/to/export/" 
-PROPERTIES
-(
-    "label" = "mylabel",
-    "column_separator"=",",
-    "columns" = "col1,col2",
-    "parallelism" = "3"
-)
-WITH BROKER "broker_name" 
-(
-  "username"="xxx",
-  "password"="yyy"
-);
-```
-
-### 导出到对象存储
-
-通过 s3 协议直接将数据导出到指定的存储。
-
-```sql
-EXPORT TABLE test TO "s3://bucket/path/to/export/dir/"
-WITH S3 (
-    "s3.endpoint" = "http://host",
-    "s3.access_key" = "AK",
-    "s3.secret_key"="SK",
-    "s3.region" = "region"
-);
-```
-
-- `s3.access_key`/`s3.secret_key`：是您访问对象存储的 ACCESS_KEY/SECRET_KEY
-- `s3.endpoint`：Endpoint 表示对象存储对外服务的访问域名。
-- `s3.region`：表示对象存储数据中心所在的地域。
-
-
-### 查看导出状态
-
-提交作业后，可以通过  [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态。结果举例如下：
-
-```sql
-mysql> show EXPORT\G;
+```Plain Text
+mysql> show export\G
 *************************** 1. row ***************************
-     JobId: 14008
-     State: FINISHED
-  Progress: 100%
-  TaskInfo: {"partitions":[],"max_file_size":"","delete_existing_files":"","columns":"","format":"csv","column_separator":"\t","line_delimiter":"\n","db":"default_cluster:demo","tbl":"student4","tablet_num":30}
-      Path: hdfs://host/path/to/export/
-CreateTime: 2019-06-25 17:08:24
- StartTime: 2019-06-25 17:08:28
-FinishTime: 2019-06-25 17:08:34
-   Timeout: 3600
-  ErrorMsg: NULL
-  OutfileInfo: [
+      JobId: 143265
+      Label: export_0aa6c944-5a09-4d0b-80e1-cb09ea223f65
+      State: FINISHED
+   Progress: 100%
+   TaskInfo: {"partitions":[],"parallelism":5,"data_consistency":"partition","format":"csv","broker":"S3","column_separator":"\t","line_delimiter":"\n","max_file_size":"2048MB","delete_existing_files":"","with_bom":"false","db":"tpch1","tbl":"lineitem"}
+       Path: s3://ftw-datalake-test-1308700295/test_ycs_activeDefense_v10/test_csv/exp_
+ CreateTime: 2024-06-11 18:01:18
+  StartTime: 2024-06-11 18:01:18
+ FinishTime: 2024-06-11 18:01:31
+    Timeout: 7200
+   ErrorMsg: NULL
+OutfileInfo: [
   [
     {
       "fileNumber": "1",
-      "totalRows": "4",
-      "fileSize": "34bytes",
-      "url": "file:///127.0.0.1/Users/fangtiewei/tmp_data/export/f1ab7dcc31744152-bbb4cda2f5c88eac_"
+      "totalRows": "6001215",
+      "fileSize": "747503989bytes",
+      "url": "s3://my_bucket/path/to/exp_6555cd33e7447c1-baa9568b5c4eb0ac_*"
     }
   ]
 ]
-1 row in set (0.01 sec)
+1 row in set (0.00 sec)
 ```
+`show export` 命令返回的结果各个列的含义如下：
 
 * JobId：作业的唯一 ID
+* Label：该导出作业的标签，如果Export没有指定，则系统会默认生成一个。
 * State：作业状态：
   * PENDING：作业待调度
   * EXPORTING：数据导出中
@@ -158,13 +115,13 @@ FinishTime: 2019-06-25 17:08:34
   * db：数据库名
   * tbl：表名
   * partitions：指定导出的分区。`空`列表 表示所有分区。
-  * column_separator：导出文件的列分隔符。
-  * line_delimiter：导出文件的行分隔符。
+  * column\_separator：导出文件的列分隔符。
+  * line\_delimiter：导出文件的行分隔符。
   * tablet num：涉及的总 Tablet 数量。
   * broker：使用的 broker 的名称。
   * coord num：查询计划的个数。
-  * max_file_size：一个导出文件的最大大小。
-  * delete_existing_files：是否删除导出目录下已存在的文件及目录。
+  * max\_file\_size：一个导出文件的最大大小。
+  * delete\_existing\_files：是否删除导出目录下已存在的文件及目录。
   * columns：指定需要导出的列名，空值代表导出所有列。
   * format：导出的文件格式
 * Path：远端存储上的导出路径。
@@ -173,68 +130,308 @@ FinishTime: 2019-06-25 17:08:34
 * ErrorMsg：如果作业出现错误，这里会显示错误原因。
 * OutfileInfo：如果作业导出成功，这里会显示具体的`SELECT INTO OUTFILE`结果信息。
 
-### 取消导出任务
 
-:::info 备注
 
-`CANCEL EXPORT` 命令自 Doris 1.2.2 版本起支持。
+提交Export作业后，在Export任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
 
-:::
-
-提交作业后，可以通过  [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT) 命令取消导出作业。取消命令举例如下：
-
-```sql
-CANCEL EXPORT
-FROM example_db
-WHERE LABEL like "%example%";
+```Plain Text
+CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 ```
+# 导出文件列类型映射
+`Export`支持导出数据为Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](./export-view.md)文档的 "导出文件列类型映射" 部分。
 
-## 最佳实践
+# 示例
+## 导出到 HDFS
+将 db1.tbl1 表的p1和p2分区中的`col1` 列和`col2` 列数据导出到 HDFS 上，设置导出作业的 label 为 `mylabel`。导出文件格式为csv（默认格式），列分割符为`,`，导出作业单个文件大小限制为512MB。
 
-### 并发导出
+```Plain Text
+EXPORT TABLE db1.tbl1 
+PARTITION (p1,p2)
+TO "hdfs://host/path/to/export/" 
+PROPERTIES
+(
+    "label" = "mylabel",
+    "column_separator"=",",
+    "max_file_size" = "512MB",
+    "columns" = "col1,col2"
+)
+with HDFS (
+    "fs.defaultFS"="hdfs://hdfs_host:port",
+    "hadoop.username" = "hadoop"
+);
+```
+如果HDFS开启了高可用，则需要提供HA信息，如：
 
-一个 Export 作业可以设置`parallelism`参数来并发导出数据。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。每一个线程会负责导出表的部分 Tablets。
+```Plain Text
+EXPORT TABLE db1.tbl1 
+PARTITION (p1,p2)
+TO "hdfs://HDFS8000871/path/to/export/" 
+PROPERTIES
+(
+    "label" = "mylabel",
+    "column_separator"=",",
+    "max_file_size" = "512MB",
+    "columns" = "col1,col2"
+)
+with HDFS (
+    "fs.defaultFS" = "hdfs://HDFS8000871",
+    "hadoop.username" = "hadoop",
+    "dfs.nameservices" = "your-nameservices",
+    "dfs.ha.namenodes.your-nameservices" = "nn1,nn2",
+    "dfs.namenode.rpc-address.HDFS8000871.nn1" = "ip:port",
+    "dfs.namenode.rpc-address.HDFS8000871.nn2" = "ip:port",
+    "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+);
+```
+如果Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下SQL语句：
 
-一个 Export 作业的底层执行逻辑实际上是`SELECT INTO OUTFILE`语句，`parallelism`参数设置的每一个线程都会去执行独立的`SELECT INTO OUTFILE`语句。
+```Plain Text
+EXPORT TABLE db1.tbl1 
+PARTITION (p1,p2)
+TO "hdfs://HDFS8000871/path/to/export/" 
+PROPERTIES
+(
+    "label" = "mylabel",
+    "column_separator"=",",
+    "max_file_size" = "512MB",
+    "columns" = "col1,col2"
+)
+with HDFS (
+    "fs.defaultFS"="hdfs://hacluster/",
+    "hadoop.username" = "hadoop",
+    "dfs.nameservices"="hacluster",
+    "dfs.ha.namenodes.hacluster"="n1,n2",
+    "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
+    "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
+    "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
+    "hadoop.security.authentication"="kerberos",
+    "hadoop.kerberos.principal"="doris_test@REALM.COM",
+    "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
+);
+```
+## 导出到 S3
+将 s3\_test 表中的所有数据导出到 s3 上，导出格式为csv，以不可见字符 "\\x07" 作为行分隔符。
 
-###### Export 作业拆分成多个`SELECT INTO OUTFILE`的具体逻辑是：将该表的所有 tablets 平均的分给所有 parallel 线程，如：
-- num(tablets) = 40, parallelism = 3，则这 3 个线程各自负责的 tablets 数量分别为 14，13，13 个。
-- num(tablets) = 2, parallelism = 3，则 Doris 会自动将 parallelism 设置为 2，每一个线程负责一个 tablets。
+```Plain Text
+EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
+PROPERTIES (
+    "line_delimiter" = "\\x07"
+) WITH s3 (
+    "s3.endpoint" = "xxxxx",
+    "s3.region" = "xxxxx",
+    "s3.secret_key"="xxxx",
+    "s3.access_key" = "xxxxx"
+)
+```
+## 导出到本地文件系统
+> export数据导出到本地文件系统，需要在fe.conf中添加`enable_outfile_to_local=true`并且重启FE。
 
-当一个线程负责的 tablets 超过 `maximum_tablets_of_outfile_in_export` 数值（默认为 10，可在 fe.conf 中添加`maximum_tablets_of_outfile_in_export`参数来修改该值）时，该线程就会拆分为多个`SELECT INTO OUTFILE`语句，如：
-- 一个线程负责的 tablets 数量分别为 14，`maximum_tablets_of_outfile_in_export = 10`，则该线程负责两个`SELECT INTO OUTFILE`语句，第一个`SELECT INTO OUTFILE`语句导出 10 个 tablets，第二个`SELECT INTO OUTFILE`语句导出 4 个 tablets，两个`SELECT INTO OUTFILE`语句由该线程串行执行。
+将test表中的所有数据导出到本地存储：
+
+```Plain Text
+-- parquet格式
+EXPORT TABLE test TO "file:///home/user/tmp/"
+PROPERTIES (
+  "columns" = "k1,k2",
+  "format" = "parquet"
+);
+
+-- orc格式
+EXPORT TABLE test TO "file:///home/user/tmp/"
+PROPERTIES (
+  "columns" = "k1,k2",
+  "format" = "orc"
+);
+
+-- csv_with_names格式, 以‘AA’为列分割符，‘zz’为行分割符
+EXPORT TABLE test TO "file:///home/user/tmp/"
+PROPERTIES (
+  "format" = "csv_with_names",
+  "column_separator"="AA",
+  "line_delimiter" = "zz"
+);
+
+-- csv_with_names_and_types格式
+EXPORT TABLE test TO "file:///home/user/tmp/"
+PROPERTIES (
+  "format" = "csv_with_names_and_types"
+);
+```
+> 注意：
+
+> 导出到本地文件系统的功能不适用于公有云用户，仅适用于私有化部署的用户。并且默认用户对集群节点有完全的控制权限。Doris 对于用户填写的导出路径不会做合法性检查。如果 Doris 的进程用户对该路径无写权限，或路径不存在，则会报错。同时处于安全性考虑，如果该路径已存在同名的文件，则也会导出失败。
+
+> Doris 不会管理导出到本地的文件，也不会检查磁盘空间等。这些文件需要用户自行管理，如清理等。
+
+## 指定分区导出
+导出作业支持仅导出 Doris 内表的部分分区，如仅导出 test 表的 p1 和 p2 分区
+
+```Plain Text
+EXPORT TABLE test
+PARTITION (p1,p2)
+TO "file:///home/user/tmp/" 
+PROPERTIES (
+    "columns" = "k1,k2"
+);
+```
+## 导出时过滤数据
+导出作业支持导出时根据谓词条件过滤数据，仅导出符合条件的数据，如仅导出满足 `k1 < 50` 条件的数据
+
+```Plain Text
+EXPORT TABLE test
+WHERE k1 < 50
+TO "file:///home/user/tmp/"
+PROPERTIES (
+    "columns" = "k1,k2",
+    "column_separator"=","
+);
+```
+## 导出外表数据
+# 最佳实践
+## 导出一致性
+`Export`导出支持 partition / tablets 两种粒度。`data_consistency`参数用来指定以何种粒度切分希望导出的表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
+
+```Plain Text
+EXPORT TABLE test TO "file:///home/user/tmp"
+PROPERTIES (
+    "format" = "parquet",
+    "data_consistency" = "partition",
+    "max_file_size" = "512MB"
+);
+```
+若设置`"data_consistency" = "partition"` ，Export任务底层构造的多个`SELECT INTO OUTFILE` 语句都会导出不同的partition。
+
+若设置`"data_consistency" = "none"` ，Export任务底层构造的多个`SELECT INTO OUTFILE` 语句都会导出不同的tablets，但是这些不同的tablets有可能属于相同的partition。
+
+关于Export底层构造 `SELECT INTO OUTFILE` 的逻辑，可参阅附录部分。
+
+## 导出作业并发度
+Export可以设置不同的并发度来并发导出数据。指定并发度为5：
+
+```Plain Text
+EXPORT TABLE test TO "file:///home/user/tmp/"
+PROPERTIES (
+  "format" = "parquet",
+  "max_file_size" = "512MB",
+  "parallelism" = "5"
+);
+```
+关于Export并发导出的原理，可参阅附录部分。
+
+## 导出前清空导出目录
+```Plain Text
+EXPORT TABLE test TO "file:///home/user/tmp"
+PROPERTIES (
+    "format" = "parquet",
+    "max_file_size" = "512MB",
+    "delete_existing_files" = "true"
+);
+```
+如果设置了 `"delete_existing_files" = "true"`，导出作业会先将`/home/user/`目录下所有文件及目录删除，然后导出数据到该目录下。
+
+> 注意：
+
+> 若要使用delete\_existing\_files参数，还需要在fe.conf中添加配置`enable_delete_existing_files = true`并重启fe，此时delete\_existing\_files才会生效。delete\_existing\_files = true 是一个危险的操作，建议只在测试环境中使用。
+
+## 设置导出文件的大小
+导出作业支持设置导出文件的大小，如果单个文件大小超过设定值，则会按照指定大小分成多个文件导出。
+
+```Plain Text
+EXPORT TABLE test TO "file:///home/user/tmp/"
+PROPERTIES (
+    "format" = "parquet",
+    "max_file_size" = "512MB"
+);
+```
+通过设置 `"max_file_size" = "``512MB``"`，则单个导出文件的最大大小为 512MB。
+
+# 注意事项
+1. 内存限制
+
+  通常一个 Export 作业的查询计划只有 `扫描-导出` 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。
+
+  但在某些场景下，比如一个查询计划，在同一个 BE 上需要扫描的 Tablet 过多，或者 Tablet 的数据版本过多时，可能会导致内存不足。可以调整session变量`exec_mem_limit`来调大内存使用限制。
+
+2. 导出数据量
+
+  不建议一次性导出大量数据。一个 Export 作业建议的导出数据量最大在几十 GB。过大的导出会导致更多的垃圾文件和更高的重试成本。如果表数据量过大，建议按照分区导出。
+
+  另外，Export 作业会扫描数据，占用 IO 资源，可能会影响系统的查询延迟。
+
+3. 导出文件的管理
+
+  如果 Export 作业运行失败，已经生成的文件不会被删除，需要用户手动删除。
+
+4. 数据一致性
+
+  目前在export时只是简单检查tablets版本是否一致，建议在执行export过程中不要对该表进行导入数据操作。
+
+5. 导出超时
+
+  若导出的数据量很大，超过导出的超时时间，则Export任务会失败。此时可以在Export命令中指定`timeout` 参数来增加超时时间并重试Export命令。
+
+6. 导出失败
+
+  在 Export 作业运行过程中，如果 FE 发生重启或切主，则 Export 作业会失败，需要用户重新提交。可以通过`show export` 命令查看Export任务状态。
+
+7. 导出分区数量
+
+  一个Export Job允许导出的分区数量最大为2000，可以在fe.conf中添加参数`maximum_number_of_export_partitions`并重启FE来修改该设置。
+
+8. 并发导出
+
+  在并发导出时，请注意合理地配置线程数量和并行度，以充分利用系统资源并避免性能瓶颈。在导出过程中，可以实时监控进度和性能指标，以便及时发现问题并进行优化调整。
+
+9. 数据完整性
+
+  导出操作完成后，建议验证导出的数据是否完整和正确，以确保数据的质量和完整性。
 
 
-当所要导出的数据量很大时，可以考虑适当调大`parallelism`参数来增加并发导出。若机器核数紧张，无法再增加`parallelism` 而导出表的 Tablets 又较多 时，可以考虑调大`maximum_tablets_of_outfile_in_export`来增加一个`SELECT INTO OUTFILE`语句负责的 tablets 数量，也可以加快导出速度。
 
-### exec\_mem\_limit
+# 附录
+### 并发导出原理
+#### 非并发
+Export 任务的底层是执行`SELECT INTO OUTFILE` SQL语句。用户发起一个 Export 任务后，Doris会根据 Export 要导出的表构造出一个或多个 `SELECT INTO OUTFILE` 执行计划，随后将这些`SELECT INTO OUTFILE` 执行计划提交给 Doris的 Job Schedule 任务调度器，Job Schedule 任务调度器会自动调度这些任务并执行。
 
-通常一个 Export 作业的查询计划只有 `扫描-导出` 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。
 
-但在某些场景下，比如一个查询计划，在同一个 BE 上需要扫描的 Tablet 过多，或者 Tablet 的数据版本过多时，可能会导致内存不足。可以调整 session 变量`exec_mem_limit`来调大内存使用限制。
 
-## 注意事项
+使用 Export 命令导出一张表时，会根据 Export 的 `data_consistency` 参数和FE参数`maximum_tablets_of_outfile_in_export` 来将该表生成多个`SELECT INTO OUTFILE` SQL执行计划。这两个参数的含义如下：
 
-* 不建议一次性导出大量数据。一个 Export 作业建议的导出数据量最大在几十 GB。过大的导出会导致更多的垃圾文件和更高的重试成本。
-* 如果表数据量过大，建议按照分区导出。
-* 在 Export 作业运行过程中，如果 FE 发生重启或切主，则 Export 作业会失败，需要用户重新提交。
-* 如果 Export 作业运行失败，已经生成的文件不会被删除，需要用户手动删除。
-* Export 作业可以导出 Base 表 / View 视图表 / 外表 的数据，不会导出 Rollup Index 的数据。
-* Export 作业会扫描数据，占用 IO 资源，可能会影响系统的查询延迟。
-* 在使用 EXPORT 命令时，请确保目标路径是已存在的目录，否则导出可能会失败。
-* 在并发导出时，请注意合理地配置线程数量和并行度，以充分利用系统资源并避免性能瓶颈。
-* 导出到本地文件时，要注意文件权限和路径，确保有足够的权限进行写操作，并遵循适当的文件系统路径。
-* 在导出过程中，可以实时监控进度和性能指标，以便及时发现问题并进行优化调整。
-* 导出操作完成后，建议验证导出的数据是否完整和正确，以确保数据的质量和完整性。
+1. `data_consistency` ： 是Export命令的一个参数，该参数用来确定以何种粒度切分希望导出的表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
+2. `maximum_tablets_of_outfile_in_export` ：这是 FE 的参数，修改该参数需要重启FE。该参数用于指定Export 任务切分出来的单个 OutFile 语句中允许的最大 partitions / buckets 数量。默认值为10.
 
-## 相关配置
+举例：假设一张表共有20个 partition，每个 partition 都有5个buckets，那么该表一共有100个buckets。（以下例子都是在Export 任务 `parallelism` 参数设置为1的情况下）
 
-### FE
+1. 在 `data_consistency = none` 和 `maximum_tablets_of_outfile_in_export = 10`情况下，Export 任务将以 buckets 粒度把该表的100个 buckets 以10个为一组切分为10组，每一组都将由一个`SELECT INTO OUTFILE` 执行计划负责导出。即该 Export 任务会生成10个`SELECT INTO OUTFILE`执行计划，每个 outfile 语句负责导出10个buckets。
 
-* `maximum_tablets_of_outfile_in_export`：ExportExecutorTask 任务中一个 OutFile 语句允许的最大 tablets 数量。
+  如果将 `maximum_tablets_of_outfile_in_export` 改为 5，则该 Export 任务会生成 20 个`SELECT INTO OUTFILE`执行计划，每个 outfile 语句负责导出 5 个buckets。
 
-## 更多帮助
+2. 在 `data_consistency = partition` 和 `maximum_tablets_of_outfile_in_export = 10`情况下，Export 任务将以 partition 粒度把该表的 20 个 partition 以10个为一组切分为 2 组，每一组都将由一个`SELECT INTO OUTFILE` 执行计划负责导出。即该 Export 任务会生成 2 个`SELECT INTO OUTFILE`执行计划，每个 outfile 语句负责导出 10 个 partition。
 
-关于 EXPORT 使用的更多详细语法及最佳实践，请参阅 [Export](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT) 命令手册，你也可以在 MySql 客户端命令行下输入 `HELP EXPORT` 获取更多帮助信息。
+  如果将 `maximum_tablets_of_outfile_in_export` 改为 20，则该 Export 任务只会生成 1 个`SELECT INTO OUTFILE`执行计划，每个 outfile 语句负责导出 20 个 partition。
 
-EXPORT 命令底层实现是`SELECT INTO OUTFILE`语句，有关`SELECT INTO OUTFILE`可以参阅[同步导出](./outfile.md) 和 [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)命令手册。
+
+
+默认情况下，Export 任务是单线程执行的，该Export 任务切分出来的多个`SELECT INTO OUTFILE` 会被串行的发送给 Doris BE 节点执行。
+
+
+
+#### 并发导出
+默认情况下，Export 任务是单线程执行的。为了提高导出的效率，Export 命令可以设置一个 `parallelism` 参数来并发导出数据。设置`parallelism` 大于1后，Export 任务会使用多个线程并发的去执行 `SELECT INTO OUTFILE` 查询计划。`parallelism`参数实际就是指定执行 EXPORT 作业的线程数量。
+
+
+
+设置`parallelism` 大于1，用户提交一个 Export 作业后。Doris 会统计这个作业涉及的所有 partitions / bucktes 个数，然后根据`parallelism`参数（由用户指定）对这些 partitions / bucktes 进行分组，每一组 partitions / bucktes 又会被切分并生成多个`SELECT INTO OUTFILE` 查询计划 。每个线程负责一组 partitions / bucktes 生成的所有`SELECT INTO OUTFILE`查询计划。
+
+
+
+举例：假设一张表共有20个 partition，每个 partition 都有5个buckets，那么该表一共有100个buckets。设置`data_consistency = none` 以及 `maximum_tablets_of_outfile_in_export = 10`。
+
+1. `parallelism = 5` 情况下：Export 任务将把该表的 100 个buckets分成5份，每个线程负责 20 个buckets。每个线程负责的 20 个buckets又将以 10 个为单位分成 2 组，每组buckets由一个 outfile 查询计划负责。所以最终该 Export 任务有 5 个线程并发执行，每个线程负责 2 个 outfile 语句，每个线程负责的 outfile 语句串行的被执行。
+2. `parallelism = 3` 情况下：Export 任务将把该表的 100 个buckets分成 3 份，3 个线程分别负责 34、33、33 个buckets。每个线程负责 buckets 又将以 10 个为单位分成 4 组（最后一组不足10个buckets），每组buckets由一个 outfile 查询计划负责。所以该 Export 任务最终有 3 个线程并发执行，每个线程负责 4 个 outfile 语句，每个线程负责的 outfile 语句串行的被执行。
+3. `parallelism = 120` 情况下：由于该表 buckets 只有100个，所以系统会将 `parallelism` 强制设为 100 ，并以 `parallelism = 100` 去执行。Export 任务将把该表的 100 个 buckets 分成 100 份，每个线程负责 1 个buckets。每个线程负责的 1 个buckets 又将以 10 个为单位分成 1 组（该组实际就只有 1 个 buckets），每组buckets 由一个 outfile 查询计划负责。所以最终该 Export 任务有 100 个线程并发执行，每个线程负责 1 个 outfile 语句，每个 outfile 语句实际只导出 1 个 buckets。
+
+
+
+> 注意：即使 Export 命令设置了 `parallelism` 参数，该 Export 任务的实际并发线程数量还与Job Schedule有关。Export 任务设置多并发后，每一个并发线程都是 Job Schedule 提供的，所以如果此时Doris系统任务较繁忙，Job Schedule 的线程资源较紧张，那么有可能分给 Export 任务的实际线程数量达不到 `parallelism` 个数，影响 Export 的并发导出。此时可以通过减轻系统负载或调整 FE 配置`async_task_consumer_thread_num` 增加 Job Schedule 的总线程数量来缓解这个问题。
