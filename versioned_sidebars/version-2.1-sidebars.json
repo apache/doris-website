@@ -509,7 +509,8 @@
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
-                        "ecosystem/bi/powerbi"
+                        "ecosystem/bi/powerbi",
+                        "ecosystem/bi/tableau"
                     ]
                 }
             ]
