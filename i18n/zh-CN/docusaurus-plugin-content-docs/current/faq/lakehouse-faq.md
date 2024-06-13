@@ -342,3 +342,16 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 1. Binary 类型映射到 Doris 后，查询乱码
 
     Doris 原生不支持 Binary 类型，所以各类数据湖或数据库中的 Binary 类型映射到 Doris 中，通常使用 String 类型进行映射。String 类型只能展示可打印字符。如果需要查询 Binary 的内容，可以使用 `TO_BASE64()` 函数转换为 Base64 编码后，在进行下一步处理。
+
+2. 分析 Parquet 文件
+
+    在查询 Parquet 文件时，由于不同系统生成的 Parquet 文件格式可能有所差异，比如 RowGroup 的数量，索引的值等，有时需要检查 Parquet 文件的元数据进行问题定位或性能分析。这里提供一个工具帮助用户更方便的分析 Parquet 文件：
+
+    1. 下载并解压 [Apache Parquet Cli 1.14.0](https://github.com/morningman/tools/releases/download/apache-parquet-cli-1.14.0/apache-parquet-cli-1.14.0.tar.xz)
+    2. 将需要分析的 Parquet 文件下载到本地，假设路径为 `/path/to/file.parquet`
+    3. 使用如下命令分析 Parquet 文件元信息：
+
+        `./parquet-tools meta /path/to/file.parquet`
+
+    4. 更多功能，可参阅 [Apache Parquet Cli 文档](https://github.com/apache/parquet-java/tree/apache-parquet-1.14.0/parquet-cli)
+

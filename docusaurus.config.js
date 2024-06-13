@@ -185,8 +185,8 @@ const config = {
                     showLastUpdateTime: false,
                 },
                 blog: {
-                    blogTitle: 'Blogs',
-                    blogDescription: 'Apache Doris Blog',
+                    blogTitle: 'Apache Doris - Blog | Latest news and events ',
+                    blogDescription: 'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
                     postsPerPage: 'ALL',
                     blogSidebarCount: 0,
                     showReadingTime: false,

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Another big leap: Apache Doris 2.1.0 is released',
-    'summary': 'We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.',
+    'description': 'We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.',
     'date': '2024-03-12',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

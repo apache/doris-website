@@ -1,11 +1,11 @@
 ---
 {
     'title': "Multi-tenant workload isolation: a better balance between isolation and utilization",
-    'summary': "Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.",
+    'description': "Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.",
     'date': '2024-05-14',
     'author': 'Apache Doris',
     'picked': "true",
-    'order': "3",
+    'order': "4",
     'tags': ['Tech Sharing'],
     "image": '/images/multi-tenant-workload-group.jpg'
 }

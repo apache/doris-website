@@ -1,7 +1,7 @@
 ---
 {
     'title': "A financial anti-fraud solution based on the Apache Doris data warehouse",
-    'summary': "Financial fraud prevention is a race against time. This post will get into details about how a retail bank builds their fraud risk management platform based on Apache Doris and how it performs. ",
+    'description': "Financial fraud prevention is a race against time. This post will get into details about how a retail bank builds their fraud risk management platform based on Apache Doris and how it performs. ",
     'date': '2024-02-22',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],

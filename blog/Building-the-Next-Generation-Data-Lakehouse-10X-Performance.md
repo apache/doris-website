@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building the next-generation data lakehouse: 10X performance',
-    'summary': "This article explains how to connect various data sources quickly and ensure high query performance.",
+    'description': "This article explains how to connect various data sources quickly and ensure high query performance.",
     'date': '2023-03-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

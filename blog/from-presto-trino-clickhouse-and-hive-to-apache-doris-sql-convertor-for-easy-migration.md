@@ -1,11 +1,9 @@
 ---
 {
     'title': "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
-    'summary': "Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.",
+    'description': "Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.",
     'date': '2024-05-06',
     'author': 'Apache Doris',
-    'picked': "true",
-    'order': "4",
     'tags': ['Tech Sharing'],
     "image": '/images/sql-convertor-feature.jpeg'
 }

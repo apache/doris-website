@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Introduction to Apache Doris: a next-generation real-time data warehouse',
-    'summary': "This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.",
+    'description': "This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.",
     'date': '2023-10-03',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

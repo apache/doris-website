@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Tencent data engineer: why we went from ClickHouse to Apache Doris?',
-    'summary': "Evolution of the data processing architecture of Tencent Music Entertainment towards better performance and simpler maintenance.",
+    'description': "Evolution of the data processing architecture of Tencent Music Entertainment towards better performance and simpler maintenance.",
     'date': '2023-03-07',
     'author': 'Jun Zhang & Kai Dai',
     'tags': ['Best Practice'],

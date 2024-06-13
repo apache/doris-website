@@ -1,7 +1,7 @@
 ---
 {
     'title': 'LLM-powered OLAP: the Tencent application with Apache Doris',
-    'summary': "The exploration of a LLM+OLAP solution is a bumpy journey, but phew, it now works well for the Tencent case, and they're writing down every lesson learned to share with you.",
+    'description': "The exploration of a LLM+OLAP solution is a bumpy journey, but phew, it now works well for the Tencent case, and they're writing down every lesson learned to share with you.",
     'date': '2023-08-29',
     'author': 'Jun Zhang & Lei Luo',
     'tags': ['Best Practice'],
