@@ -94,7 +94,7 @@ After completing the previous two steps, we can use the Trino-Connector Catalog 
 
     explain:
     - `type` ：The type of catalog, here we must set it to `trino-connector`.
-    - `connector.name`、`kafka.table-names`、`kafka.nodes`、`kafka.table-description-dir` The following four properties are derived from trino, refer to: [Kafka connector](https://trino.io/docs/current/connector/kafka.html#configuration)
+    - `trino.connector.name`、`trino.kafka.table-names`、`trino.kafka.nodes`、`trino.kafka.table-description-dir` The following four properties are derived from trino, refer to: [Kafka connector](https://trino.io/docs/current/connector/kafka.html#configuration)
 
     Different Connector plug-ins should set different properties. You can refer to the official trino documentation: [Connectors](https://trino.io/docs/current/connector.html#connector--page-root)
 
@@ -116,7 +116,7 @@ The following are the Doris Trino-Connector catalog configuration of several com
     ```
 
     > Note:
-    > - You should add Hadoop's user name in the JVM parameters: -DHADOOP_USER_NAME=ftw, which can be configured at the end of the JAVA_OPTS_FOR_JDK_17 parameter in the fe.conf / be.conf file, such as JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=ftw"
+    > - You should add Hadoop's user name in the JVM parameters: -DHADOOP_USER_NAME=user, which can be configured at the end of the JAVA_OPTS_FOR_JDK_17 parameter in the fe.conf / be.conf file, such as JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=user"
 
 2. Mysql
 
