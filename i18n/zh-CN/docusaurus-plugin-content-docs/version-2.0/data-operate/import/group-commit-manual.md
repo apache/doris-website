@@ -24,8 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-Group Commit 不是一种新的导入方式，而是对`INSERT INTO tbl VALUES(...)`、`Stream Load`、`Http Stream`的扩展，大幅提升了高并发小写入的性能。您的应用程序可以直接使用 JDBC 将数据高频写入 Doris，同时通过使用 PreparedStatement 可以获得更高的性能。在日志场景下，您也可以利用 Stream Load 或者 Http Stream 将数据高频写入 Doris。
+:::tip 提示
+Group Commit 功能自 Apache Doris 2.1 版本开始支持。关于更多功能介绍，请前往 [Apache Doris 2.1 版本](https://doris.apache.org/zh-CN/docs/data-operate/import/group-commit-manual/)查看。
+:::
 
 ## Group Commit 模式
 
