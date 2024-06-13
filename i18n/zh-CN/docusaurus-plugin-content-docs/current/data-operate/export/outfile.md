@@ -52,7 +52,7 @@ under the License.
 
 示例：
 
-```Plain Text
+```sql
 mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_";
 +------------+-----------+----------+--------------------------------------------------------------------+
 | FileNumber | TotalRows | FileSize | URL                                                                |
@@ -74,7 +74,7 @@ mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_"
 ## 导出到 HDFS
 将查询结果导出到文件 `hdfs://path/to/` 目录下，指定导出格式为 PARQUET：
 
-```Plain Text
+```sql
 SELECT c1, c2, c3 FROM tbl
 INTO OUTFILE "hdfs://${host}:${fileSystem_port}/path/to/result_"
 FORMAT AS PARQUET
@@ -86,7 +86,7 @@ PROPERTIES
 ```
 如果HDFS开启了高可用，则需要提供HA信息，如：
 
-```Plain Text
+```sql
 SELECT c1, c2, c3 FROM tbl
 INTO OUTFILE "hdfs://HDFS8000871/path/to/result_"
 FORMAT AS PARQUET
@@ -103,7 +103,7 @@ PROPERTIES
 ```
 如果Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下SQL语句：
 
-```Plain Text
+```sql
 SELECT * FROM tbl
 INTO OUTFILE "hdfs://path/to/result_"
 FORMAT AS PARQUET
@@ -125,7 +125,7 @@ PROPERTIES
 ## 导出到 S3
 将查询结果导出到s3存储的 `s3://path/to/` 目录下，指定导出格式为 ORC，需要提供`sk` `ak`等信息
 
-```Plain Text
+```sql
 SELECT * FROM tbl
 INTO OUTFILE "s3://path/to/result_"
 FORMAT AS ORC
@@ -141,7 +141,7 @@ PROPERTIES(
 
 将查询结果导出到BE的`file:///path/to/` 目录下，指定导出格式为 CSV，指定列分割符为`,`。
 
-```Plain Text
+```sql
 SELECT k1 FROM tbl1 UNION SELECT k2 FROM tbl1
 INTO OUTFILE "file:///path/to/result_"
 FORMAT AS CSV
@@ -163,7 +163,7 @@ PROPERTIES(
 
 例如：将 select 语句的查询结果导出到腾讯云 COS：`s3://${bucket_name}/path/my_file_`。指定导出格式为 csv。 指定导出成功标识文件名为`SUCCESS`。导出完成后，生成一个标识文件。
 
-```Plain Text
+```sql
 SELECT k1,k2,v1 FROM tbl1 LIMIT 100000
 INTO OUTFILE "s3://my_bucket/path/my_file_"
 FORMAT AS CSV
@@ -187,12 +187,12 @@ PROPERTIES
 
 1. 打开并发导出会话变量
 
-```Plain Text
+```sql
 mysql> SET enable_parallel_outfile = true;
 ```
 2. 执行导出命令
 
-```Plain Text
+```sql
 mysql> SELECT * FROM demo.tbl
     -> INTO OUTFILE "file:///path/to/ftw/export/exp_"
     -> FORMAT AS PARQUET;
@@ -213,7 +213,7 @@ mysql> SELECT * FROM demo.tbl
 
 如果我们修改上述语句，即在查询语句中加入 `ORDER BY` 子句。由于查询语句带了一个顶层的排序节点，所以这个查询即使开启并发导出功能，也是无法并发导出的：
 
-```Plain Text
+```sql
 mysql> SELECT * FROM demo.tbl ORDER BY id
     -> INTO OUTFILE "file:///path/to/ftw/export/exp_"
     -> FORMAT AS PARQUET;
@@ -228,7 +228,7 @@ mysql> SELECT * FROM demo.tbl ORDER BY id
 关于更多并发导出的原理说明，可参阅附录部分。
 
 ## 导出前清空导出目录
-```Plain Text
+```sql
 SELECT * FROM tbl1
 INTO OUTFILE "s3://my_bucket/export/my_file_"
 FORMAT AS CSV
@@ -250,7 +250,7 @@ PROPERTIES
 > 若要使用delete\_existing\_files参数，还需要在fe.conf中添加配置`enable_delete_existing_files = true`并重启fe，此时delete\_existing\_files才会生效。delete\_existing\_files = true 是一个危险的操作，建议只在测试环境中使用。
 
 ## 设置导出文件的大小
-```Plain Text
+```sql
 SELECT * FROM tbl
 INTO OUTFILE "s3://path/to/result_"
 FORMAT AS ORC
@@ -305,7 +305,7 @@ PROPERTIES(
 3. 确定会话变量已开启：`set enable_parallel_outfile = true;`
 4. 通过 `EXPLAIN` 查看执行计划
 
-```Plain Text
+```sql
 mysql> EXPLAIN SELECT ... INTO OUTFILE "s3://xxx" ...;
 +-----------------------------------------------------------------------------+
 | Explain String                                                              |

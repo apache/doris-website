@@ -60,7 +60,7 @@ under the License.
 
 示例：
 
-```Plain Text
+```sql
 mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
     -> PROPERTIES(
     ->     "format" = "csv",
@@ -75,7 +75,7 @@ mysql> EXPORT TABLE tpch1.lineitem TO "s3://my_bucket/path/to/exp_"
 ```
 提交作业后，可以通过 [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) 命令查询导出作业状态，结果举例如下：
 
-```Plain Text
+```sql
 mysql> show export\G
 *************************** 1. row ***************************
       JobId: 143265
@@ -134,7 +134,7 @@ OutfileInfo: [
 
 提交Export作业后，在Export任务成功或失败之前可以通过 [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) 命令取消导出作业。取消命令举例如下：
 
-```Plain Text
+```sql
 CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 ```
 # 导出文件列类型映射
@@ -144,7 +144,7 @@ CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 ## 导出到 HDFS
 将 db1.tbl1 表的p1和p2分区中的`col1` 列和`col2` 列数据导出到 HDFS 上，设置导出作业的 label 为 `mylabel`。导出文件格式为csv（默认格式），列分割符为`,`，导出作业单个文件大小限制为512MB。
 
-```Plain Text
+```sql
 EXPORT TABLE db1.tbl1 
 PARTITION (p1,p2)
 TO "hdfs://host/path/to/export/" 
@@ -162,7 +162,7 @@ with HDFS (
 ```
 如果HDFS开启了高可用，则需要提供HA信息，如：
 
-```Plain Text
+```sql
 EXPORT TABLE db1.tbl1 
 PARTITION (p1,p2)
 TO "hdfs://HDFS8000871/path/to/export/" 
@@ -185,7 +185,7 @@ with HDFS (
 ```
 如果Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下SQL语句：
 
-```Plain Text
+```sql
 EXPORT TABLE db1.tbl1 
 PARTITION (p1,p2)
 TO "hdfs://HDFS8000871/path/to/export/" 
@@ -213,7 +213,7 @@ with HDFS (
 ## 导出到 S3
 将 s3\_test 表中的所有数据导出到 s3 上，导出格式为csv，以不可见字符 "\\x07" 作为行分隔符。
 
-```Plain Text
+```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
 PROPERTIES (
     "line_delimiter" = "\\x07"
@@ -229,7 +229,7 @@ PROPERTIES (
 
 将test表中的所有数据导出到本地存储：
 
-```Plain Text
+```sql
 -- parquet格式
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -267,7 +267,7 @@ PROPERTIES (
 ## 指定分区导出
 导出作业支持仅导出 Doris 内表的部分分区，如仅导出 test 表的 p1 和 p2 分区
 
-```Plain Text
+```sql
 EXPORT TABLE test
 PARTITION (p1,p2)
 TO "file:///home/user/tmp/" 
@@ -278,7 +278,7 @@ PROPERTIES (
 ## 导出时过滤数据
 导出作业支持导出时根据谓词条件过滤数据，仅导出符合条件的数据，如仅导出满足 `k1 < 50` 条件的数据
 
-```Plain Text
+```sql
 EXPORT TABLE test
 WHERE k1 < 50
 TO "file:///home/user/tmp/"
@@ -288,11 +288,33 @@ PROPERTIES (
 );
 ```
 ## 导出外表数据
+导出作业支持Doris Catalog外表数据：
+
+```sql
+-- 创建一个catalog
+CREATE CATALOG `tpch` PROPERTIES (
+    "type" = "trino-connector",
+    "trino.connector.name" = "tpch",
+    "trino.tpch.column-naming" = "STANDARD",
+    "trino.tpch.splits-per-node" = "32"
+);
+
+-- 导出 Catalog 外表数据
+EXPORT TABLE tpch.sf1.lineitem TO "file:///path/to/exp_"
+PROPERTIES(
+    "parallelism" = "5",
+    "format" = "csv",
+    "max_file_size" = "1024MB"
+);
+```
+
+> 注意：当前Export导出 Catalog 外表数据不支持并发导出，即使指定 parallelism 大于 1，仍然是单线程导出。
+
 # 最佳实践
 ## 导出一致性
 `Export`导出支持 partition / tablets 两种粒度。`data_consistency`参数用来指定以何种粒度切分希望导出的表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
 
-```Plain Text
+```sql
 EXPORT TABLE test TO "file:///home/user/tmp"
 PROPERTIES (
     "format" = "parquet",
@@ -309,7 +331,7 @@ PROPERTIES (
 ## 导出作业并发度
 Export可以设置不同的并发度来并发导出数据。指定并发度为5：
 
-```Plain Text
+```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "parquet",
@@ -320,7 +342,7 @@ PROPERTIES (
 关于Export并发导出的原理，可参阅附录部分。
 
 ## 导出前清空导出目录
-```Plain Text
+```sql
 EXPORT TABLE test TO "file:///home/user/tmp"
 PROPERTIES (
     "format" = "parquet",
@@ -337,7 +359,7 @@ PROPERTIES (
 ## 设置导出文件的大小
 导出作业支持设置导出文件的大小，如果单个文件大小超过设定值，则会按照指定大小分成多个文件导出。
 
-```Plain Text
+```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
     "format" = "parquet",
