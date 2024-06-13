@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FE profiler生成火焰图",
+    "title": "使用FE profiler生成火焰图",
     "language": "zh-CN"
 }
 ---
