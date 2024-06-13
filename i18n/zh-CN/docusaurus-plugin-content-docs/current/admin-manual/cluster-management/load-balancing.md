@@ -25,7 +25,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 负载均衡
+
 
 当部署多个 FE 节点时，用户可以在多个 FE 之上部署负载均衡层来实现 Doris 的高可用。
 
@@ -35,25 +35,26 @@ under the License.
 
 ## JDBC Connector
 
-如果使用 mysql jdbc connector 来连接 Doris，可以使用 jdbc 的自动重试机制:
+如果使用 mysql jdbc connector 来连接 Doris，可以使用 jdbc 的自动重试机制：
 
 ```
 jdbc:mysql:loadbalance://[host:port],[host:port].../[database][?propertyName1][=propertyValue1][&propertyName2][=propertyValue
 ```
 
-详细可以参考[Mysql官网文档](https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
+详细可以参考[MySQL 官网文档](https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
 
 ## ProxySQL 方式
 
-ProxySQL是灵活强大的MySQL代理层, 是一个能实实在在用在生产环境的MySQL中间件，可以实现读写分离，支持 Query 路由功能，支持动态指定某个 SQL 进行 cache，支持动态加载配置、故障切换和一些 SQL的过滤功能。
+ProxySQL 是灵活强大的 MySQL 代理层，是一个能实实在在用在生产环境的 MySQL 中间件，可以实现读写分离，支持 Query 路由功能，支持动态指定某个 SQL 进行 Cache，支持动态加载配置、故障切换和一些 SQL 的过滤功能。
 
 Doris 的 FE 进程负责接收用户连接和查询请求，其本身是可以横向扩展且高可用的，但是需要用户在多个 FE 上架设一层 proxy，来实现自动的连接负载均衡。
 
-### 安装ProxySQL （yum方式）
+### 安装 ProxySQL（yum 方式）
 
 ```bash
 配置yum源
 # vim /etc/yum.repos.d/proxysql.repo
+
 [proxysql_repo]
 name= ProxySQL YUM repository
 baseurl=http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/centos/\$releasever
@@ -64,13 +65,16 @@ gpgkey=http://repo.proxysql.com/ProxySQL/repo_pub_key
 # yum clean all
 # yum makecache
 # yum -y install proxysql
+
 查看版本  
 # proxysql --version
 ProxySQL version 1.4.13-15-g69d4207, codename Truls
+
 设置开机自启动
 # systemctl enable proxysql
 # systemctl start proxysql      
 # systemctl status proxysql
+
 启动后会监听两个端口， 默认为6032和6033。6032端口是ProxySQL的管理端口，6033是ProxySQL对外提供服务的端口 (即连接到转发后端的真正数据库的转发端口)。
 # netstat -tunlp
 Active Internet connections (only servers)
@@ -81,13 +85,13 @@ tcp        0      0 0.0.0.0:6033            0.0.0.0:*               LISTEN
 
 ### ProxySQL 配置
 
-ProxySQL 有配置文件 `/etc/proxysql.cnf` 和配置数据库文件`/var/lib/proxysql/proxysql.db`。**这里需要特别注意**：如果存在`"proxysql.db"`文件(在`/var/lib/proxysql`目录下)，则 ProxySQL 服务只有在第一次启动时才会去读取`proxysql.cnf文件`并解析；后面启动会就不会读取`proxysql.cnf`文件了！如果想要让proxysql.cnf 文件里的配置在重启 proxysql 服务后生效(即想要让 proxysql 重启时读取并解析 proxysql.cnf配置文件)，则需要先删除 `/var/lib/proxysql/proxysql.db`数据库文件，然后再重启 proxysql 服务。这样就相当于初始化启动 proxysql 服务了，会再次生产一个纯净的 proxysql.db 数据库文件(如果之前配置了 proxysql 相关路由规则等，则就会被抹掉)
+ProxySQL 有配置文件 `/etc/proxysql.cnf` 和配置数据库文件`/var/lib/proxysql/proxysql.db`。**这里需要特别注意**：如果存在`"proxysql.db"`文件 (在`/var/lib/proxysql`目录下)，则 ProxySQL 服务只有在第一次启动时才会去读取`proxysql.cnf文件`并解析；后面启动会就不会读取`proxysql.cnf`文件了！如果想要让 proxysql.cnf 文件里的配置在重启 proxysql 服务后生效 (即想要让 proxysql 重启时读取并解析 proxysql.cnf 配置文件)，则需要先删除 `/var/lib/proxysql/proxysql.db`数据库文件，然后再重启 proxysql 服务。这样就相当于初始化启动 proxysql 服务了，会再次生产一个纯净的 proxysql.db 数据库文件 (如果之前配置了 proxysql 相关路由规则等，则就会被抹掉)
 
-#### 查看及修改配置文件
+**查看及修改配置文件**
 
 这里主要是几个参数，在下面已经注释出来了，可以根据自己的需要进行修改
 
-```
+```bash
 # egrep -v "^#|^$" /etc/proxysql.cnf
 datadir="/var/lib/proxysql"         #数据目录
 admin_variables=
@@ -138,11 +142,12 @@ mysql_replication_hostgroups=
 )
 ```
 
-#### 连接 ProxySQL 管理端口测试
+**连接 ProxySQL 管理端口测试**
 
 ```sql
 # mysql -uadmin -padmin -P6032 -hdoris01
-查看main库（默认登陆后即在此库）的global_variables表信息
+// 查看main库（默认登陆后即在此库）的global_variables表信息
+
 MySQL [(none)]> show databases;
 +-----+---------------+-------------------------------------+
 | seq | name          | file                                |
@@ -188,9 +193,9 @@ MySQL [main]> show tables;
 
 ```
 
-#### ProxySQL 配置后端 Doris FE
+**ProxySQL 配置后端 Doris FE**
 
-使用 insert 语句添加主机到 mysql_servers 表中，其中：hostgroup_id 为10表示写组，为20表示读组，我们这里不需要读写分离，无所谓随便设置哪一个都可以。
+使用 insert 语句添加主机到 mysql_servers 表中，其中：hostgroup_id 为 10 表示写组，为 20 表示读组，我们这里不需要读写分离，无所谓随便设置哪一个都可以。
 
 ```sql
 [root@mysql-proxy ~]# mysql -uadmin -padmin -P6032 -h127.0.0.1
@@ -204,15 +209,15 @@ Query OK, 1 row affected (0.000 sec)
 MySQL [(none)]> insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.9.213',9030);
 Query OK, 1 row affected (0.000 sec)
  
-如果在插入过程中，出现报错：
+//如果在插入过程中，出现报错：
 ERROR 1045 (#2800): UNIQUE constraint failed: mysql_servers.hostgroup_id, mysql_servers.hostname, mysql_servers.port
  
-说明可能之前就已经定义了其他配置，可以清空这张表 或者 删除对应host的配置
+//说明可能之前就已经定义了其他配置，可以清空这张表 或者 删除对应host的配置
 MySQL [(none)]> select * from mysql_servers;
 MySQL [(none)]> delete from mysql_servers;
 Query OK, 6 rows affected (0.000 sec)
 
-查看这3个节点是否插入成功，以及它们的状态。
+//查看这 3 个节点是否插入成功，以及它们的状态。
 MySQL [(none)]> select * from mysql_servers\G;
 *************************** 1. row ***************************
        hostgroup_id: 10
@@ -262,23 +267,23 @@ MySQL [(none)]> save mysql servers to disk;
 Query OK, 0 rows affected (0.348 sec)
 ```
 
-#### 监控Doris FE节点配置
+**监控 Doris FE 节点配置**
 
-添 doris fe 节点之后，还需要监控这些后端节点。对于后端多个FE高可用负载均衡环境来说，这是必须的，因为 ProxySQL 需要通过每个节点的 read_only 值来自动调整
+添 Doris FE 节点之后，还需要监控这些后端节点。对于后端多个 FE 高可用负载均衡环境来说，这是必须的，因为 ProxySQL 需要通过每个节点的 read_only 值来自动调整
 
 它们是属于读组还是写组。
 
-首先在后端master主数据节点上创建一个用于监控的用户名
+首先在后端 master 主数据节点上创建一个用于监控的用户名
 
 ```sql
-在doris fe master主数据库节点行执行：
+//在 Doris FE master 主数据库节点行执行：
 # mysql -P9030 -uroot -p 
 mysql> create user monitor@'192.168.9.%' identified by 'P@ssword1!';
 Query OK, 0 rows affected (0.03 sec)
 mysql> grant ADMIN_PRIV on *.* to monitor@'192.168.9.%';
 Query OK, 0 rows affected (0.02 sec)
  
-然后回到mysql-proxy代理层节点上配置监控
+//然后回到mysql-proxy代理层节点上配置监控
 # mysql -uadmin -padmin -P6032 -h127.0.0.1
 MySQL [(none)]> set mysql-monitor_username='monitor';
 Query OK, 1 row affected (0.000 sec)
@@ -286,16 +291,19 @@ Query OK, 1 row affected (0.000 sec)
 MySQL [(none)]> set mysql-monitor_password='P@ssword1!';
 Query OK, 1 row affected (0.000 sec)
  
-修改后，加载到RUNTIME，并保存到disk
+//修改后，加载到 RUNTIME，并保存 disk
 MySQL [(none)]> load mysql variables to runtime;
 Query OK, 0 rows affected (0.001 sec)
  
 MySQL [(none)]> save mysql variables to disk;
 Query OK, 94 rows affected (0.079 sec)
  
-验证监控结果：ProxySQL监控模块的指标都保存在monitor库的log表中。
-以下是连接是否正常的监控(对connect指标的监控)：
-注意：可能会有很多connect_error，这是因为没有配置监控信息时的错误，配置后如果connect_error的结果为NULL则表示正常。
+//验证监控结果：ProxySQL监控模块的指标都保存在monitor库的log表中。
+
+//以下是连接是否正常的监控(对connect指标的监控)：
+
+//注意：可能会有很多connect_error，这是因为没有配置监控信息时的错误，配置后如果connect_error的结果为NULL则表示正常。
+
 MySQL [(none)]> select * from mysql_server_connect_log;
 +---------------+------+------------------+-------------------------+---------------+
 | hostname      | port | time_start_us    | connect_success_time_us | connect_error |
@@ -313,7 +321,9 @@ MySQL [(none)]> select * from mysql_server_connect_log;
 | 192.168.9.213 | 9030 | 1548665512938268 | 613                     | NULL          |
 +---------------+------+------------------+-------------------------+---------------+
 20 rows in set (0.000 sec)
-以下是对心跳信息的监控(对ping指标的监控)
+
+//以下是对心跳信息的监控(对ping指标的监控)
+
 MySQL [(none)]> select * from mysql_server_ping_log;
 +---------------+------+------------------+----------------------+------------+
 | hostname      | port | time_start_us    | ping_success_time_us | ping_error |
@@ -326,19 +336,23 @@ MySQL [(none)]> select * from mysql_server_ping_log;
 +---------------+------+------------------+----------------------+------------+
 110 rows in set (0.001 sec)
  
-read_only日志此时也为空(正常来说，新环境配置时，这个只读日志是为空的)
+//read_only日志此时也为空(正常来说，新环境配置时，这个只读日志是为空的)
+
 MySQL [(none)]> select * from mysql_server_read_only_log;
 Empty set (0.000 sec)
 
-3个节点都在hostgroup_id=10的组中。
-现在，将刚才mysql_replication_hostgroups表的修改加载到RUNTIME生效。
+//3个节点都在hostgroup_id=10的组中。
+
+//现在，将刚才 mysql_replication_hostgroups 表的修改加载到RUNTIME生效。
+
 MySQL [(none)]> load mysql servers to runtime;
 Query OK, 0 rows affected (0.003 sec)
  
 MySQL [(none)]> save mysql servers to disk;
 Query OK, 0 rows affected (0.361 sec)
 
-现在看结果
+//现在看结果
+
 MySQL [(none)]> select hostgroup_id,hostname,port,status,weight from mysql_servers;
 +--------------+---------------+------+--------+--------+
 | hostgroup_id | hostname      | port | status | weight |
@@ -350,14 +364,15 @@ MySQL [(none)]> select hostgroup_id,hostname,port,status,weight from mysql_serve
 3 rows in set (0.000 sec)
 ```
 
-#### 配置Doris用户
+**配置 Doris 用户**
 
 上面的所有配置都是关于后端 Doris FE 节点的，现在可以配置关于 SQL 语句的，包括：发送 SQL 语句的用户、SQL 语句的路由规则、SQL 查询的缓存、SQL 语句的重写等等。
 
-本小节是 SQL 请求所使用的用户配置，例如 root 用户。这要求我们需要先在后端 Doris FE 节点添加好相关用户。这里以 root 和 doris 两个用户名为例.
+本小节是 SQL 请求所使用的用户配置，例如 root 用户。这要求我们需要先在后端 Doris FE 节点添加好相关用户。这里以 root 和 doris 两个用户名为例。
 
 ```sql
-首先，在Doris FE master主数据库节点上执行：
+//首先，在Doris FE master主数据库节点上执行：
+
 # mysql -P9030 -uroot -p
 .........
 mysql> create user doris@'%' identified by 'P@ssword1!';
@@ -367,7 +382,8 @@ mysql> grant ADMIN_PRIV on *.* to doris@'%';
 Query OK, 0 rows affected, 1 warning (0.03 sec)
  
  
-然后回到mysql-proxy代理层节点，配置mysql_users表，将刚才的两个用户添加到该表中。
+//然后回到 mysql-proxy 代理层节点，配置 mysql_users 表，将刚才的两个用户添加到该表中。
+
 admin> insert into mysql_users(username,password,default_hostgroup) values('root','',10);
 Query OK, 1 row affected (0.001 sec)
   
@@ -381,12 +397,15 @@ Query OK, 0 rows affected (0.001 sec)
 admin> save mysql users to disk;
 Query OK, 0 rows affected (0.108 sec)
   
-mysql_users表有不少字段，最主要的三个字段为username、password和default_hostgroup：
--  username：前端连接ProxySQL，以及ProxySQL将SQL语句路由给MySQL所使用的用户名。
--  password：用户名对应的密码。可以是明文密码，也可以是hash密码。如果想使用hash密码，可以先在某个MySQL节点上执行
+// mysql_users 表有不少字段，最主要的三个字段为 username、password 和default_hostgroup：
+
+//-  username：前端连接ProxySQL，以及ProxySQL将SQL语句路由给MySQL所使用的用户名。
+//-  password：用户名对应的密码。可以是明文密码，也可以是hash密码。如果想使用hash密码，可以先在某个MySQL节点上执行
+
    select password(PASSWORD)，然后将加密结果复制到该字段。
--  default_hostgroup：该用户名默认的路由目标。例如，指定root用户的该字段值为10时，则使用root用户发送的SQL语句默认
-   情况下将路由到hostgroup_id=10组中的某个节点。
+
+//-  default_hostgroup：该用户名默认的路由目标。例如，指定root用户的该字段值为10时，则使用root用户发送的SQL语句默认
+//   情况下将路由到hostgroup_id=10组中的某个节点。
  
 admin> select * from mysql_users\G
 *************************** 1. row ***************************
@@ -417,7 +436,7 @@ transaction_persistent: 1
        max_connections: 10000
 2 rows in set (0.000 sec)
   
-虽然这里没有详细介绍mysql_users表，但只有active=1的用户才是有效的用户。
+//虽然这里没有详细介绍mysql_users表，但只有active=1的用户才是有效的用户。
 
 MySQL [(none)]> load mysql users to runtime;
 Query OK, 0 rows affected (0.001 sec)
@@ -425,23 +444,28 @@ Query OK, 0 rows affected (0.001 sec)
 MySQL [(none)]> save mysql users to disk;
 Query OK, 0 rows affected (0.123 sec)
 
-这样就可以通过sql客户端，使用doris的用户名密码去连接了ProxySQL了
+//这样就可以通过sql客户端，使用doris的用户名密码去连接了ProxySQL了
 ```
 
-####  通过 ProxySQL 连接 Doris 进行测试
+**通过 ProxySQL 连接 Doris 进行测试**
 
-下面，分别使用 root 用户和 doris 用户测试下它们是否能路由到默认的 hostgroup_id=10 (它是一个写组)读数据。下面是通过转发端口 6033 连接的，连接的是转发到后端真正的数据库!
+下面，分别使用 root 用户和 doris 用户测试下它们是否能路由到默认的 hostgroup_id=10 (它是一个写组) 读数据。下面是通过转发端口 6033 连接的，连接的是转发到后端真正的数据库！
 
 ```sql
 #mysql -uroot -p -P6033 -hdoris01 -e "show databases;"
 Enter password: 
 ERROR 9001 (HY000) at line 1: Max connect timeout reached while reaching hostgroup 10 after 10000ms
-这个时候发现出错，并没有转发到后端真正的doris fe上
-通过日志看到有set autocommit=0 这样开启事务
-检查配置发现：
+
+//这个时候发现出错，并没有转发到后端真正的 Doris FE上
+
+//通过日志看到有set autocommit=0 这样开启事务
+
+//检查配置发现：
 mysql-forward_autocommit=false
 mysql-autocommit_false_is_transaction=false
-我们这里不需要读写分离，只需要将这两个参数通过下面语句直接搞成true就可以了
+
+//我们这里不需要读写分离，只需要将这两个参数通过下面语句直接搞成true就可以了
+
 mysql> UPDATE global_variables SET variable_value='true' WHERE variable_name='mysql-forward_autocommit';
 Query OK, 1 row affected (0.00 sec)
 
@@ -454,7 +478,8 @@ Query OK, 0 rows affected (0.00 sec)
 mysql> SAVE MYSQL VARIABLES TO DISK;
 Query OK, 98 rows affected (0.12 sec)
 
-然后我们在重新试一下，显示成功
+//然后我们在重新试一下，显示成功
+
 [root@doris01 ~]# mysql -udoris -pP@ssword1! -P6033 -h192.168.9.211  -e "show databases;"
 Warning: Using a password on the command line interface can be insecure.
 +--------------------+
@@ -466,15 +491,15 @@ Warning: Using a password on the command line interface can be insecure.
 +--------------------+
 ```
 
-OK，到此就结束了，你就可以用 Mysql 客户端，JDBC 等任何连接 mysql 的方式连接 ProxySQL 去操作你的 doris 了
+OK，到此就结束了，你就可以用 Mysql 客户端，JDBC 等任何连接 MySQL 的方式连接 ProxySQL 去操作你的 Doris 了
 
-## Nginx TCP反向代理方式
+## Nginx TCP 反向代理方式
 
 ### 环境准备
 
-**注意：使用Nginx实现Apache Doris数据库的负载均衡，前提是要搭建Apache Doris的环境，Apache Doris FE的IP和端口分别如下所示, 这里我是用一个FE来做演示的，多个FE只需要在配置里添加多个FE的IP地址和端口即可**
+**注意：使用 Nginx 实现 Apache Doris 数据库的负载均衡，前提是要搭建 Apache Doris 的环境，Apache Doris FE 的 IP 和端口分别如下所示，这里我是用一个 FE 来做演示的，多个 FE 只需要在配置里添加多个 FE 的 IP 地址和端口即可**
 
-通过Nginx访问MySQL的Apache Doris和端口如下所示。
+通过 Nginx 访问 MySQL 的 Apache Doris 和端口如下所示。
 
 ```
 IP: 172.31.7.119 
@@ -490,7 +515,7 @@ sudo apt-get install zlib1g-dev
 sudo apt-get install openssl libssl-dev
 ```
 
-### 安装Nginx
+### 安装 Nginx
 
 ```bash
 sudo wget http://nginx.org/download/nginx-1.18.0.tar.gz
@@ -530,7 +555,7 @@ stream {
 }
 ```
 
-### 启动Nginx
+### 启动 Nginx
 
 指定配置文件启动
 
@@ -545,11 +570,14 @@ cd /usr/local/nginx
 mysql -uroot -P6030 -h172.31.7.119
 ```
 
-参数解释:
-> - -u   指定Doris用户名
-> - -p   指定Doris密码,我这里密码是空，所以没有
-> - -h   指定Nginx代理服务器IP
-> - -P   指定端口
+参数解释：
+- -u   指定 Doris 用户名
+
+- -p   指定 Doris 密码，我这里密码是空，所以没有
+
+- -h   指定 Nginx 代理服务器 IP
+
+- -P   指定端口
 
 ```sql
 mysql -uroot -P6030 -h172.31.7.119
@@ -575,68 +603,206 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-## IP 透传
+### IP 透传
 
 自 2.1.1 版本开始，Doris 支持 [Proxy Protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) 协议。利用这个协议，可以是实现负载均衡的 IP 透传，从而在经过负载均衡后，Doris 依然可以获取客户端的真实 IP，实现白名单等权限控制。
 
 > 注：
 >
 > 1. 仅支持 Proxy Protocol V1。
->
 > 2. 仅支持并做用于 MySQL 协议端口，不支持和影响 HTTP、ADBC 等其他协议端口。
->
 > 3. 开启后，必须使用 Proxy Protocol 协议进行连接，否则连接失败。
 
 下面以 Nginx 为例，介绍如何实现 IP 透传。
 
 1. Doris 开启 Proxy Protocol
 
-    在 FE 的 fe.conf 中添加：
+   在 FE 的 fe.conf 中添加：
 
-    ```
-    enable_proxy_protocol = true
-    ```
+   ```text
+   enable_proxy_protocol = true
+   ```
+
+   
 
 2. Nginx 开启 Proxy Protocol
 
-    ```
-    events {
-    worker_connections 1024;
-    }
-    stream {
-      upstream mysqld {
-          hash $remote_addr consistent;
-          server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
-      }
-      server {
-          listen 6030;
-          proxy_connect_timeout 300s;
-          proxy_timeout 300s;
-          proxy_pass mysqld;
-          # Enable Proxy Protocol to the upstream server
-          proxy_protocol on;
-      }
-    }
-    ```
+   ```text
+   events {
+   worker_connections 1024;
+   }
+   stream {
+     upstream mysqld {
+         hash $remote_addr consistent;
+         server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
+     }
+     server {
+         listen 6030;
+         proxy_connect_timeout 300s;
+         proxy_timeout 300s;
+         proxy_pass mysqld;
+         # Enable Proxy Protocol to the upstream server
+         proxy_protocol on;
+     }
+   }
+   ```
 
-3. 通过代理连接Doris
+   
 
-    ```
-    mysql -uroot -P6030 -h172.31.7.119 
-    ```
+3. 通过代理连接 Doris
+
+   ```sql
+   mysql -uroot -P6030 -h172.31.7.119 
+   ```
+
+   
 
 4. 验证
 
-    ```
-    mysql> show processlist;
-    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-    | CurrentConnected | Id   | User | Host              | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             |
-    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-    | Yes              |    1 | root | 172.21.0.32:34390 | 2024-03-17 16:32:22 | internal |      | Query   |    0 | OK    | 82edc460d93f4e28-8bbed058a068e259 | show processlist |
-    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-    1 row in set (0.00 sec)
-    ```
+   ```sql
+   mysql> show processlist;
+   +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
+   | CurrentConnected | Id   | User | Host              | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             |
+   +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
+   | Yes              |    1 | root | 172.21.0.32:34390 | 2024-03-17 16:32:22 | internal |      | Query   |    0 | OK    | 82edc460d93f4e28-8bbed058a068e259 | show processlist |
+   +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
+   1 row in set (0.00 sec)
+   ```
 
-    如果在 `Host` 列看到的真实的客户端 IP，则说明验证成功。否则，只能看到代理服务的 IP 地址。
+   
 
-    同时，在 fe.audit.log 中也会记录真实的客户端 IP。
+   如果在 `Host` 列看到的真实的客户端 IP，则说明验证成功。否则，只能看到代理服务的 IP 地址。
+
+   同时，在 fe.audit.log 中也会记录真实的客户端 IP。
+
+
+## Haproxy 方式
+HAProxy是一个使用C语言编写的自由及开放源代码软件，其提供高可用性、负载均衡，以及基于TCP和HTTP的应用程序代理。
+
+### 安装
+1. 下载 HAProxy
+
+   下载地址：https://src.fedoraproject.org/repo/pkgs/haproxy/
+
+2. 解压
+   ```
+   tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
+   mv haproxy-2.6.15 haproxy
+   ```
+
+3. 编译
+
+   进入到 haproxy 目录中
+   ```
+   yum install gcc gcc-c++ -y
+
+   make TARGET=linux-glibc PREFIX=/usr/local/haproxy
+
+   make install PREFIX=/usr/local/haproxy
+   ```
+
+### 配置
+1. 配置 haproxy.conf 文件
+
+   vim /etc/rsyslog.d/haproxy.conf
+   ```
+   $ModLoad imudp 
+   $UDPServerRun 514
+   local0.* /usr/local/haproxy/logs/haproxy.log
+   &~
+   ```
+
+2. 开启远程日志
+
+   vim /etc/sysconfig/rsyslog
+
+   `SYSLOGD_OPTIONS="-c 2 -r -m 0" `
+
+   参数解析：
+
+   - -c 2 使用兼容模式，默认是 -c 5。 -r 开启远程日志
+
+   - -m 0 标记时间戳。单位是分钟，为0时，表示禁用该功能
+
+3. 使修改生效
+
+   `systemctl restart rsyslog`
+
+
+4. 编辑负载均衡文件
+
+   vim /usr/local/haproxy/haproxy.cfg
+
+   ```
+   #
+   # haproxy 部署在 172.16.0.3，这台机器上，用来代理 172.16.0.8,172.16.0.6,172.16.0.4 这三台部署 fe 的机器
+   #
+   
+   global
+   maxconn         2000
+   ulimit-n        40075
+   log             127.0.0.1 local0 info
+   uid             200
+   gid             200
+   chroot          /var/empty
+   daemon
+   group           haproxy
+   user            haproxy
+   
+   
+   defaults
+   # 应用全局的日志配置
+   log global
+   mode http
+   retries 3          # 健康检查。3次连接失败就认为服务器不可用，主要通过后面的check检查
+   option redispatch  # 服务不可用后重定向到其他健康服务器
+   # 超时配置
+   timeout connect 5000
+   timeout client 5000
+   timeout server 5000
+   timeout check 2000
+   
+   frontend agent-front
+   bind *:9030             # 代理机器上的转换端口
+   mode tcp
+   default_backend forward-fe
+   
+   backend forward-fe
+   mode tcp
+   balance roundrobin
+   server fe-1 172.16.0.8:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-2 172.16.0.4:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-3 172.16.0.6:9030 weight 1 check inter 3000 rise 2 fall 3
+   
+   listen http_front              # haproxy的客户页面
+   bind *:8888                    # HAProxy WEB 的IP地址
+   mode http
+   log 127.0.0.1 local0 err
+   option httplog
+   stats uri /haproxy             # 自定义页面的 url（即访问时地址为：172.16.0.3:8888/haproxy）
+   stats auth admin:admin         # 控制面板账号密码 账号：admin
+   stats refresh 10s
+   stats enable
+   ```
+
+### 启动
+
+1. 启动服务
+
+   ` /opt/haproxy/haproxy -f /usr/local/haproxy/haproxy.cfg`
+
+2. 查看服务状态
+
+   `netstat -lnatp | grep -i haproxy`
+
+3. WEB 访问
+
+   ip:8888/haproxy
+
+   登陆密码：admin : admin
+
+   注意：WEB 登陆的端口、账户、密码需要在 haproxy.cfg 文件中配置
+
+4. 测试端口是否转换成功
+
+   `mysql -h 172.16.0.3 -uroot -P3307 -p`

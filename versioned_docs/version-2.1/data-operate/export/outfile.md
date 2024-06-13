@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Export Query Result",
+    "title": "Exporting Query Result",
     "language": "en"
 }
 ---
@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Export Query Result
 
-This document describes how to use the  [SELECT INTO OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE.md)  command to export query results.
+
+This document describes how to use the  [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE)  command to export query results.
 
 `SELECT INTO OUTFILE` is a synchronous command, which means that the operation is completed when the command returns. It also returns a row of results to show the execution result of the export.
 
@@ -57,14 +57,16 @@ select * from tbl1 limit 10
 INTO OUTFILE "file:///home/work/path/result_";
 ```
 
-For more usage, see [OUTFILE documentation](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE.md).
+For more usage, see [OUTFILE documentation](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE).
 
 ## Concurrent Export
 
 By default, the export of the query result set is non-concurrent, that is, a single point of export. If the user wants the query result set to be exported concurrently, the following conditions need to be met:
 
 1. session variable 'enable_parallel_outfile' to enable concurrent export: ```set enable_parallel_outfile = true;```
+
 2. The export method is S3, HDFS instead of using a broker
+
 3. The query can meet the needs of concurrent export, for example, the top level does not contain single point nodes such as sort. (I will give an example later, which is a query that does not export the result set concurrently)
 
 If the above three conditions are met, the concurrent export query result set can be triggered. Concurrency = ```be_instacne_num * parallel_fragment_exec_instance_num```
@@ -108,7 +110,7 @@ Planning example for concurrent export:
 
 ## Usage Examples
 
-For details, please refer to [OUTFILE Document](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE.md).
+For details, please refer to [OUTFILE Document](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE).
 
 ## Return Results
 
@@ -128,8 +130,11 @@ mysql> select * from tbl1 limit 10 into outfile "file:///home/work/path/result_"
 ```
 
 * FileNumber: The number of files finally generated.
+
 * TotalRows: The number of rows in the result set.
+
 * FileSize: The total size of the exported file. Unit byte.
+
 * URL: If it is exported to a local disk, the Compute Node to which it is exported is displayed here.
 
 If a concurrent export is performed, multiple rows of data will be returned.
@@ -146,7 +151,7 @@ If a concurrent export is performed, multiple rows of data will be returned.
 
 If the execution is incorrect, an error message will be returned, such as:
 
-```
+```sql
 mysql> SELECT * FROM tbl INTO OUTFILE ...
 ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 ```
@@ -154,15 +159,23 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 ## Notice
 
 * The CSV format does not support exporting binary types, such as BITMAP and HLL types. These types will be output as `\N`, which is null.
+
 * If you do not enable concurrent export, the query result is exported by a single BE node in a single thread. Therefore, the export time and the export result set size are positively correlated. Turning on concurrent export can reduce the export time.
+
 * The export command does not check whether the file and file path exist. Whether the path will be automatically created or whether the existing file will be overwritten is entirely determined by the semantics of the remote storage system.
+
 * If an error occurs during the export process, the exported file may remain on the remote storage system. Doris will not clean these files. The user needs to manually clean up.
+
 * The timeout of the export command is the same as the timeout of the query. It can be set by `SET query_timeout = xxx`.
+
 * For empty result query, there will be an empty file.
+
 * File spliting will ensure that a row of data is stored in a single file. Therefore, the size of the file is not strictly equal to `max_file_size`.
+
 * For functions whose output is invisible characters, such as BITMAP and HLL types, the output is `\N`, which is NULL.
+
 * At present, the output type of some geo functions, such as `ST_Point` is VARCHAR, but the actual output value is an encoded binary character. Currently these functions will output garbled characters. For geo functions, use `ST_AsText` for output.
 
 ## More Help
 
-For more detailed syntax and best practices for using OUTFILE, please refer to the [OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE.md) command manual, you can also More help information can be obtained by typing `HELP OUTFILE` at the command line of the MySql client.
+For more detailed syntax and best practices for using OUTFILE, please refer to the [OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE) command manual, you can also More help information can be obtained by typing `HELP OUTFILE` at the command line of the MySql client.

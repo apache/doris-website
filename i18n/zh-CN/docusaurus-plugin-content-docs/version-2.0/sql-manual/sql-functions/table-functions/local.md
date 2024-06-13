@@ -36,7 +36,7 @@ local
 
 ### Description
 
-Local表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
+Local 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
 该函数需要 ADMIN 权限。
 
@@ -53,7 +53,7 @@ local(
 
 **参数说明**
 
-访问local文件的相关参数：
+访问 local 文件的相关参数：
 - `file_path`
 
     （必填）待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径, 其中 `user_files_secure_path` 参数是 [be的一个配置项](../../../admin-manual/config/be-config.md) 。
@@ -66,11 +66,11 @@ local(
 
 文件格式相关参数
 - `format`：(必填) 目前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
-- `column_separator`：(选填) 列分割符, 默认为`,`。 
+- `column_separator`：(选填) 列分割符，默认为`,`。 
 - `line_delimiter`：(选填) 行分割符，默认为`\n`。
-- `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE`。 默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
+- `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`。默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
 
-    下面6个参数是用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md)
+    下面 6 个参数是用于 json 格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/load-json-format)
 
 - `read_json_by_line`： (选填) 默认为 `"true"`
 - `strip_outer_array`： (选填) 默认为 `"false"`
@@ -79,10 +79,10 @@ local(
 - `num_as_string`： (选填) 默认为 `false`
 - `fuzzy_parse`： (选填) 默认为 `false`
 
-    <version since="dev">下面2个参数是用于csv格式的导入</version>
+    <version since="dev">下面 2 个参数是用于 csv 格式的导入</version>
 
-- `trim_double_quotes`： 布尔类型，选填，默认值为 `false`，为 `true` 时表示裁剪掉 csv 文件每个字段最外层的双引号
-- `skip_lines`： 整数类型，选填，默认值为0，含义为跳过csv文件的前几行。当设置format设置为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效 
+- `trim_double_quotes`：布尔类型，选填，默认值为 `false`，为 `true` 时表示裁剪掉 csv 文件每个字段最外层的双引号
+- `skip_lines`：整数类型，选填，默认值为 0，含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效 
 
 ### Examples
 
@@ -104,7 +104,7 @@ mysql> select * from local(
 +--------------------------------------------------------+
 ```
 
-读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv格式文件：
+读取和访问位于路径`${DORIS_HOME}/student.csv`的 csv 格式文件：
 
 ```sql
 mysql> select * from local(
@@ -144,4 +144,4 @@ mysql> desc function local(
 
 ### Best Practice
 
-  关于local tvf的更详细使用方法可以参照 [S3](./s3.md) tvf, 唯一不同的是访问存储系统的方式不一样。
+  关于 local tvf 的更详细使用方法可以参照 [S3](./s3.md) tvf, 唯一不同的是访问存储系统的方式不一样。

@@ -1,11 +1,9 @@
 ---
 {
-    'title': "Arrow Flight SQL in Apache Doris for 10X faster data transfer",
-    'summary': "Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.",
+    'title': "Arrow Flight SQL for 10X faster data transfer",
+    'description': "Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.",
     'date': '2024-04-16',
     'author': 'Apache Doris',
-    'picked': "true",
-    'order': "1",
     'tags': ['Tech Sharing'],
     "image": '/images/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png'
 }
@@ -453,4 +451,4 @@ For Spark users, apart from connecting to Flight SQL Server using JDBC and JAVA,
 
 A number of enterprise users of Doris has tried loading data from Doris to Python, Spark, and Flink using Arrow Flight SQL and enjoyed much faster data reading speed. In the future, we plan to include the support for Arrow Flight SQL in data writing, too. By then, most systems built with mainstream programming languages will be able to read and write data from/to Apache Doris by an ADBC client. That's high-speed data interaction which opens up numerous possibilities. On our to-do list, we also envision leveraging Arrow Flight to implement parallel data reading by multiple backends and facilitate federated queries across Doris and Spark. 
 
-Download [Apache Doris 2.1](https://doris.apache.org/download/) and get a taste of 100 times faster data transfer powered by Arrow Flight SQL. If you need assistance, come find us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ). 
+Download [Apache Doris 2.1](https://doris.apache.org/download/) and get a taste of 100 times faster data transfer powered by Arrow Flight SQL. If you need assistance, come find us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). 

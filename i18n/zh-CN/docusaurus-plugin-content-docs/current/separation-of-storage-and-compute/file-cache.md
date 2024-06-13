@@ -52,6 +52,16 @@ under the License.
 
 3. TTL 策略可以用在希望常驻本地的小表。对于常驻表，可以设置一个比较大的 TTL 值来让它在缓存里的数据不会被其他大表的查询淘汰掉。或者对于动态 Partition 的表，可以根据 Partition 的 Hot Partition 的时间，设置对应的 TTL 值，来让 Hot Partition 不会被 Cold Partition 的查询淘汰掉。目前暂不支持查看 TTL 数据在缓存的占比。
 
+   
+
+### 缓存预热
+
+存算分离Doris 提供多集群的能力，多个集群共享同一份数据，但不会共享同一份缓存。当创建新的 cluster 的时候，在新的 cluster 的缓存是空的，这时候进行查询数据，会比较慢。这时候可以通过手段预热数据，主动从远端存储的数据拉起到本地缓存。 目前支持三种模式：
+
+- 指定集群 A 的缓存预热到集群 B 。在 存算分离Doris 中，会定期采集每个集群一段时间内访问过的表或者分区的热点信息，然后作为内部表存储下来。当进行集群间的预热的时候，预热集群会根据源集群的热点信息来对某些表/分区进行预热。
+- 指定表 A 数据预热到新集群 。
+- 指定表 A 的分区 'p1' 的数据预热到新集群。
+
 
 
 ## 使用方法
@@ -90,6 +100,97 @@ ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 ```
 
 如果建表的时候没有设置 TTL，也可以通过 ALTER 语句进行修改。
+
+
+
+### 缓存预热
+目前支持三种模式：
+- 指定 cluster_name0 的缓存预热到 cluster_name1 。
+查看当前warehouse下所有cluster的最频繁访问的表。
+```
+show cache hotspot '/';
++------------------------+-----------------------+----------------------------------------+
+| cluster_name           | total_file_cache_size | top_table_name                         |
++------------------------+-----------------------+----------------------------------------+
+| cluster_name0          |          751620511367 | regression_test.doris_cache_hotspot    |
++------------------------+-----------------------+----------------------------------------+
+```
+
+查看 cluster_name0 下的所有 table 的最热 partition 信息
+```
+mysql> show cache hotspot '/cluster_name0';
++-----------------------------------------------------------+---------------------+--------------------+
+| table_name                                                | last_access_time    | top_partition_name |
++-----------------------------------------------------------+---------------------+--------------------+
+| regression_test.doris_cache_hotspot                       | 2023-05-29 12:38:02 | p20230529          |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.customer | 2023-06-06 10:56:12 | customer           |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.nation   | 2023-06-06 10:56:12 | nation             |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.orders   | 2023-06-06 10:56:12 | orders             |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.part     | 2023-06-06 10:56:12 | part               |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.partsupp | 2023-06-06 10:56:12 | partsupp           |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.region   | 2023-06-06 10:56:12 | region             |
+| regression_test_cloud_load_copy_into_tpch_sf1_p1.supplier | 2023-06-06 10:56:12 | supplier           |
++-----------------------------------------------------------+---------------------+--------------------+
+```
+
+查看 cluster_name0 下的 table regression_test_cloud_load_copy_into_tpch_sf1_p1.customer 的信息
+```
+show cache hotspot '/cluster_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer';
++----------------+---------------------+
+| partition_name | last_access_time    |
++----------------+---------------------+
+| supplier       | 2023-06-06 10:56:12 |
++----------------+---------------------+
+```
+
+当执行下面这条 SQL，cluster_name1 集群会获取到 cluster_name0 集群的访问信息，来尽可能还原出与 cluster_name0 集群一样的缓存。
+```
+warm up cluster cluster_name1 with cluster cluster_name0
+```
+- 指定 customer 数据预热到 cluster_name1。执行下面的 SQL ，可以把该表在远端存储上的数据全拉取到本地。
+```
+warm up cluster cluster_name1 with table customer
+```
+- 指定 customer 的 partition 'p1' 的数据预热到 cluster_name1。执行下面的 SQL ，可以把该分区在远端存储上的数据全拉取到本地。
+```
+warm up cluster cluster_name1 with table customer partition p1
+```
+以上三条SQL都会返回一个JobID的结果。例如
+```
+mysql> warm up cluster cloud_warm_up with table test_warm_up;
++-------+
+| JobId |
++-------+
+| 13418 |
++-------+
+1 row in set (0.01 sec)
+```
+然后通过下面的 SQL 来查看预热进度。
+```
+SHOW WARM UP JOB; // 获取job信息
+SHOW WARM UP JOB WHERE ID = 13418; // 指定job_id
++-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
+| JobId | ClusterName       | Status  | Type  | CreateTime              | FinishBatch | AllBatch | FinishTime |
++-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
+| 13418 | cloud_warm_up     | RUNNING | TABLE | 2023-05-30 20:19:34.059 | 0           | 1        | NULL       |
++-------+-------------------+---------+-------+-------------------------+-------------+----------+------------+
+1 row in set (0.02 sec)
+```
+根据 FinishBatch 和 All Batch 来判断当前任务进度，每个 Batch 约 10GB。
+目前一个 cluster 同一时间内只支持执行一个预热的JOB。也可以停止正在进行的预热job
+
+```
+mysql> cancel warm up job where id = 13418;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show warm up job where id = 13418;
++-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
+| JobId | ClusterName       | Status    | Type  | CreateTime              | FinishBatch | AllBatch | FinishTime              |
++-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
+| 13418 | cloud_warm_up     | CANCELLED | TABLE | 2023-05-30 20:19:34.059 | 0           | 1        | 2023-05-30 20:27:14.186 |
++-------+-------------------+-----------+-------+-------------------------+-------------+----------+-------------------------+
+1 row in set (0.00 sec)
+```
 
 ## 实践案例
 

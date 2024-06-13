@@ -39,11 +39,13 @@ under the License.
 
 | Connector Version | Flink Version | Doris Version | Java Version | Scala Version |
 | --------- | ----- | ------ | ---- | ----- |
-| 1.0.3     | 1.11+ | 0.15+  | 8    | 2.11,2.12 |
-| 1.1.1    | 1.14  | 1.0+   | 8    | 2.11,2.12 |
-| 1.2.1    | 1.15  | 1.0+   | 8    | -         |
-| 1.3.0     | 1.16  | 1.0+   | 8    | -         |
-| 1.4.0     | 1.15,1.16,1.17  | 1.0+   | 8   |- |
+| 1.0.3             | 1.11,1.12,1.13,1.14 | 0.15+  | 8    | 2.11,2.12 |
+| 1.1.1             | 1.14                | 1.0+   | 8    | 2.11,2.12 |
+| 1.2.1             | 1.15                | 1.0+   | 8    | -         |
+| 1.3.0             | 1.16                | 1.0+   | 8    | -         |
+| 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
+| 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
+| 1.6.1             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
 
 ## USE
 
@@ -338,9 +340,9 @@ ON a.city = c.city
 | Key                | Default Value | Required | Comment                                                      |
 | ------------------ | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix  | --            | Y        | The label prefix used by Stream load import. In the 2pc scenario, global uniqueness is required to ensure Flink's EOS semantics. |
-| sink.properties.*  | --            | N        | Import parameters for Stream Load. <br/>For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br/><br/>JSON format import<br/>'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br/>Detailed parameters refer to [here](../data-operate/import/import-way/stream-load-manual.md). |
+| sink.properties.*  | --            | N        | Import parameters for Stream Load. <br/>For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br/><br/>JSON format import<br/>'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br/>Detailed parameters refer to [here](../data-operate/import/stream-load-manual). |
 | sink.enable-delete | TRUE          | N        | Whether to enable delete. This option requires the Doris table to enable the batch delete function (Doris 0.15+ version is enabled by default), and only supports the Unique model. |
-| sink.enable-2pc    | TRUE          | N        | Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/import-way/stream-load-manual.md). |
+| sink.enable-2pc    | TRUE          | N        | Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/stream-load-manual). |
 | sink.buffer-size   | 1MB           | N        | The size of the write data cache buffer, in bytes. It is not recommended to modify, the default configuration is enough |
 | sink.buffer-count  | 3             | N        | The number of write data buffers. It is not recommended to modify, the default configuration is enough |
 | sink.max-retries   | 3             | N        | Maximum number of retries after Commit failure, default 3    |
@@ -444,8 +446,8 @@ insert into doris_sink select id,name from cdc_mysql_source;
 - **--table-suffix** Same as above, the suffix name of the Doris table.
 - **--including-tables** MySQL tables that need to be synchronized, you can use "|" to separate multiple tables, and support regular expressions. For example --including-tables table1|tbl.* is to synchronize table1 and all tables beginning with tbl.
 - **--excluding-tables** Tables that do not need to be synchronized, the usage is the same as above.
-- **--mysql-conf** MySQL CDCSource configuration, eg --mysql-conf hostname=127.0.0.1 , you can see all configuration MySQL-CDC in [here](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/mysql-cdc.html), where hostname/username/password/database-name is required.
-- **--oracle-conf** Oracle CDCSource configuration, for example --oracle-conf hostname=127.0.0.1, you can view all configurations of Oracle-CDC in [here](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/oracle-cdc.html), where hostname/username/password/database-name/schema-name is required.
+- **--mysql-conf** MySQL CDCSource configuration, eg --mysql-conf hostname=127.0.0.1 , you can see all configuration MySQL-CDC in [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/), where hostname/username/password/database-name is required.
+- **--oracle-conf** Oracle CDCSource configuration, for example --oracle-conf hostname=127.0.0.1, you can view all configurations of Oracle-CDC in [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/), where hostname/username/password/database-name/schema-name is required.
 - **--sink-conf** All configurations of Doris Sink, you can view the complete configuration items in [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9).
 - **--table-conf** The configuration item of the Doris table, that is, the content contained in properties. For example --table-conf replication_num=1
 - **--ignore-default-value** Turn off the default for synchronizing mysql table structures. It is suitable for synchronizing mysql data to doris, the field has a default value, but the actual inserted data is null. refer to[#152](https://github.com/apache/doris-flink-connector/pull/152)
@@ -617,7 +619,7 @@ The most suitable scenario for using Flink Doris Connector is to synchronize sou
 ### Other
 
 1. The Flink Doris Connector mainly relies on Checkpoint for streaming writing, so the interval between Checkpoints is the visible delay time of the data.
-2. To ensure the Exactly Once semantics of Flink, the Flink Doris Connector enables two-phase commit by default, and Doris enables two-phase commit by default after version 1.1. 1.0 can be enabled by modifying the BE parameters, please refer to [two_phase_commit](../data-operate/import/import-way/stream-load-manual.md).
+2. To ensure the Exactly Once semantics of Flink, the Flink Doris Connector enables two-phase commit by default, and Doris enables two-phase commit by default after version 1.1. 1.0 can be enabled by modifying the BE parameters, please refer to [two_phase_commit](../data-operate/import/stream-load-manual).
 
 ## FAQ
 
@@ -646,7 +648,8 @@ WITH (
    'sink.label-prefix' = 'doris_label',
    'sink.properties.columns' = 'dt,page,user_id,user_id=to_bitmap(user_id)'
 )
-````
+```
+
 4. **errCode = 2, detailMessage = Label [label_0_1] has already been used, relate to txn [19650]**
 
 In the Exactly-Once scenario, the Flink Job must be restarted from the latest Checkpoint/Savepoint, otherwise the above error will be reported.
@@ -659,13 +662,13 @@ At this time, it cannot be started from the checkpoint, and the expiration time 
 
 6. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-This is because the concurrent import of the same library exceeds 100, which can be solved by adjusting the parameter `max_running_txn_num_per_db` of fe.conf. For details, please refer to [max_running_txn_num_per_db](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/fe-config/#max_running_txn_num_per_db)
+This is because the concurrent import of the same library exceeds 100, which can be solved by adjusting the parameter `max_running_txn_num_per_db` of fe.conf. For details, please refer to [max_running_txn_num_per_db](../admin-manual/config/fe-config#max_running_txn_num_per_db)
 
 At the same time, if a task frequently modifies the label and restarts, it may also cause this error. In the 2pc scenario (Duplicate/Aggregate model), the label of each task needs to be unique, and when restarting from the checkpoint, the Flink task will actively abort the txn that has been successfully precommitted before and has not been committed. Frequently modifying the label and restarting will cause a large number of txn that have successfully precommitted to fail to be aborted, occupying the transaction. Under the Unique model, 2pc can also be turned off, which can realize idempotent writing.
 
 7. **How to ensure the order of a batch of data when Flink writes to the Uniq model?**
 
-You can add sequence column configuration to ensure that, for details, please refer to [sequence](https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual)
+You can add sequence column configuration to ensure that, for details, please refer to [sequence](../data-operate/update/update-of-unique-model).
 
 8. **The Flink task does not report an error, but the data cannot be synchronized? **
 

@@ -27,406 +27,240 @@ under the License.
 
 # Quick Start
 
-Apache Doris is a high-performance, real-time analytic database based on the MPP architecture and is known for its extreme speed and ease of use. It takes only sub-second response times to return query results under massive amounts of data, and can support not only highly concurrent point query scenarios, but also high-throughput complex analytic scenarios. This brief guide will show you how to download the latest stable version of Doris, install and run it on a single node, including creating databases, data tables, importing data and queries.
+This guide is about how to download the latest stable version of Doris, install it on a single node, and get it running, including steps for creating a database, data tables, importing data, and performing queries.
 
-## Download Doris
+## Prerequisite
 
-Doris runs on a Linux environment, CentOS 7.x or Ubuntu 16.04 or higher is recommended, and you need to have a Java runtime environment installed (the exact JDK version required is 8). You can run the following command to verify the installed version of Java.
+- A mainstream Linux X86-64 environment. CentOS 7.1 or Ubuntu 16.04 or later versions are recommended. See the "Install and Deploy" section of the doc for guides on more environments.
+- Install Java 8 runtime environment. (If you are not an Oracle JDK commercial license user, we suggest using the free Oracle JDK 8u202. [Download now](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox).)
+- It is recommended to create a new user for Doris on Linux (avoid using the root user to prevent accidental operations on the operating system).
 
-```
-java -version
-```
+## Download binary package
 
-Next, [download the latest binary version of Doris](https://doris.apache.org/download) and unzip it.
+Download the Doris installation package from doris.apache.org and proceed with the following steps.
 
-```
-tar xf apache-doris-x.x.x.tar.xz
-```
+```Bash
+# Download the binary installation package of Doris
+server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
 
-## Configure Doris
+# Extract the installation package
+server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
 
-### Configure FE 
-
-Go to the `apache-doris-x.x.x/fe` directory
-
-```
-cd apache-doris-x.x.x/fe
+# Rename the directory to apache-doris for simplicity
+server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
 ```
 
-Modify the FE configuration file `conf/fe.conf`, here we mainly modify two parameters: `priority_networks` and `meta_dir`, if you need more optimized configuration, please refer to [FE parameter configuration](../admin-manual/config/fe-config.md) for instructions on how to adjust them.
+## Install Doris
 
-1. add the `priority_networks` parameter
+### Configure FE
 
-```
-priority_networks=172.23.16.0/24
-```
+Go to the `apache-doris/fe/fe.conf` file for FE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
 
->Note: 
->
->This parameter we have to configure during installation, especially when a machine has multiple IP addresses, we have to specify a unique IP address for FE.
+```Shell
+# Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
+JAVA_HOME=/home/doris/jdk8
 
-2. Adding a metadata directory
+# The CIDR network segment of FE listening IP is empty by default. When started, Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=92.168.0.0/24, for example.
+# priority_networks =
 
-```
-meta_dir=/path/your/doris-meta
-```
-
->Note: 
->
->Here you can leave it unconfigured, the default is doris-meta in your Doris FE installation directory.
->
->To configure the metadata directory separately, you need to create the directory you specify in advance
-
-### Start FE 
-
-Execute the following command in the FE installation directory to complete the FE startup.
-
-```
-./bin/start_fe.sh --daemon
+# By default, FE metadata is stored in the doris-meta directory under DORIS_HOME. It is created already. You can change it to your specified path.
+# meta_dir = ${DORIS_HOME}/doris-meta
 ```
 
-#### View FE operational status
+### Start FE
 
-Check if Doris started successfully with the following command.
+Run the following command under apache-doris/fe to start FE.
 
-```
-curl http://127.0.0.1:8030/api/bootstrap
-```
-
-Here the IP and port are the IP and http_port of FE (default 8030), if you are executing in FE node, just run the above command directly.
-
-If the return result has the word `"msg": "success"`, then the startup was successful.
-
-You can also check this through the web UI provided by Doris FE by entering the address in your browser
-
-http:// fe_ip:8030
-
-You can see the following screen, which indicates that the FE has started successfully
-
-![image-20220822091951739](/images/image-20220822091951739.png)
-
->Note: 
->
->1. Here we use the Doris built-in default user, root, to log in with an empty password.
->2. This is an administrative interface for Doris, and only users with administrative privileges can log in.
-
-#### Connect FE
-
-We will connect to Doris FE via MySQL client below, download the installation-free [MySQL client](https://dev.mysql.com/downloads/mysql/)
-
-Unzip the MySQL client you just downloaded. You can find the `mysql` command line tool in the `bin/` directory. Execute the following command to connect to Doris.
-
-```
-mysql -uroot -P9030 -h127.0.0.1
-```
-
->Note: 
->
->1. The root user used here is the default user built into doris, and is also the super administrator user, see [Rights Management](../admin-manual/privilege-ldap/user-privilege.md)
->2. -P: Here is our query port to connect to Doris, the default port is 9030, which corresponds to `query_port` in fe.conf
->3. -h: Here is the IP address of the FE we are connecting to, if your client and FE are installed on the same node you can use 127.0.0.1
-
-Execute the following command to view the FE running status.
-
-```sql
-show frontends\G;
-```
-
-You can then see a result similar to the following.
-
-```sql
-mysql> show frontends\G;
-*************************** 1. row ***************************
-             Name: 172.21.32.5_9010_1660549353220
-               IP: 172.21.32.5
-      EditLogPort: 9010
-         HttpPort: 8030
-        QueryPort: 9030
-          RpcPort: 9020
-ArrowFlightSqlPort: 9040
-             Role: FOLLOWER
-         IsMaster: true
-        ClusterId: 1685821635
-             Join: true
-            Alive: true
-ReplayedJournalId: 49292
-    LastHeartbeat: 2022-08-17 13:00:45
-         IsHelper: true
-           ErrMsg:
-          Version: 1.1.2-rc03-ca55ac2
- CurrentConnected: Yes
-1 row in set (0.03 sec)
-```
-
-1. If the `IsMaster`, `Join` and `Alive` columns are `true`, the node is running normally.
-
-#### Communicate with the server over an encrypted connection
-
-Doris supports SSL-based encrypted connections. It currently supports TLS1.2 and TLS1.3 protocols. Doris' SSL mode can be enabled through the following configuration:
-Modify the FE configuration file `conf/fe.conf` and add `enable_ssl = true`.
-
-Next, connect to Doris through `mysql` client, mysql supports five SSL modes:
-
-1. `mysql -uroot -P9030 -h127.0.0.1` is the same as `mysql --ssl-mode=PREFERRED -uroot -P9030 -h127.0.0.1`, both try to establish an SSL encrypted connection at the beginning, if it fails , a normal connection is attempted.
-
-2. `mysql --ssl-mode=DISABLE -uroot -P9030 -h127.0.0.1`, do not use SSL encrypted connection, use normal connection directly.
-
-3. `mysql --ssl-mode=REQUIRED -uroot -P9030 -h127.0.0.1`, force the use of SSL encrypted connections.
-
-4.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem -uroot -P9030 -h127.0.0.1`, force the use of SSL encrypted connection and verify the validity of the server's identity by specifying the CA certificate.
-
-5.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem -uroot -P9030 -h127.0.0.1`, force the use of SSL encrypted connection, two-way ssl.
-
->Note:
->`--ssl-mode` parameter is introduced by mysql5.7.11 version, please refer to [here](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-security.html) for mysql client version lower than this version.
-
-Doris needs a key certificate file to verify the SSL encrypted connection. The default key certificate file is located at `Doris/fe/mysql_ssl_default_certificate/`. For the generation of the key certificate file, please refer to [Key Certificate Configuration](../admin-manual/certificate.md).
-
-#### Stop FE
-
-The Doris FE can be stopped with the following command
-
-```
-./bin/stop_fe.sh
+```Bash
+# Start FE in the background to ensure that the process continues running even after exiting the terminal.
+server1:apache-doris/fe doris$ ./bin/start_fe.sh --daemon
 ```
 
 ### Configure BE
 
-Go to the `apache-doris-x.x.x/be` directory
+Go to the `apache-doris/be/be.conf` file for BE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
 
+```Shell
+# Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
+JAVA_HOME=/home/doris/jdk8
+
+# The CIDR network segment of BE listening IP is empty by default. When started, Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=192.168.0.0/24, for example.
+# priority_networks =
+
+# By default, BE data is stored in the storage directory under DORIS_HOME. It is created already. You can change it to your specified path.
+# storage_root_path = ${DORIS_HOME}/storage
 ```
-cd apache-doris-x.x.x/be
-```
-
-Modify the BE configuration file `conf/be.conf`, here we mainly modify two parameters: `priority_networks'` and `storage_root`, if you need more optimized configuration, please refer to [BE parameter configuration](../admin-manual/config/be-config.md) instructions to make adjustments.
-
-1. Add the `priority_networks` parameter
-
-```
-priority_networks=172.23.16.0/24
-```
-
->Note: 
->
->This parameter we have to configure during installation, especially when a machine has multiple IP addresses, we have to assign a unique IP address to the BE.
-
-2. Configure the BE data storage directory
-
-
-```
-storage_root_path=/path/your/data_dir
-```
-
->Notes.
->
->1. The default directory is the storage directory of the BE installation directory
->2. The storage directory specified in the BE configuration must first be created manually
-
-3. Set JAVA_HOME environment variable
-
-  <version since="1.2.0"></version>  
-  Java UDF are supported since version 1.2, so BE are dependent on the Java environment. It is necessary to set the `JAVA_HOME` environment variable before starting. You can also add `export JAVA_HOME=your_java_home_path` to the first line of the `start_be.sh` startup script to set the variable.
-
-4. Install Java UDF functions 
-
-  <version since="1.2.0">Install Java UDF functions</version>  
-  Because Java UDF functions are supported from version 1.2, you need to download the JAR package of Java UDF functions from the official website and put them in the lib directory of BE, otherwise it may fail to start.
 
 ### Start BE
 
-Execute the following command in the BE installation directory to complete the BE startup.
+Run the following command under apache-doris/be to start BE.
 
-```
-./bin/start_be.sh --daemon
-```
-
-#### Adding a BE node to a cluster
-
-Connect to FE via MySQL client and execute the following SQL to add the BE to the cluster
-
-```sql
-ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
+```Bash
+# Start BE in the background to ensure that the process continues running even after exiting the terminal.
+server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 ```
 
-1. be_host_ip: Here is the IP address of your BE, match with `priority_networks` in `be.conf`.
-2. heartbeat_service_port: This is the heartbeat upload port of your BE, match with `heartbeat_service_port` in `be.conf`, default is `9050`.
+### Connect to Doris FE
 
-#### View BE operational status
+Download the [portable MySQL client](https://dev.mysql.com/downloads/mysql/) to connect to Doris FE.
 
-You can check the running status of BE by executing the following command at the MySQL command line.
+Unpack the client, find the `mysql` command-line tool in the `bin/` directory. Then execute the following command to connect to Doris.
 
-```sql
-SHOW BACKENDS\G；
+```Bash
+mysql -uroot -P9030 -h127.0.0.1
 ```
 
-Example output:
+Note:
 
-```sql
-mysql> SHOW BACKENDS\G;
-*************************** 1. row ***************************
-            BackendId: 10003
-              Cluster: default_cluster
-                   IP: 172.21.32.5
-        HeartbeatPort: 9050
-               BePort: 9060
-             HttpPort: 8040
-             BrpcPort: 8060
-        LastStartTime: 2022-08-16 15:31:37
-        LastHeartbeat: 2022-08-17 13:33:17
-                Alive: true
- SystemDecommissioned: false
-ClusterDecommissioned: false
-            TabletNum: 170
-     DataUsedCapacity: 985.787 KB
-        AvailCapacity: 782.729 GB
-        TotalCapacity: 984.180 GB
-              UsedPct: 20.47 %
-       MaxDiskUsedPct: 20.47 %
-                  Tag: {"location" : "default"}
-               ErrMsg:
-              Version: 1.1.2-rc03-ca55ac2
-               Status: {"lastSuccessReportTabletsTime":"2022-08-17 13:33:05","lastStreamLoadTime":-1,"isQueryDisabled":false,"isLoadDisabled":false}
-1 row in set (0.01 sec)
+- The root user here is the built-in super admin user of Doris. See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for more information.
+- -P: This specifies the query port that is connected to. The default port is 9030. It corresponds to the `query_port`setting in fe.conf.
+- -h: This specifies the IP address of the FE that is connected to. If your client and FE are installed on the same node, you can use 127.0.0.1.
+
+### Add BE nodes to cluster
+
+An example SQL to execute in the MySQL client to add BE nodes to the cluster:
+
+```SQL
+ ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-1. If `Alive` is set to `true` the node is running normally.
+Note:
 
-#### Stop BE
+1. be_host_ip: the IP address of the BE node to be added
+2. heartbeat_service_port: the heartbeat reporting port of the BE node to be added, which can be found in `be.conf`under `heartbeat_service_port`, set as `9050` by default
+3. You can use the "show backends" statement to view the newly added BE nodes.
 
-The Doris BE can be stopped with the following command
+### Modify passwords for root and admin
 
+Example SQLs to execute in the MySQL client to set new passwords for root and admin users:
+
+```SQL
+mysql> SET PASSWORD FOR 'root' = PASSWORD('doris-root-password');                                                                                                                                                                                   
+Query OK, 0 rows affected (0.01 sec)                                                                                                                                                                                                       
+                                                                                                                                                                                                                                           
+mysql> SET PASSWORD FOR 'admin' = PASSWORD('doris-admin-password');                                                                                                                                                                                 
+Query OK, 0 rows affected (0.00 sec)        
 ```
-./bin/stop_be.sh
+
+:::tip
+Difference between root and admin users
+
+The root and admin users are two default accounts that are automatically created after Doris installation. The root user has superuser privileges for the entire cluster and can perform various management operations, such as adding or removing nodes. The admin user does not have administrative privileges but is a superuser within the cluster, possessing all permissions except those related to cluster management. It is recommended to use the root privileges only when necessary for cluster administration and maintenance.
+:::
+
+## Create database and table
+
+### Connect to Doris
+
+Use admin account to connect to Doris FE.
+
+```Bash
+mysql -uadmin -P9030 -h127.0.0.1
 ```
 
-## Create table
+:::tip
+If the MySQL client connecting to 127.0.0.1 is on the same machine as FE, no password will be required.
+:::
 
-1. Create database
+### Create database and table
 
-```sql
+```SQL
 create database demo;
-```
 
-2. Create table
-
-```sql
-use demo;
-
-CREATE TABLE IF NOT EXISTS demo.example_tbl
+use demo; 
+create table mytable
 (
-    `user_id` LARGEINT NOT NULL COMMENT "user id",
-    `date` DATE NOT NULL COMMENT "",
-    `city` VARCHAR(20) COMMENT "",
-    `age` SMALLINT COMMENT "",
-    `sex` TINYINT COMMENT "",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT ""
-)
-AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-PROPERTIES (
-    "replication_allocation" = "tag.location.default: 1"
-);
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.05",    
+    k3 CHAR(10) COMMENT "string column",    
+    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+) 
+COMMENT "my first table"
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 ```
 
-3. Example data
+### Ingest data
 
-```
-10000,2017-10-01,beijing,20,0,2017-10-01 06:00:00,20,10,10
-10006,2017-10-01,beijing,20,0,2017-10-01 07:00:00,15,2,2
-10001,2017-10-01,beijing,30,1,2017-10-01 17:05:45,2,22,22
-10002,2017-10-02,shanghai,20,1,2017-10-02 12:59:12,200,5,5
-10003,2017-10-02,guangzhou,32,0,2017-10-02 11:20:00,30,11,11
-10004,2017-10-01,shenzhen,35,0,2017-10-01 10:00:15,100,3,3
-10004,2017-10-03,shenzhen,35,0,2017-10-03 10:20:22,11,6,6
-```
+Save the following example data to the local "data.csv" file:
 
-Save the above data into `test.csv` file.
-
-4. Import data
-
-Here we import the data saved to the file above into the table we just created via Stream load.
-
-```
-curl  --location-trusted -u root: -T test.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/example_tbl/_stream_load
+```Plaintext
+1,0.14,a1,20
+2,1.04,b2,21
+3,3.14,c3,22
+4,4.35,d4,23
 ```
 
-- -T test.csv : This is the data file we just saved, if the path is different, please specify the full path
-- -u root: Here is the user name and password, we use the default user root, the password is empty
-- 127.0.0.1:8030 : is the ip and http_port of fe, respectively
+Load the data from "data.csv" into the newly created table using the Stream Load method.
 
-After successful execution we can see the following return message
-
-```json
-{
-    "TxnId": 30303,
-    "Label": "8690a5c7-a493-48fc-b274-1bb7cd656f25",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 7,
-    "NumberLoadedRows": 7,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 399,
-    "LoadTimeMs": 381,
-    "BeginTxnTimeMs": 3,
-    "StreamLoadPutTimeMs": 5,
-    "ReadDataTimeMs": 0,
-    "WriteDataTimeMs": 191,
-    "CommitAndPublishTimeMs": 175
-}
+```Bash
+curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/mytable/_stream_load
 ```
 
-1. `NumberLoadedRows` indicates the number of data records that have been imported
+- -T data.csv: data file name
+- -u admin:admin_password: admin account and password
+- 127.0.0.1:8030: IP and http_port of FE
 
-2. `NumberTotalRows` indicates the total amount of data to be imported
+Once it is executed successfully, a message like the following will be returned: 
 
-3. `Status` value `Success` means the import was successful
-
-Here we have finished importing the data, and we can now query and analyze the data according to our own needs.
-
-## Query data
-
-We have finished building tables and importing data above, so we can experience Doris' ability to quickly query and analyze data.
-
-```sql
-mysql> select * from example_tbl;
-+---------+------------+-----------+------+------+---------------------+------+----------------+----------------+
-| user_id | date       | city      | age  | sex  | last_visit_date     | cost | max_dwell_time | min_dwell_time |
-+---------+------------+-----------+------+------+---------------------+------+----------------+----------------+
-| 10000   | 2017-10-01 | beijing   |   20 |    0 | 2017-10-01 06:00:00 |   20 |             10 |             10 |
-| 10001   | 2017-10-01 | beijing   |   30 |    1 | 2017-10-01 17:05:45 |    2 |             22 |             22 |
-| 10002   | 2017-10-02 | shanghai  |   20 |    1 | 2017-10-02 12:59:12 |  200 |              5 |              5 |
-| 10003   | 2017-10-02 | guangzhou |   32 |    0 | 2017-10-02 11:20:00 |   30 |             11 |             11 |
-| 10004   | 2017-10-01 | shenzhen  |   35 |    0 | 2017-10-01 10:00:15 |  100 |              3 |              3 |
-| 10004   | 2017-10-03 | shenzhen  |   35 |    0 | 2017-10-03 10:20:22 |   11 |              6 |              6 |
-| 10006   | 2017-10-01 | beijing   |   20 |    0 | 2017-10-01 07:00:00 |   15 |              2 |              2 |
-+---------+------------+-----------+------+------+---------------------+------+----------------+----------------+
-7 rows in set (0.01 sec)
-
-mysql> select * from example_tbl where city='shanghai';
-+---------+------------+----------+------+------+---------------------+------+----------------+----------------+
-| user_id | date       | city     | age  | sex  | last_visit_date     | cost | max_dwell_time | min_dwell_time |
-+---------+------------+----------+------+------+---------------------+------+----------------+----------------+
-| 10002   | 2017-10-02 | shanghai |   20 |    1 | 2017-10-02 12:59:12 |  200 |              5 |              5 |
-+---------+------------+----------+------+------+---------------------+------+----------------+----------------+
-1 row in set (0.00 sec)
-
-mysql> select city, sum(cost) as total_cost from example_tbl group by city;
-+-----------+------------+
-| city      | total_cost |
-+-----------+------------+
-| beijing   |         37 |
-| shenzhen  |        111 |
-| guangzhou |         30 |
-| shanghai  |        200 |
-+-----------+------------+
-4 rows in set (0.00 sec)
+```Bash
+{                                                     
+    "TxnId": 30,                                  
+    "Label": "a56d2861-303a-4b50-9907-238fea904363",        
+    "Comment": "",                                       
+    "TwoPhaseCommit": "false",                           
+    "Status": "Success",                                 
+    "Message": "OK",                                    
+    "NumberTotalRows": 4,                                
+    "NumberLoadedRows": 4,                               
+    "NumberFilteredRows": 0,                             
+    "NumberUnselectedRows": 0,                          
+    "LoadBytes": 52,                                     
+    "LoadTimeMs": 206,                                    
+    "BeginTxnTimeMs": 13,                                
+    "StreamLoadPutTimeMs": 141,                           
+    "ReadDataTimeMs": 0,                                 
+    "WriteDataTimeMs": 7,                                
+    "CommitAndPublishTimeMs": 42                         
+} 
 ```
 
-## Conclusion
+- `NumberLoadedRows`: the number of rows that have been loaded
+- `NumberTotalRows`: the total number of rows to be loaded
+- `Status`: "Success" means data has been loaded successfully.
 
-This is the end of the quick start. We have experienced the complete Doris operation process from Doris installation and deployment, start/stop, creation of library tables, data import and query. Let us start our Doris usage journey.
+### Query data
+
+Execute the following SQL in the MySQL client to query the loaded data:
+
+```SQL
+mysql> select * from mytable;                                                                                                                                                                                                              
++------+------+------+------+                                                                                                                                                                                                              
+| k1   | k2   | k3   | k4   |                                                                                                                                                                                                              
++------+------+------+------+                                                                                                                                                                                                              
+|    1 | 0.14 | a1   |   20 |                                                                                                                                                                                                              
+|    2 | 1.04 | b2   |   21 |                                                                                                                                                                                                              
+|    3 | 3.14 | c3   |   22 |                                                                                                                                                                                                              
+|    4 | 4.35 | d4   |   23 |                                                                                                                                                                                                              
++------+------+------+------+                                                                                                                                                                                                              
+4 rows in set (0.01 sec)       
+```
+
+## Stop Doris
+
+### Stop FE
+
+Execute the following command under apache-doris/fe to stop FE.
+
+```Bash
+server1:apache-doris/fe doris$ ./bin/stop_fe.sh
+```
+
+### Stop BE
+
+Execute the following command under apache-doris/be to stop BE.
+
+```Bash
+server1:apache-doris/be doris$ ./bin/stop_be.sh
+```
+

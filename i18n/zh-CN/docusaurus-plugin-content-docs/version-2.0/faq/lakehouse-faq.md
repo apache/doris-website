@@ -210,7 +210,7 @@ under the License.
 
    去 hadoop 环境搜索`hadoop-lzo-*.jar`放在`"${DORIS_HOME}/fe/lib/"`目录下并重启 fe。
 
-   从 2.0.2 版本起，可以将这个文件放置在 BE 的 `custom_lib/` 目录下（如不存在，手动创建即可），以防止升级集群时因为 lib 目录被替换而导致文件丢失。
+   从 2.0.2 版本起，可以将这个文件放置在 FE 的 `custom_lib/` 目录下（如不存在，手动创建即可），以防止升级集群时因为 lib 目录被替换而导致文件丢失。
 
 9. 创建 hive 表指定 serde 为 `org.apache.hadoop.hive.contrib.serde2.MultiDelimitserDe`，访问表时报错：`storage schema reading not supported`
 
@@ -237,6 +237,27 @@ under the License.
     ```
 
     尝试更新FE节点CA证书，使用 `update-ca-trust（CentOS/RockyLinux）`，然后重启FE进程即可。
+
+11. BE 报错: `java.lang.InternalError`
+
+    如果在 `be.INFO` 中看到类似如下错误：
+
+    ```
+    W20240506 15:19:57.553396 266457 jni-util.cpp:259] java.lang.InternalError
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.init(Native Method)
+            at org.apache.hadoop.io.compress.zlib.ZlibDecompressor.<init>(ZlibDecompressor.java:114)
+            at org.apache.hadoop.io.compress.GzipCodec$GzipZlibDecompressor.<init>(GzipCodec.java:229)
+            at org.apache.hadoop.io.compress.GzipCodec.createDecompressor(GzipCodec.java:188)
+            at org.apache.hadoop.io.compress.CodecPool.getDecompressor(CodecPool.java:183)
+            at org.apache.parquet.hadoop.CodecFactory$HeapBytesDecompressor.<init>(CodecFactory.java:99)
+            at org.apache.parquet.hadoop.CodecFactory.createDecompressor(CodecFactory.java:223)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:212)
+            at org.apache.parquet.hadoop.CodecFactory.getDecompressor(CodecFactory.java:43)
+    ```
+
+    是因为 Doris 自带的 libz.a 和系统环境中的 libz.so 冲突了。
+
+    为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
 
 ## HDFS
 

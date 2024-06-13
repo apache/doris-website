@@ -39,11 +39,13 @@ under the License.
 
 | Connector Version | Flink Version | Doris Version | Java Version | Scala Version |
 | --------- | ----- | ------ | ---- | ----- |
-| 1.0.3     | 1.11+ | 0.15+  | 8    | 2.11,2.12 |
-| 1.1.1     | 1.14  | 1.0+   | 8    | 2.11,2.12 |
-| 1.2.1     | 1.15  | 1.0+   | 8    | -         |
-| 1.3.0     | 1.16  | 1.0+   | 8    | -         |
-| 1.4.0     | 1.15,1.16,1.17  | 1.0+   | 8   |- |
+| 1.0.3             | 1.11,1.12,1.13,1.14 | 0.15+  | 8    | 2.11,2.12 |
+| 1.1.1             | 1.14                | 1.0+   | 8    | 2.11,2.12 |
+| 1.2.1             | 1.15                | 1.0+   | 8    | -         |
+| 1.3.0             | 1.16                | 1.0+   | 8    | -         |
+| 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
+| 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
+| 1.6.1             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
 
 ## 使用
 
@@ -341,9 +343,9 @@ ON a.city = c.city
 | Key                | Default Value | Required | Comment                                                      |
 | ------------------ | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix  | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。 |
-| sink.properties.*  | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，'\x01'会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/import-way/stream-load-manual.md)。 |
+| sink.properties.*  | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，'\x01'会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/stream-load-manual)。 |
 | sink.enable-delete | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。 |
-| sink.enable-2pc    | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/import-way/stream-load-manual.md)。 |
+| sink.enable-2pc    | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/stream-load-manual)。 |
 | sink.buffer-size   | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可     |
 | sink.buffer-count  | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可               |
 | sink.max-retries   | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                          |
@@ -455,9 +457,9 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 - **--excluding-tables** 不需要同步的表，用法同上。
 
-- **--mysql-conf** MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/mysql-cdc.html)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。
+- **--mysql-conf** MySQL CDCSource 配置，例如--mysql-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/zh/docs/connectors/legacy-flink-cdc-sources/mysql-cdc/)查看所有配置 MySQL-CDC，其中 hostname/username/password/database-name 是必需的。
 
-- **--oracle-conf** Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/oracle-cdc.html)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。
+- **--oracle-conf** Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/zh/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。
 
 - **--sink-conf** Doris Sink 的所有配置，可以在[这里](../../ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。
 
@@ -637,7 +639,7 @@ from KAFKA_SOURCE;
 
 1. Flink Doris Connector 主要是依赖 Checkpoint 进行流式写入，所以 Checkpoint 的间隔即为数据的可见延迟时间。
 
-2. 为了保证 Flink 的 Exactly Once 语义，Flink Doris Connector 默认开启两阶段提交，Doris 在 1.1 版本后默认开启两阶段提交。1.0 可通过修改 BE 参数开启，可参考[two_phase_commit](../data-operate/import/import-way/stream-load-manual.md)。
+2. 为了保证 Flink 的 Exactly Once 语义，Flink Doris Connector 默认开启两阶段提交，Doris 在 1.1 版本后默认开启两阶段提交。1.0 可通过修改 BE 参数开启，可参考[two_phase_commit](../data-operate/import/stream-load-manual)。
 
 ## 常见问题
 
@@ -680,13 +682,13 @@ Exactly-Once 场景下，Flink Job 重启时必须从最新的 Checkpoint/Savepo
 
 **6. errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](../../admin-manual/config/fe-config/#max_running_txn_num_per_db)。
+这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](../admin-manual/config/fe-config#max_running_txn_num_per_db)。
 
 同时，一个任务频繁修改 label 重启，也可能会导致这个错误。2pc 场景下 (Duplicate/Aggregate 模型)，每个任务的 label 需要唯一，并且从 checkpoint 重启时，flink 任务才会主动 abort 掉之前已经 precommit 成功，没有 commit 的 txn，频繁修改 label 重启，会导致大量 precommit 成功的 txn 无法被 abort，占用事务。在 Unique 模型下也可关闭 2pc，可以实现幂等写入。
 
 **7. Flink 写入 Uniq 模型时，如何保证一批数据的有序性？**
 
-可以添加 sequence 列配置来保证，具体可参考 [sequence](../data-operate/update/sequence-column-manual)
+可以添加 sequence 列配置来保证，具体可参考 [sequence](../data-operate/update/update-of-unique-model)
 
 **8. Flink 任务没报错，但是无法同步数据？**
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "File Analysis",
+    "title": "Analyzing File",
     "language": "en"
 }
 ---
@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# File Analysis
-
 With the Table Value Function feature, Doris is able to query files in object storage or HDFS as simply as querying Tables. In addition, it supports automatic column type inference.
 
 ## Usage
@@ -34,13 +31,14 @@ With the Table Value Function feature, Doris is able to query files in object st
 For more usage details, please see the documentation:
 
 * [S3](https://doris.apache.org/docs/dev/sql-manual/sql-functions/table-functions/s3/): supports file analysis on object storage compatible with S3
+
 * [HDFS](https://doris.apache.org/docs/dev/sql-manual/sql-functions/table-functions/hdfs/): supports file analysis on HDFS
 
 The followings illustrate how file analysis is conducted with the example of S3 Table Value Function.
 
 ### Automatic Column Type Inference
 
-```
+```sql
 > DESC FUNCTION s3 (
     "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
     "s3.access_key"= "ak",
@@ -65,7 +63,7 @@ The followings illustrate how file analysis is conducted with the example of S3 
 
 An S3 Table Value Function is defined as follows:
 
-```
+```sql
 s3(
     "URI" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
     "s3.access_key"= "ak",
@@ -111,7 +109,7 @@ Currently supported column types are:
 
 Example:
 
-```
+```sql
 s3 (
     "uri" = "https://bucket1/inventory.dat",
     "s3.access_key"= "ak",
@@ -127,7 +125,7 @@ s3 (
 
 You can conduct queries and analysis on this Parquet file using any SQL statements:
 
-```
+```sql
 SELECT * FROM s3(
     "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
     "s3.access_key"= "ak",
@@ -148,10 +146,9 @@ LIMIT 5;
 
 You can put the Table Value Function anywhere that you used to put Table in the SQL, such as in the WITH or FROM clause in CTE. In this way, you can treat the file as a normal table and conduct analysis conveniently.
 
-你也可以用过 `CREATE VIEW` 语句为 Table Value Function 创建一个逻辑视图.这样，你可以想其他视图一样，对这个 Table Value Function 进行访问、权限管理等操作，也可以让其他用户访问这个 Table Value Function.
 You can also create a logic view by using `CREATE VIEW` statement for a Table Value Function. So that you can query this view, grant priv on this view or allow other user to access this Table Value Function.
 
-```
+```sql
 CREATE VIEW v1 AS 
 SELECT * FROM s3(
     "uri" = "http://127.0.0.1:9312/test2/test.snappy.parquet",
@@ -171,7 +168,7 @@ GRANT SELECT_PRIV ON db1.v1 TO user1;
 
 Users can ingest files into Doris tables via  `INSERT INTO SELECT`  for faster file analysis:
 
-```
+```sql
 // 1. Create Doris internal table
 CREATE TABLE IF NOT EXISTS test_table
 (

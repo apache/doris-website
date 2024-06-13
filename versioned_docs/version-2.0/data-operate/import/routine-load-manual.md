@@ -62,7 +62,7 @@ When a Routine Load job is created in Doris, it generates a persistent load job 
 
 The specific process of Routine Load is illustrated in the following diagram:
 
-![Routine Load](/images/routine-load.jpeg)
+![Routine Load](/images/routine-load.png)
 
 1. The Client submits a Routine Load job to the FE to establish a persistent Routine Load Job.
 
@@ -412,7 +412,7 @@ The specific parameters for each module are as follows:
 | WHERE                 | `<where_expr>`       | Specifies the condition to filter the loaded data source. For example, to load only data where age > 30, use `WHERE age > 30`. |
 | PARTITION             | `<partition_name>`   | Specifies which partitions in the target table to load. If not specified, it will automatically load into the corresponding partitions. For example, to load partitions p1 and p2 of the target table, use `PARTITION(p1, p2)`. |
 | DELETE ON             | `<delete_expr>`      | In the MERGE load mode, using delete_expr to mark which columns need to be deleted. For example, to delete columns where age > 30 during the MERGE process, use `DELETE ON age > 30`. |
-| ORDER BY              | `<order_by_column>`  | Only effective for Unique Key models. Specifies the Sequence Column in the loaded data to ensure the order of the data. For example, when loading into a Unique Key table and specifying create_time as the Sequence Column, use `ORDER BY create_time`. For more information on Sequence Columns in Unique Key models, refer to the [Data Update/Sequence Columns](../../data-operate/update/sequence) |
+| ORDER BY              | `<order_by_column>`  | Only effective for Unique Key models. Specifies the Sequence Column in the loaded data to ensure the order of the data. For example, when loading into a Unique Key table and specifying create_time as the Sequence Column, use `ORDER BY create_time`. For more information on Sequence Columns in Unique Key models, refer to the [Data Update/Sequence Columns](../update/update-of-unique-model) |
 
 **job_properties Clause**
 

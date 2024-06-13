@@ -1,7 +1,7 @@
 ---
 {
     'title': "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
-    'summary': "The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark + Impala + HBase + NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.",
+    'description': "The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark + Impala + HBase + NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.",
     'date': '2024-03-05',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
@@ -39,7 +39,7 @@ Like most data platforms, their CDP 1.0 had a batch processing pipeline and a re
 
 That led to a component-heavy computation layer in the CDP: Impala, Spark, NebulaGraph, and HBase.
 
-![apache doris data silos in CDP](../static/images/apache-doris-data-silos-in-CDP.png)
+![apache doris data silos in CDP](/images/apache-doris-data-silos-in-CDP.png)
 
 As a result, offline tags, real-time tags, and graph data were scattered across multiple components. Integrating them for further data services was costly due to redundant storage and bulky data transfer. What's more, due to discrepancies in storage, they had to expand the size of the CDH cluster and NebulaGraph cluster, adding to the resource and maintenance costs.
 
@@ -49,7 +49,7 @@ For CDP 2.0, they decide to introduce a unified solution to clean up the mess. A
 
 To ingest **offline data**, they utilize the [Stream Load](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual) method. Their 30-thread ingestion test shows that it can perform over 300,000 upserts per second. To load **real-time data**, they use a combination of [Flink-Doris-Connector](https://doris.apache.org/docs/ecosystem/flink-doris-connector) and Stream Load. In addition, in real-time reporting where they need to extract data from multiple external data sources, they leverage the [Multi-Catalog](https://doris.apache.org/docs/lakehouse/multi-catalog/) feature for **federated queries**. 
 
-![apache doris based-CDP](../static/images/apache-doris-based-CDP.png)
+![apache doris based-CDP](/images/apache-doris-based-CDP.png)
 
 The customer analytic workflows on this CDP go like this. First, they sort out customer information, then they attach tags to each customer. Based on the tags, they divide customers into groups for more targeted analysis and operation. 
 
@@ -63,7 +63,7 @@ That's why OneID arises as an idea. It is to pool the user registration informat
 
 This is how they figure out which registration information belongs to the same user leveraging the functions in Apache Doris.
 
-![apache doris OneID](../static/images/apache-doris-OneID.png)
+![apache doris OneID](/images/apache-doris-OneID.png)
 
 ## Tagging services
 
@@ -118,15 +118,15 @@ In practice, many tagging services are implemented by multi-table joins in the d
 
 The customer grouping pipeline in CDP 2.0 goes like this: Apache Doris receives SQL from customer service, executes the computation, and sends the result set to S3 object storage via SELECT INTO OUTFILE. The company has divided their customers into 1 million groups. The customer grouping task that used to take **50 seconds in Impala** to finish now only needs **10 seconds in Doris**. 
 
-![apache doris customer grouping](../static/images/apache-doris-customer-grouping.png)
+![apache doris customer grouping](/images/apache-doris-customer-grouping.png)
 
 Apart from grouping the customers for more fine-grained analysis, sometimes they do analysis in a reverse direction. That is, to target a certain customer and find out to which groups he/she belongs. This helps analysts understand the characteristics of customers as well as how different customer groups overlap.
 
 In Apache Doris, this is implemented by the BITMAP functions: `BITMAP_CONTAINS` is a fast way to check if a customer is part of a certain group, and `BITMAP_OR`, `BITMAP_INTERSECT`, and `BITMAP_XOR` are the choices for cross analysis.  
 
-![apache doris bitmap](../static/images/apache-doris-bitmap.png)
+![apache doris bitmap](/images/apache-doris-bitmap.png)
 
 
 ## Conclusion
 
-From CDP 1.0 to CDP 2.0, the insurance company adopts Apache Doris, a unified data warehouse, to replace Spark+Impala+HBase+NebulaGraph. That increases their data processing efficiency by breaking down the data silos and streamlining data processing pipelines. In CDP 3.0 to come, they want to group their customer by combining real-time tags and offline tags for more diversified and flexible analysis. The [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and the [VeloDB](https://www.velodb.io) team will continue to be a supporting partner during this upgrade.  
+From CDP 1.0 to CDP 2.0, the insurance company adopts Apache Doris, a unified data warehouse, to replace Spark+Impala+HBase+NebulaGraph. That increases their data processing efficiency by breaking down the data silos and streamlining data processing pipelines. In CDP 3.0 to come, they want to group their customer by combining real-time tags and offline tags for more diversified and flexible analysis. The [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) and the [VeloDB](https://www.velodb.io) team will continue to be a supporting partner during this upgrade.  

@@ -58,7 +58,7 @@ Related parameters for accessing local file on be node:
 
 - `file_path`:
 
-    (required) The path of the file to be read, which is a relative path to the `user_files_secure_path` directory, where `user_files_secure_path` parameter [can be configured on be](../../../admin-manual/config/be-config.md).
+    (required) The path of the file to be read, which is a relative path to the `user_files_secure_path` directory, where `user_files_secure_path` parameter [can be configured on be](../../../admin-manual/config/be-config).
 
     Can not contains `..` in path. Support using glob syntax to match multi files, such as `log/*.log`
 
@@ -71,9 +71,9 @@ File format parameters:
 - `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`
 - `column_separator`: (optional) default `,`.
 - `line_delimiter`: (optional) default `\n`.
-- `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
+- `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
-    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/import-way/load-json-format.md)
+    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/load-json-format)
 
 - `read_json_by_line`: (optional) default `"true"`
 - `strip_outer_array`: (optional) default `"false"`

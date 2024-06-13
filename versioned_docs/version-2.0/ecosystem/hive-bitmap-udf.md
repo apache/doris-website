@@ -53,11 +53,11 @@ CREATE TABLE IF NOT EXISTS `hive_table`(
 ) comment  'comment'
 ```
 
-### Hive Bitmap UDF Usage：
+### Hive Bitmap UDF Usage:
 
    Hive Bitmap UDF used in Hive/Spark,First, you need to compile fe to get hive-udf-jar-with-dependencies.jar.
-   Compilation preparation:If you have compiled the ldb source code, you can directly compile fe,If you have compiled the ldb source code, you can compile it directly. If you have not compiled the ldb source code, you need to manually install thrift，
-   Reference:[Setting Up dev env for FE](/community/developer-guide/fe-idea-dev.md).
+   Compilation preparation:If you have compiled the ldb source code, you can directly compile fe,If you have compiled the ldb source code, you can compile it directly. If you have not compiled the ldb source code, you need to manually install thrift,
+   Reference:[Setting Up dev env for FE](https://doris.apache.org/community/developer-guide/fe-idea-dev).
 
 ```sql
 --clone doris code
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [Creating a Catalog in Doris](../lakehouse/multi-catalog/hive)
+2. [Creating a Catalog in Doris](../lakehouse/datalake/hive)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -160,6 +160,6 @@ PROPERTIES (
 insert into doris_bitmap_table select k1, k2, k3, bitmap_from_base64(uuid) from hive.test.hive_bitmap_table;
 ```
 
-### Method 2：Spark Load
+### Method 2: Spark Load
 
- see details: [Spark Load](../data-operate/import/import-way/spark-load-manual.md) -> Basic operation -> Create load(Example 3: when the upstream data source is hive binary type table)
+ see details: [Spark Load](https://doris.apache.org/docs/data-operate/import/import-way/spark-load-manual) -> Basic operation -> Create load(Example 3: when the upstream data source is hive binary type table)

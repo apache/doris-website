@@ -31,6 +31,7 @@ under the License.
 
 1. Support Iceberg V1/V2.
 2. The V2 format only supports Position Delete, not Equality Delete.
+3. Supports Parquet format.
 
 ## Create Catalog
 
@@ -110,7 +111,7 @@ For Iceberg properties, see [Iceberg Glue Catalog](https://iceberg.apache.org/do
 
 #### Alibaba Cloud DLF
 
-see [Alibaba Cloud DLF Catalog](dlf.md)
+see [Alibaba Cloud DLF Catalog](./hive)
 
 #### REST Catalog
 
@@ -196,7 +197,25 @@ The data is stored on Huawei Cloud OBS:
 
 ## Column type mapping
 
-Consistent with Hive Catalog, please refer to the **column type mapping** section in [Hive Catalog](./hive.md).
+| Iceberg Type                               | Doris Type   |
+|--------------------------------------------|--------------|
+| boolean                                    | boolean      |
+| int                                        | int          |
+| long                                       | bigint       |
+| float                                      | float        |
+| double                                     | double       |
+| decimal(p,s)                               | decimal(p,s) |
+| date                                       | date         |
+| uuid                                       | string       |
+| timestamp (Timestamp without timezone)     | datetime(6)  |
+| timestamptz (Timestamp with timezone)      | datetime(6)  |
+| string                                     | string       |
+| fixed(L)                                   | char(L)      |
+| binary                                     | string       |
+| list                                       | array        |
+| struct                                     | unsupported  |
+| map                                        | unsupported  |
+| time                                       | unsupported  |
 
 ## Time Travel
 
@@ -212,4 +231,4 @@ You can use the `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read hist
 
 `SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;`
 
-In addition, you can use the [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg_meta.md) table function to query the snapshot information of the specified table.
+In addition, you can use the [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg-meta) table function to query the snapshot information of the specified table.

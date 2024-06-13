@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Say goodbye to OOM crashes',
-    'summary': "A more robust and flexible memory management solution with optimizations in memory allocation, memory tracking, and memory limit.",
+    'description': "A more robust and flexible memory management solution with optimizations in memory allocation, memory tracking, and memory limit.",
     'date': '2023-06-16',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -32,7 +32,7 @@ under the License.
 
 What guarantees system stability in large data query tasks? It is an effective memory allocation and monitoring mechanism. It is how you speed up computation, avoid memory hotspots, promptly respond to insufficient memory, and minimize OOM errors. 
 
-![memory-allocator](../static/images/OOM_1.png)
+![memory-allocator](/images/OOM_1.png)
 
 From a database user's perspective, how do they suffer from bad memory management? This is a list of things that used to bother our users:
 
@@ -48,13 +48,13 @@ Luckily, those dark days are behind us, because we have improved our memory mana
 
 In Apache Doris, we have a one-and-only interface for memory allocation: **Allocator**. It will make adjustments as it sees appropriate to keep memory usage efficient and under control. Also, MemTrackers are in place to track the allocated or released memory size, and three different data structures are responsible for large memory allocation in operator execution (we will get to them immediately).   
 
-![memory-tracker](../static/images/OOM_2.png)
+![memory-tracker](/images/OOM_2.png)
 
 ### Data Structures in Memory
 
 As different queries have different memory hotspot patterns in execution, Apache Doris provides three different in-memory data structures: **Arena**, **HashTable**, and **PODArray**. They are all under the reign of the Allocator.
 
-![data-structures](../static/images/OOM_3.png)
+![data-structures](/images/OOM_3.png)
 
 **1. Arena**
 
@@ -100,7 +100,7 @@ Memory reuse is executed in data scanning, too. Before the scanning starts, a nu
 
 The MemTracker system before Apache Doris 1.2.0 was in a hierarchical tree structure, consisting of process_mem_tracker, query_pool_mem_tracker, query_mem_tracker, instance_mem_tracker, ExecNode_mem_tracker and so on. MemTrackers of two neighbouring layers are of parent-child relationship. Hence, any calculation mistakes in a child MemTracker will be accumulated all the way up and result in a larger scale of incredibility. 
 
-![MemTrackers](../static/images/OOM_4.png)
+![MemTrackers](/images/OOM_4.png)
 
 In Apache Doris 1.2.0 and newer, we made the structure of MemTrackers much simpler. MemTrackers are only divided into two types based on their roles: **MemTracker Limiter** and the others. MemTracker Limiter, monitoring memory usage, is unique in every query/ingestion/compaction task and global object; while the other MemTrackers traces the memory hotspots in query execution, such as HashTables in Join/Aggregation/Sort/Window functions and intermediate data in serialization, to give a picture of how memory is used in different operators or provide reference for memory control in data flushing.
 
@@ -108,7 +108,7 @@ The parent-child relationship between MemTracker Limiter and other MemTrackers i
 
 MemTrackers (including MemTracker Limiter and the others) are put into a group of Maps. They allow users to print overall MemTracker type snapshot, Query/Load/Compaction task snapshot, and find out the Query/Load with the most memory usage or the most memory overusage. 
 
-![Structure-of-MemTrackers](../static/images/OOM_5.png)
+![Structure-of-MemTrackers](/images/OOM_5.png)
 
 ### How MemTracker Works
 
@@ -123,21 +123,21 @@ Now let me explain with a simplified query execution process.
 - When the scanning is done, all MemTrackers in the Scanner Thread TLS Stack will be removed. When the ScanNode scheduling is done, the ScanNode MemTracker will be removed from the fragment execution thread. Then, similarly, when an aggregation node is scheduled, an **AggregationNode MemTracker** will be added to the fragment execution thread TLS Stack, and get removed after the scheduling is done.
 - If the query is completed, the Query MemTracker will be removed from the fragment execution thread TLS Stack. At this point, this stack should be empty. Then, from the QueryProfile, you can view the peak memory usage during the whole query execution as well as each phase (scanning, aggregation, etc.).
 
-![How-MemTrackers-Works](../static/images/OOM_6.png)
+![How-MemTrackers-Works](/images/OOM_6.png)
 
 ### How to Use MemTracker
 
 The Doris backend Web page demonstrates real-time memory usage, which is divided into types: Query/Load/Compaction/Global. Current memory consumption and peak consumption are shown. 
 
-![How-to-use-MemTrackers](../static/images/OOM_7.png)
+![How-to-use-MemTrackers](/images/OOM_7.png)
 
 The Global types include MemTrackers of Cache and TabletMeta.
 
-![memory-usage-by-subsystem-1](../static/images/OOM_8.png)
+![memory-usage-by-subsystem-1](/images/OOM_8.png)
 
 From the Query types, you can see the current memory consumption and peak consumption of the current query and the operators it involves (you can tell how they are related from the labels). For memory statistics of historical queries, you can check the Doris FE audit logs or BE INFO logs.
 
-![memory-usage-by-subsystem-2](../static/images/OOM_9.png)
+![memory-usage-by-subsystem-2](/images/OOM_9.png)
 
 ## Memory Limit
 
@@ -153,7 +153,7 @@ While in Apache Doris 2.0, we have realized exception safety for queries. That m
 
 On a regular basis, Doris backend retrieves the physical memory of processes and the currently available memory size from the system. Meanwhile, it collects MemTracker snapshots of all Query/Load/Compaction tasks. If a backend process exceeds its memory limit or there is insufficient memory, Doris will free up some memory space by clearing Cache and cancelling a number of queries or data ingestion tasks. These will be executed by an individual GC thread regularly.
 
-![memory-limit-on-process](../static/images/OOM_10.png)
+![memory-limit-on-process](/images/OOM_10.png)
 
 If the process memory consumed is over the SoftMemLimit (81% of total system memory, by default), or the available system memory drops below the Warning Water Mark (less than 3.2GB), **Minor GC** will be triggered. At this moment, query execution will be paused at the memory allocation step, the cached data in data ingestion tasks will be force flushed, and part of the Data Page Cache and the outdated Segment Cache will be released. If the newly released memory does not cover 10% of the process memory, with Memory Overcommit enabled, Doris will start cancelling the queries which are the biggest "overcommitters" until the 10% target is met or all queries are canceled. Then, Doris will shorten the system memory checking interval and the GC interval. The queries will be continued after more memory is available.
 
@@ -163,5 +163,5 @@ If the process memory consumed is beyond the MemLimit (90% of total system memor
 
 After optimizations in memory allocation, memory tracking, and memory limit, we have substantially increased the stability and high-concurrency performance of Apache Doris as a real-time analytic data warehouse platform. OOM crash in the backend is a rare scene now. Even if there is an OOM, users can locate the problem root based on the logs and then fix it. In addition, with more flexible memory limits on queries and data ingestion, users don't have to spend extra effort taking care of memory when memory space is adequate. 
 
-In the next phase, we plan to ensure completion of queries in memory overcommitment, which means less queries will have to be canceled due to memory shortage. We have broken this objective into specific directions of work: exception safety, memory isolation between resource groups, and the flushing mechanism of intermediate data. If you want to meet our developers, [this is where you find us](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+In the next phase, we plan to ensure completion of queries in memory overcommitment, which means less queries will have to be canceled due to memory shortage. We have broken this objective into specific directions of work: exception safety, memory isolation between resource groups, and the flushing mechanism of intermediate data. If you want to meet our developers, [this is where you find us](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
 

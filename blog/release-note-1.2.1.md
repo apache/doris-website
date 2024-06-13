@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris announced the official release of version 1.2.1',
-    'summary': 'Dear community, Apache Doris 1.2.1 is now available, with several enhancements and bug fixes based on 1.2.0，enabling smoother user experience.',
+    'description': 'Dear community, Apache Doris 1.2.1 is now available, with several enhancements and bug fixes based on 1.2.0，enabling smoother user experience.',
     'date': '2023-01-04',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -42,7 +42,7 @@ DecimalV3, which supports higher precision and better performance, has the follo
 
 - More complete precision derivation support, for different expressions, different precision derivation rules are applied to the accuracy of the result.
 
-[DecimalV3](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Data-Types/DECIMALV3/)
+[DecimalV3](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Data-Types/DECIMAL)
 
 ### Support Iceberg V2
 

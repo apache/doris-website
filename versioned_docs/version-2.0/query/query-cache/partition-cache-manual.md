@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Partition Cache
+
 
 Cache hits can occur when multiple SQLs use the same table partition.
 
-```
-**Partition Cache is an experimental feature and is not well maintained. Use it with caution**
-```
+:::caution Caution
+**Partition Cache is an experimental feature and is not well maintained, this feature will be removed in version 2.1. Please use it with caution**
+:::
 
 ## Demand scenarios & solutions
 
-See query-cache.md.
+See [Query Caches Overview](../query-cache/query-cache.md)
 
 ## Design principles
 

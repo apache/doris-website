@@ -64,9 +64,9 @@ INSERT INTO table_name
 > 2. SHUFFLE：当目标表是分区表，开启这个 hint 会进行 repartiiton。
 > 3. NOSHUFFLE：即使目标表是分区表，也不会进行 repartiiton，但会做一些其他操作以保证数据正确落到各个分区中。
 
-对于开启了merge-on-write的Unique表，还可以使用insert语句进行部分列更新的操作。要使用insert语句进行部分列更新，需要将会话变量enable_unique_key_partial_update的值设置为true(该变量默认值为false，即默认无法通过insert语句进行部分列更新)。进行部分列更新时，插入的列必须至少包含所有的Key列，同时指定需要更新的列。如果插入行Key列的值在原表中存在，则将更新具有相同key列值那一行的数据。如果插入行Key列的值在原表中不存在，则将向表中插入一条新的数据，此时insert语句中没有指定的列必须有默认值或可以为null，这些缺失列会首先尝试用默认值填充，如果该列没有默认值，则尝试使用null值填充，如果该列不能为null，则本次插入失败。
+对于开启了 merge-on-write 的 Unique 表，还可以使用 insert 语句进行部分列更新的操作。要使用 insert 语句进行部分列更新，需要将会话变量 enable_unique_key_partial_update 的值设置为 true(该变量默认值为 false，即默认无法通过 insert 语句进行部分列更新)。进行部分列更新时，插入的列必须至少包含所有的 Key 列，同时指定需要更新的列。如果插入行 Key 列的值在原表中存在，则将更新具有相同 key 列值那一行的数据。如果插入行 Key 列的值在原表中不存在，则将向表中插入一条新的数据，此时 insert 语句中没有指定的列必须有默认值或可以为 null，这些缺失列会首先尝试用默认值填充，如果该列没有默认值，则尝试使用 null 值填充，如果该列不能为 null，则本次插入失败。
 
-需要注意的是，控制insert语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为true，即insert语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的key。所以，在使用insert语句进行部分列更新的时候如果希望能插入不存在的key，需要在`enable_unique_key_partial_update`设置为true的基础上同时将`enable_insert_strict`设置为false。
+需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
 
 注意：
 
@@ -160,7 +160,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
          {'label':'insert_f0747f0e-7a35-46e2-affa-13a235f4020d', 'status':'committed', 'txnId':'4005'}
          ```
 
-         `Query OK` 表示执行成功。`4 rows affected` 表示总共有4行数据被导入。`2 warnings` 表示被过滤的行数。
+         `Query OK` 表示执行成功。`4 rows affected` 表示总共有 4 行数据被导入。`2 warnings` 表示被过滤的行数。
 
          同时会返回一个 json 串：
 
@@ -216,11 +216,11 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 2. 超时时间
 
    <version since="dev"></version>
-   INSERT 操作的超时时间由 [会话变量](../../../../advanced/variables.md) `insert_timeout` 控制。默认为4小时。超时则作业会被取消。
+   INSERT 操作的超时时间由 [会话变量](../../../../query/query-variables/variables) `insert_timeout` 控制。默认为 4 小时。超时则作业会被取消。
 
 3. Label 和原子性
 
-   INSERT 操作同样能够保证导入的原子性，可以参阅 [导入事务和原子性](../../../../data-operate/import/import-scenes/load-atomicity.md) 文档。
+   INSERT 操作同样能够保证导入的原子性，可以参阅 [导入事务和原子性](../../../../data-operate/import/load-atomicity) 文档。
 
    当需要使用 `CTE(Common Table Expressions)` 作为 insert 操作中的查询部分时，必须指定 `WITH LABEL` 和 `column` 部分。
 
@@ -228,7 +228,7 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
    与其他导入方式不同，INSERT 操作不能指定过滤阈值（`max_filter_ratio`）。默认的过滤阈值为 1，即素有错误行都可以被忽略。
 
-   对于有要求数据不能够被过滤的业务场景，可以通过设置 [会话变量](../../../../advanced/variables.md) `enable_insert_strict` 为 `true` 来确保当有数据被过滤掉的时候，`INSERT` 不会被执行成功。
+   对于有要求数据不能够被过滤的业务场景，可以通过设置 [会话变量](../../../../query/query-variables/variables) `enable_insert_strict` 为 `true` 来确保当有数据被过滤掉的时候，`INSERT` 不会被执行成功。
 
 5. 性能问题
 

@@ -97,17 +97,17 @@ Doris 的元数据是全内存的。每个 FE 内存中，都维护一个完整�
 
 1. FE 第一次启动，如果启动脚本不加任何参数，则会尝试以 leader 的身份启动。在 FE 启动日志中会最终看到 `transfer from UNKNOWN to MASTER`。
 
-2. FE 第一次启动，如果启动脚本中指定了 `-helper` 参数，并且指向了正确的 leader FE 节点，那么该 FE 首先会通过 http 向 leader 节点询问自身的角色（即 ROLE）和 cluster_id。然后拉取最新的 image 文件。读取 image 文件，生成元数据镜像后，启动 bdbje，开始进行 bdbje 日志同步。同步完成后，开始回放 bdbje 中，image 文件之后的日志，完成最终的元数据镜像生成。
+2. FE 第一次启动，如果启动脚本中指定了 `--helper` 参数，并且指向了正确的 leader FE 节点，那么该 FE 首先会通过 http 向 leader 节点询问自身的角色（即 ROLE）和 cluster_id。然后拉取最新的 image 文件。读取 image 文件，生成元数据镜像后，启动 bdbje，开始进行 bdbje 日志同步。同步完成后，开始回放 bdbje 中，image 文件之后的日志，完成最终的元数据镜像生成。
 
-	> 注1：使用 `-helper` 参数启动时，需要首先通过 mysql 命令，通过 leader 来添加该 FE，否则，启动时会报错。
+	> 注1：使用 `--helper` 参数启动时，需要首先通过 mysql 命令，通过 leader 来添加该 FE，否则，启动时会报错。
 	
-	> 注2：`-helper` 可以指向任何一个 follower 节点，即使它不是 leader。
+	> 注2：`--helper` 可以指向任何一个 follower 节点，即使它不是 leader。
 	
 	> 注2：bdbje 在同步日志过程中，fe 日志会显示 `xxx detached`, 此时正在进行日志拉取，属于正常现象。
 
 3. FE 非第一次启动，如果启动脚本不加任何参数，则会根据本地存储的 ROLE 信息，来确定自己的身份。同时根据本地 bdbje 中存储的集群信息，获取 leader 的信息。然后读取本地的 image 文件，以及 bdbje 中的日志，完成元数据镜像生成。（如果本地 ROLE 中记录的角色和 bdbje 中记录的不一致，则会报错。）
 
-4. FE 非第一次启动，且启动脚本中指定了 `-helper` 参数。则和第一次启动的流程一样，也会先去询问 leader 角色。但是会和自身存储的 ROLE 进行比较。如果不一致，则会报错。
+4. FE 非第一次启动，且启动脚本中指定了 `--helper` 参数。则和第一次启动的流程一样，也会先去询问 leader 角色。但是会和自身存储的 ROLE 进行比较。如果不一致，则会报错。
 
 #### 元数据读写与同步
 

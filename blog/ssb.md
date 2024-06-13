@@ -1,7 +1,7 @@
 ---
 {
     'title': "Apache Doris 1.2 star-schema-benchmark performance test report",
-    'summary': "On the SSB flat wide table, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 4 times compared with Apache Doris 1.1.3, and nearly 10 times compared with Apache Doris 0.15.0 RC04. On the SQL test with standard SSB, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 2 times compared with Apache Doris 1.1.3, and nearly 31 times compared with Apache Doris 0.15.0 RC04.",
+    'description': "On the SSB flat wide table, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 4 times compared with Apache Doris 1.1.3, and nearly 10 times compared with Apache Doris 0.15.0 RC04. On the SQL test with standard SSB, the overall performance of Apache Doris 1.2.0-rc01 has been improved by nearly 2 times compared with Apache Doris 1.1.3, and nearly 31 times compared with Apache Doris 0.15.0 RC04.",
     'date': '2022-11-22',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

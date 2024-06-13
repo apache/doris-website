@@ -24,14 +24,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Hive UDF
 
- Hive Bitmap UDF 提供了在 hive 表中生成 bitmap 、bitmap 运算等 UDF，Hive 中的 bitmap 与 Doris bitmap 完全一致 ，Hive 中的 bitmap 可以通过 spark bitmap load 导入 doris
+
+ Hive Bitmap UDF 提供了在 Hive 表中生成 bitmap、bitmap 运算等 UDF，Hive 中的 bitmap 与 Doris bitmap 完全一致，Hive 中的 bitmap 可以直接导入 doris。
 
  主要目的：
   1. 减少数据导入 doris 时间 , 除去了构建字典、bitmap 预聚合等流程；
-  2. 节省 hive 存储 ，使用 bitmap 对数据压缩 ，减少了存储成本；
-  3. 提供在 hive 中 bitmap 的灵活运算 ，比如：交集、并集、差集运算 ，计算后的 bitmap 也可以直接导入 doris；
+
+  2. 节省 Hive 存储，使用 bitmap 对数据压缩，减少了存储成本；
+
+  3. 提供在 Hive 中 bitmap 的灵活运算，比如：交集、并集、差集运算，计算后的 bitmap 也可以直接导入 doris；
 
 ## 使用方法
 
@@ -58,34 +60,34 @@ CREATE TABLE IF NOT EXISTS `hive_table`(
 
 ### Hive Bitmap UDF 使用：
 
-Hive Bitmap UDF 需要在 Hive/Spark 中使用，首先需要编译fe得到hive-udf-jar-with-dependencies.jar。
-编译准备工作：如果进行过ldb源码编译可直接编译fe，如果没有进行过ldb源码编译，则需要手动安装thrift，可参考：[FE开发环境搭建](/community/developer-guide/fe-idea-dev.md) 中的编译与安装
+Hive Bitmap UDF 需要在 Hive/Spark 中使用，首先需要编译 fe 得到 hive-udf-jar-with-dependencies.jar。
+编译准备工作：如果进行过 ldb 源码编译可直接编译 fe，如果没有进行过 ldb 源码编译，则需要手动安装 thrift，可参考：[FE 开发环境搭建](https://doris.apache.org/zh-CN/community/developer-guide/fe-idea-dev/) 中的编译与安装
 
 ```sql
---clone doris源码
+--clone doris 源码
 git clone https://github.com/apache/doris.git
 cd doris
 git submodule update --init --recursive
---安装thrift
---进入fe目录
+--安装 thrift
+--进入 fe 目录
 cd fe
---执行maven打包命令（fe的子module会全部打包）
+--执行 maven 打包命令（fe 的子 module 会全部打包）
 mvn package -Dmaven.test.skip=true
---也可以只打hive-udf module
+--也可以只打 hive-udf module
 mvn package -pl hive-udf -am -Dmaven.test.skip=true
 ```
-打包编译完成进入hive-udf目录会有target目录，里面就会有打包完成的hive-udf.jar包
+打包编译完成进入 hive-udf 目录会有 target 目录，里面就会有打包完成的 hive-udf.jar 包
 
 ```sql
 
--- 加载hive bitmap udf jar包  (需要将编译好的 hive-udf jar 包上传至 HDFS)
+-- 加载 hive bitmap udf jar 包  (需要将编译好的 hive-udf jar 包上传至 HDFS)
 add jar hdfs://node:9001/hive-udf-jar-with-dependencies.jar;
 
--- 创建UDAF函数
+-- 创建 UDAF 函数
 create temporary function to_bitmap as 'org.apache.doris.udf.ToBitmapUDAF' USING JAR 'hdfs://node:9001/hive-udf-jar-with-dependencies.jar';
 create temporary function bitmap_union as 'org.apache.doris.udf.BitmapUnionUDAF' USING JAR 'hdfs://node:9001/hive-udf-jar-with-dependencies.jar';
 
--- 创建UDF函数
+-- 创建 UDF 函数
 create temporary function bitmap_count as 'org.apache.doris.udf.BitmapCountUDF' USING JAR 'hdfs://node:9001/hive-udf-jar-with-dependencies.jar';
 create temporary function bitmap_and as 'org.apache.doris.udf.BitmapAndUDF' USING JAR 'hdfs://node:9001/hive-udf-jar-with-dependencies.jar';
 create temporary function bitmap_or as 'org.apache.doris.udf.BitmapOrUDF' USING JAR 'hdfs://node:9001/hive-udf-jar-with-dependencies.jar';
@@ -113,15 +115,9 @@ select k1,bitmap_union(uuid) from hive_bitmap_table group by k1
 
 ```
 
-###  Hive Bitmap UDF  说明
+
 
 ## Hive bitmap 导入 doris
-
-<version since="2.0.2">
-
-### 方法一：Catalog （推荐）
-
-</version>
 
 创建 Hive 表指定为 TEXT 格式，此时，对于 Binary 类型，Hive 会以 bash64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将位图数据通过 bitmap_from_bash64 函数插入到 Doris 内部。
 
@@ -138,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/multi-catalog/hive)
+2. [在 Doris 中创建 Catalog](../lakehouse/datalake-analytics/hive.md)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -168,7 +164,3 @@ PROPERTIES (
 ```sql
 insert into doris_bitmap_table select k1, k2, k3, bitmap_from_base64(uuid) from hive.test.hive_bitmap_table;
 ```
-
-### 方法二：Spark Load
-
- 详见: [Spark Load](../data-operate/import/import-way/spark-load-manual.md) -> 基本操作  -> 创建导入 (示例3：上游数据源是hive binary类型情况)

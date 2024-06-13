@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building a data warehouse for traditional industry',
-    'summary': "The best component for you is the one that suits you most. In Midland Realty, we don't have too much data to process but want a data platform easy to use and maintain.",
+    'description': "The best component for you is the one that suits you most. In Midland Realty, we don't have too much data to process but want a data platform easy to use and maintain.",
     'date': '2023-05-12',
     'author': 'Herman Seah',
     'tags': ['Best Practice'],
@@ -39,7 +39,7 @@ Now let's get started.
 
 Logically, our data architecture can be divided into four parts.
 
-![data-processing-architecture](../static/images/Midland_1.png)
+![data-processing-architecture](/images/Midland_1.png)
 
 - **Data integration**: This is supported by Flink CDC, DataX, and the Multi-Catalog feature of Apache Doris.
 - **Data management**: We use Apache Dolphinscheduler for script lifecycle management, privileges in multi-tenancy management, and data quality monitoring.
@@ -54,7 +54,7 @@ We create our dimension tables and fact tables centering each operating entity i
 
 Our data warehouse is divided into five conceptual layers. We use Apache Doris and Apache DolphinScheduler to schedule the DAG scripts between these layers.
 
-![ODS-DWD-DWS-ADS-DIM](../static/images/Midland_2.png)
+![ODS-DWD-DWS-ADS-DIM](/images/Midland_2.png)
 
 Every day, the layers go through an overall update besides incremental updates in case of changes in historical status fields or incomplete data synchronization of ODS tables.
 
@@ -92,7 +92,7 @@ This is our configuration for TBs of legacy data and GBs of incremental data. Yo
 
 1. To integrate offline data and log data, we use DataX, which supports CSV format and readers of many relational databases, and Apache Doris provides a DataX-Doris-Writer.
 
-![DataX-Doris-Writer](../static/images/Midland_3.png)
+![DataX-Doris-Writer](/images/Midland_3.png)
 
 2. We use Flink CDC to synchronize data from source tables. Then we aggregate the real-time metrics utilizing the Materialized View or the Aggregate Model of Apache Doris. Since we only have to process part of the metrics in a real-time manner and we don't want to generate too many database connections, we use one Flink job to maintain multiple CDC source tables. This is realized by the multi-source merging and full database sync features of Dinky, or you can implement a Flink DataStream multi-source merging task yourself. It is noteworthy that Flink CDC and Apache Doris support Schema Change.
 
@@ -124,11 +124,11 @@ EXECUTE CDCSOURCE demo_doris WITH (
 
 3. We use SQL scripts or "Shell + SQL" scripts, and we perform script lifecycle management. At the ODS layer, we write a general DataX job file and pass parameters for each source table ingestion, instead of writing a DataX job for each source table. In this way, we make things much easier to maintain. We manage the ETL scripts of Apache Doris on DolphinScheduler, where we also conduct version control. In case of any errors in the production environment, we can always rollback.
 
-![SQL-script](../static/images/Midland_4.png)
+![SQL-script](/images/Midland_4.png)
 
 4. After ingesting data with ETL scripts, we create a page in our reporting tool. We assign different privileges to different accounts using SQL, including the privilege of modifying rows, fields, and global dictionary. Apache Doris supports privilege control over accounts, which works the same as that in MySQL. 
 
-![privilege-control-over-accounts](../static/images/Midland_5.png)
+![privilege-control-over-accounts](/images/Midland_5.png)
 
 We also use Apache Doris data backup for disaster recovery, Apache Doris audit logs to monitor SQL execution efficiency, Grafana+Loki for cluster metric alerts, and Supervisor to monitor the daemon processes of node components.
 
@@ -166,10 +166,10 @@ For us, it is important to create a data dictionary because it largely reduces p
 
 Actually, before we evolved into our current data architecture, we tried Hive, Spark and Hadoop to build an offline data warehouse. It turned out that Hadoop was overkill for a traditional company like us since we didn't have too much data to process. It is important to find the component that suits you most.
 
-![old-offline-data warehouse](../static/images/Midland_6.png)
+![old-offline-data warehouse](/images/Midland_6.png)
 
 (Our old off-line data warehouse)
 
 On the other hand, to smoothen our  big data transition, we need to make our data platform as simple as possible in terms of usage and maintenance. That's why we landed on Apache Doris. It is compatible with MySQL protocol and provides a rich collection of functions so we don't have to develop our own UDFs. Also, it is composed of only two types of processes: frontends and backends, so it is easy to scale and track.
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).

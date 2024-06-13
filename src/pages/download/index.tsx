@@ -54,7 +54,7 @@ export default function Download() {
     const [cpu, setCPU] = useState<string>(CPUEnum.X64);
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.2');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.3');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -107,10 +107,10 @@ export default function Download() {
     // }
     return (
         <Layout
-            title={translate({ id: 'download.title', message: 'Download' })}
+            title={translate({ id: 'download.title', message: 'Apache Doris - Download | Easily deploy Doris anywhere' })}
             description={translate({
                 id: 'homepage.banner.subTitle',
-                message: 'An easy-to-use, high-performance and unified analytical database',
+                message: 'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
             })}
             wrapperClassName="download"
         >
@@ -262,7 +262,7 @@ export default function Download() {
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/standard-deployment"
+                                to="/docs/install/cluster-deployment/standard-deployment"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',
@@ -332,7 +332,7 @@ export default function Download() {
                         <div className="all-download-note">
                             Note: For detailed upgrade precautions, please refer to the{' '}
                             <Link
-                                to="/docs/install/standard-deployment"
+                                to="/docs/install/cluster-deployment/standard-deployment"
                                 style={{
                                     color: '#444FD9',
                                     cursor: 'pointer',

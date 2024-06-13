@@ -32,7 +32,7 @@ If Doris' data disk capacity is not controlled, the process will hang because th
 
 ## Glossary
 
-* Data Dir：Data directory, each data directory specified in the `storage_root_path` of the BE configuration file `be.conf`. Usually a data directory corresponds to a disk, so the following **disk** also refers to a data directory. 
+* Data Dir: Data directory, each data directory specified in the `storage_root_path` of the BE configuration file `be.conf`. Usually a data directory corresponds to a disk, so the following **disk** also refers to a data directory. 
 
 ## Basic Principles
 
@@ -123,7 +123,7 @@ When the disk capacity is higher than High Watermark or even Flood Stage, many o
     When the BE has crashed because the disk is full and cannot be started (this phenomenon may occur due to untimely detection of FE or BE), you need to delete some temporary files in the data directory to ensure that the BE process can start.
     Files in the following directories can be deleted directly: 
 
-    * log/：Log files in the log directory. 
+    * log/: Log files in the log directory. 
     * snapshot/: Snapshot files in the snapshot directory. 
     * trash/ Trash files in the trash directory. 
 
@@ -162,6 +162,6 @@ When the disk capacity is higher than High Watermark or even Flood Stage, many o
 
         ```rm -rf data/0/12345/```
 
-    * Delete tablet metadata (refer to [Tablet metadata management tool](./tablet-meta-tool.md)）
+    * Delete tablet metadata refer to [Tablet metadata management tool](./tablet-meta-tool.md)
 
         ```./lib/meta_tool --operation=delete_header --root_path=/path/to/root_path --tablet_id=12345 --schema_hash= 352781111```

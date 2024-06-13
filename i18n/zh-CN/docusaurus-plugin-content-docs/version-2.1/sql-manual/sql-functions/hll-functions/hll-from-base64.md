@@ -33,6 +33,7 @@ under the License.
 
 ### example
 
+#### 查询示例
 ```
 mysql> select hll_union_agg(hll_from_base64(hll_to_base64(pv))), hll_union_agg(pv) from test_hll;
 +---------------------------------------------------+-------------------+
@@ -66,6 +67,20 @@ mysql> select hll_cardinality(hll_from_base64(hll_to_base64(hll_hash(NULL))));
 +-----------------------------------------------------------------+
 1 row in set (0.02 sec)
 ```
+
+#### 数据导入示例：
+```
+前置条件：
+1. 在 Hive 中已经创建好一个名为 hive_test.hive_hll_table 的 Hive 表（格式为 textfile ，字段为：`k1` int, `k2` String, `k3` String, `uuid` binary），并且已经基于普通表使用 to_hll 的UDF函数往该表插入数据。
+
+2. 在 Doris 中创建名为 hive 的 Catalog 用来连接。
+
+3. 创建好 Doris 内表，名为 doris_hll_table，字段有：`k1` int, `k2` varchar(10), `k3` varchar(10), `uuid` HLL HLL_UNION。
+
+那么，此时可以使用 hll_from_base64 函数从 Hive 插入数据到 Doris 中：
+insert into doris_hll_table select k1, k2, k3, hll_from_base64(uuid) from hive.hive_test.hive_hll_table;
+```
+更多导入细节可以参考：[Hive HLL UDF](../../../ecosystem/hive-hll-udf.md)
 
 ### keywords
 HLL_FROM_BASE64,HLL

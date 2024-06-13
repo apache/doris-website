@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.0.3 just released',
-    'summary': 'Thanks to our community users and developers, 1000 improvements and bug fixes have been made in Doris 2.0.3.',
+    'description': 'Thanks to our community users and developers, 1000 improvements and bug fixes have been made in Doris 2.0.3.',
     'date': '2023-12-14',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

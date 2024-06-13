@@ -1,6 +1,6 @@
 ---
 {
-    "title": "load balancing",
+    "title": "Loading Balance",
     "language": "en"
 }
 
@@ -25,7 +25,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# load balancing
 
 When deploying multiple FE nodes, users can deploy a load balancing layer on top of multiple FEs to achieve high availability of Doris.
 
@@ -470,6 +469,10 @@ OK, that's the end, you can use Mysql client, JDBC, etc. to connect to ProxySQL 
 
 ## Nginx TCP reverse proxy method
 
+### Overview
+
+Nginx can implement load balancing of HTTP and HTTPS protocols, as well as load balancing of TCP protocol. So, the question is, can the load balancing of the Apache Doris database be achieved through Nginx? The answer is: yes. Next, let's discuss how to use Nginx to achieve load balancing of Apache Doris.
+
 ### Environmental preparation
 
 **Note: Using Nginx to achieve load balancing of Apache Doris database, the premise is to build an Apache Doris environment. The IP and port of Apache Doris FE are as follows. Here I use one FE to demonstrate, multiple FEs only You need to add multiple FE IP addresses and ports in the configuration**
@@ -511,22 +514,22 @@ vim /usr/local/nginx/conf/default.conf
 Then add the following in it
 
 ```bash
-events {
-worker_connections 1024;
-}
-stream {
-  upstream mysqld {
-      hash $remote_addr consistent;
-      server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
-      ## Add other `server` entries if there are multi FE node
-  }
-  ### Configure the proxy
-  server {
-      listen 6030;
-      proxy_connect_timeout 300s;
-      proxy_timeout 300s;
-      proxy_pass mysqld;
-  }
+events {  
+worker_connections 1024;  
+}  
+stream {  
+  upstream mysqld {  
+      hash $remote_addr consistent;  
+      server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;  
+      ## Note: If there are multiple FEs, just load them here.  
+  }  
+  ### Configuration for proxy port, timeout, etc.  
+  server {  
+      listen 6030;  
+      proxy_connect_timeout 300s;  
+      proxy_timeout 300s;  
+      proxy_pass mysqld;  
+  }  
 }
 ```
 
@@ -573,71 +576,195 @@ mysql> show databases;
 | test               |
 +--------------------+
 2 rows in set (0.00 sec)
+
+mysql> use test;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++------------------+
+| Tables_in_test   |
++------------------+
+| dwd_product_live |
++------------------+
+1 row in set (0.00 sec)
+mysql> desc dwd_product_live;
++-----------------+---------------+------+-------+---------+---------+
+| Field           | Type          | Null | Key   | Default | Extra   |
++-----------------+---------------+------+-------+---------+---------+
+| dt              | DATE          | Yes  | true  | NULL    |         |
+| proId           | BIGINT        | Yes  | true  | NULL    |         |
+| authorId        | BIGINT        | Yes  | true  | NULL    |         |
+| roomId          | BIGINT        | Yes  | true  | NULL    |         |
+| proTitle        | VARCHAR(1024) | Yes  | false | NULL    | REPLACE |
+| proLogo         | VARCHAR(1024) | Yes  | false | NULL    | REPLACE |
+| shopId          | BIGINT        | Yes  | false | NULL    | REPLACE |
+| shopTitle       | VARCHAR(1024) | Yes  | false | NULL    | REPLACE |
+| profrom         | INT           | Yes  | false | NULL    | REPLACE |
+| proCategory     | BIGINT        | Yes  | false | NULL    | REPLACE |
+| proPrice        | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| couponPrice     | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| livePrice       | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| volume          | BIGINT        | Yes  | false | NULL    | REPLACE |
+| addedTime       | BIGINT        | Yes  | false | NULL    | REPLACE |
+| offTimeUnix     | BIGINT        | Yes  | false | NULL    | REPLACE |
+| offTime         | BIGINT        | Yes  | false | NULL    | REPLACE |
+| createTime      | BIGINT        | Yes  | false | NULL    | REPLACE |
+| createTimeUnix  | BIGINT        | Yes  | false | NULL    | REPLACE |
+| amount          | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| views           | BIGINT        | Yes  | false | NULL    | REPLACE |
+| commissionPrice | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| proCostPrice    | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| proCode         | VARCHAR(1024) | Yes  | false | NULL    | REPLACE |
+| proStatus       | INT           | Yes  | false | NULL    | REPLACE |
+| status          | INT           | Yes  | false | NULL    | REPLACE |
+| maxPrice        | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| liveView        | BIGINT        | Yes  | false | NULL    | REPLACE |
+| firstCategory   | BIGINT        | Yes  | false | NULL    | REPLACE |
+| secondCategory  | BIGINT        | Yes  | false | NULL    | REPLACE |
+| thirdCategory   | BIGINT        | Yes  | false | NULL    | REPLACE |
+| fourCategory    | BIGINT        | Yes  | false | NULL    | REPLACE |
+| minPrice        | DECIMAL(18,2) | Yes  | false | NULL    | REPLACE |
+| liveVolume      | BIGINT        | Yes  | false | NULL    | REPLACE |
+| liveClick       | BIGINT        | Yes  | false | NULL    | REPLACE |
+| extensionId     | VARCHAR(128)  | Yes  | false | NULL    | REPLACE |
+| beginTime       | BIGINT        | Yes  | false | NULL    | REPLACE |
+| roomTitle       | TEXT          | Yes  | false | NULL    | REPLACE |
+| beginTimeUnix   | BIGINT        | Yes  | false | NULL    | REPLACE |
+| nickname        | TEXT          | Yes  | false | NULL    | REPLACE |
++-----------------+---------------+------+-------+---------+---------+
+40 rows in set (0.06 sec)
 ```
 
-## IP Transparency
 
-Since 2.1.1, Doris supports [Proxy Protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt). Using this protocol, IP transparency for load balancing can be achieved, so that after load balancing, Doris can still obtain the client's real IP and implement permission control such as whitelisting.
+## Haproxy way
+HAProxy is a free and open source software written in C language that provides high availability, load balancing, and application proxy based on TCP and HTTP.
 
-> Note:
->
-> 1. Only support Proxy Protocol V1。
->
-> 2. Only supports and works on the MySQL protocol port, and does not support and affect other protocol ports such as HTTP and ADBC.
->
-> 3. After enable, the Proxy Protocol must be used to connect, otherwise the connection will fail.
+### Install
+1. Download HAProxy
 
-The following uses Nginx as an example to introduce how to implement IP transparency.
+   download link: https://src.fedoraproject.org/repo/pkgs/haproxy/
 
-1. Doris enables Proxy Protocol
+2. Unzip
+   ```
+   tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
+   mv haproxy-2.6.15 haproxy
+   ```
 
-    Add config in FE's fe.conf:
+3. Compile
 
-    ```
-    enable_proxy_protocol = true
-    ```
+   Enter the haproxy directory
+   ```
+   yum install gcc gcc-c++ -y
 
-2. Nginx enables Proxy Protocol
+   make TARGET=linux-glibc PREFIX=/usr/local/haproxy
 
-    ```
-    events {
-    worker_connections 1024;
-    }
-    stream {
-      upstream mysqld {
-          hash $remote_addr consistent;
-          server 172.31.7.119:9030 weight=1 max_fails=2 fail_timeout=60s;
-      }
-      server {
-          listen 6030;
-          proxy_connect_timeout 300s;
-          proxy_timeout 300s;
-          proxy_pass mysqld;
-          # Enable Proxy Protocol to the upstream server
-          proxy_protocol on;
-      }
-    }
-    ```
+   make install PREFIX=/usr/local/haproxy
+   ```
 
-3. Connect Doris through Nginx
+### Configuration
+1. Configure the haproxy.conf file
 
-    ```
-    mysql -uroot -P6030 -h172.31.7.119
-    ```
+   vim /etc/rsyslog.d/haproxy.conf
+   ```
+   $ModLoad imudp 
+   $UDPServerRun 514
+   local0.* /usr/local/haproxy/logs/haproxy.log
+   &~
+   ```
 
-4. Verify
+2. Enable remote logging
 
-    ```
-    mysql> show processlist;
-    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-    | CurrentConnected | Id   | User | Host              | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             |
-    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-    | Yes              |    1 | root | 172.21.0.32:34390 | 2024-03-17 16:32:22 | internal |      | Query   |    0 | OK    | 82edc460d93f4e28-8bbed058a068e259 | show processlist |
-    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-    1 row in set (0.00 sec)
-    ```
+   vim /etc/sysconfig/rsyslog
 
-    If you see the real client IP in the `Host` column, the verification is successful. Otherwise, only the IP address of the proxy service will be visible.
+   `SYSLOGD_OPTIONS="-c 2 -r -m 0" `
 
-    At the same time, the real client IP will also be recorded in fe.audit.log.
+   Parameter analysis:
 
+   - -c 2 Use compatibility mode, default is -c 5. -r turns on remote logging
+
+   - -m 0 mark timestamp. The unit is minutes. When it is 0, it means the function is disabled.
+
+3. Make changes effective
+
+   `systemctl restart rsyslog`
+
+
+4. Edit load balancing file
+
+   vim /usr/local/haproxy/haproxy.cfg
+
+   ```
+   #
+   # haproxy is deployed on 172.16.0.3, this machine, and is used to proxy 172.16.0.8, 172.16.0.6, 172.16.0.4, the three machines where fe is deployed.
+   #
+   
+   global
+   maxconn         2000
+   ulimit-n        40075
+   log             127.0.0.1 local0 info
+   uid             200
+   gid             200
+   chroot          /var/empty
+   daemon
+   group           haproxy
+   user            haproxy
+   
+   
+   defaults
+   # Global log configuration
+   log global
+   mode http
+   retries 3          # health examination. If the connection fails three times, the server is considered unavailable, mainly through the subsequent check.
+   option redispatch  # Redirect to other healthy servers after service becomes unavailable
+   # Timeout configuration
+   timeout connect 5000
+   timeout client 5000
+   timeout server 5000
+   timeout check 2000
+   
+   frontend agent-front
+   bind *:9030             # Translation port on proxy machine
+   mode tcp
+   default_backend forward-fe
+   
+   backend forward-fe
+   mode tcp
+   balance roundrobin
+   server fe-1 172.16.0.8:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-2 172.16.0.4:9030 weight 1 check inter 3000 rise 2 fall 3
+   server fe-3 172.16.0.6:9030 weight 1 check inter 3000 rise 2 fall 3
+   
+   listen http_front              # haproxy client page
+   bind *:8888                    # IP address of HAProxy WEB
+   mode http
+   log 127.0.0.1 local0 err
+   option httplog
+   stats uri /haproxy             # The url of the customized page (that is, the address when accessing is: 172.16.0.3:8888/haproxy)
+   stats auth admin:admin         # Control panel account password Account: admin
+   stats refresh 10s
+   stats enable
+   ```
+
+### Start up
+
+1. Start service
+
+   ` /opt/haproxy/haproxy -f /usr/local/haproxy/haproxy.cfg`
+
+2. Check service status
+
+   `netstat -lnatp | grep -i haproxy`
+
+3. WEB access
+
+   ip:8888/haproxy
+
+   Login password: admin: admin  
+
+   Note: The WEB login port, account, and password need to be configured in the haproxy.cfg file
+
+4. Test whether the port conversion is successful
+
+   `mysql -h 172.16.0.3 -uroot -P3307 -p`

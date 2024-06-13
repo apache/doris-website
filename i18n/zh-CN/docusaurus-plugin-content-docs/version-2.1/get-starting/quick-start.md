@@ -1,6 +1,6 @@
 ---
 {
-    "title": "快速开始",
+    "title": "快速体验 Apache Doris",
     "language": "zh-CN"
 }
 
@@ -25,415 +25,247 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 快速开始
+这个简短的指南将告诉你如何下载 Doris 最新稳定版本，在单节点上安装并运行它，包括创建数据库、数据表、导入数据及查询等。
 
-Apache Doris 是一个基于 MPP 架构的高性能、实时的分析型数据库，以极速易用的特点被人们所熟知，仅需亚秒级响应时间即可返回海量数据下的查询结果，不仅可以支持高并发的点查询场景，也能支持高吞吐的复杂分析场景，这个简短的指南将告诉你如何下载 Doris 最新稳定版本，在单节点上安装并运行它，包括创建数据库、数据表、导入数据及查询等。
+## 环境准备
 
-## 下载 Doris
+-   选择一个 X86-64 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
 
-Doris 运行在 Linux 环境中，推荐 CentOS 7.x 或者 Ubuntu 16.04 以上版本，同时你需要安装 Java 运行环境（JDK 版本要求为 8），要检查你所安装的 Java 版本，请运行以下命令：
+-   Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u202，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox))。
 
-```
-java -version
-```
+-   建议在 Linux 上新建一个 Doris 用户（避免使用 root 用户，以防对操作系统误操作）
 
-接下来，[下载 Doris 的最新二进制版本](https://doris.apache.org/zh-CN/download)，然后解压。
+## 下载二进制包
 
-```
-tar xf apache-doris-x.x.x.tar.xz
-```
+从 doris.apache.org 下载相应的 Doris 安装包，并且解压。
 
-## 配置 Doris
+```Bash
+# 下载 Doris 二进制安装包
+server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
 
-### 配置 FE 
+# 解压安装包
+server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
 
-我们进入到 `apache-doris-x.x.x/fe` 目录
-
-```
-cd apache-doris-x.x.x/fe
+# 目录重命名为更为简单的 apache-doris 
+server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
 ```
 
-修改 FE 配置文件 `conf/fe.conf` ，这里我们主要修改两个参数：`priority_networks` 及 `meta_dir` ，如果你需要更多优化配置，请参考 [FE 参数配置](../admin-manual/config/fe-config.md)说明，进行调整。
+## 安装 Doris
 
-1. 添加 priority_networks 参数
+### 配置 FE
 
-```
-priority_networks=172.23.16.0/24
-```
+FE 的配置文件为 apache-doris/fe/fe.conf。下面是一些需要关注的核心配置。除了 JAVA_HOME, 需要手动增加，并且指向你的 JDK8 运行环境。其它配置，可以使用默认值，即可支持单机快速体验。
 
->注意：
->
->这个参数我们在安装的时候是必须要配置的，特别是当一台机器拥有多个 IP 地址的时候，我们要为 FE 指定唯一的 IP 地址。
+```Plain
+# 增加 JAVA_HOME 配置，指向 JDK8 的运行环境。假如我们 JDK8 位于 /home/doris/jdk8, 则设置如下
+JAVA_HOME=/home/doris/jdk8
 
-> 这里假设你的节点 IP 是 `172.23.16.32`，那么我们可以通过掩码的方式配置为 `172.23.16.0/24`。
+# FE 监听 IP 的 CIDR 网段。默认设置为空，有 Doris 启动时自动选择一个可用网段。如有多个网段，需要指定一个网段，可以类似设置 priority_networks=92.168.0.0/24
+# priority_networks =
 
-2. 添加元数据目录
-
-```
-meta_dir=/path/your/doris-meta
+# FE 元数据存放的目录，默认是在 DORIS_HOME 下的 doris-meta 目录。已经创建，可以更改为你的元数据存储路径。
+# meta_dir = ${DORIS_HOME}/doris-meta
 ```
 
->注意：
->
->这里你可以不配置，默认是在你的 Doris FE 安装目录下的 doris-meta，
->
->单独配置元数据目录，需要你提前创建好你指定的目录
+### 启动 FE
 
-### 启动 FE 
+在 apache-doris/fe 下，运行下面命令启动 FE。
 
-在 FE 安装目录下执行下面的命令，来完成 FE 的启动。
-
-```
-./bin/start_fe.sh --daemon
-```
-
-#### 查看 FE 运行状态
-
-你可以通过下面的命令来检查 Doris 是否启动成功
-
-```
-curl http://127.0.0.1:8030/api/bootstrap
-```
-
-这里 IP 和 端口分别是 FE 的 IP 和 http_port（默认 8030），如果是你在 FE 节点执行，直接运行上面的命令即可。
-
-如果返回结果中带有 `"msg":"success"` 字样，则说明启动成功。
-
-你也可以通过 Doris FE 提供的 Web UI 来检查，在浏览器里输入地址
-
-http:// fe_ip:8030
-
-可以看到下面的界面，说明 FE 启动成功
-
-![image-20220822091951739](/images/image-20220822091951739.png)
-
-
-
->注意：
->
->1. 这里我们使用 Doris 内置的默认用户 root 进行登录，密码是空
->2. 这是一个 Doris 的管理界面，只能拥有管理权限的用户才能登录，普通用户不能登录。
-
-#### 连接 FE
-
-我们下面通过 MySQL 客户端来连接 Doris FE，下载免安装的 [MySQL 客户端](https://dev.mysql.com/downloads/mysql/)
-
-解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
-
-```
-mysql -uroot -P9030 -h127.0.0.1
-```
-
->注意：
->
->1. 这里使用的 root 用户是 doris 内置的默认用户，也是超级管理员用户，具体的用户权限查看 [权限管理](../admin-manual/privilege-ldap/user-privilege.md)
->2. -P：这里是我们连接 Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
->3. -h：这里是我们连接的 FE IP 地址，如果你的客户端和 FE 安装在同一个节点可以使用 127.0.0.1。
-
-执行下面的命令查看 FE 运行状态
-
-```sql
-show frontends\G;
-```
-
-然后你可以看到类似下面的结果：
-
-```sql
-mysql> show frontends\G
-*************************** 1. row ***************************
-             Name: 172.21.32.5_9010_1660549353220
-               IP: 172.21.32.5
-      EditLogPort: 9010
-         HttpPort: 8030
-        QueryPort: 9030
-          RpcPort: 9020
-ArrowFlightSqlPort: 9040
-             Role: FOLLOWER
-         IsMaster: true
-        ClusterId: 1685821635
-             Join: true
-            Alive: true
-ReplayedJournalId: 49292
-    LastHeartbeat: 2022-08-17 13:00:45
-         IsHelper: true
-           ErrMsg:
-          Version: 1.1.2-rc03-ca55ac2
- CurrentConnected: Yes
-1 row in set (0.03 sec)
-```
-
-1. 如果 IsMaster、Join 和 Alive 三列均为 true，则表示节点正常。
-
-#### 加密连接 FE
-
-Doris 支持基于 SSL 的加密连接，当前支持 TLS1.2，TLS1.3 协议，可以通过以下配置开启 Doris 的 SSL 模式：
-修改 FE 配置文件`conf/fe.conf`，添加`enable_ssl = true`即可。
-
-接下来通过`mysql`客户端连接 Doris，mysql 支持五种 SSL 模式：
-
-1.`mysql -uroot -P9030 -h127.0.0.1`与`mysql --ssl-mode=PREFERRED -uroot -P9030 -h127.0.0.1`一样，都是一开始试图建立 SSL 加密连接，如果失败，则尝试使用普通连接。
-
-2.`mysql --ssl-mode=DISABLE -uroot -P9030 -h127.0.0.1`，不使用 SSL 加密连接，直接使用普通连接。
-
-3.`mysql --ssl-mode=REQUIRED -uroot -P9030 -h127.0.0.1`，强制使用 SSL 加密连接。
-
-4.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem -uroot -P9030 -h127.0.0.1`，强制使用 SSL 加密连接，并且通过指定 CA 证书验证服务端身份是否有效。
-
-5.`mysql --ssl-mode=VERIFY_CA --ssl-ca=ca.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem -uroot -P9030 -h127.0.0.1`，强制使用 SSL 加密连接，双向验证。
-
-
->注意：
->`--ssl-mode`参数是 mysql5.7.11 版本引入的，低于此版本的 mysql 客户端请参考[这里](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-connp-props-security.html)。
-
-Doris 开启 SSL 加密连接需要密钥证书文件验证，默认的密钥证书文件位于`Doris/fe/mysql_ssl_default_certificate/`下。密钥证书文件的生成请参考[密钥证书配置](../admin-manual/certificate.md)。
-
-#### 停止 FE 节点
-
-Doris FE 的停止可以通过下面的命令完成
-
-```
-./bin/stop_fe.sh
+```Bash
+# 将 FE 启动成后台运行模式，这样确保退出终端后，进程依旧运行。
+server1:apache-doris/fe doris$ ./bin/start_fe.sh --daemon
 ```
 
 ### 配置 BE
 
-我们进入到 `apache-doris-x.x.x/be` 目录
+BE 的配置文件为 apache-doris/be/be.conf。下面是一些需要关注的核心配置。除了 JAVA_HOME, 需要手动增加，并且指向你的 JDK8 运行环境。其它配置，可以使用默认值，即可支持我们的快速体验。
 
+```Plain
+# 增加 JAVA_HOME 配置，指向 JDK8 的运行环境。假如我们 JDK8 位于 /home/doris/jdk8, 则设置如下
+JAVA_HOME=/home/doris/jdk8
+
+# BE 监听 IP 的 CIDR 网段。默认设置为空，有 Doris 启动时自动选择一个可用网段。如有多个网段，需要指定一个网段，可以类似设置 priority_networks=192.168.0.0/24
+# priority_networks =
+
+# BE 数据存放的目录，默认是在 DORIS_HOME 下的 storage 下，默认已经创建，可以更改为你的数据存储路径
+# storage_root_path = ${DORIS_HOME}/storage
 ```
-cd apache-doris-x.x.x/be
-```
-
-修改 BE 配置文件 `conf/be.conf` ，这里我们主要修改两个参数：`priority_networks` 及 `storage_root` ，如果你需要更多优化配置，请参考 [BE 参数配置](../admin-manual/config/be-config.md)说明，进行调整。
-
-1. 添加 priority_networks 参数
-
-```
-priority_networks=172.23.16.0/24
-```
-
->注意：
->
->这个参数我们在安装的时候是必须要配置的，特别是当一台机器拥有多个 IP 地址的时候，我们要为 BE 指定唯一的 IP 地址。
-
-2. 配置 BE 数据存储目录
-
-
-```
-storage_root_path=/path/your/data_dir
-```
-
->注意：
->
->1. 默认目录在 BE 安装目录的 storage 目录下。
->2. BE 配置的存储目录必须先创建好
-
-3. 配置 JAVA_HOME 环境变量
-
-<version since="1.2.0"></version>  
-由于从 1.2 版本开始支持 Java UDF 函数，BE 依赖于 Java 环境。所以要预先配置 `JAVA_HOME` 环境变量，也可以在 `start_be.sh` 启动脚本第一行添加 `export JAVA_HOME=your_java_home_path` 来添加环境变量。
-
-4. 安装 Java UDF 函数
-
-<version since="1.2.0">安装 Java UDF 函数</version>  
-因为从 1.2 版本开始支持 Java UDF 函数，需要从官网下载 Java UDF 函数的 JAR 包放到 BE 的 lib 目录下，否则可能会启动失败。
-
-
 
 ### 启动 BE
 
-在 BE 安装目录下执行下面的命令，来完成 BE 的启动。
+在 apache-doris/be 下，运行下面命令启动 BE。
 
+```Bash
+# 将 BE 启动成后台运行模式，这样确保退出终端后，进程依旧运行。
+server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 ```
-./bin/start_be.sh --daemon
+
+### 连接 Doris FE
+
+通过 MySQL 客户端来连接 Doris FE，下载免安装的 [MySQL 客户端](https://dev.mysql.com/downloads/mysql/)。
+
+解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
+
+```Bash
+mysql -uroot -P9030 -h127.0.0.1
 ```
 
-#### 添加 BE 节点到集群
+注意：
 
-通过 MySQL 客户端连接到 FE 之后执行下面的 SQL，将 BE 添加到集群中
+-   这里使用的 root 用户是 Doris 内置的超级管理员用户，具体的用户权限查看 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md)
+-   -P：这里是我们连接 Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
+-   -h：这里是我们连接的 FE IP 地址，如果你的客户端和 FE 安装在同一个节点可以使用 127.0.0.1。
+
+### 将 BE 节点添加到集群
+
+在 MySQL 客户端执行类似下面的 SQL，将 BE 添加到集群中
 
 ```sql
-ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
+ ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-1. be_host_ip：这里是你 BE 的 IP 地址，和你在 `be.conf` 里的 `priority_networks` 匹配
-2. heartbeat_service_port：这里是你 BE 的心跳上报端口，和你在 `be.conf` 里的 `heartbeat_service_port` 匹配，默认是 `9050`。
+注意：
 
-#### 查看 BE 运行状态
+1.  be_host_ip：要添加 BE 的 IP 地址
 
-你可以在 MySQL 命令行下执行下面的命令查看 BE 的运行状态。
+2.  heartbeat_service_port：要添加 BE 的心跳上报端口，可以查看 `be.conf` 里的 `heartbeat_service_port`，默认是 `9050`。
+
+3.  通过 show backends 语句可以查看新添加的 BE 节点。
+
+### 修改 root 和 admin 的密码
+
+在 MySQL 客户端，执行类似下面的 SQL，为 root 和 admin 用户设置新密码
 
 ```sql
-SHOW BACKENDS\G
+mysql> SET PASSWORD FOR 'root' = PASSWORD('doris-root-password');                                                                                                                                                                                   
+Query OK, 0 rows affected (0.01 sec)                                                                                                                                                                                                       
+                                                                                                                                                                                                                                           
+mysql> SET PASSWORD FOR 'admin' = PASSWORD('doris-admin-password');                                                                                                                                                                                 
+Query OK, 0 rows affected (0.00 sec)        
 ```
 
-示例：
+:::tip
+root 和 admin 用户的区别
 
-```sql
-mysql> SHOW BACKENDS\G
-*************************** 1. row ***************************
-            BackendId: 10003
-              Cluster: default_cluster
-                   IP: 172.21.32.5
-        HeartbeatPort: 9050
-               BePort: 9060
-             HttpPort: 8040
-             BrpcPort: 8060
-   ArrowFlightSqlPort: 8070
-        LastStartTime: 2022-08-16 15:31:37
-        LastHeartbeat: 2022-08-17 13:33:17
-                Alive: true
- SystemDecommissioned: false
-ClusterDecommissioned: false
-            TabletNum: 170
-     DataUsedCapacity: 985.787 KB
-        AvailCapacity: 782.729 GB
-        TotalCapacity: 984.180 GB
-              UsedPct: 20.47 %
-       MaxDiskUsedPct: 20.47 %
-                  Tag: {"location" : "default"}
-               ErrMsg:
-              Version: 1.1.2-rc03-ca55ac2
-               Status: {"lastSuccessReportTabletsTime":"2022-08-17 13:33:05","lastStreamLoadTime":-1,"isQueryDisabled":false,"isLoadDisabled":false}
-1 row in set (0.01 sec)
+root 和 admin 用户都属于 Doris 安装完默认存在的 2 个账户。其中 root 拥有整个集群的超级权限，可以对集群完成各种管理操作，比如添加节点，去除节点。admin 用户没有管理权限，是集群中的 Superuser，拥有除集群管理相关以外的所有权限。建议只有在需要对集群进行运维管理超级权限时才使用 root 权限。
+:::
+
+## 建库建表
+
+### 连接 Doris
+
+使用 admin 账户连接 Doris FE。
+
+```Bash
+mysql -uadmin -P9030 -h127.0.0.1
 ```
 
-1. Alive : true 表示节点运行正常
+:::tip
+如果是在 FE 的同一台机器上的 MySQL 客户端连接 127.0.0.1, 不需要输入密码。
+:::
 
-#### 停止 BE 节点
-
-Doris BE 的停止可以通过下面的命令完成
-
-```
-./bin/stop_be.sh
-```
-
-## 创建数据表
-
-1. 创建一个数据库
+### 创建数据库和数据表
 
 ```sql
 create database demo;
-```
 
-2. 创建数据表
-
-```sql
-use demo;
-
-CREATE TABLE IF NOT EXISTS demo.example_tbl
+use demo; 
+create table mytable
 (
-    `user_id` LARGEINT NOT NULL COMMENT "用户id",
-    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-)
-AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-PROPERTIES (
-    "replication_allocation" = "tag.location.default: 1"
-);
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.05",    
+    k3 CHAR(10) COMMENT "string column",    
+    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+) 
+COMMENT "my first table"
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 ```
 
-3. 示例数据
+### 导入数据
 
-```
-10000,2017-10-01,北京,20,0,2017-10-01 06:00:00,20,10,10
-10000,2017-10-01,北京,20,0,2017-10-01 07:00:00,15,2,2
-10001,2017-10-01,北京,30,1,2017-10-01 17:05:45,2,22,22
-10002,2017-10-02,上海,20,1,2017-10-02 12:59:12,200,5,5
-10003,2017-10-02,广州,32,0,2017-10-02 11:20:00,30,11,11
-10004,2017-10-01,深圳,35,0,2017-10-01 10:00:15,100,3,3
-10004,2017-10-03,深圳,35,0,2017-10-03 10:20:22,11,6,6
-```
+将以下示例数据，保存在本地的 data.csv：
 
-将上面的数据保存在`test.csv`文件中。
-
-4. 导入数据
-
-这里我们通过 Stream load 方式将上面保存到文件中的数据导入到我们刚才创建的表里。
-
-```
-curl  --location-trusted -u root: -T test.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/example_tbl/_stream_load
+```Plaintext
+1,0.14,a1,20
+2,1.04,b2,21
+3,3.14,c3,22
+4,4.35,d4,23
 ```
 
-- -T test.csv : 这里使我们刚才保存的数据文件，如果路径不一样，请指定完整路径
-- -u root :  这里是用户名密码，我们使用默认用户 root，密码是空
-- 127.0.0.1:8030 : 分别是 fe 的 ip 和 http_port
+通过 Stream Load 方式将上面保存到文件中的数据导入到刚才创建的表里。
 
-执行成功之后我们可以看到下面的返回信息
-
-```json
-{
-    "TxnId": 30303,
-    "Label": "8690a5c7-a493-48fc-b274-1bb7cd656f25",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 7,
-    "NumberLoadedRows": 7,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 399,
-    "LoadTimeMs": 381,
-    "BeginTxnTimeMs": 3,
-    "StreamLoadPutTimeMs": 5,
-    "ReadDataTimeMs": 0,
-    "WriteDataTimeMs": 191,
-    "CommitAndPublishTimeMs": 175
-}
+```Bash
+curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/mytable/_stream_load
 ```
 
-1. `NumberLoadedRows`: 表示已经导入的数据记录数
+-   -T data.csv : 要导入的数据文件名
 
-2. `NumberTotalRows`: 表示要导入的总数据量
+-   -u admin:admin_password:  admin 账户与密码
 
-3. `Status` :Success 表示导入成功
+-   127.0.0.1:8030 : 分别是 FE 的 IP 和 http_port
 
-到这里我们已经完成的数据导入，下面就可以根据我们自己的需求对数据进行查询分析了。
+执行成功之后我们可以看到下面的返回信息：
 
-## 查询数据
+```Bash
+{                                                     
+    "TxnId": 30,                                  
+    "Label": "a56d2861-303a-4b50-9907-238fea904363",        
+    "Comment": "",                                       
+    "TwoPhaseCommit": "false",                           
+    "Status": "Success",                                 
+    "Message": "OK",                                    
+    "NumberTotalRows": 4,                                
+    "NumberLoadedRows": 4,                               
+    "NumberFilteredRows": 0,                             
+    "NumberUnselectedRows": 0,                          
+    "LoadBytes": 52,                                     
+    "LoadTimeMs": 206,                                    
+    "BeginTxnTimeMs": 13,                                
+    "StreamLoadPutTimeMs": 141,                           
+    "ReadDataTimeMs": 0,                                 
+    "WriteDataTimeMs": 7,                                
+    "CommitAndPublishTimeMs": 42                         
+} 
+```
 
-我们上面完成了建表，输数据导入，下面我们就可以体验 Doris 的数据快速查询分析能力。
+-   `NumberLoadedRows`: 表示已经导入的数据记录数
+
+-   `NumberTotalRows`: 表示要导入的总数据量
+
+-   `Status`: Success 表示导入成功
+
+### 查询数据
+
+在 MySQL 客户端中，执行如下 SQL，可以查询到刚才导入的数据：
 
 ```sql
-mysql> select * from example_tbl;
-+---------+------------+--------+------+------+---------------------+------+----------------+----------------+
-| user_id | date       | city   | age  | sex  | last_visit_date     | cost | max_dwell_time | min_dwell_time |
-+---------+------------+--------+------+------+---------------------+------+----------------+----------------+
-| 10000   | 2017-10-01 | 北京   |   20 |    0 | 2017-10-01 07:00:00 |   35 |             10 |              2 |
-| 10001   | 2017-10-01 | 北京   |   30 |    1 | 2017-10-01 17:05:45 |    2 |             22 |             22 |
-| 10002   | 2017-10-02 | 上海   |   20 |    1 | 2017-10-02 12:59:12 |  200 |              5 |              5 |
-| 10003   | 2017-10-02 | 广州   |   32 |    0 | 2017-10-02 11:20:00 |   30 |             11 |             11 |
-| 10004   | 2017-10-01 | 深圳   |   35 |    0 | 2017-10-01 10:00:15 |  100 |              3 |              3 |
-| 10004   | 2017-10-03 | 深圳   |   35 |    0 | 2017-10-03 10:20:22 |   11 |              6 |              6 |
-+---------+------------+--------+------+------+---------------------+------+----------------+----------------+
-6 rows in set (0.02 sec)
-
-mysql> select * from example_tbl where city='上海';
-+---------+------------+--------+------+------+---------------------+------+----------------+----------------+
-| user_id | date       | city   | age  | sex  | last_visit_date     | cost | max_dwell_time | min_dwell_time |
-+---------+------------+--------+------+------+---------------------+------+----------------+----------------+
-| 10002   | 2017-10-02 | 上海   |   20 |    1 | 2017-10-02 12:59:12 |  200 |              5 |              5 |
-+---------+------------+--------+------+------+---------------------+------+----------------+----------------+
-1 row in set (0.05 sec)
-
-mysql> select city, sum(cost) as total_cost from example_tbl group by city;
-+--------+------------+
-| city   | total_cost |
-+--------+------------+
-| 广州   |         30 |
-| 上海   |        200 |
-| 北京   |         37 |
-| 深圳   |        111 |
-+--------+------------+
-4 rows in set (0.05 sec)
+mysql> select * from mytable;                                                                                                                                                                                                              
++------+------+------+------+                                                                                                                                                                                                              
+| k1   | k2   | k3   | k4   |                                                                                                                                                                                                              
++------+------+------+------+                                                                                                                                                                                                              
+|    1 | 0.14 | a1   |   20 |                                                                                                                                                                                                              
+|    2 | 1.04 | b2   |   21 |                                                                                                                                                                                                              
+|    3 | 3.14 | c3   |   22 |                                                                                                                                                                                                              
+|    4 | 4.35 | d4   |   23 |                                                                                                                                                                                                              
++------+------+------+------+                                                                                                                                                                                                              
+4 rows in set (0.01 sec)       
 ```
 
+## 停止 Doris
 
+### 停止 FE
 
-到这里我们整个快速开始就结束了，我们从 Doris 安装部署、启停、创建库表、数据导入及查询，完整的体验了 Doris 的操作流程，下面开始我们 Doris 使用之旅吧。
+在 apache-doris/fe 下，运行下面命令停止 FE。
+
+```Bash
+server1:apache-doris/fe doris$ ./bin/stop_fe.sh
+```
+
+### 停止 BE
+
+在 apache-doris/be 下，运行下面命令停止 BE。
+
+```Bash
+server1:apache-doris/be doris$ ./bin/stop_be.sh
+```

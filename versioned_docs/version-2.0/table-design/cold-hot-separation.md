@@ -1,6 +1,6 @@
 ---
 {
-"title": "Cold Hot Separation",
+"title": "Tiered Storage",
 "language": "en"
 }
 ---
@@ -210,8 +210,6 @@ Garbage data for cold data refers to data that is not used by any replica. The f
 Furthermore, the garbage data on objects is not immediately cleaned up. The BE parameter `remove_unused_remote_files_interval_sec` sets the time interval for garbage collection of cold data. The default value is 21600 seconds (6 hours).
 
 ## TODOs
-
-- Currently, there is no way to query tables associated with a specific storage policy.
 
 - Some remote occupancy metrics may not have comprehensive update retrieval.
 

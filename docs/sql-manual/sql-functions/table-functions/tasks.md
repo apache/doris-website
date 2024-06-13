@@ -28,11 +28,10 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
+:::tip
 tasks
-
-</version>
+- since 2.1
+:::
 
 ### description
 
@@ -58,25 +57,35 @@ the **type** supported types
 The table schema of `tasks("type"="insert");` tvf：
 
 ```
-mysql> desc function tasks("type"="insert");
+mysql> desc  function tasks("type"="insert");;
 +---------------+------+------+-------+---------+-------+
 | Field         | Type | Null | Key   | Default | Extra |
 +---------------+------+------+-------+---------+-------+
 | TaskId        | TEXT | No   | false | NULL    | NONE  |
 | JobId         | TEXT | No   | false | NULL    | NONE  |
+| JobName       | TEXT | No   | false | NULL    | NONE  |
 | Label         | TEXT | No   | false | NULL    | NONE  |
 | Status        | TEXT | No   | false | NULL    | NONE  |
-| EtlInfo       | TEXT | No   | false | NULL    | NONE  |
-| TaskInfo      | TEXT | No   | false | NULL    | NONE  |
 | ErrorMsg      | TEXT | No   | false | NULL    | NONE  |
-| CreateTimeMs  | TEXT | No   | false | NULL    | NONE  |
-| FinishTimeMs  | TEXT | No   | false | NULL    | NONE  |
+| CreateTime    | TEXT | No   | false | NULL    | NONE  |
+| FinishTime    | TEXT | No   | false | NULL    | NONE  |
 | TrackingUrl   | TEXT | No   | false | NULL    | NONE  |
 | LoadStatistic | TEXT | No   | false | NULL    | NONE  |
 | User          | TEXT | No   | false | NULL    | NONE  |
 +---------------+------+------+-------+---------+-------+
-12 rows in set (0.01 sec)
+11 row in set (0.01 sec)
 ```
+- TaskId: task id
+- JobId: job id
+- JobName: job name
+- Label: label
+- Status: task status
+- ErrorMsg: task failure information
+- CreateTime: task creation time
+- FinishTime: task completion time
+- TrackingUrl: tracking URL
+- LoadStatistic: load statistics
+- User: user
 ##### MV Tasks
 ```sql
 mysql> desc function tasks("type"="mv");

@@ -28,11 +28,11 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 active_queries
 
-</version>
+:::caution
+Since 2.1.1, this table function has been moved to the information_schema.active_queries.
+:::
 
 ### description
 

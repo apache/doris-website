@@ -242,6 +242,7 @@
                 "ecosystem/plugin-development-manual",
                 "ecosystem/audit-plugin",
                 "ecosystem/cloudcanal",
+                "ecosystem/automq-load",
                 "ecosystem/hive-bitmap-udf",
                 {
                     "type": "category",

@@ -45,7 +45,7 @@ under the License.
 | 1.3.0             | 1.16                | 1.0+   | 8    | -         |
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
-| 1.6.0             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
+| 1.6.1             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
 
 ## USE
 
@@ -58,7 +58,7 @@ Add flink-doris-connector
 <dependency>
    <groupId>org.apache.doris</groupId>
    <artifactId>flink-doris-connector-1.16</artifactId>
-   <version>1.5.2</version>
+   <version>1.6.0</version>
 </dependency>
 ```
 
@@ -107,7 +107,7 @@ DorisOptions.Builder builder = DorisOptions.builder()
          .setUsername("root")
          .setPassword("password");
 
-DorisSource<List<?>> dorisSource = DorisSourceBuilder.<List<?>>builder()
+DorisSource<List<?>> dorisSource = DorisSource.<List<?>>builder()
          .setDorisOptions(builder.build())
          .setDorisReadOptions(DorisReadOptions.builder().build())
          .setDeserializer(new SimpleListDeserializationSchema())
@@ -321,24 +321,19 @@ ON a.city = c.city
 | password                         | --            | Y        | Password to access Doris                                     |
 | auto-redirect                    | true          | N        | Whether to redirect StreamLoad requests. After being turned on, StreamLoad will be written through FE, and BE information will no longer be displayed. |
 | doris.request.retries            | 3             | N        | Number of retries to send requests to Doris                  |
-| doris.request.connect.timeout | 30s         | N        | Connection timeout for sending requests to Doris             |
-| doris.request.read.timeout    | 30s         | N        | Read timeout for sending requests to Doris                   |
+| doris.request.connect.timeout.ms | 30000         | N        | Connection timeout for sending requests to Doris             |
+| doris.request.read.timeout.ms    | 30000         | N        | Read timeout for sending requests to Doris                   |
 
 ### Source configuration item
 
 | Key                           | Default Value      | Required | Comment                                                      |
 | ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
-| doris.request.query.timeout | 21600s              | N        | The timeout time for querying Doris, the default value is 6 hour |
-| doris.request.tablet.size     | 1 | N        | The number of Doris Tablets corresponding to a Partition. The smaller this value is set, the more Partitions will be generated. This improves the parallelism on the Flink side, but at the same time puts more pressure on Doris. |
+| doris.request.query.timeout.s | 3600               | N        | The timeout time for querying Doris, the default value is 1 hour, -1 means no timeout limit |
+| doris.request.tablet.size     | Integer. MAX_VALUE | N        | The number of Doris Tablets corresponding to a Partition. The smaller this value is set, the more Partitions will be generated. This improves the parallelism on the Flink side, but at the same time puts more pressure on Doris. |
 | doris.batch.size              | 1024               | N        | The maximum number of rows to read data from BE at a time. Increasing this value reduces the number of connections established between Flink and Doris. Thereby reducing the additional time overhead caused by network delay. |
-| doris.exec.mem.limit          | 8192mb         | N        | Memory limit for a single query. The default is 8GB, in bytes |
+| doris.exec.mem.limit          | 2147483648         | N        | Memory limit for a single query. The default is 2GB, in bytes |
 | doris.deserialize.arrow.async | FALSE              | N        | Whether to support asynchronous conversion of Arrow format to RowBatch needed for flink-doris-connector iterations |
 | doris.deserialize.queue.size  | 64                 | N        | Asynchronous conversion of internal processing queue in Arrow format, effective when doris.deserialize.arrow.async is true |
-
-#### DataStream proprietary configuration items
-
-| Key                           | Default Value      | Required | Comment                                                      |
-| ----------------------------- | ------------------ | -------- | ------------------------------------------------------------ |
 | doris.read.field              | --                 | N        | Read the list of column names of the Doris table, separated by commas |
 | doris.filter.query            | --                 | N        | The expression to filter the read data, this expression is transparently passed to Doris. Doris uses this expression to complete source-side data filtering. For example age=18. |
 
@@ -347,9 +342,9 @@ ON a.city = c.city
 | Key                         | Default Value | Required | Comment                                                      |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
 | sink.label-prefix           | --            | Y        | The label prefix used by Stream load import. In the 2pc scenario, global uniqueness is required to ensure Flink's EOS semantics. |
-| sink.properties.*           | --            | N        | Import parameters for Stream Load. <br/>For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br/><br/>JSON format import<br/>'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br/>Detailed parameters refer to [here](../data-operate/import/import-way/stream-load-manual.md). |
+| sink.properties.*           | --            | N        | Import parameters for Stream Load. <br/>For example: 'sink.properties.column_separator' = ', ' defines column delimiters, 'sink.properties.escape_delimiters' = 'true' special characters as delimiters, '\x01' will be converted to binary 0x01 <br/><br/>JSON format import<br/>'sink.properties.format' = 'json' 'sink.properties. read_json_by_line' = 'true'<br/>Detailed parameters refer to [here](../data-operate/import/stream-load-manual.md). |
 | sink.enable-delete          | TRUE          | N        | Whether to enable delete. This option requires the Doris table to enable the batch delete function (Doris 0.15+ version is enabled by default), and only supports the Unique model. |
-| sink.enable-2pc             | TRUE          | N        | Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/import-way/stream-load-manual.md). |
+| sink.enable-2pc             | TRUE          | N        | Whether to enable two-phase commit (2pc), the default is true, to ensure Exactly-Once semantics. For two-phase commit, please refer to [here](../data-operate/import/stream-load-manual.md). |
 | sink.buffer-size            | 1MB           | N        | The size of the write data cache buffer, in bytes. It is not recommended to modify, the default configuration is enough |
 | sink.buffer-count           | 3             | N        | The number of write data buffers. It is not recommended to modify, the default configuration is enough |
 | sink.max-retries            | 3             | N        | Maximum number of retries after Commit failure, default 3    |
@@ -396,6 +391,11 @@ ON a.city = c.city
 | ARRAY      | ARRAY             |
 | MAP        | MAP             |
 | JSON       | STRING             |
+| VARIANT    | STRING |
+| IPV4       | STRING |
+| IPV6       | STRING |
+
+> Starting from version connector-1.6.1, support is added for reading three data types: Variant, IPV6, and IPV4. Reading IPV6 and Variant requires Doris version 2.1.1 or higher.         
 
 
 ## Flink write Metrics
@@ -541,10 +541,11 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --sink-conf             | All configurations of Doris Sink can be found [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9) View the complete configuration items. |
 | --table-conf            | The configuration items of the Doris table(The exception is table-buckets, non-properties attributes), that is, the content contained in properties. For example `--table-conf replication_num=1`, and the `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"` option specifies the number of buckets for different tables based on the order of regular expressions. If there is no match, the table is created with the default setting of BUCKETS AUTO. |
 | --ignore-default-value  | Turn off the default value of synchronizing mysql table structure. It is suitable for synchronizing mysql data to doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152) |
-| --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
+| --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. since version 1.6.0, the default value has been set to true. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
 | --single-sink           | Whether to use a single Sink to synchronize all tables. When turned on, newly created tables in the upstream can also be automatically recognized and tables automatically created. |
 | --multi-to-one-origin   | When writing multiple upstream tables into the same table, the configuration of the source table, for example: --multi-to-one-origin="a\_.\*｜b_.\*"， Reference [here](https://github.com/apache/doris-flink-connector/pull/208) |
 | --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target="a\|b" |
+| --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
 >Note: When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar
 
@@ -712,7 +713,7 @@ The most suitable scenario for using Flink Doris Connector is to synchronize sou
 ### Other
 
 1. The Flink Doris Connector mainly relies on Checkpoint for streaming writing, so the interval between Checkpoints is the visible delay time of the data.
-2. To ensure the Exactly Once semantics of Flink, the Flink Doris Connector enables two-phase commit by default, and Doris enables two-phase commit by default after version 1.1. 1.0 can be enabled by modifying the BE parameters, please refer to [two_phase_commit](../data-operate/import/import-way/stream-load-manual.md).
+2. To ensure the Exactly Once semantics of Flink, the Flink Doris Connector enables two-phase commit by default, and Doris enables two-phase commit by default after version 1.1. 1.0 can be enabled by modifying the BE parameters, please refer to [two_phase_commit](../data-operate/import/stream-load-manual.md).
 
 ## FAQ
 
@@ -741,7 +742,7 @@ WITH (
    'sink.label-prefix' = 'doris_label',
    'sink.properties.columns' = 'dt,page,user_id,user_id=to_bitmap(user_id)'
 )
-````
+```
 4. **errCode = 2, detailMessage = Label [label_0_1] has already been used, relate to txn [19650]**
 
 In the Exactly-Once scenario, the Flink Job must be restarted from the latest Checkpoint/Savepoint, otherwise the above error will be reported.
@@ -754,13 +755,13 @@ At this time, it cannot be started from the checkpoint, and the expiration time 
 
 6. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-This is because the concurrent import of the same library exceeds 100, which can be solved by adjusting the parameter `max_running_txn_num_per_db` of fe.conf. For details, please refer to [max_running_txn_num_per_db](https://doris.apache.org/zh-CN/docs/dev/admin-manual/config/fe-config/#max_running_txn_num_per_db)
+This is because the concurrent import of the same library exceeds 100, which can be solved by adjusting the parameter `max_running_txn_num_per_db` of fe.conf. For details, please refer to [max_running_txn_num_per_db](../admin-manual/config/fe-config#max_running_txn_num_per_db)
 
 At the same time, if a task frequently modifies the label and restarts, it may also cause this error. In the 2pc scenario (Duplicate/Aggregate model), the label of each task needs to be unique, and when restarting from the checkpoint, the Flink task will actively abort the txn that has been successfully precommitted before and has not been committed. Frequently modifying the label and restarting will cause a large number of txn that have successfully precommitted to fail to be aborted, occupying the transaction. Under the Unique model, 2pc can also be turned off, which can realize idempotent writing.
 
 7. **How to ensure the order of a batch of data when Flink writes to the Uniq model?**
 
-You can add sequence column configuration to ensure that, for details, please refer to [sequence](https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual)
+You can add sequence column configuration to ensure that, for details, please refer to [sequence](../data-operate/update/update-of-unique-model.md)
 
 8. **The Flink task does not report an error, but the data cannot be synchronized? **
 
@@ -787,7 +788,7 @@ You can search for the log `abort transaction response` in TaskManager and deter
 
 14. **org.apache.flink.table.api.SqlParserException when using doris.filter.query: SQL parsing failed. "xx" encountered at row x, column xx**
 
-This problem is mainly caused by the conditional varchar/string type, which needs to be quoted. The correct way to write it is xxx = ''xxx''. In this way, the Flink SQL parser will interpret two consecutive single quotes as one single quote character instead of The end of the string, and the concatenated string is used as the value of the attribute. For example: `t1 >= '2024-01-01'` can be written as `'doris.filter.query' = 't1 >=''2024-01-01'''`. After Connector 1.6.0, FlinkSQL can implement automatic predicate and projection pushdown.
+This problem is mainly caused by the conditional varchar/string type, which needs to be quoted. The correct way to write it is xxx = ''xxx''. In this way, the Flink SQL parser will interpret two consecutive single quotes as one single quote character instead of The end of the string, and the concatenated string is used as the value of the attribute. For example: `t1 >= '2024-01-01'` can be written as `'doris.filter.query' = 't1 >=''2024-01-01'''`.
 
 15. **Failed to connect to backend: http://host:webserver_port, and BE is still alive**
 

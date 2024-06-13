@@ -30,6 +30,8 @@ under the License.
 `T round_bankers(T x[, d])`
 将`x`使用银行家舍入法后，保留d位小数，`d`默认为0。如果`d`为负数，则小数点左边`d`位为0。如果`x`或`d`为null，返回null。
 
+如果 d 为一个列，并且第一个参数为 Decimal 类型，那么结果 Decimal 会跟入参 Decimal 具有相同的小数部分长度。
+
 + 如果舍入数介于两个数字之间，则该函数使用银行家的舍入
 + 在其他情况下，该函数将数字四舍五入到最接近的整数。
 
@@ -73,6 +75,18 @@ mysql> select round_bankers(1667.2725, -2);
 +------------------------------+
 |                         1700 |
 +------------------------------+
+mysql> SELECT number
+    -> , round_bankers(number * 2.5, number - 1) AS rb_decimal_column
+    -> , round_bankers(number * 2.5, 0) AS rb_decimal_literal
+    -> , round_bankers(cast(number * 2.5 AS DOUBLE), number - 1) AS rb_double_column
+    -> , round_bankers(cast(number * 2.5 AS DOUBLE), 0) AS rb_double_literal
+    -> FROM test_enhanced_round
+    -> WHERE rid = 1;
++--------+-------------------+--------------------+------------------+-------------------+
+| number | rb_decimal_column | rb_decimal_literal | rb_double_column | rb_double_literal |
++--------+-------------------+--------------------+------------------+-------------------+
+|      1 |               2.0 |                  2 |                2 |                 2 |
++--------+-------------------+--------------------+------------------+-------------------+
 ```
 
 ### keywords

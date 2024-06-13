@@ -1,7 +1,7 @@
 ---
 {
     'title': "A financial anti-fraud solution based on the Apache Doris data warehouse",
-    'summary': "Financial fraud prevention is a race against time. This post will get into details about how a retail bank builds their fraud risk management platform based on Apache Doris and how it performs. ",
+    'description': "Financial fraud prevention is a race against time. This post will get into details about how a retail bank builds their fraud risk management platform based on Apache Doris and how it performs. ",
     'date': '2024-02-22',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
@@ -42,7 +42,7 @@ In this platform, **80% of ad-hoc queries** return results in less than **2 seco
 
 This is an overview of the entire platform from an architectural perspective. 
 
-![Fraud Risk Management Platform](../static/images/fraud-risk-management-platform.png)
+![Fraud Risk Management Platform](/images/fraud-risk-management-platform.png)
 
 The **source data** can be roughly categorized as:
 
@@ -104,4 +104,4 @@ So far, the bank has added nearly 100 alerting rules for various risk types to t
 
 ## Conclusion
 
-For a comprehensive anti-fraud solution, the bank conducts full-scale real-time monitoring and reporting for all their data workflows. Then, for each transaction, they look into the multiple dimensions of it to identify risks. For the suspicious transactions reported by the bank customers, they perform federated queries to retrieve the full details of them. Also, an auto alerting mechanism is always on patrol to safeguard the whole system. These are the various types of analytic workloads in this solution. The implementation of them rely on the capabilities of Apache Doris, which is a data warehouse designed to be an all-in-one platform for various workloads. If you try to build your own anti-fraud solution, the [Apache Doris open source developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) are happy to exchange ideas with you.
+For a comprehensive anti-fraud solution, the bank conducts full-scale real-time monitoring and reporting for all their data workflows. Then, for each transaction, they look into the multiple dimensions of it to identify risks. For the suspicious transactions reported by the bank customers, they perform federated queries to retrieve the full details of them. Also, an auto alerting mechanism is always on patrol to safeguard the whole system. These are the various types of analytic workloads in this solution. The implementation of them rely on the capabilities of Apache Doris, which is a data warehouse designed to be an all-in-one platform for various workloads. If you try to build your own anti-fraud solution, the [Apache Doris open source developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) are happy to exchange ideas with you.

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Database in fintech: how to support 10,000 dashboards without causing a mess',
-    'summary': "This article introduces the lifecycle of financial metrics in a database, from how they're produced to how they're efficiently presented in data reports.",
+    'description': "This article introduces the lifecycle of financial metrics in a database, from how they're produced to how they're efficiently presented in data reports.",
     'date': '2023-08-05',
     'author': 'Hou Lan',
     'tags': ['Best Practice'],
@@ -51,11 +51,11 @@ When the metrics are soundly put in place, you can ingest new data into your dat
 
 As is mentioned, some metrics are produced by combining multiple fields in the source table. In data engineering, that is a multi-table join query. Based on the optimization experience of an Apache Doris user, we recommend flat tables instead of Star/Snowflake Schema. The user reduced the query response time on tables of 100 million rows **from 5s to 63ms** after such a change.
 
-![join-queries](../static/images/Pingan_1.png)
+![join-queries](/images/Pingan_1.png)
 
 The flat table solution also eliminates jitter.
 
-![reduced-jitter](../static/images/Pingan_2.png)
+![reduced-jitter](/images/Pingan_2.png)
 
 ## Enable SQL Caching to Reduce Resource Consumption
 
@@ -66,13 +66,13 @@ Analysts often check data reports of the same metrics on a regular basis. These 
 - A TPS (Transactions Per Second) of 300 is reached, with CPU, memory, disk, and I/O usage under 80%;
 - Under the recommended cluster size, over 10,000 metrics can be cached, which means you can save a lot of computation resources.
 
-![reduced-computation-resources](../static/images/Pingan_3.png)
+![reduced-computation-resources](/images/Pingan_3.png)
 
 ## Conclusion
 
 The complexity of data analysis in the financial industry lies in the data itself other than the engineering side. Thus, the underlying data architecture should focus on facilitating the unified and efficient management of data. Apache Doris provides the flexibility of simple metric registration and the ability of fast and resource-efficient metric computation. In this case, the user is able to handle 10,000 active financial metrics in 10,000 dashboards with 30% less ETL efforts.
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).
 
 
 

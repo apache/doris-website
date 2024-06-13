@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Tencent data engineer: why we went from ClickHouse to Apache Doris?',
-    'summary': "Evolution of the data processing architecture of Tencent Music Entertainment towards better performance and simpler maintenance.",
+    'description': "Evolution of the data processing architecture of Tencent Music Entertainment towards better performance and simpler maintenance.",
     'date': '2023-03-07',
     'author': 'Jun Zhang & Kai Dai',
     'tags': ['Best Practice'],
@@ -28,7 +28,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-![Tencent-use-case-of-Apache-Doris](../static/images/TME/TME.png)
+![Tencent-use-case-of-Apache-Doris](/images/TME/TME.png)
 
 This article is co-written by me and my colleague Kai Dai. We are both data platform engineers at [Tencent Music](https://www.tencentmusic.com/en-us/) (NYSE: TME), a music streaming service provider with a whopping 800 million monthly active users. To drop the number here is not to brag but to give a hint of the sea of data that my poor coworkers and I have to deal with everyday.
 
@@ -38,7 +38,7 @@ The music library of Tencent Music contains data of all forms and types: recorde
 
 Specifically, we do all-round analysis of the songs, lyrics, melodies, albums, and artists, turn all this information into data assets, and pass them to our internal data users for inventory counting, user profiling, metrics analysis, and group targeting.
 
-![data-pipeline](../static/images/TME/TME_1.png)
+![data-pipeline](/images/TME/TME_1.png)
 
 We stored and processed most of our data in Tencent Data Warehouse (TDW), an offline data platform where we put the data into various tag and metric systems and then created flat tables centering each object (songs, artists, etc.).
 
@@ -48,7 +48,7 @@ After that, our data analysts used the data under the tags and metrics they need
 
 The data processing pipeline looked like this:
 
-![data-warehouse-architecture-1.0](../static/images/TME/TME_2.png)
+![data-warehouse-architecture-1.0](/images/TME/TME_2.png)
 
 # The Problems with ClickHouse
 
@@ -72,7 +72,7 @@ Statistically speaking, these features have cut our storage cost by 42% and deve
 
 During our usage of Doris, we have received lots of support from the open source Apache Doris community and timely help from the SelectDB team, which is now running a commercial version of Apache Doris.
 
-![data-warehouse-architecture-2.0](../static/images/TME/TME_3.png)
+![data-warehouse-architecture-2.0](/images/TME/TME_3.png)
 
 # Further Improvement to Serve Our Needs
 
@@ -82,7 +82,7 @@ Speaking of the datasets, on the bright side, our data analysts are given the li
 
 Our solution is to introduce a semantic layer in our data processing pipeline. The semantic layer is where all the technical terms are translated into more comprehensible concepts for our internal data users. In other words, we are turning the tags and metrics into first-class citizens for data definement and management.
 
-![data-warehouse-architecture-3.0](../static/images/TME/TME_4.png)
+![data-warehouse-architecture-3.0](/images/TME/TME_4.png)
 
 **Why would this help?**
 
@@ -96,7 +96,7 @@ Explicitly defining the tags and metrics at the semantic layer was not enough. I
 
 For this sake, we made the semantic layer the heart of our data management system:
 
-![data-warehouse-architecture-4.0](../static/images/TME/TME_5.png)
+![data-warehouse-architecture-4.0](/images/TME/TME_5.png)
 
 **How does it work?**
 
@@ -112,7 +112,7 @@ As you can see, Apache Doris has played a pivotal role in our solution. Optimizi
 
 ## What We Want?
 
-![goals-of-a-data-analytic-solution](../static/images/TME/TME_6.png)
+![goals-of-a-data-analytic-solution](/images/TME/TME_6.png)
 
 Currently, we have 800+ tags and 1300+ metrics derived from the 80+ source tables in TDW.
 
@@ -127,7 +127,7 @@ When importing data from TDW to Doris, we hope to achieve:
 
 1. **Generate Flat Tables in Flink Instead of TDW**
 
-![generate-flat-tables-in-Flink](../static/images/TME/TME_7.png)
+![generate-flat-tables-in-Flink](/images/TME/TME_7.png)
 
 Generating flat tables in TDW has a few downsides:
 
@@ -144,7 +144,7 @@ On the contrary, generating flat tables in Doris is much easier and less expensi
 
 As is shown below, Flink has aggregated the five lines of data, of which “ID”=1, into one line in Doris, reducing the data writing pressure on Doris.
 
-![flat-tables-in-Flink-2](../static/images/TME/TME_8.png)
+![flat-tables-in-Flink-2](/images/TME/TME_8.png)
 
 This can largely reduce storage costs since TDW no long has to maintain two copies of data and KafKa only needs to store the new data pending for ingestion. What’s more, we can add whatever ETL logic we want into Flink and reuse lots of development logic for offline and real-time data ingestion.
 
@@ -185,7 +185,7 @@ max_cumulative_compaction_num_singleton_deltas
 
 - Optimization of the BE commit logic: conduct regular caching of BE lists, commit them to the BE nodes batch by batch, and use finer load balancing granularity.
 
-![stable-compaction-score](../static/images/TME/TME_9.png)
+![stable-compaction-score](/images/TME/TME_9.png)
 
 **4. Use Dori-on-ES in Queries**
 
@@ -215,7 +215,7 @@ I. When Doris BE pulls data from Elasticsearch (1024 lines at a time by default)
 
 II. After the data pulling, Doris BE needs to conduct Join operations with local metric tables via SHUFFLE/BROADCAST, which can cost a lot.
 
-![Doris-on-Elasticsearch](../static/images/TME/TME_10.png)
+![Doris-on-Elasticsearch](/images/TME/TME_10.png)
 
 Thus, we make the following optimizations:
 
@@ -225,7 +225,7 @@ Thus, we make the following optimizations:
 - Use ES to compress the queried data; turn multiple data fetch into one and reduce network I/O overhead.
 - Make sure that Doris BE only pulls the data of buckets related to the local metric tables and conducts local Join operations directly to avoid data shuffling between Doris BEs.
 
-![Doris-on-Elasticsearch-2](../static/images/TME/TME_11.png)
+![Doris-on-Elasticsearch-2](/images/TME/TME_11.png)
 
 As a result, we reduce the query response time for large group targeting from 60 seconds to a surprising 3.7 seconds.
 
@@ -255,4 +255,4 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ)
+Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA)

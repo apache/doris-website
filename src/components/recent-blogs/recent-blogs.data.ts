@@ -1,19 +1,20 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'Auto-increment columns in databases: a simple magic that makes a big difference',
-        link: 'https://doris.apache.org/blog/auto-increment-columns-in-databases',
+        label: 'Apache Doris version 2.0.11 has been released',
+        link: 'https://doris.apache.org/blog/release-note-2.0.11',
     },
     {
-        label: `Another big leap: Apache Doris 2.1.0 is released`,
-        link: 'https://doris.apache.org/blog/release-note-2.1.0',
+        label: 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
+        link: 'https://doris.apache.org/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
     },
     {
-        label: `Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis`,
-        link: 'https://doris.apache.org/blog/variant-in-apache-doris-2.1',
+        label: 'Multi-tenant workload isolation: a better balance between isolation and utilization',
+        link: 'https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris',
     },
     {
-        label: 'Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP',
-        link: 'https://doris.apache.org/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp',
+        label: `From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration`,
+        link: 'https://doris.apache.org/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
     },
+
 
 ];

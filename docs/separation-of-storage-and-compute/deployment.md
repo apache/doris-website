@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Separation of Storage and Compute - Deployment",
+    "title": "Deploying Doris",
     "language": "en-US"
 }
 ---

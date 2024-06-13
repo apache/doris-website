@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris announced the official release of version 2.0.1',
-    'summary': 'Dear community, Apache Doris has fixed 383 issues or performance improvements in version 2.0.1 based on 2.0.0, enabling smoother user experience.',
+    'description': 'Dear community, Apache Doris has fixed 383 issues or performance improvements in version 2.0.1 based on 2.0.0, enabling smoother user experience.',
     'date': '2023-09-04',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

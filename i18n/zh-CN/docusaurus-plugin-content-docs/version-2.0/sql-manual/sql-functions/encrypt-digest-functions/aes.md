@@ -36,7 +36,7 @@ Reference: https://dev.mysql.com/doc/refman/8.0/en/encryption-functions.html#fun
 ### Compatibility
 
 1. aes_decrypt/aes_encrypt/sm4_decrypt/sm4_encrypt 当没有提供初始向量时，block_encryption_mode 不生效，最终都会使用 AES_128_ECB 加解密，这和 MySQL 的行为不一致。
-2. 增加 aes_decrypt_v2/aes_encrypt_v2/sm4_decrypt_v2/sm4_encrypt_v2 函数支持正确的行为，没有提供初始向量时，block_encryption_mode 可以生效，aes-192-ecb 和 aes-256-ecb 将正确加解密，其他块加密模式将报错。如果无需兼容旧数据，可直接使用v2函数。
+2. 增加 aes_decrypt_v2/aes_encrypt_v2/sm4_decrypt_v2/sm4_encrypt_v2 函数支持正确的行为，没有提供初始向量时，block_encryption_mode 可以生效，aes-192-ecb 和 aes-256-ecb 将正确加解密，其他块加密模式将报错。如果无需兼容旧数据，可直接使用 v2 函数。
 
 #### Syntax
 
@@ -94,7 +94,7 @@ select to_base64(aes_encrypt('text','F3229A0B371ED2D9441B830D21A390C3', '0123456
 1 row in set (0.01 sec)
 ```
 
-关于 `block_encryption_mode` 可选的值可以参见：[变量章节](../../../advanced/variables.md)。
+关于 `block_encryption_mode` 可选的值可以参见：[变量章节](../../../query/query-variables/variables)。
 
 ### Keywords
 
@@ -161,7 +161,7 @@ select AES_DECRYPT(FROM_BASE64('tsmK1HzbpnEdR2//WhO+MA=='),'F3229A0B371ED2D9441B
 1 row in set (0.01 sec)
 ```
 
-关于 `block_encryption_mode` 可选的值可以参见：[变量章节](../../../advanced/variables.md)。
+关于 `block_encryption_mode` 可选的值可以参见：[变量章节](../../../query/query-variables/variables)。
 
 ### Keywords
 

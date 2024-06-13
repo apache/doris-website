@@ -80,7 +80,7 @@ git commit -a -m "<you_commit_message>"
 git push origin <your_branch_name>
 ```
 
-For more git usage, please visit: [git usage](https://www.atlassian.com/git/tutorials/set-up-a-repository), not to mention here.
+For more git usage, please visit: [git usage](https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories), not to mention here.
 
 ## 3. Create PR
 

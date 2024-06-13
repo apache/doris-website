@@ -53,7 +53,7 @@ export default function ClusterManagement() {
                         <>
                             <ExternalLink href="https://www.velodb.io/download/tools" label="Download"></ExternalLink>
                             <ExternalLink
-                                href="https://doris.apache.org/docs/install/k8s-deploy/operator-deploy"
+                                href="https://doris.apache.org/docs/install/cluster-deployment/k8s-deploy/install-env"
                                 className="sub-btn"
                                 label="Docs"
                                 linkIcon={<ExternalLinkArrowIcon />}

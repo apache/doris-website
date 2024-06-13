@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WORKLOAD GROUP",
+    "title": "Workload Group",
     "language": "en"
 }
 ---
@@ -24,9 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# WORKLOAD GROUP
 
-<version since="dev"></version>
 
 The workload group can limit the use of compute and memory resources on a single be node for tasks within the group. Currently, query binding to workload groups is supported.
 
@@ -55,7 +53,7 @@ properties (
     "enable_memory_overcommit"="true"
 ).
 ```
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP.md), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP.md); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP.md); to view the workload group, refer to: [WORKLOAD_GROUPS()](../sql-manual/sql-functions/table-functions/workload-group.md) and [SHOW-WORKLOAD-GROUPS](../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md).
+For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP.md), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP.md); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP.md); to view the workload group, refer to: [WORKLOAD_GROUPS()](../../sql-manual/sql-functions/table-functions/workload-group.md) and [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md).
 
 
 3. turn on the pipeline execution engine, the workload group cpu isolation is based on the implementation of the pipeline execution engine, so you need to turn on the session variable:
@@ -75,7 +73,7 @@ set workload_group = 'g2'.
 ```
 session variable `workload_group` takes precedence over user property `default_workload_group`, in case `workload_group` is empty, the query will be bound to `default_workload_group`, in case session variable ` workload_group` is not empty, the query will be bound to `workload_group`.
 
-If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../sql-manual/sql-reference/Account-Management-Statements/GRANT.md).
+If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md).
 
 5. Execute the query, which will be associated with the g1 workload group.
 
@@ -91,9 +89,9 @@ properties (
 );
 ```
 The current workload group supports the function of querying queues, which can be specified when creating a new group. The following three parameters are required:
-* max_concurrency，the maximum number of queries allowed by the current group; Queries exceeding the maximum concurrency will enter the queue logic
-* max_queue_size，the length of the query waiting queue; When the queue is full, new queries will be rejected
-* queue_timeout，the time the query waits in the queue. If the query wait time exceeds this value, the query will be rejected, and the time unit is milliseconds
+* max_concurrency, the maximum number of queries allowed by the current group; Queries exceeding the maximum concurrency will enter the queue logic
+* max_queue_size, the length of the query waiting queue; When the queue is full, new queries will be rejected
+* queue_timeout, the time the query waits in the queue. If the query wait time exceeds this value, the query will be rejected, and the time unit is milliseconds
 
 It should be noted that the current queuing design is not aware of the number of FEs, and the queuing parameters only works in a single FE, for example:
 

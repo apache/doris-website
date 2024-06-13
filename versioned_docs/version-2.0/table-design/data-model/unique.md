@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Unique Key",
+    "title": "Unique Key Model",
     "language": "en"
 }
 ---
@@ -106,4 +106,4 @@ In version 2.1, Merge-on-Write will be the default behavior for the unique key m
 - The implementation of the Unique model can only be determined during table creation and cannot be modified through schema changes.
 - The Merge-on-read table cannot be seamlessly upgraded to the Merge-on-write table (due to completely different data organization methods). If you need to switch to Merge-on-write, you must manually perform an `INSERT INTO unique-mow-table SELECT * FROM source_table` to re-import the data.
 - **Whole-row Updates**: The default update semantics for the Unique model is a whole-row UPSERT, which stands for UPDATE OR INSERT. If the key for a row of data exists, it will be updated; if it does not exist, new data will be inserted. Under the whole-row UPSERT semantics, even if the user specifies only certain columns for insertion using `INSERT INTO`, Doris will fill in the unprovided columns with NULL values or default values during the planning phase.
-- **Partial Column Updates**: If the user wishes to update only certain fields, they must use Merge-on-write and enable support for partial column updates through specific parameters. Please refer to the documentation on partial column updates(links) for relevant usage recommendations.
+- **Partial Column Updates**: If the user wishes to update only certain fields, they must use Merge-on-write and enable support for partial column updates through specific parameters. Please refer to the documentation on [partial column updates](../../data-operate/update/update-of-unique-model) for relevant usage recommendations.

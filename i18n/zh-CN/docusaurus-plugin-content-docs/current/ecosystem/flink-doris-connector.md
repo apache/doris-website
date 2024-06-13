@@ -47,7 +47,7 @@ under the License.
 | 1.3.0             | 1.16                | 1.0+   | 8    | -         |
 | 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
 | 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
-| 1.6.0             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
+| 1.6.1             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 |- |
 
 ## 使用
 
@@ -60,7 +60,7 @@ under the License.
 <dependency>
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
-  <version>1.5.2</version>
+  <version>1.6.0</version>
 </dependency>  
 ```
 
@@ -109,7 +109,7 @@ DorisOptions.Builder builder = DorisOptions.builder()
         .setUsername("root")
         .setPassword("password");
 
-DorisSource<List<?>> dorisSource = DorisSourceBuilder.<List<?>>builder()
+DorisSource<List<?>> dorisSource = DorisSource.<List<?>>builder()
         .setDorisOptions(builder.build())
         .setDorisReadOptions(DorisReadOptions.builder().build())
         .setDeserializer(new SimpleListDeserializationSchema())
@@ -347,22 +347,22 @@ ON a.city = c.city
 
 ### Sink 配置项
 
-| Key                         | Default Value | Required | Comment                                                      |
-| --------------------------- | ------------- | -------- | ------------------------------------------------------------ |
-| sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。 |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，'\x01'会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/import-way/stream-load-manual.md)。 |
-| sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。 |
-| sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/import-way/stream-load-manual.md)。 |
-| sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可     |
-| sink.buffer-count           | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可               |
-| sink.max-retries            | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                          |
-| sink.use-cache              | false         | N        | 异常时，是否使用内存缓存进行恢复，开启后缓存中会保留 Checkpoint 期间的数据 |
-| sink.enable.batch-mode      | false         | N        | 是否使用攒批模式写入 Doris，开启后写入时机不依赖 Checkpoint，通过 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。<br />同时开启后将不保证 Exactly-once 语义，可借助 Uniq 模型做到幂等 |
-| sink.flush.queue-size       | 2             | N        | 攒批模式下，缓存的对列大小。                                 |
-| sink.buffer-flush.max-rows  | 50000         | N        | 攒批模式下，单个批次最多写入的数据行数。                     |
-| sink.buffer-flush.max-bytes | 10MB          | N        | 攒批模式下，单个批次最多写入的字节数。                       |
-| sink.buffer-flush.interval  | 10s           | N        | 攒批模式下，异步刷新缓存的间隔                               |
-| sink.ignore.update-before   | true          | N        | 是否忽略 update-before 事件，默认忽略。                        |
+| Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                         |
+| --------------------------- | ------------- | -------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                   |
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br/>例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，'\x01'会被转换为二进制的 0x01  <br/><br/>JSON 格式导入<br/>'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br/>详细参数参考[这里](../data-operate/import/stream-load-manual.md)。 |
+| sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。                                                                                                                                                                                                                                                                 |
+| sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/stream-load-manual.md)。                                                                                                                                                                                                                       |
+| sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                               |
+| sink.buffer-count           | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                                    |
+| sink.max-retries            | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                                                                                                                                                                                                                                                                                                        |
+| sink.use-cache              | false         | N        | 异常时，是否使用内存缓存进行恢复，开启后缓存中会保留 Checkpoint 期间的数据                                                                                                                                                                                                                                                                                     |
+| sink.enable.batch-mode      | false         | N        | 是否使用攒批模式写入 Doris，开启后写入时机不依赖 Checkpoint，通过 sink.buffer-flush.max-rows/sink.buffer-flush.max-bytes/sink.buffer-flush.interval 参数来控制写入时机。<br />同时开启后将不保证 Exactly-once 语义，可借助 Uniq 模型做到幂等                                                                                                                                           |
+| sink.flush.queue-size       | 2             | N        | 攒批模式下，缓存的队列大小。                                                                                                                                                                                                                                                                                                                  |
+| sink.buffer-flush.max-rows  | 50000         | N        | 攒批模式下，单个批次最多写入的数据行数。                                                                                                                                                                                                                                                                                                            |
+| sink.buffer-flush.max-bytes | 10MB          | N        | 攒批模式下，单个批次最多写入的字节数。                                                                                                                                                                                                                                                                                                             |
+| sink.buffer-flush.interval  | 10s           | N        | 攒批模式下，异步刷新缓存的间隔                                                                                                                                                                                                                                                                                                                 |
+| sink.ignore.update-before   | true          | N        | 是否忽略 update-before 事件，默认忽略。                                                                                                                                                                                                                                                                                                     |
 
 ### Lookup Join 配置项
 
@@ -399,6 +399,11 @@ ON a.city = c.city
 | ARRAY      | ARRAY             |
 | MAP        | MAP             |
 | JSON       | STRING             |
+| VARIANT    | STRING |
+| IPV4       | STRING |
+| IPV6       | STRING |
+
+> 自connector-1.6.1开始支持读取Variant,IPV6,IPV4三种数据类型，其中读取IPV6，Variant 需Doris版本2.1.1及以上。
 
 
 ## Flink 写入指标
@@ -542,10 +547,11 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。 |
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 `--table-conf replication_num=1`，而 `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"`表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。 |
 | --ignore-default-value  | 关闭同步 mysql 表结构的默认值。适用于同步 mysql 数据到 doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152) |
-| --use-new-schema-change | 是否使用新的 schema change，支持同步 mysql 多列变更、默认值。参考[#167](https://github.com/apache/doris-flink-connector/pull/167) |
+| --use-new-schema-change | 是否使用新的 schema change，支持同步 mysql 多列变更、默认值，1.6.0 开始该参数默认为true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167) |
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。 |
-| --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：--multi-to-one-origin="a\_.\*\|b_.\*"，具体参考[这里](https://github.com/apache/doris-flink-connector/pull/208) |
+| --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：--multi-to-one-origin="a\_.\*\|b_.\*"，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208) |
 | --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target="a\|b" |
+| --create-table-only     | 是否只仅仅同步表结构
 
 >注：同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar
 
@@ -712,7 +718,7 @@ from KAFKA_SOURCE;
 ### 其他
 
 1. Flink Doris Connector 主要是依赖 Checkpoint 进行流式写入，所以 Checkpoint 的间隔即为数据的可见延迟时间。
-2. 为了保证 Flink 的 Exactly Once 语义，Flink Doris Connector 默认开启两阶段提交，Doris 在 1.1 版本后默认开启两阶段提交。1.0 可通过修改 BE 参数开启，可参考[two_phase_commit](../data-operate/import/import-way/stream-load-manual.md)。
+2. 为了保证 Flink 的 Exactly Once 语义，Flink Doris Connector 默认开启两阶段提交，Doris 在 1.1 版本后默认开启两阶段提交。1.0 可通过修改 BE 参数开启，可参考[two_phase_commit](../data-operate/import/stream-load-manual.md)。
 
 ## 常见问题
 
@@ -760,7 +766,7 @@ Exactly-Once 场景下，Flink Job 重启时必须从最新的 Checkpoint/Savepo
 
 7. **Flink 写入 Uniq 模型时，如何保证一批数据的有序性？**
 
-可以添加 sequence 列配置来保证，具体可参考 [sequence](https://doris.apache.org/zh-CN/docs/dev/data-operate/update-delete/sequence-column-manual)
+可以添加 sequence 列配置来保证，具体可参考 [sequence](https://doris.apache.org/zh-CN/docs/dev/data-operate/update/update-of-unique-model/)
 
 8. **Flink 任务没报错，但是无法同步数据？**
 

@@ -47,6 +47,17 @@ PUT /MetaService/http/v1/create_instance?token=<token> HTTP/1.1
 
 为了保证兼容性，之前的接口（即不带 `v1/`）仍然能访问。
 
+## 字段值要求
+
+本文档中会出现一些字段值需要特别关注其值以及格式要求.
+
+字段 | 描述 | 备注
+------| ------| ------
+instance_id | 存算分离架构下数仓的id, 一般使用uuid字符串 | 要求历史上唯一
+cloud_unique_id | 存算分离架构下be.conf fe.conf的一个配置, 创建计算集群请求时也需要提供, 格式为 `1:<instance_id>:<string>` | 示例 "1:regression_instance0:regression-cloud-unique-id-1"
+cluster_name | 存算分离架构下描述一个计算集群时需要传入的字段, 格式要求是一个 identifier, 需要匹配模式`[a-zA-Z][0-9a-zA-Z_]+` | 实例 write_cluster 或者 read_cluster0
+
+
 ## 创建 Instance
 
 ### 接口描述
@@ -86,25 +97,25 @@ Content-Type: text/plain
 ```
 * 请求参数
 
-| 参数名                        | 描述                     | 是否必须 | 备注                             |
-|----------------------------|------------------------|------|--------------------------------|
-| instance_id                | instance_id            | 是    | 全局唯一 (包括历史上)                    |
-| name                       | instance 别名            | 否    |                                |
-| user_id                    | 用户 id                   | 是    |                                |
-| obj_info                   | S3 链接配置信息               | 是    |                                |
-| obj_info.ak                | S3 的 access key          | 是    |                                |
-| obj_info.sk                | S3 的 secret key          | 是    |                                |
-| obj_info.bucket            | S3 的 bucket 名             | 是    |                                |
-| obj_info.prefix            | S3 上数据存放位置前缀            | 否    | 不填的话，在 bucket 的根目录               |
-| obj_info.endpoint          | S3 的 endpoint 信息          | 是    |                                |
-| obj_info.region            | S3 的 region 信息            | 是    |                                |
-| obj_info.external_endpoint | S3 的 external endpoint 信息 | 否    | 兼容 oss，oss 有 external、internal 区别 |
-| obj_info.provider          | S3 的 provider 信息 | 是    |          |
-| obj_info.user_id           | bucket 的 user_id  | 否   |   轮转 ak sk 使用，用于标识哪些 obj 需更改 ak sk        |
-| ram_user | ram_user 信息，用于外部 bucket 授权         | 否    |           |
-| ram_user.user_id |         | 是    |  |
-| ram_user.ak |              | 是    |  |
-| ram_user.sk |              | 是    |  |
+| 参数名                     | 描述                                | 是否必须 | 备注                                            |
+|----------------------------|------------------------             |------    |--------------------------------                 |
+| instance_id                | instance_id                         | 是       | 全局唯一 (包括历史上), 一般是使用一个uuid 字符串|
+| name                       | instance 别名                       | 否       |                                                 |
+| user_id                    | 用户 id                             | 是       |                                                 |
+| obj_info                   | S3 链接配置信息                     | 是       |                                                 |
+| obj_info.ak                | S3 的 access key                    | 是       |                                                 |
+| obj_info.sk                | S3 的 secret key                    | 是       |                                                 |
+| obj_info.bucket            | S3 的 bucket 名                     | 是       |                                                 |
+| obj_info.prefix            | S3 上数据存放位置前缀               | 否       | 不填的话，在 bucket 的根目录                    |
+| obj_info.endpoint          | S3 的 endpoint 信息                 | 是       |                                                 |
+| obj_info.region            | S3 的 region 信息                   | 是       |                                                 |
+| obj_info.external_endpoint | S3 的 external endpoint 信息        | 否       | 兼容 oss，oss 有 external、internal 区别        |
+| obj_info.provider          | S3 的 provider 信息                 | 是       |                                                 |
+| obj_info.user_id           | bucket 的 user_id                   | 否       | 轮转 ak sk 使用，用于标识哪些 obj 需更改 ak sk  |
+| ram_user                   | ram_user 信息，用于外部 bucket 授权 | 否       |                                                 |
+| ram_user.user_id           |                                     | 是       |                                                 |
+| ram_user.ak                |                                     | 是       |                                                 |
+| ram_user.sk                |                                     | 是       |                                                 |
 
 * 请求示例
 
@@ -279,7 +290,7 @@ Content-Type: text/plain
                 "type": "SQL",
                 "nodes": [
                     {
-                        "cloud_unique_id": "regression-cloud-unique-id-fe-1",
+                        "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id-fe-1",
                         "ip": "127.0.0.1",
                         "ctime": "1669260437",
                         "mtime": "1669260437",
@@ -294,7 +305,7 @@ Content-Type: text/plain
                 "type": "COMPUTE",
                 "nodes": [
                     {
-                        "cloud_unique_id": "regression-cloud-unique-id0",
+                        "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
                         "ip": "127.0.0.1",
                         "ctime": "1669260437",
                         "mtime": "1669260437",
@@ -311,7 +322,7 @@ Content-Type: text/plain
                 "type": "COMPUTE",
                 "nodes": [
                     {
-                        "cloud_unique_id": "regression-cloud-unique-id0",
+                        "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
                         "ip": "127.0.0.1",
                         "ctime": "1669260437",
                         "mtime": "1669260437",
@@ -329,7 +340,7 @@ Content-Type: text/plain
                 "type": "COMPUTE",
                 "nodes": [
                     {
-                        "cloud_unique_id": "regression-cloud-unique-id0",
+                        "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
                         "ip": "127.0.0.1",
                         "ctime": "1669260437",
                         "mtime": "1669260437",
@@ -422,19 +433,19 @@ Content-Type: text/plain
 ```
 * 请求参数
 
-| 参数名                           | 描述                 | 是否必须 | 备注                                                                                                                                                                                   |
-|-------------------------------|--------------------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| instance_id                   | instance_id        | 是    | 全局唯一 (包括历史上)                                                                                                                                                                          |
-| cluster                       | cluster 对象信息        | 是    |                                                                                                                                                                                      |
-| cluster.cluster_name          | cluster 的名字         | 是    | 其中 fe 的 cluster 名字特殊，默认 RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_name 修改                                                                                    |
-| cluster.cluster_id            | cluster 的 id         | 是    | 其中 fe 的 cluster id 特殊，默认 RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改                                                                                       |
-| cluster.type                  | cluster 中节点的类型      | 是    | 支持："SQL","COMPUTE"两种 type，"SQL"表示 sql service 对应 fe， "COMPUTE"表示计算机节点对应 be                                                                                                                |
-| cluster.nodes                 | cluster 中的节点数组      | 是    |                                                                                                                                                                                      |
-| cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id | 是    | 是 fe.conf、be.conf 中的 cloud_unique_id 配置项                                                                                                                                                 |
-| cluster.nodes.ip              | 节点的 ip              | 是    |                                                                                                                                                                                      |
-| cluster.nodes.heartbeat_port  | be 的 heartbeat port  | 是    | 是 be.conf 中的 heartbeat_service_port 配置项                                                                                                                                                  |
-| cluster.nodes.edit_log_port   | fe 节点的 edit log port | 是    | 是 fe.conf 中的 edit_log_port 配置项                                                                                                                                                           |
-| cluster.nodes.node_type       | fe 节点的类型            | 是    | 当 cluster 的 type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为 master， "FE_OBSERVER"表示此节点为 observer，注意：一个 type 为"SQL"的 cluster 的 nodes 数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
+| 参数名                        | 描述                    | 是否必须 | 备注                                                                                                                                                                                                                                                    |
+|-------------------------------|--------------------     |------    |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                   |
+| instance_id                   | instance_id             | 是       | 全局唯一 (包括历史上)                                                                                                                                                                                                                                   |
+| cluster                       | cluster 对象信息        | 是       |                                                                                                                                                                                                                                                         |
+| cluster.cluster_name          | cluster 的名字          | 是       | 其中 fe 的 cluster 名字特殊，默认 RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_name 修改                                                                                                                            |
+| cluster.cluster_id            | cluster 的 id           | 是       | 其中 fe 的 cluster id 特殊，默认 RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改                                                                                                                                 |
+| cluster.type                  | cluster 中节点的类型    | 是       | 支持："SQL","COMPUTE"两种 type，"SQL"表示 sql service 对应 fe， "COMPUTE"表示计算机节点对应 be                                                                                                                                                          |
+| cluster.nodes                 | cluster 中的节点数组    | 是       |                                                                                                                                                                                                                                                         |
+| cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id  | 是       | 是 fe.conf、be.conf 中的 cloud_unique_id 配置项                                                                                                                                                                                                         |
+| cluster.nodes.ip              | 节点的 ip               | 是       |                                                                                                                                                                                                                                                         |
+| cluster.nodes.heartbeat_port  | be 的 heartbeat port    | 是       | 是 be.conf 中的 heartbeat_service_port 配置项                                                                                                                                                                                                           |
+| cluster.nodes.edit_log_port   | fe 节点的 edit log port | 是       | 是 fe.conf 中的 edit_log_port 配置项                                                                                                                                                                                                                    |
+| cluster.nodes.node_type       | fe 节点的类型           | 是       | 当 cluster 的 type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为 master， "FE_OBSERVER"表示此节点为 observer，注意：一个 type 为"SQL"的 cluster 的 nodes 数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
 
 * 请求示例
 
@@ -451,7 +462,7 @@ Content-Type: text/plain
         "type": "COMPUTE",
         "nodes": [
             {
-                "cloud_unique_id": "cloud_unique_id_compute_node1",
+                "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
                 "ip": "172.21.0.5",
                 "heartbeat_port": 9050
             }
@@ -524,7 +535,7 @@ Content-Type: text/plain
 
 {
     "instance_id":"regression_instance0",
-    "cloud_unique_id":"regression-cloud-unique-id-fe-1",
+    "cloud_unique_id":"1:regression_instance0:regression-cloud-unique-id-fe-1",
     "cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER",
     "cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
 }
@@ -550,7 +561,7 @@ Content-Type: text/plain
         "type": "COMPUTE",
         "nodes": [
             {
-                "cloud_unique_id": "cloud_unique_id_compute_node0",
+                "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node0",
                 "ip": "172.21.16.42",
                 "ctime": "1662695469",
                 "mtime": "1662695469",
@@ -565,7 +576,7 @@ Content-Type: text/plain
 ```
 {
  "code": "NOT_FOUND",
- "msg": "fail to get cluster with instance_id: \"instance_id_deadbeef\" cloud_unique_id: \"dengxin_cloud_unique_id_compute_node0\" cluster_name: \"cluster_name\" "
+ "msg": "fail to get cluster with instance_id: \"instance_id_deadbeef\" cloud_unique_id: \"1:regression_instance0:xxx_cloud_unique_id_compute_node0\" cluster_name: \"cluster_name\" "
 }
 ```
 
@@ -778,12 +789,12 @@ Content-Type: text/plain
         "type": "COMPUTE",
         "nodes": [
             {
-                "cloud_unique_id": "cloud_unique_id_compute_node2",
+                "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node2",
                 "ip": "172.21.0.50",
                 "heartbeat_port": 9051
             },
             {
-                "cloud_unique_id": "cloud_unique_id_compute_node3",
+                "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node3",
                 "ip": "172.21.0.52",
                 "heartbeat_port": 9052
             }
@@ -879,12 +890,12 @@ Content-Type: text/plain
         "type": "COMPUTE",
         "nodes": [
             {
-                "cloud_unique_id": "cloud_unique_id_compute_node2",
+                "cloud_unique_id": "1:instance_id_deadbeef_1:cloud_unique_id_compute_node2",
                 "ip": "172.21.0.50",
                 "heartbeat_port": 9051
             },
             {
-                "cloud_unique_id": "cloud_unique_id_compute_node3",
+                "cloud_unique_id": "1:instance_id_deadbeef_1:cloud_unique_id_compute_node3",
                 "ip": "172.21.0.52",
                 "heartbeat_port": 9052
             }
@@ -1014,7 +1025,7 @@ PUT /MetaService/http/get_obj_store_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
 
-{"cloud_unique_id": "cloud_unique_id_compute_node1"}
+{"cloud_unique_id": "<cloud_unique_id>"}
 ```
 * 请求参数
 
@@ -1029,7 +1040,7 @@ PUT /MetaService/http/get_obj_store_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
 
-{"cloud_unique_id": "cloud_unique_id_compute_node1"}
+{"cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1"}
 ```
 
 * 返回参数
@@ -1218,7 +1229,7 @@ Content-Length: <ContentLength>
 Content-Type: text/plain
 
 {
-    "cloud_unique_id": "cloud_unique_id_compute_node1",
+    "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
     "obj": {
         "id": "1",
         "ak": "test-ak",
@@ -1300,7 +1311,7 @@ Content-Length: <ContentLength>
 Content-Type: text/plain
 
 {
-    "cloud_unique_id": "cloud_unique_id_compute_node1",
+    "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
     "obj": {
         "ak": "test-ak91",
         "sk": "test-sk1",
@@ -1421,7 +1432,7 @@ Content-Length: <ContentLength>
 Content-Type: text/plain
 
 {
-    "cloud_unique_id":"regression-cloud-unique-id0",
+    "cloud_unique_id":"1:regression_instance0:regression-cloud-unique-id0",
     "tablet_idx": [{
         "table_id":113973,
         "index_id":113974,
@@ -1498,7 +1509,7 @@ Content-Length: <ContentLength>
 Content-Type: text/plain
 
 {
-    "cloud_unique_id": "regression-cloud-unique-id0",
+    "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
     "txn_id": 869414052004864
 }
 
@@ -1555,7 +1566,7 @@ Content-Length: <ContentLength>
 Content-Type: text/plain
 
 {
-    "cloud_unique_id": "regression-cloud-unique-id0",
+    "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
     "job" : {
         "idx": {"tablet_id": 113973},
         "compaction": [{"id": 113974}]
@@ -1821,7 +1832,7 @@ Content-Type: text/plain
 
 ```
 curl '127.0.0.1:5008/MetaService/http/set_cluster_status?token=greedisgood9999' -d '{
-    "cloud_unique_id": "regression-cloud-unique-id-fe-0128",
+    "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id-fe-0128",
     "cluster": {
         "cluster_id": "test_cluster_1_id1",
         "cluster_status":"STOPPED"

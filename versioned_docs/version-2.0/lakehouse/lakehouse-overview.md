@@ -43,9 +43,9 @@ We design the Doris lakehouse solution for the following four applicable scenari
 
 ## Doris-based data lakehouse architecture
 
-Apache Doris can work as a data lakehouse with its [Multi Catalog](https://doris.apache.org/docs/lakehouse/multi-catalog/?_highlight=multi&_highlight=catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
+Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
 
-![doris-based-data-lakehouse-architecture](../../../static/images/doris-based-data-lakehouse-architecture.png)
+![doris-based-data-lakehouse-architecture](/images/doris-based-data-lakehouse-architecture.png)
 
 **Data access steps:**
 
@@ -65,7 +65,7 @@ The data connection framework in Apache Doris includes metadata connection and d
 - Metadata connection: Metadata connection is conducted in the frontend of Doris. The MetaData Manager in the frontend can access and manage metadata from Hive Metastore, JDBC, and data files.
 - Data reading: Apache Doris has a NativeReader for efficient data reading from HDFS and object storage. It supports Parquet, ORC, and text data. You can also connect Apache Doris to the Java big data ecosystem via its JNI Connector.
 
-![extensible-connection-framework](../../../static/images/extensible-connection-framework.png)
+![extensible-connection-framework](/images/extensible-connection-framework.png)
 
 ### Efficient caching strategy
 
@@ -75,7 +75,7 @@ Apache Doris caches metadata, data, and query results to improve query performan
 
 Apache Doris supports metadata synchronization by three methods: auto synchronization, periodic synchronization, and metadata subscription (for Hive Metastore only). It accesses metadata from the data lake and stores it in the memory of its frontend. When a user issues a query request, Doris can quickly fetch metadata from its own memory and generate a query plan accordingly. Apache Doris improves synchronization efficiency by merging the concurrent metadata events. It can process over 100 metadata events per second. 
 
-![metadata-caching](../../../static/images/metadata-caching.png)
+![metadata-caching](/images/metadata-caching.png)
 
 **Data caching**
 
@@ -83,25 +83,25 @@ Apache Doris supports metadata synchronization by three methods: auto synchroniz
 - Cache distribution: Apache Doris distributes the cached data across all backend nodes via consistent hashing to avoid cache expiration caused by cluster scaling.
 - Cache eviction(update): When Apache Doris detects changes in the metadata of a data file, it promptly updates its cached data to ensure data consistency.
 
-![data-caching](../../../static/images/data-caching.png)
+![data-caching](/images/data-caching.png)
 
 **Query result caching & partition caching**
 
 - Query result caching: Apache Doris caches the results of previous SQL queries, so it can reuse them when similar queries are launched. It will read the corresponding result from the cache directly and return it to the client. This increases query efficiency and concurrency.
 - Partition caching: Apache Doris allows you to cache part of your data partitions in the backend to increase query efficiency. For example, if you need the data from the past 7 days (counting today), you can cache the data from the previous 6 days and merge it with today's data. This can largely reduce real-time computation burden and increase speed.
 
-![query-result-caching-and-partition-caching](../../../static/images/query-result-caching-and-partition-caching.png)
+![query-result-caching-and-partition-caching](/images/query-result-caching-and-partition-caching.png)
 
 ### Native Reader
 
 - Self-developed Native Reader to avoid data conversion: Apache Doris has its own columnar storage format, which is different from Parquet and ORC. To avoid overheads caused by data format conversion, we have built our own Native Reader for Parquet and ORC files.
 - Lazy materialization: The Native Reader can utilize indexes and filters to improve data reading. For example, when the user needs to do filtering based on the ID column, what the Native Reader does is to read and filter the ID column, take note of the relevant row numbers, and then read the corresponding rows of the other columns based on the row numbers recorded. This reduces data scanning and speeds up data reading.
 
-![native-reader](../../../static/images/native-reader.png)
+![native-reader](/images/native-reader.png)
 
 - Vectorized data reading: We have vectorized data file reading in Apache Doris to increase reading speed.
 
-![vectorized-data-reading](../../../static/images/vectorized-data-reading.png)
+![vectorized-data-reading](/images/vectorized-data-reading.png)
 
 ### Merge I/O
 
@@ -111,7 +111,7 @@ For example, if you decide to merge any I/O requests smaller than 3MB, then inst
 
 The downside of I/O merging is that it might read some irrelevant data, because it merges and reads together some intermediate data that might not be needed. Despite that, I/O merging can still bring a significant increase in overall throughput, especially for use cases with a large number of small files (1KB~1MB). Besides, users can mitigate the downside by adjusting the size of I/O merging.
 
-![merge-io](../../../static/images/merge-io.png)
+![merge-io](/images/merge-io.png)
 
 ### Statistics collection
 
@@ -123,7 +123,7 @@ Meanwhile, to avoid pressure on the Doris backend, we have enabled sampling coll
 
 In some cases, some data is frequently accessed while others are not, so Apache Doris allows partition-based statistics collection, so it can ensure high efficiency in hot data queries while mitigating the impact of statistics collection on the backend.
 
-![statistics-collection](../../../static/images/statistics-collection.png)
+![statistics-collection](/images/statistics-collection.png)
 
 ## Multi-Catalog
 
@@ -150,7 +150,7 @@ Existing databases and tables in Doris are all under the Internal Catalog, which
 
 - External Catalog
 
-Users can create an External Catalog using the [CREATE CATALOG](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/) command.
+Users can create an External Catalog using the [CREATE CATALOG](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG/) command, and view the existing Catalogs via the [SHOW CATALOGS](../sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/) command.
 
 - Switch Catalog
 
@@ -167,7 +167,7 @@ After switching catalog, you can view or switch to your target database in that 
 
 - Delete Catalog
 
-You cand delete an External Catalog via the [DROP CATALOG](https://doris.apache.org/docs/dev/sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
+You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-CATALOG/) command. (The Internal Catalog cannot be deleted.) The deletion only removes the mapping in Doris to the corresponding catalog. It doesn't change the external catalog in external data sources by all means.
 
 ### Examples
 
@@ -175,7 +175,7 @@ You cand delete an External Catalog via the [DROP CATALOG](https://doris.apache.
 
 The following is the instruction on how to connect to a Hive catalog using the Catalog feature.
 
-For more information about connecting to Hive, please see [Hive](https://doris.apache.org/docs/2.0/lakehouse/datalake/hive).
+For more information about connecting to Hive, please see [Hive](../lakehouse/datalake/hive).
 
 1. Create Catalog
 
@@ -186,7 +186,7 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-Syntax help: [CREATE CATALOG](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG/)
+Syntax help: [CREATE CATALOG](../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-CATALOG/)
 
 1. View Catalog
 2. View existing Catalogs via the `SHOW CATALOGS` command:
@@ -201,9 +201,9 @@ mysql> SHOW CATALOGS;
 +-----------+-------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```
 
-- [SHOW CATALOGS](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/)
-- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Show-Statements/SHOW-CREATE-CATALOG).
-- You can modify the Catalog PROPERTIES via [ALTER CATALOG](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-CATALOG).
+- [SHOW CATALOGS](../sql-manual/sql-reference/Show-Statements/SHOW-CATALOGS/)
+- You can view the CREATE CATALOG statement via [SHOW CREATE CATALOG](../sql-manual/sql-reference/Show-Statements/SHOW-CREATE-CATALOG).
+- You can modify the Catalog PROPERTIES via [ALTER CATALOG](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-CATALOG).
 
 1. Switch Catalog
 
@@ -226,7 +226,7 @@ mysql> SHOW DATABASES;
 +-----------+
 ```
 
-Syntax help: [SWITCH](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Utility-Statements/SWITCH/)
+Syntax help: [SWITCH](../sql-manual/sql-reference/Utility-Statements/SWITCH/)
 
 1. Use the Catalog
 
@@ -360,11 +360,11 @@ You can find more details of the mapping of various data sources (Hive, Iceberg,
 
 When using Doris to access the data in the External Catalog, by default, it relies on Doris's own permission access management function.
 
-Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Privilege Management](https://doris.apache.org/docs/2.0/admin-manual/privilege-ldap/user-privilege) for details).
+Along with the new Multi-Catalog feature, we also added privilege management at the Catalog level (See [Privilege Management](../admin-manual/privilege-ldap/user-privilege) for details).
 
 Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
 
-`"access_controller.class" = "org.apache.doris.catalog.authorizer.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive](https://doris.apache.org/docs/2.0/lakehouse/datalake/hive)
+`"access_controller.class" = "org.apache.doris.catalog.authorizer.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive](../lakehouse/datalake/hive)
 
 ### Database synchronization management
 
@@ -376,7 +376,7 @@ Set `include_database_list` and `exclude_database_list` in Catalog properties to
 
 > If there is overlap between `include_database_list` and `exclude_database_list`, `exclude_database_list`will take precedence over `include_database_list`.
 >
-> To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](https://doris.apache.org/docs/2.0/lakehouse/database/jdbc) for more details.
+> To connect to JDBC data sources, these two properties should work with `only_specified_database`. See [JDBC](../lakehouse/database/jdbc) for more details.
 
 ### Metadata refresh
 
@@ -386,7 +386,7 @@ Users can refresh metadata in the following ways.
 
 #### Manual refresh
 
-Users need to manually refresh the metadata through the [REFRESH](https://doris.apache.org/docs/2.0/sql-manual/sql-reference/Utility-Statements/REFRESH) command.
+Users need to manually refresh the metadata through the [REFRESH](../sql-manual/sql-reference/Utility-Statements/REFRESH) command.
 
 #### Regular refresh
 
@@ -407,4 +407,4 @@ CREATE CATALOG es PROPERTIES (
 
 #### Auto Refresh
 
-Currently Doris supports auto-refresh for [Hive](https://doris.apache.org/docs/2.0/lakehouse/datalake/hive) Catalog.
+Currently Doris supports auto-refresh for [Hive](../lakehouse/datalake/hive) Catalog.

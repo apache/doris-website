@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Understanding data compaction in 3 minutes',
-    'summary': "Think of your disks as a warehouse: The compaction mechanism is like a team of storekeepers who help put away the incoming data.",
+    'description': "Think of your disks as a warehouse: The compaction mechanism is like a team of storekeepers who help put away the incoming data.",
     'date': '2023-06-09',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -37,7 +37,7 @@ In particular, the data (which is the inflowing cargo in this metaphor) comes in
 - If an item needs to be discarded or replaced, since no line-jump is allowed on the conveyor belt (append-only), you can only put a "note" (together with the substitution item) at the end of the queue on the belt to remind the "storekeepers", who will later perform replacing or discarding for you.
 - If needed, the "storekeepers" are even kind enough to pre-process the cargo for you (pre-aggregating data to reduce computation burden during data reading). 
 
-![MemTable-rowset](../static/images/Compaction_1.png)
+![MemTable-rowset](/images/Compaction_1.png)
 
 As helpful as the "storekeepers" are, they can be troublemakers at times — that's why "team management" matters. For the compaction mechanism to work efficiently, you need wise planning and scheduling, or else you might need to deal with high memory and CPU usage, if not OOM in the backend or write error.
 
@@ -67,7 +67,7 @@ The combination of these three strategies is an example of cost-effective planni
 
 As columnar storage is the future for analytic databases, the execution of compaction should adapt to that. We call it vertical compaction. I illustrate this mechanism with the figure below:
 
-![vertical-compaction](../static/images/Compaction_2.png)
+![vertical-compaction](/images/Compaction_2.png)
 
 Hope all these tiny blocks and numbers don't make you dizzy. Actually, vertical compaction can be broken down into four simple steps:
 
@@ -86,7 +86,7 @@ Segment compaction is the way to avoid that. It allows you to compact data at th
 
 This is a flow chart that explains how segment compaction works:
 
-![segment-compaction](../static/images/Compaction_3.png)
+![segment-compaction](/images/Compaction_3.png)
 
 Segment compaction will be triggered once the number of newly generated files exceeds a certain limit (let's say, 10). It is executed asynchronously by a specialized merging thread. Every 10 files will be merged into one, and the original 10 files will be deleted. Segment compaction does not prolong the data ingestion process by much, but it can largely accelerate data queries.
 
@@ -96,7 +96,7 @@ Time series data analysis is an increasingly common analytic scenario.
 
 Time series data is "born orderly". It is already arranged chronologically, it is written at a regular pace, and every batch of it is of similar size. It is like the least-worried-about child in the family. Correspondingly, we have a tailored compaction method for it: ordered data compaction.
 
-![ordered-data-compaction](../static/images/Compaction_4.png)
+![ordered-data-compaction](/images/Compaction_4.png)
 
 Ordered data compaction is even simpler:
 
@@ -128,4 +128,4 @@ Every data engineer has somehow been harassed by complicated parameters and conf
 
 ## Conclusion
 
-This is how we keep our "storekeepers" working efficiently and cost-effectively. If you wonder how these strategies and optimization work in real practice, we tested Apache Doris with ClickBench. It reaches a **compaction speed of 300,000 row/s**; in high-concurrency scenarios, it maintains **a stable compaction score of around 50**. Also, we are planning to implement auto-tuning and increase observability for the compaction mechanism. If you are interested in the [Apache Doris](https://github.com/apache/doris) project and what we do, this is a group of visionary and passionate [developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) that you can talk to.
+This is how we keep our "storekeepers" working efficiently and cost-effectively. If you wonder how these strategies and optimization work in real practice, we tested Apache Doris with ClickBench. It reaches a **compaction speed of 300,000 row/s**; in high-concurrency scenarios, it maintains **a stable compaction score of around 50**. Also, we are planning to implement auto-tuning and increase observability for the compaction mechanism. If you are interested in the [Apache Doris](https://github.com/apache/doris) project and what we do, this is a group of visionary and passionate [developers](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) that you can talk to.

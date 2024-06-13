@@ -31,6 +31,8 @@ under the License.
 Rounds the argument `x` to `d` decimal places. `d` defaults to 0 if not specified. If d is negative, the left d digits of the decimal point are 0. If x or d is null, null is returned.
 2.5 will round up to 3. If you want to round down to 2, please use the round_bankers function.
 
+If `d` is a column, and `x` has Decimal type, scale of result Decimal will always be same with input Decimal.
+
 :::tip
 Another alias for this function is `dround`.
 :::
@@ -74,6 +76,18 @@ mysql> select round(1667.2725, -2);
 +----------------------+
 |                 1700 |
 +----------------------+
+mysql> SELECT number
+    -> , round(number * 2.5, number - 1) AS r_decimal_column
+    -> , round(number * 2.5, 0) AS r_decimal_literal
+    -> , round(cast(number * 2.5 AS DOUBLE), number - 1) AS r_double_column
+    -> , round(cast(number * 2.5 AS DOUBLE), 0) AS r_double_literal
+    -> FROM test_enhanced_round
+    -> WHERE rid = 1;
++--------+------------------+-------------------+-----------------+------------------+
+| number | r_decimal_column | r_decimal_literal | r_double_column | r_double_literal |
++--------+------------------+-------------------+-----------------+------------------+
+|      1 |              3.0 |                 3 |               3 |                3 |
++--------+------------------+-------------------+-----------------+------------------+
 ```
 
 ### keywords

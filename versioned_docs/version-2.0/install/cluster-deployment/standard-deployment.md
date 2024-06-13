@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Standard Deployment",
+    "title": "Manual Deployment",
     "language": "en"
 }
 ---
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-# Standard Deployment
 
 Manually deploying a Doris cluster typically involves four steps:
 
@@ -223,7 +222,7 @@ For a production cluster, it is generally recommended to deploy at least 3 FE no
 - Follower nodes participate in elections. If the Master node fails, an available Follower node will be selected as the new Master.
 - Observer nodes only synchronize metadata from the Leader node and do not participate in elections. They can be scaled to provide scalable metadata read services.
 
-Typically, it is advised to deploy 3 Follower nodes. In high-concurrency scenarios, you can scale the Observer nodes.。
+Typically, it is advised to deploy 3 Follower nodes. In high-concurrency scenarios, you can scale the Observer nodes..
 
 **Plan the BE nodes**
 
@@ -272,7 +271,7 @@ This is a CIDR representation that specifies the IP used by the FE. In environme
    JAVA_OPTS="-Xmx16384m -XX:+UseMembar -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=7 -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSClassUnloadingEnabled -XX:-CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xloggc:$DORIS_HOME/log/fe.gc.log.$DATE"
    ```
 
-6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](https://doris.apache.org/docs/2.0/advanced/variables/) documentation for more details on the `lower_case_table_names` setting.
+6. Modify the case sensitivity parameter `lower_case_table_names` By default, Doris is case-sensitive for table names. If you require case-insensitive table names, you need to set this during cluster initialization. Note that once the cluster initialization is completed, the table name case sensitivity cannot be changed. Please refer to the [variable](../../query/query-variables/variables) documentation for more details on the `lower_case_table_names` setting.
 
 **Start** **FE** **process**
 
@@ -574,7 +573,7 @@ To access the Web UI, simply enter the URL in a web browser: http://fe_ip:fe_por
 
 The built-in Web console is primarily intended for use by the root account of the cluster. By default, the root account password is empty after installation.
 
-![web-login-username-password](../../../../static/images/web-login-username-password.png)
+![web-login-username-password](/images/web-login-username-password.png)
 
 For example, you can execute the following command in the Playground to add a BE node.
 
@@ -582,7 +581,7 @@ For example, you can execute the following command in the Playground to add a BE
 ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-![Doris-Web-UI-Playground-en](../../../../static/images/Doris-Web-UI-Playground-en.png)
+![Doris-Web-UI-Playground-en](/images/Doris-Web-UI-Playground-en.png)
 
 :::tip 
 For successful execution of statements that are not related to specific databases/tables in the Playground, it is necessary to randomly select a database from the left-hand database panel. This limitation will be removed later. 

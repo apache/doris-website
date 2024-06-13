@@ -28,11 +28,11 @@ under the License.
 
 这是 [elastic beats](https://github.com/elastic/beats) 的输出实现，支持 [Filebeat](https://github.com/elastic/beats/tree/master/filebeat), [Metricbeat](https://github.com/elastic/beats/tree/master/metricbeat), [Packetbeat](https://github.com/elastic/beats/tree/master/packetbeat), [Winlogbeat](https://github.com/elastic/beats/tree/master/winlogbeat), [Auditbeat](https://github.com/elastic/beats/tree/master/auditbeat), [Heartbeat](https://github.com/elastic/beats/tree/master/heartbeat) 到 Apache Doris。
 
-该插件用于 beats 输出数据到 Doris，使用 HTTP 协议与 Doris FE Http 接口交互，并通过 Doris 的 stream load 的方式进行数据导入.
+该插件用于 beats 输出数据到 Doris，使用 HTTP 协议与 Doris FE Http 接口交互，并通过 Doris 的 stream load 的方式进行数据导入。
 
-[了解Doris Stream Load](../data-operate/import/import-way/stream-load-manual.md)
+[了解 Doris Stream Load](../data-operate/import/stream-load-manual.md)
 
-[了解更多关于Doris](/zh-CN)
+[了解更多关于 Doris](/zh-CN)
 
 ## 兼容性
 
@@ -95,20 +95,20 @@ output.doris:
 
 ## 配置说明
 
-连接 doris 配置:
+连接 doris 配置：
 
 | Name           | Description                                                                                   | Default     |
 |----------------|-----------------------------------------------------------------------------------------------|-------------|
-| fenodes        | FE 的 HTTP交互地址。 例如：  ["http://fe1:8030", "http://fe2:8030"]                                    |             |
+| fenodes        | FE 的 HTTP 交互地址。例如：  ["http://fe1:8030", "http://fe2:8030"]                                    |             |
 | user           | 用户名，该用户需要有 Doris 对应库表的导入权限                                                                    |             |
 | password       | 密码                                                                                            |             |
 | database       | 数据库名                                                                                          |             |
 | table          | 表名                                                                                            |             |
 | label_prefix   | 导入标识前缀，最终生成的标识为 *{label\_prefix}\_{db}\_{table}\_{time_stamp}*                                | doris_beats |
 | line_delimiter | 用于指定导入数据中的换行符，可以使用做多个字符的组合作为换行符。                                                              | \n          |
-| headers        | 用户可以通过 headers 传入 [stream-load 导入参数](../data-operate/import/import-way/stream-load-manual.md) |             |
+| headers        | 用户可以通过 headers 传入 [stream-load 导入参数](../data-operate/import/stream-load-manual.md) |             |
 
-Beats 配置:
+Beats 配置：
 
 | Name                | Description                                                                                                                                            | Default |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
@@ -120,7 +120,7 @@ Beats 配置:
 | backoff.init        | 网络错误后尝试重新连接之前等待的秒数                                                                                                                                     | 1       |
 | backoff.max         | 网络错误后尝试连接之前等待的最大秒数                                                                                                                                     | 60      |
 
-## 完整使用示例(Filebeat)
+## 完整使用示例 (Filebeat)
 
 ### 初始化 Doris
 
@@ -175,13 +175,13 @@ output.doris:
 echo -e "1,A\n2,B\n3,C\n4,D" >> /tmp/beats/example.log
 ```
 
-观察 filebeat 日志，如果没有打印错误日志，则导入成功。 这时可以在 example_db.example_table 表中查看导入的数据
+观察 filebeat 日志，如果没有打印错误日志，则导入成功。这时可以在 example_db.example_table 表中查看导入的数据
 
 ## 更多配置示例
 
 ### 指定导入的 columns
 
-创建 `/tmp/beats/example.log` 文件并添加以下内容:
+创建 `/tmp/beats/example.log` 文件并添加以下内容：
 
 ```csv
 1,A
@@ -207,7 +207,7 @@ output.doris:
 
 ### 采集 json 文件
 
-创建 `/tmp/beats/example.json` 文件并添加以下内容:
+创建 `/tmp/beats/example.json` 文件并添加以下内容：
 
 ```json
 {"id":  1, "name": "A"}
@@ -234,7 +234,7 @@ output.doris:
 
 ### 编码输出字段
 
-创建 `/tmp/beats/example.log` 文件并添加以下内容:
+创建 `/tmp/beats/example.log` 文件并添加以下内容：
 
 ```csv
 1,A

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'How We increased database query concurrency by 20 times',
-    'summary': 'In the upcoming Apache Doris 2.0, we have optimized it for high-concurrency point queries. Long story short, it can achieve over 30,000 QPS for a single node.',
+    'description': 'In the upcoming Apache Doris 2.0, we have optimized it for high-concurrency point queries. Long story short, it can achieve over 30,000 QPS for a single node.',
     'date': '2023-04-14',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -153,7 +153,7 @@ Normally, an SQL statement is executed in three steps:
 
 For complex queries on massive data, it is better to follow the plan created by the Query Optimizer. However, for high-concurrency point queries requiring low latency, that plan is not only unnecessary but also brings extra overheads. That's why we implement a short-circuit plan for point queries. 
 
-![short-circuit-plan](../static/images/high-concurrency_1.png)
+![short-circuit-plan](/images/high-concurrency_1.png)
 
 Once the FE receives a point query request, a short-circuit plan will be produced. It is a lightweight plan that involves no equivalent transformation, logic optimization or physical optimization. Instead, it conducts some basic analysis on the AST, creates a fixed plan accordingly, and finds ways to reduce overhead of the optimizer.
 
@@ -183,13 +183,13 @@ rpc tablet_fetch_data(PTabletKeyLookupRequest) returns (PTabletKeyLookupResponse
 
 In high-concurrency queries, part of the CPU overhead comes from SQL analysis and parsing in FE. To reduce such overhead, in FE, we provide prepared statements that are fully compatible with MySQL protocol. With prepared statements, we can achieve a four-time performance increase for primary key point queries.
 
-![prepared-statement-map](../static/images/high-concurrency_2.png)
+![prepared-statement-map](/images/high-concurrency_2.png)
 
 The idea of prepared statements is to cache precomputed SQL and expressions in HashMap in memory, so they can be directly used in queries when applicable.
 
 Prepared statements adopt MySQL binary protocol for transmission. The protocol is implemented in the mysql_row_buffer.[h|cpp] file, and uses MySQL binary encoding. Under this protocol, the client (for example, JDBC Client) sends a pre-compiled statement to FE via `PREPARE` MySQL Command. Next, FE will parse and analyze the statement and cache it in the HashMap as shown in the figure above. Next, the client, using `EXECUTE` MySQL Command, will replace the placeholder, encode it into binary format, and send it to FE. Then, FE will perform deserialization to obtain the value of the placeholder, and generate query conditions.
 
-![prepared-statement-execution](../static/images/high-concurrency_3.png)
+![prepared-statement-execution](/images/high-concurrency_3.png)
 
 Apart from caching prepared statements in FE, we also cache reusable structures in BE. These structures include pre-allocated computation blocks, query descriptors, and output expressions. Serializing and deserializing these structures often cause a CPU hotspot, so it makes more sense to cache them. The prepared statement for each query comes with a UUID named CacheID. So when BE executes the point query, it will find the corresponding class based on the CacheID, and then reuse the structure in computation.
 
@@ -221,13 +221,13 @@ resultSet = readStatement.executeQuery();
 
 Apache Doris has a Page Cache feature, where each page caches the data of one column. 
 
-![page-cache](../static/images/high-concurrency_4.png)
+![page-cache](/images/high-concurrency_4.png)
 
 As mentioned above, we have introduced row storage in Doris. The problem with this is, one row of data consists of multiple columns, so in the case of big queries, the cached data might be erased. Thus, we also introduced row cache to increase row cache hit rate.
 
 Row cache reuses the LRU Cache mechanism in Apache Doris. When the caching starts, the system will initialize a threshold value. If that threshold is hit, the old cached rows will be phased out. For a primary key query statement, the performance gap between cache hit and cache miss can be huge (we are talking about dozens of times less disk I/O and memory access here). So the introduction of row cache can remarkably enhance point query performance.
 
-![row-cache](../static/images/high-concurrency_5.png)
+![row-cache](/images/high-concurrency_5.png)
 
 To enable row cache, you can specify the following configuration in BE:
 
@@ -284,7 +284,7 @@ SELECT * from usertable WHERE YCSB_KEY = ?
 
 We run the test with the optimizations (row storage, short-circuit, and prepared statement) enabled, and then did it again with all of them disabled. Here are the results:
 
-![performance-before-and-after-concurrency-optimization](../static/images/high-concurrency_6.png)
+![performance-before-and-after-concurrency-optimization](/images/high-concurrency_6.png)
 
 With optimizations enabled, **the average query latency decreased by a whopping 96%, the 99th percentile latency was only 1/28 of that without optimizations, and it has achieved a query concurrency of over 30,000 QPS.** This is a huge leap in performance and an over 20-time increase in concurrency.
 

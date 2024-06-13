@@ -88,7 +88,7 @@ SELECT
 
    12. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: Limit the number of rows read from the table in the FROM clause, select a number of Tablets pseudo-randomly from the table according to the specified number of rows or percentages, and specify the number of seeds in REPEATABLE to return the selected samples again. In addition, you can also manually specify the TableID, Note that this can only be used for OLAP tables.
    
-   13. `hint_statement`:  hint in front of the selectlist indicates that hints can be used to influence the behavior of the optimizer in order to obtain the desired execution plan. Details refer to [joinHint using document] (https://doris.apache.org/en/docs/query-acceleration/hint/joinHint.md)
+   13. `hint_statement`:  hint in front of the selectlist indicates that hints can be used to influence the behavior of the optimizer in order to obtain the desired execution plan. Details refer to [joinHint using document](../../../../query/join-optimization/join-hint)
 
 **Syntax constraints:**
 
@@ -128,7 +128,7 @@ join_condition:
     ON conditional_expr
 ```
 
-**UNION Grammar：**
+**UNION Grammar:**
 
 ```sql
 SELECT ...
