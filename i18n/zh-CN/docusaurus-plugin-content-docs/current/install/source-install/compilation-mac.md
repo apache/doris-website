@@ -27,6 +27,10 @@ under the License.
 
 本文介绍如何在 macOS 平台上编译源码。
 
+:::tip
+目前还不支持存算分离模式编译部署
+:::
+
 ## 环境要求
 
 -   macOS 12 (Monterey) 及以上（***Intel 和 Apple Silicon 均支持***）
