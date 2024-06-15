@@ -24,26 +24,25 @@ under the License.
 
 ## IPV4_NUM_TO_STRING
 
-<version since="dev">
-
 IPV4_NUM_TO_STRING
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
 `VARCHAR IPV4_NUM_TO_STRING(BIGINT ipv4_num)`
 
+`VARCHAR INET_NTOA(BIGINT ipv4_num)`
+
 Takes a Int16、Int32、Int64 number. Interprets it as an IPv4 address in big endian. Returns a string containing the corresponding IPv4 address in the format A.B.C.d (dot-separated numbers in decimal form).
-### notice
 
-`will return NULL if the input parameter is negative or larger than 4294967295(num value of '255.255.255.255')`
+#### Notice
 
-### example
+Will return `NULL` if the input parameter is negative or larger than `4294967295`(num value of `'255.255.255.255'`). This function has an alias `INET_NOTA`.
 
-```
+### Example
+
+```sql
 mysql> select ipv4_num_to_string(3232235521);
 +--------------------------------+
 | ipv4_num_to_string(3232235521) |
@@ -65,6 +64,6 @@ mysql> select num,ipv4_num_to_string(num) from ipv4_bi;
 7 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
-IPV4_NUM_TO_STRING, IP
+IPV4_NUM_TO_STRING, INET_NTOA, IP

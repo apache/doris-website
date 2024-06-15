@@ -24,26 +24,24 @@ under the License.
 
 ## IPV4_STRING_TO_NUM_OR_NULL
 
-<version since="dev">
-
 IPV4_STRING_TO_NUM_OR_NULL
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
 `BIGINT IPV4_STRING_TO_NUM_OR_NULL(VARCHAR ipv4_string)`
 
+`BIGINT INET_ATON(VARCHAR ipv4_string)`
+
 获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）。返回一个 BIGINT 数字，表示相应的大端 IPv4 地址。
 
-### notice
+#### Notice
 
-`如果输入字符串不是有效的 IPv4 地址，将返回NULL`
+如果输入字符串不是有效的 IPv4 地址，将返回 `NULL`。该函数有一个别名为 `INET_ATON`。
 
-### example
-```
+### Example
+```sql
 mysql> select ipv4_string_to_num_or_null('192.168.0.1'); 
 +-------------------------------------------+ 
 | ipv4_string_to_num_or_null('192.168.0.1') | 
@@ -64,6 +62,6 @@ mysql> select str, ipv4_string_to_num_or_null(str) from ipv4_str;
 4 rows in set (0.01 sec)
 ```
 
-### keywords
+### Keywords
 
-IPV4_STRING_TO_NUM_OR_NULL, IP
+IPV4_STRING_TO_NUM_OR_NULL, INET_ATON, IP

@@ -24,13 +24,9 @@ under the License.
 
 ## TO_IPV4_OR_DEFAULT
 
-<version since="dev">
-
 TO_IPV4_OR_DEFAULT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,13 @@ TO_IPV4_OR_DEFAULT
 
 Same as to_ipv4, but if the IPv4 address has an invalid format, it returns 0.0.0.0 (0 as IPv4).
 
-### notice
+#### Notice
 
 `If input is NULL, return 0.0.0.0 (0 as IPv4).`
 
-### example
+### Example
 
-```
+```sql
 mysql> select to_ipv4_or_default('.');
 +-------------------------+
 | to_ipv4_or_default('.') |
@@ -60,6 +56,6 @@ mysql> select to_ipv4_or_default(NULL);
 +--------------------------+
 ```
 
-### keywords
+### Keywords
 
 TO_IPV4_OR_DEFAULT, IP
