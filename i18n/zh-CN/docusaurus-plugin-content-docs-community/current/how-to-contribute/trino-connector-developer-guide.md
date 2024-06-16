@@ -93,7 +93,7 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
 
     解释：
     - `type` ：Catalog 类型，这里我们必须设置为 `trino-connector` 。
-    - `connector.name`、`kafka.table-names`、`kafka.nodes`、`kafka.table-description-dir` 这四个属性都是来源于trino，参考：[Kafka connector](https://trino.io/docs/current/connector/kafka.html#configuration)
+    - `trino.connector.name`、`trino.kafka.table-names`、`trino.kafka.nodes`、`trino.kafka.table-description-dir` 这四个属性都是来源于trino，参考：[Kafka connector](https://trino.io/docs/current/connector/kafka.html#configuration)
 
     不同的Connector插件应该设置不同的属性，可以参考trino官方文档：[Connectors](https://trino.io/docs/current/connector.html#connector--page-root)
 
@@ -115,7 +115,7 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
     ```
 
     > 使用 Hive 插件时需要注意：
-    > - 需要在 JVM 参数里加上 Hadoop 的用户：-DHADOOP_USER_NAME=ftw，可以配置在 fe.conf / be.conf 文件的JAVA_OPTS_FOR_JDK_17 参数末尾，如 JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=ftw"
+    > - 需要在 JVM 参数里加上 Hadoop 的用户：-DHADOOP_USER_NAME=user，可以配置在 fe.conf / be.conf 文件的JAVA_OPTS_FOR_JDK_17 参数末尾，如 JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=user"
 
 2. Mysql
 
