@@ -32,7 +32,11 @@ under the License.
 
 通过format指定的方式将str转化为DATE类型，如果转化结果不对返回NULL。注意format指定的是第一个参数的格式。
 
-支持[date_format](./date-format)中的所有 format 格式，此外对于 '%Y' 和 '%Y-%m'，支持补齐日期剩余部分。
+支持[date_format](./date-format)中的所有 format 格式，
+
+> 自 Doris 2.0.5 开始：
+>
+> 对于 '%Y' 和 '%Y-%m'，支持自动补齐日期剩余部分。
 
 ### example
 
