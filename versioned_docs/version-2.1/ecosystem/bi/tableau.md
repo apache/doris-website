@@ -38,12 +38,12 @@ When choosing the ODBC driver for MySQL to connect to Doris, you should install 
 ## Connection Configuration and Usage
 1. Click the Tableau Desktop home page and select MySQL at the connection data source
 
-   ![main page](/images/powerbi/bi-tableau-en-1.png)
+   ![main page](/images/bi-tableau-en-1.png)
 
 2. Fill in the Doris server address, port and other relevant information, and click sigin in button after correctly filling
 
-   ![sign in page](/images/powerbi/bi-tableau-en-2.png)
+   ![sign in page](/images/bi-tableau-en-2.png)
 
 3. After entering Tableau, select the corresponding library table to carry out the relevant compass processing.
 
-   ![usage page](/images/powerbi/bi-tableau-en-3.png)
+   ![usage page](/images/bi-tableau-en-3.png)

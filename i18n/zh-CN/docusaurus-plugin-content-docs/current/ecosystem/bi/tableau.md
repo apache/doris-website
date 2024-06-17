@@ -40,12 +40,12 @@ Tableau Desktop 可通过如下链接进行下载：https://www.tableau.com/prod
 ## 连接配置与使用
 1. 点击Tableau Desktop 主页，在连接数据源处选择MySQL
 
-   ![main page](/images/powerbi/bi-tableau-en-1.png)
+   ![main page](/images/bi-tableau-en-1.png)
 
 2. 填写Doris服务器地址，端口等相关信息，正确填写后点击登录即可。
 
-   ![sign in page](/images/powerbi/bi-tableau-en-2.png)
+   ![sign in page](/images/bi-tableau-en-2.png)
 
 3. 进入Tableau后选择对应的库表即可进行相关的罗盘处理。
 
-   ![usage page](/images/powerbi/bi-tableau-en-3.png)
+   ![usage page](/images/bi-tableau-en-3.png)
