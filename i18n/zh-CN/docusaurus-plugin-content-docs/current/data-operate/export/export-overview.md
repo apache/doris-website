@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 数据导出概述
+## 数据导出概述
 数据导出功能，用于将查询结果集或者Doris的表数据，使用指定的文件格式，写入指定的存储系统中的。
 
 导出功能和数据备份功能有以下区别：
@@ -37,7 +37,7 @@ under the License.
 |灵活度|可以通过 SQL 语句灵活定义要导出的数据|仅支持表级别全量备份|
 |使用场景|结果集下载、不同系统之间的数据交换|数据备份、Doris集群间的数据迁移|
 
-# 选择导出方式
+## 选择导出方式
 Doris 提供以下三种不同的数据导出方式：
 
 * SELECT INTO OUTFILE：支持任意 SQL 结果集的导出。
@@ -60,19 +60,19 @@ Doris 提供以下三种不同的数据导出方式：
 |是否支持导出view|支持|支持|支持|
 |支持的导出位置|S3、HDFS、LOCAL|S3、HDFS、LOCAL|LOCAL|
 
-## SELECT INTO OUTFILE
+### SELECT INTO OUTFILE
 适用于以下场景：
 
 * 导出数据需要经过复杂计算逻辑的，如过滤、聚合、关联等。
 * 适合执行同步任务的场景。
 
-## EXPORT
+### EXPORT
 适用于以下场景：
 
 * 大数据量的单表导出、仅需简单的过滤条件。
 * 需要异步提交任务的场景。
 
-## MySQl Dump
+### MySQl Dump
 适用于以下场景：
 
 * 兼容MySQL 生态，需要同时导出表结构和数据。
@@ -80,54 +80,52 @@ Doris 提供以下三种不同的数据导出方式：
 
 
 
-# 导出文件列类型映射
+## 导出文件列类型映射
 Parquet、ORC 文件格式拥有自己的数据类型。Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型。CSV 格式没有类型，所有数据都以文本形式输出。
 
 
 
 以下是Doris数据类型和 Parquet、ORC 文件格式的数据类型映射关系表：
-
 1. Doris导出到Orc文件格式的数据类型映射表：
+    |Doris Type|Orc Type|
+    | ----- | ----- |
+    |boolean|boolean|
+    |tinyint|tinyint|
+    |smallint|smallint|
+    |int|int|
+    |bigint|bigint|
+    |largeInt|string|
+    |date|string|
+    |datev2|string|
+    |datetime|string|
+    |datetimev2|timestamp|
+    |float|float|
+    |double|double|
+    |char / varchar / string|string|
+    |decimal|decimal|
+    |struct|struct|
+    |map|map|
+    |array|array|
 
-|Doris Type|Orc Type|
-| ----- | ----- |
-|boolean|boolean|
-|tinyint|tinyint|
-|smallint|smallint|
-|int|int|
-|bigint|bigint|
-|largeInt|string|
-|date|string|
-|datev2|string|
-|datetime|string|
-|datetimev2|timestamp|
-|float|float|
-|double|double|
-|char / varchar / string|string|
-|decimal|decimal|
-|struct|struct|
-|map|map|
-|array|array|
-
+    <br/>
 2. Doris导出到Parquet文件格式时，会先将Doris内存数据转换为arrow内存数据格式，然后由arrow写出到parquet文件格式。Doris数据类型到arrow数据类的映射关系为：
 
-|Doris Type|Arrow Type|
-| ----- | ----- |
-|boolean|boolean|
-|tinyint|int8|
-|smallint|int16|
-|int|int32|
-|bigint|int64|
-|largeInt|utf8|
-|date|utf8|
-|datev2|Date32Type|
-|datetime|utf8|
-|datetimev2|TimestampType|
-|float|float32|
-|double|float64|
-|char / varchar / string|utf8|
-|decimal|decimal128|
-|struct|struct|
-|map|map|
-|array|list|
-
+    |Doris Type|Arrow Type|
+    | ----- | ----- |
+    |boolean|boolean|
+    |tinyint|int8|
+    |smallint|int16|
+    |int|int32|
+    |bigint|int64|
+    |largeInt|utf8|
+    |date|utf8|
+    |datev2|Date32Type|
+    |datetime|utf8|
+    |datetimev2|TimestampType|
+    |float|float32|
+    |double|float64|
+    |char / varchar / string|utf8|
+    |decimal|decimal128|
+    |struct|struct|
+    |map|map|
+    |array|list|

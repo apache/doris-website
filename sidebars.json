@@ -142,7 +142,7 @@
                     "type": "category",
                     "label": "Exporting Data",
                     "items": [
-                        "data-operate/export/export-view",
+                        "data-operate/export/export-overview",
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
