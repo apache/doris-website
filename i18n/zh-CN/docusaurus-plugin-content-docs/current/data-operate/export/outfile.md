@@ -34,7 +34,7 @@ under the License.
 
 `SELECT INTO OUTFILE` 是一个同步命令，命令返回即表示导出结束。若导出成功，会返回导出的文件数量、大小、路径等信息。若导出失败，会返回错误信息。
 
-关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 导出综述。
+关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-overview.md)。
 
 
 
@@ -302,36 +302,35 @@ PROPERTIES(
   `SELECT INTO OUTFILE`的并发导出就是基于上述MPP架构的并行处理能力，在可以并发导出的场景下（后面会详细说明哪些场景可以并发导出），并行的在多个BE节点上导出，每个BE处理结果集的一部分。
 
 2. 如何判断可以执行并发导出
-3. 确定会话变量已开启：`set enable_parallel_outfile = true;`
-4. 通过 `EXPLAIN` 查看执行计划
+ - 确定会话变量已开启：`set enable_parallel_outfile = true;`
+ - 通过 `EXPLAIN` 查看执行计划
 
-```sql
-mysql> EXPLAIN SELECT ... INTO OUTFILE "s3://xxx" ...;
-+-----------------------------------------------------------------------------+
-| Explain String                                                              |
-+-----------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                             |
-|  OUTPUT EXPRS:<slot 2> | <slot 3> | <slot 4> | <slot 5>                     |
-|   PARTITION: UNPARTITIONED                                                  |
-|                                                                             |
-|   RESULT SINK                                                               |
-|                                                                             |
-|   1:EXCHANGE                                                                |
-|                                                                             |
-| PLAN FRAGMENT 1                                                             |
-|  OUTPUT EXPRS:`k1` + `k2`                                                   |
-|   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`multi_tablet`.`k1`   |
-|                                                                             |
-|   RESULT FILE SINK                                                          |
-|   FILE PATH: s3://ml-bd-repo/bpit_test/outfile_1951_                        |
-|   STORAGE TYPE: S3                                                          |
-|                                                                             |
-|   0:OlapScanNode                                                            |
-|      TABLE: multi_tablet                                                    |
-+-----------------------------------------------------------------------------+
-```
-    `EXPLAIN` 命令会返回该语句的查询计划.观察该查询计划，如果发现 `RESULT FILE SINK` 出现在 `PLAN FRAGMENT 1` 中，就说明该查询语句可以并发导出。如果 `RESULT FILE SINK` 出现在 `PLAN FRAGMENT 0` 中，则说明当前查询不能进行并发导出。
+    ```sql
+    mysql> EXPLAIN SELECT ... INTO OUTFILE "s3://xxx" ...;
+    +-----------------------------------------------------------------------------+
+    | Explain String                                                              |
+    +-----------------------------------------------------------------------------+
+    | PLAN FRAGMENT 0                                                             |
+    |  OUTPUT EXPRS:<slot 2> | <slot 3> | <slot 4> | <slot 5>                     |
+    |   PARTITION: UNPARTITIONED                                                  |
+    |                                                                             |
+    |   RESULT SINK                                                               |
+    |                                                                             |
+    |   1:EXCHANGE                                                                |
+    |                                                                             |
+    | PLAN FRAGMENT 1                                                             |
+    |  OUTPUT EXPRS:`k1` + `k2`                                                   |
+    |   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`multi_tablet`.`k1`   |
+    |                                                                             |
+    |   RESULT FILE SINK                                                          |
+    |   FILE PATH: s3://ml-bd-repo/bpit_test/outfile_1951_                        |
+    |   STORAGE TYPE: S3                                                          |
+    |                                                                             |
+    |   0:OlapScanNode                                                            |
+    |      TABLE: multi_tablet                                                    |
+    +-----------------------------------------------------------------------------+
+    ```
+    `EXPLAIN` 命令会返回该语句的查询计划.观察该查询计划，如果发现 `RESULT FILE SINK` 出现在 `PLAN FRAGMENT 1` 中，就说明该查询语句可以并发导出。如果 `RESULT FILE SINK` 出现在 `PLAN FRAGMENT 0` 中，则说明当前查询不能进行并发导出。
 
 3. 导出并发度
-
-  当满足并发导出的条件后，导出任务的并发度为：`BE 节点数 * parallel_fragment_exec_instance_num`。
+  当满足并发导出的条件后，导出任务的并发度为：`BE 节点数 * parallel_fragment_exec_instance_num`。
