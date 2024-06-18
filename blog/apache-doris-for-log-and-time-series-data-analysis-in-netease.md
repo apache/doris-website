@@ -2,6 +2,7 @@
 {
     'title': 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
     'summary': "NetEase (NASDAQ: NTES) has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.",
+    'description': "NetEase (NASDAQ: NTES) has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.",
     'date': '2024-05-23',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
