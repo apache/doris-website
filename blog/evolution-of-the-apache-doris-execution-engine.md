@@ -2,6 +2,7 @@
 {
     'title': 'Steps to industry-leading query speed: evolution of the Apache Doris execution engine',
     'summary': "From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.",
+    'description': "From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.",
     'date': '2024-06-18',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
