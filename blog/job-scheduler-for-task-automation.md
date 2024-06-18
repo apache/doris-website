@@ -6,7 +6,7 @@
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/job-scheduler-for-task-automation.jpg'
 }
 
