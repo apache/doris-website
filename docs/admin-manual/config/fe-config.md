@@ -871,16 +871,6 @@ MasterOnly：false
 
 The time interval of the latest partitioned version of the table refers to the time interval between the data update and the current version. It is generally set to 900 seconds, which distinguishes offline and real-time import
 
-#### `enable_batch_delete_by_default`
-
-Default：false
-
-IsMutable：true
-
-MasterOnly：true
-
-Whether to add a delete sign column when create unique table
-
 #### `max_allowed_in_element_num_of_delete`
 
 Default：1024
