@@ -24,13 +24,9 @@ under the License.
 
 ## TO_IPV4_OR_NULL
 
-<version since="dev">
-
 TO_IPV4_OR_NULL
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ TO_IPV4_OR_NULL
 
 与to_ipv4函数类似，但如果IPv4地址的格式非法，则返回NULL。
 
-### notice
+### Example
 
-`入参ipv4_str如果为NULL，则返回NULL。`
-
-### example
-
-```
+```sql
 mysql> select to_ipv4_or_null('.');
 +----------------------+
 | to_ipv4_or_null('.') |
@@ -60,6 +52,6 @@ mysql> select to_ipv4_or_null(NULL);
 +-----------------------+
 ```
 
-### keywords
+### Keywords
 
 TO_IPV4_OR_NULL, IP

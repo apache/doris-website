@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Group Commit
+:::tip Tip
+The Group Commit feature is supported since version 2.1 of Apache Doris. For more information about this feature, see [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/).
+:::
 
 Group commit load does not introduce a new data import method, but an extension of `INSERT INTO tbl VALUS(...)`, `Stream Load` and `Http Stream`. It is a way to improve the write performance of Doris with high-concurrency and small-data writes. Your application can directly use JDBC to do high-concurrency insert operation into Doris, at the same time, combining PreparedStatement can get even higher performance. In logging scenarios, you can also do high-concurrency Stream Load or Http Stream into Doris. 
 
