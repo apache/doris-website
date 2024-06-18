@@ -68,16 +68,6 @@ When FE parses the query, `DORIS_DELETE_SIGN` is removed when it encounters * an
 
     When Base Compaction is performed, the rows marked for deletion are deleted to reduce the space occupied by the data.
 
-## Enable Batch Delete Support
-
-There are two forms of enabling Batch Delete support:
-
-1. Batch Delete is supported by adding `enable_batch_delete_by_default=true` in the FE configuration file for all new tables created after restarting FE;
-
-2. For tables that do not have the above FE configuration changed or for existing tables that do not support Batch Delete, the following statement can be used: `ALTER TABLE tablename ENABLE FEATURE "BATCH_DELETE"` to enable Batch Delete. This is essentially a schema change operation, which returns immediately and can be confirmed by `showing alter table column`.
-
-Then how to determine whether a table supports Batch Delete, you can set a session variable to show hidden columns `SET show_hidden_columns=true`, and after that use `desc tablename`, if there is a `DORIS_DELETE_SIGN` column in the output then it is supported, if there is not then it is not supported.
-
 ## Syntax Description
 
 The syntax design of the import is mainly to add a column mapping that specifies the field of the delete marker column, and it is necessary to add a column to the imported data. The syntax of various import methods is as follows:
