@@ -134,7 +134,7 @@ distribution_desc
         ```
   * <version since="2.1" type="inline">`on update current_timestamp`</version>
 
-        是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 merge-on-write 的 unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为`current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
+        是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 Merge-on-Write 的 Unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为`current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
 
       
   示例：
@@ -312,7 +312,7 @@ UNIQUE KEY(k1, k2)
 
 * `is_being_synced`  
 
-    用于标识此表是否是被 CCR 复制而来并且正在被 syncer 同步，默认为 `false`。  
+    用于标识此表是否是被 CCR 复制而来并且正在被 Syncer 同步，默认为 `false`。  
 
     如果设置为 `true`：  
     `colocate_with`，`storage_policy`属性将被擦除  
@@ -377,7 +377,7 @@ UNIQUE KEY(k1, k2)
 
 * `light_schema_change`
 
-    <version since="1.2" type="inline"> 是否使用 light schema change 优化。</version>
+    <version since="1.2" type="inline"> 是否使用 Light Schema Change 优化。</version>
 
     如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
 
@@ -387,9 +387,9 @@ UNIQUE KEY(k1, k2)
 
 * `disable_auto_compaction`
 
-    是否对这个表禁用自动 compaction。
+    是否对这个表禁用自动 Compaction。
 
-    如果这个属性设置成 `true`, 后台的自动 compaction 进程会跳过这个表的所有 tablet。
+    如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。
 
     `"disable_auto_compaction" = "false"`
 
@@ -403,7 +403,7 @@ UNIQUE KEY(k1, k2)
 
 * `enable_duplicate_without_keys_by_default`
 
-    当配置为`true`时，如果创建表的时候没有指定 Unique、Aggregate 或 Duplicate 时，会默认创建一个没有排序列和前缀索引的 Duplicate 模型的表。
+    当配置为`true`时，如果创建表的时候没有指定 Unique、Aggregate 或 Duplicate 模型，会默认创建一个没有排序列和前缀索引的 Duplicate 模型的表。
 
     `"enable_duplicate_without_keys_by_default" = "false"`
 
@@ -411,30 +411,30 @@ UNIQUE KEY(k1, k2)
 
     是否对这个表开启数据导入时不写索引。
 
-    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 compaction 的时候延迟写索引。这样可以避免首次写入和 compaction
+    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 Compaction 的时候延迟写索引。这样可以避免首次写入和 Compaction
     重复写索引的 CPU 和 IO 资源消耗，提升高吞吐导入的性能。
 
     `"skip_write_index_on_load" = "false"`
 
 * `compaction_policy`
 
-    配置这个表的 compaction 的合并策略，仅支持配置为 time_series 或者 size_based
+    配置这个表的 Compaction 的合并策略，仅支持配置为 time_series 或者 size_based
 
     time_series: 当 rowset 的磁盘体积积攒到一定大小时进行版本合并。合并后的 rowset 直接晋升到 base compaction 阶段。在时序场景持续导入的情况下有效降低 compact 的写入放大率
 
-    此策略将使用 time_series_compaction 为前缀的参数调整 compaction 的执行
+    此策略将使用 time_series_compaction 为前缀的参数调整 Compaction 的执行
 
     `"compaction_policy" = ""`
 
 * `time_series_compaction_goal_size_mbytes`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件的大小，输出的文件大小和输入相当
+    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
 
     `"time_series_compaction_goal_size_mbytes" = "1024"`
 
 * `time_series_compaction_file_count_threshold`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件数量的最小值
+    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件数量的最小值
 
     一个 tablet 中，文件数超过该配置，就会触发 compaction
 
@@ -442,13 +442,13 @@ UNIQUE KEY(k1, k2)
 
 * `time_series_compaction_time_threshold_seconds`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整 compaction 的最长时间间隔，即长时间未执行过 compaction 时，就会触发一次 compaction，单位为秒
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整 Compaction 的最长时间间隔，即长时间未执行过 Compaction 时，就会触发一次 compaction，单位为秒
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
 * `time_series_compaction_level_threshold`
 
-    compaction 的合并策略为 time_series 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 time_series_compaction_goal_size_mbytes，
+    Compaction 的合并策略为 `time_series` 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 `time_series_compaction_goal_size_mbytes`，
     
     能达到段数量减少的效果。
 
@@ -706,7 +706,7 @@ UNIQUE KEY(k1, k2)
             "replication_num" = "1"
         );
     ```
-注：需要先创建 s3 resource 和 storage policy，表才能关联迁移策略成功
+注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功
 
 12. 为表的分区添加冷热分层数据迁移策略
     ```sql
@@ -769,7 +769,7 @@ UNIQUE KEY(k1, k2)
         );
     ```
 
-注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 fe 配置项 `max_multi_partition_num` 调整
+注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 FE 配置项 `max_multi_partition_num` 调整
 
 </version>
 
