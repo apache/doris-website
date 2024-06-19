@@ -520,6 +520,7 @@
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
+                        "ecosystem/bi/smartbi",
                         "ecosystem/bi/powerbi"
                     ]
                 }
