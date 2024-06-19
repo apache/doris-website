@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IPV6_STRING
 
-<version since="dev">
-
 IS_IPV6_STRING
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ IS_IPV6_STRING
 
 接收一个表示形式为字符串的IPv6地址作为参数，如果为格式正确且合法的IPv6地址，返回true；反之，返回false。
 
-### notice
+### Example
 
-`如果入参为NULL，则返回NULL，表示无效输入`
-
-### example
-
-```
+```sql
 mysql> select is_ipv6_string(NULL);
 +----------------------+
 | is_ipv6_string(NULL) |
@@ -75,6 +67,6 @@ mysql> select id, is_ipv6_string(ip_v6) from test_is_ipv6_string order by id;
 +------+-----------------------+
 ```
 
-### keywords
+### Keywords
 
 IS_IPV6_STRING, IP

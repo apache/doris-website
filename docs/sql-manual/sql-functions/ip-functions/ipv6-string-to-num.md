@@ -24,13 +24,9 @@ under the License.
 
 ## IPV6_STRING_TO_NUM
 
-<version since="dev">
-
 IPV6_STRING_TO_NUM
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -39,12 +35,12 @@ IPV6_STRING_TO_NUM
 The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format. 
 If the input string contains a valid IPv4 address, returns its IPv6 equivalent.
 
-### notice
+#### Notice
 
-`will return an error if the input string is not a valid IP address or NULL`
+Will return an error if the input string is not a valid IP address or `NULL`
 
-### example
-```
+### Example
+```sql
 mysql> select hex(ipv6_string_to_num('1111::ffff'));
 +---------------------------------------+
 | hex(ipv6_string_to_num('1111::ffff')) |
@@ -68,6 +64,6 @@ mysql> select addr_src, hex(ipv6_string_to_num(addr_src)) from ipv4_string_test 
 ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv6 value like '::' first
 ```
 
-### keywords
+### Keywords
 
 IPV6_STRING_TO_NUM, IP

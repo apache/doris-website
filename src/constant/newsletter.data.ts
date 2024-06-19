@@ -1,5 +1,13 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "Steps to industry-leading query speed: evolution of the Apache Doris execution engine",
+        content: `From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.`,
+        to: '/blog/evolution-of-the-apache-doris-execution-engine',
+        image: 'evolution-of-the-apache-doris-execution-engine.jpg',
+    },
+
+    {
         tags: ['Best Practice'],
         title: "Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation",
         content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
@@ -20,12 +28,4 @@ export const NEWSLETTER_DATA = [
         to: '/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
         image: 'doris-for-log-and-time-series-data-analysis-in-netease.jpg',
     },
-    {
-        tags: ['Tech Sharing'],
-        title: "Multi-tenant workload isolation: a better balance between isolation and utilization",
-        content: `Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.`,
-        to: '/blog/multi-tenant-workload-isolation-in-apache-doris',
-        image: 'multi-tenant-workload-group.jpg',
-    },
-
 ];

@@ -24,13 +24,9 @@ under the License.
 
 ## IPV6_CIDR_TO_RANGE
 
-<version since="dev">
-
 IPV6_CIDR_TO_RANGE
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ IPV6_CIDR_TO_RANGE
 
 Receive an IPv6 and an Int16 value containing CIDR. Returns a struct that contains two IPv6 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
 
-### notice
+### Example
 
-`If the input parameter is NULL, return NULL, indicating invalid input`
-
-### example
-
-```
+```sql
 mysql> SELECT ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32);
 +---------------------------------------------------------------------------------------+
 | ipv6_cidr_to_range(ipv6_string_to_num('2001:0db8:0000:85a3:0000:0000:ac1f:8001'), 32) |
@@ -67,6 +59,6 @@ mysql> SELECT ipv6_cidr_to_range(NULL, NULL);
 +--------------------------------+
 ```
 
-### keywords
+### Keywords
 
 IPV6_CIDR_TO_RANGE, IP

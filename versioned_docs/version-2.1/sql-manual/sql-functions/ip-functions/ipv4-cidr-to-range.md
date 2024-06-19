@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_CIDR_TO_RANGE
 
-<version since="dev">
-
 IPV4_CIDR_TO_RANGE
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ IPV4_CIDR_TO_RANGE
 
 Receive an IPv4 and an Int16 value containing CIDR. Returns a struct that contains two IPv4 fields representing the lower range (min) and higher range (max) of the subnet, respectively.
 
-### notice
+### Example
 
-`If the input parameter is NULL, return NULL, indicating invalid input`
-
-### example
-
-```
+```sql
 mysql> SELECT ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16);
 +-----------------------------------------------------------+
 | ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16) |
@@ -67,6 +59,6 @@ mysql> SELECT ipv4_cidr_to_range(NULL, NULL);
 +--------------------------------+
 ```
 
-### keywords
+### Keywords
 
 IPV4_CIDR_TO_RANGE, IP
