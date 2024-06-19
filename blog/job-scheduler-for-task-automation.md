@@ -5,7 +5,7 @@
     'description': "The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.",
     'date': '2024-06-06',
     'author': 'Apache Doris',
-    'tags': ['Best Practice'],
+    'tags': ['Tech Sharing'],
     'picked': "true",
     'order': "2",
     "image": '/images/job-scheduler-for-task-automation.jpg'
