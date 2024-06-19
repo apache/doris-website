@@ -47,7 +47,7 @@ illustrate:
 
 ### Example
 
-1. Delete a Table
+1. Delete a table
    
      ```sql
      DROP TABLE my_table;
