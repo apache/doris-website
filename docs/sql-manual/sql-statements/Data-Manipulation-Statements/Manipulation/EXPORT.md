@@ -98,6 +98,10 @@ The bottom layer of the `Export` statement actually executes the `select...outfi
 
   - `timeout`: This is the timeout parameter of the export job, the default timeout is 2 hours, and the unit is seconds.
 
+  - `parquet.compression`: When the specified export file format is Parquet, the desired compression method for the Parquet file can be set to GZIP, BROTLI, ZSTD, LZ4, LZO, BZ2, or UNCOMPRESSED. The default value is SNAPPY. This parameter is supported from version 2.1.5.
+  
+  - `orc.compression`: When the specified export file format is ORC, the desired compression method for the ORC file can be set to PLAIN, SNAPPY, ZLIB, or ZSTD. The default value is ZLIB. This parameter is supported from version 2.1.5.
+
   > Note that to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` to the fe.conf file and restart the FE. Only then will the `delete_existing_files` parameter take effect. Setting `delete_existing_files = true` is a dangerous operation and it is recommended to only use it in a testing environment.
 
 - `WITH BROKER`
