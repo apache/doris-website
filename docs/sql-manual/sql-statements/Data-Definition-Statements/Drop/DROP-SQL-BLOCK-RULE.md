@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DROP-DATABASE",
+    "title": "DROP-SQL-BLOCK-RULE",
     "language": "en"
 }
 ---
