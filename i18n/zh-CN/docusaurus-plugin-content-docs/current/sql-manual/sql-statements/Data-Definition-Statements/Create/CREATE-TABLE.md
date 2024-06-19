@@ -114,11 +114,11 @@ distribution_desc
         可以通过给定`auto_inc_start_value`的方式指定自增列的起始值，如果不指定，则默认起始值为 1。
 
   * `default_value`
-        列默认值，当导入数据未指定该列的值时，系统将赋予该列 default_value。
+        列默认值，当导入数据未指定该列的值时，系统将赋予该列 `default_value`。
           
         语法为`default default_value`。
           
-        当前 default_value 支持两种形式：
+        当前 `default_value` 支持两种形式：
         1. 用户指定固定值，如：
         ```SQL
             k1 INT DEFAULT '1',
@@ -355,15 +355,15 @@ UNIQUE KEY(k1, k2)
 
 * `function_column.sequence_col`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个 sequence 列，当 KEY 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
-    `function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
+    `function_column.sequence_col`用来指定 Sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
     `"function_column.sequence_col" = 'column_name'`
 
 * `function_column.sequence_type`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个 sequence 列，当 KEY 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE (较大值替换较小值，否则无法替换)
 
     这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
 
