@@ -1,6 +1,6 @@
 ---
 {
-   "title": "Power-BI",
+   "title": "Power BI",
    "language": "en"
 }
 ---
@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PowerBI Introduction
+## Power BI Introduction
 
-PowerBI is a collection of software services and application connectors that can connect to multiple data sources, including Excel, SQL Server, Azure, Google Analytics, etc., so that users can easily consolidate and clean their data. With PowerBI's data modeling, users can create relational models, data analysis expressions, and data relationships to support advanced data analysis and visualization. PowerBI offers a wealth of visualization options, including ICONS, maps, dashboards, and custom visualization tools to help users make a more intuitive sense of data.
+Power BI is a collection of software services and application connectors that can connect to multiple data sources, including Excel, SQL Server, Azure, Google Analytics, etc., so that users can easily consolidate and clean their data. With Power BI's data modeling, users can create relational models, data analysis expressions, and data relationships to support advanced data analysis and visualization. Power BI offers a wealth of visualization options, including ICONS, maps, dashboards, and custom visualization tools to help users make a more intuitive sense of data.
 
-Apache Doris is highly compatible with MySQL protocol and can be connected to PowerBI and Apache Doris through MySQL driver. At present, internal data modeling, data query and visualization processing of Apache Doris have been officially supported in PowerBI.
+Apache Doris is highly compatible with MySQL protocol and can be connected to Power BI and Apache Doris through MySQL Driver. At present, internal data modeling, data query and visualization processing of Apache Doris have been officially supported in Power BI.
 
 ## Precondition
 
-If you do not have PowerBI desktop installed, you can download it from https://www.microsoft.com/
+If you do not have Power BI desktop installed, you can download it from https://www.microsoft.com/en-us/power-platform/products/power-bi/desktop
 
-## Connector configuration of PowerBI and Doris
+## Connector configuration of Power BI and Doris
 :::info Note
 Currently verified using MySQL JDBC Connector version 8.0.26
 :::
@@ -45,11 +45,11 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
 ## Load data locally and create models
 
-1. Start the PowerBI Desktop
+1. Start the Power BI Desktop
 
    ![jdbc connector download](/images/powerbi/bi-powerbi-en-1.png)
 
-2. Open the PowerBI Desktop screen and click Create Report. If a local report exists, you can open it.
+2. Open the Power BI Desktop screen and click Create Report. If a local report exists, you can open it.
 
    ![start page](/images/powerbi/bi-powerbi-en-2.png)
 
@@ -65,7 +65,7 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
    ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
 
-6. Load the selected table to the PowerBI Desktop
+6. Load the selected table to the Power BI Desktop
 
    ![load data](/images/powerbi/bi-powerbi-en-6.png)
 
@@ -84,9 +84,9 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
    ![gateway install](/images/powerbi/bi-powerbi-en-9.png)
 
-3. Log into PowerBI Online and import the local model in your workspace
+3. Log into Power BI Online and import the local model in your workspace
 
-   ![upload](/images/powerbi/bi-powerbi-en-10.png)
+   ![upload](/images/powerbi/bi-powerbi-en-10-zh.png)
 
 4. Click the model to set the automatic refresh time
 
@@ -96,7 +96,7 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
    ![config gateway](/images/powerbi/bi-powerbi-en-12.png)
 
-6. Configure the refresh schedule to complete the automatic data refresh on PowerBI
+6. Configure the refresh schedule to complete the automatic data refresh on Power BI
 
    ![make plan](/images/powerbi/bi-powerbi-en-13.png)
 
