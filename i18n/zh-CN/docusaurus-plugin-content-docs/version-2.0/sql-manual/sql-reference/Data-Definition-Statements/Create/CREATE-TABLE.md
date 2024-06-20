@@ -30,7 +30,7 @@ under the License.
 
 ### Description
 
-该命令用于创建一张表。本文档主要介绍创建 Doris 自维护的表的语法。外部表语法请参阅 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md)文档。
+该命令用于创建一张表。本文档主要介绍创建 Apache Doris 自维护的表的语法。外部表语法请参阅 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md) 文档。
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table
@@ -102,7 +102,7 @@ distribution_desc
         MIN：求最小值。适合数值类型。
         MAX：求最大值。适合数值类型。
         REPLACE：替换。对于维度列相同的行，指标列会按照导入的先后顺序，后导入的替换先导入的。
-        REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于 null 值，不做替换。这里要注意的是字段默认值要给 NULL，而不能是空字符串，如果是空字符串，会给你替换成空字符串。
+        REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于 Null 值，不做替换。这里要注意的是字段默认值要给 NULL，而不能是空字符串，如果是空字符串，会给你替换成空字符串。
         HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
         BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
         ```
@@ -166,7 +166,7 @@ distribution_desc
 
 #### engine_type
 
-表引擎类型。本文档中类型皆为 OLAP。其他外部表引擎类型见 [CREATE EXTERNAL TABLE](./CREATE-EXTERNAL-TABLE.md) 文档。示例：
+表引擎类型。本文档中类型皆为 OLAP。其他外部表引擎类型见 [CREATE-EXTERNAL-TABLE](./CREATE-EXTERNAL-TABLE.md) 文档。示例：
     
     `ENGINE=olap`
     
@@ -183,7 +183,7 @@ distribution_desc
 * UNIQUE KEY：其后指定的列为主键列。
 
 <version since="2.0">
-注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 DUPLICATE 表。
+注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 Duplicate 表。
 </version>
 
 示例：
@@ -300,7 +300,7 @@ UNIQUE KEY(k1, k2)
 
 * `is_being_synced`  
 
-    用于标识此表是否是被 CCR 复制而来并且正在被 syncer 同步，默认为 `false`。  
+    用于标识此表是否是被 CCR 复制而来并且正在被 Syncer 同步，默认为 `false`。  
 
     如果设置为 `true`：  
     `colocate_with`，`storage_policy`属性将被擦除  
@@ -337,21 +337,21 @@ UNIQUE KEY(k1, k2)
 
 * `compression`
 
-    Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。
+    Apache Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。
 
     `"compression"="zstd"`
 
 * `function_column.sequence_col`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个 sequence 列，当 KEY 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 sequence 列，当 key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
-    `function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
+    `function_column.sequence_col`用来指定 Sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
     `"function_column.sequence_col" = 'column_name'`
 
 * `function_column.sequence_type`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个 sequence 列，当 KEY 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 sequence 列，当 key 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
     这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
 
@@ -361,7 +361,7 @@ UNIQUE KEY(k1, k2)
 
     <version since="1.2" type="inline"> 是否使用 light schema change 优化。</version>
 
-    如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
+    如果设置成 `true`, 对于值列的加减操作，可以更快地、同步地完成。
 
     `"light_schema_change" = 'true'`
 
@@ -369,17 +369,17 @@ UNIQUE KEY(k1, k2)
 
 * `disable_auto_compaction`
 
-    是否对这个表禁用自动 compaction。
+    是否对这个表禁用自动 Compaction。
 
-    如果这个属性设置成 `true`, 后台的自动 compaction 进程会跳过这个表的所有 tablet。
+    如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。
 
     `"disable_auto_compaction" = "false"`
 
 * `enable_single_replica_compaction`
 
-    是否对这个表开启单副本 compaction。
+    是否对这个表开启单副本 Compaction。
 
-    如果这个属性设置成 `true`, 这个表的 tablet 的所有副本只有一个 do compaction，其他的从该副本拉取 rowset
+    如果这个属性设置成 `true`, 这个表的 Tablet 的所有副本只有一个 do compaction，其他的从该副本拉取 rowset
 
     `"enable_single_replica_compaction" = "false"`
 
@@ -393,44 +393,44 @@ UNIQUE KEY(k1, k2)
 
     是否对这个表开启数据导入时不写索引。
 
-    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 compaction 的时候延迟写索引。这样可以避免首次写入和 compaction
+    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 Compaction 的时候延迟写索引。这样可以避免首次写入和 Compaction
     重复写索引的 CPU 和 IO 资源消耗，提升高吞吐导入的性能。
 
     `"skip_write_index_on_load" = "false"`
 
 * `compaction_policy`
 
-    配置这个表的 compaction 的合并策略，仅支持配置为 time_series 或者 size_based
+    配置这个表的 Compaction 的合并策略，仅支持配置为 time_series 或者 size_based
 
     time_series: 当 rowset 的磁盘体积积攒到一定大小时进行版本合并。合并后的 rowset 直接晋升到 base compaction 阶段。在时序场景持续导入的情况下有效降低 compact 的写入放大率
 
-    此策略将使用 time_series_compaction 为前缀的参数调整 compaction 的执行
+    此策略将使用 time_series_compaction 为前缀的参数调整 Compaction 的执行
 
     `"compaction_policy" = ""`
 
 * `time_series_compaction_goal_size_mbytes`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件的大小，输出的文件大小和输入相当
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
 
     `"time_series_compaction_goal_size_mbytes" = "1024"`
 
 * `time_series_compaction_file_count_threshold`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件数量的最小值
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件数量的最小值
 
-    一个 tablet 中，文件数超过该配置，就会触发 compaction
+    一个 Tablet 中，文件数超过该配置，就会触发 Compaction
 
     `"time_series_compaction_file_count_threshold" = "2000"`
 
 * `time_series_compaction_time_threshold_seconds`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整 compaction 的最长时间间隔，即长时间未执行过 compaction 时，就会触发一次 compaction，单位为秒
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整 compaction 的最长时间间隔，即长时间未执行过 compaction 时，就会触发一次 Compaction，单位为秒
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
 * `time_series_compaction_level_threshold`
 
-    compaction 的合并策略为 time_series 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 time_series_compaction_goal_size_mbytes，
+    Compaction 的合并策略为 time_series 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 time_series_compaction_goal_size_mbytes，
     
     能达到段数量减少的效果。
 
@@ -688,7 +688,7 @@ UNIQUE KEY(k1, k2)
             "replication_num" = "1"
         );
     ```
-注：需要先创建 s3 resource 和 storage policy，表才能关联迁移策略成功
+注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功。
 
 12. 为表的分区添加冷热分层数据迁移策略
     ```sql
@@ -702,7 +702,7 @@ UNIQUE KEY(k1, k2)
             PARTITION p2 VALUES LESS THAN ("2022-02-01") ("storage_policy" = "test_create_table_partition_use_policy_2" ,"replication_num"="1")
         ) DISTRIBUTED BY HASH(k2) BUCKETS 1;
     ```
-注：需要先创建 s3 resource 和 storage policy，表才能关联迁移策略成功
+注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功。
 
 <version since="1.2.0">
 
@@ -751,7 +751,7 @@ UNIQUE KEY(k1, k2)
         );
     ```
 
-注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 fe 配置项 `max_multi_partition_num` 调整
+注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 FE 配置项 `max_multi_partition_num` 调整。
 
 </version>
 
@@ -793,7 +793,7 @@ UNIQUE KEY(k1, k2)
 
 一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partition) 文档。
 
-Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
+Apache Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
 
 同时，分区列和分桶列在表创建之后不可更改，既不能更改分区和分桶列的类型，也不能对这些列进行任何增删操作。
 
