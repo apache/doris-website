@@ -8,7 +8,7 @@ export const NEWSLETTER_DATA = [
     },
 
     {
-        tags: ['Best Practice'],
+        tags: ['Tech Sharing'],
         title: "Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation",
         content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
         to: '/blog/job-scheduler-for-task-automation',
