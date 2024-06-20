@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 审计日志插件
+
 
 Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一个可选插件。用户可以在运行时安装或卸载这个插件。
 
@@ -34,11 +34,11 @@ Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一�
 
 ### FE 配置
 
-FE的插件框架当前是实验性功能，Doris中默认关闭，在FE的配置文件中，增加`plugin_enable = true`启用plugin框架
+FE 的插件框架当前是实验性功能，Doris 中默认关闭，在 FE 的配置文件中，增加`plugin_enable = true`启用 plugin 框架
 
 ### AuditLoader 配置
 
-auditloader plugin的配置位于`${DORIS}/fe_plugins/auditloader/src/main/assembly/`.
+auditloader plugin 的配置位于`${DORIS}/fe_plugins/auditloader/src/main/assembly/`.
 
 打开 `plugin.conf` 进行配置。配置项说明参见注释。
 
@@ -51,7 +51,7 @@ auditloader plugin的配置位于`${DORIS}/fe_plugins/auditloader/src/main/assem
 
 ### 部署
 
-您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`)到所有 FE 的指定目录下。这里我们使用后者。
+您可以将这个文件放置在一个 http 服务器上，或者拷贝`auditloader.zip`(或者解压`auditloader.zip`) 到所有 FE 的指定目录下。这里我们使用后者。
 
 ### 安装
 
@@ -137,7 +137,7 @@ properties(
 
 >**注意**
 >
-> 上面表结构中：stmt string ，这个只能在0.15及之后版本中使用，之前版本，字段类型使用varchar
+> 上面表结构中：stmt string，这个只能在 0.15 及之后版本中使用，之前版本，字段类型使用 varchar
 
 其中 `dynamic_partition` 属性根据自己的需要，选择审计日志保留的天数。
 

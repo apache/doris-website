@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 审计日志插件
+
 
 Doris 的审计日志插件是在 FE 的插件框架基础上开发的。是一个可选插件。用户可以在运行时安装或卸载这个插件。
 
