@@ -248,3 +248,83 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 | io.debezium.time.ZonedTimestamp        | DATETIME  |
 | io.debezium.data.VariableScaleDecimal  | DOUBLE    |
 
+
+## 最佳实践
+### 同步 Json 序列化数据
+```
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
+  "name":"doris-json-test", 
+  "config":{ 
+    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
+    "topics":"json_topic", 
+    "tasks.max":"10",
+    "doris.topic2table.map": "json_topic:json_tab", 
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "doris.urls":"127.0.0.1", 
+    "doris.user":"root", 
+    "doris.password":"", 
+    "doris.http.port":"8030", 
+    "doris.query.port":"9030", 
+    "doris.database":"test", 
+    "load.model":"stream_load",
+    "key.converter":"org.apache.kafka.connect.json.JsonConverter",
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
+  } 
+}'
+```
+
+### 同步 Avro 序列化数据
+```
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
+  "name":"doris-avro-test", 
+  "config":{ 
+    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
+    "topics":"avro_topic", 
+    "tasks.max":"10",
+    "doris.topic2table.map": "avro_topic:avro_tab", 
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "doris.urls":"127.0.0.1", 
+    "doris.user":"root", 
+    "doris.password":"", 
+    "doris.http.port":"8030", 
+    "doris.query.port":"9030", 
+    "doris.database":"test", 
+    "load.model":"stream_load",
+    "key.converter":"io.confluent.connect.avro.AvroConverter",
+    "key.converter.schema.registry.url":"http://127.0.0.1:8081",
+    "value.converter":"io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url":"http://127.0.0.1:8081"
+  } 
+}'
+```
+
+### 同步 Protobuf 序列化数据
+```
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
+  "name":"doris-protobuf-test", 
+  "config":{ 
+    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
+    "topics":"proto_topic", 
+    "tasks.max":"10",
+    "doris.topic2table.map": "proto_topic:proto_tab", 
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "doris.urls":"127.0.0.1", 
+    "doris.user":"root", 
+    "doris.password":"", 
+    "doris.http.port":"8030", 
+    "doris.query.port":"9030", 
+    "doris.database":"test", 
+    "load.model":"stream_load",
+    "key.converter":"io.confluent.connect.protobuf.ProtobufConverter",
+    "key.converter.schema.registry.url":"http://127.0.0.1:8081",
+    "value.converter":"io.confluent.connect.protobuf.ProtobufConverter",
+    "value.converter.schema.registry.url":"http://127.0.0.1:8081"
+  } 
+}'
+```
