@@ -70,7 +70,7 @@ Install FineBI 5.0 or later, Download link: https://intl.finebi.com/
 
         - Name Database：Target database in Doris cluster。
 
-   ![connection information](/images/bi-finebi-en-5.png)
+   ![connection information](/images/bi-finebi-en-5-1.png)
 
 6. Click the test link. Connection succeeded is displayed when the connection information is correct
 
@@ -84,7 +84,7 @@ Install FineBI 5.0 or later, Download link: https://intl.finebi.com/
 
 2. You need to import tables in the existing database connection
 
-   ![select table](/images/bi-finebi-en-8.png)
+   ![select table](/images/bi-finebi-en-8-2.png)
 
 3. You need to refresh each imported table after importing the table. You can analyze the table in the topic only after refreshing the table
 
