@@ -30,7 +30,7 @@ As a business intelligence product, FineBI has a system architecture of data pro
 
 ## Precondition
 
-Install FineBI 5.0 or later, Download link: https://www.finebi.com/
+Install FineBI 5.0 or later, Download link: https://intl.finebi.com/
 
 ## Login and Connection
 
@@ -38,7 +38,7 @@ Install FineBI 5.0 or later, Download link: https://www.finebi.com/
 
    ![login page](/images/bi-finebi-en-1.png)
 
-2. Select the Built-in database, If you need to select an external database configuration, the documentation is available：https://help.fanruan.com/finebi/doc-view-437.html
+2. Select the Built-in database, If you need to select an external database configuration, the documentation is available：https://help.fanruan.com/finebi-en/doc-view-4437.html
 
    :::info Note
    It is recommended to select the built-in database as the information repository of FineBI. The database type selected here is not the target database for querying and analyzing data, but the database for storing and maintaining FineBI model, dashboard and other information. FineBI needs to add, delete, modify and check it.
