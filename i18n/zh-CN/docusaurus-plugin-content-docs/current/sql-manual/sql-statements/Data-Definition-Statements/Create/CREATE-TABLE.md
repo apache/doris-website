@@ -355,15 +355,15 @@ UNIQUE KEY(k1, k2)
 
 * `function_column.sequence_col`
 
-    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 sequence 列，当 key 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
-    `function_column.sequence_col`用来指定 Sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
+    `function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
     `"function_column.sequence_col" = 'column_name'`
 
 * `function_column.sequence_type`
 
-    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE (较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 sequence 列，当 key 列相同时，将按照 sequence 列进行 REPLACE (较大值替换较小值，否则无法替换)
 
     这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
 
@@ -442,7 +442,7 @@ UNIQUE KEY(k1, k2)
 
 * `time_series_compaction_time_threshold_seconds`
 
-    Compaction 的合并策略为 time_series 时，将使用此参数来调整 Compaction 的最长时间间隔，即长时间未执行过 Compaction 时，就会触发一次 compaction，单位为秒
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整 Compaction 的最长时间间隔，即长时间未执行过 Compaction 时，就会触发一次 Compaction，单位为秒
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
