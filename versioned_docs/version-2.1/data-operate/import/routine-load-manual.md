@@ -1915,6 +1915,8 @@ FROM KAFKA
 );
 ```
 
+Currently, only extracting the table name from the Value field of Kafka is supported. The format should be as follows, using JSON as an example: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name and `|` is used as the separator between the table name and the table data. The same format applies to CSV data, such as `table_name|val1,val2,val3`. Note that the `table_name` here must be consistent with the table name in Doris, otherwise the load will fail. Note that dynamic tables do not support the column_mapping configuration described later.
+
 ### Strict Mode Load
 
 Create a Kafka routine load task named "test1" for the "example_db" and "example_tbl". The load task is set to strict mode.
