@@ -499,6 +499,7 @@
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
                         "ecosystem/bi/tableau"
+                        "ecosystem/bi/powerbi"
                     ]
                 }
             ]

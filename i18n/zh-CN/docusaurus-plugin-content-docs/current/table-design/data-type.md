@@ -54,5 +54,6 @@ Doris 已支持的数据类型列表如下：
 | STRUCT         | /	     | 由多个 Field 组成的结构体，也可被理解为多个列的集合。不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。一个 Struct 中的 Field 的名字和数量固定，总是为 Nullable。|
 | JSON           | /         | 二进制 JSON 类型，采用二进制 JSON 格式存储，通过 JSON 函数访问 JSON 内部字段。默认支持 1048576 字节（1MB），可调大到 2147483643 字节（2GB）。可通过 BE 配置 jsonb_type_length_soft_limit_bytes 调整。 |
 | AGG_STATE      | /         | 聚合函数，只能配合 state/merge/union 函数组合器使用。AGG_STATE 不能作为 key 列使用，建表时需要同时声明聚合函数的签名。用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。 |
+| VARIANT        | /         | VARIANT允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中提前定义具体的列。VARIANT 类型特别适用于处理复杂的嵌套结构，而这些结构可能随时会发生变化。在写入过程中，该类型可以自动根据列的结构、类型推断列信息，动态合并写入的 schema，并通过将 JSON 键及其对应的值存储为列和动态子列 |
 
 您也可通过`SHOW DATA TYPES;`语句查看 Doris 支持的所有数据类型。

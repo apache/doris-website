@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_CIDR_TO_RANGE
 
-<version since="dev">
-
 IPV4_CIDR_TO_RANGE
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ IPV4_CIDR_TO_RANGE
 
 接收一个IPv4和一个包含CIDR的Int16值。返回一个结构体，其中包含两个IPv4字段分别表示子网的较低范围（min）和较高范围（max）。
 
-### notice
+### Example
 
-`如果入参为NULL，则返回NULL，表示无效输入`
-
-### example
-
-```
+```sql
 mysql> SELECT ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16);
 +------------------------------------------------------------+
 | ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16)  |
@@ -67,6 +59,6 @@ mysql> SELECT ipv4_cidr_to_range(NULL, NULL);
 +--------------------------------+
 ```
 
-### keywords
+### Keywords
 
 IPV4_CIDR_TO_RANGE, IP

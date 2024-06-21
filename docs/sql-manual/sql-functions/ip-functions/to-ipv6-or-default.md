@@ -24,13 +24,9 @@ under the License.
 
 ## TO_IPV6_OR_DEFAULT
 
-<version since="dev">
-
 TO_IPV6_OR_DEFAULT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,13 @@ TO_IPV6_OR_DEFAULT
 
 Same as to_ipv6, but if the IPv6 address has an invalid format, it returns :: (0 as IPv6).
 
-### notice
+#### Notice
 
 `If input is NULL, return :: (0 as IPv6).`
 
-### example
+### Example
 
-```
+```sql
 mysql> select to_ipv6_or_default('.');
 +-------------------------+
 | to_ipv6_or_default('.') |
@@ -60,6 +56,6 @@ mysql> select to_ipv6_or_default(NULL);
 +--------------------------+
 ```
 
-### keywords
+### Keywords
 
 TO_IPV6_OR_DEFAULT, IP
