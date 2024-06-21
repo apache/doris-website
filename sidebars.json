@@ -728,6 +728,7 @@
                                 "sql-manual/sql-functions/string-functions/elt",
                                 "sql-manual/sql-functions/string-functions/instr",
                                 "sql-manual/sql-functions/string-functions/locate",
+                                "sql-manual/sql-functions/string-functions/overlay",
                                 "sql-manual/sql-functions/string-functions/field",
                                 "sql-manual/sql-functions/string-functions/find-in-set",
                                 "sql-manual/sql-functions/string-functions/replace",
