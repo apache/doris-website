@@ -36,10 +36,10 @@ Doris 基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种�
 
 Apache Arrow Flight SQL 是一个由 Apache Arrow 社区开发的与数据库系统交互的协议，用于 ADBC 客户端使用 Arrow 数据格式与实现了 Arrow Flight SQL 协议的数据库交互，具有 Arrow Flight 的速度优势以及 JDBC/ODBC 的易用性。
 
-Doris 支持 Arrow Flight SQL 的动机、设计与实现、性能测试结果、以及有关 Arrow Flight、ADBC的更多概念可以看：https://github.com/apache/doris/issues/25514，这篇文档主要介绍 Doris Arrow Flight SQL 的使用方法，以及一些常见问题。
+Doris 支持 Arrow Flight SQL 的动机、设计与实现、性能测试结果、以及有关 Arrow Flight、ADBC的更多概念可以看：[GitHub Issue](https://github.com/apache/doris/issues/25514)，这篇文档主要介绍 Doris Arrow Flight SQL 的使用方法，以及一些常见问题。
 
 安装Apache Arrow 你可以去官方文档(
-https://arrow.apache.org/install/)找到详细的安装教程
+[Apache Arrow](https://arrow.apache.org/install/))找到详细的安装教程
 
 ## Python 使用方法
 
@@ -428,7 +428,7 @@ try (
 
 ### Jdbc 和 Java 连接方式的选择
 
-对比传统的 `jdbc:mysql` 连接方式，Jdbc 和 Java 的 Arrow Flight SQL 连接方式的性能测试见 https://github.com/apache/doris/issues/25514，这里基于测试结论给出一些使用建议。
+对比传统的 `jdbc:mysql` 连接方式，Jdbc 和 Java 的 Arrow Flight SQL 连接方式的性能测试见 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这里基于测试结论给出一些使用建议。
 
 1. 上述三种 Java Arrow Flight SQL 连接方式的选择上，如果后续的数据分析将基于行存的数据格式，那么使用 jdbc:arrow-flight-sql，这将返回 JDBC ResultSet 格式的数据；如果后续的数据分析可以基于 Arrow 格式或其他列存数据格式，那么使用 Flight AdbcDriver 或 Flight JdbcDriver 直接返回 Arrow 格式的数据，这将避免行列转换，并可利用 Arrow 的特性加速数据解析。
 
@@ -444,9 +444,9 @@ try (
 
 ### Spark & Flink
 
-Arrow Flight官方目前没有支持 Spark 和 Flink 的计划（https://github.com/apache/arrow-adbc/issues/1490），Doris 自己的 Spark Connector（https://github.com/apache/doris-spark-connector）和 Flink Connector（https://github.com/apache/doris-flink-connector）目前还不支持通过 Arrow Flight SQL 访问 Doris。其中 Doris Flink Connector 支持 Arrow Flight SQL 正在开发中，预期能提升数倍读取性能。
+Arrow Flight官方目前没有支持 Spark 和 Flink 的计划（[GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)），Doris 自己的 Spark Connector（[doris-spark-connector](https://github.com/apache/doris-spark-connector)）和 Flink Connector（[doris-flink-connector](https://github.com/apache/doris-flink-connector)）目前还不支持通过 Arrow Flight SQL 访问 Doris。其中 Doris Flink Connector 支持 Arrow Flight SQL 正在开发中，预期能提升数倍读取性能。
 
-社区之前参考开源的 Spark-Flight-Connector（https://github.com/qwshen/spark-flight-connector），在 Spark 中使用 FlightClient 连接 Doris 测试，发现 Arrow 与 Doris Block 之间数据格式转换的速度更快，是 CSV 格式与 Doris Block 之间转换速度的 10 倍，而且对 Map，Array 等复杂类型的支持更好，这是因为Arrow 数据格式的压缩率高，传输时网络开销小。不过目前 Doris Arrow Flight 还没有实现多节点并行读取，仍是将查询结果汇总到一台 BE 节点后返回，对简单的批量导出数据而言，性能可能没有 Doris Spark Connector 快，后者支持 Tablet 级别的并行读取。如果你希望在 Spark 使用 Arrow Flight SQL 连接 Doris，可以参考开源的 https://github.com/qwshen/spark-flight-connector 和 https://github.com/dremio-hub/dremio-flight-connector 自行实现。
+社区之前参考开源的 Spark-Flight-Connector（[spark-flight-connector](https://github.com/qwshen/spark-flight-connector)），在 Spark 中使用 FlightClient 连接 Doris 测试，发现 Arrow 与 Doris Block 之间数据格式转换的速度更快，是 CSV 格式与 Doris Block 之间转换速度的 10 倍，而且对 Map，Array 等复杂类型的支持更好，这是因为Arrow 数据格式的压缩率高，传输时网络开销小。不过目前 Doris Arrow Flight 还没有实现多节点并行读取，仍是将查询结果汇总到一台 BE 节点后返回，对简单的批量导出数据而言，性能可能没有 Doris Spark Connector 快，后者支持 Tablet 级别的并行读取。如果你希望在 Spark 使用 Arrow Flight SQL 连接 Doris，可以参考开源的 [spark-flight-connector](https://github.com/qwshen/spark-flight-connector) 和 [dremio-flight-connector](https://github.com/dremio-hub/dremio-flight-connector) 自行实现。
 
 ## FAQ
 
@@ -456,10 +456,10 @@ Arrow Flight官方目前没有支持 Spark 和 Flink 的计划（https://github.
 
 kylinv10 SP2 和 SP3 的 Linux 内核版本最高只有 4.19.90-24.4.v2101.ky10.aarch64，无法继续升级内核版本，只能在 kylinv10 上重新编译 Doris BE，如果使用新版本 ldb_toolchain 编译 Doris  BE 后问题依然存在，可以尝试使用低版本 ldb_toolchain v0.17 编译，如果你的 ARM 环境无法连外网，华为云提供 ARM + kylinv10，阿里云提供 x86 + kylinv10
 
-2. 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBCDriver 不支持 prepared statement 传递参数，类似`select * from xxx where id=?`，将报错 `parameter ordinal 1 out of range`，这是 Arrow Flight SQL 的一个BUG（https://github.com/apache/arrow/issues/40118）
+2. 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBCDriver 不支持 prepared statement 传递参数，类似`select * from xxx where id=?`，将报错 `parameter ordinal 1 out of range`，这是 Arrow Flight SQL 的一个BUG（[GitHub Issue](https://github.com/apache/arrow/issues/40118)）
 
 3. 修改 `jdbc:arrow-flight-sql` 每次读取的批次大小，在某些场景下可以提升性能，通过修改`org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader`文件中`makeJdbcConfig`方法中的 `setTargetBatchSize`，默认是1024，然后将修改后的文件保存到本地同名路径目录下，从而覆盖原文件生效。
 
-4. ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 还不支持并行读取，没有实现`stmt.executePartitioned()`这个方法，只能使用原生的 FlightClient 实现并行读取多个 Endpoints, 使用方法`sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`，此外，ADBC V0.10 默认的AdbcStatement实际是JdbcStatement，executeQuery后将行存格式的 JDBC ResultSet 又重新转成的Arrow列存格式，预期到 ADBC 1.0.0 时 Java ADBC 将功能完善 https://github.com/apache/arrow-adbc/issues/1490。
+4. ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 还不支持并行读取，没有实现`stmt.executePartitioned()`这个方法，只能使用原生的 FlightClient 实现并行读取多个 Endpoints, 使用方法`sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`，此外，ADBC V0.10 默认的AdbcStatement实际是JdbcStatement，executeQuery后将行存格式的 JDBC ResultSet 又重新转成的Arrow列存格式，预期到 ADBC 1.0.0 时 Java ADBC 将功能完善 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)。
 
 5. 截止Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，比如 `jdbc:arrow-flight-sql://0.0.0.0:9090/test?useServerPrepStmts=false` 中指定连接`test` database无效，只能手动执行SQL `use database`。
