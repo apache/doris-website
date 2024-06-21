@@ -51,7 +51,7 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 
    ![select databases](/images/bi-superset-en-3.png)
 
-4. 在连接信息中填写 SQLALCHEMY URI，并进行相关的连接验证。
+4. 在连接信息中填写 SQLAlchemy URI，并进行相关的连接验证。
 
    ![test connection](/images/bi-superset-en-4.png)
 
@@ -59,7 +59,7 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 
 - 在 SUPPORTED DATABASES 里选择 Apache Doris 作为数据源。
 
-- 在 SQLALCHEMY URI 里，按如下 Apache Doris SQLAlchemy URI 格式填写 URI：
+- 在 SQLAlchemy URI 里，按如下 Apache Doris SQLAlchemy URI 格式填写 URI：
 
   ```doris://<User>:<Password>@<Host>:<Port>/<Catalog>.<Database>```
 
