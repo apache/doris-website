@@ -371,7 +371,7 @@ UNIQUE KEY(k1, k2)
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> unique 表是否使用 Merge-on-Write 实现。</version>
+    <version since="1.2" type="inline"> Unique 表是否使用 Merge-on-Write 实现。</version>
 
     该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。
 
