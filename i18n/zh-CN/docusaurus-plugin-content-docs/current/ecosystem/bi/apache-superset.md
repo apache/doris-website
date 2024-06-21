@@ -39,7 +39,7 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 2. 安装 Apache Superset 3.1 及其以上的版本。具体参见 [安装 Superset 从 PyPI 库](https://superset.apache.org/docs/installation/installing-superset-from-pypi) 或者 [通过 Docker 容器的方式安装](https://hub.docker.com/r/apache/superset)。
 
 ## 添加数据源
-1. 通过对应的启动端口对 Superset 进行访问。
+1. 通过对应的启动端口对 Apache Superset 进行访问。
 
    ![login page](/images/bi-superset-en-1.png)
 
@@ -59,7 +59,7 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 
 - 在 SUPPORTED DATABASES 里选择 Apache Doris 作为数据源。
 
-- 在 SQLALCHEMY URI 里，按如下 Doris SQLAlchemy URI 格式填写 URI：
+- 在 SQLALCHEMY URI 里，按如下 Apache Doris SQLAlchemy URI 格式填写 URI：
 
   ```doris://<User>:<Password>@<Host>:<Port>/<Catalog>.<Database>```
 
@@ -79,7 +79,7 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 
 
 :::tip
-1. 当你使用最新的 Docker 镜像部署 Superset 时，如果发现找不到 Apache Doris 数据源，这个可能是因为 Superset Docker Image 默认只包含基本的数据源构建，需要手动将 pydoris 包安装进来，您可以参考 [superset docker 教程](https://hub.docker.com/r/apache/superset) 中的 How to extend this image 步骤进行 Apache Superset 的部署。
+1. 当你使用最新的 Docker 镜像部署 Superset 时，如果发现找不到 Apache Doris 数据源，这个可能是因为 Apache Superset Docker Image 默认只包含基本的数据源构建，需要手动将 pydoris 包安装进来，您可以参考 [Superset Docker 教程](https://hub.docker.com/r/apache/superset) 中的 How to extend this image 步骤进行 Apache Superset 的部署。
 
 2. 推荐使用 Apache Doris 2.0.4 及以上版本。
 :::
