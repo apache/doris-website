@@ -426,7 +426,7 @@ try (
 }
 ```
 
-### Jdbc 和 Java 连接方式的选择
+### JDBC 和 Java 连接方式的选择
 
 对比传统的 `jdbc:mysql` 连接方式，Jdbc 和 Java 的 Arrow Flight SQL 连接方式的性能测试见 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这里基于测试结论给出一些使用建议。
 
