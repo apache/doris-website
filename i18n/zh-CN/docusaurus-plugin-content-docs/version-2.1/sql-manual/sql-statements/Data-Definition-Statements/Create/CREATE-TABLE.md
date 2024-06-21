@@ -108,11 +108,11 @@ distribution_desc
         ```
 
   * `default_value`
-        列默认值，当导入数据未指定该列的值时，系统将赋予该列 default_value。
+        列默认值，当导入数据未指定该列的值时，系统将赋予该列 `default_value`。
           
         语法为`default default_value`。
           
-        当前 default_value 支持两种形式：
+        当前 `default_value` 支持两种形式：
         1. 用户指定固定值，如：
         ```SQL
             k1 INT DEFAULT '1',
@@ -128,7 +128,7 @@ distribution_desc
         ```
   * <version since="2.1" type="inline">`on update current_timestamp`</version>
 
-        是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 merge-on-write 的 unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为`current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
+        是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 Merge-on-Write 的 Unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为 `current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
 
       
   示例：
@@ -185,7 +185,7 @@ distribution_desc
 * UNIQUE KEY：其后指定的列为主键列。
 
 <version since="2.0">
-注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 DUPLICATE 表。
+注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 Duplicate 表。
 </version>
 
 示例：
@@ -349,7 +349,7 @@ UNIQUE KEY(k1, k2)
 
 * `function_column.sequence_col`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个 sequence 列，当 KEY 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
     `function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
@@ -357,7 +357,7 @@ UNIQUE KEY(k1, k2)
 
 * `function_column.sequence_type`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个 sequence 列，当 KEY 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
     这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
 
@@ -365,13 +365,13 @@ UNIQUE KEY(k1, k2)
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> unique 表是否使用 merge on write 实现。</version>
+    <version since="1.2" type="inline"> Unique 表是否使用 Merge-on-Write 实现。</version>
 
     该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。
 
 * `light_schema_change`
 
-    <version since="1.2" type="inline"> 是否使用 light schema change 优化。</version>
+    <version since="1.2" type="inline"> 是否使用 Light Schema Change 优化。</version>
 
     如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
 
@@ -381,17 +381,17 @@ UNIQUE KEY(k1, k2)
 
 * `disable_auto_compaction`
 
-    是否对这个表禁用自动 compaction。
+    是否对这个表禁用自动 Compaction。
 
-    如果这个属性设置成 `true`, 后台的自动 compaction 进程会跳过这个表的所有 tablet。
+    如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。
 
     `"disable_auto_compaction" = "false"`
 
 * `enable_single_replica_compaction`
 
-    是否对这个表开启单副本 compaction。
+    是否对这个表开启单副本 Compaction。
 
-    如果这个属性设置成 `true`, 这个表的 tablet 的所有副本只有一个 do compaction，其他的从该副本拉取 rowset
+    如果这个属性设置成 `true`, 这个表的 Tablet 的所有副本只有一个 do compaction，其他的从该副本拉取 rowset
 
     `"enable_single_replica_compaction" = "false"`
 
@@ -405,44 +405,44 @@ UNIQUE KEY(k1, k2)
 
     是否对这个表开启数据导入时不写索引。
 
-    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 compaction 的时候延迟写索引。这样可以避免首次写入和 compaction
+    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 Compaction 的时候延迟写索引。这样可以避免首次写入和 Compaction
     重复写索引的 CPU 和 IO 资源消耗，提升高吞吐导入的性能。
 
     `"skip_write_index_on_load" = "false"`
 
 * `compaction_policy`
 
-    配置这个表的 compaction 的合并策略，仅支持配置为 time_series 或者 size_based
+    配置这个表的 Compaction 的合并策略，仅支持配置为 time_series 或者 size_based
 
     time_series: 当 rowset 的磁盘体积积攒到一定大小时进行版本合并。合并后的 rowset 直接晋升到 base compaction 阶段。在时序场景持续导入的情况下有效降低 compact 的写入放大率
 
-    此策略将使用 time_series_compaction 为前缀的参数调整 compaction 的执行
+    此策略将使用 time_series_compaction 为前缀的参数调整 Compaction 的执行
 
     `"compaction_policy" = ""`
 
 * `time_series_compaction_goal_size_mbytes`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件的大小，输出的文件大小和输入相当
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
 
     `"time_series_compaction_goal_size_mbytes" = "1024"`
 
 * `time_series_compaction_file_count_threshold`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件数量的最小值
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件数量的最小值
 
-    一个 tablet 中，文件数超过该配置，就会触发 compaction
+    一个 Tablet 中，文件数超过该配置，就会触发 Compaction
 
-    `"time_series_compaction_file_count_threshold" = "2000"`
+    `"time_series_Compaction_file_count_threshold" = "2000"`
 
-* `time_series_compaction_time_threshold_seconds`
+* `time_series_Compaction_time_threshold_seconds`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整 compaction 的最长时间间隔，即长时间未执行过 compaction 时，就会触发一次 compaction，单位为秒
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整 Compaction 的最长时间间隔，即长时间未执行过 Compaction 时，就会触发一次 Compaction，单位为秒
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
 * `time_series_compaction_level_threshold`
 
-    compaction 的合并策略为 time_series 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 time_series_compaction_goal_size_mbytes，
+    Compaction 的合并策略为 time_series 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 time_series_compaction_goal_size_mbytes，
     
     能达到段数量减少的效果。
 
