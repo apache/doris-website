@@ -79,7 +79,7 @@ Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源�
 
 
 :::tip
-1. 当你使用最新的 Docker 镜像部署 Apache Superset 时，如果发现找不到 Apache Doris 数据源，这个可能是因为 Superset Docker Image 默认只包含基本的数据源构建，需要手动将 pydoris 包安装进来，您可以参考 [Superset Docker 教程](https://hub.docker.com/r/apache/superset) 中的 How to extend this image 步骤进行 Apache Superset 的部署。
+1. 当你使用最新的 Docker 镜像部署 Apache Superset 时，如果发现找不到 Apache Doris 数据源，这个可能是因为 Apache Superset Docker Image 默认只包含基本的数据源构建，需要手动将 pydoris 包安装进来，您可以参考 [Superset Docker 教程](https://hub.docker.com/r/apache/superset) 中的 How to extend this image 步骤进行 Apache Superset 的部署。
 
 2. 推荐使用 Apache Doris 2.0.4 及以上版本。
 :::
