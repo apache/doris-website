@@ -426,7 +426,7 @@ try (
 }
 ```
 
-### Jdbc 和 Java 连接方式的选择
+### JDBC 和 Java 连接方式的选择
 
 对比传统的 `jdbc:mysql` 连接方式，Jdbc 和 Java 的 Arrow Flight SQL 连接方式的性能测试见 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这里基于测试结论给出一些使用建议。
 
@@ -444,9 +444,9 @@ try (
 
 ### Spark & Flink
 
-Arrow Flight官方目前没有支持 Spark 和 Flink 的计划（[GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)），Doris 自己的 Spark Connector（[doris-spark-connector](https://github.com/apache/doris-spark-connector)）和 Flink Connector（[doris-flink-connector](https://github.com/apache/doris-flink-connector)）目前还不支持通过 Arrow Flight SQL 访问 Doris。其中 Doris Flink Connector 支持 Arrow Flight SQL 正在开发中，预期能提升数倍读取性能。
+Arrow Flight 官方目前没有支持 Spark 和 Flink 的计划（见 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)），[Doris Spark Connector] (https://github.com/apache/doris-spark-connector)）和 [Doris Flink Connector](https://github.com/apache/doris-flink-connector) 目前还不支持通过 Arrow Flight SQL 访问 Doris。其中 Doris Flink Connector 支持 Arrow Flight SQL 正在开发中，预期能提升数倍读取性能。
 
-社区之前参考开源的 Spark-Flight-Connector（[spark-flight-connector](https://github.com/qwshen/spark-flight-connector)），在 Spark 中使用 FlightClient 连接 Doris 测试，发现 Arrow 与 Doris Block 之间数据格式转换的速度更快，是 CSV 格式与 Doris Block 之间转换速度的 10 倍，而且对 Map，Array 等复杂类型的支持更好，这是因为Arrow 数据格式的压缩率高，传输时网络开销小。不过目前 Doris Arrow Flight 还没有实现多节点并行读取，仍是将查询结果汇总到一台 BE 节点后返回，对简单的批量导出数据而言，性能可能没有 Doris Spark Connector 快，后者支持 Tablet 级别的并行读取。如果你希望在 Spark 使用 Arrow Flight SQL 连接 Doris，可以参考开源的 [spark-flight-connector](https://github.com/qwshen/spark-flight-connector) 和 [dremio-flight-connector](https://github.com/dremio-hub/dremio-flight-connector) 自行实现。
+社区之前参考开源的 [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector)），在 Spark 中使用 FlightClient 连接 Doris 测试，发现 Arrow 与 Doris Block 之间数据格式转换的速度更快，是 CSV 格式与 Doris Block 之间转换速度的 10 倍，而且对 Map，Array 等复杂类型的支持更好，这是因为Arrow 数据格式的压缩率高，传输时网络开销小。不过目前 Doris Arrow Flight 还没有实现多节点并行读取，仍是将查询结果汇总到一台 BE 节点后返回，对简单的批量导出数据而言，性能可能没有 Doris Spark Connector 快，后者支持 Tablet 级别的并行读取。如果你希望在 Spark 使用 Arrow Flight SQL 连接 Doris，可以参考开源的 [Spark-Flight-Connector](https://github.com/qwshen/spark-flight-connector) 和 [Dremio-Flight-Connector](https://github.com/dremio-hub/dremio-flight-connector) 自行实现。
 
 ## FAQ
 
