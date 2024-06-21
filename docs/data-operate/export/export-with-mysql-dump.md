@@ -1,6 +1,6 @@
 ---
 {
-"title": "Exporting Query Result",
+"title": "MySQL Dump",
 "language": "en"
 }
 ---

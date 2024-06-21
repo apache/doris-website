@@ -1,6 +1,6 @@
 ---
 {
-    "title": "通过 SELECT INTO OUTFILE 导出结果集",
+    "title": "SELECT INTO OUTFILE",
     "language": "zh-CN"
 }
 ---
