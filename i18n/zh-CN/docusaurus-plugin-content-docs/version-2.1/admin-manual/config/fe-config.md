@@ -710,7 +710,7 @@ http请求处理/api/upload任务的最大线程池
 
 #### `max_query_retry_time`
 
-默认值：1
+默认值：3
 
 是否可以动态配置：true
 

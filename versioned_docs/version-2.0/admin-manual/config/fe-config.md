@@ -700,7 +700,7 @@ The default value is -1
 
 #### `max_query_retry_time`
 
-Default：1
+Default：3
 
 IsMutable：true
 
