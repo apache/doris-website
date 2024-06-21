@@ -30,7 +30,7 @@ As a business intelligence product, FineBI has a system architecture of data pro
 
 ## Precondition
 
-Install FineBI 5.0 or later, Download link: https://www.finebi.com/
+Install FineBI 5.0 or later, Download link: https://intl.finebi.com/
 
 ## Login and Connection
 
@@ -38,7 +38,7 @@ Install FineBI 5.0 or later, Download link: https://www.finebi.com/
 
    ![login page](/images/bi-finebi-en-1.png)
 
-2. Select the Built-in database, If you need to select an external database configuration, the documentation is available：https://help.fanruan.com/finebi/doc-view-437.html
+2. Select the Built-in database, If you need to select an external database configuration, the documentation is available：https://help.fanruan.com/finebi-en/doc-view-4437.html
 
    :::info Note
    It is recommended to select the built-in database as the information repository of FineBI. The database type selected here is not the target database for querying and analyzing data, but the database for storing and maintaining FineBI model, dashboard and other information. FineBI needs to add, delete, modify and check it.
@@ -70,7 +70,7 @@ Install FineBI 5.0 or later, Download link: https://www.finebi.com/
 
         - Name Database：Target database in Doris cluster。
 
-   ![connection information](/images/bi-finebi-en-5.png)
+   ![connection information](/images/bi-finebi-en-5-1.png)
 
 6. Click the test link. Connection succeeded is displayed when the connection information is correct
 
@@ -84,7 +84,7 @@ Install FineBI 5.0 or later, Download link: https://www.finebi.com/
 
 2. You need to import tables in the existing database connection
 
-   ![select table](/images/bi-finebi-en-8.png)
+   ![select table](/images/bi-finebi-en-8-2.png)
 
 3. You need to refresh each imported table after importing the table. You can analyze the table in the topic only after refreshing the table
 
