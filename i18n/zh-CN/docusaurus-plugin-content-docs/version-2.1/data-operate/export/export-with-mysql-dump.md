@@ -1,6 +1,6 @@
 ---
 {
-    "title": "通过 MySQL Dump 导出表结构和数据",
+    "title": "MySQL Dump",
     "language": "zh-CN"
 }
 ---

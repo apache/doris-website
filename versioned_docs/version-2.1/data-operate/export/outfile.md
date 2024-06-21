@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Exporting Data or Table Structures",
+    "title": "SELECT INTO OUTFILE",
     "language": "en"
 }
 ---
