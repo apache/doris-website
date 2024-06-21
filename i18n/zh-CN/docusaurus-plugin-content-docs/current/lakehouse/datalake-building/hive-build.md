@@ -202,7 +202,7 @@ under the License.
 
 - 压缩格式
 
-    - Parquet：snappy（默认），zlib，zstd
+    - Parquet：snappy（默认），zstd
     - ORC：snappy，zlib（默认），zstd
 
 - 存储介质
@@ -260,7 +260,7 @@ CREATE TABLE hive.hive_db.hive_ctas (col1,col2,pt1) ENGINE=hive
 PARTITION BY LIST (pt1) ()
 PROPERTIES (
     "file_format"="parquet",
-    "parquet.compression"="zstd"
+    "compression"="zstd"
 )
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
