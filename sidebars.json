@@ -54,7 +54,8 @@
             "type": "category",
             "label": "Database Connection",
             "items": [
-                "db-connect/database-connect"
+                "db-connect/database-connect",
+                "db-connect/arrow-flight-sql-connect"
             ]
         },
         {
