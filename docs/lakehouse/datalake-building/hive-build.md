@@ -204,8 +204,8 @@ This is an experimental feature.
 
 - Compression Formats
 
-    - Parquet: snappy(default), zstd
-    - ORC: snappy, zlib(default), zstd
+    - Parquet: snappy(default), zstd, plain. (plain means no compression is used.)
+    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression is used.)
 
 - Storage Medium
 

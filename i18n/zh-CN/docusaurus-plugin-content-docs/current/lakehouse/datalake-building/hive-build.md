@@ -202,8 +202,8 @@ under the License.
 
 - 压缩格式
 
-    - Parquet：snappy（默认），zstd
-    - ORC：snappy，zlib（默认），zstd
+    - Parquet：snappy（默认），zstd，plain。（PLAIN就是不采用压缩）
+    - ORC：snappy，zlib（默认），zstd，plain。（PLAIN就是不采用压缩）
 
 - 存储介质
 
