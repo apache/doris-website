@@ -45,25 +45,25 @@ Ensure you have completed the following tool installations:
 
    ![select databases](/images/bi-superset-en-3.png)
 
-4. Fill in the SQLALCHEMY URI information in the connection details and proceed with the relevant connectivity verification.
+4. Fill in the SQLAlchemy URI information in the connection details and proceed with the relevant connectivity verification.
 
    ![test connection](/images/bi-superset-en-4.png)
 
 When creating a data source in Apache Superset, please pay attention to the following two points:
 - Choose Apache Doris as the data source in SUPPORTED DATABASES.
-- In the SQLALCHEMY URI, fill in the URI following the Doris SQLAlchemy URI format as shown below.
+- In the SQLAlchemy URI, fill in the URI following the Apache Doris SQLAlchemy URI format as shown below.
 
   ```doris://<User>:<Password>@<Host>:<Port>/<Catalog>.<Database>```
 - URI parameters are explained as follows:
-  - User: The username for logging into the Doris cluster, e.g., admin.
-  - Password: The password for logging into the Doris cluster.
-  - Host: The IP address of the FE (Frontend) host in the Doris cluster.
-  - Port: The query port of the FE in the Doris cluster, e.g. 9030.
-  - Catalog: The target Catalog in the Doris cluster. Both Internal Catalog and External Catalog are supported.
-  - Database: The target database in the Doris cluster. Both internal and external databases are supported.
+  - User: The username for logging into the Apache Doris cluster, e.g., admin.
+  - Password: The password for logging into the Apache Doris cluster.
+  - Host: The IP address of the FE (Frontend) host in the Apache Doris cluster.
+  - Port: The query port of the FE in the Apache Doris cluster, e.g. 9030.
+  - Catalog: The target Catalog in the Apache Doris cluster. Both Internal Catalog and External Catalog are supported.
+  - Database: The target database in the Apache Doris cluster. Both internal and external databases are supported.
 
 
 :::tip
-1. When deploying Superset using the latest Docker image, if you encounter the issue of not finding the Apache Doris data source, it may be because the default [Superset Docker image](https://hub.docker.com/r/apache/superset) includes only basic data source builds. You need to manually install the pydoris package. You can refer to the 'How to extend this image' section in the Superset Docker tutorial for the deployment steps of Superset.
+1. When deploying Apache Superset using the latest Docker image, if you encounter the issue of not finding the Apache Doris data source, it may be because the default [Apache Superset Docker image](https://hub.docker.com/r/apache/superset) includes only basic data source builds. You need to manually install the pydoris package. You can refer to the 'How to extend this image' section in the Apache Superset Docker tutorial for the deployment steps of Apache Superset.
 2. It is recommended to use Apache Doris 2.0.4 and above.
 :::
