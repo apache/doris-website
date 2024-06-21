@@ -353,17 +353,17 @@ UNIQUE KEY(k1, k2)
 
     `"compression"="zstd"`
 
-* `function_column.sequence_col`
+* `function_column.Sequence_col`
 
-    当使用 Unique Key 模型时，可以指定一个 sequence 列，当 key 列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
-    `function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
+    `function_column.sequence_col`用来指定 Sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
     `"function_column.sequence_col" = 'column_name'`
 
 * `function_column.sequence_type`
 
-    当使用 Unique Key 模型时，可以指定一个 sequence 列，当 key 列相同时，将按照 sequence 列进行 REPLACE (较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE (较大值替换较小值，否则无法替换)
 
     这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
 
@@ -371,7 +371,7 @@ UNIQUE KEY(k1, k2)
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> unique 表是否使用 merge on write 实现。</version>
+    <version since="1.2" type="inline"> unique 表是否使用 Merge-on-Write 实现。</version>
 
     该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。
 
