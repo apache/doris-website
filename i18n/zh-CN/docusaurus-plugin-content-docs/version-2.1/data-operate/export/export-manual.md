@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Export
 本文档将介绍如何使用`EXPORT`命令导出 Doris 中存储的数据。
 
 有关`EXPORT`命令的详细介绍，请参考：[EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)

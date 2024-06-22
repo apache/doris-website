@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 数据导出概述
 数据导出功能，用于将查询结果集或者Doris的表数据，使用指定的文件格式，写入指定的存储系统中的。
 
 导出功能和数据备份功能有以下区别：

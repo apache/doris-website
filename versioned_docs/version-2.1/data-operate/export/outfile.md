@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SELECT INTO OUTFILE
 This document introduces how to use the `SELECT INTO OUTFILE` command to export query results.
 
 For a detailed introduction to the `SELECT INTO OUTFILE` command, refer to: [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md).

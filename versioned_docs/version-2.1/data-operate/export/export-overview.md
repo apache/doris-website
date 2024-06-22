@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Data Export Overview
 The data export function is used to write the query result set or Doris table data into the specified storage system in the specified file format.
 
 The differences between the export function and the data backup function are as follows:

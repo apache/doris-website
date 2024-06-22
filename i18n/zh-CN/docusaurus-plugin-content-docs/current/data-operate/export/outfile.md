@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SELECT INTO OUTFILE
 本文档将介绍如何使用 `SELECT INTO OUTFILE` 命令进行查询结果的导出操作。
 
 有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)

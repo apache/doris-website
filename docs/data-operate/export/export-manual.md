@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## Export
 This document provides an overview of using the `EXPORT` command to export data stored in Doris.
 
 For detailed information on the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md).
