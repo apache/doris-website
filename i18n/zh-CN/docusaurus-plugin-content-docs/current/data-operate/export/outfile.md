@@ -67,7 +67,7 @@ mysql> SELECT * FROM tbl1 LIMIT 10 INTO OUTFILE "file:///home/work/path/result_"
 * URL：导出的文件路径的前缀，多个文件会以后缀 `_0`,`_1` 依次编号。
 
 ## 导出文件列类型映射
-`SELECT INTO OUTFILE` 支持导出为Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](./export-view.md)文档的 "导出文件列类型映射" 部分。
+`SELECT INTO OUTFILE` 支持导出为 Parquet、ORC 文件格式。Parquet、ORC 文件格式拥有自己的数据类型，Doris 的导出功能能够自动将 Doris 的数据类型导出为 Parquet、ORC 文件格式的对应数据类型，具体映射关系请参阅[导出综述](./export-view.md)文档的 "导出文件列类型映射" 部分。
 
 ## 示例
 ### 导出到 HDFS
@@ -83,7 +83,7 @@ PROPERTIES
     "hadoop.username" = "hadoop"
 );
 ```
-如果HDFS开启了高可用，则需要提供HA信息，如：
+如果 HDFS 开启了高可用，则需要提供 HA 信息，如：
 
 ```sql
 SELECT c1, c2, c3 FROM tbl
@@ -100,7 +100,7 @@ PROPERTIES
     "dfs.client.failover.proxy.provider.HDFS8000871" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 );
 ```
-如果Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下SQL语句：
+如果 Hadoop 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下 SQL 语句：
 
 ```sql
 SELECT * FROM tbl
@@ -122,7 +122,7 @@ PROPERTIES
 );
 ```
 ### 导出到 S3
-将查询结果导出到s3存储的 `s3://path/to/` 目录下，指定导出格式为 ORC，需要提供`sk` `ak`等信息
+将查询结果导出到 s3 存储的 `s3://path/to/` 目录下，指定导出格式为 ORC，需要提供`sk` `ak`等信息
 
 ```sql
 SELECT * FROM tbl
@@ -138,7 +138,7 @@ PROPERTIES(
 ### 导出到本地
 > 如需导出到本地文件，需在 `fe.conf` 中添加 `enable_outfile_to_local=true`并重启 FE。
 
-将查询结果导出到BE的`file:///path/to/` 目录下，指定导出格式为 CSV，指定列分割符为`,`。
+将查询结果导出到 BE 的`file:///path/to/` 目录下，指定导出格式为 CSV，指定列分割符为`,`。
 
 ```sql
 SELECT k1 FROM tbl1 UNION SELECT k2 FROM tbl1
@@ -154,7 +154,7 @@ PROPERTIES(
 
 ## 最佳实践
 ### 生成导出成功标识文件
-`SELECT INTO OUTFILE`命令是一个同步命令，因此有可能在SQL执行过程中任务连接断开了，从而无法获悉导出的数据是否正常结束或是否完整。此时可以使用 `success_file_name` 参数要求导出成功后，在目录下生成一个文件标识。
+`SELECT INTO OUTFILE`命令是一个同步命令，因此有可能在 SQL 执行过程中任务连接断开了，从而无法获悉导出的数据是否正常结束或是否完整。此时可以使用 `success_file_name` 参数要求导出成功后，在目录下生成一个文件标识。
 
 类似 Hive，用户可以通过判断导出目录中是否有`success_file_name` 参数指定的文件，来判断导出是否正常结束以及导出目录中的文件是否完整。
 
@@ -246,7 +246,7 @@ PROPERTIES
 
 > 注意：
 
-> 若要使用delete\_existing\_files参数，还需要在fe.conf中添加配置`enable_delete_existing_files = true`并重启fe，此时delete\_existing\_files才会生效。delete\_existing\_files = true 是一个危险的操作，建议只在测试环境中使用。
+> 若要使用 delete_existing_files 参数，还需要在 fe.conf 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
 
 ### 设置导出文件的大小
 ```sql
@@ -296,9 +296,9 @@ PROPERTIES(
 ### 并发导出原理
 1. 原理介绍
 
-  Doris是典型的基于 MPP 架构的高性能、实时的分析型数据库。MPP架构的一大特征是使用分布式架构，将大规模数据集划分为小块，并在多个节点上并行处理。
+  Doris 是典型的基于 MPP 架构的高性能、实时的分析型数据库。MPP 架构的一大特征是使用分布式架构，将大规模数据集划分为小块，并在多个节点上并行处理。
 
-  `SELECT INTO OUTFILE`的并发导出就是基于上述MPP架构的并行处理能力，在可以并发导出的场景下（后面会详细说明哪些场景可以并发导出），并行的在多个BE节点上导出，每个BE处理结果集的一部分。
+  `SELECT INTO OUTFILE`的并发导出就是基于上述 MPP 架构的并行处理能力，在可以并发导出的场景下（后面会详细说明哪些场景可以并发导出），并行的在多个 BE 节点上导出，每个 BE 处理结果集的一部分。
 
 2. 如何判断可以执行并发导出
  - 确定会话变量已开启：`set enable_parallel_outfile = true;`
