@@ -37,6 +37,7 @@ The differences between the export function and the data backup function are as 
 |Use Cases|Result set download, data exchange between different systems|Data backup, data migration between Doris clusters|
 
 ## Choosing Export Methods
+
 Doris provides three different data export methods:
 
 * **SELECT INTO OUTFILE**: Supports the export of any SQL result set.
@@ -58,27 +59,32 @@ The similarities and differences between the three export methods are as follows
 |Supported export locations|S3, HDFS, LOCAL|S3, HDFS, LOCAL|LOCAL|
 
 ### SELECT INTO OUTFILE
+
 Suitable for the following scenarios:
 
 * Data needs to be exported after complex calculations, such as filtering, aggregation, joins, etc.
 * Suitable for scenarios that require synchronous tasks.
 
 ### EXPORT
+
 Suitable for the following scenarios:
 
 * Large-scale single table export, with simple filtering conditions.
 * Scenarios that require asynchronous task submission.
 
 ### MySQL Dump
+
 Suitable for the following scenarios:
 
 * Compatible with the MySQL ecosystem, requires exporting both table structure and data.
 * Only for development testing or scenarios with very small data volumes.
 
 ## Export File Column Type Mapping
+
 Parquet and ORC file formats have their own data types. Doris's export function can automatically map Doris's data types to the corresponding data types in Parquet and ORC file formats. The CSV format does not have types, all data is output as text.
 
 The following table shows the mapping between Doris data types and Parquet, ORC file format data types:
+
 1. Doris export to ORC file format data type mapping table:
     | Doris Type | Orc Type |
     | ----- | ----- |
