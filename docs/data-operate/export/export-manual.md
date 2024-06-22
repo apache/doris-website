@@ -235,21 +235,21 @@ PROPERTIES (
 Export all data from the test table to local storage:
 
 ```sql
--- parquet 格式
+-- parquet format
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "columns" = "k1,k2",
   "format" = "parquet"
 );
 
--- orc 格式
+-- orc format
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "columns" = "k1,k2",
   "format" = "orc"
 );
 
--- csv_with_names 格式，以‘AA’为列分割符，‘zz’为行分割符
+-- csv_with_names format, using 'AA' as the column separator and 'zz' as the line delimiter
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names",
@@ -257,7 +257,7 @@ PROPERTIES (
   "line_delimiter" = "zz"
 );
 
--- csv_with_names_and_types 格式
+-- csv_with_names_and_types format
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names_and_types"
@@ -300,7 +300,7 @@ PROPERTIES (
 Export jobs support Doris Catalog external table data:
 
 ```sql
--- 创建一个 catalog
+-- Create a catalog
 CREATE CATALOG `tpch` PROPERTIES (
     "type" = "trino-connector",
     "trino.connector.name" = "tpch",
@@ -308,7 +308,7 @@ CREATE CATALOG `tpch` PROPERTIES (
     "trino.tpch.splits-per-node" = "32"
 );
 
--- 导出 Catalog 外表数据
+-- Export data from the Catalog external table
 EXPORT TABLE tpch.sf1.lineitem TO "file:///path/to/exp_"
 PROPERTIES(
     "parallelism" = "5",
