@@ -297,7 +297,9 @@ PROPERTIES(
 );
 ```
 
-> Note: Currently, exporting data from Catalog external tables does not support concurrent export. Even if `parallelism` is set to greater than 1, the export is still performed in a single thread.
+:::tip
+Currently, exporting data from Catalog external tables does not support concurrent export. Even if `parallelism` is set to greater than 1, the export is still performed in a single thread.
+:::
 
 ## Best Practices
 ### Consistent Export
@@ -356,34 +358,46 @@ PROPERTIES (
 Setting `"max_file_size" = "512MB"` limits the maximum size of a single export file to 512MB.
 
 ## Notes
-1. **Memory Limits**
-   - An Export job typically involves only `scan-export` operations and does not require complex memory-consuming computations. The default 2GB memory limit usually suffices.
-   - In scenarios where the query plan needs to scan too many tablets or versions on the same BE, memory might run out. Adjust the `exec_mem_limit` session variable to increase the memory limit.
 
-2. **Export Data Volume**
-   - Avoid exporting a large volume of data at once. The recommended maximum data volume for an Export job is several tens of GBs. Larger exports can lead to more garbage files and higher retry costs. If the table size is too large, consider partition-based export.
-   - Export jobs scan data and occupy IO resources, which may affect system query latency.
+- Memory Limits
 
-3. **Managing Export Files**
-   - If an Export job fails, the generated files are not deleted and need to be removed manually.
+    An Export job typically involves only `scan-export` operations and does not require complex memory-consuming computations. The default 2GB memory limit usually suffices.
 
-4. **Data Consistency**
-   - During export, the system simply checks if the tablet versions are consistent. It is advisable to avoid importing data into the table during the export process.
+    In scenarios where the query plan needs to scan too many tablets or versions on the same BE, memory might run out. Adjust the `exec_mem_limit` session variable to increase the memory limit.
 
-5. **Export Timeout**
-   - If the data volume is large and exceeds the export timeout, the Export job will fail. Use the `timeout` parameter in the Export command to extend the timeout and retry the Export command.
+- Export Data Volume
 
-6. **Export Failure**
-   - If the FE restarts or switches primary during the Export job, the job will fail and need to be resubmitted. Use the `show export` command to check the Export job status.
+    Avoid exporting a large volume of data at once. The recommended maximum data volume for an Export job is several tens of GBs. Larger exports can lead to more garbage files and higher retry costs. If the table size is too large, consider partition-based export.
 
-7. **Number of Partitions Exported**
-   - The maximum number of partitions an Export Job can export is 2000. Modify this limit by adding the `maximum_number_of_export_partitions` parameter in `fe.conf` and restarting FE.
+    Export jobs scan data and occupy IO resources, which may affect system query latency.
 
-8. **Concurrent Export**
-   - When exporting concurrently, configure the thread count and parallelism appropriately to fully utilize system resources and avoid performance bottlenecks. Monitor the progress and performance metrics in real-time to identify and address issues promptly.
+- Managing Export Files
 
-9. **Data Integrity**
-   - After the export operation is complete, verify that the exported data is complete and correct to ensure data quality and integrity.
+    If an Export job fails, the generated files are not deleted and need to be removed manually.
+
+- Data Consistency
+
+    During export, the system simply checks if the tablet versions are consistent. It is advisable to avoid importing data into the table during the export process.
+
+- Export Timeout
+
+    If the data volume is large and exceeds the export timeout, the Export job will fail. Use the `timeout` parameter in the Export command to extend the timeout and retry the Export command.
+
+- Export Failure
+
+    If the FE restarts or switches primary during the Export job, the job will fail and need to be resubmitted. Use the `show export` command to check the Export job status.
+
+- Number of Partitions Exported
+
+    The maximum number of partitions an Export Job can export is 2000. Modify this limit by adding the `maximum_number_of_export_partitions` parameter in `fe.conf` and restarting FE.
+
+- Concurrent Export
+
+    When exporting concurrently, configure the thread count and parallelism appropriately to fully utilize system resources and avoid performance bottlenecks. Monitor the progress and performance metrics in real-time to identify and address issues promptly.
+
+- Data Integrity
+
+    After the export operation is complete, verify that the exported data is complete and correct to ensure data quality and integrity.
 
 ## Appendix
 ### Principles of Concurrent Export

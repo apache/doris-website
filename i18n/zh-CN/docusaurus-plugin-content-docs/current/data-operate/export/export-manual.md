@@ -305,7 +305,9 @@ PROPERTIES(
 );
 ```
 
-> 注意：当前Export导出 Catalog 外表数据不支持并发导出，即使指定 parallelism 大于 1，仍然是单线程导出。
+:::tip
+当前Export导出 Catalog 外表数据不支持并发导出，即使指定 parallelism 大于 1，仍然是单线程导出。
+:::
 
 ## 最佳实践
 ### 导出一致性
@@ -365,33 +367,44 @@ PROPERTIES (
 通过设置 `"max_file_size" = "512MB"`，则单个导出文件的最大大小为 512MB。
 
 ## 注意事项
-1. 内存限制
+- 内存限制
+
   通常一个 Export 作业的查询计划只有 `扫描-导出` 两部分，不涉及需要太多内存的计算逻辑。所以通常 2GB 的默认内存限制可以满足需求。
+
   但在某些场景下，比如一个查询计划，在同一个 BE 上需要扫描的 Tablet 过多，或者 Tablet 的数据版本过多时，可能会导致内存不足。可以调整session变量`exec_mem_limit`来调大内存使用限制。
-<br/>
-2. 导出数据量
+
+- 导出数据量
+
   不建议一次性导出大量数据。一个 Export 作业建议的导出数据量最大在几十 GB。过大的导出会导致更多的垃圾文件和更高的重试成本。如果表数据量过大，建议按照分区导出。
+
   另外，Export 作业会扫描数据，占用 IO 资源，可能会影响系统的查询延迟。
-<br/>
-3. 导出文件的管理
+
+- 导出文件的管理
+
   如果 Export 作业运行失败，已经生成的文件不会被删除，需要用户手动删除。
-<br/>
-4. 数据一致性
+
+- 数据一致性
+
   目前在export时只是简单检查tablets版本是否一致，建议在执行export过程中不要对该表进行导入数据操作。
-<br/>
-5. 导出超时
+
+- 导出超时
+
   若导出的数据量很大，超过导出的超时时间，则Export任务会失败。此时可以在Export命令中指定`timeout` 参数来增加超时时间并重试Export命令。
-<br/>
-6. 导出失败
+
+- 导出失败
+
   在 Export 作业运行过程中，如果 FE 发生重启或切主，则 Export 作业会失败，需要用户重新提交。可以通过`show export` 命令查看Export任务状态。
-<br/>
-7. 导出分区数量
+
+- 导出分区数量
+
   一个Export Job允许导出的分区数量最大为2000，可以在fe.conf中添加参数`maximum_number_of_export_partitions`并重启FE来修改该设置。
-<br/>
-8. 并发导出
+
+- 并发导出
+
   在并发导出时，请注意合理地配置线程数量和并行度，以充分利用系统资源并避免性能瓶颈。在导出过程中，可以实时监控进度和性能指标，以便及时发现问题并进行优化调整。
-<br/>
-9. 数据完整性
+
+- 数据完整性
+
   导出操作完成后，建议验证导出的数据是否完整和正确，以确保数据的质量和完整性。
 
 ## 附录
@@ -405,12 +418,12 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL语句。用户发起一
 
 1. 选择导出的数据的一致性模型
   根据 `data_consistency` 参数来决定导出的一致性，这个只和语义有关，和并发度无关，用户要先根据自己的需求，选择一致性模型。
-<br/>
+
 2. 确定并发度
   根据 `parallelism` 参数确定由多少个线程来运行这些 `SELECT INTO OUTFILE` 执行计划。parallelism 决定了最大可能的线程数。
 
     > 注意：即使 Export 命令设置了 `parallelism` 参数，该 Export 任务的实际并发线程数量还与Job Schedule有关。Export 任务设置多并发后，每一个并发线程都是 Job Schedule 提供的，所以如果此时 Doris 系统任务较繁忙，Job Schedule 的线程资源较紧张，那么有可能分给 Export 任务的实际线程数量达不到 `parallelism` 个数，影响 Export 的并发导出。此时可以通过减轻系统负载或调整 FE 配置 `async_task_consumer_thread_num` 增加 Job Schedule 的总线程数量来缓解这个问题。
-<br/>
+
 3. 确定每一个 outfile 语句的任务量
   每一个线程会根据 `maximum_tablets_of_outfile_in_export` 以及数据实际的分区数 / buckets 数来决定要拆分成多少个 outfile。
     > `maximum_tablets_of_outfile_in_export` 是 FE 的配置，默认值为10。该参数用于指定Export 任务切分出来的单个 OutFile 语句中允许的最大 partitions / buckets 数量。修改该配置需要重启FE。
@@ -424,6 +437,7 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL语句。用户发起一
 3. `parallelism = 120` 情况下：由于该表 buckets 只有100个，所以系统会将 `parallelism` 强制设为 100 ，并以 `parallelism = 100` 去执行。Export 任务将把该表的 100 个 buckets 分成 100 份，每个线程负责 1 个buckets。每个线程负责的 1 个buckets 又将以 10 个为单位分成 1 组（该组实际就只有 1 个 buckets），每组buckets 由一个 outfile 查询计划负责。所以最终该 Export 任务有 100 个线程并发执行，每个线程负责 1 个 outfile 语句，每个 outfile 语句实际只导出 1 个 buckets。
 
 当前版本若希望 Export 有一个较好的性能，建议设置以下参数：
+
 1. 打开 session 变量 `enable_parallel_outfile`。
 2. 设置 Export 的 `parallelism` 参数为较大值，使得每一个线程只负责一个 `SELECT INTO OUTFILE` 查询计划。
 3. 设置 FE 配置 `maximum_tablets_of_outfile_in_export` 为较小值，使得每一个 `SELECT INTO OUTFILE` 查询计划导出的数据量较小。
