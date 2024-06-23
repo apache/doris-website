@@ -438,24 +438,34 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起�
 一个 Export 任务构造一个或多个 `SELECT INTO OUTFILE` 执行计划的具体逻辑是：
 
 1. 选择导出的数据的一致性模型
-  根据 `data_consistency` 参数来决定导出的一致性，这个只和语义有关，和并发度无关，用户要先根据自己的需求，选择一致性模型。
+
+    根据 `data_consistency` 参数来决定导出的一致性，这个只和语义有关，和并发度无关，用户要先根据自己的需求，选择一致性模型。
 
 2. 确定并发度
-  根据 `parallelism` 参数确定由多少个线程来运行这些 `SELECT INTO OUTFILE` 执行计划。parallelism 决定了最大可能的线程数。
+
+    根据 `parallelism` 参数确定由多少个线程来运行这些 `SELECT INTO OUTFILE` 执行计划。parallelism 决定了最大可能的线程数。
 
     > 注意：即使 Export 命令设置了 `parallelism` 参数，该 Export 任务的实际并发线程数量还与 Job Schedule 有关。Export 任务设置多并发后，每一个并发线程都是 Job Schedule 提供的，所以如果此时 Doris 系统任务较繁忙，Job Schedule 的线程资源较紧张，那么有可能分给 Export 任务的实际线程数量达不到 `parallelism` 个数，影响 Export 的并发导出。此时可以通过减轻系统负载或调整 FE 配置 `async_task_consumer_thread_num` 增加 Job Schedule 的总线程数量来缓解这个问题。
 
 3. 确定每一个 outfile 语句的任务量
-  每一个线程会根据 `maximum_tablets_of_outfile_in_export` 以及数据实际的分区数 / buckets 数来决定要拆分成多少个 outfile。
+
+    每一个线程会根据 `maximum_tablets_of_outfile_in_export` 以及数据实际的分区数 / buckets 数来决定要拆分成多少个 outfile。
+
     > `maximum_tablets_of_outfile_in_export` 是 FE 的配置，默认值为 10。该参数用于指定 Export 任务切分出来的单个 OutFile 语句中允许的最大 partitions / buckets 数量。修改该配置需要重启 FE。
 
-举例：假设一张表共有 20 个 partition，每个 partition 都有 5 个 buckets，那么该表一共有 100 个 buckets。设置`data_consistency = none` 以及 `maximum_tablets_of_outfile_in_export = 10`。
+    举例：假设一张表共有 20 个 partition，每个 partition 都有 5 个 buckets，那么该表一共有 100 个 buckets。设置`data_consistency = none` 以及 `maximum_tablets_of_outfile_in_export = 10`。
 
-1. `parallelism = 5` 情况下：Export 任务将把该表的 100 个 buckets 分成 5 份，每个线程负责 20 个 buckets。每个线程负责的 20 个 buckets 又将以 10 个为单位分成 2 组，每组 buckets 各由一个 outfile 查询计划负责。所以最终该 Export 任务有 5 个线程并发执行，每个线程负责 2 个 outfile 语句，每个线程负责的 outfile 语句串行的被执行。
+    1. `parallelism = 5` 情况下
 
-2. `parallelism = 3` 情况下：Export 任务将把该表的 100 个 buckets 分成 3 份，3 个线程分别负责 34、33、33 个 buckets。每个线程负责的 buckets 又将以 10 个为单位分成 4 组（最后一组不足 10 个 buckets），每组 buckets 各由一个 outfile 查询计划负责。所以该 Export 任务最终有 3 个线程并发执行，每个线程负责 4 个 outfile 语句，每个线程负责的 outfile 语句串行的被执行。
+        Export 任务将把该表的 100 个 buckets 分成 5 份，每个线程负责 20 个 buckets。每个线程负责的 20 个 buckets 又将以 10 个为单位分成 2 组，每组 buckets 各由一个 outfile 查询计划负责。所以最终该 Export 任务有 5 个线程并发执行，每个线程负责 2 个 outfile 语句，每个线程负责的 outfile 语句串行的被执行。
 
-3. `parallelism = 120` 情况下：由于该表 buckets 只有 100 个，所以系统会将 `parallelism` 强制设为 100，并以 `parallelism = 100` 去执行。Export 任务将把该表的 100 个 buckets 分成 100 份，每个线程负责 1 个 buckets。每个线程负责的 1 个 buckets 又将以 10 个为单位分成 1 组（该组实际就只有 1 个 buckets），每组 buckets 由一个 outfile 查询计划负责。所以最终该 Export 任务有 100 个线程并发执行，每个线程负责 1 个 outfile 语句，每个 outfile 语句实际只导出 1 个 buckets。
+    2. `parallelism = 3` 情况下
+
+        Export 任务将把该表的 100 个 buckets 分成 3 份，3 个线程分别负责 34、33、33 个 buckets。每个线程负责的 buckets 又将以 10 个为单位分成 4 组（最后一组不足 10 个 buckets），每组 buckets 各由一个 outfile 查询计划负责。所以该 Export 任务最终有 3 个线程并发执行，每个线程负责 4 个 outfile 语句，每个线程负责的 outfile 语句串行的被执行。
+
+    3. `parallelism = 120` 情况下
+
+        由于该表 buckets 只有 100 个，所以系统会将 `parallelism` 强制设为 100，并以 `parallelism = 100` 去执行。Export 任务将把该表的 100 个 buckets 分成 100 份，每个线程负责 1 个 buckets。每个线程负责的 1 个 buckets 又将以 10 个为单位分成 1 组（该组实际就只有 1 个 buckets），每组 buckets 由一个 outfile 查询计划负责。所以最终该 Export 任务有 100 个线程并发执行，每个线程负责 1 个 outfile 语句，每个 outfile 语句实际只导出 1 个 buckets。
 
 当前版本若希望 Export 有一个较好的性能，建议设置以下参数：
 
