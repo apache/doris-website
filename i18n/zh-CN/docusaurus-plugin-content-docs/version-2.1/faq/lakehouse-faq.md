@@ -207,12 +207,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
             {
             "name": "name",
             "type": "string",
-            "doc": "名称"
+            "doc": "Name"
             },
             {
             "name": "create_time",
             "type": "string",
-            "doc": "创建时间"
+            "doc": "Creation time"
             }
         ]
     }
