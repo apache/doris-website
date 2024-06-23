@@ -369,8 +369,8 @@
                     "type": "category",
                     "label": "Log Management",
                     "items": [
-                        "admin-manual/log-management/fe-log.md",
-                        "admin-manual/log-management/be-log.md"
+                        "admin-manual/log-management/fe-log",
+                        "admin-manual/log-management/be-log"
                     ]
                 },
                 {
