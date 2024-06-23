@@ -367,6 +367,14 @@
                 },
                 {
                     "type": "category",
+                    "label": "Log Management",
+                    "items": [
+                        "admin-manual/log-management/fe-log.md",
+                        "admin-manual/log-management/be-log.md"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Maintenance",
                     "items": [
                         {
@@ -384,8 +392,7 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/debug-log"
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
