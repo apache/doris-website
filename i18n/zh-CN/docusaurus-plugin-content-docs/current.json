@@ -171,6 +171,10 @@
     "message": "内存管理",
     "description": "The label for category Managing Memory in sidebar docs"
   },
+  "sidebar.docs.category.Log Management": {
+    "message": "日志管理",
+    "description": "The label for category Log Management in sidebar docs"
+  },
   "sidebar.docs.category.Maintenance": {
     "message": "运维监控",
     "description": "The label for category Maintenance in sidebar docs"
