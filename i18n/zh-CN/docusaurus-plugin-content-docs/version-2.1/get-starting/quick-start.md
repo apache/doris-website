@@ -33,7 +33,7 @@ under the License.
 
 -   Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u202，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox)。
 
--   建议在 Linux 上新建一个 Doris 用户。请避免使用 root 用户，以防对操作系统误操作。
+-   建议在 Linux 上新建一个 Doris 用户。请避免使用 Root 用户，以防对操作系统误操作。
 
 ## 下载二进制包
 
@@ -88,7 +88,7 @@ JAVA_HOME=/home/doris/jdk8
 # priority_networks =
 
 # BE 数据存放的目录，默认是在 DORIS_HOME 下的 storage 下，默认已经创建，可以更改为你的数据存储路径
-# storage_root_path = ${DORIS_HOME}/storage
+# storage_Root_path = ${DORIS_HOME}/storage
 ```
 
 ### 启动 BE
@@ -107,12 +107,12 @@ server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Apache Doris。
 
 ```Bash
-mysql -uroot -P9030 -h127.0.0.1
+mysql -uRoot -P9030 -h127.0.0.1
 ```
 
 注意：
 
--   这里使用的 root 用户是 Doris 内置的超级管理员用户，具体的用户权限查看 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md)
+-   这里使用的 Root 用户是 Doris 内置的超级管理员用户，具体的用户权限查看 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md)
 -   -P：这里是我们连接 Apache Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
 -   -h：这里是我们连接的 FE IP 地址，如果你的客户端和 FE 安装在同一个节点可以使用 127.0.0.1。
 
@@ -132,9 +132,9 @@ mysql -uroot -P9030 -h127.0.0.1
 
 3.  通过 show backends 语句可以查看新添加的 BE 节点。
 
-### 修改 root 和 admin 的密码
+### 修改 Root 和 Admin 的密码
 
-在 MySQL 客户端，执行类似下面的 SQL，为 root 和 admin 用户设置新密码
+在 MySQL 客户端，执行类似下面的 SQL，为 Root 和 Admin 用户设置新密码
 
 ```sql
 mysql> SET PASSWORD FOR 'root' = PASSWORD('doris-root-password');                                                                                                                                                                                   
@@ -145,16 +145,16 @@ Query OK, 0 rows affected (0.00 sec)
 ```
 
 :::tip
-root 和 admin 用户的区别
+Root 和 Admin 用户的区别
 
-root 和 admin 用户都属于 Doris 安装完默认存在的 2 个账户。其中 root 拥有整个集群的超级权限，可以对集群完成各种管理操作，比如添加节点，去除节点。admin 用户没有管理权限，是集群中的 Superuser，拥有除集群管理相关以外的所有权限。建议只有在需要对集群进行运维管理超级权限时才使用 root 权限。
+Root 和 Admin 用户都属于 Doris 安装完默认存在的 2 个账户。其中 Root 拥有整个集群的超级权限，可以对集群完成各种管理操作，比如添加节点，去除节点。Admin 用户没有管理权限，是集群中的 Superuser，拥有除集群管理相关以外的所有权限。建议只有在需要对集群进行运维管理超级权限时才使用 Root 权限。
 :::
 
 ## 建库建表
 
 ### 连接 Doris
 
-使用 admin 账户连接 Doris FE。
+使用 Admin 账户连接 Doris FE。
 
 ```Bash
 mysql -uadmin -P9030 -h127.0.0.1
@@ -201,7 +201,7 @@ curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separato
 
 -   -T data.csv : 要导入的数据文件名
 
--   -u admin:admin_password:  admin 账户与密码
+-   -u admin:admin_password:  Admin 账户与密码
 
 -   127.0.0.1:8030 : 分别是 FE 的 IP 和 http_port
 
