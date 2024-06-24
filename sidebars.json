@@ -528,7 +528,8 @@
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
                         "ecosystem/bi/finebi",
-                        "ecosystem/bi/powerbi"
+                        "ecosystem/bi/powerbi",
+                        "ecosystem/bi/smartbi"
                     ]
                 }
             ]
