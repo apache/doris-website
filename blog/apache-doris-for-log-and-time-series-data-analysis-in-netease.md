@@ -6,8 +6,6 @@
     'date': '2024-05-23',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/doris-for-log-and-time-series-data-analysis-in-netease.jpg'
 }
 

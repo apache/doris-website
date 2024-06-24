@@ -1,5 +1,9 @@
 export const RECENT_BLOGS_POSTS = [
     {
+        label: `Steps to industry-leading query speed: evolution of the Apache Doris execution engine`,
+        link: 'https://doris.apache.org/blog/evolution-of-the-apache-doris-execution-engine',
+    },
+    {
         label: `Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation`,
         link: 'https://doris.apache.org/blog/job-scheduler-for-task-automation',
     },
@@ -10,10 +14,5 @@ export const RECENT_BLOGS_POSTS = [
     {
         label: 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
         link: 'https://doris.apache.org/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
-    },
-
-    {
-        label: `Multi-tenant workload isolation: a better balance between isolation and utilization`,
-        link: 'https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris',
     },
 ];
