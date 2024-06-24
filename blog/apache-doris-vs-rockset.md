@@ -4,7 +4,7 @@
     'summary': "Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.",
     'description': "Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.",
     'date': '2024-06-24',
-    'author': 'Apache Doris',
+    'author': 'Zaki Lu',
     'tags': ['Top News'],
     'picked': "true",
     'order': "1",
