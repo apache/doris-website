@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_keys
+## Json_keys
 ### Description
 #### Syntax
 
@@ -37,7 +37,7 @@ JSON_KEYS() 函数用于从 JSON 对象的顶级值中返回键。这些键作�
 >
 > 如果所选对象为空，则结果数组为空。如果顶级值包含嵌套的子对象，返回值不包括这些子对象的键。
 
-### example
+### Example
 
 ```
 
@@ -81,5 +81,5 @@ mysql> SELECT JSON_KEYS('[]');
 +-------------------------------+
 1 row in set (0.07 sec)
 ```
-### keywords
+### Keywords
 json,json_keys

@@ -940,7 +940,8 @@
                                 "sql-manual/sql-functions/json-functions/get-json-string",
                                 "sql-manual/sql-functions/json-functions/json-insert",
                                 "sql-manual/sql-functions/json-functions/json-replace",
-                                "sql-manual/sql-functions/json-functions/json-set"
+                                "sql-manual/sql-functions/json-functions/json-set",
+                                "sql-manual/sql-functions/json-functions/json-keys"
                             ]
                         },
                         {

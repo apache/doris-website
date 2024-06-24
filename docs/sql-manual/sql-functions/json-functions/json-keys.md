@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## json_keys
+## Json_keys
 ### Description
 #### Syntax
 
@@ -36,7 +36,7 @@ Returns the keys from the top-level value of a JSON object as a JSON array, or, 
 > Note:
 >
 > The result array is empty if the selected object is empty. If the top-level value has nested subobjects, the return value does not include keys from those subobjects.
-### example
+### Example
 
 ```
 
@@ -80,5 +80,5 @@ mysql> SELECT JSON_KEYS('[]');
 +-------------------------------+
 1 row in set (0.07 sec)
 ```
-### keywords
+### Keywords
 json,json_keys
