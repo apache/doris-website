@@ -38,7 +38,7 @@ Returns the keys from the top-level value of a JSON object as a JSON array, or, 
 > The result array is empty if the selected object is empty. If the top-level value has nested subobjects, the return value does not include keys from those subobjects.
 ### Example
 
-```
+```sql
 
 mysql> SELECT JSON_KEYS('{"a": 1, "b": {"c": 30}}');
 +-----------------------------------------------------+
