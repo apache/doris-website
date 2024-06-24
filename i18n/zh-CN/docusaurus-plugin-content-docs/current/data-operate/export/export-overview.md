@@ -105,6 +105,7 @@ Parquet、ORC 文件格式拥有自己的数据类型。Doris 的导出功能能
     |struct|struct|
     |map|map|
     |array|array|
+    |json|不支持|
 
     <br/>
 2. Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转换为 arrow 内存数据格式，然后由 arrow 写出到 parquet 文件格式。Doris 数据类型到 arrow 数据类的映射关系为：
@@ -128,3 +129,4 @@ Parquet、ORC 文件格式拥有自己的数据类型。Doris 的导出功能能
     |struct|struct|
     |map|map|
     |array|list|
+    |json|utf8|

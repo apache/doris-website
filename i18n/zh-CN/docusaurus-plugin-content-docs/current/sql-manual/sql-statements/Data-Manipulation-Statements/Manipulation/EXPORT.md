@@ -96,7 +96,7 @@ EXPORT
 
   - `timeout`：导出作业的超时时间，默认为2小时，单位是秒。
 
-  - `compress_type`：当指定导出的文件格式为 parquet / orc 文件时，可以指定 parquet / orc 文件使用的压缩方式。parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4，LZO，BZ2 及 PLAIN，默认值为 SNAPPY。orc 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自2.1.5版本开始支持。（PLAIN就是不采用压缩）
+  - `compress_type`：当指定导出的文件格式为 parquet / orc 文件时，可以指定 parquet / orc 文件使用的压缩方式。parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。orc 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自2.1.5版本开始支持。（PLAIN就是不采用压缩）
 
   > 注意：要使用delete_existing_files参数，还需要在fe.conf中添加配置`enable_delete_existing_files = true`并重启fe，此时delete_existing_files才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
 

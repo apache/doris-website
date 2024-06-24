@@ -85,7 +85,7 @@ INTO OUTFILE "file_path"
         max_file_size: 单个文件大小限制，如果结果超过这个值，将切割成多个文件, max_file_size取值范围是[5MB, 2GB], 默认为1GB。（当指定导出为orc文件格式时，实际切分文件的大小将是64MB的倍数，如：指定max_file_size = 5MB, 实际将以64MB为切分；指定max_file_size = 65MB, 实际将以128MB为切分）
         delete_existing_files: 默认为false，若指定为true,则会先删除file_path指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
         file_suffix: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
-        compress_type：当指定导出的文件格式为 parquet / orc 文件时，可以指定 parquet / orc 文件使用的压缩方式。parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4，LZO，BZ2 及 PLAIN，默认值为 SNAPPY。orc 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自2.1.5版本开始支持。（PLAIN就是不采用压缩）
+        compress_type：当指定导出的文件格式为 parquet / orc 文件时，可以指定 parquet / orc 文件使用的压缩方式。parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。orc 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自2.1.5版本开始支持。（PLAIN就是不采用压缩）
     
     Broker 相关属性需加前缀 `broker.`：
         broker.name: broker名称
