@@ -7,7 +7,7 @@
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
     'picked': "true",
-    'order': "1",
+    'order': "2",
     "image": '/images/evolution-of-the-apache-doris-execution-engine.jpg'
 }
 

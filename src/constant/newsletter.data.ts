@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Top News'],
+        title: "Why Apache Doris is the Best Open Source Alternative to Rockset",
+        content: `Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.`,
+        to: '/blog/apache-doris-vs-rockset',
+        image: 'doris-vs-rockset.jpeg',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "Steps to industry-leading query speed: evolution of the Apache Doris execution engine",
         content: `From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.`,
@@ -21,11 +28,5 @@ export const NEWSLETTER_DATA = [
         to: '/blog/release-note-2.0.11',
         image: '2.0.11.jpg',
     },
-    {
-        tags: ['Best Practice'],
-        title: "Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?",
-        content: `NetEase (NASDAQ: NTES) has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.`,
-        to: '/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
-        image: 'doris-for-log-and-time-series-data-analysis-in-netease.jpg',
-    },
+
 ];
