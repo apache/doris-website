@@ -1,6 +1,6 @@
 ---
 {
-    'title': 'Why Apache Doris is the Best Open Source Alternative to Rockset',
+    'title': 'Why Apache Doris is the best open source alternative to Rockset',
     'summary': "Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.",
     'description': "Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.",
     'date': '2024-06-24',
