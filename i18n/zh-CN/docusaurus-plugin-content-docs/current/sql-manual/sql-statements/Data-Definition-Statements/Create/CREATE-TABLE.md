@@ -720,7 +720,7 @@ UNIQUE KEY(k1, k2)
             PARTITION p2 VALUES LESS THAN ("2022-02-01") ("storage_policy" = "test_create_table_partition_use_policy_2" ,"replication_num"="1")
         ) DISTRIBUTED BY HASH(k2) BUCKETS 1;
     ```
-注：需要先创建 s3 resource 和 storage policy，表才能关联迁移策略成功
+注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功
 
 <version since="1.2.0">
 
