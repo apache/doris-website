@@ -1,6 +1,6 @@
 ---
 {
-   "title": "SmartBI",
+   "title": "Smartbi",
    "language": "en"
 }
 ---
@@ -24,17 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SmartBI Introduction
+## Smartbi Introduction
 
-SmartBI is a collection of software services and application connectors that can connect to a variety of data sources, including Oracle, SQL Server, MySQL, and Doris, enabling users to integrate and cleanse their data easily. With SmartBI's data modeling capabilities, users can not only create complex relational models but also write data analysis expressions and establish data relationships, laying the foundation for advanced data analysis and visualization. SmartBI offers a diverse range of visualization options, including various types of charts, geographic maps, interactive dashboards, and customizable visualization tools. These powerful tools help users understand and present their data more intuitively and comprehensively, enhancing the effectiveness and efficiency of data analysis.
+Smartbi is a collection of software services and application connectors that can connect to a variety of data sources, including Oracle, SQL Server, MySQL, and Doris, enabling users to integrate and cleanse their data easily. With Smartbi's data modeling capabilities, users can not only create complex relational models but also write data analysis expressions and establish data relationships, laying the foundation for advanced data analysis and visualization. SmartBI offers a diverse range of visualization options, including various types of charts, geographic maps, interactive dashboards, and customizable visualization tools. These powerful tools help users understand and present their data more intuitively and comprehensively, enhancing the effectiveness and efficiency of data analysis.
 
 ## Precondition
 
-you can visit  https://www.smartbi.info/download to download and install SmartBI.
+you can visit  https://www.smartbi.info/download to download and install Smartbi.
 
 ## Data connection and application
 
-1. Log into SmartBI and click Data Connections.
+1. Log into Smartbi and click Data Connections.
 
    ![main page](/images/bi-smartbi-en-1.png)
 

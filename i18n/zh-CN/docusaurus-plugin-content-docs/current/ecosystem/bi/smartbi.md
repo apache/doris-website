@@ -1,6 +1,6 @@
 ---
 {
-    "title": "SmartBI",
+    "title": "Smartbi",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## SmartBI介绍
+## Smartbi介绍
 
-SmartBI是软件服务、应用连接器的集合，其可以连接到多种数据源，包括Oracle、SQL Server、MySQL和Doris等，以便用户可以轻松地整合和清洗数据。借助 SmartBI 的数据建模功能，用户不仅可以创建复杂的关系模型，还能编写数据分析表达式并建立数据关系，从而为高级的数据分析和可视化奠定基础。SmartBI 提供了丰富多样的可视化选项，包括各种类型的图表、地理地图、交互式仪表板，以及支持用户自定义的可视化工具。这些功能强大的工具帮助用户更直观、更全面地理解和展示他们的数据，提升数据分析的效果和效率。
+Smartbi是软件服务、应用连接器的集合，其可以连接到多种数据源，包括Oracle、SQL Server、MySQL和Doris等，以便用户可以轻松地整合和清洗数据。借助 Smartbi 的数据建模功能，用户不仅可以创建复杂的关系模型，还能编写数据分析表达式并建立数据关系，从而为高级的数据分析和可视化奠定基础。Smartbi 提供了丰富多样的可视化选项，包括各种类型的图表、地理地图、交互式仪表板，以及支持用户自定义的可视化工具。这些功能强大的工具帮助用户更直观、更全面地理解和展示他们的数据，提升数据分析的效果和效率。
 
 ## 数据连接与应用
 
-1. 登录SmartBI之后点击数据连接。
+1. 登录Smartbi之后点击数据连接。
 
    ![main page](/images/bi-smartbi-en-1.png)
 
