@@ -74,10 +74,10 @@ distribution_desc
             支持科学计数法
         DOUBLE（12 字节）
             支持科学计数法
-        DECIMAL[(precision, scale)] (16 字节)
+        DECIMAL[(PRECISION, SCALE)] (16 字节)
             保证精度的小数类型。默认是 DECIMAL(9, 0)
-            precision: 1 ~ 27
-            scale: 0 ~ 9
+            PRECISION: 1 ~ 27
+            SCALE: 0 ~ 9
             其中整数部分为 1 ~ 18
             不支持科学计数法
         DATE（3 字节）
@@ -102,7 +102,7 @@ distribution_desc
         MIN：求最小值。适合数值类型。
         MAX：求最大值。适合数值类型。
         REPLACE：替换。对于维度列相同的行，指标列会按照导入的先后顺序，后导入的替换先导入的。
-        REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于 null 值，不做替换。这里要注意的是字段默认值要给 NULL，而不能是空字符串，如果是空字符串，会给你替换成空字符串。
+        REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于 NULL 值，不做替换。这里要注意的是字段默认值要给 NULL，而不能是空字符串，如果是空字符串，会给你替换成空字符串。
         HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
         BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
         ```
@@ -264,7 +264,7 @@ UNIQUE KEY(k1, k2)
    语法：
       `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num|auto]`
    说明：
-      使用指定的 key 列进行哈希分桶。
+      使用指定的 Key 列进行哈希分桶。
 2. Random 分桶
    语法：
       `DISTRIBUTED BY RANDOM [BUCKETS num|auto]`
@@ -355,7 +355,7 @@ UNIQUE KEY(k1, k2)
 
 * `function_column.Sequence_col`
 
-    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
     `function_column.sequence_col`用来指定 Sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
