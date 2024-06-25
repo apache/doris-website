@@ -246,7 +246,7 @@ Partition information supports three writing methods:
            
 <version since="1.2.0">
     
-3. MULTI RANGE：Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
+3. MULTI RANGE: Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
 
     ```
     PARTITION BY RANGE(col)
@@ -261,7 +261,7 @@ Partition information supports three writing methods:
 </version>
 
 
-4. MULTI RANGE：Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size.
+4. MULTI RANGE: Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size.
 
     ```
     PARTITION BY RANGE(int_col)
@@ -841,7 +841,7 @@ If the materialized view is created when the table is created, all subsequent da
 
 If you add a materialized view in the subsequent use process, if there is data in the table, the creation time of the materialized view depends on the current amount of data.
 
-For the introduction of materialized views, please refer to the document [materialized views](../../../../query-acceleration/materialized-view.md).
+For the introduction of materialized views, please refer to the [Materialized View](../../../../query/view-materialized-view/materialized-view) document.
 
 #### Index
 
