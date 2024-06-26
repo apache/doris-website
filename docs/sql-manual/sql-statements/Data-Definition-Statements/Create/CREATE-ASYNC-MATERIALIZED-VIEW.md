@@ -101,15 +101,14 @@ AUTO：Try to refresh incrementally as much as possible. If incremental refresh 
 
 The SQL definition and partition fields of the materialized view need to meet the following conditions for partition incremental updates:
 
-- At least one of the base tables used by the materialized view must be a partitioned table.
-- The partitioned tables used by the materialized view must employ list or range partitioning strategies.
-- The top-level partition column in the materialized view can only have one partition field.
-- The SQL of the materialized view needs to use partition columns from the base table, such as after the SELECT clause.
-- If GROUP BY is used, the partition column fields must be after the GROUP BY.
-- If window functions are used, the partition column fields must be after the PARTITION BY.
-- Data changes should occur on partitioned tables. If they occur on non-partitioned tables, the materialized view needs to be fully rebuilt.
-- Using the fields that generate nulls in the JOIN as partition fields in the materialized view prohibits partition incremental updates.
-- The null attribute of partition fields in the base table used by the materialized view must not be empty if it comes from an internal table. If it comes from an external table in Hive, the null attribute of the base table can be empty.
+- At least one of the base tables used by the materialized view is a partitioned table.
+- The base tables used by the materialized view must use list or range partitioning strategies.
+- The `partition by` clause in the SQL definition of the materialized view can only have one partitioning column.
+- The partitioning column specified in the `partition by` clause of the materialized view's SQL must come after the `SELECT` statement.
+- If the materialized view's SQL includes a `group by` clause, the columns used for partitioning must come after the `group by` clause.
+- If the materialized view's SQL includes window functions, the columns used for partitioning must come after the `partition by` clause.
+- Data changes should occur on partitioned tables. If data changes occur on non-partitioned tables, the materialized view needs to be fully rebuilt.
+- If a field from the null-generating side of a join is used as a partitioning column for the materialized view, it cannot be incrementally updated by partition. For example, for a LEFT OUTER JOIN, the partitioning column must be on the left side, not the right.
 
 ```sql
 refreshMethod
