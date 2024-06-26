@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_STRING_TO_NUM
 
-<version since="dev">
-
 IPV4_STRING_TO_NUM
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,12 +34,12 @@ IPV4_STRING_TO_NUM
 
 获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）。返回一个 BIGINT 数字，表示相应的大端 IPv4 地址。
 
-### notice
+#### Notice
 
-`如果输入字符串不是有效的 IPv4 地址或者NULL，将返回错误`
+如果输入字符串不是有效的 IPv4 地址或者 `NULL`，将返回错误
 
-### example
-```
+### Example
+```sql
 mysql> select ipv4_string_to_num('192.168.0.1'); 
 +-----------------------------------+ 
 | ipv4_string_to_num('192.168.0.1') | 
@@ -59,6 +55,6 @@ mysql> select addr_src, ipv4_string_to_num(addr_src) from ipv4_string_test where
 ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv4 value like '0.0.0.0' first
 ```
 
-### keywords
+### Keywords
 
 IPV4_STRING_TO_NUM, IP

@@ -230,9 +230,9 @@ INTO TABLE testDb.testTbl
 ```sql
 LOAD DATA LOCAL
 INFILE 'testData'
+INTO TABLE testDb.testTbl
 COLUMNS TERMINATED BY ','
-LINES TERMINATED BY '\n'
-INTO TABLE testDb.testTbl;
+LINES TERMINATED BY '\n';
 ```
 
 ### 指定导入分区

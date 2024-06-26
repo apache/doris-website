@@ -43,15 +43,20 @@ maven 依赖
 ```
 
 ### Standalone 模式启动
+在 $KAFKA_HOME 下创建 plugins 目录，将下载好的 doris-kafka-connector jar 包放入其中
 
-配置 connect-standalone.properties
+配置 config/connect-standalone.properties
 
 ```properties
 # 修改 broker 地址
 bootstrap.servers=127.0.0.1:9092
+
+# 修改为创建的 plugins 目录
+plugin.path=$KAFKA_HOME/plugins
 ```
 
 配置 doris-connector-sink.properties
+<br />
 在 config 目录下创建 doris-connector-sink.properties，并配置如下内容：
 
 ```properties
@@ -83,8 +88,9 @@ $KAFKA_HOME/bin/connect-standalone.sh -daemon $KAFKA_HOME/config/connect-standal
 
 
 ### Distributed 模式启动
+在 $KAFKA_HOME 下创建 plugins 目录，将下载好的 doris-kafka-connector jar 包放入其中
 
-配置 connect-distributed.properties
+配置 config/connect-distributed.properties
 
 ```properties
 # 修改 broker 地址
@@ -92,6 +98,9 @@ bootstrap.servers=127.0.0.1:9092
 
 # 修改 group.id，同一集群的需要一致
 group.id=connect-cluster
+
+# 修改为创建的 plugins 目录
+plugin.path=$KAFKA_HOME/plugins
 ```
 
 
@@ -175,27 +184,147 @@ errors.deadletterqueue.topic.replication.factor=1
 ## 配置项
 
 
-| Key                   | Default Value                                                                        | **Required** | **Description**                                                                                                                                                                                                        |
-|-----------------------|--------------------------------------------------------------------------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name                  | -                                                                                    | Y            | Connect 应用名称，必须是在 Kafka Connect 环境中唯一                                                                                                                                                                                  |
-| connector.class       | -                                                                                    | Y            | org.apache.doris.kafka.connector.DorisSinkConnector                                                                                                                                                                    |
-| topics                | -                                                                                    | Y            | 订阅的 topic 列表，逗号分隔：topic1,topic2                                                                                                                                                                                       |
-| doris.urls            | -                                                                                    | Y            | Doris FE 连接地址。如果有多个，中间用逗号分割：10.20.30.1,10.20.30.2,10.20.30.3                                                                                                                                                          |
-| doris.http.port       | -                                                                                    | Y            | Doris HTTP 协议端口                                                                                                                                                                                                        |
-| doris.query.port      | -                                                                                    | Y            | Doris MySQL 协议端口                                                                                                                                                                                                       |
-| doris.user            | -                                                                                    | Y            | Doris 用户名                                                                                                                                                                                                              |
-| doris.password        | -                                                                                    | Y            | Doris 密码                                                                                                                                                                                                               |
-| doris.database        | -                                                                                    | Y            | 要写入的数据库。多个库时可以为空，同时在 topic2table.map 需要配置具体的库名称                                                                                                                                                                        |
-| doris.topic2table.map | -                                                                                    | N            | topic 和 table 表的对应关系，例：topic1:tb1,topic2:tb2<br />默认为空，表示 topic 和 table 名称一一对应。 <br />  多个库的格式为 topic1:db1.tbl1,topic2:db2.tbl2                                                                                        |
-| buffer.count.records  | 10000                                                                                | N            | 在 flush 到 doris 之前，每个 Kafka 分区在内存中缓冲的记录数。默认 10000 条记录                                                                                                                                                                  |
-| buffer.flush.time     | 120                                                                                  | N            | buffer 刷新间隔，单位秒，默认 120 秒                                                                                                                                                                                                 |
-| buffer.size.bytes     | 5000000(5MB)                                                                         | N            | 每个 Kafka 分区在内存中缓冲的记录的累积大小，单位字节，默认 5MB                                                                                                                                                                                   |
-| jmx                   | true                                                                                 | N            | 通过 JMX 获取 Connector 内部监控指标，请参考：[Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/zh-CN/Doris-Connector-JMX.md)                                                                  |
-| enable.delete         | false                                                                                | N            | 是否同步删除记录，默认 false                                                                                                                                                                                                     |
-| label.prefix          | ${name}                                                                              | N            | Stream load 导入数据时的 label 前缀。默认为 Connector 应用名称。                                                                                                                                                                        |
-| auto.redirect         | true                                                                                 | N            | 是否重定向 StreamLoad 请求。开启后 StreamLoad 将通过 FE 重定向到需要写入数据的 BE，并且不再显示获取 BE 信息                                                                                                                                                |
-| load.model            | stream_load                                                                          | N            | 导入数据的方式。支持 `stream_load` 直接数据导入到 Doris 中；同时支持 `copy_into` 的方式导入数据至对象存储中，然后将数据加载至 Doris 中                                                                                                                               |
-| sink.properties.*     | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'` | N            | Stream Load 的导入参数。<br />例如：定义列分隔符`'sink.properties.column_separator':','`  <br />详细参数参考[这里](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD/#description)。 |
-| delivery.guarantee    | at_least_once                                                                        | N            | 消费 Kafka 数据导入至 doris 时，数据一致性的保障方式。支持 `at_least_once` `exactly_once`，默认为 `at_least_once` 。Doris 需要升级至 2.1.0 以上，才能保障数据的 `exactly_once`                                                                                  |
+| Key                         | Enum                                   | Default Value                                                                        | **Required** | **Description**                                                                                                                                                                                                                                          |
+|-----------------------------|----------------------------------------|--------------------------------------------------------------------------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                        | -                                      | -                                                                                    | Y            | Connect 应用名称，必须是在 Kafka Connect 环境中唯一                                                                                                                                                                                                                    |
+| connector.class             | -                                      | -                                                                                    | Y            | org.apache.doris.kafka.connector.DorisSinkConnector                                                                                                                                                                                                      |
+| topics                      | -                                      | -                                                                                    | Y            | 订阅的 topic 列表，逗号分隔：topic1,topic2                                                                                                                                                                                                                          |
+| doris.urls                  | -                                      | -                                                                                    | Y            | Doris FE 连接地址。如果有多个，中间用逗号分割：10.20.30.1,10.20.30.2,10.20.30.3                                                                                                                                                                                             |
+| doris.http.port             | -                                      | -                                                                                    | Y            | Doris HTTP 协议端口                                                                                                                                                                                                                                          |
+| doris.query.port            | -                                      | -                                                                                    | Y            | Doris MySQL 协议端口                                                                                                                                                                                                                                         |
+| doris.user                  | -                                      | -                                                                                    | Y            | Doris 用户名                                                                                                                                                                                                                                                |
+| doris.password              | -                                      | -                                                                                    | Y            | Doris 密码                                                                                                                                                                                                                                                 |
+| doris.database              | -                                      | -                                                                                    | Y            | 要写入的数据库。多个库时可以为空，同时在 topic2table.map 需要配置具体的库名称                                                                                                                                                                                                          |
+| doris.topic2table.map       | -                                      | -                                                                                    | N            | topic 和 table 表的对应关系，例：topic1:tb1,topic2:tb2<br />默认为空，表示 topic 和 table 名称一一对应。 <br />  多个库的格式为 topic1:db1.tbl1,topic2:db2.tbl2                                                                                                                          |
+| buffer.count.records        | -                                      | 10000                                                                                | N            | 在 flush 到 doris 之前，每个 Kafka 分区在内存中缓冲的记录数。默认 10000 条记录                                                                                                                                                                                                    |
+| buffer.flush.time           | -                                      | 120                                                                                  | N            | buffer 刷新间隔，单位秒，默认 120 秒                                                                                                                                                                                                                                 |
+| buffer.size.bytes           | -                                      | 5000000(5MB)                                                                         | N            | 每个 Kafka 分区在内存中缓冲的记录的累积大小，单位字节，默认 5MB                                                                                                                                                                                                                    |
+| jmx                         | -                                      | true                                                                                 | N            | 通过 JMX 获取 Connector 内部监控指标，请参考：[Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/zh-CN/Doris-Connector-JMX.md)                                                                                                      |
+| enable.delete               | -                                      | false                                                                                | N            | 是否同步删除记录，默认 false                                                                                                                                                                                                                                        |
+| label.prefix                | -                                      | ${name}                                                                              | N            | Stream load 导入数据时的 label 前缀。默认为 Connector 应用名称。                                                                                                                                                                                                          |
+| auto.redirect               | -                                      | true                                                                                 | N            | 是否重定向 StreamLoad 请求。开启后 StreamLoad 将通过 FE 重定向到需要写入数据的 BE，并且不再显示获取 BE 信息                                                                                                                                                                                  |
+| load.model                  | `stream_load`,<br/> `copy_into`        | stream_load                                                                          | N            | 导入数据的方式。支持 `stream_load` 直接数据导入到 Doris 中；同时支持 `copy_into` 的方式导入数据至对象存储中，然后将数据加载至 Doris 中                                                                                                                                                                 |
+| sink.properties.*           | -                                      | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'` | N            | Stream Load 的导入参数。<br />例如：定义列分隔符`'sink.properties.column_separator':','`  <br />详细参数参考[这里](../data-operate/import/stream-load-manual.md)。                                                                                                               |
+| delivery.guarantee          | `at_least_once`,<br/> `exactly_once`   | at_least_once                                                                        | N            | 消费 Kafka 数据导入至 doris 时，数据一致性的保障方式。支持 `at_least_once` `exactly_once`，默认为 `at_least_once` 。Doris 需要升级至 2.1.0 以上，才能保障数据的 `exactly_once`                                                                                                                     |
+| converter.mode              | `normal`,<br/> `debezium_ingestion`    | normal                                                                               | N            | 使用 Connector 消费 Kafka 数据时，上游数据的类型转换模式。 <br/> ```normal```表示正常消费 Kafka 中的数据，不经过任何类型转换。 <br/> ```debezium_ingestion```表示当 Kafka 上游的数据通过 Debezium 等 CDC （Changelog Data Capture，变更数据捕获）工具采集时，上游数据需要经过特殊的类型转换才能支持。                                           |
+| debezium.schema.evolution   | `none`,<br/> `basic`                   | none                                                                                 | N            | 通过 Debezium 采集上游数据库系统（如 MySQL），发生结构变更时，可以将增加的字段同步到 Doris 中。<br/>`none`表示上游数据库系统发生结构变更时，不同步变更后的结构到 Doris 中。 <br/>  `basic`表示同步上游数据库的数据变更操作。由于列结构变更是一个危险操作（可能会导致误删 Doris 表结构的列），目前仅支持同步上游增加列的操作。当列被重命名后，则旧列保持原样，Connector 会在目标表中新增一列，将重命名后的新增数据 Sink 到新列中。 |
+| database.time_zone          | -                                      | UTC                                                                                  | N            | 当 `converter.mode` 为非 `normal` 模式时，对于日期数据类型（如 datetime, date, timestamp 等等）提供指定时区转换的方式，默认为 UTC 时区。                                                                                                                                                       |
 
 其他Kafka Connect Sink通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
+
+## 类型映射
+Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类型。
+<br />原始类型是指使用 Kafka connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
+
+| Kafka 原始类型   | Doris 类型 |
+|--------------|----------|
+| INT8         | TINYINT  |
+| INT16        | SMALLINT |
+| INT32        | INT      |
+| INT64        | BIGINT   |
+| FLOAT32      | FLOAT    |
+| FLOAT64      | DOUBLE   |
+| BOOLEAN      | BOOLEAN  |
+| STRING       | STRING   |
+| BYTES        | STRING   |
+
+| Kafka 逻辑类型                              | Doris 类型 |
+|-----------------------------------------|----------|
+| org.apache.kafka.connect.data.Decimal   | DECIMAL  |
+| org.apache.kafka.connect.data.Date      | DATE     |
+| org.apache.kafka.connect.data.Time      | STRING   |
+| org.apache.kafka.connect.data.Timestamp | DATETIME |
+
+| Debezium 逻辑类型                          | Doris 类型  |
+|----------------------------------------|-----------|
+| io.debezium.time.Date                  | DATE      |
+| io.debezium.time.Time                  | String    |
+| io.debezium.time.MicroTime             | DATETIME  |
+| io.debezium.time.NanoTime              | DATETIME  |
+| io.debezium.time.ZonedTime             | DATETIME  |
+| io.debezium.time.Timestamp             | DATETIME  |
+| io.debezium.time.MicroTimestamp        | DATETIME  |
+| io.debezium.time.NanoTimestamp         | DATETIME  |
+| io.debezium.time.ZonedTimestamp        | DATETIME  |
+| io.debezium.data.VariableScaleDecimal  | DOUBLE    |
+
+
+## 最佳实践
+### 同步 Json 序列化数据
+```
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
+  "name":"doris-json-test", 
+  "config":{ 
+    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
+    "topics":"json_topic", 
+    "tasks.max":"10",
+    "doris.topic2table.map": "json_topic:json_tab", 
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "doris.urls":"127.0.0.1", 
+    "doris.user":"root", 
+    "doris.password":"", 
+    "doris.http.port":"8030", 
+    "doris.query.port":"9030", 
+    "doris.database":"test", 
+    "load.model":"stream_load",
+    "key.converter":"org.apache.kafka.connect.json.JsonConverter",
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter"
+  } 
+}'
+```
+
+### 同步 Avro 序列化数据
+```
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
+  "name":"doris-avro-test", 
+  "config":{ 
+    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
+    "topics":"avro_topic", 
+    "tasks.max":"10",
+    "doris.topic2table.map": "avro_topic:avro_tab", 
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "doris.urls":"127.0.0.1", 
+    "doris.user":"root", 
+    "doris.password":"", 
+    "doris.http.port":"8030", 
+    "doris.query.port":"9030", 
+    "doris.database":"test", 
+    "load.model":"stream_load",
+    "key.converter":"io.confluent.connect.avro.AvroConverter",
+    "key.converter.schema.registry.url":"http://127.0.0.1:8081",
+    "value.converter":"io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url":"http://127.0.0.1:8081"
+  } 
+}'
+```
+
+### 同步 Protobuf 序列化数据
+```
+curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
+  "name":"doris-protobuf-test", 
+  "config":{ 
+    "connector.class":"org.apache.doris.kafka.connector.DorisSinkConnector", 
+    "topics":"proto_topic", 
+    "tasks.max":"10",
+    "doris.topic2table.map": "proto_topic:proto_tab", 
+    "buffer.count.records":"100000", 
+    "buffer.flush.time":"120", 
+    "buffer.size.bytes":"10000000", 
+    "doris.urls":"127.0.0.1", 
+    "doris.user":"root", 
+    "doris.password":"", 
+    "doris.http.port":"8030", 
+    "doris.query.port":"9030", 
+    "doris.database":"test", 
+    "load.model":"stream_load",
+    "key.converter":"io.confluent.connect.protobuf.ProtobufConverter",
+    "key.converter.schema.registry.url":"http://127.0.0.1:8081",
+    "value.converter":"io.confluent.connect.protobuf.ProtobufConverter",
+    "value.converter.schema.registry.url":"http://127.0.0.1:8081"
+  } 
+}'
+```

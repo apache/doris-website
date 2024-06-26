@@ -1,21 +1,18 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'Apache Doris 2.1.3 just released',
-        link: 'https://doris.apache.org/blog/release-note-2.1.3',
+        label: 'Why Apache Doris is the Best Open Source Alternative to Rockset',
+        link: 'https://doris.apache.org/blog/apache-doris-vs-rockset',
     },
     {
-        label: 'Multi-tenant workload isolation: a better balance between isolation and utilization',
-        link: 'https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris',
+        label: `Steps to industry-leading query speed: evolution of the Apache Doris execution engine`,
+        link: 'https://doris.apache.org/blog/evolution-of-the-apache-doris-execution-engine',
     },
     {
-        label: `From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration`,
-        link: 'https://doris.apache.org/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
+        label: `Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation`,
+        link: 'https://doris.apache.org/blog/job-scheduler-for-task-automation',
     },
     {
-        label: `Cross-cluster replication for read-write separation: story of a grocery store brand`,
-        link: 'https://doris.apache.org/blog/cross-cluster-replication-for-read-write',
+        label: 'Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?',
+        link: 'https://doris.apache.org/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
     },
-
-
-
 ];

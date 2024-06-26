@@ -24,13 +24,9 @@ under the License.
 
 ## TO_IPV6
 
-<version since="dev">
-
 TO_IPV6
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -40,13 +36,13 @@ Convert a string form of IPv6 address to IPv6 type.
 If the IPv6 address has an invalid format, throw an exception.
 Similar to ipv6_string_to_num function, which converts IPv6 address to binary format.
 
-### notice
+#### Notice
 
 `Input cannot be NULL. If it is NULL, an exception will be thrown.`
 
-### example
+### Example
 
-```
+```sql
 mysql> select to_ipv6('::');
 +---------------+
 | to_ipv6('::') |
@@ -55,6 +51,6 @@ mysql> select to_ipv6('::');
 +---------------+
 ```
 
-### keywords
+### Keywords
 
 TO_IPV6, IP

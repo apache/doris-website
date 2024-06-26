@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris version 2.0.9 has been released',
-    'summary': 'Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version.',
+    'description': 'Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version.',
     'date': '2024-04-23',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],

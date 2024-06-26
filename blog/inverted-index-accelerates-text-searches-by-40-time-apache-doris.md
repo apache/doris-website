@@ -1,7 +1,7 @@
 ---
 {
     'title': 'A deep dive into inverted index: how it speeds up text searches by 40 times',
-    'summary': "As an open-source real-time data warehouse, Apache Doris provides a rich choice of indexes to speed up data scanning and filtering.This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.",
+    'description': "As an open-source real-time data warehouse, Apache Doris provides a rich choice of indexes to speed up data scanning and filtering.This post is a deep dive into inverted index and NGram BloomFilter index, providing a hands-on guide to applying them for various queries.",
     'date': '2024-02-01',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -507,4 +507,4 @@ Inverted index has been available in Apache Doris for almost a year and stood th
 - **Self-defined tokenization**: provides a user-defined tokenizer to fit in different use cases.
 - **More data types**: Users will be able to create inverted index for complex data types including Array and Map.
 
-If you encounter any issues while trying it out in Apache Doris or would like to know more details, join our [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) community and talk to us!
+If you encounter any issues while trying it out in Apache Doris or would like to know more details, join our [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) community and talk to us!

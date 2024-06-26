@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Log analysis: Elasticsearch vs Apache Doris',
-    'summary': "As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.",
+    'description': "As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.",
     'date': '2023-09-28',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -350,4 +350,4 @@ SELECT * FROM log_table WHERE request MATCH_ALL 'image faq' ORDER BY ts DESC LIM
 
 If you are looking for an efficient log analytic solution, Apache Doris is friendly to anyone equipped with SQL knowledge; if you find friction with the ELK stack, try Apache Doris provides better schema-free support, enables faster data writing and queries, and brings much less storage burden.
 
-But we won't stop here. We are going to provide more features to facilitate log analysis. We plan to add more complicated data types to inverted index, and support BKD index to make Apache Doris a fit for geo data analysis. We also plan to expand capabilities in semi-structured data analysis, such as working on the complex data types (Array, Map, Struct, JSON) and high-performance string matching algorithm. And we welcome any [user feedback and development advice](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+But we won't stop here. We are going to provide more features to facilitate log analysis. We plan to add more complicated data types to inverted index, and support BKD index to make Apache Doris a fit for geo data analysis. We also plan to expand capabilities in semi-structured data analysis, such as working on the complex data types (Array, Map, Struct, JSON) and high-performance string matching algorithm. And we welcome any [user feedback and development advice](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).

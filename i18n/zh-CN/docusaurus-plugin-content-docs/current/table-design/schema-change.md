@@ -416,7 +416,7 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 
 -   一张表在同一时间只能有一个 Schema Change 作业在运行。
 
--   Schema Change 操作不阻塞导入和查询操作。
+-   Schema Change 操作不阻塞导入和查询操作。除非操作本身影响了表的元数据（例如自动分区表导入过程中创建了分区）
 
 -   分区列和分桶列不能修改。
 

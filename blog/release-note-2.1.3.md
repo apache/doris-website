@@ -1,12 +1,10 @@
 ---
 {
     'title': 'Apache Doris 2.1.3 just released',
-    'summary': 'This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.',
+    'description': 'This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.',
     'date': '2024-05-21',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "2",
     "image": '/images/2.1.3.jpg'
 }
 ---

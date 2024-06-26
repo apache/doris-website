@@ -710,7 +710,7 @@ http 请求处理/api/upload 任务的最大线程池
 
 #### `max_query_retry_time`
 
-默认值：1
+默认值：3
 
 是否可以动态配置：true
 
@@ -871,16 +871,6 @@ http 请求处理/api/upload 任务的最大线程池
 是否为 Master FE 节点独有的配置项：false
 
 缓存结果时上一版本的最小间隔，该参数区分离线更新和实时更新
-
-#### `enable_batch_delete_by_default`
-
-默认值：false
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-创建唯一表时是否添加删除标志列，具体原理参照官方文档：操作手册->数据导入->批量删除
 
 #### `max_allowed_in_element_num_of_delete`
 

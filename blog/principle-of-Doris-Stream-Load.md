@@ -1,7 +1,7 @@
 ---
 {
 'title': 'Doris stream load principle analysis',
-'summary': "Stream Load, one of the most commonly used data import methods for Doris users, is a synchronous import method. It allows users to import data into Doris in batch through HTTP access and returns the results of data import.",
+'description': "Stream Load, one of the most commonly used data import methods for Doris users, is a synchronous import method. It allows users to import data into Doris in batch through HTTP access and returns the results of data import.",
 'date': '2022-09-08',
 'author': 'Apache Doris',
 'tags': ['Tech Sharing'],

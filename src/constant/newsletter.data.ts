@@ -1,30 +1,33 @@
 export const NEWSLETTER_DATA = [
     {
-        tags: ['Best Practice'],
-        title: "Apache Doris for log and time series data analysis in NetEase, why not Elasticsearch and InfluxDB?",
-        content: `NetEase has replaced Elasticsearch and InfluxDB with Apache Doris in its monitoring and time series data analysis platforms, respectively, achieving 11X query performance and saving 70% of resources.`,
-        to: '/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease',
-        image: 'doris-for-log-and-time-series-data-analysis-in-netease.jpg',
-    },
-    {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.1.3 just released",
-        content: `This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.`,
-        to: '/blog/release-note-2.1.3',
-        image: '2.1.3.jpg',
+        title: "Apache Doris version 2.1.4 just released",
+        content: `In this update, we have optimized various functional experiences for data lakehouse, with a focus on resolving the abnormal memory usage issue in the previous version.`,
+        to: '/blog/release-note-2.1.4',
+        image: '2.1.4.jpg',
+    },
+
+    {
+        tags: ['Top News'],
+        title: "Why Apache Doris is the Best Open Source Alternative to Rockset",
+        content: `Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.`,
+        to: '/blog/apache-doris-vs-rockset',
+        image: 'doris-vs-rockset.jpeg',
     },
     {
         tags: ['Tech Sharing'],
-        title: "Multi-tenant workload isolation: a better balance between isolation and utilization",
-        content: `Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.`,
-        to: '/blog/multi-tenant-workload-isolation-in-apache-doris',
-        image: 'multi-tenant-workload-group.jpg',
+        title: "Steps to industry-leading query speed: evolution of the Apache Doris execution engine",
+        content: `From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.`,
+        to: '/blog/evolution-of-the-apache-doris-execution-engine',
+        image: 'evolution-of-the-apache-doris-execution-engine.jpg',
     },
+
     {
         tags: ['Tech Sharing'],
-        title: "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
-        content: `Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.`,
-        to: '/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
-        image: 'sql-convertor-feature.jpeg',
+        title: "Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation",
+        content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
+        to: '/blog/job-scheduler-for-task-automation',
+        image: 'job-scheduler-for-task-automation.jpg',
     },
+
 ];

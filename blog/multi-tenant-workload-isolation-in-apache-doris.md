@@ -2,10 +2,9 @@
 {
     'title': "Multi-tenant workload isolation: a better balance between isolation and utilization",
     'summary': "Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.",
+    'description': "Apache Doris supports workload isolation based on Resource Tag and Workload Group. It provides solutions for different tradeoffs among the level of isolation, resource utilization, and stable performance.",
     'date': '2024-05-14',
     'author': 'Apache Doris',
-    'picked': "true",
-    'order': "3",
     'tags': ['Tech Sharing'],
     "image": '/images/multi-tenant-workload-group.jpg'
 }
@@ -222,4 +221,4 @@ In future releases, we will keep improving user experience of the Workload Group
 
 - The main idea of Resource Tag is to group the BE nodes, while that of Workload Group is to further divide the resources of a single BE node. For users to grasp these ideas, they need to learn about the concept of BE nodes in Doris first. However, from an operational perspective, users only need to understand the resource consumption percentage of each of their workloads and what priority they should have when cluster load is saturated. Thus, we will try and figure out a way to flatten the learning curve for users, such as keeping the concept of BE nodes in the black box. 
 
-For further assistance on workload isolation in Apache Doris, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+For further assistance on workload isolation in Apache Doris, join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA).

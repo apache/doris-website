@@ -1,7 +1,7 @@
 ---
 {
     'title': "Auto-increment columns in databases: a simple magic that makes a big difference",
-    'summary': "Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.",
+    'description': "Auto-increment columns in Apache Doris accelerates dictionary encoding and pagination without damaging data writing performance. This is an introduction to its usage, applicable scenarios, and implementation details.",
     'date': '2024-04-08',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
@@ -407,5 +407,5 @@ Attention is required regarding:
 
 ## Conclusion
 
-AUTO_INCREMENT brings higher stability and reliability for Doris in large-scale data processing. If it sounds like something you need, download [Apache Doris](https://doris.apache.org/download/) and try it out. For issues you come across along the way, join us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and we are happy to help. 
+AUTO_INCREMENT brings higher stability and reliability for Doris in large-scale data processing. If it sounds like something you need, download [Apache Doris](https://doris.apache.org/download/) and try it out. For issues you come across along the way, join us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) and we are happy to help. 
 

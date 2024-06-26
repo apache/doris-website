@@ -1539,8 +1539,3 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
 * 默认值："${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* 描述：是否直接使用 Doris 自带的时区数据库。开启后不再尝试查找系统目录。
-* 默认值：false
