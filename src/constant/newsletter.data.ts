@@ -1,5 +1,13 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Note'],
+        title: "Apache Doris version 2.1.4 just released",
+        content: `In this update, we have optimized various functional experiences for data lakehouse, with a focus on resolving the abnormal memory usage issue in the previous version.`,
+        to: '/blog/release-note-2.1.4',
+        image: '2.1.4.jpg',
+    },
+
+    {
         tags: ['Top News'],
         title: "Why Apache Doris is the Best Open Source Alternative to Rockset",
         content: `Among of all the claim-to-be alternatives to Rockset, Apache Doris is one of the few that cover all the key features of Rockset.`,
@@ -20,13 +28,6 @@ export const NEWSLETTER_DATA = [
         content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
         to: '/blog/job-scheduler-for-task-automation',
         image: 'job-scheduler-for-task-automation.jpg',
-    },
-    {
-        tags: ['Release Note'],
-        title: "Apache Doris version 2.0.11 just released",
-        content: `Thanks to our community users and developers, about 123 improvements and bug fixes have been made in Doris 2.0.11 version.`,
-        to: '/blog/release-note-2.0.11',
-        image: '2.0.11.jpg',
     },
 
 ];
