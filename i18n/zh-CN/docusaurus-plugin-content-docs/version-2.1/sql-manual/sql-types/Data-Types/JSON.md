@@ -24,24 +24,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## JSON
+JSON 数据类型，用二进制格式高效存储 [JSON](https://www.rfc-editor.org/rfc/rfc8785) 数据，通过 JSON 函数访问其内部字段。
 
-<version since="1.2.0">
+默认支持1048576 字节（1M），可调大到 2147483643 字节（2G），可通过be配置`string_type_length_soft_limit_bytes` 调整。
 
-</version>
-
-注意：在1.2.x版本中，JSON类型的名字是JSONB，为了尽量跟MySQL兼容，从2.0.0版本开始改名为JSON，老的表仍然可以使用。
-
-### description
-    JSON类型
-        二进制JSON类型，采用二进制JSON格式存储，通过json函数访问JSON内部字段。默认支持1048576 字节（1M），可调大到 2147483643 字节（2G），可通过be配置`jsonb_type_length_soft_limit_bytes`调整
-
-### note
     与普通STRING类型存储的JSON字符串相比，JSON类型有两点优势
     1. 数据写入时进行JSON格式校验
     2. 二进制存储格式更加高效，通过json_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
 
-### example
+    注意：在1.2.x版本中，JSON类型的名字是JSONB，为了尽量跟MySQL兼容，从2.0.0版本开始改名为JSON，老的表仍然可以使用。
+
+### 语法
+
+**定义**
+```sql
+json_column_name JSON
+```
+
+**写入**
+- INSERT INTO VALUE 格式是引号包围的字符串。例如：
+```sql
+INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
+```
+
+- STREAM LOAD 对应列的格式是字符串，不需要额外引号包围。例如：
+```
+12	{"k1":"v31", "k2": 300}
+13	[]
+14	[123, 456]
+```
+
+**查询**
+- 直接将整个 JSON 列 SELECT 出来
+```sql
+SELECT json_column_name FROM table_name;
+```
+
+- 从 JSON 中提取需要的字段，或者其他信息，参考 JSON 函数，例如：
+```sql
+SELECT json_extract(json_column_name, '$.k1') FROM table_name;
+```
+
+- JSON 类型可以与整数、字符串、BOOLEAN、ARRAY、MAP 进行类型转换 CAST，例如：
+```sql
+SELECT CAST('{"k1": "100"}' AS JSON)
+SELECT CAST(json_column_name AS STRING) FROM table_name;
+SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
+```
+
+:::tip
+
+JSON 类型暂时不能用于 GROUP BY，ORDER BY，比较大小
+
+:::
+
+### 使用示例
     用一个从建表、导数据、查询全周期的例子说明JSON数据类型的功能和用法。
 
 #### 创建库表
