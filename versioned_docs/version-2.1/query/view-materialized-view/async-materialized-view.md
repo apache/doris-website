@@ -381,7 +381,7 @@ If another day has passed and the current time is 2024-03-29 xx: xx: xx, t1 adds
 If the partition field is of string type, you can set the materialized view property 'partition_date_format', for example, '%Y-%m-%d'.
 
 #### Partition rolling up
-Note: Supported from version 2.1.3
+Note: Supported from version 2.1.5
 
 Partition rolling up can be used when the data in each partition of the base table becomes very small after aggregation. This can reduce the number of partitions in the materialized view.
 
