@@ -49,7 +49,7 @@ Doris 在设计湖仓一体时，主要考虑如下四个应用场景：
 
 ## 基于 Doris 的湖仓一体架构
 
-Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon(Incubating)、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
+Doris 通过多源数据目录（Multi-Catalog）功能，支持了包括 Apache Hive、Apache Iceberg、Apache Hudi、Apache Paimon、LakeSoul、Elasticsearch、MySQL、Oracle、SQLSserver 等主流数据湖、数据库的连接访问。以及可以通过 Apache Ranger 等进行统一的权限管理，具体架构如下：
 
 
 ![基于 Doris 的湖仓一体架构](/images/doris-based-data-lakehouse-architecture.png)
@@ -160,7 +160,9 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 - JDBC: 对接数据库访问的标准接口 (JDBC) 来访问各式数据库的数据。
 
-- Apache Paimon(Incubating)
+- Apache Paimon
+
+- LakeSoul
 
 该功能将作为之前外表连接方式（External Table）的补充和增强，帮助用户进行快速的多数据目录联邦查询。
 
