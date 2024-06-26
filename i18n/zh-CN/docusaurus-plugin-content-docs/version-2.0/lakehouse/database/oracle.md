@@ -50,7 +50,11 @@ CREATE CATALOG oracle PROPERTIES (
 ```
 
 :::info 备注
-jdbc_url 的正确语法因 Oracle 版本和配置而异。以上示例 URL 连接到名为`orcl`的 Oracle SID。
+jdbc_url 定义要传递给 JDBC 驱动程序的连接信息和参数。
+使用 Oracle JDBC Thin 驱动程序时，URL 的语法可能会有所不同，具体取决于您的 Oracle 配置。
+例如，如果您要连接到 Oracle SID 或 Oracle 服务名称，则连接 URL 会有所不同。
+有关更多信息，请参阅 [Oracle 数据库 JDBC 驱动程序文档](https://docs.oracle.com/en/database/oracle/oracle-database/19/jjdbc/data-sources-and-URLs.html)。
+以上示例 URL 连接到名为`orcl`的 Oracle SID。
 :::
 
 ## 层级映射
