@@ -51,7 +51,7 @@ export const DORIS_VERSIONS: Option[] = [
                 asc: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.sha512`,
                 source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
-                version: '2.1.4-rc03',
+                version: '2.1.4',
             },
             {
                 label: CPUEnum.X64NoAvx2,
@@ -60,7 +60,7 @@ export const DORIS_VERSIONS: Option[] = [
                 asc: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.sha512`,
                 source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
-                version: '2.1.4-rc03',
+                version: '2.1.4',
             },
             {
                 label: CPUEnum.ARM64,
@@ -69,7 +69,7 @@ export const DORIS_VERSIONS: Option[] = [
                 asc: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.sha512`,
                 source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
-                version: '2.1.4-rc03',
+                version: '2.1.4',
             },
         ],
     },
@@ -137,7 +137,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         asc: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.sha512`,
                         source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
-                        version: '2.1.4-rc03',
+                        version: '2.1.4',
                     },
                     {
                         label: CPUEnum.X64NoAvx2,
@@ -146,7 +146,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         asc: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.sha512`,
                         source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
-                        version: '2.1.4-rc03',
+                        version: '2.1.4',
                     },
                     {
                         label: CPUEnum.ARM64,
@@ -155,7 +155,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         asc: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.sha512`,
                         source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
-                        version: '2.1.4-rc03',
+                        version: '2.1.4',
                     },
                 ],
             },
