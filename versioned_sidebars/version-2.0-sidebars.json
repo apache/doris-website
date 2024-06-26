@@ -82,10 +82,9 @@
                     "items": [
                         "table-design/index/index-overview",
                         "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
                         "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index",
-                        "table-design/index/bitmap-index",
-                        "table-design/index/inverted-index"
+                        "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
                 "table-design/auto-increment",
