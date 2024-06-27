@@ -87,9 +87,9 @@ Apache Doris 也支持比较丰富的**索引结构**，来减少数据的扫描
 
 -   聚合模型（Aggregate Key Model）：相同 Key 的 Value 列合并，通过提前聚合大幅提升性能
 
--   主键模型（Unique Key）：Key 唯一，相同 Key 的数据覆盖，实现行级别数据更新
+-   主键模型（Unique Key Model）：Key 唯一，相同 Key 的数据覆盖，实现行级别数据更新
 
--   明细模型（Duplicate Key）：明细数据模型，满足事实表的明细存储
+-   明细模型（Duplicate Key Model）：明细数据模型，满足事实表的明细存储
 
 Apache Doris 也支持**强一致的物化视图**，物化视图的更新和选择都在系统内自动进行，不需要用户手动选择，从而大幅减少了物化视图维护的代价
 
