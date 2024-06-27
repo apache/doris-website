@@ -33,6 +33,22 @@ Ensure you have completed the following tool installations:
    pip install pydoris
 2. Install Apache Superset version 3.1 or above. For detailed instructions, refer to [Installing Superset from PyPI](https://superset.apache.org/docs/installation/installing-superset-from-pypi/) or [Installing Superset Locally Using Docker Compose](https://hub.docker.com/r/apache/superset).
 ## Add data source
+1. You can access Superset by visiting the corresponding startup port.
+
+   ![login page](/images/bi-superset-en-1.png)
+
+2. Select the "Add Database Connection" option after logging into Superset.
+
+   ![add databases](/images/bi-superset-en-2.png)
+
+3. In the connection page, select the "Apache Doris" option.
+
+   ![select databases](/images/bi-superset-en-3.png)
+
+4. Fill in the SQLALCHEMY URI information in the connection details and proceed with the relevant connectivity verification.
+
+   ![test connection](/images/bi-superset-en-4.png)
+
 When creating a data source in Apache Superset, please pay attention to the following two points:
 - Choose Apache Doris as the data source in SUPPORTED DATABASES.
 - In the SQLALCHEMY URI, fill in the URI following the Doris SQLAlchemy URI format as shown below.
