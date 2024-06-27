@@ -46,7 +46,7 @@ Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能
 一条有效的 Job 语句需包含以下内容：
 - 关键字 CREATE JOB 需加作业名称，它在数据库中标识唯一事件。
 - ON SCHEDULE 子句用于指定 Job 作业的类型、触发时间和频率。
-    - AT timestamp用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT CURRENT_TIMESTAMP  指定当前日期和时间。因 JOB 一旦创建则会立即运行，也可用于异步任务创建。
+    - AT timestamp用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT current_timestamp  指定当前日期和时间。因 JOB 一旦创建则会立即运行，也可用于异步任务创建。
     - EVERY：用于周期性作业，可指定作业的执行频率，关键字后需指定时间间隔（周、天、小时、分钟）。
         - Interval：用于指定作业执行频率。1 DAY 表示每天执行一次， 1 HOUR表示每小时执行一次， 1 MINUTE 表示每分钟执行一次， 1 WEEK 表示每周执行一次。
         - 子句EVERY包含可选 STARTS子句。STARTS后面为timestamp值，该值用于定义开始重复的时间，CURRENT_TIMESTAMP  用于指定当前日期和时间。JOB 一旦创建则会立即运行。
