@@ -49,7 +49,7 @@ CREATE CATALOG saphana PROPERTIES (
 )
 ```
 
-:::info remarks
+:::info Note
 For more information about the JDBC URL formats and parameters supported by the SAP HANA JDBC driver, see [SAP HANA](https://help.sap.com/docs/).
 :::
 
