@@ -30,7 +30,7 @@ Smartbi is a collection of software services and application connectors that can
 
 ## Precondition
 
-you can visit https://www.smartbi.info/download to download and install Smartbi.
+You can visit https://www.smartbi.info/download to download and install Smartbi.
 
 ## Data connection and application
 
