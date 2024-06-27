@@ -32,7 +32,9 @@ JSON 数据类型，用二进制格式高效存储 [JSON](https://www.rfc-editor
     1. 数据写入时进行 JSON 格式校验
     2. 二进制存储格式更加高效，通过json_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
 
-    注意：在1.2.x版本中，JSON 类型的名字是JSONB，为了尽量跟MySQL兼容，从2.0.0版本开始改名为JSON，老的表仍然可以使用。
+    :::caution 注意
+    在1.2.x版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
+    :::
 
 ### 语法
 
