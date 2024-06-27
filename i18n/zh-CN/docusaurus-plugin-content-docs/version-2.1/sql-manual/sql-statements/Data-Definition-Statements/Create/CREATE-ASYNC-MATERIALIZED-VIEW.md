@@ -147,7 +147,7 @@ CREATE MATERIALIZED VIEW mv1
 REFRESH ON SCHEDULE EVERY 2 HOUR STARTS "2023-12-13 21:07:09"
 ```
 
-##### key
+##### Key
 物化视图为 Duplicate Key 模型，因此指定的列为排序列
 
 ```sql
@@ -162,7 +162,7 @@ CREATE MATERIALIZED VIEW mv1
 KEY(k1,k2)
 ```
 
-##### partition
+##### Partition
 物化视图有两种分区方式，如果不指定分区，默认只有一个分区，如果指定分区字段，会自动推导出字段来自哪个基表并同步基表(当前支持 `OlapTable` 和 `hive`)的所有分区（限制条件：基表如果是 `OlapTable`，那么只能有一个分区字段）。
 
 例如：基表是 Range 分区，分区字段为 `create_time` 并按天分区，创建物化视图时指定 `partition by(ct) as select create_time as ct from t1`，那么物化视图也会是 Range 分区，分区字段为 `ct`，并且按天分区。
@@ -188,16 +188,16 @@ partition by (`k2`)
 partition by (date_trunc(`k2`,'month'))
 ```
 
-#### property
-物化视图既可以指定 Table 的 property，也可以指定物化视图特有的 property。
+#### Property
+物化视图既可以指定 Table 的 Property，也可以指定物化视图特有的 Property。
 
-物化视图特有的 property 包括：
+物化视图特有的 Property 包括：
 
 `grace_period`：查询改写时允许物化视图数据的最大延迟时间（单位：秒）。如果分区 A 和基表的数据不一致，物化视图的分区 A 上次刷新时间为 1，系统当前时间为 2，那么该分区不会被透明改写。但是如果 `grace_period` 大于等于1，该分区就会被用于透明改写。
 
 `excluded_trigger_tables`：数据刷新时忽略的表名，逗号分割。例如`table1,table2`
 
-`refresh_partition_num`：单次 insert 语句刷新的分区数量，默认为 1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个 insert 语句顺序执行。遇到失败的 insert 语句，整个任务将停止执行。物化视图保证单个 insert 语句的事务性，失败的 insert 语句不会影响到已经刷新成功的分区。
+`refresh_partition_num`：单次 insert 语句刷新的分区数量，默认为 1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个 Insert 语句顺序执行。遇到失败的 Insert 语句，整个任务将停止执行。物化视图保证单个 Insert 语句的事务性，失败的 Insert 语句不会影响到已经刷新成功的分区。
 
 `workload_group`：物化视图执行刷新任务时使用的 `workload_group` 名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。关于 `workload_group` 的创建及使用，可参考 [WORKLOAD-GROUP](../../../../admin-manual/workload-group.md) 文档。
 
@@ -213,7 +213,7 @@ SELECT random() as dd,k3 FROM user
 
 ### 示例
 
-1. 创建一个立即刷新，之后每周刷新一次的物化视图 mv1,数据源为 hive catalog
+1. 创建一个立即刷新，之后每周刷新一次的物化视图 mv1,数据源为 Hive Catalog
 
    ```sql
    CREATE MATERIALIZED VIEW mv1 BUILD IMMEDIATE REFRESH COMPLETE ON SCHEDULE EVERY 1 WEEK
