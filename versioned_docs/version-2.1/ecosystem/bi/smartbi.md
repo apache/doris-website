@@ -26,11 +26,11 @@ under the License.
 
 ## Smartbi Introduction
 
-Smartbi is a collection of software services and application connectors that can connect to a variety of data sources, including Oracle, SQL Server, MySQL, and Doris, enabling users to integrate and cleanse their data easily. With Smartbi's data modeling capabilities, users can not only create complex relational models but also write data analysis expressions and establish data relationships, laying the foundation for advanced data analysis and visualization. SmartBI offers a diverse range of visualization options, including various types of charts, geographic maps, interactive dashboards, and customizable visualization tools. These powerful tools help users understand and present their data more intuitively and comprehensively, enhancing the effectiveness and efficiency of data analysis.
+Smartbi is a collection of software services and application connectors that can connect to a variety of data sources, including Oracle, SQL Server, MySQL, and Apache Doris, enabling users to integrate and cleanse their data easily. With Smartbi's data modeling capabilities, users can not only create complex relational models but also write data analysis expressions and establish data relationships, laying the foundation for advanced data analysis and visualization. Smartbi offers a diverse range of visualization options, including various types of charts, geographic maps, interactive dashboards, and customizable visualization tools. These powerful tools help users understand and present their data more intuitively and comprehensively, enhancing the effectiveness and efficiency of data analysis.
 
 ## Precondition
 
-you can visit  https://www.smartbi.info/download to download and install Smartbi.
+you can visit https://www.smartbi.info/download to download and install Smartbi.
 
 ## Data connection and application
 
@@ -38,11 +38,11 @@ you can visit  https://www.smartbi.info/download to download and install Smartbi
 
    ![main page](/images/bi-smartbi-en-1.png)
 
-2. After clicking the data connections, you can find a list of databases to be connected with and select the SELECTDB database.
+2. After clicking the data connections, you can find a list of databases to be connected with and select the SelectDB database.
 
    ![selectdb](/images/bi-smartbi-en-2.png)
 
-3. After selecting the database, fill in the connection information of the Doris database
+3. After selecting the database, fill in the connection information of the Apache Doris database.
 
    ![data source connection](/images/bi-smartbi-en-3.png)
 
