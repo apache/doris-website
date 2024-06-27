@@ -131,7 +131,7 @@ REFRESH MATERIALIZED VIEW mv1 partitions(p_20231017_20231018);
 
 Specific syntax can be viewed [REFRESH MATERIALIZED VIEW](../../sql-manual/sql-statements/Utility-Statements/REFRESH-MATERIALIZED-VIEW.md)
 
-### task management
+### Task management
 
 Each materialized view defaults to a job responsible for refreshing data, which is used to describe the refresh strategy and other information of the materialized view. Each time a refresh is triggered, a task is generated,
 Task is used to describe specific refresh information, such as the time used for refreshing, which partitions were refreshed, etc
@@ -154,7 +154,7 @@ Can pause the scheduled scheduling of materialized views
 
 Specific syntax can be viewed [PAUSE MATERIALIZED VIEW JOB](../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
 
-#### RESUME materialized view job scheduling
+#### Resume materialized view job scheduling
 
 ```sql
 RESUME MATERIALIZED VIEW JOB ON mv1;
@@ -164,7 +164,7 @@ Can RESUME scheduled scheduling of materialized views
 
 Specific syntax can be viewed [RESUME MATERIALIZED VIEW JOB](../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW.md)
 
-#### Viewing tasks in materialized views
+#### View tasks in materialized views
 
 ```sql
 select * from tasks("type"="mv");
@@ -182,7 +182,7 @@ Can cancel the operation of this task
 
 Specific syntax can be viewed [CANCEL MATERIALIZED VIEW TASK](../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK.md)
 
-### Modifying materialized views
+### Modify materialized views
 
 Modify the properties of materialized views
 ```sql
@@ -203,17 +203,17 @@ The materialized view has a dedicated deletion syntax and cannot be deleted thro
 
 Specific syntax can be viewed [DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
 
-## Partition Description
+## Partition description
 There are two ways to partition materialized views:
 
 1. Custom Partitioning
 
 2. Automatically Create Partitions Based on Dependent Base Table Partitions
 
-### Custom Partitioning
+### Custom partitioning
 When creating a materialized view without specifying partition information, the materialized view will default to creating a single partition where all data will be stored.
 
-### Partitioning Based on Dependent Base Table
+### Partitioning based on dependent base tables
 A materialized view can be created by joining multiple base tables.
 
 A materialized view can be partitioned to follow one of the base tables (it is recommended to choose the fact table).
@@ -437,7 +437,7 @@ select ... from t1;
 The commonly used commands for `olapTable` are also applicable to materialized views, such as `show partitions`, `desc table`, `show data`, etc.
 
 The unique commands for materialized views mainly include the following:
-#### Viewing materialized view metadata
+#### View materialized view metadata
 [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos)
 
 Focus on the following fields:
@@ -445,7 +445,7 @@ Focus on the following fields:
 - SchemaChangeDetail: The reason for the SCHEMA_CHANGE.
 - RefreshState: The status of the last refresh task of the materialized view. If it is FAIL, it means the execution failed, and further localization can be done through tasks().
 - SyncWithBaseTables: Whether the materialized view is synchronized with the base table data. If not synchronized, further determination can be made by using show partitions to identify which partition is not synchronized.
-#### Viewing tasks for the materialized view
+#### View tasks for the materialized view
 [tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
 
 Focus on the following fields:
