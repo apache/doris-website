@@ -44,7 +44,7 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
         (COMMENT STRING_LITERAL)?
         (PARTITION BY LEFT_PAREN mvPartition RIGHT_PAREN)?
         (DISTRIBUTED BY (HASH hashKeys=identifierList | RANDOM) (BUCKETS (INTEGER_VALUE | AUTO))?)?
-        propertyClause?
+        PropertyClause?
         AS query
 ```
 
@@ -200,7 +200,7 @@ partition by (`k2`)
 partition by (date_trunc(`k2`,'month'))
 ```
 
-#### property
+#### Property
 物化视图既可以指定 Table 的 Property，也可以指定物化视图特有的 Property。
 
 物化视图特有的 Property 包括：
