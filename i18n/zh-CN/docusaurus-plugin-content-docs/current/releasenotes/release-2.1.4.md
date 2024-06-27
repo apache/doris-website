@@ -86,7 +86,7 @@ under the License.
 
 - 透明改写支持 agg_state, agg_union 类型的聚合上卷，物化视图可以定义为 agg_state 或者 agg_union，查询使用具体的聚合函数，或者使用 agg_merge
 
-  关于更多信息，请参考文档：[AGG_STATE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-types/Data-Types/AGG_STATE#agg_state)
+  关于更多信息，请参考文档：[AGG_STATE](../sql-manual/sql-types/Data-Types/AGG_STATE.md)
 
 ### 其他
 

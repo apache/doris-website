@@ -58,7 +58,7 @@ under the License.
 
 ## New features
 
-### Query Optimizer
+### Query optimizer
 
 - Support FE flame graph tool
   
@@ -78,7 +78,7 @@ under the License.
 
 - Access controller with Hive Ranger plugin supports Data Mask
 
-### Asynchronous Materialized Views
+### Asynchronous materialized views
 
 - Build support for internal table triggered updates, where if a materialized view uses an internal table and the data in the internal table changes, it can trigger a refresh of the materialized view, specifying REFRESH ON COMMIT when creating the materialized view.
 
@@ -130,7 +130,7 @@ under the License.
 
 ## Bug fixes
 
-### Query Optimizer
+### Query optimizer
 
 - Fixed the issue where SQL cache returns old results after truncating a partition. [#34698](https://github.com/apache/doris/pull/34698)
 
@@ -164,13 +164,13 @@ under the License.
 
 - Fixed the occasional issue where `<=>` was incorrectly converted to `=`. [#36521](https://github.com/apache/doris/pull/36521)
 
-### Query Execution
+### Query execution
 
 - Fixed the issue where the query hangs if the limited rows are reached on the pipeline engine and memory is not released. [#35746](https://github.com/apache/doris/pull/35746)
 
 - Fixed the BE coredump when `enable_decimal256` is true but falls back to the old planner. [#35731](https://github.com/apache/doris/pull/35731)
 
-### Asynchronous Materialized Views
+### Asynchronous materialized views
 
 - Fixed the issue in the asynchronous materialized view build where the store_row_column attribute specified was not being recognized by the core.
 
@@ -187,7 +187,7 @@ under the License.
 - Fixed the core dump problem when a VARIANT with an empty key is used. [#35671](https://github.com/apache/doris/pull/35671)
 - Bitmap and BloomFilter index should not perform light index changes. [#35225](https://github.com/apache/doris/pull/35225)
 
-### Primary Key
+### Primary key
 
 - Fixed the issue where an exception BE restart occurred in the case of partial column updates during import, which could result in duplicate keys. [#35678](https://github.com/apache/doris/pull/35678)
 
@@ -238,7 +238,7 @@ under the License.
 - Support retain and pass the additional user-defined properties fo Table Valued Functions to the S3 SDK. [#35515](https://github.com/apache/doris/pull/35515)
 
 
-### Data Import
+### Data import
 
 - Fixed the issue where `CANCEL LOAD` did not work [#35352](https://github.com/apache/doris/pull/35352)
 
@@ -246,7 +246,7 @@ under the License.
 
 - Fixed the issue with bRPC serializing large data files when sent via HTTP [#36169](https://github.com/apache/doris/pull/36169)
 
-### Data Management
+### Data management
 
 - Fixed the isseu that the resource tag in ConnectionContext was not set after forwarding DDL or DML to master FE. [#35618](https://github.com/apache/doris/pull/35618)
 
@@ -260,7 +260,7 @@ under the License.
 
 - Fixed the issue where the partition column of a table changed when querying or inserting into an automatic partition table using the old optimizer [#36514](https://github.com/apache/doris/pull/36514)
 
-### Memory Management
+### Memory management
 
 - Fixed the issue of frequent errors in the logs due to failure in obtaining Cgroup meminfo. [#35425](https://github.com/apache/doris/pull/35425)
 
