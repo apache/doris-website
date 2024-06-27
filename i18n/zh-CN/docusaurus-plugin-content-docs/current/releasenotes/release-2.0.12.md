@@ -1,7 +1,7 @@
 ---
 {
     "title": "Release 2.0.12",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
