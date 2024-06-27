@@ -50,7 +50,7 @@ CREATE CATALOG oracle PROPERTIES (
 ```
 
 :::info remarks
-jdbc_url defines the connection information and parameters to be passed to the JDBC driver.
+`jdbc_url` defines the connection information and parameters to be passed to the JDBC driver.
 When using the Oracle JDBC Thin driver, the syntax of the URL may vary depending on your Oracle configuration.
 For example, if you are connecting to an Oracle SID or Oracle service name, the connection URL will be different.
 For more information, see [Oracle Database JDBC Driver Documentation](https://docs.oracle.com/en/database/oracle/oracle-database/19/jjdbc/data-sources-and-URLs.html) .
