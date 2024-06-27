@@ -58,7 +58,7 @@ A valid Job statement must include the following components:
 
 - **CREATE JOB:** Requires a job name, uniquely identifying the event in the database.
 - **ON SCHEDULE Clause:** Specifies the job type, trigger time, and frequency.
-    - **AT timestamp:** For one-time events. Executes the job once at the specified date and time. **AT CURRENT_TIMESTAMP** specifies the current date and time. The job runs immediately upon creation and can be used for asynchronous task creation.
+    - **AT timestamp:** For one-time events. Executes the job once at the specified date and time. **AT current_timestamp** specifies the current date and time. The job runs immediately upon creation and can be used for asynchronous task creation.
     - **EVERY interval:** For periodic jobs, specifying the execution frequency. Keywords include **WEEK**, **DAY**, **HOUR**, and **MINUTE**.
         - **Interval:** Defines the execution frequency, e.g., **1 DAY** for daily, **1 HOUR** for hourly, **1 MINUTE** for every minute, **1 WEEK** for weekly.
         - **STARTS Clause (optional):** Specifies the start time for the repeating interval. **CURRENT_TIMESTAMP** sets the current date and time. The job runs immediately upon creation.
