@@ -33,7 +33,7 @@ Thanks to our community users and developers, about 333 improvements and bug fix
 **GitHub** : [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
 
-## Behavior change
+## Behavior changes
 - More reasonable and accurate precision and scale inference for decimal data type
   - [[improvement](decimal) use new way for decimal arithmetic precision promotion](https://github.com/apache/doris/pull/28034)
 
@@ -50,7 +50,7 @@ Thanks to our community users and developers, about 333 improvements and bug fix
 - Support audit-log for `insert into` SQL
 - Support reading parquet file in lzo compressed format
 
-## Three Improvement and optimizations
+## Improvements
 
 - Improve storage management including balance, migration, publish and others.
 - Improve storage cooldown policy to use save disk space.
