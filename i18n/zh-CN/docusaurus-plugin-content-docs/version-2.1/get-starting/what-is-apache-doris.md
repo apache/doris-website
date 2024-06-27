@@ -39,11 +39,11 @@ Apache Doris 如今在中国乃至全球范围内都拥有着广泛的用户群�
 ![Apache Doris 的使用场景](/images/apache-doris-usage-scenarios-pipeline.png)
 
 -   报表分析
-
+  
   -   实时看板（Dashboards）
-
+  
   -   面向企业内部分析师和管理者的报表
-
+    
   -   面向用户或者客户的高并发报表分析（Customer Facing Analytics）。比如面向网站主的站点分析、面向广告主的广告报表，并发通常要求成千上万的 QPS，查询延时要求毫秒级响应。著名的电商公司京东在广告报表中使用 Apache Doris，每天写入 100 亿行数据，查询并发 QPS 上万，99 分位的查询延时 150ms。
 
 -   即席查询（Ad-hoc Query）：面向分析师的自助分析，查询模式不固定，要求较高的吞吐。小米公司基于 Doris 构建了增长分析平台（Growing Analytics，GA），利用用户行为数据对业务进行增长分析，平均查询延时 10s，95 分位的查询延时 30s 以内，每天的 SQL 查询量为数万条。
