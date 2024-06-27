@@ -368,7 +368,7 @@ The configuration file for BE is in the "conf" directory under the BE deployment
 1. Configure Java environment Starting from version 1.2, Doris supports Java UDF (User-Defined Function), and BE relies on the Java environment. You need to configure the `JAVA_HOME` environment variable in the operating system beforehand or specify the Java environment variable in the BE configuration file.
 
 ```SQL
-## Modify Java environment variable in be/be.conf
+## Modify Java environment variable in be/conf/be.conf
 JAVA_HOME = <your-java-home-path>
 ```
 
