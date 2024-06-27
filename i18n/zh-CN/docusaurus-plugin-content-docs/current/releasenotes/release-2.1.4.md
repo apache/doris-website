@@ -42,7 +42,7 @@ under the License.
 	
   - [BE 日志管理](https://doris.apache.org/zh-CN/docs/admin-manual/log-management/be-log)
   
-  - - [FE 日志管理](https://doris.apache.org/zh-CN/docs/admin-manual/log-management/fe-log)
+  - [FE 日志管理](https://doris.apache.org/zh-CN/docs/admin-manual/log-management/fe-log)
 
 - 如果建表时没有填写表注释，默认注释为空，不再使用表类型作为默认表注释。  [#36025](https://github.com/apache/doris/pull/36025)
 
@@ -78,17 +78,15 @@ under the License.
 
 ### 03 异步物化视图
 
-- 构建支持分区上卷。 [#31812](https://github.com/apache/doris/pull/31812)
+- 构建支持内表触发式更新，如果物化视图使用的是内表，如果内表数据发生变化，可以触发物化视图刷新，需要在创建物化视图时指定 REFRESH ON COMMIT。
 
-- 构建支持触发式更新。 [#34548](https://github.com/apache/doris/pull/34548)
+- 支持单表透明改写。
 
-- 构建支持指定 `store_row_column`。 [#35860](https://github.com/apache/doris/pull/35860)
+  关于更多信息，请参考文档：[查询异步物化视图](https://doris.apache.org/zh-CN/docs/query/view-materialized-view/query-async-materialized-view/)
 
-- 构建支持指定 Storage Medium。
+- 透明改写支持 agg_state, agg_union 类型的聚合上卷，物化视图可以定义为 agg_state 或者 agg_union，查询使用具体的聚合函数，或者使用 agg_merge
 
-- 透明改写支持单表异步物化视图。[#34646](https://github.com/apache/doris/pull/34646)
-
-- 透明改写支持 AGG_STATE 类型的聚合上卷。 [#35026](https://github.com/apache/doris/pull/35026)
+  关于更多信息，请参考文档：[AGG_STATE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-types/Data-Types/AGG_STATE#agg_state)
 
 ### 04 其他
 
@@ -123,6 +121,14 @@ under the License.
 - 当 `INSERT` 源数据为空时，BE 将不会执行任何操作。[#34418](https://github.com/apache/doris/pull/34418)
 
 - 支持分批获取 Hudi 和 Hive 文件列表，当存在大量数据文件时可以提升数据扫描性能。  [#35107](https://github.com/apache/doris/pull/35107)
+
+  - 120 万文件场景中，获取文件列表的时间由 390 秒缩减到 46 秒。
+
+- 创建异步物化试图时，禁止使用动态分区。
+
+- 支持检测 Hive 外表分区数据是否和异步物化试图同步。
+
+- 允许异步物化试图创建索引。
 
 ## 问题修复
 
@@ -170,6 +176,12 @@ under the License.
 
 ### 03 物化视图
 
+- 修复构建异步物化试图指定 store_row_column 属性，be core 的问题。
+  
+- 修复构建异步物化视图指定 storage_medium 不生效的问题。
+
+- 修复基表删除后，异步物化视图 show partitions 报错的问题。
+ 
 - 修复异步物化视图引起备份恢复异常的问题。
 
 - 修复分区改写可能导致错误结果的问题。

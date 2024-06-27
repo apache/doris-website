@@ -80,15 +80,11 @@ Apache Doris version 2.1.4 was officially released on June 26, 2024. In this upd
 
 ### 03 Asynchronous Materialized Views
 
-- Support partition roll-up during construction. [#31812](https://github.com/apache/doris/pull/31812)
+- Build support for internal table triggered updates, where if a materialized view uses an internal table and the data in the internal table changes, it can trigger a refresh of the materialized view, specifying REFRESH ON COMMIT when creating the materialized view.
 
-- Support triggered updates during construction. [#34548](https://github.com/apache/doris/pull/34548)
+- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](https://doris.apache.org/docs/query/view-materialized-view/query-async-materialized-view).
 
-- Support specifying the `store_row_column` and `storage_medium` attribute during construction. [#35860](https://github.com/apache/doris/pull/35860)
-
-- Transparent rewrite supports single table asynchronous materialized views. [#34646](https://github.com/apache/doris/pull/34646)
-
-- Transparent rewrite supports `AGG_STATE` type aggregation roll-up. [#35026](https://github.com/apache/doris/pull/35026)
+- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-types/Data-Types/AGG_STATE/#agg_state).
 
 ### 04 Others
 
@@ -124,7 +120,13 @@ Apache Doris version 2.1.4 was officially released on June 26, 2024. In this upd
 
 - Optimize the `INSERT` operation that when the source is empty, the BE will not execute. [#34418](https://github.com/apache/doris/pull/34418)
 
-- Support fetching file lists of Hive/Hudi tables in batches. [#35107](https://github.com/apache/doris/pull/35107)
+- Support fetching file lists of Hive/Hudi tables in batches. In a senario with 1.2 million files, the time taken to obtain the list of files has been reduced from 390 seconds to 46 seconds. [#35107](https://github.com/apache/doris/pull/35107)
+
+- Forbid dynamic partitioning when creating asynchronous materialized views.
+
+- Support detecting whether the partition data of external data of external tables in Hive is synchronized with asynchronous materialized views.
+
+- Allow to create index for asynchronous materialized views.
 
 ## Bugfix
 
@@ -169,6 +171,12 @@ Apache Doris version 2.1.4 was officially released on June 26, 2024. In this upd
 - Fixed the BE coredump when `enable_decimal256` is true but falls back to the old planner. [#35731](https://github.com/apache/doris/pull/35731)
 
 ### 03 Asynchronous Materialized Views
+
+- Fixed the issue in the asynchronous materialized view build where the store_row_column attribute specified was not being recognized by the core.
+
+- Fixed the problem in the asynchronous materialized view build where specifying the storage_medium was not taking effect.
+
+- Resolved the error occurring in the asynchronous materialized view show partitions after the base table is deleted.
 
 - Fixed the issue where asynchronous materialized views caused backup and restore exceptions. [#35703](https://github.com/apache/doris/pull/35703)
 
