@@ -35,7 +35,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 **GitHub Release:** https://github.com/apache/doris/releases
 
-## Behavior Changed
+## Behavior changes
 
 - Non-existent files will be ignored when querying external tables such as Hive. [#35319](https://github.com/apache/doris/pull/35319)
 
@@ -59,9 +59,9 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - The default precision of DECIMALV3 has been adjusted from (9, 0) to (38, 9) to maintain compatibility with the version in which this feature was initially released. [#36316](https://github.com/apache/doris/pull/36316)
 
-## New Features
+## New features
 
-### 01 Query Optimizer
+### Query Optimizer
 
 - Support FE flame graph tool
 
@@ -73,7 +73,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - The new optimizer fully supports point query functionality [#36205](https://github.com/apache/doris/pull/36205).
 
-### 02 Lakehouse
+### Lakehouse
 
 - Support native reader of Apache Paimon deletion vector  [#35241](https://github.com/apache/doris/pull/35241)
 
@@ -81,7 +81,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - Access controller with Hive Ranger plugin supports Data Mask
 
-### 03 Asynchronous Materialized Views
+### Asynchronous Materialized Views
 
 - Support partition roll-up during construction. [#31812](https://github.com/apache/doris/pull/31812)
 
@@ -93,7 +93,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - Transparent rewrite supports `AGG_STATE` type aggregation roll-up. [#35026](https://github.com/apache/doris/pull/35026)
 
-### 04 Others
+### Others
 
 - Added function `replace_empty`. 
 
@@ -107,7 +107,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
   By setting `enable_jvm_monitor=true` in `be.conf` to enable this feature.
 
-## Optimizations
+## Improvements
 
 - Supported creating inverted indexes for columns with Chinese names. [#36321](https://github.com/apache/doris/pull/36321)
 
@@ -131,7 +131,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 ## Bug fixes
 
-### 01 Query Optimizer
+### Query Optimizer
 
 - Fixed the issue where SQL cache returns old results after truncating a partition. [#34698](https://github.com/apache/doris/pull/34698)
 
@@ -165,30 +165,30 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - Fixed the occasional issue where `<=>` was incorrectly converted to `=`. [#36521](https://github.com/apache/doris/pull/36521)
 
-### 02 Query Execution
+### Query Execution
 
 - Fixed the issue where the query hangs if the limited rows are reached on the pipeline engine and memory is not released. [#35746](https://github.com/apache/doris/pull/35746)
 
 - Fixed the BE coredump when `enable_decimal256` is true but falls back to the old planner. [#35731](https://github.com/apache/doris/pull/35731)
 
-### 03 Asynchronous Materialized Views
+### Asynchronous Materialized Views
 
 - Fixed the issue where asynchronous materialized views caused backup and restore exceptions. [#35703](https://github.com/apache/doris/pull/35703)
 
 - Fixed the issue where partition rewrite could lead to incorrect results. [#35236](https://github.com/apache/doris/pull/35236)
 
-### 04 Semi-structured
+### Semi-structured
 
 - Fixed the core dump problem when a VARIANT with an empty key is used. [#35671](https://github.com/apache/doris/pull/35671)
 - Bitmap and BloomFilter index should not perform light index changes. [#35225](https://github.com/apache/doris/pull/35225)
 
-### 05 Primary Key
+### Primary Key
 
 - Fixed the issue where an exception BE restart occurred in the case of partial column updates during import, which could result in duplicate keys. [#35678](https://github.com/apache/doris/pull/35678)
 
 - Fixed the issue where BE might core dump during clone operations when memory is tight. [#34702](https://github.com/apache/doris/pull/34702)
 
-### 06 Lakehouse
+### Lakehouse
 
 - Fixed the issue where a Hive table could not be created with a fully qualified name such as `ctl.db.tbl` [#34984](https://github.com/apache/doris/pull/34984)
 
@@ -233,7 +233,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 - Support retain and pass the additional user-defined properties fo Table Valued Functions to the S3 SDK. [#35515](https://github.com/apache/doris/pull/35515)
 
 
-### 07 Data Import
+### Data Import
 
 - Fixed the issue where `CANCEL LOAD` did not work [#35352](https://github.com/apache/doris/pull/35352)
 
@@ -241,7 +241,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - Fixed the issue with bRPC serializing large data files when sent via HTTP [#36169](https://github.com/apache/doris/pull/36169)
 
-### 08 Data Management
+### Data Management
 
 - Fixed the isseu that the resource tag in ConnectionContext was not set after forwarding DDL or DML to master FE. [#35618](https://github.com/apache/doris/pull/35618)
 
@@ -255,13 +255,13 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - Fixed the issue where the partition column of a table changed when querying or inserting into an automatic partition table using the old optimizer [#36514](https://github.com/apache/doris/pull/36514)
 
-### 09 Memory Management
+### Memory Management
 
 - Fixed the issue of frequent errors in the logs due to failure in obtaining Cgroup meminfo. [#35425](https://github.com/apache/doris/pull/35425)
 
 - Fixed the issue where the Segment cache size was uncontrolled when using BloomFilter, leading to abnormal process memory growth. [#34871](https://github.com/apache/doris/pull/34871)
 
-### 10 Permissions
+### Permissions
 
 - Fixed the issue where permission settings were ineffective after enabling case-insensitive table names. [#36557](https://github.com/apache/doris/pull/36557)
 
@@ -269,7 +269,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
 - Fixed the issue where authorization could not be checked for the `SELECT COUNT(*)` statement. [#35465](https://github.com/apache/doris/pull/35465)
 
-### 11 Others
+### Others
 
 - Fixed the issue where the client JDBC program could not close the connection if the MySQL connection was broken. [#36616](https://github.com/apache/doris/pull/36616)
 

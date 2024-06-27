@@ -34,7 +34,7 @@ Thanks to our community users and developers, about 80 improvements and bug fixe
 **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
 
-## 1 Behavior change
+## Behavior changes
 
 - `round` function defaults to rounding normally as MySQL, eg. round(5/2) return 3 instead of 2.
   
@@ -45,7 +45,7 @@ Thanks to our community users and developers, about 80 improvements and bug fixe
   - https://github.com/apache/doris/pull/27965 
 
 
-## 2 New features
+## New features
 - Support make miss slot as null alias when converting outer join to anti join to speed up query
 
   - https://github.com/apache/doris/pull/31854
@@ -55,7 +55,7 @@ Thanks to our community users and developers, about 80 improvements and bug fixe
   - https://github.com/apache/doris/pull/32338
 
 
-## 3 Improvement and optimizations
+## Improvements
 
 - Add DEFAULT_ENCRYPTION column in `information_schema` table and add `processlist` table for better compatibility for BI tools
 
