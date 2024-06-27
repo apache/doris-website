@@ -181,6 +181,8 @@ At present, Doris's resource restrictions on single queries are mainly divided i
     
 2. CPU limitations
 
+   > Note: Since Doris 2.1, cpu_resource_limit will gradually be replaced by workload group, so it is not recommended to use it.
+
     Users can limit the CPU resources of the query in the following ways:
     
     ```sql
