@@ -99,7 +99,7 @@ PROPERTIES("replication_num" = "1");
 
 #### 导入数据
 
-##### Stream Load 导入test_json.csv测试数据
+##### stream load 导入test_json.csv测试数据
 
 - 测试数据有2列，第一列ID，第二列是JSON
 - 测试数据有25行，其中前18行的JSON是合法的，后7行的JSON是非法的
@@ -180,7 +180,7 @@ curl --location-trusted -u root: -H 'max_filter_ratio: 0.3' -T test_json.csv htt
 }
 ```
 
-- 查看Stream Load导入的数据，JSON类型的列j会自动转成JSON String展示
+- 查看stream load导入的数据，JSON类型的列j会自动转成JSON String展示
 
 ```
 mysql> SELECT * FROM test_json ORDER BY id;
@@ -210,7 +210,7 @@ mysql> SELECT * FROM test_json ORDER BY id;
 
 ```
 
-##### Insert Into 插入数据
+##### insert into 插入数据
 
 - insert 1条数据，总数据从18条增加到19条
 ```
@@ -336,7 +336,7 @@ mysql> SELECT id, j, json_extract(j, '$[0]') FROM test_json ORDER BY id;
 19 rows in set (0.03 sec)
 ```
 
-1. 获取整个JSON Array
+1. 获取整个json array
 ```
 mysql> SELECT id, j, json_extract(j, '$.a1') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+------------------------------------+
@@ -365,7 +365,7 @@ mysql> SELECT id, j, json_extract(j, '$.a1') FROM test_json ORDER BY id;
 19 rows in set (0.02 sec)
 ```
 
-1. 获取JSON Array中嵌套Object的字段
+1. 获取json array中嵌套object的字段
 ```
 mysql> SELECT id, j, json_extract(j, '$.a1[0]'), json_extract(j, '$.a1[0].k1') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+-------------------------------+----------------------------------+
