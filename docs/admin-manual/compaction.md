@@ -32,7 +32,7 @@ Doris writes data through a structure similar to LSM-Tree, and continuously merg
 Appropriately adjusting the compaction strategy can greatly improve load and query efficiency. Doris provides the following compaction strategies for tuning:
 
 
-## Vertical Compaction
+## Vertical compaction
 
 <version since="1.2.2">
 </version>
@@ -47,7 +47,7 @@ BE configuration：
 - `vertical_compaction_max_segment_size` is used to configure the size of the disk file after vertical compaction, the default value is 268435456 (bytes)
 
 
-## Segment Compaction
+## Segment compaction
 
 Segment compaction mainly deals with the large-scale data load. Segment compaction operates during the load process and compact segments inside the job, which is different from normal compaction and vertical compaction. This mechanism can effectively reduce the number of generated segments and avoid the -238 (OLAP_ERR_TOO_MANY_SEGMENTS) errors.
 
@@ -73,7 +73,7 @@ Situations where segment compaction is not recommended:
 
 Refer to this [link](https://github.com/apache/doris/pull/12866) for more information about implementation and test results.
 
-## Single Replica Compaction
+## Single replica compaction
 
 By default, compaction for multiple replicas is performed independently, with each replica consuming CPU and IO resources. When single replica compaction is enabled, only one replica performs the compaction. Afterward, the other replicas pull the compacted files from this replica, resulting in CPU resources being consumed only once, saving N - 1 times CPU usage (where N is the number of replicas).
 
@@ -84,18 +84,18 @@ This parameter can be specified when creating the table or modified later using:
 ALTER TABLE table_name SET("enable_single_replica_compaction" = "true");
 ```
 
-## Compaction Strategy
+## Compaction strategy
 
 The compaction strategy determines when and which small files are merged into larger files. Doris currently offers two compaction strategies, specified by the `compaction_policy` parameter in the table properties.
 
-### Size-Based Compaction Strategy
+### Size-based compaction strategy
 
 The size-based compaction strategy is the default strategy and is suitable for most scenarios.
 ```
 "compaction_policy" = "size_based"
 ```
 
-### Time Series Compaction Strategy
+### Time series compaction strategy
 
 The time series compaction strategy is optimized for scenarios like logs and time-series data. It leverages the time locality of time-series data, merging small files written in adjacent times into larger files. Each file participates in compaction only once, reducing write amplification from repeated compaction.
 
@@ -104,7 +104,7 @@ The time series compaction strategy is optimized for scenarios like logs and tim
 ```
 
 The time series compaction strategy is triggered when any of the following conditions are met:
-- The size of unmerged files exceeds `time_series_compaction_goal_size_mbytes` (default 1GB).
+- The size of unmerged files exceeds `time_series_compaction_goal_size_mbytes` (default 1 GB).
 - The number of unmerged files exceeds `time_series_compaction_file_count_threshold` (default 2000).
 - The time since the last compaction exceeds `time_series_compaction_time_threshold_seconds` (default 1 hour).
 
@@ -113,7 +113,7 @@ These parameters are set in the table's PROPERTIES and can be specified when cre
 ALTER TABLE table_name SET("name" = "value");
 ```
 
-## Compaction Concurrency Control
+## Compaction concurrency control
 
 Compaction runs in the background and consumes CPU and IO resources. The resource consumption can be controlled by adjusting the number of concurrent compaction threads.
 
