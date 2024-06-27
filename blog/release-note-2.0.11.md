@@ -33,12 +33,12 @@ Thanks to our community users and developers, about 123 improvements and bug fix
 
 **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
-## 1 Behavior change
+## Behavior changes
 
 Since the inverted index is now mature and stable, it can replace the old BITMAP INDEX. Therefore, any newly created `BITMAP INDEX` will automatically switch to an `INVERTED INDEX`, while existing `BITMAP INDEX` will remain unchanged. This entire switching process is transparent to the user, with no changes to writing or querying. Additionally, users can disable this automatic switch by setting the FE configuration `enable_create_bitmap_index_as_inverted_index` to false. [#35528](https://github.com/apache/doris/pull/35528)
 
 
-## 2 Improvement and optimizations
+## Improvements
 
 - Add Trino JDBC Catalog type mapping for JSON and TIME
 

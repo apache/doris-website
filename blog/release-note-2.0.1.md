@@ -31,13 +31,13 @@ under the License.
 
 Thanks to our community users and developers, 383 improvements and bug fixes have been made in Doris 2.0.1.
 
-## Behavior Changes
+## Behavior changes
 
 - [https://github.com/apache/doris/pull/21302](https://github.com/apache/doris/pull/21302)
 
 ## Improvements
 
-### functionality and stability of array and map datatypes
+### Functionality and stability of array and map datatypes
 - [https://github.com/apache/doris/pull/22793](https://github.com/apache/doris/pull/22793)
 - [https://github.com/apache/doris/pull/22927](https://github.com/apache/doris/pull/22927)
 - https://github.com/apache/doris/pull/22738
@@ -45,13 +45,13 @@ Thanks to our community users and developers, 383 improvements and bug fixes hav
 - https://github.com/apache/doris/pull/23250
 - https://github.com/apache/doris/pull/22300
 
-### performance for inverted index query
+### Performance for inverted index query
 - https://github.com/apache/doris/pull/22836
 - https://github.com/apache/doris/pull/23381
 - https://github.com/apache/doris/pull/23389
 - https://github.com/apache/doris/pull/22570
 
-### performance for bitmap, like, scan, agg functions
+### Performance for bitmap, like, scan, agg functions
 - https://github.com/apache/doris/pull/23172
 - https://github.com/apache/doris/pull/23495
 - https://github.com/apache/doris/pull/23476
@@ -59,20 +59,20 @@ Thanks to our community users and developers, 383 improvements and bug fixes hav
 - https://github.com/apache/doris/pull/23182
 - https://github.com/apache/doris/pull/22216
 
-### functionality and stability of CCR
+### Functionality and stability of CCR
 - https://github.com/apache/doris/pull/22447
 - https://github.com/apache/doris/pull/22559
 - https://github.com/apache/doris/pull/22173
 - https://github.com/apache/doris/pull/22678
 
-### merge on write unique table
+### Merge on write unique table
 
 - https://github.com/apache/doris/pull/22282
 - https://github.com/apache/doris/pull/22984
 - https://github.com/apache/doris/pull/21933
 - https://github.com/apache/doris/pull/22874
 
-### optimizer table stats and analyze
+### Optimizer table stats and analyze
 
 - https://github.com/apache/doris/pull/22658
 - https://github.com/apache/doris/pull/22211
@@ -82,7 +82,7 @@ Thanks to our community users and developers, 383 improvements and bug fixes hav
 - https://github.com/apache/doris/pull/22882
 - 
 
-### functionality and performance of multi catalog
+### Functionality and performance of multi catalog
 
 - https://github.com/apache/doris/pull/22949
 - https://github.com/apache/doris/pull/22923
@@ -93,7 +93,7 @@ Thanks to our community users and developers, 383 improvements and bug fixes hav
 - https://github.com/apache/doris/pull/23279
 
 
-## Important Bug fixes
+## Bug fixes
 
 - https://github.com/apache/doris/pull/22673
 - https://github.com/apache/doris/pull/22656
@@ -150,7 +150,7 @@ Thanks to our community users and developers, 383 improvements and bug fixes hav
 See the complete list of improvements and bug fixes on [github](https://github.com/apache/doris/issues?q=label%3Adev%2F2.0.1-merged+is%3Aclosed) .
 
 
-## Big Thanks
+## Credits
 
 Thanks all who contribute to this release:
 
