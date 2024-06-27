@@ -103,7 +103,7 @@ CREATE MATERIALIZED VIEW mv1
             l_suppkey;
 ```
 
-具体的语法可查看[CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+具体的语法可查看 [CREATE-ASYNC-MATERIALIZED-VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md).
 
 ### 查看物化视图元信息
 
@@ -111,9 +111,9 @@ CREATE MATERIALIZED VIEW mv1
 select * from mv_infos("database"="tpch") where Name="mv1";
 ```
 
-物化视图独有的特性可以通过[mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos) 查看
+物化视图独有的特性可以通过 [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos) 查看。
 
-和 table 相关的属性，仍通过[SHOW TABLES](../../sql-manual/sql-statements/Show-Statements/SHOW-TABLES)来查看
+和 Table 相关的属性，仍通过 [SHOW TABLES](../../sql-manual/sql-statements/Show-Statements/SHOW-TABLES) 查看。
 
 ### 刷新物化视图
 
@@ -133,10 +133,10 @@ REFRESH MATERIALIZED VIEW mv1 partitions(p_20231017_20231018);
 
 ### 任务管理
 
-每个物化视图都会默认有一个 job 负责刷新数据，job 用来描述物化视图的刷新策略等信息，每次触发刷新，都会产生一个 task，
-task 用来描述具体的一次刷新信息，例如刷新用的时间，刷新了哪些分区等
+每个物化视图都会默认有一个 Job 负责刷新数据，Job 用来描述物化视图的刷新策略等信息，每次触发刷新，都会产生一个 Task，
+Task 用来描述具体的一次刷新信息，例如刷新用的时间，刷新了哪些分区等
 
-#### 查看物化视图的 job
+#### 查看物化视图的 Job
 
 ```sql
 select * from jobs("type"="mv") order by CreateTime;
@@ -152,9 +152,9 @@ PAUSE MATERIALIZED VIEW JOB ON mv1;
 
 可以暂停物化视图的定时调度
 
-具体的语法可查看[PAUSE MATERIALIZED VIEW JOB](../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
+具体的语法可查看[PAUSE MATERIALIZED VIEW Job](../../sql-manual/sql-statements/Utility-Statements/PAUSE-MATERIALIZED-VIEW.md)
 
-#### 恢复物化视图 job 定时调度
+#### 恢复物化视图 Job 定时调度
 
 ```sql
 RESUME MATERIALIZED VIEW JOB ON mv1;
@@ -164,7 +164,7 @@ RESUME MATERIALIZED VIEW JOB ON mv1;
 
 具体的语法可查看[RESUME MATERIALIZED VIEW JOB](../../sql-manual/sql-statements/Utility-Statements/RESUME-MATERIALIZED-VIEW.md)
 
-#### 查看物化视图的 task
+#### 查看物化视图的 Task
 
 ```sql
 select * from tasks("type"="mv");
@@ -172,13 +172,13 @@ select * from tasks("type"="mv");
 
 具体的语法可查看[tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
 
-#### 取消物化视图的 task
+#### 取消物化视图的 Task
 
 ```sql
 CANCEL MATERIALIZED VIEW TASK realTaskId on mv1;
 ```
 
-可以取消本次 task 的运行
+可以取消本次 Task 的运行
 
 具体的语法可查看[CANCEL MATERIALIZED VIEW TASK](../../sql-manual/sql-statements/Utility-Statements/CANCEL-MATERIALIZED-VIEW-TASK.md)
 
@@ -189,7 +189,7 @@ CANCEL MATERIALIZED VIEW TASK realTaskId on mv1;
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3333");
 ```
 
-修改物化视图的名字，物化视图的刷新方式及物化视图特有的 property 可通过[ALTER ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW.md)来修改
+修改物化视图的名字，物化视图的刷新方式及物化视图特有的 Property 可通过[ALTER ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-ASYNC-MATERIALIZED-VIEW.md)来修改
 
 物化视图本身也是一个 Table，所以 Table 相关的属性，例如副本数，仍通过`ALTER TABLE`相关的语法来修改。
 
@@ -199,7 +199,7 @@ ALTER MATERIALIZED VIEW mv1 set("grace_period"="3333");
 DROP MATERIALIZED VIEW mv1;
 ```
 
-物化视图有专门的删除语法，不能通过 drop table 来删除，
+物化视图有专门的删除语法，不能通过 Drop Table 来删除，
 
 具体的语法可查看[DROP ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-ASYNC-MATERIALIZED-VIEW.md)
 
@@ -214,7 +214,7 @@ DROP MATERIALIZED VIEW mv1;
 创建物化视图的时候不指定分区信息，物化视图就会默认创建一个分区，所有数据都存放在这个分区中。
 
 ### 依赖基表进行分区
-物化视图可以通过多个基表join关联创建。
+物化视图可以通过多个基表 Join 关联创建。
 
 物化视图能选择追随其中一个基表进行分区（建议选择事实表）。
 
@@ -272,7 +272,7 @@ AS
 SELECT t1.o_date as order_date, t1.user_id as user_id, t1.num, t2.age FROM t1 join t2 on t1.user_id=t2.user_id;
 ```
 
-如果如果物化视图的建表语句如下，那么物化视图mv2将和t2一样，有两个分区：
+如果如果物化视图的建表语句如下，那么物化视图 mv2 将和 t2 一样，有两个分区：
 - ('1')
 - ('2')
 
@@ -288,11 +288,11 @@ AS
 SELECT t1.o_date as order_date, t1.user_id as user_id, t1.num, t2.age FROM t1 join t2 on t1.user_id=t2.user_id;
 ```
 #### 基表有多列分区
-目前仅支持hive外表有多列分区。
+目前仅支持 Hive 外表有多列分区。
 
-hive外表有很多多级分区的情况,例如一级分区按照日期，二级分区按照区域。
+Hive 外表有很多多级分区的情况,例如一级分区按照日期，二级分区按照区域。
 
-物化视图可以选择hive的某一级分区列作为物化视图的分区列。
+物化视图可以选择 Hive 的某一级分区列作为物化视图的分区列。
 
 例如hive的建表语句如下：
 ```sql
@@ -311,7 +311,7 @@ partition(year=2021,region="sh")
 partition(year=2022,region="bj")
 partition(year=2022,region="sh")
 ```
-如果物化视图的创建语句如下,那么物化视图mv_hive将有如下三个分区：
+如果物化视图的创建语句如下,那么物化视图 `mv_hive` 将有如下三个分区：
 - ('2020')
 - ('2021')
 - ('2022')
@@ -325,7 +325,7 @@ AS
 SELECT k1,year,region FROM hive1;
 ```
 
-如果物化视图的建表语句如下,那么物化视图mv_hive2将有如下两个分区：
+如果物化视图的建表语句如下,那么物化视图 `mv_hive2` 将有如下两个分区：
 - ('bj')
 - ('sh')
 ```sql
@@ -376,7 +376,7 @@ PROPERTIES (
 AS
 SELECT * FROM t1;
 ```
-如果时间又过了一天，当前时间为 2024-03-29 xx:xx:xx，t1新增一个分区 [("2024-03-29"),("2024-03-30"))，如果此时刷新物化视图，刷新完成后，物化视图会仅有一个分区 [("2024-03-29"),("2024-03-30"))
+如果时间又过了一天，当前时间为 2024-03-29 xx:xx:xx，t1 新增一个分区 [("2024-03-29"),("2024-03-30"))，如果此时刷新物化视图，刷新完成后，物化视图会仅有一个分区 [("2024-03-29"),("2024-03-30"))
 
 如果分区字段是字符串类型，可以设置物化视图属性'partition_date_format',例如'%Y-%m-%d'
 
@@ -384,8 +384,8 @@ SELECT * FROM t1;
 
 基表的数据经过聚合后，每个分区的数据可能变的很少，这种情况下，可以使用分区上卷，减少物化视图的分区数量。
 
-##### list分区
-注：hive分区对应doris的list分区
+##### List 分区
+注：Hive 分区对应 Apache Doris 的 List 分区。
 
 如果基表建表语句如下
 ```sql
@@ -476,7 +476,7 @@ CREATE MATERIALIZED VIEW mv1
     AS
     SELECT * FROM t1;
 ```
-注意：分区是字符串时，上卷的方式还在设计中。现在的行为有可能变动，最好不要使用
+注意：分区是字符串时，上卷的方式还在设计中。现在的行为有可能变动，最好不要使用。
 
 ## 数据刷新
 ### 刷新原理
@@ -484,7 +484,7 @@ CREATE MATERIALIZED VIEW mv1
 ### 触发机制
 物化视图有三种触发刷新机制
 #### 手动触发
-用户通过sql语句触发物化视图的刷新，目前有三种策略：
+用户通过 SQL 语句触发物化视图的刷新，目前有三种策略：
 1. 不关心具体刷新哪些分区，要求刷新完成后，物化视图的数据和基表保持同步.
 ```sql
 REFRESH MATERIALIZED VIEW mvName AUTO;
@@ -497,10 +497,10 @@ REFRESH MATERIALIZED VIEW mvName COMPLETE;
 ```sql
 REFRESH MATERIALIZED VIEW mvName partitions(partitionName1,partitionName2);
 ```
-partitionName可以通过`show partitions from mvName`获取
+`partitionName` 可以通过 `show partitions from mvName` 获取。
 #### 定时触发
 通过物化视图的创建语句指定间隔多久刷新一次数据
-1. 如果物化视图的创建语句如下，要求全量刷新（refresh complete），那么物化视图每10小时刷新一次，并且刷新物化视图的所有分区
+1. 如果物化视图的创建语句如下，要求全量刷新（refresh complete），那么物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 ```sql
 CREATE MATERIALIZED VIEW mv1
 REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
@@ -508,7 +508,7 @@ partition by(`xxx`)
 AS
 select ...;
 ```
-2. 如果物化视图的创建语句如下，要求全量刷新（refresh auto），那么物化视图每10小时刷新一次，并且自动计算需要刷新的分区（2.1.3开始能自动计算hive需要刷新的分区）
+2. 如果物化视图的创建语句如下，要求全量刷新（refresh auto），那么物化视图每10小时刷新一次，并且自动计算需要刷新的分区（2.1.3开始能自动计算 Hive 需要刷新的分区）。
 ```sql
 CREATE MATERIALIZED VIEW mv1
 REFRESH AUTO ON SCHEDULE EVERY 10 hour
@@ -519,9 +519,9 @@ select ...;
 #### 自动触发
 注意：2.1.4开始支持
 
-基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围同`定时触发`
+基表数据发生变更后，自动触发相关物化视图刷新，刷新的分区范围同**定时触发**。
 
-如果物化视图的创建语句如下，那么当t1的数据发生变化，会自动触发物化视图的刷新
+如果物化视图的创建语句如下，那么当 t1 的数据发生变化，会自动触发物化视图的刷新。
 ```sql
 CREATE MATERIALIZED VIEW mv1
 REFRESH ON COMMIT
@@ -532,26 +532,26 @@ select ... from t1;
 
 ## 问题定位
 ### 定位手段
-olapTable的常用命令都适用于物化视图，例如`show partitions`，`desc table`，`show data`等。
+`olapTable` 的常用命令都适用于物化视图，例如`show partitions`，`desc table`，`show data`等。
 
 物化视图独有的命令主要有以下几个：
 #### 查看物化视图元信息
 [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos)
 
 重点关注以下字段：
-- State：如果变为SCHEMA_CHANGE，代表基表的schema发生了变化，此时物化视图将不能用来透明改写(但是不影响直接查询物化视图)，下次刷新任务如果执行成功，将恢复为NORMAL。
-- SchemaChangeDetail：SCHEMA_CHANGE发生的原因
-- RefreshState: 物化视图最后一次任务刷新的状态，如果为FAIL，代表执行失败，可以通过tasks()进一步定位
-- SyncWithBaseTables: 是否和基表数据同步，如果不同步，可通过show partitions进一步判断哪个分区不同步
-#### 查看物化视图的 task
+- State：如果变为 `SCHEMA_CHANGE`，代表基表的 Schema 发生了变化，此时物化视图将不能用来透明改写(但是不影响直接查询物化视图)，下次刷新任务如果执行成功，将恢复为 `NORMAL`。
+- SchemaChangeDetail：`SCHEMA_CHANGE` 发生的原因
+- RefreshState: 物化视图最后一次任务刷新的状态，如果为`FAIL`，代表执行失败，可以通过 `tasks()` 进一步定位
+- SyncWithBaseTables: 是否和基表数据同步，如果不同步，可通过 `show partitions` 进一步判断哪个分区不同步
+#### 查看物化视图的 Task
 [tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
 
 重点关注以下字段：
-- Status：如果为FAILED，代表运行失败，可通过ErrorMsg查看失败原因，也可通过LastQueryId来搜索doris的日志，获取更详细的错误信息
+- Status：如果为 `FAILED`，代表运行失败，可通过 `ErrorMsg` 查看失败原因，也可通过 `LastQueryId` 来搜索 Apache Doris 的日志，获取更详细的错误信息
 - ErrorMsg：失败原因
-- DurationMs：task运行耗时
-- TaskContext：task上下文，可看到task的触发信息
-- RefreshMode：complete代表刷新了全部分区，PARTIAL代表刷新了部分分区，NOT_REFRESH代表不需要刷新任何分区
+- DurationMs：Task 运行耗时
+- TaskContext：Task 上下文，可看到 Task 的触发信息
+- RefreshMode：`COMPLETE` 代表刷新了全部分区，`PARTIAL` 代表刷新了部分分区，`NOT_REFRESH` 代表不需要刷新任何分区
 
 ### 常见问题
 1. 物化视图是如何判断需要刷新哪些分区的？
@@ -584,21 +584,21 @@ olapTable的常用命令都适用于物化视图，例如`show partitions`，`de
 
 5. 物化视图显示和hive数据一致，但是实际上不一致
 
-   物化视图仅能保证物化视图的数据和通过catalog查询的结果一致
+   物化视图仅能保证物化视图的数据和通过 Catalog 查询的结果一致
    
-   catalog有一定的元数据，数据缓存。
+   Catalog 有一定的元数据，数据缓存。
 
-   如果想物化视图和hive数据一致，需要通过refresh catalog等方式，确保catalog的数据和hive的数据一致
+   如果想物化视图和 Hive 数据一致，需要通过 Refresh Catalog 等方式，确保 Catalog 的数据和 Hive 的数据一致
 
-6. 物化视图支持schema change么？
+6. 物化视图支持 Schema Change 么？
 
    不支持修改，因为物化视图的列属性是根据物化视图定义 SQL 推导出来的。目前不支持显示的自定义修改
 
-7. 物化视图使用的基表允许schema change么？
+7. 物化视图使用的基表允许 Schema Change 么？
 
-   允许。但是变更之后，使用到该基表的物化视图的State会NORMAL变为SCHEMA_CHANGE，此时物化视图将不能被用来透明改写，但是不影响直查物化视图
+   允许。但是变更之后，使用到该基表的物化视图的 State 会由 `NORMAL` 变为 `SCHEMA_CHANGE`，此时物化视图将不能被用来透明改写，但是不影响直查物化视图
 
-   如果物化视图下次刷新任务成功，那么State会由SCHEMA_CHANGE变回NORMAL
+   如果物化视图下次刷新任务成功，那么 State 会由 `SCHEMA_CHANGE` 变回 `NORMAL`
 
 8. 主键模型的表能用来创建物化视图么？
 
@@ -626,14 +626,14 @@ olapTable的常用命令都适用于物化视图，例如`show partitions`，`de
 
 ### 数据湖加速
 #### 需求背景
-很多用户有基于doris进行联邦数据查询的需求，doris的多源数据目录（Multi-Catalog）功能让这件事变的很方便，只要创建一个catalog，无须把数据迁移到doris，就可以通过doris对外部数据进行查询
+很多用户有基于 Apache Doris 进行联邦数据查询的需求，Apache Doris 的多源数据目录（Multi-Catalog）功能让这件事变的很方便，只要创建一个 Catalog，无须把数据迁移到 Apache Doris，就可以通过 Apache Doris 对外部数据进行查询
 #### 痛点
 但是这也会造成一些问题，因为查询外部数据的速度可能会收到网络及第三方服务的影响，又可能会很慢，对于响应速度要求比较高的场景，很难满足需求
 #### 如何实现外表的查询加速
-异步物化视图可以基于外部catalog来创建，但是物化视图本身的数据是存在doris内部的，所以查询物化视图的速度会很快。因此，对于响应速度要求比较高的场景，我们可以基于外部catalog创建一个物化视图
+异步物化视图可以基于外部 Catalog 来创建，但是物化视图本身的数据是存在 Apache Doris 内部的，所以查询物化视图的速度会很快。因此，对于响应速度要求比较高的场景，我们可以基于外部 Catalog 创建一个物化视图
 
 ### 数据建模
-有些场景，用户会使用事实表和维度表加工成一张汇总表，之后对此汇总表进行Ad hoc查询，此汇总表也可作为基础指标表用于后续的建模。
+有些场景，用户会使用事实表和维度表加工成一张汇总表，之后对此汇总表进行 Ad hoc 查询，此汇总表也可作为基础指标表用于后续的建模。
     
 此时可以利用物化视图对基表的数据进行建模。之后，还可以利用创建好的物化视图创建更高层级的物化视图（2.1.3支持），灵活满足不同的需求。
 
@@ -641,18 +641,18 @@ olapTable的常用命令都适用于物化视图，例如`show partitions`，`de
 - 第一层的物化视图可以设置为定时刷新，第二层的设置为触发刷新，那么第一层的物化视图刷新完成后，会自动触发第二层物化视图的刷新。
 - 每层的物化视图都设置为定时刷新，那么第二层物化视图刷新的时候，不会考虑第一层的物化视图数据是否和基表同步，只会把第一层物化视图的数据加工后同步到第二层。
 
-## 物化视图和olap的关系
-注意： 2.1.4开始支持
+## 物化视图和 Olap 的关系
+注意： 2.1.4 版本开始支持。
 
-物化视图底层是一个Duplicate模型的olap表。
+物化视图底层是一个 Duplicate 模型的 Olap 表。
 
-理论上支持Duplicate模型的所有功能，但是物化视图为了能正常高效刷新数据，所以对功能做了一些限制：
+理论上支持 Duplicate 模型的所有功能，但是物化视图为了能正常高效刷新数据，所以对功能做了一些限制：
 1. 物化视图的分区是基于基表自动创建维护的，所以不能对物化视图进行分区操作
-2. 由于物化视图背后有相关的job要处理，所以不能用删除table，rename table的命令操作物化视图，需要使用物化视图自身的命令
-3. 物化视图的column是根据查询语句推导出来的，所以不能修改，否则会导致物化视图的刷新任务失败
-4. 物化视图有一些Duplicate table没有的property，这部分property需要通过物化视图的命令进行修改，其他公用的property需要用alter table进行修改
-5. 目前不能对异步物化视图创建ROLLUP，但是能创建索引
-6. desc，show partitions等命令同样适用于物化视图
+2. 由于物化视图背后有相关的 Job 要处理，所以不能用删除 Table 或重命名 Table 的命令操作物化视图，需要使用物化视图自身的命令
+3. 物化视图的 Column是根据查询语句推导出来的，所以不能修改，否则会导致物化视图的刷新任务失败
+4. 物化视图有一些 Duplicate Table 没有的 Property，这部分 Property 需要通过物化视图的命令进行修改，其他公用的 Property 需要用 Alter Table 进行修改
+5. 目前不能对异步物化视图创建 ROLLUP，但是能创建索引
+6. `desc`，`show partitions` 等命令同样适用于物化视图
 
 ## 物化视图的使用
 
