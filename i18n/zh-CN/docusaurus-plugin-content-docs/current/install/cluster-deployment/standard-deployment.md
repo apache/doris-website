@@ -395,7 +395,7 @@ BE 的配置文件在 BE 部署路径下的 conf 目录中，启动 FE 节点前
 从 1.2 版本开始 Doris 支持 Java UDF 函数，BE 依赖于 Java 环境。需要预先配置操作系统 `JAVA_HOME` 环境变量，或者在 BE 配置文件中指定 Java 环境变量。
 
 ```sql
-## 修改 be/be.conf 的 Java 环境变量
+## 修改 be/conf/be.conf 的 Java 环境变量
 JAVA_HOME = <your-java-home-path>
 ```
 
