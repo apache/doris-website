@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-明细模型，也成为 Duplicate 数据模型。
+明细模型，也称为 Duplicate 数据模型。
 
 在某些多维分析场景下，数据既没有主键，也没有聚合需求。针对这种需求，可以使用明细数据模型。
 
