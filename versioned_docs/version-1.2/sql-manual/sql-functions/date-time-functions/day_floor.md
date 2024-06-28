@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## day_floor
-### description
-#### Syntax
+### Description
+**Syntax**
 
 ```sql
 DATETIME DAY_FLOOR(DATETIME datetime)
@@ -41,7 +41,7 @@ Convert the date to the nearest rounding down time of the specified time interva
 - period: specifies how many days each cycle consists of.
 - origin: starting from 0001-01-01T00:00:00.
 
-### example
+### Example
 
 ```
 mysql> select day_floor("2023-07-13 22:28:18", 5);
@@ -53,7 +53,10 @@ mysql> select day_floor("2023-07-13 22:28:18", 5);
 1 row in set (0.07 sec)
 ```
 
-### keywords
+### Keywords
 
     DAY_FLOOR,DAY,FLOOR
 
+### Best Practices
+
+See also [date_floor](./date_floor)
