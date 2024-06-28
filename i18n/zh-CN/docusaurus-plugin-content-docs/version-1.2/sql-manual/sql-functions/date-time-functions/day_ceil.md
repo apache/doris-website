@@ -1,7 +1,7 @@
 ---
 {
-    "title": "date_ceil",
-    "language": "en"
+  "title": "day_ceil",
+  "language": "zh-CN"
 }
 ---
 
@@ -24,83 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## date_ceil
+## day_ceil
 ### Description
 **Syntax**
 
-`DATETIME DATE_CEIL(DATETIME datetime, INTERVAL period type)`
+```sql
+DATETIME DAY_CEIL(DATETIME datetime)
+DATETIME DAY_CEIL(DATETIME datetime, DATETIME origin)
+DATETIME DAY_CEIL(DATETIME datetime, INT period)
+DATETIME DAY_CEIL(DATETIME datetime, INT period, DATETIME origin)
+```
 
+将日期转化为指定的时间间隔周期的最近上取整时刻。
 
-Convert the date to the nearest rounding up time of the specified time interval period.
-
-The datetime parameter is a valid date expression.
-
-The period parameter specifies how many units each cycle consists of, starting from 0001-01-01T00:00:00
-
-Type: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
+- datetime：参数是合法的日期表达式。
+- period：参数是指定每个周期有多少天组成。
+- origin：开始的时间起点，如果不填，默认是 0001-01-01T00:00:00。
 
 ### Example
 
 ```
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 second);
-+--------------------------------------------------------------+
-| second_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
-+--------------------------------------------------------------+
-| 2023-07-13 22:28:20                                          |
-+--------------------------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 minute);
-+--------------------------------------------------------------+
-| minute_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
-+--------------------------------------------------------------+
-| 2023-07-13 22:30:00                                          |
-+--------------------------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 hour);
-+------------------------------------------------------------+
-| hour_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
-+------------------------------------------------------------+
-| 2023-07-13 23:00:00                                        |
-+------------------------------------------------------------+
-1 row in set (0.01 sec)
-
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 day);
+mysql> select day_ceil("2023-07-13 22:28:18", 5);
 +-----------------------------------------------------------+
-| day_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
+| day_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
 +-----------------------------------------------------------+
-| 2023-07-15 00:00:00                                       |
+| 2023-07-17 00:00:00                                       |
 +-----------------------------------------------------------+
-1 row in set (0.00 sec)
-
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 month);
-+-------------------------------------------------------------+
-| month_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
-+-------------------------------------------------------------+
-| 2023-12-01 00:00:00                                         |
-+-------------------------------------------------------------+
 1 row in set (0.01 sec)
-
-mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 year);
-+------------------------------------------------------------+
-| year_ceil('2023-07-13 22:28:18', 5, '0001-01-01 00:00:00') |
-+------------------------------------------------------------+
-| 2026-01-01 00:00:00                                        |
-+------------------------------------------------------------+
-1 row in set (0.00 sec)
 ```
 
 ### Keywords
 
-    DATE_CEIL,DATE,CEIL
+    DAY_CEIL, DAY, CEIL
 
 ### Best Practices
 
-See also
-- [second_ceil](./second_ceil)
-- [minute_ceil](./minute_ceil)
-- [hour_ceil](./hour_ceil)
-- [day_ceil](./day_ceil)
-- [month_ceil](./month_ceil)
-- [year_ceil](./year_ceil)
+还可参阅 [date_ceil](./date_ceil)
