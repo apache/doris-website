@@ -575,7 +575,7 @@ To access multiple Kerberos-enabled Hadoop clusters simultaneously, you need to 
 
     ``` properties
     [realms]
-    REALM1-IP.COM = {
+    REALM1.COM = {
       kdc = 172.21.16.8:88
       admin_server = 172.21.16.8
     }
@@ -594,8 +594,10 @@ To access multiple Kerberos-enabled Hadoop clusters simultaneously, you need to 
       dns_lookup_realm = true
       dns_lookup_kdc = true
     [domain_realm]
-      .your-host.example = REALM2.COM
-      your-host.example = REALM2.COM
+      .your-host.example = REALM1.COM
+      your-host.example = REALM1.COM
+      .your-other-host.example = REALM2.COM
+      your-other-host.example = REALM2.COM
     ```
 
    If not configured correctly, you may see domain_realm-related errors in the `log/be.out` or `log/fe.out` of Doris, such as:

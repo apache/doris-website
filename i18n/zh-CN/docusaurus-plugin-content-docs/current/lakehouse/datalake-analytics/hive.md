@@ -557,7 +557,7 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
     ``` properties
     [realms]
-    REALM1-IP.COM = {
+    REALM1.COM = {
       kdc = 172.21.16.8:88
       admin_server = 172.21.16.8
     }
@@ -576,8 +576,10 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
       dns_lookup_realm = true
       dns_lookup_kdc = true
     [domain_realm]
-      .your-host.example = REALM2.COM
-      your-host.example = REALM2.COM
+      .your-host.example = REALM1.COM
+      your-host.example = REALM1.COM
+      .your-other-host.example = REALM2.COM
+      your-other-host.example = REALM2.COM
     ```
 
     如果未正确配置，通常会在 doris 的 `log/be.out` 或者 `log/fe.out` 看到两种与 domain_realm 有关的错误：

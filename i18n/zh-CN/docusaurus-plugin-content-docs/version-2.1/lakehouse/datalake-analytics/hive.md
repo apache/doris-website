@@ -32,7 +32,7 @@ under the License.
 
 ## 使用须知
 
-1. 将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。 
+1. 将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
 2. hive 支持 1/2/3 版本。
 3. 支持 Managed Table 和 External Table，支持部分 Hive View。
 4. 可以识别 Hive Metastore 中存储的 hive、iceberg、hudi 元数据。
@@ -91,7 +91,7 @@ CREATE CATALOG hive PROPERTIES (
 
 ViewFS 相关参数可以如上面一样添加到 catalog 配置中，也可以添加到 `conf/core-site.xml` 中。
 
-ViewFS 工作原理和参数配置可以参考 hadoop 相关文档，比如 https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html
+ViewFS 工作原理和参数配置可以参考 hadoop 相关文档，比如 <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html>
 
 ### Hive On JuiceFS
 
@@ -284,7 +284,7 @@ CREATE CATALOG hive PROPERTIES (
 | ALTER PARTITION | 如果是重命名，先删除旧名字的分区，再用新名字创建分区，否则失效该分区的缓存。 |
 
 > 当导入数据导致文件变更，分区表会走 ALTER PARTITION event 逻辑，不分区表会走 ALTER TABLE event 逻辑。
-> 
+>
 > 如果绕过 HMS 直接操作文件系统的话，HMS 不会生成对应事件，doris 因此也无法感知
 
 该特性在 fe.conf 中有如下参数：
@@ -328,7 +328,7 @@ Doris 可以正确访问不同 Hive 版本中的 Hive Metastore。在默认情�
 
 你可以在创建 Catalog 时指定 hive 的版本。如访问 Hive 1.1.0 版本：
 
-```sql 
+```sql
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
@@ -395,14 +395,14 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 1. 创建 Catalog 时增加：
 
-	```sql
-	"access_controller.properties.ranger.service.name" = "hive",
-	"access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory",
-	```
+ ```sql
+ "access_controller.properties.ranger.service.name" = "hive",
+ "access_controller.class" = "org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory",
+ ```
 
-	>注意：
-	>
-	> `access_controller.properties.ranger.service.name` 指的是 service 的类型，例如 `hive`，`hdfs` 等。并不是配置文件中 `ranger.plugin.hive.service.name` 的值。
+ >注意：
+ >
+ > `access_controller.properties.ranger.service.name` 指的是 service 的类型，例如 `hive`，`hdfs` 等。并不是配置文件中 `ranger.plugin.hive.service.name` 的值。
 
 2. 配置所有 FE 环境：
 
@@ -485,32 +485,32 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 ### 环境准备
 
-- `krb5.conf`
+* `krb5.conf`
 
-	`krb5.conf` 是 Kerberos 认证协议的配置文件。需将该文件部署在所有 FE 和 BE 节点上。并确保 Doris 集群可以和文件中记录的 KDC 服务连通。
+ `krb5.conf` 是 Kerberos 认证协议的配置文件。需将该文件部署在所有 FE 和 BE 节点上。并确保 Doris 集群可以和文件中记录的 KDC 服务连通。
 
-	默认情况下，该文件位于 Hadoop 集群的 `/etc` 目录下。但请联系 Hadoop 集群管理员获取正确的 `krb5.conf` 文件，并将其部署到所有 FE 和 BE 节点的 `/etc` 目录下。
+ 默认情况下，该文件位于 Hadoop 集群的 `/etc` 目录下。但请联系 Hadoop 集群管理员获取正确的 `krb5.conf` 文件，并将其部署到所有 FE 和 BE 节点的 `/etc` 目录下。
 
-	注意，某些情况下，`krb5.conf` 的文件位置可能取决于环境变量 `KRB5_CONFIG` 或 JVM 参数中的 `-Djava.security.krb5.conf` 参数。请检查这些属性以确定 `krb5.conf` 的确切位置。
+ 注意，某些情况下，`krb5.conf` 的文件位置可能取决于环境变量 `KRB5_CONFIG` 或 JVM 参数中的 `-Djava.security.krb5.conf` 参数。请检查这些属性以确定 `krb5.conf` 的确切位置。
 
-- JVM 参数
+* JVM 参数
 
-	请在 FE 和 BE 的 JVM 参数中添加如下配置（位于 fe.conf 和 be.conf 中）：
+ 请在 FE 和 BE 的 JVM 参数中添加如下配置（位于 fe.conf 和 be.conf 中）：
 
-	- `-Djavax.security.auth.useSubjectCredsOnly=false`
-	- `-Dsun.security.krb5.debug=true`
+ 	* `-Djavax.security.auth.useSubjectCredsOnly=false`
+ 	* `-Dsun.security.krb5.debug=true`
 
-	并重启 FE、BE 节点以确保其生效。
+ 并重启 FE、BE 节点以确保其生效。
 
 ### Catalog 配置
 
 通常情况下，连接 Kerberos 认证的 Hive 集群，需要在 Catalog 中添加如下属性：
 
-- `"hadoop.security.authentication" = "kerberos"`：开启 kerberos 认证方式。
--  `"hadoop.kerberos.principal" = "your_principal"`：HDFS namenode 的 principal。通常是 `hdfs-site.xml` 的 `dfs.namenode.kerberos.principal` 配置。
--  `"hadoop.kerberos.keytab" = "/path/to/your_keytab"`：HDFS namenode 的 keytab 文件。通常是 `hdfs-site.xml` 的 `dfs.namenode.keytab.file` 配置。注意，这个文件需要部署到所有 FE 和 BE 节点相同的目录下（可自定义）。
-- `"yarn.resourcemanager.principal" = "your_principal"`：Yarn Resource Manager 的 principal，可以在 `yarn-site.xml` 中获取。
-- `"hive.metastore.kerberos.principal" = "your_principal"`：Hive metastore 的 principal。可以再 `hive-site.xml` 中。
+* `"hadoop.security.authentication" = "kerberos"`：开启 kerberos 认证方式。
+* `"hadoop.kerberos.principal" = "your_principal"`：HDFS namenode 的 principal。通常是 `hdfs-site.xml` 的 `dfs.namenode.kerberos.principal` 配置。
+* `"hadoop.kerberos.keytab" = "/path/to/your_keytab"`：HDFS namenode 的 keytab 文件。通常是 `hdfs-site.xml` 的 `dfs.namenode.keytab.file` 配置。注意，这个文件需要部署到所有 FE 和 BE 节点相同的目录下（可自定义）。
+* `"yarn.resourcemanager.principal" = "your_principal"`：Yarn Resource Manager 的 principal，可以在 `yarn-site.xml` 中获取。
+* `"hive.metastore.kerberos.principal" = "your_principal"`：Hive metastore 的 principal。可以再 `hive-site.xml` 中。
 
 > 注：建议使用 `kinit -kt your_principal /path/to/your_keytab` 以及 `klist -k /path/to/your_keytab` 来
 
@@ -547,19 +547,96 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 );
 ```
 
+### 多 Kerberos 集群配置
+
+如需同时访问多个启用了 Kerberos 的 Hadoop 集群，需要修改 `krb5.conf` 文件并且配置`hadoop.security.auth_to_local`属性，具体操作如下：
+
+1. 在 krb5.conf 文件配置 realms
+
+   配置多集群时，需要把多个 realm 配置到一个 `krb5.conf` 里头，kdc 和 admin_server 也可以是域名。
+
+    ``` properties
+    [realms]
+    REALM1.COM = {
+      kdc = 172.21.16.8:88
+      admin_server = 172.21.16.8
+    }
+    REALM2.COM = {
+      kdc = kdc_hostname:88
+      admin_server = kdc_hostname
+    }
+    ```
+
+2. 在 krb5.conf 文件配置 domain_realm，
+
+   查找 kdc 时使用 principal 中的 domain_name 去找相对应的 realm
+
+    ``` properties
+    [libdefaults]
+      dns_lookup_realm = true
+      dns_lookup_kdc = true
+    [domain_realm]
+      .your-host.example = REALM1.COM
+      your-host.example = REALM1.COM
+      .your-other-host.example = REALM2.COM
+      your-other-host.example = REALM2.COM
+    ```
+
+   如果未正确配置，通常会在 doris 的 `log/be.out` 或者 `log/fe.out` 看到两种与 domain_realm 有关的错误：
+    * Unable to locate KDC for realm / Cannot locate KDC
+    * No service creds
+
+3. 配置 domain 到 realm 的映射
+
+   为了在多集群环境下，能匹配到不同 kerberos 服用用到的的 principal，推荐 `core-site.xml` 添加或修改如下配置：
+
+    ```xml
+    <property>
+        <name>hadoop.security.auth_to_local</name>
+        <value>RULE:[1:$1@$0](^.*@.*$)s/^(.*)@.*$/$1/g
+               RULE:[2:$1@$0](^.*@.*$)s/^(.*)@.*$/$1/g
+               DEFAULT</value>
+    </property>
+    ```
+
+   如果需要在 Catalog 中单独生效，可以直接配置在 properties 中：
+
+    ```sql
+    CREATE CATALOG hive_krb PROPERTIES (
+        'type'='hms',
+        'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
+        'hive.metastore.sasl.enabled' = 'true',
+        'hive.metastore.kerberos.principal' = 'your-other-hms-principal',
+        'hadoop.security.authentication' = 'kerberos',
+        'hadoop.kerberos.keytab' = '/your-other-keytab-filepath/your-other.keytab',   
+        'hadoop.kerberos.principal' = 'your-other-principal@YOUR.COM',
+        'yarn.resourcemanager.principal' = 'your-other-rm-principal',
+        'hadoop.security.auth_to_local' = 'RULE:[1:$1@$0](^.*@.*$)s/^(.*)@.*$/$1/g
+                                       RULE:[2:$1@$0](^.*@.*$)s/^(.*)@.*$/$1/g
+                                       DEFAULT'
+    );
+    ```
+
+4. 重启 Doris 服务
+
+   检验映射规则是否能正确匹配，只要看访问不同集群时是否出现错误：`NoMatchingRule: No rules applied to user/domain_name@REALM.COM`
+
 ### 问题排查
 
 如遇 Kerberos 认证问题，在设置了 JVM 参数 `-Dsun.security.krb5.debug=true` 后，会在 `fe.out` 或 `be.out` 中打印 Kerberos 认证相关信息。可以参考 [FAQ](../../faq/lakehouse-faq) 中的相关错误进行排查。
 
 ## Hive Transactional 表
-Hive transactional 表是 Hive 中支持 ACID 语义的表。详情可见：https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions
 
-### Hive Transactional 表支持情况：
+Hive transactional 表是 Hive 中支持 ACID 语义的表。详情可见：<https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions>
+
+### Hive Transactional 表支持情况
+
 |表类型 | 在 Hive 中支持的操作|Hive 表属性 | 支持的 Hive 版本|
 |---|---|---|---|
 |Full-ACID Transactional Table |支持 Insert, Update, Delete 操作|'transactional'='true', 'transactional_properties'='insert_only'|3.x，2.x，其中 2.x 需要在 Hive 中执行完 major compaction 才可以加载|
 |Insert-Only Transactional Table|只支持 Insert 操作|'transactional'='true'|3.x，2.x|
 
-### 当前限制：
+### 当前限制
+
 目前不支持 Original Files 的场景。
 当一个表转换成 Transactional 表之后，后续新写的数据文件会使用 Hive Transactional 表的 schema，但是已经存在的数据文件是不会转化成 Transactional 表的 schema，这样的文件称为 Original Files。
