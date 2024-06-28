@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-**Apache Doris 2.1.4 版本已于 2024 年 6 月 26 日正式发布。**在 2.1.4 版本中，我们对数据湖分析场景进行了多项功能体验优化，重点修复了旧版本中异常内存占用的问题，同时提交了若干改进项以及问题修复，进一步提升了系统的性能、稳定性及易用性，欢迎大家下载使用。
+**Apache Doris 2.1.4 版本已于 2024 年 6 月 26 日正式发布。** 在 2.1.4 版本中，我们对数据湖分析场景进行了多项功能体验优化，重点修复了旧版本中异常内存占用的问题，同时提交了若干改进项以及问题修复，进一步提升了系统的性能、稳定性及易用性，欢迎大家下载使用。
 
 **官网下载：** https://doris.apache.org/download/
 
@@ -40,21 +40,21 @@ under the License.
 
 	关于更多信息，请参考文档：
 	
-  - [BE 日志管理](https://doris.apache.org/zh-CN/docs/admin-manual/log-management/be-log)
+  - [BE 日志管理](../admin-manual/log-management/be-log.md)
   
-  - - [FE 日志管理](https://doris.apache.org/zh-CN/docs/admin-manual/log-management/fe-log)
+  - [FE 日志管理](../admin-manual/log-management/fe-log.md)
 
 - 如果建表时没有填写表注释，默认注释为空，不再使用表类型作为默认表注释。  [#36025](https://github.com/apache/doris/pull/36025)
 
 - DECIMALV3 的默认精度从 (9, 0) 调整为 (38,9) ，以和最初发布此功能的版本保持兼容。 [#36316](https://github.com/apache/doris/pull/36316)
 
-## 新功能
+## 新增功能
 
-### 01 查询优化器
+### 查询优化器
 
 - **支持 FE 火焰图工具**：在 FE 部署目录 `${DORIS_FE_HOME}/bin` 中会增加`profile_fe.sh` 脚本，可以利用 async-profiler 工具生成 FE 的火焰图，用以发现性能瓶颈点。
   
-  关于更多信息，请参考文档：[使用 FE Profiler 生成火焰图](https://doris.apache.org/zh-CN/community/developer-guide/fe-profiler)
+  关于更多信息，请参考文档：[使用 FE Profiler 生成火焰图](/community/developer-guide/fe-profiler.md)
 
 - **支持 SELECT DISTINCT 与聚合函数同时使用**：支持 `SELECT DISTINCT` 与聚合函数同时使用，在一个查询中同时去重和进行聚合操作，如 SUM、MIN/MAX 等。
 
@@ -62,47 +62,45 @@ under the License.
 
 - **查询优化器全面支持高并发点查询功能**：在 2.1.4 版本之后，查询优化器全面支持高并发点查询功能，所有符合点查询条件的 SQL 语句会自动走短路径查询，无需用户在客户端额外设置 `set experimental_enable_nereids_planner = false`。 [#36205](https://github.com/apache/doris/pull/36205).
 
-### 02  湖仓一体
+### 湖仓一体
 
 - **支持 Paimon 的原生读取器来处理 Deletion Vector：** Deletion Vector 主要用于标记或追踪哪些数据已被删除或标记为删除，通常应用在需要保留历史数据的场景，基于本优化可以提升大量数据更新或删除时的处理效率。 [#35241](https://github.com/apache/doris/pull/35241)
   
-  关于更多信息，请参考文档：[数据湖分析 - Paimon](https://doris.apache.org/zh-CN/docs/lakehouse/datalake-analytics/paimon)
+  关于更多信息，请参考文档：[数据湖分析 - Paimon](../lakehouse/datalake-analytics/paimon.md)
   
 -  **支持在表值函数（TVF）中使用 Resource**：TVF 功能为 Apache Doris 提供了直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析的能力。通过在 TVF 中引用 Resource，可以避免重复填写连接信息，提升使用体验。  [#35139](https://github.com/apache/doris/pull/35139)
 
-	关于更多信息，请参考文档：[表函数 - HDFS](https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/table-functions/hdfs/)
+	关于更多信息，请参考文档：[表函数 - HDFS](../sql-manual/sql-functions/table-functions/hdfs.md)
 
 - **支持通过 Ranger 插件实现数据脱敏**：开启 Ranger 鉴权功能后，支持使用 Ranger 中的 Data Mask 功能进行数据脱敏。
 
-	关于更多信息，请参考文档：[基于 Apache Ranger 的鉴权管理](https://doris.apache.org/zh-CN/docs/admin-manual/auth/ranger/#data-mask-%E7%A4%BA%E4%BE%8B)
+	关于更多信息，请参考文档：[基于 Apache Ranger 的鉴权管理](https://doris.apache.org/zh-CN/docs/admin-manual/auth/ranger/#%E5%AE%89%E8%A3%85-doris-ranger-%E6%8F%92%E4%BB%B6)
 
-### 03 异步物化视图
+### 异步物化视图
 
-- 构建支持分区上卷。 [#31812](https://github.com/apache/doris/pull/31812)
+- 构建支持内表触发式更新，如果物化视图使用的是内表，如果内表数据发生变化，可以触发物化视图刷新，需要在创建物化视图时指定 REFRESH ON COMMIT。
 
-- 构建支持触发式更新。 [#34548](https://github.com/apache/doris/pull/34548)
+- 支持单表透明改写。
 
-- 构建支持指定 `store_row_column`。 [#35860](https://github.com/apache/doris/pull/35860)
+  关于更多信息，请参考文档：[查询异步物化视图](../query/view-materialized-view/query-async-materialized-view.md)
 
-- 构建支持指定 Storage Medium。
+- 透明改写支持 agg_state, agg_union 类型的聚合上卷，物化视图可以定义为 agg_state 或者 agg_union，查询使用具体的聚合函数，或者使用 agg_merge
 
-- 透明改写支持单表异步物化视图。[#34646](https://github.com/apache/doris/pull/34646)
+  关于更多信息，请参考文档：[AGG_STATE](../sql-manual/sql-types/Data-Types/AGG_STATE.md)
 
-- 透明改写支持 AGG_STATE 类型的聚合上卷。 [#35026](https://github.com/apache/doris/pull/35026)
-
-### 04 其他
+### 其他
 
 - **新增 `replace_empty` 函数**：将字符串中的子字符串进行替换，当旧字符串为空时，会将新字符串插入到原有字符串的每个字符前以及最后。
   
-  关于更多信息，请参考文档：[字符串函数 - REPLACE_EMPTY](https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions/replace_empty)
+  关于更多信息，请参考文档：[字符串函数 - REPLACE_EMPTY](../sql-manual/sql-functions/string-functions/replace_empty.md)
 
 - 支持 `show storage policy using` 语句：支持查看所有或指定存储策略关联的表和分区。
 
-	关于更多信息，请参考文档：[SQL 语句 - SHOW](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING)
+	关于更多信息，请参考文档：[SQL 语句 - SHOW](../sql-manual/sql-statements/Show-Statements/SHOW-STORAGE-POLICY-USING.md)
 
 - **支持 BE 侧的 JVM 指标：** 通过在 `be.conf` 配置文件中设置`enable_jvm_monitor=true`，可以启用对 BE 节点 JVM 的监控和指标收集，有助于了解 BE JVM 的资源使用情况，以便进行故障排除和性能优化。
 
-## 功能优化
+## 改进优化
 
 - 支持为中文列名创建倒排索引。[#36321](https://github.com/apache/doris/pull/36321)
 
@@ -124,9 +122,17 @@ under the License.
 
 - 支持分批获取 Hudi 和 Hive 文件列表，当存在大量数据文件时可以提升数据扫描性能。  [#35107](https://github.com/apache/doris/pull/35107)
 
-## 问题修复
+  - 120 万文件场景中，获取文件列表的时间由 390 秒缩减到 46 秒。
 
-### 01 查询优化器
+- 创建异步物化试图时，禁止使用动态分区。
+
+- 支持检测 Hive 外表分区数据是否和异步物化试图同步。
+
+- 允许异步物化试图创建索引。
+
+## 缺陷修复
+
+### 查询优化器
 
 - 修复 SQL Cache 在 `truncate paritition` 后依然返回旧结果的问题。[#34698](https://github.com/apache/doris/pull/34698)
 
@@ -162,31 +168,37 @@ under the License.
 
 - 修复偶现的 `<=>` 被错误转换为 `=` 的问题。[#36521](https://github.com/apache/doris/pull/36521)
 
-### 02 查询执行
+### 查询执行
 
 - 修复 Pipeline 引擎上达到限定的行数且内存没有释放时查询被挂起的问题。 [#35746](https://github.com/apache/doris/pull/35746)
 
 - 修复当设置 `enable_decimal256 =true` 且查询优化器回退到旧版本时 BE 发生 Core 的问题。[#35731](https://github.com/apache/doris/pull/35731)
 
-### 03 物化视图
+### 物化视图
 
+- 修复构建异步物化试图指定 store_row_column 属性，be core 的问题。
+  
+- 修复构建异步物化视图指定 storage_medium 不生效的问题。
+
+- 修复基表删除后，异步物化视图 show partitions 报错的问题。
+ 
 - 修复异步物化视图引起备份恢复异常的问题。
 
 - 修复分区改写可能导致错误结果的问题。
 
-### 04 半结构化数据分析
+### 半结构化数据分析
 
 - 修复带有空 Key 的 VARIANT 类型发生 Core 的问题。[#35671](https://github.com/apache/doris/pull/35671)
 
 - Bitmap 索引和 BloomFilter 索引不应支持轻量级索引变更。[#35225](https://github.com/apache/doris/pull/35225)
 
-### 05 主键模型
+### 主键模型
 
 - 修复在有部分列更新导入的情况下发生异常重启，可能会产生重复 Key 的问题。[#35678](https://github.com/apache/doris/pull/35678)
 
 - 修复在内存紧张时发生 Clone 时 BE 可能会发生 Core 的问题。[#34702](https://github.com/apache/doris/pull/34702)
 
-### 06 湖仓一体
+### 湖仓一体
 
 - 修复创建 Hive 表时无法使用完全限定名（如 `ctl.db.tbl`）的问题。 [#34984](https://github.com/apache/doris/pull/34984)
 
@@ -228,7 +240,7 @@ under the License.
 
 - 允许用户定义的属性通过表函数传递给 S3 SDK。[#35515](https://github.com/apache/doris/pull/35515)
 
-### 07 数据导入
+### 数据导入
 
 - 修复 `CANCEL LOAD` 命令不生效的问题。[#35352](https://github.com/apache/doris/pull/35352)
 
@@ -236,7 +248,7 @@ under the License.
 
 - 修复 bRPC 通过 HTTP 发送大数据文件序列化的问题。 [#36169](https://github.com/apache/doris/pull/36169)
 
-### 08 数据管控
+### 数据管控
 
 - 修复了在将 DDL 或 DML 转发到主 FE 后，ConnectionContext 中的资源标签未设置的问题。 [#35618](https://github.com/apache/doris/pull/35618)
 
@@ -250,13 +262,13 @@ under the License.
 
 - 修复了使用旧优化器查询或插入自动分区表时，表的分区列发生变化的问题。 [#36514](https://github.com/apache/doris/pull/36514)
 
-### 09 内存管理
+### 内存管理
 
 - 修复日志中频繁报错 Cgroup meminfo 获取失败的问题。 [#35425](https://github.com/apache/doris/pull/35425)
 
 - 修复使用 BloomFilter 时 Segment 缓存大小不受控制导致进程内存异常增长的问题。[#34871](https://github.com/apache/doris/pull/34871)
 
-### 10 权限
+### 权限
 
 - 修复开启表名大小写不敏感后，权限设置无效的问题。[#36557](https://github.com/apache/doris/pull/36557)
 
@@ -264,7 +276,7 @@ under the License.
 
 - 修复了无法检查 `SELECT COUNT(*)` 语句授权的问题。[#35465](https://github.com/apache/doris/pull/35465)
 
-### 11 其他
+### 其他
 
 - 修复 MySQL 连接损坏情况下，客户端 JDBC 程序无法关闭连接的问题。 [#36616](https://github.com/apache/doris/pull/36616)
 
