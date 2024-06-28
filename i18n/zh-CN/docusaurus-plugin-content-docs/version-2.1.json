@@ -59,6 +59,10 @@
     "message": "数据导出",
     "description": "The label for category Exporting Data in sidebar docs"
   },
+  "sidebar.docs.category.Job Scheduler": {
+    "message": "作业调度",
+    "description": "The label for category job scheduler in sidebar docs"
+  },  
   "sidebar.docs.category.Lakehouse": {
     "message": "湖仓一体",
     "description": "The label for category Lakehouse in sidebar docs"
