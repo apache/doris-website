@@ -530,6 +530,7 @@
                         "ecosystem/bi/datagrip",
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
+                        "ecosystem/bi/tableau",
                         "ecosystem/bi/quicksight"
                     ]
                 }
