@@ -54,7 +54,8 @@
             "type": "category",
             "label": "Database Connection",
             "items": [
-                "db-connect/database-connect"
+                "db-connect/database-connect",
+                "db-connect/arrow-flight-sql-connect"
             ]
         },
         {
@@ -82,10 +83,9 @@
                     "items": [
                         "table-design/index/index-overview",
                         "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
                         "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index",
-                        "table-design/index/bitmap-index",
-                        "table-design/index/inverted-index"
+                        "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
                 "table-design/auto-increment",
@@ -265,6 +265,7 @@
                         "lakehouse/datalake-analytics/hudi",
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
+                        "lakehouse/datalake-analytics/lakesoul",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"
@@ -367,6 +368,14 @@
                 },
                 {
                     "type": "category",
+                    "label": "Log Management",
+                    "items": [
+                        "admin-manual/log-management/fe-log",
+                        "admin-manual/log-management/be-log"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Maintenance",
                     "items": [
                         {
@@ -384,8 +393,7 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/debug-log"
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
@@ -522,7 +530,8 @@
                         "ecosystem/bi/datagrip",
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
-                        "ecosystem/bi/tableau"
+                        "ecosystem/bi/tableau",
+                        "ecosystem/bi/quicksight"
                     ]
                 }
             ]
@@ -729,6 +738,7 @@
                                 "sql-manual/sql-functions/string-functions/elt",
                                 "sql-manual/sql-functions/string-functions/instr",
                                 "sql-manual/sql-functions/string-functions/locate",
+                                "sql-manual/sql-functions/string-functions/overlay",
                                 "sql-manual/sql-functions/string-functions/field",
                                 "sql-manual/sql-functions/string-functions/find-in-set",
                                 "sql-manual/sql-functions/string-functions/replace",
@@ -940,7 +950,8 @@
                                 "sql-manual/sql-functions/json-functions/get-json-string",
                                 "sql-manual/sql-functions/json-functions/json-insert",
                                 "sql-manual/sql-functions/json-functions/json-replace",
-                                "sql-manual/sql-functions/json-functions/json-set"
+                                "sql-manual/sql-functions/json-functions/json-set",
+                                "sql-manual/sql-functions/json-functions/json-keys"
                             ]
                         },
                         {
@@ -1139,17 +1150,17 @@
                                 "sql-manual/sql-types/Data-Types/CHAR",
                                 "sql-manual/sql-types/Data-Types/VARCHAR",
                                 "sql-manual/sql-types/Data-Types/STRING",
-                                "sql-manual/sql-types/Data-Types/HLL",
-                                "sql-manual/sql-types/Data-Types/BITMAP",
-                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/IPV4",
+                                "sql-manual/sql-types/Data-Types/IPV6",
                                 "sql-manual/sql-types/Data-Types/ARRAY",
                                 "sql-manual/sql-types/Data-Types/MAP",
                                 "sql-manual/sql-types/Data-Types/STRUCT",
                                 "sql-manual/sql-types/Data-Types/JSON",
-                                "sql-manual/sql-types/Data-Types/AGG_STATE",
                                 "sql-manual/sql-types/Data-Types/VARIANT",
-                                "sql-manual/sql-types/Data-Types/IPV4",
-                                "sql-manual/sql-types/Data-Types/IPV6"
+                                "sql-manual/sql-types/Data-Types/HLL",
+                                "sql-manual/sql-types/Data-Types/BITMAP",
+                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/AGG_STATE"
                             ]
                         }
                     ]
@@ -1508,10 +1519,12 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.4",
                 "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",
                 "releasenotes/release-2.1.0",
+                "releasenotes/release-2.0.12",
                 "releasenotes/release-2.0.11",
                 "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",

@@ -34,7 +34,7 @@ Thanks to our community users and developers, about 83 improvements and bug fixe
 **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
 
-## Improvement and Optimizations
+## Improvements
 
 - This enhancement introduces the `read_only` and `super_read_only` variables to the database system, ensuring compatibility with MySQL's read-only modes.
 

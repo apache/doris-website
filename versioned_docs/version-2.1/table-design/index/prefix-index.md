@@ -25,21 +25,38 @@ under the License.
 -->
 
 
-Doris stores data in a data structure similar to SSTable (Sorted String Table), which is an ordered data structure that can sort and store data according to specified columns. Performing queries based on sorted columns in this data structure is highly efficient.
+## Index Principles
 
-In the three data models of Aggregate, Unique, and Duplicate, the underlying data storage is sorted and stored according to the columns specified in the AGGREGATE KEY, UNIQUE KEY, and DUPLICATE KEY of their respective table creation statements. These keys are referred to as Sort Keys. With the help of Sort Keys, Doris can quickly find the data to be processed by specifying conditions on the sorted columns during queries, reducing the complexity of searching and thus accelerating the queries without the need to scan the entire table.
+Doris stores data in a structure similar to SSTable (Sorted String Table). This structure is an ordered data structure that can be sorted and stored according to one or more specified columns. In such a data structure, looking up conditions on all or part of the sorted columns is highly efficient.
 
-Based on the Sort Keys, Prefix Indexes are introduced. A Prefix Index is a sparse index. In the table, a logical data block is formed according to the corresponding number of rows. Each logical data block stores an index entry in the Prefix Index table. The length of the index entry does not exceed 36 bytes, and its content is the prefix composed of the sorted columns of the first row of data in the data block. When searching the Prefix Index table, it can help determine the starting row number of the logical data block where the row data is located. Because the Prefix Index is relatively small, it can be fully cached in memory, allowing for rapid data block localization and significantly improving query efficiency.
+In the Aggregate, Unique, and Duplicate data models, the underlying data storage is sorted according to the columns specified in the CREATE TABLE statement under AGGREGATE KEY, UNIQUE KEY, and DUPLICATE KEY respectively. These keys are referred to as sort keys. With sort keys, Doris can quickly locate the required data without scanning the entire table by specifying conditions on the sorted columns during a query, thereby reducing search complexity and speeding up the query.
+
+Based on the sort keys, Doris introduces a prefix index. The prefix index is a sparse index. The data in the table forms a logical data block (Data Block) according to the corresponding number of rows. Each logical data block stores an index entry in the prefix index table, where the length of the index entry does not exceed 36 bytes. The entry content is the prefix composed of the sorted columns of the first row in the data block. When looking up the prefix index table, it helps determine the starting row number of the logical data block where the row data is located. Because the prefix index is relatively small, it can be fully cached in memory, allowing for quick data block location and significantly improving query efficiency.
 
 :::tip
 
-The first 36 bytes of a row of data in a data block serve as the prefix index for that row. When encountering a `VARCHAR` type, the prefix index will be truncated directly. If the first column is of the `VARCHAR` type, truncation will occur even if the length does not reach 36 bytes.
+The first 36 bytes of a row in a data block are used as the prefix index for that row. When encountering a VARCHAR type, the prefix index is directly truncated. If the first column is VARCHAR, even if it does not reach 36 bytes, it will be directly truncated, and the subsequent columns will not be included in the prefix index.
+:::
+
+## Use Cases
+
+Prefix indexes can speed up equality queries and range queries.
+
+:::tip
+
+Since the KEY definition of a table is unique, a table can only have one type of prefix index. For queries using other columns that cannot hit the prefix index as conditions, the efficiency might not meet the requirements. There are two solutions:
+1. Create an inverted index on the columns that require accelerated queries, as a table can have many inverted indexes.
+2. For DUPLICATE tables, multi-prefix indexes can be indirectly achieved by creating corresponding strongly consistent materialized views with adjusted column orders. For more details, refer to query acceleration/materialized views.
 
 :::
 
-## Example
+## Syntax
 
-- If the sort keys of the table are as follows: 5 columns, then the prefix index would be: user_id (8 Bytes), age (4 Bytes), message (prefix 20 Bytes).
+There is no specific syntax for defining a prefix index. When creating a table, the first 36 bytes of the table's KEY are automatically taken as the prefix index.
+
+## Example Usage
+
+-   Suppose the sorted columns of a table are as follows, then the prefix index would be: user_id (8 Bytes) + age (4 Bytes) + message (prefix 20 Bytes).
 
 | ColumnName     | Type         |
 | -------------- | ------------ |
@@ -49,7 +66,7 @@ The first 36 bytes of a row of data in a data block serve as the prefix index fo
 | max_dwell_time | DATETIME     |
 | min_dwell_time | DATETIME     |
 
-- If the sort keys of the table consist of 5 columns and the first column is `user_name` of the VARCHAR type, then the prefix index would be `user_name` (truncated to 20 Bytes). Even though the total size of the prefix index has not reached 36 bytes, truncation occurs because it encounters a VARCHAR column, and no further columns are included.
+-   Suppose the sorted columns of a table are as follows, then the prefix index would be user_name (20 Bytes). Even if it does not reach 36 bytes, it is directly truncated due to encountering VARCHAR, and subsequent columns are not included.
 
 | ColumnName     | Type         |
 | -------------- | ------------ |
@@ -59,20 +76,16 @@ The first 36 bytes of a row of data in a data block serve as the prefix index fo
 | max_dwell_time | DATETIME     |
 | min_dwell_time | DATETIME     |
 
-- When our query conditions match the prefix index, it can greatly accelerate the query speed. For example, in the first case, executing the following query:
+-   When our query condition is the prefix of the prefix index, it can significantly speed up the query. For example, in the first example, executing the following query:
 
-```
-SELECT * FROM table WHERE user_id=1829239 and age=20；
-```
-
-The efficiency of that query would be much higher than the following query:
-
-```
-SELECT * FROM table WHERE age=20；
+```sql
+SELECT * FROM table WHERE user_id = 1829239 AND age = 20;
 ```
 
-Therefore, when creating a table, selecting the correct order of columns can greatly enhance query efficiency.
+This query will be much more efficient than the following query:
 
-## Multiple prefix indexes
+```sql
+SELECT * FROM table WHERE age = 20;
+```
 
-Due to the specified column order during table creation, a table typically has only one type of prefix index. This may not meet the efficiency requirements for queries that use other columns as conditions, which do not hit the prefix index. In such cases, multiple prefix indexes can be indirectly implemented by creating corresponding strongly consistent materialized views of the single table with adjusted column orders. For more details, please refer to  [Materialized Views](../../query/view-materialized-view/materialized-view).
+Therefore, choosing the correct column order when creating a table can greatly improve query efficiency.

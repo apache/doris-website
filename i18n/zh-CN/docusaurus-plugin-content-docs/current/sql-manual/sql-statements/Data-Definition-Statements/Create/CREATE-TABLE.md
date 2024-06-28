@@ -60,39 +60,39 @@ distribution_desc
     * `column_type`
         列类型，支持以下类型：
         ```
-        TINYINT（1字节）
+        TINYINT（1 字节）
             范围：-2^7 + 1 ~ 2^7 - 1
-        SMALLINT（2字节）
+        SMALLINT（2 字节）
             范围：-2^15 + 1 ~ 2^15 - 1
-        INT（4字节）
+        INT（4 字节）
             范围：-2^31 + 1 ~ 2^31 - 1
-        BIGINT（8字节）
+        BIGINT（8 字节）
             范围：-2^63 + 1 ~ 2^63 - 1
-        LARGEINT（16字节）
+        LARGEINT（16 字节）
             范围：-2^127 + 1 ~ 2^127 - 1
-        FLOAT（4字节）
+        FLOAT（4 字节）
             支持科学计数法
-        DOUBLE（12字节）
+        DOUBLE（12 字节）
             支持科学计数法
-        DECIMAL[(precision, scale)] (16字节)
+        DECIMAL[(PRECISION, SCALE)] (16 字节)
             保证精度的小数类型。默认是 DECIMAL(9, 0)
-            precision: 1 ~ 27
-            scale: 0 ~ 9
+            PRECISION: 1 ~ 27
+            SCALE: 0 ~ 9
             其中整数部分为 1 ~ 18
             不支持科学计数法
-        DATE（3字节）
+        DATE（3 字节）
             范围：0000-01-01 ~ 9999-12-31
-        DATETIME（8字节）
+        DATETIME（8 字节）
             范围：0000-01-01 00:00:00 ~ 9999-12-31 23:59:59
         CHAR[(length)]
-            定长字符串。长度范围：1 ~ 255。默认为1
+            定长字符串。长度范围：1 ~ 255。默认为 1
         VARCHAR[(length)]
-            变长字符串。长度范围：1 ~ 65533。默认为65533
-        HLL (1~16385个字节)
+            变长字符串。长度范围：1 ~ 65533。默认为 65533
+        HLL (1~16385 个字节)
             HyperLogLog 列类型，不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
             必须配合 HLL_UNION 聚合类型使用。
         BITMAP
-            bitmap 列类型，不需要指定长度和默认值。表示整型的集合，元素最大支持到2^64 - 1。
+            bitmap 列类型，不需要指定长度和默认值。表示整型的集合，元素最大支持到 2^64 - 1。
             必须配合 BITMAP_UNION 聚合类型使用。
         ```
     * `aggr_type`
@@ -102,23 +102,23 @@ distribution_desc
         MIN：求最小值。适合数值类型。
         MAX：求最大值。适合数值类型。
         REPLACE：替换。对于维度列相同的行，指标列会按照导入的先后顺序，后导入的替换先导入的。
-        REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于null值，不做替换。这里要注意的是字段默认值要给NULL，而不能是空字符串，如果是空字符串，会给你替换成空字符串。
+        REPLACE_IF_NOT_NULL：非空值替换。和 REPLACE 的区别在于对于 NULL 值，不做替换。这里要注意的是字段默认值要给 NULL，而不能是空字符串，如果是空字符串，会给你替换成空字符串。
         HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
         BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
         ```
     * <version since="2.1" type="inline">`AUTO_INCREMENT(auto_inc_start_value)`</version>
             
-        是否为自增列，自增列可以用来为新插入的行生成一个唯一标识。在插入表数据时如果没有指定自增列的值，则会自动生成一个合法的值。当自增列被显示地插入NULL时，其值也会被替换为生成的合法值。需要注意的是，处于性能考虑，BE会在内存中缓存部分自增列的值，所以自增列自动生成的值只能保证单调性和唯一性，无法保证严格的连续性。
-        一张表中至多有一个列是自增列，自增列必须是BIGINT类型，且必须为NOT NULL。
-        Duplicate模型表和Unique模型表均支持自增列。
-        可以通过给定`auto_inc_start_value`的方式指定自增列的起始值，如果不指定，则默认起始值为1。
+        是否为自增列，自增列可以用来为新插入的行生成一个唯一标识。在插入表数据时如果没有指定自增列的值，则会自动生成一个合法的值。当自增列被显示地插入 NULL 时，其值也会被替换为生成的合法值。需要注意的是，处于性能考虑，BE 会在内存中缓存部分自增列的值，所以自增列自动生成的值只能保证单调性和唯一性，无法保证严格的连续性。
+        一张表中至多有一个列是自增列，自增列必须是 BIGINT 类型，且必须为 NOT NULL。
+        Duplicate 模型表和 Unique 模型表均支持自增列。
+        可以通过给定`auto_inc_start_value`的方式指定自增列的起始值，如果不指定，则默认起始值为 1。
 
   * `default_value`
-        列默认值，当导入数据未指定该列的值时，系统将赋予该列default_value。
+        列默认值，当导入数据未指定该列的值时，系统将赋予该列 `default_value`。
           
         语法为`default default_value`。
           
-        当前default_value支持两种形式：
+        当前 `default_value` 支持两种形式：
         1. 用户指定固定值，如：
         ```SQL
             k1 INT DEFAULT '1',
@@ -127,14 +127,14 @@ distribution_desc
         2. 系统提供的关键字，目前支持以下关键字：
           
         ```SQL
-            // 只用于DATETIME类型，导入数据缺失该值时系统将赋予当前时间
+            // 只用于 DATETIME 类型，导入数据缺失该值时系统将赋予当前时间
             dt DATETIME DEFAULT CURRENT_TIMESTAMP
-            // 只用于DATE类型，导入数据缺失该值时系统将赋予当前日期
+            // 只用于 DATE 类型，导入数据缺失该值时系统将赋予当前日期
             dt DATE DEFAULT CURRENT_DATE
         ```
   * <version since="2.1" type="inline">`on update current_timestamp`</version>
 
-        是否在该行有列更新时将该列的值更新为当前时间(`current_timestamp`)。该特性只能在开启了merge-on-write的unique表上使用，开启了这个特性的列必须声明默认值，且默认值必须为`current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
+        是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 Merge-on-Write 的 Unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为`current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
 
       
   示例：
@@ -191,7 +191,7 @@ distribution_desc
 * UNIQUE KEY：其后指定的列为主键列。
 
 <version since="2.0">
-注：当表属性`enable_duplicate_without_keys_by_default = true`时, 默认创建没有排序列的DUPLICATE表。
+注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 Duplicate 表。
 </version>
 
 示例：
@@ -234,7 +234,7 @@ UNIQUE KEY(k1, k2)
     )
     ```
 
-3. <version since="1.2" type="inline"> MULTI RANGE：批量创建RANGE分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。</version>
+3. <version since="1.2" type="inline"> MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。</version>
 
     ```
     PARTITION BY RANGE(col)
@@ -246,7 +246,7 @@ UNIQUE KEY(k1, k2)
     )
     ```
 
-4. MULTI RANGE：批量创建数字类型的RANGE分区，定义分区的左闭右开区间，设定步长。
+4. MULTI RANGE：批量创建数字类型的 RANGE 分区，定义分区的左闭右开区间，设定步长。
 
     ```
     PARTITION BY RANGE(int_col)
@@ -264,7 +264,7 @@ UNIQUE KEY(k1, k2)
    语法：
       `DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num|auto]`
    说明：
-      使用指定的 key 列进行哈希分桶。
+      使用指定的 Key 列进行哈希分桶。
 2. Random 分桶
    语法：
       `DISTRIBUTED BY RANDOM [BUCKETS num|auto]`
@@ -296,7 +296,7 @@ UNIQUE KEY(k1, k2)
 
 * `replication_num`
 
-    副本数。默认副本数为3。如果 BE 节点数量小于3，则需指定副本数小于等于 BE 节点数量。
+    副本数。默认副本数为 3。如果 BE 节点数量小于 3，则需指定副本数小于等于 BE 节点数量。
 
     在 0.15 版本后，该属性将自动转换成 `replication_allocation` 属性，如：
 
@@ -308,17 +308,17 @@ UNIQUE KEY(k1, k2)
 
 * `min_load_replica_num`
 
-    设定数据导入成功所需的最小副本数，默认值为-1。当该属性小于等于0时，表示导入数据仍需多数派副本成功。
+    设定数据导入成功所需的最小副本数，默认值为 -1。当该属性小于等于 0 时，表示导入数据仍需多数派副本成功。
 
 * `is_being_synced`  
 
-    用于标识此表是否是被CCR复制而来并且正在被syncer同步，默认为 `false`。  
+    用于标识此表是否是被 CCR 复制而来并且正在被 Syncer 同步，默认为 `false`。  
 
     如果设置为 `true`：  
     `colocate_with`，`storage_policy`属性将被擦除  
     `dynamic partition`，`auto bucket`功能将会失效，即在`show create table`中显示开启状态，但不会实际生效。当`is_being_synced`被设置为 `false` 时，这些功能将会恢复生效。  
 
-    这个属性仅供CCR外围模块使用，在CCR同步的过程中不要手动设置。
+    这个属性仅供 CCR 外围模块使用，在 CCR 同步的过程中不要手动设置。
 
 * `storage_medium/storage_cooldown_time`
 
@@ -349,21 +349,21 @@ UNIQUE KEY(k1, k2)
 
 * `compression`
 
-    Doris 表的默认压缩方式是 LZ4。1.1版本后，支持将压缩方式指定为ZSTD以获得更高的压缩比。
+    Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。
 
     `"compression"="zstd"`
 
-* `function_column.sequence_col`
+* `function_column.Sequence_col`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个sequence列，当KEY列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
 
-    `function_column.sequence_col`用来指定sequence列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
+    `function_column.sequence_col`用来指定 Sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。
 
     `"function_column.sequence_col" = 'column_name'`
 
 * `function_column.sequence_type`
 
-    当使用 UNIQUE KEY 模型时，可以指定一个sequence列，当KEY列相同时，将按照 sequence 列进行 REPLACE(较大值替换较小值，否则无法替换)
+    当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE (较大值替换较小值，否则无法替换)
 
     这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。
 
@@ -371,13 +371,13 @@ UNIQUE KEY(k1, k2)
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> unique表是否使用merge on write实现。</version>
+    <version since="1.2" type="inline"> Unique 表是否使用 Merge-on-Write 实现。</version>
 
     该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。
 
 * `light_schema_change`
 
-    <version since="1.2" type="inline"> 是否使用light schema change优化。</version>
+    <version since="1.2" type="inline"> 是否使用 Light Schema Change 优化。</version>
 
     如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
 
@@ -387,9 +387,9 @@ UNIQUE KEY(k1, k2)
 
 * `disable_auto_compaction`
 
-    是否对这个表禁用自动compaction。
+    是否对这个表禁用自动 Compaction。
 
-    如果这个属性设置成 `true`, 后台的自动compaction进程会跳过这个表的所有tablet。
+    如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。
 
     `"disable_auto_compaction" = "false"`
 
@@ -403,38 +403,38 @@ UNIQUE KEY(k1, k2)
 
 * `enable_duplicate_without_keys_by_default`
 
-    当配置为`true`时，如果创建表的时候没有指定Unique、Aggregate或Duplicate时，会默认创建一个没有排序列和前缀索引的Duplicate模型的表。
+    当配置为`true`时，如果创建表的时候没有指定 Unique、Aggregate 或 Duplicate 模型，会默认创建一个没有排序列和前缀索引的 Duplicate 模型的表。
 
     `"enable_duplicate_without_keys_by_default" = "false"`
 
 * `skip_write_index_on_load`
 
-    是否对这个表开启数据导入时不写索引.
+    是否对这个表开启数据导入时不写索引。
 
-    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在compaction的时候延迟写索引。这样可以避免首次写入和compaction
-    重复写索引的CPU和IO资源消耗，提升高吞吐导入的性能。
+    如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 Compaction 的时候延迟写索引。这样可以避免首次写入和 Compaction
+    重复写索引的 CPU 和 IO 资源消耗，提升高吞吐导入的性能。
 
     `"skip_write_index_on_load" = "false"`
 
 * `compaction_policy`
 
-    配置这个表的 compaction 的合并策略，仅支持配置为 time_series 或者 size_based
+    配置这个表的 Compaction 的合并策略，仅支持配置为 time_series 或者 size_based
 
     time_series: 当 rowset 的磁盘体积积攒到一定大小时进行版本合并。合并后的 rowset 直接晋升到 base compaction 阶段。在时序场景持续导入的情况下有效降低 compact 的写入放大率
 
-    此策略将使用 time_series_compaction 为前缀的参数调整 compaction 的执行
+    此策略将使用 time_series_compaction 为前缀的参数调整 Compaction 的执行
 
     `"compaction_policy" = ""`
 
 * `time_series_compaction_goal_size_mbytes`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件的大小，输出的文件大小和输入相当
+    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
 
     `"time_series_compaction_goal_size_mbytes" = "1024"`
 
 * `time_series_compaction_file_count_threshold`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 compaction 输入的文件数量的最小值
+    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件数量的最小值
 
     一个 tablet 中，文件数超过该配置，就会触发 compaction
 
@@ -442,13 +442,13 @@ UNIQUE KEY(k1, k2)
 
 * `time_series_compaction_time_threshold_seconds`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整 compaction 的最长时间间隔，即长时间未执行过 compaction 时，就会触发一次 compaction，单位为秒
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整 Compaction 的最长时间间隔，即长时间未执行过 Compaction 时，就会触发一次 Compaction，单位为秒
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
 * `time_series_compaction_level_threshold`
 
-    compaction 的合并策略为 time_series 时，此参数默认为1，当设置为2时用来控住对于合并过一次的段再合并一层，保证段大小达到time_series_compaction_goal_size_mbytes，
+    Compaction 的合并策略为 `time_series` 时，此参数默认为 1，当设置为 2 时用来控住对于合并过一次的段再合并一层，保证段大小达到 `time_series_compaction_goal_size_mbytes`，
     
     能达到段数量减少的效果。
 
@@ -459,10 +459,10 @@ UNIQUE KEY(k1, k2)
     动态分区相关参数如下：
 
     * `dynamic_partition.enable`: 用于指定表级别的动态分区功能是否开启。默认为 true。
-    * `dynamic_partition.time_unit:` 用于指定动态添加分区的时间单位，可选择为DAY（天），WEEK(周)，MONTH（月），YEAR（年），HOUR（时）。
-    * `dynamic_partition.start`: 用于指定向前删除多少个分区。值必须小于0。默认为 Integer.MIN_VALUE。
-    * `dynamic_partition.end`: 用于指定提前创建的分区数量。值必须大于0。
-    * `dynamic_partition.prefix`: 用于指定创建的分区名前缀，例如分区名前缀为p，则自动创建分区名为p20200108。
+    * `dynamic_partition.time_unit:` 用于指定动态添加分区的时间单位，可选择为 DAY（天），WEEK(周)，MONTH（月），YEAR（年），HOUR（时）。
+    * `dynamic_partition.start`: 用于指定向前删除多少个分区。值必须小于 0。默认为 Integer.MIN_VALUE。
+    * `dynamic_partition.end`: 用于指定提前创建的分区数量。值必须大于 0。
+    * `dynamic_partition.prefix`: 用于指定创建的分区名前缀，例如分区名前缀为 p，则自动创建分区名为 p20200108。
     * `dynamic_partition.buckets`: 用于指定自动创建的分区分桶数量。
     * `dynamic_partition.create_history_partition`: 是否创建历史分区。
     * `dynamic_partition.history_partition_num`: 指定创建历史分区的数量。
@@ -484,7 +484,7 @@ UNIQUE KEY(k1, k2)
     DISTRIBUTED BY HASH(k1) BUCKETS 32
     ```
 
-2. 创建一个明细模型的表，分区，指定排序列，设置副本数为1
+2. 创建一个明细模型的表，分区，指定排序列，设置副本数为 1
 
     ```sql
     CREATE TABLE example_db.table_hash
@@ -606,7 +606,7 @@ UNIQUE KEY(k1, k2)
 
 8. 创建一个动态分区表。
 
-    该表每天提前创建3天的分区，并删除3天前的分区。例如今天为`2020-01-08`，则会创建分区名为`p20200108`, `p20200109`, `p20200110`, `p20200111`的分区. 分区范围分别为:
+    该表每天提前创建 3 天的分区，并删除 3 天前的分区。例如今天为`2020-01-08`，则会创建分区名为`p20200108`, `p20200109`, `p20200110`, `p20200111`的分区。分区范围分别为：
 
     ```
     [types: [DATE]; keys: [2020-01-08]; ‥types: [DATE]; keys: [2020-01-09]; )
@@ -706,7 +706,7 @@ UNIQUE KEY(k1, k2)
             "replication_num" = "1"
         );
     ```
-注：需要先创建s3 resource 和 storage policy，表才能关联迁移策略成功
+注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功
 
 12. 为表的分区添加冷热分层数据迁移策略
     ```sql
@@ -720,7 +720,7 @@ UNIQUE KEY(k1, k2)
             PARTITION p2 VALUES LESS THAN ("2022-02-01") ("storage_policy" = "test_create_table_partition_use_policy_2" ,"replication_num"="1")
         ) DISTRIBUTED BY HASH(k2) BUCKETS 1;
     ```
-注：需要先创建s3 resource 和 storage policy，表才能关联迁移策略成功
+注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功
 
 <version since="1.2.0">
 
@@ -769,13 +769,13 @@ UNIQUE KEY(k1, k2)
         );
     ```
 
-注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为4096，这个参数可以在fe配置项 `max_multi_partition_num` 调整
+注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 FE 配置项 `max_multi_partition_num` 调整
 
 </version>
 
 <version since="2.0">
 
-14. 批量无排序列Duplicate表
+14. 批量无排序列 Duplicate 表
 
     ```sql
     CREATE TABLE example_db.table_hash
@@ -833,7 +833,7 @@ Doris 中的表可以分为分区表和无分区的表。这个属性在建表�
 
 如果在之后的使用过程中添加物化视图，如果表中已有数据，则物化视图的创建时间取决于当前数据量大小。
 
-关于物化视图的介绍，请参阅文档 [物化视图](../../../../query-acceleration/materialized-view.md)。
+关于物化视图的介绍，请参阅文档 [同步物化视图](../../../../query/view-materialized-view/materialized-view)。
 
 #### 索引
 

@@ -1,6 +1,6 @@
 ---
 {
-"title": "Exporting Data or Table Structures",
+"title": "MySQL Dump",
 "language": "en"
 }
 ---
@@ -24,12 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
 Doris has supported exporting data or table structures through the `mysqldump` tool after version 0.15
 
 ## Examples
 
 ### Export
+
 1. Export the table1 table in the test database: `mysqldump -h127.0.0.1 -P9030 -uroot --no-tablespaces --databases test --tables table1`
 
 2. Export the table1 table structure in the test database: `mysqldump -h127.0.0.1 -P9030 -uroot --no-tablespaces --databases test --tables table1 --no-data`
@@ -40,6 +40,7 @@ Doris has supported exporting data or table structures through the `mysqldump` t
 For more usage parameters, please refer to the manual of `mysqldump`
 
 ### Import
+
 The results exported by `mysqldump` can be redirected to a file, which can then be imported into Doris through the source command `source filename.sql`
 
 ## Notice

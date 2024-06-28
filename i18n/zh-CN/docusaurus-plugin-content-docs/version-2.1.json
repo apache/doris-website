@@ -175,6 +175,10 @@
     "message": "运维监控",
     "description": "The label for category Maintenance and Monitor in sidebar docs"
   },
+  "sidebar.docs.category.Log Management": {
+    "message": "日志管理",
+    "description": "The label for category Log Management in sidebar docs"
+  },
   "sidebar.docs.category.Managing Configuration": {
     "message": "配置管理",
     "description": "The label for category Config in sidebar docs"

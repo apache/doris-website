@@ -40,14 +40,23 @@ Workload Group 可限制组内任务在单个 BE 节点上的计算资源和内�
 
 ## Workload Group 使用
 
-1. 开启 experimental_enable_workload_group 配置项，在 fe.conf 中设置：
+1. 手动创建名为`normal`的Workload Group，该Group不可删除。也可以在打开Workload Group开关后重启FE，会自动创建这个Group。
+```
+create workload group if not exists normal
+properties (
+    "cpu_share"="10",
+    "memory_limit"="30%",
+    "enable_memory_overcommit"="true"
+);
+```
+
+2. 开启 experimental_enable_workload_group 配置项，在 fe.conf 中设置：
 
 ```bash
 experimental_enable_workload_group=true
 ```
-在开启该配置后系统会自动创建名为`normal`的默认 Workload Group。
 
-2. 创建 Workload Group：
+3. 创建 Workload Group：
 
 ```
 create workload group if not exists g1
@@ -60,13 +69,13 @@ properties (
 
 创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，另删除 Workload Group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 Workload Group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看 Workload Group 可参考：[WORKLOAD_GROUPS()](../../sql-manual/sql-functions/table-functions/workload-group)和[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS)。
 
-3. 开启 Pipeline 执行引擎，Workload Group CPU 隔离基于 Pipeline 执行引擎实现，因此需开启 Session 变量：
+4. 开启 Pipeline 执行引擎，Workload Group CPU 隔离基于 Pipeline 执行引擎实现，因此需开启 Session 变量：
 
 ```bash
 set experimental_enable_pipeline_engine = true;
 ```
 
-4. 绑定 Workload Group。
+5. 绑定 Workload Group。
 
 * 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`:
 ```
@@ -84,7 +93,7 @@ session 变量`workload_group`优先于 user property `default_workload_group`, 
 
 如果是非 Admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 worklaod group 授权参考：[grant 语句](../../sql-manual/sql-reference/Account-Management-Statements/GRANT)。
 
-5. 执行查询，查询将关联到指定的 Workload Group。
+6. 执行查询，查询将关联到指定的 Workload Group。
 
 ### 查询排队功能
 ```
