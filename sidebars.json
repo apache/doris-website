@@ -1149,17 +1149,17 @@
                                 "sql-manual/sql-types/Data-Types/CHAR",
                                 "sql-manual/sql-types/Data-Types/VARCHAR",
                                 "sql-manual/sql-types/Data-Types/STRING",
-                                "sql-manual/sql-types/Data-Types/HLL",
-                                "sql-manual/sql-types/Data-Types/BITMAP",
-                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/IPV4",
+                                "sql-manual/sql-types/Data-Types/IPV6",
                                 "sql-manual/sql-types/Data-Types/ARRAY",
                                 "sql-manual/sql-types/Data-Types/MAP",
                                 "sql-manual/sql-types/Data-Types/STRUCT",
                                 "sql-manual/sql-types/Data-Types/JSON",
-                                "sql-manual/sql-types/Data-Types/AGG_STATE",
                                 "sql-manual/sql-types/Data-Types/VARIANT",
-                                "sql-manual/sql-types/Data-Types/IPV4",
-                                "sql-manual/sql-types/Data-Types/IPV6"
+                                "sql-manual/sql-types/Data-Types/HLL",
+                                "sql-manual/sql-types/Data-Types/BITMAP",
+                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/AGG_STATE"
                             ]
                         }
                     ]

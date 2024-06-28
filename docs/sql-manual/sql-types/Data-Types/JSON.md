@@ -26,20 +26,57 @@ under the License.
 
 ## JSON
 
-<version since="1.2.0">
+The JSON data type stores [JSON](https://www.rfc-editor.org/rfc/rfc8785) data efficiently in a binary format and allows access to its internal fields through JSON functions.
 
-</version>
+By default, it supports up to 1048576 bytes (1MB), and can be increased up to 2147483643 bytes (2GB). This can be adjusted via the `string_type_length_soft_limit_bytes` configuration.
 
-NOTICE: In version 1.2.x the data type name is JSONB. It's renamed to JSON to be more compatible to version 2.0.0. And the old tables can still be used.
+Compared to storing JSON strings in a regular STRING type, the JSON type has two main advantages:
+1. JSON format validation during data insertion.
+2. More efficient binary storage format, enabling faster access to JSON internal fields using functions like `json_extract`, compared to `get_json_xx` functions.
 
-### description
-    JSON (Binary) datatype.
-        Use binary JSON format for storage and json function to extract field. Default support is 1048576 bytes (1M), adjustable up to 2147483643 bytes (2G),and the JSONB type is also limited by the be configuration `jsonb_type_length_soft_limit_bytes`.
+**Note**: In version 1.2.x, the JSON type was named JSONB. To maintain compatibility with MySQL, it was renamed to JSON starting from version 2.0.0. Older tables can still use the previous name.
 
-### note
-    There are some advantanges for JSON over plain JSON STRING.
-    1. JSON syntax will be validated on write to ensure data quality
-    2. JSON binary format is more efficient. Using json_extract functions on JSON datatype is 2-4 times faster than get_json_xx on JSON STRING format.
+### Syntax
+
+**Definition:**
+```sql
+json_column_name JSON
+```
+
+**Insertion:**
+- Using `INSERT INTO VALUES` with the format as a string surrounded by quotes. For example:
+```sql
+INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
+```
+
+- For STREAM LOAD, the format for the corresponding column is a string without additional quotes. For example:
+```
+12	{"k1":"v31", "k2": 300}
+13	[]
+14	[123, 456]
+```
+
+**Query:**
+- Directly select the entire JSON column:
+```sql
+SELECT json_column_name FROM table_name;
+```
+
+- Extract specific fields or other information from JSON using JSON functions. For example:
+```sql
+SELECT json_extract(json_column_name, '$.k1') FROM table_name;
+```
+
+- The JSON type can be cast to and from integers, strings, BOOLEAN, ARRAY, and MAP. For example:
+```sql
+SELECT CAST('{"k1": "100"}' AS JSON);
+SELECT CAST(json_column_name AS STRING) FROM table_name;
+SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
+```
+
+:::tip
+The JSON type currently cannot be used for `GROUP BY`, `ORDER BY`, or comparison operations.
+:::
 
 ### example
 A tutorial for JSON datatype including create table, load data and query.

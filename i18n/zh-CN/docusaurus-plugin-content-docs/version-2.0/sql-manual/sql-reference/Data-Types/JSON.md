@@ -24,24 +24,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## JSON
+JSON 数据类型，用二进制格式高效存储 [JSON](https://www.rfc-editor.org/rfc/rfc8785) 数据，通过 JSON 函数访问其内部字段。
 
-<version since="1.2.0">
+默认支持1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`String_type_length_soft_limit_bytes` 调整。
 
-</version>
-
-注意：在1.2.x版本中，JSON类型的名字是JSONB，为了尽量跟MySQL兼容，从2.0.0版本开始改名为JSON，老的表仍然可以使用。
-
-### description
-    JSON类型
-        二进制JSON类型，采用二进制JSON格式存储，通过json函数访问JSON内部字段。默认支持1048576 字节（1M），可调大到 2147483643 字节（2G），可通过be配置`jsonb_type_length_soft_limit_bytes`调整
-
-### note
-    与普通STRING类型存储的JSON字符串相比，JSON类型有两点优势
-    1. 数据写入时进行JSON格式校验
+    与普通 String 类型存储的 JSON 字符串相比，JSON 类型有两点优势
+    1. 数据写入时进行 JSON 格式校验
     2. 二进制存储格式更加高效，通过json_extract等函数可以高效访问JSON内部字段，比get_json_xx函数快几倍
 
-### example
+    :::caution 注意
+    在1.2.x版本中，JSON 类型的名字是 JSONB，为了尽量跟 MySQL 兼容，从 2.0.0 版本开始改名为 JSON，老的表仍然可以使用。
+    :::
+
+### 语法
+
+**定义**
+```sql
+json_column_name JSON
+```
+
+**写入**
+- INSERT INTO VALUE 格式是引号包围的字符串。例如：
+```sql
+INSERT INTO table_name(id, json_column_name) VALUES (1, '{"k1": "100"}')
+```
+
+- STREAM LOAD 对应列的格式是字符串，不需要额外引号包围。例如：
+```
+12	{"k1":"v31", "k2": 300}
+13	[]
+14	[123, 456]
+```
+
+**查询**
+- 直接将整个 JSON 列 SELECT 出来
+```sql
+SELECT json_column_name FROM table_name;
+```
+
+- 从 JSON 中提取需要的字段，或者其他信息，参考 JSON 函数，例如：
+```sql
+SELECT json_extract(json_column_name, '$.k1') FROM table_name;
+```
+
+- JSON 类型可以与整数、字符串、BOOLEAN、ARRAY、MAP 进行类型转换 CAST，例如：
+```sql
+SELECT CAST('{"k1": "100"}' AS JSON)
+SELECT CAST(json_column_name AS String) FROM table_name;
+SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
+```
+
+:::tip
+
+JSON 类型暂时不能用于 GROUP BY，ORDER BY，比较大小
+
+:::
+
+### 使用示例
     用一个从建表、导数据、查询全周期的例子说明JSON数据类型的功能和用法。
 
 #### 创建库表
@@ -64,8 +103,8 @@ PROPERTIES("replication_num" = "1");
 
 ##### stream load 导入test_json.csv测试数据
 
-- 测试数据有2列，第一列id，第二列是json
-- 测试数据有25行，其中前18行的json是合法的，后7行的json是非法的
+- 测试数据有2列，第一列ID，第二列是JSON
+- 测试数据有25行，其中前18行的JSON是合法的，后7行的JSON是非法的
 
 ```
 1	\N
@@ -143,7 +182,7 @@ curl --location-trusted -u root: -H 'max_filter_ratio: 0.3' -T test_json.csv htt
 }
 ```
 
-- 查看stream load导入的数据，JSON类型的列j会自动转成JSON string展示
+- 查看stream load导入的数据，JSON类型的列j会自动转成JSON String展示
 
 ```
 mysql> SELECT * FROM test_json ORDER BY id;
@@ -359,7 +398,7 @@ mysql> SELECT id, j, json_extract(j, '$.a1[0]'), json_extract(j, '$.a1[0].k1') F
 ```
 
 1. 获取具体类型的
-- json_extract_string 获取string类型字段，非string类型转成string
+- json_extract_string 获取String类型字段，非String类型转成String
 ```
 mysql> SELECT id, j, json_extract_string(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+---------------------------------------------------------------+
@@ -636,8 +675,8 @@ mysql> SELECT id, j, json_extract_bool(j, '$[1]') FROM test_json ORDER BY id;
 19 rows in set (0.01 sec)
 ```
 
-- json_extract_isnull 获取json null类型字段，null返回1，非null返回0
-- 需要注意的是json null和SQL NULL不一样，SQL NULL表示某个字段的值不存在，而json null表示值存在但是是一个特殊值null
+- json_extract_isnull 获取JSON NULL类型字段，null返回1，非null返回0
+- 需要注意的是JSON NULL和SQL NULL不一样，SQL NULL表示某个字段的值不存在，而JSON表示值存在但是是一个特殊值NULL
 ```
 mysql> SELECT id, j, json_extract_isnull(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+--------------------------------+
@@ -751,9 +790,9 @@ mysql> SELECT id, j, json_exists_path(j, '$[2]') FROM test_json ORDER BY id;
 
 ```
 
-##### 用json_type获取json内的某个字段的类型
+##### 用json_type获取JSON内的某个字段的类型
 
-- 返回json path对应的json字段类型，如果不存在返回NULL
+- 返回json path对应的JSON字段类型，如果不存在返回NULL
 ```
 mysql> SELECT id, j, json_type(j, '$') FROM test_json ORDER BY id;
 +------+---------------------------------------------------------------+----------------------+
@@ -810,4 +849,4 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 ```
 
 ### keywords
-JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_string, json_exists_path, json_type
+JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_String, json_exists_path, json_type
