@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Data Lakehouse Overview",
     "language": "en"
 }
 ---
@@ -36,7 +36,7 @@ Data warehouses addresses the need for fast data analysis, while data lakes are 
 
 ## Applicable scenarios
 
-We design the Doris lakehouse solution for the following four applicable scenarios:
+We design the Doris Data Lakehouse solution for the following four applicable scenarios:
 
 - Lakehouse query acceleration: As a highly efficient OLAP query engine, Doris has excellent MPP-based vectorized distributed query capabilities. Data lake analysis with Doris will benefit from the efficient query engine.
 

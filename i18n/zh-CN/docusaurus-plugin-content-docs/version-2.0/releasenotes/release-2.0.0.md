@@ -26,7 +26,7 @@ under the License.
 
 亲爱的社区小伙伴们，我们很高兴地向大家宣布，Apache Doris 2.0.0 Release 版本已于 2023 年 8 月 11 日正式发布，有超过 275 位贡献者为 Apache Doris 提交了超过 4100 个优化与修复。
 
-在 2.0.0 版本中，Apache Doris 在标准 Benchmark 数据集上盲测查询性能得到超过 10 倍的提升、在日志分析和数据湖联邦分析场景能力得到全面加强、数据更新效率和写入效率都更加高效稳定、支持了更加完善的多租户和资源隔离机制、在资源弹性与存算分离方向踏上了新的台阶、增加了一系列面向企业用户的易用性特性。在经过近半年的开发、测试与稳定性调优后，这一版本已经正式稳定可用，欢迎大家下载使用！
+在 2.0.0 版本中，Apache Doris 在标准 Benchmark 数据集上盲测查询性能得到超过 10 倍的提升、在日志分析和湖仓一体场景能力得到全面加强、数据更新效率和写入效率都更加高效稳定、支持了更加完善的多租户和资源隔离机制、在资源弹性与存算分离方向踏上了新的台阶、增加了一系列面向企业用户的易用性特性。在经过近半年的开发、测试与稳定性调优后，这一版本已经正式稳定可用，欢迎大家下载使用！
 
 > 下载链接：[https://doris.apache.org/download](https://doris.apache.org/download)
 > 
@@ -82,13 +82,13 @@ under the License.
 
 而随着用户规模的极速扩张，越来越多用户开始希望通过 Apache Doris 来简化现有的繁重大数据技术栈，减少多套系统带来的使用及运维成本。因此 Apache Doris 也在不断拓展应用场景的边界，从过去的实时报表和 Ad-hoc 等典型 OLAP 场景到湖仓一体、ELT/ETL、日志检索与分析、高并发 Data Serving 等更多业务场景，而日志检索分析、湖仓一体也是我们在 Apache Doris 最新版本中的重要突破。
 
-### 10倍以上性价比的日志检索分析平台
+### 10 倍以上性价比的日志检索分析平台
 
 在 Apache Doris 2.0.0 版本中，我们提供了原生的半结构化数据支持，在已有的 JSON、Array 基础之上增加了复杂类型 Map，并基于 Light Schema Change 功能实现了 Schema Evolution。与此同时，2.0.0 版本新引入的倒排索引和高性能文本分析算法全面加强了 Apache Doris 在日志检索分析场景的能力，可以支持更高效的任意维度分析和全文检索。结合过去在大规模数据写入和低成本存储等方面的优势，相对于业内常见的日志分析解决方案，基于 Apache Doris 构建的新一代日志检索分析平台实现了 10 倍以上的性价比提升。
 
 ### 湖仓一体
 
-在 Apache Doris 1.2 版本中，我们引入了 Multi-Catalog 功能，支持了多种异构数据源的元数据自动映射与同步，实现了便捷的元数据和数据打通。在 2.0.0 版本中，我们进一步对数据联邦分析能力进行了加强，引入了更多数据源，并针对用户的实际生产环境做了诸多性能优化，在真实工作负载情况下查询性能得到大幅提升。
+在 Apache Doris 1.2 版本中，我们引入了 Multi-Catalog 功能，支持了多种异构数据源的元数据自动映射与同步，实现了便捷的元数据和数据打通。在 2.0.0 版本中，我们进一步对湖仓一体能力进行了加强，引入了更多数据源，并针对用户的实际生产环境做了诸多性能优化，在真实工作负载情况下查询性能得到大幅提升。
 
 在数据源方面，Apache Doris 2.0.0 版本支持了 Hudi Copy-on-Write 表的 Snapshot Query 以及 Merge-on-Read 表的 Read Optimized Query，截止目前已经支持了 Hive、Hudi、Iceberg、Paimon、MaxCompute、Elasticsearch、Trino、ClickHouse 等数十种数据源，几乎支持了所有开放湖仓格式和 Metastore。同时还支持通过 Apache Range 对 Hive Catalog 进行鉴权，可以无缝对接用户现有的权限系统。同时还支持可扩展的鉴权插件，为任意 Catalog 实现自定义的鉴权方式。
 
@@ -130,7 +130,7 @@ under the License.
 
 ### 数据高频写入更稳定
 
-在高频数据写入过程中，小文件合并和写放大问题以及随之而来的磁盘 I/O和 CPU 资源开销是制约系统稳定性的关键，因此在 2.0 版本中我们引入了 Vertical Compaction 以及 Segment Compaction，用以彻底解决 Compaction 内存问题以及写入过程中的 Segment 文件过多问题，资源消耗降低 90%，速度提升 50%，内存占用仅为原先的 10%。
+在高频数据写入过程中，小文件合并和写放大问题以及随之而来的磁盘 I/O 和 CPU 资源开销是制约系统稳定性的关键，因此在 2.0 版本中我们引入了 Vertical Compaction 以及 Segment Compaction，用以彻底解决 Compaction 内存问题以及写入过程中的 Segment 文件过多问题，资源消耗降低 90%，速度提升 50%，内存占用仅为原先的 10%。
 
 
 ### 数据表结构自动同步
@@ -196,8 +196,8 @@ under the License.
 - 查询优化器开关默认开启 `enable_nereids_planner=true`；
 - 系统中移除了非向量化代码，所以 `enable_vectorized_engine` 参数将不再生效；
 - 新增参数 `enable_single_replica_compaction`；
-- 默认使用 datev2, datetimev2, decimalv3 来创建表，不支持 datev1，datetimev1， decimalv2 创建表；
-- 在 JDBC 和 Iceberg Catalog 中默认使用decimalv3；
+- 默认使用 datev2, datetimev2, decimalv3 来创建表，不支持 datev1，datetimev1，decimalv2 创建表；
+- 在 JDBC 和 Iceberg Catalog 中默认使用 decimalv3；
 - date type 新增 AGG_STATE；
 - backend 表去掉 cluster 列；
 - 为了与 BI 工具更好兼容，在 show create table 时，将 datev2 和 datetimev2 显示为 date 和 datetime。
@@ -206,7 +206,7 @@ under the License.
 - 当系统中存在 Multi-Catalog 时，查询 information schema 的数据默认只显示 internal catalog 的数据；
 - 限制了表达式树的深度，默认为 200；
 - array string 返回值 单引号变双引号；
-- 对 Doris的进程名重命名为 DorisFE 和 DorisBE；
+- 对 Doris 的进程名重命名为 DorisFE 和 DorisBE；
 
 # 正式踏上 2.0 之旅
 

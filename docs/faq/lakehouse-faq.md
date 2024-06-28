@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse FAQ",
+    "title": "Data Lakehouse FAQ",
     "language": "en"
 }
 ---
