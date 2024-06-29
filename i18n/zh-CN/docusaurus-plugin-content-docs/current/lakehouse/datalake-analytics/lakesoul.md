@@ -1,6 +1,6 @@
 ---
 {
-    "title": "LakeSoul",
+    "title": "LakeSoul Catalog",
     "language": "zh-CN"
 }
 ---
