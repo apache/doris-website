@@ -93,7 +93,6 @@
                                 "data-operate/import/import-way/routine-load-manual",
                                 "data-operate/import/import-way/spark-load-manual",
                                 "data-operate/import/import-way/stream-load-manual",
-                                "data-operate/import/import-way/mysql-load-manual",
                                 "data-operate/import/import-way/s3-load-manual",
                                 "data-operate/import/import-way/insert-into-manual",
                                 "data-operate/import/import-way/load-json-format"
