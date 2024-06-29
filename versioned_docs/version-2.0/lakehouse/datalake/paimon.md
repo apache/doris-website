@@ -1,7 +1,7 @@
 ---
 {
-"title": "Paimon",
-"language": "en"
+    "title": "Paimon Catalog",
+    "language": "en"
 }
 ---
 
@@ -23,9 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
-# Paimon
 
 ## Instructions for use
 

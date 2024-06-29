@@ -254,7 +254,7 @@
                 "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Analyzing Data Lake",
+                    "label": "Querying Data Lakes",
                     "items": [
                         "lakehouse/datalake/hive",
                         "lakehouse/datalake/hudi",
@@ -265,7 +265,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Analyzing Database",
+                    "label": "Querying Databases",
                     "items": [
                         "lakehouse/database/jdbc",
                         "lakehouse/database/mysql",

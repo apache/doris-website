@@ -260,12 +260,12 @@
         },
         {
             "type": "category",
-            "label": "Lakehouse",
+            "label": "Data Lakehouse",
             "items": [
                 "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Analyzing Data Lake",
+                    "label": "Querying Data Lakes",
                     "items": [
                         "lakehouse/datalake-analytics/hive",
                         "lakehouse/datalake-analytics/hudi",
@@ -276,14 +276,14 @@
                 },
                 {
                     "type": "category",
-                    "label": "Building Data Lake",
+                    "label": "Building Data Lakes",
                     "items": [
                         "lakehouse/datalake-building/hive-build"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Analyzing Database",
+                    "label": "Querying Databases",
                     "items": [
                         "lakehouse/database/jdbc",
                         "lakehouse/database/mysql",

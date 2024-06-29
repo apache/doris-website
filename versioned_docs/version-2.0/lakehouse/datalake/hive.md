@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive",
+    "title": "Hive Catalog",
     "language": "en"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Hive
 
 By connecting to Hive Metastore, Doris can automatically obtain database and table information from Hive and perform data queries.
 
