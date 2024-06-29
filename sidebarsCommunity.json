@@ -19,6 +19,7 @@
                 "how-to-contribute/trino-connector-developer-guide"
             ]
         },
+        "release-versioning",
         {
             "type": "category",
             "label": "Release Process & Verification",
