@@ -70,7 +70,7 @@ under the License.
 
 - The new optimizer fully supports point query functionality [#36205](https://github.com/apache/doris/pull/36205).
 
-### Lakehouse
+### Data Lakehouse
 
 - Support native reader of Apache Paimon deletion vector  [#35241](https://github.com/apache/doris/pull/35241)
 
@@ -193,7 +193,7 @@ under the License.
 
 - Fixed the issue where BE might core dump during clone operations when memory is tight. [#34702](https://github.com/apache/doris/pull/34702)
 
-### Lakehouse
+### Data Lakehouse
 
 - Fixed the issue where a Hive table could not be created with a fully qualified name such as `ctl.db.tbl` [#34984](https://github.com/apache/doris/pull/34984)
 
