@@ -32,11 +32,11 @@ The diagram below visualizes the deployment architecture of Doris in the compute
   - **Meta Service**: Responsible for metadata management. It provides services for metadata operations, such as creating Tablets, adding Rowsets, and querying metadata of Tablets and Rowsets.
   - **Recycler**: Responsible for data recycling. It implements periodic asynchronous forward recycling of data by regularly scanning the metadata of the data marked for deletion (the data files are stored on S3 or HDFS), without the need to list the data objects for metadata comparison.
 
-![](/images/apache-doris-in-compute-storage-decoupled-mode.png)
+![apache-doris-in-compute-storage-decoupled-mode](/images/apache-doris-in-compute-storage-decoupled-mode.png)
 
 The Meta Service is a stateless service that relies on [FoundationDB](https://github.com/apple/foundationdb), a high-performance distributed transactional KV store, to store metadata. This greatly simplifies the metadata management process and provides high horizontal scalability.
 
-![](/images/deployment-of-compute-storage-decoupled-mode.png)
+![deployment-of-compute-storage-decoupled-mode](/images/deployment-of-compute-storage-decoupled-mode.png)
 
 Deploying Doris in the compute-storage decoupled mode relies on two open-source projects. Please install the following dependencies before proceeding:
 
@@ -92,7 +92,7 @@ The database is available.
 Welcome to the fdbcli. For help, type `help'.
 ```
 
-:::note
+:::info
 
 After a successful installation:
 

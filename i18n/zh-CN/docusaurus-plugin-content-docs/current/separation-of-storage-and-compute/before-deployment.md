@@ -32,11 +32,11 @@ under the License.
   - **Meta Service**：元数据管理，提供元数据操作的服务，例如创建 Tablet，新增 Rowset，Tablet 查询以及 Rowset 元数据查询等功能。
   - **Recycler**：数据回收。通过定期对记录已标记删除的数据的元数据进行扫描，实现对数据的定期异步正向回收（文件实际存储在 S3 或 HDFS 上），而无须列举数据对象进行元数据对比。
 
-![](/images/apache-doris-in-compute-storage-decoupled-mode.png)
+![apache-doris-in-compute-storage-decoupled-mode](/images/apache-doris-in-compute-storage-decoupled-mode.png)
 
 Meta Service 是一种无状态化的服务，依赖了一个高性能分布式事务 KV（即 [FoundationDB](https://github.com/apple/foundationdb)）来存储元数据，大幅简化了元数据管理流程，同时提供强大的横向的扩展能力。
 
-![](/images/deployment-of-compute-storage-decoupled-mode.png)
+![deployment-of-compute-storage-decoupled-mode](/images/deployment-of-compute-storage-decoupled-mode.png)
 
 Doris 存算分离架构依赖于两个外部开源项目，为确保部署顺利，请在开始前预先安装以下依赖：
 
@@ -92,7 +92,7 @@ The database is available.
 Welcome to the fdbcli. For help, type `help'.
 ```
 
-:::note
+:::info 备注
 
 安装成功后：
 

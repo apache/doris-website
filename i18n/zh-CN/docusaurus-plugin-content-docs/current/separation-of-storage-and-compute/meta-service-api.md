@@ -1617,7 +1617,7 @@ Content-Type: text/plain
 
 本接口用于获取计算集群下，BE 节点运行 Fragment 的情况。
 
-:::note
+:::info 备注
 
 此接口是请求 FE 的接口。
 

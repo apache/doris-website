@@ -30,7 +30,7 @@ under the License.
 - 计算集群授权
 - 在用户级别绑定计算集群 (`default_cloud_cluster`) 以达到用户级别的隔离效果
 
-:::note
+:::info 备注
 
 本文涉及的 `cluster` 均表示计算集群。
 
@@ -205,7 +205,7 @@ SHOW PROPERTY FOR {user};
 SHOW CLUSTERS;
 ```
 
-:::note
+:::info 备注
 
 - 若当前用户拥有 Admin 角色，例如：`CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`，则：
   - 可以为自身以及其他用户设置默认计算集群；

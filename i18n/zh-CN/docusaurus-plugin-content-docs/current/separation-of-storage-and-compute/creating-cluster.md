@@ -35,7 +35,7 @@ under the License.
 1. 注册一个仓库（FE）
 2. 注册一个或者多个计算集群（BE）
 
-:::note
+:::info 备注
 
 1. **本文后续示例中提及的** **`127.0.0.1:5000`** **指的是 Meta Service 的地址，实际操作时请替换为真实的 Meta Service IP 地址和 bRPC 监听端口。**
 2. 请结合实际需求修改本文档中的示例。
@@ -200,7 +200,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     );
 ```
 
-:::note
+:::info 备注
 
 新创建的存储后端对 BE 集群不一定实时可见，短时间（< 1min）内向使用新创建存储后端的表导入数据发生报错是正常现象。
 

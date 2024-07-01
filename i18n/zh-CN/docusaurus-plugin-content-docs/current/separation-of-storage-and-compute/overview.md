@@ -34,13 +34,13 @@ Doris 的整体架构由两类进程组成：Frontend (FE) 和 Backend (BE)。�
 
 在存算一体架构下，BE 节点上存储与计算紧密耦合，数据主要存储在 BE 节点上，多 BE 节点采用 MPP 分布式计算架构。
 
-![](images/compute-storage-coupled-zh.png)
+![compute-storage-coupled](/images/compute-storage-coupled-zh.png)
 
 ### 存算分离
 
 BE 节点不再存储主数据，而是将共享存储层作为统一的数据主存储空间。同时，为了应对底层对象存储系统性能不佳和网络传输带来的性能下降，Doris 引入计算节点本地高速缓存。
 
-![](images/compute-storage-decoupled-zh.png)
+![compute-storage-decoupled](/images/compute-storage-decoupled-zh.png)
 
 **元数据层：**
 
@@ -54,7 +54,7 @@ Meta Service 是 Doris 存算分离元数据服务，主要负责处理导入事
 
 计算集群（Compute Cluster）是无状态的 BE 节点组成的计算资源集合，多个计算集群共享一份数据，计算集群可以随时弹性加减节点。
 
-:::note
+:::info 备注
 
 存算分离文档中的“计算集群”概念有别于 Doris 【集群部署】以及后文【创建集群】中的“集群”概念。存算分离文档中提及的“计算集群”特指在 Doris 存算分离模式下，由无状态 BE 节点组成的计算资源集合，而非【集群部署】和【创建集群】中所指的由多个 Apache Doris 节点组成的完整分布式系统。
 

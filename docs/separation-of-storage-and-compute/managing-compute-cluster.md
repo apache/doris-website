@@ -30,7 +30,7 @@ In the compute-storage decoupled mode, users can organize one or more BE nodes i
 - Grant compute clusters to users
 - Bind a compute cluster to user (`default_cloud_cluster`) for user-level isolation
 
-:::note
+:::info
 
 `cluster` in this document refers to compute clusters.
 
@@ -207,7 +207,7 @@ Check all available compute clusters under the current instance:
 SHOW CLUSTERS;
 ```
 
-:::note
+:::info
 
 - If the current user has Admin privileges, (e.g. `CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`), then:
   - They can set the default compute cluster for themselves and other users;

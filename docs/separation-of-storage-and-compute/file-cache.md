@@ -90,7 +90,9 @@ All newly imported data into this table will be retained in the cache for 300 se
 ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 ```
 
-:::note There is a certain delay before the modified TTL value takes effect.
+:::info 
+
+There is a certain delay before the modified TTL value takes effect.
 
 For tables that are not set with a TTL strategy upon creation, users can still modify their TTL properties by executing the ALTER statement.
 

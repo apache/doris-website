@@ -35,7 +35,7 @@ The creation process is to describe the machine composition within that cluster,
 1. Register a warehouse (FE)
 2. Register one or more compute clusters (BE)
 
-:::note
+:::info
 
 - **`127.0.0.1:5000`** **in the examples of this page refers to the address of Meta Service. Please replace it with the actual IP address and bRPC listening port for your own use case.**
 - Please modify the configuration items in the following examples as needed.
@@ -200,7 +200,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     );
 ```
 
-:::note
+:::info
 
 Newly created storage vaults may NOT be immediately visible to the BE. This means if you try to import data into tables with a newly created storage vault, you might expect error reports in the short term (< 1 minute) until the storage vault is fully propagated to the BE nodes.
 

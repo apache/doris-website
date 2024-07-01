@@ -36,13 +36,13 @@ The overall architecture of Doris consists of two types of processes: Frontend (
 
 In the compute-storage coupled mode, the BE nodes perform both data storage and computation, and multiple BE nodes forms a massively parallel processing (MPP) distributed computing architecture.
 
-![](/images/compute-storage-coupled.png)
+![compute-storage-coupled](/images/compute-storage-coupled.png)
 
 ### **Compute-storage decoupled**
 
 The BE nodes no longer store the primary data. Instead, the shared storage layer serves as the unified primary data storage. Additionally, to overcome the performance loss caused by the limitations of the underlying object storage system and the overhead of network transmission, Doris introduces a high-speed cache on the local compute nodes.
 
-![](/images/compute-storage-decoupled.png)
+![compute-storage-decoupled](/images/compute-storage-decoupled.png)
 
 **Meta data layer:**
 
@@ -56,7 +56,7 @@ In the compute-storage decoupled mode, the BE nodes are stateless. They cache a 
 
 A compute cluster is a collection of stateless BE nodes serving as the computing resources. Multiple compute clusters share a single set of data, and the compute clusters can be elastically scaled by adding or removing nodes as needed.
 
-:::note
+:::info
 
 The concept of compute cluster in the compute-storage decoupled mode is distinct from the "cluster" discussed in the [Cluster Deployment] and [Create Cluster] sections.
 

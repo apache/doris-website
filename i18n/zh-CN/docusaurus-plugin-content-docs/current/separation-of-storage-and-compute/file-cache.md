@@ -90,7 +90,9 @@ PROPERTIES(
 ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
 ```
 
-:::note 修改后的 TTL 值并不会立即生效，而会存在一定的延迟。
+:::info 备注
+
+修改后的 TTL 值并不会立即生效，而会存在一定的延迟。
 
 如果在建表时没有设置 TTL，用户同样可以通过执行 ALTER 语句来修改表的 TTL 属性。
 
