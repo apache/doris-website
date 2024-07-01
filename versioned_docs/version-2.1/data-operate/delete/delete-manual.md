@@ -59,7 +59,7 @@ DELETE FROM table_name [table_alias]
 
 ### Note
 
-- When using the table model AGGREGATE, UNIQUE, you can only specify conditions on the key column.
+- When using the table model AGGREGATE, you can only specify conditions on the key column.
 
 - If the selected key column does not exist in a rollup, it cannot be deleted.
 
