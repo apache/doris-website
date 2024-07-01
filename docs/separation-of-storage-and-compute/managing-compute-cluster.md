@@ -1,7 +1,7 @@
 ---
 {
     "title": "Managing Compute Cluster",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

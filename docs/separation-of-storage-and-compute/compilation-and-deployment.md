@@ -1,7 +1,7 @@
 ---
 {
     "title": "Compilation and Deployment",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

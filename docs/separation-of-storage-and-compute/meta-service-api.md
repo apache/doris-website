@@ -1,7 +1,7 @@
 ---
 {
     "title": "Meta Service API",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

@@ -1,7 +1,7 @@
 ---
 {
     "title": "Creating Cluster",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

@@ -1,7 +1,7 @@
 ---
 {
     "title": "File Cache",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

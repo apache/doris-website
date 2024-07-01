@@ -1,7 +1,7 @@
 ---
 {
     "title": "Overview",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 

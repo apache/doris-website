@@ -1,7 +1,7 @@
 ---
 {
     "title": "Before Deployment",
-    "language": "en-US"
+    "language": "en"
 }
 ---
 
