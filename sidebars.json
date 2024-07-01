@@ -1491,15 +1491,15 @@
         },
         {
             "type": "category",
-            "label": "Separation of Storage and Compute",
+            "label": "Compute-Storage Decoupling",
             "items": [
-                "separation-of-storage-and-compute/overview",
-                "separation-of-storage-and-compute/before-deployment",
-                "separation-of-storage-and-compute/compilation-and-deployment",
-                "separation-of-storage-and-compute/creating-cluster",
-                "separation-of-storage-and-compute/managing-compute-cluster",
-                "separation-of-storage-and-compute/file-cache",
-                "separation-of-storage-and-compute/meta-service-api"
+                "compute-storage-decoupling/overview",
+                "compute-storage-decoupling/before-deployment",
+                "compute-storage-decoupling/compilation-and-deployment",
+                "compute-storage-decoupling/creating-cluster",
+                "compute-storage-decoupling/managing-compute-cluster",
+                "compute-storage-decoupling/file-cache",
+                "compute-storage-decoupling/meta-service-api"
             ]
         },
         {
