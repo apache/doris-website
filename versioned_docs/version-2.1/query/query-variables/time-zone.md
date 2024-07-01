@@ -47,12 +47,7 @@ The following two time zone related parameters exist within Doris:
 
 ## Data source
 
-The time zone data contains the name of the time zone, the corresponding time offset, and the change of daylight saving time. On the machine where the BE is located, the sources of the data are as follows:
-
-1. the directory returned by command `TZDIR`. If was not supported, the directory `/usr/share/zoneinfo`.
-2. the `zoneinfo` directory generated under the Doris BE deployment directory. The `resource/zoneinfo.tar.gz` directory from the Doris Repository.
-
-Look up the above data sources in order and use the current item if found. If neither is found, the Doris BE will fail to start, please rebuild the BE correctly or get the distribution.
+The time zone data contains the name of the time zone, the corresponding time offset, and the change of daylight saving time. On the machine where the BE is located, the source of the data is the directory returned by command `TZDIR`. If was not supported, the directory `/usr/share/zoneinfo`.
 
 ## Impact of time zone
 
@@ -93,9 +88,9 @@ If you do not want Daylight Saving Time to be turned on, set `time_zone` to `-08
 
 Time zone values can be given in a variety of formats. The following standard formats are well supported in Doris:
 
-1. standard named time zone formats, such as "Asia/Shanghai", "America/Los_Angeles".
+1. standard named time zone formats, such as "Asia/Shanghai", "America/Los_Angeles". This format is derived from [time zone data on this machine](#data-source). "Etc/GMT+3" etc. also belongs to this category.
 
-2. standard offset formats, such as "+02:30", "-10:00".
+2. standard offset formats, such as "+02:30", "-10:00".(special offsets such as "+12:03" are not supported)
 
 3. abbreviated time zone formats, currently only support:
 
@@ -104,6 +99,8 @@ Time zone values can be given in a variety of formats. The following standard fo
    2. "CST", which is equivalent to the "Asia/Shanghai" time zone
 
 4. single letter Z, for Zulu time zone, equivalent to "+00:00" time zone
+
+Besides, all parsing of alphabet is case insensitive.
 
 Note: Some other formats are currently supported in some imports in Doris due to different implementations. **Production environments should not rely on these formats that are not listed here, and their behaviour may change at any time**, so keep an eye on the relevant changelog for version updates.
 
