@@ -44,9 +44,9 @@ PUT /MetaService/http/v1/create_instance?token=<token> HTTP/1.1
 
 | 字段            | 描述                                                         | 备注                                                       |
 | --------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| instance_id     | 存算分离架构下数仓的 ID， 一般使用 UUID 字符串               | 要求历史上唯一                                             |
-| cloud_unique_id | 存算分离架构下 be.conf fe.conf 的一个配置，创建计算集群请求时也需提供，格式为 1:<instance_id>:<string> | 示例 "1:regression_instance0:regression-cloud-unique-id-1" |
-| cluster_name    | 存算分离架构下描述一个计算集群时需要传入的字段, 格式要求为一个 identifier, 需要匹配模式[a-zA-Z][0-9a-zA-Z_]+ | 实例 write_cluster 或者 read_cluster0                      |
+| instance_id     | 存算分离架构下数仓的 ID，一般使用 UUID 字符串                | 要求历史上唯一                                             |
+| cloud_unique_id | 存算分离架构下 be.conf fe.conf 的一个配置，创建计算集群请求时也需提供，格式为 `1:<instance_id>:<string> ` | 示例 "1:regression_instance0:regression-cloud-unique-id-1" |
+| cluster_name    | 存算分离架构下描述一个计算集群时需要传入的字段，格式要求为一个 identifier, 需要匹配模式` [a-zA-Z][0-9a-zA-Z_]+` | 实例 write_cluster 或者 read_cluster0                      |
 
 ## 创建存储后端的 Instance
 
@@ -112,7 +112,6 @@ Content-Type: text/plain
 PUT /MetaService/http/create_instance?token=greedisgood9999 HTTP/1.1
 Content-Length: 550
 Content-Type: text/plain
-
 {
   "instance_id": "sample_instance_id",
   "name": "sample_instance_name",
@@ -177,7 +176,7 @@ Content-Type: text/plain
 | vault.obj_info.sk          | S3 的 Secret Key                                             | 是       |                                                              |
 | vault.obj_info.bucket      | S3 的 Bucket 名                                              | 是       |                                                              |
 | vault.obj_info.prefix      | S3 上数据存放位置前缀                                        | 否       | 若不填写该参数，则默认存放位置在 Bucket 的根目录             |
-| obj_info.endpoint          | S3 的 Endpoint 信息                                          | 是       | 域名或 IP:端口，不包含 http:// 等 scheme 前缀                |
+| obj_info.endpoint          | S3 的 Endpoint 信息                                          | 是       | 域名或 IP:端口，不包含 `http://` 等 scheme 前缀              |
 | obj_info.region            | S3 的 Region 信息                                            | 是       | 若使用 MinIO，该参数可填任意值                               |
 | obj_info.external_endpoint | S3 的 External Endpoint 信息                                 | 是       | 一般与 Endpoint 一致即可，兼容 OSS，注意 OSS 有 External 和 Internal 之分 |
 | vault.obj_info.provider    | S3 的 Provider 信息，可选值包括：OSS, S3, COS, OBS, BOS, GCP, AZURE | 是       | 若使用 MinIO，直接填 S3 即可                                 |
@@ -289,7 +288,7 @@ Content-Type: text/plain
 | obj_info.sk                | S3 的 Secret Key                    | 是       |                                                  |
 | obj_info.bucket            | S3 的 Bucket 名                     | 是       |                                                  |
 | obj_info.prefix            | S3 上数据存放位置前缀               | 否       | 若不填写该参数，则默认存放位置在 Bucket 的根目录 |
-| obj_info.endpoint          | S3 的 Endpoint 信息                 | 是       | 域名或 IP:端口，不包含 http:// 等 scheme 前缀    |
+| obj_info.endpoint          | S3 的 Endpoint 信息                 | 是       | 域名或 IP:端口，不包含 `http://` 等 scheme 前缀  |
 | obj_info.region            | S3 的 Region 信息                   | 是       |                                                  |
 | obj_info.external_endpoint | S3 的 External Endpoint 信息        | 否       | 兼容 OSS，注意 OSS 有 External 和 Internal 之分  |
 | obj_info.provider          | S3 的 Provider 信息                 | 是       |                                                  |
@@ -305,7 +304,6 @@ Content-Type: text/plain
 PUT /MetaService/http/create_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456",
     "name": "name",
@@ -357,7 +355,7 @@ Content-Type: text/plain
 
 ### 接口描述
 
-本接口用于删除一个已存在的 Instance，标记删除后， Recycler 会异步回收资源。
+本接口用于删除一个已存在的 Instance，标记删除后，Recycler 会异步回收资源。
 
 ### 请求
 
@@ -367,7 +365,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string
 }
@@ -385,7 +382,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456"
 }
@@ -420,7 +416,7 @@ Content-Type: text/plain
 
 ### 接口描述
 
-本接口用于查询 Instance 下的信息（包括S3 信息、Cluster 信息、Stage 信息等），可用于 Debug。
+本接口用于查询 Instance 下的信息（包括 S3 信息、Cluster 信息、Stage 信息等），可用于 Debug。
 
 ### 请求
 
@@ -641,7 +637,7 @@ curl '127.0.0.1:5000/MetaService/http/set_instance_status?token=greedisgood9999'
 }
 ```
 
-## 获取 Instance配置的 S3 信息
+## 获取 Instance 配置的 S3 信息
 
 ### 接口描述
 
@@ -655,7 +651,6 @@ curl '127.0.0.1:5000/MetaService/http/set_instance_status?token=greedisgood9999'
 PUT /MetaService/http/get_obj_store_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {"cloud_unique_id": "<cloud_unique_id>"}
 ```
 
@@ -671,7 +666,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_obj_store_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {"cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1"}
 ```
 
@@ -730,7 +724,6 @@ Content-Type: text/plain
 PUT /MetaService/http/update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "internal_bucket_user":[
@@ -773,7 +766,6 @@ Content-Type: text/plain
 PUT /MetaService/http/update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"test",
     "internal_bucket_user":[
@@ -835,7 +827,6 @@ Content-Type: text/plain
 PUT /MetaService/http/legacy_update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "obj": {
@@ -862,7 +853,6 @@ Content-Type: text/plain
 PUT /MetaService/http/legacy_update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
     "obj": {
@@ -912,7 +902,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_obj_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "obj": {
@@ -945,7 +934,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_obj_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
     "obj": {
@@ -1023,7 +1011,7 @@ Content-Type: text/plain
 | instance_id                   | instance_id             | 是       | 全局唯一（包括历史上）                                       |
 | cluster                       | Cluster 对象            | 是       |                                                              |
 | cluster.cluster_name          | Cluster 名称            | 是       | 其中 FE 的 Cluster 名称特殊，默认为 RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_name 修改 |
-| cluster.cluster_id            | Cluster 的 ID           | 是       | 其中 FE 的 Cluster ID 特殊，默认为RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改 |
+| cluster.cluster_id            | Cluster 的 ID           | 是       | 其中 FE 的 Cluster ID 特殊，默认为 RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改 |
 | cluster.type                  | Cluster 中节点的类型    | 是       | 支持："SQL","COMPUTE" 两种 Type，"SQL"表示 SQL Service 对应 FE， "COMPUTE"表示计算机节点对应 BE |
 | cluster.nodes                 | Cluster 中的节点数组    | 是       |                                                              |
 | cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id  | 是       | fe.conf、be.conf 中的 cloud_unique_id 配置项                 |
@@ -1039,7 +1027,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456",
     "cluster": {
@@ -1096,7 +1083,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":string,
     "cloud_unique_id":string,
@@ -1120,7 +1106,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"regression_instance0",
     "cloud_unique_id":"1:regression_instance0:regression-cloud-unique-id-fe-1",
@@ -1183,7 +1168,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":string,
     "cluster": {
@@ -1208,7 +1192,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"regression_instance0",
     "cluster": {
@@ -1257,7 +1240,6 @@ Content-Type: text/plain
 PUT /MetaService/http/rename_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":string,
     "cluster": {
@@ -1282,7 +1264,6 @@ Content-Type: text/plain
 PUT /MetaService/http/rename_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"regression_instance0",
     "cluster": {
@@ -1333,7 +1314,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "cluster": {
@@ -1379,7 +1359,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "instance_id_deadbeef_1",
     "cluster": {
@@ -1441,7 +1420,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "cluster": {
@@ -1481,7 +1459,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "instance_id_deadbeef_1",
     "cluster": {
@@ -1543,7 +1520,6 @@ Content-Type: text/plain
 PUT /MetaService/http/update_cluster_mysql_user_name?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "cluster": {
@@ -1572,7 +1548,6 @@ Content-Type: text/plain
 PUT /MetaService/http/update_cluster_mysql_user_name?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "instance_id_deadbeef",
     "cluster": {
@@ -1688,7 +1663,7 @@ curl -u root: http://127.0.0.1:12100/rest/v2/manager/cluster/cluster_info/cloud_
 }
 ```
 
-## 开启Instance 对象数据服务端加密
+## 开启 Instance 对象数据服务端加密
 
 ### 接口描述
 
@@ -1702,7 +1677,6 @@ curl -u root: http://127.0.0.1:12100/rest/v2/manager/cluster/cluster_info/cloud_
 PUT /MetaService/http/enable_instance_sse?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string
 }
@@ -1720,7 +1694,6 @@ Content-Type: text/plain
 PUT /MetaService/http/enable_instance_sse?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456"
 }
@@ -1785,7 +1758,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_cluster_status?token=greedisgood9999 HTTP/1.1
 Content-Length: 109
 Content-Type: text/plain
-
 {
     "instance_ids":["regression_instance-dx-1219", "regression_instance-dx-0128"],
     "status":"NORMAL"
@@ -1847,7 +1819,6 @@ Content-Type: text/plain
 PUT /MetaService/http/set_cluster_status?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "cluster": {
@@ -1872,7 +1843,6 @@ Content-Type: text/plain
 PUT /MetaService/http/set_cluster_status?token=greedisgood9999 HTTP/1.1
 Content-Length: 128
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id-fe-0128",
     "cluster": {
@@ -1970,7 +1940,6 @@ Content-Type: text/plain
 POST /MetaService/http/get_tablet_stats?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "tablet_idx": [{
@@ -1999,7 +1968,6 @@ Content-Type: text/plain
 POST /MetaService/http/get_tablet_stats?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id":"1:regression_instance0:regression-cloud-unique-id0",
     "tablet_idx": [{
@@ -2049,7 +2017,6 @@ tablet_stats {
 POST /MetaService/http/abort_txn?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "txn_id": int64
@@ -2077,7 +2044,6 @@ or
 POST /MetaService/http/abort_txn?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
     "txn_id": 869414052004864
@@ -2107,7 +2073,6 @@ status {
 POST /MetaService/http/abort_tablet_job?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "job" : {
@@ -2134,7 +2099,6 @@ Content-Type: text/plain
 POST /MetaService/http/abort_tablet_job?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
     "job" : {

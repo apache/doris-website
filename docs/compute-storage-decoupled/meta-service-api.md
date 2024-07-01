@@ -45,8 +45,8 @@ For certain fields, special attention should be paid to their allowed value rang
 | Field           | Description                                                  | Notes                                                        |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | instance_id     | ID of the instance in the compute-storage decoupled mode,  normally a UUID string | Historically unique                                          |
-| cloud_unique_id | A configuration in be.conf fe.conf in the compute-storage decoupled mode; should be provided in a create_cluster request; the format of it is 1:<instance_id>:<string> | Example: "1:regression_instance0:regression-cloud-unique-id-1" |
-| cluster_name    | In the compute-storage decoupled mode, this field is required when describing a compute cluster. It must be a unique identifier and its format should match the pattern[a-zA-Z][0-9a-zA-Z_]+ | Example: write_cluster, read_cluster0                        |
+| cloud_unique_id | A configuration in be.conf fe.conf in the compute-storage decoupled mode; should be provided in a create_cluster request; the format of it is `1:<instance_id>:<string>` | Example: `1:regression_instance0:regression-cloud-unique-id-1` |
+| cluster_name    | In the compute-storage decoupled mode, this field is required when describing a compute cluster. It must be a unique identifier and its format should match the pattern` [a-zA-Z][0-9a-zA-Z_]+` | Example: write_cluster, read_cluster0                        |
 
 ## create_instance (multiple storage vaults)
 
@@ -112,7 +112,6 @@ Content-Type: text/plain
 PUT /MetaService/http/create_instance?token=greedisgood9999 HTTP/1.1
 Content-Length: 550
 Content-Type: text/plain
-
 {
   "instance_id": "sample_instance_id",
   "name": "sample_instance_name",
@@ -177,7 +176,7 @@ Content-Type: text/plain
 | vault.obj_info.sk          | S3 Secret Key                                                | Required          |                                                              |
 | vault.obj_info.bucket      | S3 bucket name                                               | Required          |                                                              |
 | vault.obj_info.prefix      | Prefix for data storage on S3                                | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket. |
-| obj_info.endpoint          | S3 endpoint                                                  | Required          | The domain or IP:port, not including the scheme prefix such as http://. |
+| obj_info.endpoint          | S3 endpoint                                                  | Required          | The domain or IP:port, not including the scheme prefix such as` http://.` |
 | obj_info.region            | S3 region                                                    | Required          | If using MinIO, this parameter can be filled in with any value. |
 | obj_info.external_endpoint | S3 external endpoint                                         | Required          | Normally consistent with the endpoint. Compatible with OSS. Note the difference between external and internal OSS. |
 | vault.obj_info.provider    | S3 provider; options include OSS, S3, COS, OBS, BOS, GCP, and AZURE | Required          | If using MinIO, simply fill in 'S3'.                         |
@@ -289,7 +288,7 @@ Content-Type: text/plain
 | obj_info.sk                | S3 Secret Key                                    | Required          |                                                              |
 | obj_info.bucket            | S3 bucket name                                   | Required          |                                                              |
 | obj_info.prefix            | Prefix for data storage on S3                    | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket. |
-| obj_info.endpoint          | S3 endpoint                                      | Required          | The domain or IP:port, not including the scheme prefix such as http://. |
+| obj_info.endpoint          | S3 endpoint                                      | Required          | The domain or IP:port, not including the scheme prefix such as `http://. ` |
 | obj_info.region            | S3 region                                        | Required          |                                                              |
 | obj_info.external_endpoint | S3 external endpoint                             | Optional          | Compatible with OSS. Note the difference between external and internal OSS. |
 | obj_info.provider          | S3 provider                                      | Required          |                                                              |
@@ -305,7 +304,6 @@ Content-Type: text/plain
 PUT /MetaService/http/create_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456",
     "name": "name",
@@ -367,7 +365,6 @@ This API is used to delete an existing instance. After marking it for deletion, 
 PUT /MetaService/http/drop_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string
 }
@@ -385,7 +382,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_instance?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456"
 }
@@ -655,7 +651,6 @@ This API is used to retrieve the S3 Access Key (AK) and Secret Key (SK) configur
 PUT /MetaService/http/get_obj_store_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {"cloud_unique_id": "<cloud_unique_id>"}
 ```
 
@@ -671,7 +666,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_obj_store_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {"cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1"}
 ```
 
@@ -730,7 +724,6 @@ This API is used to update the S3 and RAM_USER Access Key (AK) and Secret Key (S
 PUT /MetaService/http/update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "internal_bucket_user":[
@@ -773,7 +766,6 @@ Content-Type: text/plain
 PUT /MetaService/http/update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"test",
     "internal_bucket_user":[
@@ -841,7 +833,6 @@ This API is used to update the S3 Access Key (AK) and Secret Key (SK) configured
 PUT /MetaService/http/legacy_update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "obj": {
@@ -868,7 +859,6 @@ Content-Type: text/plain
 PUT /MetaService/http/legacy_update_ak_sk?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
     "obj": {
@@ -918,7 +908,6 @@ This API is used to add S3 configurations for an instance. It supports a maximum
 PUT /MetaService/http/add_obj_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "obj": {
@@ -951,7 +940,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_obj_info?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:cloud_unique_id_compute_node1",
     "obj": {
@@ -1045,7 +1033,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456",
     "cluster": {
@@ -1102,7 +1089,6 @@ This API is used to retrieve the information of a compute cluster. It can be cal
 PUT /MetaService/http/get_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":string,
     "cloud_unique_id":string,
@@ -1126,7 +1112,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"regression_instance0",
     "cloud_unique_id":"1:regression_instance0:regression-cloud-unique-id-fe-1",
@@ -1189,7 +1174,6 @@ This API is used to delete the information of a compute cluster under an instanc
 PUT /MetaService/http/drop_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":string,
     "cluster": {
@@ -1214,7 +1198,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"regression_instance0",
     "cluster": {
@@ -1263,7 +1246,6 @@ This API is used to rename a compute cluster under an instance. It searches for 
 PUT /MetaService/http/rename_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":string,
     "cluster": {
@@ -1288,7 +1270,6 @@ Content-Type: text/plain
 PUT /MetaService/http/rename_cluster?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id":"regression_instance0",
     "cluster": {
@@ -1339,7 +1320,6 @@ This API can be used to add either FE or BE nodes.
 PUT /MetaService/http/add_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "cluster": {
@@ -1385,7 +1365,6 @@ Content-Type: text/plain
 PUT /MetaService/http/add_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "instance_id_deadbeef_1",
     "cluster": {
@@ -1447,7 +1426,6 @@ This API is used to reduce nodes of the same type for a specific compute cluster
 PUT /MetaService/http/drop_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "cluster": {
@@ -1487,7 +1465,6 @@ Content-Type: text/plain
 PUT /MetaService/http/drop_node?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "instance_id_deadbeef_1",
     "cluster": {
@@ -1549,7 +1526,6 @@ This API is used to add a user to a specific compute cluster under an instance, 
 PUT /MetaService/http/update_cluster_mysql_user_name?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string,
     "cluster": {
@@ -1578,7 +1554,6 @@ Content-Type: text/plain
 PUT /MetaService/http/update_cluster_mysql_user_name?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "instance_id_deadbeef",
     "cluster": {
@@ -1708,7 +1683,6 @@ This API is used to enable server-side encryption for the instance object data.
 PUT /MetaService/http/enable_instance_sse?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": string
 }
@@ -1726,7 +1700,6 @@ Content-Type: text/plain
 PUT /MetaService/http/enable_instance_sse?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "instance_id": "123456"
 }
@@ -1791,7 +1764,6 @@ Content-Type: text/plain
 PUT /MetaService/http/get_cluster_status?token=greedisgood9999 HTTP/1.1
 Content-Length: 109
 Content-Type: text/plain
-
 {
     "instance_ids":["regression_instance-dx-1219", "regression_instance-dx-0128"],
     "status":"NORMAL"
@@ -1853,7 +1825,6 @@ This API is used to set the runtime status of compute clusters.
 PUT /MetaService/http/set_cluster_status?token=<token> HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "cluster": {
@@ -1878,7 +1849,6 @@ Content-Type: text/plain
 PUT /MetaService/http/set_cluster_status?token=greedisgood9999 HTTP/1.1
 Content-Length: 128
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id-fe-0128",
     "cluster": {
@@ -1976,7 +1946,6 @@ This API is used to query the status of a tablet for debugging purposes.
 POST /MetaService/http/get_tablet_stats?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "tablet_idx": [{
@@ -2005,7 +1974,6 @@ Content-Type: text/plain
 POST /MetaService/http/get_tablet_stats?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id":"1:regression_instance0:regression-cloud-unique-id0",
     "tablet_idx": [{
@@ -2055,7 +2023,6 @@ This API is used to abort a transaction during debugging.
 POST /MetaService/http/abort_txn?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "txn_id": int64
@@ -2083,7 +2050,6 @@ or
 POST /MetaService/http/abort_txn?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
     "txn_id": 869414052004864
@@ -2113,7 +2079,6 @@ This API is used to abort a job running on a tablet. Currently, it only supports
 POST /MetaService/http/abort_tablet_job?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": string,
     "job" : {
@@ -2140,7 +2105,6 @@ Content-Type: text/plain
 POST /MetaService/http/abort_tablet_job?token=greedisgood9999 HTTP/1.1
 Content-Length: <ContentLength>
 Content-Type: text/plain
-
 {
     "cloud_unique_id": "1:regression_instance0:regression-cloud-unique-id0",
     "job" : {
