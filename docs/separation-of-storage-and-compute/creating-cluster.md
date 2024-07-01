@@ -28,7 +28,7 @@ Creating a Doris cluster in the compute-storage decoupled mode is to create the 
 
 In the compute-storage decoupled mode, the registration and changes of nodes in a warehouse is managed by Meta Service. FE, BE, and Meta Service interact for service discovery and authentication.
 
-Creating a Doris cluster in the compute-storage decoupled mode entails interaction with Meta Service. Meta Service provides standard HTTP APIs for resource management operations. For more information, refer to [Meta Service API](https://doris.apache.org/docs/dev/separation-of-storage-and-compute/meta-service-resource-http-api). 
+Creating a Doris cluster in the compute-storage decoupled mode entails interaction with Meta Service. Meta Service provides standard HTTP APIs for resource management operations. For more information, refer to [Meta Service API](./meta-service-api.md).
 
 The creation process is to describe the machine composition within that cluster, including the following two steps:
 
@@ -44,7 +44,7 @@ The creation process is to describe the machine composition within that cluster,
 
 ## Cluster & storage vault
 
-The first step is to register a warehouse in Meta Service. A single Meta Service can support multiple warehouses (i.e., multiple sets of FE-BE). Specifically, this process includes describing the required storage vault (i.e., the shared storage layer demonstrated in [Overview](overview.md)) for that warehouse. The options for the storage vault include HDFS and S3 (or object storage that supports the S3 protocol, such as AWS S3, GCS, Azure Blob, MinIO, Ceph, and Alibaba Cloud OSS). Storage vault is the remote shared storage used by Doris in the compute-storage decoupled mode. Users can configure multiple storage vaults for one warehouse, and store different tables on different storage vaults.
+The first step is to register a warehouse in Meta Service. A single Meta Service can support multiple warehouses (i.e., multiple sets of FE-BE). Specifically, this process includes describing the required storage vault (i.e., the shared storage layer demonstrated in [Overview](./overview.md)) for that warehouse. The options for the storage vault include HDFS and S3 (or object storage that supports the S3 protocol, such as AWS S3, GCS, Azure Blob, MinIO, Ceph, and Alibaba Cloud OSS). Storage vault is the remote shared storage used by Doris in the compute-storage decoupled mode. Users can configure multiple storage vaults for one warehouse, and store different tables on different storage vaults.
 
 This step involves calling the `create_instance` API of Meta Service. The key parameters include:
 
@@ -53,7 +53,7 @@ This step involves calling the `create_instance` API of Meta Service. The key pa
 - `user_id`: The user ID, a string that should be filled in as required.
 - `vault`: The storage vault information, such as HDFS properties and S3 Bucket details.
 
-For more information, refer to [Meta Service API](meta-service-api.md).
+For more information, refer to [Meta Service API](./meta-service-api.md).
 
 ### Create cluster using HDFS as storage vault
 

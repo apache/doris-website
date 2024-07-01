@@ -28,7 +28,7 @@ under the License.
 
 存算分离架构下，整个数仓的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
 
-创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](meta-service-api.md)进行资源管理操作。
+创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](./meta-service-api.md)进行资源管理操作。
 
 创建存算分离集群的本质是描述该存算分离集群中的机器组成。创建基础的存算分离集群主要包括以下两步：
 
@@ -44,7 +44,7 @@ under the License.
 
 ## 存算分离集群及其存储后端
 
-这一步骤的主要目的是在 Meta Service 注册一个存算分离模式的 Doris 数仓（一套 Meta Service 可支持多个不同的 Doris 数仓（即多套 FE-BE），包括描述该仓库所需的存储后端（Storage Vault，即[概览](overview.md)中所提及的共享存储层），可以选择 HDFS 或者 S3（包括支持 S3 协议的对象存储，如 AWS S3、GCS、Azure Blob、阿里云 OSS 以及 MinIO、Ceph 等）。存储后端是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个存储后端，可将不同表存储在不同存储后端上。
+这一步骤的主要目的是在 Meta Service 注册一个存算分离模式的 Doris 数仓（一套 Meta Service 可支持多个不同的 Doris 数仓（即多套 FE-BE），包括描述该仓库所需的存储后端（Storage Vault，即[概览](./overview.md)中所提及的共享存储层），可以选择 HDFS 或者 S3（包括支持 S3 协议的对象存储，如 AWS S3、GCS、Azure Blob、阿里云 OSS 以及 MinIO、Ceph 等）。存储后端是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个存储后端，可将不同表存储在不同存储后端上。
 
 此步骤需要调用 Meta Service 的 `create_instance` 接口，主要参数包括：
 
@@ -53,7 +53,7 @@ under the License.
 - `user_id`：用户 ID，是一个字符串，按需填写。
 - `vault`：HDFS 或者 S3 的存储后端信息，如 HDFS 属性、S3 Bucket 信息等。
 
-更多信息请参考 [Meta Service API 参考文档](meta-service-api.md)。
+更多信息请参考 [Meta Service API 参考文档](./meta-service-api.md)。
 
 ### 创建基于 HDFS 的存算分离模式 Doris 集群
 
