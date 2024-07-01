@@ -61,10 +61,11 @@ Workload Policy主要包含以下几个概念：
 
 ### 适用于BE的policy
 1. Condition
-   * be_scan_rows，一个sql在单个BE进程内scan的行数，如果有多个并发那就是多个并发的累加值。
-   * be_scan_bytes，一个sql在单个BE进程内scan的字节数，如果有多个并发那么就是多个并发的累加值。
+   * be_scan_rows，一个sql在单个BE进程内scan的行数，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值。
+   * be_scan_bytes，一个sql在单个BE进程内scan的字节数，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值，单位是字节。
    * query_time，一个sql在单个BE进程上的运行时间，时间单位是毫秒。
-
+   * query_be_memory_bytes，从2.1.5版本开始支持。一个sql在单个BE进程内使用的内存用量，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值，单位是字节。
+  
 2. Action
    * cancel_query，取消查询。
 
