@@ -1494,13 +1494,12 @@
             "label": "Separation of Storage and Compute",
             "items": [
                 "separation-of-storage-and-compute/overview",
-                "separation-of-storage-and-compute/deployment",
-                "separation-of-storage-and-compute/compute-cluster",
+                "separation-of-storage-and-compute/before-deployment",
+                "separation-of-storage-and-compute/compilation-and-deployment",
+                "separation-of-storage-and-compute/creating-cluster",
+                "separation-of-storage-and-compute/managing-compute-cluster",
                 "separation-of-storage-and-compute/file-cache",
-                "separation-of-storage-and-compute/storage-vault",
-                "separation-of-storage-and-compute/meta-service-resource-http-api",
-                "separation-of-storage-and-compute/install-fdb",
-                "separation-of-storage-and-compute/use-case"
+                "separation-of-storage-and-compute/meta-service-api"
             ]
         },
         {
