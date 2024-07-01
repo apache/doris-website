@@ -32,11 +32,11 @@ under the License.
 
 ## 使用须知
 
-1. 将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
-2. hive 支持 1/2/3 版本。
+1. 将 `core-site.xml`，`hdfs-site.xml` 和 `hive-site.xml` 放到 FE 和 BE 的 `conf` 目录下。优先读取 `conf` 目录下的 `hadoop` 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
+2. Hive 支持 1/2/3 版本。
 3. 支持 Managed Table 和 External Table，支持部分 Hive View。
-4. 可以识别 Hive Metastore 中存储的 hive、iceberg、hudi 元数据。
-5. 如果 Hadoop 节点配置了 hostname，请确保添加对应的映射关系到 /etc/hosts 文件。
+4. 可以识别 Hive Metastore 中存储的 Hive、Iceberg、Hudi 元数据。
+5. 如果 Hadoop 节点配置了 `hostname`，请确保添加对应的映射关系到 `/etc/hosts` 文件。
 
 ## 创建 Catalog
 
@@ -89,9 +89,9 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
-ViewFS 相关参数可以如上面一样添加到 catalog 配置中，也可以添加到 `conf/core-site.xml` 中。
+ViewFS 相关参数可以如上面一样添加到 Catalog 配置中，也可以添加到 `conf/core-site.xml` 中。
 
-ViewFS 工作原理和参数配置可以参考 hadoop 相关文档，比如 <https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html>
+ViewFS 工作原理和参数配置可以参考 Hadoop 相关文档，比如 [ViewFS Guide](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/ViewFs.html)。
 
 ### Hive On JuiceFS
 
@@ -126,9 +126,9 @@ CREATE CATALOG hive PROPERTIES (
 
 可选属性：
 
-* s3.connection.maximum：s3 最大连接数，默认 50
-* s3.connection.request.timeout：s3 请求超时时间，默认 3000ms
-* s3.connection.timeout：s3 连接超时时间，默认 1000ms
+* s3.connection.maximum：S3 最大连接数，默认 50
+* s3.connection.request.timeout：S3 请求超时时间，默认 3000ms
+* s3.connection.timeout：S3 连接超时时间，默认 1000ms
 
 ### Hive On OSS
 
@@ -168,7 +168,7 @@ CREATE CATALOG hive PROPERTIES (
 
 ### Hive With Glue
 
-> 连接 Glue 时，如果是在非 EC2 环境，需要将 EC2 环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载[AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)工具进行配置，这种方式也会在当前用户目录下创建`.aws`目录。
+> 连接 Glue 时，如果是在非 EC2 环境，需要将 EC2 环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载 [AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) 工具进行配置，这种方式也会在当前用户目录下创建 `.aws` 目录。
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -195,13 +195,13 @@ CREATE CATALOG hive PROPERTIES (
 
 ### 默认行为和 TTL
 
-默认情况下，元数据缓存会在第一次被填充后的 10 分钟后失效。该时间由 fe.conf 的配置参数 `external_cache_expire_time_minutes_after_access` 决定。（注意，在 2.0.1 及以前的版本中，该参数默认值为 1 天）。
+默认情况下，元数据缓存会在第一次被填充后的 10 分钟后失效。该时间由 `fe.conf` 的配置参数 `external_cache_expire_time_minutes_after_access` 决定。（注意，在 2.0.1 及以前的版本中，该参数默认值为 1 天）。
 
 例如，用户在 10:00 第一次访问表 A 的元数据，那么这些元数据会被缓存，并且到 10:10 后会自动失效，如果用户在 10:11 再次访问相同的元数据，则会直接访问 Hive MetaStore 获取信息，并重新填充缓存。
 
 `external_cache_expire_time_minutes_after_access` 会影响 Catalog 下的所有 4 种缓存。
 
-针对 Hive 中常用的 `INSERT INTO OVERWRITE PARTITION` 操作，也可以通过配置 `文件信息缓存` 的 TTL，来及时的更新 `文件信息缓存`：
+针对 Hive 中常用的 `INSERT INTO OVERWRITE PARTITION` 操作，也可以通过配置 `文件信息缓存` 的 TTL，来及时地更新 `文件信息缓存`：
 
 ```
 CREATE CATALOG hive PROPERTIES (
@@ -227,7 +227,7 @@ CREATE CATALOG hive PROPERTIES (
 
     该命令会刷新指定 Catalog 的库列表，表列名以及所有缓存信息等。
 
-    `invalid_cache` 表示是否要刷新缓存。默认为 true。如果为 false，则只会刷新 Catalog 的库、表列表，而不会刷新缓存信息。该参数适用于，用户只想同步新增删的库表信息时。
+    `invalid_cache` 表示是否要刷新缓存。默认为 `true`。如果为 `false`，则只会刷新 Catalog 的库、表列表，而不会刷新缓存信息。该参数适用于，用户只想同步新增删的库表信息时。
 
 2. REFRESH DATABASE：刷新指定 Database。
 
@@ -237,7 +237,7 @@ CREATE CATALOG hive PROPERTIES (
 
     该命令会刷新指定 Database 的表列名以及 Database 下的所有缓存信息等。
 
-    `invalid_cache` 属性含义同上。默认为 true。如果为 false，则只会刷新 Database 的表列表，而不会刷新缓存信息。该参数适用于，用户只想同步新增删的表信息时。
+    `invalid_cache` 属性含义同上。默认为 `true`。如果为 `false`，则只会刷新 Database 的表列表，而不会刷新缓存信息。该参数适用于，用户只想同步新增删的表信息时。
 
 3. REFRESH TABLE: 刷新指定 Table。
 
@@ -269,13 +269,13 @@ CREATE CATALOG hive PROPERTIES (
 
 ### 自动刷新
 
-自动刷新目前仅支持 Hive Metastore 元数据服务。通过让 FE 节点定时读取 HMS 的 notification event 来感知 Hive 表元数据的变更情况，目前支持处理如下 event：
+自动刷新目前仅支持 Hive Metastore 元数据服务。通过让 FE 节点定时读取 HMS 的 Notification Event 来感知 Hive 表元数据的变更情况，目前支持处理如下 Event：
 
 |事件 | 事件行为和对应的动作 |
 |---|---|
 | CREATE DATABASE | 在对应数据目录下创建数据库。 |
 | DROP DATABASE | 在对应数据目录下删除数据库。 |
-| ALTER DATABASE  | 此事件的影响主要有更改数据库的属性信息，注释及默认存储位置等，这些改变不影响 doris 对外部数据目录的查询操作，因此目前会忽略此 event。 |
+| ALTER DATABASE  | 此事件的影响主要有更改数据库的属性信息，注释及默认存储位置等，这些改变不影响 Doris 对外部数据目录的查询操作，因此目前会忽略此 Event。 |
 | CREATE TABLE | 在对应数据库下创建表。 |
 | DROP TABLE  | 在对应数据库下删除表，并失效表的缓存。 |
 | ALTER TABLE | 如果是重命名，先删除旧名字的表，再用新名字创建表，否则失效该表的缓存。 |
@@ -283,17 +283,17 @@ CREATE CATALOG hive PROPERTIES (
 | DROP PARTITION | 在对应表缓存的分区列表里删除分区，并失效该分区的缓存。 |
 | ALTER PARTITION | 如果是重命名，先删除旧名字的分区，再用新名字创建分区，否则失效该分区的缓存。 |
 
-> 当导入数据导致文件变更，分区表会走 ALTER PARTITION event 逻辑，不分区表会走 ALTER TABLE event 逻辑。
+> 当导入数据导致文件变更，分区表会走 ALTER PARTITION Event 逻辑，不分区表会走 ALTER TABLE Event 逻辑。
 >
-> 如果绕过 HMS 直接操作文件系统的话，HMS 不会生成对应事件，doris 因此也无法感知
+> 如果绕过 HMS 直接操作文件系统的话，HMS 不会生成对应事件，Doris 因此也无法感知
 
-该特性在 fe.conf 中有如下参数：
+该特性在 `fe.conf` 中有如下参数：
 
 1. `enable_hms_events_incremental_sync`: 是否开启元数据自动增量同步功能，默认关闭。
 2. `hms_events_polling_interval_ms`: 读取 event 的间隔时间，默认值为 10000，单位：毫秒。
 3. `hms_events_batch_size_per_rpc`: 每次读取 event 的最大数量，默认值为 500。
 
-如果想使用该特性 (华为 MRS 除外)，需要更改 HMS 的 hive-site.xml 并重启 HMS 和 HiveServer2：
+如果想使用该特性 (华为 MRS 除外)，需要更改 HMS 的 `hive-site.xml` 并重启 HMS 和 HiveServer2：
 
 ```
 <property>
@@ -311,7 +311,7 @@ CREATE CATALOG hive PROPERTIES (
 
 ```
 
-华为的 MRS 需要更改 hivemetastore-site.xml 并重启 HMS 和 HiveServer2：
+华为的 MRS 需要更改 `hivemetastore-site.xml` 并重启 HMS 和 HiveServer2：
 
 ```
 <property>
@@ -324,9 +324,9 @@ CREATE CATALOG hive PROPERTIES (
 
 Doris 可以正确访问不同 Hive 版本中的 Hive Metastore。在默认情况下，Doris 会以 Hive 2.3 版本的兼容接口访问 Hive Metastore。
 
-如在查询时遇到如 `Invalid method name: 'get_table_req'` 类似错误，说明 hive 版本不匹配。
+如在查询时遇到如 `Invalid method name: 'get_table_req'` 类似错误，说明 Hive 版本不匹配。
 
-你可以在创建 Catalog 时指定 hive 的版本。如访问 Hive 1.1.0 版本：
+你可以在创建 Catalog 时指定 Hive 的版本。如访问 Hive 1.1.0 版本：
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -359,15 +359,15 @@ CREATE CATALOG hive PROPERTIES (
 | `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | 支持嵌套，如 `struct<col1: array<int>, col2: map<int, date>>` |
 | other | unsupported | |
 
-> 注：是否按照 hive 表的 schema 来截断 char 或者 varchar 列
+> 注：是否按照 Hive 表的 Schema 来截断 `char` 或者 `varchar` 列
 
-> 如果会话变量 `truncate_char_or_varchar_columns` 开启，则当 hive 表的 schema 中 char 或者 varchar 列的最大长度和底层 parquet 或者 orc 文件中的 schema 不一致时会按照 hive 表列的最大长度进行截断。
+> 如果会话变量 `truncate_char_or_varchar_columns` 开启，则当 Hive 表的 Schema 中 `char` 或者 `varchar` 列的最大长度和底层 Parquet 或者 ORC 文件中的 `schema` 不一致时会按照 Hive 表列的最大长度进行截断。
 
-> 该变量默认为 false。
+> 该变量默认为 `false`。
 
 ## 使用 broker 访问 HMS
 
-创建 HMS Catalog 时增加如下配置，Hive 外表文件分片和文件扫描将会由名为 `test_broker` 的 broker 完成
+创建 HMS Catalog 时增加如下配置，Hive 外表文件分片和文件扫描将会由名为 `test_broker` 的 Broker 完成
 
 ```sql
 "broker.name" = "test_broker"
@@ -387,7 +387,7 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 目前支持 Ranger 的库、表、列的鉴权，暂不支持加密、行权限、Data Mask 等功能。
 
-如需使用 Apache Ranger 为整个 Doris 集群服务进行鉴权，请参阅 [Apache Ranger](../../admin-manual/auth/ranger.md).
+如需使用 Apache Ranger 为整个 Doris 集群服务进行鉴权，请参阅 [Apache Ranger](../../admin-manual/auth/ranger.md)
 
 ### 环境配置
 
@@ -406,9 +406,9 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 2. 配置所有 FE 环境：
 
-    1. 将 HMS conf 目录下的配置文件 ranger-hive-audit.xml,ranger-hive-security.xml,ranger-policymgr-ssl.xml 复制到 FE 的 conf 目录下。
+    1. 将 HMS `conf` 目录下的配置文件 `ranger-hive-audit.xml`, `ranger-hive-security.xml`, `ranger-policymgr-ssl.xml` 复制到 FE 的 `conf` 目录下。
 
-    2. 修改 ranger-hive-security.xml 的属性，参考配置如下：
+    2. 修改 `ranger-hive-security.xml` 的属性，参考配置如下：
 
         ```sql
         <?xml version="1.0" encoding="UTF-8"?>
@@ -463,19 +463,19 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
         </configuration>
         ```
 
-    3. 为获取到 Ranger 鉴权本身的日志，可在 `<doris_home>/conf` 目录下添加配置文件 log4j.properties。
+    3. 为获取到 Ranger 鉴权本身的日志，可在 `<doris_home>/conf` 目录下添加配置文件 `log4j.properties`。
 
     4. 重启 FE。
 
 ### 最佳实践
 
-1. 在 ranger 端创建用户 user1 并授权 db1.table1.col1 的查询权限
+1. 在 Ranger 端创建用户 user1 并授权 db1.table1.col1 的查询权限
 
-2. 在 ranger 端创建角色 role1 并授权 db1.table1.col2 的查询权限
+2. 在 Ranger 端创建角色 role1 并授权 db1.table1.col2 的查询权限
 
-3. 在 doris 创建同名用户 user1，user1 将直接拥有 db1.table1.col1 的查询权限
+3. 在 Doris 创建同名用户 user1，user1 将直接拥有 db1.table1.col1 的查询权限
 
-4. 在 doris 创建同名角色 role1，并将 role1 分配给 user1，user1 将同时拥有 db1.table1.col1 和 col2 的查询权限
+4. 在 Doris 创建同名角色 role1，并将 role1 分配给 user1，user1 将同时拥有 db1.table1.col1 和 col2 的查询权限
 
 5. Admin 和 Root 用户的权限不受 Apache Ranger 的权限控制
 
@@ -495,10 +495,10 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
 * JVM 参数
 
- 请在 FE 和 BE 的 JVM 参数中添加如下配置（位于 fe.conf 和 be.conf 中）：
+ 请在 FE 和 BE 的 JVM 参数中添加如下配置（位于 `fe.conf` 和 `be.conf` 中）：
 
- 	* `-Djavax.security.auth.useSubjectCredsOnly=false`
- 	* `-Dsun.security.krb5.debug=true`
+  * `-Djavax.security.auth.useSubjectCredsOnly=false`
+  * `-Dsun.security.krb5.debug=true`
 
  并重启 FE、BE 节点以确保其生效。
 
@@ -549,11 +549,11 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
 ### 多 Kerberos 集群配置
 
-如需同时访问多个启用了 Kerberos 的 Hadoop 集群，需要修改 `krb5.conf` 文件并且配置`hadoop.security.auth_to_local`属性，具体操作如下：
+如需同时访问多个启用了 Kerberos 的 Hadoop 集群，需要修改 `krb5.conf` 文件并且配置 `hadoop.security.auth_to_local` 属性，具体操作如下：
 
-1. 在 krb5.conf 文件配置 realms
+1. 在 `krb5.conf` 文件配置 Realms
 
-   配置多集群时，需要把多个 realm 配置到一个 `krb5.conf` 里头，kdc 和 admin_server 也可以是域名。
+    配置多集群时，需要把多个 Realm 配置到一个 `krb5.conf` 里头，`kdc` 和 `admin_server` 也可以是域名。
 
     ``` properties
     [realms]
@@ -567,9 +567,9 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
     }
     ```
 
-2. 在 krb5.conf 文件配置 domain_realm，
+2. 在 `krb5.conf` 文件配置 `domain_realm`，
 
-   查找 kdc 时使用 principal 中的 domain_name 去找相对应的 realm
+    查找 `kdc` 时使用 Principal 中的 `domain_name` 去找相对应的 Realm
 
     ``` properties
     [libdefaults]
@@ -582,13 +582,13 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
       your-other-host.example = REALM2.COM
     ```
 
-   如果未正确配置，通常会在 doris 的 `log/be.out` 或者 `log/fe.out` 看到两种与 domain_realm 有关的错误：
-    * Unable to locate KDC for realm / Cannot locate KDC
-    * No service creds
+    如果未正确配置，通常会在 Doris 的 `log/be.out` 或者 `log/fe.out` 看到两种与 `domain_realm` 有关的错误：
+   * Unable to locate KDC for realm / Cannot locate KDC
+   * No service creds
 
-3. 配置 domain 到 realm 的映射
+3. 配置 Domain 到 Realm 的映射
 
-   为了在多集群环境下，能匹配到不同 kerberos 服用用到的的 principal，推荐 `core-site.xml` 添加或修改如下配置：
+    为了在多集群环境下，能匹配到不同 Kerberos 服用用到的的 Principal，推荐 `core-site.xml` 添加或修改如下配置：
 
     ```xml
     <property>
@@ -599,7 +599,7 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
     </property>
     ```
 
-   如果需要在 Catalog 中单独生效，可以直接配置在 properties 中：
+    如果需要在 Catalog 中单独生效，可以直接配置在 Properties 中：
 
     ```sql
     CREATE CATALOG hive_krb PROPERTIES (
@@ -619,7 +619,7 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
 4. 重启 Doris 服务
 
-   检验映射规则是否能正确匹配，只要看访问不同集群时是否出现错误：`NoMatchingRule: No rules applied to user/domain_name@REALM.COM`
+    检验映射规则是否能正确匹配，只要看访问不同集群时是否出现错误：`NoMatchingRule: No rules applied to user/domain_name@REALM.COM`
 
 ### 问题排查
 
@@ -627,16 +627,16 @@ CREATE CATALOG hive_krb_ha PROPERTIES (
 
 ## Hive Transactional 表
 
-Hive transactional 表是 Hive 中支持 ACID 语义的表。详情可见：<https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions>
+Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions)。
 
 ### Hive Transactional 表支持情况
 
 |表类型 | 在 Hive 中支持的操作|Hive 表属性 | 支持的 Hive 版本|
 |---|---|---|---|
-|Full-ACID Transactional Table |支持 Insert, Update, Delete 操作|'transactional'='true', 'transactional_properties'='insert_only'|3.x，2.x，其中 2.x 需要在 Hive 中执行完 major compaction 才可以加载|
+|Full-ACID Transactional Table |支持 Insert, Update, Delete 操作|'transactional'='true', 'transactional_properties'='insert_only'|3.x，2.x，其中 2.x 需要在 Hive 中执行完 Major Compaction 才可以加载|
 |Insert-Only Transactional Table|只支持 Insert 操作|'transactional'='true'|3.x，2.x|
 
 ### 当前限制
 
 目前不支持 Original Files 的场景。
-当一个表转换成 Transactional 表之后，后续新写的数据文件会使用 Hive Transactional 表的 schema，但是已经存在的数据文件是不会转化成 Transactional 表的 schema，这样的文件称为 Original Files。
+当一个表转换成 Transactional 表之后，后续新写的数据文件会使用 Hive Transactional 表的 Schema，但是已经存在的数据文件是不会转化成 Transactional 表的 Schema，这样的文件称为 Original Files。
