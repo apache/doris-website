@@ -375,8 +375,8 @@
     "message": "外部表",
     "description": "The label for category Lakehouse.External Table in sidebar docs"
   },
-  "sidebar.docs.category.Compute-Storage Decoupling": {
+  "sidebar.docs.category.Compute-Storage Decoupled": {
     "message": "存算分离",
-    "description": "Compute-Storage Decoupling"
+    "description": "Compute-Storage Decoupled"
   }
 }
