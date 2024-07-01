@@ -1491,15 +1491,15 @@
         },
         {
             "type": "category",
-            "label": "Compute-Storage Decoupling",
+            "label": "Compute-Storage Decoupled",
             "items": [
-                "compute-storage-decoupling/overview",
-                "compute-storage-decoupling/before-deployment",
-                "compute-storage-decoupling/compilation-and-deployment",
-                "compute-storage-decoupling/creating-cluster",
-                "compute-storage-decoupling/managing-compute-cluster",
-                "compute-storage-decoupling/file-cache",
-                "compute-storage-decoupling/meta-service-api"
+                "compute-storage-decoupled/overview",
+                "compute-storage-decoupled/before-deployment",
+                "compute-storage-decoupled/compilation-and-deployment",
+                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-compute-cluster",
+                "compute-storage-decoupled/file-cache",
+                "compute-storage-decoupled/meta-service-api"
             ]
         },
         {
