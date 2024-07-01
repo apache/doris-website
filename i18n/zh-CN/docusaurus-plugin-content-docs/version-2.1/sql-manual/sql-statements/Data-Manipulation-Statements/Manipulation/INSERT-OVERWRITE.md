@@ -51,7 +51,7 @@ INSERT OVERWRITE table table_name
 > partitions: 需要重写的目标分区，支持两种形式：
 >
 >> 1. 分区名。必须是 `table_name` 中存在的分区，多个分区名称用逗号分隔。
->> 2. 星号(*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。
+>> 2. <version since="2.1.3"></version>星号(*)。开启[自动检测分区](#overwrite-auto-detect-partition)功能。写入操作将会自动检测数据所涉及的分区，并覆写这些分区。
 >
 > label: 为 Insert 任务指定一个 label
 >
