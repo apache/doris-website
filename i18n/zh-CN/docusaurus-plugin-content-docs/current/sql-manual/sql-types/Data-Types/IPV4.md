@@ -26,9 +26,15 @@ under the License.
 
 ## IPV4
 
+<version since="dev">
+
+IPV4
+
+</version>
+
 ### description
 
-IPv4 类型，以 UInt32 的形式存储在 4 个字节中，用于表示 IPv4 地址。
+IPv4类型，以UInt32的形式存储在4个字节中，用于表示IPv4地址。
 取值范围是 ['0.0.0.0', '255.255.255.255']。
 
 `超出取值范围或者格式非法的输入将返回NULL`

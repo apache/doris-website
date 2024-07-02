@@ -69,7 +69,7 @@ Variables that support both session-level and global-level setting include:
 * `sql_mode`
 * `enable_profile`
 * `query_timeout`
-* `insert_timeout`
+* <version since="dev" type="inline">`insert_timeout`</version>
 * `exec_mem_limit`
 * `batch_size`
 * `parallel_fragment_exec_instance_num`
@@ -368,7 +368,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `insert_timeout`
 
-    Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
+  <version since="dev"></version>Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
     greater than itself to make it compatible with the habits of older version users to use query_timeout to control the timeout of INSERT statements.
 
 * `resource_group`
@@ -685,6 +685,15 @@ Note that the comment must start with /*+ and can only follow the SELECT.
   Whether to add the final keyword when using the JDBC Catalog function to query ClickHouse,default is false.
   
   It is used for the ReplacingMergeTree table engine of ClickHouse to deduplicate queries.
+
+* `enable_memtable_on_sink_node`
+
+  <version since="2.1.0">
+  Whether to enable MemTable on DataSink node when loading data, default is false.
+  </version>
+
+  Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
+  It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
 
 * `enable_unique_key_partial_update`
 

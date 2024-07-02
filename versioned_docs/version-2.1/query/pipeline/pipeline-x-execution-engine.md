@@ -28,6 +28,8 @@ under the License.
 
 # PipelineX Execution Engine
 
+<version since="2.1.0"></version>
+
 ## Background
 
 The PipelineX execution engine is an experimental feature in Doris 2.1.0, expected to address the four major issues of the Doris pipeline engine:

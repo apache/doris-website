@@ -746,6 +746,63 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 动态分区使用过程中，如果因为一些意外情况导致 `dynamic_partition.start` 和 `dynamic_partition.end` 之间的某些分区丢失，那么当前时间与 `dynamic_partition.end` 之间的丢失分区会被重新创建，`dynamic_partition.start`与当前时间之间的丢失分区不会重新创建。
 
+## 自动分区
+
+:::tip
+2.1 版本开始支持自动分区。
+
+这里给出初步介绍，如需使用，请下载 Doris 2.1，并查阅 2.1 的文档。
+
+自动分区功能支持了在导入数据过程中自动检测是否存在对应所属分区。如果不存在，则会自动创建分区并正常进行导入。
+:::
+
+自动分区功能主要解决了用户预期基于某列对表进行分区操作，但该列的数据分布比较零散或者难以预测，在建表或调整表结构时难以准确创建所需分区，或者分区数量过多以至于手动创建过于繁琐的问题。
+
+以时间类型分区列为例，在动态分区功能中，支持了按特定时间周期自动创建新分区以容纳实时数据。对于实时的用户行为日志等场景该功能基本能够满足需求。但在一些更复杂的场景下，例如处理非实时数据时，分区列与当前系统时间无关，且包含大量离散值。此时为提高效率希望依据此列对数据进行分区，但数据实际可能涉及的分区无法预先掌握，或者预期所需分区数量过大。这种情况下动态分区或者手动创建分区无法满足需求，自动分区功能很好地覆盖了此类需求。
+
+假设表 DDL 如下：
+
+```SQL
+CREATE TABLE `DAILY_TRADE_VALUE`
+(
+    `TRADE_DATE`              date NOT NULL COMMENT '交易日期',
+    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
+    ......
+)
+UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
+PARTITION BY RANGE(`TRADE_DATE`)
+(
+    PARTITION p_2000 VALUES [('2000-01-01'), ('2001-01-01')),
+    PARTITION p_2001 VALUES [('2001-01-01'), ('2002-01-01')),
+    PARTITION p_2002 VALUES [('2002-01-01'), ('2003-01-01')),
+    PARTITION p_2003 VALUES [('2003-01-01'), ('2004-01-01')),
+    PARTITION p_2004 VALUES [('2004-01-01'), ('2005-01-01')),
+    PARTITION p_2005 VALUES [('2005-01-01'), ('2006-01-01')),
+    PARTITION p_2006 VALUES [('2006-01-01'), ('2007-01-01')),
+    PARTITION p_2007 VALUES [('2007-01-01'), ('2008-01-01')),
+    PARTITION p_2008 VALUES [('2008-01-01'), ('2009-01-01')),
+    PARTITION p_2009 VALUES [('2009-01-01'), ('2010-01-01')),
+    PARTITION p_2010 VALUES [('2010-01-01'), ('2011-01-01')),
+    PARTITION p_2011 VALUES [('2011-01-01'), ('2012-01-01')),
+    PARTITION p_2012 VALUES [('2012-01-01'), ('2013-01-01')),
+    PARTITION p_2013 VALUES [('2013-01-01'), ('2014-01-01')),
+    PARTITION p_2014 VALUES [('2014-01-01'), ('2015-01-01')),
+    PARTITION p_2015 VALUES [('2015-01-01'), ('2016-01-01')),
+    PARTITION p_2016 VALUES [('2016-01-01'), ('2017-01-01')),
+    PARTITION p_2017 VALUES [('2017-01-01'), ('2018-01-01')),
+    PARTITION p_2018 VALUES [('2018-01-01'), ('2019-01-01')),
+    PARTITION p_2019 VALUES [('2019-01-01'), ('2020-01-01')),
+    PARTITION p_2020 VALUES [('2020-01-01'), ('2021-01-01')),
+    PARTITION p_2021 VALUES [('2021-01-01'), ('2022-01-01'))
+)
+DISTRIBUTED BY HASH(`TRADE_DATE`) BUCKETS 10
+PROPERTIES (
+  "replication_num" = "1"
+);
+```
+
+该表内存储了大量业务历史数据，依据交易发生的日期进行分区。可以看到在建表时，需要预先手动创建分区。如果分区列的数据范围发生变化，例如上表中增加了 2022 年的数据，则需要通过 [ALTER-TABLE-PARTITION](../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) 对表的分区进行更改。如果这种分区需要变更，或者进行更细粒度的细分，修改起来非常繁琐。此时我们就可以使用 AUTO PARTITION 改写该表 DDL。
+
 ## 手动分桶
 
 如果使用了分区，则 `DISTRIBUTED ...` 语句描述的是数据在各个分区内的划分规则。
