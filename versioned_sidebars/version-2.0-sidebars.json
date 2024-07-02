@@ -87,7 +87,6 @@
                         "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
-                "table-design/auto-increment",
                 "table-design/best-practice"
             ]
         },
@@ -107,7 +106,6 @@
                         "data-operate/import/mysql-load-manual",
                         "data-operate/import/load-json-format",
                         "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
@@ -182,14 +180,7 @@
                         "query/nereids/statistics"
                     ]
                 },
-                {
-                    "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
+                "query/pipeline/pipeline-execution-engine",
                 {
                     "type": "category",
                     "label": "Caches",
@@ -204,8 +195,7 @@
                     "label": "View and Materialize View",
                     "items": [
                         "query/view-materialized-view/create-view",
-                        "query/view-materialized-view/materialized-view",
-                        "query/view-materialized-view/asyn-materialized-view"
+                        "query/view-materialized-view/materialized-view"
                     ]
                 },
                 {
@@ -281,8 +271,7 @@
                 },
                 "lakehouse/file",
                 "lakehouse/filecache",
-                "lakehouse/external-statistics",
-                "lakehouse/sql-dialect"
+                "lakehouse/external-statistics"
             ]
         },
         {
@@ -1130,7 +1119,6 @@
                                 "sql-manual/sql-reference/Data-Types/DATE",
                                 "sql-manual/sql-reference/Data-Types/DATETIME",
                                 "sql-manual/sql-reference/Data-Types/CHAR",
-                                "sql-manual/sql-reference/Data-Types/VARCHAR",
                                 "sql-manual/sql-reference/Data-Types/STRING",
                                 "sql-manual/sql-reference/Data-Types/ARRAY",
                                 "sql-manual/sql-reference/Data-Types/MAP",
