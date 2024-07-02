@@ -102,3 +102,13 @@ mysql>select date_floor("2023-07-13 22:28:18",interval 5 year);
 ### keywords
 
     DATE_FLOOR,DATE,FLOOR
+
+### Best Practice
+
+See also
+- [second_floor](./second_floor)
+- [minute_floor](./minute_floor)
+- [hour_floor](./hour_floor)
+- [day_floor](./day_floor)
+- [month_floor](./month_floor)
+- [year_floor](./year_floor)

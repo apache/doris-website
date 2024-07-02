@@ -25,8 +25,8 @@ under the License.
 -->
 
 ## date_ceil
-### description
-#### Syntax
+### Description
+**Syntax**
 
 `DATETIME DATE_CEIL(DATETIME datetime, INTERVAL period type)`
 
@@ -37,9 +37,9 @@ The datetime parameter is a valid date expression.
 
 The period parameter specifies how many units each cycle consists of, starting from 0001-01-01T00:00:00
 
-type ：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
+Type: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND.
 
-### example
+### Example
 
 ```
 mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 second);
@@ -91,6 +91,16 @@ mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 year);
 1 row in set (0.00 sec)
 ```
 
-### keywords
+### Keywords
 
     DATE_CEIL,DATE,CEIL
+
+### Best Practices
+
+See also
+- [second_ceil](./second_ceil)
+- [minute_ceil](./minute_ceil)
+- [hour_ceil](./hour_ceil)
+- [day_ceil](./day_ceil)
+- [month_ceil](./month_ceil)
+- [year_ceil](./year_ceil)
