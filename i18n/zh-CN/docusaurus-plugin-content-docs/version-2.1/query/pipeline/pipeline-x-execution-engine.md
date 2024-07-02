@@ -28,10 +28,6 @@ under the License.
 
 # PipelineX 执行引擎
 
-:::info 备注
-PipelineX 执行引擎 是 Doris 在 2.1 版本加入的实验性功能。
-:::
-
 ## 背景
 PipelineX 执行引擎的目标是为了解决 Doris pipeline 引擎的四大问题：
 1. 执行并发上，当前 Doris 执行并发收到两个因素的制约，一个是 fe 设置的参数，另一个是受存储层 bucket 数量的限制，这样的静态并发使得执行引擎无法充分利用机器资源。

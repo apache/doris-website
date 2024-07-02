@@ -56,7 +56,7 @@ distribution_desc
 * `column_definition`
     列定义：
 
-    `column_name column_type [KEY] [aggr_type] [NULL] [AUTO_INCREMENT] [default_value] [column_comment]`
+    `column_name column_type [KEY] [aggr_type] [NULL] [default_value] [column_comment]`
     * `column_type`
         列类型，支持以下类型：
         ```

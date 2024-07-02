@@ -26,15 +26,9 @@ under the License.
 
 ## IPV6
 
-<version since="dev">
-
-IPV6
-
-</version>
-
 ### description
 
-IPv6类型，以UInt128的形式存储在16个字节中，用于表示IPv6地址。
+IPv6 类型，以 UInt128 的形式存储在 16 个字节中，用于表示 IPv6 地址。
 取值范围是 ['::', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff']。
 
 `超出取值范围或者格式非法的输入将返回NULL`
