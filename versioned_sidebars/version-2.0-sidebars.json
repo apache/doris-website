@@ -1119,6 +1119,7 @@
                                 "sql-manual/sql-reference/Data-Types/DATE",
                                 "sql-manual/sql-reference/Data-Types/DATETIME",
                                 "sql-manual/sql-reference/Data-Types/CHAR",
+                                "sql-manual/sql-reference/Data-Types/VARCHAR",
                                 "sql-manual/sql-reference/Data-Types/STRING",
                                 "sql-manual/sql-reference/Data-Types/ARRAY",
                                 "sql-manual/sql-reference/Data-Types/MAP",
