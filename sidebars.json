@@ -28,24 +28,37 @@
                     "type": "category",
                     "label": "Cluster Deployment",
                     "items": [
-                        "install/cluster-deployment/standard-deployment",
-                        "install/cluster-deployment/run-docker-cluster",
                         {
                             "type": "category",
-                            "label": "Deploying on Kubernetes",
+                            "label": "Deploying with local mode",
                             "items": [
-                                "install/cluster-deployment/k8s-deploy/install-env",
-                                "install/cluster-deployment/k8s-deploy/install-operator",
-                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-access-cluster",
-                                "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
-                                "install/cluster-deployment/k8s-deploy/root-user-use",
-                                "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                                "install/cluster-deployment/k8s-deploy/debug-crash"
+                                "install/cluster-deployment/standard-deployment",
+                                "install/cluster-deployment/run-docker-cluster",
+                                {
+                                    "type": "category",
+                                    "label": "Deploying on Kubernetes",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/install-env",
+                                        "install/cluster-deployment/k8s-deploy/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/install-access-cluster",
+                                        "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
+                                        "install/cluster-deployment/k8s-deploy/root-user-use",
+                                        "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
+                                        "install/cluster-deployment/k8s-deploy/debug-crash"
+                                    ]
+                                },
+                                "install/cluster-deployment/doris-on-aws"
                             ]
                         },
-                        "install/cluster-deployment/doris-on-aws"
+                        {
+                            "type": "category",
+                            "label": "Deploying with cloud mode",
+                            "items": [
+                                "install/cluster-deployment/standard-deployment-cloud"
+                            ]
+                        }
                     ]
                 }
             ]
