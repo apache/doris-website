@@ -32,7 +32,7 @@ To connect to an Oracle database, you need
 
 - Oracle 19c, 18c, 12c, 11g or 10g.
 
-- JDBC driver for Oracle database, you can download the latest or specified version of Oracle JDBC driver from [Maven repository](https://mvnrepository.com/artifact/com.oracle.database.jdbc).
+- JDBC driver for Oracle database, you can download the Oracle JDBC driver for Ojdbc8 and above versions from [Maven repository](https://mvnrepository.com/artifact/com.oracle.database.jdbc).
 
 - Doris Network connection between each FE and BE node and Oracle server, default port is 1521.
 
