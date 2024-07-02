@@ -28,6 +28,10 @@ under the License.
 
 该文档主要介绍了如何通过 Dockerfile 来制作 Apache Doris 的运行镜像，以便于在容器化编排工具或者快速测试过程中可迅速拉取一个 Apache Doris Image 来完成集群的创建和运行。
 
+:::tip
+目前还不支持存算分离模式编译部署
+:::
+
 ## 软硬件要求
 
 **概述**

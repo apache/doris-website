@@ -146,3 +146,7 @@ https://github.com/apache/doris-thirdparty/releases
 这里我们提供了 Linux 和 MacOS 的预编译三方库。如果和你的编译运行环境一致，可以直接下载使用。
 
 下载好后，解压会得到一个 `installed/` 目录，将这个目录拷贝到 `thirdparty/` 目录下，之后运行 `build.sh` 即可。
+
+## 存算分离编译
+
+存算分离模式编译请参考[此连接](#need reference)

@@ -31,6 +31,10 @@ import TabItem from '@theme/TabItem';
 
 注意，该文档仅作为指导性文档。在不同环境中编译可能出现其他错误。如遇问题，欢迎向 Doris [提出 Issue](https://github.com/apache/doris/issues) 或解决方案。
 
+:::tip
+目前还不支持存算分离模式编译部署
+:::
+
 ## 硬件/操作系统环境
 
 -   系统版本：CentOS 7.9、Ubuntu 20.04
