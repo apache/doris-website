@@ -501,7 +501,7 @@ WITH (
   'sink.properties.format' = 'json',
   'sink.properties.read_json_by_line' = 'true',
   'sink.properties.columns' = 'id,name,bank,age',
-  'sink.properties.partial.columns' = 'true' -- 开启部分列更新
+  'sink.properties.partial_columns' = 'true' -- 开启部分列更新
 );
 
 
