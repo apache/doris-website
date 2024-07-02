@@ -86,7 +86,7 @@ RECOVER PARTITION p1 FROM example_tbl;
 
 为了防止在这些异常情况出现数据丢失，Doris 提供了回收站机制，来保护用户数据。
 
-用户删除的 tablet 数据在 BE 端不会被直接删除，会被放在回收站中存储一段时间，在一段时间之后会有定时清理机制将过期的数据删除。默认情况下，在磁盘空间占用不超过 81%（BE 配置`config.storage_flood_stage_usage_percent` * 0.9 * 100%）时，BE 回收站中的数据最长保留 3 天（见 BE 配置`config.trash_file_expire_time_sec`）。
+用户删除的 tablet 数据在 BE 端不会被直接删除，会被放在回收站中存储一段时间，在一段时间之后会有定时清理机制将过期的数据删除。默认情况下，在磁盘空间占用不超过 81%（BE 配置`config.storage_flood_stage_usage_percent` * 0.9 * 100%）时，BE 回收站中的数据最长保留 1 天（见 BE 配置`config.trash_file_expire_time_sec`）。
 
 BE 回收站中的数据包括：tablet 的 data 文件 (.dat)，tablet 的索引文件 (.idx) 和 tablet 的元数据文件 (.hdr)。数据将会存放在如下格式的路径：
 
