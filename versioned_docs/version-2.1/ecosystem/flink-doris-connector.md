@@ -490,7 +490,7 @@ WITH (
   'sink.properties.format' = 'json',
   'sink.properties.read_json_by_line' = 'true',
   'sink.properties.columns' = 'id,name,bank,age',
-  'sink.properties.partial.columns' = 'true' --Enable partial column updates
+  'sink.properties.partial_columns' = 'true' --Enable partial column updates
 );
 
 
