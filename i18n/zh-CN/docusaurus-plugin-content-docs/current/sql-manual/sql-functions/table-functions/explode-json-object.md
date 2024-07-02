@@ -32,7 +32,7 @@ under the License.
 
 > 注意:
 >
-> 
+> 表函数必须与later view 结合使用
 
 #### Syntax
 
@@ -46,7 +46,7 @@ explode_json_object_outer(json_object)
 
 ### Example
 
-Original table data:
+原始表数据:
 
 ```
 mysql> select * from tbl_test_jsonb order by id;

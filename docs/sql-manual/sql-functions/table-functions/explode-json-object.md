@@ -32,7 +32,7 @@ Expand a json object. `explode_json_object_outer` will return NULL, while given 
 
 > Note. 
 > 
-> 表函数必须与later view 结合使用
+> Table functions must be used in conjunction with Lateral View.
 
 #### Syntax
 
@@ -46,7 +46,7 @@ explode_json_object_outer(json_object)
 
 ### Example
 
-原始表数据:
+Original table data:
 
 ```
 mysql> select * from tbl_test_jsonb order by id;
