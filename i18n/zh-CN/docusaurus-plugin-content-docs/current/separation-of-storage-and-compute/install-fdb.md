@@ -48,8 +48,7 @@ under the License.
 <https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/toolkit/fdb/foundationdb-server_7.1.38-1_amd64.deb>
 <https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/toolkit/fdb/foundationdb-clients_7.1.38-1_amd64.deb>
 
-安装 FDB
-```Shell
+安装 FDB```Shell
 // ubuntu 系统
 user@host$ sudo dpkg -i foundationdb-clients_7.1.23-1_amd64.deb \
 foundationdb-server_7.1.23-1_amd64.deb

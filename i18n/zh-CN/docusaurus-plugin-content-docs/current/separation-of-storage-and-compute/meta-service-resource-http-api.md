@@ -107,7 +107,7 @@ Content-Type: text/plain
 | obj_info.sk                | S3 的 secret key                    | 是       |                                                 |
 | obj_info.bucket            | S3 的 bucket 名                     | 是       |                                                 |
 | obj_info.prefix            | S3 上数据存放位置前缀               | 否       | 不填的话，在 bucket 的根目录                    |
-| obj_info.endpoint          | S3 的 endpoint 信息                 | 是       | 是个域名或者IP:端口, 不带http://这种scheme 前缀 |
+| obj_info.endpoint          | S3 的 endpoint 信息                 | 是       |                                                 |
 | obj_info.region            | S3 的 region 信息                   | 是       |                                                 |
 | obj_info.external_endpoint | S3 的 external endpoint 信息        | 否       | 兼容 oss，oss 有 external、internal 区别        |
 | obj_info.provider          | S3 的 provider 信息                 | 是       |                                                 |
@@ -442,11 +442,10 @@ Content-Type: text/plain
 | cluster.type                  | cluster 中节点的类型    | 是       | 支持："SQL","COMPUTE"两种 type，"SQL"表示 sql service 对应 fe， "COMPUTE"表示计算机节点对应 be                                                                                                                                                          |
 | cluster.nodes                 | cluster 中的节点数组    | 是       |                                                                                                                                                                                                                                                         |
 | cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id  | 是       | 是 fe.conf、be.conf 中的 cloud_unique_id 配置项                                                                                                                                                                                                         |
-| cluster.nodes.ip              | 节点的 ip               | 是       | 使用FQDN模式部署FE BE时这个字段 填成域名  |
-| cluster.nodes.host            | 节点的域名              | 否       | 使用FQDN模式部署FE BE时需要设置这个字段                                                                                                                                                                                                                 |
-| cluster.nodes.heartbeat_port  | BE 的 heartbeat port    | BE必填   | 是 be.conf 中的 heartbeat_service_port 配置项                                                                                                                                                                                                           |
-| cluster.nodes.edit_log_port   | FE 节点的 edit log port | FE必填   | 是 fe.conf 中的 edit_log_port 配置项                                                                                                                                                                                                                    |
-| cluster.nodes.node_type       | FE 节点的类型           | 是       | 当 cluster 的 type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为 master， "FE_OBSERVER"表示此节点为 observer，注意：一个 type 为"SQL"的 cluster 的 nodes 数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
+| cluster.nodes.ip              | 节点的 ip               | 是       |                                                                                                                                                                                                                                                         |
+| cluster.nodes.heartbeat_port  | be 的 heartbeat port    | 是       | 是 be.conf 中的 heartbeat_service_port 配置项                                                                                                                                                                                                           |
+| cluster.nodes.edit_log_port   | fe 节点的 edit log port | 是       | 是 fe.conf 中的 edit_log_port 配置项                                                                                                                                                                                                                    |
+| cluster.nodes.node_type       | fe 节点的类型           | 是       | 当 cluster 的 type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为 master， "FE_OBSERVER"表示此节点为 observer，注意：一个 type 为"SQL"的 cluster 的 nodes 数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
 
 * 请求示例
 
@@ -732,7 +731,6 @@ Content-Type: text/plain
 ### 接口描述
 
 本接口用于将 Instance 下的某 Cluster 添加若干相同类型的节点，此接口多次相同参数调用报错
-可以用于添加FE 或者 BE的节点
 
 
 ### 请求 (Request)
@@ -767,7 +765,7 @@ Content-Type: text/plain
 ```
 * 请求参数
 
-| 参数名                  | 描述                   | 是否必须 | 备注                    |
+| 参数名                  | 描述                              | 是否必须 | 备注                    |
 |----------------------|---------------------------------|------|-----------------------|
 | instance_id          | instance_id                     | 是    |                       |
 | cluster              | cluster 对象                       | 是    |                       |
@@ -775,12 +773,6 @@ Content-Type: text/plain
 | cluster.cluster_id   | 将添加 mysql user name 的 cluster id   | 是    |                       |
 | cluster.type         | cluster 的类型，与上文中 add_cluster 处解释一致 |      |                       |
 | cluster.nodes        | cluster 中的节点数组                   | 是    | 与上文 add_cluster 处字段解释一致 |
-| cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id  | 是       | 是 fe.conf、be.conf 中的 cloud_unique_id 配置项                                                                                                                                                                                                         |
-| cluster.nodes.ip              | 节点的 ip               | 是       | 使用FQDN模式部署FE BE时这个字段 填成域名  |
-| cluster.nodes.host            | 节点的域名              | 否       | 使用FQDN模式部署FE BE时需要设置这个字段                                                                                                                                                                                                                 |
-| cluster.nodes.heartbeat_port  | BE 的 heartbeat port    | BE必填   | 是 be.conf 中的 heartbeat_service_port 配置项                                                                                                                                                                                                           |
-| cluster.nodes.edit_log_port   | FE 节点的 edit log port | FE必填   | 是 fe.conf 中的 edit_log_port 配置项                                                                                                                                                                                                                    |
-| cluster.nodes.node_type       | FE 节点的类型           | 是       | 当 cluster 的 type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER", 其中"FE_MASTER" 表示此节点为 master， "FE_OBSERVER"表示此节点为 observer，注意：一个 type 为"SQL"的 cluster 的 nodes 数组中只能有一个"FE_MASTER"节点，和若干"FE_OBSERVER"节点 |
 
 * 请求示例
 
@@ -1935,8 +1927,3 @@ curl '127.0.0.1:5000/MetaService/http/set_instance_status?token=greedisgood9999'
     "msg": ""
 }
 ```
-
---------------------------------------------------------------------------------
-<!--
-vim: nowrap:
--->
