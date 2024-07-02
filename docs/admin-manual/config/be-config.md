@@ -205,8 +205,8 @@ There are two ways to configure BE configuration items:
 
 #### `trash_file_expire_time_sec`
 
-* Description: The interval for cleaning the recycle bin is 72 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
-* Default value: 259200
+* Description: The interval for cleaning the recycle bin is 24 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
+* Default value: 86400
 
 #### `es_http_timeout_ms`
 
