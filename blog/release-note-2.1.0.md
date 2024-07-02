@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Another big leap: Apache Doris 2.1.0 is released',
-    'summary': 'We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.',
+    'description': 'We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.',
     'date': '2024-03-12',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -336,14 +336,7 @@ CREATE TABLE `demo`.`records_tbl2` (
     `phone` varchar(16) NOT NULL COMMENT "",
     `mktsegment` varchar(11) NOT NULL COMMENT "",
     `unique_value` BIGINT NOT NULL AUTO_INCREMENT
-) DUPLICATE KEY (`key`, `name`)CREATE TABLE ipv4_test (
-  `id` int,
-  `ip_v4` ipv4
-) ENGINE=OLAP
-DISTRIBUTED BY HASH(`id`) BUCKETS 4
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
+) DUPLICATE KEY (`key`, `name`)
 DISTRIBUTED BY HASH(`key`) BUCKETS 10
 PROPERTIES (
     "replication_num" = "3"

@@ -66,9 +66,9 @@ After deployment, it is recommended to restart the FE and BE nodes to ensure the
 ```sql
 CREATE CATALOG `tpch` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpch",
-    "tpch.column-naming" = "STANDARD",
-    "tpch.splits-per-node" = "32"
+    "trino.connector.name" = "tpch",
+    "trino.tpch.column-naming" = "STANDARD",
+    "trino.tpch.splits-per-node" = "32"
 );
 ```
 

@@ -1,7 +1,7 @@
 ---
 {
     'title': "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
-    'summary': "The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark + Impala + HBase + NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.",
+    'description': "The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark + Impala + HBase + NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.",
     'date': '2024-03-05',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],

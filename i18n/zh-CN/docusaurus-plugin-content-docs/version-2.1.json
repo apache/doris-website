@@ -59,21 +59,25 @@
     "message": "数据导出",
     "description": "The label for category Exporting Data in sidebar docs"
   },
-  "sidebar.docs.category.Lakehouse": {
+  "sidebar.docs.category.Job Scheduler": {
+    "message": "作业调度",
+    "description": "The label for category job scheduler in sidebar docs"
+  },  
+  "sidebar.docs.category.Data Lakehouse": {
     "message": "湖仓一体",
-    "description": "The label for category Lakehouse in sidebar docs"
+    "description": "The label for category Data Lakehouse in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Data Lake": {
+  "sidebar.docs.category.Querying Data Lakes": {
     "message": "数据湖分析",
-    "description": "The label for category Analyzing Data Lake in sidebar docs"
+    "description": "The label for category Querying Data Lakes in sidebar docs"
   },
-  "sidebar.docs.category.Building Data Lake": {
+  "sidebar.docs.category.Building Data Lakes": {
     "message": "数据湖构建",
     "description": "The label for category Building Data Lake in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Database": {
+  "sidebar.docs.category.Querying Databases": {
     "message": "数据库分析",
-    "description": "The label for category Analyzing Database in sidebar docs"
+    "description": "The label for category Querying Databases in sidebar docs"
   },
   "sidebar.docs.category.Data Queries": {
     "message": "数据查询",
@@ -174,6 +178,10 @@
   "sidebar.docs.category.Maintenance": {
     "message": "运维监控",
     "description": "The label for category Maintenance and Monitor in sidebar docs"
+  },
+  "sidebar.docs.category.Log Management": {
+    "message": "日志管理",
+    "description": "The label for category Log Management in sidebar docs"
   },
   "sidebar.docs.category.Managing Configuration": {
     "message": "配置管理",

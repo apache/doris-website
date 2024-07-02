@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Power-BI",
+    "title": "Power BI",
     "language": "zh-CN"
 }
 ---
@@ -26,21 +26,21 @@ under the License.
 
 ## Power BI 介绍
 
-Power BI是软件服务、应用连接器的集合，其可以连接到多种数据源，包括Excel、SQL Server、Azure、Google Analytics等，以便用户可以轻松得整合和清洗数据。通过Power BI的数据建模，用户可以创建关系模型、数据分析表达式和数据关系，以支持高级的数据分析和可视化。Power BI提供了丰富的可视化选项，包括图标、地图、仪表盘和自定义可视化工具，以帮助用户更直观地理解数据。
+Power BI 是软件服务、应用连接器的集合，其可以连接到多种数据源，包括 Excel、SQL Server、Azure、Google Analytics 等，以便用户可以轻松得整合和清洗数据。通过 Power BI 的数据建模，用户可以创建关系模型、数据分析表达式和数据关系，以支持高级的数据分析和可视化。 Power BI 提供了丰富的可视化选项，包括图标、地图、仪表盘和自定义可视化工具，以帮助用户更直观地理解数据。
 
-Apache Doris 高度兼容 MySQL 协议，可以通过 MySQL 驱动器连接Power BI 与 Apache Doris，当前Power BI中已经正式支持了Apache Doris的内部数据建模以及数据查询与可视化处理。
+Apache Doris 高度兼容 MySQL 协议，可以通过 MySQL 驱动器连接 Power BI 与 Apache Doris，当前 Power BI 中已经正式支持了 Apache Doris 的内部数据建模以及数据查询与可视化处理。
 
 ## 前置条件
 
-未安装Power BI Desktop可以访问https://www.microsoft.com/ 下载安装Power BI。
+未安装 Power BI Desktop 可以访问 https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop 下载安装 Power BI。
 
-## PowerBI与doris的connector配置
+## Power BI与Doris的Connector配置
 
 :::info Note
-选择8.0.26版本的MySQL jdbc connector
+选择8.0.26版本的 MySQL JDBC Connector
 :::
 
-MySQL connector 下载
+MySQL Connector 下载
 
 下载链接：https://downloads.mysql.com/archives/c-net/
 
@@ -50,7 +50,7 @@ MySQL connector 下载
 
    ![jdbc connector download](/images/powerbi/bi-powerbi-en-1.png)
 
-2. 在Power BI Desktop打开界面点击新建报表。若已有本地报表可以选择打开已有报表
+2. 在 Power BI Desktop 打开界面点击新建报表。若已有本地报表可以选择打开已有报表
 
    ![start page](/images/powerbi/bi-powerbi-en-2.png)
 
@@ -58,15 +58,15 @@ MySQL connector 下载
 
    ![get data](/images/powerbi/bi-powerbi-en-3.png)
 
-4. 配置数据库连接信息，在服务器输入框中输入ip:port。doris默认的端口号为9030
+4. 配置数据库连接信息，在服务器输入框中输入ip:port。Doris默认的端口号为9030
 
    ![connection information](/images/powerbi/bi-powerbi-en-4.png)
 
-5. 上一步点击确定后在新的连接窗口处选择"数据库"连接，并在用户名与密码处填写doris的连接信息。
+5. 上一步点击确定后在新的连接窗口处选择"数据库"连接，并在用户名与密码处填写Doris的连接信息。
 
    ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
 
-6. 加载选中的表，使其表中数据至Power BI Desktop
+6. 加载选中的表，使其表中数据至 Power BI Desktop
 
    ![load data](/images/powerbi/bi-powerbi-en-6.png)
 
@@ -80,24 +80,24 @@ MySQL connector 下载
 
 ## 设置数据自动刷新
 
-1. 下载On-premises data gateway。 下载地址：https://learn.microsoft.com/en-us/power-bi/connect-data/service-gateway-personal-mode
+1. 下载On-premises data gateway。下载地址：https://learn.microsoft.com/en-us/power-bi/connect-data/service-gateway-personal-mode
 2. 安装On-premises data gateway
 
    ![gateway install](/images/powerbi/bi-powerbi-en-9.png)
 
-3. 登陆Power BI Online，在个人的工作区中把刚保存的本地模型进行导入
+3. 登陆 Power BI Online，在个人的工作区中把刚保存的本地模型进行导入
 
-   ![upload](/images/powerbi/bi-powerbi-en-10.png)
+   ![upload](/images/powerbi/bi-powerbi-en-10-zh.png)
 
 4. 点击模型配置自动刷新时间
 
-   ![click module](/images/powerbi/bi-powerbi-en-11.png)
+   ![click module](/images/powerbi/bi-powerbi-en-11-zh.png)
 
 5. 数据刷新的配置需要有gataway连接，本地开启网关后可以在网关连接中看到本地启动的网关，选取本地的网关即可。更多关于gateway：https://learn.microsoft.com/zh-cn/power-bi/connect-data/service-gateway-onprem
 
-   ![config gateway](/images/powerbi/bi-powerbi-en-12.png)
+   ![config gateway](/images/powerbi/bi-powerbi-en-12-zh.png)
 
-6. 配置相关刷新计划即可完成Power BI自动数据刷新
+6. 配置相关刷新计划即可完成 Power BI自动数据刷新
 
    ![make plan](/images/powerbi/bi-powerbi-en-13.png)
 

@@ -33,7 +33,11 @@ under the License.
 
 Convert STR to DATE type by format specified, if the conversion result does not return NULL. Note that the 'format' parameter specifies the format of the first parameter.
 
-All formats in [date_format](./date-format) are supported. In addition, support auto completing the remainder of date part for '%Y' and '%Y-%m'.
+All formats in [date_format](./date-format) are supported. 
+
+> Since Doris 2.0.5:
+>
+> Support auto completing the remainder of date part for '%Y' and '%Y-%m'.
 
 ### example
 

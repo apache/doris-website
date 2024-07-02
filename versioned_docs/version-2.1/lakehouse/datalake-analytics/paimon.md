@@ -1,7 +1,7 @@
 ---
 {
-"title": "Paimon",
-"language": "en"
+    "title": "Paimon Catalog",
+    "language": "en"
 }
 ---
 
@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# Paimon
 
 ## Instructions for use
 

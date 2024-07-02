@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Best practice of Apache Doris in Meituan',
-    'summary': "Introduction: This paper mainly introduces a general method and practice of real-time data warehouse construction. The real-time data warehouse aims at end-to-end low latency, SQL standardization, rapid response to changes, and data unification. In practice, the best practice we summarize is: a common real-time production platform + a common interactive real-time analysis engine cooperate with each other to meet real-time and quasi-real-time business scenarios. The two have a reasonable division of labor and complement each other to form an easy-to-develop, easy-to-maintain, and most efficient assembly line, taking into account development efficiency and production costs, and satisfying diverse business needs with a better input-output ratio.",
+    'description': "Introduction: This paper mainly introduces a general method and practice of real-time data warehouse construction. The real-time data warehouse aims at end-to-end low latency, SQL standardization, rapid response to changes, and data unification. In practice, the best practice we summarize is: a common real-time production platform + a common interactive real-time analysis engine cooperate with each other to meet real-time and quasi-real-time business scenarios. The two have a reasonable division of labor and complement each other to form an easy-to-develop, easy-to-maintain, and most efficient assembly line, taking into account development efficiency and production costs, and satisfying diverse business needs with a better input-output ratio.",
     'date': '2022-07-20',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],

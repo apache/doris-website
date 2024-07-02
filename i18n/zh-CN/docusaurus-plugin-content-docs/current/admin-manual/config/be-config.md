@@ -102,19 +102,19 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `be_port`
 
 * 类型：int32
-* 描述：BE 上 thrift server 的端口号，用于接收来自 FE 的请求
+* 描述：BE 上 Thrift Server 的端口号，用于接收来自 FE 的请求
 * 默认值：9060
 
 #### `heartbeat_service_port`
 
 * 类型：int32
-* 描述：BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳
+* 描述：BE 上心跳服务端口（Thrift），用于接收来自 FE 的心跳
 * 默认值：9050
 
 #### `webserver_port`
 
 * 类型：int32
-* 描述：BE 上的 http server 的服务端口
+* 描述：BE 上的 HTTP Server 的服务端口
 * 默认值：8040
 
 #### `brpc_port`
@@ -126,7 +126,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `arrow_flight_sql_port`
 
 * 类型：int32
-* 描述：FE 上的 Arrow Flight SQL server 的端口，用于从 Arrow Flight Client 和 BE 之间通讯
+* 描述：FE 上的 Arrow Flight SQL Server 的端口，用于从 Arrow Flight Client 和 BE 之间通讯
 * 默认值：-1
 
 #### `enable_https`
@@ -265,28 +265,36 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 #### `thrift_rpc_timeout_ms`
 
-* 描述：thrift 默认超时时间
+* 描述：Thrift 默认超时时间
 * 默认值：60000
 
 #### `thrift_client_retry_interval_ms`
 
 * 类型：int64
-* 描述：用来为 be 的 thrift 客户端设置重试间隔，避免 fe 的 thrift server 发生雪崩问题，单位为 ms。
+* 描述：用来为 be 的 thrift 客户端设置重试间隔，避免 FE 的 Thrift Server 发生雪崩问题，单位为 ms。
 * 默认值：1000
 
 #### `thrift_connect_timeout_seconds`
 
-* 描述：默认 thrift 客户端连接超时时间
+* 描述：默认 Thrift 客户端连接超时时间
 * 默认值：3 (s)
 
 #### `thrift_server_type_of_fe`
 
 * 类型：string
-* 描述：该配置表示 FE 的 Thrift 服务使用的服务模型，类型为 string, 大小写不敏感，该参数需要和 fe 的 thrift_server_type 参数的设置保持一致。目前该参数的取值有两个，`THREADED`和`THREAD_POOL`。
+* 描述：该配置表示 FE 的 Thrift 服务使用的服务模型，类型为 string, 大小写不敏感，该参数需要和 FE 的 thrift_server_type 参数的设置保持一致。目前该参数的取值有两个，`THREADED`和`THREAD_POOL`。
 
   - 若该参数为`THREADED`, 该模型为非阻塞式 I/O 模型，
 
   - 若该参数为`THREAD_POOL`, 该模型为阻塞式 I/O 模型。
+
+#### `thrift_max_message_size`
+
+<version since="2.0.12"></version>
+
+默认值: 100MB
+
+Thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 Thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
 
 #### `txn_commit_rpc_timeout_ms`
 
@@ -370,7 +378,7 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `doris_scanner_queue_size`
 
 * 类型：int32
-* 描述：TransferThread 与 OlapScanner 之间 RowBatch 的缓存队列的长度。Doris 进行数据扫描时是异步进行的，OlapScanner 扫描上来的 Rowbatch 会放入缓存队列之中，等待上层 TransferThread 取走。
+* 描述：TransferThread 与 OlapScanner 之间 RowBatch 的缓存队列的长度。Doris 、进行数据扫描时是异步进行的，OlapScanner 扫描上来的 Rowbatch 会放入缓存队列之中，等待上层 TransferThread 取走。
 * 默认值：1024
 
 #### `doris_scanner_row_num`
@@ -387,13 +395,13 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 #### `doris_scanner_thread_pool_queue_size`
 
 * 类型：int32
-* 描述：Scanner 线程池的队列长度。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
+* 描述：Scanner 线程池的队列长度。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
 * 默认值：102400
 
 #### `doris_scanner_thread_pool_thread_num`
 
 * 类型：int32
-* 描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。
+* 描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。
 * 默认值：48
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
@@ -874,7 +882,7 @@ BaseCompaction:546859:
 #### `be_service_threads`
 
 * 类型：int32
-* 描述：BE 上 thrift server service 的执行线程数，代表可以用于执行 FE 请求的线程数。
+* 描述：BE 上 Thrift Server Service 的执行线程数，代表可以用于执行 FE 请求的线程数。
 * 默认值：64
 
 #### `download_worker_count`
@@ -925,13 +933,13 @@ BaseCompaction:546859:
 #### `send_batch_thread_pool_thread_num`
 
 * 类型：int32
-* 描述：SendBatch 线程池线程数目。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 task 提交到线程池之中等待被调度，该参数决定了 SendBatch 线程池的大小。
+* 描述：SendBatch 线程池线程数目。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 SendBatch 线程池的大小。
 * 默认值：64
 
 #### `send_batch_thread_pool_queue_size`
 
 * 类型：int32
-* 描述：SendBatch 线程池的队列长度。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
+* 描述：SendBatch 线程池的队列长度。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
 * 默认值：102400
 
 #### `make_snapshot_worker_count`
@@ -971,7 +979,7 @@ BaseCompaction:546859:
 
 #### `max_memory_sink_batch_count`
 
-* 描述：最大外部扫描缓存批次计数，表示缓存 max_memory_cache_batch_count * batch_size row，默认为 20，batch_size 的默认值为 1024，表示将缓存 20 * 1024 行
+* 描述：最大外部扫描缓存批次计数，表示缓存 max_memory_cache_batch_count * batch_size row，默认为 20，batch_size 的默认值为 1024，表示将缓存 20 * 1024 行。
 * 默认值：20
 
 #### `memtable_mem_tracker_refresh_interval_ms`
@@ -982,7 +990,7 @@ BaseCompaction:546859:
 #### `zone_map_row_num_threshold`
 
 * 类型：int32
-* 描述：如果一个 page 中的行数小于这个值就不会创建 zonemap，用来减少数据膨胀
+* 描述：如果一个 page 中的行数小于这个值就不会创建 zonemap，用来减少数据膨胀。
 * 默认值：20
 
 #### `enable_tcmalloc_hook`
@@ -1005,7 +1013,7 @@ BaseCompaction:546859:
 
 #### `memory_limitation_per_thread_for_schema_change_bytes`
 
-* 描述：单个 schema change 任务允许占用的最大内存
+* 描述：单个 schema change 任务允许占用的最大内存。
 * 默认值：2147483648 (2GB)
 
 #### `mem_tracker_consume_min_size_bytes`
@@ -1046,7 +1054,7 @@ BaseCompaction:546859:
 #### `file_cache_max_size_per_disk`
 
 * 类型：int64
-* 描述：缓存占用磁盘大小，一旦超过这个设置，会删除最久未访问的缓存，为 0 则不限制大小。单位字节
+* 描述：缓存占用磁盘大小，一旦超过这个设置，会删除最久未访问的缓存，为 0 则不限制大小。单位：字节。
 * 默认值：0
 
 #### `max_sub_cache_file_size`
@@ -1058,13 +1066,13 @@ BaseCompaction:546859:
 #### `download_cache_thread_pool_thread_num`
 
 * 类型：int32
-* 描述：DownloadCache 线程池线程数目。在 FileCache 的缓存下载任务之中，缓存下载操作会作为一个线程 task 提交到线程池之中等待被调度，该参数决定了 DownloadCache 线程池的大小。
+* 描述：DownloadCache 线程池线程数目。在 FileCache 的缓存下载任务之中，缓存下载操作会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 DownloadCache 线程池的大小。
 * 默认值：48
 
 #### `download_cache_thread_pool_queue_size`
 
 * Type: int32
-* 描述：DownloadCache 线程池线程数目。在 FileCache 的缓存下载任务之中，缓存下载操作会作为一个线程 task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
+* 描述：DownloadCache 线程池线程数目。在 FileCache 的缓存下载任务之中，缓存下载操作会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
 * 默认值：102400
 
 #### `generate_cache_cleaner_task_interval_sec`
@@ -1117,12 +1125,12 @@ BaseCompaction:546859:
 
 #### `disk_stat_monitor_interval`
 
-* 描述：磁盘状态检查时间间隔
+* 描述：磁盘状态检查时间间隔。
 * 默认值：5（s）
 
 #### `max_garbage_sweep_interval`
 
-* 描述：磁盘进行垃圾清理的最大间隔
+* 描述：磁盘进行垃圾清理的最大间隔。
 * 默认值：3600 (s)
 
 #### `max_percentage_of_error_disk`
@@ -1143,22 +1151,22 @@ BaseCompaction:546859:
 
 #### `pprof_profile_dir`
 
-* 描述：pprof profile 保存目录
+* 描述：pprof profile 保存目录。
 * 默认值：${DORIS_HOME}/log
 
 #### `small_file_dir`
 
-* 描述：用于保存 SmallFileMgr 下载的文件的目录
+* 描述：用于保存 SmallFileMgr 下载的文件的目录。
 * 默认值：${DORIS_HOME}/lib/small_file/
 
 #### `user_function_dir`
 
-* 描述：udf 函数目录
+* 描述：udf 函数目录。
 * 默认值：${DORIS_HOME}/lib/udf
 
 #### `storage_flood_stage_left_capacity_bytes`
 
-* 描述：数据目录应该剩下的最小存储空间，默认 1G
+* 描述：数据目录应该剩下的最小存储空间，默认 1G。
 * 默认值：1073741824
 
 
@@ -1169,12 +1177,12 @@ BaseCompaction:546859:
 
 #### `storage_medium_migrate_count`
 
-* 描述：要克隆的线程数
+* 描述：要克隆的线程数。
 * 默认值：1
 
 #### `storage_page_cache_limit`
 
-* 描述：缓存存储页大小
+* 描述：缓存存储页大小。
 * 默认值：20%
 
 #### `storage_page_cache_shard_size`
@@ -1196,8 +1204,8 @@ BaseCompaction:546859:
 #### `storage_strict_check_incompatible_old_format`
 
 * 类型：bool
-* 描述：用来检查不兼容的旧版本格式时是否使用严格的验证方式
-  - 配置用来检查不兼容的旧版本格式时是否使用严格的验证方式，当含有旧版本的 hdr 格式时，使用严谨的方式时，程序会打出 fatal log 并且退出运行；否则，程序仅打印 warn log.
+* 描述：用来检查不兼容的旧版本格式时是否使用严格的验证方式。
+  - 配置用来检查不兼容的旧版本格式时是否使用严格的验证方式，当含有旧版本的 `hdr` 格式时，使用严谨的方式时，程序会打出 `fatal log` 并且退出运行；否则，程序仅打印 `warn log`.
 * 默认值：true
 * 可动态修改：否
 
@@ -1484,7 +1492,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `group_commit_wal_path`
 
-* 描述：group commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
 * 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
   ```
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
@@ -1492,7 +1500,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `group_commit_memory_rows_for_max_filter_ratio`
 
-* 描述：当 group commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 描述：当 Group Commit 导入的总行数不高于该值，`max_filter_ratio` 正常工作，否则不工作，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
 * 默认值：10000
 
 #### `default_tzfiles_path`

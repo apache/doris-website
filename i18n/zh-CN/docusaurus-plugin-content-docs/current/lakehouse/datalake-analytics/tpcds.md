@@ -66,8 +66,8 @@ mvn clean install -DskipTest
 ```sql
 CREATE CATALOG `tpcds` PROPERTIES (
     "type" = "trino-connector",
-    "connector.name" = "tpcds",
-    "tpcds.split-count" = "32"
+    "trino.connector.name" = "tpcds",
+    "trino.tpcds.split-count" = "32"
 );
 ```
 
@@ -135,7 +135,7 @@ mysql> SHOW TABLES;
 
 通过 SELECT 语句可以直接查询这些表。
 
-:::tips
+:::tip
 这些预制数据集的数据，并没有实际存储，而是在查询时实时生成的。所以这些预制数据集不适合用来直接进行 Benchmark 测试。适用于通过 `INSERT INTO SELECT` 将数据集写入到其他目的表（如 Doris 内表、Hive、Iceberg 等所有 Doris 支持写入的数据源）后，对目的表进行性能测试。
 :::
 
@@ -173,7 +173,7 @@ CREATE TABLE hive.tpcds100.web_sales              PROPERTIES("file_format" = "pa
 CREATE TABLE hive.tpcds100.web_site               PROPERTIES("file_format" = "parquet") AS SELECT * FROM tpcds.sf100.web_site              ;
 ```
 
-:::tips
+:::tip
 在包含 3 个 16C BE 节点的 Doris 集群上，创建一个 TPCDS 1000 的 Hive 数据集，大约需要 3 到 4 个小时。
 :::
 

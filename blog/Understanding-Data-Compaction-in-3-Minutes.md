@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Understanding data compaction in 3 minutes',
-    'summary': "Think of your disks as a warehouse: The compaction mechanism is like a team of storekeepers who help put away the incoming data.",
+    'description': "Think of your disks as a warehouse: The compaction mechanism is like a team of storekeepers who help put away the incoming data.",
     'date': '2023-06-09',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

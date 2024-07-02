@@ -63,13 +63,13 @@
     "message": "湖仓一体",
     "description": "The label for category Lakehouse in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Data Lake": {
+  "sidebar.docs.category.Querying Data Lakes": {
     "message": "数据湖分析",
-    "description": "The label for category Data Lake Analytics in sidebar docs"
+    "description": "The label for category Querying Data Lakes in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Database": {
+  "sidebar.docs.category.Querying Databases": {
     "message": "数据库分析",
-    "description": "The label for category Database Analytics.Multi Catalog in sidebar docs"
+    "description": "The label for category Querying Databases in sidebar docs"
   },
   "sidebar.docs.category.Data Queries": {
     "message": "数据查询",

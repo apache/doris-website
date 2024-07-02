@@ -2,7 +2,7 @@ name: Cron Deploy
 
 on:
     schedule:
-        - cron: '0 12,18,1 * * *'
+        - cron: '0 4,10,17 * * *' # UTC time
 
 jobs:
     build-and-deploy:

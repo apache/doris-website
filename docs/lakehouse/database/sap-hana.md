@@ -43,11 +43,15 @@ CREATE CATALOG saphana PROPERTIES (
     "type"="jdbc",
     "user"="USERNAME",
     "password"="PASSWORD",
-    "jdbc_url" = "jdbc:sap://example.net:30015/DATABASE",
+    "jdbc_url" = "jdbc:sap://Hostname:Port/?optionalparameters",
     "driver_url" = "ngdbc-2.4.51.jar",
     "driver_class" = "com.sap.db.jdbc.Driver"
 )
 ```
+
+:::info Note
+For more information about the JDBC URL formats and parameters supported by the SAP HANA JDBC driver, see [SAP HANA](https://help.sap.com/docs/).
+:::
 
 ## Hierarchical mapping
 

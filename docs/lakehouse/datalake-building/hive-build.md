@@ -142,6 +142,22 @@ This is an experimental feature.
 
     Note, unlike Hive's table creation statements. In Doris, when creating a Hive partitioned table, the partition columns must also be included in the Table's Schema. At the same time, the partition columns must be at the end of all schemas and in the same order.
 
+    :::tip
+
+    For some Hive clusters that enable ACID transaction features by default, after using Doris to create a table, the table attribute `transactional` will be true. However, Doris only supports some features of Hive transaction tables, which may cause the problem that Doris itself cannot read the Hive created by Doris. Therefore, it is necessary to explicitly add: `"transactional" = "false"` in the table creation properties to create a non-transactional Hive table:
+
+    ```
+    CREATE TABLE non_acid_table(
+      `col1` BOOLEAN COMMENT 'col1',
+      `col2` INT COMMENT 'col2',
+      `col3` BIGINT COMMENT 'col3'
+    )  ENGINE=hive
+    PROPERTIES (
+      'transactional'='false',
+    );
+    ```
+    :::
+
 - Drop
 
     You can drop a Hive table using the `DROP TABLE` statement. Currently, deleting the table also removes the data, including partition data.
@@ -188,8 +204,8 @@ This is an experimental feature.
 
 - Compression Formats
 
-    - Parquet: snappy(default), zlib, zstd
-    - ORC: snappy, zlib(default), zstd
+    - Parquet: snappy(default), zstd, plain. (plain means no compression is used.)
+    - ORC: snappy, zlib(default), zstd, plain. (plain means no compression is used.)
 
 - Storage Medium
 
@@ -246,7 +262,7 @@ CREATE TABLE hive.hive_db.hive_ctas (col1,col2,pt1) ENGINE=hive
 PARTITION BY LIST (pt1) ()
 PROPERTIES (
 "file_format"="parquet",
-"parquet.compression"="zstd"
+"compression"="zstd"
 )
 AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```

@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris speeds up data reporting, tagging, and data lake analytics',
-    'summary': "The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.",
+    'description': "The user leverages the capabilities of Apache Doris in reporting, customer tagging, and data lake analytics and achieves high performance.",
     'date': '2023-12-27',
     'author': 'Apache Doris',
     'tags': ['Best Practice'],

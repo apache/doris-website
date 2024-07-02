@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Log analysis: Elasticsearch vs Apache Doris',
-    'summary': "As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.",
+    'description': "As a major part of a company's data asset, logs brings values to businesses in three aspects: system observability, cyber security, and data analysis. They are your first resort for troubleshooting, your reference for improving system security, and your data mine where you can extract information that points to business growth.",
     'date': '2023-09-28',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],

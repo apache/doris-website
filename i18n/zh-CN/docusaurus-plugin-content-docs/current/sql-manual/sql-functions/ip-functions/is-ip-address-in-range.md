@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IP_ADDRESS_IN_RANGE
 
-<version since="dev">
-
 IS_IP_ADDRESS_IN_RANGE
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,13 +34,9 @@ IS_IP_ADDRESS_IN_RANGE
 
 判断IP（IPv4或IPv6）地址是否包含在以CIDR表示法表示的网络中。如果是，则返回true，否则返回false。
 
-### notice
+### Example
 
-`入参ip_str和cidr_prefix均不能为NULL`
-
-### example
-
-```
+```sql
 mysql> SELECT is_ip_address_in_range('127.0.0.1', '127.0.0.0/8');
 +----------------------------------------------------+
 | is_ip_address_in_range('127.0.0.1', '127.0.0.0/8') |
@@ -58,8 +50,15 @@ mysql> SELECT is_ip_address_in_range('::ffff:192.168.0.1', '::ffff:192.168.0.4/1
 +------------------------------------------------------------------------+
 |                                                                      0 |
 +------------------------------------------------------------------------+
+
+mysql> SELECT is_ip_address_in_range('127.0.0.1', NULL);
++-------------------------------------------+
+| is_ip_address_in_range('127.0.0.1', NULL) |
++-------------------------------------------+
+|                                      NULL |
++-------------------------------------------+
 ```
 
-### keywords
+### Keywords
 
 IS_IP_ADDRESS_IN_RANGE, IP

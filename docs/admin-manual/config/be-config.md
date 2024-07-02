@@ -277,6 +277,14 @@ There are two ways to configure BE configuration items:
 
     - If the parameter is `THREAD_POOL`, the model is a blocking I/O model.
 
+#### `thrift_max_message_size`
+
+<version since="2.0.12"></version>
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
+
 #### `txn_commit_rpc_timeout_ms`
 
 * Description:txn submit rpc timeout

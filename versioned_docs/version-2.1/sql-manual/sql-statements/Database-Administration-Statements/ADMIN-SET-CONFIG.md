@@ -32,29 +32,33 @@ ADMIN SET CONFIG
 
 ### Description
 
-This statement is used to set the configuration items of the cluster (currently only the configuration items of FE are supported).
-The settable configuration items can be viewed through the SHOW FRONTEND CONFIG; command.
+This statement is used to set the configuration items of the cluster (currently only supports setting FE configuration items).
 
-grammar:
+The configurable items can be viewed using the `SHOW FRONTEND CONFIG;` command.
+
+Syntax:
 
 ```sql
-  ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
-  ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
-````
+ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
+-- or
+ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
+```
 
-illustrate:
+:::tip Explanation
 
-1. If `ALL` keyword is used, this config will be applied to all FE(except master_only configuration)
+- Starting from versions 2.0.11 and 2.1.5, the `ALL` keyword is supported. When using the `ALL` keyword, the configuration parameters will be applied to all FEs (except for the `master_only` parameter).
+- This syntax does not persistently modify the configuration. After an FE restarts, the modified configuration becomes invalid. To persist the changes, the configuration items need to be synchronously added in fe.conf.
+:::
 
 ### Example
 
-1. Set 'disable_balance' to true
+1. Set `disable_balance` to true
 
-        ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");
+    `ADMIN SET FRONTEND CONFIG ("disable_balance" = "true");`
 
 ### Keywords
 
-    ADMIN, SET, CONFIG
+ADMIN, SET, CONFIG
 
 ### Best Practice
 

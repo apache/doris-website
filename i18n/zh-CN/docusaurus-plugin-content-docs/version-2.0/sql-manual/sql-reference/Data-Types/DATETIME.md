@@ -42,6 +42,7 @@ DATETIMEV2
 ### note
 
     DATETIME 支持了最多到微秒的时间精度。在使用 BE 端解析导入的 DATETIME 类型数据时（如使用Stream load、Spark load等），或开启[新优化器](../../../query-acceleration/nereids)后在 FE 端解析 DATETIME 类型数据时，将会对超出当前精度的小数进行**四舍五入**。
+    将带有小数秒部分的DATETIME值插入到具有较少小数位的相同类型的列中会导致**四舍五入**。
 
     DATETIME 读入时支持解析时区，格式为原本 DATETIME 字面量后紧贴时区：
 ```sql

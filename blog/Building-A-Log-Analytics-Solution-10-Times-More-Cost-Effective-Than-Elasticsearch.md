@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Building a log analytics solution 10 times more cost-effective than Elasticsearch',
-    'summary': "Apache Doris has introduced inverted indexes in version 2.0.0 and further optimized it to realize two times faster log query performance than Elasticsearch with 1/5 of the storage space it uses.",
+    'description': "Apache Doris has introduced inverted indexes in version 2.0.0 and further optimized it to realize two times faster log query performance than Elasticsearch with 1/5 of the storage space it uses.",
     'date': '2023-05-26',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
