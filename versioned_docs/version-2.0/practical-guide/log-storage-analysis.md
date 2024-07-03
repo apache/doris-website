@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Log Storage and Analysis
-
 Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content. To meet the diverse needs of observability in operations, network security monitoring, and business analysis, enterprises might need to collect scattered logs for centralized storage, querying, and analysis to extract valuable content from the log data further.
 
 In this scenario, Apache Doris provides a corresponding solution. With the characteristics of log scenarios in mind, Apache Doris added inverted-index and ultra-fast full-text search capabilities, optimizing write performance and storage space to the extreme. This allows users to build an open, high-performance, cost-effective, and unified log storage and analysis platform based on Apache Doris.
@@ -173,7 +171,7 @@ Refer to the following table to learn about the values of indicators in the exam
 | Percent of CPU resources reserved for data querying | 50% | Specify the value according to your actual needs. The default value is 50%. |
 | Estimated number of BE servers | 15.2 | Calculation formula: Number of CPU cores for the peak write throughput / Number of CPU cores of a BE server /（1 - Percent of CPU resources reserved for data querying） |
 | Rounded number of BE servers | 15  | Calculation formula: MAX (Number of data copies, Estimated number of BE servers) |
-| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br><br>It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
+| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br/><br/>It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
 
 ### Step 2: Deploy the cluster
 
@@ -259,51 +257,54 @@ Configure storage policies as follows:
 - Configure the storage location for log_s3 and set the log_policy_3day policy, where the data is cooled and moved to the specified storage location of log_s3 after 3 days. Refer to the code below.
 
 ```Go  
-CREATE DATABASE log_db;  
-USE log_db;  
-<br/>CREATE RESOURCE "log_s3"  
-PROPERTIES  
-(  
-"type" = "s3",  
-"s3.endpoint" = "your_endpoint_url",  
-"s3.region" = "your_region",  
-"s3.bucket" = "your_bucket",  
-"s3.root.path" = "your_path",  
-"s3.access_key" = "your_ak",  
-"s3.secret_key" = "your_sk"  
-);  
-<br/>CREATE STORAGE POLICY log_policy_3day  
-PROPERTIES(  
-"storage_resource" = "log_s3",  
-"cooldown_ttl" = "259200"  
-);  
-<br/>CREATE TABLE log_table  
-(  
-\`ts\` DATETIME,  
-\`host\` TEXT,  
-\`path\` TEXT,  
-\`message\` TEXT,  
-INDEX idx_host (\`host\`) USING INVERTED,  
-INDEX idx_path (\`path\`) USING INVERTED,  
-INDEX idx_message (\`message\`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")  
-)  
-ENGINE = OLAP  
-DUPLICATE KEY(\`ts\`)  
-PARTITION BY RANGE(\`ts\`) ()  
-DISTRIBUTED BY RANDOM BUCKETS 250  
-PROPERTIES (  
-"replication_num" = "1",  
-"compaction_policy" = "time_series",  
-"enable_single_replica_compaction" = "true",  
-"storage_policy" = "log_policy_3day",  
-"dynamic_partition.enable" = "true",  
-"dynamic_partition.create_history_partition" = "true",  
-"dynamic_partition.time_unit" = "DAY",  
-"dynamic_partition.start" = "-30",  
-"dynamic_partition.end" = "1",  
-"dynamic_partition.prefix" = "p",  
-"dynamic_partition.buckets" = "250",  
-"dynamic_partition.replication_num" = "1"  
+CREATE DATABASE log_db;
+USE log_db;
+
+CREATE RESOURCE "log_s3"
+PROPERTIES
+(
+    "type" = "s3",
+    "s3.endpoint" = "your_endpoint_url",
+    "s3.region" = "your_region",
+    "s3.bucket" = "your_bucket",
+    "s3.root.path" = "your_path",
+    "s3.access_key" = "your_ak",
+    "s3.secret_key" = "your_sk"
+);
+
+CREATE STORAGE POLICY log_policy_3day
+PROPERTIES(
+    "storage_resource" = "log_s3",
+    "cooldown_ttl" = "259200"
+);
+
+CREATE TABLE log_table
+(
+  `ts` DATETIME,
+  `host` TEXT,
+  `path` TEXT,
+  `message` TEXT,
+  INDEX idx_host (`host`) USING INVERTED,
+  INDEX idx_path (`path`) USING INVERTED,
+  INDEX idx_message (`message`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
+)
+ENGINE = OLAP
+DUPLICATE KEY(`ts`)
+PARTITION BY RANGE(`ts`) ()
+DISTRIBUTED BY RANDOM BUCKETS 250
+PROPERTIES (
+"dynamic_partition.enable" = "true",
+"dynamic_partition.create_history_partition" = "true",
+"dynamic_partition.time_unit" = "DAY",
+"dynamic_partition.start" = "-30",
+"dynamic_partition.end" = "1",
+"dynamic_partition.prefix" = "p",
+"dynamic_partition.buckets" = "250",
+"dynamic_partition.replication_num" = "1", -- unneccessary for the compute-storage coupled mode
+"replication_num" = "1" -- unneccessary for the compute-storage coupled mode
+"enable_single_replica_compaction" = "true", -- unneccessary for the compute-storage coupled mode
+"storage_policy" = "log_policy_3day", -- unneccessary for the compute-storage coupled mode
+"compaction_policy" = "time_series"
 );
 ```
 
@@ -311,7 +312,7 @@ PROPERTIES (
 
 After completing table creation, you can proceed with log collection, querying, and analysis.
 
-#### Collect logs
+**Collect logs**
 
 Apache Doris provides open and versatile Stream HTTP APIs, through which you can connect with popular log collectors such as Logstash, Filebeat, Kafka, and others to carry out log collection work. This section explains how to integrate these log collectors using the Stream HTTP APIs.
 
@@ -391,30 +392,54 @@ Follow these steps:
 
 
     ```YAML  
-    \# input  
-    filebeat.inputs:  
-    \- type: log  
-    enabled: true  
-    paths:  
-    \- /path/to/your/log  
-    <br/><br/>\# queue and batch  
-    queue.mem:  
-    events: 100000  
-    flush.min_events: 10000  
-    flush.timeout: 10s  
-    <br/><br/>\# output  
-    output.doris:  
-    fenodes: \[ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port>" \]  
-    user: "your_username"  
-    password: "your_password"  
-    database: "your_db"  
-    table: "your_table"  
-    \# output string format  
-    codec_format_string: '{"ts": "%{\[timestamp\]}", "host": "%{\[host\]\[name\]}", "path": "%{\[log\]\[file\]\[path\]}", "message": "%{\[message\]}"}'  
-    headers:  
-    format: "json"  
-    read_json_by_line: "true"  
-    load_to_single_tablet: "true"
+    # input
+    filebeat.inputs:
+    - type: log
+    enabled: true
+    paths:
+        - /path/to/your/log
+    multiline:
+        type: pattern
+        pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'
+        negate: true
+        match: after
+        skip_newline: true
+
+    processors:
+    - script:
+        lang: javascript
+        source: >
+            function process(event) {
+                var msg = event.Get("message");
+                msg = msg.replace(/\t/g, "  ");
+                event.Put("message", msg);
+            }
+    - dissect:
+        # 2024-06-08 18:26:25,481 INFO (report-thread|199) [ReportHandler.cpuReport():617] begin to handle
+        tokenizer: "%{day} %{time} %{log_level} (%{thread}) [%{position}] %{content}"
+        target_prefix: ""
+        ignore_failure: true
+        overwrite_keys: true
+
+    # queue and batch
+    queue.mem:
+    events: 1000000
+    flush.min_events: 100000
+    flush.timeout: 10s
+
+    # output
+    output.doris:
+    fenodes: [ "http://fehost1:http_port", "http://fehost2:http_port", "http://fehost3:http_port" ]
+    user: "your_username"
+    password: "your_password"
+    database: "your_db"
+    table: "your_table"
+    # output string format
+    codec_format_string: '{"ts": "%{[day]} %{[time]}", "host": "%{[agent][hostname]}", "path": "%{[log][file][path]}", "message": "%{[message]}"}'
+    headers:
+        format: "json"
+        read_json_by_line: "true"
+        load_to_single_tablet: "true"
     ```
 
 3. Run Filebeat according to the command below, collect logs, and output to Apache Doris.
@@ -487,7 +512,7 @@ When using custom programs, pay attention to the following key points:
 
 - It is recommended to write batches whose sizes are between 100MB to 1GB on the client side. For Apache Doris version 2.1 and higher, you need to reduce batch sizes on the client side through the Group Commit function.
 
-#### Query logs
+**Query logs**
 
 Apache Doris supports standard SQL, so you can connect to the cluster through MySQL client or JDBC to execute SQL for log queries.
 
@@ -530,7 +555,7 @@ SELECT \* FROM your_table_name WHERE message **MATCH_PHRASE** 'image faq'
 ORDER BY ts DESC LIMIT 10;
 ```
 
-#### Analyze logs visually
+**Analyze logs visually**
 
 VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called Velo Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
 

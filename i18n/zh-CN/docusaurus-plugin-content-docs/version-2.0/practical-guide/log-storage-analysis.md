@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 日志存储与分析
-
 日志是系统运行的详细记录，包含各种事件发生的主体、时间、位置、内容等关键信息。出于运维可观测、网络安全监控及业务分析等多重需求，企业通常需要将分散的日志采集起来，进行集中存储、查询和分析，以进一步从日志数据里挖掘出有价值的内容。
 
 针对此场景，Apache Doris 提供了相应解决方案，针对日志场景的特点，增加了倒排索引和极速全文检索能力，极致优化写入性能和存储空间，使得用户可以基于 Apache Doris 构建开放、高性能、低成本、统一的日志存储与分析平台。
@@ -208,52 +206,55 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 - 对于热存储数据，如果使用云盘，可配置 1 副本；如果使用物理盘，则至少配置 2 副本。
 - 配置 `log_s3` 的存储位置，并设置 `log_policy_3day` 冷热数据分层策略，即在超过 3 天后将数据冷却至 `log_s3` 指定的存储位置。可参考以下代码：
 
-```Go  
-CREATE DATABASE log_db;  
-USE log_db;  
-<br/>CREATE RESOURCE "log_s3"  
-PROPERTIES  
-(  
-"type" = "s3",  
-"s3.endpoint" = "your_endpoint_url",  
-"s3.region" = "your_region",  
-"s3.bucket" = "your_bucket",  
-"s3.root.path" = "your_path",  
-"s3.access_key" = "your_ak",  
-"s3.secret_key" = "your_sk"  
-);  
-<br/>CREATE STORAGE POLICY log_policy_3day  
-PROPERTIES(  
-"storage_resource" = "log_s3",  
-"cooldown_ttl" = "259200"  
-);  
-<br/>CREATE TABLE log_table  
-(  
-\`ts\` DATETIME,  
-\`host\` TEXT,  
-\`path\` TEXT,  
-\`message\` TEXT,  
-INDEX idx_host (\`host\`) USING INVERTED,  
-INDEX idx_path (\`path\`) USING INVERTED,  
-INDEX idx_message (\`message\`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")  
-)  
-ENGINE = OLAP  
-DUPLICATE KEY(\`ts\`)  
-PARTITION BY RANGE(\`ts\`) ()  
-DISTRIBUTED BY RANDOM BUCKETS 250  
-PROPERTIES (  
-"replication_num" = "1",  
-"compaction_policy" = "time_series",  
-"enable_single_replica_compaction" = "true",  
-"storage_policy" = "log_policy_3day",  
-"dynamic_partition.enable" = "true",  
-"dynamic_partition.create_history_partition" = "true",  
-"dynamic_partition.time_unit" = "DAY",  
-"dynamic_partition.start" = "-30",  
-"dynamic_partition.end" = "1",  
-"dynamic_partition.prefix" = "p",  
-"dynamic_partition.buckets" = "250",  
-"dynamic_partition.replication_num" = "1"  
+```Go
+CREATE DATABASE log_db;
+USE log_db;
+
+CREATE RESOURCE "log_s3"
+PROPERTIES
+(
+    "type" = "s3",
+    "s3.endpoint" = "your_endpoint_url",
+    "s3.region" = "your_region",
+    "s3.bucket" = "your_bucket",
+    "s3.root.path" = "your_path",
+    "s3.access_key" = "your_ak",
+    "s3.secret_key" = "your_sk"
+);
+
+CREATE STORAGE POLICY log_policy_3day
+PROPERTIES(
+    "storage_resource" = "log_s3",
+    "cooldown_ttl" = "259200"
+);
+
+CREATE TABLE log_table
+(
+  `ts` DATETIME,
+  `host` TEXT,
+  `path` TEXT,
+  `message` TEXT,
+  INDEX idx_host (`host`) USING INVERTED,
+  INDEX idx_path (`path`) USING INVERTED,
+  INDEX idx_message (`message`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
+)
+ENGINE = OLAP
+DUPLICATE KEY(`ts`)
+PARTITION BY RANGE(`ts`) ()
+DISTRIBUTED BY RANDOM BUCKETS 250
+PROPERTIES (
+"dynamic_partition.enable" = "true",
+"dynamic_partition.create_history_partition" = "true",
+"dynamic_partition.time_unit" = "DAY",
+"dynamic_partition.start" = "-30",
+"dynamic_partition.end" = "1",
+"dynamic_partition.prefix" = "p",
+"dynamic_partition.buckets" = "250",
+"dynamic_partition.replication_num" = "1", -- 存算分离不需要
+"replication_num" = "1" -- 存算分离不需要
+"enable_single_replica_compaction" = "true", -- 存算分离不需要
+"storage_policy" = "log_policy_3day", -- 存算分离不需要
+"compaction_policy" = "time_series"
 );
 ```
 
@@ -261,7 +262,7 @@ PROPERTIES (
 
 完成建表后，可进行日志采集、查询和分析。
 
-#### 日志采集
+**日志采集**
 
 Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你可与常用的日志采集器打通，包括 Logstash、Filebeat、Kafka 等，从而开展日志采集工作。本节介绍了如何使用 Stream HTTP APIs 对接日志采集器。
 
@@ -342,31 +343,62 @@ log_speed_interval => 10
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
 
 ```YAML  
-\# input  
-filebeat.inputs:  
-\- type: log  
-enabled: true  
-paths:  
-\- /path/to/your/log  
-<br/><br/>\# queue and batch  
-queue.mem:  
-events: 100000  
-flush.min_events: 10000  
-flush.timeout: 10s  
-<br/><br/>\# output  
-output.doris:  
-fenodes: \[ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port>" \]  
-user: "your_username"  
-password: "your_password"  
-database: "your_db"  
-table: "your_table"  
-\# output string format  
-codec_format_string: '{"ts": "%{\[timestamp\]}", "host": "%{\[host\]\[name\]}", "path": "%{\[log\]\[file\]\[path\]}", "message": "%{\[message\]}"}'  
-headers:  
-format: "json"  
-read_json_by_line: "true"  
-load_to_single_tablet: "true"
-```
+  # input
+  filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /path/to/your/log
+    # multiline 可以将跨行的日志（比如 Java stacktrace）拼接起来
+    multiline:
+      type: pattern
+      # 效果：以 yyyy-mm-dd HH:MM:SS 开头的行认为是一条新的日志，其他都拼接到上一条日志
+      pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'
+      negate: true
+      match: after
+      skip_newline: true
+
+  processors:
+  # 用 js script 插件将日志中的 \t 替换成空格，避免 JSON 解析报错
+  - script:
+      lang: javascript
+      source: >
+          function process(event) {
+              var msg = event.Get("message");
+              msg = msg.replace(/\t/g, "  ");
+              event.Put("message", msg);
+          }
+  # 用 dissect 插件做简单的日志解析
+  - dissect:
+      # 2024-06-08 18:26:25,481 INFO (report-thread|199) [ReportHandler.cpuReport():617] begin to handle
+      tokenizer: "%{day} %{time} %{log_level} (%{thread}) [%{position}] %{content}"
+      target_prefix: ""
+      ignore_failure: true
+      overwrite_keys: true
+
+  # queue and batch
+  queue.mem:
+    events: 1000000
+    flush.min_events: 100000
+    flush.timeout: 10s
+
+  # output
+  output.doris:
+    fenodes: [ "http://fehost1:http_port", "http://fehost2:http_port", "http://fehost3:http_port" ]
+    user: "your_username"
+    password: "your_password"
+    database: "your_db"
+    table: "your_table"
+    # output string format
+    ## %{[agent][hostname]} %{[log][file][path]} 是filebeat自带的metadata
+    ## 常用的 filebeat metadata 还是有采集时间戳 %{[@timestamp]}
+    ## %{[day]} %{[time]} 是上面 dissect 解析得到字段
+    codec_format_string: '{"ts": "%{[day]} %{[time]}", "host": "%{[agent][hostname]}", "path": "%{[log][file][path]}", "message": "%{[message]}"}'
+    headers:
+      format: "json"
+      read_json_by_line: "true"
+      load_to_single_tablet: "true"
+  ```
 
 3. 按照下方命令运行 Filebeat，采集日志并输出至 Apache Doris。
 
@@ -437,7 +469,7 @@ http://fe_host:fe_http_port/api/log_db/log_table/\_stream_load
 - 设置 HTTP header "load_to_single_tablet:true"，指定一次导入写入一个分桶减少导入的小文件。
 - 建议写入客户端一个 Batch 的大小为 100MB ～ 1GB。如果你使用的是 Apache Doris 2.1 及更高版本，需通过服务端 Group Commit 功能，降低客户端 Batch 大小。
 
-#### 日志查询
+**日志查询**
 
 Apache Doris 支持标准 SQL，因此，你可以通过 MySQL 客户端或者 JDBC 等方式连接到集群，执行 SQL 进行日志查询。参考以下命令：
 
@@ -480,7 +512,7 @@ SELECT \* FROM your_table_name WHERE message MATCH_PHRASE 'image faq'
 ORDER BY ts DESC LIMIT 10;
 ```
 
-#### 可视化日志分析
+**可视化日志分析**
 
 基于 Apache Doris 构建的 SelectDB Enterprise Core 提供了名为 Doris WebUI 的数据开发平台，Doris WebUI 包含了类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互，如下图所示：
 
