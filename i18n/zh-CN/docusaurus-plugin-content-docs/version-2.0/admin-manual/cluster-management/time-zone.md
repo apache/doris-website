@@ -42,7 +42,7 @@ Doris 内部存在以下两个时区相关参数：
 
 2. `SET [global] time_zone = 'Asia/Shanghai'`
 
-   该命令可以设置 session 级别的时区，如使用 `global` 关键字，则 Doris FE 会将参数持久化，之后对所有新 session 生效。
+   该命令可以设置 Session 级别的时区，如使用 `global` 关键字，则 Doris FE 会将参数持久化，之后对所有新 Session 生效。
 
 ## 数据来源
 
@@ -58,13 +58,13 @@ Doris 内部存在以下两个时区相关参数：
 
 受时区影响的函数：
 
-- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回其在 Doris session `time_zone` 指定时区的日期时间，如`time_zone`为`CST`时`FROM_UNIXTIME(0)`返回`1970-01-01 08:00:00`。
+- `FROM_UNIXTIME`：给定一个 UTC 时间戳，返回其在 Doris Session `time_zone` 指定时区的日期时间，如`time_zone`为`CST`时`FROM_UNIXTIME(0)`返回`1970-01-01 08:00:00`。
 
-- `UNIX_TIMESTAMP`：给定一个日期时间，返回其在 Doris session `time_zone` 指定时区下的 UTC 时间戳，如`time_zone`为`CST`时`UNIX_TIMESTAMP('1970-01-01 08:00:00')`返回`0`。
+- `UNIX_TIMESTAMP`：给定一个日期时间，返回其在 Doris Session `time_zone` 指定时区下的 UTC 时间戳，如`time_zone`为`CST`时`UNIX_TIMESTAMP('1970-01-01 08:00:00')`返回`0`。
 
-- `CURTIME`：返回当前 Doris session `time_zone` 指定时区的时间。
+- `CURTIME`：返回当前 Doris Session `time_zone` 指定时区的时间。
 
-- `NOW`：返回当前 Doris session `time_zone` 指定时区的日期时间。
+- `NOW`：返回当前 Doris Session `time_zone` 指定时区的日期时间。
 
 - `CONVERT_TZ`：将一个日期时间从一个指定时区转换到另一个指定时区。
 
@@ -109,7 +109,7 @@ Doris 内部存在以下两个时区相关参数：
 
 时区问题主要涉及三个影响因素：
 
-1. session variable `time_zone` —— 集群时区
+1. Session Variable `time_zone` —— 集群时区
 
 2. Stream Load、Broker Load 等导入时指定的 header `timezone` —— 导入时区
 
@@ -158,7 +158,7 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
     +---------------------+
     ```
 
- * 对于 Stream Load、Broker Load 等导入方式，我们可以通过指定 header `timezone` 来实现。例如，对于 Stream Load，我们可以通过以下例子来说明：
+ * 对于 Stream Load、Broker Load 等导入方式，我们可以通过指定 Header `timezone` 来实现。例如，对于 Stream Load，我们可以通过以下例子来说明：
 
    ```shell
     cat dt.csv
