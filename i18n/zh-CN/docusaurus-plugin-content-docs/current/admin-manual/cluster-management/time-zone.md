@@ -42,7 +42,7 @@ Doris 内部存在以下两个时区相关参数：
 
 2. `SET [global] time_zone = 'Asia/Shanghai'`
 
-   该命令可以设置 session 级别的时区，如使用 `global` 关键字，则 Doris FE 会将参数持久化，之后对所有新 session 生效。
+   该命令可以设置 Session 级别的时区，如使用 `global` 关键字，则 Doris FE 会将参数持久化，之后对所有新 Session 生效。
 
 ## 数据来源
 
