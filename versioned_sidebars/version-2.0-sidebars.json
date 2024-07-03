@@ -180,7 +180,7 @@
                         "query/nereids/statistics"
                     ]
                 },
-                "query/pipeline/pipeline-execution-engine",
+                "query/pipeline-execution-engine",
                 {
                     "type": "category",
                     "label": "Caches",
