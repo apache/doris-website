@@ -298,7 +298,7 @@ file {
 path => "/path/to/your/log"  
 }  
 }  
-<br/>output {  
+<br />output {  
 doris {  
 http_hosts => \[ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port"\>]  
 user => "your_username"  
@@ -417,7 +417,7 @@ chmod +x filebeat-doris-1.0.0
 
 ```SQL  
 \-- 准备好kafka集群和topic log_\_topic_  
-<br/>\-- 创建routine load，从kafka log_\_topic_将数据导入log_table表  
+\-- 创建routine load，从kafka log_\_topic_将数据导入log_table表  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
 COLUMNS(ts, clientip, request, status, size)  
 PROPERTIES (  
@@ -439,7 +439,7 @@ FROM KAFKA (
 "property.sasl.kerberos.keytab"="/path/to/xxx.keytab",  
 "property.sasl.kerberos.principal"="<xxx@yyy.com>"  
 );  
-<br/>\-- 查看routine的状态  
+\-- 查看routine的状态  
 SHOW ROUTINE LOAD;
 ```
 

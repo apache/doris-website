@@ -349,7 +349,7 @@ Follow these steps:
     path => "/path/to/your/log"  
     }  
     }  
-    <br/>output {  
+    <br />output {  
     doris {  
     http_hosts => \[ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port"\>]  
     user => "your_username"  

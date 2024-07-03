@@ -173,7 +173,7 @@ Refer to the following table to learn about the values of indicators in the exam
 | Percent of CPU resources reserved for data querying | 50% | Specify the value according to your actual needs. The default value is 50%. |
 | Estimated number of BE servers | 15.2 | Calculation formula: Number of CPU cores for the peak write throughput / Number of CPU cores of a BE server /（1 - Percent of CPU resources reserved for data querying） |
 | Rounded number of BE servers | 15  | Calculation formula: MAX (Number of data copies, Estimated number of BE servers) |
-| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br/><br/>It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
+| Estimated data storage space for each BE server (TB) | 4.03 | Calculation formula: Estimated storage space for hot data / Estimated number of BE servers /（1 - 30%）, where 30% represents the percent of reserved storage space.<br /><br />It is recommended to mount 4 to 12 data disks on each BE server to enhance I/O capabilities. |
 
 ### Step 2: Deploy the cluster
 
@@ -349,7 +349,7 @@ Follow these steps:
     path => "/path/to/your/log"  
     }  
     }  
-    <br/>output {  
+    <br />output {  
     doris {  
     http_hosts => \[ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port"\>]  
     user => "your_username"  
@@ -481,7 +481,7 @@ FROM KAFKA (
 "property.sasl.kerberos.keytab"="/path/to/xxx.keytab",  
 "property.sasl.kerberos.principal"="<xxx@yyy.com>"  
 );  
-<br/>SHOW ROUTINE LOAD;
+<br />SHOW ROUTINE LOAD;
 ```
 
 For more information about Kafka, see [Routine Load](../data-operate/import/routine-load-manual.md)。
