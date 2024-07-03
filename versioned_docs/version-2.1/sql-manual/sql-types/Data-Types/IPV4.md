@@ -26,12 +26,6 @@ under the License.
 
 ## IPV4
 
-<version since="dev">
-
-IPV4
-
-</version>
-
 ### description
 
 IPv4 type, stored in the form of UInt32 in 4 bytes, used to represent IPv4 addresses.
