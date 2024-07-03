@@ -371,6 +371,10 @@ mysql> SELECT * FROM dt3;
 
 * 两种事务写入`INSERT INTO SELECT`, `UPDATE`, `DELETE` 和 `INSET INTO VALUES` 不能混用，否则会遇到错误 `Transaction insert can not insert into values and insert into select at the same time`
 
+* [Delete 操作](../delete/delete-manual.md)提供了通过谓词和 Using 子句两种方式，为了保证隔离级别，在一个事务中，对相同表的删除必须在写入前，否则会遇到报错 `Can not delete because there is a insert operation for the same table`
+
 * 当从 `BEGIN` 开始的导入耗时超出 Doris 配置的 timeout 时，会导致事务回滚，导入失败。目前 timeout 使用的是 Session 变量 `insert_timeout` 和 `query_timeout` 的最大值
 
 * 当使用 JDBC 连接 Doris 进行事务操作时，请在 JDBC URL 中添加 `useLocalSessionState=true`，否则可能会遇到错误 `This is in a transaction, only insert, update, delete, commit, rollback is acceptable.`
+
+* 存算分离模式下，事务写不支持 merge on write 表，否则会遇到报错 `Transaction load is not supported for merge on write unique keys table in cloud mode`
