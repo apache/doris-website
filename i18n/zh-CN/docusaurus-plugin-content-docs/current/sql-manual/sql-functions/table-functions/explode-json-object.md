@@ -28,11 +28,12 @@ under the License.
 
 ### Description
 
-展开一个 json 对象。当给定的 json 为 NULL 或不是 json 对象时，`explode_json_object_outer` 将返回 NULL。
+展开一个 JSON 对象。当给定的 JSON 为 NULL 或不是 JSON 对象时，`explode_json_object_outer` 将返回 NULL。
 
-> 注意:
->
-> 表函数必须与later view 结合使用
+:::tip
+注意:
+表函数必须与later view 结合使用
+:::
 
 #### Syntax
 
@@ -84,7 +85,7 @@ mysql> select * from tbl_test_jsonb order by id;
 27 rows in set (0.22 sec)
 ```
 
-Lateral View :
+LATERAL VIEW :
 
 ```
 mysql> select id, j, k,v from tbl_test_jsonb lateral view explode_json_object(j) tmp as k,v order by id, k;
