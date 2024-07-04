@@ -378,5 +378,9 @@
   "sidebar.docs.category.Compute-Storage Decoupled": {
     "message": "存算分离",
     "description": "Compute-Storage Decoupled"
+  },
+  "sidebar.docs.category.Practical Guide": {
+    "message": "实践教程",
+    "description": "The label for category Practical Guide in sidebar docs"
   }
 }

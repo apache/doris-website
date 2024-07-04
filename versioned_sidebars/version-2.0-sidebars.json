@@ -459,6 +459,13 @@
                 "admin-manual/compaction",
                 "admin-manual/rowsets"
             ]
+        },        
+        {
+            "type": "category",
+            "label": "Practical Guide",
+            "items": [
+                "practical-guide/log-storage-analysis"
+            ]
         },
         {
             "type": "category",

@@ -501,6 +501,13 @@
         },
         {
             "type": "category",
+            "label": "Practical Guide",
+            "items": [
+                "practical-guide/log-storage-analysis"
+            ]
+        },
+        {
+            "type": "category",
             "label": "Ecosystem",
             "items": [
                 "ecosystem/spark-doris-connector",
