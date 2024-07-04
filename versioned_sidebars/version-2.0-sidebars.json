@@ -168,8 +168,7 @@
                     "label": "Quering Variables",
                     "items": [
                         "query/query-variables/variables",
-                        "query/query-variables/sql-mode",
-                        "query/query-variables/time-zone"
+                        "query/query-variables/sql-mode"
                     ]
                 },
                 {
@@ -285,6 +284,7 @@
                         "admin-manual/cluster-management/upgrade",
                         "admin-manual/cluster-management/elastic-expansion",
                         "admin-manual/cluster-management/load-balancing",
+                        "admin-manual/cluster-management/time-zone",
                         "admin-manual/cluster-management/fqdn"
                     ]
                 },
