@@ -461,6 +461,15 @@ Set table properties. The following attributes are currently supported:
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
+* `enable_mow_light_delete`
+
+    If modify delete predicate for the DELETE statement on the unique merge-on-write table. If enabled, it will improve the performance of the DELETE statement, but errors may occur in partial column updates after deletion. If disabled, it will reduce the performance of the DELETE statement to ensure correctness.
+
+    The default value for this property is false.
+
+    This propertiy can only be enabled on unique merge-on-write tables.
+
+    `"enable_mow_light_delete" = "true"`
 
 * Dynamic partition related
 
