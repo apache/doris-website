@@ -67,7 +67,9 @@ import adbc_driver_flightsql.dbapi as flight_sql
 修改 Doris FE 和 BE 的配置参数：
 
 - 修改fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 9090。
-- 修改 be/conf/be.conf中 arrow_flight_port 为一个可用端口，如 9091。
+- 修改 be/conf/be.conf中 arrow_flight_sql_port 为一个可用端口，如 9091。
+
+`注: fe.conf 与 be.conf 中配置的 arrow_flight_sql_port 不相同`
 
 假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 9090 和 9091 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
 
@@ -290,6 +292,16 @@ POM dependency:
     </dependency>
 </dependencies>
 ```
+
+使用 Java 9 或更高版本时，必须通过在 java 命令中添加 --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED 来暴露某些 JDK 内部结构：
+
+```shell
+# Directly on the command line
+$ java --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED -jar ...
+# Indirectly via environment variables
+$ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED" java -jar ...
+```
+否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core`
 
 连接代码示例如下：
 
