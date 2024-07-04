@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Log Storage and Analysis
-
 Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content. To meet the diverse needs of observability in operations, network security monitoring, and business analysis, enterprises might need to collect scattered logs for centralized storage, querying, and analysis to extract valuable content from the log data further.
 
 In this scenario, Apache Doris provides a corresponding solution. With the characteristics of log scenarios in mind, Apache Doris added inverted-index and ultra-fast full-text search capabilities, optimizing write performance and storage space to the extreme. This allows users to build an open, high-performance, cost-effective, and unified log storage and analysis platform based on Apache Doris.
@@ -193,16 +191,15 @@ After completing the cluster deployment, it is necessary to optimize the configu
 
 You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the following table to optimize FE configurations.
 
-| Configuration fields to be optimized | Description |
-| --- | --- |
-| max_running_txn_num_per_db = 10000 | Increase the parameter value to adapt to high-concurrency import transactions. |
-| streaming_lable_keep_max_second = 3600 | Increase the retention time to handle high-frequency import transactions with high memory usage. |
-| label_keep_max_second = 7200 |
-| enable_round_robin_create_tablet = true | When creating Tablets, use a Round Robin strategy to distribute evenly. |
-| tablet_rebalancer_type = partition | When balancing Tablets, use a strategy to evenly distribute within each partition. |
-| enable_single_replica_load = true | Enable single-replica import, where multiple replicas only need to build an index once to reduce CPU consumption. |
-| autobucket_min_buckets = 10 | Increase the minimum number of automatically bucketed buckets from 1 to 10 to avoid insufficient buckets when the log volume increases. |
-| max_backend_heartbeat_failure_tolerance_count = 10 | In log scenarios, the BE server may experience high pressure, leading to short-term timeouts, so increase the tolerance count from 1 to 10. |
+| Configuration fields to be optimized                         | Description                                                  |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| `max_running_txn_num_per_db = 10000`                         | Increase the parameter value to adapt to high-concurrency import transactions. |
+| `streaming_lable_keep_max_second = 3600``label_keep_max_second = 7200` | Increase the retention time to handle high-frequency import transactions with high memory usage. |
+| `enable_round_robin_create_tablet = true`                    | When creating Tablets, use a Round Robin strategy to distribute evenly. |
+| `tablet_rebalancer_type = partition`                         | When balancing Tablets, use a strategy to evenly distribute within each partition. |
+| `enable_single_replica_load = true`                          | Enable single-replica import, where multiple replicas only need to build an index once to reduce CPU consumption. |
+| `autobucket_min_buckets = 10`                                | Increase the minimum number of automatically bucketed buckets from 1 to 10 to avoid insufficient buckets when the log volume increases. |
+| `max_backend_heartbeat_failure_tolerance_count = 10`         | In log scenarios, the BE server may experience high pressure, leading to short-term timeouts, so increase the tolerance count from 1 to 10. |
 
 For more information, refer to [FE Configuration](../admin-manual/config/fe-config.md).
 
@@ -210,7 +207,26 @@ For more information, refer to [FE Configuration](../admin-manual/config/fe-conf
 
 You can find BE configuration fields in `be/conf/be.conf`. Refer to the following table to optimize BE configurations.
 
-<table><tbody><tr><th><p>Model</p></th><th><p>Configuration fields to be optimized</p></th><th><p>Description</p></th></tr><tr><td rowspan="3"><p>Storage</p></td><td><p>storage_root_path = /path/to/dir1;/path/to/dir2;...;/path/to/dir12</p></td><td><p>Configure the storage path for hot data on disk directories.</p></td></tr><tr><td><p>enable_file_cache = true</p></td><td><p>Enable file caching.</p></td></tr><tr><td><p>file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]</p></td><td><p>Configure the cache path and related settings for cold data with the following specific configurations:</p><ul><li>path: cache path</li><li>total_size: total size of the cache path in bytes, where 53687091200 bytes equals 50 GB</li><li>query_limit: maximum amount of data that can be queried from the cache path in one query in bytes, where 10737418240 bytes equals 10 GB</li></ul></td></tr><tr><td rowspan="3"><p>Write</p></td><td><p>write_buffer_size = 1073741824</p></td><td><p>Increase the file size of the write buffer to reduce small files and random I/O operations, improving performance.</p></td></tr><tr><td><p>max_tablet_version_num = 20000</p></td><td><p>In coordination with the time_series compaction strategy for table creation, allow more versions to remain temporarily unmerged</p></td></tr><tr><td><p>enable_single_replica_load = true</p></td><td><p>Enable single replica import to reduce CPU consumption, consistent with FE configuration.</p></td></tr><tr><td rowspan="4"><p>Compaction</p></td><td><p>max_cumu_compaction_threads = 8</p></td><td><p>Set to CPU core count / 4, indicating that 1/4 of CPU resources are used for writing, 1/4 for background compaction, and 2/1 for queries and other operations.</p></td></tr><tr><td><p>inverted_index_compaction_enable = true</p></td><td><p>Enable inverted index compaction to reduce CPU consumption during compaction.</p></td></tr><tr><td><p>enable_segcompaction = false</p></td><td rowspan="2"><p>Disable two compaction features that are unnecessary for log scenarios.</p></td></tr><tr><td><p>enable_ordered_data_compaction = false</p></td></tr><tr><td rowspan="8"><p>Cache</p></td><td><p>disable_storage_page_cache = true</p></td><td rowspan="2"><p>Due to the large volume of log data and limited caching effect, switch from data caching to index caching.</p></td></tr><tr><td><p>inverted_index_searcher_cache_limit = 30%</p></td></tr><tr><td><p>inverted_index_cache_stale_sweep_time_sec = 3600</p></td><td rowspan="2"><p>Maintain index caching in memory for up to 1 hour.</p></td></tr><tr><td><p>index_cache_entry_stay_time_after_lookup_s = 3600</p></td></tr><tr><td><p>enable_inverted_index_cache_on_cooldown = true</p></td><td rowspan="2"><p>Enable automatic caching of cold data storage during index uploading.</p></td></tr><tr><td><p>enable_write_index_searcher_cache = false</p></td></tr><tr><td><p>tablet_schema_cache_recycle_interval = 3600</p></td><td rowspan="2"><p>Reduce memory usage by other caches.</p></td></tr><tr><td><p>segment_cache_capacity = 20000</p></td></tr><tr><td rowspan="3"><p>Thread</p></td><td><p>pipeline_executor_size = 24</p></td><td rowspan="2"><p>Configure computing threads and I/O threads for a 32-core CPU in proportion to core count.</p></td></tr><tr><td><p>doris_scanner_thread_pool_thread_num = 48</p></td></tr><tr><td><p>scan_thread_nice_value = 5</p></td><td><p>Lower the priority of query I/O threads to ensure writing performance and timeliness.</p></td></tr><tr><td rowspan="4"><p>Other</p></td><td><p>string_type_length_soft_limit_bytes = 10485760</p></td><td><p>Increase the length limit of string-type data to 10 MB.</p></td></tr><tr><td><p>trash_file_expire_time_sec = 300</p></td><td rowspan="3"><p>Accelerate the recycling of trash files.</p></td></tr><tr><td><p>path_gc_check_interval_second = 900</p></td></tr><tr><td><p>path_scan_interval_second = 900</p></td></tr></tbody></table>
+| Module      | Configuration fields to be optimized                         | Description                                                  |
+| :--------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| Storage    | `storage_root_path = /path/to/dir1;/path/to/dir2;...;/path/to/dir12` | Configure the storage path for hot data on disk directories. |
+| -          | `enable_file_cache = true`                                   | Enable file caching.                                         |
+| -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | Configure the cache path and related settings for cold data with the following specific configurations:<br>`path`: cache path<br>`total_size`: total size of the cache path in bytes, where 53687091200 bytes equals 50 GB<br>`query_limit`: maximum amount of data that can be queried from the cache path in one query in bytes, where 10737418240 bytes equals 10 GB |
+| Write      | `write_buffer_size = 1073741824`                             | Increase the file size of the write buffer to reduce small files and random I/O operations, improving performance. |
+| -          | `max_tablet_version_num = 20000`                             | In coordination with the time_series compaction strategy for table creation, allow more versions to remain temporarily unmerged |
+| -          | `enable_single_replica_load = true`                          | Enable single replica import to reduce CPU consumption, consistent with FE configuration. |
+| Compaction | `max_cumu_compaction_threads = 8`                            | Set to CPU core count / 4, indicating that 1/4 of CPU resources are used for writing, 1/4 for background compaction, and 2/1 for queries and other operations. |
+| -          | `inverted_index_compaction_enable = true`                    | Enable inverted index compaction to reduce CPU consumption during compaction. |
+| -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | Disable two compaction features that are unnecessary for log scenarios. |
+| Cache      | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | Due to the large volume of log data and limited caching effect, switch from data caching to index caching. |
+| -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | Maintain index caching in memory for up to 1 hour.           |
+| -          | `enable_inverted_index_cache_on_cooldown = true` `enable_write_index_searcher_cache = false` | Enable automatic caching of cold data storage during index uploading. |
+| -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | Reduce memory usage by other caches.                         |
+| Thread     | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | Configure computing threads and I/O threads for a 32-core CPU in proportion to core count. |
+| -          | `scan_thread_nice_value = 5`                                 | Lower the priority of query I/O threads to ensure writing performance and timeliness. |
+| Other      | `string_type_length_soft_limit_bytes = 10485760`             | Increase the length limit of string-type data to 10 MB.      |
+| -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | Accelerate the recycling of trash files.                     |
+
 
 For more information, refer to [BE Configuration](../admin-manual/config/be-config.md).
 
@@ -560,7 +576,7 @@ ORDER BY ts DESC LIMIT 10;
 
 VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called Velo Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
 
-![WebUI](/image/WebUI-EN.jpeg)
+![WebUI](/images/WebUI-EN.jpeg)
 
 On this interface, WebUI supports the following operations:
 

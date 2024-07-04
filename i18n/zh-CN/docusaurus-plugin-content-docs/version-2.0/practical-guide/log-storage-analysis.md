@@ -130,7 +130,25 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 该例子中，各关键指标的值及具体计算方法可见下表：
 
-<table><tbody><tr><th><p>关键指标（单位）</p></th><th><p>值</p></th><th><p>说明</p></th></tr><tr><td><p>日增数据量（TB）</p></td><td><p>100</p></td><td><p>根据实际需求填写</p></td></tr><tr><td><p>压缩率</p></td><td><p>7</p></td><td><p>一般为 5～10 倍（含索引），根据实际需求填写</p></td></tr><tr><td><p>副本数</p></td><td><p>1</p></td><td><p>根据实际需求填写，默认 1 副本，可选值：1，2，3</p></td></tr><tr><td><p>热数据存储周期（天）</p></td><td><p>3</p></td><td><p>根据实际需求填写</p></td></tr><tr><td><p>冷数据存储周期（天）</p></td><td><p>30</p></td><td><p>根据实际需求填写</p></td></tr><tr><td><p>总存储周期（天）</p></td><td><p>33</p></td><td><p>算法：热数据存储周期 + 冷数据存储周期</p></td></tr><tr><td><p>预估热数据存储空间（TB）</p></td><td><p>42.9</p></td><td><p>算法：日增数据量 / 压缩率 * 副本数 * 热数据存储周期</p></td></tr><tr><td><p>预估冷数据存储空间（TB）</p></td><td><p>428.6</p></td><td><p>算法：日增数据量 / 压缩率 * 副本数 * 冷数据存储周期</p></td></tr><tr><td><p>写入吞吐峰值 / 均值比</p></td><td><p>200%</p></td><td><p>根据实际需求填写，默认 200%</p></td></tr><tr><td><p>单机 CPU 核数</p></td><td><p>32</p></td><td><p>根据实际需求填写，默认 32 核</p></td></tr><tr><td><p>平均写入吞吐（MB/s）</p></td><td><p>1214</p></td><td><p>算法：日增数据量 / 86400 s</p></td></tr><tr><td><p>峰值写入吞吐（MB/s）</p></td><td><p>2427</p></td><td><p>算法：平均写入吞吐 * 写入吞吐峰值 / 均值比</p></td></tr><tr><td><p>峰值写入所需 CPU 核数</p></td><td><p>242.7</p></td><td><p>算法：峰值写入吞吐 / 单机 CPU 核数</p></td></tr><tr><td><p>查询预留 CPU 百分比</p></td><td><p>50%</p></td><td><p>根据实际需求填写，默认 50%</p></td></tr><tr><td><p>预估 BE 服务器数</p></td><td><p>15.2</p></td><td><p>算法：峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比）</p></td></tr><tr><td><p>预估 BE 服务器数取整</p></td><td><p>15</p></td><td><p>算法：MAX (副本数，预估 BE 服务器数上取整)</p></td></tr><tr><td><p>预估每台 BE 服务器存储空间（TB）</p></td><td><p>4.03</p></td><td><ul><li>算法：预估热数据存储空间 / 预估 BE 服务器数 /（1 - 30%），其中，30% 是存储空间预留值。</li><li>建议每台 BE 服务器挂载 4～12 块数据盘，以提高 I/O 能力。</li></ul></td></tr></tbody></table>
+| 关键指标（单位）                 | 值    | 说明                                                         |
+| :------------------------------- | :---- | :----------------------------------------------------------- |
+| 日增数据量（TB）                 | 100   | 根据实际需求填写                                             |
+| 压缩率                           | 7     | 一般为 5～10 倍（含索引），根据实际需求填写                  |
+| 副本数                           | 1     | 根据实际需求填写，默认 1 副本，可选值：1，2，3               |
+| 热数据存储周期（天）             | 3     | 根据实际需求填写                                             |
+| 冷数据存储周期（天）             | 30    | 根据实际需求填写                                             |
+| 总存储周期（天）                 | 33    | 算法：热数据存储周期 + 冷数据存储周期                        |
+| 预估热数据存储空间（TB）         | 42.9  | 算法：日增数据量 / 压缩率 * 副本数 * 热数据存储周期          |
+| 预估冷数据存储空间（TB）         | 428.6 | 算法：日增数据量 / 压缩率 * 副本数 * 冷数据存储周期          |
+| 写入吞吐峰值 / 均值比            | 200%  | 根据实际需求填写，默认 200%                                  |
+| 单机 CPU 核数                    | 32    | 根据实际需求填写，默认 32 核                                 |
+| 平均写入吞吐（MB/s）             | 1214  | 算法：日增数据量 / 86400 s                                   |
+| 峰值写入吞吐（MB/s）             | 2427  | 算法：平均写入吞吐 * 写入吞吐峰值 / 均值比                   |
+| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机 CPU 核数                           |
+| 查询预留 CPU 百分比              | 50%   | 根据实际需求填写，默认 50%                                   |
+| 预估 BE 服务器数                 | 15.2  | 算法：峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比） |
+| 预估 BE 服务器数取整             | 15    | 算法：MAX (副本数，预估 BE 服务器数上取整)                   |
+| 预估每台 BE 服务器存储空间（TB） | 4.03  | 算法：预估热数据存储空间 / 预估 BE 服务器数 /（1 - 30%），其中，30% 是存储空间预留值。建议每台 BE 服务器挂载 4～12 块数据盘，以提高 I/O 能力。 |
 
 ### 第 2 步：部署集群
 
@@ -149,16 +167,15 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 在 `fe/conf/fe.conf` 目录下找到 FE 的相关配置项，并按照以下表格，调整 FE 配置。
 
-| 需调整参数 | 说明  |
-| --- | --- |
-| max_running_txn_num_per_db = 10000 | 高并发导入运行事务数较多，需调高参数。 |
-| streaming_lable_keep_max_second = 3600 | 高频导入事务标签内存占用多，保留时间调短。 |
-| label_keep_max_second = 7200 |
-| enable_round_robin_create_tablet = true | 创建 Tablet 时，采用 Round Robin 策略，尽量均匀。 |
-| tablet_rebalancer_type = partition | 均衡 Tablet 时，采用每个分区内尽量均匀的策略。 |
-| enable_single_replica_load = true | 开启单副本导入，多个副本只需构建一次索引，减少 CPU 消耗。 |
-| autobucket_min_buckets = 10 | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
-| max_backend_heartbeat_failure_tolerance_count = 10 | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
+| 需调整参数                                                   | 说明                                                         |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| `max_running_txn_num_per_db = 10000`                         | 高并发导入运行事务数较多，需调高参数。                       |
+| `streaming_lable_keep_max_second = 3600``label_keep_max_second = 7200` | 高频导入事务标签内存占用多，保留时间调短。                   |
+| `enable_round_robin_create_tablet = true`                    | 创建 Tablet 时，采用 Round Robin 策略，尽量均匀。            |
+| `tablet_rebalancer_type = partition`                         | 均衡 Tablet 时，采用每个分区内尽量均匀的策略。               |
+| `enable_single_replica_load = true`                          | 开启单副本导入，多个副本只需构建一次索引，减少 CPU 消耗。    |
+| `autobucket_min_buckets = 10`                                | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够。 |
+| `max_backend_heartbeat_failure_tolerance_count = 10`         | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，因此将容忍次数从 1 调大到 10。 |
 
 更多关于 FE 配置项的信息，可参考 [FE 配置项](../admin-manual/config/fe-config.md)。
 
@@ -166,7 +183,25 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 
 在 `be/conf/be.conf` 目录下找到 BE 的相关配置项，并按照以下表格，调整 BE 配置。
 
-<table><tbody><tr><th><p>模块</p></th><th><p>需调整参数</p></th><th><p>说明</p></th></tr><tr><td rowspan="3"><p>存储</p></td><td><p> storage_root_path = /path/to/dir1;/path/to/dir2;...;/path/to/dir12 </p></td><td><p>配置热数据在磁盘目录上的存储路径。</p></td></tr><tr><td><p> enable_file_cache = true </p></td><td><p>开启文件缓存。</p></td></tr><tr><td><p>file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]</p></td><td><p>配置冷数据的缓存路径和相关设置，具体配置说明如下：</p><ul><li>path：缓存路径</li><li>total_size：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB</li><li>query_limit：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB</li></ul></td></tr><tr><td rowspan="3"><p>写入</p></td><td><p>write_buffer_size = 1073741824</p></td><td><p>增加写入缓冲区（buffer）的文件大小，减少小文件和随机 I/O 操作，提升性能。</p></td></tr><tr><td><p>max_tablet_version_num = 20000</p></td><td><p>配合建表的 time_series compaction 策略，允许更多版本暂时未合并。</p></td></tr><tr><td><p>enable_single_replica_load = true</p></td><td><p>开启单副本导入，减少 CPU 消耗。与 FE 配置相同。</p></td></tr><tr><td rowspan="4"><p>Compaction</p></td><td><p>max_cumu_compaction_threads = 8</p></td><td><p>设置为 CPU 核数 / 4，意味着 CPU 资源的 1/4 用于写入，1/4 用于后台 Compaction，2/1 留给查询和其他操作。</p></td></tr><tr><td><p>inverted_index_compaction_enable = true</p></td><td><p>开启索引合并（index compaction），减少 Compaction 时的 CPU 消耗。</p></td></tr><tr><td><p>enable_segcompaction = false</p></td><td rowspan="2"><p>关闭日志场景不需要的两个 Compaction 功能。</p></td></tr><tr><td><p>enable_ordered_data_compaction = false</p></td></tr><tr><td rowspan="8"><p>缓存</p></td><td><p>disable_storage_page_cache = true</p></td><td rowspan="2"><p>因为日志数据量较大，缓存（cache）作用有限，因此关闭数据缓存，调换为索引缓存（index cache）的方式。</p></td></tr><tr><td><p>inverted_index_searcher_cache_limit = 30%</p></td></tr><tr><td><p>inverted_index_cache_stale_sweep_time_sec = 3600</p></td><td rowspan="2"><p>让索引缓存在内存中尽量保留 1 小时。</p></td></tr><tr><td><p>index_cache_entry_stay_time_after_lookup_s = 3600</p></td></tr><tr><td><p>enable_inverted_index_cache_on_cooldown = true</p></td><td rowspan="2"><p>开启索引上传冷数据存储时自动缓存的功能。</p></td></tr><tr><td><p>enable_write_index_searcher_cache = false</p></td></tr><tr><td><p>tablet_schema_cache_recycle_interval = 3600</p></td><td rowspan="2"><p>减少其他缓存对内存的占用。</p></td></tr><tr><td><p>segment_cache_capacity = 20000</p></td></tr><tr><td rowspan="3"><p>线程</p></td><td><p>pipeline_executor_size = 24</p></td><td rowspan="2"><p>32 核 CPU 的计算线程和 I/O 线程配置，根据核数等比扩缩。</p></td></tr><tr><td><p>doris_scanner_thread_pool_thread_num = 48</p></td></tr><tr><td><p>scan_thread_nice_value = 5</p></td><td><p>降低查询 I/O 线程的优先级，保证写入性能和时效性。</p></td></tr><tr><td rowspan="4"><p>其他</p></td><td><p>string_type_length_soft_limit_bytes = 10485760</p></td><td><p>将 String 类型数据的长度限制调高至 10 MB。</p></td></tr><tr><td><p>trash_file_expire_time_sec = 300</p></td><td rowspan="3"><p>调快垃圾文件的回收时间。</p></td></tr><tr><td><p>path_gc_check_interval_second = 900</p></td></tr><tr><td><p>path_scan_interval_second = 900</p></td></tr></tbody></table>
+| 模块       | 需调整参数                                                   | 说明                                                         |
+| :--------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 存储       | `storage_root_path = /path/to/dir1;/path/to/dir2;...;/path/to/dir12` | 配置热数据在磁盘目录上的存储路径。                           |
+| -          | `enable_file_cache = true`                                   | 开启文件缓存。                                               |
+| -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br>`path`：缓存路径<br>`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br>`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
+| 写入       | `write_buffer_size = 1073741824`                             | 增加写入缓冲区（buffer）的文件大小，减少小文件和随机 I/O 操作，提升性能。 |
+| -          | `max_tablet_version_num = 20000`                             | 配合建表的 time_series compaction 策略，允许更多版本暂时未合并。 |
+| -          | `enable_single_replica_load = true`                          | 开启单副本写入，减少 CPU 消耗。与 FE 配置相同。              |
+| Compaction | `max_cumu_compaction_threads = 8`                            | 设置为 CPU 核数 / 4，意味着 CPU 资源的 1/4 用于写入，1/4 用于后台 Compaction，2/1 留给查询和其他操作。 |
+| -          | `inverted_index_compaction_enable = true`                    | 开启索引合并（index compaction），减少 Compaction 时的 CPU 消耗。 |
+| -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | 关闭日志场景不需要的两个 Compaction 功能。                   |
+| 缓存       | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | 因为日志数据量较大，缓存（cache）作用有限，因此关闭数据缓存，调换为索引缓存（index cache）的方式。 |
+| -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | 让索引缓存在内存中尽量保留 1 小时。                          |
+| -          | `enable_inverted_index_cache_on_cooldown = true` <br>`enable_write_index_searcher_cache = false` | 开启索引上传冷数据存储时自动缓存的功能。                     |
+| -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | 减少其他缓存对内存的占用。                                   |
+| 线程       | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | 32 核 CPU 的计算线程和 I/O 线程配置，根据核数等比扩缩。      |
+| -          | `scan_thread_nice_value = 5`                                 | 降低查询 I/O 线程的优先级，保证写入性能和时效性。            |
+| 其他       | `string_type_length_soft_limit_bytes = 10485760`             | 将 String 类型数据的长度限制调高至 10 MB。                   |
+| -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | 调快垃圾文件的回收时间。                                     |
 
 更多关于 BE 配置项的信息，可参考 [BE 配置项](../admin-manual/config/be-config.md)。
 
@@ -516,7 +551,7 @@ ORDER BY ts DESC LIMIT 10;
 
 基于 Apache Doris 构建的 SelectDB Enterprise Core 提供了名为 Doris WebUI 的数据开发平台，Doris WebUI 包含了类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互，如下图所示：
 
-![WebUI](/image/WebUI-CN.jpeg)
+![WebUI](/images/WebUI-CN.jpeg)
 
 在此界面上，Doris WebUI 主要支持以下功能：
 
