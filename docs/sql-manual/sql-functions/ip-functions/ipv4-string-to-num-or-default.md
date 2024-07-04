@@ -24,13 +24,9 @@ under the License.
 
 ## IPV4_STRING_TO_NUM_OR_DEFAULT
 
-<version since="dev">
-
 IPV4_STRING_TO_NUM_OR_DEFAULT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -38,12 +34,13 @@ IPV4_STRING_TO_NUM_OR_DEFAULT
 
 Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form). Returns a BIGINT number representing the corresponding IPv4 address in big endian.
 
-### notice
+#### Notice
 
-`will return 0 if the input parameter is invalid ipv4 value or NULL`
+If the input string is not a valid IPv4 address or `NULL`, `0` is returned.
 
-### example
-```
+### Example
+
+```sql
 mysql> select ipv4_string_to_num_or_default('192.168.0.1'); 
 +----------------------------------------------+ 
 | ipv4_string_to_num_or_default('192.168.0.1') | 
@@ -72,6 +69,6 @@ mysql> select addr_src, ipv4_string_to_num_or_default(addr_src) from ipv4_string
 1 row in set (0.09 sec)
 ```
 
-### keywords
+### Keywords
 
 IPV4_STRING_TO_NUM_OR_DEFAULT, IP

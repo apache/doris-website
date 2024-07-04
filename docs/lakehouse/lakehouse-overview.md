@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Lakehouse Overview",
+    "title": "Data Lakehouse Overview",
     "language": "en"
 }
 ---
@@ -36,7 +36,7 @@ Data warehouses addresses the need for fast data analysis, while data lakes are 
 
 ## Applicable scenarios
 
-We design the Doris lakehouse solution for the following four applicable scenarios:
+We design the Doris Data Lakehouse solution for the following four applicable scenarios:
 
 - Lakehouse query acceleration: As a highly efficient OLAP query engine, Doris has excellent MPP-based vectorized distributed query capabilities. Data lake analysis with Doris will benefit from the efficient query engine.
 
@@ -49,7 +49,7 @@ We design the Doris lakehouse solution for the following four applicable scenari
 
 ## Doris-based data lakehouse architecture
 
-Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon (incubating), Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
+Apache Doris can work as a data lakehouse with its [Multi Catalog](../lakehouse/lakehouse-overview#multi-catalog) feature. It can access databases and data lakes including Apache Hive, Apache Iceberg, Apache Hudi, Apache Paimon, LakeSoul, Elasticsearch, MySQL, Oracle, and SQLServer. It also supports Apache Ranger for privilege management.
 
 ![doris-based-data-lakehouse-architecture](/images/doris-based-data-lakehouse-architecture.png)
 
@@ -157,7 +157,7 @@ With Multi-Catalog, Doris now has a new three-tiered metadata hierarchy (catalog
 
 - JDBC
 
-- Apache Paimon(Incubating)
+- Apache Paimon
 
 Multi-Catalog works as an additional and enhanced external table connection method. It helps users conduct multi-catalog federated queries quickly.
 

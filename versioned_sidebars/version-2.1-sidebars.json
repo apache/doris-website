@@ -54,7 +54,8 @@
             "type": "category",
             "label": "Database Connection",
             "items": [
-                "db-connect/database-connect"
+                "db-connect/database-connect",
+                "db-connect/arrow-flight-sql-connect"
             ]
         },
         {
@@ -82,10 +83,9 @@
                     "items": [
                         "table-design/index/index-overview",
                         "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
                         "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index",
-                        "table-design/index/bitmap-index",
-                        "table-design/index/inverted-index"
+                        "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
                 "table-design/auto-increment",
@@ -141,9 +141,17 @@
                     "type": "category",
                     "label": "Exporting Data",
                     "items": [
+                        "data-operate/export/export-overview",
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Job Scheduler",
+                    "items": [
+                        "data-operate/scheduler/job-scheduler"
                     ]
                 }
             ]
@@ -172,7 +180,6 @@
                     "items": [
                         "query/query-variables/variables",
                         "query/query-variables/sql-mode",
-                        "query/query-variables/time-zone",
                         "query/query-variables/user-defined-variables"
                     ]
                 },
@@ -252,12 +259,12 @@
         },
         {
             "type": "category",
-            "label": "Lakehouse",
+            "label": "Data Lakehouse",
             "items": [
                 "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Analyzing Data Lake",
+                    "label": "Querying Data Lakes",
                     "items": [
                         "lakehouse/datalake-analytics/hive",
                         "lakehouse/datalake-analytics/hudi",
@@ -268,14 +275,14 @@
                 },
                 {
                     "type": "category",
-                    "label": "Building Data Lake",
+                    "label": "Building Data Lakes",
                     "items": [
                         "lakehouse/datalake-building/hive-build"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Analyzing Database",
+                    "label": "Querying Databases",
                     "items": [
                         "lakehouse/database/jdbc",
                         "lakehouse/database/mysql",
@@ -308,6 +315,7 @@
                         "admin-manual/cluster-management/upgrade",
                         "admin-manual/cluster-management/elastic-expansion",
                         "admin-manual/cluster-management/load-balancing",
+                        "admin-manual/cluster-management/time-zone",
                         "admin-manual/cluster-management/fqdn"
                     ]
                 },
@@ -363,6 +371,14 @@
                 },
                 {
                     "type": "category",
+                    "label": "Log Management",
+                    "items": [
+                        "admin-manual/log-management/fe-log",
+                        "admin-manual/log-management/be-log"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Maintenance",
                     "items": [
                         {
@@ -380,8 +396,7 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/debug-log"
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
@@ -486,6 +501,13 @@
         },
         {
             "type": "category",
+            "label": "Practical Guide",
+            "items": [
+                "practical-guide/log-storage-analysis"
+            ]
+        },
+        {
+            "type": "category",
             "label": "Ecosystem",
             "items": [
                 "ecosystem/spark-doris-connector",
@@ -509,7 +531,10 @@
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
-                        "ecosystem/bi/powerbi"
+                        "ecosystem/bi/finebi",
+                        "ecosystem/bi/powerbi",
+                        "ecosystem/bi/tableau",
+                        "ecosystem/bi/quicksight"
                     ]
                 }
             ]
@@ -624,7 +649,19 @@
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
                                 "sql-manual/sql-functions/date-time-functions/date_floor",
+                                "sql-manual/sql-functions/date-time-functions/second_floor",
+                                "sql-manual/sql-functions/date-time-functions/minute_floor",
+                                "sql-manual/sql-functions/date-time-functions/hour_floor",
+                                "sql-manual/sql-functions/date-time-functions/day_floor",
+                                "sql-manual/sql-functions/date-time-functions/month_floor",
+                                "sql-manual/sql-functions/date-time-functions/year_floor",
                                 "sql-manual/sql-functions/date-time-functions/date_ceil",
+                                "sql-manual/sql-functions/date-time-functions/second_ceil",
+                                "sql-manual/sql-functions/date-time-functions/minute_ceil",
+                                "sql-manual/sql-functions/date-time-functions/hour_ceil",
+                                "sql-manual/sql-functions/date-time-functions/day_ceil",
+                                "sql-manual/sql-functions/date-time-functions/month_ceil",
+                                "sql-manual/sql-functions/date-time-functions/year_ceil",
                                 "sql-manual/sql-functions/date-time-functions/microsecond",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-diff",
@@ -714,9 +751,11 @@
                                 "sql-manual/sql-functions/string-functions/elt",
                                 "sql-manual/sql-functions/string-functions/instr",
                                 "sql-manual/sql-functions/string-functions/locate",
+                                "sql-manual/sql-functions/string-functions/overlay",
                                 "sql-manual/sql-functions/string-functions/field",
                                 "sql-manual/sql-functions/string-functions/find-in-set",
                                 "sql-manual/sql-functions/string-functions/replace",
+                                "sql-manual/sql-functions/string-functions/replace_empty",
                                 "sql-manual/sql-functions/string-functions/strleft",
                                 "sql-manual/sql-functions/string-functions/strright",
                                 "sql-manual/sql-functions/string-functions/split-part",
@@ -1069,15 +1108,11 @@
                             "label": "IP Functions",
                             "items": [
                                 "sql-manual/sql-functions/ip-functions/ipv4-num-to-string",
-                                "sql-manual/sql-functions/ip-functions/inet-ntoa",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num",
-                                "sql-manual/sql-functions/ip-functions/inet-aton",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num-or-default",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num-or-null",
                                 "sql-manual/sql-functions/ip-functions/ipv6-num-to-string",
-                                "sql-manual/sql-functions/ip-functions/inet6-ntoa",
                                 "sql-manual/sql-functions/ip-functions/ipv6-string-to-num",
-                                "sql-manual/sql-functions/ip-functions/inet6-aton",
                                 "sql-manual/sql-functions/ip-functions/ipv6-string-to-num-or-default",
                                 "sql-manual/sql-functions/ip-functions/ipv6-string-to-num-or-null",
                                 "sql-manual/sql-functions/ip-functions/is-ipv4-compat",
@@ -1132,17 +1167,17 @@
                                 "sql-manual/sql-types/Data-Types/CHAR",
                                 "sql-manual/sql-types/Data-Types/VARCHAR",
                                 "sql-manual/sql-types/Data-Types/STRING",
-                                "sql-manual/sql-types/Data-Types/HLL",
-                                "sql-manual/sql-types/Data-Types/BITMAP",
-                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/IPV4",
+                                "sql-manual/sql-types/Data-Types/IPV6",
                                 "sql-manual/sql-types/Data-Types/ARRAY",
                                 "sql-manual/sql-types/Data-Types/MAP",
                                 "sql-manual/sql-types/Data-Types/STRUCT",
                                 "sql-manual/sql-types/Data-Types/JSON",
-                                "sql-manual/sql-types/Data-Types/AGG_STATE",
                                 "sql-manual/sql-types/Data-Types/VARIANT",
-                                "sql-manual/sql-types/Data-Types/IPV4",
-                                "sql-manual/sql-types/Data-Types/IPV6"
+                                "sql-manual/sql-types/Data-Types/HLL",
+                                "sql-manual/sql-types/Data-Types/BITMAP",
+                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/AGG_STATE"
                             ]
                         }
                     ]
@@ -1486,6 +1521,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.4",
                 "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",

@@ -32,7 +32,7 @@ OUTFILE
 
 ### description
 
- `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程, S3 协议或HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
+ `SELECT INTO OUTFILE` 命令用于将查询结果导出为文件。目前支持通过 Broker 进程, S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
 #### 语法：
 
@@ -73,18 +73,19 @@ INTO OUTFILE "file_path"
 3. properties
 
     ```
-    指定相关属性。目前支持通过 Broker 进程, 或通过 S3/HDFS协议进行导出。
+    指定相关属性。目前支持通过 Broker 进程, 或通过 S3/HDFS 协议进行导出。
     
     语法：
     [PROPERTIES ("key"="value", ...)]
     支持如下属性：
 
     文件相关的属性：
-        column_separator: 列分隔符，只用于csv相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
-        line_delimiter: 行分隔符，只用于csv相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
-        max_file_size: 单个文件大小限制，如果结果超过这个值，将切割成多个文件, max_file_size取值范围是[5MB, 2GB], 默认为1GB。（当指定导出为orc文件格式时，实际切分文件的大小将是64MB的倍数，如：指定max_file_size = 5MB, 实际将以64MB为切分；指定max_file_size = 65MB, 实际将以128MB为切分）
-        delete_existing_files: 默认为false，若指定为true,则会先删除file_path指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
-        file_suffix: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
+        `column_separator`: 列分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
+        `line_delimiter`: 行分隔符，只用于 CSV 相关格式。在 1.2 版本开始支持多字节分隔符，如："\\x01", "abc"。
+        `max_file_size`: 单个文件大小限制，如果结果超过这个值，将切割成多个文件, `max_file_size` 取值范围是[5MB, 2GB], 默认为 `1GB`。（当指定导出为 OCR 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 `max_file_size = 5MB`, 实际将以 64 MB 为切分；指定 `max_file_size = 65MB`, 实际将以 128 MB 为切分）
+        `delete_existing_files`: 默认为 `false`，若指定为 `true`，则会先删除 `file_path` 指定的目录下的所有文件，然后导出数据到该目录下。例如："file_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
+        `file_suffix`: 指定导出文件的后缀，若不指定该参数，将使用文件格式的默认后缀。
+        `compress_type`：当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）
     
     Broker 相关属性需加前缀 `broker.`：
         broker.name: broker名称
@@ -111,10 +112,10 @@ INTO OUTFILE "file_path"
         s3.access_key
         s3.secret_key
         s3.region
-        use_path_style: (选填) 默认为false 。S3 SDK 默认使用 virtual-hosted style 方式。但某些对象存储系统可能没开启或不支持virtual-hosted style 方式的访问，此时可以添加 use_path_style 参数来强制使用 path style 访问方式。
+        use_path_style: (选填) 默认为 `false` 。S3 SDK 默认使用 Virtual-hosted Style 方式。但某些对象存储系统可能没开启或不支持 Virtual-hosted Style 方式的访问，此时可以添加 `use_path_style` 参数来强制使用 Path Style 访问方式。
     ```
 
-    > 注意：若要使用delete_existing_files参数，还需要在fe.conf中添加配置`enable_delete_existing_files = true`并重启fe，此时delete_existing_files才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
+    > 注意：若要使用 `delete_existing_files` 参数，还需要在 `fe.conf` 中添加配置`enable_delete_existing_files = true`并重启fe，此时delete_existing_files才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
 
 4. 导出的数据类型
 
@@ -122,11 +123,11 @@ INTO OUTFILE "file_path"
 
 5. 并发导出
 
-    设置session变量```set enable_parallel_outfile = true;```可开启outfile并发导出，详细使用方法见[导出查询结果集](../../../data-operate/export/outfile.md)
+    设置 Session 变量```set enable_parallel_outfile = true;```可开启 Outfile 并发导出，详细使用方法见[导出查询结果集](../../../data-operate/export/outfile.md)
 
 6. 导出到本地
 
-    导出到本地文件时需要先在fe.conf中配置`enable_outfile_to_local=true`
+    导出到本地文件时需要先在 `fe.conf` 中配置`enable_outfile_to_local=true`
 
     ```sql
     select * from tbl1 limit 10 
@@ -135,9 +136,9 @@ INTO OUTFILE "file_path"
 
 #### 数据类型映射
 
-parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能够自动将Doris的数据类型导出到parquet/orc文件格式的对应数据类型，以下是Doris数据类型和parquet/orc文件格式的数据类型映射关系表：
+Parquet、ORC 文件格式拥有自己的数据类型，Doris的导出功能能够自动将 Doris 的数据类型导出到 Parquet/ORC 文件格式的对应数据类型，以下是 Apache Doris 数据类型和 Parquet/ORC 文件格式的数据类型映射关系表：
 
-1. Doris导出到Orc文件格式的数据类型映射表：
+1. Doris 导出到 ORC 文件格式的数据类型映射表：
 
     | Doris Type | Orc Type |
     | --- | --- |
@@ -160,7 +161,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     | array | array |
 
 
-2. Doris导出到Parquet文件格式时，会先将Doris内存数据转换为arrow内存数据格式，然后由arrow写出到parquet文件格式。Doris数据类型到arrow数据类的映射关系为：
+2. Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。Doris 数据类型到 Arrow 数据类的映射关系为：
 
     | Doris Type | Arrow Type |
     | --- | --- |
@@ -184,7 +185,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
 
 ### example
 
-1. 使用 broker 方式导出，将简单查询结果导出到文件 `hdfs://path/to/result.txt`。指定导出格式为 CSV。使用 `my_broker` 并设置 kerberos 认证信息。指定列分隔符为 `,`，行分隔符为 `\n`。
+1. 使用 Broker 方式导出，将简单查询结果导出到文件 `hdfs://path/to/result.txt`。指定导出格式为 CSV。使用 `my_broker` 并设置 kerberos 认证信息。指定列分隔符为 `,`，行分隔符为 `\n`。
 
     ```sql
     SELECT * FROM tbl
@@ -220,7 +221,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     );
     ```
 
-3. 将 CTE 语句的查询结果导出到文件 `hdfs://path/to/result.txt`。默认导出格式为 CSV。使用 `my_broker` 并设置 hdfs 高可用信息。使用默认的行列分隔符。
+3. 将 CTE 语句的查询结果导出到文件 `hdfs://path/to/result.txt`。默认导出格式为 CSV。使用 `my_broker` 并设置 HDFS 高可用信息。使用默认的行列分隔符。
 
     ```sql
     WITH
@@ -246,7 +247,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
    最终生成文件如如果不大于 1GB，则为：`result_0.csv`。
    如果大于 1GB，则可能为 `result_0.csv, result_1.csv, ...`。
 
-4. 将 UNION 语句的查询结果导出到文件 `bos://bucket/result.txt`。指定导出格式为 PARQUET。使用 `my_broker` 并设置 hdfs 高可用信息。PARQUET 格式无需指定列分割符。
+4. 将 UNION 语句的查询结果导出到文件 `bos://bucket/result.txt`。指定导出格式为 PARQUET。使用 `my_broker` 并设置 HDFS 高可用信息。PARQUET 格式无需指定列分割符。
    导出完成后，生成一个标识文件。
 
     ```sql
@@ -262,7 +263,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     );
     ```
 
-5. 将 select 语句的查询结果导出到文件 `s3a://${bucket_name}/path/result.txt`。指定导出格式为 csv。
+5. 将 Select 语句的查询结果导出到文件 `s3a://${bucket_name}/path/result.txt`。指定导出格式为 CSV。
    导出完成后，生成一个标识文件。
 
     ```sql
@@ -289,7 +290,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
         1. 不存在的path会自动创建
         2. access.key/secret.key/endpoint需要和cos的同学确认。尤其是endpoint的值，不需要填写bucket_name。
 
-6. 使用 s3 协议导出到 bos，并且并发导出开启。
+6. 使用 S3 协议导出到 bos，并且并发导出开启。
 
     ```sql
     set enable_parallel_outfile = true;
@@ -307,8 +308,8 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
 
    最终生成的文件前缀为 `my_file_{fragment_instance_id}_`。
 
-7. 使用 s3 协议导出到 bos，并且并发导出 session 变量开启。
-   注意：但由于查询语句带了一个顶层的排序节点，所以这个查询即使开启并发导出的 session 变量，也是无法并发导出的。
+7. 使用 S3 协议导出到 bos，并且并发导出 Session 变量开启。
+   注意：但由于查询语句带了一个顶层的排序节点，所以这个查询即使开启并发导出的 Session 变量，也是无法并发导出的。
 
     ```sql
     set enable_parallel_outfile = true;
@@ -324,7 +325,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     )
     ```
 
-8. 使用 hdfs 方式导出，将简单查询结果导出到文件 `hdfs://${host}:${fileSystem_port}/path/to/result.txt`。指定导出格式为 CSV，用户名为work。指定列分隔符为 `,`，行分隔符为 `\n`。
+8. 使用 HDFS 方式导出，将简单查询结果导出到文件 `hdfs://${host}:${fileSystem_port}/path/to/result.txt`。指定导出格式为 CSV，用户名为work。指定列分隔符为 `,`，行分隔符为 `\n`。
 
     ```sql
     -- fileSystem_port默认值为9000
@@ -338,7 +339,7 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     );
     ```
 
-   如果Hadoop 集群开启高可用并且启用 Kerberos 认证，可以参考如下SQL语句：
+   如果 Hadoop 集群开启高可用并且启用 Kerberos 认证，可以参考如下 SQL 语句：
 
     ```sql
     SELECT * FROM tbl
@@ -359,10 +360,10 @@ parquet、orc文件格式拥有自己的数据类型，Doris的导出功能能�
     );
     ```
 
-   最终生成文件如如果不大于 100MB，则为：`result_0.csv`。
-   如果大于 100MB，则可能为 `result_0.csv, result_1.csv, ...`。
+   最终生成文件如如果不大于 100 MB，则为：`result_0.csv`。
+   如果大于 100 MB，则可能为 `result_0.csv, result_1.csv, ...`。
 
-9. 将 select 语句的查询结果导出到腾讯云cos的文件 `cosn://${bucket_name}/path/result.txt`。指定导出格式为 csv。
+9. 将 Select 语句的查询结果导出到腾讯云 cos 的文件 `cosn://${bucket_name}/path/result.txt`。指定导出格式为 CSV。
    导出完成后，生成一个标识文件。
 
     ```sql

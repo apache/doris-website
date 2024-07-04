@@ -39,33 +39,33 @@ Using the three tables: lineitem, orders, and partsupp from TPC-H, let's describ
 a materialized view and using the materialized view for transparent query rewriting.
 ```sql
 CREATE TABLE IF NOT EXISTS lineitem (
-    l_orderkey    integer not null,
-    l_partkey     integer not null,
-    l_suppkey     integer not null,
-    l_linenumber  integer not null,
-    l_quantity    decimalv3(15,2) not null,
-    l_extendedprice  decimalv3(15,2) not null,
-    l_discount    decimalv3(15,2) not null,
-    l_tax         decimalv3(15,2) not null,
-    l_returnflag  char(1) not null,
-    l_linestatus  char(1) not null,
-    l_shipdate    date not null,
-    l_commitdate  date not null,
-    l_receiptdate date not null,
-    l_shipinstruct char(25) not null,
-    l_shipmode     char(10) not null,
-    l_comment      varchar(44) not null
-    )
-    DUPLICATE KEY(l_orderkey, l_partkey, l_suppkey, l_linenumber)
-    PARTITION BY RANGE(l_shipdate)
-(FROM ('2023-10-17') TO ('2023-10-20') INTERVAL 1 DAY)
-    DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3
-    PROPERTIES ("replication_num" = "1");
+                                      l_orderkey    integer not null,
+                                      l_partkey     integer not null,
+                                      l_suppkey     integer not null,
+                                      l_linenumber  integer not null,
+                                      l_quantity    decimalv3(15,2) not null,
+  l_extendedprice  decimalv3(15,2) not null,
+  l_discount    decimalv3(15,2) not null,
+  l_tax         decimalv3(15,2) not null,
+  l_returnflag  char(1) not null,
+  l_linestatus  char(1) not null,
+  l_shipdate    date not null,
+  l_commitdate  date not null,
+  l_receiptdate date not null,
+  l_shipinstruct char(25) not null,
+  l_shipmode     char(10) not null,
+  l_comment      varchar(44) not null
+  )
+  DUPLICATE KEY(l_orderkey, l_partkey, l_suppkey, l_linenumber)
+  PARTITION BY RANGE(l_shipdate)
+(FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
+  DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3
+  PROPERTIES ("replication_num" = "1");
 
 insert into lineitem values
-                         (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
-                         (2, 4, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
-                         (3, 2, 4, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-19', '2023-10-19', '2023-10-19', 'a', 'b', 'yyyyyyyyy');
+                       (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
+                       (2, 4, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
+                       (3, 2, 4, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-19', '2023-10-19', '2023-10-19', 'a', 'b', 'yyyyyyyyy');
 ```
 ```sql
 CREATE TABLE IF NOT EXISTS orders  (
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS orders  (
     )
     DUPLICATE KEY(o_orderkey, o_custkey)
     PARTITION BY RANGE(o_orderdate)(
-    FROM ('2023-10-17') TO ('2023-10-20') INTERVAL 1 DAY)
+  FROM ('2023-10-17') TO ('2023-11-01') INTERVAL 1 DAY)
     DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
     PROPERTIES ("replication_num" = "1");
 
@@ -356,6 +356,8 @@ Temporary support for the aggregation roll-up functions is as follows:
 | count(distinct )     | bitmap_union                     | bitmap_union_count                    |
 | bitmap_union         | bitmap_union                     | bitmap_union                          |
 | bitmap_union_count   | bitmap_union                     | bitmap_union_count                    |
+| hll_union_agg, approx_count_distinct, hll_cardinality | hll_union 或者 hll_raw_agg    | hll_union_agg      |
+
 
 ## Query partial Transparent Rewriting (Coming soon)
 When the number of tables in the materialized view is greater than the query, if the materialized view
@@ -392,9 +394,8 @@ Query statement:
  LEFT OUTER JOIN orders ON L_ORDERKEY = O_ORDERKEY;
 ```
 
-## Union Rewriting (Coming soon)
-When the materialized view is not sufficient to provide all the data for the query, it can use Union to return
-data by combining the original table and the materialized view.
+## Union Rewriting
+When a materialized view is insufficient to provide all the data required by a query, a UNION ALL approach can be used to combine data from both the original table and the materialized view for the final result. Currently, the materialized view needs to be a partitioned materialized view, and UNION ALL can be used to supplement the data by applying the filter conditions on the partition fields.
 For example:
 
 **Case 1**
@@ -403,43 +404,124 @@ Materialized view definition:
 
 ```sql
 CREATE MATERIALIZED VIEW mv7
-BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
-DISTRIBUTED BY RANDOM BUCKETS 3
-PROPERTIES ('replication_num' = '1')
-AS
-SELECT
-    o_orderkey,
-    o_custkey,
-    o_orderstatus,
-    o_totalprice
-FROM orders
-WHERE o_orderkey > 10;
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1') 
+as
+select l_shipdate, o_orderdate, l_partkey,
+       l_suppkey, sum(o_totalprice) as sum_total
+from lineitem
+       left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+group by
+  l_shipdate,
+  o_orderdate,
+  l_partkey,
+  l_suppkey;
 ```
+
+When a new partition 2023-10-21 is added to the base table and the materialized view has not yet been refreshed, the result can be returned by combining the materialized view with the original table using UNION ALL.
+
+```sql
+insert into lineitem values
+    (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-21', '2023-10-21', '2023-10-21', 'a', 'b', 'yyyyyyyyy');
+```
+
 
 Query statement:
 ```sql
-SELECT
-    o_orderkey,
-    o_custkey,
-    o_orderstatus,
-    o_totalprice
-FROM orders
-WHERE o_orderkey > 5;
+select l_shipdate, o_orderdate, l_partkey, l_suppkey, sum(o_totalprice) as sum_total
+from lineitem
+       left join orders on lineitem.l_orderkey = orders.o_orderkey and l_shipdate = o_orderdate
+group by
+  l_shipdate,
+  o_orderdate,
+  l_partkey,
+  l_suppkey;
 ```
 
 Rewriting result:
 ```sql
 SELECT *
-FROM mv
-UNION ALL
-SELECT
-    o_orderkey,
-    o_custkey,
-    o_orderstatus,
-    o_totalprice
-FROM orders
-WHERE o_orderkey > 5 AND o_orderkey <= 10;
+FROM mv7
+union all
+select t1.l_shipdate, o_orderdate, t1.l_partkey, t1.l_suppkey, sum(o_totalprice) as sum_total
+from (select * from lineitem where l_shipdate = '2023-10-21') t1
+       left join orders on t1.l_orderkey = orders.o_orderkey and t1.l_shipdate = o_orderdate
+group by
+  t1.l_shipdate,
+  o_orderdate,
+  t1.l_partkey,
+  t1.l_suppkey;
 ```
+
+Noted:
+The materialized view includes a WHERE condition. For example, if the materialized view is constructed with the filter condition WHERE l_shipdate > '2023-10-19' and the query condition is WHERE l_shipdate > '2023-10-18', this situation currently cannot be compensated for using UNION ALL. This will be supported in the future.
+
+## Nested Materialized View Rewrite
+The definition SQL of a materialized view can use another materialized view; this type of materialized view is called a nested materialized view. Theoretically, there is no limit to the number of nested layers. This materialized view can be queried directly or can participate in transparent rewrite operations. Nested materialized views can also be involved in transparent rewrites.
+
+**Case 1**
+
+Here is an example to illustrate how nested materialized views work:
+
+First, create the inner materialized view `mv8_0_inner_mv`.
+
+```sql
+CREATE MATERIALIZED VIEW mv8_0_inner_mv
+BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1')
+AS
+select
+l_linenumber,
+o_custkey,
+o_orderkey,
+o_orderstatus,
+l_partkey,
+l_suppkey,
+l_orderkey
+from lineitem
+inner join orders on lineitem.l_orderkey = orders.o_orderkey;
+```
+
+Create the outer materialized view `mv8_0`.
+
+```sql
+CREATE MATERIALIZED VIEW mv8_0
+BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1') 
+AS
+select
+l_linenumber,
+o_custkey,
+o_orderkey,
+o_orderstatus,
+l_partkey,
+l_suppkey,
+l_orderkey,
+ps_availqty
+from mv8_0_inner_mv
+inner join partsupp on l_partkey = ps_partkey AND l_suppkey = ps_suppkey;
+```
+
+The following query will result in successful rewrite for both mv8_0_inner_mv and mv8_0. Ultimately, the cost-based optimizer will select mv8_0.
+
+```sql
+select lineitem.l_linenumber
+from lineitem
+inner join orders on l_orderkey = o_orderkey
+inner join partsupp on  l_partkey = ps_partkey AND l_suppkey = ps_suppkey
+where o_orderstatus = 'o'
+```
+
+**Note:**
+
+1. The more layers of nested materialized views, the longer the time it will take for transparent rewriting. It is recommended not to exceed 3 layers of nested materialized views.
+2. Transparent rewriting of nested materialized views is disabled by default. See the switch below for enabling it.
+
+
 
 ## Auxiliary Functions
 **Data Consistency Issues After Transparent Rewriting**
@@ -511,27 +593,290 @@ you can execute the following statement. It will provide a detailed breakdown of
 | SET enable_materialized_view_rewrite = true;                        | Enable or disable query transparent rewriting, default is disabled                                                                |
 | SET materialized_view_rewrite_enable_contain_external_table = true; | Whether materialized views participating in transparent rewriting are allowed to contain external tables, default is not allowed  |
 | SET materialized_view_rewrite_success_candidate_num = 3;            | Transparently rewrites the successful result set, allowing the maximum number of CBO candidates to participate, the default is 3  |
-
+| SET enable_materialized_view_union_rewrite = true;                  | Whether to allow the union of base table and materialized view using UNION ALL when the partitioned materialized view is insufficient to provide all the data required by a query. Default is enabled. |
+| SET enable_materialized_view_nest_rewrite = true;                   | Whether to allow nested rewriting. Default is disabled. |
+| SET materialized_view_relation_mapping_max_count = 8;               | Maximum number of relation mappings allowed during transparent rewrite. If exceeded, truncation will occur. Relation mapping is typically generated by self-joins in tables and the number is usually the Cartesian product, for example, if there are 3 tables, it may generate 8 combinations. Default is 8. |
 
 ## Limitations
-- The materialized view definition statement only allows SELECT, FROM, WHERE, JOIN, and GROUP BY clauses.
-  The input for JOIN can include simple GROUP BY (aggregation on a single table).
-  Supported types of JOIN operations include INNER and LEFT OUTER JOIN.
-  Support for other types of JOIN operations will be gradually added.
+- Materialized view definition statements are only allowed to include SELECT, FROM, WHERE, JOIN, and GROUP BY clauses.
+- The input to JOIN can include simple GROUP BY (single-table aggregation). Supported JOIN types include INNER, LEFT OUTER JOIN,
+- RIGHT OUTER JOIN, FULL OUTER JOIN, LEFT SEMI JOIN, RIGHT SEMI JOIN, LEFT ANTI JOIN, and RIGHT ANTI JOIN.
 
-- Materialized views based on External Tables do not guarantee strong consistency in query results.
+- Materialized views based on External Tables do not guarantee strong consistency of query results.
 
-- The use of non-deterministic functions to build materialized views is not supported,
-  including rand, now, current_time, current_date, random, uuid, etc.
+- The use of non-deterministic functions to construct materialized views is not supported, including rand, now, current_time,
+- current_date, random, uuid, etc.
 
 - Transparent rewriting does not support window functions.
 
-- There is LIMIT in queries and materialized views, and transparent rewriting is not supported for the time being.
+- Materialized views with LIMIT are currently not supported for transparent rewriting.
 
 - Currently, materialized view definitions cannot utilize views or other materialized views.
 
 - When the query or materialized view has no data, transparent rewriting is not supported.
 
-- Currently, WHERE clause compensation supports scenarios where the materialized view does not have a WHERE clause,
-  but the query does, or where the materialized view has a WHERE clause and the query's WHERE clause is a superset
-  of the materialized view's. Range condition compensation is not yet supported but will be added gradually.
+- Currently, WHERE condition compensation only supports compensating conditions on numeric and date type columns.
+  For example, if the materialized view is defined as a > 5 and the query is a > 10, transparent rewriting is supported.
+
+## Frequently Asked Questions
+
+### 1. Why isn't the materialized view being used?
+To determine why a materialized view is not being used, execute the following SQL:
+
+`explain your_query_sql;`
+
+a. The transparent rewriting feature for materialized views is disabled by default. You need to enable the corresponding switch for it to work. See the related switches for asynchronous materialized views.
+
+b. The materialized view may not be available, causing transparent rewriting to fail. Check the status of materialized view construction, see problem 2.
+
+c. After checking the first two steps, if the materialized view is still not being used, it may be because the definition SQL of the materialized view and the query SQL are not within the current capability of the materialized view rewriting. See the capabilities of materialized view transparent rewriting.
+
+### 2. How to check if the materialized view status is normal?
+#### 2.1 Confirm the Materialized View Construction Status
+To participate in transparent rewriting, the status of the materialized view must be Success. First, run the following SQL to check the JobName of the materialized view:
+
+`select * from mv_infos('database'='db_name') where Name = 'mv_name'`
+
+Next, use the JobName to check the task status of the materialized view. Run the following SQL:
+
+`select * from tasks("type"="mv") where JobName = 'job_name';`
+
+Check if the status of the most recent task execution is Success.
+
+#### 2.2 Confirm the Availability of Consistent Materialized View Data
+If the materialized view is successfully built but is unavailable due to data changes and the `grace_period` setting,
+confirm the availability of consistent materialized view data.
+
+**For Full Refresh Materialized Views:**
+
+Run the following SQL and check if the `SyncWithBaseTables` field is 1:
+
+`select * from mv_infos('database'='db_name') where Name = 'mv_name'`
+
+**For Partitioned Materialized Views:**
+
+Run the following SQL to check if the partitions used in the query are valid:
+`show partitions from mv_name;`
+
+### 3. Error During Materialized View Construction
+Error Message:
+
+`ERROR 1105 (HY000): errCode = 2, detailMessage = Syntax error in line 1:
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL`
+
+a. The statement for asynchronous materialized views is only supported under the new optimizer.
+Ensure that the new optimizer is enabled:
+
+`SET global enable_nereids_planner = true;`
+
+b. It's possible that there is a typo in the keywords used in the statement to build the materialized view, or there
+may be syntax errors in the materialized view definition SQL. Check the materialized view definition SQL and the create
+materialized view statement to ensure correctness.
+
+### 4. Error: Unable to Find a Suitable Base Table for Partitioning
+This error typically indicates that the SQL definition of the materialized view and the selection of partitioning fields
+for the materialized view are not suitable for partitioned incremental updates. Therefore, creating a partitioned
+materialized view will result in this error.
+
+For a materialized view to support partitioned incremental updates, it needs to meet certain requirements.
+For more details, refer to the [CREATE ASYNC MATERIALIZED VIEW documentation](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md).
+
+Here is an example to illustrate the construction of a partitioned materialized view:
+
+```sql
+   CREATE TABLE IF NOT EXISTS lineitem (
+   l_orderkey    INTEGER NOT NULL,
+   l_partkey     INTEGER NOT NULL,
+   l_suppkey     INTEGER NOT NULL,
+   l_linenumber  INTEGER NOT NULL,
+   l_quantity    DECIMALV3(15,2) NOT NULL,
+   l_extendedprice  DECIMALV3(15,2) NOT NULL,
+   l_discount    DECIMALV3(15,2) NOT NULL,
+   l_tax         DECIMALV3(15,2) NOT NULL,
+   l_returnflag  CHAR(1) NOT NULL,
+   l_linestatus  CHAR(1) NOT NULL,
+   l_shipdate    DATE NOT NULL,
+   l_commitdate  DATE NOT NULL,
+   l_receiptdate DATE NOT NULL,
+   l_shipinstruct CHAR(25) NOT NULL,
+   l_shipmode     CHAR(10) NOT NULL,
+   l_comment      VARCHAR(44) NOT NULL
+   )
+   DUPLICATE KEY(l_orderkey, l_partkey, l_suppkey, l_linenumber)
+   PARTITION BY RANGE(l_shipdate) (
+   PARTITION `day_1` VALUES LESS THAN ('2023-12-9'),
+   PARTITION `day_2` VALUES LESS THAN ("2023-12-11"),
+   PARTITION `day_3` VALUES LESS THAN ("2023-12-30"))
+   DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3
+   PROPERTIES (
+   "replication_num" = "1"
+              );
+```
+
+```sql
+    CREATE TABLE IF NOT EXISTS orders  (
+   o_orderkey       INTEGER NOT NULL,
+   o_custkey        INTEGER NOT NULL,
+   o_orderstatus    CHAR(1) NOT NULL,
+   o_totalprice     DECIMALV3(15,2) NOT NULL,
+   o_orderdate      DATE NOT NULL,
+   o_orderpriority  CHAR(15) NOT NULL,
+   o_clerk          CHAR(15) NOT NULL,
+   o_shippriority   INTEGER NOT NULL,
+   O_COMMENT        VARCHAR(79) NOT NULL
+   )
+   DUPLICATE KEY(o_orderkey, o_custkey)
+   PARTITION BY RANGE(o_orderdate) (
+   PARTITION `day_2` VALUES LESS THAN ('2023-12-9'),
+   PARTITION `day_3` VALUES LESS THAN ("2023-12-11"),
+   PARTITION `day_4` VALUES LESS THAN ("2023-12-30")
+   )
+   DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
+   PROPERTIES (
+   "replication_num" = "1"
+              );
+```
+If l_shipdate is the partition field of the base table lineitem, the following materialized view can be incrementally
+updated by partition.
+
+```sql
+CREATE MATERIALIZED VIEW mv9
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(l_shipdate)
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
+PROPERTIES ('replication_num' = '1') 
+AS
+SELECT l_shipdate, l_orderkey, O_ORDERDATE,
+       count(O_ORDERDATE) over (partition by l_shipdate order by l_orderkey) as window_count
+FROM lineitem
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
+```
+
+The following materialized view cannot be incrementally updated by partition because l_shipdate is generated from the
+right side of a LEFT OUTER JOIN and may produce null values.
+
+```sql
+CREATE MATERIALIZED VIEW mv10
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(l_shipdate)
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
+PROPERTIES ('replication_num' = '1') 
+AS
+SELECT l_shipdate, l_orderkey, O_ORDERDATE,
+       count(O_ORDERDATE) over (partition by l_shipdate order by l_orderkey) as window_count
+FROM orders 
+LEFT OUTER JOIN lineitem on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
+```
+
+### 5. The materialized view returns no data upon direct query?
+The materialized view might still be under construction or the construction process might have failed. Use the following
+statement to check the status of materialized view construction:
+
+```sql
+   -- 查看物化视图元数据信息,database 为当前数据库, mv_name 为物化视图名称
+   select * from mv_infos('database'='db_name') where Name = 'mv_name' \G
+```
+
+```sql
+-- 查看任务元数据
+select * from jobs("type"="mv") order by CreateTime limit 5;
+```
+```sql
+-- 查看任务执行信息，这里面会展示任务执行的状态，如果失败会有失败原因
+select * from tasks("type"="mv") where JobName = 'job_name';
+```
+
+### 6. What happens when the data in the base tables used by the materialized view changes before the materialized view is refreshed?
+The timeliness of data in asynchronous materialized views has a certain delay compared to the base tables.
+
+For internal tables and external tables that can perceive data changes (such as Hive tables),
+whether a materialized view can be used for transparent rewriting when the data in the base tables changes
+before the materialized view is refreshed depends on the threshold set by `grace_period`.
+
+`grace_period` refers to the time allowance for the materialized view to be inconsistent with the data from the base tables.
+
+For example, if `grace_period` is set to 0, it means that the materialized view must be consistent with the data in the base
+tables before it can be used for transparent rewriting.
+
+For external tables (except Hive tables), since data changes cannot be perceived, the materialized view can be used for transparent rewriting regardless of whether the data in the external tables is up-to-date (in this case, data inconsistency may occur).
+
+If `grace_period` is set to 10, it means that the materialized view and the base table data are allowed to have a delay of 10 seconds. If there is a delay in the data of the materialized view compared to the base tables within 10 seconds, the materialized view can still be used for transparent rewriting.
+
+For partitioned materialized views, if some partitions become invalid, there are two scenarios:
+
+a. If the query does not use data from the invalid partitions, the materialized view can still be used for transparent rewriting.
+
+b. If the query uses data from the invalid partitions and the data is within the grace_period, the materialized view can still be used. If the data in the materialized view is not within the grace_period, the query can be responded to by using UNION ALL with the original table and the materialized view.
+
+### 7. How to confirm if the materialized view is hit, and how to check the reason if it's not hit?
+
+You can use the `explain query_sql` command to see a summary of whether the materialized view is hit or not. For example,
+consider the following materialized view:
+
+```sql
+CREATE MATERIALIZED VIEW mv11
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+partition by(l_shipdate)
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
+PROPERTIES ('replication_num' = '1')
+AS
+SELECT l_shipdate, l_orderkey, O_ORDERDATE, count(*)
+FROM lineitem  
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
+```
+
+Now, let's analyze the following query:
+
+```sql
+explain
+SELECT l_shipdate, l_linestatus, O_ORDERDATE, count(*)
+FROM orders
+LEFT OUTER JOIN lineitem on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
+```
+
+The explain command will show information about whether the materialized view is hit or not.
+If it's not hit, it will provide a summary of the failure reason. For example:
+```text
+| MaterializedView                                                                                                          |
+| MaterializedViewRewriteSuccessAndChose:                                                                                   |
+|                                                                                                                           |
+| MaterializedViewRewriteSuccessButNotChose:                                                                                |
+|                                                                                                                           |
+| MaterializedViewRewriteFail:                                                                                              |
+|   Name: internal#doc_test#mv11                                                                                            |
+|   FailSummary: View struct info is invalid, The graph logic between query and view is not consistent
+```
+
+In this case, the failure reason is `The graph logic between query and view is not consistent`,
+which means that the join order in the query is not consistent with the join order in the materialized view.
+
+Let's consider another query:
+
+```sql
+explain
+SELECT l_shipdate, l_linestatus, O_ORDERDATE, count(*)
+FROM lineitem  
+LEFT OUTER JOIN orders on l_orderkey = o_orderkey
+GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
+```
+
+If this query also fails to hit the materialized view, the summary might be:
+
+```text
+| MaterializedView                                                                                                          |
+| MaterializedViewRewriteSuccessAndChose:                                                                                   |
+|                                                                                                                           |
+| MaterializedViewRewriteSuccessButNotChose:                                                                                |
+|                                                                                                                           |
+| MaterializedViewRewriteFail:                                                                                              |
+|   Name: internal#doc_test#mv11                                                                                            |
+|   FailSummary: View struct info is invalid, View dimensions doesn't not cover the query dimensions    
+```
+
+In this case, the failure reason is `View dimensions doesn't not cover the query dimensions`, indicating that
+the fields used in the `GROUP BY` clause of the query cannot be obtained from the `GROUP BY` clause
+of the materialized view.

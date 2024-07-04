@@ -1,7 +1,7 @@
 ---
 {
-    "title": "CREATE-ASYNC-MATERIALIZED-VIEW",
-    "language": "en"
+"title": "CREATE-ASYNC-MATERIALIZED-VIEW",
+"language": "en"
 }
 ---
 
@@ -40,9 +40,9 @@ This statement is used to create an asynchronous materialized view.
 CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
         (LEFT_PAREN cols=simpleColumnDefs RIGHT_PAREN)? buildMode?
         (REFRESH refreshMethod? refreshTrigger?)?
-        (KEY keys=identifierList)?
+        ((DUPLICATE)? KEY keys=identifierList)?
         (COMMENT STRING_LITERAL)?
-        (PARTITION BY LEFT_PAREN partitionKey = identifier RIGHT_PAREN)?
+        (PARTITION BY LEFT_PAREN mvPartition RIGHT_PAREN)?
         (DISTRIBUTED BY (HASH hashKeys=identifierList | RANDOM) (BUCKETS (INTEGER_VALUE | AUTO))?)?
         propertyClause?
         AS query
@@ -101,15 +101,15 @@ AUTO：Try to refresh incrementally as much as possible. If incremental refresh 
 
 The SQL definition and partition fields of the materialized view need to meet the following conditions for partition incremental updates:
 
-- At least one of the base tables used by the materialized view must be a partitioned table.
-- The partitioned tables used by the materialized view must employ list or range partitioning strategies.
-- The top-level partition column in the materialized view can only have one partition field.
-- The SQL of the materialized view needs to use partition columns from the base table, such as after the SELECT clause.
-- If GROUP BY is used, the partition column fields must be after the GROUP BY.
-- If window functions are used, the partition column fields must be after the PARTITION BY.
-- Data changes should occur on partitioned tables. If they occur on non-partitioned tables, the materialized view needs to be fully rebuilt.
-- Using the fields that generate nulls in the JOIN as partition fields in the materialized view prohibits partition incremental updates.
-- The null attribute of partition fields in the base table used by the materialized view must not be empty if it comes from an internal table. If it comes from an external table in Hive, the null attribute of the base table can be empty.
+- At least one of the base tables used by the materialized view is a partitioned table.
+- The base tables used by the materialized view must use list or range partitioning strategies.
+- The `partition by` clause in the SQL definition of the materialized view can only have one partitioning column.
+- The partitioning column specified in the `partition by` clause of the materialized view's SQL must come after the `SELECT` statement.
+- If the materialized view's SQL includes a `group by` clause, the columns used for partitioning must come after the `group by` clause.
+- If the materialized view's SQL includes window functions, the columns used for partitioning must come after the `partition by` clause.
+- Data changes should occur on partitioned tables. If data changes occur on non-partitioned tables, the materialized view needs to be fully rebuilt.
+- If a field from the null-generating side of a join is used as a partitioning column for the materialized view, it cannot be incrementally updated by partition. For example, for a LEFT OUTER JOIN, the partitioning column must be on the left side, not the right.
+
 
 ```sql
 refreshMethod
@@ -131,10 +131,13 @@ MANUAL：Manual refresh
 
 SCHEDULE：Timed refresh
 
+COMMIT: Trigger-based refresh. When the base table data changes, a task to refresh the materialized view is automatically generated.
+
 ```sql
 refreshTrigger
 : ON MANUAL
 | ON SCHEDULE refreshSchedule
+| ON COMMIT
 ;
     
 refreshSchedule
@@ -174,10 +177,29 @@ KEY(k1,k2)
 ##### partition
 There are two types of partitioning methods for materialized views. If no partitioning is specified, there will be a default single partition. If a partitioning field is specified, the system will automatically deduce the source base table of that field and synchronize all partitions of the base table (currently supporting `OlapTable` and `hive`). (Limitation: If the base table is an `OlapTable`, it can only have one partition field)
 
-For example, if the base table is a range partition with a partition field of `create_time` and partitioning by day, and `partition by(ct) as select create_time as ct from t1` is specified when creating a materialized view, 
+For example, if the base table is a range partition with a partition field of `create_time` and partitioning by day, and `partition by(ct) as select create_time as ct from t1` is specified when creating a materialized view,
 then the materialized view will also be a range partition with a partition field of 'ct' and partitioning by day
 
+Materialized views can also reduce the number of partitions by using partition roll-up. Currently, the partition roll-up function supports `date_trunc`, and the roll-up units supported are `year`, `month`, and `day`.
+
 The selection of partition fields and the definition of materialized views must meet the conditions for partition incremental updates for the materialized view to be created successfully; otherwise, an error "Unable to find a suitable base table for partitioning" will occur.
+
+```sql
+mvPartition
+    : partitionKey = identifier
+    | partitionExpr = functionCallExpression
+    ;
+```
+
+For example, if the base table is partitioned by day, the materialized view is also partitioned by day.
+```sql
+partition by (`k2`)
+```
+
+For example, if the base table is partitioned by day, the materialized view is partitioned by month.
+```sql
+partition by (date_trunc(`k2`,'month'))
+```
 
 #### property
 The materialized view can specify both the properties of the table and the properties unique to the materialized view.

@@ -65,16 +65,6 @@ FE 解析查询时，遇到 * 等扩展时去掉`DORIS_DELETE_SIGN`，并且默�
 
     Base Compaction 时要将标记为删除的行的删掉，以减少数据占用的空间。
 
-## 启用批量删除支持
-
-启用批量删除支持有以下两种形式：
-
-1. 通过在 FE 配置文件中增加`enable_batch_delete_by_default=true` 重启 fe 后新建表的都支持批量删除，此选项默认为 true；
-
-2. 对于没有更改上述 FE 配置或对于已存在的不支持批量删除功能的表，可以使用如下语句： `ALTER TABLE tablename ENABLE FEATURE "BATCH_DELETE"` 来启用批量删除。本操作本质上是一个 schema change 操作，操作立即返回，可以通过`show alter table column` 来确认操作是否完成。
-
-那么如何确定一个表是否支持批量删除，可以通过设置一个 session variable 来显示隐藏列 `SET show_hidden_columns=true` ，之后使用`desc tablename`，如果输出中有`DORIS_DELETE_SIGN` 列则支持，如果没有则不支持。
-
 ## 语法说明
 
 导入的语法设计方面主要是增加一个指定删除标记列的字段的 column 映射，并且需要在导入的数据中增加一列，各种导入方式设置的语法如下

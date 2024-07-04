@@ -792,8 +792,8 @@ Suppose our table DDL is as follows:
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
 (
-    `TRADE_DATE`              datev2 NOT NULL COMMENT '交易日期',
-    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
+    `TRADE_DATE`              datev2 NOT NULL COMMENT 'TRADE_DATE',
+    `TRADE_ID`                varchar(40) NOT NULL COMMENT 'TRADE_ID',
     ......
 )
 UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)

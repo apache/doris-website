@@ -491,6 +491,14 @@ thrift 服务器的连接超时和套接字超时配置
 
 thrift_client_timeout_ms 的默认值设置为零以防止读取超时
 
+#### `thrift_max_message_size`
+
+<version since="2.0.12"></version>
+
+默认值: 100MB
+
+thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
+
 #### `use_compact_thrift_rpc`
 
 默认值：true
@@ -710,7 +718,7 @@ http 请求处理/api/upload 任务的最大线程池
 
 #### `max_query_retry_time`
 
-默认值：1
+默认值：3
 
 是否可以动态配置：true
 
@@ -871,16 +879,6 @@ http 请求处理/api/upload 任务的最大线程池
 是否为 Master FE 节点独有的配置项：false
 
 缓存结果时上一版本的最小间隔，该参数区分离线更新和实时更新
-
-#### `enable_batch_delete_by_default`
-
-默认值：false
-
-是否可以动态配置：true
-
-是否为 Master FE 节点独有的配置项：true
-
-创建唯一表时是否添加删除标志列，具体原理参照官方文档：操作手册->数据导入->批量删除
 
 #### `max_allowed_in_element_num_of_delete`
 

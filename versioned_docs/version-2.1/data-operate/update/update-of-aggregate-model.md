@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Updaing Data on Aggregate Key Model",
+    "title": "Updating Data on Aggregate Key Model",
     "language": "en"
 }
 ---

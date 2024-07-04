@@ -111,7 +111,7 @@ Doris 支持运行和部署在 x86-64 架构的服务器平台或 ARM64 架构�
 
 -   BE 节点可以配置多块硬盘存储，在一个 BE 实例上绑定多块 HDD 或 SSD 盘
 
--   集群的性能与 BE 节点的资源有关，BE 节点越多，Doris 性能约好。通常情况下在 10 - 100 台机器上可以充分发挥 Doris 的性能
+-   集群的性能与 BE 节点的资源有关，BE 节点越多，Doris 性能越好。通常情况下在 10 - 100 台机器上可以充分发挥 Doris 的性能
 :::
 
 ### 硬盘空间计算
@@ -211,16 +211,16 @@ echo never > /sys/kernel/mm/transparent_hugepage/defrag
 Doris 各个实例直接通过网络进行通讯，其正常运行需要网络环境提供以下的端口。管理员可以根据实际环境自行调整 Doris 的端口：
 
 | 实例名称 | 端口名称               | 默认端口 | 通信方向                    | 说明                                                 |
-| -------- | ---------------------- | -------- | --------------------------- | ---------------------------------------------------- |
-| BE       | be_port                | 9060     | FE --> BE                   | BE 上 thrift server 的端口，用于接收来自 FE 的请求   |
-| BE       | webserver_port         | 8040     | BE <--> BE                  | BE 上的 http server 的端口                           |
-| BE       | heartbeat_service_port | 9050     | FE --> BE                   | BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳  |
-| BE       | brpc_port              | 8060     | FE <--> BEBE <--> BE        | BE 上的 brpc 端口，用于 BE 之间通讯                  |
-| FE       | http_port              | 8030     | FE <--> FEClient <--> FE    | FE 上的 http server 端口                             |
-| FE       | rpc_port               | 9020     | BE --> FEFE <--> FE         | FE 上的 thrift server 端口，每个 fe 的配置需要保持一致 |
-| FE       | query_port             | 9030     | Client <--> FE              | FE 上的 MySQL server 端口                            |
-| FE       | edit_log_port          | 9010     | FE <--> FE                  | FE 上的 bdbje 之间通信用的端口                       |
-| Broker   | broker_ipc_port        | 8000     | FE --> Broker BE --> Broker | Broker 上的 thrift server，用于接收请求              |
+| -------- | ---------------------- | -------- | -------------------------- | ---------------------------------------------------- |
+| BE       | be_port                | 9060     | FE --> BE                  | BE 上 thrift server 的端口，用于接收来自 FE 的请求   |
+| BE       | webserver_port         | 8040     | BE <--> BE                 | BE 上的 http server 的端口                           |
+| BE       | heartbeat_service_port | 9050     | FE --> BE                  | BE 上心跳服务端口（thrift），用于接收来自 FE 的心跳  |
+| BE       | brpc_port              | 8060     | FE <--> BE，BE <--> BE       | BE 上的 brpc 端口，用于 BE 之间通讯                  |
+| FE       | http_port              | 8030     | FE <--> FE，Client <--> FE   | FE 上的 http server 端口                             |
+| FE       | rpc_port               | 9020     | BE --> FE，FE <--> FE        | FE 上的 thrift server 端口，每个 fe 的配置需要保持一致 |
+| FE       | query_port             | 9030     | Client <--> FE             | FE 上的 MySQL server 端口                            |
+| FE       | edit_log_port          | 9010     | FE <--> FE                 | FE 上的 bdbje 之间通信用的端口                       |
+| Broker   | broker_ipc_port        | 8000     | FE --> Broker，BE --> Broker | Broker 上的 thrift server，用于接收请求              |
 
 ### 节点数量规划
 
@@ -395,7 +395,7 @@ BE 的配置文件在 BE 部署路径下的 conf 目录中，启动 FE 节点前
 从 1.2 版本开始 Doris 支持 Java UDF 函数，BE 依赖于 Java 环境。需要预先配置操作系统 `JAVA_HOME` 环境变量，或者在 BE 配置文件中指定 Java 环境变量。
 
 ```sql
-## 修改 be/be.conf 的 Java 环境变量
+## 修改 be/conf/be.conf 的 Java 环境变量
 JAVA_HOME = <your-java-home-path>
 ```
 

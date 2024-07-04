@@ -39,11 +39,13 @@ under the License.
 
 | Connector Version | Flink Version | Doris Version | Java Version | Scala Version |
 | --------- | ----- | ------ | ---- | ----- |
-| 1.0.3     | 1.11+ | 0.15+  | 8    | 2.11,2.12 |
-| 1.1.1    | 1.14  | 1.0+   | 8    | 2.11,2.12 |
-| 1.2.1    | 1.15  | 1.0+   | 8    | -         |
-| 1.3.0     | 1.16  | 1.0+   | 8    | -         |
-| 1.4.0     | 1.15,1.16,1.17  | 1.0+   | 8   |- |
+| 1.0.3             | 1.11,1.12,1.13,1.14 | 0.15+  | 8    | 2.11,2.12 |
+| 1.1.1             | 1.14                | 1.0+   | 8    | 2.11,2.12 |
+| 1.2.1             | 1.15                | 1.0+   | 8    | -         |
+| 1.3.0             | 1.16                | 1.0+   | 8    | -         |
+| 1.4.0             | 1.15,1.16,1.17      | 1.0+   | 8   |- |
+| 1.5.2             | 1.15,1.16,1.17,1.18 | 1.0+ | 8 |- |
+| 1.6.1             | 1.15,1.16,1.17,1.18,1.19 | 1.0+ | 8 | - |
 
 ## USE
 
@@ -77,7 +79,7 @@ Copy this file to `classpath` of `Flink` to use `Flink-Doris-Connector`. For exa
 
 ### read
 
-####SQL
+**SQL**
 
 ```sql
 -- doris source
@@ -96,7 +98,7 @@ CREATE TABLE flink_doris_source (
 );
 ```
 
-####DataStream
+**DataStream**
 
 ```java
 DorisOptions.Builder builder = DorisOptions.builder()
@@ -116,7 +118,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 
 ### write
 
-####SQL
+**SQL**
 
 ```sql
 --enable checkpoint
@@ -142,7 +144,7 @@ CREATE TABLE flink_doris_sink (
 INSERT INTO flink_doris_sink select name,age,price,sale from flink_doris_source
 ```
 
-####DataStream
+**DataStream**
 
 DorisSink writes data to Doris through StreamLoad, and DataStream supports different serialization methods when writing
 

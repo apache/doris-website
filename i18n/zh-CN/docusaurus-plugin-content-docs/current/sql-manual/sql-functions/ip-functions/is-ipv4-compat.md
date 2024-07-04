@@ -24,13 +24,9 @@ under the License.
 
 ## IS_IPV4_COMPAT
 
-<version since="dev">
-
 IS_IPV4_COMPAT
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -40,9 +36,9 @@ IS_IPV4_COMPAT
 如果参数是有效的 IPv4 兼容 IPv6 地址，则返回 1，否则返回 0（除非 expr 为 NULL，在这种情况下该函数返回 NULL）。
 IPv4 兼容地址的格式为::ipv4_address。
 
-### example
+### Example
 
-```
+```sql
 mysql> SELECT IS_IPV4_COMPAT(INET6_ATON('::ffff:10.0.5.9')) AS is_result;
 +-----------+
 | is_result |
@@ -60,6 +56,6 @@ mysql> SELECT IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9')) AS is_result;
 1 row in set (0.03 sec)
 ```
 
-### keywords
+### Keywords
 
 IS_IPV4_COMPAT, IP

@@ -1,6 +1,6 @@
 ---
 {
-   "title": "Power-BI",
+   "title": "Power BI",
    "language": "en"
 }
 ---
@@ -28,18 +28,18 @@ under the License.
 
 Power BI is a collection of software services and application connectors that can connect to multiple data sources, including Excel, SQL Server, Azure, Google Analytics, etc., so that users can easily consolidate and clean their data. With Power BI's data modeling, users can create relational models, data analysis expressions, and data relationships to support advanced data analysis and visualization. Power BI offers a wealth of visualization options, including ICONS, maps, dashboards, and custom visualization tools to help users make a more intuitive sense of data.
 
-Apache Doris is highly compatible with MySQL protocol and can be connected to Power BI and Apache Doris through MySQL driver. At present, internal data modeling, data query and visualization processing of Apache Doris have been officially supported in Power BI.
+Apache Doris is highly compatible with MySQL protocol and can be connected to Power BI and Apache Doris through MySQL Driver. At present, internal data modeling, data query and visualization processing of Apache Doris have been officially supported in Power BI.
 
 ## Precondition
 
-If you do not have PowerBI desktop installed, you can download it from https://www.microsoft.com/
+If you do not have Power BI desktop installed, you can download it from https://www.microsoft.com/en-us/power-platform/products/power-bi/desktop
 
-## Connector configuration of PowerBI and Doris
+## Connector configuration of Power BI and Doris
 :::info Note
-Currently verified using MySQL jdbc connector version 8.0.26
+Currently verified using MySQL JDBC Connector version 8.0.26
 :::
 
-Download and installation MySQL connector
+Download and installation MySQL Connector
 Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.26. There are incompatibilities in higher versions
 
 
@@ -61,7 +61,7 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
    ![connection information](/images/powerbi/bi-powerbi-en-4.png)
 
-5. Click OK in the previous step and select "Database" in the new connection window to connect, and fill in the connection information of Doris in the user name and password.
+5. Click OK in the previous step and select "Database" in the new connection window to connect, and fill in the connection information of Doris in the username and password.
 
    ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
 
@@ -86,7 +86,7 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
 3. Log into Power BI Online and import the local model in your workspace
 
-   ![upload](/images/powerbi/bi-powerbi-en-10.png)
+   ![upload](/images/powerbi/bi-powerbi-en-10-zh.png)
 
 4. Click the model to set the automatic refresh time
 
