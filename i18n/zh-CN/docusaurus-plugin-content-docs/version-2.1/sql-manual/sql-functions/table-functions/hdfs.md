@@ -36,7 +36,7 @@ hdfs
 
 ### Description
 
-HDFS表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
+HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
 
 #### syntax
 ```sql
@@ -52,8 +52,8 @@ hdfs(
 
 **参数说明**
 
-访问hdfs相关参数：
-- `uri`：（必填） 访问hdfs的uri。如果uri路径不存在或文件都是空文件，hdfs tvf将返回空集合。
+访问 hdfs 相关参数：
+- `uri`：（必填）访问 hdfs 的 uri。如果 uri 路径不存在或文件都是空文件，hdfs tvf 将返回空集合。
 - `fs.defaultFS`：（必填）
 - `hadoop.username`： （必填）可以是任意字符串，但不能为空
 - `hadoop.security.authentication`：（选填）
@@ -71,11 +71,11 @@ hdfs(
 
 文件格式相关参数
 - `format`：(必填) 目前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`
-- `column_separator`：(选填) 列分割符, 默认为`,`。 
+- `column_separator`：(选填) 列分割符，默认为`\t`。 
 - `line_delimiter`：(选填) 行分割符，默认为`\n`。
-- `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`。 默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
+- `compress_type`: (选填) 目前支持 `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`。默认值为 `UNKNOWN`, 将会根据 `uri` 的后缀自动推断类型。
 
-    下面6个参数是用于json格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md)
+    下面 6 个参数是用于 json 格式的导入，具体使用方法可以参照：[Json Load](../../../data-operate/import/import-way/load-json-format.md)
 
 - `read_json_by_line`： (选填) 默认为 `"true"`
 - `strip_outer_array`： (选填) 默认为 `"false"`
@@ -84,18 +84,18 @@ hdfs(
 - `num_as_string`： (选填) 默认为 `false`
 - `fuzzy_parse`： (选填) 默认为 `false`
 
-    <version since="dev">下面2个参数是用于csv格式的导入</version>
+    <version since="dev">下面 2 个参数是用于 csv 格式的导入</version>
 
-- `trim_double_quotes`： 布尔类型，选填，默认值为 `false`，为 `true` 时表示裁剪掉 csv 文件每个字段最外层的双引号
-- `skip_lines`： 整数类型，选填，默认值为0，含义为跳过csv文件的前几行。当设置format设置为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效
+- `trim_double_quotes`：布尔类型，选填，默认值为 `false`，为 `true` 时表示裁剪掉 csv 文件每个字段最外层的双引号
+- `skip_lines`：整数类型，选填，默认值为 0，含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效
 
 其他参数：
 - `path_partition_keys`：（选填）指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写`path_partition_keys="city,date"`，将会自动从路径中读取相应列名和列值进行导入。
-- `resource`：（选填）指定resource名，hdfs tvf 可以利用已有的 hdfs resource 来直接访问hdfs。创建 hdfs resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md)。该功能自 2.1.4 版本开始支持。
+- `resource`：（选填）指定 resource 名，hdfs tvf 可以利用已有的 hdfs resource 来直接访问 hdfs。创建 hdfs resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md)。该功能自 2.1.4 版本开始支持。
 
 ### Examples
 
-读取并访问 HDFS 存储上的csv格式文件
+读取并访问 HDFS 存储上的 csv 格式文件
 ```sql
 MySQL [(none)]> select * from hdfs(
             "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
@@ -113,7 +113,7 @@ MySQL [(none)]> select * from hdfs(
 +------+---------+------+
 ```
 
-读取并访问 HA 模式的 HDFS 存储上的csv格式文件
+读取并访问 HA 模式的 HDFS 存储上的 csv 格式文件
 ```sql
 MySQL [(none)]> select * from hdfs(
             "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
@@ -152,4 +152,4 @@ MySQL [(none)]> desc function hdfs(
 
 ### Best Practice
 
-  关于HDFS tvf的更详细使用方法可以参照 [S3](./s3.md) tvf, 唯一不同的是访问存储系统的方式不一样。
+  关于 HDFS tvf 的更详细使用方法可以参照 [S3](./s3.md) tvf, 唯一不同的是访问存储系统的方式不一样。

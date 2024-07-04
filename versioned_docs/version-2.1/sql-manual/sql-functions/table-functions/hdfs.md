@@ -62,6 +62,7 @@ Related parameters for accessing hdfs:
 - `dfs.domain.socket.path`: (optional)
 
 Related parameters for accessing HDFS in HA mode:
+
 - `dfs.nameservices`: (optional)
 - `dfs.ha.namenodes.your-nameservices`: (optional)
 - `dfs.namenode.rpc-address.your-nameservices.your-namenode`: (optional)
@@ -70,7 +71,7 @@ Related parameters for accessing HDFS in HA mode:
 File format parameters:
 
 - `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`
-- `column_separator`: (optional) default `,`.
+- `column_separator`: (optional) default `\t`.
 - `line_delimiter`: (optional) default `\n`.
 - `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
@@ -115,6 +116,7 @@ MySQL [(none)]> select * from hdfs(
 ```
 
 Read and access csv format files on hdfs storage in HA mode.
+
 ```sql
 MySQL [(none)]> select * from hdfs(
             "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
