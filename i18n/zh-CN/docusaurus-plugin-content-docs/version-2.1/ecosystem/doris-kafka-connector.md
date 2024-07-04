@@ -28,6 +28,17 @@ under the License.
 
 Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
 
+## 场景
+Doris kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka 中的数据导入到 Doris 中。
+<br />
+![kafka-connector](/images/ecomsystem/kafka-connector.png)
+<br />
+支持同步多种场景的数据：
+1. 同步调用 Kafka API 生产出来的数据
+2. 在 Kafka 上游部署 Debezium 组件，采集 MySQL、PostgreSQL、Oracle 等各种数据库类型的数据
+
+将上述各类场景的数据转化成 JSON 格式，最终通过 StreamLoad 导入至 Doris 中。
+
 ## Doris Kafka Connector 使用
 
 ### 下载

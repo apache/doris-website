@@ -28,6 +28,17 @@ under the License.
 
 The Doris community provides the [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
 
+## Scenes
+Doris kafka Connector imports data in Kafka into Doris by subscribing to data in Kafka Topic.
+<br />
+![kafka-connector](/images/ecomsystem/kafka-connector.png)
+<br />
+Supports synchronization of data in multiple scenarios:
+1. Synchronously call the data produced by Kafka API.
+2. Deploy the Debezium component upstream of Kafka to collect data from various database types such as MySQL, PostgreSQL, and Oracle.
+
+Convert the data of the above various scenarios into JSON format, and finally import it into Doris through StreamLoad.
+
 ## Usage Doris Kafka Connector
 
 ### Download
