@@ -24,11 +24,7 @@ under the License.
 
 ## named_struct
 
-<version since="2.0.0">
-
 named_struct
-
-</version>
 
 ### description
 
@@ -39,10 +35,6 @@ named_struct
 Construct a struct with the given field names and values. 
 
 The number of parameters must be non zero and even. With odd digits being the name of the field and could be string literal, with even digits being the value of the field and could be column or literal.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

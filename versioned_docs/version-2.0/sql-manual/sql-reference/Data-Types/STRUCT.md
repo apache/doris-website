@@ -28,11 +28,7 @@ under the License.
 
 ### name
 
-<version since="2.0.0">
-
 STRUCT
-
-</version>
 
 ### description
 

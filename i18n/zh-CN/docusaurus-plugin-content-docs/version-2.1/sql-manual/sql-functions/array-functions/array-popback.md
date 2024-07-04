@@ -24,11 +24,7 @@ under the License.
 
 ## array_popback
 
-<version since="1.2.0">
-
 array_popback
-
-</version>
 
 ### description
 
@@ -38,15 +34,9 @@ array_popback
 
 返回移除最后一个元素后的数组，如果输入参数为NULL，则返回NULL
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_popback(['test', NULL, 'value']);
 +-----------------------------------------------------+
 | array_popback(ARRAY('test', NULL, 'value'))         |

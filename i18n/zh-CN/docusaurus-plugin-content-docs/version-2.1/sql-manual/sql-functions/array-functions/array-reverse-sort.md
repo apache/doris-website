@@ -39,15 +39,9 @@ array_reverse_sort
 返回按降序排列后的数组，如果输入数组为NULL，则返回NULL。
 如果数组元素包含NULL, 则输出的排序数组会将NULL放在最后面。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
-```
-mysql> set enable_vectorized_engine=true;
-mysql> select k1, k2, array_reverse_sort(k2) from array_test;
+```mysql> select k1, k2, array_reverse_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
 | k1   | k2                          | array_reverse_sort(`k2`)    |
 +------+-----------------------------+-----------------------------+

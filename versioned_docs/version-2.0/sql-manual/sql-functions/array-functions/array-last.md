@@ -43,10 +43,6 @@ T array_last(lambda, ARRAY<T>)
 
 Use a lambda bool expression and an array as the input parameters, the lambda expression is used to evaluate the internal data of other input ARRAY parameters.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```

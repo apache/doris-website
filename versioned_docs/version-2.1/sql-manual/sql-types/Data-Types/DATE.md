@@ -26,11 +26,7 @@ under the License.
 
 ## DATE
 
-<version since="1.2.0">
-
 DATE
-
-</version>
 
 ### Description
 #### Syntax

@@ -38,10 +38,6 @@ struct()
 
 construct an struct with variadic elements and return it, Tn could be column or literal
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```

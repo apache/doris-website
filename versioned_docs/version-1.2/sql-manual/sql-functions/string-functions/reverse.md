@@ -58,8 +58,6 @@ mysql> SELECT REVERSE('你好');
 +------------------+
 1 row in set (0.00 sec)
 
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1, k2, reverse(k2) from array_test order by k1;
 +------+-----------------------------+-----------------------------+
 | k1   | k2                          | reverse(`k2`)               |

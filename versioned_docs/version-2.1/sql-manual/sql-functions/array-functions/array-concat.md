@@ -24,11 +24,7 @@ under the License.
 
 ## array_concat
 
-<version since="2.0.0">
-
 array_concat
-
-</version>
 
 ### description
 
@@ -43,10 +39,6 @@ Concat all arrays passed in the arguments
 The concated array.
 
 Type: Array.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

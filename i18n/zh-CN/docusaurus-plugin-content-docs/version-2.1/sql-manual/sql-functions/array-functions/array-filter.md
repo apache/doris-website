@@ -32,11 +32,7 @@ array_filter(lambda,array)
 
 </version>
 
-<version since="2.0.2">
-
 array array_filter(array arr, array_bool filter_column)
-
-</version>
 
 ### description
 

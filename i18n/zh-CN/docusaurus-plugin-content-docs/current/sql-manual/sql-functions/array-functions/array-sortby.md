@@ -44,10 +44,6 @@ ARRAY<T> array_sortby(lambda,array....)
 如果输入数组key为NULL，则直接返回src数组。
 如果输入数组key元素包含NULL, 则输出的排序数组会将NULL放在最前面。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```

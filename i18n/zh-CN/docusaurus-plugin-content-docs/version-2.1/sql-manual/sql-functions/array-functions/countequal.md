@@ -26,11 +26,7 @@ under the License.
 
 ## countequal
 
-<version since="1.2.0">
-
 countequal
-
-</version>
 
 ### description
 
@@ -46,15 +42,9 @@ num      - value在array中的数量；
 NULL     - 如果数组为NULL。
 ```
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select *, countEqual(c_array,5) from array_test;
 +------+-----------------+--------------------------+
 | id   | c_array         | countequal(`c_array`, 5) |

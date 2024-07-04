@@ -44,10 +44,6 @@ array_pushback
 
 类型: Array.
 
-### notice
-
-`只支持在向量化引擎中使用`
-
 ### example
 
 ```

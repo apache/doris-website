@@ -52,10 +52,6 @@ s - The name of field，only supports constants.
 
 Returns the specified field column, of any type.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```

@@ -24,11 +24,7 @@ under the License.
 
 ## array_compact
 
-<version since="1.2.0">
-
 array_compact
-
-</version>
 
 ### description
 
@@ -47,10 +43,6 @@ array_compact
 不存在连续重复元素的数组.
 
 Type: Array.
-
-### notice
-
-`只支持在向量化引擎中使用。`
 
 ### example
 
