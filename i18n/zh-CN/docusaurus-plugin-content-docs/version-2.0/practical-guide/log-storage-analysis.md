@@ -196,7 +196,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | 关闭日志场景不需要的两个 Compaction 功能。                   |
 | 缓存       | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | 因为日志数据量较大，缓存（cache）作用有限，因此关闭数据缓存，调换为索引缓存（index cache）的方式。 |
 | -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | 让索引缓存在内存中尽量保留 1 小时。                          |
-| -          | `enable_inverted_index_cache_on_cooldown = true` <br>`enable_write_index_searcher_cache = false` | 开启索引上传冷数据存储时自动缓存的功能。                     |
+| -          | `enable_inverted_index_cache_on_cooldown = true` <br />`enable_write_index_searcher_cache = false` | 开启索引上传冷数据存储时自动缓存的功能。                     |
 | -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | 减少其他缓存对内存的占用。                                   |
 | 线程       | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | 32 核 CPU 的计算线程和 I/O 线程配置，根据核数等比扩缩。      |
 | -          | `scan_thread_nice_value = 5`                                 | 降低查询 I/O 线程的优先级，保证写入性能和时效性。            |

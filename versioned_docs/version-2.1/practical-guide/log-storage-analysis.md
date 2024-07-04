@@ -220,7 +220,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | Disable two compaction features that are unnecessary for log scenarios. |
 | Cache      | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | Due to the large volume of log data and limited caching effect, switch from data caching to index caching. |
 | -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | Maintain index caching in memory for up to 1 hour.           |
-| -          | `enable_inverted_index_cache_on_cooldown = true` `enable_write_index_searcher_cache = false` | Enable automatic caching of cold data storage during index uploading. |
+| -          | `enable_inverted_index_cache_on_cooldown = true`<br />`enable_write_index_searcher_cache = false` | Enable automatic caching of cold data storage during index uploading. |
 | -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | Reduce memory usage by other caches.                         |
 | Thread     | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | Configure computing threads and I/O threads for a 32-core CPU in proportion to core count. |
 | -          | `scan_thread_nice_value = 5`                                 | Lower the priority of query I/O threads to ensure writing performance and timeliness. |
