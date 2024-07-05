@@ -30,9 +30,8 @@ under the License.
 
 展开一个 JSON 对象。当给定的 JSON 为 NULL 或不是 JSON 对象时，`explode_json_object_outer` 将返回 NULL。
 
-:::tip
-注意:
-表函数必须与later view 结合使用
+:::tip 注意
+表函数必须与 Lateral View 结合使用
 :::
 
 #### Syntax
