@@ -222,7 +222,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
 conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
