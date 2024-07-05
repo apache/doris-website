@@ -92,7 +92,7 @@ Configure parameters for Doris frontend (FE) and backend (BE):
 
 - In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 9090.
 
-- In `be/conf/be.conf`, set `arrow_flight_port ` to an available port, such as 9091.
+- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 9091.
 
 Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 9090 and 9091 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
 
