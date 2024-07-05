@@ -23,7 +23,7 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://github.com/apache/doris-flink-connector/releases"
+                                href="https://doris.apache.org/docs/download#doris-ecosystem"
                                 label="Download"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
@@ -47,7 +47,7 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="https://github.com/apache/doris-spark-connector/releases"
+                                href="https://doris.apache.org/docs/download#doris-ecosystem"
                                 label="Download"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
@@ -74,7 +74,7 @@ export default function Connectors() {
                     moreLink={
                         <>
                             <ExternalLink
-                                href="http://localhost:3000/download#doris-ecosystem"
+                                href="https://doris.apache.org/docs/download#doris-ecosystem"
                                 label="Download"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>

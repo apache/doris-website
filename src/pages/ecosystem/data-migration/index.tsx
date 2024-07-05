@@ -27,7 +27,6 @@ export default function DistributionsAndPackaging() {
                             <ExternalLink
                                 href="https://www.selectdb.com/download/tools#sql-convertor"
                                 label="Download"
-                                linkIcon={<ExternalLinkArrowIcon />}
                             ></ExternalLink>
 
                             <ExternalLink
