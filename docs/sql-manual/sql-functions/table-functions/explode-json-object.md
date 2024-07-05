@@ -30,8 +30,7 @@ under the License.
 
 Expand a JSON object. `explode_json_object_outer` will return NULL, while given json is NULL or is not a JSON object.
 
-:::tip 
-Note  
+:::tip Note  
 Table functions must be used in conjunction with Lateral View.
 :::
 
