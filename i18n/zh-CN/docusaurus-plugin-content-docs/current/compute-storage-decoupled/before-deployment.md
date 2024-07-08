@@ -55,7 +55,7 @@ Doris 存算分离架构依赖于两个外部开源项目，为确保部署顺�
 
 :::
 
-每台机器都需先安装 FoundationDB 服务。可通过[以下地址](https://github.com/apple/foundationdb/releases)选择一个版本下载 FoundationDB 安装包，目前通常推荐使用[7.1.38](https://github.com/apple/foundationdb/releases/tag/7.1.38)版本。
+每台机器都需先安装 FoundationDB 服务。可通过[以下地址](https://github.com/apple/foundationdb/releases)选择一个版本下载 FoundationDB 安装包，目前通常推荐使用 [7.1.38](https://github.com/apple/foundationdb/releases/tag/7.1.38) 版本。
 
 对于 CentOS (Red Hat) 和 Ubuntu 用户，以下是[下载链接](https://github.com/apple/foundationdb/releases/tag/7.1.38)：
 
