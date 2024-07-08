@@ -28,7 +28,7 @@ under the License.
 
 存算分离架构下，整个数仓的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
 
-创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](./meta-service-api.md) 进行资源管理操作。
+创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](./meta-service-api.md)进行资源管理操作。
 
 创建存算分离集群的本质是描述该存算分离集群中的机器组成。创建基础的存算分离集群主要包括以下两步：
 
