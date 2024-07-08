@@ -252,7 +252,7 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 
 
 ## 最佳实践
-### 同步 Json 序列化数据
+### 同步 JSON 序列化数据
 ```
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-json-test", 
@@ -332,7 +332,7 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 ## 常见问题
-**1. 读取 Json 类型的数据报如下错误：**
+**1. 读取 JSON 类型的数据报如下错误：**
 ```
 Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
 	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
