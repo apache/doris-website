@@ -450,11 +450,11 @@ UNIQUE KEY(k1, k2)
 
 * `enable_mow_light_delete`
 
-    是否在unique表mow上开启delete语句写delete predicate。若开启，会提升delete语句的性能，但delete后进行部分列更新可能会出现部分数据错误的情况。若关闭，会降低delete语句的性能来保证正确性。
+    是否在 Unique 表 Mow 上开启 Delete 语句写 Delete predicate。若开启，会提升 Delete 语句的性能，但 Delete 后进行部分列更新可能会出现部分数据错误的情况。若关闭，会降低 Delete 语句的性能来保证正确性。
 
-    此属性的默认值为false。
+    此属性的默认值为 `false`。
 
-    此属性只能在Unique merge-on-write表上开启。
+    此属性只能在 Unique Merge-on-Write表上开启。
 
     `"enable_mow_light_delete" = "true"`
 
