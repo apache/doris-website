@@ -441,6 +441,22 @@ Set table properties. The following attributes are currently supported:
 
     `"compaction_policy" = ""`
 
+* `group_commit_interval_ms`
+
+    Configures the group commit batch interval for this table. The unit is milliseconds, with a default value of 10000ms (10 seconds).
+
+    The flushing timing of group commit depends on which value is reached first: `group_commit_interval_ms` or `group_commit_data_bytes`.
+
+    `"group_commit_interval_ms" = "10000"`
+
+* `group_commit_data_bytes`
+
+    Configures the group commit batch data size for this table. The unit is bytes, with a default value of 134217728 bytes (128MB).
+
+    The flushing timing of group commit depends on which value is reached first: `group_commit_interval_ms` or `group_commit_data_bytes`.
+
+    `"group_commit_data_bytes" = "134217728"`
+
 * `time_series_compaction_goal_size_mbytes`
 
     Time series compaction policy will utilize this parameter to adjust the size of input files for each compaction. The output file size will be approximately equal to the input file size.
