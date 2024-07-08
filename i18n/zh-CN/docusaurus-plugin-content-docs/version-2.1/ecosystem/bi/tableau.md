@@ -29,7 +29,7 @@ under the License.
 Tableau 是一款轻量级数据可视化分析平台，它将数据运算与美观的图表完美地结合在一起，不要求用户编写代码，仅仅通过拖拽的方式就可以快速洞察数据；探索不同的视图，甚至可以轻松地将多个数据源组合在一起，完成数据展示、探索和分析工作。
 ## 前置条件
 Tableau Desktop 可通过如下链接进行下载：https://www.tableau.com/products/desktop/download
-## 连接配置与使用
+## 驱动安装
 1. iODBC 安装
     1. 关闭 Tableau Desktop
     2. 安装 iODBC Driver Manager，可从 iODBC.org 网站获取最新版本 (mxkozzz.dmg)
