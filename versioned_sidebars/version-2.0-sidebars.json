@@ -199,7 +199,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Join Queries",
+                    "label": "Join Optimization",
                     "items": [
                         "query/join-optimization/doris-join-optimization",
                         "query/join-optimization/bucket-shuffle-join",
@@ -210,7 +210,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Duplicating Query Results",
+                    "label": "Distincting Counts",
                     "items": [
                         "query/duplicate/orthogonal-bitmap-manual",
                         "query/duplicate/using-hll"

@@ -282,13 +282,13 @@ Users can also choose to store their new tables in the `built-in storage vault`.
 
 Some of the storage vault configurations are modifiable.
 
-Comming soon
+Coming soon
 
 ### Delete storage vault
 
 Only non-default storage vaults that are not referenced by any tables can be deleted.
 
-Comming soon
+Coming soon
 
 ### Storage vault privilege
 

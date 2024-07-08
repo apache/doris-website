@@ -574,7 +574,7 @@ ORDER BY ts DESC LIMIT 10;
 
 **Analyze logs visually**
 
-VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called Velo Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
+VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called VeloDB Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
 
 ![WebUI](/images/WebUI-EN.jpeg)
 
@@ -590,4 +590,4 @@ On this interface, WebUI supports the following operations:
 
 - Display of top field values in search results for finding anomalies and further drilling down for analysis
 
-You can [click to download Velo Enterprise Core](https://www.velodb.io/download/enterprise) and [install it](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-distribution-doris-core-deployment-guide) to use WebUI. For more information about the main functions and how to use WebUI, see [WebUI](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-webui-guide).
+You can [click to download VeloDB Enterprise Core](https://www.velodb.io/download/enterprise) and [install it](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-distribution-doris-core-deployment-guide) to use WebUI. For more information about the main functions and how to use WebUI, see [WebUI](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-webui-guide).

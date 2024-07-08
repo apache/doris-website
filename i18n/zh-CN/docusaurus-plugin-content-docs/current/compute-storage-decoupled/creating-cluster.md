@@ -151,7 +151,7 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 ### **名词解释**
 
 - `vault name`：每个存储后端的名称为数仓实例内全局唯一，除 `built-in vault` 外，`vault name` 由用户创建存储后端时指定。
-- `built-in vault`：存算分离模式下，用于存储 Doris 系统表的远程共享存储。须在创建数仓实例时配置。`built-in vault` 的固定名称为 `built_in_storage_vault`。配置 `built-in vault`后，数仓 （FE） 才能启动。
+- `built-in vault`：存算分离模式下，用于存储 Doris 系统表的远程共享存储。须在创建数仓实例时配置。`built-in vault` 的固定名称为 `built_in_storage_vault`。配置 `built-in vault`后，数仓（FE）才能启动。
 - `default vault`：数仓实例级别的默认存储后端，用户可以指定某个存储后端为默认存储后端，包括 `built-in vault` 也可作为默认存储后端。由于存算分离模式中，数据必须要存储在某个远程共享存储上，因此如果用户建表时未在 `PROPERTIES` 中指定 `vault_name`，该表数据会存储在 `default vault` 上。`default vault` 可被重新设置，但是已经创建的表所使用的存储后端不会随之改变。
 
 配置 `built-in vault` 后，还可按需创建更多存储后端。FE 启动成功后，可通过 SQL 语句进行存储后端操作，包括创建存储后端，查看存储后端以及指定存储后端进行建表等。
@@ -282,13 +282,13 @@ PROPERTIES (
 
 用于更新 Storage Vault 配置的可修改属性。
 
-Comming soon
+Coming soon
 
 ### 删除存储后端
 
 只有非默认存储后端且没有被任何表引用的存储后端才可被删除。
 
-Comming soon
+Coming soon
 
 ### 存储后端权限
 

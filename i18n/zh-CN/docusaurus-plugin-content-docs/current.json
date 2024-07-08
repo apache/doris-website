@@ -107,13 +107,13 @@
     "message": "视图与物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Join Queries": {
+  "sidebar.docs.category.Join Optimization": {
     "message": "Join 优化",
-    "description": "The label for category Join Queries in sidebar docs"
+    "description": "The label for category Join Optimization in sidebar docs"
   },
-  "sidebar.docs.category.Duplicating Query Results": {
+  "sidebar.docs.category.Distincting Counts": {
     "message": "高效去重",
-    "description": "The label for category Duplicating Query Results in sidebar docs"
+    "description": "The label for category Distincting Counts in sidebar docs"
   },
   "sidebar.docs.category.Analyzing Query": {
     "message": "查询分析",
