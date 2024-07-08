@@ -383,7 +383,7 @@ cloud_unique_id` 是一个唯一字符串，格式为 `1:<instance_id>:<string>`
 
 ```Bash
 # 172.19.0.11
-# 添加BE
+# 添加 BE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     "instance_id":"sample_instance_id",
     "cluster":{
@@ -448,7 +448,6 @@ Doris 存算分离模式下，FE/BE 启停方式和存算一体模式下的启�
 ```Shell
 bin/start_be.sh --daemon
 bin/stop_be.sh
-
 
 bin/start_fe.sh --daemon
 bin/stop_fe.sh
@@ -580,4 +579,3 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
      }
 }'
 ```
-
