@@ -26,10 +26,10 @@ under the License.
 
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) 是一款可扩展、可靠的在 Apache Kafka 和其他系统之间进行数据传输的工具，可以定义 Connectors 将大量数据迁入迁出 Kafka。
 
-Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka topic 中的数据写入到 Doris 中。
+Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka Topic 中的数据写入到 Doris 中。
 
 ## 场景
-Doris kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka 中的数据导入到 Doris 中。
+Doris Kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka 中的数据导入到 Doris 中。
 <br />
 ![kafka-connector](/images/ecomsystem/kafka-connector.png)
 <br />
