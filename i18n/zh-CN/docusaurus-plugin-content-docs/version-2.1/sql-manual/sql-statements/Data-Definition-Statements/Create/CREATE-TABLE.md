@@ -422,17 +422,17 @@ UNIQUE KEY(k1, k2)
 
 * `group_commit_interval_ms`
 
-    配置这个表的 group commit 攒批间隔。单位为ms，默认值为10000ms即10s。
+    配置这个表的 Group Commit 攒批间隔。单位为 ms，默认值为 10000ms，即 10s。
 
-    group commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
+    Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
 
     `"group_commit_interval_ms" = "10000"`
 
 * `group_commit_data_bytes`
 
-    配置这个表的 group commit 攒批数据大小。单位为bytes，默认值为134217728 bytes即128MB。
+    配置这个表的 Group Commit 攒批数据大小。单位为 bytes，默认值为 134217728 bytes，即 128MB。
 
-    group commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
+    Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes` 哪个先到设置的值。
 
     `"group_commit_data_bytes" = "134217728"`
 
