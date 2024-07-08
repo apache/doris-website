@@ -428,23 +428,23 @@ UNIQUE KEY(k1, k2)
 
 * `group_commit_interval_ms`
 
-    配置这个表的 group commit 攒批间隔。单位为ms，默认值为10000ms即10s。
+    配置这个表的 Group Commit 攒批间隔。单位为 ms，默认值为 10000ms，即 10s。
 
-    group commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
+    Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
 
     `"group_commit_interval_ms" = "10000"`
 
 * `group_commit_data_bytes`
 
-    配置这个表的 group commit 攒批数据大小。单位为bytes，默认值为134217728 bytes即128MB。
+    配置这个表的 Group Commit 攒批数据大小。单位为 bytes，默认值为 134217728 bytes，即 128MB。
 
-    group commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
+    Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes` 哪个先到设置的值。
 
     `"group_commit_data_bytes" = "134217728"`
 
 * `time_series_compaction_goal_size_mbytes`
 
-    compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
+    Compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
 
     `"time_series_compaction_goal_size_mbytes" = "1024"`
 
