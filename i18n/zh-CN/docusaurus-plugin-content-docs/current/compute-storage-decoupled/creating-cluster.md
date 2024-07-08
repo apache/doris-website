@@ -28,7 +28,7 @@ under the License.
 
 存算分离架构下，整个数仓的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
 
-创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](./meta-service-api.md)进行资源管理操作。
+创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](./meta-service-api.md) 进行资源管理操作。
 
 创建存算分离集群的本质是描述该存算分离集群中的机器组成。创建基础的存算分离集群主要包括以下两步：
 
@@ -383,7 +383,7 @@ cloud_unique_id` 是一个唯一字符串，格式为 `1:<instance_id>:<string>`
 
 ```Bash
 # 172.19.0.11
-# 添加BE
+# 添加 BE
 curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     "instance_id":"sample_instance_id",
     "cluster":{
@@ -448,7 +448,6 @@ Doris 存算分离模式下，FE/BE 启停方式和存算一体模式下的启�
 ```Shell
 bin/start_be.sh --daemon
 bin/stop_be.sh
-
 
 bin/start_fe.sh --daemon
 bin/stop_fe.sh
@@ -580,4 +579,3 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
      }
 }'
 ```
-

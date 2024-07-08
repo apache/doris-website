@@ -55,9 +55,9 @@ Doris 存算分离架构依赖于两个外部开源项目，为确保部署顺�
 
 :::
 
-每台机器都需先安装 FoundationDB 服务。可通过[以下地址](https://github.com/apple/foundationdb/releases)选择一个版本下载 FoundationDB 安装包，目前通常推荐使用 [7.1.38](https://github.com/apple/foundationdb/releases/tag/7.1.38) 版本。
+每台机器都需先安装 FoundationDB 服务。可通过[以下地址](https://github.com/apple/foundationdb/releases)选择一个版本下载 FoundationDB 安装包，目前通常推荐使用[7.1.38](https://github.com/apple/foundationdb/releases/tag/7.1.38)版本。
 
-对于 CentOS (Red Hat) 和 Ubuntu 用户，以下是[下载链接](https://github.com/apple/foundationdb/releases/tag/7.1.38 )：
+对于 CentOS (Red Hat) 和 Ubuntu 用户，以下是[下载链接](https://github.com/apple/foundationdb/releases/tag/7.1.38)：
 
 - [clients-x86_64.rpm](https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-clients-7.1.38-1.el7.x86_64.rpm)
 - [server-x86_64.rpm](https://github.com/apple/foundationdb/releases/download/7.1.38/foundationdb-server-7.1.38-1.el7.x86_64.rpm)
@@ -342,21 +342,10 @@ OpenJDK 17 需安装到所有的节点上，可通过以下链接获取安装：
 ```Bash
 tar xf openjdk-17.0.1_linux-x64_bin.tar.gz  -C /opt/
 
-# 启动meta-service 或者 recycler 之前
+# 启动 meta-service 或者 recycler 之前
 export JAVA_HOME=/opt/jdk-17.0.1
 ```
 
 ## 注意事项
 
 部署 FoundationDB 的机器同时也可部署 Meta Service 和 Recycler，此为推荐部署方式，可节省机器资源。
-
-
-
-
-
-
-
-
-
-
-
