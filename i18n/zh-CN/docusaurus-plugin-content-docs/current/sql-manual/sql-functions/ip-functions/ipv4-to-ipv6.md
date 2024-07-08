@@ -33,7 +33,7 @@ IPV4_TO_IPV6
 `IPV6 IPV4_TO_IPV6(IPV4 ipv4)`
 
 
-接受一个类型为 IPv4 的地址，返回相应 IPv6的形式。
+接受一个类型为 IPv4 的地址，返回相应 IPv6 的形式。
 
 
 ### Example
