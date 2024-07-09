@@ -44,7 +44,7 @@ Convert the data of the above various scenarios into JSON format, and finally im
 ### Download
 Download [Doris](https://doris.apache.org/download/) to use Doris Kafka Connector.
 
-maven dependenciesz
+maven dependencies
 ```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
