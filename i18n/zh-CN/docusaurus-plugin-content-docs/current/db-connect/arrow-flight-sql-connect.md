@@ -38,7 +38,7 @@ Apache Arrow Flight SQL 是一个由 Apache Arrow 社区开发的与数据库系
 
 Doris 支持 Arrow Flight SQL 的动机、设计与实现、性能测试结果、以及有关 Arrow Flight、ADBC 的更多概念可以看 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这篇文档主要介绍 Doris Arrow Flight SQL 的使用方法，以及一些常见问题。
 
-安装 Apache Arrow 你可以去官方文档
+安装 Apache Arrow 你可以去官方文档（
 [Apache Arrow](https://arrow.apache.org/install/)）找到详细的安装教程。
 
 ## Python 使用方法
