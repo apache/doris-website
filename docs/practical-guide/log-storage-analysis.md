@@ -227,6 +227,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | Other      | `string_type_length_soft_limit_bytes = 10485760`             | Increase the length limit of string-type data to 10 MB.      |
 | -          | `trash_file_expire_time_sec = 300` `path_gc_check_interval_second  = 900` `path_scan_interval_second = 900` | Accelerate the recycling of trash files.                     |
 
+
 For more information, refer to [BE Configuration](../admin-manual/config/be-config.md).
 
 ### Step 4: Create tables
@@ -325,11 +326,9 @@ PROPERTIES (
 );
 ```
 
-### Step 5: Collect, query, and analyze logs
+### Step 5: Collect logs
 
-After completing table creation, you can proceed with log collection, querying, and analysis.
-
-**Collect logs**
+After completing table creation, you can proceed with log collection.
 
 Apache Doris provides open and versatile Stream HTTP APIs, through which you can connect with popular log collectors such as Logstash, Filebeat, Kafka, and others to carry out log collection work. This section explains how to integrate these log collectors using the Stream HTTP APIs.
 
@@ -406,7 +405,6 @@ Follow these steps:
 1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-1.0.0) or compile it from the Apache Doris source code.
 
 2. Configure Filebeat. Specify the filebeat_demo.yml field that is used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
-
 
     ```YAML  
     # input
@@ -528,6 +526,8 @@ When using custom programs, pay attention to the following key points:
 - Set HTTP header "load_to_single_tablet:true" to import data into one bucket at a time to reduce small file imports.
 
 - It is recommended to write batches whose sizes are between 100MB to 1GB on the client side. For Apache Doris version 2.1 and higher, you need to reduce batch sizes on the client side through the Group Commit function.
+
+### Step 6: Query and analyze logs
 
 **Query logs**
 
