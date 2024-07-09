@@ -26,10 +26,10 @@ under the License.
 
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) is a scalable and reliable tool for data transmission between Apache Kafka and other systems. Connectors can be defined Move large amounts of data in and out of Kafka.
 
-The Doris community provides the [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
+The Doris community provides the [Doris Kafka Connector](https://github.com/apache/doris-kafka-connector) plug-in, which can write data in the Kafka topic to Doris.
 
 ## Scenes
-Doris kafka Connector imports data in Kafka into Doris by subscribing to data in Kafka Topic.
+Doris Kafka Connector imports data in Kafka into Doris by subscribing to data in Kafka Topic.
 <br />
 ![kafka-connector](/images/ecomsystem/kafka-connector.png)
 <br />
@@ -37,14 +37,14 @@ Supports synchronization of data in multiple scenarios:
 1. Synchronously call the data produced by Kafka API.
 2. Deploy the Debezium component upstream of Kafka to collect data from various database types such as MySQL, PostgreSQL, and Oracle.
 
-Convert the data of the above various scenarios into JSON format, and finally import it into Doris through StreamLoad.
+Convert the data of the above various scenarios into JSON format, and finally import it into Doris through Stream Load.
 
 ## Usage Doris Kafka Connector
 
 ### Download
-[doris-kafka-connector](https://doris.apache.org/zh-CN/download)
+Download [Doris](https://doris.apache.org/download/) to use Doris Kafka Connector.
 
-maven dependencies
+maven dependenciesz
 ```xml
 <dependency>
   <groupId>org.apache.doris</groupId>
@@ -211,8 +211,8 @@ errors.deadletterqueue.topic.replication.factor=1
 | buffer.size.bytes         | -                                    | 5000000(5MB)                                                                          | N            | The cumulative size of records buffered in memory for each Kafka partition, in bytes, default 5MB                                                                                                                                                                       |
 | jmx                       | -                                    | true                                                                                  | N            | To obtain connector internal monitoring indicators through JMX, please refer to: [Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/en/Doris-Connector-JMX.md)                                                                      |
 | enable.delete             | -                                    | false                                                                                 | N            | Whether to delete records synchronously, default false                                                                                                                                                                                                                  |
-| label.prefix              | -                                    | ${name}                                                                               | N            | Stream load label prefix when importing data. Defaults to the Connector application name.                                                                                                                                                                               |
-| auto.redirect             | -                                    | true                                                                                  | N            | Whether to redirect StreamLoad requests. After being turned on, StreamLoad will redirect to the BE where data needs to be written through FE, and the BE information will no longer be displayed.                                                                       |
+| label.prefix              | -                                    | ${name}                                                                               | N            | Stream Load label prefix when importing data. Defaults to the Connector application name.                                                                                                                                                                               |
+| auto.redirect             | -                                    | true                                                                                  | N            | Whether to redirect Stream Load requests. After being turned on, Stream Load will redirect to the BE where data needs to be written through FE, and the BE information will no longer be displayed.                                                                       |
 | load.model                | `stream_load`,<br/> `copy_into`      | stream_load                                                                           | N            | How to import data. Supports `stream_load` to directly import data into Doris; also supports `copy_into` to import data into object storage, and then load the data into Doris.                                                                                         |
 | sink.properties.*         | -                                    | `'sink.properties.format':'json'`, <br/>`'sink.properties.read_json_by_line':'true'`  | N            | Import parameters for Stream Load. <br />For example: define column separator `'sink.properties.column_separator':','` <br />Detailed parameter reference [here](https://doris.apache.org/docs/data-operate/import/stream-load-manual) |
 | delivery.guarantee        | `at_least_once`,<br/> `exactly_once` | at_least_once                                                                         | N            | How to ensure data consistency when consuming Kafka data is imported into Doris. Supports `at_least_once` `exactly_once`, default is `at_least_once`. Doris needs to be upgraded to 2.1.0 or above to ensure data `exactly_once`                                        |
