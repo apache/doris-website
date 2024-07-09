@@ -494,7 +494,8 @@
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
                         "ecosystem/bi/tableau",
-                        "ecosystem/bi/quicksight"
+                        "ecosystem/bi/quicksight",
+                        "ecosystem/bi/quickbi"
                     ]
                 }
             ]
