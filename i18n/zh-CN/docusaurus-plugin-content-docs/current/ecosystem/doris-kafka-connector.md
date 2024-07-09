@@ -26,7 +26,7 @@ under the License.
 
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) 是一款可扩展、可靠的在 Apache Kafka 和其他系统之间进行数据传输的工具，可以定义 Connectors 将大量数据迁入迁出 Kafka。
 
-Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka Topic 中的数据写入到 Doris 中。
+Doris 社区提供了 [Doris Kafka Connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka Topic 中的数据写入到 Doris 中。
 
 ## 场景
 Doris Kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka 中的数据导入到 Doris 中。
@@ -42,7 +42,7 @@ Doris Kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka �
 ## Doris Kafka Connector 使用
 
 ### 下载
-[doris-kafka-connector](https://doris.apache.org/zh-CN/download)
+下载 [Doris](https://doris.apache.org/zh-CN/download) 以使用 Doris Kafka Connector。
 
 maven 依赖
 ```xml
@@ -149,15 +149,15 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 
 操作 Connector
 ```
-# 查看 connector 状态
+# 查看 Connector 状态
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET
-# 删除当前 connector
+# 删除当前 Connector
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster -X DELETE
-# 暂停当前 connector
+# 暂停当前 Connector
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/pause -X PUT
-# 重启当前 connector
+# 重启当前 Connector
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/resume -X PUT
-# 重启 connector 内的 tasks
+# 重启 Connector 内的 tasks
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart -X POST
 ```
 参考：[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html#kconnect-rest-interface)
@@ -224,8 +224,8 @@ errors.deadletterqueue.topic.replication.factor=1
 其他Kafka Connect Sink通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
 ## 类型映射
-Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类型。
-<br />原始类型是指使用 Kafka connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
+Doris Kafka Connector 使用逻辑或原始类型映射来解析列的数据类型。
+<br />原始类型是指使用 Kafka Connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
 
 | Kafka 原始类型   | Doris 类型 |
 |--------------|----------|
@@ -261,7 +261,7 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 
 
 ## 最佳实践
-### 同步 Json 序列化数据
+### 同步 JSON 序列化数据
 ```
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-json-test", 
