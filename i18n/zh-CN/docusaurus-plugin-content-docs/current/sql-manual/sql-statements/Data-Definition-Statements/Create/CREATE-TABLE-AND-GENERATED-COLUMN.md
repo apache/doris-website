@@ -46,7 +46,7 @@ mysql> SELECT * FROM products;
 +------------+-------+----------+-------------+
 ```
 在这个示例中, total_value 列是一个生成列，其值由 price 和 quantity 列的值相乘计算而来。
-在导入或更新时计算并存储在表中。
+生成列的值在导入或更新时计算并存储在表中。
 ## 语法
 ```sql
 col_name data_type [GENERATED ALWAYS] AS (expr)
@@ -66,14 +66,14 @@ col_name data_type [GENERATED ALWAYS] AS (expr)
 ```sql
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
-没有指定列时，生成列需要使用default关键字进行占位。
+没有指定列时，生成列需要使用DEFAULT关键字进行占位。
 ```sql
 INSERT INTO products VALUES(1, 10.00, 10, default);
 ```
 
-### LOAD
+### Load
 使用load方式进行数据导入时，需要显式指定导入列。不应当指定生成列为导入列，当指定导入生成列并在数据文件中有对应的数据时，生成列不会使用数据文件中的值，生成列的值仍然是根据表达式计算得到的结果。
-#### STREAM LOAD
+#### Stream Load
 创建表:
 ```sql
 mysql> CREATE TABLE gen_col_stream_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) not null)
@@ -125,7 +125,7 @@ mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
 3 rows in set (0.07 sec)
 ```
-#### HTTP STREAM LOAD
+#### HTTP Stream Load
 创建表:
 ```sql
 mysql> CREATE TABLE gencol_refer_gencol_http_load(a INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL,b INT, d INT GENERATED ALWAYS AS(c+1))
@@ -168,7 +168,7 @@ mysql> SELECT * FROM gencol_refer_gencol_http_load;                             
 +------+------+------+------+
 3 rows in set (0.04 sec)
 ```
-#### MYSQL LOAD
+#### MySQL Load
 ```sql
 mysql> CREATE TABLE gen_col_mysql_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL)
 DISTRIBUTED BY HASH(a)
@@ -192,7 +192,7 @@ mysql> SELECT * FROM gen_col_mysql_load;
 +------+------+------+
 3 rows in set (0.06 sec)
 ```
-#### 其它LOAD
+#### 其它Load
 BROKER LOAD, ROUTINE LOAD等方式都可以将数据导入有生成列的表，不再一一列举。
 
 ## 生成列与部分列更新
@@ -210,7 +210,7 @@ SET enable_insert_strict=false;
 SET enable_fallback_to_original_planner=false;
 INSERT INTO test_partial_column_unique_gen_col(a,b,e) VALUES(1,2,7);
 ```
-如果没有指定所有的被引用的普通列会报错:
+如果没有指定所有被引用的普通列会报错:
 ```sql
 mysql> INSERT INTO test_partial_column_unique_gen_col(a) VALUES(3);
 ERROR 1105 (HY000): errCode = 2, detailMessage = Partial update should include all ordinary columns referenced by generated columns, missing: b
@@ -222,25 +222,3 @@ curl --location-trusted -u root: -H "Expect:100-continue" -H "column_separator:,
 -T /Users/moailing/Documents/tmp/gen_col_data.csv \
 http://127.0.0.1:8030/api/testdb/partial_column_unique_gen_col/_stream_load
 ```
-
-
-## ALTER TABLE和生成列
-生成列暂时不支持ADD COLUMN, MODIFY COLUMN。
-### REORDER COLUMN
-```sql
-ALTER TABLE products ORDER BY (product_id, total_value, price, quantity);
-```
-注意事项：
-修改后的列顺序仍然需要满足生成列建表时的顺序限制。
-### RENAME COLUMN
-```sql
-ALTER TABLE products RENAME COLUMN total_value new_name;
-```
-注意事项：
-如果表中某列（生成列或者普通列）被其它生成列引用，需要先删除其它生成列后，才能修改此生成列的名称。
-### DROP COLUMN
-```sql
-ALTER TABLE products DROP COLUMN total_value;
-```
-注意事项：
-如果表中某列（生成列或者普通列）被其它生成列引用，需要先删除其它生成列后，才能删除此被引用的生成列或者普通列。

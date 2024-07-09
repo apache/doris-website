@@ -1,7 +1,7 @@
 ---
 {
   "title": "CREATE-TABLE-AND-GENERATED-COLUMN",
-  "language": "zh-CN"
+  "language": "en"
 }
 ---
 
@@ -21,8 +21,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-CREATE TABLE 支持指定生成列，生成列的值是从列定义中指定的表达式中计算得到的。
-下面是一个使用生成列的例子：
+CREATE TABLE supports specifying generated columns, where the value of a generated column is calculated from the expression specified in the column definition.
+Here is an example using a generated column:
 ```sql
 CREATE TABLE products (
 product_id INT,
@@ -35,7 +35,7 @@ DISTRIBUTED BY HASH(product_id) PROPERTIES ("replication_num" = "1");
 INSERT INTO products VALUES(1, 10.00, 10, default);
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
-从表中查询数据：
+Query data from the table:
 ```sql
 mysql> SELECT * FROM products;
 +------------+-------+----------+-------------+
@@ -45,42 +45,41 @@ mysql> SELECT * FROM products;
 |          1 | 20.00 |       10 |      200.00 |
 +------------+-------+----------+-------------+
 ```
-在这个示例中, total_value 列是一个生成列，其值由 price 和 quantity 列的值相乘计算而来。
-在导入或更新时计算并存储在表中。
-## 语法
+In this example, the total_value column is a generated column whose value is calculated by multiplying the values ​​of the price and quantity columns.
+The values of generated columns are calculated and stored in the table when importing or updating.
+## Grammar
 ```sql
 col_name data_type [GENERATED ALWAYS] AS (expr)
 [NOT NULL | NULL] [COMMENT 'string']
 ```
-## 生成列的限制
-1. 使用的函数只能是内置的标量函数和运算符，不允许使用udf，聚合函数等其它。
-2. 不允许使用变量，子查询，Lambda表达式。
-3. AUTO_INCREMENT列不能用作生成的列定义中的基列。
-4. 生成的列定义可以引用其他生成的列，但只能引用表定义中较早出现的列。 生成的列定义可以引用表中的任何基本（非生成）列，无论其定义发生得早还是晚。
-5. 聚合模型中，生成列是VALUE列时，仅允许使用REPLACE和REPLACE_IF_NOT_NULL聚合类型。
-
-## 导入数据
-导入数据时，如果违反了生成列的NOT NULL限制，例如导入数据时，没有指定生成列引用的列，并且此列没有默认值，将导致导入失败。
+## Restrictions on generated columns
+1. The functions used can only be built-in scalar functions and operators. UDF, aggregate functions, etc. are not allowed.
+2. Variables, subqueries, and Lambda expressions are not allowed.
+3. AUTO_INCREMENT columns cannot be used as base columns in generated column definitions.
+4. Generated column definitions can reference other generated columns, but only columns that appear earlier in the table definition. Generated column definitions can reference any base (non-generated) column in the table, regardless of whether its definition occurs earlier or later.
+5. In the aggregate model, when the generated column is a VALUE column, only REPLACE and REPLACE_IF_NOT_NULL aggregate types are allowed.
+## Import data
+When importing data, if the NOT NULL restriction of the generated column is violated, for example, when importing data, the column referenced by the generated column is not specified, and this column has no default value, the import will fail.
 ### INSERT
-指定列时，指定的列不能包含生成列，否则将报错。
+When specifying columns, the specified columns cannot contain generated columns, otherwise an error will be reported.
 ```sql
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
-没有指定列时，生成列需要使用default关键字进行占位。
+When no columns are specified, the DEFAULT keyword must be used as a placeholder for the generated columns.。
 ```sql
 INSERT INTO products VALUES(1, 10.00, 10, default);
 ```
 
-### LOAD
-使用load方式进行数据导入时，需要显式指定导入列。不应当指定生成列为导入列，当指定导入生成列并在数据文件中有对应的数据时，生成列不会使用数据文件中的值，生成列的值仍然是根据表达式计算得到的结果。
-#### STREAM LOAD
-创建表:
+### Load
+When using the load method to import data, you need to explicitly specify the import column. You should not specify a generated column as an import column. When you specify an import generated column and there is corresponding data in the data file, the generated column will not use the value in the data file, and the value of the generated column is still the result of the expression calculation.
+#### Stream Load
+Create table:
 ```sql
 mysql> CREATE TABLE gen_col_stream_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) not null)
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
-准备数据，并进行stream load:
+Prepare data and perform stream loading:
 ```shell
 cat gen_col_data.csv 
 1,2
@@ -113,7 +112,7 @@ curl --location-trusted -u root: \
     "CommitAndPublishTimeMs": 37
 }
 ```
-查看数据导入结果:
+View the data import results:
 ```sql
 mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
@@ -125,14 +124,14 @@ mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
 3 rows in set (0.07 sec)
 ```
-#### HTTP STREAM LOAD
-创建表:
+#### HTTP Stream Load
+Create table:
 ```sql
 mysql> CREATE TABLE gencol_refer_gencol_http_load(a INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL,b INT, d INT GENERATED ALWAYS AS(c+1))
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
-准备数据，并进行http stream load:
+Prepare data and perform HTTP stream loading:
 ```shell
 curl  --location-trusted -u root: -T gen_col_data.csv  -H "Expect: 100-Continue" \
 -H "sql:insert into testdb.gencol_refer_gencol_http_load(a, b) select * from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" )" \
@@ -157,7 +156,7 @@ http://127.0.0.1:8030/api/_http_stream
     "CommitAndPublishTimeMs": 36
 }
 ```
-查看数据导入结果:
+View the data import results:
 ```sql
 mysql> SELECT * FROM gencol_refer_gencol_http_load;                                                                                                                          +------+------+------+------+
 | a    | c    | b    | d    |
@@ -168,7 +167,7 @@ mysql> SELECT * FROM gencol_refer_gencol_http_load;                             
 +------+------+------+------+
 3 rows in set (0.04 sec)
 ```
-#### MYSQL LOAD
+#### MySQL Load
 ```sql
 mysql> CREATE TABLE gen_col_mysql_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL)
 DISTRIBUTED BY HASH(a)
@@ -192,13 +191,12 @@ mysql> SELECT * FROM gen_col_mysql_load;
 +------+------+------+
 3 rows in set (0.06 sec)
 ```
-#### 其它LOAD
-BROKER LOAD, ROUTINE LOAD等方式都可以将数据导入有生成列的表，不再一一列举。
+#### Other Load
+BROKER LOAD, ROUTINE LOAD and other methods can import data into a table with generated columns, which will not be listed here.
+## Generated columns and partial update
+When updating some columns, you must specify all the common columns referenced by the generated columns in columns, otherwise an error will be reported.
 
-## 生成列与部分列更新
-在进行部分列更新时，必须在columns中指定生成列引用的所有普通列，否则会报错。
-
-下面是一个示例， 建表和插入一行数据，并设置session变量:
+The following is an example to create a table, insert a row of data, and set the session variable:
 ```sql
 CREATE TABLE test_partial_column_unique_gen_col (a INT, b INT, c INT AS (a+b), d INT AS (c+1), e INT)
 UNIQUE KEY(a) DISTRIBUTED BY HASH(a) PROPERTIES(
@@ -210,38 +208,15 @@ SET enable_insert_strict=false;
 SET enable_fallback_to_original_planner=false;
 INSERT INTO test_partial_column_unique_gen_col(a,b,e) VALUES(1,2,7);
 ```
-如果没有指定所有的被引用的普通列会报错:
+If all referenced normal columns are not specified, an error will be reported:
 ```sql
 mysql> INSERT INTO test_partial_column_unique_gen_col(a) VALUES(3);
 ERROR 1105 (HY000): errCode = 2, detailMessage = Partial update should include all ordinary columns referenced by generated columns, missing: b
 ```
-LOAD也是这样，-H "columns: a, b"中需要指定所有被引用的普通列，下面是使用stream load的示例:
+The same is true for LOAD. All referenced normal columns need to be specified in -H "columns: a, b". The following is an example of using stream load:
 ```shell
 curl --location-trusted -u root: -H "Expect:100-continue" -H "column_separator:," \
 -H "columns: a, b" -H "partial_columns:true" \
 -T /Users/moailing/Documents/tmp/gen_col_data.csv \
 http://127.0.0.1:8030/api/testdb/partial_column_unique_gen_col/_stream_load
 ```
-
-
-## ALTER TABLE和生成列
-生成列暂时不支持ADD COLUMN, MODIFY COLUMN。
-### REORDER COLUMN
-```sql
-ALTER TABLE products ORDER BY (product_id, total_value, price, quantity);
-```
-注意事项：
-修改后的列顺序仍然需要满足生成列建表时的顺序限制。
-### RENAME COLUMN
-```sql
-ALTER TABLE products RENAME COLUMN total_value new_name;
-```
-注意事项：
-如果表中某列（生成列或者普通列）被其它生成列引用，需要先删除其它生成列后，才能修改此生成列的名称。
-### DROP COLUMN
-```sql
-ALTER TABLE products DROP COLUMN total_value;
-```
-注意事项：
-如果表中某列（生成列或者普通列）被其它生成列引用，需要先删除其它生成列后，才能删除此被引用的生成列或者普通列。
-
