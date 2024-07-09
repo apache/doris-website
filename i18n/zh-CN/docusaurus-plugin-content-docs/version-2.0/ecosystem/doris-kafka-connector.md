@@ -26,7 +26,7 @@ under the License.
 
 [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) 是一款可扩展、可靠的在 Apache Kafka 和其他系统之间进行数据传输的工具，可以定义 Connectors 将大量数据迁入迁出 Kafka。
 
-Doris 社区提供了 [doris-kafka-connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka Topic 中的数据写入到 Doris 中。
+Doris 社区提供了 [Doris Kafka Connector](https://github.com/apache/doris-kafka-connector) 插件，可以将 Kafka Topic 中的数据写入到 Doris 中。
 
 ## 场景
 Doris Kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka 中的数据导入到 Doris 中。
@@ -37,7 +37,7 @@ Doris Kafka Connector 通过订阅 Kafka Topic 中的数据，实现将 Kafka �
 1. 同步调用 Kafka API 生产出来的数据
 2. 在 Kafka 上游部署 Debezium 组件，采集 MySQL、PostgreSQL、Oracle 等各种数据库类型的数据
 
-将上述各类场景的数据转化成 JSON 格式，最终通过 StreamLoad 导入至 Doris 中。
+将上述各类场景的数据转化成 JSON 格式，最终通过 Stream Load 导入至 Doris 中。
 
 ## Doris Kafka Connector 使用
 
@@ -54,7 +54,7 @@ maven 依赖
 ```
 
 ### Standalone 模式启动
-在 $KAFKA_HOME 下创建 plugins 目录，将下载好的 doris-kafka-connector jar 包放入其中
+在 $KAFKA_HOME 下创建 `plugins` 目录，将下载好的 `doris-kafka-connector` jar 包放入其中
 
 配置 config/connect-standalone.properties
 
@@ -66,9 +66,9 @@ bootstrap.servers=127.0.0.1:9092
 plugin.path=$KAFKA_HOME/plugins
 ```
 
-配置 doris-connector-sink.properties
+配置 `doris-connector-sink.properties`
 <br />
-在 config 目录下创建 doris-connector-sink.properties，并配置如下内容：
+在 `config` 目录下创建 `doris-connector-sink.properties`，并配置如下内容：
 
 ```properties
 name=test-doris-sink
@@ -94,14 +94,14 @@ value.converter=org.apache.kafka.connect.json.JsonConverter
 $KAFKA_HOME/bin/connect-standalone.sh -daemon $KAFKA_HOME/config/connect-standalone.properties $KAFKA_HOME/config/doris-connector-sink.properties
 ```
 :::note
-注意：一般不建议在生产环境中使用 standalone 模式
+注意：一般不建议在生产环境中使用 Standalone 模式
 :::
 
 
 ### Distributed 模式启动
-在 $KAFKA_HOME 下创建 plugins 目录，将下载好的 doris-kafka-connector jar 包放入其中
+在 $KAFKA_HOME 下创建 `plugins` 目录，将下载好的 `doris-kafka-connector` jar 包放入其中
 
-配置 config/connect-distributed.properties
+配置 `config/connect-distributed.properties`
 
 ```properties
 # 修改 broker 地址
@@ -149,25 +149,25 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 
 操作 Connector
 ```
-# 查看 connector 状态
+# 查看 Connector 状态
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET
-# 删除当前 connector
+# 删除当前 Connector
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster -X DELETE
-# 暂停当前 connector
+# 暂停当前 Connector
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/pause -X PUT
-# 重启当前 connector
+# 重启当前 Connector
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/resume -X PUT
-# 重启 connector 内的 tasks
+# 重启 Connector 内的 Tasks
 curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart -X POST
 ```
 参考：[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html#kconnect-rest-interface)
 
 :::note
-注意 kafka-connect 首次启动时，会往 kafka 集群中创建 `config.storage.topic` `offset.storage.topic` `status.storage.topic` 三个 topic 用于记录 kafka-connect 的共享连接器配置、偏移数据和状态更新。[How to Use Kafka Connect - Get Started](https://docs.confluent.io/platform/current/connect/userguide.html)
+注意 Kafka-connect 首次启动时，会往 Kafka 集群中创建 `config.storage.topic` `offset.storage.topic` `status.storage.topic` 三个 topic 用于记录 Kafka-connect 的共享连接器配置、偏移数据和状态更新。[How to Use Kafka Connect - Get Started](https://docs.confluent.io/platform/current/connect/userguide.html)
 :::
 
 ### 访问 SSL 认证的 Kafka 集群
-通过 kafka-connect 访问 SSL 认证的 Kafka 集群需要用户提供用于认证 Kafka Broker 公钥的证书文件（client.truststore.jks）。您可以在 `connect-distributed.properties` 文件中增加以下配置：
+通过 Kafka-connect 访问 SSL 认证的 Kafka 集群需要用户提供用于认证 Kafka Broker 公钥的证书文件（client.truststore.jks）。您可以在 `connect-distributed.properties` 文件中增加以下配置：
 ```
 # Connect worker
 security.protocol=SSL
@@ -179,7 +179,7 @@ consumer.security.protocol=SSL
 consumer.ssl.truststore.location=/var/ssl/private/client.truststore.jks
 consumer.ssl.truststore.password=test1234
 ```
-关于通过 Kafka-Connect 连接 SSL 认证的 Kafka 集群配置说明可以参考：[Configure Kafka Connect](https://docs.confluent.io/5.1.2/tutorials/security_tutorial.html#configure-kconnect-long)
+关于通过 Kafka-connect 连接 SSL 认证的 Kafka 集群配置说明可以参考：[Configure Kafka Connect](https://docs.confluent.io/5.1.2/tutorials/security_tutorial.html#configure-kconnect-long)
 
 
 ### 死信队列
@@ -221,11 +221,11 @@ errors.deadletterqueue.topic.replication.factor=1
 | debezium.schema.evolution   | `none`,<br/> `basic`                   | none                                                                                 | N            | 通过 Debezium 采集上游数据库系统（如 MySQL），发生结构变更时，可以将增加的字段同步到 Doris 中。<br/>`none`表示上游数据库系统发生结构变更时，不同步变更后的结构到 Doris 中。 <br/>  `basic`表示同步上游数据库的数据变更操作。由于列结构变更是一个危险操作（可能会导致误删 Doris 表结构的列），目前仅支持同步上游增加列的操作。当列被重命名后，则旧列保持原样，Connector 会在目标表中新增一列，将重命名后的新增数据 Sink 到新列中。 |
 | database.time_zone          | -                                      | UTC                                                                                  | N            | 当 `converter.mode` 为非 `normal` 模式时，对于日期数据类型（如 datetime, date, timestamp 等等）提供指定时区转换的方式，默认为 UTC 时区。                                                                                                                                                       |
 
-其他Kafka Connect Sink通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
+其他 Kafka Connect Sink 通用配置项可参考：[connect_configuring](https://kafka.apache.org/documentation/#connect_configuring)
 
 ## 类型映射
-Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类型。
-<br />原始类型是指使用 Kafka connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
+Doris Kafka Connector 使用逻辑或原始类型映射来解析列的数据类型。
+<br />原始类型是指使用 Kafka Connect 的 `Schema` 表示的简单数据类型。逻辑数据类型通常是采用 `Struct` 结构表示复杂类型，或者日期时间类型。
 
 | Kafka 原始类型   | Doris 类型 |
 |--------------|----------|
@@ -261,7 +261,7 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 
 
 ## 最佳实践
-### 同步 Json 序列化数据
+### 同步 JSON 序列化数据
 ```
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-json-test", 
