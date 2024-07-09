@@ -23,6 +23,7 @@ under the License.
 -->
 CREATE TABLE supports specifying generated columns, where the value of a generated column is calculated from the expression specified in the column definition.
 Here is an example using a generated column:
+
 ```sql
 CREATE TABLE products (
 product_id INT,
@@ -35,7 +36,9 @@ DISTRIBUTED BY HASH(product_id) PROPERTIES ("replication_num" = "1");
 INSERT INTO products VALUES(1, 10.00, 10, default);
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
+
 Query data from the table:
+
 ```sql
 mysql> SELECT * FROM products;
 +------------+-------+----------+-------------+
@@ -45,13 +48,16 @@ mysql> SELECT * FROM products;
 |          1 | 20.00 |       10 |      200.00 |
 +------------+-------+----------+-------------+
 ```
+
 In this example, the total_value column is a generated column whose value is calculated by multiplying the values ​​of the price and quantity columns.
 The values of generated columns are calculated and stored in the table when importing or updating.
 ## Grammar
+
 ```sql
 col_name data_type [GENERATED ALWAYS] AS (expr)
 [NOT NULL | NULL] [COMMENT 'string']
 ```
+
 ## Restrictions on generated columns
 1. The functions used can only be built-in scalar functions and operators. UDF, aggregate functions, etc. are not allowed.
 2. Variables, subqueries, and Lambda expressions are not allowed.
@@ -62,10 +68,13 @@ col_name data_type [GENERATED ALWAYS] AS (expr)
 When importing data, if the NOT NULL restriction of the generated column is violated, for example, when importing data, the column referenced by the generated column is not specified, and this column has no default value, the import will fail.
 ### INSERT
 When specifying columns, the specified columns cannot contain generated columns, otherwise an error will be reported.
+
 ```sql
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
+
 When no columns are specified, the DEFAULT keyword must be used as a placeholder for the generated columns.。
+
 ```sql
 INSERT INTO products VALUES(1, 10.00, 10, default);
 ```
@@ -74,12 +83,15 @@ INSERT INTO products VALUES(1, 10.00, 10, default);
 When using the load method to import data, you need to explicitly specify the import column. You should not specify a generated column as an import column. When you specify an import generated column and there is corresponding data in the data file, the generated column will not use the value in the data file, and the value of the generated column is still the result of the expression calculation.
 #### Stream Load
 Create table:
+
 ```sql
 mysql> CREATE TABLE gen_col_stream_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) not null)
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
+
 Prepare data and perform stream loading:
+
 ```shell
 cat gen_col_data.csv 
 1,2
@@ -112,7 +124,9 @@ curl --location-trusted -u root: \
     "CommitAndPublishTimeMs": 37
 }
 ```
+
 View the data import results:
+
 ```sql
 mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
@@ -124,14 +138,18 @@ mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
 3 rows in set (0.07 sec)
 ```
+
 #### HTTP Stream Load
 Create table:
+
 ```sql
 mysql> CREATE TABLE gencol_refer_gencol_http_load(a INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL,b INT, d INT GENERATED ALWAYS AS(c+1))
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
+
 Prepare data and perform HTTP stream loading:
+
 ```shell
 curl  --location-trusted -u root: -T gen_col_data.csv  -H "Expect: 100-Continue" \
 -H "sql:insert into testdb.gencol_refer_gencol_http_load(a, b) select * from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" )" \
@@ -156,7 +174,9 @@ http://127.0.0.1:8030/api/_http_stream
     "CommitAndPublishTimeMs": 36
 }
 ```
+
 View the data import results:
+
 ```sql
 mysql> SELECT * FROM gencol_refer_gencol_http_load;                                                                                                                          +------+------+------+------+
 | a    | c    | b    | d    |
@@ -167,7 +187,10 @@ mysql> SELECT * FROM gencol_refer_gencol_http_load;                             
 +------+------+------+------+
 3 rows in set (0.04 sec)
 ```
+
 #### MySQL Load
+The process of creating a table, loading data and querying is as follows:
+
 ```sql
 mysql> CREATE TABLE gen_col_mysql_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL)
 DISTRIBUTED BY HASH(a)
@@ -191,12 +214,14 @@ mysql> SELECT * FROM gen_col_mysql_load;
 +------+------+------+
 3 rows in set (0.06 sec)
 ```
+
 #### Other Load
 BROKER LOAD, ROUTINE LOAD and other methods can import data into a table with generated columns, which will not be listed here.
 ## Generated columns and partial update
 When updating some columns, you must specify all the common columns referenced by the generated columns in columns, otherwise an error will be reported.
 
 The following is an example to create a table, insert a row of data, and set the session variable:
+
 ```sql
 CREATE TABLE test_partial_column_unique_gen_col (a INT, b INT, c INT AS (a+b), d INT AS (c+1), e INT)
 UNIQUE KEY(a) DISTRIBUTED BY HASH(a) PROPERTIES(
@@ -208,12 +233,16 @@ SET enable_insert_strict=false;
 SET enable_fallback_to_original_planner=false;
 INSERT INTO test_partial_column_unique_gen_col(a,b,e) VALUES(1,2,7);
 ```
+
 If all referenced normal columns are not specified, an error will be reported:
+
 ```sql
 mysql> INSERT INTO test_partial_column_unique_gen_col(a) VALUES(3);
 ERROR 1105 (HY000): errCode = 2, detailMessage = Partial update should include all ordinary columns referenced by generated columns, missing: b
 ```
+
 The same is true for LOAD. All referenced normal columns need to be specified in -H "columns: a, b". The following is an example of using stream load:
+
 ```shell
 curl --location-trusted -u root: -H "Expect:100-continue" -H "column_separator:," \
 -H "columns: a, b" -H "partial_columns:true" \

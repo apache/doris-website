@@ -23,6 +23,7 @@ under the License.
 -->
 CREATE TABLE 支持指定生成列，生成列的值是从列定义中指定的表达式中计算得到的。
 下面是一个使用生成列的例子：
+
 ```sql
 CREATE TABLE products (
 product_id INT,
@@ -35,7 +36,9 @@ DISTRIBUTED BY HASH(product_id) PROPERTIES ("replication_num" = "1");
 INSERT INTO products VALUES(1, 10.00, 10, default);
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
+
 从表中查询数据：
+
 ```sql
 mysql> SELECT * FROM products;
 +------------+-------+----------+-------------+
@@ -45,13 +48,16 @@ mysql> SELECT * FROM products;
 |          1 | 20.00 |       10 |      200.00 |
 +------------+-------+----------+-------------+
 ```
+
 在这个示例中, total_value 列是一个生成列，其值由 price 和 quantity 列的值相乘计算而来。
 生成列的值在导入或更新时计算并存储在表中。
 ## 语法
+
 ```sql
 col_name data_type [GENERATED ALWAYS] AS (expr)
 [NOT NULL | NULL] [COMMENT 'string']
 ```
+
 ## 生成列的限制
 1. 使用的函数只能是内置的标量函数和运算符，不允许使用udf，聚合函数等其它。
 2. 不允许使用变量，子查询，Lambda表达式。
@@ -63,10 +69,13 @@ col_name data_type [GENERATED ALWAYS] AS (expr)
 导入数据时，如果违反了生成列的NOT NULL限制，例如导入数据时，没有指定生成列引用的列，并且此列没有默认值，将导致导入失败。
 ### INSERT
 指定列时，指定的列不能包含生成列，否则将报错。
+
 ```sql
 INSERT INTO products(product_id, price, quantity) VALUES(1, 20.00, 10);
 ```
+
 没有指定列时，生成列需要使用DEFAULT关键字进行占位。
+
 ```sql
 INSERT INTO products VALUES(1, 10.00, 10, default);
 ```
@@ -75,12 +84,15 @@ INSERT INTO products VALUES(1, 10.00, 10, default);
 使用load方式进行数据导入时，需要显式指定导入列。不应当指定生成列为导入列，当指定导入生成列并在数据文件中有对应的数据时，生成列不会使用数据文件中的值，生成列的值仍然是根据表达式计算得到的结果。
 #### Stream Load
 创建表:
+
 ```sql
 mysql> CREATE TABLE gen_col_stream_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) not null)
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
+
 准备数据，并进行stream load:
+
 ```shell
 cat gen_col_data.csv 
 1,2
@@ -113,7 +125,9 @@ curl --location-trusted -u root: \
     "CommitAndPublishTimeMs": 37
 }
 ```
+
 查看数据导入结果:
+
 ```sql
 mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
@@ -125,14 +139,18 @@ mysql> SELECT * FROM gen_col_stream_load;
 +------+------+------+
 3 rows in set (0.07 sec)
 ```
+
 #### HTTP Stream Load
 创建表:
+
 ```sql
 mysql> CREATE TABLE gencol_refer_gencol_http_load(a INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL,b INT, d INT GENERATED ALWAYS AS(c+1))
 DISTRIBUTED BY HASH(a)
 PROPERTIES("replication_num" = "1");
 ```
+
 准备数据，并进行http stream load:
+
 ```shell
 curl  --location-trusted -u root: -T gen_col_data.csv  -H "Expect: 100-Continue" \
 -H "sql:insert into testdb.gencol_refer_gencol_http_load(a, b) select * from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" )" \
@@ -157,7 +175,9 @@ http://127.0.0.1:8030/api/_http_stream
     "CommitAndPublishTimeMs": 36
 }
 ```
+
 查看数据导入结果:
+
 ```sql
 mysql> SELECT * FROM gencol_refer_gencol_http_load;                                                                                                                          +------+------+------+------+
 | a    | c    | b    | d    |
@@ -168,7 +188,10 @@ mysql> SELECT * FROM gencol_refer_gencol_http_load;                             
 +------+------+------+------+
 3 rows in set (0.04 sec)
 ```
+
 #### MySQL Load
+建表，加载数据和查询的过程如下:
+
 ```sql
 mysql> CREATE TABLE gen_col_mysql_load(a INT,b INT,c DOUBLE GENERATED ALWAYS AS (abs(a+b)) NOT NULL)
 DISTRIBUTED BY HASH(a)
@@ -192,6 +215,7 @@ mysql> SELECT * FROM gen_col_mysql_load;
 +------+------+------+
 3 rows in set (0.06 sec)
 ```
+
 #### 其它Load
 BROKER LOAD, ROUTINE LOAD等方式都可以将数据导入有生成列的表，不再一一列举。
 
@@ -199,6 +223,7 @@ BROKER LOAD, ROUTINE LOAD等方式都可以将数据导入有生成列的表，�
 在进行部分列更新时，必须在columns中指定生成列引用的所有普通列，否则会报错。
 
 下面是一个示例， 建表和插入一行数据，并设置session变量:
+
 ```sql
 CREATE TABLE test_partial_column_unique_gen_col (a INT, b INT, c INT AS (a+b), d INT AS (c+1), e INT)
 UNIQUE KEY(a) DISTRIBUTED BY HASH(a) PROPERTIES(
@@ -210,12 +235,16 @@ SET enable_insert_strict=false;
 SET enable_fallback_to_original_planner=false;
 INSERT INTO test_partial_column_unique_gen_col(a,b,e) VALUES(1,2,7);
 ```
+
 如果没有指定所有被引用的普通列会报错:
+
 ```sql
 mysql> INSERT INTO test_partial_column_unique_gen_col(a) VALUES(3);
 ERROR 1105 (HY000): errCode = 2, detailMessage = Partial update should include all ordinary columns referenced by generated columns, missing: b
 ```
+
 LOAD也是这样，-H "columns: a, b"中需要指定所有被引用的普通列，下面是使用stream load的示例:
+
 ```shell
 curl --location-trusted -u root: -H "Expect:100-continue" -H "column_separator:," \
 -H "columns: a, b" -H "partial_columns:true" \
