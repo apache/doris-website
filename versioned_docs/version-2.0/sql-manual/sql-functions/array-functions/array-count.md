@@ -52,10 +52,6 @@ array_count(x->(abs(x)-1), array1);
 array_count((x,y)->(x = y), array1, array2);
 ```
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```

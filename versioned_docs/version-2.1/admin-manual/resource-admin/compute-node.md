@@ -26,9 +26,6 @@ under the License.
 
 # Compute Node
 
-<version since="1.2.1">
-</version>
-
 Starting from version 1.2.1, Doris supports the Compute Node.
 
 Starting from this release, BE nodes can be divided into two categories:

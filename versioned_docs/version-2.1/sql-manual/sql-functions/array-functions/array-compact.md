@@ -24,11 +24,7 @@ under the License.
 
 ## array_compact
 
-<version since="1.2.0">
-
 array_compact
-
-</version>
 
 ### description
 
@@ -47,10 +43,6 @@ Removes consecutive duplicate elements from an array. The order of result values
 The array without continuous duplicate.
 
 Type: Array.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

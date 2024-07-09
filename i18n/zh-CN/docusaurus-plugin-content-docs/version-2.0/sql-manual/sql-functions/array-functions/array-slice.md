@@ -24,11 +24,7 @@ under the License.
 
 ## array_slice
 
-<version since="1.2.0">
-
 array_slice
-
-</version>
 
 ### description
 
@@ -45,16 +41,10 @@ array_slice
 如果len是负数，则表示长度为0
 ```
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k2, k2[2:2] from array_type_table_nullable;
 +-----------------+-------------------------+
 | k2              | array_slice(`k2`, 2, 2) |

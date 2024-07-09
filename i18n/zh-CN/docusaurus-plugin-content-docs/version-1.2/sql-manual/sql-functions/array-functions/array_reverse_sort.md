@@ -45,9 +45,7 @@ array_reverse_sort
 
 ### example
 
-```
-mysql> set enable_vectorized_engine=true;
-mysql> select k1, k2, array_reverse_sort(k2) from array_test;
+```mysql> select k1, k2, array_reverse_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
 | k1   | k2                          | array_reverse_sort(`k2`)    |
 +------+-----------------------------+-----------------------------+

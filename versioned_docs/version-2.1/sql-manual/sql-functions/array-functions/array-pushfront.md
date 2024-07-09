@@ -44,10 +44,6 @@ The array after adding the value.
 
 Type: Array.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```

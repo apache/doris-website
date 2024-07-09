@@ -138,7 +138,6 @@ set runtime_filter_type=7;
 
 - **Bitmap Filter**:
     - Currently, the bitmap filter is used only when the subquery in the [in subquery](../../sql-manual/sql-statements/Operators/in) operation returns a bitmap column.
-    - Currently, bitmap filter is only supported in vectorization engine.
 
 #### 2.runtime_filter_mode
 Used to control the transmission range of Runtime Filter between instances.

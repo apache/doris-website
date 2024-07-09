@@ -23,13 +23,7 @@ under the License.
 -->
 
 ## array()
-
-<version since="1.2.0">
-
 array()
-
-</version>
-
 ### description
 
 #### Syntax
@@ -38,15 +32,9 @@ array()
 
 construct an array with variadic elements and return it, T could be column or literal
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array("1", 2, 1.1);
 +----------------------+
 | array('1', 2, '1.1') |

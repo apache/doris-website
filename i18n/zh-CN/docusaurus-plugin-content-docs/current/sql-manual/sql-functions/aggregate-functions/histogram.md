@@ -38,13 +38,6 @@ histogram（直方图）函数用于描述数据分布情况，它使用“等�
 - num_buckets：可选项。用于限制直方图桶（bucket）的数量，默认值 128。
 
 别名函数：`hist(expr[, INT num_buckets])`
-
-### notice
-
-```
-仅支持向量化引擎中使用
-```
-
 ### example
 
 ```

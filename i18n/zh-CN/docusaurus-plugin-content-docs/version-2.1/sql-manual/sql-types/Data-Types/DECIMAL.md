@@ -26,11 +26,7 @@ under the License.
 
 ## DECIMAL
 
-<version since="1.2.1">
-
 DECIMAL
-
-</version>
 
 ### description
     DECIMAL(M[,D])

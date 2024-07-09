@@ -26,11 +26,7 @@ under the License.
 
 ## array_except
 
-<version since="1.2.0">
-
 array_except
-
-</version>
 
 ### description
 
@@ -47,8 +43,6 @@ Returns an array of the elements in array1 but not in array2, without duplicates
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3,array_except(k2,k3) from array_type_table;
 +------+-----------------+--------------+--------------------------+
 | k1   | k2              | k3           | array_except(`k2`, `k3`) |

@@ -26,11 +26,7 @@ under the License.
 
 ## array_difference
 
-<version since="1.2.0">
-
 array_difference
-
-</version>
 
 ### description
 
@@ -49,8 +45,6 @@ need notice that NULL will be return NULL
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select *,array_difference(k2) from array_type_table;
 +------+-----------------------------+---------------------------------+
 | k1   | k2                          | array_difference(`k2`)          |

@@ -26,9 +26,6 @@ under the License.
 
 # 计算节点
 
-<version since="1.2.1">
-</version>
-
 自 1.2.1 版本开始，Doris 支持了计算节点（Compute Node）功能。
 
 从这个版本开始，BE 节点可以分为两类：

@@ -71,12 +71,10 @@ https://shimo.im/docs/DT6JXDRkdTvdyV3G
   - SegCompaction: 所有 SegCompaction 任务的内存总和，Orphan的子集。
   - SegmentMeta: memory use by segment meta data such as footer or index page，Orphan的子集。
   - TabletManager: 存储引擎 get、add、delete Tablet 过程中消耗的内存，Orphan的子集。
-  - BufferAllocator: 仅用于非向量化Partitioned Agg过程中的内存复用，Orphan的子集。
 
 - DataPageCache: 用于缓存数据 Page，用于加速 Scan。
 - IndexPageCache: 用于缓存数据 Page 的索引，用于加速 Scan。
 - SegmentCache: 用于缓存已打开的 Segment，如索引信息。
-- DiskIO: 用于缓存 Disk IO 数据，仅在非向量化使用。
 - ChunkAllocator: 用于缓存2的幂大小的内存块，在应用层内存复用。
 - LastSuccessChannelCache: 用于缓存导入接收端的 LoadChannel。
 - DeleteBitmap AggCache: Gets aggregated delete_bitmap on rowset_id and version。

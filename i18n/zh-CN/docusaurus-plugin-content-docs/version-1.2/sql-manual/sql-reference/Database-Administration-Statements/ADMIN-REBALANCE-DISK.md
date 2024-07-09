@@ -26,11 +26,7 @@ under the License.
 
 ### Name
 
-<version since="1.2.0">
-
 ADMIN REBALANCE DISK
-
-</version>
 
 ### Description
 
