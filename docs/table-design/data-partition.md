@@ -1124,22 +1124,22 @@ The choice of bucket columns involves a trade-off between query throughput and q
 
 ### Recommendations for bucket number and data volume:
 
-- The total number of buckets for a table is equal to (Partition num * Bucket num).
+- The total number of tablets for a table is equal to (Partition num * Bucket num).
 - Without considering expansion, it is recommended that the number of buckets for a table be slightly more than the total number of disks in the cluster.
 - In theory, there is no upper or lower limit for the data volume of a single bucket, but it is recommended to be within the range of 1G - 10G. If the data volume of a single bucket is too small, the data aggregation effect will not be good, and the metadata management pressure will be high. If the data volume is too large, it will not be conducive to the migration and replenishment of replicas, and it will increase the cost of retrying failed operations such as Schema Change or Rollup (the granularity of retrying these operations is the bucket).
-- When there is a conflict between the data volume principle and the quantity principle of buckets, it is recommended to prioritize the data volume principle.
+- When there is a conflict between the data volume principle and the quantity principle of tablets, it is recommended to prioritize the data volume principle.
 - When creating a table, the bucket number for each partition is uniformly specified. However, when dynamically adding partitions `ADD PARTITION`, the bucket number for the new partition can be specified separately. This feature can be conveniently used to handle data reduction or expansion.
 - Once the bucket number for a partition is specified, it cannot be changed. Therefore, when determining the bucket number, it is necessary to consider the cluster expansion scenario in advance. For example, if there are only 3 hosts with 1 disk each, and the bucket number is set to 3 or less, then even if more machines are added later, the concurrency cannot be improved.
 
-Here are some examples: Assuming there are 10 BEs, each with one disk. If a table has a total size of 500MB, 4-8 buckets can be considered. For 5GB: 8-16 buckets. For 50GB: 32 buckets. For 500GB: It is recommended to partition the table, with each partition size around 50GB and 16-32 buckets per partition. For 5TB: It is recommended to partition the table, with each partition size around 50GB and 16-32 buckets per partition.
+Here are some examples: Assuming there are 10 BEs, each with one disk. If a table has a total size of 500MB, 4-8 tablets can be considered. For 5GB: 8-16 tablets. For 50GB: 32 tablets. For 500GB: It is recommended to partition the table, with each partition size around 50GB and 16-32 tablets per partition. For 5TB: It is recommended to partition the table, with each partition size around 50GB and 16-32 tablets per partition.
 
 The data volume of a table can be viewed using the [SHOW DATA](../sql-manual/sql-statements/Show-Statements/SHOW-DATA) command, and the result should be divided by the number of replicas to obtain the actual data volume of the table.
 
 ### Random distribution
 
 - If an OLAP table does not have fields of the update type, setting the data bucketing mode of the table to RANDOM can avoid severe data skew. When data is imported into the corresponding partitions of the table, each batch of a single import job will randomly select a bucket for writing.
-- When the bucketing mode of a table is set to RANDOM, there is no bucketing column, it is not possible to query only a few buckets based on the values of the bucketing column. Queries on the table will simultaneously scan all buckets that hit the partition. This setting is suitable for aggregate query analysis of the entire table data, but not suitable for high-concurrency point queries.
-- If the data distribution of the OLAP table is Random Distribution, then during data import, single-bucket import mode can be set (set `load_to_single_tablet` to true). Then, during large-volume data import, a task will only write to one tablet when writing data to the corresponding partition. This can improve the concurrency and throughput of data import, reduce the write amplification caused by data import and compaction, and ensure the stability of the cluster.
+- When the bucketing mode of a table is set to RANDOM, there is no bucketing column, it is not possible to query only a few tablets based on the values of the bucketing column. Queries on the table will simultaneously scan all tablets that hit the partition. This setting is suitable for aggregate query analysis of the entire table data, but not suitable for high-concurrency point queries.
+- If the data distribution of the OLAP table is Random Distribution, then during data import, single-tablet import mode can be set (set `load_to_single_tablet` to true). Then, during large-volume data import, a task will only write to one tablet when writing data to the corresponding partition. This can improve the concurrency and throughput of data import, reduce the write amplification caused by data import and compaction, and ensure the stability of the cluster.
 
 ## Auto bucket
 
@@ -1324,20 +1324,20 @@ According to the above algorithm, the initial number of buckets and the number o
 
    Doris creates tables sequentially based on partition granularity. When a partition fails to create, this error may occur. Even if partitions are not used, when there is a problem with table creation, `Failed to create partition` may still be reported because, as mentioned earlier, Doris creates an unmodifiable default partition for tables without specified partitions.
 
-   When encountering this error, it is usually because the BE encountered a problem when creating data buckets. You can troubleshoot by following these steps:
+   When encountering this error, it is usually because the BE encountered a problem when creating data tablets. You can troubleshoot by following these steps:
 
-   - In the fe.log, search for the `Failed to create partition` log entry at the corresponding timestamp. In this log entry, you may find a series of number pairs similar to `{10001-10010}`. The first number in the pair represents the Backend ID, and the second number represents the tablet ID. For example, this number pair indicates that the creation of tablet ID 10010 on Backend ID 10001 failed.  
-   - Go to the be.INFO log of the corresponding Backend and search for tablet ID-related logs within the corresponding time period to find error messages.  
+   - In the fe.log, search for the `Failed to create partition` log entry at the corresponding timestamp. In this log entry, you may find a series of number pairs similar to `{10001-10010}`. The first number in the pair represents the Backend ID, and the second number represents the Tablet ID. For example, this number pair indicates that the creation of Tablet ID 10010 on Backend ID 10001 failed.  
+   - Go to the be.INFO log of the corresponding Backend and search for Tablet ID-related logs within the corresponding time period to find error messages.  
    - Here are some common tablet creation failure errors, including but not limited to:  
-     - The BE did not receive the relevant task. In this case, you cannot find tablet ID-related logs in be.INFO or the BE reports success but actually fails. For these issues, please refer to the [Installation and Deployment](../install/cluster-deployment/standard-deployment) section to check the connectivity between FE and BE.  
+     - The BE did not receive the relevant task. In this case, you cannot find Tablet ID-related logs in be.INFO or the BE reports success but actually fails. For these issues, please refer to the [Installation and Deployment](../install/cluster-deployment/standard-deployment) section to check the connectivity between FE and BE.  
      - Pre-allocated memory failure. This may be because the byte length of a row in the table exceeds 100KB.  
      - `Too many open files`. The number of open file handles exceeds the Linux system limit. You need to modify the handle limit of the Linux system.  
 
-* If there is a timeout when creating data buckets, you can also extend the timeout by setting `tablet_create_timeout_second=xxx` and `max_create_table_timeout_second=xxx` in the fe.conf file. By default, `tablet_create_timeout_second` is set to 1 second, and `max_create_table_timeout_second` is set to 60 seconds. The overall timeout is calculated as `min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)`. For specific parameter settings, please refer to the [FE Configuration](../admin-manual/config/fe-config) section.
+* If there is a timeout when creating data tablets, you can also extend the timeout by setting `tablet_create_timeout_second=xxx` and `max_create_table_timeout_second=xxx` in the fe.conf file. By default, `tablet_create_timeout_second` is set to 1 second, and `max_create_table_timeout_second` is set to 60 seconds. The overall timeout is calculated as `min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)`. For specific parameter settings, please refer to the [FE Configuration](../admin-manual/config/fe-config) section.
 
 3. The table creation command does not return results for a long time.
 
-* Doris's table creation command is a synchronous command. The timeout for this command is currently set simply as (tablet num * replication num) seconds. If many data buckets are created and some of them fail to create, it may result in a long wait before returning an error.  
+* Doris's table creation command is a synchronous command. The timeout for this command is currently set simply as (tablet num * replication num) seconds. If many data tablets are created and some of them fail to create, it may result in a long wait before returning an error.  
 * Under normal circumstances, the table creation statement should return within a few seconds or tens of seconds. If it exceeds one minute, it is recommended to cancel the operation directly and check the relevant errors in the FE or BE logs.
 
 ## More Help
