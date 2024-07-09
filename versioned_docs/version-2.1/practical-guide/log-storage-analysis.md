@@ -326,11 +326,9 @@ PROPERTIES (
 );
 ```
 
-### Step 5: Collect, query, and analyze logs
+### Step 5: Collect logs
 
-After completing table creation, you can proceed with log collection, querying, and analysis.
-
-**Collect logs**
+After completing table creation, you can proceed with log collection.
 
 Apache Doris provides open and versatile Stream HTTP APIs, through which you can connect with popular log collectors such as Logstash, Filebeat, Kafka, and others to carry out log collection work. This section explains how to integrate these log collectors using the Stream HTTP APIs.
 
@@ -528,6 +526,8 @@ When using custom programs, pay attention to the following key points:
 - Set HTTP header "load_to_single_tablet:true" to import data into one bucket at a time to reduce small file imports.
 
 - It is recommended to write batches whose sizes are between 100MB to 1GB on the client side. For Apache Doris version 2.1 and higher, you need to reduce batch sizes on the client side through the Group Commit function.
+
+### Step 6: Query and analyze logs
 
 **Query logs**
 

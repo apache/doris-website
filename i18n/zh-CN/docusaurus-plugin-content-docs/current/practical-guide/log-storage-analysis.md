@@ -116,7 +116,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
   - 平均写入吞吐 \* 写入吞吐峰值 / 均值比 = 峰值写入吞吐
   - 峰值写入吞吐 / 单核写入吞吐 = 峰值写入所需 CPU 核数
 
-2. **评估存储资源**：计算公式为「日增数据量 / 压缩率 \* 副本数 \* 数据存储周期 = 所需存储空间」。
+2. **评估存储资源**：计算公式为「日增数据量 / 压缩率 * 副本数 * 数据存储周期 = 所需存储空间」。
 
 3. **评估查询资源**：查询的资源消耗随查询量和复杂度而异，建议初始预留 50% 的 CPU 资源用于查询，再根据实际测试情况进行调整。
    
@@ -144,7 +144,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | 单机 CPU 核数                    | 32    | 根据实际需求填写，默认 32 核                                 |
 | 平均写入吞吐（MB/s）             | 1214  | 算法：日增数据量 / 86400 s                                   |
 | 峰值写入吞吐（MB/s）             | 2427  | 算法：平均写入吞吐 * 写入吞吐峰值 / 均值比                   |
-| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机 CPU 核数                           |
+| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机写入吞吐                           |
 | 查询预留 CPU 百分比              | 50%   | 根据实际需求填写，默认 50%                                   |
 | 预估 BE 服务器数                 | 15.2  | 算法：峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比） |
 | 预估 BE 服务器数取整             | 15    | 算法：MAX (副本数，预估 BE 服务器数上取整)                   |
@@ -293,11 +293,9 @@ PROPERTIES (
 );
 ```
 
-### 第 5 步：采集和查询日志
+### 第 5 步：采集日志
 
-完成建表后，可进行日志采集、查询和分析。
-
-**日志采集**
+完成建表后，可进行日志采集。
 
 Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你可与常用的日志采集器打通，包括 Logstash、Filebeat、Kafka 等，从而开展日志采集工作。本节介绍了如何使用 Stream HTTP APIs 对接日志采集器。
 
@@ -504,6 +502,8 @@ http://fe_host:fe_http_port/api/log_db/log_table/\_stream_load
 - 设置 HTTP header "load_to_single_tablet:true"，指定一次导入写入一个分桶减少导入的小文件。
 - 建议写入客户端一个 Batch 的大小为 100MB ～ 1GB。如果你使用的是 Apache Doris 2.1 及更高版本，需通过服务端 Group Commit 功能，降低客户端 Batch 大小。
 
+### 第 6 步：查询和分析日志
+
 **日志查询**
 
 Apache Doris 支持标准 SQL，因此，你可以通过 MySQL 客户端或者 JDBC 等方式连接到集群，执行 SQL 进行日志查询。参考以下命令：
@@ -542,7 +542,7 @@ ORDER BY ts DESC LIMIT 10;
 
 - 检索请求字段中有 `image` 和 `faq` 的最新 10 条数据。其中，`MATCH_PHRASE` 是 Apache Doris 全文检索的 SQL 语法，用于匹配参数中所有关键字，并且要求顺序一致。在下方例子中，`a image faq b` 能匹配，但是 `a faq image b` 不能匹配，因为 `image` 和 `faq` 的顺序与查询不一致。
 
-```SQL  
+```SQL
 SELECT \* FROM your_table_name WHERE message MATCH_PHRASE 'image faq'  
 ORDER BY ts DESC LIMIT 10;
 ```
