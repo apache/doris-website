@@ -37,7 +37,7 @@ Supports synchronization of data in multiple scenarios:
 1. Synchronously call the data produced by Kafka API.
 2. Deploy the Debezium component upstream of Kafka to collect data from various database types such as MySQL, PostgreSQL, and Oracle.
 
-Convert the data of the above various scenarios into JSON format, and finally import it into Doris through StreamLoad.
+Convert the data of the above various scenarios into JSON format, and finally import it into Doris through Stream Load.
 
 ## Use Doris Kafka Connector
 
