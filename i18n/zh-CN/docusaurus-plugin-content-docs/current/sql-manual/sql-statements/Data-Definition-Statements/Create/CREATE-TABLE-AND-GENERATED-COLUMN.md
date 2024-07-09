@@ -21,7 +21,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-CREATE TABLE 支持指定生成列，生成列的值是从列定义中指定的表达式中计算得到的。
+
+生成列是一种特殊的数据库表列，其值由其他列的值计算而来，而不是直接由用户插入或更新。该功能支持预先计算表达式的结果，并存储在数据库中，适用于需要频繁查询或进行复杂计算的场景。
+
+生成列可以在数据导入或更新时自动根据预定义的表达式计算结果，并将这些结果持久化存储。这样，在后续的查询过程中，可以直接访问这些已经计算好的结果，而无需在查询时再进行复杂的计算，从而显著减少查询时的计算负担，提升查询性能。
+
 下面是一个使用生成列的例子：
 
 ```sql

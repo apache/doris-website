@@ -21,7 +21,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-CREATE TABLE supports specifying generated columns, where the value of a generated column is calculated from the expression specified in the column definition.
+A generated column is a special database table column whose value is calculated from the values of other columns rather than directly inserted or updated by the user. This feature supports pre-computing the results of expressions and storing them in the database, which is suitable for scenarios that require frequent queries or complex calculations.
+
+Generated columns can automatically calculate results based on predefined expressions when data is imported or updated, and store these results persistently. In this way, during subsequent queries, you can directly access these calculated results without performing complex calculations during queries, thereby significantly reducing the computational burden during queries and improving query performance.
+
 Here is an example using a generated column:
 
 ```sql
