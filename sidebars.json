@@ -252,8 +252,7 @@
                     "type": "category",
                     "label": "User Defined Functions",
                     "items": [
-                        "query/udf/java-user-defined-function",
-                        "query/udf/remote-user-defined-function"
+                        "query/udf/java-user-defined-function"
                     ]
                 }
             ]
