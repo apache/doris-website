@@ -1284,6 +1284,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB"
                                     ]
