@@ -72,13 +72,13 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
     Hadoop 配置属性,指定要使用的默认文件系统。-- 必需
 
 `path_prefix` 
-    存储数据的路径前缀。-- 可选
+    存储数据的路径前缀。-- 可选. 如果没有指定则会使用user账户下的默认路径。
 
 `hadoop.username` 
-    Hadoop 配置属性,指定访问文件系统的用户。-- 可选
+    Hadoop 配置属性,指定访问文件系统的用户。-- 可选. 如果没有指定则会使用启动hadoop进程的user.
 
 `hadoop.security.authentication` 
-    用于 hadoop 的认证方式。-- 可选
+    用于 hadoop 的认证方式。-- 可选. 如果希望使用kerberos则可以填写`kerberos`.
 
 `hadoop.kerberos.principal` 
     您的 kerberos 主体的路径。-- 可选

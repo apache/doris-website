@@ -82,15 +82,15 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 * `path_prefix`
 
-   The path prefix to where the data would be stored. -- optional
+   The path prefix to where the data would be stored. -- optional. It would be the root_path of your Hadoop user if you don't provide any prefix.
 
 * `hadoop.username`
 
-   Hadoop configuration property that specifies the user accessing the file system. -- optional
+   Hadoop configuration property that specifies the user accessing the file system. -- optional. It would be the user starting Hadoop process if you don't provide any user.
 
 * `hadoop.security.authentication`
 
-   The authentication way used for hadoop. -- optional
+   The authentication way used for hadoop. -- optional. If you'd like to use kerberos you can provide with `kerboros`.
 
 * `hadoop.kerberos.principal`
 
