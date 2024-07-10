@@ -54,13 +54,13 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
     存储数据的路径。-- 必需
 
 `s3.bucket` 
-    您的 OSS 账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。-- 必需
+    您的对象存储账户的存储桶。(如果您使用 Azure,则为 StorageAccount)。-- 必需
 
 `s3.access_key` 
-    您的 OSS 账户的访问密钥。(如果您使用 Azure,则为 AccountName)。-- 必需
+    您的对象存储账户的访问密钥。(如果您使用 Azure,则为 AccountName)。-- 必需
 
 `s3.secret_key` 
-    您的 OSS 账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。-- 必需
+    您的对象存储账户的秘密密钥。(如果您使用 Azure,则为 AccountKey)。-- 必需
 
 `provider` 
     提供对象存储服务的云供应商。-- 必需
@@ -89,21 +89,22 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 ### 示例
 
-1. 创建 HDFS 存储库。
+1. create a HDFS storage vault.
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
         PROPERTIES (
-        "type"="hdfs", 
+        "type"="hdfs",
         "fs.defaultFS"="hdfs://127.0.0.1:8020"
         );
     ```
-2. 使用 azure 创建 S3 存储库。
+
+2. create a S3 storage vault using azure.
     ```sql
     CREATE STORAGE VAULT IF NOT EXISTS s3_vault
         PROPERTIES (
         "type"="S3",
         "s3.endpoint"="ak.blob.core.windows.net/",
-        "s3.access_key" = "ak", 
+        "s3.access_key" = "ak",
         "s3.secret_key" = "sk",
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
@@ -111,6 +112,66 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         );
     ```
 
-#### 关键词
+3. create a S3 storage vault using OSS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="oss.aliyuncs.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "cn-hangzhou",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "OSS"
+        );
+    ```
 
-    CREATE, STORAGE VAUL
+4. create a S3 storage vault using COS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="cos.ap-guangzhou.myqcloud.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "ap-guangzhou",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "COS"
+        );
+    ```
+
+5. create a S3 storage vault using OBS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="obs.cn-north-4.myhuaweicloud.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "cn-north-4",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "OBS"
+        );
+    ```
+
+6. create a S3 storage vault using AWS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="s3.us-east-1.amazonaws.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "us-east-1",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "S3"
+        );
+    ```
+
+### 关键词
+
+    CREATE, STORAGE VAULT

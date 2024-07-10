@@ -60,15 +60,15 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
 
 * `s3.bucket`
 
-    The bucket of your OSS account. (StorageAccount if you're using Azure). -- Required
+    The bucket of your object storage account. (StorageAccount if you're using Azure). -- Required
 
 * `s3.access_key`
 
-   The access key of you OSS account. (AccountName if you're using Azure). -- Required
+   The access key of your object storage account. (AccountName if you're using Azure). -- Required
 
 * `s3.secret_key`
 
-   The secret key of you OSS account. (AccountKey if you're using Azure). -- Required
+   The secret key of your object storage account. (AccountKey if you're using Azure). -- Required
 
 * `provider`
 
@@ -123,6 +123,66 @@ CREATE STORAGE VAULT [IF NOT EXISTS] vault
         "s3.root.path" = "ssb_sf1_p2_s3",
         "s3.bucket" = "doris-build-1308700295",
         "provider" = "AZURE"
+        );
+    ```
+
+3. create a S3 storage vault using OSS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="oss.aliyuncs.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "cn-hangzhou",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "OSS"
+        );
+    ```
+
+4. create a S3 storage vault using COS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="cos.ap-guangzhou.myqcloud.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "ap-guangzhou",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "COS"
+        );
+    ```
+
+5. create a S3 storage vault using OBS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="obs.cn-north-4.myhuaweicloud.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "cn-north-4",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "OBS"
+        );
+    ```
+
+6. create a S3 storage vault using AWS.
+    ```sql
+    CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+        PROPERTIES (
+        "type"="S3",
+        "s3.endpoint"="s3.us-east-1.amazonaws.com",
+        "s3.access_key" = "ak",
+        "s3.secret_key" = "sk",
+        "s3.region" = "us-east-1",
+        "s3.root.path" = "ssb_sf1_p2_s3",
+        "s3.bucket" = "doris-build-1308700295",
+        "provider" = "S3"
         );
     ```
 
