@@ -66,7 +66,9 @@ Create a client to interact with the Doris Arrow Flight SQL service. You need to
 Modify the configuration parameters of Doris FE and BE:
 
 - Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-- Modify arrow_flight_port in be/conf/be.conf to an available port, such as 9091.
+- Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
+
+`Note: arrow_flight_sql_port configured in fe.conf and be.conf are different`
 
 Assuming that the Arrow Flight SQL services of FE and BE in the Doris instance will run on ports 9090 and 9091 respectively, and the Doris username/password is "user"/"pass", the connection process is as follows:
 
@@ -219,7 +221,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
 conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
@@ -390,6 +392,17 @@ connection.close();
 ```
 
 ### JDBC Driver
+
+When using Java 9 or later, some JDK internals must be exposed by adding --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED to the java command:
+
+```shell
+# Directly on the command line
+$ java --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED -jar ...
+# Indirectly via environment variables
+$ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED" java -jar ...
+```
+
+Otherwise, you may see errors like `module java.base does not "opens java.nio" to unnamed module` or `module java.base does not "opens java.nio" to org.apache.arrow.memory.core`
 
 The connection code example is as follows:
 
