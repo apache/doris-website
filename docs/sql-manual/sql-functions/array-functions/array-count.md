@@ -26,11 +26,7 @@ under the License.
 
 ## array_count
 
-<version since="2.0">
-
 array_count
-
-</version>
 
 ### description
 

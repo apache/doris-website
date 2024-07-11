@@ -106,7 +106,7 @@ distribution_desc
         HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
         BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
         ```
-    * <version since="2.1" type="inline">`AUTO_INCREMENT(auto_inc_start_value)`</version>
+    * `AUTO_INCREMENT(auto_inc_start_value)`
             
         是否为自增列，自增列可以用来为新插入的行生成一个唯一标识。在插入表数据时如果没有指定自增列的值，则会自动生成一个合法的值。当自增列被显示地插入 NULL 时，其值也会被替换为生成的合法值。需要注意的是，处于性能考虑，BE 会在内存中缓存部分自增列的值，所以自增列自动生成的值只能保证单调性和唯一性，无法保证严格的连续性。
         一张表中至多有一个列是自增列，自增列必须是 BIGINT 类型，且必须为 NOT NULL。
@@ -132,7 +132,7 @@ distribution_desc
             // 只用于 DATE 类型，导入数据缺失该值时系统将赋予当前日期
             dt DATE DEFAULT CURRENT_DATE
         ```
-  * <version since="2.1" type="inline">`on update current_timestamp`</version>
+  * `on update current_timestamp`
 
         是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 Merge-on-Write 的 Unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为`current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
 
@@ -190,9 +190,9 @@ distribution_desc
 * AGGREGATE KEY：其后指定的列为维度列。
 * UNIQUE KEY：其后指定的列为主键列。
 
-<version since="2.0">
+:::info 备注
 注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 Duplicate 表。
-</version>
+:::
 
 示例：
 
@@ -234,7 +234,7 @@ UNIQUE KEY(k1, k2)
     )
     ```
 
-3. <version since="1.2" type="inline"> MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。</version>
+3.  MULTI RANGE：批量创建 RANGE 分区，定义分区的左闭右开区间，设定时间单位和步长，时间单位支持年、月、日、周和小时。
 
     ```
     PARTITION BY RANGE(col)
@@ -371,13 +371,13 @@ UNIQUE KEY(k1, k2)
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> Unique 表是否使用 Merge-on-Write 实现。</version>
+    Unique 表是否使用 Merge-on-Write 实现。
 
     该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。
 
 * `light_schema_change`
 
-    <version since="1.2" type="inline"> 是否使用 Light Schema Change 优化。</version>
+    是否使用 Light Schema Change 优化。
 
     如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。
 
@@ -476,7 +476,7 @@ UNIQUE KEY(k1, k2)
 
     此属性的默认值为 `false`。
 
-    此属性只能在 Unique Merge-on-Write表上开启。
+    此属性只能在 Unique Merge-on-Write 表上开启。
 
     `"enable_mow_light_delete" = "true"`
 
@@ -748,9 +748,7 @@ UNIQUE KEY(k1, k2)
     ```
 注：需要先创建 S3 Resource 和 Storage Policy，表才能关联迁移策略成功
 
-<version since="1.2.0">
-
-13. 批量创建分区
+1.  批量创建分区
     ```sql
         CREATE TABLE create_table_multi_partion_date
         (
@@ -794,14 +792,11 @@ UNIQUE KEY(k1, k2)
             "replication_num" = "1"
         );
     ```
+:::info 备注
+注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 FE 配置项 `max_multi_partition_num` 调整。
+:::
 
-注：批量创建分区可以和常规手动创建分区混用，使用时需要限制分区列只能有一个，批量创建分区实际创建默认最大数量为 4096，这个参数可以在 FE 配置项 `max_multi_partition_num` 调整
-
-</version>
-
-<version since="2.0">
-
-14. 批量无排序列 Duplicate 表
+1.  批量无排序列 Duplicate 表
 
     ```sql
     CREATE TABLE example_db.table_hash
@@ -824,8 +819,6 @@ UNIQUE KEY(k1, k2)
         "enable_duplicate_without_keys_by_default" = "true"
     );
     ```
-
-</version>
 
 ### Keywords
 

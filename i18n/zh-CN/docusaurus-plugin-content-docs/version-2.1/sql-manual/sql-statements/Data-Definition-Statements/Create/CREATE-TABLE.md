@@ -126,7 +126,7 @@ distribution_desc
             // 只用于 DATE 类型，导入数据缺失该值时系统将赋予当前日期
             dt DATE DEFAULT CURRENT_DATE
         ```
-  * <version since="2.1" type="inline">`on update current_timestamp`</version>
+  * `on update current_timestamp`
 
         是否在该行有列更新时将该列的值更新为当前时间 (`current_timestamp`)。该特性只能在开启了 Merge-on-Write 的 Unique 表上使用，开启了这个特性的列必须声明默认值，且默认值必须为 `current_timestamp`。如果此处声明了时间戳的精度，则该列默认值中的时间戳精度必须与该处的时间戳精度相同。
 
@@ -184,9 +184,7 @@ distribution_desc
 * AGGREGATE KEY：其后指定的列为维度列。
 * UNIQUE KEY：其后指定的列为主键列。
 
-<version since="2.0">
 注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 Duplicate 表。
-</version>
 
 示例：
 
@@ -470,7 +468,7 @@ UNIQUE KEY(k1, k2)
 
     此属性的默认值为 `false`。
 
-    此属性只能在 Unique Merge-on-Write表上开启。
+    此属性只能在 Unique Merge-on-Write 表上开启。
 
     `"enable_mow_light_delete" = "true"`
 
@@ -793,9 +791,7 @@ UNIQUE KEY(k1, k2)
 
 </version>
 
-<version since="2.0">
-
-14. 批量无排序列 Duplicate 表
+1.  批量无排序列 Duplicate 表
 
     ```sql
     CREATE TABLE example_db.table_hash
@@ -818,8 +814,6 @@ UNIQUE KEY(k1, k2)
         "enable_duplicate_without_keys_by_default" = "true"
     );
     ```
-
-</version>
 
 ### Keywords
 

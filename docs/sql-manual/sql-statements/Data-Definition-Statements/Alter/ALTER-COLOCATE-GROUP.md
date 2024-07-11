@@ -30,8 +30,6 @@ under the License.
 
 ALTER COLOCATE GROUP
 
-<version since="dev"></version>
-
 ### Description
 
 This statement is used to modify the colocation group.

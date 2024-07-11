@@ -49,7 +49,7 @@ To give AUTO_INCREMENT column a spin, follow this quick [demo](https://www.youtu
 
 ## Syntax & usage
 
-To enable an auto-increment column in Doris, add `AUTO_INCREMENT` property to the column in the table creation statement ([CREAT-TABLE](https://doris.apache.org/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-TABLE/)). You can specify a starting value for the auto-increment column via `AUTO_INCREMENT(start_value)`; if not, the default starting value is 1.
+To enable an auto-increment column in Doris, add `AUTO_INCREMENT` property to the column in the table creation statement ([CREAT-TABLE](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)). You can specify a starting value for the auto-increment column via `AUTO_INCREMENT(start_value)`; if not, the default starting value is 1.
 
 For example, you can create a table in the [Duplicate Key model](https://doris.apache.org/docs/data-table/data-model#duplicate-model), with one of the key columns being an auto-increment column. 
 

@@ -24,11 +24,7 @@ under the License.
 
 ## struct_element
 
-<version since="2.0">
-
 struct_element
-
-</version>
 
 ### description
 

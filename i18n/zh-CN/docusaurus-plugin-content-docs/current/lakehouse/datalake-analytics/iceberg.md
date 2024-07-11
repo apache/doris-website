@@ -35,7 +35,7 @@ under the License.
 
 ## 创建 Catalog
 
-### 基于Hive Metastore创建Catalog
+### 基于 Hive Metastore 创建 Catalog
 
 和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 [Hive Catalog](./hive.md)。
 
@@ -52,9 +52,9 @@ CREATE CATALOG iceberg PROPERTIES (
 );
 ```
 
-### 基于Iceberg API创建Catalog
+### 基于 Iceberg API 创建 Catalog
 
-使用Iceberg API访问元数据的方式，支持Hadoop File System、Hive、REST、Glue、DLF等服务作为Iceberg的Catalog。
+使用 Iceberg API 访问元数据的方式，支持 Hadoop File System、Hive、REST、Glue、DLF 等服务作为 Iceberg 的 Catalog。
 
 #### Hadoop Catalog
 
@@ -112,7 +112,7 @@ CREATE CATALOG iceberg PROPERTIES (
 
 #### AWS Glue
 
-> 连接Glue时，如果是在非EC2环境，需要将EC2环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载[AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)工具进行配置，这种方式也会在当前用户目录下创建`.aws`目录。
+> 连接 Glue 时，如果是在非 EC2 环境，需要将 EC2 环境里的 `~/.aws` 目录拷贝到当前环境里。也可以下载[AWS Cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)工具进行配置，这种方式也会在当前用户目录下创建`.aws`目录。
 
 ```sql
 CREATE CATALOG glue PROPERTIES (
@@ -126,15 +126,15 @@ CREATE CATALOG glue PROPERTIES (
 
 1. Iceberg 属性详情参见 [Iceberg Glue Catalog](https://iceberg.apache.org/docs/latest/aws/#glue-catalog)
 
-2. 如果在AWS服务（如EC2）中，不填写Credentials相关信息（`glue.access_key`和`glue.secret_key`），Doris就会使用默认的DefaultAWSCredentialsProviderChain，它会读取系统环境变量或者InstanceProfile中配置的属性。
+2. 如果在 AWS 服务（如 EC2）中，不填写 Credentials 相关信息（`glue.access_key`和`glue.secret_key`），Doris 就会使用默认的 DefaultAWSCredentialsProviderChain，它会读取系统环境变量或者 InstanceProfile 中配置的属性。
 
 #### 阿里云 DLF
 
-参见[阿里云DLF Catalog配置](dlf.md)
+参见[阿里云 DLF Catalog 配置](dlf.md)
 
 #### REST Catalog
 
-该方式需要预先提供REST服务，用户需实现获取Iceberg元数据的REST接口。
+该方式需要预先提供 REST 服务，用户需实现获取 Iceberg 元数据的 REST 接口。
 
 ```sql
 CREATE CATALOG iceberg PROPERTIES (
@@ -144,7 +144,7 @@ CREATE CATALOG iceberg PROPERTIES (
 );
 ```
 
-如果使用HDFS存储数据，并开启了高可用模式，还需在Catalog中增加HDFS高可用配置：
+如果使用 HDFS 存储数据，并开启了高可用模式，还需在 Catalog 中增加 HDFS 高可用配置：
 
 ```sql
 CREATE CATALOG iceberg PROPERTIES (
@@ -174,11 +174,11 @@ CREATE CATALOG iceberg PROPERTIES (
 );
 ```
 
-`hive.metastore.uris`: Dataproc Metastore 服务开放的接口，在 Metastore 管理页面获取 ：[Dataproc Metastore Services](https://console.cloud.google.com/dataproc/metastore).
+`hive.metastore.uris`: Dataproc Metastore 服务开放的接口，在 Metastore 管理页面获取：[Dataproc Metastore Services](https://console.cloud.google.com/dataproc/metastore).
 
 ### Iceberg On Object Storage
 
-若数据存放在S3上，properties中可以使用以下参数：
+若数据存放在 S3 上，properties 中可以使用以下参数：
 
 ```
 "s3.access_key" = "ak"
@@ -187,7 +187,7 @@ CREATE CATALOG iceberg PROPERTIES (
 "s3.region" = "us-east-1"
 ```
 
-数据存放在阿里云OSS上：
+数据存放在阿里云 OSS 上：
 
 ```
 "oss.access_key" = "ak"
@@ -196,7 +196,7 @@ CREATE CATALOG iceberg PROPERTIES (
 "oss.region" = "oss-cn-beijing"
 ```
 
-数据存放在腾讯云COS上：
+数据存放在腾讯云 COS 上：
 
 ```
 "cos.access_key" = "ak"
@@ -205,7 +205,7 @@ CREATE CATALOG iceberg PROPERTIES (
 "cos.region" = "ap-beijing"
 ```
 
-数据存放在华为云OBS上：
+数据存放在华为云 OBS 上：
 
 ```
 "obs.access_key" = "ak"
@@ -248,8 +248,8 @@ CREATE CATALOG `iceberg` PROPERTIES (
 | string                                     | string       |
 | fixed(L)                                   | char(L)      |
 | binary                                     | string       |
-| struct                                     | struct （2.1.3 版本开始支持）      |
-| map                                        | map （2.1.3 版本开始支持）    |
+| struct                                     | struct（2.1.3 版本开始支持）      |
+| map                                        | map（2.1.3 版本开始支持）    |
 | list                                       | array        |
 | time                                       | 不支持        |
 
@@ -258,7 +258,7 @@ CREATE CATALOG `iceberg` PROPERTIES (
 
 支持读取 Iceberg 表指定的 Snapshot。
 
-每一次对iceberg表的写操作都会产生一个新的快照。
+每一次对 iceberg 表的写操作都会产生一个新的快照。
 
 默认情况下，读取请求只会读取最新版本的快照。
 

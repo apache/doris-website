@@ -28,17 +28,13 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 CLEAN PROFILE
-
-</version>
 
 ### Description
 
-用于手动清理所有历史query或load的profile信息。
+用于手动清理所有历史 query 或 load 的 profile 信息。
 
-语法:
+语法：
 
 ```sql
 CLEAN ALL PROFILE;
@@ -46,7 +42,7 @@ CLEAN ALL PROFILE;
 
 ### Example
 
-1. 清理所有profile信息。
+1. 清理所有 profile 信息。
 
 	```sql
 	CLEAN ALL PROFILE;

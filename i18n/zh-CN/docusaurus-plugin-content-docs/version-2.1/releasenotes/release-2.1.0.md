@@ -104,7 +104,7 @@ under the License.
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
 :::note
-参考文档：https://doris.apache.org/zh-CN/docs/query/pipeline/pipeline-x-execution-engine
+参考文档：[Pipeline X Execution Engine](../query/pipeline/pipeline-x-execution-engine.md)
 :::
 
 ## ARM 架构深度适配，性能提升 230% 
@@ -143,7 +143,7 @@ under the License.
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0
 
-- 参考文档：https://doris.apache.org/zh-CN/docs/lakehouse/sql-dialect
+- 参考文档：[SQL 方言兼容](../lakehouse/sql-dialect.md)
 :::
 
 ### 高速数据读取，数据传输效率提升 100 倍
@@ -696,7 +696,7 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
 
-- 参考文档：https://doris.apache.org/zh-CN/docs/admin-manual/workload-group/
+- 参考文档：https://doris.apache.org/zh-CN/docs/admin-manual/resource-admin/workload-group
 :::
 
 ### TopSQL
@@ -852,10 +852,10 @@ JOB e_daily
         FROM site_activity.sessions where create_time >=  days_add(now(),-1) ;
 ```
 
-:::caution
-注意事项
+:::caution 注意
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-JOB
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+
 :::
 
 ## Behavior Changed
@@ -874,7 +874,7 @@ JOB e_daily
 
   - 对于之前已经安装过审计日志插件的用户，升级后可以继续使用原有插件，也可以通过 uninstall 命令卸载原有插件后，使用新的插件。但注意，切换插件后，审计日志表也将切换到新的表中。
 
-  - 具体可参阅：https://doris.apache.org/docs/ecosystem/audit-plugin/
+  - 具体可参阅：https://doris.apache.org/zh-CN/docs/admin-manual/audit-plugin/
 
 
 

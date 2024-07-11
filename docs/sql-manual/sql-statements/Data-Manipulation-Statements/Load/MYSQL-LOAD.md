@@ -28,9 +28,7 @@ under the License.
 
 ### Name
 
-<version since="dev">
     MYSQL LOAD
-</version>
 
 ### Description
 
@@ -67,7 +65,7 @@ This import method can still guarantee the atomicity of a batch of import tasks,
 
 ### PROPERTIES
 
-1. max_filter_ratio：The maximum tolerable data ratio that can be filtered (for reasons such as data irregularity). Zero tolerance by default. Data irregularities do not include rows filtered out by where conditions.
+1. max_filter_ratio: The maximum tolerable data ratio that can be filtered (for reasons such as data irregularity). Zero tolerance by default. Data irregularities do not include rows filtered out by where conditions.
 
 2. timeout: Specify the import timeout. in seconds. The default is 600 seconds. The setting range is from 1 second to 259200 seconds.
 

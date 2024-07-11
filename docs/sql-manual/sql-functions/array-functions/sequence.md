@@ -26,11 +26,7 @@ under the License.
 
 ## sequence
 
-<version since="dev">
-
 sequence
-
-</version>
 
 ### description
 alias of array_range function

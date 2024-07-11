@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="1.2">
-
 ## convert_to
 ### description
 #### Syntax
@@ -35,8 +33,6 @@ under the License.
 It is used in the order by clause. eg: order by convert(column using gbk), Now only support character can be converted to 'gbk'.
 Because when the order by column contains Chinese, it is not arranged in the order of Pinyin
 After the character encoding of column is converted to gbk, it can be arranged according to pinyin
-
-</version>
 
 ### example
 

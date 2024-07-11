@@ -24,11 +24,8 @@ under the License.
 
 ## array_reverse_sort
 
-<version since="2.0">
-
 array_reverse_sort
 
-</version>
 
 ### description
 

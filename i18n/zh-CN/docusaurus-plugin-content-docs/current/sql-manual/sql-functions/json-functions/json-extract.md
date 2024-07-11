@@ -26,8 +26,6 @@ under the License.
 
 ## json_extract
 
-<version since="dev"></version>
-
 ### description
 #### Syntax
 
@@ -45,27 +43,27 @@ STRING json_extract_string(JSON j, VARCHAR json_path)
 
 
 
-json_extract是一系列函数，从JSON类型的数据中提取json_path指定的字段，根据要提取的字段类型不同提供不同的系列函数。
-- json_extract对VARCHAR类型的json string返回VARCHAR类型
-- jsonb_extract返回JSON类型
-- json_extract_isnull返回是否为json null的BOOLEAN类型
-- json_extract_bool返回BOOLEAN类型
-- json_extract_int返回INT类型
-- json_extract_bigint返回BIGINT类型
-- json_extract_largeint返回LARGEINT类型
-- json_extract_double返回DOUBLE类型
-- json_extract_STRING返回STRING类型
+json_extract 是一系列函数，从 JSON 类型的数据中提取 json_path 指定的字段，根据要提取的字段类型不同提供不同的系列函数。
+- json_extract 对 VARCHAR 类型的 json string 返回 VARCHAR 类型
+- jsonb_extract 返回 JSON 类型
+- json_extract_isnull 返回是否为 json null 的 BOOLEAN 类型
+- json_extract_bool 返回 BOOLEAN 类型
+- json_extract_int 返回 INT 类型
+- json_extract_bigint 返回 BIGINT 类型
+- json_extract_largeint 返回 LARGEINT 类型
+- json_extract_double 返回 DOUBLE 类型
+- json_extract_STRING 返回 STRING 类型
 
-json path的语法如下
-- '$' 代表json root
-- '.k1' 代表json object中key为'k1'的元素
+json path 的语法如下
+- '$' 代表 json root
+- '.k1' 代表 json object 中 key 为'k1'的元素
   - 如果 key 列值包含 ".", json_path 中需要用双引号，例如 SELECT json_extract('{"k1.a":"abc","k2":300}', '$."k1.a"'); 
-- '[i]' 代表json array中下标为i的元素
+- '[i]' 代表 json array 中下标为 i 的元素
   - 获取 json_array 的最后一个元素可以用'$[last]'，倒数第二个元素可以用'$[last-1]'，以此类推
 
 特殊情况处理如下：
-- 如果 json_path 指定的字段在JSON中不存在，返回NULL
-- 如果 json_path 指定的字段在JSON中的实际类型和json_extract_t指定的类型不一致，如果能无损转换成指定类型返回指定类型t，如果不能则返回NULL
+- 如果 json_path 指定的字段在 JSON 中不存在，返回 NULL
+- 如果 json_path 指定的字段在 JSON 中的实际类型和 json_extract_t 指定的类型不一致，如果能无损转换成指定类型返回指定类型 t，如果不能则返回 NULL
 
 ### example
 

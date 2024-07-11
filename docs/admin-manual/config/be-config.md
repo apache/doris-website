@@ -279,8 +279,6 @@ There are two ways to configure BE configuration items:
 
 #### `thrift_max_message_size`
 
-<version since="2.0.12"></version>
-
 Default: 100MB
 
 The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
@@ -1463,8 +1461,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Whether enable simdjson to parse json while stream load
 * Default value: true
-
-</version>
 
 #### `enable_query_memory_overcommit`
 

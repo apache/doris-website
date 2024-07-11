@@ -98,11 +98,7 @@ under the License.
 }
 ```
 
-<version since="1.2">
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。
-
-</version>
 
 ### Examples
 ```
@@ -176,8 +172,6 @@ GET /rest/v2/manager/query/query_info
 }
 ```
 
-<version since="1.2">
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 trace id 不存在或无权限，则返回 Bad Request：
 
 ```
@@ -188,8 +182,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-</version>
 
 ## 获取指定查询的 sql 和文本 profile
 
@@ -249,8 +241,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-</version>
     
 ### Examples
 
@@ -316,8 +306,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-<version since="1.2">
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
 
 ```
@@ -328,8 +316,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-</version>
     
 ### Examples
 
@@ -419,8 +405,6 @@ Response:
 }
 ```
 
-<version since="1.2">
-
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
 
 ```
@@ -431,8 +415,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
-
-</version>
 
 ## 正在执行的 query
 

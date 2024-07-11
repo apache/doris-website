@@ -68,11 +68,7 @@ illustrate:
             Status: If the job fails, display the failure message
             Timeout: Job timeout, in seconds
 
-<version since="dev">
-
         2. brief: only show key information of RESTORE tasks, columns RestoreObjs, Progress, TaskErrMsg will not show
-
-</version>
 
 ### Example
 

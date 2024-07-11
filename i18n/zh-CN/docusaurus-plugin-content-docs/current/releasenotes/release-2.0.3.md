@@ -26,7 +26,7 @@ under the License.
 
 亲爱的社区小伙伴们，Apache Doris 2.0.3  版本已于 2023 年 12 月 14 日正式发布，该版本对复杂数据类型、统计信息收集、倒排索引、数据湖分析、分布式副本管理等多个功能进行了优化，有 104 位贡献者为 Apache Doris 2.0.3 版本提交了超过 1000 个功能优化项以及问题修复，进一步提升了系统的稳定性和性能，欢迎大家下载体验。
 
-**GitHub下载**：https://github.com/apache/doris/releases
+**GitHub 下载**：https://github.com/apache/doris/releases
 
 **官网下载页**：https://doris.apache.org/download/
 
@@ -39,7 +39,7 @@ under the License.
 
 在每次导入事务提交后，Apache Doris 将记录导入事务更新的表信息并估算表统计信息的健康度，对于健康度低于配置参数的表会认为统计信息已过时并自动触发表的统计信息收集作业。同时为了降低统计信息作业的资源开销，Apache Doris 会自动采取采样的方式收集统计信息，用户也可以调整参数来采样更多行以获得更准确的数据分布信息。
 
-更多信息请参考：https://doris.apache.org/docs/query-acceleration/statistics/
+更多信息请参考：[Statistics](../query/nereids/statistics.md)
 
 
 ### 数据湖框架支持复杂数据类型
@@ -148,7 +148,7 @@ under the License.
 - 修复了空数组的倒排索引写入时 BE crash 的问题
   - https://github.com/apache/doris/pull/25984
 
-- 修复输出为空的情况下index compaction BE crash 的问题
+- 修复输出为空的情况下 index compaction BE crash 的问题
   - https://github.com/apache/doris/pull/25486
 
 - 修复新增列没有写入数据时，增加倒排索引 BE crash 的问题
@@ -247,7 +247,7 @@ under the License.
   - https://github.com/apache/doris/pull/26933
 
 
-### SQL规划和优化
+### SQL 规划和优化
 
 - 修复了部分场景下分区裁剪错误的问题
   - https://github.com/apache/doris/pull/27047
@@ -274,7 +274,7 @@ under the License.
 - 修正了部分情况下返回的结果 header 不正确的问题
   - https://github.com/apache/doris/pull/25372
   
-- 包含有 nullsafeEquals 表达式(<=>)作为连接条件时，可以正确对规划出 hash join
+- 包含有 nullsafeEquals 表达式 (<=>) 作为连接条件时，可以正确对规划出 hash join
   - https://github.com/apache/doris/pull/27127
   
 - 修复了 set operation 算子中无法正确列裁剪的问题
