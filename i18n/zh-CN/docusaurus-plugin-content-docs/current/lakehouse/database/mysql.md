@@ -143,7 +143,7 @@ Doris 会在 Catalog 中维护表的统计信息，以便在执行查询时能�
 
 1. 当执行类似于 `where dt = '2022-01-01'` 这样的查询时，Doris 能够将这些过滤条件下推到外部数据源，从而直接在数据源层面排除不符合条件的数据，减少了不必要的数据获取和传输。这大大提高了查询性能，同时也降低了对外部数据源的负载。
 
-2. 当变量 `enable_ext_func_pred_pushdown` 设置为 true，会将 where 之后的函数条件也下推到外部数据源，Doris 会自动识别部分 MySQL 不支持的函数，可通过 explain sql 查看。 
+2. 当变量 `enable_ext_func_pred_pushdown` 设置为true，会将 where 之后的函数条件也下推到外部数据源，Doris 会自动识别部分 MySQL 不支持的函数，可通过 explain sql 查看。 
 
    当前 Doris 默认不会下推到 MySQL 的函数如下
 
@@ -167,21 +167,21 @@ Doris 会在下发到 MySQL 的查询语句中，自动在字段名与表名上�
 
 1. 读写 MySQL 的 emoji 表情出现乱码
 
-    Doris 进行 MySQL Catalog 查询时，由于 MySQL 之中默认的 utf8 编码为 utf8mb3，无法表示需要 4 字节编码的 emoji 表情。这里需要将 MySQL 的编码修改为 utf8mb4，以支持 4 字节编码。
+    Doris 进行 MySQL Catalog 查询时，由于 MySQL 之中默认的 utf8 编码为 utf8mb3 ，无法表示需要 4 字节编码的 emoji 表情。这里需要将 MySQL 的编码修改为 utf8mb4 ，以支持 4 字节编码。
 
     可全局修改配置项
 
     ```
-    修改 mysql 目录下的 my.ini 文件（linux 系统为 etc 目录下的 my.cnf 文件）
+    修改mysql目录下的my.ini文件（linux系统为etc目录下的my.cnf文件）
     [client]
     default-character-set=utf8mb4
     
     [mysql]
-    设置 mysql 默认字符集
+    设置mysql默认字符集
     default-character-set=utf8mb4
     
     [mysqld]
-    设置 mysql 字符集服务器
+    设置mysql字符集服务器
     character-set-server=utf8mb4
     collation-server=utf8mb4_unicode_ci
     init_connect='SET NAMES utf8mb4
@@ -202,9 +202,9 @@ Doris 会在下发到 MySQL 的查询语句中，自动在字段名与表名上�
 
     这是因为 JDBC 中对于该非法的 DATE/DATETIME 默认处理为抛出异常，可以通过参数 `zeroDateTimeBehavior`控制该行为。
 
-    可选参数为：`exception`,`convertToNull`,`round`, 分别为：异常报错，转为 NULL 值，转为 "0001-01-01 00:00:00";
+    可选参数为: `exception`,`convertToNull`,`round`, 分别为：异常报错，转为NULL值，转为 "0001-01-01 00:00:00";
 
-    需要在创建 Catalog 的 `jdbc_url` 把 JDBC 连接串最后增加 `zeroDateTimeBehavior=convertToNull` ,如 `"jdbc_url" = "jdbc:mysql://127.0.0.1:3306/test?zeroDateTimeBehavior=convertToNull"`
+    需要在创建 Catalog 的 `jdbc_url` 把JDBC连接串最后增加 `zeroDateTimeBehavior=convertToNull` ,如 `"jdbc_url" = "jdbc:mysql://127.0.0.1:3306/test?zeroDateTimeBehavior=convertToNull"`
     这种情况下，JDBC 会把 0000-00-00 或者 0000-00-00 00:00:00 转换成 null，然后 Doris 会把当前 Catalog 的所有 Date/DateTime 类型的列按照可空类型处理，这样就可以正常读取了。
 
 3. 读取 MySQL Catalog 或其他 JDBC Catalog 时，出现加载类失败
@@ -256,19 +256,19 @@ Doris 会在下发到 MySQL 的查询语句中，自动在字段名与表名上�
 
 6. 查询 MySQL 的过程中，如果发现和在 MySQL 库的查询结果不一致的情况
 
-    首先要先排查下查询字段中字符串是否存在有大小写情况。比如，Table 中有一个字段 c_1 中有 "aaa" 和 "AAA" 两条数据，如果在初始化 MySQL 数据库时未指定区分字符串大小写，那么 MySQL 默认是不区分字符串大小写的，但是在 Doris 中是严格区分大小写的，所以会出现以下情况：
+    首先要先排查下查询字段中是字符串否存在有大小写情况。比如，Table 中有一个字段 c_1 中有 "aaa" 和 "AAA" 两条数据，如果在初始化 MySQL 数据库时未指定区分字符串大小写，那么 MySQL 默认是不区分字符串大小写的，但是在 Doris 中是严格区分大小写的，所以会出现以下情况：
 
     ```
-    MySQL 行为：
+    MySQL行为：
     select count(c_1) from table where c_1 = "aaa"; 未区分字符串大小，所以结果为：2
 
-    Doris 行为：
+    Doris行为：
     select count(c_1) from table where c_1 = "aaa"; 严格区分字符串大小，所以结果为：1
     ```
 
     如果出现上述现象，那么需要按照需求来调整，方式如下：
 
-    在 MySQL 中查询时添加“BINARY”关键字来强制区分大小写：`select count(c_1) from table where BINARY c_1 = "aaa";` 
+    在 MySQL 中查询时添加 “BINARY” 关键字来强制区分大小写：`select count(c_1) from table where BINARY c_1 = "aaa";` 
 
     或者在 MySQL 中建表时候指定：`CREATE TABLE table (c_1 VARCHAR(255) CHARACTER SET binary);` 
 
@@ -283,4 +283,4 @@ Doris 会在下发到 MySQL 的查询语句中，自动在字段名与表名上�
     default-character-set=utf8
     ```
 
-7. 查询 MySQL 的时候，出现长时间卡住没有返回结果，或着卡住很长时间并且 fe.warn.log 中出现出现大量 write lock 日志，可以尝试在 URL 添加 socketTimeout，例如：`jdbc:mysql://host:port/database?socketTimeout=30000`，防止 JDBC 客户端 在被 MySQL 关闭连接后无限等待。
+7. 查询 MySQL 的时候，出现长时间卡住没有返回结果，或着卡住很长时间并且 fe.warn.log 中出现出现大量 write lock 日志，可以尝试在 URL 添加 socketTimeout ，例如：`jdbc:mysql://host:port/database?socketTimeout=30000`，防止 JDBC 客户端 在被 MySQL 关闭连接后无限等待。
