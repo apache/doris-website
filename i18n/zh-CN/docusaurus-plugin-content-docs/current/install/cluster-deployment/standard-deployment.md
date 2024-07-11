@@ -31,8 +31,11 @@ under the License.
 5.  部署验证：登录并验证集群正确性
 
 :::tip
-上述步骤是存算一体的部署方式, 如果需要部署存算分离模式, 在完成上述 1 2 3 步之后,
-参考此[链接](#need reference) 继续完成Doris存算分离模式部署.
+如果需要部署存算分离模式, 在完成上述 1 2 3 步之后,
+参考以下链接继续完成存算分离模式部署
+1. [存算分离部署前准备](../compute-storage-decoupled/before-deployment.md)
+2. [存算分离基础模块部署](../compute-storage-decoupled/compilation-and-deployment.md)
+3. [存算分离创建集群](../compute-storage-decoupled/creating-cluster.md)
 :::
 
 ## 1 软硬件环境检查
