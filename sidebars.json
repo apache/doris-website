@@ -309,6 +309,19 @@
         },
         {
             "type": "category",
+            "label": "Compute-Storage Decoupled",
+            "items": [
+                "compute-storage-decoupled/overview",
+                "compute-storage-decoupled/before-deployment",
+                "compute-storage-decoupled/compilation-and-deployment",
+                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-compute-cluster",
+                "compute-storage-decoupled/file-cache",
+                "compute-storage-decoupled/meta-service-api"
+            ]
+        },
+        {
+            "type": "category",
             "label": "Managing Doris",
             "items": [
                 {
@@ -1511,19 +1524,6 @@
                         }
                     ]
                 }
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Compute-Storage Decoupled",
-            "items": [
-                "compute-storage-decoupled/overview",
-                "compute-storage-decoupled/before-deployment",
-                "compute-storage-decoupled/compilation-and-deployment",
-                "compute-storage-decoupled/creating-cluster",
-                "compute-storage-decoupled/managing-compute-cluster",
-                "compute-storage-decoupled/file-cache",
-                "compute-storage-decoupled/meta-service-api"
             ]
         },
         {
