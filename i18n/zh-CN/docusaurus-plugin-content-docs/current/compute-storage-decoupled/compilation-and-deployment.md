@@ -156,4 +156,3 @@ version:{doris_cloud-0.0.0-debug} code_version:{commit=4517faffbf79b48d34a94abb2
 
 meta-service started
 ```
-

@@ -26,11 +26,7 @@ under the License.
 
 ## COLLECT_SET
 
-<version since="1.2.0">
-
 COLLECT_SET
-
-</version>
 
 ### description
 #### Syntax
@@ -39,17 +35,10 @@ COLLECT_SET
 
 Creates an array containing distinct elements from `expr`,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements. It has an alias `group_uniq_array`.
 
-### notice
-
-```
-Only supported in vectorized engine
-```
 
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3 from collect_set_test order by k1;
 +------+------------+-------+
 | k1   | k2         | k3    |

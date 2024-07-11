@@ -24,11 +24,7 @@ under the License.
 
 ## array_remove
 
-<version since="1.2.0">
-
 array_remove
-
-</version>
 
 ### description
 
@@ -45,8 +41,6 @@ array_remove
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_remove(['test', NULL, 'value'], 'value');
 +-----------------------------------------------------+
 | array_remove(ARRAY('test', NULL, 'value'), 'value') |

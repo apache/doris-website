@@ -41,16 +41,11 @@ If the array contains `NULL` values, then `NULL` is set at the same position in 
 Array<T> array_cum_sum(Array<T>)
 ```
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```shell
 mysql> create table array_type_table(k1 INT, k2 Array<int>) duplicate key (k1) distributed by hash(k1) buckets 1 properties('replication_num' = '1');
 mysql> insert into array_type_table values (0, []), (1, [NULL]), (2, [1, 2, 3, 4]), (3, [1, NULL, 3, NULL, 5]);
-mysql> set enable_vectorized_engine = true;    # enable vectorized engine
 mysql> select k2, array_cum_sum(k2) from array_type_table;
 +-----------------------+-----------------------+
 | k2                    | array_cum_sum(`k2`)   |

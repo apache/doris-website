@@ -441,6 +441,22 @@ Set table properties. The following attributes are currently supported:
 
     `"compaction_policy" = ""`
 
+* `group_commit_interval_ms`
+
+    Configures the group commit batch interval for this table. The unit is milliseconds, with a default value of 10000ms (10 seconds).
+
+    The flushing timing of group commit depends on which value is reached first: `group_commit_interval_ms` or `group_commit_data_bytes`.
+
+    `"group_commit_interval_ms" = "10000"`
+
+* `group_commit_data_bytes`
+
+    Configures the group commit batch data size for this table. The unit is bytes, with a default value of 134217728 bytes (128MB).
+
+    The flushing timing of group commit depends on which value is reached first: `group_commit_interval_ms` or `group_commit_data_bytes`.
+
+    `"group_commit_data_bytes" = "134217728"`
+
 * `time_series_compaction_goal_size_mbytes`
 
     Time series compaction policy will utilize this parameter to adjust the size of input files for each compaction. The output file size will be approximately equal to the input file size.
@@ -461,6 +477,15 @@ Set table properties. The following attributes are currently supported:
 
     `"time_series_compaction_time_threshold_seconds" = "3600"`
 
+* `enable_mow_light_delete`
+
+    If modify delete predicate for the DELETE statement on the unique merge-on-write table. If enabled, it will improve the performance of the DELETE statement, but errors may occur in partial column updates after deletion. If disabled, it will reduce the performance of the DELETE statement to ensure correctness.
+
+    The default value for this property is false.
+
+    This propertiy can only be enabled on unique merge-on-write tables.
+
+    `"enable_mow_light_delete" = "true"`
 
 * Dynamic partition related
 

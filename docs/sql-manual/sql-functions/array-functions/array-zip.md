@@ -42,10 +42,6 @@ Combines all all arrays into a single array. The resulting array contains the co
 
 Array with elements from the source arrays grouped into tuples. Data types in the tuple are the same as types of the input arrays and in the same order as arrays are passed.
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```

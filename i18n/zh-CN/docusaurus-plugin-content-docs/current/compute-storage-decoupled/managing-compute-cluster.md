@@ -356,4 +356,3 @@ USE @`test_cluster`
 USE test_database@test_cluster
 USE `test_database`@`test_cluster`
 ```
-

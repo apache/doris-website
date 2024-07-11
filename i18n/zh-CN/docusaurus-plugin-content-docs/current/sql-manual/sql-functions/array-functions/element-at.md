@@ -26,11 +26,7 @@ under the License.
 
 ## element_at
 
-<version since="1.2.0">
-
 element_at
-
-</version>
 
 ### description
 
@@ -43,17 +39,11 @@ T arr[position]
 
 返回数组中位置为 `position` 的元素。如果该位置上元素不存在，返回NULL。`position` 从1开始，并且支持负数。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 `position` 为正数使用范例:
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> SELECT id,c_array,element_at(c_array, 5) FROM `array_test`;
 +------+-----------------+--------------------------+
 | id   | c_array         | element_at(`c_array`, 5) |
@@ -68,8 +58,6 @@ mysql> SELECT id,c_array,element_at(c_array, 5) FROM `array_test`;
 `position` 为负数使用范例:
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> SELECT id,c_array,c_array[-2] FROM `array_test`;
 +------+-----------------+----------------------------------+
 | id   | c_array         | %element_extract%(`c_array`, -2) |

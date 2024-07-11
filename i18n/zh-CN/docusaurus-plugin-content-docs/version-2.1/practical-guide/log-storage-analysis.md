@@ -116,7 +116,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
   - 平均写入吞吐 \* 写入吞吐峰值 / 均值比 = 峰值写入吞吐
   - 峰值写入吞吐 / 单核写入吞吐 = 峰值写入所需 CPU 核数
 
-2. **评估存储资源**：计算公式为「日增数据量 / 压缩率 \* 副本数 \* 数据存储周期 = 所需存储空间」。
+2. **评估存储资源**：计算公式为「日增数据量 / 压缩率 * 副本数 * 数据存储周期 = 所需存储空间」。
 
 3. **评估查询资源**：查询的资源消耗随查询量和复杂度而异，建议初始预留 50% 的 CPU 资源用于查询，再根据实际测试情况进行调整。
    
@@ -144,7 +144,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | 单机 CPU 核数                    | 32    | 根据实际需求填写，默认 32 核                                 |
 | 平均写入吞吐（MB/s）             | 1214  | 算法：日增数据量 / 86400 s                                   |
 | 峰值写入吞吐（MB/s）             | 2427  | 算法：平均写入吞吐 * 写入吞吐峰值 / 均值比                   |
-| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机 CPU 核数                           |
+| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机写入吞吐                          |
 | 查询预留 CPU 百分比              | 50%   | 根据实际需求填写，默认 50%                                   |
 | 预估 BE 服务器数                 | 15.2  | 算法：峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比） |
 | 预估 BE 服务器数取整             | 15    | 算法：MAX (副本数，预估 BE 服务器数上取整)                   |
@@ -187,7 +187,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | :--------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
 | 存储       | `storage_root_path = /path/to/dir1;/path/to/dir2;...;/path/to/dir12` | 配置热数据在磁盘目录上的存储路径。                           |
 | -          | `enable_file_cache = true`                                   | 开启文件缓存。                                               |
-| -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br/>`path`：缓存路径<br/>`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br/>`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
+| -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br />`path`：缓存路径<br />`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br />`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
 | 写入       | `write_buffer_size = 1073741824`                             | 增加写入缓冲区（buffer）的文件大小，减少小文件和随机 I/O 操作，提升性能。 |
 | -          | `max_tablet_version_num = 20000`                             | 配合建表的 time_series compaction 策略，允许更多版本暂时未合并。 |
 | -          | `enable_single_replica_load = true`                          | 开启单副本写入，减少 CPU 消耗。与 FE 配置相同。              |
@@ -196,7 +196,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | 关闭日志场景不需要的两个 Compaction 功能。                   |
 | 缓存       | `disable_storage_page_cache = true` `inverted_index_searcher_cache_limit = 30%` | 因为日志数据量较大，缓存（cache）作用有限，因此关闭数据缓存，调换为索引缓存（index cache）的方式。 |
 | -          | `inverted_index_cache_stale_sweep_time_sec = 3600` `index_cache_entry_stay_time_after_lookup_s = 3600` | 让索引缓存在内存中尽量保留 1 小时。                          |
-| -          | `enable_inverted_index_cache_on_cooldown = true`<br />`enable_write_index_searcher_cache = false` | 开启索引上传冷数据存储时自动缓存的功能。                     |
+| -          | `enable_inverted_index_cache_on_cooldown = true` <br />`enable_write_index_searcher_cache = false` | 开启索引上传冷数据存储时自动缓存的功能。                     |
 | -          | `tablet_schema_cache_recycle_interval = 3600` `segment_cache_capacity = 20000` | 减少其他缓存对内存的占用。                                   |
 | 线程       | `pipeline_executor_size = 24` `doris_scanner_thread_pool_thread_num = 48` | 32 核 CPU 的计算线程和 I/O 线程配置，根据核数等比扩缩。      |
 | -          | `scan_thread_nice_value = 5`                                 | 降低查询 I/O 线程的优先级，保证写入性能和时效性。            |
@@ -212,7 +212,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 **配置分区分桶参数**
 
 - 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](https://doris.apache.org/zh-CN/docs/table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](https://doris.apache.org/zh-CN/docs/table-design/data-partition#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](https://doris.apache.org/zh-CN/docs/dev/table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](https://doris.apache.org/zh-CN/docs/dev/table-design/data-partition?_highlight=%E8%87%AA%E5%8A%A8&_highlight=%E5%88%86&_highlight=%E6%A1%B6#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key，在查询最新 N 条日志时有数倍加速。
 - 分桶时，按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍。
@@ -293,11 +293,9 @@ PROPERTIES (
 );
 ```
 
-### 第 5 步：采集和查询日志
+### 第 5 步：采集日志
 
-完成建表后，可进行日志采集、查询和分析。
-
-**日志采集**
+完成建表后，可进行日志采集。
 
 Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你可与常用的日志采集器打通，包括 Logstash、Filebeat、Kafka 等，从而开展日志采集工作。本节介绍了如何使用 Stream HTTP APIs 对接日志采集器。
 
@@ -377,7 +375,7 @@ log_speed_interval => 10
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
 
-```YAML  
+  ```YAML  
   # input
   filebeat.inputs:
   - type: log
@@ -474,7 +472,7 @@ FROM KAFKA (
 "property.sasl.kerberos.keytab"="/path/to/xxx.keytab",  
 "property.sasl.kerberos.principal"="<xxx@yyy.com>"  
 );  
-\-- 查看routine的状态  
+-- 查看routine的状态  
 SHOW ROUTINE LOAD;
 ```
 
@@ -503,6 +501,8 @@ http://fe_host:fe_http_port/api/log_db/log_table/\_stream_load
 - 设置 HTTP header "read_json_by_line:true"，指定每行一个 JSON。
 - 设置 HTTP header "load_to_single_tablet:true"，指定一次导入写入一个分桶减少导入的小文件。
 - 建议写入客户端一个 Batch 的大小为 100MB ～ 1GB。如果你使用的是 Apache Doris 2.1 及更高版本，需通过服务端 Group Commit 功能，降低客户端 Batch 大小。
+
+### 第 6 步：查询和分析日志
 
 **日志查询**
 
@@ -542,7 +542,7 @@ ORDER BY ts DESC LIMIT 10;
 
 - 检索请求字段中有 `image` 和 `faq` 的最新 10 条数据。其中，`MATCH_PHRASE` 是 Apache Doris 全文检索的 SQL 语法，用于匹配参数中所有关键字，并且要求顺序一致。在下方例子中，`a image faq b` 能匹配，但是 `a faq image b` 不能匹配，因为 `image` 和 `faq` 的顺序与查询不一致。
 
-```SQL  
+```SQL
 SELECT \* FROM your_table_name WHERE message MATCH_PHRASE 'image faq'  
 ORDER BY ts DESC LIMIT 10;
 ```

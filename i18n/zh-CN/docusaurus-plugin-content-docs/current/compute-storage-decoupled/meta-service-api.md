@@ -234,7 +234,7 @@ Content-Type: text/plain
 
 ## 创建非存储后端的 Instance 
 
-:::tips
+:::tip
 
 历史遗留接口，新版本已弃用，私有化部署请勿使用。
 
@@ -1016,7 +1016,7 @@ Content-Type: text/plain
 | cluster.nodes                 | Cluster 中的节点数组    | 是       |                                                              |
 | cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id  | 是       | fe.conf、be.conf 中的 cloud_unique_id 配置项                 |
 | cluster.nodes.ip              | 节点的 IP               | 是       | 使用 FQDN 模式部署 FE/BE 时，该字段填写域名                  |
-| cluster.nodes.host            | 节点的域名              | 否       | 使用 FQDN 模式部署 FE/BE时，需设置该字段                     |
+| cluster.nodes.host            | 节点的域名              | 否       | 使用 FQDN 模式部署 FE/BE 时，需设置该字段                     |
 | cluster.nodes.heartbeat_port  | BE 的 Heartbeat Port    | BE 必填  | be.conf 中的 heartbeat_service_port 配置项                   |
 | cluster.nodes.edit_log_port   | FE 节点的 Edit Log Port | FE 必填  | 是 fe.conf 中的 edit_log_port 配置项                         |
 | cluster.nodes.node_type       | FE 节点的类型           | 是       | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
@@ -1348,7 +1348,7 @@ Content-Type: text/plain
 | cluster.nodes                 | Cluster 中的节点信息        | 是       | 数组                                                         |
 | cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id      | 是       | fe.conf、be.conf 中的 cloud_unique_id 配置项                 |
 | cluster.nodes.ip              | 节点的 IP                   | 是       | 使用 FQDN 模式部署 FE/BE 时，该字段填写域名                  |
-| cluster.nodes.host            | 节点的域名                  | 否       | 使用 FQDN 模式部署 FE/BE时，需设置该字段                     |
+| cluster.nodes.host            | 节点的域名                  | 否       | 使用 FQDN 模式部署 FE/BE 时，需设置该字段                     |
 | cluster.nodes.heartbeat_port  | BE 的 Heartbeat Port        | BE 必填  | be.conf 中的 heartbeat_service_port 配置项                   |
 | cluster.nodes.edit_log_port   | FE 节点的 Edit Log Port     | FE 必填  | 是 fe.conf 中的 edit_log_port 配置项                         |
 | cluster.nodes.node_type       | FE 节点的类型               | 是       | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
@@ -2116,4 +2116,3 @@ status {
   msg: ""
 }
 ```
-

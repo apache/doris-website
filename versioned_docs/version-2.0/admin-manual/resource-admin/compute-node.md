@@ -24,10 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-<version since="1.2.1">
-</version>
+# Compute Node
 
 ## Scenarios
   

@@ -24,11 +24,7 @@ under the License.
 
 ## array_compact
 
-<version since="1.2.0">
-
 array_compact
-
-</version>
 
 ### description
 

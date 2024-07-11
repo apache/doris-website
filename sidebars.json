@@ -220,7 +220,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Join Queries",
+                    "label": "Join Optimization",
                     "items": [
                         "query/join-optimization/doris-join-optimization",
                         "query/join-optimization/bucket-shuffle-join",
@@ -231,7 +231,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Duplicating Query Results",
+                    "label": "Distincting Counts",
                     "items": [
                         "query/duplicate/orthogonal-bitmap-manual",
                         "query/duplicate/using-hll"
@@ -252,8 +252,7 @@
                     "type": "category",
                     "label": "User Defined Functions",
                     "items": [
-                        "query/udf/java-user-defined-function",
-                        "query/udf/remote-user-defined-function"
+                        "query/udf/java-user-defined-function"
                     ]
                 }
             ]
@@ -306,6 +305,19 @@
                 "lakehouse/external-statistics",
                 "lakehouse/cloud-auth",
                 "lakehouse/sql-dialect"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Compute-Storage Decoupled",
+            "items": [
+                "compute-storage-decoupled/overview",
+                "compute-storage-decoupled/before-deployment",
+                "compute-storage-decoupled/compilation-and-deployment",
+                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-compute-cluster",
+                "compute-storage-decoupled/file-cache",
+                "compute-storage-decoupled/meta-service-api"
             ]
         },
         {
@@ -545,7 +557,8 @@
                         "ecosystem/bi/finebi",
                         "ecosystem/bi/powerbi",
                         "ecosystem/bi/tableau",
-                        "ecosystem/bi/quicksight"
+                        "ecosystem/bi/quicksight",
+                        "ecosystem/bi/quickbi"
                     ]
                 }
             ]
@@ -1117,6 +1130,7 @@
                             "label": "IP Functions",
                             "items": [
                                 "sql-manual/sql-functions/ip-functions/ipv4-num-to-string",
+                                "sql-manual/sql-functions/ip-functions/ipv4-to-ipv6",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num-or-default",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num-or-null",
@@ -1129,6 +1143,7 @@
                                 "sql-manual/sql-functions/ip-functions/ipv4-cidr-to-range",
                                 "sql-manual/sql-functions/ip-functions/ipv6-cidr-to-range",
                                 "sql-manual/sql-functions/ip-functions/is-ip-address-in-range",
+                                "sql-manual/sql-functions/ip-functions/cut-ipv6",
                                 "sql-manual/sql-functions/ip-functions/is-ipv4-string",
                                 "sql-manual/sql-functions/ip-functions/is-ipv6-string",
                                 "sql-manual/sql-functions/ip-functions/to-ipv4",
@@ -1269,6 +1284,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-DATABASE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-INDEX",
@@ -1281,6 +1297,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB"
                                     ]
@@ -1298,6 +1315,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COMMENT",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-AND-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/CANCEL-ALTER-TABLE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-VIEW",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-STORAGE-POLICY",
@@ -1506,19 +1524,6 @@
                         }
                     ]
                 }
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Compute-Storage Decoupled",
-            "items": [
-                "compute-storage-decoupled/overview",
-                "compute-storage-decoupled/before-deployment",
-                "compute-storage-decoupled/compilation-and-deployment",
-                "compute-storage-decoupled/creating-cluster",
-                "compute-storage-decoupled/managing-compute-cluster",
-                "compute-storage-decoupled/file-cache",
-                "compute-storage-decoupled/meta-service-api"
             ]
         },
         {

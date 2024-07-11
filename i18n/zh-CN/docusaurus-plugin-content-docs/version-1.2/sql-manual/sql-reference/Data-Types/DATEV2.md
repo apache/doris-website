@@ -28,11 +28,7 @@ under the License.
 
 ### name
 
-<version since="1.2.0">
-
 DATEV2
-
-</version>
 
 ### description
     DATEV2类型

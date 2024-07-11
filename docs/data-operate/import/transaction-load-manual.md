@@ -371,6 +371,10 @@ mysql> SELECT * FROM dt3;
 
 * Mixing the two transaction load of `INSERT INTO SELECT`, `UPDATE`, `DELETE` and `INSERT INTO VALUES` is not allowed; otherwise, you will encounter the error `Transaction insert can not insert into values and insert into select at the same time`.
 
+* [Delete Command](../delete/delete-manual.md) supports delete by specifying a filter predicate or using clause, to guarantee the isolation, currently only support that, the delete operations must before the insert operations for one table in one transaction, otherwise, you will encounter the error `Can not delete because there is a insert operation for the same table`.  
+
 * If the time-consuming from `BEGIN` statement exceeds the timeout configured in Doris, the transaction will be rolled back. Currently, the timeout uses the maximum value of session variables `insert_timeout` and `query_timeout`.
 
 * When using JDBC to connect to Doris for transaction operations, please add `useLocalSessionState=true` in the JDBC URL; otherwise, you may encounter the error `This is in a transaction, only insert, update, delete, commit, rollback is acceptable`.
+
+* In cloud mode, transaction load does not support `merge on write` unique tables, otherwise, you will encounter the error `Transaction load is not supported for merge on write unique keys table in cloud mode`.  

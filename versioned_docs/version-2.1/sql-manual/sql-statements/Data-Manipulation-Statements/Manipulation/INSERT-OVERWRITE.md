@@ -51,7 +51,7 @@ INSERT OVERWRITE table table_name
 > partitions: the table partitions that needs to be overwritten. The following two formats are supported
 >
 >> 1. partition names. must be one of the existing partitions in `table_name` separated by a comma
->> 2. asterisk(*)。Enable [auto-detect-partition](#overwrite-auto-detect-partition). The write operation will automatically detect the partitions involved in the data and overwrite those partitions.
+>> 2. asterisk(*)。Enable [auto-detect-partition](#overwrite-auto-detect-partition). The write operation will automatically detect the partitions involved in the data and overwrite those partitions. This format is supported since Apache Doris 2.1.3 version.
 >
 > label: specify a label for the Insert task
 >

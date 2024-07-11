@@ -26,11 +26,7 @@ under the License.
 
 ## IN
 
-<version since="1.2.0">
-
 IN
-
-</version>
 
 ### description
 #### Syntax
@@ -44,10 +40,6 @@ IN
 subquery 只能返回一列，并且子查询返回的列类型必须 expr 类型兼容。
 
 如果 subquery 返回bitmap数据类型列，expr必须是整型。
-
-#### notice
-
-- 当前仅向量化引擎中支持 in 子查询返回bitmap列。
 
 ### example
 

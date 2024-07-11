@@ -326,11 +326,9 @@ PROPERTIES (
 );
 ```
 
-### Step 5: Collect, query, and analyze logs
+### Step 5: Collect logs
 
-After completing table creation, you can proceed with log collection, querying, and analysis.
-
-**Collect logs**
+After completing table creation, you can proceed with log collection.
 
 Apache Doris provides open and versatile Stream HTTP APIs, through which you can connect with popular log collectors such as Logstash, Filebeat, Kafka, and others to carry out log collection work. This section explains how to integrate these log collectors using the Stream HTTP APIs.
 
@@ -529,6 +527,8 @@ When using custom programs, pay attention to the following key points:
 
 - It is recommended to write batches whose sizes are between 100MB to 1GB on the client side. For Apache Doris version 2.1 and higher, you need to reduce batch sizes on the client side through the Group Commit function.
 
+### Step 6: Query and analyze logs
+
 **Query logs**
 
 Apache Doris supports standard SQL, so you can connect to the cluster through MySQL client or JDBC to execute SQL for log queries.
@@ -574,7 +574,7 @@ ORDER BY ts DESC LIMIT 10;
 
 **Analyze logs visually**
 
-VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called Velo Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
+VeloDB Enterprise Core, built on Apache Doris, provides a data development platform called VeloDB Enterprise WebUI ("WebUI"), featuring a Kibana Discover-like log retrieval and analysis interface for intuitive and easy exploratory log analysis interaction as shown in the image below:
 
 ![WebUI](/images/WebUI-EN.jpeg)
 
@@ -590,4 +590,4 @@ On this interface, WebUI supports the following operations:
 
 - Display of top field values in search results for finding anomalies and further drilling down for analysis
 
-You can [click to download Velo Enterprise Core](https://www.velodb.io/download/enterprise) and [install it](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-distribution-doris-core-deployment-guide) to use WebUI. For more information about the main functions and how to use WebUI, see [WebUI](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-webui-guide).
+You can [click to download VeloDB Enterprise Core](https://www.velodb.io/download/enterprise) and [install it](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-distribution-doris-core-deployment-guide) to use WebUI. For more information about the main functions and how to use WebUI, see [WebUI](https://docs.velodb.io/enterprise/enterprise-core-guide/velodb-webui-guide).

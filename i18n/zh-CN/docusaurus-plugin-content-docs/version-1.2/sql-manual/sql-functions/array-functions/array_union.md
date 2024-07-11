@@ -26,11 +26,7 @@ under the License.
 
 ## array_union
 
-<version since="1.2.0">
-
 array_union
-
-</version>
 
 ### description
 
@@ -47,8 +43,6 @@ array_union
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3,array_union(k2,k3) from array_type_table;
 +------+-----------------+--------------+-------------------------+
 | k1   | k2              | k3           | array_union(`k2`, `k3`) |

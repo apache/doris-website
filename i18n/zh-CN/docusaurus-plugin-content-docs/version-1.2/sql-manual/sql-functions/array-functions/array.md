@@ -24,11 +24,7 @@ under the License.
 
 ## array()
 
-<version since="1.2.0">
-
 array()
-
-</version>
 
 ### description
 
@@ -44,8 +40,6 @@ array()
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array("1", 2, 1.1);
 +----------------------+
 | array('1', 2, '1.1') |

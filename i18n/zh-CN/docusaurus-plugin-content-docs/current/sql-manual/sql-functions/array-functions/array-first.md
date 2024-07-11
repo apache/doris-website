@@ -43,10 +43,6 @@ T array_first(lambda, ARRAY<T>)
 
 使用一个lambda表达式和一个ARRAY作为输入参数，lambda表达式为布尔型，用于对ARRAY中的每个元素进行判断返回值。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```

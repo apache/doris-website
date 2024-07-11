@@ -52,11 +52,12 @@ Configure config/connect-standalone.properties
 bootstrap.servers=127.0.0.1:9092
 
 # Modify to the created plugins directory
+# Note: Please fill in the direct path to Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 ```
 
 Configure doris-connector-sink.properties
-<br />
+
 Create doris-connector-sink.properties in the config directory and configure the following content:
 
 ```properties
@@ -99,6 +100,7 @@ bootstrap.servers=127.0.0.1:9092
 group.id=connect-cluster
 
 # Modify to the created plugins directory
+# Note: Please fill in the direct path to Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 ```
 
@@ -328,3 +330,21 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
   } 
 }'
 ```
+
+## FAQ
+**1. The following error occurs when reading Json type data:**
+```
+Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
+	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
+	at org.apache.kafka.connect.storage.Converter.toConnectData(Converter.java:91)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.lambda$convertAndTransformRecord$4(WorkerSinkTask.java:536)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndRetry(RetryWithToleranceOperator.java:180)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndHandleError(RetryWithToleranceOperator.java:214)
+```
+**reason:**
+This is because using the `org.apache.kafka.connect.json.JsonConverter` converter requires matching the "schema" and "payload" fields.
+
+**Two solutions, choose one:**
+  1. Replace `org.apache.kafka.connect.json.JsonConverter` with `org.apache.kafka.connect.storage.StringConverter`
+  2. If the startup mode is **Standalone** mode, change `value.converter.schemas.enable` or `key.converter.schemas.enable` in config/connect-standalone.properties to false;
+   If the startup mode is **Distributed** mode, change `value.converter.schemas.enable` or `key.converter.schemas.enable` in config/connect-distributed.properties to false

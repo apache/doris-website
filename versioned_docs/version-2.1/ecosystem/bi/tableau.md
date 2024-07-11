@@ -27,7 +27,7 @@ under the License.
 Tableau is a lightweight data visualization analysis platform that combines data operations with beautiful charts perfectly. It seamlessly combines data computation with visually appealing charts, requiring no coding from the user. By simply dragging and dropping, users can quickly gain insights into the data. They can explore different views and even easily combine multiple data sources to complete tasks such as data visualization, exploration, and analysis.
 ## Precondition
 Tableau Desktop via the following link to download: https://www.tableau.com/products/desktop/download
-## Add data source
+## Driver installation
 1. Install iODBC
    1. Close the Tableau Desktop
    2. Install iODBC Driver Manager. Obtain the latest version (mxkozzz.dmg) from iODBC.org

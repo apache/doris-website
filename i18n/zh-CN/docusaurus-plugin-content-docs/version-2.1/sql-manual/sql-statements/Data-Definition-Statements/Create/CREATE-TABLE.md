@@ -420,6 +420,22 @@ UNIQUE KEY(k1, k2)
 
     `"compaction_policy" = ""`
 
+* `group_commit_interval_ms`
+
+    配置这个表的 Group Commit 攒批间隔。单位为 ms，默认值为 10000ms，即 10s。
+
+    Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes`哪个先到设置的值。
+
+    `"group_commit_interval_ms" = "10000"`
+
+* `group_commit_data_bytes`
+
+    配置这个表的 Group Commit 攒批数据大小。单位为 bytes，默认值为 134217728 bytes，即 128MB。
+
+    Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes` 哪个先到设置的值。
+
+    `"group_commit_data_bytes" = "134217728"`
+
 * `time_series_compaction_goal_size_mbytes`
 
     Compaction 的合并策略为 time_series 时，将使用此参数来调整每次 Compaction 输入的文件的大小，输出的文件大小和输入相当
@@ -447,6 +463,16 @@ UNIQUE KEY(k1, k2)
     能达到段数量减少的效果。
 
     `"time_series_compaction_level_threshold" = "2"`
+
+* `enable_mow_light_delete`
+
+    是否在 Unique 表 Mow 上开启 Delete 语句写 Delete predicate。若开启，会提升 Delete 语句的性能，但 Delete 后进行部分列更新可能会出现部分数据错误的情况。若关闭，会降低 Delete 语句的性能来保证正确性。
+
+    此属性的默认值为 `false`。
+
+    此属性只能在 Unique Merge-on-Write表上开启。
+
+    `"enable_mow_light_delete" = "true"`
 
 * 动态分区相关
 
