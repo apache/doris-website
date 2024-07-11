@@ -24,11 +24,7 @@ under the License.
 
 ## array_pushfront
 
-<version since="2.0">
-
 array_pushfront
-
-</version>
 
 ### description
 

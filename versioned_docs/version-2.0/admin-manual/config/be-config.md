@@ -279,7 +279,11 @@ There are two ways to configure BE configuration items:
 
 #### `thrift_max_message_size`
 
-<version since="2.0.12"></version>
+:::info Note
+
+This field is supported since version 2.0.12.
+
+:::
 
 Default: 100MB
 

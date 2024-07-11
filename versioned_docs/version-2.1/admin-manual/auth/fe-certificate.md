@@ -26,8 +26,6 @@ under the License.
 
 # Certificate Configuration
 
-<version since="2.0">
-
 Certificate Configuration
 
 </version>

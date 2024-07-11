@@ -108,11 +108,13 @@ select k1,bitmap_union(uuid) from hive_bitmap_table group by k1
 
 ## Hive Bitmap import into Doris
 
-<version since="2.0.2">
+### Method 1: Catalog (recommended)
 
-### Method 1：Catalog (recommended)
+:::info Note
 
-</version>
+This feature is supported since version 2.0.2.
+
+:::
 
 When create a Hive table in the format specified as TEXT, for Binary type, Hive will be saved as a bash64 encoded string. Therefore, the binary data can be directly saved as Bitmap through bitmap_from_base64 function by using  Doris's Hive Catalog.
 
