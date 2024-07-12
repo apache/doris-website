@@ -44,9 +44,9 @@ PUT /MetaService/http/v1/create_instance?token=<token> HTTP/1.1
 
 | 字段            | 描述                                                         | 备注                                                       |
 | --------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| instance_id     | 存算分离架构下数仓的 ID，一般使用 UUID 字符串                | 要求历史上唯一                                             |
-| cloud_unique_id | 存算分离架构下 be.conf fe.conf 的一个配置，创建计算集群请求时也需提供，格式为 `1:<instance_id>:<string> ` | 示例 "1:regression_instance0:regression-cloud-unique-id-1" |
-| cluster_name    | 存算分离架构下描述一个计算集群时需要传入的字段，格式要求为一个 identifier, 需要匹配模式` [a-zA-Z][0-9a-zA-Z_]+` | 实例 write_cluster 或者 read_cluster0                      |
+| instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`                |  例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8 |
+| cloud_unique_id | 存算分离架构下 be.conf fe.conf 的一个配置，创建计算集群请求时也需提供，格式为 `1:<instance_id>:<string>`, 其中string要求匹配模式`[0-9a-zA-Z_-]+` 要求每个节点值不相同 | 示例 "1:regression_instance0:regression-cloud-unique-id-1" |
+| cluster_name    | 存算分离架构下描述一个计算集群时需要传入的字段，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 实例 write_cluster 或者 read_cluster0                      |
 
 ## 创建存储后端的 Instance
 
@@ -93,9 +93,9 @@ Content-Type: text/plain
 
 | 参数名                                   | 描述                          | 是否必须 | 备注                                             |
 | ---------------------------------------- | ----------------------------- | -------- | ------------------------------------------------ |
-| instance_id                              | instance_id                   | 是       | 全局唯一（包括历史上），一般使用一个 UUID 字符串 |
-| name                                     | Instance 别名                 | 否       |                                                  |
-| user_id                                  | 用户 ID                       | 是       |                                                  |
+| instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`            |是    |  例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8 |
+| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | vault                                    | Storage Vault 的信息          | 是       |                                                  |
 | vault.hdfs_info                          | 描述 HDFS 存储后端的信息      | 是       |                                                  |
 | vault.build_conf                         | 描述 HDFS 存储后端主要信息    | 是       |                                                  |
@@ -104,7 +104,7 @@ Content-Type: text/plain
 | vault.build_conf.hdfs_kerberos_keytab    | Kerberos Keytab 的路径        | 否       | 使用 Kerberos 鉴权时需要提供                     |
 | vault.build_conf.hdfs_kerberos_principal | Kerberos Principal 的信息     | 否       | 使用 Kerberos 鉴权时需要提供                     |
 | vault.build_conf.hdfs_confs              | HDFS 的其他描述属性           | 否       | 按需填写                                         |
-| vault.prefix                             | 数据存放的前缀                | 是       |                                                  |
+| vault.prefix                             | 数据存放的路径前缀，用于数据隔离 | 是    | 一般按照业务名称 例：big_data          |
 
 - 创建基于 HDFS 为存储后端的请求示例
 
@@ -168,14 +168,14 @@ Content-Type: text/plain
 
 | 参数名                     | 描述                                                         | 是否必须 | 备注                                                         |
 | -------------------------- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
-| instance_id                | instance_id                                                  | 是       | 全局唯一（包括历史上），一般使用一个 UUID 字符串             |
-| name                       | Instance 名称                                                | 否       |                                                              |
-| user_id                    | 创建 Instance 的用户 ID                                      | 是       |                                                              |
+| instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`       |是           |  例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8 |
+| name       | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| user_id    | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | vault.obj_info             | S3 链接配置信息                                              | 是       |                                                              |
 | vault.obj_info.ak          | S3 的 Access Key                                             | 是       |                                                              |
 | vault.obj_info.sk          | S3 的 Secret Key                                             | 是       |                                                              |
 | vault.obj_info.bucket      | S3 的 Bucket 名                                              | 是       |                                                              |
-| vault.obj_info.prefix      | S3 上数据存放位置前缀                                        | 否       | 若不填写该参数，则默认存放位置在 Bucket 的根目录             |
+| vault.obj_info.prefix      | S3 上数据存放位置前缀                                        | 否       | 若不填写该参数，则默认存放位置在 Bucket 的根目录，例：big_data |
 | obj_info.endpoint          | S3 的 Endpoint 信息                                          | 是       | 域名或 IP:端口，不包含 `http://` 等 scheme 前缀              |
 | obj_info.region            | S3 的 Region 信息                                            | 是       | 若使用 MinIO，该参数可填任意值                               |
 | obj_info.external_endpoint | S3 的 External Endpoint 信息                                 | 是       | 一般与 Endpoint 一致即可，兼容 OSS，注意 OSS 有 External 和 Internal 之分 |
@@ -280,9 +280,9 @@ Content-Type: text/plain
 
 | 参数名                     | 描述                                | 是否必须 | 备注                                             |
 | -------------------------- | ----------------------------------- | -------- | ------------------------------------------------ |
-| instance_id                | instance_id                         | 是       | 全局唯一（包括历史上），一般使用一个 UUID 字符串 |
-| name                       | Instance 别名                       | 否       |                                                  |
-| user_id                    | 用户 ID                             | 是       |                                                  |
+| instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`                |是  |  例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8 |
+| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | obj_info                   | S3 链接配置信息                     | 是       |                                                  |
 | obj_info.ak                | S3 的 Access Key                    | 是       |                                                  |
 | obj_info.sk                | S3 的 Secret Key                    | 是       |                                                  |
@@ -374,7 +374,7 @@ Content-Type: text/plain
 
 | 参数名      | 描述        | 是否必须 | 备注                   |
 | ----------- | ----------- | -------- | ---------------------- |
-| instance_id | instance_id | 是       | 全局唯一（包括历史上） |
+| instance_id | instance_id | 是       | 全局唯一 |
 
 - 请求示例
 
@@ -432,7 +432,7 @@ Content-Type: text/plain
 
 | 参数名      | 描述        | 是否必须 | 备注                   |
 | ----------- | ----------- | -------- | ---------------------- |
-| instance_id | instance_id | 是       | 全局唯一（包括历史上） |
+| instance_id | instance_id | 是       | 全局唯一 |
 
 - 请求示例
 
@@ -1008,7 +1008,7 @@ Content-Type: text/plain
 
 | 参数名                        | 描述                    | 是否必须 | 备注                                                         |
 | ----------------------------- | ----------------------- | -------- | ------------------------------------------------------------ |
-| instance_id                   | instance_id             | 是       | 全局唯一（包括历史上）                                       |
+| instance_id                   | instance_id             | 是       | 全局唯一                                       |
 | cluster                       | Cluster 对象            | 是       |                                                              |
 | cluster.cluster_name          | Cluster 名称            | 是       | 其中 FE 的 Cluster 名称特殊，默认为 RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_name 修改 |
 | cluster.cluster_id            | Cluster 的 ID           | 是       | 其中 FE 的 Cluster ID 特殊，默认为 RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改 |
@@ -1019,7 +1019,7 @@ Content-Type: text/plain
 | cluster.nodes.host            | 节点的域名              | 否       | 使用 FQDN 模式部署 FE/BE 时，需设置该字段                     |
 | cluster.nodes.heartbeat_port  | BE 的 Heartbeat Port    | BE 必填  | be.conf 中的 heartbeat_service_port 配置项                   |
 | cluster.nodes.edit_log_port   | FE 节点的 Edit Log Port | FE 必填  | 是 fe.conf 中的 edit_log_port 配置项                         |
-| cluster.nodes.node_type       | FE 节点的类型           | 是       | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
+| cluster.nodes.node_type       | FE 节点的类型           | FE 必填  | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
 
 - 请求示例
 
@@ -1348,10 +1348,10 @@ Content-Type: text/plain
 | cluster.nodes                 | Cluster 中的节点信息        | 是       | 数组                                                         |
 | cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id      | 是       | fe.conf、be.conf 中的 cloud_unique_id 配置项                 |
 | cluster.nodes.ip              | 节点的 IP                   | 是       | 使用 FQDN 模式部署 FE/BE 时，该字段填写域名                  |
-| cluster.nodes.host            | 节点的域名                  | 否       | 使用 FQDN 模式部署 FE/BE 时，需设置该字段                     |
+| cluster.nodes.host            | 节点的域名                  | 否       | 使用 FQDN 模式部署 FE/BE 时，需设置该字段                    |
 | cluster.nodes.heartbeat_port  | BE 的 Heartbeat Port        | BE 必填  | be.conf 中的 heartbeat_service_port 配置项                   |
 | cluster.nodes.edit_log_port   | FE 节点的 Edit Log Port     | FE 必填  | 是 fe.conf 中的 edit_log_port 配置项                         |
-| cluster.nodes.node_type       | FE 节点的类型               | 是       | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
+| cluster.nodes.node_type       | FE 节点的类型               | FE 必填  | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
 
 - 请求示例
 
@@ -1686,7 +1686,7 @@ Content-Type: text/plain
 
 | 参数名      | 描述        | 是否必须 | 备注                   |
 | ----------- | ----------- | -------- | ---------------------- |
-| instance_id | instance_id | 是       | 全局唯一（包括历史上） |
+| instance_id | instance_id | 是       | 全局唯一 |
 
 - 请求示例
 

@@ -133,7 +133,8 @@ $ USE_AVX2=0 sh build.sh
 $ BUILD_TYPE=Debug sh build.sh
 ```
 
-该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE）。编译产出在 `output/` 目录下。
+该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE、MS）。编译产出在 `output/` 目录下。
+MS模块是doris存算分离模式依赖的模块, 详细说明请参考[此连接](../compute-storage-decoupled/compilation-and-deployment.md)
 
 ## 预编译三方库
 
@@ -146,3 +147,4 @@ https://github.com/apache/doris-thirdparty/releases
 这里我们提供了 Linux 和 MacOS 的预编译三方库。如果和你的编译运行环境一致，可以直接下载使用。
 
 下载好后，解压会得到一个 `installed/` 目录，将这个目录拷贝到 `thirdparty/` 目录下，之后运行 `build.sh` 即可。
+

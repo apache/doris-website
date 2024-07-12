@@ -25,14 +25,18 @@ under the License.
 手动部署 Doris 集群，通常要进行四步规划：
 
 1.  软硬件环境检查：检查用户的硬件资源情况及操作系统兼容性
-
 2.  操作系统检查：检查操作系统参数及配置
-
 3.  集群规划：规划集群的 FE、BE 节点，预估使用资源情况
-
 4.  集群部署：根据部署规划进行集群部署操作
-
 5.  部署验证：登录并验证集群正确性
+
+:::tip
+如果需要部署存算分离模式, 在完成上述 1 2 3 步之后,
+参考以下链接继续完成存算分离模式部署
+1. [存算分离部署前准备](../compute-storage-decoupled/before-deployment.md)
+2. [存算分离基础模块部署](../compute-storage-decoupled/compilation-and-deployment.md)
+3. [存算分离创建集群](../compute-storage-decoupled/creating-cluster.md)
+:::
 
 ## 1 软硬件环境检查
 

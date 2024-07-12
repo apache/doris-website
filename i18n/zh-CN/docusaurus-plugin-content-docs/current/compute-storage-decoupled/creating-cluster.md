@@ -26,14 +26,17 @@ under the License.
 
 本文档中，创建存算分离集群指的是在存算分离模式下，创建由多个 Doris 节点组成的分布式系统，包含 FE 和 BE 节点。随后，在存算分离模式的 Doris 集群下可创建计算集群，即创建由一个或多个 BE 节点组成的计算资源组。
 
-存算分离架构下，整个数仓的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
+一套 fdb+meta-service+recycler 基础环境可以支撑多个存算分离集群，一个存算分离集群又叫一个数仓实例（instance）。
+
+存算分离架构下，数仓实例的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
 
 创建存算分离集群主要涉及与 Meta Service 的交互，Meta Service 提供了标准的 [HTTP 接口](./meta-service-api.md)进行资源管理操作。
 
-创建存算分离集群的本质是描述该存算分离集群中的机器组成。创建基础的存算分离集群主要包括以下两步：
+Doris 存算分离模式采用服务发现的机制进行工作，创建存算分离集群可以归纳为以下步骤：
 
-1. 注册一个仓库（FE）
-2. 注册一个或者多个计算集群（BE）
+1. 注册声明数仓实例以及它的存储后端。
+2. 注册声明数仓实例中的 FE BE 节点组成，分别有哪些机器，如何组成集群。
+3. 配置并启动所有的 FE BE 节点。
 
 :::info 备注
 
@@ -42,24 +45,42 @@ under the License.
 
 :::
 
-## 存算分离集群及其存储后端
+## 创建存算分离集群及其存储后端
 
-这一步骤的主要目的是在 Meta Service 注册一个存算分离模式的 Doris 数仓（一套 Meta Service 可支持多个不同的 Doris 数仓（即多套 FE-BE），包括描述该仓库所需的存储后端（Storage Vault，即[概览](./overview.md)中所提及的共享存储层），可以选择 HDFS 或者 S3（包括支持 S3 协议的对象存储，如 AWS S3、GCS、Azure Blob、阿里云 OSS 以及 MinIO、Ceph 等）。存储后端是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个存储后端，可将不同表存储在不同存储后端上。
+这一步骤的主要目的是在 Meta Service 注册一个存算分离模式的 Doris 数仓实例（一套 Meta Service 可支持多个不同的 Doris 数仓实例（即多套 FE-BE），
+包括描述该数仓实例所需的存储后端（Storage Vault，即[概览](./overview.md)中所提及的共享存储层），
+可以选择 HDFS 或者 S3（包括支持 S3 协议的对象存储，如 AWS S3、GCS、Azure Blob、阿里云 OSS 以及 MinIO、Ceph 等）。
+存储后端是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个存储后端，可将不同表存储在不同存储后端上。
 
 此步骤需要调用 Meta Service 的 `create_instance` 接口，主要参数包括：
 
-- `instance_id`：存算分离模式 Doris 数仓的 ID，要求该 ID 为历史唯一，一般使用 UUID 字符串，例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8。本文档中为了简化使用普通字符串。
-- `name`：数仓名称，根据实际需求填写。
-- `user_id`：用户 ID，是一个字符串，按需填写。
-- `vault`：HDFS 或者 S3 的存储后端信息，如 HDFS 属性、S3 Bucket 信息等。
+- `instance_id`：存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`，例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8。本文档中为了简化使用普通字符串。
+- `name`：数仓实例名称，根据实际需求填写。要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`，一般填业务名字
+- `user_id`：创建数仓实例的用户 ID，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`，用于标识创建人，按需填写。
+- `vault`：HDFS 或者 S3 的存储后端信息，如 HDFS 属性、S3 Bucket 信息等。不同的后端的详细参数会不一样。
 
-更多信息请参考 [Meta Service API 参考文档](./meta-service-api.md)。
+更多信息请参考 [Meta Service API 参考文档](./meta-service-api.md) “创建存储后端的 Instance” 章节。
+
+**通过多次调用 meta-service `create_instance` 接口可以创建多个不同的存算分离集群（数仓实例/instance）。**
 
 ### 创建基于 HDFS 的存算分离模式 Doris 集群
 
 创建基于 HDFS 的存算分离模式 Doris 集群，需要正确描述所有信息，并保证所有的节点（包括 FE / BE 节点、Meta Service 和 Recycler) 均有权限访问所指定的 HDFS，包括提前完成机器的 Kerberos 授权配置和连通性检查（可在对应的每个节点上使用 Hadoop Client 进行测试）等。
 
-Prefix 字段根据实际需求填写，一般以数仓所服务的业务命名。
+| 参数名                                   | 描述                          | 是否必须 | 备注                                             |
+| ---------------------------------------- | ----------------------------- | -------- | ------------------------------------------------ |
+| instance_id                              | instance_id                   | 是       | 全局唯一（包括历史上），一般使用一个 UUID 字符串 |
+| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
+| vault                                    | Storage Vault 的信息          | 是       |                                                  |
+| vault.hdfs_info                          | 描述 HDFS 存储后端的信息      | 是       |                                                  |
+| vault.build_conf                         | 描述 HDFS 存储后端主要信息    | 是       |                                                  |
+| vault.build_conf.fs_name                 | HDFS 的名称，一般为连接的地址 | 是       |                                                  |
+| vault.build_conf.user                    | 连接该 HDFS 使用的 User       | 是       |                                                  |
+| vault.build_conf.hdfs_kerberos_keytab    | Kerberos Keytab 的路径        | 否       | 使用 Kerberos 鉴权时需要提供                     |
+| vault.build_conf.hdfs_kerberos_principal | Kerberos Principal 的信息     | 否       | 使用 Kerberos 鉴权时需要提供                     |
+| vault.build_conf.hdfs_confs              | HDFS 的其他描述属性           | 否       | 按需填写                                         |
+| vault.prefix                             | 数据存放的路径前缀，用于数据隔离 | 是    | 一般按照业务名称 例：big_data          |
 
 **示例**
 
@@ -97,6 +118,21 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 - Bucket 字段的值为 Bucket 名称，不包含 `s3://` 等 schema。
 - `external_endpoint` 保持与 `endpoint` 值相同即可。
 - 如果使用非云厂商对象存储，region 和 provider 可填写任意值。
+
+| 参数名                     | 描述                                                         | 是否必须 | 备注                                                         |
+| -------------------------- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
+| instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`          | 是     |  例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8 |
+| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
+| vault.obj_info             | 对象存储配置信息                                             | 是       |                                                              |
+| vault.obj_info.ak          | 对象存储的 Access Key                                             | 是       |                                                              |
+| vault.obj_info.sk          | 对象存储的 Secret Key                                             | 是       |                                                              |
+| vault.obj_info.bucket      | 对象存储的 Bucket 名                                              | 是       |                                                              |
+| vault.obj_info.prefix      | 对象存储上数据存放位置前缀                                        | 否       | 若不填写该参数，则默认存放位置在 Bucket 的根目录，例：big_data |
+| obj_info.endpoint          | 对象存储的 Endpoint 信息                                          | 是       | 值为 域名或 IP:端口，不包含 `http://` 等 scheme 前缀              |
+| obj_info.region            | 对象存储的 Region 信息                                            | 是       | 若使用 MinIO，该参数可填任意值                               |
+| obj_info.external_endpoint | 对象存储的 External Endpoint 信息                                 | 是       | 一般与 Endpoint 一致即可，兼容 OSS，注意 OSS 有 External 和 Internal 之分 |
+| vault.obj_info.provider    | 对象存储的 Provider 信息，可选值包括：OSS, S3, COS, OBS, BOS, GCP, AZURE | 是       | 若使用 MinIO，直接填 S3 即可                                 |
 
 **示例（腾讯云 COS）**
 
@@ -151,7 +187,7 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 ### **名词解释**
 
 - `vault name`：每个存储后端的名称为数仓实例内全局唯一，除 `built-in vault` 外，`vault name` 由用户创建存储后端时指定。
-- `built-in vault`：存算分离模式下，用于存储 Doris 系统表的远程共享存储。须在创建数仓实例时配置。`built-in vault` 的固定名称为 `built_in_storage_vault`。配置 `built-in vault`后，数仓（FE）才能启动。
+- `built-in vault`：存算分离模式下，用于存储 Doris 系统表的远程共享存储。须在创建数仓实例时配置。`built-in vault` 的固定名称为 `built_in_storage_vault`。配置 `built-in vault`后，数仓实例（FE）才能启动。
 - `default vault`：数仓实例级别的默认存储后端，用户可以指定某个存储后端为默认存储后端，包括 `built-in vault` 也可作为默认存储后端。由于存算分离模式中，数据必须要存储在某个远程共享存储上，因此如果用户建表时未在 `PROPERTIES` 中指定 `vault_name`，该表数据会存储在 `default vault` 上。`default vault` 可被重新设置，但是已经创建的表所使用的存储后端不会随之改变。
 
 配置 `built-in vault` 后，还可按需创建更多存储后端。FE 启动成功后，可通过 SQL 语句进行存储后端操作，包括创建存储后端，查看存储后端以及指定存储后端进行建表等。
@@ -175,28 +211,28 @@ PROPERTIES
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
-        "type"="hdfs", -- required
-        "fs.defaultFS"="hdfs://127.0.0.1:8020", -- required
-        "path_prefix"="prefix", -- optional
-        "hadoop.username"="user" -- optional
-        "hadoop.security.authentication"="kerberos" -- optional
+        "type"="hdfs",                                     -- required
+        "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
+        "path_prefix"="big/data",                          -- optional,  一般按照业务名称来填
+        "hadoop.username"="user"                           -- optional
+        "hadoop.security.authentication"="kerberos"        -- optional
         "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
-        "hadoop.kerberos.keytab"="/etc/emr.keytab" -- optional
+        "hadoop.kerberos.keytab"="/etc/emr.keytab"         -- optional
     );
 ```
 
 **创建 S3 存储后端**
 
 ```SQL
-CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
+CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     PROPERTIES (
-        "type"="S3", -- required
-        "s3.endpoint" = "bj", -- required
-        "s3.region" = "bj", -- required
-        "s3.root.path" = "/path/to/root", -- required
-        "s3.access_key" = "ak", -- required
-        "s3.secret_key" = "sk", -- required
-        "provider" = "cos", -- required
+        "type"="S3",                                   -- required
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+        "s3.region" = "bj",                            -- required
+        "s3.root.path" = "big/data/prefix",            -- required
+        "s3.access_key" = "ak",                        -- required
+        "s3.secret_key" = "sk",                        -- required
+        "provider" = "cos",                            -- required
     );
 ```
 
@@ -206,17 +242,24 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
 
 :::
 
-**参数**
+**properties 参数**
 
-| 参数                           | 说明                | 示例                            |
-| ------------------------------ | ------------------- | ------------------------------- |
-| type                           | 目前支持 S3 和 HDFS | s3 \| hdfs                      |
-| fs.defaultFS                   | HDFS Vault 参数     | hdfs://127.0.0.1:8020           |
-| hadoop.username                | HDFS Vault 参数     | hadoop                          |
-| hadoop.security.authentication | HDFS Vault 参数     | kerberos                        |
-| hadoop.kerberos.principal      | HDFS Vault 参数     | hadoop/127.0.0.1@XXX            |
-| hadoop.kerberos.keytab         | HDFS Vault 参数     | /etc/emr.keytab                 |
-| dfs.client.socket-timeout      | HDFS Vault 参数     | dfs.client.socket-timeout=60000 |
+| 参数                          | 说明                                                                               | 是否必须  | 示例                           |
+| ------------------------------| -------------------                                                                | ------    | -------------------------------|
+| type                          | 目前支持 S3 和 HDFS                                                                | 是        | s3 或者 hdfs                   |
+| fs.defaultFS                  | HDFS Vault 参数                                                                    | 是        | hdfs://127.0.0.1:8020          |
+| path_prefix                   | HDFS Vault 参数，数据存储的路径前缀，一般按照业务名称区分                          | 否        | big/data/dir                  |
+| hadoop.username               | HDFS Vault 参数                                                                    | 否        | hadoop                         |
+| hadoop.security.authentication| HDFS Vault 参数                                                                    | 否        | kerberos                       |
+| hadoop.kerberos.principal     | HDFS Vault 参数                                                                    | 否        | hadoop/127.0.0.1@XXX           |
+| hadoop.kerberos.keytab        | HDFS Vault 参数                                                                    | 否        | /etc/emr.keytab                |
+| dfs.client.socket-timeout     | HDFS Vault 参数, 单位毫秒                                                          | 否        | 60000                          |
+| s3.endpiont                   | s3 Vault 参数                                                                      | 是        | oss-cn-beijing.aliyuncs.com    |
+| s3.region                     | s3 Vault 参数                                                                      | 是        | bj                             |
+| s3.root.path                  | s3 Vault 参数, 实际存储数据的路径前缀                                              | 是        | /big/data/prefix               |
+| s3.access_key                 | s3 Vault 参数                                                                      | 是        |                                |
+| s3.secret_key                 | s3 Vault 参数                                                                      | 是        |                                |
+| provider                      | s3 Vault 参数, 目前支持 腾讯 COS，阿里 OSS，AWS S3，微软 AZURE，百度 BOS，华为 OBS，谷歌 GCP；若使用 MinIO，直接填 S3 即可 | 是        | cos                            |
 
 ### 查看存储后端
 
@@ -232,12 +275,12 @@ SHOW STORAGE VAULT
 
 ```SQL
 mysql> show storage vault;
-+------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
-| StorageVaultName       | StorageVaultId | Propeties                                                                                       | IsDefault |
-+------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
-| built_in_storage_vault | 1              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_1CF80628-16CF-0A46-54EE-2C4A54AB1519" | false     |
-| hdfs_vault             | 2              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_0717D76E-FF5E-27C8-D9E3-6162BC913D97" | false     |
-+------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
++------------------------+----------------+-------------------------------------------------------------------------------------------------------------+-----------+
+| StorageVaultName       | StorageVaultId | Propeties                                                                                                   | IsDefault |
++------------------------+----------------+-------------------------------------------------------------------------------------------------------------+-----------+
+| built_in_storage_vault | 1              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_1CF80628-16CF-0A46-54EE-2C4A54AB1519"             | false     |
+| hdfs_vault             | 2              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "big/data/dir_0717D76E-FF5E-27C8-D9E3-6162BC913D97" | false     |
++------------------------+----------------+-------------------------------------------------------------------------------------------------------------+-----------+
 ```
 
 ### 设置默认存储后端
@@ -333,11 +376,30 @@ REVOKE
 revoke usage_priv on storage vault my_storage_vault from user1
 ```
 
-## 添加 FE 
+## 添加 FE
 
-存算分离模式下，FE 管理方式与 BE 类似，二者均进行分组管理，因此也是通过 `add_cluster` 等接口进行操作。
+存算分离模式下，FE 以及 BE 的节点管理使用的接口是相同的，只是参数配置不一样，
+通过 meta-service `add_cluster` 接口进行 FE 以及 BE 的初始节点添加。
 
-一般而言，只需建一个 FE 即可，如果需要新增 FE，可按如下操作：
+`add_cluster` 接口的参数列表如下
+
+| 参数名                        | 描述                    | 是否必须 | 备注                                                         |
+| ----------------------------- | ----------------------- | -------- | ------------------------------------------------------------ |
+| instance_id                   | instance_id，存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`         | 是       | 全局唯一（包括历史上，每次调用此接口使用不一样的值）         |
+| cluster                       | Cluster 对象            | 是       |                                                              |
+| cluster.cluster_name          | Cluster 名称，需要匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`| 是       | 其中 FE 的 Cluster 名称特殊，默认为 RESERVED_CLUSTER_NAME_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_name 修改 |
+| cluster.cluster_id            | Cluster 的 ID           | 是       | 其中 FE 的 Cluster ID 特殊，默认为 RESERVED_CLUSTER_ID_FOR_SQL_SERVER，可在 fe.conf 中配置 cloud_observer_cluster_id 修改 |
+| cluster.type                  | Cluster 中节点的类型    | 是       | 支持："SQL","COMPUTE" 两种 Type，"SQL"表示 SQL Service 对应 FE， "COMPUTE"表示计算机节点对应 BE |
+| cluster.nodes                 | Cluster 中的节点数组    | 是       |                                                              |
+| cluster.nodes.cloud_unique_id | 节点的 cloud_unique_id, 格式为 `1:<instance_id>:<string>`, 其中`string`要求匹配模式 `[0-9a-zA-Z_-]+` 每个节点选用不同的值 | 是       | fe.conf、be.conf 中的 cloud_unique_id 配置项                 |
+| cluster.nodes.ip              | 节点的 IP               | 是       | 使用 FQDN 模式部署 FE/BE 时，该字段填写域名                  |
+| cluster.nodes.host            | 节点的域名              | 否       | 使用 FQDN 模式部署 FE/BE 时，需设置该字段                    |
+| cluster.nodes.heartbeat_port  | BE 的 Heartbeat Port    | BE 必填  | be.conf 中的 heartbeat_service_port 配置项                   |
+| cluster.nodes.edit_log_port   | FE 节点的 Edit Log Port | FE 必填  | 是 fe.conf 中的 edit_log_port 配置项                         |
+| cluster.nodes.node_type       | FE 节点的类型           | FE 必填  | 当 Cluster 的 Type 为 SQL 时，需要填写，分为"FE_MASTER" 和 "FE_OBSERVER"，其中 "FE_MASTER" 表示此节点为 Master， "FE_OBSERVER" 表示此节点为 Observer，注意：一个 Type 为 "SQL" 的 Cluster 的 Nodes 数组中只能有一个 "FE_MASTER" 节点，和若干 "FE_OBSERVER" 节点 |
+
+
+以下为添加一个 FE 的示例：
 
 ```Bash
 # 添加 FE
@@ -358,28 +420,47 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     }
 }'
 
-# 创建成功后，通过 get_cluster 进行确认
+# 创建成功后，可以通过 get_cluster 返回值 进行确认
 curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
     "instance_id":"sample_instance_id",
     "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
     "cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER",
     "cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
 }'
-cloud_unique_id` 是一个唯一字符串，格式为 `1:<instance_id>:<string>`。`ip`与 `edit_log_port` 根据 `fe.conf`填写。注意，FE 集群的 `cluster_name`与 `cluster_id` 恒定为 `"cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER"` 和 `"cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
 ```
+
+上述接口中如果需要在初始操作就添加2个 FE，在 `nodes` 数组添多声明一个节点。
+如下为多声明一个 observer 的例子：
+```
+...
+        "nodes":[
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
+                "ip":"172.21.16.21",
+                "edit_log_port":12103,
+                "node_type":"FE_MASTER"
+            },
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
+                "ip":"172.21.16.22",
+                "edit_log_port":12103,
+                "node_type":"FE_OBSERVER"
+            }
+        ]
+...
+```
+如果需要增加或者减少 FE 节点，可以参考后续 “计算集群操作” 章节。
 
 ## 创建计算集群
 
 用户可创建一个或多个计算集群，一个计算集群由任意多个 BE 节点组成。
+也是通过 meta-service `add_cluter` 接口进行操作
 
-一个计算集群的组成包含多项关键信息：
-
-- `cloud_unique_id`：一个唯一字符串，格式为 `1:<instance_id>:<string>`，根据实际需求设置。需与 `be.conf` 的 `cloud_unique_id` 配置值相同。
-- `cluster_name cluster_id`：根据实际需求设置。
-- `ip`：根据实际需求填写。
-- `heartbeat_port`：BE 的心跳端口。
+接口描述在前文 “添加 FE” 章节已经描述。
 
 用户可根据实际需求调整计算集群的数量及其所包含的节点数量，不同的计算集群需要使用不同的 `cluster_name` 和 `cluster_id`。
+
+如下是添加包含1个 BE 的 计算集群：
 
 ```Bash
 # 172.19.0.11
@@ -409,12 +490,33 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 }'
 ```
 
+上述接口中如果需要在初始操作就添加2个 BE，在 `nodes` 数组添多声明一个节点。
+如下为声明一个包含2个 BE 的计算集群的例子：
+```
+...
+        "nodes":[
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_compute_node0",
+                "ip":"172.21.16.21",
+                "heartbeat_port":9455
+            },
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_compute_node0",
+                "ip":"172.21.16.22",
+                "heartbeat_port":9455
+            }
+        ]
+...
+```
+如果需要增加或者减少 BE 节点，可以参考后续 “计算集群操作” 章节。
+如果需要多增加一些计算集群，重复本章节的操作即可。
+
 ## FE/BE 配置
 
-相较于存算一体模式，存算分离模式下的 FE 和 BE 配置增加了部分配置，其中：
+相较于[存算一体模式](../cluster-deployment/standard-deployment.md)，存算分离模式下的 FE 和 BE 配置增加了部分配置，其中：
 
 - `meta_service_endpoint`：Meta Service 的地址，需在 FE 和 BE 中填写。
-- `cloud_unique_id`：根据创建存算分离集群发往 Meta Service 请求中的实际值填写即可；Doris 通过该配置的值确定是否在存算分离模式下工作。
+- `cloud_unique_id`：根据创建存算分离集群发往 Meta Service `add_cluster` 请求中的实际值填写即可；Doris 通过该配置的值确定是否在存算分离模式下工作。
 
 ### fe.conf
 
@@ -443,7 +545,8 @@ file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":1048
 
 ## 启停 FE/BE
 
-Doris 存算分离模式下，FE/BE 启停方式和存算一体模式下的启停方式一致。
+Doris 存算分离模式下，FE/BE 启停方式和[存算一体模式](../cluster-deployment/standard-deployment.md)下的启停方式一致。
+**存算分离模式属于服务发现的模式，不需通过 `alter system add/drop frontend/backend` 等命令操作节点。**
 
 ```Shell
 bin/start_be.sh --daemon
@@ -452,8 +555,6 @@ bin/stop_be.sh
 bin/start_fe.sh --daemon
 bin/stop_fe.sh
 ```
-
-存算分离模式下，FE 会自动发现对应的 BE，不需通过 `alter system add` 或者 `drop backend` 等命令操作节点。
 
 启动后观察日志，如果上述配置均正确，则说明已进入正常工作模式，可通过 MySQL 客户端连接 FE 进行访问。
 
@@ -517,7 +618,8 @@ curl '127.0.0.1:5000/MetaService/http/drop_node?token=greedisgood9999' -d '{
 }'
 ```
 
-增加一个 FE Follower，以下示例中，`node_type` 为 `FE_MASTER` 表示该节点可以选为 Master，如果需要增加一个 Observer，将 `node_type` 设置为 OBSERVER 即可。
+增加一个 FE Observer，以下示例中，`node_type` 为 `FE_OBSERVE`，
+**目前还不允许添加 FE Follower 角色**
 
 ```Plain
 curl '127.0.0.1:5000/MetaService/http/add_node?token=greedisgood9999' -d '{
@@ -531,7 +633,7 @@ curl '127.0.0.1:5000/MetaService/http/add_node?token=greedisgood9999' -d '{
                 "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
                 "ip":"172.21.16.22",
                 "edit_log_port":12103,
-                "node_type":"FE_MASTER"
+                "node_type":"FE_OBSERVER"
             }
         ]
     }
