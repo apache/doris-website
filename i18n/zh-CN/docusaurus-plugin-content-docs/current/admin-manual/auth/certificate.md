@@ -77,7 +77,7 @@ openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12
 
 # 打包Server端密钥和证书
-openssl pkcs12 -inkey server-key.pem -in server.pem -export -out server_certificate.p12
+openssl pkcs12 -inkey server-key.pem -in server-cert.pem -export -out server_certificate.p12
 ```
 
 :::info Note
