@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS test (
 UNIQUE KEY(`c1`)
 PARTITION BY LIST (`c1`)
 (
-PARTITION p1 VALUES IN ("1","2","3"),# Partition p1 only allows 1, 2, and 3 to exist.
-PARTITION p2 VALUES IN ("4","5","6") # Partition p2 only allows 1, 5, and 6 to exist.
+PARTITION p1 VALUES IN ("1","2","3"),
+PARTITION p2 VALUES IN ("4","5","6")
 )
 DISTRIBUTED BY HASH(`c1`) BUCKETS 3
 PROPERTIES (
