@@ -9,8 +9,8 @@
                     "type": "category",
                     "label": "Quick Start",
                     "items": [
-                        "get-starting/quick-start/quick-start.md",
-                        "get-starting/quick-start/doris-hudi.md"
+                        "get-starting/quick-start/quick-start",
+                        "get-starting/quick-start/doris-hudi"
                     ]
                 }
             ]
