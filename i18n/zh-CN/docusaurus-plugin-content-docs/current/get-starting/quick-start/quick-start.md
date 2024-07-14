@@ -1,6 +1,6 @@
 ---
 {
-    "title": "快速体验 Apache Doris",
+    "title": "快速开始",
     "language": "zh-CN"
 }
 
@@ -41,13 +41,13 @@ under the License.
 
 ```Bash
 # 下载 Apache Doris 二进制安装包
-server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
+server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.12-bin-x64.tar.gz
 
 # 解压安装包
-server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
+server1:~ doris$ tar zxf apache-doris-2.0.12-bin-x64.tar.gz
 
 # 目录重命名为更为简单的 apache-doris 
-server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
+server1:~ doris$ mv apache-doris-2.0.12-bin-x64 apache-doris
 ```
 
 ## 安装 Doris

@@ -5,7 +5,13 @@
             "label": "Getting Started",
             "items": [
                 "get-starting/what-is-apache-doris",
-                "get-starting/quick-start"
+                {
+                    "type": "category",
+                    "label": "Quick Start",
+                    "items": [
+                        "get-starting/quick-start/quick-start.md"
+                    ]
+                }
             ]
         },
         {

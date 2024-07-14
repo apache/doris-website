@@ -1,6 +1,6 @@
 ---
 {
-    "title": "快速体验 Apache Doris",
+    "title": "快速开始",
     "language": "zh-CN"
 }
 
@@ -25,29 +25,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-这个简短的指南将告诉你如何下载 Doris 最新稳定版本，在单节点上安装并运行它，包括创建数据库、数据表、导入数据及查询等。
+这个简短的指南将告诉你如何下载 Apache Doris 最新稳定版本，在单节点上安装并运行它，包括创建数据库、数据表、导入数据及查询等。
 
 ## 环境准备
 
--   选择一个 X86-64 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
+-   选择一个 x86-64 上的主流 Linux 环境，推荐 CentOS 7.1 或者 Ubuntu 16.04 以上版本。更多运行环境请参考安装部署部分。
 
 -   Java 8 运行环境（非 Oracle JDK 商业授权用户，建议使用免费的 Oracle JDK 8u202，[立即下载](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox))。
 
--   建议在 Linux 上新建一个 Doris 用户（避免使用 root 用户，以防对操作系统误操作）
+-   建议在 Linux 上新建一个 Doris 用户。请避免使用 Root 用户，以防对操作系统误操作。
 
 ## 下载二进制包
 
-从 doris.apache.org 下载相应的 Doris 安装包，并且解压。
+从 doris.apache.org 下载相应的 Apache Doris 安装包，并且解压。
 
 ```Bash
-# 下载 Doris 二进制安装包
-server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
+# 下载 Apache Doris 二进制安装包
+server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.12-bin-x64.tar.gz
 
 # 解压安装包
-server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
+server1:~ doris$ tar zxf apache-doris-2.0.12-bin-x64.tar.gz
 
 # 目录重命名为更为简单的 apache-doris 
-server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
+server1:~ doris$ mv apache-doris-2.0.12-bin-x64 apache-doris
 ```
 
 ## 安装 Doris
@@ -60,7 +60,7 @@ FE 的配置文件为 apache-doris/fe/conf/fe.conf。下面是一些需要关注
 # 增加 JAVA_HOME 配置，指向 JDK8 的运行环境。假如我们 JDK8 位于 /home/doris/jdk8, 则设置如下
 JAVA_HOME=/home/doris/jdk8
 
-# FE 监听 IP 的 CIDR 网段。默认设置为空，有 Doris 启动时自动选择一个可用网段。如有多个网段，需要指定一个网段，可以类似设置 priority_networks=92.168.0.0/24
+# FE 监听 IP 的 CIDR 网段。默认设置为空，有 Apache Doris 启动时自动选择一个可用网段。如有多个网段，需要指定一个网段，可以类似设置 priority_networks=92.168.0.0/24
 # priority_networks =
 
 # FE 元数据存放的目录，默认是在 DORIS_HOME 下的 doris-meta 目录。已经创建，可以更改为你的元数据存储路径。
@@ -84,7 +84,7 @@ BE 的配置文件为 apache-doris/be/conf/be.conf。下面是一些需要关注
 # 增加 JAVA_HOME 配置，指向 JDK8 的运行环境。假如我们 JDK8 位于 /home/doris/jdk8, 则设置如下
 JAVA_HOME=/home/doris/jdk8
 
-# BE 监听 IP 的 CIDR 网段。默认设置为空，有 Doris 启动时自动选择一个可用网段。如有多个网段，需要指定一个网段，可以类似设置 priority_networks=192.168.0.0/24
+# BE 监听 IP 的 CIDR 网段。默认设置为空，有 Apache Doris 启动时自动选择一个可用网段。如有多个网段，需要指定一个网段，可以类似设置 priority_networks=192.168.0.0/24
 # priority_networks =
 
 # BE 数据存放的目录，默认是在 DORIS_HOME 下的 storage 下，默认已经创建，可以更改为你的数据存储路径
@@ -100,22 +100,23 @@ JAVA_HOME=/home/doris/jdk8
 server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 ```
 
-### 连接 Doris FE
+### 连接 Apache Doris FE
 
-通过 MySQL 客户端来连接 Doris FE，下载免安装的 [MySQL 客户端](https://dev.mysql.com/downloads/mysql/)。
+通过 MySQL 客户端来连接 Apache Doris FE，下载免安装的 [MySQL 客户端](https://dev.mysql.com/downloads/mysql/)。
 
-解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
+解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Apache Doris。
 
 ```Bash
 mysql -uroot -P9030 -h127.0.0.1
 ```
 
-注意：
+:::caution 注意
 
--   这里使用的 root 用户是 Doris 内置的超级管理员用户，具体的用户权限查看 [权限管理](../admin-manual/privilege-ldap/user-privilege)
-
--   -P：这里是我们连接 Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
+-   这里使用的 Root 用户是 Apache Doris 内置的超级管理员用户，具体的用户权限查看 [认证和鉴权](../../../admin-manual/auth/authentication-and-authorization.md)
+-   -P：这里是我们连接 Apache Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
 -   -h：这里是我们连接的 FE IP 地址，如果你的客户端和 FE 安装在同一个节点可以使用 127.0.0.1。
+
+:::
 
 ### 将 BE 节点添加到集群
 
@@ -125,7 +126,7 @@ mysql -uroot -P9030 -h127.0.0.1
  ALTER SYSTEM ADD BACKEND "be_host_ip:heartbeat_service_port";
 ```
 
-注意：
+:::caution 注意
 
 1.  be_host_ip：要添加 BE 的 IP 地址
 
@@ -133,9 +134,11 @@ mysql -uroot -P9030 -h127.0.0.1
 
 3.  通过 show backends 语句可以查看新添加的 BE 节点。
 
-### 修改 root 和 admin 的密码
+:::
 
-在 MySQL 客户端，执行类似下面的 SQL，为 root 和 admin 用户设置新密码
+### 修改 Root 用户和 Admin 用户的密码
+
+在 MySQL 客户端，执行类似下面的 SQL，为 Root 用户和 Admin 用户设置新密码
 
 ```sql
 mysql> SET PASSWORD FOR 'root' = PASSWORD('doris-root-password');                                                                                                                                                                                   
@@ -146,16 +149,16 @@ Query OK, 0 rows affected (0.00 sec)
 ```
 
 :::tip
-root 和 admin 用户的区别
+Root 用户和 Admin 用户的区别
 
-root 和 admin 用户都属于 Doris 安装完默认存在的 2 个账户。其中 root 拥有整个集群的超级权限，可以对集群完成各种管理操作，比如添加节点，去除节点。admin 用户没有管理权限，是集群中的 Superuser，拥有除集群管理相关以外的所有权限。建议只有在需要对集群进行运维管理超级权限时才使用 root 权限。
+Root 用户和 Admin 用户都属于 Apache Doris 安装完默认存在的 2 个账户。其中 Root 用户拥有整个集群的超级权限，可以对集群完成各种管理操作，比如添加节点，去除节点。Admin 用户没有管理权限，是集群中的 Superuser，拥有除集群管理相关以外的所有权限。建议只有在需要对集群进行运维管理超级权限时才使用 Root 权限。
 :::
 
 ## 建库建表
 
-### 连接 Doris
+### 连接 Apache Doris
 
-使用 admin 账户连接 Doris FE。
+使用 Admin 账户连接 Apache Doris FE。
 
 ```Bash
 mysql -uadmin -P9030 -h127.0.0.1
@@ -202,7 +205,7 @@ curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separato
 
 -   -T data.csv : 要导入的数据文件名
 
--   -u admin:admin_password:  admin 账户与密码
+-   -u admin:admin_password:  Admin 账户与密码
 
 -   127.0.0.1:8030 : 分别是 FE 的 IP 和 http_port
 
@@ -253,7 +256,7 @@ mysql> select * from mytable;
 4 rows in set (0.01 sec)       
 ```
 
-## 停止 Doris
+## 停止 Apache Doris
 
 ### 停止 FE
 

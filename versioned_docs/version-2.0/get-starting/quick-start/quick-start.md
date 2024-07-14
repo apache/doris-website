@@ -3,7 +3,6 @@
     "title": "Quick Start",
     "language": "en"
 }
-
 ---
 
 <!-- 
@@ -27,20 +26,20 @@ under the License.
 
 # Quick Start
 
-This guide is about how to download the latest stable version of Doris, install it on a single node, and get it running, including steps for creating a database, data tables, importing data, and performing queries.
+This guide is about how to download the latest stable version of Apache Doris, install it on a single node, and get it running, including steps for creating a database, data tables, importing data, and performing queries.
 
-## Prerequisite
+## Environment requirements
 
-- A mainstream Linux X86-64 environment. CentOS 7.1 or Ubuntu 16.04 or later versions are recommended. See the "Install and Deploy" section of the doc for guides on more environments.
+- A mainstream Linux x86-64 environment. CentOS 7.1 or Ubuntu 16.04 or later versions are recommended. See the "Install and Deploy" section of the doc for guides on more environments.
 - Install Java 8 runtime environment. (If you are not an Oracle JDK commercial license user, we suggest using the free Oracle JDK 8u202. [Download now](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox).)
-- It is recommended to create a new user for Doris on Linux (avoid using the root user to prevent accidental operations on the operating system).
+- It is recommended to create a new user for Apache Doris on Linux (avoid using the root user to prevent accidental operations on the operating system).
 
 ## Download binary package
 
-Download the Doris installation package from doris.apache.org and proceed with the following steps.
+Download the Apache Doris installation package from doris.apache.org and proceed with the following steps.
 
 ```Bash
-# Download the binary installation package of Doris
+# Download the binary installation package of Apache Doris
 server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
 
 # Extract the installation package
@@ -50,17 +49,17 @@ server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
 server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
 ```
 
-## Install Doris
+## Install Apache Doris
 
 ### Configure FE
 
-Go to the `apache-doris/fe/conf/fe.conf` file for FE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
+Go to the `apache-doris/fe/fe.conf` file for FE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
 
 ```Shell
 # Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
 JAVA_HOME=/home/doris/jdk8
 
-# The CIDR network segment of FE listening IP is empty by default. When started, Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=92.168.0.0/24, for example.
+# The CIDR network segment of FE listening IP is empty by default. When started, Apache Doris will automatically select an available network segment. If you need to specify a segment, you can set priority_networks=92.168.0.0/24, for example.
 # priority_networks =
 
 # By default, FE metadata is stored in the doris-meta directory under DORIS_HOME. It is created already. You can change it to your specified path.
@@ -104,7 +103,7 @@ server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 
 Download the [portable MySQL client](https://dev.mysql.com/downloads/mysql/) to connect to Doris FE.
 
-Unpack the client, find the `mysql` command-line tool in the `bin/` directory. Then execute the following command to connect to Doris.
+Unpack the client, find the `mysql` command-line tool in the `bin/` directory. Then execute the following command to connect to Apache Doris.
 
 ```Bash
 mysql -uroot -P9030 -h127.0.0.1
@@ -112,7 +111,7 @@ mysql -uroot -P9030 -h127.0.0.1
 
 Note:
 
-- The root user here is the built-in super admin user of Doris. See [Permission Management](https://doris.apache.org/docs/2.0/admin-manual/privilege-ldap/user-privilege/) for more information.
+- The root user here is the built-in super admin user of Apache Doris. See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for more information.
 - -P: This specifies the query port that is connected to. The default port is 9030. It corresponds to the `query_port`setting in fe.conf.
 - -h: This specifies the IP address of the FE that is connected to. If your client and FE are installed on the same node, you can use 127.0.0.1.
 
@@ -150,9 +149,9 @@ The root and admin users are two default accounts that are automatically created
 
 ## Create database and table
 
-### Connect to Doris
+### Connect to Apache Doris
 
-Use admin account to connect to Doris FE.
+Use admin account to connect to Apache Doris FE.
 
 ```Bash
 mysql -uadmin -P9030 -h127.0.0.1
@@ -246,7 +245,7 @@ mysql> select * from mytable;
 4 rows in set (0.01 sec)       
 ```
 
-## Stop Doris
+## Stop Apache Doris
 
 ### Stop FE
 
