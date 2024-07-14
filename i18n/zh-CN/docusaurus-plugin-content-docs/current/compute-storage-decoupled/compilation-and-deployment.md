@@ -24,17 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-在存算分离模式下进行 Doris 编译与存算一体模式的编译相似，主要区别在于新增 Meta Service 模块的编译和部署。
+在存算分离模式下进行 Doris 编译与存算一体模式的编译相似，主要区别在于新增 MS 模块的编译和部署。
+本文档主要介绍相比于3.0.0版本前的新增 MS 模块的编译，配置以及启停。
 
-## 编译
+## 获取二进制
 
-存算分离和存算一体模式下的编译方式相似，均使用代码库自带的 `build.sh` 脚本编译，新增的 Meta Service 模块使用参数`--cloud` 即可编出（二进制名为 `doris_cloud`）。
+存算分离和存算一体模式下的编译方式相似，均使用代码库自带的 `build.sh` 脚本编译，新增的 MS 模块使用参数`--cloud` 即可编出（二进制名为 `doris_cloud`）。
+**已经编译好的二进制（包含所有 Doris 模块）可以直接从 [Doris 下载页面](https://doris.apache.org/download/)下载（选择大于等于3.0.0的版本）**。
 
 ```Bash
 sh build.sh --fe --be --cloud 
 ```
 
-不同于存算一体模式，存算分离模式编译后，可在 `output` 目录下发现一个 `ms` 目录。
+相比 3.0.0 之前的版本，编译完成的二进制包中（产出）多了 `ms` 目录。
 
 ```Bash
 output
@@ -46,15 +48,15 @@ output
     └── lib
 ```
 
-`ms`目录作为编译产出，将同时服务于 Meta Service 和 Recycler。需要注意的是，尽管 Meta Service 和 Recycler 在本质上属于同一程序，但目前需要分别为它们准备独立的二进制文件。Meta Service 和 Recycler 两个目录完全一致，只是启动参数不同。
+`ms`目录将同时用于 Meta Service 和 Recycler 两种进程。
+需要注意的是，尽管 Meta Service 和 Recycler 在本质上属于同一程序，但目前需要分别为它们准备独立的二进制文件，以及工作目录。
+Meta Service 和 Recycler 两个工作目录除了配置完全一致，使用不同启动参数启动。
 
-准备两份二进制文件，只需使用以下命令从`ms`目录中拷贝二进制文件至一个新的 Recycler 工作目录`re`，然后在`ms`和`re`的`conf`子目录下，对端口号等参数按需进行必要修改即可。
+要准备两份二进制文件/工作目录，只需使用以下命令从`ms`目录中拷贝二进制文件至一个新的 Recycler 工作目录`re`，然后在`ms`和`re`的`conf`子目录下，对端口号等参数按需进行必要修改即可。详细的配置启动会在本文后续章节介绍。
 
 ```Shell
 cp -r ms re
 ```
-
-## 版本信息
 
 可通过两种方式检查`doris_cloud` 的版本信息，若其中一种方式无法正确执行，可尝试另一方式，在`ms`或者`re`目录下：
 
@@ -128,7 +130,7 @@ Meta Service 和 Recycler 依赖 JAVA 运行环境，并使用 OpenJDK 17。在�
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
-bin/start.sh --meta-service --daemonized
+bin/start.sh --meta-service --daemon
 
 bin/stop.sh
 ```
@@ -139,7 +141,7 @@ bin/stop.sh
 
 ```Shell
 export JAVA_HOME=${path_to_jdk_17}
-bin/start.sh --recycler --daemonized
+bin/start.sh --recycler --daemon
 
 bin/stop.sh
 ```
