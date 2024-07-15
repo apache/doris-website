@@ -24,11 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Certificate Configuration
 
-Certificate Configuration
 
-</version>
 
 To enable SSL function on Doris FE interface, you need to configure key certificate as follows:
 
