@@ -26,8 +26,6 @@ under the License.
 
 ## json_replace
 
-<version since="dev"></version>
-
 ### Description
 #### Syntax
 

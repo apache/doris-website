@@ -60,8 +60,6 @@ Notice: Cancel by State is supported since 1.2.0.
     WHERE LABEL like "example_";
     ````
 
-<version since="1.2.0">
-
 3. Cancel all import jobs which state are "LOADING"
 
    ```sql
@@ -69,8 +67,6 @@ Notice: Cancel by State is supported since 1.2.0.
    FROM example_db
    WHERE STATE = "loading";
    ```
-
-</version>
 
 ### Keywords
 

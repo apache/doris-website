@@ -36,9 +36,9 @@ under the License.
 
 ### Note
 
-相比 JSON 类型有以下优势:
+相比 JSON 类型有以下优势：
 
-1. 存储方式不同， JSON 类型是以二进制 JSONB 格式进行存储，整行 JSON 以行存的形式存储到 segment 文件中。而 VARIANT 类型在写入的时候进行类型推断，将写入的 JSON 列存化。比JSON类型有更高的压缩比， 存储空间更小。
+1. 存储方式不同，JSON 类型是以二进制 JSONB 格式进行存储，整行 JSON 以行存的形式存储到 segment 文件中。而 VARIANT 类型在写入的时候进行类型推断，将写入的 JSON 列存化。比 JSON 类型有更高的压缩比，存储空间更小。
 2. 查询方式不同，查询不需要进行解析。VARIANT 充分利用 Doris 中列式存储、向量化引擎、优化器等组件给用户带来极高的查询性能。
 下面是基于 clickbench 数据测试的结果：
 
@@ -50,7 +50,7 @@ under the License.
    
    
 
-**节省约 65%存储容量**
+**节省约 65% 存储容量**
 
 | 查询次数        | 预定义静态列 | VARIANT 类型 | JSON 类型        |
 |----------------|--------------|--------------|-----------------|
@@ -58,15 +58,13 @@ under the License.
 | 第二次查询 (hot)  | 86.02s       | 94.82s       | 789.24s         |
 | 第三次查询 (hot)  | 83.03s       | 92.29s       | 743.69s         |
 
-[测试集](https://github.com/ClickHouse/ClickBench/blob/main/doris/queries.sql) 一共43个查询语句
+[测试集](https://github.com/ClickHouse/ClickBench/blob/main/doris/queries.sql) 一共 43 个查询语句
 
-**查询提速 8+倍， 查询性能与静态列相当**
+**查询提速 8+ 倍，查询性能与静态列相当**
 
 ### Example
 
-```
-用一个从建表、导数据、查询全周期的例子说明VARIANT的功能和用法。
-```
+用一个从建表、导数据、查询全周期的例子说明 VARIANT 的功能和用法。
 
 **建表语法**
 
@@ -165,7 +163,7 @@ DISTRIBUTED BY HASH(id) BUCKETS 10
 properties("replication_num" = "1");
 ```
 
-**需要注意的是:**
+**需要注意的是：**
 
 :::tip
 
@@ -176,7 +174,7 @@ properties("replication_num" = "1");
 
 **使用 streamload 导入**
 
-导入gh_2022-11-07-3.json，这是 github events 一个小时的数据
+导入 gh_2022-11-07-3.json，这是 github events 一个小时的数据
 
 ``` shell
 wget http://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/variant/gh_2022-11-07-3.json
@@ -269,7 +267,7 @@ mysql> desc github_events;
 406 rows in set (0.07 sec)
 ```
 
-desc 可以指定 partition 查看某个 partition 的 schema， 语法如下
+desc 可以指定 partition 查看某个 partition 的 schema，语法如下
 
 ```
 DESCRIBE ${table_name} PARTITION ($partition_name);
@@ -280,7 +278,7 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
 :::tip
 
 **注意**
-如使用过滤和聚合等功能来查询子列, 需要对子列进行额外的 cast 操作（因为存储类型不一定是固定的，需要有一个 SQL 统一的类型）。
+如使用过滤和聚合等功能来查询子列，需要对子列进行额外的 cast 操作（因为存储类型不一定是固定的，需要有一个 SQL 统一的类型）。
 例如 SELECT * FROM tbl where CAST(var['titile'] as text) MATCH "hello world"
 以下简化的示例说明了如何使用 VARIANT 进行查询
 
@@ -352,25 +350,25 @@ mysql> SELECT
 ### 使用限制和最佳实践
 
 **VARIANT 类型的使用有以下限制：**
-VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之类的数据 ，在这类数据中，经常通过动态属性添加字段（例如 Kubernetes 中的容器标签）。但是解析 JSON 和推断类型会在写入时产生额外开销。因此，我们建议保持单次导入列数在 1000 以下。
+VARIANT 动态列与预定义静态列几乎一样高效。处理诸如日志之类的数据，在这类数据中，经常通过动态属性添加字段（例如 Kubernetes 中的容器标签）。但是解析 JSON 和推断类型会在写入时产生额外开销。因此，我们建议保持单次导入列数在 1000 以下。
 
-尽可能保证类型一致， Doris 会自动进行如下兼容类型转换，当字段无法进行兼容类型转换时会统一转换成 JSONB 类型。JSONB 列的性能与 int、text 等列性能会有所退化。
+尽可能保证类型一致，Doris 会自动进行如下兼容类型转换，当字段无法进行兼容类型转换时会统一转换成 JSONB 类型。JSONB 列的性能与 int、text 等列性能会有所退化。
 
-1. tinyint->smallint->int->bigint， 整形可以按照箭头做类型提升
+1. tinyint->smallint->int->bigint，整形可以按照箭头做类型提升
 2. float->double，浮点数按照箭头做类型提升
 3. text，字符串类型
-4. JSON， 二进制JSON类型
+4. JSON，二进制 JSON 类型
 
-上诉类型无法兼容时， 会变成JSON类型防止类型信息丢失， 如果您需要在 VARIANT 中设置严格的schema，即将推出 VARIANT MAPPING机制
+上诉类型无法兼容时，会变成 JSON 类型防止类型信息丢失，如果您需要在 VARIANT 中设置严格的 schema，即将推出 VARIANT MAPPING 机制
 
 其它限制如下：
 
-- VARIANT 列只能创建倒排索引或者bloom filter来加速过滤
-- **推荐使用 RANDOM 模式和[Group Commit](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/group-commit-manual/)模式， 写入性能更高效**
+- VARIANT 列只能创建倒排索引或者 bloom filter 来加速过滤
+- **推荐使用 RANDOM 模式和[Group Commit](../../../data-operate/import/group-commit-manual.md) 模式，写入性能更高效**
 - 日期、decimal 等非标准 JSON 类型会被默认推断成字符串类型，所以尽可能从 VARIANT 中提取出来，用静态类型，性能更好
 - 2 维及其以上的数组列存化会被存成 JSONB 编码，性能不如原生数组
 - 不支持作为主键或者排序键
-- 查询过滤、聚合需要带 cast， 存储层会根据存储类型和 cast 目标类型来消除 cast 操作，加速查询。
+- 查询过滤、聚合需要带 cast，存储层会根据存储类型和 cast 目标类型来消除 cast 操作，加速查询。
 
 ### Keywords
 

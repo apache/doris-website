@@ -24,8 +24,6 @@ under the License.
 
 ## ADMIN-REBALANCE-DISK
 
-<version since="1.2.0">
-
 ### Name
 
 ADMIN REBALANCE DISK
@@ -64,5 +62,3 @@ ADMIN REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 ADMIN,REBALANCE,DISK
 
 ### Best Practice
-
-</version>

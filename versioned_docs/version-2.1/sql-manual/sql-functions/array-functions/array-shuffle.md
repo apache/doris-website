@@ -26,12 +26,8 @@ under the License.
 
 ## array_shuffle
 
-<version since="2.0">
-
 array_shuffle
 shuffle
-
-</version>
 
 ### description
 

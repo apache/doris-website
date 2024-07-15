@@ -83,7 +83,7 @@ Here we provide 3 ways to solve this problem:
 
 3. Manually migrate data using the API
 
-   Doris provides [HTTP API](https://doris.apache.org/zh-CN/docs/dev/admin-manual/http-actions/be/tablet-migration), which can manually specify the migration of data shards on one disk to another disk.
+   Doris provides [HTTP API](../admin-manual/be/tablet-migration.md), which can manually specify the migration of data shards on one disk to another disk.
 
 ### Q5. How to read FE/BE logs correctly?
 
@@ -295,7 +295,7 @@ ldd /path/to/libmyodbc8w.so |grep libssl.so
 If the output contains ``libssl.so.10``, there may be problems using it, if it contains ``libssl.so.1.1``, it is compatible with doris 1.0
 
 ### Q15. After upgrading to version 1.2, the BE NoClassDefFoundError issue failed to start
-<version since="1.2"> Java UDF dependency error </version>
+Java UDF dependency error
 If the upgrade support starts be, the following Java `NoClassDefFoundError` error occurs
 ```
 Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/doris/udf/IniUtil
@@ -304,7 +304,7 @@ Caused by: java.lang.ClassNotFoundException: org.apache.doris.udf.JniUtil
 You need to download the Java UDF function dependency package of `apache-doris-java-udf-jar-with-dependencies-1.2.0` from the official website, put it in the lib directory under the BE installation directory, and then restart BE
 
 ### Q16. After upgrading to version 1.2, BE startup shows Failed to initialize JNI
-<version since="1.2"></version>  
+
 If the following `Failed to initialize JNI` error occurs when starting BE after upgrading 
 ```
 Failed to initialize JNI: Failed to find the library libjvm.so.

@@ -26,8 +26,6 @@ under the License.
 
 ## ALTER-RESOURCE
 
-<version since="1.2.0"></version>
-
 ### Name
 
 ALTER RESOURCE

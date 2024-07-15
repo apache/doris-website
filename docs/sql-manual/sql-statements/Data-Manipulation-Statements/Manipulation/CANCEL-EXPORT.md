@@ -28,8 +28,6 @@ under the License.
 
 ### Name
 
-<version since="1.2.2"></version>
-
 CANCEL EXPORT 
 
 ### Description

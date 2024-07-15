@@ -26,11 +26,7 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 SUBSTRING_INDEX
-
-</version>
 
 ### description
 
@@ -41,10 +37,10 @@ SUBSTRING_INDEX
 返回 content 的子字符串，在 delimiter 出现 field 次的位置按如下规则截取：  
 如果 field > 0，则从左边算起，返回截取位置前的子串；  
 如果 field < 0，则从右边算起，返回截取位置后的子串；
-如果 field = 0，返回一个空串（`content` 不为null）, 或者Null （`content` = null）。
+如果 field = 0，返回一个空串（`content` 不为 null）, 或者 Null（`content` = null）。
 
 - delimiter 大小写敏感，且是多字节安全的。
-- `delimiter` 和 `field` 参数需要是常量, 不支持变量。
+- `delimiter` 和 `field` 参数需要是常量，不支持变量。
 
 ### example
 

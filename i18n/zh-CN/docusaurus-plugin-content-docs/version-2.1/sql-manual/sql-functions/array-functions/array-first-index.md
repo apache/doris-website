@@ -24,11 +24,7 @@ under the License.
 
 ## array_first_index
 
-<version since="2.0">
-
 array_first_index
-
-</version>
 
 ### description
 
@@ -36,9 +32,9 @@ array_first_index
 
 `ARRAY<T> array_first_index(lambda, ARRAY<T> array1, ...)`
 
-使用lambda表达式作为输入参数，对其他输入ARRAY参数的内部数据进行相应的表达式计算。 返回第一个使得 `lambda(array1[i], ...)` 返回值不为 0 的索引。如果没找到满足此条件的索引，则返回 0。
+使用 lambda 表达式作为输入参数，对其他输入 ARRAY 参数的内部数据进行相应的表达式计算。返回第一个使得 `lambda(array1[i], ...)` 返回值不为 0 的索引。如果没找到满足此条件的索引，则返回 0。
 
-在lambda表达式中输入的参数为1个或多个，所有输入的array的元素数量必须一致。在lambda中可以执行合法的标量函数，不支持聚合函数等。
+在 lambda 表达式中输入的参数为 1 个或多个，所有输入的 array 的元素数量必须一致。在 lambda 中可以执行合法的标量函数，不支持聚合函数等。
 
 ```
 array_first_index(x->x>1, array1);

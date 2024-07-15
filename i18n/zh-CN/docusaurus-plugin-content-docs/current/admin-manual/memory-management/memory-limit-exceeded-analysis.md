@@ -26,8 +26,6 @@ under the License.
 
 # 内存超限错误分析
 
-<version since="1.2.0">
-
 当查询或导入报错`Memory limit exceeded`时，可能的原因：进程内存超限、系统剩余可用内存不足、超过单次查询执行的内存上限。
 ```
 ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consuming tracker:<xxx>, xxx. backend 172.1.1.1 process memory used xxx GB, limit xxx GB. If query tracker exceed, `set exec_mem_limit=8G` to change limit, details mem usage see be.INFO.
@@ -41,9 +39,9 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 
 ### 错误信息分析
 错误信息分为三部分：
-1、`Memory limit exceeded:<consuming tracker:<Query#Id=3c88608cf35c461d-95fe88969aa6fc30>`：当前正在执行query `3c88608cf35c461d-95fe88969aa6fc30`的内存申请过程中发现内存超限。
-2、`process memory used 2.68 GB exceed limit 2.47 GB or sys mem available 50.95 GB less than low water mark 3.20 GB, failed alloc size 2.00 MB`：超限的原因是 BE 进程使用的内存 2.68GB 超过了 2.47GB 的limit，limit的值来自 be.conf 中的 mem_limit * system MemTotal，默认等于操作系统总内存的80%，当前操作系统剩余可用内存 50.95 GB 仍高于最低水位 3.2GB，本次尝试申请 2MB 的内存。
-3、`executing msg:<execute:<ExecNode:VAGGREGATION_NODE (id=7)>>, backend 172.24.47.117 process memory used 2.68 GB, limit 2.47 GB`：本次内存申请的位置是`ExecNode:VAGGREGATION_NODE (id=7)>`，当前BE节点的IP是 172.1.1.1，以及再次打印BE节点的内存统计。
+1、`Memory limit exceeded:<consuming tracker:<Query#Id=3c88608cf35c461d-95fe88969aa6fc30>`：当前正在执行 query `3c88608cf35c461d-95fe88969aa6fc30`的内存申请过程中发现内存超限。
+2、`process memory used 2.68 GB exceed limit 2.47 GB or sys mem available 50.95 GB less than low water mark 3.20 GB, failed alloc size 2.00 MB`：超限的原因是 BE 进程使用的内存 2.68GB 超过了 2.47GB 的 limit，limit 的值来自 be.conf 中的 mem_limit * system MemTotal，默认等于操作系统总内存的 80%，当前操作系统剩余可用内存 50.95 GB 仍高于最低水位 3.2GB，本次尝试申请 2MB 的内存。
+3、`executing msg:<execute:<ExecNode:VAGGREGATION_NODE (id=7)>>, backend 172.24.47.117 process memory used 2.68 GB, limit 2.47 GB`：本次内存申请的位置是`ExecNode:VAGGREGATION_NODE (id=7)>`，当前 BE 节点的 IP 是 172.1.1.1，以及再次打印 BE 节点的内存统计。
 
 ### 日志分析
 同时可以在 log/be.INFO 中找到如下日志，确认当前进程内存使用是否符合预期，日志同样分为三部分：
@@ -51,8 +49,8 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 2、`Alloc Stacktrace`：触发内存超限检测的栈，这不一定是大内存申请的位置。
 3、`Memory Tracker Summary`：进程 memory tracker 统计，参考 [Memory Tracker](./memory-tracker.md) 分析使用内存的位置。
 注意：
-1、进程内存超限日志的打印间隔是1s，进程内存超限后，BE大多数位置的内存申请都会感知，并尝试做出预定的回调方法，并打印进程内存超限日志，所以如果日志中 Try Alloc 的值很小，则无须关注`Alloc Stacktrace`，直接分析`Memory Tracker Summary`即可。
-2、当进程内存超限后，BE会触发内存GC。
+1、进程内存超限日志的打印间隔是 1s，进程内存超限后，BE 大多数位置的内存申请都会感知，并尝试做出预定的回调方法，并打印进程内存超限日志，所以如果日志中 Try Alloc 的值很小，则无须关注`Alloc Stacktrace`，直接分析`Memory Tracker Summary`即可。
+2、当进程内存超限后，BE 会触发内存 GC。
 
 ```
 W1127 17:23:16.372572 19896 mem_tracker_limiter.cpp:214] System Mem Exceed Limit Check Failed, Try Alloc: 1062688
@@ -105,13 +103,13 @@ Memory Tracker Summary:
 ```
 
 ### 系统剩余可用内存计算
-当错误信息中系统可用内存小于低水位线时，同样当作进程内存超限处理，其中系统可用内存的值来自于`/proc/meminfo`中的`MemAvailable`，当`MemAvailable`不足时继续内存申请可能返回 std::bad_alloc 或者导致BE进程OOM，因为刷新进程内存统计和BE内存GC都具有一定的滞后性，所以预留小部分内存buffer作为低水位线，尽可能避免OOM。
+当错误信息中系统可用内存小于低水位线时，同样当作进程内存超限处理，其中系统可用内存的值来自于`/proc/meminfo`中的`MemAvailable`，当`MemAvailable`不足时继续内存申请可能返回 std::bad_alloc 或者导致 BE 进程 OOM，因为刷新进程内存统计和 BE 内存 GC 都具有一定的滞后性，所以预留小部分内存 buffer 作为低水位线，尽可能避免 OOM。
 
-其中`MemAvailable`是操作系统综合考虑当前空闲的内存、buffer、cache、内存碎片等因素给出的一个在尽可能不触发swap的情况下可以提供给用户进程使用的内存总量，一个简单的计算公式: MemAvailable = MemFree - LowWaterMark + (PageCache - min(PageCache / 2, LowWaterMark))，和 cmd `free`看到的`available`值相同，具体可参考：
+其中`MemAvailable`是操作系统综合考虑当前空闲的内存、buffer、cache、内存碎片等因素给出的一个在尽可能不触发 swap 的情况下可以提供给用户进程使用的内存总量，一个简单的计算公式：MemAvailable = MemFree - LowWaterMark + (PageCache - min(PageCache / 2, LowWaterMark))，和 cmd `free`看到的`available`值相同，具体可参考：
 https://serverfault.com/questions/940196/why-is-memavailable-a-lot-less-than-memfreebufferscached
 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=34e431b0ae398fc54ea69ff85ec700722c9da773
 
-低水位线默认最大1.6G，根据`MemTotal`、`vm/min_free_kbytes`、`confg::mem_limit`、`config::max_sys_mem_available_low_water_mark_bytes`共同算出，并避免浪费过多内存。其中`MemTotal`是系统总内存，取值同样来自`/proc/meminfo`；`vm/min_free_kbytes`是操作系统给内存GC过程预留的buffer，取值通常在 0.4% 到 5% 之间，某些云服务器上`vm/min_free_kbytes`可能为5%，这会导致直观上系统可用内存比真实值少；调大`config::max_sys_mem_available_low_water_mark_bytes`将在大于16G内存的机器上，为Full GC预留更多的内存buffer，反之调小将尽可能充分使用内存。
+低水位线默认最大 1.6G，根据`MemTotal`、`vm/min_free_kbytes`、`confg::mem_limit`、`config::max_sys_mem_available_low_water_mark_bytes`共同算出，并避免浪费过多内存。其中`MemTotal`是系统总内存，取值同样来自`/proc/meminfo`；`vm/min_free_kbytes`是操作系统给内存 GC 过程预留的 buffer，取值通常在 0.4% 到 5% 之间，某些云服务器上`vm/min_free_kbytes`可能为 5%，这会导致直观上系统可用内存比真实值少；调大`config::max_sys_mem_available_low_water_mark_bytes`将在大于 16G 内存的机器上，为 Full GC 预留更多的内存 buffer，反之调小将尽可能充分使用内存。
 
 ## 查询或导入单次执行内存超限
 当返回如下报错时，说明超过单次执行内存限制。
@@ -121,8 +119,8 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 
 ### 错误信息分析
 错误信息分为三部分：
-1、`Memory limit exceeded:<consuming tracker:<Query#Id=f78208b15e064527-a84c5c0b04c04fcf>`：当前正在执行query `f78208b15e064527-a84c5c0b04c04fcf`的内存申请过程中发现内存超限。
-2、`failed alloc size 1.03 MB, exceeded tracker:<Query#Id=f78208b15e064527-a84c5c0b04c04fcf>, limit 100.00 MB, peak used 99.29 MB, current used 99.25 MB`：本次尝试申请 1.03MB 的内存，但此时query `f78208b15e064527-a84c5c0b04c04fcf` memory tracker 的当前 consumption 为 99.28MB 加上 1.03MB 后超过了 100MB 的limit，limit的值来自 session variables 中的 `exec_mem_limit`，默认4G。
+1、`Memory limit exceeded:<consuming tracker:<Query#Id=f78208b15e064527-a84c5c0b04c04fcf>`：当前正在执行 query `f78208b15e064527-a84c5c0b04c04fcf`的内存申请过程中发现内存超限。
+2、`failed alloc size 1.03 MB, exceeded tracker:<Query#Id=f78208b15e064527-a84c5c0b04c04fcf>, limit 100.00 MB, peak used 99.29 MB, current used 99.25 MB`：本次尝试申请 1.03MB 的内存，但此时 query `f78208b15e064527-a84c5c0b04c04fcf` memory tracker 的当前 consumption 为 99.28MB 加上 1.03MB 后超过了 100MB 的 limit，limit 的值来自 session variables 中的 `exec_mem_limit`，默认 4G。
 3、`executing msg:<execute:<ExecNode:VHASH_JOIN_NODE (id=4)>>. backend 172.24.47.117 process memory used 1.13 GB, limit 98.92 GB. If query tracker exceed, `set exec_mem_limit=8G` to change limit, details mem usage see be.INFO.`：本次内存申请的位置是`VHASH_JOIN_NODE (id=4)`，并提示可通过 `set exec_mem_limit` 来调高单次查询的内存上限。
 
 ### 日志分析
@@ -131,7 +129,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 1、`Process Memory Summary`：进程内存统计。
 2、`Alloc Stacktrace`：触发内存超限检测的栈，这不一定是大内存申请的位置。
 3、`Memory Tracker Summary`：当前查询的 memory tracker 统计，可以看到查询每个算子当前使用的内存和峰值，具体可参考 [Memory Tracker](./memory-tracker.md)。
-注意：一个查询在内存超限后只会打印一次日志，此时查询的多个线程都会感知，并尝试等待内存释放，或者cancel当前查询，如果日志中 Try Alloc 的值很小，则无须关注`Alloc Stacktrace`，直接分析`Memory Tracker Summary`即可。
+注意：一个查询在内存超限后只会打印一次日志，此时查询的多个线程都会感知，并尝试等待内存释放，或者 cancel 当前查询，如果日志中 Try Alloc 的值很小，则无须关注`Alloc Stacktrace`，直接分析`Memory Tracker Summary`即可。
 
 ```
 W1128 01:34:11.016165 357796 mem_tracker_limiter.cpp:191] Memory limit exceeded:<consuming tracker:<Query#Id=78208b15e064527-a84c5c0b04c04fcf>, failed alloc size 4.00 MB, exceeded tracker:<Query#Id=78208b15e064527-a84c5c0b04c04fcf>, limit 100.00 MB, peak used 98.59 MB,
@@ -175,5 +173,3 @@ Memory Tracker Summary:
     MemTracker Label=ExecNode:VNewOlapScanNode(lineorder) (id=0), Parent Label=Query#Id=78208b15e064527-a84c5c0b04c04fcf, Used=6.03 MB(6318064 B), Peak=4.02 MB(4217664 B)
     MemTracker Label=VDataStreamSender:78208b15e064527-a84c5c0b04c04fd0, Parent Label=Query#Id=78208b15e064527-a84c5c0b04c04fcf, Used=2.34 KB(2400 B), Peak=0(0 B)
 ```
-
-</version>

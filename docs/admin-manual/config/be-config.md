@@ -279,8 +279,6 @@ There are two ways to configure BE configuration items:
 
 #### `thrift_max_message_size`
 
-<version since="2.0.12"></version>
-
 Default: 100MB
 
 The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
@@ -1163,7 +1161,7 @@ BaseCompaction:546859:
 #### `user_function_dir`
 
 * Description: udf function directory
-* Default value: ${DORIS_HOME}/lib/udf
+* Default value: `${DORIS_HOME}/lib/udf`
 
 #### `storage_flood_stage_left_capacity_bytes`
 
@@ -1343,7 +1341,7 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Type: string
 * Description: Storage directory of BE log data
-* Default value: ${DORIS_HOME}/log
+* Default value: `${DORIS_HOME}/log`
 
 #### `sys_log_level`
 
@@ -1452,7 +1450,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: the increased frequency of priority for remaining tasks in BlockingPriorityQueue
 * Default value: 512
 
-<version since="1.2">
 
 #### `jdbc_drivers_dir`
 
@@ -1464,11 +1461,9 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: Whether enable simdjson to parse json while stream load
 * Default value: true
 
-</version>
-
 #### `enable_query_memory_overcommit`
 
-* Description: If true, when the process does not exceed the soft mem limit, the query memory will not be limited; when the process memory exceeds the soft mem limit, the query with the largest ratio between the currently used memory and the exec_mem_limit will be canceled. If false, cancel query when the memory used exceeds exec_mem_limit.
+* Description: If true, when the process does not exceed the soft mem limit, the query memory will not be limited; when the process memory exceeds the soft mem limit, the query with the largest ratio between the currently used memory and the exec_mem_limit will be canceled. If false, cancel query when the memory used exceeds `exec_mem_limit`.
 * Default value: true
 
 #### `user_files_secure_path`

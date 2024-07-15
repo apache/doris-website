@@ -26,10 +26,6 @@ under the License.
 
 ## VARIANT
 
-<version since="2.1.0">
-
-</version>
-
 ### Description
 
 Introduced a new data type VARIANT in Doris 2.1, which can store semi-structured JSON data. It allows storing complex data structures containing different data types (such as integers, strings, boolean values, etc.) without the need to define specific columns in the table structure beforehand. The VARIANT type is particularly useful for handling complex nested structures that may change at any time. During the writing process, this type can automatically infer column information based on the structure and types of the columns, dynamicly merge written schemas. It stores JSON keys and their corresponding values as columns and dynamic sub-columns.
@@ -358,7 +354,7 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 **Other limitations include:**
 
 - VARIANT columns can only create inverted indexes or bloom filter to speed up query.
-- Using the **RANDOM** mode or [group commit](https://doris.apache.org/docs/dev/data-operate/import/import-way/group-commit-manual/) mode is recommended for higher write performance.
+- Using the **RANDOM** mode or [group commit](/docs/data-operate/import/group-commit-manual.md) mode is recommended for higher write performance.
 - Non-standard JSON types such as date and decimal should ideally use static types for better performance, since these types are infered to text type.
 - Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
 - Not supported as primary or sort keys.

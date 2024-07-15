@@ -28,15 +28,11 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 SHOW CATALOG RECYCLE BIN
-
-</version>
 
 ### Description
 
-该语句用于展示回收站中可回收的库,表或分区元数据信息
+该语句用于展示回收站中可回收的库，表或分区元数据信息
 
 语法：
 

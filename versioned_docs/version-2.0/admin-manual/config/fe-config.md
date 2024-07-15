@@ -493,7 +493,11 @@ The value for thrift_client_timeout_ms is set to be zero to prevent read timeout
 
 #### `thrift_max_message_size`
 
-<version since="2.0.12"></version>
+:::info Note
+
+This field is supported since version 2.0.12.
+
+:::
 
 Default: 100MB
 

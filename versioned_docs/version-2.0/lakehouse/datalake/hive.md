@@ -407,7 +407,7 @@ Doris supports authentication on specified External Hive Catalog using Apache Ra
 
 Currently Doris supports authentication of Ranger libraries, tables, and columns, but does not support encryption, row privileges, and Data Mask.
 
-If you need to use Apache Ranger for authentication of the entire Doris cluster, refer to [Integration with Apache Ranger](https://doris.apache.org/docs/dev/admin-manual/privilege-ldap/ranger/).
+If you need to use Apache Ranger for authentication of the entire Doris cluster, refer to [Integrate with Apache Ranger](../../lakehouse/datalake/hive#integrate-with-apache-ranger).
 
 ### Environment settings
 

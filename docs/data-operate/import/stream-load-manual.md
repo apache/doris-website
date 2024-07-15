@@ -1176,7 +1176,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
   Specify the import data format, support csv, json, the default is csv
 
-  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc</version>
+ supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc
 
 + exec\_mem\_limit
 
@@ -1223,7 +1223,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
       "CommitAndPublishTimeMs": 0
   }
   ```
-    2. Trigger the commit operation on the transaction.
+    1. Trigger the commit operation on the transaction.
       Note 1) requesting to fe and be both works
       Note 2) `{table}` in url can be omit when commit
       using txn id
@@ -1242,7 +1242,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] commit successfully."
   }
   ```
-    3. Trigger an abort operation on a transaction
+    1. Trigger an abort operation on a transaction
       Note 1) requesting to fe and be both works
       Note 2) `{table}` in url can be omit when abort
       using txn id
@@ -1264,22 +1264,18 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
 + enable_profile
 
-  <version since="1.2.7">When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).</version>
+  When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).
 
 + memtable_on_sink_node
 
-  <version since="2.1.0">
   Whether to enable MemTable on DataSink node when loading data, default is false.
-  </version>
 
   Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
   It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
 - partial_columns
-   <version since="2.0">
    Whether to enable partial column updates, Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
 
    eg: `curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://127.0.0.1:48037/api/db1/user_profile/_stream_load`
-  </version>
 
 ### Use stream load with SQL
 

@@ -26,11 +26,7 @@ under the License.
 
 ## array_filter
 
-<version since="2.0">
-
 array_filter(lambda,array)
-
-</version>
 
 <version since="2.0.2">
 

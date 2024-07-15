@@ -24,11 +24,7 @@ under the License.
 
 ## array_pushback
 
-<version since="2.0">
-
 array_pushback
-
-</version>
 
 ### description
 

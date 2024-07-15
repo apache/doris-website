@@ -24,11 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="dev">
-
 ## SHOW-TABLETS-BELONG
-
-</version>
 
 ### Name
 
@@ -46,7 +42,7 @@ SHOW TABLETS BELONG tablet-ids;
 
 illustrate：
 
-1. tablet-ids：one or more tablet-ids, with comma separated
+1. tablet-ids: one or more tablet-ids, with comma separated
 2. Columns of result keep same with result of `SHOW-DATA` for the same table
 
 ### Example

@@ -28,22 +28,18 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 frontends
-
-</version>
 
 ### description
 
-表函数，生成frontends临时表，可以查看当前doris集群中的 FE 节点信息。
+表函数，生成 frontends 临时表，可以查看当前 doris 集群中的 FE 节点信息。
 
-该函数用于from子句中。
+该函数用于 from 子句中。
 
 #### syntax
 `frontends()`
 
-frontends()表结构：
+frontends() 表结构：
 ```
 mysql> desc function frontends();
 +-------------------+------+------+-------+---------+-------+
@@ -71,9 +67,9 @@ mysql> desc function frontends();
 17 rows in set (0.022 sec)
 ```
 
-`frontends()` tvf展示出来的信息基本与 `show frontends` 语句展示出的信息一致,但是 `frontends()` tvf的各个字段类型更加明确，且可以利用tvf生成的表去做过滤、join等操作。
+`frontends()` tvf 展示出来的信息基本与 `show frontends` 语句展示出的信息一致，但是 `frontends()` tvf 的各个字段类型更加明确，且可以利用 tvf 生成的表去做过滤、join 等操作。
 
-对 `frontends()` tvf信息展示进行了鉴权，与 `show frontends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
+对 `frontends()` tvf 信息展示进行了鉴权，与 `show frontends` 行为保持一致，要求用户具有 ADMIN/OPERATOR 权限。
 
 ### example
 ```

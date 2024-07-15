@@ -28,17 +28,13 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 CLEAN LABEL
-
-</version>
 
 ### Description
 
 用于手动清理历史导入作业的 Label。清理后，Label 可以重复使用。
 
-语法:
+语法：
 
 ```sql
 CLEAN LABEL [label] FROM db;

@@ -28,15 +28,11 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 iceberg_meta
-
-</version>
 
 ### description
 
-iceberg_meta表函数（table-valued-function,tvf），可以用于读取iceberg表的各类元数据信息，如操作历史、生成的快照、文件元数据等。
+iceberg_meta 表函数（table-valued-function,tvf），可以用于读取 iceberg 表的各类元数据信息，如操作历史、生成的快照、文件元数据等。
 
 #### syntax
 ```sql
@@ -49,14 +45,14 @@ iceberg_meta(
 
 **参数说明**
 
-iceberg_meta表函数 tvf中的每一个参数都是一个 `"key"="value"` 对。
+iceberg_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对。
 相关参数：
-- `table`： (必填) 完整的表名，需要按照目录名.库名.表名的格式，填写需要查看的iceberg表名。
-- `query_type`： (必填) 想要查看的元数据类型，目前仅支持snapshots。
+- `table`： (必填) 完整的表名，需要按照目录名。库名。表名的格式，填写需要查看的 iceberg 表名。
+- `query_type`： (必填) 想要查看的元数据类型，目前仅支持 snapshots。
 
 ### Example
 
-读取并访问iceberg表格式的snapshots元数据。
+读取并访问 iceberg 表格式的 snapshots 元数据。
 
 ```sql
 select * from iceberg_meta("table" = "ctl.db.tbl", "query_type" = "snapshots");
@@ -75,7 +71,7 @@ desc function iceberg_meta("table" = "ctl.db.tbl", "query_type" = "snapshots");
 
 ### Best Prac
 
-查看iceberg表的snapshots
+查看 iceberg 表的 snapshots
 
 ```sql
 select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "snapshots");
@@ -88,7 +84,7 @@ select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type
 +------------------------+----------------+---------------+-----------+-------------------+------------------------------+
 ```
 
-根据snapshot_id字段筛选
+根据 snapshot_id 字段筛选
 
 ```sql
 select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "snapshots") 

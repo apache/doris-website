@@ -24,11 +24,7 @@ under the License.
 
 ## array_sortby
 
-<version since="2.0">
-
 array_sortby
-
-</version>
 
 ### description
 

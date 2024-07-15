@@ -30,8 +30,6 @@ under the License.
 
 ALTER WORKLOAD GROUP
 
-<version since="dev"></version>
-
 ### Description
 
 This statement is used to modify the workload group.

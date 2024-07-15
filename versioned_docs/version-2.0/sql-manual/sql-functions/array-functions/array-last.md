@@ -26,11 +26,7 @@ under the License.
 
 ## array_last
 
-<version since="2.0">
-
 array_last
-
-</version>
 
 ### description
 Returns the last element in the array for which func(arr1[i]) returns something other than 0.
