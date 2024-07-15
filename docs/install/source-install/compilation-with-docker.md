@@ -28,6 +28,12 @@ under the License.
 
 This guide is about how to compile Doris using the official compilation image provided. As this image is maintained by the Apache Doris team and is regularly updated with the necessary dependencies, it is the recommended way of compilation for users.
 
+:::tip
+
+Currently, this is not supported in the compute-storage decoupled mode.
+
+:::
+
 ## Install Docker
 
 In CentOS, execute the following command: 

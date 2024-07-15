@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris存算分离架构部署方式示意图如下，共需要 3 个模块参与工作：
+Doris 存算分离架构部署方式示意图如下，共需要 3 个模块参与工作：
 
-- **FE**：负责接收用户请求，负责存储库表的元数据，目前是有状态的，未来会和BE类似，演化为无状态。
+- **FE**：负责接收用户请求，负责存储库表的元数据，目前是有状态的，未来会和 BE 类似，演化为无状态。
 - **BE**：无状态化的 Doris BE 节点，负责具体的计算任务。BE 上会缓存一部分 Tablet 元数据和数据以提高查询性能。
 - **Meta Service**：存算分离模式新增模块，程序名为 `doris_cloud`，可通过启动不同参数来指定为以下两种角色之一
   - **Meta Service**：元数据管理，提供元数据操作的服务，例如创建 Tablet，新增 Rowset，Tablet 查询以及 Rowset 元数据查询等功能。
@@ -46,55 +46,57 @@ Doris 存算分离架构依赖于两个外部开源项目，为确保部署顺�
 
 ## 部署步骤
 
-Doris存算分离模式部署按照模块和分工是＂从下往上＂部署：
-1. 存算分离模式机器规划，这一步在[本文档](./before-deployment.md)介绍。
-2. 部署fdb以及运行环境等基础的依赖，这一步不需要Doris的编译产出即可完成，在[本文档](./before-deployment.md)介绍。
-3. [部署meta-service以及recycler](./compilation-and-deployment.md)
-4. [部署FE以及BE](./creating-cluster.md)
+Doris 存算分离模式部署按照模块与分工＂自下而上＂部署：
+1. 存算分离模式机器规划，这一步骤在[本文档](./before-deployment.md)介绍。
+2. 部署 FoundationDB 以及运行环境等基础的依赖，这一步骤不需要 Doris 的编译产出即可完成，在[本文档](./before-deployment.md)介绍。
+3. [部署 Meta Service以及 Recycler](./compilation-and-deployment.md)
+4. [部署 FE 以及 BE](./creating-cluster.md)
 
-注意：一套 fdb+meta-servce+recycler 基础环境可以支撑多个存算分离模式的Doris实例(多套FE+BE)。
+:::info 备注
+注意：一套 FoundationDB + Meta Service + Recycler 基础环境可以支撑多个存算分离模式的 Doris 实例（即多套 FE + BE ）。
+:::
 
 ## 部署规划
 
-Doris存算分离模式推荐的方式是按照模块划分，尽量避免模块间相互影响。
-推荐的部署方式以及规划：
-* meta-service，recycler 以及 fdb 使用同一批机器。要求大于等于3台。
-	* 存算分离模式要正常运行至少要部署一个 meta-service 进程以及至少一个 recycler 进程。这两种进程是无状态的，可以按需增加部署数量，一般每种进程部署3个能够满足需求。
-	* 为了保证 fdb 的性能，可靠性以及扩展性，fdb 需要使用多副本部署的方式。
-* FE单独部署，至少1台，可以按需实际查询需要多部署一些
-* BE单独部署，至少1台，可以按需实际查询需要多部署一些
+Doris 存算分离模式推荐的部署方式是按照模块划分，尽量避免模块间相互影响。
+推荐的部署方式及规划：
+* Meta Service，Recycler 以及 FoundationDB 使用同一批机器。要求大于等于 3 台。
+	* 要使存算分离模式正常运行，需要部署至少一个 Meta Service 进程以及至少一个 Recycler 进程。这两种进程均为无状态，可以按需增加部署数量，一般每种进程部署 3 个即可满足需求。
+	* 为了保证 FoundationDB 的性能、可靠性以及扩展性，需要使用多副本方式部署 FoundationDB。
+* FE 单独部署，至少 1 台，可根据实际查询需求增加机器数量
+* BE 单独部署，至少 1 台，可根据实际查询需求增加机器数量
 
 
 ```
-               host1                  host2
+               Host1                  Host2
        .------------------.   .------------------.
        |                  |   |                  |
        |        FE        |   |        BE        |
        |                  |   |                  |
        '------------------'   '------------------'
 
-        host3                 host4                 host5
+        Host3                 Host4                 Host5
 .------------------.  .------------------.  .------------------.
-|     recycler     |  |     recycler     |  |     recycler     |
-|   meta-servcie   |  |   meta-servcie   |  |   meta-servcie   |
-|       fdb        |  |       fdb        |  |       fdb        |
+|     Recycler     |  |     Recycler     |  |     Recycler     |
+|   Meta Service   |  |   Meta Service   |  |   Meta Service   |
+|   FoundationDB   |  |   FoundationDB   |  |   FoundationDB   |
 '------------------'  '------------------'  '------------------'
 
 ```
 
 
-如果机器数量有限，可以使用全混部的方式，所有模块部署在同一批机器，要求机器数量大于3台。
+如果机器数量有限，可以使用全混部方式，所有模块部署在同一批机器。要求机器数量大于 3 台。
 如下是一种可行的规划。
 
 ```
-        host1                  host2                  host3
+        Host1                  Host2                  Host3
 .------------------.   .------------------.   .------------------.
 |                  |   |                  |   |                  |
 |        FE        |   |                  |   |                  |
 |                  |   |        BE        |   |        BE        |
-|     recycler     |   |                  |   |                  |
-|   meta-servcie   |   |                  |   |                  |
-|       fdb        |   |       fdb        |   |       fdb        |
+|     Recycler     |   |                  |   |                  |
+|   Meta Servcie   |   |                  |   |                  |
+|   FoundationDB   |   |   FoundationDB   |   |   FoundationDB   |
 |                  |   |                  |   |                  |
 '------------------'   '------------------'   '------------------'
 ```

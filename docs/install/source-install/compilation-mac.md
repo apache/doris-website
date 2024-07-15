@@ -28,6 +28,12 @@ under the License.
 
 This guide is about how to compile Doris on MacOS.
 
+:::tip
+
+Currently, this is not supported in the compute-storage decoupled mode.
+
+:::
+
 ## Prerequisites
 
 - MacOS 12 (Monterey) or later (Both **Intel** and **Apple Silicon** are supported.)

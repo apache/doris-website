@@ -29,6 +29,12 @@ To facilitate a quick experience of Doris on AWS, we have provided a CloudFormat
 
 Alternatively, you can also purchase AWS resources independently and deploy the cluster manually using standard methods.
 
+:::tip
+
+Currently, such deployment is not supported in the compute-storage decoupled mode.
+
+:::
+
 ## What's AWS CloudFormation?
 
 CloudFormation enables users to create a "stack of resources" in just one step. Resources refer to the items created by users, such as EC2 instances, VPCs, subnets, and more. A group of such resources is referred to as a stack. Users can write a template that easily allows them to create a resource stack according to their preferences in a single step. This is faster, more repeatable, and offers better consistency compared to manual creation and configuration. Additionally, templates can be placed into source code for version control, enabling their use for any purpose whenever needed.
