@@ -172,7 +172,6 @@ GET /rest/v2/manager/query/query_info
 }
 ```
 
-<version since="1.2">
 
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 trace id 不存在或无权限，则返回 Bad Request：
 
@@ -302,7 +301,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
 }
 ```
 
-<version since="1.2">
 
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
 
@@ -403,7 +401,6 @@ Response:
 }
 ```
 
-<version since="1.2">
 
 Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己发送的 Query。若指定 query id 不存在或无权限，则返回 Bad Request：
 
