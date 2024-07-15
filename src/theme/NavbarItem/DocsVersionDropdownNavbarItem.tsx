@@ -19,7 +19,7 @@ export default function DocsVersionDropdownNavbarItem({
     const activeDocContext = useActiveDocContext(docsPluginId);
     const versions = useVersions(docsPluginId);
     const { savePreferredVersionName } = useDocsPreferredVersion(docsPluginId);
-    const versionLinks = versions.map(version => {
+    const versionLinks = (versions.filter(item => item.name !== '1.2')).map(version => {
         // We try to link to the same doc, in another version
         // When not possible, fallback to the "main doc" of the version
         const versionDoc = activeDocContext.alternateDocVersions[version.name] ?? getVersionMainDoc(version);
@@ -31,7 +31,6 @@ export default function DocsVersionDropdownNavbarItem({
             onClick: () => savePreferredVersionName(version.name),
         };
     });
-
     const items = [...dropdownItemsBefore, ...versionLinks, ...dropdownItemsAfter];
     const dropdownVersion = useDocsVersionCandidates(docsPluginId)[0];
     // Mobile dropdown is handled a bit differently

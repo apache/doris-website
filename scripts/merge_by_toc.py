@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 # coding: utf8
-#
-# Generate all-in-one Markdown file for `doc-cn`
-# Tip: 不支持中文文件名
-# readme.md 中的目录引用的md多次（或者md的sub heading)，以第一次出现为主
 
 from __future__ import print_function, unicode_literals
 
