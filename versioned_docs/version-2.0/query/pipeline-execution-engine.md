@@ -28,7 +28,11 @@ under the License.
 
 # Pipeline Execution Engine
 
-<version since="2.0.0"></version>
+:::info Note
+
+This feature is supported since version 2.0.0.
+
+:::
 
 Pipeline execution engine is an experimental feature added by Doris in version 2.0. The goal is to replace the current execution engine of Doris's volcano model, fully release the computing power of multi-core CPUs, and limit the number of Doris's query threads to solve the problem of Doris's execution thread bloat.
 

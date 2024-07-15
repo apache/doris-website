@@ -95,7 +95,7 @@ To further release burden on operation and maintenance, V2.1 allows auto data pa
 
 ### High-concurrency real-time data ingestion
 
-For data writing, a back pressure mechanism is in place to avoid execessive data versions, so as to reduce resource consumption by data version merging. In addition, V2.1 supports group commit ([read more](https://doris.apache.org/docs/data-operate/import/import-way/group-commit-manual/)), which means to accumulate multiple writing and commit them as one. Benchmark tests on group commit with JDBC ingestion and the Stream Load method present great results.
+For data writing, a back pressure mechanism is in place to avoid execessive data versions, so as to reduce resource consumption by data version merging. In addition, V2.1 supports group commit ([read more](https://doris.apache.org/docs/data-operate/import/group-commit-manual)), which means to accumulate multiple writing and commit them as one. Benchmark tests on group commit with JDBC ingestion and the Stream Load method present great results.
 
 ## Semi-structured data analysis
 
@@ -150,7 +150,7 @@ Please note that this version is only suitable for quick experience and function
 - Audit log plug-in
   - Since V2.1.0, Doris has a built-in audit log plug-in. Users can simply enable or disable it by setting the enable_audit_plugin parameter.
   - If you have already installed your own audit log plug-in, you can either continue using it after upgrading to Doris V2.1, or uninstall it and use the one in Doris. Please note that the audit log table will be relocated after switching plug-in.
-  - For more details, please see the [docs](https://doris.apache.org/docs/ecosystem/audit-plugin/).
+  - For more details, please see the [docs](https://doris.apache.org/zh-CN/docs/admin-manual/audit-plugin/). 
 
 
 ## Credits

@@ -26,8 +26,6 @@ under the License.
 
 # BE OOM 分析
 
-<version since="1.2.0">
-
 理想情况下，在 [Memory Limit Exceeded Analysis](./memory-limit-exceeded-analysis) 中我们定时检测操作系统剩余可用内存，并在内存不足时及时响应，如触发内存 GC 释放缓存或 cancel 内存超限的查询，但因为刷新进程内存统计和内存 GC 都具有一定的滞后性，同时我们很难完全 catch 所有大内存申请，在集群压力过大时仍有 OOM 风险。
 
 ## 解决方法
@@ -81,4 +79,3 @@ Memory Tracker Summary:
 
 8. 若`be/log/be.INFO`没有在 OOM 前打印出`Memory Tracker Summary`日志，说明 BE 没有及时检测出内存超限，观察 Grafana 内存监控确认 BE 在 OOM 前的内存增长趋势，若 OOM 可复现，考虑在`be.conf`中增加`memory_debug=true`，重启集群后会每秒打印集群内存统计，观察 OOM 前的最后一次`Memory Tracker Summary`日志，继续步骤 3 分析；
 
-</version>

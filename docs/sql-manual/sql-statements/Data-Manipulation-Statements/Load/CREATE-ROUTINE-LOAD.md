@@ -366,7 +366,7 @@ FROM data_source [data_source_properties]
         ````text
         "property.kafka_default_offsets" = "OFFSET_BEGINNING"
         ````
-- <version since="1.2.3" type="inline"> comment </version>
+- comment
   Comment for the routine load job.
 ### Example
 

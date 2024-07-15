@@ -358,7 +358,7 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 **Other limitations include:**
 
 - VARIANT columns can only create inverted indexes or bloom filter to speed up query.
-- Using the **RANDOM** mode or [group commit](https://doris.apache.org/docs/dev/data-operate/import/import-way/group-commit-manual/) mode is recommended for higher write performance.
+- Using the **RANDOM** mode or [group commit](../../data-operate/import/group-commit-manual.md) mode is recommended for higher write performance.
 - Non-standard JSON types such as date and decimal should ideally use static types for better performance, since these types are infered to text type.
 - Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
 - Not supported as primary or sort keys.

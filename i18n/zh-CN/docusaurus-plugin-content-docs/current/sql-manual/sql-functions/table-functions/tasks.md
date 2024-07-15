@@ -28,11 +28,7 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 tasks
-
-</version>
 
 ### description
 
@@ -115,22 +111,22 @@ mysql> desc function tasks("type"="mv");
 ```
 * TaskId：task id
 * JobId：job id
-* JobName：job名称
-* MvId：物化视图id
+* JobName：job 名称
+* MvId：物化视图 id
 * MvName：物化视图名称
-* MvDatabaseId：物化视图所属db id
-* MvDatabaseName：物化视图所属db名称
-* Status：task状态
-* ErrorMsg：task失败信息
-* CreateTime：task创建时间
-* StartTime：task开始运行时间
-* FinishTime：task结束运行时间
-* DurationMs：task运行时间
-* TaskContext：task运行参数
+* MvDatabaseId：物化视图所属 db id
+* MvDatabaseName：物化视图所属 db 名称
+* Status：task 状态
+* ErrorMsg：task 失败信息
+* CreateTime：task 创建时间
+* StartTime：task 开始运行时间
+* FinishTime：task 结束运行时间
+* DurationMs：task 运行时间
+* TaskContext：task 运行参数
 * RefreshMode：刷新模式
-* NeedRefreshPartitions：本次task需要刷新的分区信息
-* CompletedPartitions：本次task刷新完成的分区信息
-* Progress：task运行进度
+* NeedRefreshPartitions：本次 task 需要刷新的分区信息
+* CompletedPartitions：本次 task 刷新完成的分区信息
+* Progress：task 运行进度
 
 ### example
 #### Insert Tasks
@@ -153,13 +149,13 @@ LoadStatistic: {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"LoadByt
 
 ```
 #### MV Tasks
-1. 查看所有物化视图的task
+1. 查看所有物化视图的 task
 
 ```sql
 mysql> select * from tasks("type"="mv");
 ```
 
-2. 查看jobName为`inner_mtmv_75043`的所有task
+2. 查看 jobName 为`inner_mtmv_75043`的所有 task
 
 ```sql
 mysql> select * from tasks("type"="mv") where JobName="inner_mtmv_75043";

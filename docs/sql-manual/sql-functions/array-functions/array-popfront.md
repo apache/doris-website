@@ -24,11 +24,7 @@ under the License.
 
 ## array_popfront
 
-<version since="2.0">
-
 array_popfront
-
-</version>
 
 ### description
 

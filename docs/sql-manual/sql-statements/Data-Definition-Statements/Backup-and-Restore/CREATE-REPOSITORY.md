@@ -48,7 +48,7 @@ illustrate:
 - Creation of repositories, relying on existing brokers or accessing cloud storage directly through AWS s3 protocol, or accessing HDFS directly.
 - If it is a read-only repository, restores can only be done on the repository. If not, backup and restore operations are available.
 - PROPERTIES are different according to different types of broker or S3 or hdfs, see the example for details.
-- ON LOCATION ： if it is S3 , here followed by the Bucket Name.
+- ON LOCATION : if it is S3 , here followed by the Bucket Name.
 
 ### Example
 
@@ -143,8 +143,6 @@ PROPERTIES
 
 7. Create a repository named minio_repo via temporary security credentials.
 
-<version since="1.2"></version>
-
 ```
 CREATE REPOSITORY `minio_repo`
 WITH S3
@@ -159,7 +157,7 @@ PROPERTIES
 )
 ```
 
-8. Create repository using Tencent COS
+1. Create repository using Tencent COS
 
 ```
 CREATE REPOSITORY `cos_repo`

@@ -25,11 +25,6 @@ under the License.
 -->
 
 
-
-<version since="2.1">
-
-</version>
-
 When importing data, Doris assigns a table-unique value to rows that do not have specified values in the auto-increment column.
 
 ## Functionality

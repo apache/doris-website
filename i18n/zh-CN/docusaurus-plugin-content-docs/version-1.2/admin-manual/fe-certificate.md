@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FE SSL密钥证书配置",
+    "title": "FE SSL 密钥证书配置",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# SSL密钥证书配置
+# SSL 密钥证书配置
 
-<version since="2.0">
-
-SSL密钥证书配置
-
-</version>
+SSL 密钥证书配置
 
 Doris FE 接口开启 SSL 功能需要配置密钥证书，步骤如下：
 

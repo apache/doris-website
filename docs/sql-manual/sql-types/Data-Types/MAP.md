@@ -71,8 +71,8 @@ Insert data example:
 mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
 ```
 
-stream_load examples：
-See [STREAM TABLE](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/stream-load-manual) for syntax details.
+stream_load examples:
+See [STREAM TABLE](../../../data-operate/import/stream-load-manual.md) for syntax details.
 
 ```
 # load the map data from json file

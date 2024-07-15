@@ -28,15 +28,11 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 iceberg_meta
-
-</version>
 
 ### description
 
-iceberg_meta table-valued-function(tvf), Use for read iceberg metadata，operation history, snapshots of table, file metadata etc.
+iceberg_meta table-valued-function(tvf), Use for read iceberg metadata, operation history, snapshots of table, file metadata etc.
 
 #### syntax
 
@@ -52,7 +48,7 @@ iceberg_meta(
 
 Each parameter in iceberg_meta tvf is a pair of `"key"="value"`.
 
-Related parameters：
+Related parameters:
 - `table`： (required) Use iceberg table name the format `catlog.database.table`.
 - `query_type`： (required) The type of iceberg metadata. Only `snapshots` is currently supported.
 

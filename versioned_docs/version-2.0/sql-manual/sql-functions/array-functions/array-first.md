@@ -26,11 +26,7 @@ under the License.
 
 ## array_first
 
-<version since="2.0">
-
 array_first
-
-</version>
 
 ### description
 Returns the first element in the array for which func(arr1[i]) returns something other than 0.

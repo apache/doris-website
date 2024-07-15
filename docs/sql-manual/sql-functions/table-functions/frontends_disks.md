@@ -28,11 +28,7 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 frontends
-
-</version>
 
 ### description
 

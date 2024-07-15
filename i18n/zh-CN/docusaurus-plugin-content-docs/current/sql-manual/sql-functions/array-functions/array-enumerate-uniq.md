@@ -26,11 +26,7 @@ under the License.
 
 ## array_enumerate_uniq
 
-<version since="2.0">
-
 array_enumerate_uniq
-
-</version>
 
 ### description
 #### Syntax

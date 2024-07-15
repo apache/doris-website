@@ -24,10 +24,7 @@ under the License.
 
 ## array_popfront
 
-<version since="2.0">
-
 array_popfront
-</version>
 
 ### description
 
@@ -35,7 +32,7 @@ array_popfront
 
 `ARRAY<T> array_popfront(ARRAY<T> arr)`
 
-返回移除第一个元素后的数组，如果输入参数为NULL，则返回NULL
+返回移除第一个元素后的数组，如果输入参数为 NULL，则返回 NULL
 
 ### example
 

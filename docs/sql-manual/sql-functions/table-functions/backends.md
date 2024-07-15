@@ -28,11 +28,7 @@ under the License.
 
 ### Name
 
-<version since="dev">
-
 backends
-
-</version>
 
 ### description
 

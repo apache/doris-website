@@ -24,11 +24,7 @@ under the License.
 
 ## array_reverse_sort
 
-<version since="2.0">
-
 array_reverse_sort
-
-</version>
 
 ### description
 
@@ -36,8 +32,8 @@ array_reverse_sort
 
 `ARRAY<T> array_reverse_sort(ARRAY<T> arr)`
 
-返回按降序排列后的数组，如果输入数组为NULL，则返回NULL。
-如果数组元素包含NULL, 则输出的排序数组会将NULL放在最后面。
+返回按降序排列后的数组，如果输入数组为 NULL，则返回 NULL。
+如果数组元素包含 NULL, 则输出的排序数组会将 NULL 放在最后面。
 
 ### example
 
