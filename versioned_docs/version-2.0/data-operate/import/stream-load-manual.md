@@ -1270,7 +1270,7 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
    Whether to enable partial column updates, Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
 
    eg: `curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://127.0.0.1:48037/api/db1/user_profile/_stream_load`
-  </version>
+
 
 ### Use stream load with SQL
 
