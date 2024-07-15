@@ -2,6 +2,7 @@ import { useLocation } from '@docusaurus/router';
 import React, { useState } from 'react';
 import { EcomsystemCategoryEnum } from '../ecomsystem.data';
 import { ClusterManagementIcon } from './components/icons/cluster-management-icon';
+import { DataMigrationIcon } from './components/icons/data-migration-icon';
 import { ConnectorsIcon } from './components/icons/connectors-icon';
 import { DistributionsAndPackagingIcon } from './components/icons/distributions-packaging-icon';
 import { DataLoadingIcon } from './components/icons/data-loading';
@@ -17,9 +18,11 @@ export default function EcomsystemCategory() {
         currentActive = EcomsystemCategoryEnum.ClusterManagement;
     } else if (pathnames.some(current => current === EcomsystemCategoryEnum.Connectors)) {
         currentActive = EcomsystemCategoryEnum.Connectors;
-    } else {
+    } else if (pathnames.some(current => current === EcomsystemCategoryEnum.DataLoading)){
         currentActive = EcomsystemCategoryEnum.DataLoading;
         // currentActive = EcomsystemCategoryEnum.DistributionsAndPackaging;
+    } else {
+        currentActive = EcomsystemCategoryEnum.DataMigration;
     }
 
     const [active, setActive] = useState<EcomsystemCategoryEnum | string>(currentActive);
@@ -49,6 +52,14 @@ export default function EcomsystemCategory() {
                 icon={<DataLoadingIcon />}
                 title={'Data loading'}
                 content="Accelerate large-scale data loading"
+            />
+            <TabItem
+                url={EcomsystemCategoryEnum.DataMigration}
+                setActive={() => setActive(EcomsystemCategoryEnum.DataMigration)}
+                active={active === EcomsystemCategoryEnum.DataMigration}
+                icon={<DataMigrationIcon />}
+                title={'Data migration'}
+                content="The easiest way to migrate your data"
             />
             {/* <TabItem
                 url={EcomsystemCategoryEnum.DistributionsAndPackaging}
