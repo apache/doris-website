@@ -160,7 +160,7 @@ const config = {
                     },
                     {
                         from: '/docs/dev/get-starting/',
-                        to: '/docs/dev/get-starting//quick-start/',
+                        to: '/docs/dev/get-starting/quick-start/',
                     },
                 ],
             },
@@ -247,7 +247,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/get-starting/quick-start/quick-start',
+                        to: '/docs/get-starting/quick-start/',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
                     { to: '/users', label: 'Users', position: 'left' },
@@ -337,7 +337,7 @@ const config = {
                             },
                             {
                                 label: 'Docs',
-                                href: '/docs/get-starting/quick-start/quick-start',
+                                href: '/docs/get-starting/quick-start',
                             },
                             {
                                 label: 'Blog',
