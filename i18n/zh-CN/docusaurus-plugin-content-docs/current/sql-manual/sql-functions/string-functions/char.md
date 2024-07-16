@@ -24,8 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="1.2">
-
 ## function char
 ### description
 #### Syntax
@@ -39,7 +37,6 @@ under the License.
 大于 `255` 的参数将转换为多个结果字节。例如，`char(15049882)`等价于`char(229, 164, 154)`。
 
 `charset_name`目前只支持`utf8`。
-</version>
 
 ### example
 

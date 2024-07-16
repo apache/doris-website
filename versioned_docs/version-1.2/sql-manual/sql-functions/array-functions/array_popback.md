@@ -24,11 +24,7 @@ under the License.
 
 ## array_popback
 
-<version since="1.2.0">
-
 array_popback
-
-</version>
 
 ### description
 
@@ -45,8 +41,6 @@ Remove the last element from array.
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_popback(['test', NULL, 'value']);
 +-----------------------------------------------------+
 | array_popback(ARRAY('test', NULL, 'value'))         |

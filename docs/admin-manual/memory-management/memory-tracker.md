@@ -26,8 +26,6 @@ under the License.
 
 # Memory Tracker
 
-<version since="1.2.0">
-
 The Memory Tracker records the memory usage of the Doris BE process, including the memory used in the life cycle of tasks such as query, import, Compaction, and Schema Change, as well as various caches for memory control and analysis.
 
 ## principle
@@ -71,12 +69,10 @@ For the memory statistics results of historical queries, you can view the `peakM
   - SegCompaction: The memory sum of all SegCompaction tasks, a subset of Orphan.
   - SegmentMeta: memory use by segment meta data such as footer or index page, a subset of Orphan.
   - TabletManager: The memory consumed by the storage engine get, add, and delete Tablet, a subset of Orphan.
-  - BufferAllocator: Only used for memory multiplexing in the non-vectorized Partitioned Agg process, a subset of Orphan.
 
 - DataPageCache: Used to cache data Pages to speed up Scan.
 - IndexPageCache: The index used to cache the data Page, used to speed up Scan.
 - SegmentCache: Used to cache opened Segments, such as index information.
-- DiskIO: Used to cache Disk IO data, only used in non-vectorization.
 - ChunkAllocator: Used to cache power-of-2 memory blocks, and reuse memory at the application layer.
 - LastSuccessChannelCache: Used to cache the LoadChannel of the import receiver.
 - DeleteBitmap AggCache: Gets aggregated delete_bitmap on rowset_id and version.
@@ -94,5 +90,3 @@ For the memory statistics results of historical queries, you can view the `peakM
 1. Limit: The import is divided into two stages: Fragment Scan and Load Channel to write Segment to disk. The upper memory limit of the Scan phase can be viewed and modified through `show session variables`; the segment write disk phase does not have a separate memory upper limit for each import, but the total upper limit of all imports, corresponding to `load_process_max_memory_limit_percent`.
 2. Label: The label naming rule of a single import Scan stage Tracker is `Load#Id=xxx`; the Label naming rule of a single import Segment write disk stage Tracker is `LoadChannel#senderIp=xxx#loadID=xxx`.
 3. Parent Label: Parent is the Tracker of `Load#Id=xxx`, which records the memory used by different operators during the import Scan stage; Parent is the Tracker of `LoadChannelMgrTrackerSet`, which records the Insert and The memory used by the Flush disk process is associated with the last `loadID` of the Label to write to the disk stage Tracker of the Segment.
-
-</version>

@@ -41,7 +41,7 @@ FE 桩子示例代码
 ```java
 private Status foo() {  
 	// dbug_fe_foo_do_nothing 是一个木桩名字，
-	// 打开这个木桩之后，DebugPointUtil.isEnable("dbug_fe_foo_do_nothing") 将会返回true
+	// 打开这个木桩之后，DebugPointUtil.isEnable("dbug_fe_foo_do_nothing") 将会返回 true
 	if (DebugPointUtil.isEnable("dbug_fe_foo_do_nothing")) {
 		return Status.Nothing;
 	}
@@ -90,10 +90,10 @@ POST /api/debug_point/add/{debug_point_name}[?timeout=<int>&execute=<int>]
     木桩名字。必填。
 
 * `timeout`
-    超时时间，单位为秒。超时之后，木桩失活。默认值-1表示永远不超时。可选。
+    超时时间，单位为秒。超时之后，木桩失活。默认值 -1 表示永远不超时。可选。
 
 * `execute`
-    木桩最大执行次数。默认值-1表示不限执行次数。可选。       
+    木桩最大执行次数。默认值 -1 表示不限执行次数。可选。       
 
 
 ### Request body
@@ -112,7 +112,7 @@ POST /api/debug_point/add/{debug_point_name}[?timeout=<int>&execute=<int>]
 ### Examples
 
 
-打开木桩 `foo`，最多执行5次。
+打开木桩 `foo`，最多执行 5 次。
 	
 	
 ```
@@ -132,7 +132,7 @@ curl -X POST "http://127.0.0.1:8030/api/debug_point/add/foo?execute=5"
 POST /api/debug_point/add/{debug_point_name}[?k1=v1&k2=v2&k3=v3...]
 ```
 * `k1=v1`
-  k1为参数名称，v1为参数值，多个参数用&分隔。
+  k1 为参数名称，v1 为参数值，多个参数用&分隔。
   
 ### Request body
 
@@ -269,7 +269,7 @@ curl -X POST "http://127.0.0.1:8030/api/debug_point/clear"
 
 ## 在回归测试中使用木桩
 
-> 提交PR时，社区 CI 系统默认开启 FE 和 BE 的`enable_debug_points`配置。
+> 提交 PR 时，社区 CI 系统默认开启 FE 和 BE 的`enable_debug_points`配置。
 
 回归测试框架提供方法函数来开关指定的木桩，它们声明如下：
 

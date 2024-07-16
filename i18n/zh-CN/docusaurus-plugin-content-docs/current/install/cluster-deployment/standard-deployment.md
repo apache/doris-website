@@ -25,14 +25,18 @@ under the License.
 手动部署 Doris 集群，通常要进行四步规划：
 
 1.  软硬件环境检查：检查用户的硬件资源情况及操作系统兼容性
-
 2.  操作系统检查：检查操作系统参数及配置
-
 3.  集群规划：规划集群的 FE、BE 节点，预估使用资源情况
-
 4.  集群部署：根据部署规划进行集群部署操作
-
 5.  部署验证：登录并验证集群正确性
+
+:::tip
+如果需要部署存算分离模式, 在完成上述 1 2 3 步之后,
+参考以下链接继续完成存算分离模式部署
+1. [存算分离部署前准备](../compute-storage-decoupled/before-deployment.md)
+2. [存算分离基础模块部署](../compute-storage-decoupled/compilation-and-deployment.md)
+3. [存算分离创建集群](../compute-storage-decoupled/creating-cluster.md)
+:::
 
 ## 1 软硬件环境检查
 
@@ -123,6 +127,14 @@ Doris 支持运行和部署在 x86-64 架构的服务器平台或 ARM64 架构�
 | FE     | 元数据一般在几百 MB 到几 GB，建议不低于 100GB                 |
 | BE     | Doris 默认 LZ4 压缩方式进行存储，压缩比在 0.3 - 0.5 左右磁盘空间需要按照总数据量 * 3（3 副本）计算需要预留出 40% 空间用作后台 compaction 以及临时数据的存储 |
 | Broker | 如需部署 Broker，通常情况下可以将 Broker 节点与 FE / BE 节点部署在同一台机器上 |
+
+### Java 版本
+
+Doris 的所有进程都依赖 Java。
+
+在 2.1（含）版本之前，请使用 Java 8，推荐版本：`openjdk-8u352-b08-linux-x64`。
+
+从 3.0（含）版本之后，请使用 Java 17，推荐版本：`jdk-17.0.10_linux-x64_bin.tar.gz`。
 
 ## 2 操作系统检查
 

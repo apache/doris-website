@@ -26,7 +26,6 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
             return false;
         }
     }
-
     const getOptions = (version: string[]) => {
         const currentParentVersion = versions.find(item => form.getFieldValue('version')[0] === item.value).children;
         const currentVersion = currentParentVersion.find(item => form.getFieldValue('version')[1] === item.value);

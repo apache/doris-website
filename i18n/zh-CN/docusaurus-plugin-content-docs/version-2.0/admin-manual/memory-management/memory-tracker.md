@@ -102,7 +102,6 @@ https://shimo.im/docs/DT6JXDRkdTvdyV3G
 
 - SegmentCache: 用于缓存已打开的 Segment，如索引信息。
 
-- DiskIO: 用于缓存 Disk IO 数据，仅在非向量化使用。
 
 - ChunkAllocator: 用于缓存 2 的幂大小的内存块，在应用层内存复用。
 

@@ -26,11 +26,7 @@ under the License.
 
 ## array_join
 
-<version since="1.2.0">
-
 array_join
-
-</version>
 
 ### description
 
@@ -44,15 +40,9 @@ array_join
 若sep为空字符串，则不应用任何分隔符。
 若null_replace为空字符串或者不指定，则直接丢弃数组中的NULL元素。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-
-mysql> set enable_vectorized_engine=true;
 
 mysql> select k1, k2, array_join(k2, '_', 'null') from array_test order by k1;
 +------+-----------------------------+------------------------------------+

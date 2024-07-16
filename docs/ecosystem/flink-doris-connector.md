@@ -79,7 +79,7 @@ Copy this file to `classpath` of `Flink` to use `Flink-Doris-Connector`. For exa
 
 ### read
 
-####SQL
+**SQL**
 
 ```sql
 -- doris source
@@ -98,7 +98,7 @@ CREATE TABLE flink_doris_source (
 );
 ```
 
-####DataStream
+**DataStream**
 
 ```java
 DorisOptions.Builder builder = DorisOptions.builder()
@@ -118,7 +118,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 
 ### write
 
-####SQL
+**SQL**
 
 ```sql
 --enable checkpoint
@@ -144,7 +144,7 @@ CREATE TABLE flink_doris_sink (
 INSERT INTO flink_doris_sink select name,age,price,sale from flink_doris_source
 ```
 
-####DataStream
+**DataStream**
 
 DorisSink writes data to Doris through StreamLoad, and DataStream supports different serialization methods when writing
 
@@ -494,7 +494,7 @@ WITH (
   'sink.properties.format' = 'json',
   'sink.properties.read_json_by_line' = 'true',
   'sink.properties.columns' = 'id,name,bank,age',
-  'sink.properties.partial.columns' = 'true' --Enable partial column updates
+  'sink.properties.partial_columns' = 'true' --Enable partial column updates
 );
 
 

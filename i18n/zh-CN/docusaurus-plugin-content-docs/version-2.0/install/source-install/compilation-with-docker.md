@@ -69,18 +69,11 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 
 -   编译镜像变更信息可参考 [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)。
 
--   Docker 编译镜像同时包含了 OpenJDK 8 和 OpenJDK 11，请通过 `java -version` 确认默认 JDK 版本。也可以通过以下方式切换版本（建议默认使用 JDK8）
-
 ```Bash
 # 切换到 JDK 8
 alternatives --set java java-1.8.0-openjdk.x86_64
 alternatives --set javac java-1.8.0-openjdk.x86_64
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
-
-# 切换到 JDK 11
-alternatives --set java java-11-openjdk.x86_64
-alternatives --set javac java-11-openjdk.x86_64
-export JAVA_HOME=/usr/lib/jvm/java-11
 ```
 
 ## 编译 Doris

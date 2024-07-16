@@ -26,14 +26,10 @@ under the License.
 
 ## array_last
 
-<version since="2.0">
-
 array_last
 
-</version>
-
 ### description
-返回数组中的最后一个func(arr1[i])值不为0的元素。当数组中所有元素进行func(arr1[i])都为0时，结果返回`NULL`值。
+返回数组中的最后一个 func(arr1[i]) 值不为 0 的元素。当数组中所有元素进行 func(arr1[i]) 都为 0 时，结果返回`NULL`值。
 
 #### Syntax
 
@@ -41,11 +37,7 @@ array_last
 T array_last(lambda, ARRAY<T>)
 ```
 
-使用一个lambda表达式和一个ARRAY作为输入参数，lambda表达式为布尔型，用于对ARRAY中的每个元素进行判断返回值。
-
-### notice
-
-`仅支持向量化引擎中使用`
+使用一个 lambda 表达式和一个 ARRAY 作为输入参数，lambda 表达式为布尔型，用于对 ARRAY 中的每个元素进行判断返回值。
 
 ### example
 

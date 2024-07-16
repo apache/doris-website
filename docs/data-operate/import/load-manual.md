@@ -84,9 +84,6 @@ Import methods are divided into synchronous and asynchronous. For the synchronou
 
 ## Import the Data of Array Types
 
-The array function can only be supported in vectorization scenarios, but non-vectorization scenarios are not supported.
-if you want to apply the array function to import data, you should enable vectorization engine. Then you need to cast the input parameter column into the array type according to the parameter of the array function. Finally, you can continue to use the array function.
-
 For example, in the following import, you need to cast columns b14 and a13 into `array<string>` type, and then use the `array_union` function.
 
 ```sql

@@ -26,7 +26,7 @@ under the License.
 
 The diagram below visualizes the deployment architecture of Doris in the compute-storage mode. It involves three modules: 
 
-- **FE**: Responsible for receiving user requests.
+- **FE**: Responsible for receiving user requests and storing the meta data of databases and tables. It is currently stateful, but will evolve to be stateless like BE.
 - **BE**: Stateless BE nodes, responsible for computation. The BE will cache a portion of the Tablet metadata and data to improve query performance.
 - **Meta Service**: A new module added in the compute-storage decoupled mode, with the program name `doris_cloud`, which can be specified as one of the following two roles by starting with different parameters:
   - **Meta Service**: Responsible for metadata management. It provides services for metadata operations, such as creating Tablets, adding Rowsets, and querying metadata of Tablets and Rowsets.
@@ -42,6 +42,64 @@ Deploying Doris in the compute-storage decoupled mode relies on two open-source 
 
 - **FoundationDB (FDB)**
 - **OpenJDK17**: Needs to be installed on all nodes where the Meta Service is deployed.
+
+## Deployment steps
+
+Given the modules and their functionalities, it is recommended to deploy Doris in the compute-storage decoupled mode from bottom up:
+
+1. Machine planning: Follow the instructions on [this page](./before-deployment.md).
+2. Deployment of FoundationDB and the required runtime dependencies: This step can be completed without the need for any Doris compilation outputs. Follow the instructions on [this page](./before-deployment.md).
+3. [Deploy Meta Service and Recycler](./compilation-and-deployment.md)
+4. [Deploy FE and BE](./creating-cluster.md)
+
+:::info
+Note: A single FoundationDB + Meta Service + Recycler infrastructure can support multiple Doris instances (i.e., multiple FE + BE setups) running in the compute-storage decoupled mode.
+:::
+
+## Deployment planning
+
+To avoid inter-module interference as much as possible, the recommended deployment is to deploy module by module.
+
+- The Meta Service, Recycler, and FoundationDB modules use the same set of machines, with a minimum requirement of 3 machines.
+  - To enable the compute-storage decoupled mode, at least one Meta Service process and one Recycler process must be deployed. These stateless processes can be scaled as needed, typically with 3 instances for each.
+  - To ensure the performance, reliability, and scalability of FoundationDB, a multi-replica deployment is required.
+- FE is deployed independently, with a minimum of 1 machine, and can be scaled out based on the actual query demands.
+- BE is deployed independently, with a minimum of 1 machine, and can be scaled out based on the actual query demands.
+
+
+```
+               Host1                  Host2
+       .------------------.   .------------------.
+       |                  |   |                  |
+       |        FE        |   |        BE        |
+       |                  |   |                  |
+       '------------------'   '------------------'
+
+        Host3                 Host4                 Host5
+.------------------.  .------------------.  .------------------.
+|     Recycler     |  |     Recycler     |  |     Recycler     |
+|   Meta Service   |  |   Meta Service   |  |   Meta Service   |
+|   FoundationDB   |  |   FoundationDB   |  |   FoundationDB   |
+'------------------'  '------------------'  '------------------'
+
+```
+
+If machine resources are limited, a hybrid deployment approach can be used, where all the modules are deployed on the same set of machines. This approach requires a minimum of 3 machines.
+
+One feasible planning is as follows:
+
+```
+        Host1                  Host2                  Host3
+.------------------.   .------------------.   .------------------.
+|                  |   |                  |   |                  |
+|        FE        |   |                  |   |                  |
+|                  |   |        BE        |   |        BE        |
+|     Recycler     |   |                  |   |                  |
+|   Meta Servcie   |   |                  |   |                  |
+|   FoundationDB   |   |   FoundationDB   |   |   FoundationDB   |
+|                  |   |                  |   |                  |
+'------------------'   '------------------'   '------------------'
+```
 
 ## Install FoundationDB
 
@@ -278,7 +336,7 @@ Using cluster file `/etc/foundationdb/fdb.cluster'.
 The database is available.
 
 Welcome to the fdbcli. For help, type `help'.
-fdb> coordinators primary machine ip:4500 secondary machine 1ip:4500 secondary machine 2ip:4500 (Fill in all machines)
+fdb> coordinators ${primary machine ip}:4500 ${secondary machine 1 ip}:4500 ${secondary machine 2 ip}:4500 (Fill in all machines)
 Coordinators changed
 ```
 

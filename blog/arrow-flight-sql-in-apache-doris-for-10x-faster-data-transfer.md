@@ -92,7 +92,7 @@ Configure parameters for Doris frontend (FE) and backend (BE):
 
 - In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 9090.
 
-- In `be/conf/be.conf`, set `arrow_flight_port ` to an available port, such as 9091.
+- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 9091.
 
 Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 9090 and 9091 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
 
@@ -245,7 +245,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
 conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
@@ -313,7 +313,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 import pandas
 from datetime import datetime
 
-my_uri = "grpc://0.0.0.0:`fe.conf_arrow_flight_port`"
+my_uri = "grpc://0.0.0.0:`fe.conf_arrow_flight_sql_port`"
 my_db_kwargs = {
     adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
     adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",

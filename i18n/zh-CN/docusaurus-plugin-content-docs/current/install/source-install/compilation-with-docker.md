@@ -26,6 +26,10 @@ under the License.
 
 本文介绍如何使用 Doris 官方提供的编译镜像来编译 Doris，由于此镜像由官方维护，且会随编译依赖及时更新，所以推荐用户使用这种方式编译
 
+:::tip
+目前还不支持存算分离模式编译部署
+:::
+
 ## 安装 Docker
 
 比如在 CentOS 下，执行命令安装 Docker
@@ -69,7 +73,7 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 
 -   编译镜像变更信息可参考 [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)。
 
--   最新版本的 `apache/doris:build-env-ldb-toolchain-latest` 镜像中同时包含 JDK 8 和 JDK 17。
+-   最新版本的 `apache/doris:build-env-ldb-toolchain-latest` 镜像中同时包含 JDK 8 和 JDK 17。2.1（含）之前的版本，请使用 JDK 8。3.0（含）之后的版本或 master 分支，请使用 JDK 17。
 
 ```Bash
 # 切换到 JDK 8

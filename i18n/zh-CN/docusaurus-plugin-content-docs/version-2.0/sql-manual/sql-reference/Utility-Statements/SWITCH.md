@@ -27,11 +27,7 @@ under the License.
 ## SWITCH
 
 ### Name
-<version since="1.2.0">
-
 SWITCH
-
-</version>
 
 
 ### Description

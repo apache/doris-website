@@ -24,15 +24,11 @@ under the License.
 
 ## struct_element
 
-<version since="2.0">
-
 struct_element
-
-</version>
 
 ### description
 
-返回struct数据列内的某一field
+返回 struct 数据列内的某一 field
 
 #### Syntax
 
@@ -50,11 +46,7 @@ s - field的名字，仅支持常量
 
 #### Returned value
 
-返回指定的field列，类型为任意类型
-
-### notice
-
-`只支持在向量化引擎中使用。`
+返回指定的 field 列，类型为任意类型
 
 ### example
 

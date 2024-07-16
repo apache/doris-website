@@ -44,9 +44,9 @@ For certain fields, special attention should be paid to their allowed value rang
 
 | Field           | Description                                                  | Notes                                                        |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| instance_id     | ID of the instance in the compute-storage decoupled mode,  normally a UUID string | Historically unique                                          |
-| cloud_unique_id | A configuration in be.conf fe.conf in the compute-storage decoupled mode; should be provided in a create_cluster request; the format of it is `1:<instance_id>:<string>` | Example: `1:regression_instance0:regression-cloud-unique-id-1` |
-| cluster_name    | In the compute-storage decoupled mode, this field is required when describing a compute cluster. It must be a unique identifier and its format should match the pattern` [a-zA-Z][0-9a-zA-Z_]+` | Example: write_cluster, read_cluster0                        |
+| instance_id     | ID of the data warehouse instance instance in the compute-storage decoupled mode,  normally a UUID string. It should follow the format of `[0-9a-zA-Z_-]+`. | Example: `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`              |
+| cloud_unique_id | A configuration in `be.conf`  and `fe.conf` in the compute-storage decoupled mode; should be provided in a create_cluster request; the format of it is `1:<instance_id>:<string>`, in which the `string` should conform to the format of `[0-9a-zA-Z_-]+`. The value for each node should be different. | Example: `1:regression_instance0:regression-cloud-unique-id-1` |
+| cluster_name    | In the compute-storage decoupled mode, this field is required when describing a compute cluster. It must be a unique identifier and its format should match the pattern ` [a-zA-Z][0-9a-zA-Z_]+` | Example: `write_cluster`, `read_cluster0`                    |
 
 ## create_instance (multiple storage vaults)
 
@@ -91,20 +91,20 @@ Content-Type: text/plain
 
 - Parameters for a `create_instance` request using HDFS as the storage vault
 
-| Parameter                                | Description                                   | Required/Optional | Notes                                                    |
-| ---------------------------------------- | --------------------------------------------- | ----------------- | -------------------------------------------------------- |
-| instance_id                              | instance_id                                   | Required          | Globally and historically unique, normally a UUID string |
-| name                                     | Instance name                                 | Optional          |                                                          |
-| user_id                                  | User ID                                       | Required          |                                                          |
-| vault                                    | Storage vault                                 | Required          |                                                          |
-| vault.hdfs_info                          | Information of the HDFS storage vault         | Required          |                                                          |
-| vault.build_conf                         | Build configuration of the HDFS storage vault | Required          |                                                          |
-| vault.build_conf.fs_name                 | HDFS name, normally the connection address    | Required          |                                                          |
-| vault.build_conf.user                    | User to connect to HDFS                       | Required          |                                                          |
-| vault.build_conf.hdfs_kerberos_keytab    | Kerberos Keytab path                          | Optional          | Required when using Kerberos authentication              |
-| vault.build_conf.hdfs_kerberos_principal | Kerberos Principal                            | Optional          | Required when using Kerberos authentication              |
-| vault.build_conf.hdfs_confs              | Other configurations of HDFS                  | Optional          | Can be filled in as needed                               |
-| vault.prefix                             | Prefix for data storage                       | Required          |                                                          |
+| Parameter                                | Description                                                  | Required/Optional | Notes                                                        |
+| ---------------------------------------- | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
+| instance_id                              | ID of the data warehouse instance in the compute-storage decoupled mode, normally a UUID string. It should conform to the format of `[0-9a-zA-Z_-]+`. | Required          | Example: `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`              |
+| name                                     | Instance name. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Optional          |                                                              |
+| user_id                                  | ID of the user who creates the instance. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Required          |                                                              |
+| vault                                    | Storage vault                                                | Required          |                                                              |
+| vault.hdfs_info                          | Information of the HDFS storage vault                        | Required          |                                                              |
+| vault.build_conf                         | Build configuration of the HDFS storage vault                | Required          |                                                              |
+| vault.build_conf.fs_name                 | HDFS name, normally the connection address                   | Required          |                                                              |
+| vault.build_conf.user                    | User to connect to HDFS                                      | Required          |                                                              |
+| vault.build_conf.hdfs_kerberos_keytab    | Kerberos Keytab path                                         | Optional          | Required when using Kerberos authentication                  |
+| vault.build_conf.hdfs_kerberos_principal | Kerberos Principal                                           | Optional          | Required when using Kerberos authentication                  |
+| vault.build_conf.hdfs_confs              | Other configurations of HDFS                                 | Optional          | Can be filled in as needed                                   |
+| vault.prefix                             | Prefix for data storage; used for data isolation             | Required          | Normally named after the specific business, such as `big_data` |
 
 - Example of a `create_instance` request using HDFS as the storage vault
 
@@ -168,18 +168,18 @@ Content-Type: text/plain
 
 | Parameter                  | Description                                                  | Required/Optional | Notes                                                        |
 | -------------------------- | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
-| instance_id                | instance_id                                                  | Required          | Globally and historically unique, normally a UUID string     |
-| name                       | Instance name                                                | Optional          |                                                              |
-| user_id                    | User ID to create the instance                               | Required          |                                                              |
+| instance_id                | ID of the data warehouse instance in the compute-storage decoupled mode, normally a UUID string. It should conform to the format of `[0-9a-zA-Z_-]+`. | Required          | Example: `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`              |
+| name                       | Instance name. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Optional          |                                                              |
+| user_id                    | ID of the user who creates the instance. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Required          |                                                              |
 | vault.obj_info             | S3 link configuration                                        | Required          |                                                              |
 | vault.obj_info.ak          | S3 Access Key                                                | Required          |                                                              |
 | vault.obj_info.sk          | S3 Secret Key                                                | Required          |                                                              |
 | vault.obj_info.bucket      | S3 bucket name                                               | Required          |                                                              |
-| vault.obj_info.prefix      | Prefix for data storage on S3                                | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket. |
+| vault.obj_info.prefix      | Prefix for data storage on S3                                | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket, such as `big_data` |
 | obj_info.endpoint          | S3 endpoint                                                  | Required          | The domain or IP:port, not including the scheme prefix such as` http://.` |
 | obj_info.region            | S3 region                                                    | Required          | If using MinIO, this parameter can be filled in with any value. |
 | obj_info.external_endpoint | S3 external endpoint                                         | Required          | Normally consistent with the endpoint. Compatible with OSS. Note the difference between external and internal OSS. |
-| vault.obj_info.provider    | S3 provider; options include OSS, S3, COS, OBS, BOS, GCP, and AZURE | Required          | If using MinIO, simply fill in 'S3'.                         |
+| vault.obj_info.provider    | S3 provider; options include OSS, S3, COS, OBS, BOS, GCP, and AZURE | Required          | If using MinIO, simply fill in S3.                           |
 
 - Example of a `create_instance` request using object storage as the storage vault
 
@@ -211,7 +211,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -278,25 +278,25 @@ Content-Type: text/plain
 
 - Parameter
 
-| Parameter                  | Description                                      | Required/Optional | Notes                                                        |
-| -------------------------- | ------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
-| instance_id                | instance_id                                      | Required          | Globally and historically unique, normally a UUID string     |
-| name                       | Instance name                                    | Optional          |                                                              |
-| user_id                    | User ID                                          | Required          |                                                              |
-| obj_info                   | S3 link configuration                            | Required          |                                                              |
-| obj_info.ak                | S3 Access Key                                    | Required          |                                                              |
-| obj_info.sk                | S3 Secret Key                                    | Required          |                                                              |
-| obj_info.bucket            | S3 bucket name                                   | Required          |                                                              |
-| obj_info.prefix            | Prefix for data storage on S3                    | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket. |
-| obj_info.endpoint          | S3 endpoint                                      | Required          | The domain or IP:port, not including the scheme prefix such as `http://. ` |
-| obj_info.region            | S3 region                                        | Required          |                                                              |
-| obj_info.external_endpoint | S3 external endpoint                             | Optional          | Compatible with OSS. Note the difference between external and internal OSS. |
-| obj_info.provider          | S3 provider                                      | Required          |                                                              |
-| obj_info.user_id           | user_id for bucket                               | Optional          | Used to identify the object that needs to have its AK/SK changed during AK/SK rotation. |
-| ram_user                   | ram_user, used for external bucket authorization | Optional          |                                                              |
-| ram_user.user_id           |                                                  | Required          |                                                              |
-| ram_user.ak                |                                                  | Required          |                                                              |
-| ram_user.sk                |                                                  | Required          |                                                              |
+| Parameter                  | Description                                                  | Required/Optional | Notes                                                        |
+| -------------------------- | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
+| instance_id                | ID of the data warehouse instance in the compute-storage decoupled mode, normally a UUID string. It should conform to the format of `[0-9a-zA-Z_-]+`. | Required          | Example: `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`              |
+| name                       | Instance name. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Optional          |                                                              |
+| user_id                    | ID of the user who creates the instance. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Required          |                                                              |
+| obj_info                   | S3 link configuration                                        | Required          |                                                              |
+| obj_info.ak                | S3 Access Key                                                | Required          |                                                              |
+| obj_info.sk                | S3 Secret Key                                                | Required          |                                                              |
+| obj_info.bucket            | S3 bucket name                                               | Required          |                                                              |
+| obj_info.prefix            | Prefix for data storage on S3                                | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket. |
+| obj_info.endpoint          | S3 endpoint                                                  | Required          | The domain or IP:port, not including the scheme prefix such as `http://. ` |
+| obj_info.region            | S3 region                                                    | Required          |                                                              |
+| obj_info.external_endpoint | S3 external endpoint                                         | Optional          | Compatible with OSS. Note the difference between external and internal OSS. |
+| obj_info.provider          | S3 provider                                                  | Required          |                                                              |
+| obj_info.user_id           | user_id for bucket                                           | Optional          | Used to identify the object that needs to have its AK/SK changed during AK/SK rotation. |
+| ram_user                   | ram_user, used for external bucket authorization             | Optional          |                                                              |
+| ram_user.user_id           |                                                              | Required          |                                                              |
+| ram_user.ak                |                                                              | Required          |                                                              |
+| ram_user.sk                |                                                              | Required          |                                                              |
 
 - Example
 
@@ -330,7 +330,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -372,9 +372,9 @@ Content-Type: text/plain
 
 - Parameter
 
-| Parameter   | Description | Required/Optional | Notes                            |
-| ----------- | ----------- | ----------------- | -------------------------------- |
-| instance_id | instance_id | Required          | Globally and historically unique |
+| Parameter   | Description | Required/Optional | Notes           |
+| ----------- | ----------- | ----------------- | --------------- |
+| instance_id | instance_id | Required          | Globally unique |
 
 - Example
 
@@ -391,7 +391,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -430,9 +430,9 @@ Content-Type: text/plain
 
 - Parameter
 
-| Parameter   | Description | Required/Optional | Notes                            |
-| ----------- | ----------- | ----------------- | -------------------------------- |
-| instance_id | instance_id | Required          | Globally and historically unique |
+| Parameter   | Description | Required/Optional | Notes           |
+| ----------- | ----------- | ----------------- | --------------- |
+| instance_id | instance_id | Required          | Globally unique |
 
 - Example
 
@@ -446,7 +446,7 @@ Content-Type: text/plain
 
 | Parameter          | Description                                      | Required/Optional | Notes                                                        |
 | ------------------ | ------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
-| code               | Response status code                             | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code               | Response status code                             | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg                | Error message                                    | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 | result             | Details of the instance                          | Required          |                                                              |
 | result.user_id     | User ID used to create the instance              | Required          |                                                              |
@@ -456,7 +456,7 @@ Content-Type: text/plain
 | result.mtime       | Modification time of the instance                | Required          |                                                              |
 | result.obj_info    | S3 information list associated with the instance | Required          |                                                              |
 | result.stages      | List of stages associated with the instance      | Required          |                                                              |
-| result.status      | Instance status                                  | Optional          | If an instance is dropped, its status will turn into "DELETED". |
+| result.status      | Instance status                                  | Optional          | If an instance is dropped, its status will turn into `DELETED`. |
 
 - Successful response
 
@@ -658,7 +658,7 @@ Content-Type: text/plain
 
 | Parameter       | Description             | Required/Optional | Notes                                                        |
 | --------------- | ----------------------- | ----------------- | ------------------------------------------------------------ |
-| cloud_unique_id | cloud_unique_id of node | Required          | The unique_id of a node under an instance can be used to retrieve the S3 information configured for the entire instance. |
+| cloud_unique_id | cloud_unique_id of node | Required          | The `unique_id` of a node under an instance can be used to retrieve the S3 information configured for the entire instance. |
 
 - Example
 
@@ -673,7 +673,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 | result    | Result objects       | Required          |                                                              |
 
@@ -792,7 +792,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -873,7 +873,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -957,7 +957,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1014,18 +1014,18 @@ Content-Type: text/plain
 
 | Parameter                     | Description              | Required/Optional | Notes                                                        |
 | ----------------------------- | ------------------------ | ----------------- | ------------------------------------------------------------ |
-| instance_id                   | instance_id              | Required          | Globally and historically unique, normally a UUID string     |
+| instance_id                   | instance_id              | Required          | Globally unique                                              |
 | cluster                       | Cluster object           | Required          |                                                              |
-| cluster.cluster_name          | Cluster name             | Required          | The FE cluster name is special. The default value of it is RESERVED_CLUSTER_NAME_FOR_SQL_SERVER. This can be modified by configuring cloud_observer_cluster_name in the fe.conf file. |
-| cluster.cluster_id            | Cluster ID               | Required          | The FE cluster ID is special. The default value of it is RESERVED_CLUSTER_ID_FOR_SQL_SERVER. This can be modified by configuring cloud_observer_cluster_id in the fe.conf file. |
-| cluster.type                  | Cluster node type        | Required          | Two types are supported: "SQL" and "COMPUTE". "SQL" represents the SQL Service corresponding to FE, while "COMPUTE" means that the compute nodes are corresponding to BE. |
+| cluster.cluster_name          | Cluster name             | Required          | The FE cluster name is special. The default value of it is `RESERVED_CLUSTER_NAME_FOR_SQL_SERVER`. This can be modified by configuring `cloud_observer_cluster_name` in the `fe.conf` file. |
+| cluster.cluster_id            | Cluster ID               | Required          | The FE cluster ID is special. The default value of it is `RESERVED_CLUSTER_ID_FOR_SQL_SERVER`. This can be modified by configuring `cloud_observer_cluster_id` in the `fe.conf` file. |
+| cluster.type                  | Cluster node type        | Required          | Two types are supported: `SQL` and `COMPUTE`. `SQL` represents the SQL Service corresponding to FE, while `COMPUTE` means that the compute nodes are corresponding to BE. |
 | cluster.nodes                 | Nodes in the cluster     | Required          | Array                                                        |
-| cluster.nodes.cloud_unique_id | cloud_unique_id of nodes | Required          | cloud_unique_id in fe.conf and be.conf                       |
+| cluster.nodes.cloud_unique_id | cloud_unique_id of nodes | Required          | `cloud_unique_id` in `fe.conf` and `be.conf`                 |
 | cluster.nodes.ip              | Node IP                  | Required          | When deploying FE/BE in FQDN mode, this field should be the domain name. |
 | cluster.nodes.host            | Node domain name         | Optional          | This field is required when deploying FE/BE in FQDN mode.    |
 | cluster.nodes.heartbeat_port  | Heartbeat port of BE     | Required for BE   | heartbeat_service_port in be.conf                            |
-| cluster.nodes.edit_log_port   | Edit log port of FE      | Required for FE   | edit_log_port in fe.conf                                     |
-| cluster.nodes.node_type       | FE node type             | Required          | This field is required when the cluster type is "SQL". It can be either "FE_MASTER" or "FE_OBSERVER". "FE_MASTER" indicates that the node is of Master role, and "FE_OBSERVER" indicates that the node is an Observer. Note that in an "SQL" type cluster, the nodes array can only have one "FE_MASTER" node, but it can include multiple "FE_OBSERVER" nodes. |
+| cluster.nodes.edit_log_port   | Edit log port of FE      | Required for FE   | `edit_log_port` in `fe.conf`                                 |
+| cluster.nodes.node_type       | FE node type             | Required for FE   | This field is required when the cluster type is `SQL`. It can be either `FE_MASTER` or `FE_OBSERVER`. `FE_MASTER` indicates that the node is of Master role, and `FE_OBSERVER` indicates that the node is an Observer. Note that in an `SQL` type cluster, the nodes array can only have one `FE_MASTER` node, but it can include multiple `FE_OBSERVER` nodes. |
 
 - Example
 
@@ -1054,7 +1054,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1101,10 +1101,10 @@ Content-Type: text/plain
 
 | Parameter       | Description                                     | Required/Optional | Notes                                                        |
 | --------------- | ----------------------------------------------- | ----------------- | ------------------------------------------------------------ |
-| cloud_unique_id | cloud_unique_id                                 | Required          | It can be used to retrieve the relevant instance_id          |
-| cluster_name    | Cluster name                                    | Optional          | Note: One of the three parameters (cluster_name, cluster_id, and mysql_user_name) must be provided. If all three are empty, the API will return the information of all clusters under the instance. |
-| cluster_id      | Cluster ID                                      | Optional          | Note: One of the three parameters (cluster_name, cluster_id, and mysql_user_name) must be provided. If all three are empty, the API will return the information of all clusters under the instance. |
-| mysql_user_name | Available cluster configured by mysql_user_name | Optional          | Note: One of the three parameters (cluster_name, cluster_id, and mysql_user_name) must be provided. If all three are empty, the API will return the information of all clusters under the instance. |
+| cloud_unique_id | cloud_unique_id                                 | Required          | It can be used to retrieve the relevant `instance_id`        |
+| cluster_name    | Cluster name                                    | Optional          | Note: One of the three parameters (`cluster_name`, `cluster_id`, and `mysql_user_name`) must be provided. If all three are empty, the API will return the information of all clusters under the instance. |
+| cluster_id      | Cluster ID                                      | Optional          | Note: One of the three parameters (`cluster_name`, `cluster_id`, and `mysql_user_name`) must be provided. If all three are empty, the API will return the information of all clusters under the instance. |
+| mysql_user_name | Available cluster configured by mysql_user_name | Optional          | Note: One of the three parameters (`cluster_name`, `cluster_id`, and `mysql_user_name`) must be provided. If all three are empty, the API will return the information of all clusters under the instance. |
 
 - Example
 
@@ -1124,7 +1124,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 | result    | Result objects       | Required          |                                                              |
 
@@ -1211,7 +1211,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1283,7 +1283,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1350,14 +1350,14 @@ Content-Type: text/plain
 | cluster                       | Cluster object             | Required          |                                                              |
 | cluster.cluster_name          | Name of the target cluster | Required          |                                                              |
 | cluster.cluster_id            | ID of the target cluster   | Required          |                                                              |
-| cluster.type                  | Cluster node type          | Required          | Two types are supported: "SQL" and "COMPUTE". "SQL" represents the SQL Service corresponding to FE, while "COMPUTE" means that the compute nodes are corresponding to BE. |
+| cluster.type                  | Cluster node type          | Required          | Two types are supported: `SQL` and `COMPUTE`. `SQL` represents the SQL Service corresponding to FE, while `COMPUTE` means that the compute nodes are corresponding to BE. |
 | cluster.nodes                 | Nodes in the cluster       | Required          | Array                                                        |
-| cluster.nodes.cloud_unique_id | cloud_unique_id of nodes   | Required          | cloud_unique_id in fe.conf and be.conf                       |
+| cluster.nodes.cloud_unique_id | cloud_unique_id of nodes   | Required          | `cloud_unique_id` in `fe.conf` and `be.conf`                 |
 | cluster.nodes.ip              | Node IP                    | Required          | When deploying FE/BE in FQDN mode, this field should be the domain name. |
 | cluster.nodes.host            | Node domain name           | Optional          | This field is required when deploying FE/BE in FQDN mode.    |
-| cluster.nodes.heartbeat_port  | Heartbeat port of BE       | Required for BE   | heartbeat_service_port in be.conf                            |
-| cluster.nodes.edit_log_port   | Edit log port of FE        | Required for FE   | edit_log_port in fe.conf                                     |
-| cluster.nodes.node_type       | FE node type               | Required          | This field is required when the cluster type is "SQL". It can be either "FE_MASTER" or "FE_OBSERVER". "FE_MASTER" indicates that the node is of Master role, and "FE_OBSERVER" indicates that the node is an Observer. Note that in an "SQL" type cluster, the nodes array can only have one "FE_MASTER" node, but it can include multiple "FE_OBSERVER" nodes. |
+| cluster.nodes.heartbeat_port  | Heartbeat port of BE       | Required for BE   | `heartbeat_service_port` in `be.conf`                        |
+| cluster.nodes.edit_log_port   | Edit log port of FE        | Required for FE   | `edit_log_port` in `fe.conf`                                 |
+| cluster.nodes.node_type       | FE node type               | Required for FE   | This field is required when the cluster type is `SQL`. It can be either `FE_MASTER` or `FE_OBSERVER`. `FE_MASTER` indicates that the node is of Master role, and `FE_OBSERVER` indicates that the node is an Observer. Note that in an `SQL` type cluster, the nodes array can only have one `FE_MASTER` node, but it can include multiple `FE_OBSERVER` nodes. |
 
 - Example
 
@@ -1391,7 +1391,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1491,7 +1491,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1571,7 +1571,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1690,9 +1690,9 @@ Content-Type: text/plain
 
 - Parameter
 
-| Parameter   | Description | Required/Optional | Notes                            |
-| ----------- | ----------- | ----------------- | -------------------------------- |
-| instance_id | instance_id | Required          | Globally and historically unique |
+| Parameter   | Description | Required/Optional | Notes           |
+| ----------- | ----------- | ----------------- | --------------- |
+| instance_id | instance_id | Required          | Globally unique |
 
 - Example
 
@@ -1709,7 +1709,7 @@ Content-Type: text/plain
 
 | Parameter | Description          | Required/Optional | Notes                                                        |
 | --------- | -------------------- | ----------------- | ------------------------------------------------------------ |
-| code      | Response status code | Required          | Enumerated values, including OK, INVALID_ARGUMENT, INTERNAL_ERROR, and ALREADY_EXISTED |
+| code      | Response status code | Required          | Enumerated values, including `OK`, `INVALID_ARGUMENT`, `INTERNAL_ERROR`, and `ALREADY_EXISTED` |
 | msg       | Error message        | Required          | If an error occurs, an error message will be returned; if no error occurs, an empty string will be returned. |
 
 - Successful response
@@ -1756,7 +1756,7 @@ Content-Type: text/plain
 | ---------------- | -------------------- | ----------------- | ------------------------------------------------------------ |
 | instance_ids     | IDs of the instances | Required          |                                                              |
 | cloud_unique_ids | cloud_unique_ids     | Optional          | instance_ids is required while cloud_unique_ids is optional  |
-| status           | Filtering condition  | Optional          | Possible status includes "NORMAL", "STOPPED", and "TO_RESUME". If this parameter is not filled in, the systen will return the status of all clusters. |
+| status           | Filtering condition  | Optional          | Possible status includes `NORMAL`, `STOPPED`, and `TO_RESUME`. If this parameter is not filled in, the systen will return the status of all clusters. |
 
 - Example
 
@@ -1841,7 +1841,7 @@ Content-Type: text/plain
 | cloud_unique_id |                              | Optional          |                                                              |
 | instance_id     |                              | Required          |                                                              |
 | cluster_id      | ID of the target cluster     | Required          |                                                              |
-| cluster_status  | Status of the target cluster | Required          | Possible status includes "NORMAL", "STOPPED", and "TO_RESUME". |
+| cluster_status  | Status of the target cluster | Required          | Possible status includes `NORMAL`, `STOPPED`, and `TO_RESUME`. |
 
 - Example
 

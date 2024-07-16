@@ -27,11 +27,7 @@ under the License.
 
 # 文件分析
 
-<version since="1.2.0">
-
 通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析。并且支持自动的列类型推断。
-
-</version>
 
 ## 使用方式
 

@@ -26,7 +26,6 @@ under the License.
 
 ## json_insert
 
-<version since="dev"></version>
 
 ### Description
 #### Syntax

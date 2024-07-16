@@ -56,7 +56,7 @@ cp -r ms re
 
 ## 版本信息
 
-可通过两种方式检查`doris_cloud` 的版本信息，若其中一种方式无法正确执行，可尝试另一方式：
+可通过两种方式检查`doris_cloud` 的版本信息，若其中一种方式无法正确执行，可尝试另一方式，在`ms`或者`re`目录下：
 
 - `bin/start.sh --version`
 - `lib/doris_cloud --version`
@@ -156,4 +156,3 @@ version:{doris_cloud-0.0.0-debug} code_version:{commit=4517faffbf79b48d34a94abb2
 
 meta-service started
 ```
-

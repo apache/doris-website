@@ -24,8 +24,6 @@ under the License.
 
 ## ADMIN-CANCEL-REBALANCE-DISK
 
-<version since="1.2.0">
-
 ### Name
 
 ADMIN CANCEL REBALANCE DISK
@@ -57,6 +55,4 @@ ADMIN CANCEL REBALANCE DISK ON ("192.168.1.1:1234", "192.168.1.2:1234");
 ADMIN,CANCEL,REBALANCE DISK
 
 ### Best Practice
-
-</version>
 

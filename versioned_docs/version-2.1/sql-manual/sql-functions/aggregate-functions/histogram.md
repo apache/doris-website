@@ -39,10 +39,6 @@ Parameter description：
 
 Alias function: `hist(expr[, INT num_buckets])`
 
-### notice
-
-> Only supported in vectorized engine
-
 ### example
 
 ```

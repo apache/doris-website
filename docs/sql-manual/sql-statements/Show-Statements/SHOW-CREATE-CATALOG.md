@@ -28,11 +28,7 @@ under the License.
 
 ### Name
 
-<version since="1.2">
-
 SHOW CREATE CATALOG
-
-</version>
 
 ### Description
 

@@ -53,7 +53,7 @@ Dear community, Apache Doris version 2.1.4 was released on June 26, 2024. In thi
 
   - [Log Management - FE Log](https://doris.apache.org/docs/admin-manual/log-management/fe-log)
 
-  - [Log Management - FE Log](https://doris.apache.org/docs/admin-manual/log-management/be-log)
+  - [Log Management - BE Log](https://doris.apache.org/docs/admin-manual/log-management/be-log)
 
 - If no table comment is provided when creating a table, the default comment will be empty instead of using the table type as the default comment. [#36025](https://github.com/apache/doris/pull/36025)
 

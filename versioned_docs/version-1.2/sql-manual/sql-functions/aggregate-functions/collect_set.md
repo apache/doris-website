@@ -26,11 +26,7 @@ under the License.
 
 ## COLLECT_SET
 
-<version since="1.2.0">
-
 COLLECT_SET
-
-</version>
 
 ### description
 #### Syntax
@@ -48,8 +44,6 @@ Only supported in vectorized engine
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3 from collect_set_test order by k1;
 +------+------------+-------+
 | k1   | k2         | k3    |

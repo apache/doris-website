@@ -108,11 +108,13 @@ select k1,bitmap_union(uuid) from hive_bitmap_table group by k1
 
 ## Hive Bitmap import into Doris
 
-<version since="2.0.2">
+### Method 1: Catalog (recommended)
 
-### Method 1：Catalog (recommended)
+:::info Note
 
-</version>
+This feature is supported since version 2.0.2.
+
+:::
 
 When create a Hive table in the format specified as TEXT, for Binary type, Hive will be saved as a bash64 encoded string. Therefore, the binary data can be directly saved as Bitmap through bitmap_from_base64 function by using  Doris's Hive Catalog.
 
@@ -162,4 +164,4 @@ insert into doris_bitmap_table select k1, k2, k3, bitmap_from_base64(uuid) from 
 
 ### Method 2: Spark Load
 
- see details: [Spark Load](https://doris.apache.org/docs/data-operate/import/import-way/spark-load-manual) -> Basic operation -> Create load(Example 3: when the upstream data source is hive binary type table)
+ See details: Spark Load -> Basic operation -> Create load (Example 3: when the upstream data source is hive binary type table)

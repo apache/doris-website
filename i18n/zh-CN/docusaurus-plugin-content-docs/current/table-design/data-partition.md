@@ -99,7 +99,7 @@ PROPERTIES
 
 在建表语句的最后 PROPERTIES 中，关于 PROPERTIES 中可以设置的相关参数，可以查看[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE)中的详细介绍。
 
-ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 mysql、broker、es 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
+ENGINE 的类型是 OLAP，即默认的 ENGINE 类型。在 Doris 中，只有这个 ENGINE 类型是由 Doris 负责数据管理和存储的。其他 ENGINE 类型，如 MySQL、 Broker、ES 等等，本质上只是对外部其他数据库或系统中的表的映射，以保证 Doris 可以读取这些数据。而 Doris 本身并不创建、管理和存储任何非 OLAP ENGINE 类型的表和数据。
 
 `IF NOT EXISTS`表示如果没有创建过该表，则创建。注意这里只判断表名是否存在，而不会判断新建表 Schema 是否与已存在的表 Schema 相同。所以如果存在一个同名但不同 Schema 的表，该命令也会返回成功，但并不代表已经创建了新的表和新的 Schema。。
 
@@ -484,7 +484,7 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
 - `dynamic_partition.history_partition_num`
 
-  当`create_history_partition` 为 `true` 时，该参数用于指定创建历史分区数量。默认值为 -1，即未设置。
+  当`create_history_partition` 为 `true` 时，该参数用于指定创建历史分区数量。默认值为 -1，即未设置。**该变量与 `dynamic_partition.start` 作用相同，建议同时只设置一个。**
 
 -  `dynamic_partition.hot_partition_num`
 
@@ -697,7 +697,7 @@ PROPERTIES
 );
 ```
 
-假设当前日期为 2020-05-29。则根于以上规则，tbl1 会产生以下分区：
+假设当前日期为 2020-05-29。则基于以上规则，tbl1 会产生以下分区：
 
 ```Plain
 p202005: ["2020-05-03", "2020-06-03")
@@ -719,20 +719,25 @@ p202006: ["2020-06-28", "2020-07-28")
 
 Doris FE 中有固定的 dynamic partition 控制线程，持续以特定时间间隔（即 `dynamic_partition_check_interval_seconds`）进行 dynamic partition 表的分区检查，完成需要的分区创建与删除操作。
 
-具体而言，自动分区将会进行如下检查与操作（我们称此时该表分区的起始包含时间为 `START`，末尾包含时间为 `END`）：
+具体而言，自动分区将会进行如下检查与操作（我们称此时该表分区的起始包含时间为 `START`，末尾包含时间为 `END`，省略 property 的 `dynamic_partition.` 前缀）：
 1. `START` 时间之前的所有分区，全部被删除。
-2. 如果 `dynamic_partition.create_history_partition` 为 `true`，创建 `START` 到 `END` 之间的所有分区；如果 `dynamic_partition.create_history_partition` 为 `false`，创建当前时间到 `END` 之间的所有分区。
+2. 如果 `create_history_partition` 为 `false`，创建当前时间到 `END` 之间的所有分区；如果 `create_history_partition` 为 `true`，除当前时间到 `END` 之间的分区外，还会创建 `START` 到当前时间的分区。若定义了 `history_partition_num`，则从当前时间向前创建的分区数量不超过 `history_partition_num`。
 
 需要注意的是：
 1. 如果分区时间范围与 `[START, END]` 范围相交，则认为**属于**当前 dynamic partition 时间范围。
-2. 如果尝试创建的新分区和现有分区冲突，则保留当前分区，不创建该新分区。
+2. 如果尝试创建的新分区和现有分区冲突，则保留当前分区，不创建该新分区。如果该行为出现在建表时，DDL 将会报错。
 
 因此，自动分区表在系统自动维护后，呈现的状态是：
-1. `START` 时间之前**不包含**任何分区；
-2. 保留所有 `END` 时间以后**手动创建的**分区。
-3. 除手动删除或意外丢失的分区外，表包含**特定范围**内的全部分区；如果其中某一段范围有手动创建的分区，则这部分分区被保留；其他范围均被dynamic partition 按照 `dynamic_partition.time_unit` 为单位创建的单位分区覆盖。
-    - 如果 `dynamic_partition.create_history_partition` 为 `true`，则**特定范围**为 `[START, END]`；
-    - 如果 `dynamic_partition.create_history_partition` 为 `false`，则**特定范围**为 `[当前时间, END]`，同时包含 `[START, 当前时间)` 中既存的分区。
+1. `START` 时间之前，除 `reserved_history_periods` 所指定范围以外，**不包含**任何分区；
+2. `END` 时间之后，保留所有**手动创建的**分区。
+3. 除手动删除或意外丢失的分区外，表包含**特定范围**内的全部分区：
+    - 如果 `create_history_partition` 为 `true`：
+      - 若定义了 `history_partition_num`，则**特定范围**为 `[max(START, 当前时间 - history_partition_num * time_unit), END]`；
+      - 若未定义 `history_partition_num`，则**特定范围**为 `[START, END]`；
+    - 如果 `create_history_partition` 为 `false`，则**特定范围**为 `[当前时间, END]`，同时包含 `[START, 当前时间)` 中既存的分区。
+    
+    整个**特定范围**按照 `time_unit` 划分为若干分区范围。对于任意一个范围，如果其与某个当前存在的分区 `X` 相交，则 `X` 被保留，否则该范围将被 dynamic partition 所创建的一个分区所完整覆盖。
+4. 除非分区数量即将超过 `max_dynamic_partition_num`，创建将会失败。
 
 ### 修改动态分区属性
 
@@ -1321,4 +1326,4 @@ Doris 建表是按照 Partition 粒度依次创建的。当一个 Partition 创�
 
 ## 更多帮助
 
-关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 Mysql 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。
+关于数据划分更多的详细说明，我们可以在 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) 命令手册中查阅，也可以在 MySQL 客户端下输入 `HELP CREATE TABLE;` 获取更多的帮助信息。

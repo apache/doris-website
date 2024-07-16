@@ -52,11 +52,12 @@ maven 依赖
 bootstrap.servers=127.0.0.1:9092
 
 # 修改为创建的 plugins 目录
+# 注意：此处请填写 Kafka 的直接路径。例如：plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 ```
 
 配置 doris-connector-sink.properties
-<br />
+
 在 config 目录下创建 doris-connector-sink.properties，并配置如下内容：
 
 ```properties
@@ -100,6 +101,7 @@ bootstrap.servers=127.0.0.1:9092
 group.id=connect-cluster
 
 # 修改为创建的 plugins 目录
+# 注意：此处请填写 Kafka 的直接路径。例如：plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 ```
 
@@ -250,7 +252,7 @@ Doris-kafka-connector 使用逻辑或原始类型映射来解析列的数据类�
 
 
 ## 最佳实践
-### 同步 Json 序列化数据
+### 同步 JSON 序列化数据
 ```
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
   "name":"doris-json-test", 
@@ -328,3 +330,21 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
   } 
 }'
 ```
+
+## 常见问题
+**1. 读取 JSON 类型的数据报如下错误：**
+```
+Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
+	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
+	at org.apache.kafka.connect.storage.Converter.toConnectData(Converter.java:91)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.lambda$convertAndTransformRecord$4(WorkerSinkTask.java:536)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndRetry(RetryWithToleranceOperator.java:180)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndHandleError(RetryWithToleranceOperator.java:214)
+```
+**原因：**
+    是因为使用 `org.apache.kafka.connect.json.JsonConverter` 转换器需要匹配 "schema" 和 "payload" 字段。
+
+**两种解决方案，任选其一：**
+  1. 将 `org.apache.kafka.connect.json.JsonConverter` 更换为 `org.apache.kafka.connect.storage.StringConverter`
+  2. 启动模式为 **Standalone** 模式，则将 config/connect-standalone.properties 中 `value.converter.schemas.enable` 或 `key.converter.schemas.enable` 改成false；
+    启动模式为 **Distributed** 模式，则将 config/connect-distributed.properties 中 `value.converter.schemas.enable` 或 `key.converter.schemas.enable` 改成false

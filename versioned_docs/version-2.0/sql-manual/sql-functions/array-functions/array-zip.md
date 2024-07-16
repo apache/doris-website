@@ -24,11 +24,7 @@ under the License.
 
 ## array_zip
 
-<version since="2.0">
-
 array_zip
-
-</version>
 
 ### description
 
@@ -41,10 +37,6 @@ Combines all all arrays into a single array. The resulting array contains the co
 #### Returned value
 
 Array with elements from the source arrays grouped into tuples. Data types in the tuple are the same as types of the input arrays and in the same order as arrays are passed.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

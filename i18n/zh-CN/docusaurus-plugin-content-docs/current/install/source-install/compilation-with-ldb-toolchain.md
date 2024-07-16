@@ -65,6 +65,8 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 
 -   下载 [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz)，安装到 /path/to/java
 
+    > 3.0（含）之后的版本，或 master 分支，请使用 [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz)。
+
 -   下载 [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz)，安装到 /path/to/maven
 
 -   下载 [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)，安装到 /path/to/node
@@ -133,7 +135,8 @@ $ USE_AVX2=0 sh build.sh
 $ BUILD_TYPE=Debug sh build.sh
 ```
 
-该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE）。编译产出在 `output/` 目录下。
+该脚本会先编译第三方库，之后再编译 Doris 组件（FE、BE、MS）。编译产出在 `output/` 目录下。
+MS模块是doris存算分离模式依赖的模块, 详细说明请参考[此连接](../compute-storage-decoupled/compilation-and-deployment.md)
 
 ## 预编译三方库
 
@@ -146,3 +149,4 @@ https://github.com/apache/doris-thirdparty/releases
 这里我们提供了 Linux 和 MacOS 的预编译三方库。如果和你的编译运行环境一致，可以直接下载使用。
 
 下载好后，解压会得到一个 `installed/` 目录，将这个目录拷贝到 `thirdparty/` 目录下，之后运行 `build.sh` 即可。
+

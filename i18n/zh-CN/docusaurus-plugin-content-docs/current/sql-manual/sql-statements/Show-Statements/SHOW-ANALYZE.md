@@ -28,8 +28,6 @@ under the License.
 
 ### Name
 
-<version since="2.0"></version>
-
 SHOW ANALYZE
 
 ### Description
@@ -43,9 +41,9 @@ SHOW [AUTO] ANALYZE < table_name | job_id >
     [ WHERE [ STATE = [ "PENDING" | "RUNNING" | "FINISHED" | "FAILED" ] ] ];
 ```
 
-- AUTO：仅仅展示自动收集历史作业信息。需要注意的是默认只保存过去20000个执行完毕的自动收集作业的状态。
+- AUTO：仅仅展示自动收集历史作业信息。需要注意的是默认只保存过去 20000 个执行完毕的自动收集作业的状态。
 - table_name：表名，指定后可查看该表对应的统计作业信息。可以是  `db_name.table_name`  形式。不指定时返回所有统计作业信息。
-- job_id：统计信息作业 ID，执行 `ANALYZE` 异步收集时得到。不指定id时此命令返回所有统计作业信息。
+- job_id：统计信息作业 ID，执行 `ANALYZE` 异步收集时得到。不指定 id 时此命令返回所有统计作业信息。
 
 输出：
 

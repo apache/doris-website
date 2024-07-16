@@ -161,11 +161,7 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 ## Hive HLL 导入 doris
 
-<version dev>
-
 ### 方法一：Catalog（推荐）
-
-</version>
 
 创建 Hive 表指定为 TEXT 格式，对于 Binary 类型，Hive 会以 base64 编码的字符串形式保存，此时可以通过 Hive Catalog 的形式，直接将 HLL 数据通过 [hll_from_base64](../sql-manual/sql-functions/hll-functions/hll-from-base64.md) 函数插入到 Doris 内部。
 

@@ -26,11 +26,7 @@ under the License.
 
 ## array_last
 
-<version since="2.0">
-
 array_last
-
-</version>
 
 ### description
 Returns the last element in the array for which func(arr1[i]) returns something other than 0.
@@ -42,10 +38,6 @@ T array_last(lambda, ARRAY<T>)
 ```
 
 Use a lambda bool expression and an array as the input parameters, the lambda expression is used to evaluate the internal data of other input ARRAY parameters.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

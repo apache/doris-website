@@ -44,7 +44,7 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
 
 ### Example
 
-1. 撤销数据库 example_db 上， label 为 `example_db_test_load_label` 的导入作业
+1. 撤销数据库 example_db 上，label 为 `example_db_test_load_label` 的导入作业
 
    ```sql
    CANCEL LOAD
@@ -52,15 +52,13 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
    WHERE LABEL = "example_db_test_load_label";
    ```
 
-2. 撤销数据库 example*db 上， 所有包含 example* 的导入作业。
+2. 撤销数据库 example*db 上，所有包含 example* 的导入作业。
 
    ```sql
    CANCEL LOAD
    FROM example_db
    WHERE LABEL like "example_";
    ```
-
-<version since="1.2.0">
 
 3. 取消状态为 LOADING 的导入作业。
 
@@ -69,8 +67,6 @@ WHERE [LABEL = "load_label" | LABEL like "label_pattern" | STATE = "PENDING/ETL/
    FROM example_db
    WHERE STATE = "loading";
    ```
-
-</version>
 
 ### Keywords
 

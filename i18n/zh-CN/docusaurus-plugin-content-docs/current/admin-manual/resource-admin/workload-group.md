@@ -26,8 +26,6 @@ under the License.
 
 # WORKLOAD GROUP
 
-<version since="dev"></version>
-
 workload group 可限制组内任务在单个 be 节点上的计算资源和内存资源的使用。当前支持 query 绑定到 workload group。
 
 ## 版本说明
@@ -109,9 +107,9 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-此时配置的 CPU 限制为软限。自2.1版本起，系统会自动创建一个名为```normal```的group，不可删除。
+此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。
 
-创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看workload group可访问Doris系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
 
 2. 绑定 workload group。
 * 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`:
@@ -125,7 +123,7 @@ set workload_group = 'g1';
 ```
 session 变量`workload_group`优先于 user property `default_workload_group`, 在`workload_group`为空时，查询将绑定到`default_workload_group`, 在 session 变量`workload_group`不为空时，查询将绑定到`workload_group`。
 
-如果是非admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
 
 6. 执行查询，查询将关联到指定的 workload group。
 

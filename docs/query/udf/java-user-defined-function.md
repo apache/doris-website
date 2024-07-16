@@ -37,6 +37,8 @@ Doris supports writing UDFs, UDAFs, and UDTFs using JAVA. Unless otherwise speci
 ## Creating UDF
 
 The implemented jar package can be placed locally or stored on a remote server for download via HTTP, but each FE and BE node must be able to access the jar package.
+"file"=" file:///path/to/java-udf-demo-jar-with-dependencies.jar "
+"file"=" http://IP:port/udf-code.jar "
 
 Otherwise, an error message `Couldn't open file ......` will be returned.
 
@@ -89,7 +91,7 @@ When the session is linked within the database, directly using the UDF name will
 
 ## Dropping UDF
 
-If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md).
+If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md).
 
 ## Type Correspondence
 

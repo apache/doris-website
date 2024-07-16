@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Updaing Data on Unique Key Model",
+    "title": "Updating Data on Unique Key Model",
     "language": "en"
 }
 ---

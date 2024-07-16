@@ -26,11 +26,7 @@ under the License.
 
 ## DATETIME
 
-<version since="1.2.0">
-
 DATETIME
-
-</version>
 
 ### Description
 DATETIME([P])

@@ -31,8 +31,8 @@ brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
 python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@17 npm
 ```
 
-*使用 brew 安装的 jdk 版本为 17，因为在 macOS上，arm64 版本的 brew 默认没有 8 版本的 jdk*
-*Doris目前只支持 jdk8 和 jdk17 两个版本*
+*使用 brew 安装的 jdk 版本为 17，因为在 macOS 上，arm64 版本的 brew 默认没有 8 版本的 jdk*
+*Doris 目前只支持 jdk8 和 jdk17 两个版本*
 
 **依赖说明：**
 1. Java、Maven 等可以单独下载，方便管理
@@ -47,7 +47,7 @@ python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@
    
 ## 安装 thrift
 
-**注意：** 仅在只调试FE的情况下需要安装 thrift，同时调试 BE 和 FE 时，BE 的三方库包含 thrift
+**注意：** 仅在只调试 FE 的情况下需要安装 thrift，同时调试 BE 和 FE 时，BE 的三方库包含 thrift
 
 ```shell
 MacOS: 
@@ -103,7 +103,7 @@ MacOS:
     curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
         -o - | tar -Jxf -
 
-    # 保证protoc和thrift能够正常运行
+    # 保证 protoc 和 thrift 能够正常运行
     cd installed/bin
 
     ./protoc --version

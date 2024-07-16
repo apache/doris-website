@@ -32,8 +32,8 @@ Column 可以分为两大类：Key 和 Value。从业务角度看，Key 和 Valu
 
 Doris 的数据模型主要分为 3 类：
 
--   明细模型 Duplicate
+-   明细模型（Duplicate Key Model）：允许指定的 Key 列重复；适用于必须保留所有原始数据记录的情况。
 
--   主键模型 Unique 
+-   主键模型（Unique Key Model）：每一行的 Key 值唯一；可确保给定的 Key 列不会存在重复行。
 
--   聚合模型 Aggregate 
+-   聚合模型（Aggregate Key Model）：可根据 Key 列聚合数据；通常用于需要汇总或聚合信息（如总数或平均值）的情况。

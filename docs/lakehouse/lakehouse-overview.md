@@ -145,19 +145,7 @@ Multi-Catalog is designed to facilitate connection to external data catalogs and
 
 In older versions of Doris, user data is in a two-tiered structure: database and table. Thus, connections to external catalogs could only be done at the database or table level. For example, users could create a mapping to a table in an external catalog via `create external table`, or to a database via `create external database`. If there are large amounts of databases or tables in the external catalog, users will need to create mappings to them one by one, which could be tedious.
 
-With Multi-Catalog, Doris now has a new three-tiered metadata hierarchy (catalog -> database -> table), which means users can connect to external data at the catalog level directly. Currently it supports external catalogs including:
-
-- Apache Hive
-
-- Apache Iceberg
-
-- Apache Hudi
-
-- Elasticsearch
-
-- JDBC
-
-- Apache Paimon
+With Multi-Catalog, Doris now has a new three-tiered metadata hierarchy (catalog -> database -> table), which means users can connect to external data at the catalog level directly.
 
 Multi-Catalog works as an additional and enhanced external table connection method. It helps users conduct multi-catalog federated queries quickly.
 
@@ -388,7 +376,7 @@ Along with the new Multi-Catalog feature, we also added privilege management at 
 
 Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
 
-`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive](../lakehouse/datalake-analytics/hive)
+`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive Catalog](../datalake-analytics/hive)
 
 ### Database synchronization management
 

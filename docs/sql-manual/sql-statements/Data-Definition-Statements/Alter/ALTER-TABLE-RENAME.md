@@ -68,12 +68,8 @@ RENAME PARTITION old_partition_name new_partition_name;
 
 4. Modify the column name
 
-<version since="1.2">
-
 Modify the column name
  
-</version>
-
 grammar:
 
 ```sql

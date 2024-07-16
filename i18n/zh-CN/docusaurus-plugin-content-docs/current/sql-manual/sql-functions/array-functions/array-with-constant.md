@@ -24,12 +24,8 @@ under the License.
 
 ## array_with_constant
 
-<version since="1.2.0">
-
 array_with_constant
 array_repeat
-
-</version>
 
 ### description
 
@@ -39,17 +35,11 @@ array_repeat
 ARRAY<T> array_with_constant(n, T)
 ARRAY<T> array_repeat(T, n)
 ```
-返回一个数组, 包含n个重复的T常量。array_repeat与array_with_constant功能相同，用来兼容hive语法格式。
-
-### notice
-
-`仅支持向量化引擎中使用`
+返回一个数组，包含 n 个重复的 T 常量。array_repeat 与 array_with_constant 功能相同，用来兼容 hive 语法格式。
 
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
 +---------------------------------+--------------------------+
 | array_with_constant(2, 'hello') | array_repeat('hello', 2) |

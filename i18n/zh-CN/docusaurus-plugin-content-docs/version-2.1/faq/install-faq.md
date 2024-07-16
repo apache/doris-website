@@ -84,7 +84,7 @@ Observer 角色和这个单词的含义一样，仅仅作为观察者来同步�
 
 3. 使用 API 手动迁移数据
 
-   Doris 提供了[HTTP API](https://doris.apache.org/zh-CN/docs/dev/admin-manual/http-actions/be/tablet-migration)，可以手动指定一个磁盘上的数据分片迁移到另一个磁盘上。
+   Doris 提供了[HTTP API](../admin-manual/be/tablet-migration.md)，可以手动指定一个磁盘上的数据分片迁移到另一个磁盘上。
 
 ### Q5. 如何正确阅读 FE/BE 日志？
 

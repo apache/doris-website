@@ -26,11 +26,7 @@ under the License.
 
 ## array_count
 
-<version since="2.0">
-
 array_count
-
-</version>
 
 ### description
 
@@ -51,10 +47,6 @@ array_count(x->(x%2 = 0), array1);
 array_count(x->(abs(x)-1), array1);
 array_count((x,y)->(x = y), array1, array2);
 ```
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

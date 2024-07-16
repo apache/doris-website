@@ -35,6 +35,16 @@ Manually deploying a Doris cluster typically involves four steps:
 4. Deploy cluster: deploy the cluster based on the planning and configuration
 5. Verify: log in to the cluster and check if everything is right
 
+:::tip
+
+If you need to deploy Doris in the compute-storage decoupled mode, after completing step 1~3 as above, you may refer to the following docs to proceed with the deployment:
+
+1. [Before deployment](../compute-storage-decoupled/before-deployment.md)
+2. [Deploy the basic modules for the compute-storage decoupled mode](../compute-storage-decoupled/compilation-and-deployment.md)
+3. [Create cluster in the compute-storage decoupled mode](../compute-storage-decoupled/creating-cluster.md)
+
+:::
+
 ## 1. Check hardware and software environment
 
 ### Check hardware
@@ -115,6 +125,14 @@ In a Doris cluster, FE is mainly responsible for metadata storage, including met
 | FE        | Generally, the size of metadata ranges from several hundred MB to several GB. The recommended disk space is not to be less than 100GB. |
 | BE        | Doris uses LZ4 compression by default, with a compression ratio of 0.3~0.5.Disk space needs to be calculated based on the total data volume * 3 (3 data replicas)There is a need to reserve 40% disk space for background data compaction and temporary data storage. |
 | Broker    | If you want to deploy a Broker, you can usually deploy the Broker node on the same machine as the FE /BE nodes. |
+
+### Java version
+
+All Doris processes depend on Java.
+
+Before version 2.1 (inclusive), please use Java 8, recommended version: `openjdk-8u352-b08-linux-x64`.
+
+After version 3.0 (inclusive), please use Java 17, recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
 
 ## 2. Check operating system
 

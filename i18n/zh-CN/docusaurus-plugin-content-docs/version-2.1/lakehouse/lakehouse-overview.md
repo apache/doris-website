@@ -148,19 +148,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 在之前的 Doris 版本中，用户数据只有两个层级：Database 和 Table。当我们需要连接一个外部数据目录时，我们只能在 Database 或 Table 层级进行对接。比如通过 `create external table` 的方式创建一个外部数据目录中的表的映射，或通过 `create external database` 的方式映射一个外部数据目录中的 Database。如果外部数据目录中的 Database 或 Table 非常多，则需要用户手动进行一一映射，使用体验不佳。
 
-而新的 Multi-Catalog 功能在原有的元数据层级上，新增一层 Catalog，构成 Catalog -> Database -> Table 的三层元数据层级。其中，Catalog 可以直接对应到外部数据目录。目前支持的外部数据目录包括：
-
-- Apache Hive
-
-- Apache Iceberg
-
-- Apache Hudi
-
-- Elasticsearch
-
-- JDBC: 对接数据库访问的标准接口 (JDBC) 来访问各式数据库的数据。
-
-- Apache Paimon(Incubating)
+而新的 Multi-Catalog 功能在原有的元数据层级上，新增一层 Catalog，构成 Catalog -> Database -> Table 的三层元数据层级。
 
 该功能将作为之前外表连接方式（External Table）的补充和增强，帮助用户进行快速的多数据目录联邦查询。
 
@@ -197,7 +185,7 @@ Doris 通过收集统计信息有助于优化器了解数据分布特性，在�
 
 这里我们通过连接一个 Hive 集群说明如何使用 Catalog 功能。
 
-更多关于 Hive 的说明，请参阅：[Hive Catalog](../lakehouse/datalake-analytics/hive)
+更多关于 Hive 的说明，请参阅：[Hive Catalog](./datalake-analytics/hive)
 
 **1. 创建 Catalog**
 

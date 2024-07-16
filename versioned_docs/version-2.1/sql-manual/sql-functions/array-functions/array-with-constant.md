@@ -24,11 +24,7 @@ under the License.
 
 ## array_with_constant
 
-<version since="1.2.0">
-
 array_with_constant
-
-</version>
 
 ### description
 
@@ -40,15 +36,9 @@ ARRAY<T> array_repeat(T, n)
 ```
 
 get array of constants with n length, array_repeat has the same function as array_with_constant and is used to be compatible with the hive syntax format
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_with_constant(2, "hello"), array_repeat("hello", 2);
 +---------------------------------+--------------------------+
 | array_with_constant(2, 'hello') | array_repeat('hello', 2) |

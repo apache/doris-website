@@ -28,6 +28,12 @@ under the License.
 
 This guide is about how to compile Doris using the official compilation image provided. As this image is maintained by the Apache Doris team and is regularly updated with the necessary dependencies, it is the recommended way of compilation for users.
 
+:::tip
+
+Currently, this is not supported in the compute-storage decoupled mode.
+
+:::
+
 ## Install Docker
 
 In CentOS, execute the following command: 
@@ -67,7 +73,7 @@ apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 - `apache/doris:build-env-ldb-toolchain-latest` is used for compiling the latest master code and is updated along with the master. You can check the update time in the `docker/README.md` file.
 - Images with "no-avx2" in their names contain third-party libraries that can run on CPUs that do not support AVX2 instructions. Using these images, you can compile Doris with the "USE_AVX2=0".
 - For information about changes in the compilation image, please see [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
-- The Docker compilation image includes both JDK 8 and JDK 17. You can check the default JDK version by running `java -version`, and switch between versions using the following commands (JDK 8 as the default version is recommended).
+- The Docker compilation image includes both JDK 8 and JDK 17. You can check the default JDK version by running `java -version`, and switch between versions using the following commands. For versions earlier than 2.1 (inclusive), please use JDK 8. For versions later than 3.0 (inclusive) or the master branch, please use JDK 17.
 
 ```Bash
 # Switch to JDK 8

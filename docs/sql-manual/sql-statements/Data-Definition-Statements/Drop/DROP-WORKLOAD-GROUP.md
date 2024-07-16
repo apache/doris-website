@@ -30,8 +30,6 @@ under the License.
 
 DROP WORKLOAD GROUP
 
-<version since="dev"></version>
-
 ### Description
 
 This statement is used to delete a workload group.

@@ -26,20 +26,16 @@ under the License.
 
 ## field
 
-<version since="dev">
-
 field
-
-</version>
 
 ### description
 #### Syntax
 
 `field(Expr e, param1, param2, param3,.....)`
 
-在order by子句中，可以使用自定义排序，可以将expr中的数据按照指定的param1，2，3顺序排列。
-不在param参数中的数据不会参与排序,将会放在最前面,可以使用asc，desc控制整体顺序。
-如果有NULL值，可以使用nulls first，nulls last控制null的顺序
+在 order by 子句中，可以使用自定义排序，可以将 expr 中的数据按照指定的 param1，2，3 顺序排列。
+不在 param 参数中的数据不会参与排序，将会放在最前面，可以使用 asc，desc 控制整体顺序。
+如果有 NULL 值，可以使用 nulls first，nulls last 控制 null 的顺序
 
 
 ### example

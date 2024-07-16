@@ -493,8 +493,6 @@ The value for thrift_client_timeout_ms is set to be zero to prevent read timeout
 
 #### `thrift_max_message_size`
 
-<version since="2.0.12"></version>
-
 Default: 100MB
 
 The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
@@ -754,8 +752,6 @@ MasterOnly：true
 
 Decide how often to check dynamic partition
 
-<version since="1.2.0">
-
 #### `max_multi_partition_num`
 
 Default：4096
@@ -765,7 +761,6 @@ IsMutable：true
 MasterOnly：true
 
 Use this parameter to set the partition name prefix for multi partition,Only multi partition takes effect, not dynamic partitions. The default prefix is "p_".
-</version>
 
 #### `multi_partition_name_prefix`
 
@@ -2185,7 +2180,6 @@ After dropping database(table/partition), you can recover it by using RECOVER st
 
 #### `storage_cooldown_second`
 
-<version deprecated="2.0"></version>
 
 Default：`30 * 24 * 3600L`  （30 day）
 
@@ -2722,8 +2716,6 @@ If the compute node number is larger than this value, query on external table wi
 
 #### `infodb_support_ext_catalog`
 
-<version since="1.2.4"></version>
-
 Default: false
 
 IsMutable: true
@@ -2737,8 +2729,6 @@ This is to avoid query time when external catalog is not reachable.
 
 #### `enable_query_hit_stats`
 
-<version since="dev"></version>
-
 Default: false
 
 IsMutable: true
@@ -2748,7 +2738,6 @@ MasterOnly: false
 Controls whether to enable query hit statistics. The default is false.
 
 #### `div_precision_increment`
-<version since="dev"></version>
 
 Default: 4
 

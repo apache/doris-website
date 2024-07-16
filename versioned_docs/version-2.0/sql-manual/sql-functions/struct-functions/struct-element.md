@@ -24,11 +24,7 @@ under the License.
 
 ## struct_element
 
-<version since="2.0">
-
 struct_element
-
-</version>
 
 ### description
 
@@ -51,10 +47,6 @@ s - The name of field，only supports constants.
 #### Returned value
 
 Returns the specified field column, of any type.
-
-### notice
-
-`Only supported in vectorized engine`
 
 ### example
 

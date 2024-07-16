@@ -32,13 +32,13 @@ Doris 基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种�
 
 ## 用途
 
-从 Doris 加载大批量数据到其他组件，如 Python/Java/Spark/Flink，可以使用基于 Arrow Flight SQL 的 ADBC/JDBC 替代过去的 JDBC/Pymysql/Pandas 来获得更高的读取性能，这在数据科学、数据湖分析等场景中经常遇到。
+从 Doris 加载大批量数据到其他组件，如 Python/Java/Spark/Flink，可以使用基于 Arrow Flight SQL 的 ADBC/JDBC 替代过去的 JDBC/PyMySQL/Pandas 来获得更高的读取性能，这在数据科学、数据湖分析等场景中经常遇到。
 
 Apache Arrow Flight SQL 是一个由 Apache Arrow 社区开发的与数据库系统交互的协议，用于 ADBC 客户端使用 Arrow 数据格式与实现了 Arrow Flight SQL 协议的数据库交互，具有 Arrow Flight 的速度优势以及 JDBC/ODBC 的易用性。
 
-Doris 支持 Arrow Flight SQL 的动机、设计与实现、性能测试结果、以及有关 Arrow Flight、ADBC的更多概念可以看 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这篇文档主要介绍 Doris Arrow Flight SQL 的使用方法，以及一些常见问题。
+Doris 支持 Arrow Flight SQL 的动机、设计与实现、性能测试结果、以及有关 Arrow Flight、ADBC 的更多概念可以看 [GitHub Issue](https://github.com/apache/doris/issues/25514)，这篇文档主要介绍 Doris Arrow Flight SQL 的使用方法，以及一些常见问题。
 
-安装Apache Arrow 你可以去官方文档（
+安装 Apache Arrow 你可以去官方文档（
 [Apache Arrow](https://arrow.apache.org/install/)）找到详细的安装教程。
 
 ## Python 使用方法
@@ -67,7 +67,9 @@ import adbc_driver_flightsql.dbapi as flight_sql
 修改 Doris FE 和 BE 的配置参数：
 
 - 修改fe/conf/fe.conf 中 arrow_flight_sql_port 为一个可用端口，如 9090。
-- 修改 be/conf/be.conf中 arrow_flight_port 为一个可用端口，如 9091。
+- 修改 be/conf/be.conf中 arrow_flight_sql_port 为一个可用端口，如 9091。
+
+`注: fe.conf 与 be.conf 中配置的 arrow_flight_sql_port 不相同`
 
 假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 9090 和 9091 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
 
@@ -220,7 +222,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
 conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
@@ -273,9 +275,9 @@ execute("select k5, sum(k1), count(1), avg(k3) from arrow_flight_sql_test group 
 cursor.close()
 ```
 
-## Jdbc Connector with Arrow Flight SQL
+## JDBC Connector with Arrow Flight SQL
 
-Arrow Flight SQL 协议的开源 JDBC 驱动兼容标准的 JDBC API，可用于大多数 BI 工具通过 JDBC 访问 Doris，并支持高速传输 Apache Arrow 数据。使用方法与通过 MySQL 协议的 JDBC 驱动连接 Doris 类似，只需将链接 URL 中的 jdbc:mysql 协议换成 jdbc:arrow-flight-sql协议，查询返回的结果依然是 JDBC 的 ResultSet 数据结构。
+Arrow Flight SQL 协议的开源 JDBC 驱动兼容标准的 JDBC API，可用于大多数 BI 工具通过 JDBC 访问 Doris，并支持高速传输 Apache Arrow 数据。使用方法与通过 MySQL 协议的 JDBC 驱动连接 Doris 类似，只需将链接 URL 中的 jdbc:mysql 协议换成 jdbc:arrow-flight-sql 协议，查询返回的结果依然是 JDBC 的 ResultSet 数据结构。
 
 POM dependency:
 ```Java
@@ -290,6 +292,16 @@ POM dependency:
     </dependency>
 </dependencies>
 ```
+
+使用 Java 9 或更高版本时，必须通过在 Java 命令中添加 --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED 来暴露某些 JDK 内部结构：
+
+```shell
+# Directly on the command line
+$ java --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED -jar ...
+# Indirectly via environment variables
+$ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED" java -jar ...
+```
+否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core`
 
 连接代码示例如下：
 
@@ -319,7 +331,7 @@ conn.close();
 
 ## Java 使用方法
 
-除了使用 JDBC，与 Python 类似，JAVA 也可以创建 Driver 读取 Doris 并返回 Arrow 格式的数据，下面分别是使用 AdbcDriver 和 JdbcDriver 连接 Doris Arrow Flight Server。
+除了使用 JDBC，与 Python 类似，Java 也可以创建 Driver 读取 Doris 并返回 Arrow 格式的数据，下面分别是使用 AdbcDriver 和 JdbcDriver 连接 Doris Arrow Flight Server。
 
 POM dependency:
 ```Java

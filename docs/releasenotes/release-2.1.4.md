@@ -49,8 +49,8 @@ under the License.
 	For more infomation, please see the documentations:
 	
 	- [Log Management - FE Log](../admin-manual/log-management/fe-log.md)
-	
-	- [Log Management - FE Log](../admin-manual/log-management/be-log.md)
+
+	- [Log Management - BE Log](../admin-manual/log-management/be-log.md)
 
 - If no table comment is provided when creating a table, the default comment will be empty instead of using the table type as the default comment. [#36025](https://github.com/apache/doris/pull/36025)
 
