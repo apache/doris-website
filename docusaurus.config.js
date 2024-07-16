@@ -156,11 +156,11 @@ const config = {
                     // /docs/oldDoc -> /docs/newDoc
                     {
                         from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/dev/get-starting/quick-start/quick-start',
+                        to: '/docs/dev/get-starting/quick-start/',
                     },
                     {
-                        from: '/docs/dev/get-starting/quick-start',
-                        to: '/docs/dev/get-starting/quick-start/quick-start',
+                        from: '/docs/dev/get-starting/',
+                        to: '/docs/dev/get-starting//quick-start/',
                     },
                 ],
             },
