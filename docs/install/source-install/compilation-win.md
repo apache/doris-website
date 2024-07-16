@@ -28,6 +28,12 @@ under the License.
 
 This guide is about how to compile Doris source code on the Windows platform using Windows Subsystem for Linux (WSL). WSL allows you to run a Linux system on Windows to compile Doris.
 
+:::tip
+
+Currently, this is not supported in the compute-storage decoupled mode.
+
+:::
+
 ## Prerequisites
 
 1. Windows 10 version 2004 or higher (19041 or higher) or Windows 11

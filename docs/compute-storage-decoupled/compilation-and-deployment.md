@@ -56,7 +56,7 @@ cp -r ms re
 
 ## Version
 
-The version information of `doris_cloud` can be checked in two ways. If one method does not work correctly, you can try the other:
+The version information of `doris_cloud` can be checked in two ways. If one method does not work correctly, you can try the other. In the `ms` or `re` directory: 
 
 - `bin/start.sh --version`
 - `lib/doris_cloud --version`

@@ -26,14 +26,17 @@ under the License.
 
 Creating a Doris cluster in the compute-storage decoupled mode is to create the entire distributed system that contains both FE and BE nodes. Then, in such a cluster, users can create compute clusters. Each compute cluster is a group of computing resources consisting of one or more BE nodes.
 
+A single FoundationDB + Meta Service + Recycler infrastructure can support multiple compute-storage decoupled clusters, where each compute-storage decoupled cluster is considered a data warehouse instance (instance).
+
 In the compute-storage decoupled mode, the registration and changes of nodes in a warehouse is managed by Meta Service. FE, BE, and Meta Service interact for service discovery and authentication.
 
 Creating a Doris cluster in the compute-storage decoupled mode entails interaction with Meta Service. Meta Service provides standard HTTP APIs for resource management operations. For more information, refer to [Meta Service API](./meta-service-api.md).
 
-The creation process is to describe the machine composition within that cluster, including the following two steps:
+The compute-storage decoupled mode of Doris adopts a service discovery mechanism. The steps to create a compute-storage separation cluster can be summarized as follows:
 
-1. Register a warehouse (FE)
-2. Register one or more compute clusters (BE)
+1. Register and specify the data warehouse instance and its storage backend.
+2. Register and specify the FE and BE nodes that make up the data warehouse instance, including the specific machines and how they form the cluster.
+3. Configure and start all the FE and BE nodes.
 
 :::info
 
@@ -42,24 +45,39 @@ The creation process is to describe the machine composition within that cluster,
 
 :::
 
-## Cluster & storage vault
+## Create cluster & storage vault
 
-The first step is to register a warehouse in Meta Service. A single Meta Service can support multiple warehouses (i.e., multiple sets of FE-BE). Specifically, this process includes describing the required storage vault (i.e., the shared storage layer demonstrated in [Overview](./overview.md)) for that warehouse. The options for the storage vault include HDFS and S3 (or object storage that supports the S3 protocol, such as AWS S3, GCS, Azure Blob, MinIO, Ceph, and Alibaba Cloud OSS). Storage vault is the remote shared storage used by Doris in the compute-storage decoupled mode. Users can configure multiple storage vaults for one warehouse, and store different tables on different storage vaults.
+The first step is to register a data warehouse instance in Meta Service. A single Meta Service can support multiple data warehouse instances (i.e., multiple sets of FE-BE). Specifically, this process includes describing the required storage vault (i.e., the shared storage layer demonstrated in [Overview](./overview.md)) for that data warehouse instance. The options for the storage vault include HDFS and S3 (or object storage that supports the S3 protocol, such as AWS S3, GCS, Azure Blob, MinIO, Ceph, and Alibaba Cloud OSS). Storage vault is the remote shared storage used by Doris in the compute-storage decoupled mode. Users can configure multiple storage vaults for one data warehouse instance, and store different tables on different storage vaults.
 
 This step involves calling the `create_instance` API of Meta Service. The key parameters include:
 
-- `instance_id`: The ID of the warehouse. It should be historically unique and is typically a UUID string, such as "6ADDF03D-4C71-4F43-9D84-5FC89B3514F8". For simplicity in this guide, a regular string is used.
-- `name`: The name of the data warehouse, which should be filled in according to actual needs.
-- `user_id`: The user ID, a string that should be filled in as required.
-- `vault`: The storage vault information, such as HDFS properties and S3 Bucket details.
+- `instance_id`: The ID of the data warehouse instance. It is typically a UUID string, such as `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`. For simplicity in this guide, a regular string is used.
+- `name`: The name of the data warehouse instance, which should be filled in according to actual needs. It should follow the format of `[a-zA-Z][0-9a-zA-Z_]+`.
+- `user_id`: The ID of the user who creates the data warehouse instance. It should follow the format of `[a-zA-Z][0-9a-zA-Z_]+`.
+- `vault`: The storage vault information, such as HDFS properties and S3 Bucket details. Different storage vaults entails different parameters.
 
-For more information, refer to [Meta Service API](./meta-service-api.md).
+For more information, refer to "create_instance" in [Meta Service API](./meta-service-api.md).
+
+Multiple compute-storage decoupled clusters (data warehouse instances/instances) can be created by making multiple calls to the Meta Service `create_instance` interface.
 
 ### Create cluster using HDFS as storage vault
 
 To create a Doris cluster in the compute-storage decoupled mode using HDFS as the storage vault, configure the following items accurately and ensure that all nodes (including FE/BE nodes, Meta Service, and Recycler) have the necessary permissions to access the specified HDFS. This includes completing the Kerberos authorization configuration and connectivity checks for the machines (which can be tested using the Hadoop Client on the respective nodes).
 
-The `prefix` field should be set based on actual requirements. It is usually named after the business that the data warehouse serves.
+| Parameter                                | Description                                                  | Required/Optional | Notes                                                        |
+| ---------------------------------------- | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
+| instance_id                              | instance_id                                                  | Required          | Globally and historically unique, normally a UUID string     |
+| name                                     | Instance name. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Optional          |                                                              |
+| user_id                                  | ID of the user who creates the instance. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Required          |                                                              |
+| vault                                    | Storage vault                                                | Required          |                                                              |
+| vault.hdfs_info                          | Information of the HDFS storage vault                        | Required          |                                                              |
+| vault.build_conf                         | Build configuration of the HDFS storage vault                | Required          |                                                              |
+| vault.build_conf.fs_name                 | HDFS name, normally the connection address                   | Required          |                                                              |
+| vault.build_conf.user                    | User to connect to HDFS                                      | Required          |                                                              |
+| vault.build_conf.hdfs_kerberos_keytab    | Kerberos Keytab path                                         | Optional          | Required when using Kerberos authentication                  |
+| vault.build_conf.hdfs_kerberos_principal | Kerberos Principal                                           | Optional          | Required when using Kerberos authentication                  |
+| vault.build_conf.hdfs_confs              | Other configurations of HDFS                                 | Optional          | Can be filled in as needed                                   |
+| vault.prefix                             | Prefix for data storage; used for data isolation             | Required          | Normally named after the specific business, such as `big_data` |
 
 **Example**
 
@@ -97,6 +115,21 @@ All object storage attributes are required in the creation statement. Specifical
 - The value of the Bucket field should be the name of the bucket, which does NOT include the schema like `s3://`.
 - The `external_endpoint` should be kept the same as the `endpoint` value.
 - If you are using a non-cloud provider object storage, you can fill in any values for the region and provider fields.
+
+| Parameter                  | Description                                                  | Required/Optional | Notes                                                        |
+| -------------------------- | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
+| instance_id                | ID of the data warehouse instance in the compute-storage decoupled mode, normally a UUID string. It should conform to the format of `[0-9a-zA-Z_-]+`. | Required          | Example: `6ADDF03D-4C71-4F43-9D84-5FC89B3514F8`              |
+| name                       | Instance name. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Optional          |                                                              |
+| user_id                    | ID of the user who creates the instance. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+` | Required          |                                                              |
+| vault.obj_info             | Object storage configuration                                 | Required          |                                                              |
+| vault.obj_info.ak          | Object storage Access Key                                    | Required          |                                                              |
+| vault.obj_info.sk          | Object storage Secret Key                                    | Required          |                                                              |
+| vault.obj_info.bucket      | Object storage bucket name                                   | Required          |                                                              |
+| vault.obj_info.prefix      | Prefix for data storage on object storage                    | Optional          | If this parameter is empty, the default storage location will be in the root directory of the bucket. Example: `big_data` |
+| obj_info.endpoint          | Object storage endpoint                                      | Required          | The domain or `ip:port`, not including the scheme prefix such as ` http://.` |
+| obj_info.region            | Object storage region                                        | Required          | If using MinIO, this parameter can be filled in with any value. |
+| obj_info.external_endpoint | Object storage external endpoint                             | Required          | Normally consistent with the endpoint. Compatible with OSS. Note the difference between external and internal OSS. |
+| vault.obj_info.provider    | Object storage provider; options include OSS, S3, COS, OBS, BOS, GCP, and AZURE | Required          | If using MinIO, simply fill in 'S3'.                         |
 
 **Example (AWS S3)**
 
@@ -175,28 +208,28 @@ PROPERTIES
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
-        "type"="hdfs", -- required
-        "fs.defaultFS"="hdfs://127.0.0.1:8020", -- required
-        "path_prefix"="prefix", -- optional
-        "hadoop.username"="user" -- optional
-        "hadoop.security.authentication"="kerberos" -- optional
+        "type"="hdfs",                                     -- required
+        "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
+        "path_prefix"="big/data",                          -- optional,  Normally named after the specifc business
+        "hadoop.username"="user"                           -- optional
+        "hadoop.security.authentication"="kerberos"        -- optional
         "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
-        "hadoop.kerberos.keytab"="/etc/emr.keytab" -- optional
+        "hadoop.kerberos.keytab"="/etc/emr.keytab"         -- optional
     );
 ```
 
 **Create S3 storage vault**
 
 ```SQL
-CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
+CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     PROPERTIES (
-        "type"="S3", -- required
-        "s3.endpoint" = "bj", -- required
-        "s3.region" = "bj", -- required
-        "s3.root.path" = "/path/to/root", -- required
-        "s3.access_key" = "ak", -- required
-        "s3.secret_key" = "sk", -- required
-        "provider" = "cos", -- required
+        "type"="S3",                                   -- required
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+        "s3.region" = "bj",                            -- required
+        "s3.root.path" = "big/data/prefix",            -- required
+        "s3.access_key" = "ak",                        -- required
+        "s3.secret_key" = "sk",                        -- required
+        "provider" = "cos",                            -- required
     );
 ```
 
@@ -206,19 +239,26 @@ Newly created storage vaults may NOT be immediately visible to the BE. This mean
 
 :::
 
-**Parameter**
+**Properties**
 
-| Parameter                      | Description          | Example                         |
-| ------------------------------ | -------------------- | ------------------------------- |
-| type                           | S3 or HDFS           | s3 \| hdfs                      |
-| fs.defaultFS                   | HDFS vault parameter | hdfs://127.0.0.1:8020           |
-| hadoop.username                | HDFS vault parameter | hadoop                          |
-| hadoop.security.authentication | HDFS vault parameter | kerberos                        |
-| hadoop.kerberos.principal      | HDFS vault parameter | hadoop/127.0.0.1@XXX            |
-| hadoop.kerberos.keytab         | HDFS vault parameter | /etc/emr.keytab                 |
-| dfs.client.socket-timeout      | HDFS vault parameter | dfs.client.socket-timeout=60000 |
+| Parameter                      | Description                                                  | Required/Optional | Example                       |
+| ------------------------------ | ------------------------------------------------------------ | ----------------- | ----------------------------- |
+| type                           | S3 and HDFS are currently supported.                         | Required          | `s3` or `hdfs`                |
+| fs.defaultFS                   | HDFS vault parameter                                         | Required          | `hdfs://127.0.0.1:8020`       |
+| path_prefix                    | HDFS vault parameter, the path prefix for data storage, normally configured based on specific business. | Optional          | `big/data/dir`                |
+| hadoop.username                | HDFS vault parameter                                         | Optional          | `hadoop`                      |
+| hadoop.security.authentication | HDFS vault parameter                                         | Optional          | `kerberos`                    |
+| hadoop.kerberos.principal      | HDFS vault parameter                                         | Optional          | `hadoop/127.0.0.1@XXX`        |
+| hadoop.kerberos.keytab         | HDFS vault parameter                                         | Optional          | `/etc/emr.keytab`             |
+| dfs.client.socket-timeout      | HDFS vault parameter, measured in millisecond                | Optional          | `60000`                       |
+| s3.endpiont                    | S3 vault parameter                                           | Required          | `oss-cn-beijing.aliyuncs.com` |
+| s3.region                      | S3 vault parameter                                           | Required          | `bj`                          |
+| s3.root.path                   | S3 vault parameter, path prefix for the actual data storage  | Required          | `/big/data/prefix`            |
+| s3.access_key                  | S3 vault parameter                                           | Required          |                               |
+| s3.secret_key                  | S3 vault parameter                                           | Required          |                               |
+| provider                       | S3 vault parameter. Options include OSS, AWS S3, COS, OBS, BOS, GCP, and Microsoft Azure. If using MinIO, simply fill in 'S3'. | Required          | `cos`                         |
 
-### View storage vault
+View storage vault
 
 **Syntax**
 
@@ -232,12 +272,12 @@ The returned result contains 4 columns, which are the name of the storage vault,
 
 ```SQL
 mysql> show storage vault;
-+------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
-| StorageVaultName       | StorageVaultId | Propeties                                                                                       | IsDefault |
-+------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
-| built_in_storage_vault | 1              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_1CF80628-16CF-0A46-54EE-2C4A54AB1519" | false     |
-| hdfs_vault             | 2              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_0717D76E-FF5E-27C8-D9E3-6162BC913D97" | false     |
-+------------------------+----------------+-------------------------------------------------------------------------------------------------+-----------+
++------------------------+----------------+-------------------------------------------------------------------------------------------------------------+-----------+
+| StorageVaultName       | StorageVaultId | Propeties                                                                                                   | IsDefault |
++------------------------+----------------+-------------------------------------------------------------------------------------------------------------+-----------+
+| built_in_storage_vault | 1              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "_1CF80628-16CF-0A46-54EE-2C4A54AB1519"             | false     |
+| hdfs_vault             | 2              | build_conf { fs_name: "hdfs://127.0.0.1:8020" } prefix: "big/data/dir_0717D76E-FF5E-27C8-D9E3-6162BC913D97" | false     |
++------------------------+----------------+-------------------------------------------------------------------------------------------------------------+-----------+
 ```
 
 ### Set default storage vault
@@ -337,9 +377,28 @@ revoke usage_priv on storage vault my_storage_vault from user1
 
 ## Add FE 
 
-In the compute-storage decoupled mode, both FE and BE are managed in groups. Therefore, operations on FE/BE are performed through interfaces such as `add_cluster`.
+In the compute-storage decoupled mode, the node management interfaces for FE and BE are the same, with only the parameter configurations differing.
 
-Generally, only one FE is needed. If you need to add a new FE, you can follow these steps:
+The initial FE and BE nodes can be added through the Meta Service `add_cluster` interface.
+
+The parameter list for the `add_cluster` interface is as follows:
+
+| Parameter                     | Description                                                  | Required/Optional | Notes                                                        |
+| ----------------------------- | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
+| instance_id                   | ID of the data warehouse instance in the compute-storage decoupled mode, normally a UUID string. It should conform to the format of `[0-9a-zA-Z_-]+`. | Required          | Globally and historically unique, normally a UUID string. Users should use a different `instance_id` each time they call this interface. |
+| cluster                       | Cluster object                                               | Required          |                                                              |
+| cluster.cluster_name          | Cluster name. It should conform to the format of `[a-zA-Z][0-9a-zA-Z_]+`. | Required          | The FE cluster name is special. The default value of it is `RESERVED_CLUSTER_NAME_FOR_SQL_SERVER`. This can be modified by configuring `cloud_observer_cluster_name` in the `fe.conf` file. |
+| cluster.cluster_id            | Cluster ID                                                   | Required          | The FE cluster ID is special. The default value of it is `RESERVED_CLUSTER_ID_FOR_SQL_SERVER`. This can be modified by configuring `cloud_observer_cluster_id` in the `fe.conf` file. |
+| cluster.type                  | Cluster node type                                            | Required          | Two types are supported: `SQL` and `COMPUTE`. `SQL` represents the SQL Service corresponding to FE, while `COMPUTE` means that the compute nodes are corresponding to BE. |
+| cluster.nodes                 | Nodes in the cluster                                         | Required          | Array                                                        |
+| cluster.nodes.cloud_unique_id | `cloud_unique_id `of nodes. It should conform to the format of  `1:<instance_id>:<string>`, in which the `string ` should conform to the format of `[0-9a-zA-Z_-]+` . The value for each node should be different. | Required          | `cloud_unique_id` in `fe.conf` and `be.conf`                 |
+| cluster.nodes.ip              | Node IP                                                      | Required          | When deploying FE/BE in FQDN mode, this field should be the domain name. |
+| cluster.nodes.host            | Node domain name                                             | Optional          | This field is required when deploying FE/BE in FQDN mode.    |
+| cluster.nodes.heartbeat_port  | Heartbeat port of BE                                         | Required for BE   | `heartbeat_service_port` in `be.conf`                        |
+| cluster.nodes.edit_log_port   | Edit log port of FE                                          | Required for FE   | `edit_log_port` in `fe.conf`                                 |
+| cluster.nodes.node_type       | FE node type                                                 | Required          | This field is required when the cluster type is `SQL`. It can be either `FE_MASTER` or `FE_OBSERVER`. `FE_MASTER` indicates that the node is of Master role, and `FE_OBSERVER` indicates that the node is an Observer. Note that in an `SQL` type cluster, the nodes array can only have one `FE_MASTER` node, but it can include multiple `FE_OBSERVER` nodes. |
+
+This is an example of adding one FE:
 
 ```Bash
 # Add FE
@@ -360,28 +419,49 @@ curl '127.0.0.1:5000/MetaService/http/add_cluster?token=greedisgood9999' -d '{
     }
 }'
 
-# Confirm successful creation using get_cluster
+# Confirm successful creation based on the returned result of the get_cluster command.
 curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
     "instance_id":"sample_instance_id",
     "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
     "cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER",
     "cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
 }'
-cloud_unique_id` is a unique string in the format of `1:<instance_id>:<string>`. `ip` and `edit_log_port` should be consistent with those in `fe.conf`. Note that `cluster_name` and `cluster_id` of FE should always be `"cluster_name":"RESERVED_CLUSTER_NAME_FOR_SQL_SERVER"` and `"cluster_id":"RESERVED_CLUSTER_ID_FOR_SQL_SERVER"
 ```
+
+If you need to add 2 FE nodes during the initial operation using the interface mentioned above, you can add configurations for the additional node in the `nodes` array.
+
+This is an example of adding an `observer` node:
+
+```
+...
+        "nodes":[
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
+                "ip":"172.21.16.21",
+                "edit_log_port":12103,
+                "node_type":"FE_MASTER"
+            },
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
+                "ip":"172.21.16.22",
+                "edit_log_port":12103,
+                "node_type":"FE_OBSERVER"
+            }
+        ]
+...
+```
+
+If you need to add or drop FE nodes, you may refer to the "Manage compute cluster" section on this page.
 
 ## Create compute cluster
 
-Users can create one or more compute clusters, and a compute cluster can consist of any number of BE nodes.
+Users can create one or more compute clusters, and a compute cluster can consist of any number of BE nodes. This is also performed via the Meta Service `add_cluster` interface.
 
-The composition of a compute cluster includes the following information:
-
-- `cloud_unique_id`: a unique string in the format of `1:<instance_id>:<string>`. It should be configured based on your needs and consistent with the `cloud_unique_id` in `be.conf`.
-- `cluster_name cluster_id`: This should be filled in based on your case.
-- `ip`: This should be filled in based on your case.
-- `heartbeat_port`: This is the heartbeat port of BE.
+See the "Add FE" section above for more information of the interface.
 
 Users can adjust the number of compute clusters and the number of nodes within each cluster based on their needs. Each compute cluster should have a unique `cluster_name` and `cluster_id`.
+
+This is an example of adding a compute cluster that consists of 1 BE node.
 
 ```Bash
 # 172.19.0.11
@@ -411,12 +491,37 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 }'
 ```
 
+If you need to add 2 BE nodes during the initial operation using the interface mentioned above, you can add the configurations for the additional node in the `nodes` array.
+
+This is an example of specifying a compute cluster with 2 BE nodes:
+
+```
+...
+        "nodes":[
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_compute_node0",
+                "ip":"172.21.16.21",
+                "heartbeat_port":9455
+            },
+            {
+                "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_compute_node0",
+                "ip":"172.21.16.22",
+                "heartbeat_port":9455
+            }
+        ]
+...
+```
+
+For instructions on adding or dropping BE nodes, refer to the "Manage compute cluster" section on this page. 
+
+If you need to continue adding more compute clusters, you can simply repeat the operations described in this section.
+
 ## FE/BE configuration
 
-The compute-storage decoupled mode requires additional configurations for the FE and BE:
+Compared to the [compute-storage coupled mode](../cluster-deployment/standard-deployment.md), the compute-storage decoupled mode requires additional configurations for the FE and BE:
 
 - `meta_service_endpoint`: The address of Meta Service, which needs to be filled in both the FE and BE.
-- `cloud_unique_id`: This should be filled with the corresponding value from the request sent to Meta Service when creating the cluster. Doris determines whether it is operating in the compute-storage decoupled mode based on this configuration.
+- `cloud_unique_id`: This should be filled with the corresponding value from the `add_cluster` request sent to Meta Service when creating the cluster. Doris determines whether it is operating in the compute-storage decoupled mode based on this configuration.
 
 ### fe.conf
 
@@ -431,7 +536,7 @@ In the following example, `meta_service_use_load_balancer` and `enable_file_cach
 
 The `file_cache_path` is a JSON array (configured according to the actual number of cache disks), and the definition of each field is as follows:
 
-- `path`: The path to store the cached data, similar to the `storage_root_path` in the compute-storage coupled mode.
+- `path`: The path to store the cached data, similar to the `storage_root_path` in the compute-storage coupled mode. 
 - `total_size`: The expected upper limit of the cache space to be used.
 - `query_limit`: The maximum amount of cache data that can be evicted when a single query misses the cache (to prevent large queries from evicting all the cache). Since the cache needs to store data, it is best to use high-performance disks such as SSDs as the cache storage medium.
 
@@ -445,7 +550,9 @@ file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":1048
 
 ## Start/stop FE/BE
 
-In the compute-storage decoupled mode of Doris, the startup and shutdown processes for the FE/BE is the same as those in the compute-storage coupled mode.
+In the compute-storage decoupled mode of Doris, the startup and shutdown processes for the FE/BE is the same as those in the [compute-storage coupled mode](../cluster-deployment/standard-deployment.md).
+
+In the compute-storage decoupled mode, which follows a service discovery model, there is no need to use commands like `alter system add/drop frontend/backend` to manage the nodes.
 
 ```Shell
 bin/start_be.sh --daemon
@@ -455,8 +562,6 @@ bin/stop_be.sh
 bin/start_fe.sh --daemon
 bin/stop_fe.sh
 ```
-
-In the compute-storage decoupled mode, the FE will automatically discover the corresponding BE nodes, and there is no need for manual operation such as `alter system add` and `drop backend`.
 
 After startup, if the above configuration items are all correct in the logs, it indicates that the system has started to function normally, and you can connect to the FE through a MySQL client for access.
 
@@ -520,9 +625,9 @@ curl '127.0.0.1:5000/MetaService/http/drop_node?token=greedisgood9999' -d '{
 }'
 ```
 
-Add an FE Follower.
+Add an FE Follower. In the following example, `node_type = FE_OBSERVER`.
 
-`node_type = FE_MASTER` indicates that the node can be elected as the Master. If you need to add an FE Observer, you can set `node_type = OBSERVER`.
+**Currently, Doris does not support adding FE Follower in the compute-storage decoupled mode.**
 
 ```Plain
 curl '127.0.0.1:5000/MetaService/http/add_node?token=greedisgood9999' -d '{
@@ -536,7 +641,7 @@ curl '127.0.0.1:5000/MetaService/http/add_node?token=greedisgood9999' -d '{
                 "cloud_unique_id":"1:sample_instance_id:cloud_unique_id_sql_server00",
                 "ip":"172.21.16.22",
                 "edit_log_port":12103,
-                "node_type":"FE_MASTER"
+                "node_type":"FE_OBSERVER"
             }
         ]
     }

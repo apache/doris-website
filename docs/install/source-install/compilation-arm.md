@@ -33,6 +33,12 @@ This topic is about how to compile Doris on the ARM64 platform.
 
 Note that this document is intended as a guide only. Other errors may occur when compiling in different environments. Feel free to [issue](https://github.com/apache/doris/issues) Doris with problems or solutions.
 
+:::tip
+
+Currently, this is not supported in the compute-storage decoupled mode.
+
+:::
+
 ## Hardware/OS environment
 
 1. KylinOS：
@@ -497,7 +503,7 @@ If you still encounter problems when compiling or starting, please consult the [
       cp /opt/software/ldb_toolchain/share/aclocal/pkg.m4 /opt/incubator-doris/thirdparty/src/libxml2-v2.9.10/m4
       sh /opt/incubator-doris/thirdparty/build-thirdparty.sh
 ```
-   
+
 7. Failed to execute test CURL_HAS_TLS_PROXY
 
    - Problem Description

@@ -26,7 +26,7 @@ under the License.
 
 本文档中，创建存算分离集群指的是在存算分离模式下，创建由多个 Doris 节点组成的分布式系统，包含 FE 和 BE 节点。随后，在存算分离模式的 Doris 集群下可创建计算集群，即创建由一个或多个 BE 节点组成的计算资源组。
 
-一套 fdb+meta-service+recycler 基础环境可以支撑多个存算分离集群，一个存算分离集群又叫一个数仓实例（instance）。
+一套 FoundationDB + Meta Service + Recycler 基础环境可以支撑多个存算分离集群，一个存算分离集群又称为一个数仓实例（Instance）。
 
 存算分离架构下，数仓实例的节点构成信息由 Meta Service 维护（注册 + 变更）。FE、BE 和 Meta Service 交互以实现服务发现和身份验证。
 
@@ -35,8 +35,8 @@ under the License.
 Doris 存算分离模式采用服务发现的机制进行工作，创建存算分离集群可以归纳为以下步骤：
 
 1. 注册声明数仓实例以及它的存储后端。
-2. 注册声明数仓实例中的 FE BE 节点组成，分别有哪些机器，如何组成集群。
-3. 配置并启动所有的 FE BE 节点。
+2. 注册声明数仓实例中的 FE 和 BE 节点组成，分别包含哪些机器，以及如何组成集群。
+3. 配置并启动所有的 FE 和 BE 节点。
 
 :::info 备注
 
@@ -55,13 +55,13 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 此步骤需要调用 Meta Service 的 `create_instance` 接口，主要参数包括：
 
 - `instance_id`：存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`，例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8。本文档中为了简化使用普通字符串。
-- `name`：数仓实例名称，根据实际需求填写。要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`，一般填业务名字
+- `name`：数仓实例名称，根据实际需求填写。要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`，一般填写业务名称。
 - `user_id`：创建数仓实例的用户 ID，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`，用于标识创建人，按需填写。
-- `vault`：HDFS 或者 S3 的存储后端信息，如 HDFS 属性、S3 Bucket 信息等。不同的后端的详细参数会不一样。
+- `vault`：HDFS 或者 S3 的存储后端信息，如 HDFS 属性、S3 Bucket 信息等。不同后端的详细参数不同。
 
 更多信息请参考 [Meta Service API 参考文档](./meta-service-api.md) “创建存储后端的 Instance” 章节。
 
-**通过多次调用 meta-service `create_instance` 接口可以创建多个不同的存算分离集群（数仓实例/instance）。**
+**通过多次调用 Meta Service `create_instance` 接口可以创建多个不同的存算分离集群（即数仓实例/instance）。**
 
 ### 创建基于 HDFS 的存算分离模式 Doris 集群
 
@@ -80,7 +80,7 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 | vault.build_conf.hdfs_kerberos_keytab    | Kerberos Keytab 的路径        | 否       | 使用 Kerberos 鉴权时需要提供                     |
 | vault.build_conf.hdfs_kerberos_principal | Kerberos Principal 的信息     | 否       | 使用 Kerberos 鉴权时需要提供                     |
 | vault.build_conf.hdfs_confs              | HDFS 的其他描述属性           | 否       | 按需填写                                         |
-| vault.prefix                             | 数据存放的路径前缀，用于数据隔离 | 是    | 一般按照业务名称 例：big_data          |
+| vault.prefix                             | 数据存放的路径前缀，用于数据隔离 | 是    | 一般按照业务名称 例：`big_data`          |
 
 **示例**
 
@@ -213,7 +213,7 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
     PROPERTIES (
         "type"="hdfs",                                     -- required
         "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
-        "path_prefix"="big/data",                          -- optional,  一般按照业务名称来填
+        "path_prefix"="big/data",                          -- optional,  一般按照业务名称填写
         "hadoop.username"="user"                           -- optional
         "hadoop.security.authentication"="kerberos"        -- optional
         "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
@@ -242,24 +242,24 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
 
 :::
 
-**properties 参数**
+**Properties 参数**
 
 | 参数                          | 说明                                                                               | 是否必须  | 示例                           |
 | ------------------------------| -------------------                                                                | ------    | -------------------------------|
-| type                          | 目前支持 S3 和 HDFS                                                                | 是        | s3 或者 hdfs                   |
-| fs.defaultFS                  | HDFS Vault 参数                                                                    | 是        | hdfs://127.0.0.1:8020          |
-| path_prefix                   | HDFS Vault 参数，数据存储的路径前缀，一般按照业务名称区分                          | 否        | big/data/dir                  |
-| hadoop.username               | HDFS Vault 参数                                                                    | 否        | hadoop                         |
-| hadoop.security.authentication| HDFS Vault 参数                                                                    | 否        | kerberos                       |
-| hadoop.kerberos.principal     | HDFS Vault 参数                                                                    | 否        | hadoop/127.0.0.1@XXX           |
-| hadoop.kerberos.keytab        | HDFS Vault 参数                                                                    | 否        | /etc/emr.keytab                |
-| dfs.client.socket-timeout     | HDFS Vault 参数, 单位毫秒                                                          | 否        | 60000                          |
-| s3.endpiont                   | s3 Vault 参数                                                                      | 是        | oss-cn-beijing.aliyuncs.com    |
-| s3.region                     | s3 Vault 参数                                                                      | 是        | bj                             |
-| s3.root.path                  | s3 Vault 参数, 实际存储数据的路径前缀                                              | 是        | /big/data/prefix               |
-| s3.access_key                 | s3 Vault 参数                                                                      | 是        |                                |
-| s3.secret_key                 | s3 Vault 参数                                                                      | 是        |                                |
-| provider                      | s3 Vault 参数, 目前支持 腾讯 COS，阿里 OSS，AWS S3，微软 AZURE，百度 BOS，华为 OBS，谷歌 GCP；若使用 MinIO，直接填 S3 即可 | 是        | cos                            |
+| type                          | 目前支持 S3 和 HDFS                                                                | 是        | `s3` 或 `hdfs`    |
+| fs.defaultFS                  | HDFS Vault 参数                                                                    | 是        | `hdfs://127.0.0.1:8020`        |
+| path_prefix                   | HDFS Vault 参数，数据存储的路径前缀，一般按照业务名称区分                          | 否        | `big/data/dir`                |
+| hadoop.username               | HDFS Vault 参数                                                                    | 否        | `hadoop`                       |
+| hadoop.security.authentication| HDFS Vault 参数                                                                    | 否        | `kerberos`                     |
+| hadoop.kerberos.principal     | HDFS Vault 参数                                                                    | 否        | `hadoop/127.0.0.1@XXX`         |
+| hadoop.kerberos.keytab        | HDFS Vault 参数                                                                    | 否        | `/etc/emr.keytab`              |
+| dfs.client.socket-timeout     | HDFS Vault 参数，单位毫秒                                                         | 否        | `60000`                        |
+| s3.endpiont                   | S3 Vault 参数                                                                      | 是        | `oss-cn-beijing.aliyuncs.com`  |
+| s3.region                     | S3 Vault 参数                                                                      | 是        | `bj`                           |
+| s3.root.path                  | S3 Vault 参数，实际存储数据的路径前缀                                              | 是        | `/big/data/prefix`             |
+| s3.access_key                 | S3 Vault 参数                                                                     | 是        |                                |
+| s3.secret_key                 | S3 Vault 参数                                                                     | 是        |                                |
+| provider                      | S3 Vault 参数，目前支持腾讯 COS，阿里 OSS，AWS S3，微软 AZURE，百度 BOS，华为 OBS，谷歌 GCP；若使用 MinIO，直接填写 S3 即可 | 是        | `cos`                          |
 
 ### 查看存储后端
 
@@ -378,10 +378,10 @@ revoke usage_priv on storage vault my_storage_vault from user1
 
 ## 添加 FE
 
-存算分离模式下，FE 以及 BE 的节点管理使用的接口是相同的，只是参数配置不一样，
-通过 meta-service `add_cluster` 接口进行 FE 以及 BE 的初始节点添加。
+存算分离模式下，FE 以及 BE 的节点管理使用的接口相同，仅参数配置不同，
+可通过 Meta Service `add_cluster` 接口进行 FE 以及 BE 的初始节点添加。
 
-`add_cluster` 接口的参数列表如下
+`add_cluster` 接口的参数列表如下：
 
 | 参数名                        | 描述                    | 是否必须 | 备注                                                         |
 | ----------------------------- | ----------------------- | -------- | ------------------------------------------------------------ |
@@ -429,8 +429,9 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 }'
 ```
 
-上述接口中如果需要在初始操作就添加2个 FE，在 `nodes` 数组添多声明一个节点。
-如下为多声明一个 observer 的例子：
+上述接口中如果需在初始操作即添加 2 个 FE，可在 `nodes` 数组增加一个声明节点。
+如下为增加一个 `observer` 的例子：
+
 ```
 ...
         "nodes":[
@@ -454,13 +455,13 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 ## 创建计算集群
 
 用户可创建一个或多个计算集群，一个计算集群由任意多个 BE 节点组成。
-也是通过 meta-service `add_cluter` 接口进行操作
+创建计算集群操作也可通过 Meta Service `add_cluter` 接口进行。
 
-接口描述在前文 “添加 FE” 章节已经描述。
+接口描述详见前文 “添加 FE” 章节。
 
 用户可根据实际需求调整计算集群的数量及其所包含的节点数量，不同的计算集群需要使用不同的 `cluster_name` 和 `cluster_id`。
 
-如下是添加包含1个 BE 的 计算集群：
+如下是创建包含 1 个 BE 的 计算集群：
 
 ```Bash
 # 172.19.0.11
@@ -490,8 +491,9 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
 }'
 ```
 
-上述接口中如果需要在初始操作就添加2个 BE，在 `nodes` 数组添多声明一个节点。
-如下为声明一个包含2个 BE 的计算集群的例子：
+上述接口中如果需在初始操作就添加 2 个 BE，可在 `nodes` 数组增加一个声明节点。
+如下为声明一个包含 2 个 BE 的计算集群的例子：
+
 ```
 ...
         "nodes":[
@@ -508,12 +510,12 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
         ]
 ...
 ```
-如果需要增加或者减少 BE 节点，可以参考后续 “计算集群操作” 章节。
-如果需要多增加一些计算集群，重复本章节的操作即可。
+如果需要增加或减少 BE 节点，可以参考后续 “计算集群操作” 章节。
+如果需要继续增加计算集群，重复本章节操作即可。
 
 ## FE/BE 配置
 
-相较于[存算一体模式](../cluster-deployment/standard-deployment.md)，存算分离模式下的 FE 和 BE 配置增加了部分配置，其中：
+相较于[存算一体模式](../cluster-deployment/standard-deployment.md)，存算分离模式下的 FE 和 BE 增加了部分配置，其中：
 
 - `meta_service_endpoint`：Meta Service 的地址，需在 FE 和 BE 中填写。
 - `cloud_unique_id`：根据创建存算分离集群发往 Meta Service `add_cluster` 请求中的实际值填写即可；Doris 通过该配置的值确定是否在存算分离模式下工作。
@@ -618,8 +620,9 @@ curl '127.0.0.1:5000/MetaService/http/drop_node?token=greedisgood9999' -d '{
 }'
 ```
 
-增加一个 FE Observer，以下示例中，`node_type` 为 `FE_OBSERVE`，
-**目前还不允许添加 FE Follower 角色**
+增加一个 FE Observer，以下示例中，`node_type` 为 `FE_OBSERVER`。
+
+**目前尚不支持添加 FE Follower 角色。**
 
 ```Plain
 curl '127.0.0.1:5000/MetaService/http/add_node?token=greedisgood9999' -d '{
