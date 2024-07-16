@@ -3,7 +3,6 @@
     "title": "Quick Start",
     "language": "en"
 }
-
 ---
 
 <!-- 
@@ -33,14 +32,14 @@ This guide is about how to download the latest stable version of Apache Doris, i
 
 - A mainstream Linux x86-64 environment. CentOS 7.1 or Ubuntu 16.04 or later versions are recommended. See the "Install and Deploy" section of the doc for guides on more environments.
 - Install Java 8 runtime environment. (If you are not an Oracle JDK commercial license user, we suggest using the free Oracle JDK 8u202. [Download now](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html#license-lightbox).)
-- It is recommended to create a new user for Doris on Linux (avoid using the root user to prevent accidental operations on the operating system).
+- It is recommended to create a new user for Apache Doris on Linux (avoid using the root user to prevent accidental operations on the operating system).
 
 ## Download binary package
 
 Download the Apache Doris installation package from doris.apache.org and proceed with the following steps.
 
 ```Bash
-# Download the binary installation package of Doris
+# Download the binary installation package of Apache Doris
 server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
 
 # Extract the installation package
@@ -54,7 +53,7 @@ server1:~ doris$ mv apache-doris-2.0.3-bin-x64 apache-doris
 
 ### Configure FE
 
-Go to the `apache-doris/fe/conf/fe.conf` file for FE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
+Go to the `apache-doris/fe/fe.conf` file for FE configuration. Below are some key configurations to pay attention to. Add JAVA_HOME manually and point it to your JDK8 runtime environment. For other configurations, you can go with the default values for a quick single-machine experience.
 
 ```Shell
 # Add JAVA_HOME and point it to your JDK8 runtime environment. Suppose your JDK8 is at /home/doris/jdk8, set it as follows:
@@ -100,7 +99,7 @@ Run the following command under apache-doris/be to start BE.
 server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 ```
 
-### Connect to Apache Doris FE
+### Connect to Doris FE
 
 Download the [portable MySQL client](https://dev.mysql.com/downloads/mysql/) to connect to Doris FE.
 
@@ -145,7 +144,7 @@ Query OK, 0 rows affected (0.00 sec)
 :::tip
 Difference between root and admin users
 
-The root and admin users are two default accounts that are automatically created after Apache Doris installation. The root user has superuser privileges for the entire cluster and can perform various management operations, such as adding or removing nodes. The admin user does not have administrative privileges but is a superuser within the cluster, possessing all permissions except those related to cluster management. It is recommended to use the root privileges only when necessary for cluster administration and maintenance.
+The root and admin users are two default accounts that are automatically created after Doris installation. The root user has superuser privileges for the entire cluster and can perform various management operations, such as adding or removing nodes. The admin user does not have administrative privileges but is a superuser within the cluster, possessing all permissions except those related to cluster management. It is recommended to use the root privileges only when necessary for cluster administration and maintenance.
 :::
 
 ## Create database and table
