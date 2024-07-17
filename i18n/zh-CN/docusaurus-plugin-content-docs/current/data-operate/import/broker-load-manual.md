@@ -163,7 +163,7 @@ username 配置为要访问的用户，密码置空即可。
 
 - `dfs.namenode.rpc-address.xxx.nn`：指定 namenode 的 rpc 地址信息。其中 nn 表示 `dfs.ha.namenodes.xxx` 中配置的 namenode 的名字，如："dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"。
 
-- `dfs.client.failover.proxy.provider`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
+- `dfs.client.failover.proxy.provider.[nameservice ID]`：指定 client 连接 namenode 的 provider，默认为：org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider。
 
 示例如下：
 
@@ -174,7 +174,7 @@ username 配置为要访问的用户，密码置空即可。
     "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
     "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
     "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-    "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 )
 ```
 
@@ -189,7 +189,7 @@ HA 模式可以和前面两种认证方式组合，进行集群访问。如通�
     "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
     "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
     "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-    "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 )
 ```
 
