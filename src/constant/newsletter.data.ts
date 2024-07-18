@@ -1,10 +1,10 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.1.4 just released",
-        content: `In this update, we have optimized various functional experiences for data lakehouse, with a focus on resolving the abnormal memory usage issue in the previous version.`,
-        to: '/blog/release-note-2.1.4',
-        image: '2.1.4.jpg',
+        title: "Apache Doris version 2.0.13 has been released",
+        content: `Thanks to our community users and developers, about 112 improvements and bug fixes have been made in Doris 2.0.13 version`,
+        to: '/blog/release-note-2.0.13',
+        image: '2.0.13.jpg',
     },
 
     {
