@@ -32,9 +32,9 @@ partitions
 
 ### description
 
-表函数，生成分区临时表，可以查看某个table的分区列表。
+表函数，生成分区临时表，可以查看某个 TABLE 的分区列表。
 
-该函数用于 from 子句中。
+该函数用于 From 子句中。
 
 #### syntax
 
@@ -105,7 +105,7 @@ mysql> desc function partitions("catalog"="hive","database"="zdtest","table"="co
 
 ### example
 
-1. 查看internal catalog 下 db1 的 table1 的分区列表
+1. 查看 internal CATALOG 下 db1 的 table1 的分区列表
 
 ```sql
 mysql> select * from partitions("catalog"="internal","database"="db1","table"="table1");
@@ -117,7 +117,7 @@ mysql> select * from partitions("catalog"="internal","database"="db1","table"="t
 mysql> select * from partitions("catalog"="internal","database"="db1","table"="table1") where PartitionName = "partition1";
 ```
 
-3. 查看 table1 下的分区名称为 partition1 的分区id
+3. 查看 table1 下的分区名称为 partition1 的分区 id
 
 ```sql
 mysql> select PartitionId from partitions("catalog"="internal","database"="db1","table"="table1") where PartitionName = "partition1";
