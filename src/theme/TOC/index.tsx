@@ -25,7 +25,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                     target="_blank"
                 >
                     <div className="px-2 grid gap-1">
-                        <span className="block">7 月 20 日 Apache Doris x 天翼云城市行@上海站免费参与🔥</span>
+                        <span className="block">7 月 26 日 Apache Doris x 天翼云城市行@上海站免费参与🔥</span>
                         <span>立即报名<span className="ml-1"><ExternalLinkArrowIcon/></span></span>
                     </div>
                     {/* <svg
