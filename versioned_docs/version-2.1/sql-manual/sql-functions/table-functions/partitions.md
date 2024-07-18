@@ -32,7 +32,7 @@ partitions
 
 ### description
 
-The table function generates a temporary partition table, which allows you to view the partition list of a certain table.
+The table function generates a temporary partition TABLE, which allows you to view the PARTITION list of a certain TABLE.
 
 This function is used in the from clause.
 
