@@ -1426,6 +1426,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-BROKER",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-TABLE",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CHARSET",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-DATABASE",
