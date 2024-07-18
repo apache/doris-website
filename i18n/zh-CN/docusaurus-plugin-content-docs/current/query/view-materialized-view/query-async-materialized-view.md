@@ -323,6 +323,69 @@ l_shipdate,
 l_suppkey;
 ```
 
+**用例 3**
+支持多维聚合的透明改写，即如果物化视图中没有 GROUPING SETS, CUBE, ROLLUP, 查询中有多维聚合。并且物化视图 group by 后的字段包含查询中多维聚合
+中的所有字段。那么也可以进行透明改写。
+
+
+mv 定义：
+```sql
+CREATE MATERIALIZED VIEW mv5_1
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+DISTRIBUTED BY RANDOM BUCKETS 3
+PROPERTIES ('replication_num' = '1')
+AS
+select o_orderstatus, o_orderdate, o_orderpriority,
+       sum(o_totalprice) as sum_total,
+       max(o_totalprice) as max_total,
+       min(o_totalprice) as min_total,
+       count(*) as count_all
+from orders
+group by
+o_orderstatus, o_orderdate, o_orderpriority;
+```
+
+查询语句：
+```sql
+select o_orderstatus, o_orderdate, o_orderpriority,
+       sum(o_totalprice),
+       max(o_totalprice),
+       min(o_totalprice),
+       count(*)
+from orders
+group by
+GROUPING SETS ((o_orderstatus, o_orderdate), (o_orderpriority), (o_orderstatus), ());
+```
+
+
+**用例 4**
+当查询中包含聚合，物化视图中不包含聚合，查询中使用的列都可以从物化视图中获取，那么也可以改写成功。
+
+mv 定义：
+```sql
+CREATE MATERIALIZED VIEW mv5_2
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+DISTRIBUTED BY RANDOM BUCKETS 3
+PROPERTIES ('replication_num' = '1')
+AS
+select case when o_shippriority > 1 and o_orderkey IN (4, 5) then o_custkey else o_shippriority end,
+       o_orderstatus,
+       bin(o_orderkey)
+from orders;
+```
+
+查询语句：
+```sql
+select
+    count(case when o_shippriority > 1 and o_orderkey IN (4, 5) then o_custkey else o_shippriority end),
+    o_orderstatus,
+    bin(o_orderkey)
+from orders
+group by
+    o_orderstatus,
+    bin(o_orderkey);
+```
+
 暂时目前支持的聚合上卷函数列表如下：
 
 | 查询中函数                                                 | 物化视图中函数                     | 函数上卷后              |
@@ -537,19 +600,19 @@ where o_orderstatus = 'o'
 
 ## 相关环境变量
 
-| 开关                                                                  | 说明                                                                                                   |
-|---------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| SET enable_nereids_planner = true;                                  | 异步物化视图只有在新优化器下才支持，所以需要开启新优化器                                                                         |
-| SET enable_materialized_view_rewrite = true;                        | 开启或者关闭查询透明改写，默认关闭                                                                                    |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许                                                                            |
-| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3                                                                  |
-| SET enable_materialized_view_union_rewrite = true;                  | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许                                                |
-| SET enable_materialized_view_nest_rewrite = true;                   | 是否允许嵌套改写，默认不允许                                                                                       |
+| 开关                                                                  | 说明                                                                                                    |
+|---------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| SET enable_nereids_planner = true;                                  | 异步物化视图只有在新优化器下才支持，所以需要开启新优化器                                                                          |
+| SET enable_materialized_view_rewrite = true;                        | 开启或者关闭查询透明改写，默认开启                                                                                     |
+| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许                                                                             |
+| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3                                                                   |
+| SET enable_materialized_view_union_rewrite = true;                  | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许                                                 |
+| SET enable_materialized_view_nest_rewrite = true;                   | 是否允许嵌套改写，默认不允许                                                                                        |
 | SET materialized_view_relation_mapping_max_count = 8;               | 透明改写过程中，relation mapping最大允许数量，如果超过，进行截取。relation mapping通常由表自关联产生，数量一般会是笛卡尔积，比如3张表，可能会产生 8 种组合。默认是 8 |
 
 ## 限制
 - 物化视图定义语句中只允许包含 SELECT、FROM、WHERE、JOIN、GROUP BY 语句，JOIN 的输入可以包含简单的 GROUP BY（单表聚合），其中 JOIN 的支持的类型为
-  INNER，LEFT OUTER JOIN，RIGHT OUTER JOIN，FULL OUTER JOIN， LEFT SEMI JOIN，RIGHT SEMI JOIN，LEFT ANTI JOIN，RIGHT ANTI JOIN。
+  INNER，LEFT OUTER JOIN，RIGHT OUTER JOIN，FULL OUTER JOIN，LEFT SEMI JOIN，RIGHT SEMI JOIN，LEFT ANTI JOIN，RIGHT ANTI JOIN。
 - 基于 External Table 的物化视图不保证查询结果强一致。
 - 不支持使用非确定性函数来构建物化视图，包括 rand、now、current_time、current_date、random、uuid 等。
 - 不支持窗口函数的透明改写。
