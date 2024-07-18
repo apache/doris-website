@@ -83,7 +83,11 @@ hdfs(
 
 其他参数：
 - `path_partition_keys`：（选填）指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写`path_partition_keys="city,date"`，将会自动从路径中读取相应列名和列值进行导入。
-- `resource`：（选填）指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md)。该功能自 2.1.4 版本开始支持。(注意事项：直接查询 tvf 或基于该tvf 创建 view ，需要拥有该 resource 的 usage 权限，查询基于 tvf 创建的 view ，只需要该 view 的 select 权限)
+- `resource`：（选填）指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md)。该功能自 2.1.4 版本开始支持。
+  
+:::tip 注意
+直接查询 TVF 或基于该 TVF 创建 VIEW ，需要拥有该 RESOURCE 的 USAGE 权限，查询基于 TVF 创建的 VIEW ，只需要该 VIEW 的 SELECT 权限
+:::
 
 ### Examples
 
