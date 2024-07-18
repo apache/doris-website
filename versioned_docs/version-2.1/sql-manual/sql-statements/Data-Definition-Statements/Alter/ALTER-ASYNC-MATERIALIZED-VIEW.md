@@ -79,7 +79,7 @@ Replacing atoms with two materialized views
 
 swap default is TRUE
 - If the swap parameter is set to TRUE, it is equivalent to renaming the materialized view mv1 to mv2, and renaming mv2 to mv1 at the same time
-- If the swap parameter is set to False, it is equivalent to renaming mv2 to mv1 and deleting the original mv1
+- If the swap parameter is set to FALSE, it is equivalent to renaming mv2 to mv1 and deleting the original mv1
 
 For example, if you want to swap the names of mv1 and mv2
 ```sql
