@@ -38,62 +38,21 @@ grammar:
 
 ```sql
 CREATE [READ ONLY] REPOSITORY `repo_name`
-WITH [BROKER `broker_name`|S3|hdfs]
+WITH [S3|hdfs]
 ON LOCATION `repo_location`
 PROPERTIES ("key"="value", ...);
 ```
 
 illustrate:
 
-- Creation of repositories, relying on existing brokers or accessing cloud storage directly through AWS s3 protocol, or accessing HDFS directly.
+- Creation of repositories, accessing cloud storage directly through AWS s3 protocol, or accessing HDFS directly.
 - If it is a read-only repository, restores can only be done on the repository. If not, backup and restore operations are available.
-- PROPERTIES are different according to different types of broker or S3 or hdfs, see the example for details.
+- PROPERTIES are different according to different types of S3 or hdfs, see the example for details.
 - ON LOCATION : if it is S3 , here followed by the Bucket Name.
 
 ### Example
 
-1. Create a warehouse named bos_repo, rely on BOS broker "bos_broker", and the data root directory is: bos://palo_backup
-
-```sql
-CREATE REPOSITORY `bos_repo`
-WITH BROKER `bos_broker`
-ON LOCATION "bos://palo_backup"
-PROPERTIES
-(
-    "bos_endpoint" = "http://gz.bcebos.com",
-    "bos_accesskey" = "bos_accesskey",
-    "bos_secret_accesskey"="bos_secret_accesskey"
-);
-```
-
-2. Create the same repository as Example 1, but with read-only properties:
-
-```sql
-CREATE READ ONLY REPOSITORY `bos_repo`
-WITH BROKER `bos_broker`
-ON LOCATION "bos://palo_backup"
-PROPERTIES
-(
-    "bos_endpoint" = "http://gz.bcebos.com",
-    "bos_accesskey" = "bos_accesskey",
-    "bos_secret_accesskey"="bos_accesskey"
-);
-```
-
-3. Create a warehouse named hdfs_repo, rely on Baidu hdfs broker "hdfs_broker", the data root directory is: hdfs://hadoop-name-node:54310/path/to/repo/
-
-```sql
-CREATE REPOSITORY `hdfs_repo`
-WITH BROKER `hdfs_broker`
-ON LOCATION "hdfs://hadoop-name-node:54310/path/to/repo/"
-PROPERTIES
-(
-    "username" = "user",
-    "password" = "password"
-);
-```
-
-4. Create a repository named s3_repo to link cloud storage directly without going through the broker.
+1. Create a repository named s3_repo.
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -109,7 +68,7 @@ PROPERTIES
 );
 ```
 
-5. Create a repository named hdfs_repo to link HDFS directly without going through the broker.
+2. Create a repository named hdfs_repo.
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`

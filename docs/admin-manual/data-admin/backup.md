@@ -26,11 +26,9 @@ under the License.
 
 # Data Backup
 
-Doris supports backing up the current data in the form of files to the remote storage system through the broker. Afterwards, you can restore data from the remote storage system to any Doris cluster through the restore command. Through this function, Doris can support periodic snapshot backup of data. You can also use this function to migrate data between different clusters.
+Doris supports backing up the current data in the form of files to the remote storage system like S3 and HDFS. Afterwards, you can restore data from the remote storage system to any Doris cluster through the restore command. Through this function, Doris can support periodic snapshot backup of data. You can also use this function to migrate data between different clusters.
 
 This feature requires Doris version 0.8.2+
-
-To use this function, you need to deploy the broker corresponding to the remote storage. Such as BOS, HDFS, etc. You can view the currently deployed broker through `SHOW BROKER;`.
 
 ## A brief explanation of the principle
 
@@ -56,9 +54,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
 
 ## Start Backup
 
-1. Create a hdfs remote warehouse example_repo:
-
-   **WITH HDFS (Recommended)**
+1. Create a hdfs remote warehouse example_repo (S3 refer to step 2):
 
    ```sql
    CREATE REPOSITORY `example_repo`
@@ -71,22 +67,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    );
    ```
 
-   **WITH BROKER**
-
-   This requires starting a broker process first.
-
-   ```sql
-   CREATE REPOSITORY `example_repo`
-   WITH BROKER `broker_name`
-   ON LOCATION "hdfs://hadoop-name-node:54310/path/to/repo/"
-   PROPERTIES
-   (
-      "username" = "user",
-      "password" = "password"
-   );
-   ```
-
-2. Create a remote repository for s3 : s3_repo
+2. Create a remote repository for s3 : s3_repo (HDFS should skip step 2)
 
    ```
    CREATE REPOSITORY `s3_repo`
@@ -105,7 +86,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    >
    >ON LOCATION is followed by Bucket Name here
 
-1. Full backup of table example_tbl under example_db to warehouse example_repo:
+3. Full backup of table example_tbl under example_db to warehouse example_repo:
 
    ```sql
    BACKUP SNAPSHOT example_db.snapshot_label1
@@ -114,7 +95,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    PROPERTIES ("type" = "full");
    ```
 
-2. Under the full backup example_db, the p1, p2 partitions of the table example_tbl, and the table example_tbl2 to the warehouse example_repo:
+4. Under the full backup example_db, the p1, p2 partitions of the table example_tbl, and the table example_tbl2 to the warehouse example_repo:
 
    ```sql
    BACKUP SNAPSHOT example_db.snapshot_label2
@@ -126,7 +107,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    );
    ```
 
-4. View the execution of the most recent backup job:
+5. View the execution of the most recent backup job:
 
    ```sql
    mysql> show BACKUP\G;
@@ -148,7 +129,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    1 row in set (0.01 sec)
    ```
 
-5. View existing backups in remote repositories:
+6. View existing backups in remote repositories:
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo WHERE SNAPSHOT = "snapshot_label1";
