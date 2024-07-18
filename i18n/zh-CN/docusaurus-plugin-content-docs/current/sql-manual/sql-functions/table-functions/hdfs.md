@@ -86,7 +86,7 @@ hdfs(
 - `resource`：（选填）指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md)。该功能自 2.1.4 版本开始支持。
   
 :::tip 注意
-直接查询 TVF 或基于该 TVF 创建 VIEW ，需要拥有该 RESOURCE 的 USAGE 权限，查询基于 TVF 创建的 VIEW ，只需要该 VIEW 的 SELECT 权限
+直接查询 TVF 或基于该 TVF 创建 View ，需要拥有该 Resource 的 USAGE 权限，查询基于 TVF 创建的 View ，只需要该 View 的 SELECT 权限
 :::
 
 ### Examples
