@@ -38,7 +38,7 @@ SQL input is treated as multiple statements only when the `CLIENT_MULTI_STATEMEN
 
 - `LogicalWindow` and `LogicalPartitionTopN` support multi-field predicate pushdown to improve performance. [#36828](https://github.com/apache/doris/pull/36828)
 
-- The ES Catalog now maps ES `nested` or `object` types to Doris `JSON` types. [#36759](https://github.com/apache/doris/pull/36759)
+- The ES Catalog now maps ES `nested` or `object` types to Doris `JSON` types. [#37101](https://github.com/apache/doris/pull/37101)
 
 ## Improvements
 
