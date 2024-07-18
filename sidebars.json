@@ -353,7 +353,7 @@
                         "admin-manual/data-admin/reparing-data"
                     ]
                 },
-            {
+                {
                     "type": "category",
                     "label": "Managing Resource",
                     "items": [
