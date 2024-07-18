@@ -39,6 +39,8 @@ In Doris, table names are case-sensitive by default. You can configure [lower_ca
 
 2. The number of buckets for an existing partition cannot be modified. You can change the number of buckets by [replacing the partition](../data-operate/delete/table-temp-partition.md). However, you can modify the number of buckets for partitions that have not yet been created under dynamic partitioning.
 
-3. Adding or removing VALUE columns is a lightweight operation and can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. It is best to avoid adding or removing KEY columns or modifying data types with large amounts of data.
+3. To modify table and partition properties, refer to [modifying table properties](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
 
-4. You can use tiered storage to save cold data to HDD or S3 / HDFS.
+4. Adding or removing VALUE columns is a lightweight operation and can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. It is best to avoid adding or removing KEY columns or modifying data types with large amounts of data.
+
+5. You can use tiered storage to save cold data to HDD or S3 / HDFS.

@@ -100,6 +100,7 @@
                     "type": "category",
                     "label": "Tiered Storage",
                     "items": [
+                        "table-design/tiered-storage/diff-disk-medium-migration",
                         "table-design/tiered-storage/remote-storage"
                     ]
                 },

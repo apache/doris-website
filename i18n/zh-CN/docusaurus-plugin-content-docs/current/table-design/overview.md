@@ -38,6 +38,8 @@ Doris 中表名默认是大小写敏感的，可以在第一次初始化集群�
 
 2. 已经创建的分区不能修改分桶数，可以通过[替换分区](../data-operate/delete/table-temp-partition.md) 来修改分桶数，可以修改动态分区未创建的分区分桶数。
 
-3. 加减 VALUE 列是轻量级实现，秒级别可以完成，加减 KEY 列或者修改数据类型是重量级操作，完成时间取决于数据量，大规模数据下尽量避免加减 KEY 列或者修改数据类型。
+3. 修改表、分区属性可以参考[修改表属性](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
 
-4. 可以使用层级存储将冷数据保存到 HDD 或者 S3 / HDFS。
+4. 加减 VALUE 列是轻量级实现，秒级别可以完成，加减 KEY 列或者修改数据类型是重量级操作，完成时间取决于数据量，大规模数据下尽量避免加减 KEY 列或者修改数据类型。
+
+5. 可以使用层级存储将冷数据保存到 HDD 或者 S3 / HDFS。
