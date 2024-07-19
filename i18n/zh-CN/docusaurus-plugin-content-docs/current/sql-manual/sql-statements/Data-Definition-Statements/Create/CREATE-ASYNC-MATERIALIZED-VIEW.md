@@ -221,14 +221,11 @@ partition by (date_trunc(`k2`,'month'))
 
 `partition_date_format`：分区字段的时间格式，例如"%Y-%m-%d"
 
-`query`
+`enable_nondeterministic_function`：物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random()等，如果
+是 true, 允许包含，否则不允许包含, 默认不允许包含。
 
-创建物化视图的查询语句，其结果即为物化视图中的数据
+`query`：创建物化视图的查询语句，其结果即为物化视图中的数据
 
-不支持随机函数，例如:
-```sql
-SELECT random() as dd,k3 FROM user
-```
 
 ### 示例
 

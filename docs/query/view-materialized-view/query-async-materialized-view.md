@@ -345,6 +345,73 @@ l_shipdate,
 l_suppkey;
 ```
 
+
+**Case 3**
+Supports transparent rewriting for multidimensional aggregation. That is, if the materialized view does not contain
+GROUPING SETS, CUBE, ROLLUP, and there are multidimensional aggregations in the query. Additionally, if the fields
+after the group by in the materialized view include all the fields in the multidimensional aggregation in the query,
+then transparent rewriting can also be performed.
+
+
+Materialized view definition:
+```sql
+CREATE MATERIALIZED VIEW mv5_1
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+DISTRIBUTED BY RANDOM BUCKETS 3
+PROPERTIES ('replication_num' = '1')
+AS
+select o_orderstatus, o_orderdate, o_orderpriority,
+       sum(o_totalprice) as sum_total,
+       max(o_totalprice) as max_total,
+       min(o_totalprice) as min_total,
+       count(*) as count_all
+from orders
+group by
+o_orderstatus, o_orderdate, o_orderpriority;
+```
+
+Query statement:
+```sql
+select o_orderstatus, o_orderdate, o_orderpriority,
+       sum(o_totalprice),
+       max(o_totalprice),
+       min(o_totalprice),
+       count(*)
+from orders
+group by
+GROUPING SETS ((o_orderstatus, o_orderdate), (o_orderpriority), (o_orderstatus), ());
+```
+
+
+**Case 4**
+When the query contains aggregation and the materialized view does not contain aggregation, if all the columns
+used in the query can be obtained from the materialized view, then the rewrite can also be successful.
+
+Materialized view definition:
+```sql
+CREATE MATERIALIZED VIEW mv5_2
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+DISTRIBUTED BY RANDOM BUCKETS 3
+PROPERTIES ('replication_num' = '1')
+AS
+select case when o_shippriority > 1 and o_orderkey IN (4, 5) then o_custkey else o_shippriority end,
+       o_orderstatus,
+       bin(o_orderkey)
+from orders;
+```
+
+Query statement:
+```sql
+select
+    count(case when o_shippriority > 1 and o_orderkey IN (4, 5) then o_custkey else o_shippriority end),
+    o_orderstatus,
+    bin(o_orderkey)
+from orders
+group by
+    o_orderstatus,
+    bin(o_orderkey);
+```
+
 Temporary support for the aggregation roll-up functions is as follows:
 
 | Functions in Queries | Functions in Materialized Views  | Aggregation Functions After Rewriting |
@@ -587,14 +654,14 @@ you can execute the following statement. It will provide a detailed breakdown of
 
 ## Relevant Environment Variables
 
-| Switch                                                              | Description                                                                                                                       |
-|---------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| SET enable_nereids_planner = true;                                  | Asynchronous materialized views are only supported under the new optimizer, so the new optimizer needs to be enabled.             |
-| SET enable_materialized_view_rewrite = true;                        | Enable or disable query transparent rewriting, default is disabled                                                                |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | Whether materialized views participating in transparent rewriting are allowed to contain external tables, default is not allowed  |
-| SET materialized_view_rewrite_success_candidate_num = 3;            | Transparently rewrites the successful result set, allowing the maximum number of CBO candidates to participate, the default is 3  |
-| SET enable_materialized_view_union_rewrite = true;                  | Whether to allow the union of base table and materialized view using UNION ALL when the partitioned materialized view is insufficient to provide all the data required by a query. Default is enabled. |
-| SET enable_materialized_view_nest_rewrite = true;                   | Whether to allow nested rewriting. Default is disabled. |
+| Switch                                                              | Description                                                                                                                                                                                                                                                                                                    |
+|---------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SET enable_nereids_planner = true;                                  | Asynchronous materialized views are only supported under the new optimizer, so the new optimizer needs to be enabled.                                                                                                                                                                                          |
+| SET enable_materialized_view_rewrite = true;                        | Enable or disable query transparent rewriting, default is enabled                                                                                                                                                                                                                                              |
+| SET materialized_view_rewrite_enable_contain_external_table = true; | Whether materialized views participating in transparent rewriting are allowed to contain external tables, default is not allowed                                                                                                                                                                               |
+| SET materialized_view_rewrite_success_candidate_num = 3;            | Transparently rewrites the successful result set, allowing the maximum number of CBO candidates to participate, the default is 3                                                                                                                                                                               |
+| SET enable_materialized_view_union_rewrite = true;                  | Whether to allow the union of base table and materialized view using UNION ALL when the partitioned materialized view is insufficient to provide all the data required by a query. Default is enabled.                                                                                                         |
+| SET enable_materialized_view_nest_rewrite = true;                   | Whether to allow nested rewriting. Default is disabled.                                                                                                                                                                                                                                                        |
 | SET materialized_view_relation_mapping_max_count = 8;               | Maximum number of relation mappings allowed during transparent rewrite. If exceeded, truncation will occur. Relation mapping is typically generated by self-joins in tables and the number is usually the Cartesian product, for example, if there are 3 tables, it may generate 8 combinations. Default is 8. |
 
 ## Limitations
