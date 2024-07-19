@@ -51,7 +51,7 @@ github:
   features:
     issues: true
 notifications:
-    commits:              commits@foo.apache.org
+    commits:              commits@doris.apache.org
     issues:               commits@doris.apache.org
     pullrequests_comment: commits@doris.apache.org
     pullrequests_status:  commits@doris.apache.org
