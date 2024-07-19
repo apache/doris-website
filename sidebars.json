@@ -348,9 +348,9 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/data-recovery",
                         "admin-manual/data-admin/delete-recover",
-                        "admin-manual/data-admin/ccr"
+                        "admin-manual/data-admin/ccr",
+                        "admin-manual/data-admin/repairing-data"
                     ]
                 },
                 {
@@ -1426,6 +1426,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-BROKER",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-TABLE",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CHARSET",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-DATABASE",

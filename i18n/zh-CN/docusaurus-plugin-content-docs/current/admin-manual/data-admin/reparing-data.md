@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Data Recovery",
-    "language": "en"
+    "title": "数据修复",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,29 +24,29 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Data Recovery
+# 数据修复
 
-For the Unique Key Merge on Write table, there are bugs in some Doris versions, which may cause errors when the system calculates the delete bitmap, resulting in duplicate primary keys. At this time, the full compaction function can be used to repair the data. This function is invalid for non-Unique Key Merge on Write tables.
+对于 Unique Key Merge on Write 表，在某些 Doris 的版本中存在 bug，可能会导致系统在计算 delete bitmap 时出现错误，导致出现重复主键，此时可以利用 full compaction 功能进行数据的修复。本功能对于非 Unique Key Merge on Write 表无效。
 
-This feature requires Doris version 2.0+.
+该功能需要 Doris 版本 2.0+。
 
-To use this function, it is necessary to stop the import as much as possible, otherwise problems such as import timeout may occur.
+使用该功能，需要尽可能停止导入，否则可能会出现导入超时等问题。
 
-## Brief principle explanation
+## 简要原理说明
 
-After the full compaction is executed, the delete bitmap will be recalculated, and the wrong delete bitmap data will be deleted to complete the data restoration.
+执行 full compaction 后，会对 delete bitmap 进行重新计算，将错误的 delete bitmap 数据删除，以完成数据的修复。
 
-## Instructions for use
+## 使用说明
 
 `POST /api/compaction/run?tablet_id={int}&compact_type=full`
 
-or
+或
 
 `POST /api/compaction/run?table_id={int}&compact_type=full`
 
-Note that only one tablet_id and table_id can be specified, and cannot be specified at the same time. After specifying table_id, full_compaction will be automatically executed for all tablets under this table.
+注意，tablet_id 和 table_id 只能指定一个，不能够同时指定，指定 table_id 后会自动对此 table 下所有 tablet 执行 full_compaction。
 
-## Example of use
+## 使用例子
 
 ```
 curl -X POST "http://127.0.0.1:8040/api/compaction/run?tablet_id=10015&compact_type=full"
