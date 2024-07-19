@@ -1,4 +1,12 @@
 export const NEWSLETTER_DATA = [
+
+    {
+        tags: ['Best Practice'],
+        title: "Migrate data lakehouse from BigQuery to Apache Doris, saving $4,500 per month ",
+        content: `Dien Tran Thanh shares his firsthand experience, proven best practices, and insightful suggestions for migrating from BigQuery to Apache Doris to build a more cost-efficient data warehouse.`,
+        to: '/blog/migrate-lakehouse-from-bigquery-to-doris',
+        image: 'migrate-lakehouse-from-bigquery-to-apache-doris.jpg',
+    },
     {
         tags: ['Release Note'],
         title: "Apache Doris version 2.0.13 has been released",
@@ -20,14 +28,6 @@ export const NEWSLETTER_DATA = [
         content: `From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.`,
         to: '/blog/evolution-of-the-apache-doris-execution-engine',
         image: 'evolution-of-the-apache-doris-execution-engine.jpg',
-    },
-
-    {
-        tags: ['Tech Sharing'],
-        title: "Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation",
-        content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
-        to: '/blog/job-scheduler-for-task-automation',
-        image: 'job-scheduler-for-task-automation.jpg',
     },
 
 ];

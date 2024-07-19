@@ -6,8 +6,8 @@
     'date': '2024-06-18',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "3",
+   'picked': "true",
+    'order': "4",
     "image": '/images/evolution-of-the-apache-doris-execution-engine.jpg'
 }
 
