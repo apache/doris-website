@@ -110,6 +110,10 @@ CREATE CATALOG hive PROPERTIES (
 
 ### Doris query DLC
 
+:::note
+Supported since Doris version 2.0.13 / 2.1.5
+:::
+
 [DLC](https://cloud.tencent.com/product/dlc) of Tencent Cloud use HMS to manage its metadata, so Hive catalog can be used。
 DLC stores data on LakeFS or COSN, below catalog is compatible with both file system.
 ```sql

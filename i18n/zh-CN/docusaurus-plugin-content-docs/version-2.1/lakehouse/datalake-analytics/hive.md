@@ -110,6 +110,10 @@ CREATE CATALOG hive PROPERTIES (
 
 ### Doris 访问腾讯云 DLC
 
+:::note
+Doris 2.1 版本自 2.1.5 后支持该功能
+:::
+
 腾讯云 [DLC](https://cloud.tencent.com/product/dlc) 采用HMS管理元数据，因此可用 Hive catalog 进行联邦分析。
 DLC 可基于 LakeFS 或 COSN 进行数据存储。以下 catalog 创建方法对两种 FS 都适用。
 ```sql
