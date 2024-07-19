@@ -39,9 +39,9 @@ Manually deploying a Doris cluster typically involves four steps:
 
 If you need to deploy Doris in the compute-storage decoupled mode, after completing step 1~3 as above, you may refer to the following docs to proceed with the deployment:
 
-1. [Before deployment](../compute-storage-decoupled/before-deployment.md)
-2. [Deploy the basic modules for the compute-storage decoupled mode](../compute-storage-decoupled/compilation-and-deployment.md)
-3. [Create cluster in the compute-storage decoupled mode](../compute-storage-decoupled/creating-cluster.md)
+1. [Before deployment](../../compute-storage-decoupled/before-deployment.md)
+2. [Deploy the basic modules for the compute-storage decoupled mode](../../compute-storage-decoupled/compilation-and-deployment.md)
+3. [Create cluster in the compute-storage decoupled mode](../../compute-storage-decoupled/creating-cluster.md)
 
 :::
 
