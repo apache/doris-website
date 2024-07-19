@@ -509,6 +509,11 @@ This section mainly introduces how to connect to a Hive + HDFS cluster with Kerb
 
  Note that in some cases the file location of `krb5.conf` may depend on the environment variable `KRB5_CONFIG` or the `-Djava.security.krb5.conf` in the JVM parameters. Please check these properties to determine the exact location of `krb5.conf`.
 
+ To customize the location of `krb5.conf`:
+ 
+ - FE: Configure the JVM parameter `-Djava.security.krb5.conf` in `fe.conf`.
+ - BE: Use the `kerberos_krb5_conf_path` configuration item in `be.conf`, the default value is `/etc/krb5.conf`.
+
 * JVM parameters
 
  Please add the following options to the JVM of FE and BE (located in `fe.conf` and `be.conf`):
@@ -656,3 +661,13 @@ Hive transactional tables are tables in Hive that support ACID (Atomicity, Consi
 
 Currently, it does not support scenarios involving Original Files.
 When a table is transformed into a transactional table, subsequent newly written data files will use the schema of the Hive transactional table. However, existing data files will not be converted to the schema of the transactional table. These existing files are referred to as Original Files.
+
+## Best Practices
+
+- Handling of Empty Lines in Hive Text Format Tables
+
+    By default, Doris ignores empty lines in Text format tables. Starting from version 2.1.5, you can control this behavior by setting the session variable `read_csv_empty_line_as_null`.
+
+    `set read_csv_empty_line_as_null = true;`
+
+    The variable defaults to false, indicating that empty lines are ignored. If set to true, the empty line will be read as a line with "all columns are null" and returned, which is consistent with the behavior of some query engines in the Hadoop ecosystem.
