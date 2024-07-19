@@ -210,6 +210,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -T streamload_example.json \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
+> If the JSON file is not a JSON array but each line is a JSON object, add the headers `-H "strip_outer_array:false"` and `-H "read_json_by_line:true"`.
 
 ​	Stream Load is a synchronous method, where the result is directly returned to the user.
 
