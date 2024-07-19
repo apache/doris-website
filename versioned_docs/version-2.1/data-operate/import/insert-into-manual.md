@@ -192,6 +192,12 @@ enable_insert_strict
 - Description: If this is set to true, INSERT INTO will fail when the task involves invalid data. If set to false, INSERT INTO will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully.
 - Explanation: INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
 
+insert_max_filter_ratio
+
+- Default value: 1.0
+
+- Description: Since version 2.1.5. Only effective when `enable_insert_strict` is false. Used to control the error tolerance when using `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value is 1.0, which means all errors are tolerated. It can be a decimal between 0 and 1. It means that when the number of error rows exceeds this ratio, the INSERT task will fail.
+
 ### Return values
 
 INSERT INTO an SQL statement, and it returns different results based on different query outcomes:
