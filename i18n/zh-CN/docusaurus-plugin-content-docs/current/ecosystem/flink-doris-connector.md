@@ -509,13 +509,13 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 
 ```
 
-## 使用 FlinkCDC 接入多表或整库 (支持 MySQL,Oracle,PostgreSQL,SQLServer)
+## 使用 FlinkCDC 接入多表或整库 (支持 MySQL,Oracle,PostgreSQL,SQLServer,MongoDB)
 ### 语法
 ```shell
 <FLINK_HOME>bin/flink run \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
     lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar \
-    <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database> \
+    <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database|mongodb-sync-database> \
     --database <doris-database-name> \
     [--job-name <flink-job-name>] \
     [--table-prefix <doris-table-prefix>] \
@@ -544,6 +544,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。                                                                                                                                                                                  |
 | --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。                                                                                                                                                                |
 | --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。                                                                                                                                                                      |
+| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样mongodb 数据为Doris建表的配置，默认为0.2|
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。                                                                                                                                                                                                                                                                                           |
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 `--table-conf replication_num=1`，而 `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"`表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。                                                                                                                                                                                                               |
 | --ignore-default-value  | 关闭同步 mysql 表结构的默认值。适用于同步 mysql 数据到 doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152)                                                                                                                                                                                                                                                                                                               |
@@ -554,7 +555,9 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target="a\|b"                                                                                                                                                                                                                                                                                                                                                                                   |
 | --create-table-only     | 是否只仅仅同步表的结构                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
->注：同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar
+:::info 备注
+同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar ，flink-sql-connector-mongodb-cdc-${version}.jar
+:::
 
 ### MySQL 多表同步示例
 ```shell
@@ -654,6 +657,33 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
      --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
      --sink-conf sink.label-prefix=label \
      --table-conf replication_num=1
+```
+
+### MongoDB 同步示例
+
+```shell
+<FLINK_HOME>/bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    mongodb-sync-database \
+    --database cdc_test \
+    --schema-change-mode debezium_structure \
+    --mongodb-conf hosts=127.0.0.1:27017 \
+    --mongodb-conf username=flinkuser \
+    --mongodb-conf password=flinkpwd \
+    --mongodb-conf database=test \
+    --mongodb-conf scan.startup.mode=initial \
+    --mongodb-conf schema.sample-percent=0.2 \
+    --including-tables cdc_test \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --sink-conf sink.enable-2pc=false \
+    --table-conf replication_num=1
 ```
 
 ## 使用 FlinkCDC 更新 Key 列

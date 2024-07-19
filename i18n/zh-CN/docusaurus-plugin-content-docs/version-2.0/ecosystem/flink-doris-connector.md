@@ -432,7 +432,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
 <FLINK_HOME>bin/flink run \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
     lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar \
-    <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database> \
+    <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database | mongodb-sync-database>| \
     --database <doris-database-name> \
     [--job-name <flink-job-name>] \
     [--table-prefix <doris-table-prefix>] \
@@ -461,6 +461,8 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 - **--oracle-conf** Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/zh/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。
 
+- **--mongodb-conf** MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。
+
 - **--sink-conf** Doris Sink 的所有配置，可以在[这里](../../ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。
 
 - **--table-conf** Doris 表的配置项，即 properties 中包含的内容。例如 --table-conf replication_num=1
@@ -469,8 +471,8 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 - **--use-new-schema-change** 新的 schema change 支持同步 mysql 多列变更、默认值。参考[#167](https://github.com/apache/doris-flink-connector/pull/167)
 
-:::note
-注：同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar
+:::info 备注
+同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar, flink-sql-connector-mongodb-cdc-${version}.jar
 :::
 
 ### MySQL 同步示例
@@ -574,6 +576,31 @@ insert into doris_sink select id,name from cdc_mysql_source;
      --table-conf replication_num=1
 ```
 
+### MongoDB 同步示例
+```shell
+<FLINK_HOME>/bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    mongodb-sync-database \
+    --database cdc_test \
+    --schema-change-mode debezium_structure \
+    --mongodb-conf hosts=127.0.0.1:27017 \
+    --mongodb-conf username=flinkuser \
+    --mongodb-conf password=flinkpwd \
+    --mongodb-conf database=test \
+    --mongodb-conf scan.startup.mode=initial \
+    --mongodb-conf schema.sample-percent=0.2 \
+    --including-tables cdc_test \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --sink-conf sink.enable-2pc=false \
+    --table-conf replication_num=1
+```
 ## 使用 FlinkCDC 更新 Key 列
 
 一般在业务数据库中，会使用编号来作为表的主键，比如 Student 表，会使用编号 (id) 来作为主键，但是随着业务的发展，数据对应的编号有可能是会发生变化的。
