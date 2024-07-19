@@ -177,29 +177,20 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-statements/Data-De
 
 2. BACKUP
 
-   执行一次备份操作。具体参考(../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
+   执行一次备份操作。具体参考 [备份文档] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md)。
 
 3. SHOW BACKUP
 
-   查看最近一次 backup 作业的执行情况。具体参考(../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
+   查看最近一次 backup 作业的执行情况。具体参考 [查看备份作业文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
 
 4. SHOW SNAPSHOT
 
-   查看远端仓库中已存在的备份。具体参考(../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md)。
-
-   - Snapshot：备份时指定的该备份的名称（Label）。
-   - Timestamp：备份的时间戳。
-   - Status：该备份是否正常。
-
-   如果在 `SHOW SNAPSHOT` 后指定了 where 子句，则可以显示更详细的备份信息。
-
-   - Database：备份时对应的 Database。
-   - Details：展示了该备份完整的数据目录结构。
+   查看远端仓库中已存在的备份。具体参考 [查看备份文档](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md)。
 
 5. CANCEL BACKUP
 
-   取消当前正在执行的备份作业。具体参考(../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md)。
+   取消当前正在执行的备份作业。具体参考 [取消备份作业文档] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md)。
 
 6. DROP REPOSITORY
 
-   删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。具体参考(../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md)。
+   删除已创建的远端仓库。删除仓库，仅仅是删除该仓库在 Doris 中的映射，不会删除实际的仓库数据。具体参考 [删除远程仓库文档] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md)。
