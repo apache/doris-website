@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Transaction Load",
-    "language": "zh-CN"
+    "title": "Transaction",
+    "language": "en"
 }
 ---
 
@@ -24,33 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-事务是指一个操作，包含一个或多个SQL语句，这些语句的执行要么完全成功，要么完全失败，是一个不可分割的工作单位。
+A transaction is an operation that contains one or more SQL statements. The execution of these statements must either be completely successful or completely fail. It is an indivisible work unit.
 
-## 显式事务和隐式事务
+## Explicit and Implicit Transactions
 
-### 显式事务
+### Explicit Transactions
 
-显式事务需要用户主动的开启，提交或回滚事务。 在 Doris 中，提供了 2 种显式事务：
+Explicit transactions require users to actively start, commit, or roll back transactions. Doris provides two types of explicit transactions:
 
-1. 本文中介绍的事务写方式，即：
+1. The transaction write method introduced in this document :
 
     ```sql
-    BEGIN; 
+    BEGIN;
     [INSERT, UPDATE, DELETE statement]
     COMMIT; / ROLLBACK;
     ```
 
-2. [Stream Load 2PC](load-atomicity.md#stream-load)
+2. [Stream Load 2PC](import/load-atomicity.md#stream-load)
 
-### 隐式事务
+### Implicit Transactions
 
-隐式事务是指用户在所执行的一条或多条SQL语句的前后，没有显式添加开启事务和提交事务的语句。
+Implicit transactions refer to SQL statements that are executed without explicitly adding statements to start and commit transactions before and after the statements.
 
-在 Doris 中，除[Group Commit](group-commit-manual.md)外，每个导入语句在开始执行时都会开启一个事务，并且在该语句执行完成之后，自动提交该事务；或执行失败后，自动回滚该事务。更多详细信息请参考: [导入事务与原子性](load-atomicity.md)。
+In Doris, except for [Group Commit](import/group-commit-manual.md), each import statement opens a transaction when it starts executing. The transaction is automatically committed after the statement is executed, or automatically rolled back if the statement fails. For more information, see [Transaction Load](import/load-atomicity.md).
 
-## 事务操作
+## Transaction Operations
 
-### 开启事务
+### Start a Transaction
 
 ```sql
 BEGIN;
@@ -58,33 +58,33 @@ BEGIN;
 BEGIN WITH LABEL {user_label}; 
 ```
 
-如果执行该语句时，当前 Session 正处于一个事务的中间过程，那么 Doris 会忽略该语句，也可以理解为事务是不能嵌套的。
+If this statement is executed while the current session is in the middle of a transaction, Doris will ignore the statement, which can also be understood as transactions cannot be nested.
 
-### 提交事务
+### Commit a Transaction
 
-```sql 
+```sql
 COMMIT;
 ```
 
-用于提交在当前事务中进行的所有修改。
+Used to commit all modifications made in the current transaction.
 
-### 回滚事务
+### Rollback a Transaction
 
 ```sql
 ROLLBACK;
 ```
 
-用于撤销当前事务的所有修改。
+Used to roll back all modifications made in the current transaction.
 
-事务是 Session 级别的，如果 Session 中止或关闭，也会自动回滚该事务。
+Transactions are session-level, so if a session is terminated or closed, the transaction will automatically be rolled back.
 
-## 事务写入
+## Transaction Load
 
-目前 Doris 中支持 2 种方式的事务写入。
+Currently, Doris supports two ways of transaction loading.
 
-### 单表多次`INSERT INTO VALUES`写入
+### Multiple `INSERT INTO VALUES` for one table
 
-假如表的结构为：
+Suppose the table schema is:
 
 ```sql
 CREATE TABLE `dt` (
@@ -99,7 +99,7 @@ PROPERTIES (
 );
 ```
 
-写入：
+Do transaction load:
 
 ```sql
 mysql> BEGIN;
@@ -119,15 +119,15 @@ Query OK, 0 rows affected (1.02 sec)
 {'label':'txn_insert_b55db21aad7451b-b5b6c339704920c5', 'status':'VISIBLE', 'txnId':'10013'}
 ```
 
-这种写入方式不仅可以实现写入的原子性，而且在 Doris 中，能提升 `INSERT INTO VALUES` 的写入性能。
+This method not only achieves atomicity, but also in Doris, it enhances the writing performance of `INSERT INTO VALUES`.
 
-如果用户同时开启了 `Group Commit` 和事务写，事务写生效。
+If user enables `Group Commit` and transaction insert at the same time, the transaction insert will work. 
 
-也可以参考 [Insert Into](load-atomicity.md#insert-into)获取更多信息。 
+See [Insert Into](import/load-atomicity.md#insert-into) for more details.
 
-### 多表多次`INSERT INTO SELECT`, `UPDATE`, `DELETE`写入
+### Multiple `INSERT INTO SELECT`, `UPDATE`, `DELETE` for multiple tables
 
-假设有`dt1`, `dt2`, `dt3` 3 张表，表结构同上，表中数据为：
+Suppose there are 3 tables: `dt1`, `dt2`, `dt3`, with the same schema as above, and the data in the tables are:
 
 ```sql
 mysql> SELECT * FROM dt1;
@@ -158,7 +158,7 @@ mysql> SELECT * FROM dt3;
 Empty set (0.03 sec)
 ```
 
-做事务写入，把`dt1`和`dt2`的数据写入到`dt3`中，同时，对`dt1`表中的分数进行更新，`dt2`表中的数据进行删除：
+Do transaction load, write the data from `dt1` and `dt2` to `dt3`, and update the scores in `dt1` and delete the data in `dt2`:
 
 ```sql
 mysql> BEGIN;
@@ -187,10 +187,10 @@ Query OK, 0 rows affected (0.03 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'VISIBLE', 'txnId':'11024'}
 ```
 
-查询数据：
+Select data:
 
 ```sql
-# id >= 4 的分数加 10
+# the score column of id >= 4 records is updated 
 mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 | id   | name      | score |
@@ -203,7 +203,7 @@ mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 5 rows in set (0.01 sec)
 
-# id >= 9 的数据被删除
+# the records of id >= 9 are deleted
 mysql> SELECT * FROM dt2;
 +------+---------+-------+
 | id   | name    | score |
@@ -214,7 +214,7 @@ mysql> SELECT * FROM dt2;
 +------+---------+-------+
 3 rows in set (0.02 sec)
 
-# dt1 和 dt2 中已提交的数据被写入到 dt3 中
+# the data of dt1 and dt2 is written to dt3
 mysql> SELECT * FROM dt3;
 +------+-----------+-------+
 | id   | name      | score |
@@ -233,11 +233,11 @@ mysql> SELECT * FROM dt3;
 10 rows in set (0.01 sec)
 ```
 
-#### 隔离级别
+#### Isolation Level
 
-目前 Doris 事务写提供的隔离级别为 `READ COMMITTED`。需要注意以下两点:
+Doris provides the `READ COMMITTED` isolation level. Please note the following:
 
-* 事务中的多个语句，每个语句会读取到本语句开始执行时已提交的数据，如:
+* In a transaction, each statement reads the data that was committed at the time the statement began executing:
 
     ```sql
      timestamp | ------------ Session 1 ------------  |  ------------ Session 2 ------------
@@ -246,28 +246,28 @@ mysql> SELECT * FROM dt3;
                | INSERT INTO dt3 SELECT * FROM dt1;   |
        t3      |                                      | # write 2 rows to dt1 table
                |                                      | INSERT INTO dt1 VALUES(...), (...);
-       t4      | # read n + 2 rows from dt1 table     |
+       t4      | # read n + 2 rows FROM dt1 table     |
                | INSERT INTO dt3 SELECT * FROM dt1;   |
        t5      | COMMIT;                              |
     ```
 
-* 事务中的多个语句，每个语句不能读到本事务内其它语句做出的修改，如：
+* In a transaction, each statement cannot read the modifications made by other statements within the same transactio:
 
-    假如事务开启前，表 `dt1` 有 5 行，表 `dt2` 有 5 行，表 `dt3` 为空，执行以下语句： 
+    Suppose `dt1` has 5 rows, `dt2` has 5 rows, `dt3` has 0 rows. And execute the following SQL:
 
     ```sql
     BEGIN;
-    # dt2 中写入 5 行，事务提交后共 10 行
+    # write 5 rows to dt2, 
     INSERT INTO dt2 SELECT * FROM dt1;
-    # dt3 中写入 5 行，不能读出上一步中 dt2 中新写入的数据
+    # write 5 rows to dt3, and cannot read the new data written to dt2 in the previous step
     INSERT INTO dt3 SELECT * FROM dt2;
     COMMIT;
     ```
 
-    具体的例子为：
+    One example:
 
     ```sql
-    # 建表并写入数据
+    # create table and insert data
     CREATE TABLE `dt1` (
         `id` INT(11) NOT NULL,
         `name` VARCHAR(50) NULL,
@@ -282,14 +282,14 @@ mysql> SELECT * FROM dt3;
     CREATE TABLE dt3 LIKE dt1;
     INSERT INTO dt1 VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
     INSERT INTO dt2 VALUES (6, "William", 69), (7, "Sophia", 32), (8, "James", 64), (9, "Emma", 37), (10, "Liam", 64);
-
-    # 事务写
+    
+    # Do transaction write
     BEGIN;
     INSERT INTO dt2 SELECT * FROM dt1;
     INSERT INTO dt3 SELECT * FROM dt2;
     COMMIT;
-
-    # 查询
+    
+    # Select data
     mysql> SELECT * FROM dt2;
     +------+-----------+-------+
     | id   | name      | score |
@@ -306,7 +306,7 @@ mysql> SELECT * FROM dt3;
     |    5 | Ava       |    17 |
     +------+-----------+-------+
     10 rows in set (0.01 sec)
-
+    
     mysql> SELECT * FROM dt3;
     +------+---------+-------+
     | id   | name    | score |
@@ -320,11 +320,11 @@ mysql> SELECT * FROM dt3;
     5 rows in set (0.01 sec)
     ```
 
-#### 事务中执行失败的语句
+#### Failed Statements Within a Transaction
 
-当事务中的某个语句执行失败时，这个操作已经自动回滚。然而，事务中其它执行成功的语句，仍然是可提交或回滚的。当事务被成功提交后，事务中执行成功的语句的修改被应用。
+When a statement within a transaction fails, that operation is rolled back. However, other statements within the transaction that have executed successfully are still able to either commit or rollback. Once the transaction is successfully committed, the modifications made by the successfully executed statements within the transaction are applied.
 
-比如：
+One example:
 
 ```sql
 mysql> BEGIN;
@@ -335,7 +335,7 @@ mysql> INSERT INTO dt3 SELECT * FROM dt1;
 Query OK, 5 rows affected (0.07 sec)
 {'label':'txn_insert_c5940d31bf364f57-a48b628886415442', 'status':'PREPARE', 'txnId':'11058'}
 
-# 失败的写入自动回滚
+# The failed insert is rolled back
 mysql> INSERT INTO dt3 SELECT * FROM dt2;
 ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=http://172.21.16.12:9082/api/_load_error_log?file=__shard_3/error_log_insert_stmt_3d1fed266ce443f2-b54d2609c2ea6b11_3d1fed266ce443f2_b54d2609c2ea6b11
 
@@ -347,10 +347,10 @@ Query OK, 0 rows affected (0.02 sec)
 {'label':'txn_insert_c5940d31bf364f57-a48b628886415442', 'status':'VISIBLE', 'txnId':'11058'}
 ```
 
-查询：
+Select data:
 
 ```sql
-# dt1 的数据被写入到 dt3 中，dt2 中 id = 7的数据写入成功，其它写入失败
+# The data in dt1 is written to dt3, the data with id = 7 in dt2 is written successfully, and the other data is written failed
 mysql> SELECT * FROM dt3;
 +------+----------+-------+
 | id   | name     | score |
@@ -365,16 +365,16 @@ mysql> SELECT * FROM dt3;
 6 rows in set (0.01 sec)
 ```
 
-#### 常见问题
+#### QA
 
-* 写入的多表必须属于同一个 Database，否则会遇到错误 `Transaction insert must be in the same database`
+* Writing to multiple tables must belong to the same Database; otherwise, you will encounter the error `Transaction insert must be in the same database`
 
-* 两种事务写入`INSERT INTO SELECT`, `UPDATE`, `DELETE` 和 `INSET INTO VALUES` 不能混用，否则会遇到错误 `Transaction insert can not insert into values and insert into select at the same time`
+* Mixing the two transaction load of `INSERT INTO SELECT`, `UPDATE`, `DELETE` and `INSERT INTO VALUES` is not allowed; otherwise, you will encounter the error `Transaction insert can not insert into values and insert into select at the same time`.
 
-* [Delete 操作](../delete/delete-manual.md)提供了通过谓词和 Using 子句两种方式，为了保证隔离级别，在一个事务中，对相同表的删除必须在写入前，否则会遇到报错 `Can not delete because there is a insert operation for the same table`
+* [Delete Command](delete/delete-manual.md) supports delete by specifying a filter predicate or using clause, to guarantee the isolation, currently only support that, the delete operations must before the insert operations for one table in one transaction, otherwise, you will encounter the error `Can not delete because there is a insert operation for the same table`.  
 
-* 当从 `BEGIN` 开始的导入耗时超出 Doris 配置的 timeout 时，会导致事务回滚，导入失败。目前 timeout 使用的是 Session 变量 `insert_timeout` 和 `query_timeout` 的最大值
+* If the time-consuming from `BEGIN` statement exceeds the timeout configured in Doris, the transaction will be rolled back. Currently, the timeout uses the maximum value of session variables `insert_timeout` and `query_timeout`.
 
-* 当使用 JDBC 连接 Doris 进行事务操作时，请在 JDBC URL 中添加 `useLocalSessionState=true`，否则可能会遇到错误 `This is in a transaction, only insert, update, delete, commit, rollback is acceptable.`
+* When using JDBC to connect to Doris for transaction operations, please add `useLocalSessionState=true` in the JDBC URL; otherwise, you may encounter the error `This is in a transaction, only insert, update, delete, commit, rollback is acceptable`.
 
-* 存算分离模式下，事务写不支持 Merge-on-Write 表，否则会遇到报错 `Transaction load is not supported for merge on write unique keys table in cloud mode`
+* In cloud mode, transaction load does not support `merge on write` unique tables, otherwise, you will encounter the error `Transaction load is not supported for merge on write unique keys table in cloud mode`.  
