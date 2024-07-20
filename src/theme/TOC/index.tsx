@@ -21,7 +21,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
             {isCN ? (
                 <Link
                     className={clsx(styles.bgCustomGradient, "ml-4 mb-8 text-sm flex items-center hover:no-underline border border-[#aac8d6] rounded-md")}
-                    href="https://5234442745174.huodongxing.com/event/4764741344811"
+                    href="https://hdxu.cn/S44O0"
                     target="_blank"
                 >
                     <div className="px-2 grid gap-1">
