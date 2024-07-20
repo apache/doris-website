@@ -21,12 +21,12 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
             {isCN ? (
                 <Link
                     className={clsx(styles.bgCustomGradient, "ml-4 mb-8 text-sm flex items-center hover:no-underline border border-[#aac8d6] rounded-md")}
-                    href="https://www.huodongxing.com/event/3763009788811"
+                    href="https://5234442745174.huodongxing.com/event/4764741344811"
                     target="_blank"
                 >
                     <div className="px-2 grid gap-1">
-                        <span className="block">7 月 20 日 Apache Doris x 天翼云城市行@上海站免费参与🔥</span>
-                        <span>立即报名<span className="ml-1"><ExternalLinkArrowIcon/></span></span>
+                        <span className="block">8 月 3 日 Apache Doris x 腾讯云 Meetup 深圳站限时免费参加🔥</span>
+                        <span>立即报名<span className="ml-1"><ExternalLinkArrowIcon /></span></span>
                     </div>
                     {/* <svg
                         viewBox="0 0 1024 1024"
