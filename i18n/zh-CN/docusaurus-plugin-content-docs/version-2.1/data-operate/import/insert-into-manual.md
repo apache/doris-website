@@ -201,6 +201,12 @@ VALUES (val1, val2, ...), (val3, val4, ...), ...;
 
 - 解释：INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。
 
+**insert_max_filter_ratio**
+
+- 默认值：1.0
+
+- 参数描述：自 2.1.5 版本。仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。
+
 **enable_nereids_dml_with_pipeline**
 
   设置为 `true` 后，`insert into` 语句将尝试通过 Pipeline 引擎执行。详见[导入](./load-manual)文档。

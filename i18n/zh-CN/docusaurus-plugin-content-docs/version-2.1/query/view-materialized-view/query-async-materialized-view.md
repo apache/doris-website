@@ -59,9 +59,9 @@ CREATE TABLE IF NOT EXISTS lineitem (
     PROPERTIES ("replication_num" = "1");
 
 insert into lineitem values
-                         (1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
-                         (2, 4, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
-                         (3, 2, 4, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-19', '2023-10-19', '2023-10-19', 'a', 'b', 'yyyyyyyyy');
+(1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-17', '2023-10-17', '2023-10-17', 'a', 'b', 'yyyyyyyyy'),
+(2, 4, 3, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-18', '2023-10-18', '2023-10-18', 'a', 'b', 'yyyyyyyyy'),
+(3, 2, 4, 4, 5.5, 6.5, 7.5, 8.5, 'o', 'k', '2023-10-19', '2023-10-19', '2023-10-19', 'a', 'b', 'yyyyyyyyy');
 ```
 ```sql
 CREATE TABLE IF NOT EXISTS orders  (
@@ -81,31 +81,31 @@ CREATE TABLE IF NOT EXISTS orders  (
     DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3
     PROPERTIES ("replication_num" = "1");
 
-    insert into orders values
-    (1, 1, 'o', 9.5, '2023-10-17', 'a', 'b', 1, 'yy'),
-    (1, 1, 'o', 10.5, '2023-10-18', 'a', 'b', 1, 'yy'),
-    (2, 1, 'o', 11.5, '2023-10-19', 'a', 'b', 1, 'yy'),
-    (3, 1, 'o', 12.5, '2023-10-19', 'a', 'b', 1, 'yy');
+insert into orders values
+(1, 1, 'o', 9.5, '2023-10-17', 'a', 'b', 1, 'yy'),
+(1, 1, 'o', 10.5, '2023-10-18', 'a', 'b', 1, 'yy'),
+(2, 1, 'o', 11.5, '2023-10-19', 'a', 'b', 1, 'yy'),
+(3, 1, 'o', 12.5, '2023-10-19', 'a', 'b', 1, 'yy');
 ```
 
 ```sql
-    CREATE TABLE IF NOT EXISTS partsupp (
-      ps_partkey     INTEGER NOT NULL,
-      ps_suppkey     INTEGER NOT NULL,
-      ps_availqty    INTEGER NOT NULL,
-      ps_supplycost  DECIMALV3(15,2)  NOT NULL,
-      ps_comment     VARCHAR(199) NOT NULL 
-    )
-    DUPLICATE KEY(ps_partkey, ps_suppkey)
-    DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3
-    PROPERTIES (
-      "replication_num" = "1"
-    );
+CREATE TABLE IF NOT EXISTS partsupp (
+  ps_partkey     INTEGER NOT NULL,
+  ps_suppkey     INTEGER NOT NULL,
+  ps_availqty    INTEGER NOT NULL,
+  ps_supplycost  DECIMALV3(15,2)  NOT NULL,
+  ps_comment     VARCHAR(199) NOT NULL 
+)
+DUPLICATE KEY(ps_partkey, ps_suppkey)
+DISTRIBUTED BY HASH(ps_partkey) BUCKETS 3
+PROPERTIES (
+  "replication_num" = "1"
+);
 
-    insert into partsupp values
-    (2, 3, 9, 10.01, 'supply1'),
-    (4, 3, 10, 11.01, 'supply2'),
-    (2, 3, 10, 11.01, 'supply3');
+insert into partsupp values
+(2, 3, 9, 10.01, 'supply1'),
+(4, 3, 10, 11.01, 'supply2'),
+(2, 3, 10, 11.01, 'supply3');
 ```
 
 ## 直查物化视图
@@ -323,6 +323,69 @@ l_shipdate,
 l_suppkey;
 ```
 
+**用例 3**
+支持多维聚合的透明改写，即如果物化视图中没有 GROUPING SETS, CUBE, ROLLUP, 查询中有多维聚合。并且物化视图 group by 后的字段包含查询中多维聚合
+中的所有字段。那么也可以进行透明改写。
+
+
+mv 定义：
+```sql
+CREATE MATERIALIZED VIEW mv5_1
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+DISTRIBUTED BY RANDOM BUCKETS 3
+PROPERTIES ('replication_num' = '1')
+AS
+select o_orderstatus, o_orderdate, o_orderpriority,
+       sum(o_totalprice) as sum_total,
+       max(o_totalprice) as max_total,
+       min(o_totalprice) as min_total,
+       count(*) as count_all
+from orders
+group by
+o_orderstatus, o_orderdate, o_orderpriority;
+```
+
+查询语句：
+```sql
+select o_orderstatus, o_orderdate, o_orderpriority,
+       sum(o_totalprice),
+       max(o_totalprice),
+       min(o_totalprice),
+       count(*)
+from orders
+group by
+GROUPING SETS ((o_orderstatus, o_orderdate), (o_orderpriority), (o_orderstatus), ());
+```
+
+
+**用例 4**
+当查询中包含聚合，物化视图中不包含聚合，查询中使用的列都可以从物化视图中获取，那么也可以改写成功。
+
+mv 定义：
+```sql
+CREATE MATERIALIZED VIEW mv5_2
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 hour
+DISTRIBUTED BY RANDOM BUCKETS 3
+PROPERTIES ('replication_num' = '1')
+AS
+select case when o_shippriority > 1 and o_orderkey IN (4, 5) then o_custkey else o_shippriority end,
+       o_orderstatus,
+       bin(o_orderkey)
+from orders;
+```
+
+查询语句：
+```sql
+select
+    count(case when o_shippriority > 1 and o_orderkey IN (4, 5) then o_custkey else o_shippriority end),
+    o_orderstatus,
+    bin(o_orderkey)
+from orders
+group by
+    o_orderstatus,
+    bin(o_orderkey);
+```
+
 暂时目前支持的聚合上卷函数列表如下：
 
 | 查询中函数                                                 | 物化视图中函数                     | 函数上卷后              |
@@ -537,14 +600,14 @@ where o_orderstatus = 'o'
 
 ## 相关环境变量
 
-| 开关                                                                  | 说明                                                                                                   |
-|---------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| SET enable_nereids_planner = true;                                  | 异步物化视图只有在新优化器下才支持，所以需要开启新优化器                                                                         |
-| SET enable_materialized_view_rewrite = true;                        | 开启或者关闭查询透明改写，默认关闭                                                                                    |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许                                                                            |
-| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3                                                                  |
-| SET enable_materialized_view_union_rewrite = true;                  | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许                                                |
-| SET enable_materialized_view_nest_rewrite = true;                   | 是否允许嵌套改写，默认不允许                                                                                       |
+| 开关                                                                  | 说明                                                                                                    |
+|---------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| SET enable_nereids_planner = true;                                  | 异步物化视图只有在新优化器下才支持，所以需要开启新优化器                                                                          |
+| SET enable_materialized_view_rewrite = true;                        | 开启或者关闭查询透明改写，默认开启                                                                                     |
+| SET materialized_view_rewrite_enable_contain_external_table = true; | 参与透明改写的物化视图是否允许包含外表，默认不允许                                                                             |
+| SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3                                                                   |
+| SET enable_materialized_view_union_rewrite = true;                  | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许                                                 |
+| SET enable_materialized_view_nest_rewrite = true;                   | 是否允许嵌套改写，默认不允许                                                                                        |
 | SET materialized_view_relation_mapping_max_count = 8;               | 透明改写过程中，relation mapping最大允许数量，如果超过，进行截取。relation mapping通常由表自关联产生，数量一般会是笛卡尔积，比如3张表，可能会产生 8 种组合。默认是 8 |
 
 ## 限制

@@ -207,17 +207,22 @@ partition by (date_trunc(`k2`,'month'))
 
 `partition_sync_time_unit`：时间单位，支持 DAY/MONTH/YEAR（默认DAY）
 
-	@@ -209,9 +208,9 @@ KEY(k1,k2)
-SELECT random() as dd,k3 FROM user
-```
+`enable_nondeterministic_function`：物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random()等，如果
+是 true, 允许包含，否则不允许包含, 默认不允许包含。
+
+`query`： 创建物化视图的查询语句，其结果即为物化视图中的数据
+
 
 ### 示例
 
-1. 创建一个立即刷新，之后每周刷新一次的物化视图 mv1,数据源为 Hive Catalog
+1. 创建一个立即刷新，之后每周刷新一次的物化视图 `mv1`，数据源为 Hive Catalog
 
    ```sql
    CREATE MATERIALIZED VIEW mv1 BUILD IMMEDIATE REFRESH COMPLETE ON SCHEDULE EVERY 1 WEEK
-	@@ -222,7 +221,7 @@ SELECT random() as dd,k3 FROM user
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    PROPERTIES (
+    "replication_num" = "1"
+    )
     AS SELECT * FROM hive_catalog.db1.user;
    ```
 
@@ -225,7 +230,10 @@ SELECT random() as dd,k3 FROM user
 
    ```sql
    CREATE MATERIALIZED VIEW mv1 BUILD IMMEDIATE REFRESH COMPLETE ON SCHEDULE EVERY 1 WEEK
-	@@ -233,7 +232,6 @@ SELECT random() as dd,k3 FROM user
+    DISTRIBUTED BY RANDOM BUCKETS 2
+    PROPERTIES (
+    "replication_num" = "1"
+    )
     AS select user.k1,user.k3,com.k4 from user join com on user.k1=com.k1;
    ```
 

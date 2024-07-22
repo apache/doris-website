@@ -213,14 +213,11 @@ The properties unique to materialized views include:
 
 `workload_group`: The name of the workload_group used by the materialized view when performing refresh tasks. This is used to limit the resources used for refreshing data in the materialized view, in order to avoid affecting the operation of other business processes. For details on how to create and use workload_group, refer to [WORKLOAD-GROUP](../../../../admin-manual/workload-group.md)
 
-##### query
+`query`: Create a query statement for the materialized view, and the result is the data in the materialized view
 
-Create a query statement for the materialized view, and the result is the data in the materialized view
-
-Random functions are not supported, for example:
-```sql
-SELECT random() as dd,k3 FROM user
-```
+`enable_nondeterministic_function`: Whether the SQL definition of the materialized view allows containing nondeterministic 
+functions, such as current_date(), now(), random(), etc. If true, they are allowed; otherwise, they are not allowed. 
+By default, they are not allowed.
 
 ### Example
 
