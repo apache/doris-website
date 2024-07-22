@@ -1531,6 +1531,16 @@ MasterOnly：true
 
 For some high-frequency load work, such as: INSERT, STREAMING LOAD, ROUTINE_LOAD_TASK. If it expires, delete the completed job or task.
 
+#### `label_num_threshold`
+
+Default: 2000
+
+IsMutable：true
+
+MasterOnly：true
+
+The threshold of load labels' number. After this number is exceeded, the labels of the completed import jobs or tasks will be deleted, and the deleted labels can be reused. When the value is -1, it indicates no threshold.
+
 #### `label_clean_interval_second`
 
 Default：1 * 3600  (1 hour)
