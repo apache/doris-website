@@ -67,7 +67,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    );
    ```
 
-2. Create a remote repository for s3 : s3_repo (HDFS skips step 2)
+2. Create a remote repository for S3 : s3_repo (HDFS skips step 2)
 
    ```
    CREATE REPOSITORY `s3_repo`
