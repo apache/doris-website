@@ -40,7 +40,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 
 否则将会返回错误状态信息 `Couldn't open file ......`。
 
-更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
 
 ### UDF
 
@@ -89,7 +89,7 @@ UDF 的使用与普通的函数方式一致，唯一的区别在于，内置函�
 
 ## 删除 UDF
 
-当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
+当你不再需要 UDF 函数时，你可以通过下述命令来删除一个 UDF 函数，可以参考 [DROP FUNCTION](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-FUNCTION.md)
 
 ## 类型对应关系
 
