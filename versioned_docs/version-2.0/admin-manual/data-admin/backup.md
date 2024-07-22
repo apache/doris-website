@@ -141,7 +141,7 @@ ALTER TABLE tbl1 SET ("dynamic_partition.enable"="true")
    1 row in set (0.15 sec)
    ```
 
-For the detailed usage of BACKUP, please refer to [here](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
+For the detailed usage of BACKUP, please refer to [here](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
 
 ## Best Practices
 
@@ -170,28 +170,28 @@ It is recommended to import the new and old clusters in parallel for a period of
 
    1. CREATE REPOSITORY
 
-      Create a remote repository path for backup or restore. Please refer to [Create Repository Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md).
+      Create a remote repository path for backup or restore. Please refer to [Create Repository Reference](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/CREATE-REPOSITORY.md).
 
    2. BACKUP
 
-      Perform a backup operation. Please refer to [Backup Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
+      Perform a backup operation. Please refer to [Backup Reference](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md).
 
    3. SHOW BACKUP
 
-      View the execution of the most recent backup job. Please refer to [Show Backup Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
+      View the execution of the most recent backup job. Please refer to [Show Backup Reference](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
 
    4. SHOW SNAPSHOT
 
-      View existing backups in the remote repository. Please refer to [Show Snapshot Reference](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md).
+      View existing backups in the remote repository. Please refer to [Show Snapshot Reference](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md).
 
    5. CANCEL BACKUP
 
-      Cancel the currently executing backup job. Please refer to [Cancel Backup Reference] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md).
+      Cancel the currently executing backup job. Please refer to [Cancel Backup Reference] (../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/CANCEL-BACKUP.md).
 
    6. DROP REPOSITORY
 
-      Delete the created remote repository. Deleting a warehouse only deletes the mapping of the warehouse in Doris, and does not delete the actual warehouse data. Please refer to [Drop Repository Reference] (../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md).
+      Delete the created remote repository. Deleting a warehouse only deletes the mapping of the warehouse in Doris, and does not delete the actual warehouse data. Please refer to [Drop Repository Reference] (../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/DROP-REPOSITORY.md).
 
 ## More Help
 
- For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-statements/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) command manual, You can also type `HELP BACKUP` on the MySql client command line for more help.
+ For more detailed syntax and best practices used by BACKUP, please refer to the [BACKUP](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/BACKUP.md) command manual, You can also type `HELP BACKUP` on the MySql client command line for more help.
