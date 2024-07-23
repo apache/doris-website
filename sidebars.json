@@ -766,6 +766,7 @@
                                 "sql-manual/sql-functions/string-functions/strright",
                                 "sql-manual/sql-functions/string-functions/split-part",
                                 "sql-manual/sql-functions/string-functions/split-by-string",
+                                "sql-manual/sql-functions/string-functions/split-by-pattern",
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
                                 "sql-manual/sql-functions/string-functions/parse-url",
