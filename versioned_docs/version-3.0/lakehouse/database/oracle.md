@@ -124,4 +124,4 @@ Doris will automatically add the escape character ("") to the field names and ta
 
 2. `Non supported character set (add orai18n.jar in your classpath): ZHS16GBK` exception occurs when creating or querying Oracle Catalog
 
-   Download [orai18n.jar](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) and put it in the `custom_lib/` directory under each FE and BE directory (if not exists, just create it manually) and restart each FE and BE.
+   Download [orai18n.jar](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) and put it in the `custom_lib/` directory under each FE and BE directory (if not exists, just create it manually).

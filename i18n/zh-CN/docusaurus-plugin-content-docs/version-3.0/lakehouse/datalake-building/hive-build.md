@@ -28,17 +28,8 @@ under the License.
 
 本文介绍在 Apache Doris 中支持的 Hive 操作，语法和使用须知。
 
-:::tip
+:::tip 备注
 这是一个实验功能。
-:::
-
-:::tip
-使用前，请先设置：
-<br/>
-set global enable_nereids_planner = true;
-set global enable_fallback_to_original_planner = false;
-<br/>
-从老版本升级上来的集群，这些参数可能有变化。
 :::
 
 ## 元数据创建与删除

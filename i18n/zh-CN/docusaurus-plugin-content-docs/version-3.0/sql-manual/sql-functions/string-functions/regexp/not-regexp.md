@@ -1,7 +1,7 @@
 ---
 {
-    "title": "REGEXP_REPLACE",
-    "language": "en"
+    "title": "NOT REGEXP",
+    "language": "zh-CN"
 }
 ---
 
@@ -24,31 +24,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## regexp_replace
+## not regexp
 ### description
-#### Syntax
+#### syntax
 
-`VARCHAR regexp_replace(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
+`BOOLEAN not regexp(VARCHAR str, VARCHAR pattern)`
 
-
-Regular matching of STR strings, replacing the part hitting pattern with repl
+对字符串 str 进行正则匹配，匹配上的则返回 false，没匹配上则返回 true。pattern 为正则表达式。
 
 ### example
 
 ```
-mysql> SELECT regexp_replace('a b c', " ", "-");
-+-----------------------------------+
-| regexp_replace('a b c', ' ', '-') |
-+-----------------------------------+
-| a-b-c                             |
-+-----------------------------------+
+// 查找 k1 字段中不以 'billie' 为开头的所有数据
+mysql > select k1 from test where k1 not regexp '^billie';
++--------------------+
+| k1                 |
++--------------------+
+| Emmy eillish       |
++--------------------+
 
-mysql> SELECT regexp_replace('a b c','(b)','<\\1>');
-+----------------------------------------+
-| regexp_replace('a b c', '(b)', '<\1>') |
-+----------------------------------------+
-| a <b> c                                |
-+----------------------------------------+
+// 查找 k1 字段中不以 'ok' 为结尾的所有数据：
+mysql > select k1 from test where k1 not regexp 'ok$';
++------------+
+| k1         |
++------------+
+| It's true  |
++------------+
 ```
+
 ### keywords
-    REGEXP_REPLACE,REGEXP,REPLACE
+    REGEXP, NOT, NOT REGEXP

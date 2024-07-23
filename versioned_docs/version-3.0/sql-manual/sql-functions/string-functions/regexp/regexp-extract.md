@@ -30,13 +30,12 @@ under the License.
 
 `VARCHAR regexp_extract (VARCHAR str, VARCHAR pattern, int pos)`
 
-The string STR is matched regularly and the POS matching part which conforms to pattern is extracted. Patterns need to match exactly some part of the STR to return to the matching part of the pattern. If there is no match, return an empty string.
 
-Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+The string STR is matched regularly and the POS matching part which conforms to pattern is extracted. Patterns need to match exactly some part of the STR to return to the matching part of the pattern. If there is no match, return an empty string.
 
 ### example
 
-```sql
+```
 mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1);
 +-------------------------------------------------------------+
 | regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 1) |
@@ -50,14 +49,6 @@ mysql> SELECT regexp_extract('AbCdE', '([[:lower:]]+)C([[:lower:]]+)', 2);
 +-------------------------------------------------------------+
 | d                                                           |
 +-------------------------------------------------------------+
-
-mysql> select regexp_extract('这是一段中文This is a passage in English 1234567', '(\\p{Han}+)(.+)', 2);
-+-----------------------------------------------------------------------------------------------+
-| regexp_extract('这是一段中文This is a passage in English 1234567', '(\p{Han}+)(.+)', 2)       |
-+-----------------------------------------------------------------------------------------------+
-| This is a passage in English 1234567                                                          |
-+-----------------------------------------------------------------------------------------------+
 ```
-
 ### keywords
     REGEXP_EXTRACT,REGEXP,EXTRACT

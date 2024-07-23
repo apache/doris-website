@@ -32,12 +32,10 @@ under the License.
 
 对字符串 str 进行正则匹配，匹配上的则返回 true，没匹配上则返回 false。pattern 为正则表达式。
 
-字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
-
 ### example
 
-```sql
---- 查找 k1 字段中以 'billie' 为开头的所有数据
+```
+// 查找 k1 字段中以 'billie' 为开头的所有数据
 mysql > select k1 from test where k1 regexp '^billie';
 +--------------------+
 | k1                 |
@@ -45,20 +43,13 @@ mysql > select k1 from test where k1 regexp '^billie';
 | billie eillish     |
 +--------------------+
 
---- 查找 k1 字段中以 'ok' 为结尾的所有数据：
+// 查找 k1 字段中以 'ok' 为结尾的所有数据：
 mysql > select k1 from test where k1 regexp 'ok$';
 +----------+
 | k1       |
 +----------+
 | It's ok  |
 +----------+
-
-mysql> select regexp('这是一段中文This is a passage in English 1234567', '\\p{Han}');
-+-----------------------------------------------------------------------------+
-| ('这是一段中文This is a passage in English 1234567' regexp '\p{Han}')       |
-+-----------------------------------------------------------------------------+
-|                                                                           1 |
-+-----------------------------------------------------------------------------+
 ```
 
 ### keywords

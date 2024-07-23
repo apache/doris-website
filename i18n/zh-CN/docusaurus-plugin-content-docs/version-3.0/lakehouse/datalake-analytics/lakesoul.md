@@ -24,10 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip 备注
-这是一个实验功能。
-:::
-
 ## 使用须知
 
 1. 目前支持 LakeSoul 作为 Source 的读操作，支持 LakeSoul 的主键表、无主键表，支持 MOR 读取。

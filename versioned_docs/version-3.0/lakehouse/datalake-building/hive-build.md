@@ -32,16 +32,6 @@ This article introduces Hive operations supported in Doris, including syntax and
 This is an experimental feature.
 :::
 
-:::tip
-Before using, please set:
-<br/>
-set global enable_nereids_planner = true;
-
-set global enable_fallback_to_original_planner = false;
-<br/>
-For clusters upgraded from old versions, these variables may change.
-:::
-
 ## Metadata Creation and Deletion
 
 ### Catalog
