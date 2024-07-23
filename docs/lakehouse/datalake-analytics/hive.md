@@ -108,6 +108,30 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Doris query DLC
+
+:::note
+Supported since Doris version 2.0.13 / 2.1.5
+:::
+
+[DLC](https://cloud.tencent.com/product/dlc) of Tencent Cloud use HMS to manage its metadata, so Hive catalog can be used。
+DLC stores data on LakeFS or COSN, below catalog is compatible with both file system.
+```sql
+CREATE CATALOG dlc PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://<dlc_metastore_ip>:<dlc_metastore_port>',
+    's3.access_key' = 'xxxxx',
+    's3.secret_key' = 'xxxxx',
+    's3.region' = 'ap-xxx',
+    's3.endpoint' = 'cos.ap-xxx.myqcloud.com',
+    'fs.cosn.bucket.region' = 'ap-xxx',
+    'fs.ofs.user.appid' = '<your_tencent_cloud_appid>',
+    'fs.ofs.tmp.cache.dir' = '<tmp_cache_dir>'
+);
+```
+
+After create catalog, you need to [grant](https://cloud.tencent.com/document/product/436/38648) essential privilege to the appid your dlc catalog is using.
+
 ### Hive On S3
 
 ```sql
