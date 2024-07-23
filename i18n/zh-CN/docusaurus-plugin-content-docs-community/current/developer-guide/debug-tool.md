@@ -258,36 +258,31 @@ heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `JE
 ##### 3. heap dump profiling
 
 ```
-需要 addr2line 版本为 2.35.2, 见下面的 QA 1.
+需要 addr2line 版本为 2.35.2 及以上, 见下面的 QA 1.
 ```
 
-1.  单个heap dump文件生成纯文本分析结果
+1. 分析单个heap dump文件
+
 ```shell
-   jeprof lib/doris_be heap_dump_file_1
+   jeprof --dot lib/doris_be heap_dump_file_1
    ```
 
-2.  分析两个heap dump的diff
-   ```shell
-   jeprof lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
-   ```
-   
-3. 生成调用关系图片
+   执行完上述命令，终端中会输出dot语法的图，将其贴到[在线dot绘图网站](http://www.webgraphviz.com/)，生成内存分配图，然后进行分析。
 
-   安装绘图所需的依赖项
-   ```shell
+   如果服务器方便传输文件，也可以通过如下命令直接生成调用关系图 result.pdf 文件传输到本地后进行查看，需要安装绘图所需的依赖项。
+
+```shell
    yum install ghostscript graphviz
+   jeprof --pdf lib/doris_be heap_dump_file_1 > result.pdf
    ```
-   通过在一短时间内多次运行上述命令可以生成多份dump 文件，可以选取第一份dump 文件作为baseline 进行diff对比分析
-   
-   ```shell
+
+2.  分析两个heap dump文件的diff
+
+```shell
    jeprof --dot lib/doris_be --base=heap_dump_file_1 heap_dump_file_2
    ```
-   执行完上述命令，终端中会输出dot语法的图，将其贴到[在线dot绘图网站](http://www.webgraphviz.com/)，生成内存分配图，然后进行分析，此种方式能够直接通过终端输出结果进行绘图，比较适用于传输文件不是很方便的服务器。
-   
-   也可以通过如下命令直接生成调用关系result.pdf文件传输到本地后进行查看
-   ```shell
-   jeprof --pdf lib/doris_be --base=heap_dump_file_1 heap_dump_file_2 > result.pdf
-   ```
+
+   通过在一段时间内多次运行上述命令可以生成多个 heap 文件，可以选取较早时间的 heap 文件作为 baseline，与较晚时间的 heap 文件对比分析它们的diff，生成调用关系图的方法同上。
 
 ##### 4. QA
 

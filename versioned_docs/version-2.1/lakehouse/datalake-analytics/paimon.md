@@ -1,7 +1,7 @@
 ---
 {
-"title": "Paimon",
-"language": "en"
+    "title": "Paimon Catalog",
+    "language": "en"
 }
 ---
 
@@ -25,12 +25,10 @@ under the License.
 -->
 
 
-# Paimon
-
 ## Instructions for use
 
 1. When data in hdfs,need to put core-site.xml, hdfs-site.xml and hive-site.xml in the conf directory of FE and BE. First read the hadoop configuration file in the conf directory, and then read the related to the environment variable `HADOOP_CONF_DIR` configuration file.
-2. The currently adapted version of the Paimon is 0.7.
+2. The currently adapted version of the Paimon is 0.8 (since 2.1.4).
 
 ## Create Catalog
 

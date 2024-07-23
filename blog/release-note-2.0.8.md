@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.0.8 just released',
-    'summary': 'Thanks to our community users and developers, about 65 improvements and bug fixes have been made in Doris 2.0.8 version.',
+    'description': 'Thanks to our community users and developers, about 65 improvements and bug fixes have been made in Doris 2.0.8 version.',
     'date': '2024-04-09',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -35,7 +35,7 @@ Thanks to our community users and developers, about 65 improvements and bug fixe
 
 
 
-## 1 Behavior change
+## Behavior changes
 
 The `ADMIN SHOW` statement can not be executed with high version of MySQL 8.x jdbc driver. So rename these statement, remove the `ADMIN` keywords. 
 
@@ -49,13 +49,13 @@ ADMIN SHOW TABLET -> SHOW TABLET
 ```
 
 
-## 2 New features
+## New features
 
 N/A
 
 
 
-## 3 Improvement and optimizations
+## Improvement
 
 - Make Inverted Index work with TopN opt in Nereids
 
@@ -72,7 +72,7 @@ N/A
 See the complete list of improvements and bug fixes on [GitHub](https://github.com/apache/doris/compare/2.0.7...2.0.8) .
 
 
-## 4 Credits
+## Credits
 
 Thanks all who contribute to this release:
 

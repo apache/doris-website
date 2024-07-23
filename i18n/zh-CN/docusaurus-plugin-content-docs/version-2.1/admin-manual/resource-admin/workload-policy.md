@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<version since="2.1.3"></version>
+
 ## 功能背景
 Workload Group功能解决了不同负载间的隔离问题，但无法解决同一个Group内的大查询熔断的问题， 用户遇到大查询影响集群稳定性时只能手动处理。
 
@@ -44,6 +46,7 @@ Workload Policy主要包含以下几个概念：
 * properties，定义了当前policy的属性，包括是否启用和优先级。
 
 上面例子中policy的含义是，创建一个名为`test_cancel_policy`的policy，它会取消掉集群中运行时间超过1s的查询，当前状态为启用。
+创建 Workload Policy 需要 admin_priv 权限。
 
 ## 基本用法
 由于action的行为有的只能在FE生效，有的只能在BE生效，因此policy本身也有FE和BE的区别。
@@ -58,10 +61,11 @@ Workload Policy主要包含以下几个概念：
 
 ### 适用于BE的policy
 1. Condition
-   * be_scan_rows，一个sql在单个BE进程内scan的行数，如果有多个并发那就是多个并发的累加值。
-   * be_scan_bytes，一个sql在单个BE进程内scan的字节数，如果有多个并发那么就是多个并发的累加值。
+   * be_scan_rows，一个sql在单个BE进程内scan的行数，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值。
+   * be_scan_bytes，一个sql在单个BE进程内scan的字节数，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值，单位是字节。
    * query_time，一个sql在单个BE进程上的运行时间，时间单位是毫秒。
-
+   * query_be_memory_bytes，从2.1.5版本开始支持。一个sql在单个BE进程内使用的内存用量，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值，单位是字节。
+  
 2. Action
    * cancel_query，取消查询。
 

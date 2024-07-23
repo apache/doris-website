@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hudi",
+    "title": "Hudi Catalog",
     "language": "zh-CN"
 }
 ---
@@ -24,9 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-
-
 ## 使用限制
 
 1. Hudi 表支持的查询类型如下，后续将支持 Incremental Query。
@@ -36,11 +33,11 @@ under the License.
   | Copy On Write  | Snapshot Query + Time Travel |
   | Merge On Read  | Snapshot Queries + Read Optimized Queries + Time Travel |
 
-2. 目前支持 Hive Metastore 和兼容 Hive Metastore 类型 (例如[ AWS Glue ](../../lakehouse/datalake/hive)/[ Alibaba DLF ](https://doris.apache.org/zh-CN/docs/lakehouse/multi-catalog/dlf)) 的 Catalog。
+1. 目前支持 Hive Metastore 和兼容 Hive Metastore 类型，例如[AWS Glue](../../lakehouse/datalake/hive.md)/Alibaba DLF 的 Catalog。
 
 ## 创建 Catalog
 
-和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 [Hive Catalog](../../lakehouse/datalake/hive)。
+和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 [Hive Catalog](../../lakehouse/datalake/hive.md)。
 
 ```sql
 CREATE CATALOG hudi PROPERTIES (

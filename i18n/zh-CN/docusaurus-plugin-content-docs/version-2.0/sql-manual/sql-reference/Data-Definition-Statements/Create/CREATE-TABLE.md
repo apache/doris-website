@@ -56,7 +56,7 @@ distribution_desc
 * `column_definition`
     列定义：
 
-    `column_name column_type [KEY] [aggr_type] [NULL] [AUTO_INCREMENT] [default_value] [column_comment]`
+    `column_name column_type [KEY] [aggr_type] [NULL] [default_value] [column_comment]`
     * `column_type`
         列类型，支持以下类型：
         ```
@@ -106,11 +106,6 @@ distribution_desc
         HLL_UNION：HLL 类型的列的聚合方式，通过 HyperLogLog 算法聚合。
         BITMAP_UNION：BIMTAP 类型的列的聚合方式，进行位图的并集聚合。
         ```
-    * `AUTO_INCREMENT`(仅在 master 分支可用)
-            
-        是否为自增列，自增列可以用来为新插入的行生成一个唯一标识。在插入表数据时如果没有指定自增列的值，则会自动生成一个合法的值。当自增列被显示地插入 NULL 时，其值也会被替换为生成的合法值。需要注意的是，处于性能考虑，BE 会在内存中缓存部分自增列的值，所以自增列自动生成的值只能保证单调性和唯一性，无法保证严格的连续性。
-        一张表中至多有一个列是自增列，自增列必须是 BIGINT 类型，且必须为 NOT NULL。
-        Duplicate 模型表和 Unique 模型表均支持自增列。
 
   * `default_value`
         列默认值，当导入数据未指定该列的值时，系统将赋予该列 default_value。
@@ -182,9 +177,7 @@ distribution_desc
 * AGGREGATE KEY：其后指定的列为维度列。
 * UNIQUE KEY：其后指定的列为主键列。
 
-<version since="2.0">
 注：当表属性`enable_duplicate_without_keys_by_default = true`时，默认创建没有排序列的 DUPLICATE 表。
-</version>
 
 示例：
 
@@ -755,9 +748,7 @@ UNIQUE KEY(k1, k2)
 
 </version>
 
-<version since="2.0">
-
-14. 批量无排序列 Duplicate 表
+1.  批量无排序列 Duplicate 表
 
     ```sql
     CREATE TABLE example_db.table_hash
@@ -780,8 +771,6 @@ UNIQUE KEY(k1, k2)
         "enable_duplicate_without_keys_by_default" = "true"
     );
     ```
-
-</version>
 
 ### Keywords
 

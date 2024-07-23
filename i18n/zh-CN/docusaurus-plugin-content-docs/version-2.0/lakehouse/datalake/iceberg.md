@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Iceberg",
+    "title": "Iceberg Catalog",
     "language": "zh-CN"
 }
 ---
@@ -23,9 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
-
 
 ## 使用限制
 
@@ -111,7 +108,7 @@ Iceberg 属性详情参见 [Iceberg Glue Catalog](https://iceberg.apache.org/doc
 
 **阿里云 DLF**
 
-参见[阿里云 DLF Catalog 配置](https://doris.apache.org/zh-CN/docs/lakehouse/multi-catalog/dlf)
+参见[阿里云 DLF Catalog 配置](../lakehouse/datalake-analytics/dlf.md)
 
 **REST Catalog**
 

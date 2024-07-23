@@ -27,7 +27,7 @@ under the License.
 
 亲爱的社区小伙伴们，我们很高兴地向大家宣布，在 3 月 8 日我们引来了 Apache Doris 2.1.0 版本的正式发布，欢迎大家下载使用。
 
-- 在查询性能方面， 2.1 系列版本我们着重提升了开箱盲测性能，力争不做调优的情况下取得较好的性能表现，包含了对复杂 SQL 查询性能的进一步提升，在 TPC-DS 1TB 测试数据集上获得超过 100% 的性能提升，查询性能居于业界领先地位。
+- 在查询性能方面，2.1 系列版本我们着重提升了开箱盲测性能，力争不做调优的情况下取得较好的性能表现，包含了对复杂 SQL 查询性能的进一步提升，在 TPC-DS 1TB 测试数据集上获得超过 100% 的性能提升，查询性能居于业界领先地位。
 
 - 在数据湖分析场景，我们进行了大量性能方面的改进、相对于 Trino 和 Spark 分别有 4-6 倍的性能提升，并引入了多 SQL 方言兼容、便于用户可以从原有系统无缝切换至 Apache Doris。在面向数据科学以及其他形式的大规模数据读取场景，我们引入了基于 Arrow Flight 的高速读取接口，数据传输效率提升 100 倍。
 
@@ -81,39 +81,39 @@ under the License.
 
 ### Parallel Adaptive Scan 并行自适应扫描
 
-在复杂数据分析场景下，每次查询都需要扫描大量的数据进行计算，因此 IO 瓶颈很大程度上决定了查询性能的上限。为了提升 Scan IO 的性能，Apache Doris 采取了并行读取的技术，每个扫描线程读取 1 个或者多个 Tablet（即用户建表时指定的 Bucket），但如若用户建表时指定的Bucket 数目不合理、那么磁盘扫描线程就无法并行工作，直接影响查询性能。 为此，在 2.1 版本中我们引入了 Tablet 内的并行扫描技术，可以将多个 Tablet 进行池化，在磁盘扫描端可以根据行数来拆分多个线程并行扫描（最多支持 48 个线程），从而有效避免分桶数不合理导致的查询性能问题。
+在复杂数据分析场景下，每次查询都需要扫描大量的数据进行计算，因此 IO 瓶颈很大程度上决定了查询性能的上限。为了提升 Scan IO 的性能，Apache Doris 采取了并行读取的技术，每个扫描线程读取 1 个或者多个 Tablet（即用户建表时指定的 Bucket），但如若用户建表时指定的 Bucket 数目不合理、那么磁盘扫描线程就无法并行工作，直接影响查询性能。为此，在 2.1 版本中我们引入了 Tablet 内的并行扫描技术，可以将多个 Tablet 进行池化，在磁盘扫描端可以根据行数来拆分多个线程并行扫描（最多支持 48 个线程），从而有效避免分桶数不合理导致的查询性能问题。
 
 ![Parallel Adaptive Scan 并行自适应扫描](/images/2.1-doris-parallel-adaptive-scan.png)
 
 因此在 2.1 版本以后，我们建议用户**在建表时设置的分桶数=整个集群磁盘的数量**，在 IO 层面能将整个集群所有的 IO 资源全部利用起来。
 
 :::tip
-当前 2.1.0 版本的 Parallel Adaptive Scan 只能针对 Unqiue Key 模型的 Merge-on-Write 表以及 Duplicate Key 模型生效， 预计在 2.1.1 版本中会增加对 Unique Key 模型 Merge-on-Read 表和 Aggregate Key 模型的支持。
+当前 2.1.0 版本的 Parallel Adaptive Scan 只能针对 Unqiue Key 模型的 Merge-on-Write 表以及 Duplicate Key 模型生效，预计在 2.1.1 版本中会增加对 Unique Key 模型 Merge-on-Read 表和 Aggregate Key 模型的支持。
 :::
 
 ### Local Shuffle
 
-在部分场景下，数据分布不均会导致多个 Instance 的查询执行出现长尾。而为了解决单个 BE 节点上多个 Instance 之间的数据倾斜问题，在Apache Doris 2.1 版本中我们引入了 Local Shuffle 技术，尽可能将数据打散从而加速查询。例如在某一典型的聚合查询中，数据在经过聚合之前将会通过一个 Local Shuffle 节点被均匀分布在不同的 Pipeline Task 中，如下图所示：
+在部分场景下，数据分布不均会导致多个 Instance 的查询执行出现长尾。而为了解决单个 BE 节点上多个 Instance 之间的数据倾斜问题，在 Apache Doris 2.1 版本中我们引入了 Local Shuffle 技术，尽可能将数据打散从而加速查询。例如在某一典型的聚合查询中，数据在经过聚合之前将会通过一个 Local Shuffle 节点被均匀分布在不同的 Pipeline Task 中，如下图所示：
 
 ![Local Shuffle](/images/2.1-doris-local-shuffle.png)
 
 在具备了 Parallel Adaptive Scan 和 Local Shuffle 能力之后，Apache Doris 能够规避由于分桶数不合理、数据分布不均带来的性能问题。
 
-在此我们分别使用 Clickbench（大宽表场景）和 TPC-H（多表 Join 的复杂分析场景） 数据集模拟建表分桶不合理的情况，在 Clickbench 数据集中我们建表 Bucket 数量分别设为 1 和 16 ，在 TPC-H 100G 数据集下我们建表时每个 Partition 的 Bucket 数目分别设为 1 和 16。在开启 Parallel Adaptive Scan 和 Local Shuffle 之后，整体查询性能表现比较平稳，即使不合理的数据分布也能取得优异的性能表现。
+在此我们分别使用 Clickbench（大宽表场景）和 TPC-H（多表 Join 的复杂分析场景）数据集模拟建表分桶不合理的情况，在 Clickbench 数据集中我们建表 Bucket 数量分别设为 1 和 16，在 TPC-H 100G 数据集下我们建表时每个 Partition 的 Bucket 数目分别设为 1 和 16。在开启 Parallel Adaptive Scan 和 Local Shuffle 之后，整体查询性能表现比较平稳，即使不合理的数据分布也能取得优异的性能表现。
 
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
 :::note
-参考文档：https://doris.apache.org/zh-CN/docs/query-acceleration/pipeline-x-execution-engine
+参考文档：[Pipeline X Execution Engine](../query/pipeline/pipeline-x-execution-engine.md)
 :::
 
 ## ARM 架构深度适配，性能提升 230% 
 
 在 Apache Doris 2.1 版本中我们针对 ARM 架构进行了深度的适配和指令集优化，可以在 ARM 架构上充分发挥 Apache Doris 的性能优势。相较于 2.0 版本，2.1 版本在 ClickBench、SSB 100G、TPC-H 100G 以及 TPC-DS 1TB 等多个测试数据集中取得了超过 100% 的性能提升。在此我们以大宽表场景的 ClickBench 以及多表关联场景的 TPC-H 为例，集群配置均为 1FE 3BE、BE 节点的服务器配置为 16C 64G 的 ARM 服务器，测试结论如下：
 
-- 在大宽表场景中， ClickBench 测试数据集 43 个 SQL 的总查询耗时从 102.36 秒降低至 30.73 秒，性能提升超过 230%；
+- 在大宽表场景中，ClickBench 测试数据集 43 个 SQL 的总查询耗时从 102.36 秒降低至 30.73 秒，性能提升超过 230%；
 
-- 在多表关联场景中， TPC-H 22 个 SQL 的总查询耗时从 174.8 秒降低至 90.4 秒，性能提升 93%；
+- 在多表关联场景中，TPC-H 22 个 SQL 的总查询耗时从 174.8 秒降低至 90.4 秒，性能提升 93%；
 
 ## 数据湖分析
 
@@ -121,11 +121,11 @@ under the License.
 
 在 2.1 版本中，我们对数据湖分析方面做了大量改进，包括对 HDFS 和对象存储的 IO 优化、Parquet/ORC 文件格式的读取反序列优化、浮点类型解压优化、谓词下推执行优化、缓存策略以及扫描任务调度策略的优化，以及针对不同数据源的统计信息准确性的提升及更精准的优化器代价模型。基于以上优化，Apache Doris 在数据湖分析场景下的性能得到大幅度提升。
 
-![Doris 数据湖分析-性能提升](/images/2.1-doris-TPC-DS.png)
+![Doris 数据湖分析 - 性能提升](/images/2.1-doris-TPC-DS.png)
 
 在此我们以 TPC-DS 1TB 场景下进行测试，Apache Doris 2.1 版本和 Trino 435 版本的性能测试结果如下：
 
-- 在无缓存情况下，Apache Doris 的总体运行耗时间为 717s、Trino 为 1296s，查询耗时降低了 45%，全部 99 条 SQL 中有 80% 比 Trino 更快 ；
+- 在无缓存情况下，Apache Doris 的总体运行耗时间为 717s、Trino 为 1296s，查询耗时降低了 45%，全部 99 条 SQL 中有 80% 比 Trino 更快；
 
 - 在开启文件缓存功能并命中的情况下，Apache Doris 的总体性能可以进一步提升 2.2 倍以上，**较 Trino 有 4 倍以上的性能提升，全部 99 条 SQL 性能均优于 Trino**。
 
@@ -143,7 +143,7 @@ under the License.
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0
 
-- 参考文档: https://doris.apache.org/zh-CN/docs/lakehouse/sql-dialect
+- 参考文档：[SQL 方言兼容](../lakehouse/sql-dialect.md)
 :::
 
 ### 高速数据读取，数据传输效率提升 100 倍
@@ -156,9 +156,9 @@ under the License.
 
 在过去如果需要采取 Python 读取 Apache Doris 中的数据，需要将 Apache Doris 中列存的 Block 序列化为 MySQL 协议的行存 Bytes，然后在 Python 客户端再反序列化到 Pandas 中，传输过程带来的性能损耗非常大。
 
-在 Apache Doris 2.1 版本中，我们提供了基于 Arrow Flight 的 HTTP Data API 高吞吐数据读写接口。相比于过去的 MySQL 协议，使用 Arrow Flight SQL 后，我们在 Apache Doris 中先将列存的 Block 转为同样列存的 Arrow RecordBatch，这一步转换效率非常高、且传输过程中无需再次序列化和反序列化，而后在 Python 客户端再将 Arrow RecordBatch 转到同样列存的 Pandas DataFrame 中，这一步转换同样非常快。通过Arrow Flight 提供的 Python 客户端 Pandas/Numpy 等数据科学工具，可以快速从 Apache Doris 中读取数据并在本地进行分析。
+在 Apache Doris 2.1 版本中，我们提供了基于 Arrow Flight 的 HTTP Data API 高吞吐数据读写接口。相比于过去的 MySQL 协议，使用 Arrow Flight SQL 后，我们在 Apache Doris 中先将列存的 Block 转为同样列存的 Arrow RecordBatch，这一步转换效率非常高、且传输过程中无需再次序列化和反序列化，而后在 Python 客户端再将 Arrow RecordBatch 转到同样列存的 Pandas DataFrame 中，这一步转换同样非常快。通过 Arrow Flight 提供的 Python 客户端 Pandas/Numpy 等数据科学工具，可以快速从 Apache Doris 中读取数据并在本地进行分析。
 
-基于此， Apache Doris 可以与整个 AI 和数据科学生态进行良好的整合，这也是未来的重要发展方向。
+基于此，Apache Doris 可以与整个 AI 和数据科学生态进行良好的整合，这也是未来的重要发展方向。
 
 ```C++
 conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
@@ -268,7 +268,7 @@ PROPERTIES (
 )
 ```
 
-**创建物化视图:**
+**创建物化视图：**
 
 ```SQL
 CREATE MATERIALIZED VIEW mv1 
@@ -302,7 +302,7 @@ CREATE MATERIALIZED VIEW mv1
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1s2421T71z/?spm_id_from=333.999.0.0
 
-- 参考文档：https://doris.apache.org/zh-CN/docs/query-acceleration/async-materialized-view/
+- 参考文档：https://doris.apache.org/zh-CN/docs/query/view-materialized-view/async-materialized-view
 :::
 
 ## 存储能力增强
@@ -341,14 +341,7 @@ CREATE TABLE `demo`.`records_tbl2` (
     `phone` varchar(16) NOT NULL COMMENT "",
     `mktsegment` varchar(11) NOT NULL COMMENT "",
     `unique_value` BIGINT NOT NULL AUTO_INCREMENT
-) DUPLICATE KEY (`key`, `name`)CREATE TABLE ipv4_test (
-  `id` int,
-  `ip_v4` ipv4
-) ENGINE=OLAP
-DISTRIBUTED BY HASH(`id`) BUCKETS 4
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
+) DUPLICATE KEY (`key`, `name`)
 DISTRIBUTED BY HASH(`key`) BUCKETS 10
 PROPERTIES (
     "replication_num" = "3"
@@ -377,9 +370,7 @@ order by unique_value limit 100;
 ```
 
 :::note
-- 演示 Demo：https://www.bilibili.com/video/BV1VC411h7Gr/?spm_id_from=333.999.0.0
-
-- 参考文档：https://doris.apache.org/zh-CN/docs/advanced/auto-increment
+演示 Demo：https://www.bilibili.com/video/BV1VC411h7Gr/?spm_id_from=333.999.0.0
 :::
 
 ### 自动分区 Auto Partition
@@ -428,7 +419,7 @@ PROPERTIES (
 ![INSERT INTO SELECT 导入性能提升 100%](/images/2.1-doris-INSERT-INTO-SELECT.png)
 
 
-MemTable 前移和非前移的流程对比如上图所示，Sink 节点不再发送编码后的 Block，而是在本地处理完 MemTable 将生成的 Segment 数据发给下游节点，减少了数据多次编码的开销，同时使内存反压更准确和及时。此外，我们使用了 Streaming RPC 来替代了 Ping-pong RPC ，减少了数据传输过程中的等待。
+MemTable 前移和非前移的流程对比如上图所示，Sink 节点不再发送编码后的 Block，而是在本地处理完 MemTable 将生成的 Segment 数据发给下游节点，减少了数据多次编码的开销，同时使内存反压更准确和及时。此外，我们使用了 Streaming RPC 来替代了 Ping-pong RPC，减少了数据传输过程中的等待。
 
 在此我们对 2.1 版本开启 MemTable 前移后的导入性能进行了测试，测试环境如下：1 FE+3 BE、每个节点 16C 64G、3 块高性能云盘（保证磁盘 I/O 不成为瓶颈）
 
@@ -447,14 +438,14 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 
 ### 高频实时导入/服务端攒批 Group Commit
 
-在数据导入过程中，不同批次导入的数据都会写入内存表中，随后在磁盘中上形成一个个 RowSet 文件，每个 Rowset 文件对应一次数据导入版本。后台 Compacttion 进程会自动对多个版本的 RowSet 文件进行合并，将多个 RowSet 小文件合并成 RowSet 大文件以优化查询性能以及存储空间，而每一次的 Compaction 进程都会产生对 CPU、内存以及磁盘 IO 资源的消耗。在实际数据写入场景中，写入越实时高频、生成 RowSet 版本数越高、Compaction 所消耗的资源就越大。为了避免高频写入带来的过多资源消耗甚至 OOM，Apache Doris 引入了反压机制，即在版本过多的情况下会返回 -235 ，并对数据的版本数量进行控制。
+在数据导入过程中，不同批次导入的数据都会写入内存表中，随后在磁盘中上形成一个个 RowSet 文件，每个 Rowset 文件对应一次数据导入版本。后台 Compacttion 进程会自动对多个版本的 RowSet 文件进行合并，将多个 RowSet 小文件合并成 RowSet 大文件以优化查询性能以及存储空间，而每一次的 Compaction 进程都会产生对 CPU、内存以及磁盘 IO 资源的消耗。在实际数据写入场景中，写入越实时高频、生成 RowSet 版本数越高、Compaction 所消耗的资源就越大。为了避免高频写入带来的过多资源消耗甚至 OOM，Apache Doris 引入了反压机制，即在版本过多的情况下会返回 -235，并对数据的版本数量进行控制。
 
 
 ![高频实时导入/服务端攒批 Group Commit](/images/2.1-doris-group-commit.png)
 
 从 Apache Doris 2.1 版本开始，我们引入了服务端攒批 Group Commit，大幅强化了高并发、高频实时写入的能力。
 
-顾名思义， Group Commit 会把用户侧的多次写入在 BE 端进行积攒后批量提交。对于用户而言，无需控制写入程序的频率，Doris 会自动把用户提交的多次写入在内部合并为一个版本，从而可以大幅提升用户侧的写入频次。
+顾名思义，Group Commit 会把用户侧的多次写入在 BE 端进行积攒后批量提交。对于用户而言，无需控制写入程序的频率，Doris 会自动把用户提交的多次写入在内部合并为一个版本，从而可以大幅提升用户侧的写入频次。
 
 ![高频实时导入/服务端攒批 Group Commit](/images/2.1-doris-group-commit-2.png)
 
@@ -466,7 +457,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 
   - 集群配置为 1FE 1BE，数据集为 TPC-H SF10 Lineitem 表，总共约 22GB、1.8 亿行；
 
-  - 经测试，在并发数 20、单次 Insert 数据行数 100 行下，导入效率达到 10.69w 行/秒、导入吞吐达 11.46 MB/秒， BE 节点的 CPU 使用率稳定保持在 10%-20%；
+  - 经测试，在并发数 20、单次 Insert 数据行数 100 行下，导入效率达到 10.69w 行/秒、导入吞吐达 11.46 MB/秒，BE 节点的 CPU 使用率稳定保持在 10%-20%；
 
 - **Stream Load 写入**：
 
@@ -478,7 +469,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
-- 参考文档和完整测试报告：https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/
+- 参考文档和完整测试报告：https://doris.apache.org/zh-CN/docs/data-operate/import/group-commit-manual
 :::
 
 ## 半结构化数据分析
@@ -489,7 +480,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 
 1. 一种方式是用户提前预定好表结构，加工成宽表，在数据进入前将数据解析好，这种方案的优点是写入性能好，查询也不需要解析，但是使用不够灵活、对表结构发起变更增加运维、研发的成本。
 
-2. 使用 Doris 中的 JSON 类型、或是存成 JSON String，将原始 JSON 数据不经过加工直接入库， 查询的时候，用解析函数处理。优点是不需要额外的数据加工、预定义表结构拍平嵌套结构，运维、研发方便，但存在解析性能以及数据读取效率低下的问题。
+2. 使用 Doris 中的 JSON 类型、或是存成 JSON String，将原始 JSON 数据不经过加工直接入库，查询的时候，用解析函数处理。优点是不需要额外的数据加工、预定义表结构拍平嵌套结构，运维、研发方便，但存在解析性能以及数据读取效率低下的问题。
 
 为了解决上述半结构化数据的挑战，在 Apache Doris 2.1 版本中我们引入全新的数据类型`VARIANT`，支持存储半结构化数据、允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，无需在表结构中提前定义具体的列，其存储和查询与传统的 String、JSONB 等行存类型发生了本质的改变，期望其作为半结构化数据首选数据类型，给用户带来更加高效的数据处理机制。
 
@@ -549,7 +540,7 @@ SELECT v["properties"]["title"] from ${table_name}
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV13u4m1g7ra/?spm_id_from=333.999.0.0
 
-- 参考文档：https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Types/VARIANT
+- 参考文档：https://doris.apache.org/zh-CN/docs/sql-manual/sql-types/Data-Types/VARIANT
 :::
 
 ### IP 数据类型 
@@ -563,7 +554,7 @@ SELECT v["properties"]["title"] from ${table_name}
 - INET_ATON：获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）
 
 :::note
-参考文档： https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Types/IPV6
+参考文档：https://doris.apache.org/zh-CN/docs/sql-manual/sql-types/Data-Types/IPV6
 :::
 
 ### 复杂数据类型分析函数完善
@@ -572,9 +563,9 @@ SELECT v["properties"]["title"] from ${table_name}
 
 - `explode_map`：支持 MAP 类型数据行转列（仅在新优化器中实现）
 
-支持 Map 类型 Explode行转列，将 Map 字段的 N 个 Key Value对展开成 N 行，每行的 Map 字段替换成 Key 和 Value 两个字段。`explode_map` 需要和 Lateral View 一起使用，可以接多个 Lateral View, 结果则是每个 `explode_map` 之后的行数以笛卡尔积的形式展示。
+支持 Map 类型 Explode 行转列，将 Map 字段的 N 个 Key Value 对展开成 N 行，每行的 Map 字段替换成 Key 和 Value 两个字段。`explode_map` 需要和 Lateral View 一起使用，可以接多个 Lateral View, 结果则是每个 `explode_map` 之后的行数以笛卡尔积的形式展示。
 
-具体使用如下:
+具体使用如下：
 
 ```SQL
 -- 建表语句
@@ -676,7 +667,7 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-- `MAP_AGG`： 接收 expr1 作为键，expr2 作为对应的值，返回一个 MAP 
+- `MAP_AGG`：接收 expr1 作为键，expr2 作为对应的值，返回一个 MAP 
 
 :::note
 参考文档：https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/aggregate-functions/map-agg/
@@ -688,9 +679,9 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 ### 资源硬隔离
 
-在 Apache Doris 2.0 版本我们引入了 Workload Group，可以实现对 CPU 资源的软限制。Workload Group 软限的优点是可以提升资源的利用率，但同时也会带来查询延迟的不确定性，这对那些期望查询性能稳定性的用户来说是难以接受的。因此在 Apache Doris 2.1 版本中我们对 Workload Group 实现了 CPU 硬限，即无论当前物理机的整体CPU是否空闲，配置了硬限的 Group 最大 CPU 用量不能超过配置的值。
+在 Apache Doris 2.0 版本我们引入了 Workload Group，可以实现对 CPU 资源的软限制。Workload Group 软限的优点是可以提升资源的利用率，但同时也会带来查询延迟的不确定性，这对那些期望查询性能稳定性的用户来说是难以接受的。因此在 Apache Doris 2.1 版本中我们对 Workload Group 实现了 CPU 硬限，即无论当前物理机的整体 CPU 是否空闲，配置了硬限的 Group 最大 CPU 用量不能超过配置的值。
 
-这意味着不管单机的资源是否充足，该 Workload Group 的最大可用 CPU 资源都是固定的，只要用户的查询负载不发生大的变化，那么查询性能就会相对稳定。由于影响一个查询性能稳定性的因素很多，除了 CPU之外，内存、IO 以及软件层面的资源竞争也都会产生影响，因此当集群的负载在空闲和满载之间切换时，即使配置了 CPU 的硬限，查询性能的稳定性也会产生波动，但是预期的表现应该是优于软限制。
+这意味着不管单机的资源是否充足，该 Workload Group 的最大可用 CPU 资源都是固定的，只要用户的查询负载不发生大的变化，那么查询性能就会相对稳定。由于影响一个查询性能稳定性的因素很多，除了 CPU 之外，内存、IO 以及软件层面的资源竞争也都会产生影响，因此当集群的负载在空闲和满载之间切换时，即使配置了 CPU 的硬限，查询性能的稳定性也会产生波动，但是预期的表现应该是优于软限制。
 
 :::caution
 注意事项
@@ -705,7 +696,7 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
 
-- 参考文档：https://doris.apache.org/zh-CN/docs/admin-manual/workload-group/
+- 参考文档：https://doris.apache.org/zh-CN/docs/admin-manual/resource-admin/workload-group
 :::
 
 ### TopSQL
@@ -738,7 +729,7 @@ mysql [(none)]>desc function active_queries();
 
 `active_queries()` 函数记录了查询在各个 BE 上运行时的审计信息，该函数可以当做普通的 Doris 表来看待，支持查询、谓词过滤、排序和 Join 等操作。常用的指标包括 SQL 的运行时间、CPU 时间、单 BE 的峰值内存、Scan 的数据量以及 Shuffle 的数据量，也可以从 BE 的粒度做上卷，查看 SQL 全局的资源用量。
 
-需要注意的是这里只显示运行时的 SQL，查询结束的 SQL 不会在这里显示，而是写入审计日志中（目前主要是fe.audit.log）。常用的 SQL 如下：
+需要注意的是这里只显示运行时的 SQL，查询结束的 SQL 不会在这里显示，而是写入审计日志中（目前主要是 fe.audit.log）。常用的 SQL 如下：
 
 ```SQL
 查看集群中目前运行时间最久的n个sql
@@ -861,10 +852,10 @@ JOB e_daily
         FROM site_activity.sessions where create_time >=  days_add(now(),-1) ;
 ```
 
-:::caution
-注意事项
+:::caution 注意
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：https://doris.apache.org/zh-CN/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-JOB
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+
 :::
 
 ## Behavior Changed
@@ -883,10 +874,10 @@ JOB e_daily
 
   - 对于之前已经安装过审计日志插件的用户，升级后可以继续使用原有插件，也可以通过 uninstall 命令卸载原有插件后，使用新的插件。但注意，切换插件后，审计日志表也将切换到新的表中。
 
-  - 具体可参阅：https://doris.apache.org/docs/ecosystem/audit-plugin/
+  - 具体可参阅：https://doris.apache.org/zh-CN/docs/admin-manual/audit-plugin/
 
 
 
 ## 致谢
 
-467887319、924060929、acnot、airborne12、AKIRA、alan_rodriguez、AlexYue、allenhooo、amory、amory、AshinGau、beat4ocean、BePPPower、bigben0204、bingquanzhao、BirdAmosBird、BiteTheDDDDt、bobhan1、caiconghui、camby、camby、CanGuan、caoliang-web、catpineapple、Centurybbx、chen、ChengDaqi2023、ChenyangSunChenyang、Chester、ChinaYiGuan、ChouGavinChou、chunping、colagy、CSTGluigi、czzmmc、daidai、dalong、dataroaring、DeadlineFen、DeadlineFen、deadlinefen、deardeng、didiaode18、DongLiang-0、dong-shuai、Doris-Extras、Dragonliu2018、DrogonJackDrogon、DuanXujianDuan、DuRipeng、dutyu、echo-dundun、ElvinWei、englefly、Euporia、feelshana、feifeifeimoon、feiniaofeiafei、felixwluo、figurant、flynn、fornaix、FreeOnePlus、Gabriel39、gitccl、gnehil、GoGoWen、gohalo、guardcrystal、hammer、HappenLee、HB、hechao、HelgeLarsHelge、herry2038、HeZhangJianHe、HHoflittlefish777、HonestManXin、hongkun-Shao、HowardQin、hqx871、httpshirley、htyoung、huanghaibin、HuJerryHu、HuZhiyuHu、Hyman-zhao、i78086、irenesrl、ixzc、jacktengg、jacktengg、jackwener、jayhua、Jeffrey、jiafeng.zhang、Jibing-Li、JingDas、julic20s、kaijchen、kaka11chen、KassieZ、kindred77、KirsCalvinKirs、KirsCalvinKirs、kkop、koarz、LemonLiTree、LHG41278、liaoxin01、LiBinfeng-01、LiChuangLi、LiDongyangLi、Lightman、lihangyu、lihuigang、LingAdonisLing、liugddx、LiuGuangdongLiu、LiuHongLiu、liuJiwenliu、LiuLijiaLiu、lsy3993、LuGuangmingLu、LuoMetaLuo、luozenglin、Luwei、Luzhijing、lxliyou001、Ma1oneZhang、mch_ucchi、Miaohongkai、morningman、morrySnow、Mryange、mymeiyi、nanfeng、nanfeng、Nitin-Kashyap、PaiVallishPai、Petrichor、plat1ko、py023、q763562998、qidaye、QiHouliangQi、ranxiang327、realize096、rohitrs1983、sdhzwc、seawinde、seuhezhiqiang、seuhezhiqiang、shee、shuke987、shysnow、songguangfan、Stalary、starocean999、SunChenyangSun、sunny、SWJTU-ZhangLei、TangSiyang2001、Tanya-W、taoxutao、Uniqueyou、vhwzIs、walter、walter、wangbo、Wanghuan、wangqt、wangtao、wangtianyi2004、wenluowen、whuxingying、wsjz、wudi、wudongliang、wuwenchihdu、wyx123654、xiangran0327、Xiaocc、XiaoChangmingXiao、xiaokang、XieJiann、Xinxing、xiongjx、xuefengze、xueweizhang、XueYuhai、XuJianxu、xuke-hat、xy、xy720、xyfsjq、xzj7019、yagagagaga、yangshijie、YangYAN、yiguolei、yiguolei、yimeng、YinShaowenYin、Yoko、yongjinhou、ytwp、yuanyuan8983、yujian、yujun777、Yukang-Lian、Yulei-Yang、yuxuan-luo、zclllyybb、ZenoYang、zfr95、zgxme、zhangdong、zhangguoqiang、zhangstar333、zhangstar333、zhangy5、ZhangYu0123、zhannngchen、ZhaoLongZhao、zhaoshuo、zhengyu、zhiqqqq、ZhongJinHacker、ZhuArmandoZhu、zlw5307、ZouXinyiZou、zxealous、zy-kkk、zzwwhh、zzzxl1993、zzzzzzzs
+467887319, 924060929, acnot, airborne12, AKIRA, alan_rodriguez, AlexYue, allenhooo, amory, amory, AshinGau, beat4ocean, BePPPower, bigben0204, bingquanzhao, BirdAmosBird, BiteTheDDDDt, bobhan1, caiconghui, camby, camby, CanGuan, caoliang-web, catpineapple, Centurybbx, chen, ChengDaqi2023, ChenyangSunChenyang, Chester, ChinaYiGuan, ChouGavinChou, chunping, colagy, CSTGluigi, czzmmc, daidai, dalong, dataroaring, DeadlineFen, DeadlineFen, deadlinefen, deardeng, didiaode18, DongLiang-0, dong-shuai, Doris-Extras, Dragonliu2018, DrogonJackDrogon, DuanXujianDuan, DuRipeng, dutyu, echo-dundun, ElvinWei, englefly, Euporia, feelshana, feifeifeimoon, feiniaofeiafei, felixwluo, figurant, flynn, fornaix, FreeOnePlus, Gabriel39, gitccl, gnehil, GoGoWen, gohalo, guardcrystal, hammer, HappenLee, HB, hechao, HelgeLarsHelge, herry2038, HeZhangJianHe, HHoflittlefish777, HonestManXin, hongkun-Shao, HowardQin, hqx871, httpshirley, htyoung, huanghaibin, HuJerryHu, HuZhiyuHu, Hyman-zhao, i78086, irenesrl, ixzc, jacktengg, jacktengg, jackwener, jayhua, Jeffrey, jiafeng.zhang, Jibing-Li, JingDas, julic20s, kaijchen, kaka11chen, KassieZ, kindred77, KirsCalvinKirs, KirsCalvinKirs, kkop, koarz, LemonLiTree, LHG41278, liaoxin01, LiBinfeng-01, LiChuangLi, LiDongyangLi, Lightman, lihangyu, lihuigang, LingAdonisLing, liugddx, LiuGuangdongLiu, LiuHongLiu, liuJiwenliu, LiuLijiaLiu, lsy3993, LuGuangmingLu, LuoMetaLuo, luozenglin, Luwei, Luzhijing, lxliyou001, Ma1oneZhang, mch_ucchi, Miaohongkai, morningman, morrySnow, Mryange, mymeiyi, nanfeng, nanfeng, Nitin-Kashyap, PaiVallishPai, Petrichor, plat1ko, py023, q763562998, qidaye, QiHouliangQi, ranxiang327, realize096, rohitrs1983, sdhzwc, seawinde, seuhezhiqiang, seuhezhiqiang, shee, shuke987, shysnow, songguangfan, Stalary, starocean999, SunChenyangSun, sunny, SWJTU-ZhangLei, TangSiyang2001, Tanya-W, taoxutao, Uniqueyou, vhwzIs, walter, walter, wangbo, Wanghuan, wangqt, wangtao, wangtianyi2004, wenluowen, whuxingying, wsjz, wudi, wudongliang, wuwenchihdu, wyx123654, xiangran0327, Xiaocc, XiaoChangmingXiao, xiaokang, XieJiann, Xinxing, xiongjx, xuefengze, xueweizhang, XueYuhai, XuJianxu, xuke-hat, xy, xy720, xyfsjq, xzj7019, yagagagaga, yangshijie, YangYAN, yiguolei, yiguolei, yimeng, YinShaowenYin, Yoko, yongjinhou, ytwp, yuanyuan8983, yujian, yujun777, Yukang-Lian, Yulei-Yang, yuxuan-luo, zclllyybb, ZenoYang, zfr95, zgxme, zhangdong, zhangguoqiang, zhangstar333, zhangstar333, zhangy5, ZhangYu0123, zhannngchen, ZhaoLongZhao, zhaoshuo, zhengyu, zhiqqqq, ZhongJinHacker, ZhuArmandoZhu, zlw5307, ZouXinyiZou, zxealous, zy-kkk, zzwwhh, zzzxl1993, zzzzzzzs

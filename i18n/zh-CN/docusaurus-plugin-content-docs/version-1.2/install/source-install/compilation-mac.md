@@ -1,6 +1,6 @@
 ---
 {
-    "title": "在macOS平台上编译",
+    "title": "在 macOS 平台上编译",
     "language": "zh-CN"
 }
 ---
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 在macOS平台上编译
+# 在 macOS 平台上编译
 
-本文介绍如何在macOS平台上编译源码。
+本文介绍如何在 macOS 平台上编译源码。
 
 ## 环境要求
 
-1. macOS 12 (Monterey) 及以上（_**Intel和Apple Silicon均支持**_）
+1. macOS 12 (Monterey) 及以上（_**Intel 和 Apple Silicon 均支持**_）
 2. [Homebrew](https://brew.sh/)
 
 ## 编译步骤
@@ -63,7 +63,7 @@ under the License.
     curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
         -o - | tar -Jxf -
 
-    # 保证protoc和thrift能够正常运行
+    # 保证 protoc 和 thrift 能够正常运行
     cd installed/bin
 
     ./protoc --version
@@ -91,13 +91,13 @@ under the License.
     65536
     ```
 
-2. 启动BE
+2. 启动 BE
     ```shell
     cd output/be/bin
     ./start_be.sh --daemon
     ```
 
-3. 启动FE
+3. 启动 FE
     ```shell
     cd output/fe/bin
     ./start_fe.sh --daemon
@@ -105,8 +105,8 @@ under the License.
 
 ## 常见问题
 
-### 启动BE失败，日志显示错误`fail to open StorageEngine, res=file descriptors limit is too small`
+### 启动 BE 失败，日志显示错误`fail to open StorageEngine, res=file descriptors limit is too small`
 参考前面提到的设置`file descriptors`。
 
-### Java版本
-推荐使用Java 8。
+### Java 版本
+推荐使用 Java 8。

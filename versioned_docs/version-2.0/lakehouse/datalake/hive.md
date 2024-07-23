@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive",
+    "title": "Hive Catalog",
     "language": "en"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Hive
 
 By connecting to Hive Metastore, Doris can automatically obtain database and table information from Hive and perform data queries.
 
@@ -111,6 +109,31 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Doris query DLC
+
+:::note
+Supported since Doris version 2.0.13
+:::
+
+[DLC](https://cloud.tencent.com/product/dlc) of Tencent Cloud use HMS to manage its metadata, so Hive catalog can be used。
+DLC stores data on LakeFS or COSN, below catalog is compatible with both file system.
+```sql
+CREATE CATALOG dlc PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://<dlc_metastore_ip>:<dlc_metastore_port>',
+    's3.access_key' = 'xxxxx',
+    's3.secret_key' = 'xxxxx',
+    's3.region' = 'ap-xxx',
+    's3.endpoint' = 'cos.ap-xxx.myqcloud.com',
+    'fs.cosn.bucket.region' = 'ap-xxx',
+    'fs.ofs.user.appid' = '<your_tencent_cloud_appid>',
+    'fs.ofs.tmp.cache.dir' = '<tmp_cache_dir>'
+);
+```
+
+After create catalog, you need to [grant](https://cloud.tencent.com/document/product/436/38648) essential privilege to the appid your dlc catalog is using.
+
+
 ### Hive on S3
 
 ```SQL
@@ -120,7 +143,7 @@ CREATE CATALOG hive PROPERTIES (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.access_key" = "ak",
-    "s3.secret_key" = "sk"
+    "s3.secret_key" = "sk",
     "use_path_style" = "true"
 );
 ```
@@ -409,7 +432,7 @@ Doris supports authentication on specified External Hive Catalog using Apache Ra
 
 Currently Doris supports authentication of Ranger libraries, tables, and columns, but does not support encryption, row privileges, and Data Mask.
 
-If you need to use Apache Ranger for authentication of the entire Doris cluster, refer to [Integration with Apache Ranger](https://doris.apache.org/docs/dev/admin-manual/privilege-ldap/ranger/).
+If you need to use Apache Ranger for authentication of the entire Doris cluster, refer to [Integrate with Apache Ranger](../../lakehouse/datalake/hive#integrate-with-apache-ranger).
 
 ### Environment settings
 

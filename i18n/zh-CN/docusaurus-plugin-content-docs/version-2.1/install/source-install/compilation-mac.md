@@ -106,4 +106,19 @@ cd installed/bin
 ./thrift --version
 ```
 
-运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考 https://support.apple.com/zh-cn/HT202491。
+## 常见错误
+
+1. 运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考 https://support.apple.com/zh-cn/HT202491。
+
+2. 使用 M3 芯片的 Mac 编译时报编译 proto 文件失败
+失败日志如下
+```Shell
+[ERROR] ... [0:0]: --grpc-java_out: protoc-gen-grpc-java: Plugin failed with status code 1.
+```
+此错误的原因可能是由于 Apple 基于 arm 的芯片不支持 x86 平台的软件导致。
+可从 https://repo.maven.apache.org/maven2/io/grpc/protoc-gen-grpc-java/下载编译用到的 protoc-gen-grpc-java 软件验证，版本信息可从 fe/fe-core/pom.xml 中 protoc_rosetta profile 下的 grpc.java.artifact 属性查看。
+下载后执行如果报错如下错误则表示当前 Mac 不能执行基于 x86 编译的软件：
+```Shell
+zsh: bad CPU type in executable: ./protoc-gen-grpc-java-1.34.0-osx-x86_64.exe
+```
+可参考 Apple 官方文档 https://support.apple.com/en-us/102527，安装 Rosetta 解决该问题。

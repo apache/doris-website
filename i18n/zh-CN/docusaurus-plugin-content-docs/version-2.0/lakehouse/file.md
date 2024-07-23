@@ -1,6 +1,6 @@
 ---
 {
-    "title": "TVF",
+    "title": "分析 S3/HDFS 上的文件",
     "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
 
 通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析。并且支持自动的列类型推断。
 

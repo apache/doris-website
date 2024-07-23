@@ -62,6 +62,7 @@ Related parameters for accessing hdfs:
 - `dfs.domain.socket.path`: (optional)
 
 Related parameters for accessing HDFS in HA mode:
+
 - `dfs.nameservices`: (optional)
 - `dfs.ha.namenodes.your-nameservices`: (optional)
 - `dfs.namenode.rpc-address.your-nameservices.your-namenode`: (optional)
@@ -70,7 +71,7 @@ Related parameters for accessing HDFS in HA mode:
 File format parameters:
 
 - `format`: (required) Currently support `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`
-- `column_separator`: (optional) default `,`.
+- `column_separator`: (optional) default `\t`.
 - `line_delimiter`: (optional) default `\n`.
 - `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
@@ -91,6 +92,7 @@ File format parameters:
 other kinds of parameters:
 
 - `path_partition_keys`: (optional) Specifies the column names carried in the file path. For example, if the file path is /path/to/city=beijing/date="2023-07-09", you should fill in `path_partition_keys="city,date"`. It will automatically read the corresponding column names and values from the path during load process.
+- `resource`：（optional）Specify the resource name. Hdfs Tvf can use the existing Hdfs resource to directly access Hdfs. You can refer to the method for creating an Hdfs resource: [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md). This property is supported starting from version 2.1.4 .
 
 ### Examples
 
@@ -114,6 +116,7 @@ MySQL [(none)]> select * from hdfs(
 ```
 
 Read and access csv format files on hdfs storage in HA mode.
+
 ```sql
 MySQL [(none)]> select * from hdfs(
             "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",

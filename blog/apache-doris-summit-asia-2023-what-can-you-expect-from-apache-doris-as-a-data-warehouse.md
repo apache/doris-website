@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris Summit Asia 2023: what can you expect from apache doris as a data warehouse?',
-    'summary': "The past year marks a breakthrough of Apache Doris, an open-source real-time data warehouse that has just undergone an overall upgrade after long consistent incremental optimizations.",
+    'description': "The past year marks a breakthrough of Apache Doris, an open-source real-time data warehouse that has just undergone an overall upgrade after long consistent incremental optimizations.",
     'date': '2023-11-10',
     'author': 'Apache Doris',
     'tags': ['Top News'],
@@ -39,7 +39,7 @@ Thanks to the hard work of 275 committers, the [Apache Doris 2.0](https://doris.
 
 **Faster** 
 
-This year, Apache Doris has attained a 10-fold performance increase in blind benchmarking and single-table queries, a 13-fold increase in multi-table joins, and a 20-fold increase in concurrent point queries. The high query performance is supported by the smart design of Apache Doris, including a vectorized execution engine, Merge-on-Write mechanism, the Light Schema Change feature, a self-adaptive parallel execution model, and a [new query optimizer](https://doris.apache.org/docs/query-acceleration/nereids?_highlight=nereids).
+This year, Apache Doris has attained a 10-fold performance increase in blind benchmarking and single-table queries, a 13-fold increase in multi-table joins, and a 20-fold increase in concurrent point queries. The high query performance is supported by the smart design of Apache Doris, including a vectorized execution engine, Merge-on-Write mechanism, the Light Schema Change feature, a self-adaptive parallel execution model, and a [new query optimizer](https://doris.apache.org/docs/query/nereids/).
 
 **Wider**
 
@@ -72,7 +72,7 @@ We aim to make Apache Doris the first choice for people in real-time data analys
 
 ### Real-time response to queries
 
-As is said, Apache Doris 2.0 delivers 10 times faster query speed than the previous versions, but what is the key accelerator behind such high performance? It is the [cost-based query optimizer](https://doris.apache.org/docs/query-acceleration/nereids/) and the self-adaptive [pipeline parallel execution model](https://doris.apache.org/docs/query-acceleration/pipeline-execution-engine/) of Apache Doris. 
+As is said, Apache Doris 2.0 delivers 10 times faster query speed than the previous versions, but what is the key accelerator behind such high performance? It is the [cost-based query optimizer](https://doris.apache.org/docs/query/nereids/) and the self-adaptive [pipeline parallel execution model](https://doris.apache.org/docs/query-acceleration/pipeline-execution-engine/) of Apache Doris. 
 
 In traditional data reporting, data is often arranged in flat tables. The idea of flat tables and pre-aggregated tables is to trade storage space for query speed. In these cases, the key to high performance is to accelerate data scanning and aggregation. However, since nowadays data analytic workloads involve more complex computations with more and larger batch processing, data engineers often have to fine-tune the database and rewrite the SQL before they can enjoy satisfactory query speeds. That's why we have refactored the the query optimizer in Apache Doris. The new query optimizer can figure out the most efficient query execution plan for a thousand-line SQL or a join query that relates dozens of tables, saving engineers lots of efforts.
 
@@ -174,4 +174,4 @@ From the self-developed pre-aggregation storage engine, materialized views, and 
 - We want to keep inspiring the data world by presenting more use cases.
 - We want to provide more and better choices for users by collaborating with partners along the data pipeline and cloud service providers.
 
-By choosing Apache Doris, you choose to stay in the heartbeat of innovation. The [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) awaits newcomers.
+By choosing Apache Doris, you choose to stay in the heartbeat of innovation. The [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA) awaits newcomers.

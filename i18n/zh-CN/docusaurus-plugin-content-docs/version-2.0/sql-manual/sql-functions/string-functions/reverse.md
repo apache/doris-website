@@ -35,10 +35,6 @@ ARRAY<T> reverse(ARRAY<T> arr)
 
 将字符串或数组反转，返回的字符串或者数组的顺序和原来的顺序相反。
 
-### notice
-
-`对于数组类型，仅支持向量化引擎中使用`
-
 ### example
 
 ```
@@ -57,8 +53,6 @@ mysql> SELECT REVERSE('你好');
 | 好你              |
 +------------------+
 1 row in set (0.00 sec)
-
-mysql> set enable_vectorized_engine=true;
 
 mysql> select k1, k2, reverse(k2) from array_test order by k1;
 +------+-----------------------------+-----------------------------+

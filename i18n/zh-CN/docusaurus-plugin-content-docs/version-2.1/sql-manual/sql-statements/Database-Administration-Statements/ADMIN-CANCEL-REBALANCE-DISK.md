@@ -25,13 +25,7 @@ under the License.
 ## ADMIN-CANCEL-REBALANCE-DISK
 
 ### Name
-
-<version since="1.2.0">
-
 ADMIN CANCEL REBALANCE DISK
-
-</version>
-
 ### Description
 
     该语句用于取消优先均衡BE的磁盘

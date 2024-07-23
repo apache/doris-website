@@ -277,6 +277,18 @@ There are two ways to configure BE configuration items:
 
     - If the parameter is `THREAD_POOL`, the model is a blocking I/O model.
 
+#### `thrift_max_message_size`
+
+:::info Note
+
+This field is supported since version 2.0.12.
+
+:::
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
+
 #### `txn_commit_rpc_timeout_ms`
 
 * Description:txn submit rpc timeout
@@ -1505,8 +1517,3 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
 * Default: "${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* Description: Whether to use the time zone database that comes with Doris directly. Enabled to stop trying to find in  the system directory.
-* Default: false

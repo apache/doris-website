@@ -28,7 +28,7 @@ under the License.
 
 ## 背景
 
-从 4.0 版本开始，Doris 支持对接 Trino Connector 插件。通过丰富的 Trino Connector 插件以及 Doris 的 `Trino-Connector` Catalog 功能可以让 Doris 支持更多的数据源。
+从 3.0 版本开始，Doris 支持对接 Trino Connector 插件。通过丰富的 Trino Connector 插件以及 Doris 的 `Trino-Connector` Catalog 功能可以让 Doris 支持更多的数据源。
 
 Trino Connector 兼容框架的目的在于帮助 Doris 快速对接更多的数据源，以满足用户需求。
 对于 Hive、Iceberg、Hudi、Paimon、JDBC 等数据源，我们仍然建议使用 Doris 内置的 Catalog 进行连接，已获得更好的性能、稳定性和兼容性。
@@ -82,18 +82,18 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
 
     ```sql
     create catalog kafka_tpch properties (
-    "type"="trino-connector",
-    -- 下面这四个属性来源于 trino，与 trino 的 etc/catalog/kakfa.properties 中的属性一致。
-    "connector.name"="kafka",
-    "kafka.table-names"="tpch.customer,tpch.orders,tpch.lineitem,tpch.part,tpch.partsupp,tpch.supplier,tpch.nation,tpch.region",
-    "kafka.nodes"="localhost:9092",
-    "kafka.table-description-dir" = "/mnt/datadisk1/fangtiewei"
+        "type"="trino-connector",
+        -- 下面这四个属性来源于 trino，与 trino 的 etc/catalog/kakfa.properties 中的属性一致。但需要统一增加 "trino." 前缀
+        "trino.connector.name"="kafka",
+        "trino.kafka.table-names"="tpch.customer,tpch.orders,tpch.lineitem,tpch.part,tpch.partsupp,tpch.supplier,tpch.nation,tpch.region",
+        "trino.kafka.nodes"="localhost:9092",
+        "trino.kafka.table-description-dir" = "/mnt/datadisk1/fangtiewei"
     );
     ```
 
     解释：
     - `type` ：Catalog 类型，这里我们必须设置为 `trino-connector` 。
-    - `connector.name`、`kafka.table-names`、`kafka.nodes`、`kafka.table-description-dir` 这四个属性都是来源于trino，参考：[Kafka connector](https://trino.io/docs/current/connector/kafka.html#configuration)
+    - `trino.connector.name`、`trino.kafka.table-names`、`trino.kafka.nodes`、`trino.kafka.table-description-dir` 这四个属性都是来源于trino，参考：[Kafka connector](https://trino.io/docs/current/connector/kafka.html#configuration)
 
     不同的Connector插件应该设置不同的属性，可以参考trino官方文档：[Connectors](https://trino.io/docs/current/connector.html#connector--page-root)
 
@@ -108,27 +108,24 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
     ```sql
     create catalog emr_hive properties (
         "type"="trino-connector",
-
-        "connector.name"="hive",
-        "hive.metastore.uri"="thrift://ip:port",
-        "hive.config.resources"="/path/to/core-site.xml,/path/to/hdfs-site.xml"
+        "trino.connector.name"="hive",
+        "trino.hive.metastore.uri"="thrift://ip:port",
+        "trino.hive.config.resources"="/path/to/core-site.xml,/path/to/hdfs-site.xml"
     );
     ```
 
     > 使用 Hive 插件时需要注意：
-    > - 需要在 JVM 参数里加上 Hadoop 的用户：-DHADOOP_USER_NAME=ftw，可以配置在 fe.conf / be.conf 文件的JAVA_OPTS_FOR_JDK_17 参数末尾，如 JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=ftw"
-
+    > - 需要在 JVM 参数里加上 Hadoop 的用户：-DHADOOP_USER_NAME=user，可以配置在 fe.conf / be.conf 文件的JAVA_OPTS_FOR_JDK_17 参数末尾，如 JAVA_OPTS_FOR_JDK_17="...-DHADOOP_USER_NAME=user"
 
 2. Mysql
 
     ```sql
     create catalog trino_mysql properties (
         "type"="trino-connector",
-        
-        "connector.name"="mysql",
-        "connection-url" = "jdbc:mysql://ip:port",
-        "connection-user" = "user",
-        "connection-password" = "password"
+        "trino.connector.name"="mysql",
+        "trino.connection-url" = "jdbc:mysql://ip:port",
+        "trino.connection-user" = "user",
+        "trino.connection-password" = "password"
     );
     ```
 
@@ -140,24 +137,22 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
     ```sql
     create catalog kafka properties (
         "type"="trino-connector",
-        
-        "connector.name"="kafka",
-        "kafka.nodes"="localhost:9092",
-        "kafka.table-description-supplier"="CONFLUENT",
-        "kafka.confluent-schema-registry-url"="http://localhost:8081",
-        "kafka.hide-internal-columns" = "false"
+        "trino.connector.name"="kafka",
+        "trino.kafka.nodes"="localhost:9092",
+        "trino.kafka.table-description-supplier"="CONFLUENT",
+        "trino.kafka.confluent-schema-registry-url"="http://localhost:8081",
+        "trino.kafka.hide-internal-columns" = "false"
     );
     ```
-
 
 4. BigQuery
 
     ```sql
     create catalog bigquery_catalog properties (
         "type"="trino-connector",
-
-        "connector.name"="bigquery",
-        "bigquery.project-id"="steam-circlet-388406",
-        "bigquery.credentials-file"="/path/to/application_default_credentials.json"
+        "trino.connector.name"="bigquery",
+        "trino.bigquery.project-id"="steam-circlet-388406",
+        "trino.bigquery.credentials-file"="/path/to/application_default_credentials.json"
     );
     ```
+

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hive",
+    "title": "Hive Catalog",
     "language": "zh-CN"
 }
 ---
@@ -111,6 +111,30 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Doris 访问腾讯云 DLC
+
+:::note
+Doris 2.0 版本自 2.0.13 后支持该功能
+:::
+
+腾讯云 [DLC](https://cloud.tencent.com/product/dlc) 采用HMS管理元数据，因此可用 Hive catalog 进行联邦分析。
+DLC 可基于 LakeFS 或 COSN 进行数据存储。以下 catalog 创建方法对两种 FS 都适用。
+```sql
+CREATE CATALOG dlc PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://<dlc_metastore_ip>:<dlc_metastore_port>',
+    's3.access_key' = 'xxxxx',
+    's3.secret_key' = 'xxxxx',
+    's3.region' = 'ap-xxx',
+    's3.endpoint' = 'cos.ap-xxx.myqcloud.com',
+    'fs.cosn.bucket.region' = 'ap-xxx',
+    'fs.ofs.user.appid' = '<your_tencent_cloud_appid>',
+    'fs.ofs.tmp.cache.dir' = '<tmp_cache_dir>'
+);
+```
+
+创建完 catalog 后需要对 catalog 绑定的 appid 进行[授权](https://cloud.tencent.com/document/product/436/38648) 。
+
 ### Hive On S3
 
 ```sql
@@ -120,7 +144,7 @@ CREATE CATALOG hive PROPERTIES (
     "s3.endpoint" = "s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.access_key" = "ak",
-    "s3.secret_key" = "sk"
+    "s3.secret_key" = "sk",
     "use_path_style" = "true"
 );
 ```

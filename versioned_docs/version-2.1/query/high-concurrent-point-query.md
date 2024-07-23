@@ -74,7 +74,10 @@ PROPERTIES (
 2. when condition only contains primary key like `select * from tbl_point_query where key = 123`, such query will go through the short fast path
 3. `light_schema_change` should also been enabled since we rely on `column unique id` of each column when doing a point query.
 4. It only supports equality queries on the key column of a single table and does not support joins or nested subqueries. The WHERE condition should consist of the key column alone and be an equality comparison. It can be considered as a type of key-value query.
-
+5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 2.1, it is recommended to use `"row_store_columns"="key,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
+```
+SELECT key, v1, v2 FROM tbl_point_query WHERE key = 1
+```
 
 ## Using `PreparedStatement`
 

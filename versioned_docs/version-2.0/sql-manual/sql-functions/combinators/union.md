@@ -26,10 +26,6 @@ under the License.
 
 ## UNION
 
-<version since="2.0.0">
-</version>
-
-
 ### description
 #### Syntax
 

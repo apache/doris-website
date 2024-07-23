@@ -24,13 +24,9 @@ under the License.
 
 ## IPV6_STRING_TO_NUM
 
-<version since="dev">
-
 IPV6_STRING_TO_NUM
 
-</version>
-
-### description
+### Description
 
 #### Syntax
 
@@ -39,12 +35,12 @@ IPV6_STRING_TO_NUM
 IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
 如果输入字符串包含有效的 IPv4 地址，则返回其等效的 IPv6 地址。
 
-### notice
+#### Notice
 
-`如果输入非法的IP地址或者NULL，会抛出异常`
+如果输入非法的 IP 地址或者 `NULL`，会抛出异常
 
-### example
-```
+### Example
+```sql
 mysql> select hex(ipv6_string_to_num('1111::ffff'));
 +---------------------------------------+
 | hex(ipv6_string_to_num('1111::ffff')) |
@@ -68,6 +64,6 @@ mysql> select addr_src, hex(ipv6_string_to_num(addr_src)) from ipv4_string_test 
 ERROR 1105 (HY000): errCode = 2, detailMessage = (172.17.0.2)[CANCELLED][E33] Null Input, you may consider convert it to a valid default IPv6 value like '::' first
 ```
 
-### keywords
+### Keywords
 
 IPV6_STRING_TO_NUM, IP

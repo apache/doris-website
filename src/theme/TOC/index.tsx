@@ -6,6 +6,7 @@ import type { Props } from '@theme/TOC';
 import styles from './styles.module.css';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Link from '@docusaurus/Link';
+import { ExternalLinkArrowIcon } from '../../components/Icons/external-link-arrow-icon';
 
 // Using a custom className
 // This prevents TOCInline/TOCCollapsible getting highlighted by mistake
@@ -19,12 +20,15 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', className)}>
             {isCN ? (
                 <Link
-                    className="ml-4 mb-8 flex items-center hover:no-underline"
-                    href="https://ask.selectdb.com"
+                    className={clsx(styles.bgCustomGradient, "ml-4 mb-8 text-sm flex items-center hover:no-underline border border-[#aac8d6] rounded-md")}
+                    href="https://hdxu.cn/S44O0"
                     target="_blank"
                 >
-                    <span className="pr-2">问答论坛</span>
-                    <svg
+                    <div className="px-2 grid gap-1">
+                        <span className="block">8 月 3 日 Apache Doris x 腾讯云 Meetup 深圳站限时免费参加🔥</span>
+                        <span>立即报名<span className="ml-1"><ExternalLinkArrowIcon /></span></span>
+                    </div>
+                    {/* <svg
                         viewBox="0 0 1024 1024"
                         version="1.1"
                         xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +42,7 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
                             p-id="8501"
                             fill="currentColor"
                         ></path>
-                    </svg>
+                    </svg> */}
                 </Link>
             ) : (
                 <Link

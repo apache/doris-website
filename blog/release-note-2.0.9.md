@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris version 2.0.9 has been released',
-    'summary': 'Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version.',
+    'description': 'Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version.',
     'date': '2024-04-23',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -35,7 +35,7 @@ Thanks to our community users and developers, about 68 improvements and bug fixe
 - **GitHub** : [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
 
-## 1 Behavior change
+## 1 Behavior changes
 
 NA
 
@@ -53,7 +53,7 @@ NA
 
 - Show index id in `SHOW PROC INDEXES`
 
-## 3 Improvement and optimizations
+## 3 Improvements
 
 - Sdd a secondary argument in `first_value` / `last_value` to ignore NULL values
 

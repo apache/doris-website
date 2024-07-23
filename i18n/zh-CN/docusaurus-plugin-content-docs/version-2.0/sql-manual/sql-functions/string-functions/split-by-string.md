@@ -24,9 +24,6 @@ under the License.
 
 ## split_by_string
 
-<version since="1.2.2">
-</version>
-
 ### description
 
 #### Syntax
@@ -51,10 +48,6 @@ under the License.
 需要分割的字符串为空，而分隔符不为空.
 
 Type: `Array(String)`
-
-### notice
-
-`仅支持向量化引擎中使用`
 
 ### example
 

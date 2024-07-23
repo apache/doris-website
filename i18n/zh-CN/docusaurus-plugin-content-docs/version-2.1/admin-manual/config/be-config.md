@@ -214,8 +214,8 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 #### `trash_file_expire_time_sec`
 
-* 描述：回收站清理的间隔，72 个小时，当磁盘空间不足时，trash 下的文件保存期可不遵守这个参数
-* 默认值：259200
+* 描述：回收站清理的间隔，24 个小时，当磁盘空间不足时，trash 下的文件保存期可不遵守这个参数
+* 默认值：86400
 
 #### `es_http_timeout_ms`
 
@@ -287,6 +287,14 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
   - 若该参数为`THREADED`, 该模型为非阻塞式 I/O 模型，
 
   - 若该参数为`THREAD_POOL`, 该模型为阻塞式 I/O 模型。
+
+#### `thrift_max_message_size`
+
+<version since="2.1.4"></version>
+
+默认值: 100MB
+
+thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
 
 #### `txn_commit_rpc_timeout_ms`
 
@@ -1499,8 +1507,3 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
 * 默认值："${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* 描述：是否直接使用 Doris 自带的时区数据库。开启后不再尝试查找系统目录。
-* 默认值：false

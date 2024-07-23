@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Analyzing File",
+    "title": "Querying Files on S3/HDFS",
     "language": "en"
 }
 ---

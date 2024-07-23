@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Apache Doris 2.0.5 just released',
-    'summary': 'Thanks to our community users and developers, about 217 improvements and bug fixes have been made in Doris 2.0.5 version.',
+    'description': 'Thanks to our community users and developers, about 217 improvements and bug fixes have been made in Doris 2.0.5 version.',
     'date': '2024-02-28',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -28,12 +28,12 @@ under the License.
 
 Thanks to our community users and developers, about 217 improvements and bug fixes have been made in Doris 2.0.5 version.
 
-**Quick Download：** [https://doris.apache.org/download/](https://doris.apache.org/download/)
+**Quick Download:** [https://doris.apache.org/download/](https://doris.apache.org/download/)
 
 **GitHub：** [https://github.com/apache/doris/releases](https://github.com/apache/doris/releases)
 
 
-## Behavior change
+## Behavior changes
 - change char function behaviour: select char(0) = '\0' return true as MySQL
   - https://github.com/apache/doris/pull/30034
 - Allow exporting empty data
@@ -48,7 +48,7 @@ Thanks to our community users and developers, about 217 improvements and bug fix
 - Support analyze materialized view
 - Support ShowProcessStmt Show all Fe connection
 
-## Improvement and optimizations
+## Improvements
 - Optimize query plan when column stats are unaviable
 - Optimize query plan using rollup column stats
 - Stop analyze quickly after user close auto analyze

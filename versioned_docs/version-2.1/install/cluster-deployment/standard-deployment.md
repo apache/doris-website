@@ -116,6 +116,14 @@ In a Doris cluster, FE is mainly responsible for metadata storage, including met
 | BE        | Doris uses LZ4 compression by default, with a compression ratio of 0.3~0.5.Disk space needs to be calculated based on the total data volume * 3 (3 data replicas)There is a need to reserve 40% disk space for background data compaction and temporary data storage. |
 | Broker    | If you want to deploy a Broker, you can usually deploy the Broker node on the same machine as the FE /BE nodes. |
 
+### Java version
+
+All Doris processes depend on Java.
+
+Before version 2.1 (inclusive), please use Java 8, recommended version: `openjdk-8u352-b08-linux-x64`.
+
+After version 3.0 (inclusive), please use Java 17, recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
+
 ## 2. Check operating system
 
 ### Disable swap partition
@@ -200,17 +208,17 @@ echo never > /sys/kernel/mm/transparent_hugepage/defrag
 
 Doris instances communicate directly over the network, requiring the following ports for normal operation. Administrators can adjust Doris ports according to their environment:
 
-| Instance | Port                   | Default Port | Communication Direction     | Description                                                  |
-| -------- | ---------------------- | ------------ | --------------------------- | ------------------------------------------------------------ |
-| BE       | be_port                | 9060         | FE --> BE                   | thrift server port on BE, receiving requests from FE         |
-| BE       | webserver_port         | 8040         | BE <--> BE                  | http server port on BE                                       |
-| BE       | heartbeat_service_port | 9050         | FE --> BE                   | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
-| BE       | brpc_port              | 8060         | FE <--> BEBE <--> BE        | brpc port on BE, used for communication between BEs          |
-| FE       | http_port              | 8030         | FE <--> FEClient <--> FE    | http server port on FE                                       |
-| FE       | rpc_port               | 9020         | BE --> FEFE <--> FE         | thrift server port on FE, configuration of each FE should be consistent |
-| FE       | query_port             | 9030         | Client <--> FE              | MySQL server port on FE                                      |
-| FE       | edit_log_port          | 9010         | FE <--> FE                  | port on FE for bdbje communication                           |
-| Broker   | broker_ipc_port        | 8000         | FE --> Broker BE --> Broker | thrift server on Broker, receiving requests                  |
+| Instance | Port                   | Default Port | Communication Direction    | Description                                                  |
+| -------- | ---------------------- | ------------ | -------------------------- | ------------------------------------------------------------ |
+| BE       | be_port                | 9060         | FE --> BE                  | thrift server port on BE, receiving requests from FE         |
+| BE       | webserver_port         | 8040         | BE <--> BE                 | http server port on BE                                       |
+| BE       | heartbeat_service_port | 9050         | FE --> BE                  | heartbeat service port (thrift) on BE, receiving heartbeats from FE |
+| BE       | brpc_port              | 8060         | FE <--> BE，BE <--> BE       | brpc port on BE, used for communication between BEs          |
+| FE       | http_port              | 8030         | FE <--> FE，Client <--> FE   | http server port on FE                                       |
+| FE       | rpc_port               | 9020         | BE --> FE，FE <--> FE        | thrift server port on FE, configuration of each FE should be consistent |
+| FE       | query_port             | 9030         | Client <--> FE             | MySQL server port on FE                                      |
+| FE       | edit_log_port          | 9010         | FE <--> FE                 | port on FE for bdbje communication                           |
+| Broker   | broker_ipc_port        | 8000         | FE --> Broker，BE --> Broker | thrift server on Broker, receiving requests                  |
 
 ### Plan the nodes
 
@@ -369,7 +377,7 @@ The configuration file for BE is in the "conf" directory under the BE deployment
 1. Configure Java environment Starting from version 1.2, Doris supports Java UDF (User-Defined Function), and BE relies on the Java environment. You need to configure the `JAVA_HOME` environment variable in the operating system beforehand or specify the Java environment variable in the BE configuration file.
 
 ```SQL
-## Modify Java environment variable in be/be.conf
+## Modify Java environment variable in be/conf/be.conf
 JAVA_HOME = <your-java-home-path>
 ```
 

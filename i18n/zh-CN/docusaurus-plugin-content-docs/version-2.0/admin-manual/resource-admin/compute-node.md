@@ -24,9 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+# 计算节点
 
 ## 需求场景
+
 目前 Doris 是一个典型 Share-Nothing 的架构，通过绑定数据和计算资源在同一个节点获得非常好的性能表现。
 但随着 Doris 计算引擎性能持续提高，越来越多的用户也开始选择使用 Doris 直接查询数据湖数据。
 这类场景是一种 Share-Disk 场景，数据往往存储在远端的 HDFS/S3 上，计算在 Doris 中，Doris 通过网络获取数据，然后在内存完成计算。

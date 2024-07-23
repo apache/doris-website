@@ -28,25 +28,18 @@ under the License.
 
 ### name
 
-<version since="1.2.0">
-
 ARRAY
-
-</version>
 
 ### description
 
 `ARRAY<T>`
 
-由T类型元素组成的数组，不能作为key列使用。目前支持在Duplicate模型的表中使用。
+由 T 类型元素组成的数组，不能作为 Key 列使用。目前支持在 Duplicate 模型的表中使用。
 
-<version since="2.0">
+2.0 版本之后支持在 Unique 模型的表中非 Key 列使用。
 
-2.0 版本之后支持在Unique模型的表中非key列使用。
 
-</version>
-
-T支持的类型有：
+T 支持的类型有：
 
 ```
 BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE,

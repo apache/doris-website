@@ -28,8 +28,6 @@ under the License.
 
 ### Name
 
-<version since="2.0"></version>
-
 SHOW COLUMN STATS
 
 ### Description
@@ -44,7 +42,7 @@ SHOW COLUMN [cached] STATS table_name [ (column_name [, ...]) ];
 
 其中：
 
-- cached: 展示当前FE内存缓存中的统计信息。
+- cached: 展示当前 FE 内存缓存中的统计信息。
 - table_name: 收集统计信息的目标表。可以是  `db_name.table_name`  形式。
 - column_name: 指定的目标列，必须是  `table_name`  中存在的列，多个列名称用逗号分隔。
 

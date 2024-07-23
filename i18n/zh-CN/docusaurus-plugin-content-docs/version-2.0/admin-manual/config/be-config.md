@@ -288,6 +288,16 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
   - 若该参数为`THREAD_POOL`, 该模型为阻塞式 I/O 模型。
 
+#### `thrift_max_message_size`
+
+:::info 备注
+该参数自 2.0.12 版本起支持。
+:::
+
+默认值：100MB
+
+thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
+
 #### `txn_commit_rpc_timeout_ms`
 
 * 描述：txn 提交 rpc 超时
@@ -1361,15 +1371,11 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：序列化 RowBatch 时是否使用 Snappy 压缩算法进行数据压缩
 * 默认值：true
 
-<version since="1.2">
-
 #### `jvm_max_heap_size`
 
 * 类型：string
 * 描述：BE 使用 JVM 堆内存的最大值，即 JVM 的 -Xmx 参数
 * 默认值：1024M
-
-</version>
 
 ### 日志
 
@@ -1486,8 +1492,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：BlockingPriorityQueue 中剩余任务的优先级频率增加
 * 默认值:512
 
-<version since="1.2">
-
 #### `jdbc_drivers_dir`
 
 * 描述：存放 jdbc driver 的默认目录。
@@ -1502,8 +1506,6 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：是否在导入 json 数据时用 simdjson 来解析。
 * 默认值：true
-
-</version>
 
 #### `enable_query_memory_overcommit`
 
@@ -1539,8 +1541,3 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 描述：Doris 自带的时区数据库。如果系统目录下未找到时区文件，则启用该目录下的数据。
 * 默认值："${DORIS_HOME}/zoneinfo"
-
-#### `use_doris_tzfile`
-
-* 描述：是否直接使用 Doris 自带的时区数据库。开启后不再尝试查找系统目录。
-* 默认值：false

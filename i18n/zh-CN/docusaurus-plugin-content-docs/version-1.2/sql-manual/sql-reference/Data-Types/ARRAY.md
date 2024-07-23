@@ -28,11 +28,7 @@ under the License.
 
 ### name
 
-<version since="1.2.0">
-
 ARRAY
-
-</version>
 
 ### description
 

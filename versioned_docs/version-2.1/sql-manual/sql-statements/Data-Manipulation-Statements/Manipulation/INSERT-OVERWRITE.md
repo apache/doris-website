@@ -51,7 +51,7 @@ INSERT OVERWRITE table table_name
 > partitions: the table partitions that needs to be overwritten. The following two formats are supported
 >
 >> 1. partition names. must be one of the existing partitions in `table_name` separated by a comma
->> 2. asterisk(*)。Enable [auto-detect-partition](#overwrite-auto-detect-partition). The write operation will automatically detect the partitions involved in the data and overwrite those partitions.
+>> 2. asterisk(*)。Enable [auto-detect-partition](#overwrite-auto-detect-partition). The write operation will automatically detect the partitions involved in the data and overwrite those partitions. This format is supported since Apache Doris 2.1.3 version.
 >
 > label: specify a label for the Insert task
 >
@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS test (
 UNIQUE KEY(`c1`)
 PARTITION BY LIST (`c1`)
 (
-PARTITION p1 VALUES IN ("1","2","3"),# Partition p1 only allows 1, 2, and 3 to exist.
-PARTITION p2 VALUES IN ("4","5","6") # Partition p2 only allows 1, 5, and 6 to exist.
+PARTITION p1 VALUES IN ("1","2","3"),
+PARTITION p2 VALUES IN ("4","5","6")
 )
 DISTRIBUTED BY HASH(`c1`) BUCKETS 3
 PROPERTIES (

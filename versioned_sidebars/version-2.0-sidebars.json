@@ -5,7 +5,13 @@
             "label": "Getting Started",
             "items": [
                 "get-starting/what-is-apache-doris",
-                "get-starting/quick-start"
+                {
+                    "type": "category",
+                    "label": "Quick Start",
+                    "items": [
+                        "get-starting/quick-start/quick-start"
+                    ]
+                }
             ]
         },
         {
@@ -82,13 +88,11 @@
                     "items": [
                         "table-design/index/index-overview",
                         "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
                         "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index",
-                        "table-design/index/bitmap-index",
-                        "table-design/index/inverted-index"
+                        "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
-                "table-design/auto-increment",
                 "table-design/best-practice"
             ]
         },
@@ -108,7 +112,6 @@
                         "data-operate/import/mysql-load-manual",
                         "data-operate/import/load-json-format",
                         "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
@@ -171,8 +174,7 @@
                     "label": "Quering Variables",
                     "items": [
                         "query/query-variables/variables",
-                        "query/query-variables/sql-mode",
-                        "query/query-variables/time-zone"
+                        "query/query-variables/sql-mode"
                     ]
                 },
                 {
@@ -183,14 +185,7 @@
                         "query/nereids/statistics"
                     ]
                 },
-                {
-                    "type": "category",
-                    "label": "Pipeline Execution Engine",
-                    "items": [
-                        "query/pipeline/pipeline-execution-engine",
-                        "query/pipeline/pipeline-x-execution-engine"
-                    ]
-                },
+                "query/pipeline-execution-engine",
                 {
                     "type": "category",
                     "label": "Caches",
@@ -205,13 +200,12 @@
                     "label": "View and Materialize View",
                     "items": [
                         "query/view-materialized-view/create-view",
-                        "query/view-materialized-view/materialized-view",
-                        "query/view-materialized-view/asyn-materialized-view"
+                        "query/view-materialized-view/materialized-view"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Join Queries",
+                    "label": "Join Optimization",
                     "items": [
                         "query/join-optimization/doris-join-optimization",
                         "query/join-optimization/bucket-shuffle-join",
@@ -222,7 +216,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Duplicating Query Results",
+                    "label": "Distincting Counts",
                     "items": [
                         "query/duplicate/orthogonal-bitmap-manual",
                         "query/duplicate/using-hll"
@@ -255,7 +249,7 @@
                 "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Analyzing Data Lake",
+                    "label": "Querying Data Lakes",
                     "items": [
                         "lakehouse/datalake/hive",
                         "lakehouse/datalake/hudi",
@@ -266,17 +260,23 @@
                 },
                 {
                     "type": "category",
-                    "label": "Analyzing Database",
+                    "label": "Querying Databases",
                     "items": [
-                        "lakehouse/database/es",
                         "lakehouse/database/jdbc",
+                        "lakehouse/database/mysql",
+                        "lakehouse/database/postgresql",
+                        "lakehouse/database/oracle",
+                        "lakehouse/database/sqlserver",
+                        "lakehouse/database/clickhouse",
+                        "lakehouse/database/sap-hana",
+                        "lakehouse/database/oceanbase",
+                        "lakehouse/database/es",
                         "lakehouse/database/max-compute"
                     ]
                 },
                 "lakehouse/file",
                 "lakehouse/filecache",
-                "lakehouse/external-statistics",
-                "lakehouse/sql-dialect"
+                "lakehouse/external-statistics"
             ]
         },
         {
@@ -290,6 +290,7 @@
                         "admin-manual/cluster-management/upgrade",
                         "admin-manual/cluster-management/elastic-expansion",
                         "admin-manual/cluster-management/load-balancing",
+                        "admin-manual/cluster-management/time-zone",
                         "admin-manual/cluster-management/fqdn"
                     ]
                 },
@@ -467,6 +468,13 @@
         },
         {
             "type": "category",
+            "label": "Practical Guide",
+            "items": [
+                "practical-guide/log-storage-analysis"
+            ]
+        },
+        {
+            "type": "category",
             "label": "Ecosystem",
             "items": [
                 "ecosystem/spark-doris-connector",
@@ -489,7 +497,11 @@
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
-                        "ecosystem/bi/powerbi"
+                        "ecosystem/bi/finebi",
+                        "ecosystem/bi/powerbi",
+                        "ecosystem/bi/tableau",
+                        "ecosystem/bi/quicksight",
+                        "ecosystem/bi/quickbi"
                     ]
                 }
             ]
@@ -603,7 +615,19 @@
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
                                 "sql-manual/sql-functions/date-time-functions/date_floor",
+                                "sql-manual/sql-functions/date-time-functions/second_floor",
+                                "sql-manual/sql-functions/date-time-functions/minute_floor",
+                                "sql-manual/sql-functions/date-time-functions/hour_floor",
+                                "sql-manual/sql-functions/date-time-functions/day_floor",
+                                "sql-manual/sql-functions/date-time-functions/month_floor",
+                                "sql-manual/sql-functions/date-time-functions/year_floor",
                                 "sql-manual/sql-functions/date-time-functions/date_ceil",
+                                "sql-manual/sql-functions/date-time-functions/second_ceil",
+                                "sql-manual/sql-functions/date-time-functions/minute_ceil",
+                                "sql-manual/sql-functions/date-time-functions/hour_ceil",
+                                "sql-manual/sql-functions/date-time-functions/day_ceil",
+                                "sql-manual/sql-functions/date-time-functions/month_ceil",
+                                "sql-manual/sql-functions/date-time-functions/year_ceil",
                                 "sql-manual/sql-functions/date-time-functions/microsecond",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-diff",
@@ -809,7 +833,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/grouping-id",
                                 "sql-manual/sql-functions/aggregate-functions/count-by-enum",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
-                                "sql-manual/sql-functions/aggregate-functions/array-agg",
                                 "sql-manual/sql-functions/aggregate-functions/map-agg",
                                 "sql-manual/sql-functions/aggregate-functions/bitmap_agg"
                             ]
@@ -1090,9 +1113,6 @@
                                 "sql-manual/sql-reference/Database-Administration-Statements/INSTALL-PLUGIN",
                                 "sql-manual/sql-reference/Database-Administration-Statements/UNINSTALL-PLUGIN",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SET-REPLICA-STATUS",
-                                "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SET-REPLICA-VERSION",
-                                "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SET-PARTITION-VERSION",
-                                "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SET-TABLE-STATUS",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-REPLICA-DISTRIBUTION",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-SHOW-REPLICA-STATUS",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-REPAIR-TABLE",
@@ -1127,13 +1147,13 @@
                                 "sql-manual/sql-reference/Data-Types/CHAR",
                                 "sql-manual/sql-reference/Data-Types/VARCHAR",
                                 "sql-manual/sql-reference/Data-Types/STRING",
-                                "sql-manual/sql-reference/Data-Types/HLL",
-                                "sql-manual/sql-reference/Data-Types/BITMAP",
-                                "sql-manual/sql-reference/Data-Types/QUANTILE_STATE",
                                 "sql-manual/sql-reference/Data-Types/ARRAY",
                                 "sql-manual/sql-reference/Data-Types/MAP",
                                 "sql-manual/sql-reference/Data-Types/STRUCT",
                                 "sql-manual/sql-reference/Data-Types/JSON",
+                                "sql-manual/sql-reference/Data-Types/HLL",
+                                "sql-manual/sql-reference/Data-Types/BITMAP",
+                                "sql-manual/sql-reference/Data-Types/QUANTILE_STATE",
                                 "sql-manual/sql-reference/Data-Types/AGG_STATE"
                             ]
                         },
@@ -1394,6 +1414,9 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.0.13",
+                "releasenotes/release-2.0.12",
+                "releasenotes/release-2.0.11",
                 "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",
                 "releasenotes/release-2.0.8",

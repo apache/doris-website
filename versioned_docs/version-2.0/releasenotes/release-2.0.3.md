@@ -42,7 +42,7 @@ Thanks to our community users and developers, about 1000 improvements and bug fi
 
 Collecting statistics helps the optimizer understand the data distribution characteristics and choose a better plan to greatly improve query performance. It is officially supported starting from version 2.0.3 and is enabled all day by default.
 
-see more：https://doris.apache.org/docs/query-acceleration/statistics/
+see more: [Statistics](../query/nereids/statistics.md)
 
 
 ### 2.2 Support complex datatypes for more datalake source

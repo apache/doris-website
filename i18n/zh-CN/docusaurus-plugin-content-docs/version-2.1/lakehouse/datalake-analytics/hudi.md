@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Hudi",
+    "title": "Hudi Catalog",
     "language": "zh-CN"
 }
 ---
@@ -24,12 +24,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-# Hudi
+快速体验 [Apache Doris & Hudi](../../get-starting/quick-start/doris-hudi.md)
 
 ## 使用限制
 
-1. Hudi 表支持的查询类型如下，后续将支持 CDC。
+1. Hudi 表支持的查询类型如下：
 
 |  表类型   | 支持的查询类型  |
 |  ----  | ----  |

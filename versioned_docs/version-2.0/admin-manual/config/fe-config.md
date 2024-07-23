@@ -491,6 +491,18 @@ The connection timeout and socket timeout config for thrift server.
 
 The value for thrift_client_timeout_ms is set to be zero to prevent read timeout.
 
+#### `thrift_max_message_size`
+
+:::info Note
+
+This field is supported since version 2.0.12.
+
+:::
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
+
 #### `use_compact_thrift_rpc`
 
 Default: true
@@ -700,7 +712,7 @@ The default value is -1
 
 #### `max_query_retry_time`
 
-Default：1
+Default：3
 
 IsMutable：true
 

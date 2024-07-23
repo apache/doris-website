@@ -38,13 +38,22 @@ The workload group can limit the use of compute and memory resources on a single
 
 ## Workload group usage
 
-1. Enable the experimental_enable_workload_group configuration, set in fe.conf to
+1. Manually create a Workload Group named 'normal', which cannot be deleted. You can also restart FE after set FE config ```experimental_enable_workload_group=true``` to automatically create this group.
+```
+create workload group if not exists normal
+properties (
+    "cpu_share"="10",
+    "memory_limit"="30%",
+    "enable_memory_overcommit"="true"
+);
+```
+
+2. Enable the experimental_enable_workload_group configuration, set in fe.conf to
 ```
 experimental_enable_workload_group=true
-```
-The system will automatically create a default workload group named ``normal`` after this configuration is enabled. 
+``` 
 
-2. To create a workload group:
+3. To create a workload group:
 ```
 create workload group if not exists g1
 properties (
@@ -56,12 +65,12 @@ properties (
 For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP.md), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP.md); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP.md); to view the workload group, refer to: [WORKLOAD_GROUPS()](../../sql-manual/sql-functions/table-functions/workload-group.md) and [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md).
 
 
-3. turn on the pipeline execution engine, the workload group cpu isolation is based on the implementation of the pipeline execution engine, so you need to turn on the session variable:
+4. turn on the pipeline execution engine, the workload group cpu isolation is based on the implementation of the pipeline execution engine, so you need to turn on the session variable:
 ```
 set experimental_enable_pipeline_engine = true.
 ```
 
-4. Bind the workload group.
+5. Bind the workload group.
 * Bind the user to the workload group by default by setting the user property to ``normal``.
 ```
 set property 'default_workload_group' = 'g1'.
@@ -75,7 +84,7 @@ session variable `workload_group` takes precedence over user property `default_w
 
 If you are a non-admin user, you need to execute [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md) to check if the current user can see the workload group, if not, the workload group may not exist or the current user does not have permission to execute the query. If you cannot see the workload group, the workload group may not exist or the current user does not have privileges. To authorize the workload group, refer to: [grant statement](../../sql-manual/sql-reference/Account-Management-Statements/GRANT.md).
 
-5. Execute the query, which will be associated with the g1 workload group.
+6. Execute the query, which will be associated with the g1 workload group.
 
 ### Query queue Function
 ```

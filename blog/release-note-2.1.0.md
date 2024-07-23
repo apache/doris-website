@@ -1,7 +1,7 @@
 ---
 {
     'title': 'Another big leap: Apache Doris 2.1.0 is released',
-    'summary': 'We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.',
+    'description': 'We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback.',
     'date': '2024-03-12',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
@@ -40,7 +40,7 @@ Dear Apache Doris community, we are thrilled to announce the advent of Apache Do
 
 - **Better workload management**: optimizations of the Workload Group mechanism for higher performance stability and the display of SQL resource consumption in the runtime.
 
-We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback. We will keep aiming for the stars with our agile release planning, and we appreciate your feedback in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ). 
+We appreciate the 237 contributors who made nearly 6000 commits in total to the Apache Doris project, and the nearly 100 enterprise users who provided valuable feedback. We will keep aiming for the stars with our agile release planning, and we appreciate your feedback in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2kl08hzc0-SPJe4VWmL_qzrFd2u2XYQA). 
 
 
 **Download from GitHub**: https://github.com/apache/doris/releases
@@ -109,7 +109,7 @@ For a proof of concept, we have simulated unreasonable bucket number settings. F
 
 
 :::note
-See doc: https://doris.apache.org/docs/query-acceleration/pipeline-x-execution-engine/
+See the doc: https://doris.apache.org/docs/query/pipeline/pipeline-x-execution-engine
 :::
 
 
@@ -192,7 +192,7 @@ As a typical "trade disk space for time" strategy, materialized views pre-comput
 
 Previous versions of Doris offer strong consistency for single-table materialized views, ensuring atomicity between the base table and the materialized view table. They also support smart routing for query statements on materialized views, allowing for efficient query execution.
 
-**What's more exciting is that, in V2.1, we have introduced materialized views with multiple tables (also known as[asynchronous materialized view](https://doris.apache.org/docs/query-acceleration/async-materialized-view/)).** As the name implies, you can build a materialized view across tables. It can be based on full data or incremental data, and it can be refreshed manually or periodically. For multi-table joins or large data scale scenarios, the optimizer transparently rewrites queries based on the cost model and automatically searches for the right materialized view for **optimal query performance**. You can build asynchronous materialized views for external tables, and you can perform queries on these views directly. In other words, **this can be a game changer for** **data warehouse** **layering, data modeling, job scheduling, and data processing**.
+**What's more exciting is that, in V2.1, we have introduced materialized views with multiple tables (also known as[asynchronous materialized view](https://doris.apache.org/docs/query/view-materialized-view/async-materialized-view)).** As the name implies, you can build a materialized view across tables. It can be based on full data or incremental data, and it can be refreshed manually or periodically. For multi-table joins or large data scale scenarios, the optimizer transparently rewrites queries based on the cost model and automatically searches for the right materialized view for **optimal query performance**. You can build asynchronous materialized views for external tables, and you can perform queries on these views directly. In other words, **this can be a game changer for** **data warehouse** **layering, data modeling, job scheduling, and data processing**.
 
 Now let's get started: 
 
@@ -336,14 +336,7 @@ CREATE TABLE `demo`.`records_tbl2` (
     `phone` varchar(16) NOT NULL COMMENT "",
     `mktsegment` varchar(11) NOT NULL COMMENT "",
     `unique_value` BIGINT NOT NULL AUTO_INCREMENT
-) DUPLICATE KEY (`key`, `name`)CREATE TABLE ipv4_test (
-  `id` int,
-  `ip_v4` ipv4
-) ENGINE=OLAP
-DISTRIBUTED BY HASH(`id`) BUCKETS 4
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
-);
+) DUPLICATE KEY (`key`, `name`)
 DISTRIBUTED BY HASH(`key`) BUCKETS 10
 PROPERTIES (
     "replication_num" = "3"
@@ -372,7 +365,7 @@ order by unique_value limit 100;
 ```
 
 :::note
-See doc: https://doris.apache.org/docs/advanced/auto-increment/
+See doc: https://doris.apache.org/docs/table-design/auto-increment
 :::
 
 ### AUTO PARTITION
@@ -466,7 +459,7 @@ Benchmark tests on Group Commit (`async_mode`) with JDBC ingestion and the Strea
   - At a concurrency level of 10, with each writing involving less than 10MB, enabling Group Commit increases the writing speed by 45% and the writing throughput by 79%.
 
 :::note
-See doc and full test results: https://doris.apache.org/docs/data-operate/import/import-way/group-commit-manual/#performance
+See doc and full test results: https://doris.apache.org/docs/data-operate/import/group-commit-manual
 :::
 
 ## Semi-structured data analysis
@@ -534,7 +527,7 @@ In terms of query performance, **the Variant type enables 8 times higher query s
 :::
 
 :::note
-See doc: https://doris.apache.org/docs/sql-manual/sql-reference/Data-Types/VARIANT/
+See doc: https://doris.apache.org/docs/sql-manual/sql-types/Data-Types/VARIANT
 :::
 
 ### IP types
@@ -548,7 +541,7 @@ IP address is a widely used field in statistical analysis for network traffic mo
 - INET_ATON: It retrieves a string containing an IPv4 address in the format of A.B.C.D, where A, B, C, and D are decimal numbers separated by periods.
 
 :::note
-See doc: https://doris.apache.org/docs/sql-manual/sql-reference/Data-Types/IPV6/
+See [IPV6](https://doris.apache.org/docs/sql-manual/sql-types/Data-Types/IPV6) for more information.
 :::
 
 ### More powerful functions for compound data types
@@ -686,7 +679,7 @@ On the basis of the Workload Group mechanism, which imposes a soft limit on the 
 :::
 
 :::note
-See doc: https://doris.apache.org/docs/admin-manual/workload-group/
+See [Workload Group](https://doris.apache.org/docs/admin-manual/resource-admin/workload-group).
 :::
 
 ### TopSQL
@@ -840,7 +833,7 @@ JOB e_daily
 ```
 
 :::note
-Doris Job Scheduler only supports Insert operations on internal tables currently. See doc: https://doris.apache.org/docs/sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-JOB/
+Doris Job Scheduler only supports Insert operations on internal tables currently. See [CREATE-JOB](https://doris.apache.org/docs/sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB).
 :::
 
 ## Behavior changed
@@ -859,7 +852,7 @@ Doris Job Scheduler only supports Insert operations on internal tables currently
 
   - If you have already installed your own audit log plug-in, you can either continue using it after upgrading to Doris V2.1, or uninstall it and use the one in Doris. Please note that the audit log table will be relocated after switching plug-in.
 
-  - For more details, please see doc: https://doris.apache.org/docs/ecosystem/audit-plugin/
+  - For more details, please see doc: https://doris.apache.org/docs/admin-manual/audit-plugin
 
 
 

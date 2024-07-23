@@ -1,12 +1,10 @@
 ---
 {
     'title': 'Apache Doris 2.1.3 just released',
-    'summary': 'This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.',
+    'description': 'This version has updated several improvements, including writing data back to Hive, materialized view, permission management and bug fixes. It further enhances the performance and stability of the system.',
     'date': '2024-05-21',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "2",
     "image": '/images/2.1.3.jpg'
 }
 ---
@@ -36,7 +34,7 @@ Apache Doris 2.1.3 was officially released on May 21, 2024. This version has upd
 
 
 
-## Feature Enhancements
+## New features
 
 **1. Support writing back data to hive tables via Hive Catalog**
 
@@ -84,7 +82,7 @@ The strcmp function compares two strings and returns their comparison result, si
 
 HyperLogLog (HLL) is an algorithm for cardinality estimation. These two functions allow users to decode HLL data from a Base64-encoded string or encode HLL data as a Base64 string, which is very useful for storing and transmitting HLL data.
 
-## Optimization and Improvements
+## Improvements
 
 **1. Replace SipHash with XXHash to improve shuffle performance**
 
@@ -122,7 +120,7 @@ The Variant data type can store multiple data types. This optimization allows ag
 
 Supporting the decimal256 type in row-based storage extends the system's ability to handle high-precision numerical data.
 
-## Behavioral Changes
+## Behavior changes
 
 **1. Authorization**
 
@@ -144,7 +142,7 @@ Due to issues with correctly recognizing or processing S3 URLs in certain cases,
 
 Since many users use certain keywords as column names or attribute values, the following keywords have been set as non-reserved, allowing users to use them as identifiers.
 
-## Bug Fixes
+## Bug fixes
 
 **1. Fix no data error when reading Hive tables on Tencent Cloud COSN**
 

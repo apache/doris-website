@@ -5,7 +5,14 @@
             "label": "Getting Started",
             "items": [
                 "get-starting/what-is-apache-doris",
-                "get-starting/quick-start"
+                {
+                    "type": "category",
+                    "label": "Quick Start",
+                    "items": [
+                        "get-starting/quick-start/quick-start",
+                        "get-starting/quick-start/doris-hudi"
+                    ]
+                }
             ]
         },
         {
@@ -54,7 +61,8 @@
             "type": "category",
             "label": "Database Connection",
             "items": [
-                "db-connect/database-connect"
+                "db-connect/database-connect",
+                "db-connect/arrow-flight-sql-connect"
             ]
         },
         {
@@ -82,10 +90,9 @@
                     "items": [
                         "table-design/index/index-overview",
                         "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
                         "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index",
-                        "table-design/index/bitmap-index",
-                        "table-design/index/inverted-index"
+                        "table-design/index/ngram-bloomfilter-index"
                     ]
                 },
                 "table-design/auto-increment",
@@ -106,7 +113,6 @@
                         "data-operate/import/routine-load-manual",
                         "data-operate/import/insert-into-manual",
                         "data-operate/import/mysql-load-manual",
-                        "data-operate/import/transaction-load-manual",
                         "data-operate/import/load-json-format",
                         "data-operate/import/migrate-data-from-other-olap",
                         "data-operate/import/group-commit-manual",
@@ -142,11 +148,20 @@
                     "type": "category",
                     "label": "Exporting Data",
                     "items": [
+                        "data-operate/export/export-overview",
                         "data-operate/export/export-manual",
                         "data-operate/export/outfile",
                         "data-operate/export/export-with-mysql-dump"
                     ]
-                }
+                },
+                {
+                    "type": "category",
+                    "label": "Job Scheduler",
+                    "items": [
+                        "data-operate/scheduler/job-scheduler"
+                    ]
+                },
+                "data-operate/transaction"
             ]
         },
         {
@@ -173,7 +188,6 @@
                     "items": [
                         "query/query-variables/variables",
                         "query/query-variables/sql-mode",
-                        "query/query-variables/time-zone",
                         "query/query-variables/user-defined-variables"
                     ]
                 },
@@ -213,7 +227,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Join Queries",
+                    "label": "Join Optimization",
                     "items": [
                         "query/join-optimization/doris-join-optimization",
                         "query/join-optimization/bucket-shuffle-join",
@@ -224,7 +238,7 @@
                 },
                 {
                     "type": "category",
-                    "label": "Duplicating Query Results",
+                    "label": "Distincting Counts",
                     "items": [
                         "query/duplicate/orthogonal-bitmap-manual",
                         "query/duplicate/using-hll"
@@ -245,25 +259,25 @@
                     "type": "category",
                     "label": "User Defined Functions",
                     "items": [
-                        "query/udf/java-user-defined-function",
-                        "query/udf/remote-user-defined-function"
+                        "query/udf/java-user-defined-function"
                     ]
                 }
             ]
         },
         {
             "type": "category",
-            "label": "Lakehouse",
+            "label": "Data Lakehouse",
             "items": [
                 "lakehouse/lakehouse-overview",
                 {
                     "type": "category",
-                    "label": "Analyzing Data Lake",
+                    "label": "Querying Data Lakes",
                     "items": [
                         "lakehouse/datalake-analytics/hive",
                         "lakehouse/datalake-analytics/hudi",
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
+                        "lakehouse/datalake-analytics/lakesoul",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"
@@ -271,17 +285,25 @@
                 },
                 {
                     "type": "category",
-                    "label": "Building Data Lake",
+                    "label": "Building Data Lakes",
                     "items": [
                         "lakehouse/datalake-building/hive-build"
                     ]
                 },
                 {
                     "type": "category",
-                    "label": "Analyzing Database",
+                    "label": "Querying Databases",
                     "items": [
-                        "lakehouse/database/es",
                         "lakehouse/database/jdbc",
+                        "lakehouse/database/mysql",
+                        "lakehouse/database/postgresql",
+                        "lakehouse/database/oracle",
+                        "lakehouse/database/sqlserver",
+                        "lakehouse/database/ibm-db2",
+                        "lakehouse/database/clickhouse",
+                        "lakehouse/database/sap-hana",
+                        "lakehouse/database/oceanbase",
+                        "lakehouse/database/es",
                         "lakehouse/database/max-compute"
                     ]
                 },
@@ -290,6 +312,19 @@
                 "lakehouse/external-statistics",
                 "lakehouse/cloud-auth",
                 "lakehouse/sql-dialect"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Compute-Storage Decoupled",
+            "items": [
+                "compute-storage-decoupled/overview",
+                "compute-storage-decoupled/before-deployment",
+                "compute-storage-decoupled/compilation-and-deployment",
+                "compute-storage-decoupled/creating-cluster",
+                "compute-storage-decoupled/managing-compute-cluster",
+                "compute-storage-decoupled/file-cache",
+                "compute-storage-decoupled/meta-service-api"
             ]
         },
         {
@@ -303,6 +338,7 @@
                         "admin-manual/cluster-management/upgrade",
                         "admin-manual/cluster-management/elastic-expansion",
                         "admin-manual/cluster-management/load-balancing",
+                        "admin-manual/cluster-management/time-zone",
                         "admin-manual/cluster-management/fqdn"
                     ]
                 },
@@ -312,9 +348,9 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/data-recovery",
                         "admin-manual/data-admin/delete-recover",
-                        "admin-manual/data-admin/ccr"
+                        "admin-manual/data-admin/ccr",
+                        "admin-manual/data-admin/repairing-data"
                     ]
                 },
                 {
@@ -358,6 +394,14 @@
                 },
                 {
                     "type": "category",
+                    "label": "Log Management",
+                    "items": [
+                        "admin-manual/log-management/fe-log",
+                        "admin-manual/log-management/be-log"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Maintenance",
                     "items": [
                         {
@@ -375,8 +419,7 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start",
-                        "admin-manual/maint-monitor/debug-log"
+                        "admin-manual/maint-monitor/automatic-service-start"
                     ]
                 },
                 {
@@ -488,6 +531,13 @@
         },
         {
             "type": "category",
+            "label": "Practical Guide",
+            "items": [
+                "practical-guide/log-storage-analysis"
+            ]
+        },
+        {
+            "type": "category",
             "label": "Ecosystem",
             "items": [
                 "ecosystem/spark-doris-connector",
@@ -511,7 +561,11 @@
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip",
-                        "ecosystem/bi/powerbi"
+                        "ecosystem/bi/finebi",
+                        "ecosystem/bi/powerbi",
+                        "ecosystem/bi/tableau",
+                        "ecosystem/bi/quicksight",
+                        "ecosystem/bi/quickbi"
                     ]
                 }
             ]
@@ -541,6 +595,8 @@
                                 "sql-manual/sql-functions/array-functions/array-sort",
                                 "sql-manual/sql-functions/array-functions/array-reverse-sort",
                                 "sql-manual/sql-functions/array-functions/array-sortby",
+                                "sql-manual/sql-functions/array-functions/array-split",
+                                "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
                                 "sql-manual/sql-functions/array-functions/array-except",
@@ -626,7 +682,19 @@
                                 "sql-manual/sql-functions/date-time-functions/date-format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
                                 "sql-manual/sql-functions/date-time-functions/date_floor",
+                                "sql-manual/sql-functions/date-time-functions/second_floor",
+                                "sql-manual/sql-functions/date-time-functions/minute_floor",
+                                "sql-manual/sql-functions/date-time-functions/hour_floor",
+                                "sql-manual/sql-functions/date-time-functions/day_floor",
+                                "sql-manual/sql-functions/date-time-functions/month_floor",
+                                "sql-manual/sql-functions/date-time-functions/year_floor",
                                 "sql-manual/sql-functions/date-time-functions/date_ceil",
+                                "sql-manual/sql-functions/date-time-functions/second_ceil",
+                                "sql-manual/sql-functions/date-time-functions/minute_ceil",
+                                "sql-manual/sql-functions/date-time-functions/hour_ceil",
+                                "sql-manual/sql-functions/date-time-functions/day_ceil",
+                                "sql-manual/sql-functions/date-time-functions/month_ceil",
+                                "sql-manual/sql-functions/date-time-functions/year_ceil",
                                 "sql-manual/sql-functions/date-time-functions/microsecond",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds-diff",
@@ -716,9 +784,11 @@
                                 "sql-manual/sql-functions/string-functions/elt",
                                 "sql-manual/sql-functions/string-functions/instr",
                                 "sql-manual/sql-functions/string-functions/locate",
+                                "sql-manual/sql-functions/string-functions/overlay",
                                 "sql-manual/sql-functions/string-functions/field",
                                 "sql-manual/sql-functions/string-functions/find-in-set",
                                 "sql-manual/sql-functions/string-functions/replace",
+                                "sql-manual/sql-functions/string-functions/replace_empty",
                                 "sql-manual/sql-functions/string-functions/strleft",
                                 "sql-manual/sql-functions/string-functions/strright",
                                 "sql-manual/sql-functions/string-functions/split-part",
@@ -818,6 +888,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
+                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
@@ -925,7 +996,8 @@
                                 "sql-manual/sql-functions/json-functions/get-json-string",
                                 "sql-manual/sql-functions/json-functions/json-insert",
                                 "sql-manual/sql-functions/json-functions/json-replace",
-                                "sql-manual/sql-functions/json-functions/json-set"
+                                "sql-manual/sql-functions/json-functions/json-set",
+                                "sql-manual/sql-functions/json-functions/json-keys"
                             ]
                         },
                         {
@@ -1065,15 +1137,12 @@
                             "label": "IP Functions",
                             "items": [
                                 "sql-manual/sql-functions/ip-functions/ipv4-num-to-string",
-                                "sql-manual/sql-functions/ip-functions/inet-ntoa",
+                                "sql-manual/sql-functions/ip-functions/ipv4-to-ipv6",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num",
-                                "sql-manual/sql-functions/ip-functions/inet-aton",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num-or-default",
                                 "sql-manual/sql-functions/ip-functions/ipv4-string-to-num-or-null",
                                 "sql-manual/sql-functions/ip-functions/ipv6-num-to-string",
-                                "sql-manual/sql-functions/ip-functions/inet6-ntoa",
                                 "sql-manual/sql-functions/ip-functions/ipv6-string-to-num",
-                                "sql-manual/sql-functions/ip-functions/inet6-aton",
                                 "sql-manual/sql-functions/ip-functions/ipv6-string-to-num-or-default",
                                 "sql-manual/sql-functions/ip-functions/ipv6-string-to-num-or-null",
                                 "sql-manual/sql-functions/ip-functions/is-ipv4-compat",
@@ -1081,6 +1150,7 @@
                                 "sql-manual/sql-functions/ip-functions/ipv4-cidr-to-range",
                                 "sql-manual/sql-functions/ip-functions/ipv6-cidr-to-range",
                                 "sql-manual/sql-functions/ip-functions/is-ip-address-in-range",
+                                "sql-manual/sql-functions/ip-functions/cut-ipv6",
                                 "sql-manual/sql-functions/ip-functions/is-ipv4-string",
                                 "sql-manual/sql-functions/ip-functions/is-ipv6-string",
                                 "sql-manual/sql-functions/ip-functions/to-ipv4",
@@ -1128,17 +1198,17 @@
                                 "sql-manual/sql-types/Data-Types/CHAR",
                                 "sql-manual/sql-types/Data-Types/VARCHAR",
                                 "sql-manual/sql-types/Data-Types/STRING",
-                                "sql-manual/sql-types/Data-Types/HLL",
-                                "sql-manual/sql-types/Data-Types/BITMAP",
-                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/IPV4",
+                                "sql-manual/sql-types/Data-Types/IPV6",
                                 "sql-manual/sql-types/Data-Types/ARRAY",
                                 "sql-manual/sql-types/Data-Types/MAP",
                                 "sql-manual/sql-types/Data-Types/STRUCT",
                                 "sql-manual/sql-types/Data-Types/JSON",
-                                "sql-manual/sql-types/Data-Types/AGG_STATE",
                                 "sql-manual/sql-types/Data-Types/VARIANT",
-                                "sql-manual/sql-types/Data-Types/IPV4",
-                                "sql-manual/sql-types/Data-Types/IPV6"
+                                "sql-manual/sql-types/Data-Types/HLL",
+                                "sql-manual/sql-types/Data-Types/BITMAP",
+                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
+                                "sql-manual/sql-types/Data-Types/AGG_STATE"
                             ]
                         }
                     ]
@@ -1221,6 +1291,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-CATALOG",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-DATABASE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AND-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-INDEX",
@@ -1233,6 +1304,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-STORAGE-VAULT",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB"
                                     ]
@@ -1250,6 +1322,7 @@
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-REPLACE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-COMMENT",
+                                        "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-AND-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/CANCEL-ALTER-TABLE",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-VIEW",
                                         "sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-STORAGE-POLICY",
@@ -1353,6 +1426,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-BROKER",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-TABLE",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CHARSET",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-DATABASE",
@@ -1462,20 +1536,6 @@
         },
         {
             "type": "category",
-            "label": "Separation of Storage and Compute",
-            "items": [
-                "separation-of-storage-and-compute/overview",
-                "separation-of-storage-and-compute/deployment",
-                "separation-of-storage-and-compute/compute-cluster",
-                "separation-of-storage-and-compute/file-cache",
-                "separation-of-storage-and-compute/storage-vault",
-                "separation-of-storage-and-compute/meta-service-resource-http-api",
-                "separation-of-storage-and-compute/install-fdb",
-                "separation-of-storage-and-compute/use-case"
-            ]
-        },
-        {
-            "type": "category",
             "label": "Benchmark",
             "items": [
                 "benchmark/ssb",
@@ -1497,10 +1557,14 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.4",
                 "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",
                 "releasenotes/release-2.1.1",
                 "releasenotes/release-2.1.0",
+                "releasenotes/release-2.0.13",
+                "releasenotes/release-2.0.12",
+                "releasenotes/release-2.0.11",
                 "releasenotes/release-2.0.10",
                 "releasenotes/release-2.0.9",
                 "releasenotes/release-2.0.8",

@@ -30,8 +30,8 @@ export enum ToolsEnum {
 
 export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
 export enum VersionEnum {
-    Latest = '2.1.3',
-    Prev = '2.0.10',
+    Latest = '2.1.4',
+    Prev = '2.0.13',
     // Earlier = '1.1.5',
 }
 export enum DownloadTypeEnum {
@@ -40,70 +40,70 @@ export enum DownloadTypeEnum {
 }
 export const DORIS_VERSIONS: Option[] = [
     {
-        label: '2.1.3',
-        value: '2.1.3',
+        label: '2.1.4',
+        value: '2.1.4',
         majorVersion: '2.1',
         children: [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                gz: `${ORIGIN}apache-doris-2.1.3-bin-x64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.1.3-bin-x64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.1.3-bin-x64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.1/2.1.3/',
-                version: '2.1.3-rc09',
+                gz: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
+                version: '2.1.4',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                gz: `${ORIGIN}apache-doris-2.1.3-bin-x64-noavx2.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.1.3-bin-x64-noavx2.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.1.3-bin-x64-noavx2.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.1/2.1.3/',
-                version: '2.1.3-rc09',
+                gz: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
+                version: '2.1.4',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                gz: `${ORIGIN}apache-doris-2.1.3-bin-arm64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.1.3-bin-arm64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.1.3-bin-arm64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.1/2.1.3/',
-                version: '2.1.3-rc09',
+                gz: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
+                version: '2.1.4',
             },
         ],
     },
     {
-        label: '2.0.10',
-        value: '2.0.10',
+        label: '2.0.13',
+        value: '2.0.13',
         majorVersion: '2.0',
         children: [
             {
                 label: CPUEnum.X64,
                 value: CPUEnum.X64,
-                gz: `${ORIGIN}apache-doris-2.0.10-bin-x64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.0.10-bin-x64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.0.10-bin-x64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.0/2.0.10/',
-                version: '2.0.10',
+                gz: `${ORIGIN}apache-doris-2.0.13-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.13-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.13-bin-x64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.13/',
+                version: '2.0.13',
             },
             {
                 label: CPUEnum.X64NoAvx2,
                 value: CPUEnum.X64NoAvx2,
-                gz: `${ORIGIN}apache-doris-2.0.10-bin-x64-noavx2.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.0.10-bin-x64-noavx2.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.0.10-bin-x64-noavx2.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.0/2.0.10/',
-                version: '2.0.10',
+                gz: `${ORIGIN}apache-doris-2.0.13-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.13-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.13-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.13/',
+                version: '2.0.13',
             },
             {
                 label: CPUEnum.ARM64,
                 value: CPUEnum.ARM64,
-                gz: `${ORIGIN}apache-doris-2.0.10-bin-arm64.tar.gz`,
-                asc: `${ORIGIN}apache-doris-2.0.10-bin-arm64.tar.gz.asc`,
-                sha512: `${ORIGIN}apache-doris-2.0.10-bin-arm64.tar.gz.sha512`,
-                source: 'https://downloads.apache.org/doris/2.0/2.0.10/',
-                version: '2.0.10',
+                gz: `${ORIGIN}apache-doris-2.0.13-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-2.0.13-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-2.0.13-bin-arm64.tar.gz.sha512`,
+                source: 'https://downloads.apache.org/doris/2.0/2.0.13/',
+                version: '2.0.13',
             },
         ],
     },
@@ -125,6 +125,40 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         label: '2.1',
         value: '2.1',
         children: [
+            {
+                label: '2.1.4',
+                value: '2.1.4',
+                majorVersion: '2.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
+                        version: '2.1.4',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.1.4-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
+                        version: '2.1.4',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.1.4-bin-arm64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.1/2.1.4/',
+                        version: '2.1.4',
+                    },
+                ],
+            },
             {
                 label: '2.1.3',
                 value: '2.1.3',
@@ -267,6 +301,108 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         label: '2.0',
         value: '2.0',
         children: [
+            {
+                label: '2.0.13',
+                value: '2.0.13',
+                majorVersion: '2.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-2.0.13-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.13-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.13-bin-x64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.13/',
+                        version: '2.0.13',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-2.0.13-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.13-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.13-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.13/',
+                        version: '2.0.13',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-2.0.13-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.13-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.13-bin-arm64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.13/',
+                        version: '2.0.13',
+                    },
+                ],
+            },
+            {
+                label: '2.0.12',
+                value: '2.0.12',
+                majorVersion: '2.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-2.0.12-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.12-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.12-bin-x64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.12/',
+                        version: '2.0.12',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-2.0.12-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.12-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.12-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.12/',
+                        version: '2.0.12',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-2.0.12-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.12-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.12-bin-arm64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.12/',
+                        version: '2.0.12',
+                    },
+                ],
+            },
+            {
+                label: '2.0.11',
+                value: '2.0.11',
+                majorVersion: '2.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-2.0.11-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.11-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.11-bin-x64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.11/',
+                        version: '2.0.11',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-2.0.11-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.11-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.11-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.11/',
+                        version: '2.0.11',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-2.0.11-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-2.0.11-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-2.0.11-bin-arm64.tar.gz.sha512`,
+                        source: 'https://downloads.apache.org/doris/2.0/2.0.11/',
+                        version: '2.0.11',
+                    },
+                ],
+            },
             {
                 label: '2.0.10',
                 value: '2.0.10',
@@ -983,6 +1119,8 @@ export const TOOL_VERSIONS = [
                 label: '1.0.0',
                 value: '1.0.0',
                 gz: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/kafka-connector/1.0.0-rc01/apache-doris-kafka-connector-1.0.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/1.0.0/doris-kafka-connector-1.0.0.jar'
             },
         ],
     },
@@ -994,36 +1132,50 @@ export const TOOL_VERSIONS = [
                 label: '1.6.1',
                 value: '1.6.1',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.6.1/apache-doris-flink-connector-1.6.1-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.6.1/apache-doris-flink-connector-1.6.1-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/1.6.1/flink-doris-connector-1.19-1.6.1.jar'
             },
             {
                 label: '1.5.2',
                 value: '1.5.2',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.5.2/apache-doris-flink-connector-1.5.2-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.5.2/apache-doris-flink-connector-1.5.2-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/1.5.2/flink-doris-connector-1.18-1.5.2.jar'
             },
             {
                 label: '1.4.0',
                 value: '1.4.0',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.4.0/apache-doris-flink-connector-1.4.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.4.0/apache-doris-flink-connector-1.4.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/1.4.0/flink-doris-connector-1.17-1.4.0.jar'
             },
             {
                 label: '1.3.0',
                 value: '1.3.0',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.3.0/apache-doris-flink-connector-1.16-1.3.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.3.0/apache-doris-flink-connector-1.16-1.3.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/1.3.0/flink-doris-connector-1.16-1.3.0.jar'
             },
             {
                 label: '1.2.1',
                 value: '1.2.1',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.2.1/apache-doris-flink-connector-1.15-1.2.1-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.2.1/apache-doris-flink-connector-1.15-1.2.1-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/1.2.1/flink-doris-connector-1.15-1.2.1.jar'
             },
             {
                 label: '1.1.1',
                 value: '1.1.1',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.11-1.1.1-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.1.1/apache-doris-flink-connector-1.14_2.11-1.1.1-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.12/1.1.1/flink-doris-connector-1.14_2.12-1.1.1.jar'
             },
             {
                 label: '1.0.3',
                 value: '1.0.3',
                 gz: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.11-1.0.3-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/flink-connector/1.0.3/apache-doris-flink-connector-1.12_2.11-1.0.3-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.14_2.12/1.0.3/flink-doris-connector-1.14_2.12-1.0.3.jar'
             },
         ],
     },
@@ -1035,26 +1187,36 @@ export const TOOL_VERSIONS = [
                 label: '1.3.2',
                 value: '1.3.2',
                 gz: 'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.4_2.12/1.3.2/spark-doris-connector-3.4_2.12-1.3.2.jar'
             },
             {
                 label: '1.2.0',
                 value: '1.2.0',
                 gz: 'https://downloads.apache.org/doris/spark-connector/1.2.0/apache-doris-spark-connector-1.2.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/spark-connector/1.2.0/apache-doris-spark-connector-1.2.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.2.0/spark-doris-connector-3.2_2.12-1.2.0.jar'
             },
             {
                 label: '1.1.0',
                 value: '3.2_2.12-1.1.0',
                 gz: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.2_2.12-1.1.0-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/spark-connector/1.1.0/apache-doris-spark-connector-3.2_2.12-1.1.0-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.2_2.12/1.1.0/spark-doris-connector-3.2_2.12-1.1.0.jar'
             },
             {
                 label: '1.0.1 (For Spark 3.1)',
                 value: '3.1_2.12-1.0.1',
                 gz: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-3.1_2.12-1.0.1-incubating-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-3.1_2.12-1.0.1-incubating-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-3.1_2.12/1.0.1/spark-doris-connector-3.1_2.12-1.0.1.jar'
             },
             {
                 label: '1.0.1 (For Spark 2.x)',
                 value: '2.3_2.11-1.0.1',
                 gz: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-2.3_2.11-1.0.1-incubating-src.tar.gz',
+                Source: 'https://downloads.apache.org/doris/spark-connector/1.0.1/apache-doris-spark-connector-2.3_2.11-1.0.1-incubating-src.tar.gz',
+                Binary: 'https://repository.apache.org/content/repositories/releases//org/apache/doris/spark-doris-connector-2.3_2.11/1.0.1/spark-doris-connector-2.3_2.11-1.0.1.jar'
             },
         ],
     },
@@ -1070,11 +1232,13 @@ export const TOOL_VERSIONS = [
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
                         gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz'
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
                         gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
+                        Binary: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz'
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
