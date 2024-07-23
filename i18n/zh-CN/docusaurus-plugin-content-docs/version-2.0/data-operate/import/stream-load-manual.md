@@ -457,7 +457,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 设置导入最大容错率
 
-Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将次参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。关于容忍率的一些计算方式，可以参阅 [数据转换](../../data-operate/import/load-data-convert) 文档。
+Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通过 `max_filter_ratio` 设置。默认为 0，即表示当有一条错误数据时，整个导入任务将会失败。如果用户希望忽略部分有问题的数据行，可以将此参数设置为 0~1 之间的数值，Doris 会自动跳过哪些数据格式不正确的行。关于容忍率的一些计算方式，可以参阅 [数据转换](../../data-operate/import/load-data-convert) 文档。
 
 通过以下命令可以指定 max_filter_ratio 容忍度为 0.4 创建 stream load 导入任务：
 
