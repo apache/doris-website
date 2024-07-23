@@ -24,10 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-:::tip
-This is an experimental feature.
-:::
-
 ## Instructions for use
 
 1. Currently, LakeSoul is supported as a source for read operations. LakeSoul's primary key table, non-primary key table, and MOR reading are all supported.

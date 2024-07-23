@@ -194,7 +194,7 @@ You can find FE configuration fields in `fe/conf/fe.conf`. Refer to the followin
 | Configuration fields to be optimized                         | Description                                                  |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
 | `max_running_txn_num_per_db = 10000`                         | Increase the parameter value to adapt to high-concurrency import transactions. |
-| `streaming_label_keep_max_second = 3600``label_keep_max_second = 7200` | Increase the retention time to handle high-frequency import transactions with high memory usage. |
+| `streaming_lable_keep_max_second = 3600``label_keep_max_second = 7200` | Increase the retention time to handle high-frequency import transactions with high memory usage. |
 | `enable_round_robin_create_tablet = true`                    | When creating Tablets, use a Round Robin strategy to distribute evenly. |
 | `tablet_rebalancer_type = partition`                         | When balancing Tablets, use a strategy to evenly distribute within each partition. |
 | `enable_single_replica_load = true`                          | Enable single-replica import, where multiple replicas only need to build an index once to reduce CPU consumption. |

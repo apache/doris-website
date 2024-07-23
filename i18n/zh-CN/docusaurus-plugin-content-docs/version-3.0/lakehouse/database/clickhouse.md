@@ -41,7 +41,7 @@ Doris JDBC Catalog 支持通过标准 JDBC 接口连接 ClickHouse 数据库。�
 ```sql
 CREATE CATALOG clickhouse PROPERTIES (
     "type"="jdbc",
-    "user"="default",
+    "user"="default"
     "password"="password",
     "jdbc_url" = "jdbc:clickhouse://example.net:8123/",
     "driver_url" = "clickhouse-jdbc-0.4.6-all.jar",

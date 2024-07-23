@@ -30,13 +30,12 @@ under the License.
 
 `VARCHAR regexp_replace(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
 
-对字符串 str 进行正则匹配, 将命中 pattern 的部分使用 repl 来进行替换
 
-字符集匹配需要使用 Unicode 标准字符类型。例如，匹配中文请使用 `\p{Han}`。
+对字符串 str 进行正则匹配, 将命中 pattern 的部分使用 repl 来进行替换
 
 ### example
 
-```sql
+```
 mysql> SELECT regexp_replace('a b c', " ", "-");
 +-----------------------------------+
 | regexp_replace('a b c', ' ', '-') |
@@ -50,14 +49,6 @@ mysql> SELECT regexp_replace('a b c','(b)','<\\1>');
 +----------------------------------------+
 | a <b> c                                |
 +----------------------------------------+
-
-mysql> select regexp_replace('这是一段中文This is a passage in English 1234567', '\\p{Han}+', '123');
-+---------------------------------------------------------------------------------------------+
-| regexp_replace('这是一段中文This is a passage in English 1234567', '\p{Han}+', '123')       |
-+---------------------------------------------------------------------------------------------+
-| 123This is a passage in English 1234567                                                     |
-+---------------------------------------------------------------------------------------------+
 ```
-
 ### keywords
     REGEXP_REPLACE,REGEXP,REPLACE

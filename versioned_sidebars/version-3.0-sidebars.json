@@ -10,8 +10,7 @@
                     "label": "Quick Start",
                     "items": [
                         "get-starting/quick-start/quick-start",
-                        "get-starting/quick-start/doris-hudi",
-                        "get-starting/quick-start/doris-paimon"
+                        "get-starting/quick-start/doris-hudi"
                     ]
                 }
             ]
@@ -279,9 +278,6 @@
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
                         "lakehouse/datalake-analytics/lakesoul",
-                        "lakehouse/datalake-analytics/bigquery",
-                        "lakehouse/datalake-analytics/deltalake",
-                        "lakehouse/datalake-analytics/kudu",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"
@@ -352,8 +348,8 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
+                        "admin-manual/data-admin/delete-recover",
                         "admin-manual/data-admin/ccr",
-                        "admin-manual/data-admin/recyclebin",
                         "admin-manual/data-admin/repairing-data"
                     ]
                 },
@@ -841,7 +837,8 @@
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract-all",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-replace",
-                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one"
+                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one",
+                                        "sql-manual/sql-functions/string-functions/regexp/not-regexp"
                                     ]
                                 }
                             ]
@@ -1554,6 +1551,13 @@
                 "faq/data-faq",
                 "faq/sql-faq",
                 "faq/lakehouse-faq"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Release notes",
+            "items": [
+                "releasenotes/release-3.0.0"
             ]
         }
     ]
