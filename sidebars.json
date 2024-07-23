@@ -280,7 +280,9 @@
                         "lakehouse/datalake-analytics/lakesoul",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
-                        "lakehouse/datalake-analytics/tpcds"
+                        "lakehouse/datalake-analytics/tpcds",
+                        "lakehouse/datalake-analytics/bigquery",
+                        "lakehouse/datalake-analytics/deltalake"
                     ]
                 },
                 {
