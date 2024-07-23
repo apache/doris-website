@@ -67,11 +67,11 @@ Doris支持的导入方式包括Stream Load、Broker Load、Insert Into、Routin
 
 ### 数据源
 
-| 数据源                                         | 支持的导入方案                                         |
+| 数据源                                         | 支持的导入方式                                        |
 | ---------------------------------------------- | ------------------------------------------------------ |
 | 本地数据                                       | <p>Stream Load</p> <p>StreamLoader</p> <p>MySQL load</p>         |
-| 对象存储                                       | <p>S3 Load</p> <p>INSERT TO SELECT FROM S3 TVF</p>              |
-| HDFS                                           | <p>HDFS Load</p> <p>INSERT TO SELECT FROM HDFS TVF</p>         |
+| 对象存储                                       | <p>Broker Load</p> <p>INSERT TO SELECT FROM S3 TVF</p>              |
+| HDFS                                           | <p>Broker Load</p> <p>INSERT TO SELECT FROM HDFS TVF</p>         |
 | Kafka                                          | <p>Routine Load</p> <p>Kakfa  Doris Connector</p>              |
 | Flink                                          | Flink Doris Connector                                  |
 | Spark                                          | Spark Doris Connector                                  |
@@ -84,11 +84,7 @@ Doris支持的导入方式包括Stream Load、Broker Load、Insert Into、Routin
 
 ### 原子性
 
-Doris 中所有导入任务都是原子性的，即一个导入作业要么全部成功，要么全部失败，不会出现仅部分数据导入成功的情况，并且在同一个导入任务中对多张表的导入也能够保证原子性。对于简单的导入任务，用户无需做额外配置或操作。对于表所附属的物化视图，也同时保证和基表的原子性和一致性。对于以下情形，Doris 为用户提供了更多的事务控制。
-
-1. 如果用户需要将对于同一个目标表的多个 `INSERT INTO` 导入组合成一个事务，可以使用 `BEGIN` 和 `COMMIT` 命令。
-2. 如果用户需要将多个 Stream Load 导入组合成一个事务，可以使用 Stream Load 的两阶段事务提交模式。
-3. Broker Load 多表导入的原子性。
+Doris 中所有导入任务都是原子性的，即一个导入作业要么全部成功，要么全部失败，不会出现仅部分数据导入成功的情况，并且在同一个导入任务中对多张表的导入也能够保证原子性。对于简单的导入任务，用户无需做额外配置或操作。对于表所附属的物化视图，也同时保证和基表的原子性和一致性。
 
 ### 标签机制
 
@@ -96,13 +92,9 @@ Doris 的导入作业都可以设置一个 Label。这个 Label 通常是用户�
 
 Label 是用于保证对应的导入作业，仅能成功导入一次。一个被成功导入的 Label，再次使用时，会被拒绝并报错 `Label already used`。通过这个机制，可以在 Doris 侧做到 `At-Most-Once` 语义。如果结合上游系统的 `At-Least-Once` 语义，则可以实现导入数据的 `Exactly-Once` 语义。
 
-Label 在一个数据库下具有唯一性。Label 的保留期限默认是 3 天。即 3 天后，已完成的 Label 会被自动清理，之后 Label 可以被重复使用。
-
 ### 导入模式
 
 导入模式分为同步导入和异步导入。对于同步导入方式，返回结果即表示导入成功还是失败。而对于异步导入方式，返回成功仅代表作业提交成功，不代表数据导入成功，需要使用对应的命令查看导入作业的运行状态。
-
-支持同步模式的导入方式有 Stream Load 、MySQL Load和 INSERT INTO，支持异步模式的导入方式有 Broker Load、Routine Load和Spark Load。
 
 ### 数据转化
 

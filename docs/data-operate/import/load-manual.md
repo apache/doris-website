@@ -71,8 +71,8 @@ Each import method and ecosystem tool has different use cases and supports diffe
 | Data Source                                         | Supported Import Methods                                         |
 | ---------------------------------------------- | ------------------------------------------------------ |
 | Local data                                       | <p>Stream Load</p> <p>StreamLoader</p> <p>MySQL Load</p>              |
-| Object storage                                       | <p>S3 Load</p> <p>INSERT TO SELECT FROM S3 TVF</p>                |
-| HDFS                                           | <p>HDFS Load</p> <p>INSERT TO SELECT FROM HDFS TVF</p>            |
+| Object storage                                       | <p>Broker Load</p> <p>INSERT TO SELECT FROM S3 TVF</p>                |
+| HDFS                                           | <p>Broker Load</p> <p>INSERT TO SELECT FROM HDFS TVF</p>            |
 | Kafka                                          | <p>Routine Load</p> <p>Kakfa Doris Connector</p>                 |
 | Flink                                          | Flink Doris Connector                                  |
 | Spark                                          | Spark Doris Connector                                  |
@@ -85,11 +85,7 @@ This section mainly introduces some concepts related to import to help users bet
 
 ### Atomicity
 
-All import tasks in Doris are atomic, meaning that a import job either succeeds completely or fails completely. Partially successful data import will not occur within the same import task, and atomicity and consistency between materialized views and base tables are also guaranteed. For simple import tasks, users do not need to perform additional configurations or operations. For materialized views associated with tables, atomicity and consistency with the base table are also guaranteed. For the following scenarios, Doris provides users with more transaction control:
-
-1. If users need to combine multiple `INSERT INTO` imports for the same target table into one transaction, they can use the `BEGIN` and `COMMIT` commands.
-2. If users need to combine multiple Stream Load imports into one transaction, they can use the two-phase transaction commit mode of Stream Load.
-3. Atomicity of multi-table import in Broker Load.
+All import tasks in Doris are atomic, meaning that a import job either succeeds completely or fails completely. Partially successful data import will not occur within the same import task, and atomicity and consistency between materialized views and base tables are also guaranteed. For simple import tasks, users do not need to perform additional configurations or operations. For materialized views associated with tables, atomicity and consistency with the base table are also guaranteed.
 
 ### Label Mechanism
 
@@ -97,13 +93,9 @@ Import jobs in Doris can be assigned a label. This label is usually a user-defin
 
 The label is used to ensure that the corresponding import job can only be successfully imported once. If a label that has been successfully imported is used again, it will be rejected and an error message `Label already used` will be reported. With this mechanism, Doris can achieve `At-Most-Once` semantics on the Doris side. If combined with the `At-Least-Once` semantics of the upstream system, it is possible to achieve `Exactly-Once` semantics for importing data.
 
-Labels are unique within a database. The default retention period for labels is 3 days. After 3 days, completed labels will be automatically cleaned up, and the labels can be reused afterwards.
-
 ### Import Mode
 
 Import mode can be either synchronous or asynchronous. For synchronous import methods, the result returned indicates whether the import is successful or not. For asynchronous import methods, a successful return only indicates that the job has been submitted successfully, not that the data import is successful. Users need to use the corresponding command to check the running status of the import job.
-
-Synchronous import methods include Stream Load, MySQL Load, and INSERT INTO, while asynchronous import methods include Broker Load, Routine Load, and Spark Load.
 
 ### Data Transformation
 
