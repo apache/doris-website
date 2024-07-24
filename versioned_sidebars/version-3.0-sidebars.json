@@ -278,6 +278,9 @@
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
                         "lakehouse/datalake-analytics/lakesoul",
+                        "lakehouse/datalake-analytics/bigquery",
+                        "lakehouse/datalake-analytics/deltalake",
+                        "lakehouse/datalake-analytics/kudu",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"

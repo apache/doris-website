@@ -1,7 +1,7 @@
 ---
 {
     "title": "Delta Lake Catalog",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,24 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Delta Lake Catalog 通过 [Trino Connector](../../../../docusaurus-plugin-content-docs-community/current/how-to-contribute/trino-connector-developer-guide.md) 兼容框架，使用 Delta Lake Connector 来访问 Delta Lake 表。
+Delta Lake Catalog is compatible with the [Trino Connector](../../../../docusaurus-plugin-content-docs-community/current/how-to-contribute/trino-connector-developer-guide.md), using the Delta Lake Connector to access Delta Lake tables.
 
-> 该功能自 Doris 3.0.1 版本开始支持。
+> This feature is supported starting from Doris version 3.0.1.
 
-:::tip 备注
-这是一个实验功能。
+:::tip Note
+This is an experimental feature.
 :::
 
-## 使用须知
+## Instructions for Use
 
-1. 在使用 Trino Catalog 访问 Delta Lake 表之前，必须先编译 Trino 的 Delta Lake 插件，并将其放在指定目录下。具体操作步骤参考下文。
-2. 当前 Doris 适配 Trino 435 版本的插件，如果使用低于或高于 435 版本的 Trino 插件，可能会出现兼容性问题。
-3. 当前不支持 Delta Lake 的 Time Travel 功能。
-4. 当前不支持查询 Delta Lake 的 history 信息。
+1. Before accessing Delta Lake tables with the Trino Catalog, you must first compile the Trino Delta Lake plugin and place it in the specified directory. Refer to the following steps for specific instructions.
+2. The current Doris is compatible with the Trino 435 version plugin. Using a Trino plugin lower or higher than version 435 may cause compatibility issues.
+3. Time Travel feature of Delta Lake is not supported at the moment.
+4. Querying Delta Lake history information is not supported at the moment.
 
-## 编译 Delta Lake Connector 插件
+## Compiling the Delta Lake Connector Plugin
 
-> 需要 JDK 17 版本。
+> JDK version 17 is required.
 
 ```Plain Text
 $ git clone https://github.com/apache/Doris-thirdparty.git
@@ -51,13 +51,13 @@ $ cd plugin/trino-delta-lake
 $ mvn clean install -DskipTest
 ```
 
-完成编译后，会在 `trino/plugin/trino-delta-lake/target/` 下得到 `trino-delta-lake-435` 目录。
+After compiling, you will find the `trino-delta-lake-435` directory under `trino/plugin/trino-delta-lake/target/`.
 
-也可以直接下载预编译的 [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) 并解压。
+You can also directly download the precompiled [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) and extract it.
 
-## 部署 Delta Lake Connector
+## Deploying the Delta Lake Connector
 
-将 `trino-delta-lake-435/` 目录放到所有 FE 和 BE 部署路径的 `connectors/` 目录下。（如果没有，可以手动创建）。
+Place the `trino-delta-lake-435/` directory in the `connectors/` directory of all FE and BE deployment paths. (If it does not exist, you can create it manually).
 
 ```Plain Text
 ├── bin
@@ -66,9 +66,10 @@ $ mvn clean install -DskipTest
 │   ├── trino-delta-lake-435
 ...
 ```
-部署完成后，建议重启 FE、BE 节点以确保 Connector 可以被正确加载。
 
-## 创建 Delta Lake Catalog
+After deployment, it is recommended to restart the FE and BE nodes to ensure the Connector is correctly loaded.
+
+## Creating the Delta Lake Catalog
 
 ```sql
 create catalog delta_lake_catalog properties ( 
@@ -80,9 +81,9 @@ create catalog delta_lake_catalog properties (
 );
 ```
 
-其中：以 `trino.` 为前缀的属性都是 trino 原生的属性，更多有关 Delta Lake 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/delta-lake.html)。
+Note: Properties prefixed with `trino.` are native Trino properties. For more information about Delta Lake properties, refer to the [Trino documentation](https://trino.io/docs/current/connector/delta-lake.html).
 
-## 列类型映射
+## Column Type Mapping
 
 |Delta Lake|Trino|Doris|
 | ----- | ----- | ----- |
@@ -102,3 +103,4 @@ create catalog delta_lake_catalog properties (
 |ARRAY|ARRAY|ARRAY|
 |MAP|MAP|MAP|
 |STRUCT|ROW|STRUCT|
+
