@@ -136,7 +136,7 @@ PROPERTIES (
    INSERT OVERWRITE table test WITH LABEL `label2` (c1, c2) SELECT * from test2;
    ```
 
-- Using a label will encapsulate this task into an **asynchronous task**. After executing the statement, the relevant operations will be executed asynchronously. Users can use the `SHOW LOAD;` command to check the status of the job imported by this `label`. It should be noted that the label is unique.
+- Users can use the `SHOW LOAD;` command to check the status of the job imported by this `label`. It should be noted that the label is unique.
 
 
 #### Overwrite Table Partition
