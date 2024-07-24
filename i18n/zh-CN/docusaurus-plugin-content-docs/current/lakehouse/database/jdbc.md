@@ -205,6 +205,22 @@ Doris 显示的小写名称去查询。
 
 同时为了避免在 BE 上累积过多的未使用的连接池缓存，可以通过设置 BE 的 `jdbc_connection_pool_cache_clear_time_sec` 参数来指定清理缓存的时间间隔。默认值为 28800 秒（8小时），此间隔过后，BE 将强制清理所有超过该时间未使用的连接池缓存。
 
+:::warning
+使用 Doris JDBC Catalog 连接外部数据源时，需谨慎更新数据库凭证。
+
+Doris 通过连接池维持活跃连接以快速响应查询。但凭证变更后，连接池可能会继续使用旧凭证尝试建立新连接并失败。由于系统试图保持一定数量的活跃连接，这种错误尝试会重复执行，且在某些数据库系统中，频繁的失败可能导致账户被锁定。
+
+建议在必须更改凭证时，同步更新 Doris JDBC Catalog 配置，并重启 Doris 集群，以确保所有节点使用最新凭证，防止连接失败和潜在的账户锁定。
+
+可能遇到的账户锁定如下：
+
+MySQL: account is locked
+
+Oracle: ORA-28000: the account is locked
+
+SQL Server: Login is locked out
+:::
+
 ### Insert 事务
 
 Doris 的数据是由一组 batch 的方式写入 JDBC Catalog 的，如果中途导入中断，之前写入数据可能需要回滚。所以 JDBC Catalog 支持数据写入时的事务，事务的支持需要通过设置 session variable: `enable_odbc_transcation `。

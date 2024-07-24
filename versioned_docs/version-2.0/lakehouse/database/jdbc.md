@@ -154,6 +154,20 @@ The connection pool size can be adjusted to better suit your workload. Typically
 
 At the same time, in order to avoid accumulating too many unused connection pool caches on BE, you can specify the time interval for clearing the cache by setting the `jdbc_connection_pool_cache_clear_time_sec` parameter of BE. The default value is 28800 seconds (8 hours). After this interval, BE will forcefully clear all connection pool caches that have not been used for more than this time.
 
+:::warning
+When using Doris JDBC Catalog to connect to external data sources, you need to be careful when updating database credentials.
+Doris maintains active connections through a connection pool to respond to queries quickly. However, after the credentials are changed, the connection pool may continue to use the old credentials to try to establish new connections and fail. Such erroneous attempts are repeated as the system attempts to maintain a certain number of active connections, and in some database systems, frequent failures may result in account lockout.
+It is recommended that when credentials must be changed, the Doris JDBC Catalog configuration is updated synchronously and the Doris cluster is restarted to ensure that all nodes use the latest credentials to prevent connection failures and potential account lockouts.
+
+Account lockouts you may encounter are as follows:
+
+MySQL: account is locked
+
+Oracle: ORA-28000: the account is locked
+
+SQL Server: Login is locked out
+:::
+
 ### Insert transaction
 
 Doris' data is written to the JDBC Catalog in a batch manner. If the import is interrupted midway, the previously written data may need to be rolled back. Therefore, JDBC Catalog supports transactions when data is written. Transaction support needs to be set by setting session variable: `enable_odbc_transcation`.

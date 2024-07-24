@@ -123,4 +123,4 @@ Apache Doris 会在下发到 Oracle 的查询语句中，自动在字段名与�
 
 2. 创建或查询 Oracle Catalog 时出现 `Non supported character set (add orai18n.jar in your classpath): ZHS16GBK` 异常
 
-   下载 [orai18n.jar](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) 并放到 每个 FE 和 BE 的目录下的 `custom_lib/` 目录下（如不存在，手动创建即可）。
+   下载 [orai18n.jar](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) 并放到 每个 FE 和 BE 的目录下的 `custom_lib/` 目录下（如不存在，手动创建即可）并重启每个 FE 和 BE。
