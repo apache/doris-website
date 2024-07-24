@@ -24,15 +24,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 创建表
+## 创建表
 
 使用 [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) 语句在 Doris 中创建一个表，也可以使用 [LIKE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE.md) 或 [AS](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT.md) 子句从另一个表派生表定义。
 
-# 表名
+## 表名
 
 Doris 中表名默认是大小写敏感的，可以在第一次初始化集群时配置[lower_case_table_names](../admin-manual/config/fe-config.md)为大小写不敏感的。默认的表名最大长度为 64 字节，可以通过配置[table_name_length_limit](../admin-manual/config/fe-config.md)更改，不建议配置过大。创建表的语法请参考[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md)。
 
-# 注意事项
+## 注意事项
 
 1. 数据模型不可更改，因此建表时需要选择一个合适的[数据模型](../table-design/data-model/overview.md)。
 
