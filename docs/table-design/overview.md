@@ -24,4 +24,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Creating tables
+
+Users can use the [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md) statement to create a table in Doris. You can also use the [LIKE](./sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-LIKE.md) or [AS](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE-AS-SELECT.md) clause to derive the table definition from another table.
+
+# Table name
+
 In Doris, table names are case-sensitive by default. You can configure [lower_case_table_names](../admin-manual/config/fe-config.md)to make them case-insensitive during the initial cluster setup. The default maximum length for table names is 64 bytes, but you can change this by configuring [table_name_length_limit](../admin-manual/config/fe-config.md). It is not recommended to set this value too high. For syntax on creating tables, please refer to [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md).
+
+
+# Notes
+
+1. The data model cannot be changed, so you need to choose an appropriate [data model](../table-design/data-model/overview.md) when creating the table.
+
+2. The number of buckets for an existing partition cannot be modified. You can change the number of buckets by [replacing the partition](../data-operate/delete/table-temp-partition.md). However, you can modify the number of buckets for partitions that have not yet been created under dynamic partitioning.
+
+3. Adding or removing VALUE columns is a lightweight operation and can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. It is best to avoid adding or removing KEY columns or modifying data types with large amounts of data.
+
+4. You can use tiered storage to save cold data to HDD or S3 / HDFS.
