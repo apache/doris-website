@@ -55,7 +55,7 @@ export default function Download() {
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.4');
+    const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/release-2.1.5');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -254,7 +254,7 @@ export default function Download() {
                                 )}
                             </div>
                         </div>
-                        <div className="all-download-note" style={{textAlign:'center',marginTop:'24px'}}>
+                        <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
                             Note: For Apache Doris version specifics, please refer to the <Link
                                 to="https://doris.apache.org/community/release-versioning"
                                 style={{
