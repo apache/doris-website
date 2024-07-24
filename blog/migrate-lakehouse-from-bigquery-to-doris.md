@@ -170,7 +170,7 @@ The implementation was carried out by 1 Data Engineer, 1 Software Engineer, and 
 
 - It supports seamless data import from Apache Iceberg. The Machine Learning and data mining team can directly import data without needing to create a separate pipeline like with BigQuery.
 
-- It supports vector data storage for AI chatbots. Data can be directly imported from the File Store Service (S3) instead of having to push it to Redis as before.
+- It supports [vector data storage](https://python.langchain.com/v0.2/docs/integrations/vectorstores/apache_doris/) for AI chatbots. Data can be directly imported from the File Store Service (S3) instead of having to push it to Redis as before.
 
 - It provides efficient data aggregation through the Rollup mechanism.
 

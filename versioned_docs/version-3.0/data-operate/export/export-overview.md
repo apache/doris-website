@@ -86,26 +86,27 @@ Parquet and ORC file formats have their own data types. Doris's export function 
 The following table shows the mapping between Doris data types and Parquet, ORC file format data types:
 
 1. Doris export to ORC file format data type mapping table:
-    | Doris Type | Orc Type |
-    | ----- | ----- |
-    | boolean | boolean |
-    | tinyint | tinyint |
-    | smallint | smallint |
-    | int | int |
-    | bigint | bigint |
-    | largeInt | string |
-    | date | string |
-    | datev2 | string |
-    | datetime | string |
-    | datetimev2 | timestamp |
-    | float | float |
-    | double | double |
-    | char / varchar / string | string |
-    | decimal | decimal |
-    | struct | struct |
-    | map | map |
-    | array | array |
-    |json| Not support|
+
+    |Doris Type|Orc Type|
+    | -------- | ------- |
+    |boolean|boolean|
+    |tinyint|tinyint|
+    |smallint|smallint|
+    |int|int|
+    |bigint|bigint|
+    |largeInt|string|
+    |date|string|
+    |datev2|string|
+    |datetime|string|
+    |datetimev2|timestamp|
+    |float|float|
+    |double|double|
+    |char / varchar / string|string|
+    |decimal|decimal|
+    |struct|struct|
+    |map|map|
+    |array|array|
+    |json| Not supported|
 
 2. When Doris exports to Parquet file format, it first converts Doris in-memory data to Arrow in-memory data format, then writes out to Parquet file format. The mapping relationship between Doris data types and Arrow data types is:
 
