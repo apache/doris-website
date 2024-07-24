@@ -83,7 +83,13 @@
                 },
                 "table-design/data-partition",
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
+                {
+                    "type": "category",
+                    "label": "Tiered Storage",
+                    "items": [
+                        "table-design/tiered-storage/remote-storage"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Table Indexes",
@@ -108,14 +114,20 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
                         "data-operate/import/load-json-format",
                         "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
                         "data-operate/import/load-atomicity",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
@@ -348,8 +360,8 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/delete-recover",
                         "admin-manual/data-admin/ccr",
+                        "admin-manual/data-admin/recyclebin",
                         "admin-manual/data-admin/repairing-data"
                     ]
                 },
