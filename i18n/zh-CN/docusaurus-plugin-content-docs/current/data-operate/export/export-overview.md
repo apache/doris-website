@@ -86,8 +86,9 @@ Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出�
 以下是 Apache Doris 数据类型和 Parquet、ORC 文件格式的数据类型映射关系表：
 
 1. Doris 导出到 Orc 文件格式的数据类型映射表：
+
     |Doris Type|Orc Type|
-    | ----- | ----- |
+    | -------- | ------- |
     |boolean|boolean|
     |tinyint|tinyint|
     |smallint|smallint|
@@ -107,7 +108,7 @@ Parquet、ORC 文件格式拥有自己的数据类型。Apache Doris 的导出�
     |array|array|
     |json|不支持|
 
-    <br/>
+
 2. Apache Doris 导出到 Parquet 文件格式时，会先将 Apache Doris 内存数据转换为 Arrow 内存数据格式，然后由 Arrow 写出到 Parquet 文件格式。Apache Doris 数据类型到 Arrow 数据类的映射关系为：
 
     |Doris Type|Arrow Type|
