@@ -83,7 +83,13 @@
                 },
                 "table-design/data-partition",
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
+                {
+                    "type": "category",
+                    "label": "Tiered Storage",
+                    "items": [
+                        "table-design/tiered-storage/remote-storage"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Table Indexes",
