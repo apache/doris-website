@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Recover",
+    "title": "Recover from Recycle Bin",
     "language": "en"
 }
 ---
@@ -24,19 +24,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Data Deletion Recovery
+# Data Lifecycle
 
-Data deletion recovery includes two situations：
+1. When a user executes the `drop database/table/partition` command, Doris moves the deleted database, table, or partition to the recycle bin. The recover command can be used to restore all data of the deleted database, table, or partition from the recycle bin, making them visible again.
 
-1. After executing the command `drop database/table/partition`,  user can use command `recover` to recover all the data in the entire database/table/partition. It will restore the metadata of the database/table/partition from the FE's catalog recycle bin, change them from invisible to visible again, and the data will also be visible again;
+2. When a tablet is deleted on the BE side, its data is moved to the BE recycle bin by default. In case of accidental operations or online bugs that result in some tablets being deleted on the BE, these tablets can be recovered from the BE recycle bin using maintenance tools.
 
-2. Due to some misoperations or online bugs, some tablets on BEs are deleted, and these tablets can be rescued from the BE's trash through maintenance tools.
-
-The above two, the former is aimed at the fact that the database/table/partition is no longer visible on FE, and the metadata of the database/table/partition is still kept in the catalog recycle bin of FE. The latter is aimed at databases/tables/partitions that are visible on FE, but some BE tablet data is deleted.
+In the above scenarios, the first one pertains to the situation where the database, table, or partition is no longer visible on the FE, but its metadata is still retained in the FE recycle bin. The second scenario pertains to the situation where the database, table, or partition is still visible on the FE, but some BE tablet data has been deleted.
 
 The two recovery methods are described below.
 
-## Drop Recovery
+## Recover From FE Recycle Bin
 
 In order to avoid disasters caused by misoperation, Doris supports data recovery of accidentally deleted databases/tables/partitions. After dropping table or database, Doris will not physically delete the data immediately, but will keep it in Trash for a period of time ( The default is 1 day, which can be configured through the `catalog_trash_expire_second` parameter in fe.conf). The administrator can use the RECOVER command to restore accidentally deleted data.
 
@@ -75,12 +73,12 @@ RECOVER PARTITION p1 FROM example_tbl;
 
 For more detailed syntax and best practices used by RECOVER, please refer to the [RECOVER](../../sql-manual/sql-reference/Database-Administration-Statements/RECOVER.md) command manual, You can also type `HELP RECOVER` on the MySql client command line for more help.
 
-## Tablet Restore Tool
+## Recover Tablet from BE Recycle Bin
 
 
-### Restore data from BE Recycle Bin
+### Recover data from BE Recycle Bin
 
-During the user's use of Doris, some valid tablets (including metadata and data) may be deleted due to some misoperations or online bugs. In order to prevent data loss in these abnormal situations, Doris provides a recycle bin mechanism to protect user data. Tablet data deleted by users will not be deleted directly, but will be stored in the recycle bin for a period of time. After a period of time, there will be a regular cleaning mechanism to delete expired data. By default, when the disk space usage does not exceed 81% (BE `config.storage_flood_stage_usage_percent` * 0.9 * 100%), the data in the BE recycle bin is kept for up to 1 days (BE `config.trash_file_expire_time_sec`).
+During the user's use of Doris, some valid tablets (including metadata and data) may be deleted due to some misoperations or online bugs. In order to prevent data loss in these abnormal situations, Doris provides a recycle bin mechanism to protect user data. Tablet data deleted by users will not be deleted directly, but will be stored in the recycle bin for a period of time. After a period of time, there will be a regular cleaning mechanism to delete expired data. By default, when the disk space usage does not exceed 81% (BE `config.storage_flood_stage_usage_percent` * 0.9 * 100%), the data in the BE recycle bin is kept for up to 3 days (BE `config.trash_file_expire_time_sec`).
 
 The data in the BE recycle bin includes: tablet data file (.dat), tablet index file (.idx) and tablet metadata file (.hdr). The data will be stored in a path in the following format:
 
@@ -179,7 +177,7 @@ In some very special circumstances, such as code bugs, or human misoperation, et
     ADMIN SET FRONTEND CONFIG ("recover_with_empty_tablet" = "true");
     ```
 
-    * Note: You can first check whether the current version supports this parameter through the `SHOW FRONTEND CONFIG;` command.
+    * Note: You can first check whether the current version supports this parameter through the `ADMIN SHOW FRONTEND CONFIG;` command.
 
 3. A few minutes after the setup is complete, you should see the following log in the Master FE log `fe.log`:
 

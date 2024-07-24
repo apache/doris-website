@@ -1,6 +1,6 @@
 ---
 {
-    "title": "数据删除的恢复",
+    "title": "从回收站恢复",
     "language": "zh-CN"
 }
 ---
@@ -25,18 +25,16 @@ under the License.
 -->
 
 
+# 数据生命周期
 
-数据删除恢复包含两种情况：
+1. 用户执行命令`drop database/table/partition`之后，Doris 会把删除的数据库/表/分区放到回收站，可以使用命令`recover`来恢复整个数据库/表/分区的所有数据从回收站里恢复，把它们从不可见状态，重新变回可见。
+2. BE 侧删除一个 tablet 时，默认会把 tablet 的数据放进 BE 回收站。因为某些误操作或者线上 bug，导致 BE 上部分 tablet 被删除，通过运维工具把这些 tablet 从 BE 回收站中抢救回来。
 
-1. 用户执行命令`drop database/table/partition`之后，再使用命令`recover`来恢复整个数据库/表/分区的所有数据。这种修复将会把 FE 上的数据库/表/分区的结构，从 catalog 回收站里恢复过来，把它们从不可见状态，重新变回可见，并且原来的数据也恢复可见；
-
-2. 用户因为某些误操作或者线上 bug，导致 BE 上部分 tablet 被删除，通过运维工具把这些 tablet 从 BE 回收站中抢救回来。
-
-上面两个，前者针对的是数据库/表/分区在 FE 上已经不可见，且数据库/表/分区的元数据尚保留在 FE 的 catalog 回收站里。而后者针对的是数据库/表/分区在 FE 上可见，但部分 BE tablet 数据被删除。
+上面两个，前者针对的是数据库/表/分区在 FE 上已经不可见，且数据库/表/分区的元数据尚保留在 FE 的回收站里。而后者针对的是数据库/表/分区在 FE 上可见，但部分 BE tablet 数据被删除。
 
 下面分别阐述这两种恢复。
 
-## Drop 恢复
+## 从 FE 回收站恢复
 
 Doris 为了避免误操作造成的灾难，支持对误删除的数据库/表/分区进行数据恢复，在 drop table 或者 drop database 或者 drop partition 之后，Doris 不会立刻对数据进行物理删除，而是在 FE 的 catalog 回收站中保留一段时间（默认 1 天，可通过 fe.conf 中`catalog_trash_expire_second`参数配置），管理员可以通过 RECOVER 命令对误删除的数据进行恢复。
 
@@ -79,7 +77,7 @@ RECOVER PARTITION p1 FROM example_tbl;
 
 关于 RECOVER 使用的更多详细语法及最佳实践，请参阅 [RECOVER](../../sql-manual/sql-reference/Database-Administration-Statements/RECOVER.md) 命令手册，你也可以在 MySql 客户端命令行下输入 `help RECOVER` 获取更多帮助信息。
 
-## BE tablet 数据恢复
+## 从 BE 回收站中恢复 Tablet
 
 ### 从 BE 回收站中恢复数据
 
