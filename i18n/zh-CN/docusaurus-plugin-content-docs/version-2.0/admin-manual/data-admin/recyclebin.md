@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-# 数据生命周期
+## 数据生命周期
 
 1. 用户执行命令`drop database/table/partition`之后，Doris 会把删除的数据库/表/分区放到回收站，可以使用命令`recover`来恢复整个数据库/表/分区的所有数据从回收站里恢复，把它们从不可见状态，重新变回可见。
 2. BE 侧删除一个 tablet 时，默认会把 tablet 的数据放进 BE 回收站。因为某些误操作或者线上 bug，导致 BE 上部分 tablet 被删除，通过运维工具把这些 tablet 从 BE 回收站中抢救回来。
