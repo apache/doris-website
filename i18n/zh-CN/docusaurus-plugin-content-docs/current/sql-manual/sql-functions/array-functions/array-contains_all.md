@@ -32,7 +32,7 @@ array_contains_all
 
 #### Syntax
 
-`BOOLEAN array_contains(ARRAY<T> array1, ARRAY<T> array2)`
+`BOOLEAN array_contains_all(ARRAY<T> array1, ARRAY<T> array2)`
 
 判断数组array1中是否包含子数组array2，且需要保证元素顺序完全一致。返回结果如下：
 

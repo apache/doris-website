@@ -32,7 +32,7 @@ array_contains_all
 
 #### Syntax
 
-`BOOLEAN array_contains(ARRAY<T> array1, ARRAY<T> array2)`
+`BOOLEAN array_contains_all(ARRAY<T> array1, ARRAY<T> array2)`
 
 check whether array1 contains the subarray array2, ensuring that the element order is exactly the same. The return results are as follows:
 
