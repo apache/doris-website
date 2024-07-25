@@ -599,6 +599,7 @@
                                 "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
+                                "sql-manual/sql-functions/array-functions/array-contains_all",
                                 "sql-manual/sql-functions/array-functions/array-except",
                                 "sql-manual/sql-functions/array-functions/array-product",
                                 "sql-manual/sql-functions/array-functions/array-intersect",
