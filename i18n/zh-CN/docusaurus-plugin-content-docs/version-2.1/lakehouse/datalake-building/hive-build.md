@@ -34,10 +34,10 @@ under the License.
 
 :::tip
 使用前，请先设置：
-
+<br />
 set global enable_nereids_planner = true;
 set global enable_fallback_to_original_planner = false;
-
+<br />
 从老版本升级上来的集群，这些参数可能有变化。
 :::
 
