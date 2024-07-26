@@ -128,11 +128,11 @@
                             ]
                         },
                         "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/load-atomicity",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-atomicity",
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
