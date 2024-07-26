@@ -278,6 +278,9 @@
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
                         "lakehouse/datalake-analytics/lakesoul",
+                        "lakehouse/datalake-analytics/bigquery",
+                        "lakehouse/datalake-analytics/deltalake",
+                        "lakehouse/datalake-analytics/kudu",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"
@@ -1551,13 +1554,6 @@
                 "faq/data-faq",
                 "faq/sql-faq",
                 "faq/lakehouse-faq"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Release notes",
-            "items": [
-                "releasenotes/release-3.0.0"
             ]
         }
     ]
