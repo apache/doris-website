@@ -226,13 +226,15 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     PROPERTIES (
-        "type"="S3",                                   -- required
-        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
-        "s3.region" = "bj",                            -- required
-        "s3.root.path" = "big/data/prefix",            -- required
-        "s3.access_key" = "ak",                        -- required
-        "s3.secret_key" = "sk",                        -- required
-        "provider" = "cos",                            -- required
+        "type"="S3",                                            -- required
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",          -- required
+        "s3.external_endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+        "s3.bucket" = "sample_bucket_name",                     -- required
+        "s3.region" = "bj",                                     -- required
+        "s3.root.path" = "big/data/prefix",                     -- required
+        "s3.access_key" = "ak",                                 -- required
+        "s3.secret_key" = "sk",                                 -- required
+        "provider" = "cos",                                     -- required
     );
 ```
 
@@ -255,6 +257,8 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
 | hadoop.kerberos.keytab        | HDFS Vault 参数                                                                    | 否        | `/etc/emr.keytab`              |
 | dfs.client.socket-timeout     | HDFS Vault 参数，单位毫秒                                                         | 否        | `60000`                        |
 | s3.endpiont                   | S3 Vault 参数                                                                      | 是        | `oss-cn-beijing.aliyuncs.com`  |
+| s3.external_endpoint          | S3 vault 参数                                                                      | 是          | `oss-cn-beijing.aliyuncs.com` |
+| s3.bucket                     | S3 vault 参数                                                                      | 是          | `sample_bucket_name`          |
 | s3.region                     | S3 Vault 参数                                                                      | 是        | `bj`                           |
 | s3.root.path                  | S3 Vault 参数，实际存储数据的路径前缀                                              | 是        | `/big/data/prefix`             |
 | s3.access_key                 | S3 Vault 参数                                                                     | 是        |                                |
