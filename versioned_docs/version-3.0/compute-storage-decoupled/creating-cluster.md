@@ -223,13 +223,15 @@ CREATE STORAGE VAULT IF NOT EXISTS ssb_hdfs_vault
 ```SQL
 CREATE STORAGE VAULT IF NOT EXISTS ssb_s3_vault
     PROPERTIES (
-        "type"="S3",                                   -- required
-        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
-        "s3.region" = "bj",                            -- required
-        "s3.root.path" = "big/data/prefix",            -- required
-        "s3.access_key" = "ak",                        -- required
-        "s3.secret_key" = "sk",                        -- required
-        "provider" = "cos",                            -- required
+        "type"="S3",                                            -- required
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",          -- required
+        "s3.external_endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
+        "s3.bucket" = "sample_bucket_name",                     -- required
+        "s3.region" = "bj",                                     -- required
+        "s3.root.path" = "big/data/prefix",                     -- required
+        "s3.access_key" = "ak",                                 -- required
+        "s3.secret_key" = "sk",                                 -- required
+        "provider" = "cos",                                     -- required
     );
 ```
 
@@ -252,6 +254,8 @@ Newly created storage vaults may NOT be immediately visible to the BE. This mean
 | hadoop.kerberos.keytab         | HDFS vault parameter                                         | Optional          | `/etc/emr.keytab`             |
 | dfs.client.socket-timeout      | HDFS vault parameter, measured in millisecond                | Optional          | `60000`                       |
 | s3.endpiont                    | S3 vault parameter                                           | Required          | `oss-cn-beijing.aliyuncs.com` |
+| s3.external_endpoint           | S3 vault parameter                                           | Required          | `oss-cn-beijing.aliyuncs.com` |
+| s3.bucket                      | S3 vault parameter                                           | Required          | `sample_bucket_name`          |
 | s3.region                      | S3 vault parameter                                           | Required          | `bj`                          |
 | s3.root.path                   | S3 vault parameter, path prefix for the actual data storage  | Required          | `/big/data/prefix`            |
 | s3.access_key                  | S3 vault parameter                                           | Required          |                               |
