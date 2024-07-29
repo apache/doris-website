@@ -32,6 +32,15 @@ under the License.
 这是一个实验功能。
 :::
 
+:::tip
+使用前，请先设置：
+<br />
+set global enable_nereids_planner = true;
+set global enable_fallback_to_original_planner = false;
+<br />
+从老版本升级上来的集群，这些参数可能有变化。
+:::
+
 ## 元数据创建与删除
 
 ### Catalog
