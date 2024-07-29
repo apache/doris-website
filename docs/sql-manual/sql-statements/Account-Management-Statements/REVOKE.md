@@ -76,6 +76,24 @@ role_list is the list of roles to be revoked, separated by commas. The specified
     REVOKE 'role1','role2' FROM 'jack'@'192.%';
     ```
 
+4. Revoke user jack usage privilege on 'g1';
+
+    ```
+    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
+    ```
+
+5. Revoke user jack usage privilege on all Workload Group;
+
+    ```
+    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
+    ```
+
+6. Revoke role test_role usage privilege on Workload Group 'g1';
+
+    ```
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'test_role';
+   ```
+
 ### Keywords
 
     REVOKE
