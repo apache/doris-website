@@ -66,6 +66,18 @@ The following 3 global variables can control some writing behaviors of the audit
 
 Can be set via `set global xxx=yyy`.
 
+FE configurations:
+
+- `skip_audit_user_list` (Since 3.0.1)
+
+    If you do not want certain users' operations to be recorded in the audit log, you can modify this configuration.
+
+    ```
+    skip_audit_user_list=root
+    -- or
+    skip_audit_user_list=user1,user2
+    ```
+
 ## Compilation, Configuration and Deployment
 
 ### FE Configuration
