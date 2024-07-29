@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 ALTER SYSTEM DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"...];
-````
+```
 
   illustrate:
 
@@ -53,7 +53,7 @@ ALTER SYSTEM DECOMMISSION BACKEND "host:heartbeat_port"[,"host:heartbeat_port"..
 
     ```sql
     ALTER SYSTEM DECOMMISSION BACKEND "host1:port", "host2:port";
-    ````
+    ```
 
 ### Keywords
 

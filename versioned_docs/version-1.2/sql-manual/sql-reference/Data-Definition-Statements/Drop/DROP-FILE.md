@@ -39,7 +39,7 @@ grammar:
 ```sql
 DROP FILE "file_name" [FROM database]
 [properties]
-````
+```
 
 illustrate:
 
@@ -54,7 +54,7 @@ illustrate:
 
      ```sql
      DROP FILE "ca.pem" properties("catalog" = "kafka");
-     ````
+     ```
 
 ### Keywords
 

@@ -46,7 +46,7 @@ SHOW LOAD
 ]
 [ORDER BY...]
 [LIMIT limit][OFFSET offset];
-````
+```
 
 illustrate:
 
@@ -68,7 +68,7 @@ illustrate:
 
    ```sql
    SHOW LOAD WARNINGS ON 'url'
-   ````
+   ```
 
 ### Example
 
@@ -76,38 +76,38 @@ illustrate:
 
    ```sql
    SHOW LOAD;
-   ````
+   ```
 
 2. Display the import tasks of the specified db, the label contains the string "2014_01_02", and display the oldest 10
 
    ```sql
    SHOW LOAD FROM example_db WHERE LABEL LIKE "2014_01_02" LIMIT 10;
-   ````
+   ```
 
 3. Display the import tasks of the specified db, specify the label as "load_example_db_20140102" and sort by LoadStartTime in descending order
 
    ```sql
    SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" ORDER BY LoadStartTime DESC;
-   ````
+   ```
 
 4. Display the import task of the specified db, specify the label as "load_example_db_20140102", the state as "loading", and sort by LoadStartTime in descending order
 
    ```sql
    SHOW LOAD FROM example_db WHERE LABEL = "load_example_db_20140102" AND STATE = "loading" ORDER BY LoadStartTime DESC;
-   ````
+   ```
 
 5. Display the import tasks of the specified db and sort them in descending order by LoadStartTime, and display 10 query results starting from offset 5
 
    ```sql
    SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 5,10;
    SHOW LOAD FROM example_db ORDER BY LoadStartTime DESC limit 10 offset 5;
-   ````
+   ```
 
 6. Small batch import is a command to check the import status
 
-   ````
+   ```
    curl --location-trusted -u {user}:{passwd} http://{hostname}:{port}/api/{database}/_load_info?label={labelname}
-   ````
+   ```
 
 ### Keywords
 

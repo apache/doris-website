@@ -40,7 +40,7 @@ grammar:
 ```sql
   ADMIN SET FRONTEND CONFIG ("key" = "value") [ALL];
   ADMIN SET ALL FRONTENDS CONFIG ("key" = "value");
-````
+```
 
 illustrate:
 

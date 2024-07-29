@@ -36,7 +36,7 @@ This statement is used to display files created by the CREATE FILE command withi
 
 ```sql
 SHOW FILE [FROM database];
-````
+```
 
 Return result description:
 
@@ -53,7 +53,7 @@ Return result description:
 
     ```sql
     SHOW FILE FROM my_database;
-    ````
+    ```
 
 ### Keywords
 

@@ -195,6 +195,8 @@ SQL 函数文档排版请参考文档贡献指南-**[如何编写命令帮助手
 
 - 在 Visual Studio Code 等编辑器中统一设置一个 Tab 等于四个半角空格
 
+- 缩进可能会影响文档渲染结果，**以 vscode 等富文本编辑器能够正确渲染为准（例如，在多级缩进结构内的代码块有时仍需要 0 级缩进才可正确渲染）**。
+
 ### 03 空格使用
 
 - 英文、数字与中文需要前后半角空格
@@ -239,7 +241,7 @@ SQL 函数文档排版请参考文档贡献指南-**[如何编写命令帮助手
 
 插入代码块建议遵循以下规范：
 
-- 行内代码，使用反引号 ``` 创建，多行代码使用三个反引号 创建。
+- 行内代码，使用反引号 (\```) 创建，多行代码使用三个反引号 创建。
 
 - 行内代码块前后加上空格、多行代码与正文空一行
 
@@ -249,33 +251,33 @@ SQL 函数文档排版请参考文档贡献指南-**[如何编写命令帮助手
 
    | 代码类型                                | 代码围栏指定方式         |
     | :-------------------------------------- | :----------------------- |
-    | Shell 脚本                              | ```shell``` 或 ```bash```  |
-    | Python 代码                             | ````python```              |
-    | JSON 代码                               | ````json```                |
-    | XML 文档                                | ````xml```                 |
-    | SQL 查询（请使用小写 sql 否则渲染失败） | ````sql```                |
-    | YAML 文件                               | ````yaml``` 或```yml```      |
-    | Markdown 文本                           | ```markdown``` 或```md```  |
-    | JavaScript 代码                         | ```js```或```javascript``` |
-    | Java 代码                               | ```java```              |
-    | C++ 代码                                | ```cpp```                 |
-    | C 代码                                  | ```c```                   |
-    | Ruby 代码                               | ```ruby```                |
-    | HTML 代码                               | ```html```                |
-    | CSS 代码                                | ```css```                 |
-    | PHP 代码                                | ```php```                |
+    | Shell 脚本                              | \```shell```  |
+    | Python 代码                             | \```python```              |
+    | JSON 代码                               | \```json```                |
+    | XML 文档                                | \```xml```                 |
+    | SQL 查询（请使用小写 sql 否则渲染失败）     | \```sql```                |
+    | YAML 文件                               | \```yaml\``` 或 \```yml```      |
+    | Markdown 文本                           | \```markdown\``` 或 \```md```  |
+    | JavaScript 代码                         | \```js\```或\```javascript``` |
+    | Java 代码                               | \```java```              |
+    | C++ 代码                                | \```cpp```                 |
+    | C 代码                                  | \```c```                   |
+    | Ruby 代码                               | \```ruby```                |
+    | HTML 代码                               | \```html```                |
+    | CSS 代码                                | \```css```                 |
+    | PHP 代码                                | \```php```                |
 
-- 当使用 ```bash``` 代码时，写入命令与输出结果需分开编写。下面以 Kubernetes 集群访问文档为例：
+- 当使用 ```shell``` 代码时，写入命令与输出结果需分开编写。下面以 Kubernetes 集群访问文档为例：
 
   - 使用以下命令查看相应 Service：
 
-    ```Bash
+    ```shell
     kubectl get pod --namespace doris
     ```
 
   - 返回结果如下
   
-    ```Bash
+    ```shell
     NAME                     READY   STATUS    RESTARTS   AGE
     doriscluster-helm-fe-0   1/1     Running   0          1m39s
     doriscluster-helm-fe-1   1/1     Running   0          1m39s

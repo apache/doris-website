@@ -39,7 +39,7 @@ grammar:
 ```sql
 DROP [GLOBAL] FUNCTION function_name
      (arg_type [, ...])
-````
+```
 
 Parameter Description:
 
@@ -52,12 +52,12 @@ Parameter Description:
 
     ```sql
     DROP FUNCTION my_add(INT, INT)
-    ````
+    ```
 2. Delete a global function
 
     ```sql
     DROP GLOBAL FUNCTION my_add(INT, INT)
-    ````   
+    ```   
 
 ### Keywords
 

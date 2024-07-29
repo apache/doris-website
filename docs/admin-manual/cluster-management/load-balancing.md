@@ -486,7 +486,7 @@ IP: 172.31.7.119
 
 ### Install dependencies
 
-```bash
+```shell
 sudo apt-get install build-essential
 sudo apt-get install libpcre3 libpcre3-dev 
 sudo apt-get install zlib1g-dev
@@ -495,7 +495,7 @@ sudo apt-get install openssl libssl-dev
 
 ### Install Nginx
 
-```bash
+```shell
 sudo wget http://nginx.org/download/nginx-1.18.0.tar.gz
 sudo tar zxvf nginx-1.18.0.tar.gz
 cd nginx-1.18.0
@@ -507,13 +507,13 @@ sudo make && make install
 
 Here is a new configuration file
 
-```bash
+```shell
 vim /usr/local/nginx/conf/default.conf
 ```
 
 Then add the following in it
 
-```bash
+```shell
 events {  
 worker_connections 1024;  
 }  
@@ -537,7 +537,7 @@ stream {
 
 Start the specified configuration file
 
-```bash
+```shell
 cd /usr/local/nginx
 /usr/local/nginx/sbin/nginx -c conf.d/default.conf
 ```

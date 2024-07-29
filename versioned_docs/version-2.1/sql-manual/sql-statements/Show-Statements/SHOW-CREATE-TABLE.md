@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW [BRIEF] CREATE TABLE [DBNAME.]TABLE_NAME
-````
+```
 
 illustrate:
 
@@ -57,7 +57,7 @@ illustrate:
 
     ```sql
     SHOW CREATE TABLE demo.tb1
-    ````
+    ```
 
 ### Keywords
 

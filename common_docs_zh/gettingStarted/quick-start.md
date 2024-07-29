@@ -39,7 +39,7 @@ under the License.
 
 从 doris.apache.org 下载相应的 Apache Doris 安装包，并且解压。
 
-```Bash
+```shell
 # 下载 Apache Doris 二进制安装包
 server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.12-bin-x64.tar.gz
 
@@ -71,7 +71,7 @@ JAVA_HOME=/home/doris/jdk8
 
 在 apache-doris/fe 下，运行下面命令启动 FE。
 
-```Bash
+```shell
 # 将 FE 启动成后台运行模式，这样确保退出终端后，进程依旧运行。
 server1:apache-doris/fe doris$ ./bin/start_fe.sh --daemon
 ```
@@ -95,7 +95,7 @@ JAVA_HOME=/home/doris/jdk8
 
 在 apache-doris/be 下，运行下面命令启动 BE。
 
-```Bash
+```shell
 # 将 BE 启动成后台运行模式，这样确保退出终端后，进程依旧运行。
 server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 ```
@@ -106,7 +106,7 @@ server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 
 解压刚才下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Apache Doris。
 
-```Bash
+```shell
 mysql -uroot -P9030 -h127.0.0.1
 ```
 
@@ -160,7 +160,7 @@ Root 用户和 Admin 用户都属于 Apache Doris 安装完默认存在的 2 个
 
 使用 Admin 账户连接 Apache Doris FE。
 
-```Bash
+```shell
 mysql -uadmin -P9030 -h127.0.0.1
 ```
 
@@ -199,7 +199,7 @@ PROPERTIES ('replication_num' = '1');
 
 通过 Stream Load 方式将上面保存到文件中的数据导入到刚才创建的表里。
 
-```Bash
+```shell
 curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/mytable/_stream_load
 ```
 
@@ -211,7 +211,7 @@ curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separato
 
 执行成功之后我们可以看到下面的返回信息：
 
-```Bash
+```shell
 {                                                     
     "TxnId": 30,                                  
     "Label": "a56d2861-303a-4b50-9907-238fea904363",        
@@ -262,7 +262,7 @@ mysql> select * from mytable;
 
 在 apache-doris/fe 下，运行下面命令停止 FE。
 
-```Bash
+```shell
 server1:apache-doris/fe doris$ ./bin/stop_fe.sh
 ```
 
@@ -270,6 +270,6 @@ server1:apache-doris/fe doris$ ./bin/stop_fe.sh
 
 在 apache-doris/be 下，运行下面命令停止 BE。
 
-```Bash
+```shell
 server1:apache-doris/be doris$ ./bin/stop_be.sh
 ```

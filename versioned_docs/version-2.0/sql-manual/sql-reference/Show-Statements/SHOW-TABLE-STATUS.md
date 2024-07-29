@@ -39,7 +39,7 @@ grammar:
 ```sql
 SHOW TABLE STATUS
 [FROM db] [LIKE "pattern"]
-````
+```
 
 illustrate:
 
@@ -51,13 +51,13 @@ illustrate:
 
      ```sql
      SHOW TABLE STATUS;
-     ````
+     ```
 
   2. View the information of the table whose name contains example under the specified database
 
      ```sql
      SHOW TABLE STATUS FROM db LIKE "%example%";
-     ````
+     ```
 
 ### Keywords
 

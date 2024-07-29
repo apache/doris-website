@@ -30,13 +30,13 @@ under the License.
 
 存算分离和存算一体模式下的编译方式相似，均使用代码库自带的 `build.sh` 脚本编译，新增的 Meta Service 模块使用参数`--cloud` 即可编出（二进制名为 `doris_cloud`）。
 
-```Bash
+```shell
 sh build.sh --fe --be --cloud 
 ```
 
 不同于存算一体模式，存算分离模式编译后，可在 `output` 目录下发现一个 `ms` 目录。
 
-```Bash
+```shell
 output
 ├── be
 ├── fe
@@ -61,7 +61,7 @@ cp -r ms re
 - `bin/start.sh --version`
 - `lib/doris_cloud --version`
 
-```Bash
+```shell
 $ lib/doris_cloud --version
 version:{doris_cloud-0.0.0-debug} code_version:{commit=b9c1d057f07dd874ad32501ff43701247179adcb time=2024-03-24 20:44:50 +0800} build_info:{initiator=gavinchou@VM-10-7-centos build_at=2024-03-24 20:44:50 +0800 build_on=NAME="TencentOS Server" VERSION="3.1 (Final)" }
 ```
@@ -85,7 +85,7 @@ fdb_cluster = xxx:yyy@127.0.0.1:4500
 
 **示例**
 
-```Bash
+```shell
 cat /etc/foundationdb/fdb.cluster
 
 DO NOT EDIT!
@@ -108,7 +108,7 @@ fdb_cluster = xxx:yyy@127.0.0.1:4500
 
 **示例**
 
-```Bash
+```shell
 cat /etc/foundationdb/fdb.cluster
 
 DO NOT EDIT!

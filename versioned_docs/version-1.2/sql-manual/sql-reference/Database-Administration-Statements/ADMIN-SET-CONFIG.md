@@ -39,7 +39,7 @@ grammar:
 
 ```sql
   ADMIN SET FRONTEND CONFIG ("key" = "value");
-````
+```
 
 ### Example
 

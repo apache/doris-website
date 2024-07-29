@@ -43,7 +43,7 @@ ALTER ROUTINE LOAD FOR [db.]job_name
 [job_properties]
 FROM data_source
 [data_source_properties]
-````
+```
 
 1. `[db.]job_name`
 
@@ -101,7 +101,7 @@ FROM data_source
    (
        "desired_concurrent_number" = "1"
    );
-   ````
+   ```
 
 2. Modify `desired_concurrent_number` to 10, modify the offset of the partition, and modify the group id.
 
@@ -117,7 +117,7 @@ FROM data_source
        "kafka_offsets" = "100, 200, 100",
        "property.group.id" = "new_group"
    );
-   ````
+   ```
 
 ### Keywords
 

@@ -117,7 +117,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
    The Stream Load job can be submitted using the `curl` command.
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "column_separator:," \
@@ -200,7 +200,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
    The Stream Load job can be submitted using the `curl` command.
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:124" \
     -H "Expect:100-continue" \
@@ -261,7 +261,7 @@ Users cannot manually cancel a Stream Load operation. A Stream Load job will be 
 
 The syntax for Stream Load is as follows:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
   -H "Expect:100-continue" [-H ""...] \
   -T <file_path> \
@@ -399,7 +399,7 @@ When performing Stream Load using the TVF `http_stream`, the Rest API URL differ
 
 Using curl for Stream Load in http_stream Mode:
 
-```Bash
+```shell
 curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
 ```
 
@@ -407,7 +407,7 @@ Adding a SQL parameter in the header to replace the previous parameters such as 
 
 Example of load SQL:
 
-```Bash
+```shell
 insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
 ```
 
@@ -454,7 +454,7 @@ Load job can tolerate a certain amount of data with formatting errors. The toler
 
 You can use the following command to specify a `max_filter_ratio` tolerance of 0.4 for creating a Stream Load job:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "max_filter_ratio:0.4" \
@@ -484,7 +484,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 Loading data from local files into partitions p1 and p2 of the table, allowing a 20% error rate.
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:123" \
     -H "Expect:100-continue" \
@@ -512,7 +512,7 @@ Stream Load is based on the HTTP protocol for importing, which supports using pr
 
 The following example demonstrates this usage through a bash command pipeline. The imported data is generated streamingly by the program rather than from a local file.
 
-```Bash
+```shell
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -536,7 +536,7 @@ curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_na
 
 In stream load, there are three import types: APPEND, DELETE, and MERGE. These can be adjusted by specifying the parameter `merge_type`. If you want to specify that all data with the same key as the imported data should be deleted, you can use the following command:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
@@ -579,7 +579,7 @@ After importing, the original table data will be deleted, resulting in the follo
 
 By specifying `merge_type` as MERGE, the imported data can be merged into the table. The MERGE semantics need to be used in combination with the DELETE condition, which means that data satisfying the DELETE condition is processed according to the DELETE semantics, and the rest is added to the table according to the APPEND semantics. The following operation represents deleting the row with `siteid` of 1, and adding the rest of the data to the table:
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: MERGE" \
@@ -771,7 +771,7 @@ JSON data type:
 
 Command:
 
-```Bash
+```shell
 curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
 ```
 

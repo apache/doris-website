@@ -144,7 +144,7 @@ role_list 是需要赋予的角色列表，以逗号分隔，指定的角色必�
 
     ```sql
     GRANT 'role1','role2' TO 'jack'@'%';
-    ````
+    ```
 
 
  
@@ -153,25 +153,25 @@ role_list 是需要赋予的角色列表，以逗号分隔，指定的角色必�
 
     ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%';
-    ````
+    ```
 
 9. 匹配所有 workload group 授予用户 jack
 
     ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%';
-    ````
+    ```
 
 10. 将指定 workload group‘g1’授予角色 my_role
 
     ```sql
     GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO ROLE 'my_role';
-    ````
+    ```
 
 11. 允许 jack 查看 db1 下 view1 的创建语句
 
     ```sql
     GRANT SHOW_VIEW_PRIV ON db1.view1 TO 'jack'@'%';
-    ````
+    ```
 
 ### Keywords
 

@@ -84,7 +84,7 @@ RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -
 
 运行构建命令
 
-```bash
+```shell
 docker build -t doris .
 ```
 
@@ -98,7 +98,7 @@ docker build -t doris .
 
 `--cap-add SYS_PTRACE`参数可以允许docker使用ptrace，便于我们使用ptrace和gdb远程调试功能。
 
-```bash
+```shell
 docker run -it --cap-add SYS_PTRACE doris:latest /bin/bash
 ```
 
@@ -111,7 +111,7 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 创建目录并下载 doris
 
-```bash
+```shell
 su <your user>
 mkdir code && cd code
 git clone https://github.com/apache/doris.git
@@ -125,7 +125,7 @@ git submodule update --init --recursive
 
 第一次编译的时候要使用如下命令
 
-```bash
+```shell
 sh build.sh --clean --be --fe --ui
 ```
 
@@ -133,7 +133,7 @@ sh build.sh --clean --be --fe --ui
 
 编译 Doris
 
-```bash
+```shell
 sh build.sh
 ```
 
@@ -141,26 +141,26 @@ sh build.sh
 
 手动创建 `meta_dir` 元数据存放位置, 默认值为 `${DORIS_HOME}/doris-meta`
 
-```bash
+```shell
 mkdir meta_dir
 ```
 
 启动FE
 
-```bash
+```shell
 cd output/fe
 sh bin/start_fe.sh --daemon
 ```
 
 启动BE
 
-```bash
+```shell
 cd output/be
 sh bin/start_be.sh --daemon
 ```
 
 mysql-client 连接
 
-```bash
+```shell
 mysql -h 127.0.0.1 -P 9030 -u root
 ```

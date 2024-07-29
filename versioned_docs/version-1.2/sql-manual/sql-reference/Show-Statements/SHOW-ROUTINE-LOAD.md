@@ -38,11 +38,11 @@ grammar:
 
 ```sql
 SHOW [ALL] ROUTINE LOAD [FOR jobName];
-````
+```
 
 Result description:
 
-````
+```
                   Id: job ID
                 Name: job name
           CreateTime: job creation time
@@ -62,7 +62,7 @@ DataSourceProperties: Data source configuration details
 ReasonOfStateChanged: The reason for the job state change
         ErrorLogUrls: The viewing address of the filtered unqualified data
             OtherMsg: other error messages
-````
+```
 
 * State
 
@@ -87,39 +87,39 @@ ReasonOfStateChanged: The reason for the job state change
 
    ```sql
    SHOW ALL ROUTINE LOAD FOR test1;
-   ````
+   ```
 
 2. Show the currently running routine import job named test1
 
    ```sql
    SHOW ROUTINE LOAD FOR test1;
-   ````
+   ```
 
 3. Display all routine import jobs (including stopped or canceled jobs) under example_db. The result is one or more lines.
 
    ```sql
    use example_db;
    SHOW ALL ROUTINE LOAD;
-   ````
+   ```
 
 4. Display all running routine import jobs under example_db
 
    ```sql
    use example_db;
    SHOW ROUTINE LOAD;
-   ````
+   ```
 
 5. Display the currently running routine import job named test1 under example_db
 
    ```sql
    SHOW ROUTINE LOAD FOR example_db.test1;
-   ````
+   ```
 
 6. Displays all routine import jobs named test1 under example_db (including stopped or canceled jobs). The result is one or more lines.
 
    ```sql
    SHOW ALL ROUTINE LOAD FOR example_db.test1;
-   ````
+   ```
 
 ### Keywords
 

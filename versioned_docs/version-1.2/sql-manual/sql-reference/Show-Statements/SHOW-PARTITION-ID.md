@@ -45,7 +45,7 @@ SHOW PARTITION [partition_id]
 
     ```sql
     SHOW PARTITION 10002;
-    ````
+    ```
 
 ### Keywords
 

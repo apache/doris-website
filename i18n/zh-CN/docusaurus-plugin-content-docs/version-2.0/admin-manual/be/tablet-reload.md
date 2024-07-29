@@ -51,13 +51,13 @@ under the License.
 
 ## Response
 
-    ```bash
+    ```shell
     load header succeed
     ```
 ## Examples
 
 
-    ```bash
+    ```shell
     curl "http://127.0.0.1:8040/api/reload_tablet?tablet_id=123456&schema_hash=1111111&path=/abc"
 
     ```

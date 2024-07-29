@@ -36,7 +36,7 @@ grammar:
 
 ```sql
 DROP ENCRYPTKEY key_name
-````
+```
 
 Parameter Description:
 
@@ -52,7 +52,7 @@ Executing this command requires the user to have `ADMIN` privileges.
 
     ```sql
     DROP ENCRYPTKEY my_key;
-    ````
+    ```
 
 ### Keywords
 

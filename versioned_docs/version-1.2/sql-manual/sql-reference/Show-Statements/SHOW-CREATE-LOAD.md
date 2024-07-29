@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW CREATE LOAD for load_name;
-````
+```
 
 illustrate:
 
@@ -50,7 +50,7 @@ illustrate:
 
     ```sql
     SHOW CREATE LOAD for test_load
-    ````
+    ```
 
 ### Keywords
 

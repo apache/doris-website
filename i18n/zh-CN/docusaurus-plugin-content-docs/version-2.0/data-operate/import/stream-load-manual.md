@@ -120,7 +120,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     通过 `curl` 命令可以提交 Stream Load 导入作业。
 
-    ```Bash
+    ```shell
     curl --location-trusted -u <doris_user>:<doris_password> \
         -H "Expect:100-continue" \
         -H "column_separator:," \
@@ -203,7 +203,7 @@ Stream Load 需要对目标表的 INSERT 权限。如果没有 INSERT 权限，�
 
     通过 `curl` 命令可以提交 Stream Load 导入作业。
 
-    ```Bash
+    ```shell
     curl --location-trusted -u <doris_user>:<doris_password> \
         -H "label:124" \
         -H "Expect:100-continue" \
@@ -264,7 +264,7 @@ mysql> show stream load from testdb;
 
 Stream Load 导入语法如下：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
   -H "Expect:100-continue" [-H ""...] \
   -T <file_path> \
@@ -407,7 +407,7 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 :::
 
 使用 `curl` 来使用 Stream Load 的 http stream 模式：
-```Bash
+```shell
 curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
 ```
 
@@ -415,7 +415,7 @@ curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -
 
 load_sql 举例：
 
-```Bash
+```shell
 insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
 ```
 
@@ -461,7 +461,7 @@ Doris 的导入任务可以容忍一部分格式错误的数据。容忍率通�
 
 通过以下命令可以指定 max_filter_ratio 容忍度为 0.4 创建 stream load 导入任务：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "max_filter_ratio:0.4" \
@@ -491,7 +491,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 将本地文件中的数据导入到表中的 p1, p2 分区，允许 20% 的错误率。
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "label:123" \
     -H "Expect:100-continue" \
@@ -519,7 +519,7 @@ Stream Load 是基于 HTTP 的协议进行导入，所以是支持使用程序�
 
 下面通过 `bash` 的命令管道来举例这种使用方式，这种导入的数据就是程序流式生成的，而不是本地文件。
 
-```Bash
+```shell
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -543,7 +543,7 @@ curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_na
 
 在 Stream Load 中有三种导入类型：APPEND、DELETE 与 MERGE。可以通过指定参数 merge_type 进行调整。如想指定将与导入数据 Key 相同的数据全部删除，可以使用以下命令：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: DELETE" \
@@ -586,7 +586,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 指定 merge_type 为 MERGE，可以将导入的数据 MERGE 到表中。MERGE 语义需要结合 DELETE 条件联合使用，表示满足 DELETE 条件的数据按照 DELETE 语义处理，其余按照 APPEND 语义添加到表中，如下面操作表示删除 siteid 为 1 的行，其余数据添加到表中：
 
-```Bash
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
     -H "merge_type: MERGE" \
@@ -778,7 +778,7 @@ JSON 数据格式：
 
 导入命令：
 
-```Bash
+```shell
 curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
 ```
 

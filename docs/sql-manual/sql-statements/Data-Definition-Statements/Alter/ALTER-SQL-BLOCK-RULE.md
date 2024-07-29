@@ -39,7 +39,7 @@ grammar:
 ```sql
 ALTER SQL_BLOCK_RULE rule_name
 [PROPERTIES ("key"="value", ...)];
-````
+```
 
 illustrate:
 
@@ -52,18 +52,18 @@ illustrate:
 
 ```sql
 ALTER SQL_BLOCK_RULE test_rule PROPERTIES("sql"="select \\* from test_table","enable"="true")
-````
+```
 
 2. If a rule sets partition_num, then sql or sqlHash cannot be modified
 
 ```sql
 ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
-````
+```
 
 ### Keywords
 
-````text
+```text
 ALTER,SQL_BLOCK_RULE
-````
+```
 
 ### Best Practice

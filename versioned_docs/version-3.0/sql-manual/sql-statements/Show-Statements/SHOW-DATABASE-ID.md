@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW DATABASE [database_id]
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ SHOW DATABASE [database_id]
 
     ```sql
     SHOW DATABASE 1001;
-    ````
+    ```
 
 ### Keywords
 

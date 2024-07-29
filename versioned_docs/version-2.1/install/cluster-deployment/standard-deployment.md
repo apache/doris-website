@@ -286,7 +286,7 @@ This is a CIDR representation that specifies the IP used by the FE. In environme
 
 Start FE process by executing the following command
 
-```Bash
+```shell
 bin/start_fe.sh --daemon
 ```
 
@@ -349,7 +349,7 @@ ALTER SYSTEM ADD OBSERVER "<fe_ip_address>:<fe_edit_log_port>"
 
 Execute the following command to start FE Follower node and synchronize metadata automatically.
 
-```Bash
+```shell
 bin/start_fe.sh --helper <helper_fe_ip>:<fe_edit_log_port> --daemon
 ```
 
@@ -568,7 +568,7 @@ As a distributed database, Doris generally has many BE nodes. Doris adds BE node
 
 You can use the following command to check if the FE has started successfully.
 
-```Bash
+```shell
 # Retry the following command, if it returns "msg":"success"，the FE has started successfully.
 server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 {"msg":"success","code":0,"data":{"replayedJournalId":0,"queryPort":0,"rpcPort":0,"version":""},"count":0}

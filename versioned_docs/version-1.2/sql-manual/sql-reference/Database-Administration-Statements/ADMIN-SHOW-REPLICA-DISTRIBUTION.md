@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 ADMIN SHOW REPLICA DISTRIBUTION FROM [db_name.]tbl_name [PARTITION (p1, ...)];
-````
+```
 
 illustrate:
 
@@ -50,13 +50,13 @@ illustrate:
 
     ```sql
     ADMIN SHOW REPLICA DISTRIBUTION FROM tbl1;
-    ````
+    ```
 
   2. View the replica distribution of the partitions of the table
 
       ```sql
      ADMIN SHOW REPLICA DISTRIBUTION FROM db1.tbl1 PARTITION(p1, p2);
-      ````
+      ```
 
 ### Keywords
 

@@ -40,7 +40,7 @@ grammar:
 
 ```sql
 KILL [CONNECTION | QUERY] processlist_id
-````
+```
 
 ### Example
 

@@ -38,7 +38,7 @@ grammar:
 
 ```sql
 SHOW TABLET tablet_id
-````
+```
 
 ### Example
 
@@ -46,7 +46,7 @@ SHOW TABLET tablet_id
 
     ```sql
     SHOW TABLET 10000;
-    ````
+    ```
 
 ### Keywords
 
