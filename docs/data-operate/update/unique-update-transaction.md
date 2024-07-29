@@ -109,7 +109,7 @@ PROPERTIES (
 
 The syntax for stream load is to add the mapping of the hidden column `function_column.sequence_col` to the `source_sequence` in the header. Example:
 
-```Bash
+```shell
 curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
 ```
 
@@ -228,7 +228,7 @@ Load the following data:
 
 Here is an example using Stream Load:
 
-```Bash
+```shell
 curl --location-trusted -u root: -T testData http://host:port/api/test/test_table/_stream_load
 ```
 

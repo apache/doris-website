@@ -249,7 +249,7 @@ SQL 函数文档排版请参考文档贡献指南-**[如何编写命令帮助手
 
    | 代码类型                                | 代码围栏指定方式         |
     | :-------------------------------------- | :----------------------- |
-    | Shell 脚本                              | ```shell``` 或 ```bash```  |
+    | Shell 脚本                              | ```shell``` 或 ```shell```  |
     | Python 代码                             | ````python```              |
     | JSON 代码                               | ````json```                |
     | XML 文档                                | ````xml```                 |
@@ -265,17 +265,17 @@ SQL 函数文档排版请参考文档贡献指南-**[如何编写命令帮助手
     | CSS 代码                                | ```css```                 |
     | PHP 代码                                | ```php```                |
 
-- 当使用 ```bash``` 代码时，写入命令与输出结果需分开编写。下面以 Kubernetes 集群访问文档为例：
+- 当使用 ```shell``` 代码时，写入命令与输出结果需分开编写。下面以 Kubernetes 集群访问文档为例：
 
   - 使用以下命令查看相应 Service：
 
-    ```Bash
+    ```shell
     kubectl get pod --namespace doris
     ```
 
   - 返回结果如下
   
-    ```Bash
+    ```shell
     NAME                     READY   STATUS    RESTARTS   AGE
     doriscluster-helm-fe-0   1/1     Running   0          1m39s
     doriscluster-helm-fe-1   1/1     Running   0          1m39s

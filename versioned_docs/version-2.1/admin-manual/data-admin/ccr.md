@@ -70,7 +70,7 @@ enable_feature_binlog=true
 
 ​Build CCR syncer
 
-```Bash
+```shell
 git clone https://github.com/selectdb/ccr-syncer
 cd ccr-syncer   
 bash build.sh <-j NUM_OF_THREAD> <--output SYNCER_OUTPUT_DIR>
@@ -81,7 +81,7 @@ cd SYNCER_OUTPUT_DIR# Contact the Doris community for a free CCR binary package
 Start and stop syncer
 
 
-```Bash
+```shell
 # Start
 cd bin && sh start_syncer.sh --daemon
    
@@ -91,7 +91,7 @@ sh stop_syncer.sh
 
 5. Enable binlog in the source cluster.
 
-```Bash
+```shell
 -- If you want to synchronize the entire database, you can execute the following script:
 vim shell/enable_db_binlog.sh
 Modify host, port, user, password, and db in the source cluster
@@ -103,7 +103,7 @@ ALTER TABLE enable_binlog SET ("binlog.enable" = "true");
 
 6. Launch a synchronization task to the syncer
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "ccr_test",
     "src": {
@@ -129,7 +129,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 Parameter description:
 
-```Bash
+```shell
 name: name of the CCR synchronization task, should be unique
 host, port: host and mysql(jdbc) port for the master FE for the corresponding cluster
 user, password: the credentials used by the syncer to initiate transactions, fetch data, etc.
@@ -271,7 +271,7 @@ Stop the syncer according to the process number in the pid file under the defaul
 
 The file structure can be seen under the output path after compilation:
 
-```Bash
+```shell
 output_dir
     bin
         ccr_syncer
@@ -306,7 +306,7 @@ Follow the default configurations.
 
 Specify the directory where the pid file is located. The above three stopping methods all depend on the directory where the pid file is located for execution.
 
-```Bash
+```shell
 bash bin/stop_syncer.sh --pid_dir /path/to/pids
 ```
 
@@ -318,7 +318,7 @@ The default value is `SYNCER_OUTPUT_DIR/bin`.
 
 Stop the syncer corresponding to host: port in the pid_dir path.
 
-```Bash
+```shell
 bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190
 ```
 
@@ -328,7 +328,7 @@ The default value of host is 127.0.0.1, and the default value of port is empty. 
 
 Stop the syncer corresponding to the specified pid file name in the pid_dir path.
 
-```Bash
+```shell
 bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"
 ```
 
@@ -338,7 +338,7 @@ The file names should be wrapped in `" "` and separated with spaces.
 
 **Template for requests**
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d {json_body} http://ccr_syncer_host:ccr_syncer_port/operator
 ```
 
@@ -362,7 +362,7 @@ or
 
 Create CCR tasks
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "ccr_test",
     "src": {
@@ -398,7 +398,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 View the synchronization progress.
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
 }' http://ccr_syncer_host:ccr_syncer_port/get_lag
@@ -410,7 +410,7 @@ The job_name is the name specified when create_ccr.
 
 Pause synchronization task.
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
 }' http://ccr_syncer_host:ccr_syncer_port/pause 
@@ -420,7 +420,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 Resume synchronization task.
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
 }' http://ccr_syncer_host:ccr_syncer_port/resume
@@ -430,7 +430,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 Delete synchronization task.
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
 }' http://ccr_syncer_host:ccr_syncer_port/delete
@@ -440,7 +440,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 View version information.
 
-```Bash
+```shell
 curl http://ccr_syncer_host:ccr_syncer_port/version
 
 # > return
@@ -451,7 +451,7 @@ curl http://ccr_syncer_host:ccr_syncer_port/version
 
 View job status.
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
 }' http://ccr_syncer_host:ccr_syncer_port/job_status
@@ -470,7 +470,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 No sync. Users can swap the source and target clusters.
 
-```Bash
+```shell
 curl -X POST -H "Content-Type: application/json" -d '{
     "name": "job_name"
 }' http://ccr_syncer_host:ccr_syncer_port/desync
@@ -480,7 +480,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 List all created tasks.
 
-```Bash
+```shell
 curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
 {"success":true,"jobs":["ccr_db_table_alias"]}
@@ -492,7 +492,7 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
 The file structure can be seen under the output path after compilation:
 
-```Bash
+```shell
 output_dir
     bin
         ccr_syncer
@@ -509,7 +509,7 @@ output_dir
 
 **Usage**
 
-```Bash
+```shell
 bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 ```
 
@@ -556,7 +556,7 @@ Minimum required version: V2.0.3
 
 BE-side configuration parameter
 
-```Bash
+```shell
 download_binlog_rate_limit_kbs=1024 # This configuration limits the size to 1MB. It applies to all binlogs, including local snapshots, in a single BE.
 ```
 

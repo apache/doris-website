@@ -36,13 +36,13 @@ Doris 在 Kubernetes 上默认提供 ClusterIP 访问模式。无需进行修改
 
 在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
-```bash
+```shell
 kubectl -n doris get svc
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
 doriscluster-sample-be-internal   ClusterIP   None          <none>        9050/TCP                              9m
 doriscluster-sample-be-service    ClusterIP   10.1.68.128   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   9m
@@ -59,13 +59,13 @@ doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/T
 
 使用以下命令，可以在当前的 Kubernetes 集群中创建一个包含 mysql client 的 pod：
 
-```bash
+```shell
 kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
 ```
 
 在集群内的容器中，可以使用对外暴露的后缀为 `service` 的服务名访问 Doris 集群：
 
-```bash
+```shell
 ## 使用 service 类型 pod name 访问 Doris 集群
 mysql -uroot -P9030 -hdoriscluster-sample-fe-service
 ```
@@ -145,13 +145,13 @@ spec:
 
 在部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
 
-```bash
+```shell
 kubectl get service
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
 kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP   None             <none>        9030/TCP                                                      2d
@@ -162,13 +162,13 @@ doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        906
 
 Doris 的 Query Port 端口默认为 9030，在本地中被映射到本地端口 31545。在访问 Doris 集群时，同时需要获取到对应的 IP 地址，可以通过以下命令查看：
 
-```bash
+```shell
 kubectl get nodes -owide
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
 r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -178,7 +178,7 @@ r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        Ce
 
 在 NodePort 模式下，可以根据任何 node 节点的宿主机 IP 与端口映射访问 Kubernetes 集群内的服务。在本例中可以使用任一的 node 节点 IP，192.168.88.61、192.168.88.62、192.168.88.63 访问 Doris 服务。如在下例中使用了 node 节点 192.168.88.62 与映射出的 query port 端口 31545 访问集群：
 
-```bash
+```shell
 mysql -h 192.168.88.62 -P 31545 -uroot
 ```
 
@@ -194,7 +194,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 在上例返回结果中，可以直接在同一个 Kubernetes 集群内的 Pod 中通过 curl 命令获取返回结果：
 
-```bash
+```shell
 curl http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local:8040/api/_load_error_log?file=__shard_1/error_log_insert_stmt_af474190276a2e9c-49bb9d175b8e968e_af474190276a2e9c_49bb9d175b8e968e
 ```
 
@@ -245,7 +245,7 @@ spec:
 
 按照上例中的 service 将 CR 中的 ${podName} 替换成 doriscluster-sample-be-2，将 ${ServiceType} 替换为 NodePort。通过 kubectl apply 命令，在于 doris 集群相同的 namespace 中创建 service 服务。
 
-```bash
+```shell
 kubectl -n {namespace} apply -f strem_load_get_error.yaml
 ```
 
@@ -253,13 +253,13 @@ kubectl -n {namespace} apply -f strem_load_get_error.yaml
 
 使用以下命令查看上述部署 Service 分配的 NodePort 端口：
 
-```bash
+```shell
 kubectl get service -n doris doriscluster-detail-error
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)            AGE
 doriscluster-detail-error         NodePort    10.152.183.35    <none>        8040:31201/TCP     32s
 ```
@@ -268,13 +268,13 @@ doriscluster-detail-error         NodePort    10.152.183.35    <none>        804
 
 获取 K8s 管控的宿主机地址：
 
-```bash
+```shell
 kubectl get node -owide
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME             STATUS   ROLES    AGE    VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION       CONTAINER-RUNTIME
 vm-10-8-centos   Ready    <none>   226d   v1.28.7   10.16.10.8    <none>        TencentOS Server 3.1 (Final)   5.4.119-19-0009.3    containerd://1.6.28
 vm-10-7-centos   Ready    <none>   19d    v1.28.7   10.16.10.7    <none>        TencentOS Server 3.1 (Final)   5.4.119-19.0009.25   containerd://1.6.28
@@ -301,7 +301,7 @@ http://doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluste
 
 上述地址的域名地址为 `doriscluster-sample-be-2.doriscluster-sample-be-internal.doris.svc.cluster.local` 在 `Kubernetes` 上 `Doris Operator` 部署的 pod 使用的域名中，三级域名为  pod 的名称。将上述模板中 {podName} 替换为真实的 `pod` 名称，将 {serviceType} 替换为 `LoadBalancer` ，更改后保存到新建的 `stream_load_get_error.yaml` 文件中。使用如下命令部署 service：
 
-```bash
+```shell
 kubectl -n {namespace} apply -f strem_load_get_error.yaml
 ```
 
@@ -309,13 +309,13 @@ kubectl -n {namespace} apply -f strem_load_get_error.yaml
 
 使用如下命令查看上述部署 Service 分配的  LoadBalaner 地址 EXTERNAL-IP ,以下为在 aws eks 测试实例：
 
-```bash
+```shell
 kubectl get service -n doris doriscluster-detail-error
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                         TYPE          CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)           AGE
 doriscluster-detail-error    LoadBalancer  172.20.183.136   ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com  8040:32003/TCP    14s
 ```

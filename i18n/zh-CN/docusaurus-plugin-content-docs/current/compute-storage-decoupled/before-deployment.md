@@ -205,7 +205,7 @@ Welcome to the fdbcli. For help, type `help'.
 
 以下是一个基于 8 核 CPU、32GB 内存和一块 500GB SSD 数据盘的机器的`foundationdb.conf`示例（请确保正确设置 `data` 和 `log` 的存放路径；目前，数据盘一般挂载在 `mnt` 上）：
 
-```Bash
+```shell
 # foundationdb.conf
 ##
 ## Configuration file for FoundationDB server processes
@@ -291,7 +291,7 @@ chmod -R 777 /etc/foundationdb
 
 然后重启 FoundationDB 服务：
 
-```Bash
+```shell
 # for service
 user@host$ sudo service foundationdb restart
 
@@ -342,7 +342,7 @@ chmod -R 777 /etc/foundationdb
 
 随后在本机重启 FoundationDB 服务。
 
-```Bash
+```shell
 # for service
 user@host$ sudo service foundationdb restart
 
@@ -431,7 +431,7 @@ OpenJDK 17 需安装到所有的节点上，可通过以下链接获取安装：
 
 然后，将下载好的 OpenJDK 安装包直接解压到安装路径即可：
 
-```Bash
+```shell
 tar xf openjdk-17.0.1_linux-x64_bin.tar.gz  -C /opt/
 
 # 启动 Meta Service 或者 Recycler 之前

@@ -66,7 +66,7 @@ To apply the TTL strategy for a table, set the TTL strategy in the PROPERTIES of
 
 - `file_cache_ttl_seconds`: The expected time (measured in seconds) for newly imported data to be retained in the cache.
 
-```Bash
+```shell
 CREATE TABLE IF NOT EXISTS customer (
   C_CUSTKEY     INTEGER NOT NULL,
   C_NAME        VARCHAR(25) NOT NULL,
@@ -208,7 +208,7 @@ A user has a total data volume of over 3TB, but the available cache capacity is 
 
 Under the LRU strategy, if a large table is queried and accessed, its data will replace that of the small table in the cache, causing performance fluctuations. To solve this, the user adopts a TTL strategy, setting the TTL time of the dimension table and fact table to 1 year and 1 day, respectively. 
 
-```Bash
+```shell
 ALTER TABLE dimension_table set ("file_cache_ttl_seconds"="31536000");
 
 ALTER TABLE fact_table set ("file_cache_ttl_seconds"="86400");

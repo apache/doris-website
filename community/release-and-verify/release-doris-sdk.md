@@ -46,7 +46,7 @@ Create a branch in the code base: 1.0.0-release, and checkout to this branch.
 
 Execute the following command to start generating release tags:
 
-```bash
+```shell
 mvn release:clean
 mvn release:prepare -DpushChanges=false
 ```

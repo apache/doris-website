@@ -48,7 +48,7 @@ Colocation 属性的表的副本修复和均衡可以参阅[这里](../../query/
 
 7. Storage Medium：存储介质。Doris 支持对分区粒度指定不同的存储介质，包括 SSD 和 HDD。副本调度策略也是针对不同的存储介质分别调度的。
 
-```bash
+```shell
 
               +--------+              +-----------+
               |  Meta  |              |  Backends |

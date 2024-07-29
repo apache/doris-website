@@ -32,7 +32,7 @@ This guide is about how to compile Doris using the official compilation image pr
 
 In CentOS, execute the following command: 
 
-```Bash
+```shell
 yum install docker
 ```
 
@@ -51,7 +51,7 @@ For different versions of Doris, you need to download different build images. Th
 
 Take Doris 2.0 as an example, download and check the correponding Docker image.
 
-```Bash
+```shell
 # Choose docker.io/apache/doris:build-env-for-2.0
 $ docker pull apache/doris:build-env-for-2.0
 

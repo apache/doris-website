@@ -98,7 +98,7 @@ cd output/fe/bin
 
 Download the pre-compiled third-party libraries from [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation). Refer to the command below: 
 
-```Bash
+```shell
 cd thirdparty
 rm -rf installed
 

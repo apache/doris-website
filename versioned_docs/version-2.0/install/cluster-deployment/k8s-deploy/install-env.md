@@ -39,7 +39,7 @@ under the License.
 
 When deploying a Doris cluster on Kubernetes, it is recommended to turn off the firewall configuration:
 
-```bash
+```shell
 systemctl stop firewalld
 systemctl disable firewalld
 ```
@@ -56,7 +56,7 @@ When deploying Doris, it is recommended to turn off the swap partition.
 
 The swap partition can be permanently shut down with the following command.
 
-```bash
+```shell
 echo "vm.swappiness = 0">> /etc/sysctl.conf
 swapoff -a && swapon -a
 sysctl -p
@@ -64,7 +64,7 @@ sysctl -p
 
 ### Set the maximum number of open file handles in the system
 
-```bash
+```shell
 vi /etc/security/limits.conf 
 * soft nofile 65536
 * hard nofile 65536
@@ -74,7 +74,7 @@ vi /etc/security/limits.conf
 
 Modify the virtual memory area to at least 2000000
 
-```bash
+```shell
 sysctl -w vm.max_map_count=2000000
 ```
 
@@ -82,7 +82,7 @@ sysctl -w vm.max_map_count=2000000
 
 When deploying Doris, it is recommended to turn off transparent huge pages.
 
-```bash
+```shell
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 echo never > /sys/kernel/mm/transparent_hugepage/defrag
 ```

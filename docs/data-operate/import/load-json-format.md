@@ -234,7 +234,7 @@ k2 int, k1 int
 
 Import statement 1 (take Stream Load as an example):
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -T example.json http:/ /127.0.0.1:8030/api/db1/tbl1/_stream_load
 ````
 
@@ -252,7 +252,7 @@ You can see that the actual k1 column imports the value of the "k2" column in th
 
 Import statement 2:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -H "columns: k2, k1 " -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ````
 
@@ -268,7 +268,7 @@ Compared with the import statement 1, the Columns field is added here to describ
 
 Of course, as with other imports, column transformations can be performed in Columns. An example is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\"]" -H "columns: k2, tmp_k1 , k1 = tmp_k1 * 100" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ````
 
@@ -293,7 +293,7 @@ k2 int, k1 int, k1_copy int
 
 If you want to assign a column field in JSON to several column fields in the table multiple times, you can specify the column multiple times in jsonPaths and specify the mapping order in sequence. An example is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\", \"$.k1\"]" -H "columns: k2,k1,k1_copy" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -324,7 +324,7 @@ k2 int, k1 int, k1_nested1 int, k1_nested2 int
 ```
 If you want to assign multi-level fields with the same name nested in json to different columns in the table, you can specify the column in jsonPaths and specify the mapping order in turn. An example are as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "jsonpaths: [\"$.k2\", \"$.k1\",\"$.k3.k1\",\"$.k3.k1_nested.k1\" -H "columns: k2,k1,k1_nested1,k1_nested2" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ```
 
@@ -387,7 +387,7 @@ The table structure is: `k1 int null, k2 varchar(32) null default "x"`
 
 The import statement is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ````
 
@@ -421,7 +421,7 @@ But the actual import result is as follows, that is, for the missing column, NUL
 
 This is because Doris doesn't know "the missing column is column k2 in the table" from the information in the import statement. If you want to import the above data according to the expected result, the import statement is as follows:
 
-```bash
+```shell
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -H "jsonpaths: [\"$.k1\", \"$.k2\"]" - H "columns: k1, tmp_k2, k2 = ifnull(tmp_k2, 'x')" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ````
 
@@ -447,7 +447,7 @@ code INT NULL
 
    - do not specify JSON Path
 
-     ```bash
+     ```shell
      curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
      ````
 
@@ -459,7 +459,7 @@ code INT NULL
 
    - Specify JSON Path
 
-     ```bash
+     ```shell
      curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - T data.json http://localhost:8030/api/db1/tbl1/_stream_load
      ````
 
@@ -477,7 +477,7 @@ code INT NULL
 
    - Specify JSON Path
 
-     ```bash
+     ```shell
      curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\ "]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
      ````
 
@@ -508,7 +508,7 @@ code INT NULL
 
    - Specify JSON Path
 
-     ```bash
+     ```shell
      curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
      ````
 
@@ -534,7 +534,7 @@ code INT NULL
 
  	 StreamLoad import:
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
 ```
 	   Import result:
@@ -548,7 +548,7 @@ curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: 
 
 The data is still the multi-line data in Example 3, and now it is necessary to add 1 to the `code` column in the imported data before importing.
 
-```bash
+```shell
 curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - H "strip_outer_array: true" -H "columns: id, city, tmpc, code=tmpc+1" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
 ````
 
@@ -575,7 +575,7 @@ we suggest you to use JSON string to import data to `array<decimal>` or `array<l
 {"k1": 40, "k2": ["10000000000000000000.1111111222222222"]}
 ```
 
-```bash
+```shell
 curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_decimal.json http://localhost:8035/api/example_db/array_test_decimal/_stream_load
 ```
 
@@ -595,7 +595,7 @@ MySQL > select * from array_test_decimal;
 {"k1": 999, "k2": ["76959836937749932879763573681792701709", "26017042825937891692910431521038521227"]}
 ```
 
-```bash
+```shell
 curl --location-trusted -u root:  -H "max_filter_ratio:0.01" -H "format:json" -H "timeout:300" -T test_largeint.json http://localhost:8035/api/example_db/array_test_largeint/_stream_load
 ```
 

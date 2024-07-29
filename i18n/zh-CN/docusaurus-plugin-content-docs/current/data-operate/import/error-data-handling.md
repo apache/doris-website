@@ -112,7 +112,7 @@ mysql> desc user_profile;
 18,9999999,2023-07-03 12:00:03
 ```
 
-```bash
+```shell
 curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:false" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://host:port/api/db1/user_profile/_stream_load
 ```
 
@@ -129,7 +129,7 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true"
 
 [STREAM LOAD](./import-way/stream-load-manual.md)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "strict_mode: true" \
    -T 1.txt \
@@ -217,7 +217,7 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true"
 
 [Stream Load](./import-way/stream-load-manual.md)
 
-   ```bash
+   ```shell
    curl --location-trusted -u user:passwd \
    -H "max_filter_ratio: 0.1" \
    -T 1.txt \

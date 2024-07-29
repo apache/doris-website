@@ -51,7 +51,7 @@ under the License.
 
 ## 使用方法
 
-```bash
+```shell
 
 doris-streamloader --source_file={FILE_LIST} --url={FE_OR_BE_SERVER_URL}:{PORT} --header={STREAMLOAD_HEADER} --db={TARGET_DATABASE} --table={TARGET_TABLE}
 
@@ -110,7 +110,7 @@ doris-streamloader --source_file={FILE_LIST} --url={FE_OR_BE_SERVER_URL}:{PORT} 
 
 用法举例：
 
-```bash
+```shell
 doris-streamloader --source_file="data.csv" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
 ```
 

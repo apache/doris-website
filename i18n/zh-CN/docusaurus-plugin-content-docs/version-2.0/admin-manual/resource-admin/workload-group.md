@@ -52,7 +52,7 @@ properties (
 
 2. 开启 experimental_enable_workload_group 配置项，在 fe.conf 中设置：
 
-```bash
+```shell
 experimental_enable_workload_group=true
 ```
 
@@ -71,7 +71,7 @@ properties (
 
 4. 开启 Pipeline 执行引擎，Workload Group CPU 隔离基于 Pipeline 执行引擎实现，因此需开启 Session 变量：
 
-```bash
+```shell
 set experimental_enable_pipeline_engine = true;
 ```
 

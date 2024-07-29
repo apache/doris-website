@@ -30,32 +30,32 @@ Doris Operator 使用自定义资源定义（Custom Resource Definition, CRD）�
 
 通过以下命令可以在 Kubernetes 环境中部署 Doris Cluster CRD：
 
-```bash
+```shell
 kubectl create -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 ```
 
 如果没有外网，先将 CRD 文件下载到本地：
 
-```bash
+```shell
 wget https://raw.githubusercontent.com/selectdb/doris-operator/master/config/crd/bases/doris.selectdb.com_dorisclusters.yaml
 kubectl create -f ./doris.selectdb.com_dorisclusters.yaml
 ```
 
 以下是期望输出结果：
 
-```bash
+```shell
 customresourcedefinition.apiextensions.k8s.io/dorisclusters.doris.selectdb.com created
 ```
 
 在创建了 Doris Cluster CRD 后，可以通过以下命令查看创建的 CRD。
 
-```bash
+```shell
 kubectl get crd | grep doris
 ```
 
 以下为期望输出结果：
 
-```bash
+```shell
 dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
 ```
 
@@ -67,13 +67,13 @@ dorisclusters.doris.selectdb.com                      2024-02-22T16:23:13Z
 
 使用以下命令可以在 Kubernetes 集群中部署 Doris Operator：
 
-```bash
+```shell
 kubectl apply -f https://raw.githubusercontent.com/selectdb/doris-operator/master/config/operator/operator.yaml
 ```
 
 以下为期望输出结果：
 
-```bash
+```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
 rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -93,13 +93,13 @@ deployment.apps/doris-operator created
 
 在修改 operator.yaml 文件后，可以使用以下命令部署 Doris Operator 服务：
 
-```bash
+```shell
 kubectl apply -f ./operator.yaml
 ```
 
 以下为期望输出结果：
 
-```bash
+```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
 rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -115,13 +115,13 @@ deployment.apps/doris-operator created
 
 如果服务器没有连通外网，需要先下载对应的 operator 镜像文件。Doris Operator 用到以下的镜像：
 
-```bash
+```shell
 selectdb/doris.k8s-operator:latest
 ```
 
 在可以连通外网的服务器中运行以下的命令，可以将镜像下载下来：
 
-```bash
+```shell
 ## download doris operator image
 docker pull selectdb/doris.k8s-operator:latest
 ## save the doris operator image as a tar package
@@ -130,7 +130,7 @@ docker save -o doris.k8s-operator-latest.tar selectdb/doris.k8s-operator:latest
 
 将已打包的 tar 文件放置到所有的 Kubernetes node 节点中，运行以下命令上传镜像：
 
-```bash
+```shell
 docker load -i doris.k8s-operator-latest.tar
 ```
 
@@ -140,7 +140,7 @@ docker load -i doris.k8s-operator-latest.tar
 
 Doris Operator 在 Kubernetes 集群中是一个无状态的 Deployment，可以根据需求修改如 `limits`、`replica`、`label`、`namespace` 等项目。如需要指定某一版本的 doirs operator 镜像，可以在上传镜像后对 operator.yaml 文件做如下修改：
 
-```bash
+```shell
 ...
 containers:
   - command:
@@ -161,13 +161,13 @@ containers:
 
 在修改 Doris Operator 模板后，可以使用 apply 命令部署 Operator：
 
-```bash
+```shell
 kubectl apply -f ./operator.yaml
 ```
 
 以下为期望输出结果：
 
-```bash
+```shell
 namespace/doris created
 role.rbac.authorization.k8s.io/leader-election-role created
 rolebinding.rbac.authorization.k8s.io/leader-election-rolebinding created
@@ -187,13 +187,13 @@ Helm Chart 是一系列描述 Kubernetes 相关资源的 YAML 文件的封装。
 
 通过 `repo add` 命令添加远程仓库
 
-```bash
+```shell
 helm repo add doris-repo https://charts.selectdb.com
 ```
 
 通过 `repo update` 命令更新最新版本的 chart
 
-```bash
+```shell
 helm repo update doris-repo
 ```
 
@@ -201,25 +201,25 @@ helm repo update doris-repo
 
 通过 `helm install` 命令可以使用默认配置在 doris 的 namespace 中安装 Doris Operator
 
-```bash
+```shell
 helm install operator doris-repo/doris-operator
 ```
 
 如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令:
 
-```bash
+```shell
 helm install -f values.yaml operator doris-repo/doris-operator
 ```
 
 通过 `kubectl get pods` 命令查看 Pod 的部署状态。当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。
 
-```bash
+```shell
 kubectl get pod --namespace doris
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
@@ -232,7 +232,7 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 
 下载 `doris-operator-{chart_version}.tgz` 安装 Doris Operator chart。如需要下载 1.4.0 版本的 Doris Operator 可以使用以下命令：
 
-```bash
+```shell
 wget https://charts.selectdb.com/doris-operator-1.4.0.tgz
 ```
 
@@ -240,25 +240,25 @@ wget https://charts.selectdb.com/doris-operator-1.4.0.tgz
 
 通过 `helm install` 命令可以安装 Doris Operator。
 
-```bash
+```shell
 helm install operator doris-operator-1.4.0.tgz
 ```
 
 如果需要自定义装配 [values.yaml](https://artifacthub.io/packages/helm/doris/doris-operator?modal=values) ，可以参考如下命令:
 
-```bash
+```shell
 helm install -f values.yaml operator doris-operator-1.4.0.tgz
 ```
 
 通过 `kubectl get pods` 命令查看 Pod 的部署状态。当 Doris Operator 的 Pod 处于 Running 状态且 Pod 内所有容器都已经就绪，即部署成功。
 
-```bash
+```shell
 kubectl get pod --namespace doris
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 ```
@@ -267,13 +267,13 @@ doris-operator-866bd449bb-zl5mr   1/1     Running   0          18m
 
 当部署 Operator 服务后，可以通过以下命令查看服务状态。
 
-```bash
+```shell
 kubectl get pod -n doris
 ```
 
 返回结果如下：
 
-```bash
+```shell
 NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-6f47594455-p5tp7   1/1     Running   0          11s
 ```

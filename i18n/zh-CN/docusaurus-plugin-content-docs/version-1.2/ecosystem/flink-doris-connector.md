@@ -60,7 +60,7 @@ Flink Doris Connector 可以支持通过 Flink 操作（读取、插入、修改
 
 2.指定thrift安装目录
 
-```bash
+```shell
 ##源文件内容
 #export THRIFT_BIN=
 #export MVN_BIN=
@@ -89,7 +89,7 @@ export THRIFT_BIN=/opt/homebrew/Cellar/thrift@0.13.0/0.13.0/bin/thrift
  参考链接: `https://gist.github.com/tonydeng/02e571f273d6cce4230dc8d5f394493c`
  
  Linux:
-  ```bash
+  ```shell
     1. wget https://archive.apache.org/dist/thrift/0.13.0/thrift-0.13.0.tar.gz  # 下载源码包
     2. yum install -y autoconf automake libtool cmake ncurses-devel openssl-devel lzo-devel zlib-devel gcc gcc-c++  # 安装依赖
     3. tar zxvf thrift-0.13.0.tar.gz
@@ -103,7 +103,7 @@ export THRIFT_BIN=/opt/homebrew/Cellar/thrift@0.13.0/0.13.0/bin/thrift
 
 在源码目录下执行：
 
-```bash
+```shell
 sh build.sh
 
   Usage:
