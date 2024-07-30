@@ -403,25 +403,3 @@ where k1 is not null and k4 >= 1.2
 | ---- | ---- | ---- | ---- |
 | 2    | 200  | 2    | 1.2  |
 | 3    | 300  | 3    | 1.3  |
-
-## Best Practices
-
-### Data Quality Issues and Filtering Threshold
-
-The rows of data processed in the load job can be classified into the following three categories:
-
-- Filtered Rows: Data rows that are filtered out due to data quality issues. Data quality issues can include type errors, precision errors, strings exceeding length limits, mismatched file column counts, and data rows filtered out due to missing corresponding partitions.
-
-- Unselected Rows: These are data rows filtered out due to `preceding filter` or `where` column filtering conditions.
-
-- Loaded Rows: Data rows that are successfully loaded.
-
-Doris's load task allows users to set a maximum error rate (`max_filter_ratio`). If the error rate of the loaded data is below the threshold, the error rows will be ignored, and the other correct data will be loaded.
-
-The error rate is calculated as follows:
-
-```Plain
-#Filtered Rows / (#Filtered Rows + #Loaded Rows)
-```
-
-This means that `Unselected Rows` are not included in the error rate calculation.
