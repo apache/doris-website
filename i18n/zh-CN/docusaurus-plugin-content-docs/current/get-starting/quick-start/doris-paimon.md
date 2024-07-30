@@ -267,3 +267,4 @@ mysql> explain verbose select * from customer where c_nationkey < 3;
 ```
 
 可以看到，对于刚才通过 Flink SQL 更新的表，包含 4 个分片，并且全部分片都可以通过 Native Reader 进行访问（paimonNativeReadSplits=4/4）。并且第一个分片的hasDeletionVector的属性为 true，表示该分片有对应的 Deletion Vector，读取时会根据 Deletion Vector 进行数据过滤。
+
