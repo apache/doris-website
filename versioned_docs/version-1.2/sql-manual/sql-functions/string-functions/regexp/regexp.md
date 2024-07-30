@@ -1,6 +1,6 @@
 ---
 {
-    "title": "regexp",
+    "title": "REGEXP",
     "language": "en"
 }
 ---
@@ -32,10 +32,12 @@ under the License.
 
 Perform regular matching on the string str, return true if it matches, and return false if it doesn't match. pattern is a regular expression.
 
+Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
+
 ### example
 
-```
-// Find all data starting with 'billie' in the k1 field
+```sql
+--- Find all data starting with 'billie' in the k1 field
 mysql> select k1 from test where k1 regexp '^billie';
 +--------------------+
 | k1                 |
@@ -43,13 +45,20 @@ mysql> select k1 from test where k1 regexp '^billie';
 | billie eillish     |
 +--------------------+
 
-// Find all data ending with 'ok' in the k1 field:
+--- Find all data ending with 'ok' in the k1 field:
 mysql> select k1 from test where k1 regexp 'ok$';
 +----------+
 | k1       |
 +----------+
 | It's ok  |
 +----------+
+
+mysql> select regexp('这是一段中文This is a passage in English 1234567', '\\p{Han}');
++-----------------------------------------------------------------------------+
+| ('这是一段中文This is a passage in English 1234567' regexp '\p{Han}')       |
++-----------------------------------------------------------------------------+
+|                                                                           1 |
++-----------------------------------------------------------------------------+
 ```
 
 ### keywords
