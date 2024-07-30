@@ -10,7 +10,8 @@
                     "label": "Quick Start",
                     "items": [
                         "get-starting/quick-start/quick-start",
-                        "get-starting/quick-start/doris-hudi"
+                        "get-starting/quick-start/doris-hudi",
+                        "get-starting/quick-start/doris-paimon"
                     ]
                 }
             ]
