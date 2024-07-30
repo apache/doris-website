@@ -24,6 +24,7 @@ import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
     { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
 function downloadFile(url: string) {
@@ -55,7 +56,7 @@ export default function Download() {
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-2.1.4');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/release-3.0.0');
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -106,6 +107,8 @@ export default function Download() {
             setReleaseNote('https://github.com/apache/doris/releases');
         } else if (values.version[0] === '1.2') {
             setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
+        } else if (['2.1','2.0'].includes(values.version[0])) {
+            setReleaseNote(`/docs/${values.version[0]}/releasenotes/release-${values.version[1]}`);
         } else {
             setReleaseNote(`/docs/releasenotes/release-${values.version[1]}`);
         }
@@ -214,47 +217,61 @@ export default function Download() {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="download-type way">
-                            <label></label>
-                            <div className={clsx('download-way all-in-one show')}>
-                                {downloadInfo && (
+                        {version === '3.0.0' && cpu === 'ARM64' ?
+                            <div className="download-type way">
+                                <label></label>
+                                <div className={clsx('download-way all-in-one show')}>
                                     <div className="tabs-radio">
                                         <div className="radio">
-                                            {downloadType === DownloadTypeEnum.Binary ? (
-                                                <div className="inner" key={downloadInfo.filename}>
-                                                    <Link to={downloadInfo.gz}>{downloadInfo.filename}</Link>
-                                                    <span> ( </span>
-                                                    <Link to={downloadInfo.asc}>ASC</Link>,{' '}
-                                                    <Link to={downloadInfo.sha512}>SHA-512</Link>
-                                                    <span> )</span>
-                                                </div>
-                                            ) : (
-                                                <div className="inner" key={downloadInfo.filename}>
-                                                    <Link
-                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz`}
-                                                    >{`apache-doris-${downloadInfo.version}-src.tar.gz`}</Link>
-                                                    <span> ( </span>
-                                                    <Link
-                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
-                                                    >
-                                                        ASC
-                                                    </Link>
-                                                    ,{' '}
-                                                    <Link
-                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
-                                                    >
-                                                        SHA-512
-                                                    </Link>
-                                                    <span> )</span>
-                                                </div>
-                                            )}
+                                            <div className="inner cursor-not-allowed ">
+                                                <span className=" cursor-not-allowed text-[#8592a6]" >Currently not supported</span>
+                                            </div>
                                         </div>
                                     </div>
-                                )}
+                                </div>
                             </div>
-                        </div>
-                        <div className="all-download-note" style={{textAlign:'center',marginTop:'24px'}}>
+                            :
+                            <div className="download-type way">
+                                <label></label>
+                                <div className={clsx('download-way all-in-one show')}>
+                                    {downloadInfo && (
+                                        <div className="tabs-radio">
+                                            <div className="radio">
+                                                {downloadType === DownloadTypeEnum.Binary ? (
+                                                    <div className="inner" key={downloadInfo.filename}>
+                                                        <Link to={downloadInfo.gz}>{downloadInfo.filename}</Link>
+                                                        <span> ( </span>
+                                                        <Link to={downloadInfo.asc}>ASC</Link>,{' '}
+                                                        <Link to={downloadInfo.sha512}>SHA-512</Link>
+                                                        <span> )</span>
+                                                    </div>
+                                                ) : (
+                                                    <div className="inner" key={downloadInfo.filename}>
+                                                        <Link
+                                                            to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz`}
+                                                        >{`apache-doris-${downloadInfo.version}-src.tar.gz`}</Link>
+                                                        <span> ( </span>
+                                                        <Link
+                                                            to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
+                                                        >
+                                                            ASC
+                                                        </Link>
+                                                        ,{' '}
+                                                        <Link
+                                                            to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
+                                                        >
+                                                            SHA-512
+                                                        </Link>
+                                                        <span> )</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        }
+                        <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
                             Note: For Apache Doris version specifics, please refer to the <Link
                                 to="https://doris.apache.org/community/release-versioning"
                                 style={{
