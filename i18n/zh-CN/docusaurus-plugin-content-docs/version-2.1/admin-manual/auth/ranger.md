@@ -45,7 +45,7 @@ Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，�
 	- [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
 	- [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
-2. 将下载好的文件放到 Ranger 服务的 plugins 目录下，如：
+2. 将下载好的文件放到 Ranger 服务的 `ranger-plugins/doris` 目录下，如：
 
 	```
 	/usr/local/service/ranger/ews/webapp/WEB-INF/classes/ranger-plugins/doris/ranger-doris-plugin-3.0.0-SNAPSHOT.jar
