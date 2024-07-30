@@ -1,7 +1,7 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'Apache Doris version 2.0.13 has been released',
-        link: 'https://doris.apache.org/blog/release-note-2.0.13',
+        label: 'Migrate data lakehouse from BigQuery to Apache Doris, saving $4,500 per month',
+        link: 'https://doris.apache.org/blog/migrate-lakehouse-from-bigquery-to-doris',
     },
     {
         label: 'Why Apache Doris is the Best Open Source Alternative to Rockset',

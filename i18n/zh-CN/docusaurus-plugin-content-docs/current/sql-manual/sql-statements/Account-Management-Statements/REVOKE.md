@@ -77,6 +77,24 @@ role_list 是需要撤销的角色列表，以逗号分隔，指定的角色必�
     REVOKE 'role1','role2' FROM 'jack'@'192.%';
     ```
 
+4. 撤销用户jack使用Workload Group 'g1'的权限
+
+    ```
+    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
+    ```
+
+5. 撤销用户jack使用所有Workload Group的权限
+    
+    ```
+    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
+    ```
+
+6. 撤销角色test_role使用Workload Group 'g1'的权限
+    
+    ```
+   REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'test_role';
+   ```
+
 ### Keywords
 
     REVOKE
