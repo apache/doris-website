@@ -156,7 +156,7 @@ Flink SQL> select * from customer order by c_custkey limit 4;
 
 ### 04 数据查询
 
-如下所示，Doris 集群中已经创建了名为paimon 的 Catalog（可通过 SHOW CATALOGS 查看）。以下为该 Catalog 的创建语句：
+如下所示，Doris 集群中已经创建了名为 `paimon` 的 Catalog（可通过 SHOW CATALOGS 查看）。以下为该 Catalog 的创建语句：
 
 ```
 -- 已创建，无需执行
@@ -228,7 +228,7 @@ mysql> select * from customer where c_nationkey=1 limit 2;
 
 ![](/images/quick-start/lakehouse-paimon-benchmark.PNG)
 
-从测试结果可以看到，Doris 在标准静态测试集上的平均查询性能是 Trino 的 3 -5 倍。后续我们将针对 Deletion Vector 进行优化，进一步提升真实业务场景下的查询效率。 
+从测试结果可以看到，Doris 在标准静态测试集上的平均查询性能是 Trino 的 3~5 倍。后续我们将针对 Deletion Vector 进行优化，进一步提升真实业务场景下的查询效率。 
 
 ## 查询优化
 
@@ -266,4 +266,4 @@ mysql> explain verbose select * from customer where c_nationkey < 3;
 67 rows in set (0.23 sec)
 ```
 
-可以看到，对于刚才通过 Flink SQL 更新的表，包含 4 个分片，并且全部分片都可以通过 Native Reader 进行访问（paimonNativeReadSplits=4/4）。并且第一个分片的hasDeletionVector的属性为 true，表示该分片有对应的 Deletion Vector，读取时会根据 Deletion Vector 进行数据过滤。
+可以看到，对于刚才通过 Flink SQL 更新的表，包含 4 个分片，并且全部分片都可以通过 Native Reader 进行访问（`paimonNativeReadSplits=4/4`）。并且第一个分片的`hasDeletionVector`的属性为`true`，表示该分片有对应的 Deletion Vector，读取时会根据 Deletion Vector 进行数据过滤。
