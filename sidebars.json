@@ -10,7 +10,8 @@
                     "label": "Quick Start",
                     "items": [
                         "get-starting/quick-start/quick-start",
-                        "get-starting/quick-start/doris-hudi"
+                        "get-starting/quick-start/doris-hudi",
+                        "get-starting/quick-start/doris-paimon"
                     ]
                 }
             ]
@@ -615,6 +616,7 @@
                                 "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
+                                "sql-manual/sql-functions/array-functions/array-contains_all",
                                 "sql-manual/sql-functions/array-functions/array-except",
                                 "sql-manual/sql-functions/array-functions/array-product",
                                 "sql-manual/sql-functions/array-functions/array-intersect",
@@ -853,8 +855,7 @@
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract-all",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-replace",
-                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one",
-                                        "sql-manual/sql-functions/string-functions/regexp/not-regexp"
+                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one"
                                     ]
                                 }
                             ]
