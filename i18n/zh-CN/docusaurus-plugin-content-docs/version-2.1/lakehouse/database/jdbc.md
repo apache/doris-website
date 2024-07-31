@@ -316,3 +316,32 @@ select * from query("catalog" = "jdbc_catalog", "query" = "select * from db_name
 - 只有对 Catalog 有 LOAD 权限的用户，才能执行`CALL EXECUTE_STMT()`命令。
 - 只有对 Catalog 有 SELECT 权限的用户，才能执行`query()`表函数。
 - `query` 表函数读取到的的数据，数据类型的支持与所查询的 catalog 类型支持的数据类型一致。
+
+## 连接池问题排查
+
+1. 在小于 2.0.5 的版本，连接池相关配置只能在 BE conf 的 JAVA_OPTS 中配置，参考 2.0.4 版本的 [be.conf](https://github.com/apache/doris/blob/2.0.4-rc06/conf/be.conf#L22)。
+2. 在 2.0.5 及之后的版本，连接池相关配置可以在 Catalog 属性中配置，参考 [连接池属性](#连接池属性)。
+3. Doris 使用的连接池在 2.0.10（2.0 Release）和 2.1.3（2.1 Release）开始从 Druid 换为 HikariCP，故连接池相关报错以及原因排查方式有所不同，参考如下
+
+* Druid 连接池版本
+    * Initialize datasource failed:  CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 10, creating 1
+        * 原因 1：查询太多导致连接个数超出配置
+        * 原因 2：连接池计数异常导致活跃计数未下降
+        * 解决方法
+            * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); 暂时通过调整连接数来增大连接池容量，且可以通过这种方式刷新连接池缓存
+            * 升级到更换连接池到 Hikari 版本
+        * Initialize datasource failed:  CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 0, creating 1
+            * 原因 1：网络不通
+            * 原因 2：网络延迟高，导致创建连接超过 5s
+            * 解决方法
+                * 检查网络
+                * alter catalog <catalog_name> set properties ('connection_pool_max_wait' = '10000'); 调大超时时间
+* HikariCP 连接池版本
+    * HikariPool-2 - Connection is not available, request timed out after 5000ms
+        * 原因 1：网络不通
+        * 原因 2：网络延迟高，导致创建连接超过 5s
+        * 原因 3：查询太多导致连接个数超出配置
+        * 解决方法
+            * 检查网络
+            * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); 调大连接个数
+            * alter catalog <catalog_name> set properties ('connection_pool_max_wait_time' = '10000'); 调大超时时间

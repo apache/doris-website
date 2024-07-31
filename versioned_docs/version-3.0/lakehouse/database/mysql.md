@@ -164,6 +164,41 @@ If you have the limit keyword in the query, Doris will push the limit down to My
 
 Doris will automatically add the escape character (``) to the field names and table names in the query statements sent to MySQL to avoid conflicts between field names, table names and MySQL internal keywords.
 
+## Troubleshoot connection exceptions
+
+* Communications link failure The last packet successfully received from the server was 7 milliseconds ago.
+   * reason:
+      * Internet problem:
+         * The network is unstable or the connection is interrupted.
+         * Network latency between client and server is too high.
+      * MySQL server settings
+         * The MySQL server may be configured with connection timeout parameters, such as wait_timeout or interactive_timeout, causing the connection to timeout and be closed.
+      * Firewall settings
+         * Firewall rules may be blocking communication between the client and the server.
+      * Connection pool settings
+         * The configuration connection_pool_max_life_time in the connection pool may cause the connection to be closed or recycled, or the connection may not be detected in time.
+      * Server resource issues
+         * The MySQL server may have insufficient resources to handle new connection requests.
+      * Client configuration
+         * Client JDBC driver configuration error, for example, the autoReconnect parameter is not set or set improperly.
+   * solve
+      * Check network connection:
+         * Confirm that the network connection between the client and the server is stable to avoid excessive network latency.
+      * Check MySQL server configuration:
+         * Review and adjust the MySQL server's wait_timeout and interactive_timeout parameters to ensure they are set appropriately.
+      * Check firewall configuration:
+         * Verify that firewall rules allow communication between client and server.
+      * Adjust connection pool settings:
+         * Check and adjust the connection pool configuration parameter connection_pool_max_life_time to ensure it is smaller than MySQL's wait_timeout and interactive_timeout parameters and larger than the SQL with the longest execution time
+      * Monitor server resources:
+         * Monitor the resource usage of the MySQL server to ensure that there are sufficient resources to handle connection requests.
+      * Optimize client configuration:
+         * Confirm that the configuration parameters of the JDBC driver are correct, such as autoReconnect=true, to ensure that the connection can automatically reconnect after being interrupted.
+
+* java.io.EOFException MESSAGE: Can not read response from server. Expected to read 819 bytes, read 686 bytes before connection was unexpectedly lost.
+   * Reason: The connection was killed by MySQL or MySQL crashed
+   * Solution: Check whether MySQL has a mechanism to actively kill connections, or whether MySQL crashes because of too large a query.
+
 ## FAQ
 
 1. The emoji expressions read and written in MySQL are garbled.
@@ -285,3 +320,14 @@ Doris will automatically add the escape character (``) to the field names and ta
     ```
 
 7. When querying MySQL, if you are stuck for a long time and no results are returned, or if you are stuck for a long time and a large number of write lock logs appear in fe.warn.log, you can try adding socketTimeout to the URL, for example: `jdbc:mysql ://host:port/database?socketTimeout=30000`, prevents the JDBC client from waiting indefinitely after the connection is closed by MySQL.
+
+8. In the process of using MySQL Catalog, it is found that the JVM memory or the number of Threads in FE continues to grow and does not decrease, and a Forward to master connection timed out error may appear at the same time.
+
+   Print the FE thread stack `jstack fe_pid > fe.js`. If a large number of `mysql-cj-abandoned-connection-cleanup` threads appear, it means there is a problem with the MySQL JDBC driver.
+
+   Proceed as follows:
+
+   1. Upgrade the MySQL JDBC driver to version 8.0.31 and above
+   2. Add the `-Dcom.mysql.cj.disableAbandonedConnectionCleanup=true` parameter to JAVA_OPTS in the FE and BE conf files, disable the connection cleanup function of the MySQL JDBC driver, and restart the cluster
+
+   **Note:** If the version of Doris is 2.0.13 and above (2.0 Release), or 2.1.5 and above (2.1 Release), there is no need to increase this parameter, because Doris has disabled the connection cleaning function of the MySQL JDBC driver by default. . Just change the MySQL JDBC driver version. However, the Doris cluster needs to be restarted to clean up the previous Threads.
