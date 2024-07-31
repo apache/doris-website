@@ -61,7 +61,7 @@ under the License.
 ## Examples
 
 
-    ```bash
+    ```shell
     curl -X POST "http://127.0.0.1:8040/api/pad_rowset?tablet_id=123456&start_version=1111111&end_version=1111112"
 
     ```

@@ -100,7 +100,7 @@ PROPERTIES (
 
 该目下会有一个 tablet id 命名的目录，将这个目录整体打包后备用。（注意，该目录最多保留 60 分钟，之后会自动删除）。
 
-```bash
+```shell
 cd /path/to/be/storage/snapshot/20220830101353.2.3600
 tar czf 10020.tar.gz 10020/
 ```
@@ -178,13 +178,13 @@ tar czf 10020.tar.gz 10020/
 
     同时，我们还需要到调试环境 BE 节点的数据目录下，确认新的 tablet 所在的 shard id：
     
-    ```bash
+    ```shell
     cd /path/to/storage/data/*/10017 && pwd
     ```
     
     这个命令会进入 10017 这个 tablet 所在目录并展示路径。这里我们会看到类似如下的路径：
     
-    ```bash
+    ```shell
     /path/to/storage/data/0/10017
     ```
     
@@ -208,7 +208,7 @@ tar czf 10020.tar.gz 10020/
     
     通过 `meta_tool` 工具删除原来的 tablet meta。该工具位于 `be/lib` 目录下。
     
-    ```bash
+    ```shell
     ./lib/meta_tool --root_path=/path/to/storage --operation=delete_meta --tablet_id=10017 --schema_hash=44622287
     ```
     
@@ -216,7 +216,7 @@ tar czf 10020.tar.gz 10020/
     
     通过 `meta_tool` 工具加载新的 tablet meta。
     
-    ```bash
+    ```shell
     ./lib/meta_tool --root_path=/path/to/storage --operation=load_meta --json_meta_path=/path/to/10017.hdr.json
     ```
     

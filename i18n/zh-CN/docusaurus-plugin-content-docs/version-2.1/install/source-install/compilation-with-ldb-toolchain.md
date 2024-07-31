@@ -118,7 +118,7 @@ Doris 源码编译时首先会下载三方库进行编译，可以参考下文�
 
 **1.  进入 Doris 源码目录，执行如下命令查看编译机器是否支持 AVX2 指令集**
 
-```Bash
+```shell
 $ cat /proc/cpuinfo | grep avx2
 ```
 

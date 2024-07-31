@@ -38,7 +38,7 @@ This guide is about how to download the latest stable version of Apache Doris, i
 
 Download the Apache Doris installation package from doris.apache.org and proceed with the following steps.
 
-```Bash
+```shell
 # Download the binary installation package of Apache Doris
 server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
 
@@ -70,7 +70,7 @@ JAVA_HOME=/home/doris/jdk8
 
 Run the following command under apache-doris/fe to start FE.
 
-```Bash
+```shell
 # Start FE in the background to ensure that the process continues running even after exiting the terminal.
 server1:apache-doris/fe doris$ ./bin/start_fe.sh --daemon
 ```
@@ -94,7 +94,7 @@ JAVA_HOME=/home/doris/jdk8
 
 Run the following command under apache-doris/be to start BE.
 
-```Bash
+```shell
 # Start BE in the background to ensure that the process continues running even after exiting the terminal.
 server1:apache-doris/be doris$ ./bin/start_be.sh --daemon
 ```
@@ -105,7 +105,7 @@ Download the [portable MySQL client](https://dev.mysql.com/downloads/mysql/) to 
 
 Unpack the client, find the `mysql` command-line tool in the `bin/` directory. Then execute the following command to connect to Apache Doris.
 
-```Bash
+```shell
 mysql -uroot -P9030 -h127.0.0.1
 ```
 
@@ -153,7 +153,7 @@ The root and admin users are two default accounts that are automatically created
 
 Use admin account to connect to Apache Doris FE.
 
-```Bash
+```shell
 mysql -uadmin -P9030 -h127.0.0.1
 ```
 
@@ -192,7 +192,7 @@ Save the following example data to the local "data.csv" file:
 
 Load the data from "data.csv" into the newly created table using the Stream Load method.
 
-```Bash
+```shell
 curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separator:," http://127.0.0.1:8030/api/demo/mytable/_stream_load
 ```
 
@@ -202,7 +202,7 @@ curl  --location-trusted -u admin:admin_password -T data.csv -H "column_separato
 
 Once it is executed successfully, a message like the following will be returned: 
 
-```Bash
+```shell
 {                                                     
     "TxnId": 30,                                  
     "Label": "a56d2861-303a-4b50-9907-238fea904363",        
@@ -251,7 +251,7 @@ mysql> select * from mytable;
 
 Execute the following command under apache-doris/fe to stop FE.
 
-```Bash
+```shell
 server1:apache-doris/fe doris$ ./bin/stop_fe.sh
 ```
 
@@ -259,7 +259,7 @@ server1:apache-doris/fe doris$ ./bin/stop_fe.sh
 
 Execute the following command under apache-doris/be to stop BE.
 
-```Bash
+```shell
 server1:apache-doris/be doris$ ./bin/stop_be.sh
 ```
 

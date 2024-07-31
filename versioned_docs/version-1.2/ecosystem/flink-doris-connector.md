@@ -58,7 +58,7 @@ Ready to work
 
 2.Specify the thrift installation directory
 
-```bash
+```shell
 ##source file content
 #export THRIFT_BIN=
 #export MVN_BIN=
@@ -86,7 +86,7 @@ Note: Executing `brew install thrift@0.13.0` on MacOS may report an error that t
  Reference link: `https://gist.github.com/tonydeng/02e571f273d6cce4230dc8d5f394493c`
  
 Linux:
-   ```bash
+   ```shell
     1. wget https://archive.apache.org/dist/thrift/0.13.0/thrift-0.13.0.tar.gz  # Download source package
     2. yum install -y autoconf automake libtool cmake ncurses-devel openssl-devel lzo-devel zlib-devel gcc gcc-c++  # Install dependencies
     3. tar zxvf thrift-0.13.0.tar.gz
@@ -101,7 +101,7 @@ Linux:
 
 Execute following command in source dir:
 
-```bash
+```shell
 sh build.sh
 
   Usage:

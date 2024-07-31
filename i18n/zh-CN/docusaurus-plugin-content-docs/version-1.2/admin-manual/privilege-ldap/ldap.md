@@ -89,13 +89,13 @@ set ldap_admin_password = password('ldap_admin_password');
 
   例如在linux或者mac环境中可以使用：
 
-  ```bash
+  ```shell
   echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ～/.bash_profile && source ～/.bash_profile
   ```
 
 - 每次登录Doris时添加参数“--enable-cleartext-plugin”：
 
-  ```bash
+  ```shell
   mysql -hDORIS_HOST -PDORIS_PORT -u user -p --enable-cleartext-plugin
   
   输入ldap密码
@@ -129,13 +129,13 @@ LDAP密码验证和组授权是Doris密码验证和授权的补充，开启LDAP�
 LDAP用户节点存在属性：uid: jack 用户密码：abcdef
 使用以下命令登录Doris可以登录jack@'172.10.1.10'账户：
 
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 ```
 
 使用以下命令将登录失败：
 
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 ```
 
@@ -144,7 +144,7 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 LDAP用户节点存在属性：uid: jack 用户密码：abcdef
 使用以下命令创建临时用户并登录jack@'%'，临时用户具有基本权限 DatabasePrivs：Select_priv， 用户退出登录后Doris将删除该临时用户：
 
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 ```
 
@@ -153,7 +153,7 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 存在Doris账户：jack@'172.10.1.10'，密码：123456
 使用Doris密码登录账户，成功：
 
-```bash
+```shell
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 ```
 

@@ -72,7 +72,7 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
 
    The log level can also be modified at runtime via the following API. There is no need to restart the FE node.
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?add_verbose=org.apache.doris.catalog.Catalog
    ````
 
@@ -95,7 +95,7 @@ The Debug level log of FE can be turned on by modifying the configuration file, 
 
    Debug logging can also be turned off via the following API:
 
-   ```bash
+   ```shell
    curl -X POST -uuser:passwd fe_host:http_port/rest/v1/log?del_verbose=org.apache.doris.catalog.Catalog
    ````
 

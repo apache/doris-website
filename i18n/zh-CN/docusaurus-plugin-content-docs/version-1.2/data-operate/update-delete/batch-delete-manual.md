@@ -159,19 +159,19 @@ mysql> DESC test;
 
 1. 正常导入数据：
 
-```bash
+```shell
 curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: APPEND"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
 ```
 
 其中的APPEND 条件可以省略，与下面的语句效果相同：
 
-```bash
+```shell
 curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
 ```
 
 2. 将与导入数据key 相同的数据全部删除
 
-```bash
+```shell
 curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
 ```
 
@@ -206,7 +206,7 @@ curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, ci
 
 3. 将导入数据中与`site_id=1` 的行的key列相同的行
 
-```bash
+```shell
 curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv" -H "merge_type: MERGE" -H "delete: siteid=1"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
 ```
 
@@ -245,7 +245,7 @@ curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, ci
 
 4. 当存在sequence列时，将与导入数据key 相同的数据全部删除
 
-```bash
+```shell
 curl --location-trusted -u root: -H "column_separator:," -H "columns: name, gender, age" -H "function_column.sequence_col: age" -H "merge_type: DELETE"  -T ~/table1_data http://127.0.0.1:8130/api/test/table1/_stream_load
 ```
 

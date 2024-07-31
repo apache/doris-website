@@ -32,14 +32,14 @@ Download MySQL Client from the MySQL official website or use the pre-installed [
 
 Extract the downloaded MySQL client. In the `bin/` directory, find the `mysql` command-line tool. Execute the following command to connect to Doris:
 
-```Bash
+```shell
 # FE_IP represents the listening address of the FE node, while FE_QUERY_PORT represents the port of the MySQL protocol service of the FE. This corresponds to the query_port parameter in fe.conf and it defaults to 9030.
 mysql -h FE_IP -P FE_QUERY_PORT -u USER_NAME 
 ```
 
 After login, the following message will be displayed.
 
-```Bash
+```shell
 Welcome to the MySQL monitor.  Commands end with ; or \g.                               
 Your MySQL connection id is 236                                                         
 Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5                           

@@ -89,7 +89,7 @@ root_path: 在 be.conf 中配置的对应的 root_path 路径。
 
 命令：
 
-```bash
+```shell
 ./lib/meta_tool --operation=load_meta --root_path=/path/to/root_path --json_meta_path=path
 ```
 
@@ -99,13 +99,13 @@ root_path: 在 be.conf 中配置的对应的 root_path 路径。
 
 删除单个 tablet 元数据：
 
-```bash
+```shell
 ./lib/meta_tool --operation=delete_meta --root_path=/path/to/root_path --tablet_id=xxx --schema_hash=xxx
 ```
 
 删除一组 tablet 元数据：
 
-```bash
+```shell
 ./lib/meta_tool --operation=batch_delete_meta --tablet_file=/path/to/tablet_file.txt
 ```
 
@@ -117,7 +117,7 @@ root_path: 在 be.conf 中配置的对应的 root_path 路径。
 
 `tablet_file` 文件示例：
 
-```bash
+```shell
 /output/be/data/,14217,352781111
 /output/be/data/,14219,352781111
 /output/be/data/,14223,352781111
@@ -134,7 +134,7 @@ root_path: 在 be.conf 中配置的对应的 root_path 路径。
 
 命令：
 
-```bash
+```shell
 ./lib/meta_tool --operation=show_meta --root_path=/path/to/root_path --pb_header_path=path
 ```
 
@@ -144,7 +144,7 @@ root_path: 在 be.conf 中配置的对应的 root_path 路径。
 
 命令：
 
-```bash
+```shell
 ./meta_tool --operation=show_segment_footer --file=/path/to/segment/file
 
 

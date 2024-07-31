@@ -58,7 +58,7 @@ Please note that this document is provided as a guide only. Compiling in differe
 
 1. **Create a root directory for software package and a root directory for software installation.**
 
-```Bash
+```shell
 # Create a root directory for software package.
 mkdir /opt/tools
 
@@ -68,7 +68,7 @@ mkdir /opt/software
 
 2. **Install dependencies.**
 
-```Bash
+```shell
 ### Git ###
 # Use yum install to save the trouble of compilation.
 yum install -y git
@@ -115,7 +115,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
 
 3. **Configure environment variables**
 
-```Bash
+```shell
 # Configure the environment variables.
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
@@ -142,13 +142,13 @@ gcc --version
 
 1. **Update apt-get software library**
 
-```Bash
+```shell
 apt-get update
 ```
 
 2. **Reconfigure shell**
 
-```Bash
+```shell
 # By default, Ubuntu's shell is set to dash instead of bash, so please switch to bash before continuing. Run the following command to view detailed information about shell and confirm which program it corresponds to.
 ls -al /bin/sh
 
@@ -159,7 +159,7 @@ sudo dpkg-reconfigure dash
 
 3. **Create a root directory for software package and a root directory for software installation.**
 
-```Bash
+```shell
 # Create a root directory for software package.
 mkdir /opt/tools
 
@@ -169,7 +169,7 @@ mkdir /opt/software
 
 4. **Install dependencies.**
 
-```Bash
+```shell
 ### Git ###
 # Use apt-get install to save the trouble of compilation.
 apt-get -y install git
@@ -225,7 +225,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
 
 5. **Configure environment variables**
 
-```Bash
+```shell
 # Configure the environment variables.
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
@@ -256,7 +256,7 @@ It is recommended to use LDB Toolchain for compilation with ARM environment.
 
 When compiling Doris on an ARM platform, please disable the AVX2 and LIBUNWIND third-party libraries.
 
-```Bash
+```shell
 export USE_AVX2=OFF
 export USE_UNWIND=OFF
 ```
@@ -273,7 +273,7 @@ Cause: Something wrong with dependency download for the third-party library
 
 Solution: Use a third-party library download repository.
 
-```Bash
+```shell
 export REPOSITORY_URL=https://doris-thirdparty-repo.bj.bcebos.com/thirdparty
 sh /opt/doris/thirdparty/build-thirdparty.sh
 ```

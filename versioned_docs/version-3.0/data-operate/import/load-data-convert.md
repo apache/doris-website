@@ -60,7 +60,7 @@ WITH BROKER bos
 
 ### STREAM LOAD
 
-```bash
+```shell
 curl
 --location-trusted
 -u user:passwd
@@ -96,7 +96,7 @@ Stream load does not support preceding filtering.
 
 Example:
 
-```bash
+```shell
 curl
 --location-trusted
 -u user:passwd

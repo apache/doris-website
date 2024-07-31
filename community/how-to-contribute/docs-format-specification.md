@@ -161,7 +161,7 @@ Link descriptions are not advisable to repeatedly use phrases such as "see detai
 
 | Language   | Syntax Higlighting       |
 | :--------- | :----------------------- |
-| Shell      | ```shell``` or ```bash``` |
+| Shell      | ```shell``` or ```shell``` |
 | Python     | ```python```              |
 | JSON       | ```json```                |
 | XML        | ```xml```                 |
@@ -177,16 +177,16 @@ Link descriptions are not advisable to repeatedly use phrases such as "see detai
 | CSS        | ````css`                 |
 | PHP        | ```php```                 |
 
-- When using the ```bash` code block, it is recommended to separate the command and the output results. Here is an example:
+- When using the ```shell` code block, it is recommended to separate the command and the output results. Here is an example:
   - Use the following command to view the service
   
-   ```Bash
+   ```shell
     kubectl get pod --namespace doris
     ```
 
   - The output result
   
-   ```Bash
+   ```shell
     NAME                     READY   STATUS    RESTARTS   AGE
     doriscluster-helm-fe-0   1/1     Running   0          1m39s
     doriscluster-helm-fe-1   1/1     Running   0          1m39s

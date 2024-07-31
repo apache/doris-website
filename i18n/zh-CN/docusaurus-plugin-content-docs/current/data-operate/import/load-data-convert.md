@@ -60,7 +60,7 @@ WITH BROKER bos
 
 ### STREAM LOAD
 
-```Bash
+```shell
 curl
 --location-trusted
 -u user:passwd
@@ -96,7 +96,7 @@ Stream load 不支持前置过滤。
 
 示例：
 
-```Bash
+```shell
 curl
 --location-trusted
 -u user:passwd

@@ -34,14 +34,14 @@ Doris 的 FE 进程和 BE 进程都提供了完备的监控指标。监控指标
 
 可以通过访问 FE 或 BE 节点的 http 端口获取当前监控。如：
 
-```bash
+```shell
 curl http://fe_host:http_port/metrics
 curl http://be_host:webserver_port/metrics
 ```
 
 默认返回 Prometheus 兼容格式的监控指标，如：
 
-```bash
+```shell
 doris_fe_cache_added{type="partition"} 0
 doris_fe_cache_added{type="sql"} 0
 doris_fe_cache_hit{type="partition"} 0
@@ -51,7 +51,7 @@ doris_fe_connection_total 2
 
 如需获取 JSON 格式的监控指标，请访问：
 
-```bash
+```shell
 curl http://fe_host:http_port/metrics?type=json
 curl http://be_host:webserver_port/metrics?type=json
 ```

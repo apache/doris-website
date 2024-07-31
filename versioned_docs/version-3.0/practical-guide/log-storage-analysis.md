@@ -392,7 +392,7 @@ Follow these steps:
 
 3. Run Logstash according to the command below, collect logs, and output to Apache Doris.
 
-    ```Bash  
+    ```shell  
     ./bin/logstash -f logstash_demo.conf
     ```
 
@@ -459,7 +459,7 @@ Follow these steps:
 
 3. Run Filebeat according to the command below, collect logs, and output to Apache Doris.
 
-    ```Bash  
+    ```shell  
     chmod +x filebeat-doris-1.0.0  
     ./filebeat-doris-1.0.0 -c filebeat_demo.yml
     ```
@@ -503,7 +503,7 @@ For more information about Kafka, see [Routine Load](../data-operate/import/rout
 
 In addition to integrating common log collectors, you can also customize programs to import log data into Apache Doris using the Stream Load HTTP API. Refer to the following code:
 
-```Bash  
+```shell  
 curl \\  
 \--location-trusted \\  
 \-u username:password \\  

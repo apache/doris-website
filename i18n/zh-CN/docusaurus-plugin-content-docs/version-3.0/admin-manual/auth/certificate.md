@@ -41,7 +41,7 @@ Doris 开启 SSL 功能需要配置 CA 密钥证书和 Server 端密钥证书，
 
 1. 生成 CA、Server 端和 Client 端的密钥和证书
 
-```BASH
+```shell
 # 生成CA certificate
 openssl genrsa 2048 > ca-key.pem
 openssl req -new -x509 -nodes -days 3600 \
@@ -66,13 +66,13 @@ openssl x509 -req -in client-req.pem -days 3600 \
 
 2. 验证创建的证书。
 
-```bash
+```shell
 openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
 ```
 
 3. 将您的 CA 密钥和证书和 Sever 端密钥和证书分别合并到 PKCS#12 (P12) 包中。您也可以指定某个证书格式，默认 PKCS12，可以通过修改 conf/fe.conf 配置文件，添加参数 ssl_trust_store_type 指定证书格式
 
-```bash
+```shell
 # 打包CA密钥和证书
 openssl pkcs12 -inkey ca-key.pem -in ca.pem -export -out ca_certificate.p12
 
