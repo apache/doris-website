@@ -10,7 +10,8 @@
                     "label": "Quick Start",
                     "items": [
                         "get-starting/quick-start/quick-start",
-                        "get-starting/quick-start/doris-hudi"
+                        "get-starting/quick-start/doris-hudi",
+                        "get-starting/quick-start/doris-paimon"
                     ]
                 }
             ]
@@ -69,7 +70,19 @@
             "type": "category",
             "label": "Data Table Design",
             "items": [
+                "table-design/overview",
                 "table-design/data-type",
+                {
+                    "type": "category",
+                    "label": "Table Indexes",
+                    "items": [
+                        "table-design/index/index-overview",
+                        "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
+                        "table-design/index/bloomfilter",
+                        "table-design/index/ngram-bloomfilter-index"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Data Models",
@@ -83,16 +96,11 @@
                 },
                 "table-design/data-partition",
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
                 {
                     "type": "category",
-                    "label": "Table Indexes",
+                    "label": "Tiered Storage",
                     "items": [
-                        "table-design/index/index-overview",
-                        "table-design/index/prefix-index",
-                        "table-design/index/inverted-index",
-                        "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index"
+                        "table-design/tiered-storage/remote-storage"
                     ]
                 },
                 "table-design/auto-increment",
@@ -108,18 +116,24 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
                         "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-atomicity",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/load-atomicity",
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -278,6 +292,9 @@
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
                         "lakehouse/datalake-analytics/lakesoul",
+                        "lakehouse/datalake-analytics/bigquery",
+                        "lakehouse/datalake-analytics/deltalake",
+                        "lakehouse/datalake-analytics/kudu",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"
@@ -348,8 +365,8 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/delete-recover",
                         "admin-manual/data-admin/ccr",
+                        "admin-manual/data-admin/recyclebin",
                         "admin-manual/data-admin/repairing-data"
                     ]
                 },
@@ -599,6 +616,7 @@
                                 "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
+                                "sql-manual/sql-functions/array-functions/array-contains_all",
                                 "sql-manual/sql-functions/array-functions/array-except",
                                 "sql-manual/sql-functions/array-functions/array-product",
                                 "sql-manual/sql-functions/array-functions/array-intersect",
@@ -837,8 +855,7 @@
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract-all",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-replace",
-                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one",
-                                        "sql-manual/sql-functions/string-functions/regexp/not-regexp"
+                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one"
                                     ]
                                 }
                             ]
@@ -1557,6 +1574,7 @@
             "type": "category",
             "label": "Release notes",
             "items": [
+                "releasenotes/release-2.1.5",
                 "releasenotes/release-2.1.4",
                 "releasenotes/release-2.1.3",
                 "releasenotes/release-2.1.2",

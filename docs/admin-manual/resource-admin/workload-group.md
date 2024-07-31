@@ -197,3 +197,51 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 
 If user expects to switch back from cpu hard limit to cpu soft limit, then they only need to set ```enable_cpu_hard_limit=false```.
 CPU Soft Limit property ```cpu_share``` will be filled with a valid value of 1024 by default(If the user has never set the cpu_share before), and users can adjust cpu_share based on the priority of Workload Group.
+
+# Workload Group权限表
+You can view the Workload Groups that users or roles have access to through the Workload Group privilege table. Authorization related usage can refer to[grant statement](../../sql-manual/sql-statements/Account-Management-Statements/GRANT).
+
+This table currently has row level permission control. Root or admin accounts can view all data, while non root/admin accounts can only see data from Workload Groups that they have access to。
+
+Schema of Workload Group privilege table is as follow：
+```
+mysql [information_schema]>desc information_schema.workload_group_privileges;
++---------------------+--------------+------+-------+---------+-------+
+| Field               | Type         | Null | Key   | Default | Extra |
++---------------------+--------------+------+-------+---------+-------+
+| GRANTEE             | varchar(64)  | Yes  | false | NULL    |       |
+| WORKLOAD_GROUP_NAME | varchar(256) | Yes  | false | NULL    |       |
+| PRIVILEGE_TYPE      | varchar(64)  | Yes  | false | NULL    |       |
+| IS_GRANTABLE        | varchar(3)   | Yes  | false | NULL    |       |
++---------------------+--------------+------+-------+---------+-------+
+```
+
+Column Description：
+1. grantee, user or role.
+2. workload_group_name, value is the name of Workload Group or '%', where '%' represents all Workload Group.
+3. privilege_type，type of privilege, at present, the value of this column is only Usage_priv。
+4. is_grantable，value is YES or NO, it means whether the user can grant access privilege of Workload Group to other user.Only root/admin user has grant privilege.
+
+Basic usage：
+1. Search for Workload Group with authorized access based on username.
+```
+mysql [information_schema]>select * from workload_group_privileges where GRANTEE like '%test_wlg_user%';
++---------------------+---------------------+----------------+--------------+
+| GRANTEE             | WORKLOAD_GROUP_NAME | PRIVILEGE_TYPE | IS_GRANTABLE |
++---------------------+---------------------+----------------+--------------+
+| 'test_wlg_user'@'%' | normal              | Usage_priv     | NO           |
+| 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
++---------------------+---------------------+----------------+--------------+
+2 rows in set (0.04 sec)
+```
+
+2. Search for user which has access privilege by Workload Group name. 
+```
+mysql [information_schema]>select * from workload_group_privileges where WORKLOAD_GROUP_NAME='test_group';
++---------------------+---------------------+----------------+--------------+
+| GRANTEE             | WORKLOAD_GROUP_NAME | PRIVILEGE_TYPE | IS_GRANTABLE |
++---------------------+---------------------+----------------+--------------+
+| 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
++---------------------+---------------------+----------------+--------------+
+1 row in set (0.03 sec)
+```
