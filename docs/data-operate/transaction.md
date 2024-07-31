@@ -406,6 +406,8 @@ mysql> SELECT * FROM dt3;
 
 * In cloud mode, transaction load does not support `merge on write` unique tables, otherwise, you will encounter the error `Transaction load is not supported for merge on write unique keys table in cloud mode`.  
 
+## Load with Transaction
+
 ### Stream Load
 
 **1. Enable two-phase commit by setting `two_phase_commit:true` in the HTTP Header.**

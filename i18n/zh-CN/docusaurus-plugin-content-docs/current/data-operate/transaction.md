@@ -404,7 +404,7 @@ mysql> SELECT * FROM dt3;
 * 存算分离模式下，事务写不支持 Merge-on-Write 表，否则会遇到报错 `Transaction load is not supported for merge on write unique keys table in cloud mode`
 
 
-## 隐式事务举例
+## 导入事务
 
 
 ### Stream Load
