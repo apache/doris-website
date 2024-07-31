@@ -105,7 +105,7 @@ Used to roll back all modifications made in the current transaction.
 
 Transactions are session-level, so if a session is terminated or closed, the transaction will automatically be rolled back.
 
-## Transaction Load
+## Transaction with multiple sql statements
 
 Currently, Doris supports two ways of transaction loading.
 
@@ -406,9 +406,7 @@ mysql> SELECT * FROM dt3;
 
 * In cloud mode, transaction load does not support `merge on write` unique tables, otherwise, you will encounter the error `Transaction load is not supported for merge on write unique keys table in cloud mode`.  
 
-## Load with Transaction
-
-### Stream Load
+## Stream Load 2PC
 
 **1. Enable two-phase commit by setting `two_phase_commit:true` in the HTTP Header.**
 
@@ -478,7 +476,7 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
   }
   ```
 
-### Broker Load
+## Broker Load into muti tables with a transaction
 
 All Broker Load tasks are atomic and ensure atomicity even when loading multiple tables within the same task. The Label mechanism can be used to ensure data load without loss or duplication.
 

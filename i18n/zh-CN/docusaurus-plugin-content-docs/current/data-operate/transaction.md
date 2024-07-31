@@ -102,7 +102,7 @@ ROLLBACK;
 
 事务是 Session 级别的，如果 Session 中止或关闭，也会自动回滚该事务。
 
-## 事务写入
+## 多条 SQL 语句写入
 
 目前 Doris 中支持 2 种方式的事务写入。
 
@@ -404,10 +404,7 @@ mysql> SELECT * FROM dt3;
 * 存算分离模式下，事务写不支持 Merge-on-Write 表，否则会遇到报错 `Transaction load is not supported for merge on write unique keys table in cloud mode`
 
 
-## 导入事务
-
-
-### Stream Load
+## Stream Load 2PC
 
 **1. 在 HTTP Header 中设置 `two_phase_commit:true` 启用两阶段提交。**
 
@@ -477,7 +474,7 @@ curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt h
   }
   ```
 
-### Broker Load
+## Broker Load 多表事务
 
 所有 Broker Load 导入任务都是原子生效的。并且在同一个导入任务中对多张表的导入也能够保证原子性。还可以通过 Label 的机制来保证数据导入的不丢不重。
 
