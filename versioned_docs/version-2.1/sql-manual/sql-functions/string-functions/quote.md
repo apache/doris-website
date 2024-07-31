@@ -1,7 +1,7 @@
 ---
 {
     "title": "QUOTE",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -28,7 +30,7 @@ under the License.
 
 `VARCHAR quote(VARCHAR str)`
 
-将参数中所有的字符串按原样输出,并用''套起来
+Output all the strings in the argument as is and wrap them with ''
 
 ### example
 
