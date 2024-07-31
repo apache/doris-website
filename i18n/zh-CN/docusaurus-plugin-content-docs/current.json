@@ -295,6 +295,10 @@
     "message": "分析（窗口）函数",
     "description": "The label for category Analytic(Window) Functions in sidebar docs"
   },
+  "sidebar.docs.category.Debug Functions": {
+    "message": "调试函数",
+    "description": "The label for category Debug Functions in sidebar docs"
+  },
   "sidebar.docs.category.Account Management": {
     "message": "账户管理",
     "description": "The label for category Account Management in sidebar docs"
