@@ -819,7 +819,6 @@
                                 "sql-manual/sql-functions/string-functions/extract-url-parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
-                                "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
                                 "sql-manual/sql-functions/string-functions/random_bytes",
                                 {
@@ -1186,6 +1185,16 @@
                                 "sql-manual/sql-functions/distance-functions/inner-product",
                                 "sql-manual/sql-functions/distance-functions/l1-distance",
                                 "sql-manual/sql-functions/distance-functions/l2-distance"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Debug Functions",
+                            "items": [
+                                "sql-manual/sql-functions/debug-functions/ignore",
+                                "sql-manual/sql-functions/debug-functions/non-nullable",
+                                "sql-manual/sql-functions/debug-functions/nullable",
+                                "sql-manual/sql-functions/debug-functions/sleep"
                             ]
                         },
                         "sql-manual/sql-functions/cast",
