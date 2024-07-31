@@ -1,7 +1,7 @@
 ---
 {
 "title": "Beats Doris Output Plugin",
-"language": "zh-CN"
+"language": "en"
 }
 ---
 
