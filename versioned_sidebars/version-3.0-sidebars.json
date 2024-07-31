@@ -1555,6 +1555,13 @@
                 "faq/sql-faq",
                 "faq/lakehouse-faq"
             ]
+        },
+        {
+            "type": "category",
+            "label": "Release notes",
+            "items": [
+                "releasenotes/release-3.0.0"
+            ]
         }
     ]
 }

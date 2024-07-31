@@ -26,6 +26,11 @@ under the License.
 
 Thanks to our devoted developers and supportive community users, the much-expected Apache Doris 3.0.0 is now available!
 
+**Quick Download:** https://doris.apache.org/download/
+
+**GitHub:** https://github.com/apache/doris/issues/37502
+
+
 ## Compute-Storage Decoupled
 
 From version 3.0.0, Doris supports a compute-storage decoupled mode, allowing users to physically isolate business workloads and separate read and write operations through multiple computing clusters. This mode substantially reduces storage costs by utilizing mature object storage or HDFS. It mitigates operational complexities such as disk balancing and data loss due to multiple BE nodes going offline.
