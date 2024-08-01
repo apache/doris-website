@@ -548,10 +548,11 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 `--table-conf replication_num=1`，而 `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"`表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。 |
 | --ignore-default-value  | 关闭同步 mysql 表结构的默认值。适用于同步 mysql 数据到 doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152) |
 | --use-new-schema-change | 是否使用新的 schema change，支持同步 mysql 多列变更、默认值，1.6.0 开始该参数默认为true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167) |
+| --schema-change-mode    | 解析 schema change 的模式，支持 `debezium_structure`、`sql_parser` 两种解析模式，默认采用 `debezium_structure` 模式。<br/><br/> `debezium_structure` 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。 <br/> `sql_parser` 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。<br/> 使用例子：`--schema-change-mode debezium_structure`<br/> 本功能将在 1.6.2.1 后的版本中提供|
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。 |
 | --multi-to-one-origin   | 将上游多张表写入同一张表时，源表的配置，比如：--multi-to-one-origin="a\_.\*\|b_.\*"，具体参考[#208](https://github.com/apache/doris-flink-connector/pull/208) |
 | --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target="a\|b" |
-| --create-table-only     | 是否只仅仅同步表结构
+| --create-table-only     | 是否只仅仅同步表结构|
 
 >注：同步时需要在$FLINK_HOME/lib 目录下添加对应的 Flink CDC 依赖，比如 flink-sql-connector-mysql-cdc-${version}.jar，flink-sql-connector-oracle-cdc-${version}.jar
 
