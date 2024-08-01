@@ -148,6 +148,13 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
+Note: Due to the high frequency of INSERT INTO statements, a large number of audit logs will be printed, which can impact performance. This can be controlled by setting a session variable to determine whether to print audit logs for prepared statements.
+
+```sql
+# Configure the session variable to disable the printing of prepared statement audit logs. By default, it is true, which means audit logs for prepared statements are enabled.
+SET enable_prepared_stmt_audit_log = false;
+```
+
 See [Synchronize Data Using Insert Method](../../data-operate/import/insert-into-manual) for more details about **JDBC**.
 
 ### INSERT INTO VALUES
@@ -434,9 +441,13 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Environment
 
-* 1 FE: 8-core CPU, 16 GB RAM, 1 200 GB SSD disk
-* 3 BE: 16-core CPU, 64 GB RAM, 1 2 TB SSD disk
-* 1 Client: 8-core CPU, 64 GB RAM, 1 100 GB SSD disk
+* 1 Front End (FE) server: Alibaba Cloud with 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+
+* 3 Backend (BE) servers: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 1TB ESSD PL1 SSD.
+
+* 1 Test Client: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+
+* The version for testing is Doris-3.0.1.
 
 #### DataSet
 
@@ -454,18 +465,18 @@ We have separately tested the write performance of group commit in high-concurre
 
 | Load Way           | Single-concurrency Data Size | Concurrency | Cost Seconds | Rows / Seconds | MB / Seconds |
 |--------------------|------------------------------|-------------|--------------------|----------------|--------------|
-| `group_commit`     | 10 KB                        | 10          | 3707               | 66,697         | 8.56         |
-| `group_commit`     | 10 KB                        | 30          | 3385               | 73,042         | 9.38         |
-| `group_commit`     | 100 KB                       | 10          | 473                | 522,725        | 67.11        |
-| `group_commit`     | 100 KB                       | 30          | 390                | 633,972        | 81.39        |
-| `group_commit`     | 500 KB                       | 10          | 323                | 765,477        | 98.28        |
-| `group_commit`     | 500 KB                       | 30          | 309                | 800,158        | 102.56       |
-| `group_commit`     | 1 MB                         | 10          | 304                | 813,319        | 104.24       |
-| `group_commit`     | 1 MB                         | 30          | 286                | 864,507        | 110.88       |
-| `group_commit`     | 10 MB                        | 10          | 290                | 852,583        | 109.28       |
-| `non group_commit` | 1 MB                         | 10          | `-235 error`       |                |              |
-| `non group_commit` | 10 MB                        | 10          | 519                | 476,395        | 61.12        |
-| `non group_commit` | 10 MB                        | 30          | `-235 error`       |                |              |
+| `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
+| `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
+| `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
+| `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
+| `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
+| `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
+| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
+| `non group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
+| `non group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
+| `non group_commit` | 10 MB   | 30   | 118  | 2095331 | 276.1|
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
 
@@ -475,9 +486,15 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 #### Environment
 
-* 1 FE: 8-core CPU, 16 GB RAM, 1 200 GB SSD disk
-* 1 BE: 16-core CPU, 64 GB RAM, 1 2 TB SSD disk
-* 1 Client: 16-core CPU, 64 GB RAM, 1 100 GB SSD disk
+1 Front End (FE) server: Alibaba Cloud with an 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+
+1 Backend (BE) server: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 500GB ESSD PL1 SSD.
+
+1 Test Client: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+
+The testing version is Doris-3.0.1.
+
+Disable the printing of prepared statement audit logs to enhance performance.
 
 #### DataSet
 
@@ -496,6 +513,8 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 | Rows per insert | Concurrency | Rows / Second | MB / Second |
 |-----------------|-------------|---------------|-------------|
-| 100             | 20          | 106931        | 11.46       |
+| 100 | 10  | 160,758    | 17.21 |
+| 100 | 20  | 210,476    | 22.19 |
+| 100 | 30  | 214,323    | 22.92 |
 
 In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates between 60-70%.
