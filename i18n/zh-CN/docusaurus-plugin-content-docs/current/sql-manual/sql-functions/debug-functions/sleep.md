@@ -1,7 +1,7 @@
 ---
 {
     "title": "SLEEP",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -25,24 +25,23 @@ under the License.
 -->
 
 ## sleep
-### Description
+### description
 #### Syntax
 
 `BOOLEAN sleep(INT num)`
 
-Make the thread sleep for num seconds.
+使当前会话休眠 `num` 秒。
 
 ### example
 
-```
+```sql
 mysql> select sleep(10);
 +-----------+
 | sleep(10) |
 +-----------+
 |         1 |
 +-----------+
-1 row in set (10.01 sec)
-
 ```
+
 ### keywords
     sleep

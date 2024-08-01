@@ -129,11 +129,10 @@
                             ]
                         },
                         "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/load-atomicity",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -814,12 +813,12 @@
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
                                 "sql-manual/sql-functions/string-functions/parse-url",
+                                "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
                                 "sql-manual/sql-functions/string-functions/convert-to",
                                 "sql-manual/sql-functions/string-functions/extract-url-parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
-                                "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
                                 "sql-manual/sql-functions/string-functions/random_bytes",
                                 {
@@ -1186,6 +1185,16 @@
                                 "sql-manual/sql-functions/distance-functions/inner-product",
                                 "sql-manual/sql-functions/distance-functions/l1-distance",
                                 "sql-manual/sql-functions/distance-functions/l2-distance"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Debug Functions",
+                            "items": [
+                                "sql-manual/sql-functions/debug-functions/ignore",
+                                "sql-manual/sql-functions/debug-functions/non-nullable",
+                                "sql-manual/sql-functions/debug-functions/nullable",
+                                "sql-manual/sql-functions/debug-functions/sleep"
                             ]
                         },
                         "sql-manual/sql-functions/cast",

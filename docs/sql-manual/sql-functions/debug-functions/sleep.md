@@ -1,7 +1,7 @@
 ---
 {
-    "title": "QUOTE",
-    "language": "zh-CN"
+    "title": "SLEEP",
+    "language": "en"
 }
 ---
 
@@ -13,7 +13,9 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
+
   http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,24 +24,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## quote
+## sleep
 ### description
 #### Syntax
 
-`VARCHAR quote(VARCHAR str)`
+`BOOLEAN sleep(INT num)`
 
-将参数中所有的字符串按原样输出,并用''套起来
+Sleeps the current session for `num` second(s)。
 
 ### example
 
 ```sql
-mysql> select quote('hello world!\\t');
-+-------------------------+
-| quote('hello world!\t') |
-+-------------------------+
-| 'hello world!\t'        |
-+-------------------------+
+mysql> select sleep(10);
++-----------+
+| sleep(10) |
++-----------+
+|         1 |
++-----------+
 ```
 
 ### keywords
-    QUOTE
+    sleep

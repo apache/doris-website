@@ -323,7 +323,7 @@ FROM KAFKA [data_source_properties]
 
 **max_routine_load_task_concurrent_num**
 
-- 默认值：5
+- 默认值：256
 
 - 动态配置：是
 
@@ -333,7 +333,7 @@ FROM KAFKA [data_source_properties]
 
 **max_routine_load_task_num_per_be**
 
-- 默认值：5
+- 默认值：1024
 
 - 动态配置：是
 
@@ -567,7 +567,7 @@ ReasonOfStateChanged:
 | ErrorLogUrls         | 被过滤的质量不合格的数据的查看地址                           |
 | OtherMsg             | 其他错误信息                                                 |
 
-## 导入最佳实践
+## 导入示例
 
 ### CSV 格式导入
 
