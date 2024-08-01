@@ -45,7 +45,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 	- [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
 	- [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
-2. Place the downloaded file in the plugins directory of the Ranger service, such as:
+2. Place the downloaded file in the `ranger-plugins/doris` directory of the Ranger service, such as:
 
 	```
 	/usr/local/service/ranger/ews/webapp/WEB-INF/classes/ranger-plugins/doris/ranger-doris-plugin-3.0.0-SNAPSHOT.jar
