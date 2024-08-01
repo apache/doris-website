@@ -46,9 +46,6 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 ## Load data locally and create models
 
 1. Start the Power BI Desktop
-
-   ![jdbc connector download](/images/powerbi/bi-powerbi-en-1.png)
-
 2. Open the Power BI Desktop screen and click Create Report. If a local report exists, you can open it.
 
    ![start page](/images/powerbi/bi-powerbi-en-2.png)

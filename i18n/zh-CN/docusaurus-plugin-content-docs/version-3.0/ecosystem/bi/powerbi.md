@@ -47,9 +47,6 @@ MySQL Connector 下载
 ## 本地加载数据与创建模型
 
 1. 启动 Power BI Desktop
-
-   ![jdbc connector download](/images/powerbi/bi-powerbi-en-1.png)
-
 2. 在 Power BI Desktop 打开界面点击新建报表。若已有本地报表可以选择打开已有报表
 
    ![start page](/images/powerbi/bi-powerbi-en-2.png)
