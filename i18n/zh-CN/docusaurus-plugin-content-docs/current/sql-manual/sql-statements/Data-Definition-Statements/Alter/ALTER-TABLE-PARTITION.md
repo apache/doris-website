@@ -168,6 +168,7 @@ ADD PARTITION p1 VALUES [("2014-01-01"), ("2014-02-01"));
 ```
 
 10. 批量增加数字类型和时间类型的分区
+
 ```sql
 ALTER TABLE example_db.my_table ADD PARTITIONS FROM (1) TO (100) INTERVAL 10;
 ALTER TABLE example_db.my_table ADD PARTITIONS FROM ("2023-01-01") TO ("2025-01-01") INTERVAL 1 YEAR;
