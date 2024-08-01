@@ -147,6 +147,13 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
+注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，可以通过设置session variable的方式控制是否打印parpared语句的audit log。
+
+```sql
+# 配置 session 变量关闭打印parpared语句的audit log, 默认为true即开启打印parpared语句的audit log。
+set enable_prepared_stmt_audit_log=false;
+```
+
 关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import/insert-into-manual)。
 
 ### INSERT INTO VALUES
@@ -443,11 +450,13 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **机器配置**
 
-* 1 台 FE：8 核 CPU、16GB 内存、1 块 200GB 通用性 SSD 云磁盘
+* 1 台 FE：阿里云 8 核 CPU、16GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 3 台 BE：16 核 CPU、64GB 内存、1 块 2TB 通用性 SSD 云磁盘
+* 3 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘
 
-* 1 台测试客户端：16 核 CPU、64GB 内存、1 块 100GB 通用型 SSD 云磁盘
+* 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
+
+* 测试版本为Doris-3.0.1
 
 **数据集**
 
@@ -465,18 +474,18 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 | 导入方式    | 单并发数据量  | 并发数  | 耗时 (秒)     | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
 |----------------|---------|------|-----------|----------|-----------|
-| `group_commit` | 10 KB   | 10   | 3707      | 66,697   | 8.56 |
-| `group_commit` | 10 KB   | 30   | 3385      | 73,042   | 9.38 |
-| `group_commit` | 100 KB  | 10   | 473       | 522,725  | 67.11 |
-| `group_commit` | 100 KB  | 30   | 390       | 633,972  | 81.39 |
-| `group_commit` | 500 KB  | 10   | 323       | 765,477  | 98.28 |
-| `group_commit` | 500 KB  | 30   | 309       | 800,158  | 102.56 |
-| `group_commit` | 1 MB    | 10   | 304       | 813,319  | 104.24 |
-| `group_commit` | 1 MB    | 30   | 286       | 864,507  | 110.88 |
-| `group_commit` | 10 MB   | 10   | 290       | 852,583  | 109.28 |
-| `非group_commit` | 1 MB    | 10   | 导入报错 -235  |  | |
-| `非group_commit` | 10 MB   | 10   | 519       | 476,395  | 61.12 |
-| `非group_commit` | 10 MB   | 30   | 导入报错 -235  |  | |
+| `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
+| `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
+| `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
+| `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
+| `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
+| `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
+| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
+| `非group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
+| `非group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
+| `非group_commit` | 10 MB   | 30   | 118  | 2095331 | 276.1|
 
 在上面的`group_commit`测试中，BE 的 CPU 使用率在 10-40% 之间。
 
@@ -486,11 +495,15 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **机器配置**
 
-* 1 台 FE：8 核 CPU、16 GB 内存、1 块 200 GB 通用性 SSD 云磁盘
+* 1 台 FE：阿里云 8 核 CPU、16GB 内存、1 块 100GB ESSD PL1 云磁盘
 
-* 1 台 BE：16 核 CPU、64 GB 内存、1 块 2 TB 通用性 SSD 云磁盘
+* 1 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
 
-* 1 台测试客户端：16 核 CPU、64GB 内存、1 块 100 GB 通用型 SSD 云磁盘
+* 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
+
+* 测试版本为Doris-3.0.1
+
+* 关闭打印parpared语句的audit log以提高性能
 
 **数据集**
 
@@ -508,6 +521,8 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 | 单个 insert 的行数 | 并发数 | 导入速率 (行/秒) | 导入吞吐 (MB/秒) |
 |-------------|-----|-----------|----------|
-| 100 | 20  | 106931    | 11.46 |
+| 100 | 10  | 160,758    | 17.21 |
+| 100 | 20  | 210,476    | 22.19 |
+| 100 | 30  | 214,323    | 22.92 |
 
 在上面的测试中，FE 的 CPU 使用率在 60-70% 左右，BE 的 CPU 使用率在 10-20% 左右。
