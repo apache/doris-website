@@ -1546,6 +1546,16 @@ NORMAL 优先级挂起加载作业的并发数。
 
 对于一些高频负载工作，例如：INSERT、STREAMING LOAD、ROUTINE_LOAD_TASK。如果过期，则删除已完成的作业或任务。
 
+#### `label_num_threshold`
+
+默认值：2000
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+load label个数阈值，超过该个数后，对于已经完成导入作业或者任务，其label会被删除，被删除的 label 可以被重用。 值为 -1 时，表示此阈值不生效。
+
 #### `label_clean_interval_second`
 
 默认值：1 * 3600（1 小时）
