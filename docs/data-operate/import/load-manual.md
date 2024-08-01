@@ -87,6 +87,8 @@ This section mainly introduces some concepts related to import to help users bet
 
 All import tasks in Doris are atomic, meaning that a import job either succeeds completely or fails completely. Partially successful data import will not occur within the same import task, and atomicity and consistency between materialized views and base tables are also guaranteed. For simple import tasks, users do not need to perform additional configurations or operations. For materialized views associated with tables, atomicity and consistency with the base table are also guaranteed.
 
+More detailed info refer to [Transaction](../../data-operate/transaction.md).
+
 ### Label Mechanism
 
 Import jobs in Doris can be assigned a label. This label is usually a user-defined string with certain business logic properties. If not specified by the user, the system will generate one automatically. The main purpose of the label is to uniquely identify an import task and ensure that the same label is imported successfully only once.

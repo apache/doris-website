@@ -132,7 +132,6 @@
                         "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-atomicity",
                         "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
