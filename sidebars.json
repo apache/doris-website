@@ -128,7 +128,7 @@
                                 "data-operate/import/import-way/group-commit-manual"
                             ]
                         },
-                        "data-operate/import/load-json-format",
+                        "data-operate/import/load-data-format",
                         "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
