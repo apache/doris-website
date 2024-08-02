@@ -38,6 +38,7 @@ grammar:
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] db_name
+    [COMMENT "db comment"]
     [PROPERTIES ("key"="value", ...)];
 ````
 
@@ -68,10 +69,15 @@ CREATE DATABASE [IF NOT EXISTS] db_name
    );
    ````
 
+3. Create a new database db_test with comment
+   ```sql
+   CREATE DATABASE db_test COMMENT "this is test comment";
+   ````
+
 ### Keywords
 
 ````text
-CREATE, DATABASE
+CREATE, DATABASE, COMMENT
 ````
 
 ### Best Practice
