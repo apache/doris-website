@@ -449,8 +449,8 @@ Note:
 2. The`_id`  field must be of  `varchar`  type.
 
 ### Getting globally ordered query results
-ES query results sorted by scores are useful in scenarios such as relevance sorting, prioritizing important content, etc. Doris querying ES pulls data according to the distribution of shards in the ES index in order to take full advantage of the MPP architecture.
-In order to get globally ordered sorting results, you need to do a single point query on ES. This can be controlled by the session variable `enable_es_parallel_scroll` (default true).
+ES query results sorted by scores are useful in scenarios such as relevance sorting, prioritizing important content, etc. Doris querying ES pulls data according to the distribution of shards in the ES index in order to take full advantage of the MPP architecture.  
+In order to get globally ordered sorting results, you need to do a single point query on ES. This can be controlled by the session variable `enable_es_parallel_scroll` (default true).  
 When `enable_es_parallel_scroll=false` is set, Doris will send a `scroll` query without `shard_preference` and `sort` information to the ES cluster to get globally ordered results.  
 **Note:** Use with caution when the query result set is large.
 
