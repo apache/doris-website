@@ -88,8 +88,8 @@ After switching to the ES Catalog, you will be in the `dafault_db`  so you don't
 | ip               | string      |                                                                         |
 | constant_keyword | string      |                                                                         |
 | wildcard         | string      |                                                                         |
-| nested           | string      |                                                                         |
-| object           | string      |                                                                         |
+| nested           | json        |                                                                         |
+| object           | json        |                                                                         |
 | other            | unsupported |                                                                         |
 
 ### Array Type
@@ -447,6 +447,17 @@ Note:
 
 1. The `_id`  field only supports `=` and `in` filtering.
 2. The`_id`  field must be of  `varchar`  type.
+
+### Getting globally ordered query results
+ES query results sorted by scores are useful in scenarios such as relevance sorting, prioritizing important content, etc. Doris querying ES pulls data according to the distribution of shards in the ES index in order to take full advantage of the MPP architecture.
+In order to get globally ordered sorting results, you need to do a single point query on ES. This can be controlled by the session variable `enable_es_parallel_scroll` (default true).
+When `enable_es_parallel_scroll=false` is set, Doris will send a `scroll` query without `shard_preference` and `sort` information to the ES cluster to get globally ordered results.  
+**Note:** Use with caution when the query result set is large.
+
+
+### Modify the batch size for scroll requests.
+
+The `batch` of a `scroll` request is 4064 by default, and can be changed with the session variable `batch_size`.
 
 ## FAQ
 
