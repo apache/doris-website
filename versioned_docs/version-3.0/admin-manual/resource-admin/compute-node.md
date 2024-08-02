@@ -94,7 +94,7 @@ At the same time, the following FE configuration will affect the usage strategy 
 >
 > 4. If the `min_backend_num_for_external_table` value is greater than the total number of BE nodes, at most number of BE will be selected.
 >
-> 5. The above configurations can be modified at runtime without restarting the FE node. And all FE nodes need to be configured.
+> 5. The above parameters can be modified dynamically through the `ADMIN SET FRONTEND CONFIG` command without restarting the FE node. And all FE nodes need to be configured. Or add configuration in `fe.conf` and restart the FE node.
 
 ## Best Practices
 
