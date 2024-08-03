@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Loading Data in JSON Format",
+    "title": "Import Data Formats",
     "language": "en"
 }
 ---
@@ -24,10 +24,112 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Doris supports importing data files in CSV, JSON, Parquet, and ORC formats. This document provides detailed information on the supported import methods, applicable parameters, and usage for each file format.
 
+## CSV Format
+### Supported Import Methods
+The following import methods support data import in CSV format:
+- [Stream Load](./import-way/stream-load-manual.md)
+- [Broker Load](./import-way/broker-load-manual.md)
+- [Routine Load](./import-way/routine-load-manual.md)
+- [MySQL Load](./import-way/mysql-load-manual.md)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+
+### Supported CSV Formats
+- csv: File without header and type
+- csv_with_names: File with header, automatically filters the first line of the file
+- csv_with_names_and_types: File with header and type, automatically filters the first two lines of the file
+
+### Applicable Parameters
+
+| Parameter      | Description                                                  | Method                                                       |
+| :------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Line Delimiter | Specifies the newline character in the import file, default is `\n`. Multiple characters can be used as a combination for the newline character. For text files on Windows systems, you may need to specify the newline character as `\r\n`. Some programs may use `\r` as the line terminator when writing files, in which case you need to specify `\r` as the newline character. Routine Load does not support specifying the line delimiter, as each message corresponds to a row of data. | <p>- Stream     Load: `line_delimiter` Http Header</p> <p>- Broker Load: `LINES TERMINATED BY`</p> <p>- Routine Load: Not supported</p>  <p>- MySQL Load: `LINES TERMINATED BY`</p> |
+| Column Delimiter | Specifies the column delimiter in the import file, default is `\t`. If it is an invisible character, it needs to be prefixed with `\x` and represented in hexadecimal. Multiple characters can be used as a combination for the column delimiter. Because the MySQL protocol performs escape processing, if the column delimiter is an invisible character, an additional backslash `\` needs to be added before the column delimiter in the import request submitted through the MySQL protocol. For example, the file delimiter in Hive is `\x01`, and Broker Load needs to pass `\\x01`. | <p>- Stream     Load: `columns_delimiter` Http Header</p> <p>- Broker Load: `COLUMNS TERMINATED BY`</p> <p>- Routine Load: `COLUMNS TERMINATED BY`</p> <p>- MySQL Load: `COLUMNS TERMINATED BY`</p> |
+| Enclose Character | When the CSV data field contains the line delimiter or column delimiter, to prevent accidental truncation, a single-byte character can be specified as the enclosing character for protection. The default value is `NONE`. The most commonly used enclosing characters are single quotes `'` or double quotes `"`. For example, if the column delimiter is `,` and the enclosing character is `'`, and the data is `a,'b,c'`, then `b,c` will be parsed as one field. | <p>- Stream     Load: `enclose` Http Header</p> <p>- Broker Load: Specify `enclose` in `PROPERTIES`</p> <p>- Routine Load: Specify `enclose` in `PROPERTIES`</p> <p>- MySQL Load: Specify `enclose` in `PROPERTIES`</p> |
+| Escape Character | Used to escape the same character as the enclosing character that appears in the field. For example, if the data is `a,'b,'c'`, the enclosing character is `'`, and you want `b,'c` to be parsed as one field, you need to specify a single-byte escape character, such as `\`, and modify the data to `a,'b,\'c'`. | <p>- Stream     Load: `escape` Http Header</p> <p>- Broker Load: Specify `escape` in `PROPERTIES`</p> <p>- Routine Load: Specify `escape` in `PROPERTIES`</p> <p>- MySQL Load: Specify `escape` in `PROPERTIES`</p> |
+| Skipped Lines | Skips the first few lines of the CSV file, integer type, default is 0. This parameter is ignored when the format is set to `csv_with_names` or `csv_with_names_and_types`. | <p>- Stream     Load: `skip_lines` Http Header</p> <p>- Broker Load: Specify `skip_lines` in `PROPERTIES`</p> <p>- MySQL Load: Not supported</p> <p>- Routine Load: Not supported</p> |
+| Compression Format | The following compression formats are supported for CSV format data: plain, gz, lzo, bz2, lz4, LZ4FRAME, lzop, deflate. The default is plain, indicating no compression. Tar format is not supported, as tar is an archiving tool, not a compression format. | <p>- Stream     Load: `compress_type` Http Header</p> <p>- Broker Load: `COMPRESS_TYPE AS`</p> <p>- MySQL Load: Not supported</p> <p>- Routine Load: Not supported</p> |
+
+#### Import Example
+
+[Stream Load](./import-way/stream-load-manual.md) 
+
+```
+curl --location-trusted -u <doris_user>:<doris_password>
+    -H "Expect:100-continue"
+    -H "line_delimiter:\n"
+    -H "columns_delimiter:|"
+    -H "enclose:'"
+    -H "escape:\"
+    -H "skip_lines:2"
+    -T streamload_example.csv 
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
+```
+
+[Broker Load](./import-way/broker-load-manual.md)
+```
+LOAD LABEL example_db.exmpale_label_1
+(
+    DATA INFILE("s3://your_bucket_name/your_file.txt")
+    INTO TABLE load_test
+    COLUMNS TERMINATED BY "|"
+    LINES TERMINATED BY "\n"
+)
+WITH S3
+(
+    "AWS_ENDPOINT" = "AWS_ENDPOINT",
+    "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+    "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+    "AWS_REGION" = "AWS_REGION"
+)
+PROPERTIES
+(
+    "enclose" = "'",
+    "escape" = "\",
+    "skip_lines = "2"
+);
+```
+
+[Routine Load](./import-way/routine-load-manual.md)
+```
+CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
+     COLUMNS TERMINATED BY "|",
+     COLUMNS(id, name, age)
+     PROPERTIES
+     (
+         "enclose" = "'",
+         "escape" = "\"
+     )
+     FROM KAFKA
+     (
+         "kafka_broker_list" = "10.16.10.6:9092",
+         "kafka_topic" = "routineLoad01",
+         "property.group.id" = "kafka_job01",
+         "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+     );  
+```
+
+[MySQL Load](./import-way/mysql-load-manual.md)
+```
+LOAD DATA LOCAL
+INFILE "testData"
+INTO TABLE testDb.testTbl
+COLUMNS TERMINATED BY "|"
+LINES TERMINATED BY "\n"
+PROPERTIES
+(
+    "enclose" = "'",
+    "escape" = "\"
+);
+```
+
+
+## Json format
 Doris supports importing data in JSON format. This document mainly describes the precautions when importing data in JSON format.
 
-## Supported import methods
+### Supported import methods
 
 Currently, only the following import methods support data import in JSON format:
 
@@ -37,11 +139,11 @@ Currently, only the following import methods support data import in JSON format:
 
 Other ways of importing data in JSON format are not currently supported.
 
-## Supported JSON Formats
+### Supported JSON Formats
 
 Currently only the following three JSON formats are supported:
 
-1. Multiple rows of data represented by Array
+- Multiple rows of data represented by Array
 
    JSON format with Array as root node. Each element in the Array represents a row of data to be imported, usually an Object. An example is as follows:
 
@@ -65,46 +167,47 @@ Currently only the following three JSON formats are supported:
 
    This method must be used with the setting `strip_outer_array=true`. Doris will expand the array when parsing, and then parse each Object in turn as a row of data.
 
-2. A single row of data represented by Object
+- A single row of data represented by Object
    JSON format with Object as root node. The entire Object represents a row of data to be imported. An example is as follows:
 
    ````json
    { "id": 123, "city" : "beijing"}
    ````
-   
+ 
    ````json
    { "id": 123, "city" : { "name" : "beijing", "region" : "haidian" }}
    ````
-   
+ 
    This method is usually used for the Routine Load import method, such as representing a message in Kafka, that is, a row of data.
 
-3. Multiple lines of Object data separated by a fixed delimiter
+- Multiple lines of Object data separated by a fixed delimiter
    
    A row of data represented by Object represents a row of data to be imported. The example is as follows:
-   
+ 
    ````json
    { "id": 123, "city" : "beijing"}
    { "id": 456, "city" : "shanghai"}
    ...
    ````
-   
+ 
    This method is typically used for Stream Load import methods to represent multiple rows of data in a batch of imported data.
-   
+ 
    This method must be used with the setting `read_json_by_line=true`, the special delimiter also needs to specify the `line_delimiter` parameter, the default is `\n`. When Doris parses, it will be separated according to the delimiter, and then parse each line of Object as a line of data.
 
-### streaming_load_json_max_mb parameters
+### Parameter Configuration
+- streaming_load_json_max_mb parameters
 
-Some data formats, such as JSON, cannot be split. Doris must read all the data into the memory before parsing can begin. Therefore, this value is used to limit the maximum amount of data that can be loaded in a single Stream load.
+  Some data formats, such as JSON, cannot be split. Doris must read all the data into the memory before parsing can begin. Therefore, this value is used to limit the maximum amount of data that can be loaded in a single Stream load.
+  
+  The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../admin-manual/config/be-config.md).
+  
+- fuzzy_parse parameters
 
-The default value is 100, The unit is MB, modify this parameter by referring to the [BE configuration](../../admin-manual/config/be-config.md).
-
-### fuzzy_parse parameters
-
-In [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
-
-This parameter is usually used to import the format of **multi-line data represented by Array**, so it is generally used with `strip_outer_array=true`.
-
-This feature requires that each row of data in the Array has exactly the same order of fields. Doris will only parse according to the field order of the first row, and then access the subsequent data in the form of subscripts. This method can improve the import efficiency by 3-5X.
+  In [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md) `fuzzy_parse` parameter can be added to speed up JSON Data import efficiency.
+  
+  This parameter is usually used to import the format of **multi-line data represented by Array**, so it is generally used with `strip_outer_array=true`.
+  
+  This feature requires that each row of data in the Array has exactly the same order of fields. Doris will only parse according to the field order of the first row, and then access the subsequent data in the form of subscripts. This method can improve the import efficiency by 3-5X.
 
 ## JSON Path
 
@@ -214,7 +317,7 @@ Doris supports extracting data specified in JSON through JSON Path.
 
   would cause the exact match to fail, and the line would be marked as an error line instead of yielding `null, null`.
 
-## JSON Path and Columns
+### JSON Path and Columns
 
 JSON Path is used to specify how to extract data in JSON format, while Columns specifies the mapping and conversion relationship of columns. Both can be used together.
 
@@ -338,7 +441,7 @@ The above example will extract the fields in the order of the JSON Path, specify
 +------+------+------------+------------+
 ```
 
-## JSON root
+### JSON root
 
 Doris supports extracting data specified in JSON through JSON root.
 
@@ -370,7 +473,7 @@ Doris supports extracting data specified in JSON through JSON root.
 
   The element will be treated as new JSON for subsequent import operations,and get the final data 321 and shanghai
 
-## NULL and Default values
+### NULL and Default values
 
 Example data is as follows:
 
@@ -425,9 +528,9 @@ This is because Doris doesn't know "the missing column is column k2 in the table
 curl -v --location-trusted -u root: -H "format: json" -H "strip_outer_array: true" -H "jsonpaths: [\"$.k1\", \"$.k2\"]" - H "columns: k1, tmp_k2, k2 = ifnull(tmp_k2, 'x')" -T example.json http://127.0.0.1:8030/api/db1/tbl1/_stream_load
 ````
 
-## Application example
+### Application example
 
-### Stream Load
+#### Stream Load
 
 Because of the inseparability of the JSON format, when using Stream Load to import a JSON format file, the file content will be fully loaded into the memory before processing begins. Therefore, if the file is too large, it may take up more memory.
 
@@ -441,108 +544,110 @@ code INT NULL
 
 1. Import a single row of data 1
 
-   ````json
-   {"id": 100, "city": "beijing", "code" : 1}
-   ````
+````json
+{"id": 100, "city": "beijing", "code" : 1}
+````
 
-   - do not specify JSON Path
+- do not specify JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ````
+```bash
+curl --location-trusted -u user:passwd -H "format: json" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+````
 
-     Import result:
+Import result:
 
-     ````text
-     100 beijing 1
-     ````
+````text
+100 beijing 1
+````
 
-   - Specify JSON Path
+- Specify JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ````
+```bash
+curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+````
 
-     Import result:
+Import result:
 
-     ````text
-     100 beijing 1
-     ````
+````text
+100 beijing 1
+````
 
 2. Import a single row of data 2
 
-   ````json
-   {"id": 100, "content": {"city": "beijing", "code": 1}}
-   ````
+ ````json
+{"id": 100, "content": {"city": "beijing", "code": 1}}
+````
 
-   - Specify JSON Path
+- Specify JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\ "]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ````
+```bash
+curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.content.city\",\"$.content.code\ "]" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+````
 
-     Import result:
+Import result:
 
-     ````text
-     100 beijing 1
-     ````
+````text
+100 beijing 1
+````
 
 3. Import multiple rows of data as Array
 
-   ````json
-   [
-       {"id": 100, "city": "beijing", "code" : 1},
-       {"id": 101, "city": "shanghai"},
-       {"id": 102, "city": "tianjin", "code" : 3},
-       {"id": 103, "city": "chongqing", "code" : 4},
-       {"id": 104, "city": ["zhejiang", "guangzhou"], "code" : 5},
-       {
-           "id": 105,
-           "city": {
-               "order1": ["guangzhou"]
-           },
-           "code" : 6
-       }
-   ]
-   ````
+````json
+[
+    {"id": 100, "city": "beijing", "code" : 1},
+    {"id": 101, "city": "shanghai"},
+    {"id": 102, "city": "tianjin", "code" : 3},
+    {"id": 103, "city": "chongqing", "code" : 4},
+    {"id": 104, "city": ["zhejiang", "guangzhou"], "code" : 5},
+    {
+        "id": 105,
+        "city": {
+            "order1": ["guangzhou"]
+        },
+        "code" : 6
+    }
+]
+````
 
-   - Specify JSON Path
+- Specify JSON Path
 
-     ```bash
-     curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
-     ````
+```bash
+curl --location-trusted -u user:passwd -H "format: json" -H "jsonpaths: [\"$.id\",\"$.city\",\"$.code\"]" - H "strip_outer_array: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
+````
 
-     Import result:
+Import result:
 
-     ````text
-     100 beijing 1
-     101 shanghai NULL
-     102 tianjin 3
-     103 chongqing 4
-     104 ["zhejiang","guangzhou"] 5
-     105 {"order1":["guangzhou"]} 6
-     ````
+````text
+100 beijing 1
+101 shanghai NULL
+102 tianjin 3
+103 chongqing 4
+104 ["zhejiang","guangzhou"] 5
+105 {"order1":["guangzhou"]} 6
+````
 
 4. Import multi-line data as multi-line Object
 
-      ```json
-      {"id": 100, "city": "beijing", "code" : 1}
-      {"id": 101, "city": "shanghai"}
-      {"id": 102, "city": "tianjin", "code" : 3}
-      {"id": 103, "city": "chongqing", "code" : 4}
-      ```
+ ```json
+ {"id": 100, "city": "beijing", "code" : 1}
+ {"id": 101, "city": "shanghai"}
+ {"id": 102, "city": "tianjin", "code" : 3}
+ {"id": 103, "city": "chongqing", "code" : 4}
+ ```
 
- 	 StreamLoad import:
+StreamLoad import:
 
 ```bash
 curl --location-trusted -u user:passwd -H "format: json" -H "read_json_by_line: true" -T data.json http://localhost:8030/api/db1/tbl1/_stream_load
 ```
-	   Import result:
+Import result:
 	
-	100     beijing                     1
-	101     shanghai                    NULL
-	102     tianjin                     3
-	103     chongqing                   4
+```bash
+100     beijing                     1
+101     shanghai                    NULL
+102     tianjin                     3
+103     chongqing                   4
+```
 
 5. Transform the imported data
 
@@ -609,8 +714,82 @@ MySQL > select * from array_test_largeint;
 +------+------------------------------------------------------------------------------------+
 ```
 
-### Routine Load
+#### Routine Load
 
 The processing principle of Routine Load for JSON data is the same as that of Stream Load. It is not repeated here.
 
 For Kafka data sources, the content in each Massage is treated as a complete JSON data. If there are multiple rows of data represented in Array format in a Massage, multiple rows will be imported, and the offset of Kafka will only increase by 1. If an Array format Json represents multiple lines of data, but the Json parsing fails due to the wrong Json format, the error line will only increase by 1 (because the parsing fails, in fact, Doris cannot determine how many lines of data are contained in it, and can only error by one line data record)
+
+## Parquet
+### Supported Import Methods
+The following import methods support importing data in CSV format:
+- [Stream Load](./import-way/stream-load-manual.md)
+- [Broker Load](./import-way/broker-load-manual.md)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+
+### Import Examples
+
+[Stream Load](./import-way/stream-load-manual.md) 
+
+```
+curl --location-trusted -u <doris_user>:<doris_password>
+    -H "Expect:100-continue"
+    -H "format:parquet"
+    -T streamload_example.parquet
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
+```
+
+[Broker Load](./import-way/broker-load-manual.md)
+```
+LOAD LABEL example_db.exmpale_label_1
+(
+    DATA INFILE("s3://your_bucket_name/your_file.parquet")
+    INTO TABLE load_test
+    FORMAT AS "parquet"
+)
+WITH S3
+(
+    "AWS_ENDPOINT" = "AWS_ENDPOINT",
+    "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+    "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+    "AWS_REGION" = "AWS_REGION"
+);
+```
+
+## ORC
+### Supported Import Methods
+The following import methods support importing data in CSV format:
+- [Stream Load](./import-way/stream-load-manual.md)
+- [Broker Load](./import-way/broker-load-manual.md)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+
+### Import Examples
+
+[Stream Load](./import-way/stream-load-manual.md) 
+
+```
+curl --location-trusted -u <doris_user>:<doris_password>
+    -H "Expect:100-continue"
+    -H "format:orc"
+    -T streamload_example.orc
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
+```
+
+[Broker Load](./import-way/broker-load-manual.md)
+```
+LOAD LABEL example_db.exmpale_label_1
+(
+    DATA INFILE("s3://your_bucket_name/your_file.orc")
+    INTO TABLE load_test
+    FORMAT AS "orc"
+)
+WITH S3
+(
+    "AWS_ENDPOINT" = "AWS_ENDPOINT",
+    "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+    "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+    "AWS_REGION" = "AWS_REGION"
+);
+```
