@@ -285,7 +285,8 @@
                     "type": "category",
                     "label": "Building Data Lakes",
                     "items": [
-                        "lakehouse/datalake-building/hive-build"
+                        "lakehouse/datalake-building/hive-build",
+                        "lakehouse/datalake-building/iceberg-build"
                     ]
                 },
                 {
