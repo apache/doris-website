@@ -94,7 +94,7 @@ under the License.
 > 
 > 4. 如果 `min_backend_num_for_external_table` 值大于总的 BE 节点数量，则最多只会选择全部的 BE。
 > 
-> 5. 以上参数均支持在运行时修改，不需要重启 FE 节点。且所有 FE 节点都需配置。
+> 5. 以上参数可以通过 `ADMIN SET FRONTEND CONFIG` 命令动态修改，不需要重启 FE 节点。且所有 FE 节点都需配置。或者在 `fe.conf` 中添加配置并重启 FE 节点。
 
 ## 最佳实践
 
