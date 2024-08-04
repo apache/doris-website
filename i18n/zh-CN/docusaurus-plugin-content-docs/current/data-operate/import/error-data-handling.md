@@ -278,5 +278,5 @@ curl  --location-trusted -u root -H "partial_columns:true" -H "strict_mode:true"
    INSERT INTO my_table FROM S3/HDFS/LOCAL();
    ```
 :::tip
-仅当 `enable_insert_strict` 值为 `false` 时生效，用于控制使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定最大错误率的。默认为 1.0 表示容忍所有错误。
-::::
+仅当 `enable_insert_strict` 值为 `false` 时， `insert_max_filter_ratio` 才生效，只用于控制 `INSERT INTO FROM S3/HDFS/LOCAL()` 的最大错误率。默认为 1.0，表示容忍所有错误。
+:::

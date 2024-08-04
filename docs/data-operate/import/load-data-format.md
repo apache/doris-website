@@ -133,11 +133,11 @@ Doris supports importing data in JSON format. This document mainly describes the
 
 Currently, only the following import methods support data import in JSON format:
 
-- Through [S3 table function](../../sql-manual/sql-functions/table-functions/s3.md) import statement: insert into table select * from S3();
-- Import the local JSON format file through [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD.md).
-- Subscribe and consume JSON format in Kafka via [ROUTINE LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/CREATE-ROUTINE-LOAD.md) information.
-
-Other ways of importing data in JSON format are not currently supported.
+- [Stream Load](./import-way/stream-load-manual.md)
+- [Broker Load](./import-way/broker-load-manual.md)
+- [Routine Load](./import-way/routine-load-manual.md)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
 
 ### Supported JSON Formats
 
@@ -209,7 +209,7 @@ Currently only the following three JSON formats are supported:
   
   This feature requires that each row of data in the Array has exactly the same order of fields. Doris will only parse according to the field order of the first row, and then access the subsequent data in the form of subscripts. This method can improve the import efficiency by 3-5X.
 
-## JSON Path
+### JSON Path
 
 Doris supports extracting data specified in JSON through JSON Path.
 
