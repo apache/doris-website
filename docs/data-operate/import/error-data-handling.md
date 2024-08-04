@@ -278,5 +278,5 @@ The default value of `max_filter_ratio` is 0, which means that if there is any e
    INSERT INTO my_table FROM S3/HDFS/LOCAL();
    ```
 :::tip
-Only effective when the value of `enable_insert_strict` is `false`, used to control the maximum error rate when using `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value is 1.0, which means tolerating all errors.
-::::
+The `insert_max_filter_ratio` only takes effect when the value of `enable_insert_strict` is `false`, and it is used to control the maximum error rate of `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value is 1.0, which means tolerating all errors.
+:::
