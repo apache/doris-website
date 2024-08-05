@@ -91,8 +91,8 @@ CREATE CATALOG es PROPERTIES (
 | ip               | string      |                                                            |
 | constant_keyword | string      |                                                            |
 | wildcard         | string      |                                                            |
-| nested           | string      |                                                            |
-| object           | string      |                                                            |
+| nested           | json        |                                                            |
+| object           | json        |                                                            |
 | other            | unsupported |                                                            |
 
 
@@ -448,6 +448,17 @@ PROPERTIES (
 1. `_id` 字段的过滤条件仅支持`=`和`in`两种
 
 2. `_id` 字段必须为 `varchar` 类型
+
+### 获取全局有序的查询结果
+
+在相关性排序、优先展示重要内容等场景中 ES 查询结果按照 score 来排序非常有用。Doris 查询 ES 为了充分利用 MPP 的架构优势，是按照 ES 索引的 shard 的分布情况来拉取数据。  
+为了得到全局有序的排序结果，需要对 ES 进行单点查询。可以通过 session 变量 `enable_es_parallel_scroll` （默认为 true）来控制。  
+当设置 `enable_es_parallel_scroll=false` 时，Doris 将会向 ES 集群发送不带 `shard_preference` 和 `sort` 信息的 `scroll` 查询，从而得到全局有序的结果。  
+**注意：** 在查询结果集较大时，谨慎使用。
+
+### 修改 scroll 请求的 batch 大小
+
+`scroll` 请求的 `batch` 默认为 4064。可以通过 session 变量 `batch_size` 来修改。
 
 ## 常见问题
 
