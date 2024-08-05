@@ -6,7 +6,7 @@ import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
 import SearchBar from '@theme/SearchBar';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarLogo from '@theme/Navbar/Logo';
-import DocsLogo from '@site/static/images/docs-logo.svg';
+import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
 import NavbarSearch from '@theme/Navbar/Search';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
@@ -17,11 +17,11 @@ function useNavbarItems() {
     // TODO temporary casting until ThemeConfig type is improved
     return useThemeConfig().navbar.items;
 }
-function NavbarItems({ items }) {
+function NavbarItems({ items, isDocsPage }) {
     return (
         <>
             {items.map((item, i) => (
-                <NavbarItem {...item} key={i} />
+                <NavbarItem {...item} key={i} isDocsPage={isDocsPage} />
             ))}
         </>
     );
@@ -45,19 +45,26 @@ function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
 export default function NavbarContent({ mobile }) {
     const mobileSidebar = useNavbarMobileSidebar();
     const items = useNavbarItems();
+    const docItems = useThemeConfig().docNavbarEN.items;
     const [leftItems, rightItems] = splitNavbarItems(items);
     const searchBarItem = items.find(item => item.type === 'search');
     const [star, setStar] = useState<any>();
     const [isDocsPage, setIsDocsPage] = useState(false);
+    const [startWithDoc, setStartWithDoc] = useState(true)
     const [isCommunity, setIsCommunity] = useState(false);
+    const [isEN, setIsEN] = useState(true)
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
+            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes']
             const pathname = location.pathname.split('/')[1];
-            const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
+            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true)
+            const docsStart = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
+            const docsPage = tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`))
             const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
             setIsCommunity(communityPage);
             setIsDocsPage(docsPage);
+            setStartWithDoc(docsStart)
         }
     }, [typeof window !== 'undefined' && location.pathname]);
 
@@ -86,23 +93,25 @@ export default function NavbarContent({ mobile }) {
         <NavbarContentLayout
             left={
                 // TODO stop hardcoding items?
-                <div className="navbar-left">
+                <div className={`navbar-left `}>
                     <div className="navbar-logo-wrapper flex items-center">
                         {isDocsPage ? (
                             <div
                                 className="cursor-pointer docs"
                                 onClick={() => {
-                                    window.location.href = '/';
+                                    window.location.href = '/get-starting/what-is-new';
                                 }}
                             >
-                                <DocsLogo />
+                                {/* {isEN ? <DocsLogoEN /> :<DocsLogoZH />} */}
+                                <DocsLogoNew />
                             </div>
                         ) : (
                             <NavbarLogo />
                         )}
                     </div>
-
-                    {!isDocsPage && <NavbarItems items={leftItems} />}
+                    <div className={`${styles.navbarLeftToc}`}>
+                        {!isDocsPage ? <NavbarItems items={leftItems} /> : <NavbarItems items={isEN ? docItems : useThemeConfig().docNavbarZH.items} isDocsPage={isDocsPage} />}
+                    </div>
                     {/*  */}
                 </div>
             }
@@ -132,7 +141,7 @@ export default function NavbarContent({ mobile }) {
                         target="_blank"
                     ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
-                        <Translate id="navbar.download">Download</Translate>
+                        <Translate id="navbar.download">{location.pathname.includes('zh-CN') ? '下载' : 'Download'}</Translate>
                     </Link>
                 </>
             }
@@ -140,7 +149,7 @@ export default function NavbarContent({ mobile }) {
                 isDocsPage || isCommunity ? (
                     <div className="docs-nav-version-locale">
                         <LocaleDropdownNavbarItem mobile={false} {...(getNavItem('localeDropdown') as any)} />
-                        {isDocsPage && (
+                        {isDocsPage && ( //startWithDoc
                             <DocsVersionDropdownNavbarItem
                                 mobile={false}
                                 docsPluginId="default"

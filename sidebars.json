@@ -2,18 +2,11 @@
     "docs": [
         {
             "type": "category",
-            "label": "Getting Started",
+            "label": "Quick Start",
             "items": [
-                "get-starting/what-is-apache-doris",
-                {
-                    "type": "category",
-                    "label": "Quick Start",
-                    "items": [
-                        "get-starting/quick-start/quick-start",
-                        "get-starting/quick-start/doris-hudi",
-                        "get-starting/quick-start/doris-paimon"
-                    ]
-                }
+                "get-starting/quick-start/quick-start",
+                "get-starting/quick-start/doris-hudi",
+                "get-starting/quick-start/doris-paimon"
             ]
         },
         {
@@ -548,43 +541,9 @@
         },
         {
             "type": "category",
-            "label": "Practical Guide",
+            "label": "Use Case",
             "items": [
                 "practical-guide/log-storage-analysis"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Ecosystem",
-            "items": [
-                "ecosystem/spark-doris-connector",
-                "ecosystem/flink-doris-connector",
-                "ecosystem/doris-kafka-connector",
-                "ecosystem/datax",
-                "ecosystem/dbt-doris-adapter",
-                "ecosystem/seatunnel",
-                "ecosystem/kyuubi",
-                "ecosystem/logstash",
-                "ecosystem/beats",
-                "ecosystem/cloudcanal",
-                "ecosystem/automq-load",
-                "ecosystem/doris-streamloader",
-                "ecosystem/hive-bitmap-udf",
-                "ecosystem/hive-hll-udf",
-                {
-                    "type": "category",
-                    "label": "BI and Database IDE",
-                    "items": [
-                        "ecosystem/bi/apache-superset",
-                        "ecosystem/bi/dbeaver",
-                        "ecosystem/bi/datagrip",
-                        "ecosystem/bi/finebi",
-                        "ecosystem/bi/powerbi",
-                        "ecosystem/bi/tableau",
-                        "ecosystem/bi/quicksight",
-                        "ecosystem/bi/quickbi"
-                    ]
-                }
             ]
         },
         {
@@ -1559,66 +1518,6 @@
                         }
                     ]
                 }
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Benchmark",
-            "items": [
-                "benchmark/ssb",
-                "benchmark/tpch",
-                "benchmark/tpcds"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "FAQ",
-            "items": [
-                "faq/install-faq",
-                "faq/data-faq",
-                "faq/sql-faq",
-                "faq/lakehouse-faq"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Release notes",
-            "items": [
-                "releasenotes/release-2.1.5",
-                "releasenotes/release-2.1.4",
-                "releasenotes/release-2.1.3",
-                "releasenotes/release-2.1.2",
-                "releasenotes/release-2.1.1",
-                "releasenotes/release-2.1.0",
-                "releasenotes/release-2.0.13",
-                "releasenotes/release-2.0.12",
-                "releasenotes/release-2.0.11",
-                "releasenotes/release-2.0.10",
-                "releasenotes/release-2.0.9",
-                "releasenotes/release-2.0.8",
-                "releasenotes/release-2.0.7",
-                "releasenotes/release-2.0.6",
-                "releasenotes/release-2.0.5",
-                "releasenotes/release-2.0.4",
-                "releasenotes/release-2.0.3",
-                "releasenotes/release-2.0.2",
-                "releasenotes/release-2.0.1",
-                "releasenotes/release-2.0.0",
-                "releasenotes/release-1.2.8",
-                "releasenotes/release-1.2.7",
-                "releasenotes/release-1.2.6",
-                "releasenotes/release-1.2.5",
-                "releasenotes/release-1.2.4",
-                "releasenotes/release-1.2.3",
-                "releasenotes/release-1.2.2",
-                "releasenotes/release-1.2.1",
-                "releasenotes/release-1.2.0",
-                "releasenotes/release-1.1.5",
-                "releasenotes/release-1.1.4",
-                "releasenotes/release-1.1.3",
-                "releasenotes/release-1.1.2",
-                "releasenotes/release-1.1.1",
-                "releasenotes/release-1.1.0"
             ]
         }
     ]
