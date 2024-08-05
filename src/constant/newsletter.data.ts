@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Release Note'],
+        title: "Another milestone: Apache Doris 3.0.0 is released",
+        content: `From version 3.0.0, Doris supports a compute-storage decoupled mode, allowing users to physically isolate business workloads and separate read and write operations through multiple computing clusters.`,
+        to: '/docs/releasenotes/release-3.0.0',
+        image: '3.0.0.jpg',
+    },
+    {
         tags: ['Recent Events'],
         title: "Register | Apache Doris Meetup 2024 · Shenzhen on August 3",
         content: `Jointly launched by Apache Doris community and Tencent Cloud, this collaboration offers practical experience in finance, entertainment, advertising, logistics, and digital marketing, powered by Apache Doris.`,
         to: 'https://5234442745174.huodongxing.com/event/4764741344811?layout=EN',
         image: 'doris-meetup-shenzhen-banner.jpeg',
-    },
-    {
-        tags: ['Release Note'],
-        title: "Apache Doris version 2.1.5 has been released",
-        content: `In this update, we have optimized various functional experiences for data lakehouse and high concurrency scenarios, functionalities of asynchronous materialized views. Additionaly, we have implemented several improvemnents and bug fixes to enhance the stability.`,
-        to: '/blog/release-note-2.1.5',
-        image: '2.1.5.jpg',
     },
     {
         tags: ['Best Practice'],
