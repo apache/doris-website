@@ -331,7 +331,7 @@
     "message": "版本发布",
     "description": "The label for category Release notes in sidebar docs"
   },
-  "sidebar.docs.category.Practical Guide": {
+  "sidebar.docs.category.Use Case": {
     "message": "实践教程",
     "description": "The label for category Practical Guide in sidebar docs"
   }

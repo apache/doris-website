@@ -27,6 +27,17 @@
             display: block;
         }
     }
+    &.withoutDoc {
+        .docs-search {
+            display: block;
+        }
+        .custom-navbar-item {
+            display: block;
+        }
+        .custom-navbar-item:nth-child(4) {
+            display: none;
+        }
+    }
     &__inner {
         padding: 0 5rem;
         margin: 0 auto;

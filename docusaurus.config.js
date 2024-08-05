@@ -77,6 +77,56 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
+        [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'gettingStarted',
+                path: 'gettingStarted',
+                routeBasePath: '/get-starting',
+                sidebarPath: require.resolve('./sidebarsGettingStarted.json'),
+            }),
+        ],
+        [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'benchmark',
+                path: 'benchmark',
+                routeBasePath: '/benchmark',
+                sidebarPath: require.resolve('./sidebarsBenchmark.json'),
+            }),
+        ],
+        [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'ecosystems',
+                path: 'ecosystems',
+                routeBasePath: '/ecosystems',
+                sidebarPath: require.resolve('./sidebarsEcosystem.json'),
+            }),
+        ],
+        [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'faq',
+                path: 'faq',
+                routeBasePath: '/faq',
+                sidebarPath: require.resolve('./sidebarsFAQ.json'),
+            }),
+        ],
+        [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'releasenotes',
+                path: 'releasenotes',
+                routeBasePath: '/releasenotes',
+                sidebarPath: require.resolve('./sidebarsReleaseNotes.json'),
+            }),
+        ],
         process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         [
             '@docusaurus/plugin-pwa',
@@ -156,11 +206,11 @@ const config = {
                     // /docs/oldDoc -> /docs/newDoc
                     {
                         from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/dev/get-starting/quick-start/',
+                        to: '/docs/dev/get-starting/quick-start/quick-start',
                     },
                     {
                         from: '/docs/dev/get-starting/',
-                        to: '/docs/dev/get-starting/quick-start/',
+                        to: '/docs/dev/get-starting/quick-start/quick-start',
                     },
                 ],
             },
@@ -247,7 +297,8 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/get-starting/quick-start/',
+                        to: '/get-starting/what-is-new',
+                        target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
                     { to: '/users', label: 'Users', position: 'left' },
@@ -290,6 +341,108 @@ const config = {
                         className: 'header-right-button-primary navbar-download-mobile',
                         label: 'Download',
                         position: 'right',
+                    },
+                ],
+            },
+            docNavbarZH: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: 'https://cdnd.selectdb.com/images/logo.svg',
+                },
+                items: [
+                    {
+                        label: '快速开始',
+                        position: 'left',
+                        to: '/get-starting/what-is-new',
+                        activeBaseRegex: 'what-is-new|what-is-apache-doris',
+                    },
+                    {
+                        label: '使用指南',
+                        position: 'left',
+                        to: '/docs/get-starting/quick-start',
+                        activeBaseRegex: 'zh-CN/docs/(dev|install|2.1|2.0|1.2)|quick-start',
+                    },
+                    {
+                        label: '性能测试',
+                        position: 'left',
+                        to: '/benchmark/ssb',
+                        activeBaseRegex: 'zh-CN/benchmark',
+                    },
+                    {
+                        label: '生态工具',
+                        position: 'left',
+                        to: '/ecosystems/spark-doris-connector',
+                        activeBaseRegex: 'zh-CN/ecosystems',
+                    },
+                    {
+                        label: '常见问题',
+                        position: 'left',
+                        to: '/faq/install-faq',
+                        activeBaseRegex: 'zh-CN/faq',
+                    },
+                    {
+                        label: '版本发布',
+                        position: 'left',
+                        to: '/releasenotes/all-release',
+                        activeBaseRegex: 'zh-CN/releasenotes',
+                    },
+                    {
+                        type: 'html',
+                        position: 'left',
+                        value: `<a href="https://ask.selectdb.com/" target="_blank" style="display: flex; align-items: center; justify-content: center; text-decoration: none">技术论坛<img style="width: 1.2rem; height: 1.2rem; margin-left: 0.2rem;" src="/images/forum-logo.svg">
+                    </a>`,
+                    },
+                ],
+            },
+            docNavbarEN: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: 'https://cdnd.selectdb.com/images/logo.svg',
+                },
+                items: [
+                    {
+                        label: 'Getting Started',
+                        position: 'left',
+                        to: '/get-starting/what-is-new',
+                        activeBaseRegex: 'what-is-new|what-is-apache-doris',
+                    },
+                    {
+                        label: 'Guides',
+                        position: 'left',
+                        to: '/docs/get-starting/quick-start',
+                        activeBaseRegex: 'docs/(dev|install|2.1|2.0|1.2)|quick-start',
+                    },
+                    {
+                        label: 'Benchmark',
+                        position: 'left',
+                        to: '/benchmark/ssb',
+                        activeBaseRegex: 'benchmark',
+                    },
+                    {
+                        label: 'Ecosystem',
+                        position: 'left',
+                        to: '/ecosystems/spark-doris-connector',
+                        activeBaseRegex: 'ecosystems',
+                    },
+                    {
+                        label: 'FAQ',
+                        position: 'left',
+                        to: '/faq/install-faq',
+                        activeBaseRegex: 'faq',
+                    },
+                    {
+                        label: 'Releases',
+                        position: 'left',
+                        to: '/releasenotes/all-release',
+                        activeBaseRegex: 'releasenotes',
+                    },
+                    {
+                        type: 'html',
+                        position: 'left',
+                        value: `<a href="https://ask.selectdb.com/" target="_blank" style="display: flex; align-items: center; justify-content: center; text-decoration: none">Forum<img style="width: 1.2rem; height: 1.2rem; margin-left: 0.2rem;" src="/images/forum-logo.svg">
+                    </a>`,
                     },
                 ],
             },

@@ -31,6 +31,7 @@ export default function DocsVersionDropdownNavbarItem({
             onClick: () => savePreferredVersionName(version.name),
         };
     });
+    console.log(versionLinks,'versionLinks')
     const items = [...dropdownItemsBefore, ...versionLinks, ...dropdownItemsAfter];
     const dropdownVersion = useDocsVersionCandidates(docsPluginId)[0];
     // Mobile dropdown is handled a bit differently
@@ -43,6 +44,7 @@ export default function DocsVersionDropdownNavbarItem({
               })
             : dropdownVersion.label;
     const dropdownTo = mobile && items.length > 1 ? undefined : getVersionMainDoc(dropdownVersion).path;
+
     // We don't want to render a version dropdown with 0 or 1 item. If we build
     // the site with a single docs version (onlyIncludeVersions: ['1.0.0']),
     // We'd rather render a button instead of a dropdown
@@ -61,7 +63,7 @@ export default function DocsVersionDropdownNavbarItem({
         <DropdownNavbarItem
             {...props}
             mobile={mobile}
-            label={<span className="text-sm">Versions: {versionLinks.find(e => e.isActive())?.label}</span>}
+            label={<span className="text-sm">{location.pathname.includes('zh-CN') ? '版本: ':'Versions: '}{versionLinks.find(e => e.isActive())?.label}</span>}
             to={dropdownTo}
             items={items}
             isActive={dropdownActiveClassDisabled ? () => false : undefined}
