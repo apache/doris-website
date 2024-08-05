@@ -520,140 +520,136 @@ Disable the printing of prepared statement audit logs to enhance performance.
 In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates between 60-70%.
 
 
-### Insert into sync 模式小批量数据
+### Insert into Sync Mode Small Batch Data
 
-**机器配置**
+**Machine Configuration**
 
-* 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
+* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk. Note: Tests were conducted using 1, 3, and 5 BE nodes respectively.
+* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
+* Test version: Doris-3.0.1
 
-* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了1台，3台，5台BE进行测试。
+**Dataset**
 
-* 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
+* Simple insert into statement: `insert into tbl values(1,1);`
 
-* 测试版本为Doris-3.0.1
-
-**数据集**
-
-* 简单的insert into语句。insert into tbl values(1,1);
-
-**测试工具**
+**Testing Tool**
 
 * [Jemeter](https://jmeter.apache.org/)
 
-**测试方法**
+**Testing Methodology**
 
-* 通过 `Jemeter` 向`Doris`写数据。
+* Data was written to `Doris` using `Jemeter`.
 
-**测试结果**
+**Test Results**
 
-* 数据单位为行每秒。
+* Data unit: rows per second.
+* The following tests were divided into two groups: new optimizer and old optimizer.
 
-* 以下测试分为新优化器和旧优化器两组数据。
+**30 Concurrent Sync Mode Performance Test**
 
-**30并发sync模式性能测试**
-
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
+| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
 |-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 834.1      | 新: 916.5      | 新: 930.2      | 新: 907.1      | 新: 925.7      | 新: 946.2      |
-|                       | 旧: 822.9      | 旧: 913.4      | 旧: 917.0      | 旧: 925.2      | 旧: 940.6      | 旧: 932.3      |
-| 20ms                  | 新: 657.3      | 新: 656.3      | 新: 691.9      | 新: 695.5      | 新: 715.0      | 新: 717.2      |
-|                       | 旧: 649.4      | 旧: 658.6      | 旧: 691.5      | 旧: 711.4      | 旧: 715.0      | 旧: 709.3      |
-| 50ms                  | 新: 400.2      | 新: 392.0      | 新: 402.0      | 新: 409.3      | 新: 413.7      | 新: 415.1      |
-|                       | 旧: 387.4      | 旧: 387.1      | 旧: 411.9      | 旧: 415.8      | 旧: 415.8      | 旧: 414.1      |
-| 100ms                 | 新: 235.9      | 新: 243.2      | 新: 238.4      | 新: 243.5      | 新: 245.0      | 新: 245.1      |
-|                       | 旧: 236.7      | 旧: 243.5      | 旧: 239.9      | 旧: 244.3      | 旧: 245.0      | 旧: 244.1      |
+| 10ms                  | new: 834.1      | new: 916.5      | new: 930.2      | new: 907.1      | new: 925.7      | new: 946.2      |
+|                       | old: 822.9      | old: 913.4      | old: 917.0      | old: 925.2      | old: 940.6      | old: 932.3      |
+| 20ms                  | new: 657.3      | new: 656.3      | new: 691.9      | new: 695.5      | new: 715.0      | new: 717.2      |
+|                       | old: 649.4      | old: 658.6      | old: 691.5      | old: 711.4      | old: 715.0      | old: 709.3      |
+| 50ms                  | new: 400.2      | new: 392.0      | new: 402.0      | new: 409.3      | new: 413.7      | new: 415.1      |
+|                       | old: 387.4      | old: 387.1      | old: 411.9      | old: 415.8      | old: 415.8      | old: 414.1      |
+| 100ms                 | new: 235.9      | new: 243.2      | new: 238.4      | new: 243.5      | new: 245.0      | new: 245.1      |
+|                       | old: 236.7      | old: 243.5      | old: 239.9      | old: 244.3      | old: 245.0      | old: 244.1      |
 
-**100并发sync模式性能测试**
+**100 Concurrent Sync Mode Performance Test**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
+| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
 |-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 2321.1    | 新: 2393.6    | 新: 2760.3    | 新: 2632.7    | 新: 2614.8    | 新: 2661.7    |
-|                       | 旧: 2437.4    | 旧: 2423.8    | 旧: 2709.2    | 旧: 2637.7    | 旧: 2718.4    | 旧: 2827.8    |
-| 20ms                  | 新: 1889.2    | 新: 1914.2    | 新: 2098.7    | 新: 2071.5    | 新: 2043.9    | 新: 2073.0    |
-|                       | 旧: 1969.1    | 旧: 2016.7    | 旧: 2058.3    | 旧: 2090.8    | 旧: 2189.6    | 旧: 2177.5    |
-| 50ms                  | 新: 1222.7    | 新: 1226.9    | 新: 1215.3    | 新: 1261.1    | 新: 1268.8    | 新: 1282.0    |
-|                       | 旧: 1227.7    | 旧: 1263.7    | 旧: 1278.1    | 旧: 1270.9    | 旧: 1290.3    | 旧: 1319.0    |
-| 100ms                 | 新: 756.8     | 新: 759.2     | 新: 758.2     | 新: 777.5     | 新: 777.2     | 新: 783.8     |
-|                       | 旧: 767.9     | 旧: 769.1     | 旧: 780.7     | 旧: 784.1     | 旧: 794.1     | 旧: 804.3     |
+| 10ms                  | new: 2321.1    | new: 2393.6    | new: 2760.3    | new: 2632.7    | new: 2614.8    | new: 2661.7    |
+|                       | old: 2437.4    | old: 2423.8    | old: 2709.2    | old: 2637.7    | old: 2718.4    | old: 2827.8    |
+| 20ms                  | new: 1889.2    | new: 1914.2    | new: 2098.7    | new: 2071.5    | new: 2043.9    | new: 2073.0    |
+|                       | old: 1969.1    | old: 2016.7    | old: 2058.3    | old: 2090.8    | old: 2189.6    | old: 2177.5    |
+| 50ms                  | new: 1222.7    | new: 1226.9    | new: 1215.3    | new: 1261.1    | new: 1268.8    | new: 1282.0    |
+|                       | old: 1227.7    | old: 1263.7    | old: 1278.1    | old: 1270.9    | old: 1290.3    | old: 1319.0    |
+| 100ms                 | new: 756.8     | new: 759.2     | new: 758.2     | new: 777.5     | new: 777.2     | new: 783.8     |
+|                       | old: 767.9     | old: 769.1     | old: 780.7     | old: 784.1     | old: 794.1     | old: 804.3     |
 
-**500并发sync模式性能测试**
+**500 Concurrent Sync Mode Performance Test**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
+| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
 |-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 5315.2    | 新: 5333.8    | 新: 5374.0    | 新: 6456.4    | 新: 6735.3    | 新: 4816.5    |
-|                       | 旧: 7001.3    | 旧: 7747.4    | 旧: 8181.5    | 旧: 7830.2    | 旧: 8493.9    | 旧: 8022.3    |
-| 20ms                  | 新: 5243.2    | 新: 5301.8    | 新: 5487.7    | 新: 6776.9    | 新: 6825.0    | 新: 3917.8    |
-|                       | 旧: 7756.7    | 旧: 7996.6    | 旧: 7852.4    | 旧: 7852.1    | 旧: 7990.5    | 旧: 7902.5    |
-| 50ms                  | 新: 4944.2    | 新: 4978.9    | 新: 5054.9    | 新: 4944.0    | 新: 4975.2    | 新: 3843.6    |
-|                       | 旧: 5730.1    | 旧: 5746.9    | 旧: 5709.9    | 旧: 5916.3    | 旧: 6024.7    | 旧: 6024.0    |
-| 100ms                 | 新: 3350.9    | 新: 3353.5    | 新: 3372.7    | 新: 3307.6    | 新: 3341.2    | 新: 3120.5    |
-|                       | 旧: 3715.0    | 旧: 3682.8    | 旧: 3717.9    | 旧: 3755.7    | 旧: 3820.8    | 旧: 3832.8    |
+| 10ms                  | new: 5315.2    | new: 5333.8    | new: 5374.0    | new: 6456.4    | new: 6735.3    | new: 4816.5    |
+|                       | old: 7001.3    | old: 7747.4    | old: 8181.5    | old: 7830.2    | old: 8493.9    | old: 8022.3    |
+| 20ms                  | new: 5243.2    | new: 5301.8    | new: 5487.7    | new: 6776.9    | new: 6825.0    | new: 3917.8    |
+|                       | old: 7756.7    | old: 7996.6    | old: 7852.4    | old: 7852.1    | old: 7990.5    | old: 7902.5    |
+| 50ms                  | new: 4944.2    | new: 4978.9    | new: 5054.9    | new: 4944.0    | new: 4975.2    | new: 3843.6    |
+|                       | old: 5730.1    | old: 5746.9    | old: 5709.9    | old: 5916.3    | old: 6024.7    | old: 6024.0    |
+| 100ms                 | new: 3350.9    | new: 3353.5    | new: 3372.7    | new: 3307.6    | new: 3341.2    | new: 3120.5    |
+|                       | old: 3715.0    | old: 3682.8    | old: 3717.9    | old: 3755.7    | old: 3820.8    | old: 3832.8    |
 
-### Insert into sync 模式大批量数据
+### Insert into Sync Mode Large Batch Data
 
-**机器配置**
+**Machine Configuration**
 
-* 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
+* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
 
-* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了1台，3台，5台BE进行测试。
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk. Note: Tests were conducted using 1, 3, and 5 BE nodes respectively.
 
-* 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
+* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
 
-* 测试版本为Doris-3.0.1
+* Test version: Doris-3.0.1
 
-**数据集**
+**Dataset**
 
-* 1000条数据的insert into语句。insert into tbl values(1,1)...省略1000条数据;
+* Insert into statement for 1000 rows: `insert into tbl values(1,1)...` (1000 rows omitted)
 
-**测试工具**
+**Testing Tool**
 
 * [Jemeter](https://jmeter.apache.org/)
 
-**测试方法**
+**Testing Methodology**
 
-* 通过 `Jemeter` 向`Doris`写数据。
+* Data was written to `Doris` using `Jemeter`.
 
-**测试结果**
+**Test Results**
 
-* 数据单位为行每秒。
+* Data unit: rows per second.
 
-* 以下测试分为新优化器和旧优化器两组数据。
+* The following tests were divided into two groups: new optimizer and old optimizer.
 
-**30并发sync模式性能测试**
+**30 Concurrent Sync Mode Performance Test**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
+| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
 |-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 33.7K | 新: 33.0K      | 新: 33.4K      | 新: 39.4K      | 新: 32.2K      | 新: 34.2K      |
-|                       | 旧: 501.4K | 旧: 505.3K      | 旧: 512.6K      | 旧: 37K        | 旧: 35.8K      | 旧: 297.8K     |
-| 20ms                  | 新: 35.0K      | 新: 32.9K      | 新: 35.5K      | 新: 35.4K      | 新: 39.4K      | 新: 35.6K      |
-|                       | 旧: 415.1K     | 旧: 425.0K     | 旧: 430.5K     | 旧: 144.4K     | 旧: 285.2K     | 旧: 287.8K     |
-| 50ms                  | 新: 41.4K      | 新: 42.5K      | 新: 40.4K      | 新: 39.6K      | 新: 41.1K      | 新: 39.4K      |
-|                       | 旧: 301.7K     | 旧: 312.9K     | 旧: 295.4K     | 旧: 138.1K     | 旧: 252.3K     | 旧: 255.1K     |
-| 100ms                 | 新: 37.3K      | 新: 38.1K      | 新: 39.2K      | 新: 37.3K      | 新: 38.4K      | 新: 40.2K      |
-|                       | 旧: 202.5K     | 旧: 202.4K     | 旧: 200.8K     | 旧: 128.2K     | 旧: 200.8K     | 旧: 201.2K     |
+| 10ms                  | new: 33.7K | new: 33.0K      | new: 33.4K      | new: 39.4K      | new: 32.2K      | new: 34.2K      |
+|                       | old: 501.4K | old: 505.3K      | old: 512.6K      | old: 37K        | old: 35.8K      | old: 297.8K     |
+| 20ms                  | new: 35.0K      | new: 32.9K      | new: 35.5K      | new: 35.4K      | new: 39.4K      | new: 35.6K      |
+|                       | old: 415.1K     | old: 425.0K     | old: 430.5K     | old: 144.4K     | old: 285.2K     | old: 287.8K     |
+| 50ms                  | new: 41.4K      | new: 42.5K      | new: 40.4K      | new: 39.6K      | new: 41.1K      | new: 39.4K      |
+|                       | old: 301.7K     | old: 312.9K     | old: 295.4K     | old: 138.1K     | old: 252.3K     | old: 255.1K     |
+| 100ms                 | new: 37.3K      | new: 38.1K      | new: 39.2K      | new: 37.3K      | new: 38.4K      | new: 40.2K      |
+|                       | old: 202.5K     | old: 202.4K     | old: 200.8K     | old: 128.2K     | old: 200.8K     | old: 201.2K     |
 
-**100并发sync模式性能测试**
+**100 Concurrent Sync Mode Performance Test**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
+| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
 |-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 37.0K      | 新: 37.1K      | 新: 36.9K      | 新: 37.7K      | 新: 37.4K      | 新: 37.2K      |
-|                       | 旧: 585.5K     | 旧: 594.6K     | 旧: 599.2K     | 旧: 587K       | 旧: 594.6K     | 旧: 468.8K     |
-| 20ms                  | 新: 37.4K      | 新: 37.3K      | 新: 37.2K      | 新: 37.7K      | 新: 37.7K      | 新: 37.2K      |
-|                       | 旧: 594.0K     | 旧: 595.9K     | 旧: 608.7K     | 旧: 591.7K     | 旧: 599.5K     | 旧: 467.4K     |
-| 50ms                  | 新: 38.3K      | 新: 37.1K      | 新: 36.9K      | 新: 38.5K      | 新: 38.4K      | 新: 36.3K      |
-|                       | 旧: 563.9K     | 旧: 572K       | 旧: 576.6K     | 旧: 563.3K     | 旧: 565.5K     | 旧: 454.5K     |
-| 100ms                 | 新: 36.4K      | 新: 37.7K      | 新: 36.6K      | 新: 36.4K      | 新: 39.1K      | 新: 36.3K      |
-|                       | 旧: 500.3K     | 旧: 505.5K     | 旧: 509K       | 旧: 504.3K     | 旧: 506.7K     | 旧: 403.5K     |
+| 10ms                  | new: 37.0K      | new: 37.1K      | new: 36.9K      | new: 37.7K      | new: 37.4K      | new: 37.2K      |
+|                       | old: 585.5K     | old: 594.6K     | old: 599.2K     | old: 587K       | old: 594.6K     | old: 468.8K     |
+| 20ms                  | new: 37.4K      | new: 37.3K      | new: 37.2K      | new: 37.7K      | new: 37.7K      | new: 37.2K      |
+|                       | old: 594.0K     | old: 595.9K     | old: 608.7K     | old: 591.7K     | old: 599.5K     | old: 467.4K     |
+| 50ms                  | new: 38.3K      | new: 37.1K      | new: 36.9K      | new: 38.5K      | new: 38.4K      | new: 36.3K      |
+|                       | old: 563.9K     | old: 572K       | old: 576.6K     | old: 563.3K     | old: 565.5K     | old: 454.5K     |
+| 100ms                 | new: 36.4K      | new: 37.7K      | new: 36.6K      | new: 36.4K      | new: 39.1K      | new: 36.3K      |
+|                       | old: 500.3K     | old: 505.5K     | old: 509K       | old: 504.3K     | old: 506.7K     | old: 403.5K     |
 
-**500并发sync模式性能测试**
+**500 Concurrent Sync Mode Performance Test**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
+| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
 |-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 23.2K      | 新: 24K        | 新: 23.6K      | 新: 28.9K      | 新: 24.9K      | 新: 177.2K     |
-|                       | 旧: 421.9K     | 旧: 412.7K     | 旧: 414.1K     | 旧: 117.1K     | 旧: 414.1K     | 旧: 418.4K     |
-| 20ms                  | 新: 23.9K      | 新: 24.4K      | 新: 23.3K      | 新: 26.2K      | 新: 24.9K      | 新: 10.4K      |
-|                       | 旧: 416.4K     | 旧: 409.9K     | 旧: 401.3K     | 旧: 402.1K     | 旧: 405K       | 旧: 411.7K     |
-| 50ms                  | 新: 24K        | 新: 23.8K      | 新: 22.8K      | 新: 20.2K      | 新: 23.7K      | 新: 3.9K       |
-|                       | 旧: 405.9K     | 旧: 407.4K     | 旧: 402.8K     | 旧: 6.6K       | 旧: 402.1K     | 旧: 411.1K     |
-| 100ms                 | 新: 23.5K      | 新: 23.2K      | 新: 22.7K      | 新: 21.5K      | 新: 24.4K      | 新: 20.2K      |
-|                       | 旧: 399.8K     | 旧: 406.3K     | 旧: 407.1K     | 旧: 409.9K     | 旧: 402.4K     | 旧: 395.9K     |
+| 10ms                  | new: 23.2K      | new: 24K        | new: 23.6K      | new: 28.9K      | new: 24.9K      | new: 177.2K     |
+|                       | old: 421.9K     | old: 412.7K     | old: 414.1K     | old: 117.1K     | old: 414.1K     | old: 418.4K     |
+| 20ms                  | new: 23.9K      | new: 24.4K      | new: 23.3K      | new: 26.2K      | new: 24.9K      | new: 10.4K      |
+|                       | old: 416.4K     | old: 409.9K     | old: 401.3K     | old: 402.1K     | old: 405K       | old: 411.7K     |
+| 50ms                  | new: 24K        | new: 23.8K      | new: 22.8K      | new: 20.2K      | new: 23.7K      | new: 3.9K       |
+|                       | old: 405.9K     | old: 407.4K     | old: 402.8K     | old: 6.6K       | old: 402.1K     | old: 411.1K     |
+| 100ms                 | new: 23.5K      | new: 23.2K      | new: 22.7K      | new: 21.5K      | new: 24.4K      | new: 20.2K      |
+|                       | old: 399.8K     | old: 406.3K     | old: 407.1K     | old: 409.9K     | old: 402.4K     | old: 395.9K     |
