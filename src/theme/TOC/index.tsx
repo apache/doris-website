@@ -32,10 +32,10 @@ export default function TOC({ className, ...props }: Props): JSX.Element {
             ) : ( */}
                 <Link
                     className="ml-4 mb-8 flex items-center hover:no-underline"
-                    href="https://github.com/apache/doris/discussions"
+                    href={isCN ? 'https://ask.selectdb.com/' : 'https://github.com/apache/doris/discussions'}
                     target="_blank"
                 >
-                    <span className="pr-2">Join Discussion</span>
+                    <span className="pr-2">{isCN ? '问答论坛' : 'Join Discussion'}</span>
                     <svg
                         viewBox="0 0 1024 1024"
                         version="1.1"
