@@ -444,7 +444,7 @@ try (
 
 1. 上述三种 Java Arrow Flight SQL 连接方式的选择上，如果后续的数据分析将基于行存的数据格式，那么使用 jdbc:arrow-flight-sql，这将返回 JDBC ResultSet 格式的数据；如果后续的数据分析可以基于 Arrow 格式或其他列存数据格式，那么使用 Flight AdbcDriver 或 Flight JdbcDriver 直接返回 Arrow 格式的数据，这将避免行列转换，并可利用 Arrow 的特性加速数据解析。
 
-2. 无论解析 JDBC ResultSet 还是 Arrow 格式的数据，所耗费的时间都大于读取数据的耗时，如果你那里使用 Aroow Flight SQL 的性能不符合预期，和 `jdbc:mysql://` 相比提升有限，不妨分析下是否解析数据耗时太长。
+2. 无论解析 JDBC ResultSet 还是 Arrow 格式的数据，所耗费的时间都大于读取数据的耗时，如果你那里使用 Arrow Flight SQL 的性能不符合预期，和 `jdbc:mysql://` 相比提升有限，不妨分析下是否解析数据耗时太长。
 
 3. 对所有连接方式而言，JDK 17 都比 JDK 1.8 读取数据的速度更快。
 
