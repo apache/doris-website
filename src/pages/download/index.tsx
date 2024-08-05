@@ -230,6 +230,7 @@ export default function Download() {
                                     </div>
                                 </div>
                             </div>
+
                             :
                             <div className="download-type way">
                                 <label></label>
@@ -271,6 +272,7 @@ export default function Download() {
                                 </div>
                             </div>
                         }
+
                         <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
                             Note: For Apache Doris version specifics, please refer to the <Link
                                 to="https://doris.apache.org/community/release-versioning"
