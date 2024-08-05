@@ -50,21 +50,22 @@ export default function NavbarContent({ mobile }) {
     const searchBarItem = items.find(item => item.type === 'search');
     const [star, setStar] = useState<any>();
     const [isDocsPage, setIsDocsPage] = useState(false);
-    const [startWithDoc, setStartWithDoc] = useState(true)
+    const [startWithDoc, setStartWithDoc] = useState(true);
     const [isCommunity, setIsCommunity] = useState(false);
-    const [isEN, setIsEN] = useState(true)
+    const [isEN, setIsEN] = useState(true);
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
-            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes']
+            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes'];
             const pathname = location.pathname.split('/')[1];
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true)
+            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
             const docsStart = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
-            const docsPage = tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`))
+            const docsPage =
+                tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`));
             const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
             setIsCommunity(communityPage);
             setIsDocsPage(docsPage);
-            setStartWithDoc(docsStart)
+            setStartWithDoc(docsStart);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
 
@@ -99,7 +100,7 @@ export default function NavbarContent({ mobile }) {
                             <div
                                 className="cursor-pointer docs"
                                 onClick={() => {
-                                    window.location.href = '/get-starting/what-is-new';
+                                    window.location.href = '/docs/get-starting/what-is-apache-doris';
                                 }}
                             >
                                 {/* {isEN ? <DocsLogoEN /> :<DocsLogoZH />} */}
@@ -110,7 +111,14 @@ export default function NavbarContent({ mobile }) {
                         )}
                     </div>
                     <div className={`${styles.navbarLeftToc}`}>
-                        {!isDocsPage ? <NavbarItems items={leftItems} /> : <NavbarItems items={isEN ? docItems : useThemeConfig().docNavbarZH.items} isDocsPage={isDocsPage} />}
+                        {!isDocsPage ? (
+                            <NavbarItems items={leftItems} />
+                        ) : (
+                            <NavbarItems
+                                items={isEN ? docItems : useThemeConfig().docNavbarZH.items}
+                                isDocsPage={isDocsPage}
+                            />
+                        )}
                     </div>
                     {/*  */}
                 </div>
@@ -141,7 +149,9 @@ export default function NavbarContent({ mobile }) {
                         target="_blank"
                     ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
-                        <Translate id="navbar.download">{location.pathname.includes('zh-CN') ? '下载' : 'Download'}</Translate>
+                        <Translate id="navbar.download">
+                            {location.pathname.includes('zh-CN') ? '下载' : 'Download'}
+                        </Translate>
                     </Link>
                 </>
             }

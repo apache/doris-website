@@ -34,3 +34,8 @@ yarn.lock
 # community/
 # versioned_docs
 doris
+versioned_docs/version-3.0/get-starting
+versioned_docs/version-3.0/releasenotes
+versioned_docs/version-3.0/faq
+versioned_docs/version-3.0/ecosystem
+versioned_docs/version-3.0/benchmark

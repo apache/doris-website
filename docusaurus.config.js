@@ -77,56 +77,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        [
-            'content-docs',
-            /** @type {import('@docusaurus/plugin-content-docs').Options} */
-            ({
-                id: 'gettingStarted',
-                path: 'gettingStarted',
-                routeBasePath: '/get-starting',
-                sidebarPath: require.resolve('./sidebarsGettingStarted.json'),
-            }),
-        ],
-        [
-            'content-docs',
-            /** @type {import('@docusaurus/plugin-content-docs').Options} */
-            ({
-                id: 'benchmark',
-                path: 'benchmark',
-                routeBasePath: '/benchmark',
-                sidebarPath: require.resolve('./sidebarsBenchmark.json'),
-            }),
-        ],
-        [
-            'content-docs',
-            /** @type {import('@docusaurus/plugin-content-docs').Options} */
-            ({
-                id: 'ecosystems',
-                path: 'ecosystems',
-                routeBasePath: '/ecosystems',
-                sidebarPath: require.resolve('./sidebarsEcosystem.json'),
-            }),
-        ],
-        [
-            'content-docs',
-            /** @type {import('@docusaurus/plugin-content-docs').Options} */
-            ({
-                id: 'faq',
-                path: 'faq',
-                routeBasePath: '/faq',
-                sidebarPath: require.resolve('./sidebarsFAQ.json'),
-            }),
-        ],
-        [
-            'content-docs',
-            /** @type {import('@docusaurus/plugin-content-docs').Options} */
-            ({
-                id: 'releasenotes',
-                path: 'releasenotes',
-                routeBasePath: '/releasenotes',
-                sidebarPath: require.resolve('./sidebarsReleaseNotes.json'),
-            }),
-        ],
         process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         [
             '@docusaurus/plugin-pwa',
@@ -236,7 +186,8 @@ const config = {
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
-                    blogDescription: 'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
+                    blogDescription:
+                        'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
                     postsPerPage: 'ALL',
                     blogSidebarCount: 0,
                     showReadingTime: false,
@@ -297,7 +248,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/get-starting/what-is-new',
+                        to: '/docs/get-starting/what-is-apache-doris',
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
@@ -354,7 +305,7 @@ const config = {
                     {
                         label: '快速开始',
                         position: 'left',
-                        to: '/get-starting/what-is-new',
+                        to: '/get-starting/what-is-apache-doris',
                         activeBaseRegex: 'what-is-new|what-is-apache-doris',
                     },
                     {
@@ -405,7 +356,7 @@ const config = {
                     {
                         label: 'Getting Started',
                         position: 'left',
-                        to: '/get-starting/what-is-new',
+                        to: '/docs/get-starting/what-is-apache-doris',
                         activeBaseRegex: 'what-is-new|what-is-apache-doris',
                     },
                     {
@@ -417,25 +368,25 @@ const config = {
                     {
                         label: 'Benchmark',
                         position: 'left',
-                        to: '/benchmark/ssb',
+                        to: '/docs/benchmark/ssb',
                         activeBaseRegex: 'benchmark',
                     },
                     {
                         label: 'Ecosystem',
                         position: 'left',
-                        to: '/ecosystems/spark-doris-connector',
-                        activeBaseRegex: 'ecosystems',
+                        to: '/docs/ecosystem/spark-doris-connector',
+                        activeBaseRegex: 'ecosystem',
                     },
                     {
                         label: 'FAQ',
                         position: 'left',
-                        to: '/faq/install-faq',
+                        to: '/docs/faq/install-faq',
                         activeBaseRegex: 'faq',
                     },
                     {
                         label: 'Releases',
                         position: 'left',
-                        to: '/releasenotes/all-release',
+                        to: '/docs/releasenotes/all-release',
                         activeBaseRegex: 'releasenotes',
                     },
                     {

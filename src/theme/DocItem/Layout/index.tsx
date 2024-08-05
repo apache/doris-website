@@ -14,7 +14,7 @@ import DocItemTOCDesktop from '@theme/DocItem/TOC/Desktop';
 import DocItemContent from '@theme/DocItem/Content';
 import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import type { Props } from '@theme/DocItem/Layout';
-import { generateUrl } from './pathTransfer'
+import { generateUrl } from './pathTransfer';
 
 import styles from './styles.module.css';
 import EditThisPage from '../../EditThisPage';
@@ -43,16 +43,16 @@ function useDocTOC() {
 export default function DocItemLayout({ children }: Props): JSX.Element {
     const docTOC = useDocTOC();
     const { metadata } = useDoc();
-    const [isNew, setIsNew] = useState(true)
-    const [pathname, setPathname] = useState('')
-    const [isZH, setIsZH] = useState(false)
+    const [isNew, setIsNew] = useState(true);
+    const [pathname, setPathname] = useState('');
+    const [isZH, setIsZH] = useState(false);
     const { editUrl, lastUpdatedAt, formattedLastUpdatedAt, lastUpdatedBy, tags } = metadata;
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            setIsNew(location.pathname.includes('what-is-new'))
-            setIsZH(location.pathname.includes('zh-CN'))
-            setPathname(location.pathname)
+            setIsNew(location.pathname.includes('what-is-apache-doris'));
+            setIsZH(location.pathname.includes('zh-CN'));
+            setPathname(location.pathname);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
     return (
@@ -68,10 +68,19 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                         <DocItemFooter />
                     </article>
                     <div className="flex items-center justify-end col mt-10">
-                        {isNew ? <></> :
-                            <Link to={generateUrl(location.pathname)} className={`mr-6 ${styles.footerBtn}`}><DocsEdit /> <span className="ml-2">{isZH ? '编辑本页' : 'Edit this page'}</span></Link>
-                        }
-                        <Link to="https://github.com/apache/doris-website/issues" className={`mr-6 ${styles.footerBtn}`}><DocsAttention /> <span className="ml-2">{isZH ? '反馈问题' : 'Report issue'}</span></Link>
+                        {isNew ? (
+                            <></>
+                        ) : (
+                            <Link to={generateUrl(location.pathname)} className={`mr-6 ${styles.footerBtn}`}>
+                                <DocsEdit /> <span className="ml-2">{isZH ? '编辑本页' : 'Edit this page'}</span>
+                            </Link>
+                        )}
+                        <Link
+                            to="https://github.com/apache/doris-website/issues"
+                            className={`mr-6 ${styles.footerBtn}`}
+                        >
+                            <DocsAttention /> <span className="ml-2">{isZH ? '反馈问题' : 'Report issue'}</span>
+                        </Link>
                     </div>
                     <DocItemPaginator />
                 </div>
