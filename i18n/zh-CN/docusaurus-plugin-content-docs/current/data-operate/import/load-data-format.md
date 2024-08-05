@@ -29,7 +29,7 @@ Doris 支持对csv、json、parquet、orc格式的数据文件进行导入。本
 ## CSV 格式
 ### 支持的导入方式
 以下导入方式支持 CSV 格式的数据导入：
-- [Strream Load](./import-way/stream-load-manual.md)
+- [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
 - [Routine Load](./import-way/routine-load-manual.md)
 - [MySQL Load](./import-way/mysql-load-manual.md)
@@ -133,7 +133,7 @@ Doris 支持导入 JSON 格式的数据。本文档主要说明在进行 JSON �
 
 以下导入方式支持 JSON 格式的数据导入：
 
-- [Strream Load](./import-way/stream-load-manual.md)
+- [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
 - [Routine Load](./import-way/routine-load-manual.md)
 - [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
@@ -473,7 +473,7 @@ JSON 数据为：
 
 该元素会被当作新 JSON 进行后续导入操作，得到最终数据 321 和 shanghai
 
-## NULL 和 Default 值
+### NULL 和 Default 值
 
 示例数据如下：
 
@@ -722,7 +722,7 @@ Routine Load 对 JSON 数据的处理原理和 Stream Load 相同。在此不再
 ## Parquet
 ### 支持的导入方式
 以下导入方式支持 CSV 格式的数据导入：
-- [Strream Load](./import-way/stream-load-manual.md)
+- [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
 - [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
 - [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
@@ -759,7 +759,7 @@ WITH S3
 ## ORC
 ### 支持的导入方式
 以下导入方式支持 CSV 格式的数据导入：
-- [Strream Load](./import-way/stream-load-manual.md)
+- [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
 - [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
 - [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
