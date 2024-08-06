@@ -498,7 +498,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 
 ```
 
-## Use FlinkCDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer,MongoDB)
+## Use FlinkCDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer, MongoDB)
 
 
 ### grammar
@@ -545,7 +545,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target="a\|b"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 
 | --create-table-only     | Whether only the table schema should be synchronized                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 
-:::info note
+:::info Note
 When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
 :::
 
