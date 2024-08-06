@@ -691,7 +691,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 一般在业务数据库中，会使用编号来作为表的主键，比如 Student 表，会使用编号 (id) 来作为主键，但是随着业务的发展，数据对应的编号有可能是会发生变化的。
 在这种场景下，使用 FlinkCDC + Doris Connector 同步数据，便可以自动更新 Doris 主键列的数据。
 ### 原理
-FlinkCDC 底层的采集工具是 Debezium，Debezium 内部使用 op 字段来标识对应的操作：op 字段的取值分别为 c、u、d、r，分别对应 create、update、delete 和 read。
+Flink CDC 底层的采集工具是 Debezium，Debezium 内部使用 op 字段来标识对应的操作：op 字段的取值分别为 c、u、d、r，分别对应 create、update、delete 和 read。
 而对于主键列的更新，FlinkCDC 会向下游发送 DELETE 和 INSERT 事件，同时数据同步到 Doris 中后，就会自动更新主键列的数据。
 
 ### 使用
