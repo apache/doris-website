@@ -502,7 +502,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 
 ```
 
-## Use Flink CDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer,MongoDB)
+## Use FlinkCDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer,MongoDB)
 
 
 ### Grammar
