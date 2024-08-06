@@ -220,7 +220,7 @@ In order to ensure the safety of your data, please use 3 copies to store your da
 
     ```shell
     cp ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
-    cp ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
+    cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
     ```
 
 4. Start the BE node

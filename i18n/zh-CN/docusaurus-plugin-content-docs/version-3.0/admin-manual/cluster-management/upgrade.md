@@ -221,7 +221,7 @@ h. 如果启动成功，则代表兼容性没有问题，停止测试环境的 F
 
    ```shell
    cp ${DORIS_NEW_HOME}/be/bin ${DORIS_OLD_HOME}/be/bin
-   cp ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
+   cp -r ${DORIS_NEW_HOME}/be/lib ${DORIS_OLD_HOME}/be/lib
    ```
 
 4. 启动该 BE 节点
