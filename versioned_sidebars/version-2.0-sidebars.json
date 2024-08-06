@@ -1406,7 +1406,8 @@
                 "faq/install-faq",
                 "faq/data-faq",
                 "faq/sql-faq",
-                "faq/lakehouse-faq"
+                "faq/lakehouse-faq",
+                "faq/bi-faq"
             ]
         },
         {
