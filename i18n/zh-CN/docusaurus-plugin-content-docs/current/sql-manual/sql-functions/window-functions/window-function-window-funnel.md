@@ -14,7 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 ## WINDOW FUNCTION WINDOW_FUNNEL
 ### description
 
-漏斗分析函数搜索滑动时间窗口内最大的发生的最大事件序列长度。
+在滑动时间窗口中搜索事件链，并计算链中发生的最大事件数。
 
 - window ：滑动时间窗口大小，单位为秒。
 - mode ：模式，共有四种模式
@@ -37,29 +37,236 @@ window_funnel(window, mode, timestamp_column, event1, event2, ... , eventN)
 
 ### example
 
+#### example1: default 模式
+
+使用默认模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```5```分钟：
+
 ```sql
-CREATE TABLE windowfunnel_test (
-                `xwho` varchar(50) NULL COMMENT 'xwho',
-                `xwhen` datetime COMMENT 'xwhen',
-                `xwhat` int NULL COMMENT 'xwhat'
-                )
-DUPLICATE KEY(xwho)
-DISTRIBUTED BY HASH(xwho) BUCKETS 3
-PROPERTIES (
-    "replication_num" = "1"
-);
+CREATE TABLE events(
+    user_id BIGINT,
+    event_name VARCHAR(64),
+    event_timestamp datetime,
+    phone_brand varchar(64),
+    tab_num int
+) distributed by hash(user_id) buckets 3 properties("replication_num" = "1");
 
-INSERT into windowfunnel_test (xwho, xwhen, xwhat) values ('1', '2022-03-12 10:41:00', 1),
-                                                   ('1', '2022-03-12 13:28:02', 2),
-                                                   ('1', '2022-03-12 16:15:01', 3),
-                                                   ('1', '2022-03-12 19:05:04', 4);
+INSERT INTO
+    events
+VALUES
+    (100123, '登录', '2022-05-14 10:01:00', 'HONOR', 1),
+    (100123, '访问', '2022-05-14 10:02:00', 'HONOR', 2),
+    (100123, '下单', '2022-05-14 10:04:00', 'HONOR', 3),
+    (100123, '付款', '2022-05-14 10:10:00', 'HONOR', 4),
+    (100125, '登录', '2022-05-15 11:00:00', 'XIAOMI', 1),
+    (100125, '访问', '2022-05-15 11:01:00', 'XIAOMI', 2),
+    (100125, '下单', '2022-05-15 11:02:00', 'XIAOMI', 6),
+    (100126, '登录', '2022-05-15 12:00:00', 'IPHONE', 1),
+    (100126, '访问', '2022-05-15 12:01:00', 'HONOR', 2),
+    (100127, '登录', '2022-05-15 11:30:00', 'VIVO', 1),
+    (100127, '访问', '2022-05-15 11:31:00', 'VIVO', 5);
 
-select window_funnel(3600 * 3, 'default', t.xwhen, t.xwhat = 1, t.xwhat = 2 ) AS level from windowfunnel_test t;
+SELECT
+    user_id,
+    window_funnel(
+        300,
+        "default",
+        event_timestamp,
+        event_name = '登录',
+        event_name = '访问',
+        event_name = '下单',
+        event_name = '付款'
+    ) AS level
+FROM
+    events
+GROUP BY
+    user_id
+order BY
+    user_id;
 
-| level |
-|---|
-| 2 |
++---------+-------+
+| user_id | level |
++---------+-------+
+|  100123 |     3 |
+|  100125 |     3 |
+|  100126 |     2 |
+|  100127 |     2 |
++---------+-------+
 ```
+
+对于```uesr_id=100123```，因为```付款```事件发生的时间超出了时间窗口，所以匹配到的事件链是```登陆-访问-下单```。
+
+#### example2: deduplication 模式
+
+使用```deduplication```模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```1```小时：
+
+```sql
+CREATE TABLE events(
+    user_id BIGINT,
+    event_name VARCHAR(64),
+    event_timestamp datetime,
+    phone_brand varchar(64),
+    tab_num int
+) distributed by hash(user_id) buckets 3 properties("replication_num" = "1");
+
+INSERT INTO
+    events
+VALUES
+    (100123, '登录', '2022-05-14 10:01:00', 'HONOR', 1),
+    (100123, '访问', '2022-05-14 10:02:00', 'HONOR', 2),
+    (100123, '登录', '2022-05-14 10:03:00', 'HONOR', 3),
+    (100123, '下单', '2022-05-14 10:04:00', "HONOR", 4),
+    (100123, '付款', '2022-05-14 10:10:00', 'HONOR', 4),
+    (100125, '登录', '2022-05-15 11:00:00', 'XIAOMI', 1),
+    (100125, '访问', '2022-05-15 11:01:00', 'XIAOMI', 2),
+    (100125, '下单', '2022-05-15 11:02:00', 'XIAOMI', 6),
+    (100126, '登录', '2022-05-15 12:00:00', 'IPHONE', 1),
+    (100126, '访问', '2022-05-15 12:01:00', 'HONOR', 2),
+    (100127, '登录', '2022-05-15 11:30:00', 'VIVO', 1),
+    (100127, '访问', '2022-05-15 11:31:00', 'VIVO', 5);
+
+SELECT
+    user_id,
+    window_funnel(
+        3600,
+        "deduplication",
+        event_timestamp,
+        event_name = '登录',
+        event_name = '访问',
+        event_name = '下单',
+        event_name = '付款'
+    ) AS level
+FROM
+    events
+GROUP BY
+    user_id
+order BY
+    user_id;
+
++---------+-------+
+| user_id | level |
++---------+-------+
+|  100123 |     2 |
+|  100125 |     3 |
+|  100126 |     2 |
+|  100127 |     2 |
++---------+-------+
+```
+对于```uesr_id=100123```，匹配到```访问```事件后，```登录```事件重复出现，所以匹配到的事件链是```登陆-访问```。
+
+#### example3: fixed 模式
+
+使用```fixed```模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```1```小时：
+
+```sql
+CREATE TABLE events(
+    user_id BIGINT,
+    event_name VARCHAR(64),
+    event_timestamp datetime,
+    phone_brand varchar(64),
+    tab_num int
+) distributed by hash(user_id) buckets 3 properties("replication_num" = "1");
+
+INSERT INTO
+    events
+VALUES
+    (100123, '登录', '2022-05-14 10:01:00', 'HONOR', 1),
+    (100123, '访问', '2022-05-14 10:02:00', 'HONOR', 2),
+    (100123, '下单', '2022-05-14 10:03:00', "HONOR", 4),
+    (100123, '登录2', '2022-05-14 10:04:00', 'HONOR', 3),
+    (100123, '付款', '2022-05-14 10:10:00', 'HONOR', 4),
+    (100125, '登录', '2022-05-15 11:00:00', 'XIAOMI', 1),
+    (100125, '访问', '2022-05-15 11:01:00', 'XIAOMI', 2),
+    (100125, '下单', '2022-05-15 11:02:00', 'XIAOMI', 6),
+    (100126, '登录', '2022-05-15 12:00:00', 'IPHONE', 1),
+    (100126, '访问', '2022-05-15 12:01:00', 'HONOR', 2),
+    (100127, '登录', '2022-05-15 11:30:00', 'VIVO', 1),
+    (100127, '访问', '2022-05-15 11:31:00', 'VIVO', 5);
+
+SELECT
+    user_id,
+    window_funnel(
+        3600,
+        "fixed",
+        event_timestamp,
+        event_name = '登录',
+        event_name = '访问',
+        event_name = '下单',
+        event_name = '付款'
+    ) AS level
+FROM
+    events
+GROUP BY
+    user_id
+order BY
+    user_id;
+
++---------+-------+
+| user_id | level |
++---------+-------+
+|  100123 |     3 |
+|  100125 |     3 |
+|  100126 |     2 |
+|  100127 |     2 |
++---------+-------+
+```
+对于```uesr_id=100123```，匹配到```下单```事件后，事件链被```登录2```事件打断，所以匹配到的事件链是```登陆-访问-下单```。
+
+#### example4: increase 模式
+
+使用```increase```模式，筛选出不同```user_id```对应的最大连续事件数，时间窗口为```1```小时：
+
+```sql
+CREATE TABLE events(
+    user_id BIGINT,
+    event_name VARCHAR(64),
+    event_timestamp datetime,
+    phone_brand varchar(64),
+    tab_num int
+) distributed by hash(user_id) buckets 3 properties("replication_num" = "1");
+
+INSERT INTO
+    events
+VALUES
+    (100123, '登录', '2022-05-14 10:01:00', 'HONOR', 1),
+    (100123, '访问', '2022-05-14 10:02:00', 'HONOR', 2),
+    (100123, '下单', '2022-05-14 10:04:00', "HONOR", 4),
+    (100123, '付款', '2022-05-14 10:04:00', 'HONOR', 4),
+    (100125, '登录', '2022-05-15 11:00:00', 'XIAOMI', 1),
+    (100125, '访问', '2022-05-15 11:01:00', 'XIAOMI', 2),
+    (100125, '下单', '2022-05-15 11:02:00', 'XIAOMI', 6),
+    (100126, '登录', '2022-05-15 12:00:00', 'IPHONE', 1),
+    (100126, '访问', '2022-05-15 12:01:00', 'HONOR', 2),
+    (100127, '登录', '2022-05-15 11:30:00', 'VIVO', 1),
+    (100127, '访问', '2022-05-15 11:31:00', 'VIVO', 5);
+
+SELECT
+    user_id,
+    window_funnel(
+        3600,
+        "increase",
+        event_timestamp,
+        event_name = '登录',
+        event_name = '访问',
+        event_name = '下单',
+        event_name = '付款'
+    ) AS level
+FROM
+    events
+GROUP BY
+    user_id
+order BY
+    user_id;
+
++---------+-------+
+| user_id | level |
++---------+-------+
+|  100123 |     3 |
+|  100125 |     3 |
+|  100126 |     2 |
+|  100127 |     2 |
++---------+-------+
+```
+对于```uesr_id=100123```，```付款```事件的时间戳与```下单```事件的时间戳发生在同一秒，没有递增，所以匹配到的事件链是```登陆-访问-下单```。
 
 ### keywords
 
