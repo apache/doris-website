@@ -35,7 +35,7 @@ under the License.
 >**注意：**
 >
 >1. 修改和删除只支持在 Unique Key 模型上
->2. 目前的删除是支持 Flink CDC 的方式接入数据实现自动删除，如果是其他数据接入的方式删除需要自己实现。Flink CDC 的数据删除使用方式参照本文档最后一节
+>2. 目前的删除是支持 FlinkCDC 的方式接入数据实现自动删除，如果是其他数据接入的方式删除需要自己实现。FlinkCDC 的数据删除使用方式参照本文档最后一节
 
 ## 版本兼容
 
@@ -84,7 +84,7 @@ under the License.
 #### SQL
 
 ```sql
--- doris source
+-- Doris source
 CREATE TABLE flink_doris_source (
     name STRING,
     age INT,
@@ -126,7 +126,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 -- enable checkpoint
 SET 'execution.checkpointing.interval' = '10s';
 
--- doris sink
+-- Doris sink
 CREATE TABLE flink_doris_sink (
     name STRING,
     age INT,
@@ -200,7 +200,7 @@ env.enableCheckpointing(10000);
 // using batch mode for bounded data
 env.setRuntimeMode(RuntimeExecutionMode.BATCH);
 
-//doris sink option
+//Doris sink option
 DorisSink.Builder<RowData> builder = DorisSink.builder();
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder.setFenodes("FE_IP:HTTP_PORT")
@@ -691,7 +691,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 一般在业务数据库中，会使用编号来作为表的主键，比如 Student 表，会使用编号 (id) 来作为主键，但是随着业务的发展，数据对应的编号有可能是会发生变化的。
 在这种场景下，使用 FlinkCDC + Doris Connector 同步数据，便可以自动更新 Doris 主键列的数据。
 ### 原理
-Flink CDC 底层的采集工具是 Debezium，Debezium 内部使用 op 字段来标识对应的操作：op 字段的取值分别为 c、u、d、r，分别对应 create、update、delete 和 read。
+FlinkCDC 底层的采集工具是 Debezium，Debezium 内部使用 op 字段来标识对应的操作：op 字段的取值分别为 c、u、d、r，分别对应 create、update、delete 和 read。
 而对于主键列的更新，FlinkCDC 会向下游发送 DELETE 和 INSERT 事件，同时数据同步到 Doris 中后，就会自动更新主键列的数据。
 
 ### 使用
@@ -812,7 +812,7 @@ Connector1.1.0 版本以前，是攒批写入的，写入均是由数据驱动�
 Flink 在数据导入时，如果有脏数据，比如字段格式、长度等问题，会导致 StreamLoad 报错，此时 Flink 会不断的重试。如果需要跳过，可以通过禁用 StreamLoad 的严格模式 (strict_mode=false,max_filter_ratio=1) 或者在 Sink 算子之前对数据做过滤。
 
 11. **源表和 Doris 表应如何对应？**
-使用 Flink Connector 导入数据时，要注意两个方面，第一是源表的列和类型跟 flink sql 中的列和类型要对应上；第二个是 flink sql 中的列和类型要跟 doris 表的列和类型对应上，具体可以参考上面的"Doris 和 Flink 列类型映射关系"
+使用 Flink Connector 导入数据时，要注意两个方面，第一是源表的列和类型跟 flink sql 中的列和类型要对应上；第二个是 flink sql 中的列和类型要跟 Doris 表的列和类型对应上，具体可以参考上面的"Doris 和 Flink 列类型映射关系"
 
 12. **TApplicationException: get_next failed: out of sequence response: expected 4 but got 3**
 

@@ -84,7 +84,7 @@ under the License.
 #### SQL
 
 ```sql
--- doris source
+-- Doris source
 CREATE TABLE flink_doris_source (
     name STRING,
     age INT,
@@ -126,7 +126,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 -- enable checkpoint
 SET 'execution.checkpointing.interval' = '10s';
 
--- doris sink
+-- Doris sink
 CREATE TABLE flink_doris_sink (
     name STRING,
     age INT,
@@ -200,7 +200,7 @@ env.enableCheckpointing(10000);
 // using batch mode for bounded data
 env.setRuntimeMode(RuntimeExecutionMode.BATCH);
 
-//doris sink option
+//Doris sink option
 DorisSink.Builder<RowData> builder = DorisSink.builder();
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder.setFenodes("FE_IP:HTTP_PORT")
@@ -543,10 +543,10 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --oracle-conf           | Oracle CDCSource 配置，例如--oracle-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/)查看所有配置 Oracle-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。                                                                                                                                                                                    |
 | --postgres-conf         | Postgres CDCSource 配置，例如--postgres-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/)查看所有配置 Postgres-CDC，其中 hostname/username/password/database-name/schema-name/slot.name 是必需的。                                                                                                                                                                  |
 | --sqlserver-conf        | SQLServer CDCSource 配置，例如--sqlserver-conf hostname=127.0.0.1，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/)查看所有配置 SQLServer-CDC，其中 hostname/username/password/database-name/schema-name 是必需的。                                                                                                                                                                        |
-| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样mongodb 数据为Doris建表的配置，默认为0.2|
+| --mongodb-conf          | MongoDB CDCSource 配置，例如 --mongodb-conf hosts=127.0.0.1:27017，您可以在[这里](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/)查看所有配置 Mongo-CDC，其中 hosts/username/password/database 是必须的。其中 --mongodb-conf schema.sample-percent 为自动采样mongodb 数据为Doris建表的配置，默认为0.2                                                                                                                                    |
 | --sink-conf             | Doris Sink 的所有配置，可以在[这里](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9)查看完整的配置项。                                                                                                                                                                                                                                                                                             |
 | --table-conf            | Doris 表的配置项，即 properties 中包含的内容（其中 table-buckets 例外，非 properties 属性）。例如 `--table-conf replication_num=1`，而 `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"`表示按照正则表达式顺序指定不同表的 buckets 数量，如果没有匹配到则采用 BUCKETS AUTO 建表。                                                                                                                                                                                                                 |
-| --ignore-default-value  | 关闭同步 mysql 表结构的默认值。适用于同步 mysql 数据到 doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152)                                                                                                                                                                                                                                                                                                                 |
+| --ignore-default-value  | 关闭同步 mysql 表结构的默认值。适用于同步 mysql 数据到 Doris 时，字段有默认值，但实际插入数据为 null 情况。参考[#152](https://github.com/apache/doris-flink-connector/pull/152)                                                                                                                                                                                                                                                                                                                 |
 | --use-new-schema-change | 是否使用新的 schema change，支持同步 mysql 多列变更、默认值，1.6.0 开始该参数默认为true。参考[#167](https://github.com/apache/doris-flink-connector/pull/167)                                                                                                                                                                                                                                                                                                                        |
 | --schema-change-mode    | 解析 schema change 的模式，支持 `debezium_structure`、`sql_parser` 两种解析模式，默认采用 `debezium_structure` 模式。<br/><br/> `debezium_structure` 解析上游 CDC 同步数据时所使用的数据结构，通过解析该结构判断 DDL 变更操作。 <br/> `sql_parser` 通过解析上游 CDC 同步数据时的 DDL 语句，从而判断 DDL 变更操作，因此该解析模式更加准确。<br/> 使用例子：`--schema-change-mode debezium_structure`<br/> 本功能将在 1.6.2.1 后的版本中提供                                                                                                                        |
 | --single-sink           | 是否使用单个 Sink 同步所有表，开启后也可自动识别上游新创建的表，自动创建表。                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -811,7 +811,7 @@ Connector1.1.0 版本以前，是攒批写入的，写入均是由数据驱动�
 Flink 在数据导入时，如果有脏数据，比如字段格式、长度等问题，会导致 StreamLoad 报错，此时 Flink 会不断的重试。如果需要跳过，可以通过禁用 StreamLoad 的严格模式 (strict_mode=false,max_filter_ratio=1) 或者在 Sink 算子之前对数据做过滤。
 
 11. **源表和 Doris 表应如何对应？**
-使用 Flink Connector 导入数据时，要注意两个方面，第一是源表的列和类型跟 flink sql 中的列和类型要对应上；第二个是 flink sql 中的列和类型要跟 doris 表的列和类型对应上，具体可以参考上面的"Doris 和 Flink 列类型映射关系"
+使用 Flink Connector 导入数据时，要注意两个方面，第一是源表的列和类型跟 flink sql 中的列和类型要对应上；第二个是 flink sql 中的列和类型要跟 Doris 表的列和类型对应上，具体可以参考上面的"Doris 和 Flink 列类型映射关系"
 
 12. **TApplicationException: get_next failed: out of sequence response: expected 4 but got 3**
 

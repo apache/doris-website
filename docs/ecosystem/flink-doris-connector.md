@@ -77,12 +77,12 @@ Copy this file to `classpath` of `Flink` to use `Flink-Doris-Connector`. For exa
 
 ## Instructions
 
-### read
+### Read
 
 **SQL**
 
 ```sql
--- doris source
+-- Doris source
 CREATE TABLE flink_doris_source (
      name STRING,
      age INT,
@@ -116,7 +116,7 @@ DorisSource<List<?>> dorisSource = DorisSource.<List<?>>builder()
 env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").print();
 ```
 
-### write
+### Write
 
 **SQL**
 
@@ -124,7 +124,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 --enable checkpoint
 SET 'execution.checkpointing.interval' = '10s';
 
--- doris sink
+-- Doris sink
 CREATE TABLE flink_doris_sink (
      name STRING,
      age INT,
@@ -197,7 +197,7 @@ env.enableCheckpointing(10000);
 // using batch mode for bounded data
 env.setRuntimeMode(RuntimeExecutionMode.BATCH);
 
-//doris sink option
+//Doris sink option
 DorisSink.Builder<RowData> builder = DorisSink.builder();
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder.setFenodes("FE_IP:HTTP_PORT")
@@ -214,7 +214,7 @@ executionBuilder.setLabelPrefix("label-doris") //streamload label prefix
                  .setDeletable(false)
                  .setStreamLoadProp(properties); //streamload params
 
-//flink rowdata's schema
+//Flink rowdata's schema
 String[] fields = {"city", "longitude", "latitude", "destroy_date"};
 DataType[] types = {DataTypes.VARCHAR(256), DataTypes.DOUBLE(), DataTypes.DOUBLE(), DataTypes.DATE()};
 
@@ -307,7 +307,7 @@ LEFT JOIN dim_city FOR SYSTEM_TIME AS OF a.process_time AS c
 ON a.city = c.city
 ```
 
-## configuration
+## Configuration
 
 ### General configuration items
 
@@ -502,10 +502,10 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 
 ```
 
-## Use FlinkCDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer,MongoDB)
+## Use Flink CDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer,MongoDB)
 
 
-### grammar
+### Grammar
 
 ```shell
 <FLINK_HOME>bin/flink run \
@@ -541,7 +541,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --mongodb-conf          | MongoDB CDCSource configuration, for example --mongodb-conf hosts=127.0.0.1:27017, you can find all Mongo-CDC configurations [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/), where hosts/username/password/database are required. The --mongodb-conf schema.sample-percent configuration is for automatically sampling MongoDB data for creating a table in Doris, with a default value of 0.2.                                                                                                                                                                                                                 |
 | --sink-conf             | All configurations of Doris Sink can be found [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9) View the complete configuration items.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | --table-conf            | The configuration items of the Doris table(The exception is table-buckets, non-properties attributes), that is, the content contained in properties. For example `--table-conf replication_num=1`, and the `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"` option specifies the number of buckets for different tables based on the order of regular expressions. If there is no match, the table is created with the default setting of BUCKETS AUTO.                                                                                                                                                                                                         |
-| --ignore-default-value  | Turn off the default value of synchronizing mysql table structure. It is suitable for synchronizing mysql data to doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152)                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --ignore-default-value  | Turn off the default value of synchronizing mysql table structure. It is suitable for synchronizing mysql data to Doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152)                                                                                                                                                                                                                                                                                                                                                                                                       |
 | --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. since version 1.6.0, the default value has been set to true. Reference [here](https://github.com/apache/doris-flink-connector/pull/167)                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | --schema-change-mode    | The mode for parsing schema change supports two parsing modes: `debezium_structure` and `sql_parser`. The default mode is `debezium_structure`. <br/><br/> `debezium_structure` parses the data structure used when upstream CDC synchronizes data, and determines DDL change operations by parsing this structure. <br/> `sql_parser` determines the DDL change operation by parsing the DDL statement when the upstream CDC synchronizes data, so this parsing mode is more accurate. <br/> Usage example: `--schema-change-mode debezium_structure`<br/> This feature will be available in versions after 1.6.2.1                                                              |
 | --single-sink           | Whether to use a single Sink to synchronize all tables. When turned on, newly created tables in the upstream can also be automatically recognized and tables automatically created.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -807,7 +807,7 @@ It usually occurs before Connector1.1.0, because the writing frequency is too fa
 When Flink imports data, if there is dirty data, such as field format, length, etc., it will cause StreamLoad to report an error, and Flink will continue to retry at this time. If you need to skip, you can disable the strict mode of StreamLoad (strict_mode=false, max_filter_ratio=1) or filter the data before the Sink operator.
 
 11. **How should the source table and Doris table correspond?**
-When using Flink Connector to import data, pay attention to two aspects. The first is that the columns and types of the source table correspond to the columns and types in flink sql; the second is that the columns and types in flink sql must match those of the doris table For the correspondence between columns and types, please refer to the above "Doris & Flink Column Type Mapping" for details
+When using Flink Connector to import data, pay attention to two aspects. The first is that the columns and types of the source table correspond to the columns and types in flink sql; the second is that the columns and types in flink sql must match those of the Doris table For the correspondence between columns and types, please refer to the above "Doris & Flink Column Type Mapping" for details
 
 12. **TApplicationException: get_next failed: out of sequence response: expected 4 but got 3**
 

@@ -77,12 +77,12 @@ Copy this file to `classpath` of `Flink` to use `Flink-Doris-Connector`. For exa
 
 ## Instructions
 
-### read
+### Read
 
 **SQL**
 
 ```sql
--- doris source
+-- Doris source
 CREATE TABLE flink_doris_source (
      name STRING,
      age INT,
@@ -116,7 +116,7 @@ DorisSource<List<?>> dorisSource = DorisSourceBuilder.<List<?>>builder()
 env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").print();
 ```
 
-### write
+### Write
 
 **SQL**
 
@@ -124,7 +124,7 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 --enable checkpoint
 SET 'execution.checkpointing.interval' = '10s';
 
--- doris sink
+-- Doris sink
 CREATE TABLE flink_doris_sink (
      name STRING,
      age INT,
@@ -197,7 +197,7 @@ env.enableCheckpointing(10000);
 // using batch mode for bounded data
 env.setRuntimeMode(RuntimeExecutionMode.BATCH);
 
-//doris sink option
+//Doris sink option
 DorisSink.Builder<RowData> builder = DorisSink.builder();
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder.setFenodes("FE_IP:HTTP_PORT")
@@ -307,7 +307,7 @@ LEFT JOIN dim_city FOR SYSTEM_TIME AS OF a.process_time AS c
 ON a.city = c.city
 ```
 
-## configuration
+## Configuration
 
 ### General configuration items
 
@@ -421,7 +421,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 ## Use FlinkCDC to access multi-table or whole database example
 
-### grammar
+### Grammar
 
 ```shell
 <FLINK_HOME>bin/flink run \
@@ -713,7 +713,7 @@ It usually occurs before Connector1.1.0, because the writing frequency is too fa
 When Flink imports data, if there is dirty data, such as field format, length, etc., it will cause StreamLoad to report an error, and Flink will continue to retry at this time. If you need to skip, you can disable the strict mode of StreamLoad (strict_mode=false, max_filter_ratio=1) or filter the data before the Sink operator.
 
 11. **How should the source table and Doris table correspond?**
-When using Flink Connector to import data, pay attention to two aspects. The first is that the columns and types of the source table correspond to the columns and types in flink sql; the second is that the columns and types in flink sql must match those of the doris table For the correspondence between columns and types, please refer to the above "Doris & Flink Column Type Mapping" for details
+When using Flink Connector to import data, pay attention to two aspects. The first is that the columns and types of the source table correspond to the columns and types in flink sql; the second is that the columns and types in flink sql must match those of the Doris table For the correspondence between columns and types, please refer to the above "Doris & Flink Column Type Mapping" for details
 
 12. **TApplicationException: get_next failed: out of sequence response: expected 4 but got 3**
 

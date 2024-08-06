@@ -272,7 +272,7 @@ env.enableCheckpointing(10000);
 // using batch mode for bounded data
 env.setRuntimeMode(RuntimeExecutionMode.BATCH);
 
-//doris sink option
+//Doris sink option
 DorisSink.Builder<RowData> builder = DorisSink.builder();
 DorisOptions.Builder dorisBuilder = DorisOptions.builder();
 dorisBuilder.setFenodes("FE_IP:8030")
