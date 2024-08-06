@@ -14,6 +14,7 @@ import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
 import DocsVersionDropdownNavbarItem from '../../NavbarItem/DocsVersionDropdownNavbarItem';
 import LocaleDropdownNavbarItem from '../../NavbarItem/LocaleDropdownNavbarItem';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 function useNavbarItems() {
     // TODO temporary casting until ThemeConfig type is improved
     return useThemeConfig().navbar.items;
@@ -101,7 +102,7 @@ export default function NavbarContent({ mobile }) {
                             <div
                                 className="cursor-pointer docs"
                                 onClick={() => {
-                                    window.location.href = `/docs${isEN ? '' : '/zh-CN'}/gettingStarted/what-is-apache-doris`;
+                                    window.location.href = `/docs${isEN ? '' : '/zh-CN'}/gettingStarted/what-is-new`;
                                 }}
                             >
                                 {isEN ? <DocsLogoNew /> : <DocsLogoZH />}
@@ -150,7 +151,7 @@ export default function NavbarContent({ mobile }) {
                     ></Link>
                     <Link className="header-right-button-primary navbar-download-desktop" to="/download">
                         <Translate id="navbar.download">
-                            {location.pathname.includes('zh-CN') ? '下载' : 'Download'}
+                            {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs') ? '下载' : 'Download'}
                         </Translate>
                     </Link>
                 </>

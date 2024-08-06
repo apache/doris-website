@@ -1269,23 +1269,29 @@
         },
         {
             "type": "category",
-            "label": "Previous Release",
+            "label": "v1.2",
             "items": [
-                "releasenotes/archives/release-1.2.8",
-                "releasenotes/archives/release-1.2.7",
-                "releasenotes/archives/release-1.2.6",
-                "releasenotes/archives/release-1.2.5",
-                "releasenotes/archives/release-1.2.4",
-                "releasenotes/archives/release-1.2.3",
-                "releasenotes/archives/release-1.2.2",
-                "releasenotes/archives/release-1.2.1",
-                "releasenotes/archives/release-1.2.0",
-                "releasenotes/archives/release-1.1.5",
-                "releasenotes/archives/release-1.1.4",
-                "releasenotes/archives/release-1.1.3",
-                "releasenotes/archives/release-1.1.2",
-                "releasenotes/archives/release-1.1.1",
-                "releasenotes/archives/release-1.1.0"
+                "releasenotes/v1.2/release-1.2.8",
+                "releasenotes/v1.2/release-1.2.7",
+                "releasenotes/v1.2/release-1.2.6",
+                "releasenotes/v1.2/release-1.2.5",
+                "releasenotes/v1.2/release-1.2.4",
+                "releasenotes/v1.2/release-1.2.3",
+                "releasenotes/v1.2/release-1.2.2",
+                "releasenotes/v1.2/release-1.2.1",
+                "releasenotes/v1.2/release-1.2.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "v1.1",
+            "items": [
+                "releasenotes/v1.1/release-1.1.5",
+                "releasenotes/v1.1/release-1.1.4",
+                "releasenotes/v1.1/release-1.1.3",
+                "releasenotes/v1.1/release-1.1.2",
+                "releasenotes/v1.1/release-1.1.1",
+                "releasenotes/v1.1/release-1.1.0"
             ]
         }
     ]

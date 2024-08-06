@@ -1,7 +1,7 @@
 const transformPathWithoutZhCN = (pathname: string): string => {
     if (pathname.includes('/ecosystem') || pathname.includes('/gettingStarted') ||
         pathname.includes('/benchmark') || pathname.includes('/faq') || pathname.includes('/releasenotes')) {
-        return `${pathname.replace(/^\/docs/, '')}.md`;
+        return `${pathname.replace(/^\/docs\/(?:2\.1|2\.0|1\.2|dev)/, '').replace('/docs','')}.md`;
     } else {
         const pathWithoutDocs = pathname.replace('/docs', '');
         if (pathname.includes('/2.1')) {
@@ -18,16 +18,18 @@ const transformPathWithoutZhCN = (pathname: string): string => {
     }
 };
 const transformPathWithZhCN = (pathname: string): string => {
+    const regex = /^\/zh-CN\/docs\/(?:2\.1|2\.0|1\.2|dev|)/
+    console.log(pathname.match(/\/ecosystem\/(.+)$/),'2222222')
     if (pathname.includes('/gettingStarted')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-gettingStarted/current${pathname.replace('/zh-CN/docs/gettingStarted', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-gettingStarted/current/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/gettingStarted\//,'')}.md`;
     } else if (pathname.includes('/ecosystem')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-ecosystem/current${pathname.replace('/zh-CN/docs/ecosystem', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-ecosystem/current/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/ecosystem\//,'')}.md`;
     } else if (pathname.includes('/benchmark')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-benchmark/current${pathname.replace('/zh-CN/docs/benchmark', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-benchmark/current/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/benchmark\//,'')}.md`;
     } else if (pathname.includes('/faq')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-faq/current${pathname.replace('/zh-CN/docs/faq', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-faq/current/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/faq\//,'')}.md`;
     } else if (pathname.includes('/releasenotes')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-releases/current${pathname.replace('/zh-CN/docs/releasenotes', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/releasenotes\//,'')}.md`;
     } else if (pathname.includes('/docs')) {
         if (pathname.includes('/2.1')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1${pathname.replace('/zh-CN/docs/2.1', '')}.md`;

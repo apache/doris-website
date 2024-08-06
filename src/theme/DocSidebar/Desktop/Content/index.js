@@ -66,9 +66,9 @@ export default function DocSidebarDesktopContent({ path, sidebar, className }) {
             <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list')}>
                 {showVersion && <div className={styles.currentVersion}>
                     {isEN ? 'Version：' : '当前版本：'} {currentVersion}
-                    <div onMouseLeave={() => setIshover(false)} onMouseEnter={() => setIshover(true)} className="cursor-pointer">
+                    {/* <div onMouseLeave={() => setIshover(false)} onMouseEnter={() => setIshover(true)} className="cursor-pointer">
                         {isHover ? <DownloadPdfActive /> : <DownloadPdf />}
-                    </div>
+                    </div> */}
                 </div>}
                 <DocSidebarItems items={sidebar} activePath={path} level={1} />
             </ul>
