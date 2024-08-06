@@ -1491,14 +1491,15 @@
         }
     ],
     "get-starting": [
-        "get-starting/what-is-apache-doris",
+        "gettingStarted/what-is-new",
+        "gettingStarted/what-is-apache-doris",
+        "gettingStarted/quick-start",
         {
             "type": "category",
-            "label": "Quick Start",
+            "label": "Tutorials",
             "items": [
-                "get-starting/quick-start/quick-start",
-                "get-starting/quick-start/doris-hudi",
-                "get-starting/quick-start/doris-paimon"
+                "gettingStarted/tutorials/doris-hudi",
+                "gettingStarted/tutorials/doris-paimon"
             ]
         }
     ],
@@ -1545,40 +1546,65 @@
     ],
     "releasenotes": [
         "releasenotes/all-release",
-        "releasenotes/release-2.1.5",
-        "releasenotes/release-2.1.4",
-        "releasenotes/release-2.1.3",
-        "releasenotes/release-2.1.2",
-        "releasenotes/release-2.1.1",
-        "releasenotes/release-2.1.0",
-        "releasenotes/release-2.0.13",
-        "releasenotes/release-2.0.12",
-        "releasenotes/release-2.0.11",
-        "releasenotes/release-2.0.10",
-        "releasenotes/release-2.0.9",
-        "releasenotes/release-2.0.8",
-        "releasenotes/release-2.0.7",
-        "releasenotes/release-2.0.6",
-        "releasenotes/release-2.0.5",
-        "releasenotes/release-2.0.4",
-        "releasenotes/release-2.0.3",
-        "releasenotes/release-2.0.2",
-        "releasenotes/release-2.0.1",
-        "releasenotes/release-2.0.0",
-        "releasenotes/release-1.2.8",
-        "releasenotes/release-1.2.7",
-        "releasenotes/release-1.2.6",
-        "releasenotes/release-1.2.5",
-        "releasenotes/release-1.2.4",
-        "releasenotes/release-1.2.3",
-        "releasenotes/release-1.2.2",
-        "releasenotes/release-1.2.1",
-        "releasenotes/release-1.2.0",
-        "releasenotes/release-1.1.5",
-        "releasenotes/release-1.1.4",
-        "releasenotes/release-1.1.3",
-        "releasenotes/release-1.1.2",
-        "releasenotes/release-1.1.1",
-        "releasenotes/release-1.1.0"
+        {
+            "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "v2.1",
+            "items": [
+                "releasenotes/v2.1/release-2.1.5",
+                "releasenotes/v2.1/release-2.1.4",
+                "releasenotes/v2.1/release-2.1.3",
+                "releasenotes/v2.1/release-2.1.2",
+                "releasenotes/v2.1/release-2.1.1",
+                "releasenotes/v2.1/release-2.1.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "v2.0",
+            "items": [
+                "releasenotes/v2.0/release-2.0.13",
+                "releasenotes/v2.0/release-2.0.12",
+                "releasenotes/v2.0/release-2.0.11",
+                "releasenotes/v2.0/release-2.0.10",
+                "releasenotes/v2.0/release-2.0.9",
+                "releasenotes/v2.0/release-2.0.8",
+                "releasenotes/v2.0/release-2.0.7",
+                "releasenotes/v2.0/release-2.0.6",
+                "releasenotes/v2.0/release-2.0.5",
+                "releasenotes/v2.0/release-2.0.4",
+                "releasenotes/v2.0/release-2.0.3",
+                "releasenotes/v2.0/release-2.0.2",
+                "releasenotes/v2.0/release-2.0.1",
+                "releasenotes/v2.0/release-2.0.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Previous Release",
+            "items": [
+                "releasenotes/archives/release-1.2.8",
+                "releasenotes/archives/release-1.2.7",
+                "releasenotes/archives/release-1.2.6",
+                "releasenotes/archives/release-1.2.5",
+                "releasenotes/archives/release-1.2.4",
+                "releasenotes/archives/release-1.2.3",
+                "releasenotes/archives/release-1.2.2",
+                "releasenotes/archives/release-1.2.1",
+                "releasenotes/archives/release-1.2.0",
+                "releasenotes/archives/release-1.1.5",
+                "releasenotes/archives/release-1.1.4",
+                "releasenotes/archives/release-1.1.3",
+                "releasenotes/archives/release-1.1.2",
+                "releasenotes/archives/release-1.1.1",
+                "releasenotes/archives/release-1.1.0"
+            ]
+        }
     ]
 }

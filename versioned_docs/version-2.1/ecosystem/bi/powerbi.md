@@ -89,7 +89,7 @@ Download link: https://downloads.mysql.com/archives/c-net/. Select version 8.0.2
 
    ![click module](/images/powerbi/bi-powerbi-en-11.png)
 
-5. The data refresh configuration requires a gataway connection. After the gateway is enabled locally, you can see the  started gateway in the gateway connection locally. Select the local gateway.
+5. The data refresh configuration requires a gataway connection. After the gateway is enabled locally, you can see the  started gateway in the gateway connection locally. Select the local gateway. 
 
    ![config gateway](/images/powerbi/bi-powerbi-en-12.png)
 
