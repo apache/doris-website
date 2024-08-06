@@ -7,6 +7,7 @@ import SearchBar from '@theme/SearchBar';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarLogo from '@theme/Navbar/Logo';
 import DocsLogoNew from '@site/static/images/doc-logo-new.svg';
+import DocsLogoZH from '@site/static/images/doc-logo-zh.svg';
 import NavbarSearch from '@theme/Navbar/Search';
 import styles from './styles.module.css';
 import Link from '@docusaurus/Link';
@@ -100,11 +101,10 @@ export default function NavbarContent({ mobile }) {
                             <div
                                 className="cursor-pointer docs"
                                 onClick={() => {
-                                    window.location.href = '/docs/get-starting/what-is-apache-doris';
+                                    window.location.href = `/docs${isEN ? '' : '/zh-CN'}/gettingStarted/what-is-apache-doris`;
                                 }}
                             >
-                                {/* {isEN ? <DocsLogoEN /> :<DocsLogoZH />} */}
-                                <DocsLogoNew />
+                                {isEN ? <DocsLogoNew /> : <DocsLogoZH />}
                             </div>
                         ) : (
                             <NavbarLogo />

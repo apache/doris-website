@@ -66,7 +66,7 @@
   "sidebar.docs.category.Job Scheduler": {
     "message": "作业调度",
     "description": "The label for category job scheduler in sidebar docs"
-  },  
+  },
   "sidebar.docs.category.Data Lakehouse": {
     "message": "湖仓一体",
     "description": "The label for category Data Lakehouse in sidebar docs"
@@ -355,6 +355,10 @@
     "message": "版本发布",
     "description": "The label for category Release notes in sidebar docs"
   },
+  "sidebar.releasenotes.category.Previous Release": {
+    "message": "历史版本",
+    "description": "The label for category Release notes in sidebar docs"
+  },
   "sidebar.docs.category.cluster management": {
     "message": "集群管理",
     "description": "The label for category cluster management in sidebar docs"
@@ -378,5 +382,9 @@
   "sidebar.docs.category.Use Case": {
     "message": "实践教程",
     "description": "The label for category Practical Guide in sidebar docs"
+  },
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

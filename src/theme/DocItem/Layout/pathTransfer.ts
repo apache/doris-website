@@ -1,37 +1,33 @@
 const transformPathWithoutZhCN = (pathname: string): string => {
-    if (pathname.includes('/what-is-apache-doris')) {
-        return '/gettingStarted/what-is-apache-doris.md';
-    } else if (pathname.includes('/ecosystems') ||
+    if (pathname.includes('/ecosystem') || pathname.includes('/gettingStarted') ||
         pathname.includes('/benchmark') || pathname.includes('/faq') || pathname.includes('/releasenotes')) {
-        return `${pathname}.md`;
-    } else if (pathname.includes('/docs')) {
+        return `${pathname.replace(/^\/docs/, '')}.md`;
+    } else {
         const pathWithoutDocs = pathname.replace('/docs', '');
         if (pathname.includes('/2.1')) {
-            return `/versioned_docs/version-2.1${pathWithoutDocs}.md`;
+            return `/versioned_docs/version-2.1${pathWithoutDocs.replace('/2.1', '')}.md`;
         } else if (pathname.includes('/2.0')) {
-            return `/versioned_docs/version-2.0${pathWithoutDocs}.md`;
+            return `/versioned_docs/version-2.0${pathWithoutDocs.replace('/2.0', '')}.md`;
         } else if (pathname.includes('/1.2')) {
-            return `/versioned_docs/version-1.2${pathWithoutDocs}.md`;
+            return `/versioned_docs/version-1.2${pathWithoutDocs.replace('/1.2', '')}.md`;
         } else if (pathname.includes('/dev')) {
             return `/docs${pathWithoutDocs.replace('/dev', '')}.md`;
         } else {
             return `/versioned_docs/version-3.0${pathWithoutDocs}.md`;
         }
-    } else {
-        return pathname;
     }
 };
 const transformPathWithZhCN = (pathname: string): string => {
-    if (pathname.includes('/what-is-apache-doris')) {
-        return '/i18n/zh-CN/docusaurus-plugin-content-docs-gettingStarted/current/what-is-apache-doris.md';
-    } else if (pathname.includes('/ecosystems')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-ecosystem/current${pathname.replace('/zh-CN/ecosystems', '')}.md`;
+    if (pathname.includes('/gettingStarted')) {
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-gettingStarted/current${pathname.replace('/zh-CN/docs/gettingStarted', '')}.md`;
+    } else if (pathname.includes('/ecosystem')) {
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-ecosystem/current${pathname.replace('/zh-CN/docs/ecosystem', '')}.md`;
     } else if (pathname.includes('/benchmark')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-benchmark/current${pathname.replace('/zh-CN/benchmark', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-benchmark/current${pathname.replace('/zh-CN/docs/benchmark', '')}.md`;
     } else if (pathname.includes('/faq')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-faq/current${pathname.replace('/zh-CN/faq', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-faq/current${pathname.replace('/zh-CN/docs/faq', '')}.md`;
     } else if (pathname.includes('/releasenotes')) {
-        return `/i18n/zh-CN/docusaurus-plugin-content-docs-releases/current${pathname.replace('/zh-CN/releasenotes', '')}.md`;
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-releases/current${pathname.replace('/zh-CN/docs/releasenotes', '')}.md`;
     } else if (pathname.includes('/docs')) {
         if (pathname.includes('/2.1')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1${pathname.replace('/zh-CN/docs/2.1', '')}.md`;

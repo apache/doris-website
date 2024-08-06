@@ -7,9 +7,28 @@ cp -rf benchmark versioned_docs/version-3.0
 cp -rf ecosystem versioned_docs/version-3.0
 cp -rf faq versioned_docs/version-3.0
 cp -rf releasenotes versioned_docs/version-3.0
-cp -rf get-starting versioned_docs/version-3.0
+cp -rf gettingStarted versioned_docs/version-3.0
+cp -rf benchmark versioned_docs/version-2.1
+cp -rf ecosystem versioned_docs/version-2.1
+cp -rf faq versioned_docs/version-2.1
+cp -rf releasenotes versioned_docs/version-2.1
+cp -rf gettingStarted versioned_docs/version-2.1
+cp -rf benchmark versioned_docs/version-2.0
+cp -rf ecosystem versioned_docs/version-2.0
+cp -rf faq versioned_docs/version-2.0
+cp -rf releasenotes versioned_docs/version-2.0
+cp -rf gettingStarted versioned_docs/version-2.0
+cp -rf benchmark versioned_docs/version-1.2
+cp -rf ecosystem versioned_docs/version-1.2
+cp -rf faq versioned_docs/version-1.2
+cp -rf releasenotes versioned_docs/version-1.2
+cp -rf gettingStarted versioned_docs/version-1.2
 
-yarn && yarn start
+if [ "$1" = "zh-CN" ]; then
+  yarn start:zh-CN
+else
+  yarn start
+fi
 
 
 echo "***************************************"

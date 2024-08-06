@@ -3,7 +3,7 @@
       "message": "current",
       "description": "The label for version current"
     },
-    "sidebar.releases.category.Previous Release": {
+    "sidebar.releasenotes.category.Previous Release": {
       "message": "历史版本",
       "description": "The label for category Getting Started in sidebar docs"
     }

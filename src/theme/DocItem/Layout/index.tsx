@@ -50,7 +50,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            setIsNew(location.pathname.includes('what-is-apache-doris'));
+            setIsNew(location.pathname.includes('what-is-new'));
             setIsZH(location.pathname.includes('zh-CN'));
             setPathname(location.pathname);
         }
