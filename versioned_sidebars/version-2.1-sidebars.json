@@ -451,6 +451,7 @@
                         "admin-manual/fe/get-load-state",
                         "admin-manual/fe/get-log-file-action",
                         "admin-manual/fe/get-small-file",
+                        "admin-manual/fe/get-wal-size-action",
                         "admin-manual/fe/health-action",
                         "admin-manual/fe/meta-info-action",
                         "admin-manual/fe/meta-replay-state-action",
