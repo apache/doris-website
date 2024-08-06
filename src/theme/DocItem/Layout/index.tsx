@@ -44,21 +44,23 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     const docTOC = useDocTOC();
     const { metadata } = useDoc();
     const [isNew, setIsNew] = useState(true);
-    const [pathname, setPathname] = useState('');
+    const [showBanner, setShowBanner] = useState(false);
     const [isZH, setIsZH] = useState(false);
     const { editUrl, lastUpdatedAt, formattedLastUpdatedAt, lastUpdatedBy, tags } = metadata;
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
+            const notBanner = ['gettingStarted','benchmark','ecosystem','faq','releasenotes']
+            const isShow = notBanner.some(item => location.pathname.includes(item))
             setIsNew(location.pathname.includes('what-is-new'));
             setIsZH(location.pathname.includes('zh-CN'));
-            setPathname(location.pathname);
+            setShowBanner(!isShow);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <div className="row">
             <div className={clsx('col', !docTOC.hidden && styles.docItemCol)}>
-                <DocVersionBanner />
+                {showBanner && <DocVersionBanner />}
                 <div className={styles.docItemContainer}>
                     <article>
                         <DocBreadcrumbs />
@@ -76,7 +78,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                             </Link>
                         )}
                         <Link
-                            to="https://github.com/apache/doris-website/issues"
+                            to="https://github.com/apache/doris-website/issues/new"
                             className={`mr-6 ${styles.footerBtn}`}
                         >
                             <DocsAttention /> <span className="ml-2">{isZH ? '反馈问题' : 'Report issue'}</span>

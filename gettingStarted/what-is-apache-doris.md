@@ -1,5 +1,5 @@
 ---
-{ 'title': 'What is Apache Doris', 'language': 'en' }
+{ "title": "What's Apache Doris", "language": "en" }
 ---
 
 <!--
@@ -21,7 +21,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# What is Apache Doris
+# What's Apache Doris
 
 Apache Doris is an MPP-based real-time data warehouse known for its high query speed. For queries on large datasets, it returns results in sub-seconds. It supports both high-concurrent point queries and high-throughput complex analysis. It can be used for report analysis, ad-hoc queries, unified data warehouse, and data lake query acceleration. Based on Apache Doris, users can build applications for user behavior analysis, A/B testing platform, log analysis, user profile analysis, and e-commerce order analysis.
 

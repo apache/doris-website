@@ -62,7 +62,7 @@ export default function DocsVersionDropdownNavbarItem({
         <DropdownNavbarItem
             {...props}
             mobile={mobile}
-            label={<span className="text-sm">{location.pathname.includes('zh-CN') ? '版本: ' : 'Versions: '}{versionLinks.find(e => e.isActive())?.label}</span>}
+            label={<span className="text-sm">{typeof window !== 'undefined' && location.pathname.includes('zh-CN') ? '版本: ' : 'Versions: '}{versionLinks.find(e => e.isActive())?.label}</span>}
             to={dropdownTo}
             items={items}
             isActive={dropdownActiveClassDisabled ? () => false : undefined}

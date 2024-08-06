@@ -1,6 +1,6 @@
 ---
 {
-    "title": "All Release",
+    "title": "What's New",
     "language": "en"
 }
 ---
@@ -24,73 +24,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-The following summarizes Apache Doris releases, from the latest one to the earliest one.
+This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order.
 
-## Latest Release
 
-:::tip NEW
 
-🔥 Another milestone, Apache Doris 3.0 is released now !
+:::tip Latest Release
 
-- [Release Note](/releasenotes/v3.0/release-3.0.0)
+🔥 Apache Doris 2.1.5 is released !
+
+- [Release Note](/releasenotes/v2.1/release-2.1.5.md)
 
 - [Quick Download](https://doris.apache.org/download)
 
 :::
 
 
-
-## v3.0 
-
-[3.0.0 ｜ 2024-08-03](/releasenotes/v3.0/release-3.0.0)
-
-## v2.1
-
-[2.1.5 ｜2024-07-24](/releasenotes/v2.1/release-2.1.5)
-
-[2.1.4 ｜2024-06-26](/releasenotes/v2.1/release-2.1.4)
-
-[2.1.3 ｜2024-05-21](/releasenotes/v2.1/release-2.1.3)
-
-[2.1.2 ｜2024-04-12](/releasenotes/v2.1/release-2.1.2)
-
-[2.1.1 ｜2024-04-03](/releasenotes/v2.1/release-2.1.1)
-
-[2.1.0 ｜2024-03-12](/releasenotes/v2.1/release-2.1.0)
+<br />
 
 
-## v2.0
+- [2024-07-24, Apache Doris 2.1.5 is released](../releasenotes/v2.1/release-2.1.5.md)
 
-[2.0.13 ｜2024-07-17](/releasenotes/v2.0/release-2.0.13)
+- [2024-07-17, Apache Doris 2.0.13 is released](../releasenotes/v2.0/release-2.0.13.md)
 
-[2.0.12 ｜2024-06-27](/releasenotes/v2.0/release-2.0.12)
+- [2024-06-27, Apache Doris 2.0.12 is released](../releasenotes/v2.0/release-2.0.12.md)
 
-[2.0.11 ｜2024-06-05](/releasenotes/v2.0/release-2.0.11)
+- [2024-06-26, Apache Doris 2.1.4 is released](../releasenotes/v2.1/release-2.1.4.md)
 
-[2.0.10 ｜2024-05-16](/releasenotes/v2.0/release-2.0.10)
+- [2024-06-05, Apache DOris 2.0.11 is released](../releasenotes/v2.0/release-2.0.11.md)
 
-[2.0.9 ｜2024-04-23](/releasenotes/v2.0/release-2.0.9)
+- [2024-05-21, Apache Doris 2.1.3 is released](../releasenotes/v2.1/release-2.1.3.md)
 
-[2.0.8 ｜2024-04-09](/releasenotes/v2.0/release-2.0.8)
+- [2024-05-16, Apache Doris 2.0.11 is released](../releasenotes/v2.0/release-2.0.10.md)
 
-[2.0.7 ｜2024-03-26](/releasenotes/v2.0/release-2.0.7)
+- [2024-04-23, Apache Doris 2.0.9 is released](../releasenotes/v2.0/release-2.0.9.md)
 
-[2.0.6 ｜2024-03-11](/releasenotes/v2.0/release-2.0.6)
+- [2024-04-12, Apache Doris 2.1.2 is released](../releasenotes/v2.1/release-2.1.2.md)
 
-[2.0.5 ｜2024-02-28](/releasenotes/v2.0/release-2.0.5)
+- [2024-04-09, Apache Doris 2.0.8 is released](../releasenotes/v2.0/release-2.0.8.md)
 
-[2.0.4 ｜2024-01-26](/releasenotes/v2.0/release-2.0.4)
+- [2024-04-03, Apache Doris 2.1.1 is released](../releasenotes/v2.1/release-2.1.1.md)
 
-[2.0.3 ｜2023-12-14](/releasenotes/v2.0/release-2.0.3)
+- [2024-03-26, Apache Doris 2.0.7 is released](../releasenotes/v2.0/release-2.0.7.md)
 
-[2.0.2 ｜2023-10-13](/releasenotes/v2.0/release-2.0.2)
+- [2024-03-12, Apache Doris 2.1.0 is released](../releasenotes/v2.1/release-2.1.0.md)
 
-[2.0.1 ｜2023-09-04](/releasenotes/v2.0/release-2.0.1)
+- [2024-03-11, Apache Doris 2.0.6 is released](../releasenotes/v2.0/release-2.0.6.md)
 
-[2.0.0 ｜2023-08-16](/releasenotes/v2.0/release-2.0.0)
+- [2024-02-28, Apache Doris 2.0.5 is released](../releasenotes/v2.0/release-2.0.5.md)
+
+- [2024-01-26, Apache Doris 2.0.4 is released](../releasenotes/v2.0/release-2.0.4.md)
 
 
 
-## Previouse release
 
-For earlier release notes click [Previous Releases](/archives/release-1.2.8).

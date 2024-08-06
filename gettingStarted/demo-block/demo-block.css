@@ -263,11 +263,11 @@ img.home-svg svg path {
     margin-top: 15px
 }
 
-.markdown a {
+.home-page-hero-right a {
     color: #4c576c
 }
 
-.markdown a:hover,
+.home-page-hero-right a:hover,
 a:active {
     /* color: #444fd9; */
     text-decoration: none;

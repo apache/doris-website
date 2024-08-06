@@ -23,7 +23,7 @@ export default function Latest() {
                             </div> */}
                             <div style={{ marginBottom: 10 }}>Join Doris Discussion</div>
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 20 }}>A platform to fostering connects within the Doris community, specially for addressing technical inquiries and providing support</div>
+                        <div style={{ fontSize: 12, marginBottom: 20 }}>A platform to fostering connects within the community for addressing technical inquiries and providing support.</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>Learn more</div>
                     </a>
                     <a className="latest-button" href="../releasenotes/v2.1/release-2.1.5">
