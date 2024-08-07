@@ -331,8 +331,20 @@
     "message": "版本发布",
     "description": "The label for category Release notes in sidebar docs"
   },
-  "sidebar.docs.category.Practical Guide": {
+  "sidebar.releasenotes.category.Previous Release": {
+    "message": "历史版本",
+    "description": "The label for category Release notes in sidebar docs"
+  },
+  "sidebar.docs.category.Use Case": {
     "message": "实践教程",
     "description": "The label for category Practical Guide in sidebar docs"
-  }
+  },
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Tutorials": {
+        "message": "使用教程",
+        "description": "The label for category BI and Database IDE in sidebar docs"
+    }
 }
