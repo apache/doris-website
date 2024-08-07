@@ -1,8 +1,19 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './demo-block.css';
 
 
 export default function Latest() {
+    const [currentVersion, setCurrentVersion] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div className="home-page-hero">
@@ -27,7 +38,7 @@ export default function Latest() {
                         <div style={{ fontSize: 12, marginBottom: 20 }}>联合众多 Doris 生态中的开发者、用户以及合作伙伴，共同发起和创建的问答社区。在这里，你可以自由的提出和讨论技术问题、分享和收获技术经验、与社区的小伙伴进行互动和交流。</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>进入论坛</div>
                     </a>
-                    <a className="latest-button" href="../releasenotes/v2.1/release-2.1.5">
+                    <a className="latest-button" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.1/release-2.1.5`}>
                         <div className="home-page-hero-button-label"><div>版本发布</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
