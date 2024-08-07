@@ -1445,6 +1445,14 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 * Description: Cgroups assigned to doris
 * Default value: empty
 
+#### `enable_use_cgroup_memory_info`
+
+<version since="2.1.4"></version>
+
+* Type: bool
+* Description: This controls whether or not doris will check cgroups for memory usage. Doris doesn't support cgroups v2 yet, so in a cgroups v2 context attempting to fetch the cgroup memory info will always fail. Changing this option to false will suppress that error and not clog up logs.
+* Default value: true
+
 #### `priority_queue_remaining_tasks_increased_frequency`
 
 * Description: the increased frequency of priority for remaining tasks in BlockingPriorityQueue
