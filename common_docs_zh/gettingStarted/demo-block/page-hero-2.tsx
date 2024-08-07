@@ -1,6 +1,17 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './demo-block.css';
 export default function PageHero2() {
+    const [currentVersion, setCurrentVersion] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div className="home-page-hero">
@@ -11,7 +22,7 @@ export default function PageHero2() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href="../query/nereids">
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids`}>
                         <div className="home-page-hero-button-label"><div>数据查询</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -24,7 +35,7 @@ export default function PageHero2() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>现代架构的全新查询优化器，能够更高效处理当前 Doris 场景的查询请求，同时提供更好的扩展性。</div>
                     </a>
-                    <a className="latest-button-CN" href="../table-design/index/inverted-index">
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/table-design/index/inverted-index`}>
                         <div className="latest-button-title">
                             <div className="home-page-hero-button-label"><div>数据表设计</div></div>
                             {/* <div className="home-page-hero-button-icon">

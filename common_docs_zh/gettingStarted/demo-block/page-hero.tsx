@@ -1,6 +1,17 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './demo-block.css';
 export default function PageHero1() {
+    const [currentVersion, setCurrentVersion] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div className="home-page-hero">
@@ -11,7 +22,7 @@ export default function PageHero1() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href="../get-starting/tutorials/doris-hudi">
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/doris-hudi`}>
                         <div className="home-page-hero-button-label"><div>使用教程</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -24,7 +35,7 @@ export default function PageHero1() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>如何快速搭建 Apache Doris 与 Hudi 测试及演示环境，并对各功能操作进行演示。</div>
                     </a>
-                    <a className="latest-button-CN" href="../get-starting/tutorials/doris-paimon">
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/doris-paimon`}>
                         <div className="latest-button-title">
                             <div className="home-page-hero-button-label"><div>使用教程</div></div>
                             {/* <div className="home-page-hero-button-icon">
