@@ -52,22 +52,27 @@ export default function NavbarContent({ mobile }) {
     const searchBarItem = items.find(item => item.type === 'search');
     const [star, setStar] = useState<any>();
     const [isDocsPage, setIsDocsPage] = useState(false);
-    const [startWithDoc, setStartWithDoc] = useState(true);
     const [isCommunity, setIsCommunity] = useState(false);
     const [isEN, setIsEN] = useState(true);
+    const [currentVersion, setCurrentVersion] = useState('')
     useEffect(() => {
         getGithubStar();
         if (typeof window !== 'undefined') {
-            const tempPath = ['get-starting', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes'];
+            const tempPath = ['gettingStarted', 'benchmark', 'ecosystems', 'faq', 'docs', 'releasenotes'];
+
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+
             const pathname = location.pathname.split('/')[1];
             location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-            const docsStart = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
-            const docsPage =
-                tempPath.includes(pathname) || tempPath.some(path => location.pathname.includes(`zh-CN/${path}`));
+            const docsPage = location.pathname.includes('docs')
             const communityPage = pathname === 'community' || location.pathname.includes('zh-CN/community');
             setIsCommunity(communityPage);
             setIsDocsPage(docsPage);
-            setStartWithDoc(docsStart);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
 
@@ -102,7 +107,7 @@ export default function NavbarContent({ mobile }) {
                             <div
                                 className="cursor-pointer docs"
                                 onClick={() => {
-                                    window.location.href = `/docs${isEN ? '' : '/zh-CN'}/gettingStarted/what-is-new`;
+                                    window.location.href = `${isEN ? '' : '/zh-CN'}/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/what-is-new`;
                                 }}
                             >
                                 {isEN ? <DocsLogoNew /> : <DocsLogoZH />}

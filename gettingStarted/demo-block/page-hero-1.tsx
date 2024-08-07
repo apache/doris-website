@@ -1,6 +1,17 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './demo-block.css';
 export default function PageHero1() {
+    const [currentVersion, setCurrentVersion] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div className="home-page-hero">
@@ -11,7 +22,7 @@ export default function PageHero1() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href="../practical-guide/log-storage-analysis">
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/practical-guide/log-storage-analysis`}>
                         <div className="home-page-hero-button-label"><div>Use Case</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -24,7 +35,7 @@ export default function PageHero1() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>To build an open, high-performance, cost-effective and unified log storage and analysis platform.</div>
                     </a>
-                    <a className="latest-button" href="../lakehouse/datalake-analytics/hive">
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/lakehouse/datalake-analytics/hive`}>
                         <div className="latest-button-title">
                             <div className="home-page-hero-button-label"><div>Lakehouse</div></div>
                             {/* <div className="home-page-hero-button-icon">

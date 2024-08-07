@@ -1,7 +1,18 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './demo-block.css';
 
 export default function Latest() {
+    const [currentVersion, setCurrentVersion] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div className="home-page-hero">
@@ -26,7 +37,7 @@ export default function Latest() {
                         <div style={{ fontSize: 12, marginBottom: 20 }}>A platform to fostering connects within the community for addressing technical inquiries and providing support.</div>
                         <div style={{ fontSize: 14, marginBottom: 10 }}>Learn more</div>
                     </a>
-                    <a className="latest-button" href="../releasenotes/v2.1/release-2.1.5">
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/releasenotes/v2.1/release-2.1.5`}>
                         <div className="home-page-hero-button-label"><div>Release</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">

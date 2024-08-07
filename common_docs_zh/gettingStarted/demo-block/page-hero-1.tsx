@@ -1,6 +1,17 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './demo-block.css';
 export default function PageHero() {
+    const [currentVersion, setCurrentVersion] = useState('')
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
+            if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+                setCurrentVersion(secPath)
+            } else {
+                setCurrentVersion('')
+            }
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div className="home-page-hero">
@@ -11,7 +22,7 @@ export default function PageHero() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href="../practical-guide/log-storage-analysis">
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/practical-guide/log-storage-analysis`}>
                         <div className="home-page-hero-button-label"><div>实践教程</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
@@ -24,7 +35,7 @@ export default function PageHero() {
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>如何基于 Apache Doris 构建开放、高性能低成本、统一的日志存储分析平台。</div>
                     </a>
-                    <a className="latest-button-CN" href="../lakehouse/datalake-analytics/hive">
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/lakehouse/datalake-analytics/hive`}>
                         <div className="latest-button-title">
                             <div className="home-page-hero-button-label"><div>湖仓一体</div></div>
                             {/* <div className="home-page-hero-button-icon">
