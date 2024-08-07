@@ -1,11 +1,11 @@
 ---
 {
-    "title": "VARCHAR",
-    "language": "zh-CN"
+    "title": "Overview",
+    "language": "en"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## VARCHAR
-### description
-    VARCHAR(M)
-    变长字符串，M代表的是变长字符串的字节长度。M的范围是1-65533。
-    
-    注意：变长字符串是以UTF-8编码存储的，因此通常英文字符占1个字节，中文字符占3个字节。
 
-### keywords
 
-    VARCHAR
+
+Doris supports both fixed-length and variable-length strings, including:
+
+- **[CHAR(M)](../string/CHAR.md)**: A fixed-length string, where M is the byte length. The range for M is [1, 255].
+
+- **[VARCHAR(M)](../string/VARCHAR.md)**: A variable-length string, where M is the maximum length. The range for M is [1, 65533].
+
+- **[STRING](../string/STRING.md)**: A variable-length string with a default maximum length of 1,048,576 bytes (1 MB). This maximum length can be increased up to 2,147,483,643 bytes (2 GB) by configuring the `string_type_length_soft_limit_bytes`setting.

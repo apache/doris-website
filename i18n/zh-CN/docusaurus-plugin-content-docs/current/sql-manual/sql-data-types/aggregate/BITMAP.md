@@ -28,14 +28,14 @@ under the License.
 ### description
 BITMAP
 
-BITMAP类型的列可以在Aggregate表、Unique表或Duplicate表中使用。
-在Unique表或duplicate表中使用时，其必须作为非key列使用。
-在Aggregate表中使用时，其必须作为非key列使用，且建表时配合的聚合类型为BITMAP_UNION。
+BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。
+在 Unique 表或 duplicate 表中使用时，其必须作为非 key 列使用。
+在 Aggregate 表中使用时，其必须作为非 key 列使用，且建表时配合的聚合类型为 BITMAP_UNION。
 用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。
-并且BITMAP列只能通过配套的bitmap_union_count、bitmap_union、bitmap_hash、bitmap_hash64等函数进行查询或使用。
+并且 BITMAP 列只能通过配套的 bitmap_union_count、bitmap_union、bitmap_hash、bitmap_hash64 等函数进行查询或使用。
 
-离线场景下使用BITMAP会影响导入速度，在数据量大的情况下查询速度会慢于HLL，并优于Count Distinct。
-注意：实时场景下BITMAP如果不使用全局字典，使用了bitmap_hash()可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用bitmap_hash64。
+离线场景下使用 BITMAP 会影响导入速度，在数据量大的情况下查询速度会慢于 HLL，并优于 Count Distinct。
+注意：实时场景下 BITMAP 如果不使用全局字典，使用了 bitmap_hash() 可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用 bitmap_hash64。
 
 ### example
 

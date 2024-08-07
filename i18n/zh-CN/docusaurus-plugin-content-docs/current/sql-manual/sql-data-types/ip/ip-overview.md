@@ -1,11 +1,11 @@
 ---
 {
-    "title": "CHAR",
+    "title": "IP 类型概览",
     "language": "zh-CN"
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,11 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## CHAR
-### description
-    CHAR(M)
-    定长字符串，M代表的是定长字符串的字节长度。M的范围是1-255
+IP 类型以二进制形式存储 IP 地址，比用字符串存储更省空间查询速度更快，支持 2 种类型：
 
-### keywords
+1. [IPv4](../ip/IPV4.md)：以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。
 
-    CHAR
+2. [IPv6](../ip/IPV6.md)：以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。

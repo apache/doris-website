@@ -351,8 +351,32 @@
     "message": "Show",
     "description": "The label for category Show in sidebar docs"
   },
-  "sidebar.docs.category.Data Types": {
+  "sidebar.docs.category.SQL Data Types": {
     "message": "数据类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregation Data Type": {
+    "message": "聚合类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Datetime Data Type": {
+    "message": "日期类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.String Data Type": {
+    "message": "字符串类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Data Type": {
+    "message": "数值类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Semi-Structured Data Type": {
+    "message": "半结构化类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.IP Data Type": {
+    "message": "IP 类型",
     "description": "The label for category Data Types in sidebar docs"
   },
   "sidebar.docs.category.Utility": {
@@ -404,7 +428,7 @@
     "description": "The label for category BI and Database IDE in sidebar docs"
   },
   "sidebar.get-starting.category.Tutorials": {
-        "message": "使用教程",
-        "description": "The label for category BI and Database IDE in sidebar docs"
-    }
+    "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  }
 }
