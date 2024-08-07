@@ -35,7 +35,7 @@ export default function DocSidebarDesktopContent({ path, sidebar, className }) {
     const [currentVersion, setCurrentVersion] = useState('3.0')
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const tempPath = ['gettingStarted', 'benchmark', 'ecosystem', 'faq', 'releasenotes'];
+            const tempPath = ['gettingStarted', 'benchmark', 'ecosystem', 'faq', 'releasenotes','community'];
             const isShowVersion = tempPath.some(path => location.pathname.includes(path))
             const pathname = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[2] : location.pathname.split('/')[1];
             const secPath = location.pathname.includes('zh-CN/docs') ? location.pathname.split('/')[3] : location.pathname.split('/')[2]
@@ -65,7 +65,7 @@ export default function DocSidebarDesktopContent({ path, sidebar, className }) {
         >
             <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list')}>
                 {showVersion && <div className={styles.currentVersion}>
-                    {isEN ? 'Version：' : '当前版本：'} {currentVersion}
+                    {isEN ? 'Version:' : '当前版本:'} {currentVersion}
                     {/* <div onMouseLeave={() => setIshover(false)} onMouseEnter={() => setIshover(true)} className="cursor-pointer">
                         {isHover ? <DownloadPdfActive /> : <DownloadPdf />}
                     </div> */}
