@@ -92,3 +92,15 @@
     //   }
     // }
 }
+.sidebar-pdf {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #dfe5f0;
+    height:50px;
+    line-height: 50px;
+    padding: 0 1.5rem;
+    cursor: pointer;
+}
+.sidebar-pdf:hover {
+    color:#444FD9
+}
