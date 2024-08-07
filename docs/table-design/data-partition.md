@@ -462,6 +462,10 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   The starting offset of the dynamic partition, usually a negative number. Depending on the `time_unit` attribute, based on the current day (week / month), the partitions with a partition range before this offset will be deleted. If not filled, the default is `-2147483648`, that is, the history partition will not be  deleted.
 
+:::caution
+Note that if the user sets history_partition_num (> 0), the starting partition for creating dynamic partitions will use max(start, -history_partition_num), and when deleting historical partitions, the range up to start will still be retained, where start < 0.
+:::
+
 - `dynamic_partition.end`(required parameters)
 
   The end offset of the dynamic partition, usually a positive number. According to the difference of the `time_unit` attribute, the partition of the corresponding range is created in advance based on the current day (week / month).
