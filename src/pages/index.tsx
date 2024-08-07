@@ -381,7 +381,7 @@ export default function Home(): JSX.Element {
             href: 'https://www.youtube.com/@apachedoris/channels',
         },
     ];
-
+console.log(siteConfig,'siteConfig')
     return (
         <Layout
             title={translate({ id: 'homepage.title', message: 'Apache Doris: Open source data warehouse for real time data analytics' })}

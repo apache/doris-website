@@ -1,0 +1,32 @@
+{
+    "ecosystems": [
+        "spark-doris-connector",
+        "flink-doris-connector",
+        "doris-kafka-connector",
+        "datax",
+        "dbt-doris-adapter",
+        "seatunnel",
+        "kyuubi",
+        "logstash",
+        "beats",
+        "cloudcanal",
+        "automq-load",
+        "doris-streamloader",
+        "hive-bitmap-udf",
+        "hive-hll-udf",
+        {
+            "type": "category",
+            "label": "BI and Database IDE",
+            "items": [
+                "bi/apache-superset",
+                "bi/dbeaver",
+                "bi/datagrip",
+                "bi/finebi",
+                "bi/powerbi",
+                "bi/tableau",
+                "bi/quicksight",
+                "bi/quickbi"
+            ]
+        }
+    ]
+}

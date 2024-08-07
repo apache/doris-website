@@ -1,0 +1,7 @@
+{
+  "benchmark": [
+    "ssb",
+    "tpch",
+    "tpcds"
+  ]
+}

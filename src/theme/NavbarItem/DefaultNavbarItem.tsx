@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import NavbarNavLink from '@theme/NavbarItem/NavbarNavLink';
 import type { DesktopOrMobileNavBarItemProps, Props } from '@theme/NavbarItem/DefaultNavbarItem';
 
-function DefaultNavbarItemDesktop({ className, isDropdownItem = false, ...props }: DesktopOrMobileNavBarItemProps) {
+function DefaultNavbarItemDesktop({ className, isDropdownItem = false, isDocsPage, ...props }: DesktopOrMobileNavBarItemProps) {
     const element = (
         <NavbarNavLink
             className={clsx(isDropdownItem ? 'dropdown__link' : 'navbar__item navbar__link', className)}
             isDropdownLink={isDropdownItem}
-            style={{ textAlign: props?.align || 'center' }}
+            style={{ textAlign: props?.align || 'center', padding: '0 0.625rem' }}
             {...props}
         />
     );
@@ -16,7 +16,6 @@ function DefaultNavbarItemDesktop({ className, isDropdownItem = false, ...props 
     if (isDropdownItem) {
         return <li>{element}</li>;
     }
-
     return element;
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import Logo from '@theme/Logo';
+import {DocsDownload} from '../../../components/Icons/docs-download';
 import SearchBar from '@theme/SearchBar';
 import CollapseButton from '@theme/DocSidebar/Desktop/CollapseButton';
 import Content from '@theme/DocSidebar/Desktop/Content';
@@ -15,6 +16,7 @@ function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
             sidebar: { hideable },
         },
     } = useThemeConfig();
+    console.log(sidebar,'sidebar')
     const hasLearningPath = path.includes('/docs');
     return (
         <div className={clsx('sidebar ', hideOnScroll && 'sidebar-with-hideable-navbar', isHidden && 'sidebar-hidden')}>
