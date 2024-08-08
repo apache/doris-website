@@ -351,10 +351,6 @@
     "message": "Show",
     "description": "The label for category Show in sidebar docs"
   },
-  "sidebar.docs.category.SQL Data Types": {
-    "message": "数据类型",
-    "description": "The label for category Data Types in sidebar docs"
-  },
   "sidebar.docs.category.Aggregation Data Type": {
     "message": "聚合类型",
     "description": "The label for category Data Types in sidebar docs"

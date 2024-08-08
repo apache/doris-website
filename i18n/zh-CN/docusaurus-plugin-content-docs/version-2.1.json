@@ -217,7 +217,31 @@
   },
   "sidebar.docs.category.SQL Types": {
     "message": "SQL 类型",
-    "description": "The label for category SQL Types in sidebar docs"
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregation Data Type": {
+    "message": "聚合类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Datetime Data Type": {
+    "message": "日期类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.String Data Type": {
+    "message": "字符串类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Data Type": {
+    "message": "数值类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Semi-Structured Data Type": {
+    "message": "半结构化类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.IP Data Type": {
+    "message": "IP 类型",
+    "description": "The label for category Data Types in sidebar docs"
   },
   "sidebar.docs.category.Array Functions": {
     "message": "数组函数",
