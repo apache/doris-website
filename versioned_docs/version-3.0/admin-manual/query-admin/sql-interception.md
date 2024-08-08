@@ -24,76 +24,115 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# SQL Block Rule
+This feature is used to restrict the execution of SQL statements (both DDL and DML can be restricted).
 
-This function is used to limit any sql statement (no matter DDL or DML statement).
-Support SQL block rule by user level:
+Supports per-user configuration of SQL interception rules, such as using regular expressions to match and intercept SQL, or using supported rules for interception.
 
-1. by regex way to deny specify SQL
+## Creating and Managing Rules
 
-2. by setting partition_num, tablet_num, cardinality, check whether a sql reaches one of the limitations
-    - partition_num, tablet_num, cardinality could be set together, and once reach one of them, the sql will be blocked.
+### Creating Rules
 
-## Rule
+For more syntax on creating rules, please refer to [CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE).
 
-SQL block rule CRUD
-- create SQL block rule,For more creation syntax see [CREATE SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-SQL-BLOCK-RULE.md)
-    - sql: Regex pattern, Special characters need to be translated, "NULL" by default
-    - sqlHash: Sql hash value, Used to match exactly, We print it in fe.audit.log, This parameter is the only choice between sql and sql, "NULL" by default
-    - partition_num: Max number of partitions will be scanned by a scan node, 0L by default
-    - tablet_num: Max number of tablets will be scanned by a scan node, 0L by default
-    - cardinality: An inaccurate number of scan rows of a scan node, 0L by default
-    - global: Whether global(all users)is in effect, false by default
-    - enable: Whether to enable block rule, true by default
+- `sql`: Matching rule (based on regular expression matching, special characters need to be escaped), optional, default value is "NULL".
+- `sqlHash`: SQL hash value for exact matching. This value will be printed in `fe.audit.log`, optional. This parameter and SQL are mutually exclusive, default value is "NULL".
+- `partition_num`: Maximum number of partitions a scan node will scan, default value is 0L.
+- `tablet_num`: Maximum number of tablets a scan node will scan, default value is 0L.
+- `cardinality`: Rough number of rows scanned by a scan node, default value is 0L.
+- `global`: Whether it is globally effective (for all users), default is false.
+- `enable`: Whether to enable the blocking rule, default is true.
+
+Example:
+
 ```sql
-CREATE SQL_BLOCK_RULE test_rule 
+CREATE SQL_BLOCK_RULE test_rule1 
 PROPERTIES(
   "sql"="select \\* from order_analysis",
   "global"="false",
   "enable"="true",
   "sqlHash"=""
+);
+
+CREATE SQL_BLOCK_RULE test_rule2
+PROPERTIES(
+	"partition_num" = "30",
+	"cardinality"="10000000000",
+	"global"="false",
+	"enable"="true"
 )
 ```
-> Notes:
->
-> That the sql statement here does not end with a semicolon
 
-When we execute the sql that we defined in the rule just now, an exception error will be returned. An example is as follows:
+:::note
+Note: Do not include a semicolon at the end of the SQL statement.
+:::
+
+Starting from version 2.1.6, SQL interception rules support external tables (tables in the External Catalog).
+
+- `sql`: Same as for internal tables.
+- `sqlHash`: Same as for internal tables.
+- `partition_num`: Same as for internal tables.
+- `tablet_num`: Limits the number of shards scanned for external tables. Different data sources have different definitions of shards. For example, file shards in Hive tables, incremental data shards in Hudi tables, etc.
+- `cardinality`: Same as for internal tables, limits the number of scanned rows. This parameter only takes effect when there are row count statistics for external tables (such as collected manually or automatically).
+
+### Binding Rules
+
+Rules with `global` set to `true` are globally effective and do not need to be bound to specific users.
+
+Rules with `global` set to `false` need to be bound to specific users. A user can be bound to multiple rules, and multiple rules are separated by `,`.
+
+```sql
+SET PROPERTY [FOR 'jack'] 'sql_block_rules' = 'test_rule1,test_rule2'
+```
+
+### Viewing Rules
+
+- View the configured SQL blocking rules.
+
+If no rule name is specified, all rules will be viewed. For specific syntax, please refer to [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE)
+
+```sql
+SHOW SQL_BLOCK_RULE [FOR RULE_NAME]
+```
+
+- View rules bound to a user
+
+```sql
+SHOW PROPERTY FOR user_name;
+```
+
+### Modifying Rules
+
+Allow modifications to each item such as sql/sqlHash/partition_num/tablet_num/cardinality/global/enable. For specific syntax, please refer to [ALTER SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE)
+
+- `sql` and `sqlHash` cannot be set simultaneously.
+
+If a rule sets `sql` or `sqlHash`, the other property cannot be modified.
+
+- `sql`/`sqlHash` and `partition_num`/`tablet_num`/`cardinality` cannot be set simultaneously
+
+For example, if a rule sets `partition_num`, then `sql` or `sqlHash` cannot be modified.
+
+```sql
+ALTER SQL_BLOCK_RULE test_rule PROPERTIES("sql"="select \\* from test_table","enable"="true")
+```
+
+```sql
+ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
+```
+
+### Deleting Rules
+
+Support deleting multiple rules simultaneously, separated by `,`. For specific syntax, please refer to [DROP SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE)
+
+```
+DROP SQL_BLOCK_RULE test_rule1,test_rule2
+```
+
+## Triggering Rules
+
+When we execute the SQL defined in the rules, an exception error will be returned, as shown below:
 
 ```sql
 mysql> select * from order_analysis;
 ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: order_analysis_rule
 ```
-
-- create test_rule2, limits the maximum number of scanning partitions to 30 and the maximum scanning cardinality to 10 billion rows. As shown in the following example:
-```sql
-CREATE SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "30", "cardinality"="10000000000","global"="false","enable"="true")
-```
-
-- show configured SQL block rules, or show all rules if you do not specify a rule name,Please see the specific grammar [SHOW SQL BLOCK RULE](../../sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE.md)
-
-```sql
-SHOW SQL_BLOCK_RULE [FOR RULE_NAME]
-```
-- alter SQL block rule, Allows changes sql/sqlHash/global/enable/partition_num/tablet_num/cardinality anyone,Please see the specific grammar[ALTER SQL BLOCK  RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-SQL-BLOCK-RULE.md)
-    - sql and sqlHash cannot be set both. It means if sql or sqlHash is set in a rule, another property will never be allowed to be altered
-    - sql/sqlHash and partition_num/tablet_num/cardinality cannot be set together. For example, partition_num is set in a rule, then sql or sqlHash will never be allowed to be altered.
-```sql
-ALTER SQL_BLOCK_RULE test_rule PROPERTIES("sql"="select \\* from test_table","enable"="true")
-```
-
-```
-ALTER SQL_BLOCK_RULE test_rule2 PROPERTIES("partition_num" = "10","tablet_num"="300","enable"="true")
-```
-
-- drop SQL block rule, Support multiple rules, separated by `,`,Please see the specific grammar[DROP SQL BLOCK RULE](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-SQL-BLOCK-RULE.md)
-```sql
-DROP SQL_BLOCK_RULE test_rule1,test_rule2
-```
-
-## User bind rules
-If global=false is configured, the rules binding for the specified user needs to be configured, with multiple rules separated by ', '
-```sql
-SET PROPERTY [FOR 'jack'] 'sql_block_rules' = 'test_rule1,test_rule2'
-```
-

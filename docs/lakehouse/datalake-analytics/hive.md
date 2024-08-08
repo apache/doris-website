@@ -204,92 +204,13 @@ CREATE CATALOG hive PROPERTIES (
 
 ## Metadata Cache & Refresh
 
-For Hive Catalog, 4 types of metadata are cached in Doris:
+For metadata cache and refresh mechanisms, please refer to [Metadata Cache Documentation](../metacache.md).
 
-1. Table structure: cache table column information, etc.
-2. Partition value: Cache the partition value information of all partitions of a table.
-3. Partition information: Cache the information of each partition, such as partition data format, partition storage location, partition value, etc.
-4. File information: Cache the file information corresponding to each partition, such as file path location, etc.
+Here we mainly introduce automatic metadata subscription based on Hive Metastore metadata events.
 
-The above cache information will not be persisted to Doris, so operations such as restarting Doris's FE node, switching masters, etc. may cause the cache to become invalid. After the cache expires, Doris will directly access the Hive MetaStore to obtain information and refill the cache.
+### Subscribe to Hive Metastore
 
-Metadata cache can be updated automatically, manually, or configured with TTL (Time-to-Live) according to user needs.
-
-### Default behavior and TTL
-
-By default, the metadata cache expires 10 minutes after it is first accessed. This time is determined by the configuration parameter `external_cache_expire_time_minutes_after_access` in fe.conf. (Note that in versions 2.0.1 and earlier, the default value for this parameter was 1 day).
-
-For example, if the user accesses the metadata of table A for the first time at 10:00, then the metadata will be cached and will automatically expire after 10:10. If the user accesses the same metadata again at 10:11, Doris will directly access the Hive MetaStore to obtain information and refill the cache.
-
-`external_cache_expire_time_minutes_after_access` affects all 4 caches under Catalog.
-
-For the `INSERT INTO OVERWRITE PARTITION` operation commonly used in Hive, you can also timely update the `File Information Cache` by configuring the TTL of the `File Information Cache`:
-
-```
-CREATE CATALOG hive PROPERTIES (
-     'type'='hms',
-     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-     'file.meta.cache.ttl-second' = '60'
-);
-```
-
-In the above example, `file.meta.cache.ttl-second` is set to 60 seconds, and the cache will expire after 60 seconds. This parameter will only affect the `file information cache`.
-
-You can also set this value to 0 to disable file caching, which will fetch file information directly from the Hive MetaStore every time.
-
-### Manual refresh
-
-Users need to manually refresh the metadata through the [REFRESH](../../sql-manual/sql-statements/Utility-Statements/REFRESH.md) command.
-
-1. REFRESH CATALOG: Refresh the specified Catalog.
-
-     ```
-     REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");
-     ```
-
-     This command will refresh the database list, table list, and all cache information of the specified Catalog.
-
-     `invalid_cache` indicates whether to flush the cache. Defaults to true. If it is false, only the database and table list of the catalog will be refreshed, but the cache information will not be refreshed. This parameter is applicable when the user only wants to synchronize newly added or deleted database/table information.
-
-2. REFRESH DATABASE: Refresh the specified Database.
-
-     ```
-     REFRESH DATABASE [ctl.]db1 PROPERTIES("invalid_cache" = "true");
-     ```
-
-     This command will refresh the table list of the specified Database and all cached information under the Database.
-
-     The meaning of the `invalid_cache` attribute is the same as above. Defaults to true. If false, only the Database's table list will be refreshed, not cached information. This parameter is suitable for users who only want to synchronize newly added or deleted table information.
-
-3. REFRESH TABLE: Refresh the specified Table.
-
-     ```
-     REFRESH TABLE [ctl.][db.]tbl1;
-     ```
-
-     This command will refresh all cache information under the specified Table.
-
-### Regular refresh
-
-Users can set the scheduled refresh of the Catalog when creating the Catalog.
-
-```
-CREATE CATALOG hive PROPERTIES (
-     'type'='hms',
-     'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-     'metadata_refresh_interval_sec' = '600'
-);
-```
-
-In the above example, `metadata_refresh_interval_sec` means refreshing the Catalog every 600 seconds. Equivalent to automatically executing every 600 seconds:
-
-`REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");`
-
-The scheduled refresh interval must not be less than 5 seconds.
-
-### Auto Refresh
-
-Currently, Doris only supports automatic update of metadata in Hive Metastore (HMS). It perceives changes in metadata by the FE node which regularly reads the notification events from HMS. The supported events are as follows:
+By letting FE nodes read HMS Notification Events regularly to perceive changes in Hive table metadata, we currently support processing the following Events:
 
 | Event           | Corresponding Update Operation                               |
 | :-------------- | :----------------------------------------------------------- |
