@@ -72,8 +72,66 @@ INSERT OVERWRITE table table_name
 注意：
 
 1. 在当前版本中，会话变量 `enable_insert_strict` 默认为 `true`，如果执行 `INSERT OVERWRITE` 语句时，对于有不符合目标表格式的数据被过滤掉的话会重写目标表失败（比如重写分区时，不满足所有分区条件的数据会被过滤）。
-2. 如果INSERT OVERWRITE的目标表是[AUTO-PARTITION表](../../../../advanced/partition/auto-partition)，若未指定PARTITION（重写整表），那么可以创建新的分区。如果指定了覆写的PARTITION（包括通过 `partition(*)` 语法自动检测并覆盖分区），那么在此过程中，AUTO PARTITION表表现得如同普通分区表一样，不满足现有分区条件的数据将被过滤，而非创建新的分区。
-3. INSERT OVERWRITE语句会首先创建一个新表，将需要重写的数据插入到新表中，最后原子性的用新表替换旧表并修改名称。因此，在重写表的过程中，旧表中的数据在重写完毕之前仍然可以正常访问。
+2. INSERT OVERWRITE 语句会首先创建一个新表，将需要重写的数据插入到新表中，最后原子性的用新表替换旧表并修改名称。因此，在重写表的过程中，旧表中的数据在重写完毕之前仍然可以正常访问。
+
+#### For Auto Partition Table
+
+如果 INSERT OVERWRITE 的目标表是自动分区表，那么行为受到 [Session Variable](../query/query-variables/variables#变量) `enable_auto_create_when_overwrite` 的控制，具体行为如下：
+1. 若未指定 PARTITION （覆写整表），当 `enable_auto_create_when_overwrite` 为 `true`，在覆写整表已有数据的同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
+2. 如果指定了覆写的PARTITION，那么在此过程中，AUTO PARTITION 表表现得如同普通分区表一样，不满足现有分区条件的数据将被过滤，而非创建新的分区。
+3. 若指定 PARTITION 为 `partition(*)` （自动检测分区并覆写），当 `enable_auto_create_when_overwrite` 为 `true`，对于那些在表中有对应分区的数据，覆写它们对应的分区，其他已有分区不变。同时，对于没有对应分区的数据，按照该表的自动分区规则创建分区，并容纳这些原本没有对应分区的数据。如果 `enable_auto_create_when_overwrite` 为 `false`，未找到分区的数据将累计错误行直到失败。
+
+在没有 `enable_auto_create_when_overwrite` 的版本，行为如同该变量值为 `false`。
+
+示例如下：
+
+```sql
+mysql> create table auto_list(
+    ->              k0 varchar null
+    ->          )
+    ->          auto partition by list (k0)
+    ->          (
+    ->              PARTITION p1 values in (("Beijing"), ("BEIJING")),
+    ->              PARTITION p2 values in (("Shanghai"), ("SHANGHAI")),
+    ->              PARTITION p3 values in (("xxx"), ("XXX")),
+    ->              PARTITION p4 values in (("list"), ("LIST")),
+    ->              PARTITION p5 values in (("1234567"), ("7654321"))
+    ->          )
+    ->          DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    ->          properties("replication_num" = "1");
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> insert into auto_list values ("Beijing"),("Shanghai"),("xxx"),("list"),("1234567");
+Query OK, 5 rows affected (0.22 sec)
+
+mysql> insert overwrite table auto_list partition(*) values ("BEIJING"), ("new1");
+Query OK, 2 rows affected (0.28 sec)
+
+mysql> select * from auto_list;
++----------+ --- p1 被覆写，new1 得到了新分区，其他分区数据未变
+| k0       |
++----------+
+| 1234567  |
+| BEIJING  |
+| list     |
+| xxx      |
+| new1     |
+| Shanghai |
++----------+
+6 rows in set (0.48 sec)
+
+mysql> insert overwrite table auto_list values ("SHANGHAI"), ("new2");
+Query OK, 2 rows affected (0.17 sec)
+
+mysql> select * from auto_list;
++----------+ --- 整表原有数据被覆写，同时 new2 得到了新分区
+| k0       |
++----------+
+| new2     |
+| SHANGHAI |
++----------+
+2 rows in set (0.15 sec)
+```
 
 ### Example
 
