@@ -1230,13 +1230,6 @@
         "releasenotes/all-release",
         {
             "type": "category",
-            "label": "v3.0",
-            "items": [
-                "releasenotes/v3.0/release-3.0.0"
-            ]
-        },
-        {
-            "type": "category",
             "label": "v2.1",
             "items": [
                 "releasenotes/v2.1/release-2.1.5",
@@ -1251,6 +1244,7 @@
             "type": "category",
             "label": "v2.0",
             "items": [
+                "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",
                 "releasenotes/v2.0/release-2.0.11",
