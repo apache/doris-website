@@ -111,11 +111,11 @@ CREATE CATALOG hive PROPERTIES (
 ### Doris 访问腾讯云 DLC
 
 :::note
-Doris 2.1 版本自 2.1.5 后支持该功能
+Doris 2.0.13 / 2.1.5 后支持该功能
 :::
 
 腾讯云 [DLC](https://cloud.tencent.com/product/dlc) 采用HMS管理元数据，因此可用 Hive catalog 进行联邦分析。
-DLC 可基于 LakeFS 或 COSN 进行数据存储。以下 catalog 创建方法对两种 FS 都适用。
+DLC 可基于 lakefs 或 cosn 进行数据存储。以下 catalog 创建方法对两种 FS 都适用。
 ```sql
 CREATE CATALOG dlc PROPERTIES (
     'type' = 'hms',
@@ -204,94 +204,13 @@ CREATE CATALOG hive PROPERTIES (
 
 ## 元数据缓存与刷新
 
-针对 Hive Catalog，在 Doris 中会缓存 4 种元数据：
+关于元数据缓存和刷新机制，请参阅 [元数据缓存文档](../metacache.md)。
 
-1. 表结构：缓存表的列信息等。
-2. 分区值：缓存一个表的所有分区的分区值信息。
-3. 分区信息：缓存每个分区的信息，如分区数据格式，分区存储位置、分区值等。
-4. 文件信息：缓存每个分区所对应的文件信息，如文件路径位置等。
+这里主要介绍，基于 Hive Metastore 元数据事件的自定元数据订阅
 
-以上缓存信息不会持久化到 Doris 中，所以在 Doris 的 FE 节点重启、切主等操作，都可能导致缓存失效。缓存失效后，Doris 会直接访问 Hive MetaStore 获取信息，并重新填充缓存。
+### 订阅 Hive Metastore
 
-元数据缓可以根据用户的需要，进行自动、手动，或配置 TTL（Time-to-Live）的方式进行更新。
-
-### 默认行为和 TTL
-
-默认情况下，元数据缓存会在第一次被填充后的 10 分钟后失效。该时间由 `fe.conf` 的配置参数 `external_cache_expire_time_minutes_after_access` 决定。（注意，在 2.0.1 及以前的版本中，该参数默认值为 1 天）。
-
-例如，用户在 10:00 第一次访问表 A 的元数据，那么这些元数据会被缓存，并且到 10:10 后会自动失效，如果用户在 10:11 再次访问相同的元数据，则会直接访问 Hive MetaStore 获取信息，并重新填充缓存。
-
-`external_cache_expire_time_minutes_after_access` 会影响 Catalog 下的所有 4 种缓存。
-
-针对 Hive 中常用的 `INSERT INTO OVERWRITE PARTITION` 操作，也可以通过配置 `文件信息缓存` 的 TTL，来及时地更新 `文件信息缓存`：
-
-```
-CREATE CATALOG hive PROPERTIES (
-    'type'='hms',
-    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'file.meta.cache.ttl-second' = '60'
-);
-```
-
-上面的例子中，`file.meta.cache.ttl-second` 设置为 60 秒，则缓存会在 60 秒后失效。这个参数，只会影响 `文件信息缓存`。
-
-也可以将该值设置为 0 来禁用分区文件缓存，每次都会从 Hive MetaStore 直接获取文件信息。
-
-### 手动刷新
-
-用户需要通过 [REFRESH](../../sql-manual/sql-statements/Utility-Statements/REFRESH.md) 命令手动刷新元数据。
-
-1. REFRESH CATALOG：刷新指定 Catalog。
-
-    ```
-    REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");
-    ```
-
-    该命令会刷新指定 Catalog 的库列表，表列名以及所有缓存信息等。
-
-    `invalid_cache` 表示是否要刷新缓存。默认为 `true`。如果为 `false`，则只会刷新 Catalog 的库、表列表，而不会刷新缓存信息。该参数适用于，用户只想同步新增删的库表信息时。
-
-2. REFRESH DATABASE：刷新指定 Database。
-
-    ```
-    REFRESH DATABASE [ctl.]db1 PROPERTIES("invalid_cache" = "true");
-    ```
-
-    该命令会刷新指定 Database 的表列名以及 Database 下的所有缓存信息等。
-
-    `invalid_cache` 属性含义同上。默认为 `true`。如果为 `false`，则只会刷新 Database 的表列表，而不会刷新缓存信息。该参数适用于，用户只想同步新增删的表信息时。
-
-3. REFRESH TABLE: 刷新指定 Table。
-
-    ```
-    REFRESH TABLE [ctl.][db.]tbl1;
-    ```
-
-    该命令会刷新指定 Table 下的所有缓存信息等。
-
-### 定时刷新
-
-用户可以在创建 Catalog 时，设置该 Catalog 的定时刷新。
-
-```
-CREATE CATALOG hive PROPERTIES (
-    'type'='hms',
-    'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
-    'metadata_refresh_interval_sec' = '600'
-);
-```
-
-在上例中，`metadata_refresh_interval_sec` 表示每 600 秒刷新一次 Catalog。相当于每隔 600 秒，自动执行一次：
-
-`REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");`
-
-操作。
-
-定时刷新间隔不得小于 5 秒。
-
-### 自动刷新
-
-自动刷新目前仅支持 Hive Metastore 元数据服务。通过让 FE 节点定时读取 HMS 的 Notification Event 来感知 Hive 表元数据的变更情况，目前支持处理如下 Event：
+通过让 FE 节点定时读取 HMS 的 Notification Event 来感知 Hive 表元数据的变更情况，目前支持处理如下 Event：
 
 |事件 | 事件行为和对应的动作 |
 |---|---|

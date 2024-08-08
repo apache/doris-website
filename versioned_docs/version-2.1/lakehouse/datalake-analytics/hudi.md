@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-[Apache Doris & Hudi Quick Start](../../get-starting/quick-start/doris-hudi.md)
+[Apache Doris & Hudi Quick Start](https://doris.apache.org/docs/gettingStarted/tutorials/doris-hudi)
 
 ## Usage
 
