@@ -293,6 +293,7 @@
                 "lakehouse/file",
                 "lakehouse/filecache",
                 "lakehouse/metacache",
+                "lakehouse/compute-node",
                 "lakehouse/external-statistics",
                 "lakehouse/cloud-auth",
                 "lakehouse/sql-dialect"
@@ -331,8 +332,7 @@
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
                         "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant",
-                        "admin-manual/resource-admin/compute-node"
+                        "admin-manual/resource-admin/multi-tenant"
                     ]
                 },
                 {
