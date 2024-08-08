@@ -6,8 +6,6 @@
     'date': '2024-06-06',
     'author': 'Apache Doris',
     'tags': ['Tech Sharing'],
-    'picked': "true",
-    'order': "4",
     "image": '/images/job-scheduler-for-task-automation.jpg'
 }
 

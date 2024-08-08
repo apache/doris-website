@@ -1,12 +1,18 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.1.4 just released",
-        content: `In this update, we have optimized various functional experiences for data lakehouse, with a focus on resolving the abnormal memory usage issue in the previous version.`,
-        to: '/blog/release-note-2.1.4',
-        image: '2.1.4.jpg',
+        title: "Apache Doris version 2.0.14 has been released",
+        content: `Thanks to our community users and developers, about 110 improvements and bug fixes have been made in Doris 2.0.14 version`,
+        to: '/blog/release-note-2.0.14',
+        image: '2.0.14.jpg',
     },
-
+    {
+        tags: ['Best Practice'],
+        title: "Migrate data lakehouse from BigQuery to Apache Doris, saving $4,500 per month ",
+        content: `Dien Tran Thanh shares his firsthand experience, proven best practices, and insightful suggestions for migrating from BigQuery to Apache Doris to build a more cost-efficient data warehouse.`,
+        to: '/blog/migrate-lakehouse-from-bigquery-to-doris',
+        image: 'migrate-lakehouse-from-bigquery-to-apache-doris.jpg',
+    },
     {
         tags: ['Top News'],
         title: "Why Apache Doris is the Best Open Source Alternative to Rockset",
@@ -15,19 +21,11 @@ export const NEWSLETTER_DATA = [
         image: 'doris-vs-rockset.jpeg',
     },
     {
-        tags: ['Tech Sharing'],
+        tags: ['Recent Events'],
         title: "Steps to industry-leading query speed: evolution of the Apache Doris execution engine",
         content: `From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.`,
         to: '/blog/evolution-of-the-apache-doris-execution-engine',
         image: 'evolution-of-the-apache-doris-execution-engine.jpg',
-    },
-
-    {
-        tags: ['Tech Sharing'],
-        title: "Another lifesaver for data engineers: Apache Doris Job Scheduler for task automation",
-        content: `The built-in Doris Job Scheduler triggers pre-defined operations efficiently and reliably. It is useful in many cases including ETL and data lake analytics.`,
-        to: '/blog/job-scheduler-for-task-automation',
-        image: 'job-scheduler-for-task-automation.jpg',
     },
 
 ];

@@ -24,6 +24,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+快速体验 [Apache Doris & Hudi](../../get-starting/quick-start/doris-hudi.md)
+
 ## 使用限制
 
 1. Hudi 表支持的查询类型如下：

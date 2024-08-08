@@ -6,8 +6,6 @@
     'date': '2024-06-26',
     'author': 'Apache Doris',
     'tags': ['Release Notes'],
-    'picked': "true",
-    'order': "1",
     "image": '/images/2.1.4.jpg'
 }
 ---

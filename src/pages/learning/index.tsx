@@ -18,7 +18,7 @@ const sitemapList = [
             },
             {
                 title: <Translate>Get Started</Translate>,
-                link: '/docs/dev/get-starting/quick-start',
+                link: '/docs/dev/get-starting/quick-start/quick-start',
             },
             {
                 title: <Translate>Installation and deployment</Translate>,

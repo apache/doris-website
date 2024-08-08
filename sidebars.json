@@ -2,14 +2,6 @@
     "docs": [
         {
             "type": "category",
-            "label": "Getting Started",
-            "items": [
-                "get-starting/what-is-apache-doris",
-                "get-starting/quick-start"
-            ]
-        },
-        {
-            "type": "category",
             "label": "Installation and Deployment",
             "items": [
                 {
@@ -62,7 +54,19 @@
             "type": "category",
             "label": "Data Table Design",
             "items": [
+                "table-design/overview",
                 "table-design/data-type",
+                {
+                    "type": "category",
+                    "label": "Table Indexes",
+                    "items": [
+                        "table-design/index/index-overview",
+                        "table-design/index/prefix-index",
+                        "table-design/index/inverted-index",
+                        "table-design/index/bloomfilter",
+                        "table-design/index/ngram-bloomfilter-index"
+                    ]
+                },
                 {
                     "type": "category",
                     "label": "Data Models",
@@ -76,16 +80,11 @@
                 },
                 "table-design/data-partition",
                 "table-design/schema-change",
-                "table-design/cold-hot-separation",
                 {
                     "type": "category",
-                    "label": "Table Indexes",
+                    "label": "Tiered Storage",
                     "items": [
-                        "table-design/index/index-overview",
-                        "table-design/index/prefix-index",
-                        "table-design/index/inverted-index",
-                        "table-design/index/bloomfilter",
-                        "table-design/index/ngram-bloomfilter-index"
+                        "table-design/tiered-storage/remote-storage"
                     ]
                 },
                 "table-design/auto-increment",
@@ -101,19 +100,23 @@
                     "label": "Loading Data",
                     "items": [
                         "data-operate/import/load-manual",
-                        "data-operate/import/stream-load-manual",
-                        "data-operate/import/broker-load-manual",
-                        "data-operate/import/routine-load-manual",
-                        "data-operate/import/insert-into-manual",
-                        "data-operate/import/mysql-load-manual",
-                        "data-operate/import/transaction-load-manual",
-                        "data-operate/import/load-json-format",
-                        "data-operate/import/migrate-data-from-other-olap",
-                        "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-atomicity",
+                        {
+                            "type": "category",
+                            "label": "Import Way",
+                            "items": [
+                                "data-operate/import/import-way/stream-load-manual",
+                                "data-operate/import/import-way/broker-load-manual",
+                                "data-operate/import/import-way/routine-load-manual",
+                                "data-operate/import/import-way/insert-into-manual",
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/group-commit-manual"
+                            ]
+                        },
+                        "data-operate/import/load-data-format",
+                        "data-operate/import/error-data-handling",
                         "data-operate/import/load-data-convert",
                         "data-operate/import/min-load-replica-num",
-                        "data-operate/import/load-strict-mode"
+                        "data-operate/import/migrate-data-from-other-olap"
                     ]
                 },
                 {
@@ -154,7 +157,8 @@
                     "items": [
                         "data-operate/scheduler/job-scheduler"
                     ]
-                }
+                },
+                "data-operate/transaction"
             ]
         },
         {
@@ -271,6 +275,9 @@
                         "lakehouse/datalake-analytics/iceberg",
                         "lakehouse/datalake-analytics/paimon",
                         "lakehouse/datalake-analytics/lakesoul",
+                        "lakehouse/datalake-analytics/bigquery",
+                        "lakehouse/datalake-analytics/deltalake",
+                        "lakehouse/datalake-analytics/kudu",
                         "lakehouse/datalake-analytics/dlf",
                         "lakehouse/datalake-analytics/tpch",
                         "lakehouse/datalake-analytics/tpcds"
@@ -280,7 +287,8 @@
                     "type": "category",
                     "label": "Building Data Lakes",
                     "items": [
-                        "lakehouse/datalake-building/hive-build"
+                        "lakehouse/datalake-building/hive-build",
+                        "lakehouse/datalake-building/iceberg-build"
                     ]
                 },
                 {
@@ -341,9 +349,9 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/data-recovery",
-                        "admin-manual/data-admin/delete-recover",
-                        "admin-manual/data-admin/ccr"
+                        "admin-manual/data-admin/ccr",
+                        "admin-manual/data-admin/recyclebin",
+                        "admin-manual/data-admin/repairing-data"
                     ]
                 },
                 {
@@ -524,43 +532,9 @@
         },
         {
             "type": "category",
-            "label": "Practical Guide",
+            "label": "Use Case",
             "items": [
                 "practical-guide/log-storage-analysis"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Ecosystem",
-            "items": [
-                "ecosystem/spark-doris-connector",
-                "ecosystem/flink-doris-connector",
-                "ecosystem/doris-kafka-connector",
-                "ecosystem/datax",
-                "ecosystem/dbt-doris-adapter",
-                "ecosystem/seatunnel",
-                "ecosystem/kyuubi",
-                "ecosystem/logstash",
-                "ecosystem/beats",
-                "ecosystem/cloudcanal",
-                "ecosystem/automq-load",
-                "ecosystem/doris-streamloader",
-                "ecosystem/hive-bitmap-udf",
-                "ecosystem/hive-hll-udf",
-                {
-                    "type": "category",
-                    "label": "BI and Database IDE",
-                    "items": [
-                        "ecosystem/bi/apache-superset",
-                        "ecosystem/bi/dbeaver",
-                        "ecosystem/bi/datagrip",
-                        "ecosystem/bi/finebi",
-                        "ecosystem/bi/powerbi",
-                        "ecosystem/bi/tableau",
-                        "ecosystem/bi/quicksight",
-                        "ecosystem/bi/quickbi"
-                    ]
-                }
             ]
         },
         {
@@ -592,6 +566,7 @@
                                 "sql-manual/sql-functions/array-functions/array-reverse-split",
                                 "sql-manual/sql-functions/array-functions/array-position",
                                 "sql-manual/sql-functions/array-functions/array-contains",
+                                "sql-manual/sql-functions/array-functions/array-contains_all",
                                 "sql-manual/sql-functions/array-functions/array-except",
                                 "sql-manual/sql-functions/array-functions/array-product",
                                 "sql-manual/sql-functions/array-functions/array-intersect",
@@ -747,6 +722,7 @@
                                 "sql-manual/sql-functions/string-functions/to-base64",
                                 "sql-manual/sql-functions/string-functions/from-base64",
                                 "sql-manual/sql-functions/string-functions/ascii",
+                                "sql-manual/sql-functions/string-functions/auto_partition_name",
                                 "sql-manual/sql-functions/string-functions/length",
                                 "sql-manual/sql-functions/string-functions/bit-length",
                                 "sql-manual/sql-functions/string-functions/char-length",
@@ -789,12 +765,12 @@
                                 "sql-manual/sql-functions/string-functions/substring-index",
                                 "sql-manual/sql-functions/string-functions/money-format",
                                 "sql-manual/sql-functions/string-functions/parse-url",
+                                "sql-manual/sql-functions/string-functions/quote",
                                 "sql-manual/sql-functions/string-functions/url-decode",
                                 "sql-manual/sql-functions/string-functions/convert-to",
                                 "sql-manual/sql-functions/string-functions/extract-url-parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
-                                "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
                                 "sql-manual/sql-functions/string-functions/random_bytes",
                                 {
@@ -830,8 +806,7 @@
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract-all",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-replace",
-                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one",
-                                        "sql-manual/sql-functions/string-functions/regexp/not-regexp"
+                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one"
                                     ]
                                 }
                             ]
@@ -1164,6 +1139,16 @@
                                 "sql-manual/sql-functions/distance-functions/l2-distance"
                             ]
                         },
+                        {
+                            "type": "category",
+                            "label": "Debug Functions",
+                            "items": [
+                                "sql-manual/sql-functions/debug-functions/ignore",
+                                "sql-manual/sql-functions/debug-functions/non-nullable",
+                                "sql-manual/sql-functions/debug-functions/nullable",
+                                "sql-manual/sql-functions/debug-functions/sleep"
+                            ]
+                        },
                         "sql-manual/sql-functions/cast",
                         "sql-manual/sql-functions/digital-masking",
                         "sql-manual/sql-functions/width-bucket"
@@ -1175,33 +1160,68 @@
                     "items": [
                         {
                             "type": "category",
-                            "label": "Data Types",
+                            "label": "Numeric Data Type",
                             "items": [
-                                "sql-manual/sql-types/Data-Types/BOOLEAN",
-                                "sql-manual/sql-types/Data-Types/TINYINT",
-                                "sql-manual/sql-types/Data-Types/SMALLINT",
-                                "sql-manual/sql-types/Data-Types/INT",
-                                "sql-manual/sql-types/Data-Types/BIGINT",
-                                "sql-manual/sql-types/Data-Types/LARGEINT",
-                                "sql-manual/sql-types/Data-Types/FLOAT",
-                                "sql-manual/sql-types/Data-Types/DOUBLE",
-                                "sql-manual/sql-types/Data-Types/DECIMAL",
-                                "sql-manual/sql-types/Data-Types/DATE",
-                                "sql-manual/sql-types/Data-Types/DATETIME",
-                                "sql-manual/sql-types/Data-Types/CHAR",
-                                "sql-manual/sql-types/Data-Types/VARCHAR",
-                                "sql-manual/sql-types/Data-Types/STRING",
-                                "sql-manual/sql-types/Data-Types/IPV4",
-                                "sql-manual/sql-types/Data-Types/IPV6",
-                                "sql-manual/sql-types/Data-Types/ARRAY",
-                                "sql-manual/sql-types/Data-Types/MAP",
-                                "sql-manual/sql-types/Data-Types/STRUCT",
-                                "sql-manual/sql-types/Data-Types/JSON",
-                                "sql-manual/sql-types/Data-Types/VARIANT",
-                                "sql-manual/sql-types/Data-Types/HLL",
-                                "sql-manual/sql-types/Data-Types/BITMAP",
-                                "sql-manual/sql-types/Data-Types/QUANTILE_STATE",
-                                "sql-manual/sql-types/Data-Types/AGG_STATE"
+                                "sql-manual/sql-data-types/numeric/numeric-overview",
+                                "sql-manual/sql-data-types/numeric/BOOLEAN",
+                                "sql-manual/sql-data-types/numeric/TINYINT",
+                                "sql-manual/sql-data-types/numeric/SMALLINT",
+                                "sql-manual/sql-data-types/numeric/INT",
+                                "sql-manual/sql-data-types/numeric/BIGINT",
+                                "sql-manual/sql-data-types/numeric/LARGEINT",
+                                "sql-manual/sql-data-types/numeric/FLOAT",
+                                "sql-manual/sql-data-types/numeric/DOUBLE",
+                                "sql-manual/sql-data-types/numeric/DECIMAL"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Datetime Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/datetime/datetime-overview",
+                                "sql-manual/sql-data-types/datetime/DATE",
+                                "sql-manual/sql-data-types/datetime/DATETIME"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "String Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/string/CHAR",
+                                "sql-manual/sql-data-types/string/VARCHAR",
+                                "sql-manual/sql-data-types/string/STRING"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Semi-Structured Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/semi-structured/semi-structured-overview",
+                                "sql-manual/sql-data-types/semi-structured/ARRAY",
+                                "sql-manual/sql-data-types/semi-structured/MAP",
+                                "sql-manual/sql-data-types/semi-structured/STRUCT",
+                                "sql-manual/sql-data-types/semi-structured/JSON",
+                                "sql-manual/sql-data-types/semi-structured/VARIANT"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Aggregation Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/aggregate/aggregate-overview",
+                                "sql-manual/sql-data-types/aggregate/HLL",
+                                "sql-manual/sql-data-types/aggregate/BITMAP",
+                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "IP Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/ip/ip-overview",
+                                "sql-manual/sql-data-types/ip/IPV4",
+                                "sql-manual/sql-data-types/ip/IPV6"
                             ]
                         }
                     ]
@@ -1419,6 +1439,7 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-BROKER",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CATALOGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-TABLE",
+                                "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-MATERIALIZED-VIEW",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CHARSET",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-CATALOG",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-CREATE-DATABASE",
@@ -1525,63 +1546,122 @@
                     ]
                 }
             ]
-        },
+        }
+    ],
+    "get-starting": [
+        "gettingStarted/what-is-new",
+        "gettingStarted/what-is-apache-doris",
+        "gettingStarted/quick-start",
         {
             "type": "category",
-            "label": "Benchmark",
+            "label": "Tutorials",
             "items": [
-                "benchmark/ssb",
-                "benchmark/tpch",
-                "benchmark/tpcds"
+                "gettingStarted/tutorials/doris-hudi",
+                "gettingStarted/tutorials/doris-paimon"
+            ]
+        }
+    ],
+    "benchmark": [
+        "benchmark/ssb",
+        "benchmark/tpch",
+        "benchmark/tpcds"
+    ],
+    "ecosystem": [
+        "ecosystem/spark-doris-connector",
+        "ecosystem/flink-doris-connector",
+        "ecosystem/doris-kafka-connector",
+        "ecosystem/datax",
+        "ecosystem/dbt-doris-adapter",
+        "ecosystem/seatunnel",
+        "ecosystem/kyuubi",
+        "ecosystem/logstash",
+        "ecosystem/beats",
+        "ecosystem/cloudcanal",
+        "ecosystem/automq-load",
+        "ecosystem/doris-streamloader",
+        "ecosystem/hive-bitmap-udf",
+        "ecosystem/hive-hll-udf",
+        {
+            "type": "category",
+            "label": "BI and Database IDE",
+            "items": [
+                "ecosystem/bi/apache-superset",
+                "ecosystem/bi/dbeaver",
+                "ecosystem/bi/datagrip",
+                "ecosystem/bi/finebi",
+                "ecosystem/bi/powerbi",
+                "ecosystem/bi/tableau",
+                "ecosystem/bi/quicksight",
+                "ecosystem/bi/quickbi"
+            ]
+        }
+    ],
+    "faq": [
+        "faq/install-faq",
+        "faq/data-faq",
+        "faq/sql-faq",
+        "faq/lakehouse-faq"
+    ],
+    "releasenotes": [
+        "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v2.1",
+            "items": [
+                "releasenotes/v2.1/release-2.1.5",
+                "releasenotes/v2.1/release-2.1.4",
+                "releasenotes/v2.1/release-2.1.3",
+                "releasenotes/v2.1/release-2.1.2",
+                "releasenotes/v2.1/release-2.1.1",
+                "releasenotes/v2.1/release-2.1.0"
             ]
         },
         {
             "type": "category",
-            "label": "FAQ",
+            "label": "v2.0",
             "items": [
-                "faq/install-faq",
-                "faq/data-faq",
-                "faq/sql-faq",
-                "faq/lakehouse-faq"
+                "releasenotes/v2.0/release-2.0.14",
+                "releasenotes/v2.0/release-2.0.13",
+                "releasenotes/v2.0/release-2.0.12",
+                "releasenotes/v2.0/release-2.0.11",
+                "releasenotes/v2.0/release-2.0.10",
+                "releasenotes/v2.0/release-2.0.9",
+                "releasenotes/v2.0/release-2.0.8",
+                "releasenotes/v2.0/release-2.0.7",
+                "releasenotes/v2.0/release-2.0.6",
+                "releasenotes/v2.0/release-2.0.5",
+                "releasenotes/v2.0/release-2.0.4",
+                "releasenotes/v2.0/release-2.0.3",
+                "releasenotes/v2.0/release-2.0.2",
+                "releasenotes/v2.0/release-2.0.1",
+                "releasenotes/v2.0/release-2.0.0"
             ]
         },
         {
             "type": "category",
-            "label": "Release notes",
+            "label": "v1.2",
             "items": [
-                "releasenotes/release-2.1.4",
-                "releasenotes/release-2.1.3",
-                "releasenotes/release-2.1.2",
-                "releasenotes/release-2.1.1",
-                "releasenotes/release-2.1.0",
-                "releasenotes/release-2.0.12",
-                "releasenotes/release-2.0.11",
-                "releasenotes/release-2.0.10",
-                "releasenotes/release-2.0.9",
-                "releasenotes/release-2.0.8",
-                "releasenotes/release-2.0.7",
-                "releasenotes/release-2.0.6",
-                "releasenotes/release-2.0.5",
-                "releasenotes/release-2.0.4",
-                "releasenotes/release-2.0.3",
-                "releasenotes/release-2.0.2",
-                "releasenotes/release-2.0.1",
-                "releasenotes/release-2.0.0",
-                "releasenotes/release-1.2.8",
-                "releasenotes/release-1.2.7",
-                "releasenotes/release-1.2.6",
-                "releasenotes/release-1.2.5",
-                "releasenotes/release-1.2.4",
-                "releasenotes/release-1.2.3",
-                "releasenotes/release-1.2.2",
-                "releasenotes/release-1.2.1",
-                "releasenotes/release-1.2.0",
-                "releasenotes/release-1.1.5",
-                "releasenotes/release-1.1.4",
-                "releasenotes/release-1.1.3",
-                "releasenotes/release-1.1.2",
-                "releasenotes/release-1.1.1",
-                "releasenotes/release-1.1.0"
+                "releasenotes/v1.2/release-1.2.8",
+                "releasenotes/v1.2/release-1.2.7",
+                "releasenotes/v1.2/release-1.2.6",
+                "releasenotes/v1.2/release-1.2.5",
+                "releasenotes/v1.2/release-1.2.4",
+                "releasenotes/v1.2/release-1.2.3",
+                "releasenotes/v1.2/release-1.2.2",
+                "releasenotes/v1.2/release-1.2.1",
+                "releasenotes/v1.2/release-1.2.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "v1.1",
+            "items": [
+                "releasenotes/v1.1/release-1.1.5",
+                "releasenotes/v1.1/release-1.1.4",
+                "releasenotes/v1.1/release-1.1.3",
+                "releasenotes/v1.1/release-1.1.2",
+                "releasenotes/v1.1/release-1.1.1",
+                "releasenotes/v1.1/release-1.1.0"
             ]
         }
     ]

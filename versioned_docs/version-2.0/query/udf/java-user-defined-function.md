@@ -355,7 +355,7 @@ public class MedianUDAF {
 
 Similar to UDFs, UDTFs require users to implement an `evaluate` method. However, the return value of a UDTF must be of the Array type.
 
-Additionally, table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
+Additionally, table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
 
 ```JAVA
 public class UDTFStringTest {

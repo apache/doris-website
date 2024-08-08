@@ -2,14 +2,6 @@
     "docs": [
         {
             "type": "category",
-            "label": "Getting Started",
-            "items": [
-                "get-starting/what-is-apache-doris",
-                "get-starting/quick-start"
-            ]
-        },
-        {
-            "type": "category",
             "label": "Installation and Deployment",
             "items": [
                 {
@@ -294,9 +286,9 @@
                     "items": [
                         "admin-manual/data-admin/backup",
                         "admin-manual/data-admin/restore",
-                        "admin-manual/data-admin/data-recovery",
-                        "admin-manual/data-admin/delete-recover",
-                        "admin-manual/data-admin/ccr"
+                        "admin-manual/data-admin/ccr",
+                        "admin-manual/data-admin/recyclebin",
+                        "admin-manual/data-admin/data-recovery"
                     ]
                 },
                 {
@@ -459,45 +451,12 @@
                 "admin-manual/compaction",
                 "admin-manual/rowsets"
             ]
-        },        
-        {
-            "type": "category",
-            "label": "Practical Guide",
-            "items": [
-                "practical-guide/log-storage-analysis"
-            ]
         },
         {
             "type": "category",
-            "label": "Ecosystem",
+            "label": "Use Case",
             "items": [
-                "ecosystem/spark-doris-connector",
-                "ecosystem/flink-doris-connector",
-                "ecosystem/doris-kafka-connector",
-                "ecosystem/datax",
-                "ecosystem/dbt-doris-adapter",
-                "ecosystem/seatunnel",
-                "ecosystem/kyuubi",
-                "ecosystem/logstash",
-                "ecosystem/beats",
-                "ecosystem/cloudcanal",
-                "ecosystem/automq-load",
-                "ecosystem/doris-streamloader",
-                "ecosystem/hive-bitmap-udf",
-                {
-                    "type": "category",
-                    "label": "BI and Database IDE",
-                    "items": [
-                        "ecosystem/bi/apache-superset",
-                        "ecosystem/bi/dbeaver",
-                        "ecosystem/bi/datagrip",
-                        "ecosystem/bi/finebi",
-                        "ecosystem/bi/powerbi",
-                        "ecosystem/bi/tableau",
-                        "ecosystem/bi/quicksight",
-                        "ecosystem/bi/quickbi"
-                    ]
-                }
+                "practical-guide/log-storage-analysis"
             ]
         },
         {
@@ -763,8 +722,7 @@
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-extract-all",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp-replace",
-                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one",
-                                        "sql-manual/sql-functions/string-functions/regexp/not-regexp"
+                                        "sql-manual/sql-functions/string-functions/regexp/regexp-replace-one"
                                     ]
                                 }
                             ]
@@ -1062,7 +1020,80 @@
                 },
                 {
                     "type": "category",
-                    "label": "SQL Reference",
+                    "label": "SQL Types",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Numeric Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/numeric/numeric-overview",
+                                "sql-manual/sql-data-types/numeric/BOOLEAN",
+                                "sql-manual/sql-data-types/numeric/TINYINT",
+                                "sql-manual/sql-data-types/numeric/SMALLINT",
+                                "sql-manual/sql-data-types/numeric/INT",
+                                "sql-manual/sql-data-types/numeric/BIGINT",
+                                "sql-manual/sql-data-types/numeric/LARGEINT",
+                                "sql-manual/sql-data-types/numeric/FLOAT",
+                                "sql-manual/sql-data-types/numeric/DOUBLE",
+                                "sql-manual/sql-data-types/numeric/DECIMAL"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Datetime Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/datetime/datetime-overview",
+                                "sql-manual/sql-data-types/datetime/DATE",
+                                "sql-manual/sql-data-types/datetime/DATETIME"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "String Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/string/string-overview",
+                                "sql-manual/sql-data-types/string/CHAR",
+                                "sql-manual/sql-data-types/string/VARCHAR",
+                                "sql-manual/sql-data-types/string/STRING"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Semi-Structured Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/semi-structured/semi-structured-overview",
+                                "sql-manual/sql-data-types/semi-structured/ARRAY",
+                                "sql-manual/sql-data-types/semi-structured/MAP",
+                                "sql-manual/sql-data-types/semi-structured/STRUCT",
+                                "sql-manual/sql-data-types/semi-structured/JSON",
+                                "sql-manual/sql-data-types/semi-structured/VARIANT"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Aggregation Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/aggregate/aggregate-overview",
+                                "sql-manual/sql-data-types/aggregate/HLL",
+                                "sql-manual/sql-data-types/aggregate/BITMAP",
+                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "IP Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/ip/ip-overview",
+                                "sql-manual/sql-data-types/ip/IPV4",
+                                "sql-manual/sql-data-types/ip/IPV6"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "SQL Statements",
                     "items": [
                         {
                             "type": "category",
@@ -1121,34 +1152,6 @@
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-REBALANCE-DISK",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-CANCEL-REBALANCE-DISK",
                                 "sql-manual/sql-reference/Database-Administration-Statements/enable-feature"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Data Types",
-                            "items": [
-                                "sql-manual/sql-reference/Data-Types/BOOLEAN",
-                                "sql-manual/sql-reference/Data-Types/TINYINT",
-                                "sql-manual/sql-reference/Data-Types/SMALLINT",
-                                "sql-manual/sql-reference/Data-Types/INT",
-                                "sql-manual/sql-reference/Data-Types/BIGINT",
-                                "sql-manual/sql-reference/Data-Types/LARGEINT",
-                                "sql-manual/sql-reference/Data-Types/FLOAT",
-                                "sql-manual/sql-reference/Data-Types/DOUBLE",
-                                "sql-manual/sql-reference/Data-Types/DECIMAL",
-                                "sql-manual/sql-reference/Data-Types/DATE",
-                                "sql-manual/sql-reference/Data-Types/DATETIME",
-                                "sql-manual/sql-reference/Data-Types/CHAR",
-                                "sql-manual/sql-reference/Data-Types/VARCHAR",
-                                "sql-manual/sql-reference/Data-Types/STRING",
-                                "sql-manual/sql-reference/Data-Types/ARRAY",
-                                "sql-manual/sql-reference/Data-Types/MAP",
-                                "sql-manual/sql-reference/Data-Types/STRUCT",
-                                "sql-manual/sql-reference/Data-Types/JSON",
-                                "sql-manual/sql-reference/Data-Types/HLL",
-                                "sql-manual/sql-reference/Data-Types/BITMAP",
-                                "sql-manual/sql-reference/Data-Types/QUANTILE_STATE",
-                                "sql-manual/sql-reference/Data-Types/AGG_STATE"
                             ]
                         },
                         {
@@ -1384,43 +1387,122 @@
                     ]
                 }
             ]
-        },
+        }
+    ],
+    "get-starting": [
+        "gettingStarted/what-is-new",
+        "gettingStarted/what-is-apache-doris",
+        "gettingStarted/quick-start",
         {
             "type": "category",
-            "label": "Benchmark",
+            "label": "Tutorials",
             "items": [
-                "benchmark/ssb",
-                "benchmark/tpch",
-                "benchmark/tpcds"
+                "gettingStarted/tutorials/doris-hudi",
+                "gettingStarted/tutorials/doris-paimon"
+            ]
+        }
+    ],
+    "benchmark": [
+        "benchmark/ssb",
+        "benchmark/tpch",
+        "benchmark/tpcds"
+    ],
+    "ecosystem": [
+        "ecosystem/spark-doris-connector",
+        "ecosystem/flink-doris-connector",
+        "ecosystem/doris-kafka-connector",
+        "ecosystem/datax",
+        "ecosystem/dbt-doris-adapter",
+        "ecosystem/seatunnel",
+        "ecosystem/kyuubi",
+        "ecosystem/logstash",
+        "ecosystem/beats",
+        "ecosystem/cloudcanal",
+        "ecosystem/automq-load",
+        "ecosystem/doris-streamloader",
+        "ecosystem/hive-bitmap-udf",
+        "ecosystem/hive-hll-udf",
+        {
+            "type": "category",
+            "label": "BI and Database IDE",
+            "items": [
+                "ecosystem/bi/apache-superset",
+                "ecosystem/bi/dbeaver",
+                "ecosystem/bi/datagrip",
+                "ecosystem/bi/finebi",
+                "ecosystem/bi/powerbi",
+                "ecosystem/bi/tableau",
+                "ecosystem/bi/quicksight",
+                "ecosystem/bi/quickbi"
+            ]
+        }
+    ],
+    "faq": [
+        "faq/install-faq",
+        "faq/data-faq",
+        "faq/sql-faq",
+        "faq/lakehouse-faq"
+    ],
+    "releasenotes": [
+        "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v2.1",
+            "items": [
+                "releasenotes/v2.1/release-2.1.5",
+                "releasenotes/v2.1/release-2.1.4",
+                "releasenotes/v2.1/release-2.1.3",
+                "releasenotes/v2.1/release-2.1.2",
+                "releasenotes/v2.1/release-2.1.1",
+                "releasenotes/v2.1/release-2.1.0"
             ]
         },
         {
             "type": "category",
-            "label": "FAQ",
+            "label": "v2.0",
             "items": [
-                "faq/install-faq",
-                "faq/data-faq",
-                "faq/sql-faq",
-                "faq/lakehouse-faq"
+                "releasenotes/v2.0/release-2.0.14",
+                "releasenotes/v2.0/release-2.0.13",
+                "releasenotes/v2.0/release-2.0.12",
+                "releasenotes/v2.0/release-2.0.11",
+                "releasenotes/v2.0/release-2.0.10",
+                "releasenotes/v2.0/release-2.0.9",
+                "releasenotes/v2.0/release-2.0.8",
+                "releasenotes/v2.0/release-2.0.7",
+                "releasenotes/v2.0/release-2.0.6",
+                "releasenotes/v2.0/release-2.0.5",
+                "releasenotes/v2.0/release-2.0.4",
+                "releasenotes/v2.0/release-2.0.3",
+                "releasenotes/v2.0/release-2.0.2",
+                "releasenotes/v2.0/release-2.0.1",
+                "releasenotes/v2.0/release-2.0.0"
             ]
         },
         {
             "type": "category",
-            "label": "Release notes",
+            "label": "v1.2",
             "items": [
-                "releasenotes/release-2.0.12",
-                "releasenotes/release-2.0.11",
-                "releasenotes/release-2.0.10",
-                "releasenotes/release-2.0.9",
-                "releasenotes/release-2.0.8",
-                "releasenotes/release-2.0.7",
-                "releasenotes/release-2.0.6",
-                "releasenotes/release-2.0.5",
-                "releasenotes/release-2.0.4",
-                "releasenotes/release-2.0.3",
-                "releasenotes/release-2.0.2",
-                "releasenotes/release-2.0.1",
-                "releasenotes/release-2.0.0"
+                "releasenotes/v1.2/release-1.2.8",
+                "releasenotes/v1.2/release-1.2.7",
+                "releasenotes/v1.2/release-1.2.6",
+                "releasenotes/v1.2/release-1.2.5",
+                "releasenotes/v1.2/release-1.2.4",
+                "releasenotes/v1.2/release-1.2.3",
+                "releasenotes/v1.2/release-1.2.2",
+                "releasenotes/v1.2/release-1.2.1",
+                "releasenotes/v1.2/release-1.2.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "v1.1",
+            "items": [
+                "releasenotes/v1.1/release-1.1.5",
+                "releasenotes/v1.1/release-1.1.4",
+                "releasenotes/v1.1/release-1.1.3",
+                "releasenotes/v1.1/release-1.1.2",
+                "releasenotes/v1.1/release-1.1.1",
+                "releasenotes/v1.1/release-1.1.0"
             ]
         }
     ]

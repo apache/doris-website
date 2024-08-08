@@ -1,6 +1,6 @@
 ---
 {
-    "title": "regexp_replace",
+    "title": "REGEXP_REPLACE",
     "language": "en"
 }
 ---
@@ -30,12 +30,13 @@ under the License.
 
 `VARCHAR regexp_replace(VARCHAR str, VARCHAR pattern, VARCHAR repl)`
 
-
 Regular matching of STR strings, replacing the part hitting pattern with repl
+
+Character set matching requires the use of Unicode standard character classes. For example, to match Chinese, use `\p{Han}`.
 
 ### example
 
-```
+```sql
 mysql> SELECT regexp_replace('a b c', " ", "-");
 +-----------------------------------+
 | regexp_replace('a b c', ' ', '-') |
@@ -49,6 +50,14 @@ mysql> SELECT regexp_replace('a b c','(b)','<\\1>');
 +----------------------------------------+
 | a <b> c                                |
 +----------------------------------------+
+
+mysql> select regexp_replace('这是一段中文This is a passage in English 1234567', '\\p{Han}+', '123');
++---------------------------------------------------------------------------------------------+
+| regexp_replace('这是一段中文This is a passage in English 1234567', '\p{Han}+', '123')       |
++---------------------------------------------------------------------------------------------+
+| 123This is a passage in English 1234567                                                     |
++---------------------------------------------------------------------------------------------+
 ```
+
 ### keywords
     REGEXP_REPLACE,REGEXP,REPLACE

@@ -7,6 +7,10 @@
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
   },
+  "sidebar.docs.category.Quick Start": {
+    "message": "快速体验",
+    "description": "The label for category Quick Start in sidebar docs"
+  },
   "sidebar.docs.category.Installation and Deployment": {
     "message": "安装部署",
     "description": "The label for category Installation and Deployment in sidebar docs"
@@ -183,9 +187,37 @@
     "message": "监控指标",
     "description": "The label for category Monitor Metrics in sidebar docs"
   },
-  "sidebar.docs.category.SQL Reference": {
+  "sidebar.docs.category.SQL Statements": {
     "message": "SQL 手册",
     "description": "The label for category SQL Manual in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Types": {
+    "message": "SQL 类型",
+    "description": "The label for category SQL Manual in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregation Data Type": {
+    "message": "聚合类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Datetime Data Type": {
+    "message": "日期类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.String Data Type": {
+    "message": "字符串类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Data Type": {
+    "message": "数值类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Semi-Structured Data Type": {
+    "message": "半结构化类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.IP Data Type": {
+    "message": "IP 类型",
+    "description": "The label for category Data Types in sidebar docs"
   },
   "sidebar.docs.category.SQL Functions": {
     "message": "SQL 函数",
@@ -327,8 +359,20 @@
     "message": "版本发布",
     "description": "The label for category Release notes in sidebar docs"
   },
-  "sidebar.docs.category.Practical Guide": {
+  "sidebar.releasenotes.category.Previous Release": {
+    "message": "历史版本",
+    "description": "The label for category Release notes in sidebar docs"
+  },
+  "sidebar.docs.category.Use Case": {
     "message": "实践教程",
     "description": "The label for category Practical Guide in sidebar docs"
+  },
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Tutorials": {
+    "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

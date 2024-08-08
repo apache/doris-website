@@ -39,6 +39,7 @@ ALTER ASYNC MATERIALIZED VIEW
 ```sql
 ALTER MATERIALIZED VIEW mvName=multipartIdentifier ((RENAME newName=identifier)
        | (REFRESH (refreshMethod | refreshTrigger | refreshMethod refreshTrigger))
+       | REPLACE WITH MATERIALIZED VIEW newName=identifier propertyClause?
        | (SET  LEFT_PAREN fileProperties=propertyItemList RIGHT_PAREN))
 ```
 
@@ -67,6 +68,28 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 例如修改mv1的grace_period为3000ms
 ```sql
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3000");
+```
+
+##### REPLACE
+```sql
+ALTER MATERIALIZED VIEW [db.]mv1 REPLACE WITH MATERIALIZED VIEW mv2
+[PROPERTIES('swap' = 'true')];
+```
+两个物化视图进行原子的替换操作
+
+swap 默认为 TRUE
+- 如果 swap 参数为 TRUE，相当于把物化视图 mv1 重命名为 mv2 , 同时把 mv2 重命名为 mv1
+- 如果 swap 参数为 FALSE，相当于把 mv2 重命名为 mv1 ，原有的 mv1 被删除
+
+例如想把 mv1 和 mv2 的名字互换
+```sql
+ALTER MATERIALIZED VIEW db1.mv1 REPLACE WITH MATERIALIZED VIEW mv2;
+```
+
+例如想把 mv2 重命名为 mv1，并删除原先的 mv1
+```sql
+ALTER MATERIALIZED VIEW db1.mv1 REPLACE WITH MATERIALIZED VIEW mv2
+PROPERTIES('swap' = 'false');
 ```
 
 ### Keywords

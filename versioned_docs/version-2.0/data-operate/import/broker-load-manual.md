@@ -163,7 +163,7 @@ This configuration is used to access HDFS clusters deployed in HA (High Availabi
 
 - **dfs.namenode.rpc-address.xxx.nn:** Specifies the RPC address information for the namenode. In this context, nn represents the namenode name configured in dfs.ha.namenodes.xxx. For example: "dfs.namenode.rpc-address.my_ha.my_nn" = "host:port".
 
-- **dfs.client.failover.proxy.provider:** Specifies the provider for client connections to the namenode. The default is org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider.
+- **dfs.client.failover.proxy.provider.[nameservice ID]:** Specifies the provider for client connections to the namenode. The default is org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider.
 
 An example configuration is as follows:
 
@@ -174,7 +174,7 @@ An example configuration is as follows:
     "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
     "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
     "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-    "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 )
 ```
 
@@ -189,7 +189,7 @@ HA mode can be combined with the previous two authentication methods for cluster
     "dfs.ha.namenodes.my_ha" = "my_namenode1, my_namenode2",
     "dfs.namenode.rpc-address.my_ha.my_namenode1" = "nn1_host:rpc_port",
     "dfs.namenode.rpc-address.my_ha.my_namenode2" = "nn2_host:rpc_port",
-    "dfs.client.failover.proxy.provider" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+    "dfs.client.failover.proxy.provider.my_ha" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
 )
 ```
 

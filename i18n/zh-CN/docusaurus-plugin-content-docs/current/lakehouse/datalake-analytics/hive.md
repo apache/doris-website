@@ -108,6 +108,30 @@ CREATE CATALOG hive PROPERTIES (
 );
 ```
 
+### Doris 访问腾讯云 DLC
+
+:::note
+Doris 2.0.13 / 2.1.5 后支持该功能
+:::
+
+腾讯云 [DLC](https://cloud.tencent.com/product/dlc) 采用HMS管理元数据，因此可用 Hive catalog 进行联邦分析。
+DLC 可基于 lakefs 或 cosn 进行数据存储。以下 catalog 创建方法对两种 FS 都适用。
+```sql
+CREATE CATALOG dlc PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://<dlc_metastore_ip>:<dlc_metastore_port>',
+    's3.access_key' = 'xxxxx',
+    's3.secret_key' = 'xxxxx',
+    's3.region' = 'ap-xxx',
+    's3.endpoint' = 'cos.ap-xxx.myqcloud.com',
+    'fs.cosn.bucket.region' = 'ap-xxx',
+    'fs.ofs.user.appid' = '<your_tencent_cloud_appid>',
+    'fs.ofs.tmp.cache.dir' = '<tmp_cache_dir>'
+);
+```
+
+创建完 catalog 后需要对 catalog 绑定的 appid 进行[授权](https://cloud.tencent.com/document/product/436/38648) 。
+
 ### Hive On S3
 
 ```sql
@@ -491,6 +515,11 @@ Doris 支持为指定的 External Hive Catalog 使用 Apache Ranger 进行鉴权
 
  注意，某些情况下，`krb5.conf` 的文件位置可能取决于环境变量 `KRB5_CONFIG` 或 JVM 参数中的 `-Djava.security.krb5.conf` 参数。请检查这些属性以确定 `krb5.conf` 的确切位置。
 
+ 如需自定义`krb5.conf`的位置：
+
+ - FE：在 `fe.conf` 配置 JVM 参数 `-Djava.security.krb5.conf`。
+ - BE：在 `be.conf` 使用 `kerberos_krb5_conf_path` 配置项，默认值为`/etc/krb5.conf`。
+
 * JVM 参数
 
  请在 FE 和 BE 的 JVM 参数中添加如下配置（位于 `fe.conf` 和 `be.conf` 中）：
@@ -638,3 +667,13 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
 目前不支持 Original Files 的场景。
 当一个表转换成 Transactional 表之后，后续新写的数据文件会使用 Hive Transactional 表的 Schema，但是已经存在的数据文件是不会转化成 Transactional 表的 Schema，这样的文件称为 Original Files。
+
+## 最佳实践
+
+- Hive Text 格式表的中空行行为的处理
+
+    默认情况下，Doris 会忽略 Text 格式表中的空行。从 2.1.5 版本开始，可以通过设置会话变量 `read_csv_empty_line_as_null` 来控制该行为。
+
+    `set read_csv_empty_line_as_null = true;`
+
+    该变量默认为 false，表示忽略空行。如果设置为 true，这空行会读取为“所有列都是 null” 的行并返回，这种行为和部分 Hadoop 生态中查询引擎的行为一致。
