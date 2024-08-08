@@ -660,7 +660,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 ### DB2 多表同步示例
 
 ```shell
-bin/flink run \
+<FLINK_HOME>bin/flink run \
     -Dexecution.checkpointing.interval=10s \
     -Dparallelism.default=1 \
     -c org.apache.doris.flink.tools.cdc.CdcTools \
