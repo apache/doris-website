@@ -37,7 +37,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get started</Translate>,
-            link: '/docs/get-starting/what-is-apache-doris',
+            link: '/docs/gettingStarted/what-is-new',
             type: 'ghost',
         },
         {
@@ -413,7 +413,7 @@ console.log(siteConfig,'siteConfig')
                     footer={
                         <div className="justify-center flex mt-14">
                             <LinkWithArrow
-                                to="/docs/get-starting/what-is-apache-doris"
+                                to="/docs/gettingStarted/what-is-apache-doris"
                                 text={
                                     <Translate id="homepage.more" description="more link">
                                         Learn more
