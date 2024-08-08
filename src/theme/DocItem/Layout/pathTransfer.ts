@@ -19,7 +19,6 @@ const transformPathWithoutZhCN = (pathname: string): string => {
 };
 const transformPathWithZhCN = (pathname: string): string => {
     const regex = /^\/zh-CN\/docs\/(?:2\.1|2\.0|1\.2|dev|)/
-    console.log(pathname,'pathname')
     if (pathname.includes('/gettingStarted')) {
         return `/common_docs_zh/gettingStarted/${pathname.replace(/^\/zh-CN\/docs(?:\/(?:2\.1|2\.0|1\.2|dev))?\/gettingStarted\//,'')}.md`;
     } else if (pathname.includes('/ecosystem')) {
