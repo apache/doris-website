@@ -530,6 +530,23 @@ AS
 select ... from t1;
 ```
 
+## Data Lake Support Status
+| Catalog type | COMPLETE REFRESH | PARTITION REFRESH | TRIGGER REFRESH
+|--------------| -- | --- | --- |
+| Internal     | 2.1 | 2.1 | 2.1.4
+| Hive         | 2.1 | 2.1 | N/A
+| Iceberg      | N/A | N/A | N/A
+| Paimon       | N/A | N/A | N/A
+| Hudi         | N/A | N/A | N/A
+| JDBC         | N/A | N/A | N/A
+| ES           | N/A | N/A | N/A
+
+## Permission Description
+- Create a materialized view : Create permissions for materialized views (similar to table creation) and query permissions for creating materialized view query statements (similar to SELECT)
+- Drop a materialized view : Drop permission for materialized views (same as deleting tables)
+- Alter a materialized view : Alter permission for materialized views (same as deleting tables)
+- Pause/Resume/Cancel/Refresh: Create permissions for materialized views
+
 ## Problem localization
 ### Localization means
 The commonly used commands for `olapTable` are also applicable to materialized views, such as `show partitions`, `desc table`, `show data`, etc.
