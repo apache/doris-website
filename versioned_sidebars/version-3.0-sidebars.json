@@ -298,6 +298,7 @@
                 },
                 "lakehouse/file",
                 "lakehouse/filecache",
+                "lakehouse/metacache",
                 "lakehouse/external-statistics",
                 "lakehouse/cloud-auth",
                 "lakehouse/sql-dialect"
@@ -1500,7 +1501,8 @@
             "label": "Tutorials",
             "items": [
                 "gettingStarted/tutorials/doris-hudi",
-                "gettingStarted/tutorials/doris-paimon"
+                "gettingStarted/tutorials/doris-paimon",
+                "gettingStarted/tutorials/doris-iceberg"
             ]
         }
     ],

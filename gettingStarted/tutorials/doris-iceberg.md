@@ -1,7 +1,7 @@
 ---
 {
-    "title": "使用 Doris 和 Iceberg 构建 Lakehouse",
-    "language": "zh-CN"
+    "title": "Building lakehouse using Doris and Paimon",
+    "language": "en"
 }
 
 ---
@@ -14,9 +14,7 @@ regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
-
   http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,73 +23,73 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-作为一种全新的开放式的数据管理架构，湖仓一体（Data Lakehouse）融合了数据仓库的高性能、实时性以及数据湖的低成本、灵活性等优势，帮助用户更加便捷地满足各种数据处理分析的需求，在企业的大数据体系中已经得到越来越多的应用。
+As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of a data warehouse with the low cost and flexibility of a data lake, helping users more conveniently meet various data processing and analysis needs. It has been increasingly applied in enterprise big data systems.
 
-在过去多个版本中，Apache Doris 持续加深与数据湖的融合，当前已演进出一套成熟的湖仓一体解决方案。
+In recent versions, Apache Doris has deepened its integration with data lakes and now offers a mature Data Lakehouse solution.
 
-- 自 0.15 版本起，Apache Doris 引入 Hive 和 Iceberg 外部表，尝试在 Apache Iceberg 之上探索与数据湖的能力结合。
-- 自 1.2 版本起，Apache Doris 正式引入 Multi-Catalog 功能，实现了多种数据源的自动元数据映射和数据访问、并对外部数据读取和查询执行等方面做了诸多性能优化，完全具备了构建极速易用 Lakehouse 架构的能力。
-- 在 2.1 版本中，Apache Doris 湖仓一体架构得到全面加强，不仅增强了主流数据湖格式（Hudi、Iceberg、Paimon 等）的读取和写入能力，还引入了多 SQL 方言兼容、可从原有系统无缝切换至 Apache Doris。在数据科学及大规模数据读取场景上，Doris 集成了 Arrow Flight 高速读取接口，使得数据传输效率实现 100 倍的提升。
+- Since version 0.15, Apache Doris has introduced Hive and Iceberg external tables, exploring the capabilities of combining with Apache Iceberg for data lakes.
+- Starting from version 1.2, Apache Doris officially introduced the Multi-Catalog feature, enabling automatic metadata mapping and data access for various data sources, along with numerous performance optimizations for external data reading and query execution. It now fully supports building a high-speed and user-friendly Lakehouse architecture.
+- In version 2.1, Apache Doris further strengthened its Data Lakehouse architecture, enhancing the reading and writing capabilities of mainstream data lake formats (Hudi, Iceberg, Paimon, etc.), introducing compatibility with multiple SQL dialects, and seamless migration from existing systems to Apache Doris. For data science and large-scale data reading scenarios, Doris integrated the Arrow Flight high-speed reading interface, achieving a 100x improvement in data transfer efficiency.
 
 ![](/images/quick-start/lakehouse-iceberg-arch.jpeg)
 
 ## Apache Doris & Iceberg
 
-Apache Iceberg 是一种开源、高性能、高可靠的数据湖表格式，可实现超大规模数据的分析与管理。它支持 Apache Doris 在内的多种主流查询引擎，兼容 HDFS 以及各种对象云存储，具备 ACID、Schema 演进、高级过滤、隐藏分区和分区布局演进等特性，可确保高性能查询以及数据的可靠性及一致性，其时间旅行和版本回滚功能也为数据管理带来较高的灵活性。
+Apache Iceberg is an open-source, high-performance, and highly reliable data lake table format that enables the analysis and management of massive-scale data. It supports various mainstream query engines, including Apache Doris, is compatible with HDFS and various object cloud storage, and features ACID compliance, schema evolution, advanced filtering, hidden partitioning, and partition layout evolution to ensure high-performance queries, data reliability, consistency, and flexibility with features like time travel and version rollback.
 
-Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
+Apache Doris provides native support for several core features of Iceberg:
 
-- 支持 Hive Metastore、Hadoop、REST、Glue、Google Dataproc Metastore、DLF 等多种 Iceberg Catalog 类型。
-- 原生支持 Iceberg V1/V2 表格式，以及  Position Delete、Equality Delete 文件的读取。
-- 支持通过表函数查询 Iceberg 表快照历史。
-- 支持时间旅行（Time Travel）功能。
-- 原生支持 Iceberg 表引擎。可以通过 Apache Doris 直接创建、管理以及将数据写入到 Iceberg 表。支持完善的分区 Transform 函数，从而提供隐藏分区和分区布局演进等能力。
+- Supports multiple Iceberg Catalog types such as Hive Metastore, Hadoop, REST, Glue, Google Dataproc Metastore, DLF, etc.
+- Native support for Iceberg V1/V2 table formats and reading of Position Delete, Equality Delete files.
+- Supports querying Iceberg table snapshot history through table functions.
+- Supports Time Travel functionality.
+- Native support for the Iceberg table engine. It allows Apache Doris to directly create, manage, and write data to Iceberg tables. It supports comprehensive partition Transform functions, providing capabilities like hidden partitioning and partition layout evolution.
 
-用户可以基于 Apache Doris + Apache Iceberg 快速构建高效的湖仓一体解决方案，以灵活应对实时数据分析与处理的各种需求：
+Users can quickly build an efficient Data Lakehouse solution based on Apache Doris + Apache Iceberg to flexibly address various real-time data analysis and processing needs.
 
-- 通过 Doris 高性能查询引擎对 Iceberg 表数据和其他数据源进行关联数据分析，构建**统一的联邦数据分析平台**。
-- 通过 Doris 直接管理和构建 Iceberg 表，在 Doris 中完成对数据的清洗、加工并写入到 Iceberg 表，构建**统一的湖仓数据处理平台**。
-- 通过 Iceberg 表引擎，将 Doris 数据共享给其他上下游系统做进一步处理，构建**统一的开放数据存储平台**。
+- Use the high-performance query engine of Doris to perform data analysis by associating Iceberg table data and other data sources, building a **unified federated data analysis platform**.
+- Manage and build Iceberg tables directly through Doris, complete data cleaning, processing, and writing to Iceberg tables in Doris, building a **unified data processing platform for data lakes**.
+- Share Doris data with other upstream and downstream systems for further processing through the Iceberg table engine, building a **unified open data storage platform**.
 
-未来，Apache Iceberg 将作为 Apache Doris 的原生表引擎之一，提供更加完善的湖格式数据的分析、管理功能。Apache Doris 也将逐步支持包括 Update/Delete/Merge、写回时排序、增量数据读取、元数据管理等 Apache Iceberg 更多高级特性，共同构建统一、高性能、实时的湖仓平台。
+In the future, Apache Iceberg will serve as one of the native table engines for Apache Doris, providing more comprehensive analysis and management functions for lake-formatted data. Apache Doris will also gradually support more advanced features of Apache Iceberg, including Update/Delete/Merge, sorting during write-back, incremental data reading, metadata management, etc., to jointly build a unified, high-performance, real-time data lake platform.
 
-关于更多说明，请参阅 [Iceberg Catalog](../../lakehouse/datalake-analytics/iceberg.md)
+For more information, please refer to [Iceberg Catalog](../../lakehouse/datalake-analytics/iceberg.md)
 
-## 使用指南
+## User Guide
 
-本文档主要讲解如何在 Docker 环境下快速搭建 Apache Doris + Apache Iceberg 测试 & 演示环境，并展示各功能的使用操作。
+This document mainly explains how to quickly set up an Apache Doris + Apache Iceberg testing & demonstration environment in a Docker environment and demonstrate the usage of various functions.
 
-本文涉及所有脚本和代码可以从该地址获取：[https://github.com/apache/doris/tree/master/samples/datalake/iceberg_and_paimon](https://github.com/apache/doris/tree/master/samples/datalake/iceberg_and_paimon)
+All scripts and code mentioned in this document can be obtained from this address: [https://github.com/apache/doris/tree/master/samples/datalake/iceberg_and_paimon](https://github.com/apache/doris/tree/master/samples/datalake/iceberg_and_paimon)
 
-### 01 环境准备
+### 01 Environment Preparation
 
-本文示例采用 Docker Compose 部署，组件及版本号如下：
+This document uses Docker Compose for deployment, with the following components and versions:
 
-| 组件名称 | 版本 |
+| Component | Version |
 | --- | --- |
-| Apache Doris | 默认 2.1.5，可修改 |
-| Apache Iceberg | 1.4.3|
-| MinIO | RELEASE.2024-04-29T09-56-05Z|
+| Apache Doris | Default 2.1.5, can be modified |
+| Apache Iceberg | 1.4.3 |
+| MinIO | RELEASE.2024-04-29T09-56-05Z |
 
-### 02 环境部署
+### 02 Environment Deployment
 
-1. 启动所有组件
+1. Start all components
 
 	`bash ./start_all.sh`
 
-2. 启动后，可以使用如下脚本，登陆 Doris 命令行：
-	
+2. After starting, you can use the following script to log in to the Doris command line:
+
 	```
 	-- login doris
 	bash ./start_doris_client.sh
 	```
 
-### 03 创建 Iceberg 表
+### 03 Create Iceberg Table
 
-首先登陆 Doris 命令行后，Doris 集群中已经创建了名为 Iceberg 的 Catalog（可通过 `SHOW CATALOGS`/`SHOW CREATE CATALOG iceberg` 查看）。以下为该 Catalog 的创建语句：
+After logging into the Doris command line, an Iceberg Catalog named Iceberg has already been created in the Doris cluster (can be viewed by `SHOW CATALOGS`/`SHOW CREATE CATALOG iceberg`). The following is the creation statement for this Catalog:
 
 ```
--- 已创建，无需执行
+-- Already created
 CREATE CATALOG `iceberg` PROPERTIES (
     "type" = "iceberg",
     "iceberg.catalog.type" = "rest",
@@ -103,7 +101,7 @@ CREATE CATALOG `iceberg` PROPERTIES (
 );
 ```
 
-在 Iceberg Catalog 创建数据库和 Iceberg 表：
+Create a database and an Iceberg table in the Iceberg Catalog:
 
 ```
 mysql> SWITCH iceberg;
@@ -129,9 +127,9 @@ mysql> CREATE TABLE iceberg.nyc.taxis
 Query OK, 0 rows affected (0.15 sec)
 ```
 
-### 04 数据写入
+### 04 Data Insertion
 
-向 Iceberg 表中插入数据：
+Insert data into the Iceberg table:
 
 ```
 mysql> INSERT INTO iceberg.nyc.taxis
@@ -144,7 +142,7 @@ Query OK, 4 rows affected (1.61 sec)
 {'status':'COMMITTED', 'txnId':'10085'}
 ```
 
-通过 `CREATE TABLE AS SELECT` 来创建一张 Iceberg 表：
+Create an Iceberg table using `CREATE TABLE AS SELECT`:
 
 ```
 mysql> CREATE TABLE iceberg.nyc.taxis2 AS SELECT * FROM iceberg.nyc.taxis;
@@ -152,9 +150,9 @@ Query OK, 6 rows affected (0.25 sec)
 {'status':'COMMITTED', 'txnId':'10088'}
 ```
 
-### 05 数据查询
+### 05 Data Query
 
-- 简单查询
+- Simple query
 
 	```
 	mysql> SELECT * FROM iceberg.nyc.taxis;
@@ -180,7 +178,7 @@ Query OK, 6 rows affected (0.25 sec)
 	4 rows in set (0.35 sec)
 	```
 
-- 分区剪裁
+- Partition pruning
 
 	```
 	mysql> SELECT * FROM iceberg.nyc.taxis where vendor_id = 2 and ts >= '2024-01-01' and ts < '2024-01-02';
@@ -211,13 +209,13 @@ Query OK, 6 rows affected (0.25 sec)
 	....
 	```
 
-	通过 `EXPLAIN VERBOSE` 语句的结果可知，`vendor_id = 2 and ts >= '2024-01-01' and ts < '2024-01-02'` 谓词条件，最终只命中一个分区（`partition=1/0`）。
+	By examining the result of the `EXPLAIN VERBOSE` statement, it can be seen that the predicate condition `vendor_id = 2 and ts >= '2024-01-01' and ts < '2024-01-02'` ultimately only hits one partition (`partition=1/0`).
 
-	同时也可知，因为在建表时指定了分区 Transform 函数 `DAY(ts)`，原始数据中的的值 `2024-01-01 03:25:15.000000` 会被转换成文件目录中的分区信息 `ts_day=2024-01-01`。
+	It can also be observed that because a partition Transform function `DAY(ts)` was specified when creating the table, the original value in the data `2024-01-01 03:25:15.000000` will be transformed into the partition information in the file directory `ts_day=2024-01-01`.
 
 ### 06 Time Travel
 
-我们先再次插入几行数据：
+Let's insert a few more rows of data:
 
 ```
 INSERT INTO iceberg.nyc.taxis VALUES (1, 1000375, 8.8, 55.55, 'Y', '2024-01-01 8:10:22'), (3, 1000376, 7.4, 32.35, 'N', '2024-01-02  1:14:45');
@@ -238,7 +236,7 @@ mysql> SELECT * FROM iceberg.nyc.taxis;
 6 rows in set (0.11 sec)
 ```
 
-使用 `iceberg_meta` 表函数查询表的快照信息：
+Use the `iceberg_meta` table function to query the snapshot information of the table:
 
 ```
 mysql> select * from iceberg_meta("table" = "iceberg.nyc.taxis", "query_type" = "snapshots");
@@ -251,7 +249,7 @@ mysql> select * from iceberg_meta("table" = "iceberg.nyc.taxis", "query_type" = 
 2 rows in set (0.07 sec)
 ```
 
-使用 `FOR VERSION AS OF` 语句查询指定快照：
+Query a specified snapshot using the `FOR VERSION AS OF` statement:
 
 ```
 mysql> SELECT * FROM iceberg.nyc.taxis FOR VERSION AS OF 8483933166442433486;
@@ -279,7 +277,7 @@ mysql> SELECT * FROM iceberg.nyc.taxis FOR VERSION AS OF 4726331391239920914;
 6 rows in set (0.04 sec)
 ```
 
-使用 `FOR TIME AS OF` 语句查询指定快照：
+Query a specified snapshot using the `FOR TIME AS OF` statement:
 
 ```
 mysql> SELECT * FROM iceberg.nyc.taxis FOR TIME AS OF "2024-07-29 03:38:23";

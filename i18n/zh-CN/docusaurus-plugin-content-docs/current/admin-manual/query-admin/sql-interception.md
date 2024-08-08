@@ -24,14 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-该功能用于限制执行 sql 语句（DDL / DML 都可限制）。
-支持按用户配置 SQL 黑名单：
+该功能用于限制执行 SQL 语句（DDL / DML 都可限制）。
 
-1. 通过正则匹配的方式拒绝指定 SQL
-
-2. 通过设置 partition_num, tablet_num, cardinality, 检查一个查询是否达到其中一个限制
-
-  - partition_num, tablet_num, cardinality 可以一起设置，一旦一个查询达到其中一个限制，查询将会被拦截
+支持按用户配置 SQL 的拦截规则，如使用正则表达式匹配和拦截 SQL，或使用支持的规则进行拦截。
 
 ## 创建和管理规则
 
@@ -73,7 +68,9 @@ PROPERTIES(
 
 从 2.1.6 版本开始，SQL 拦截规则支持外部表（External Catalog 中的表）。
 
-- `partition_num`：和内表含义一致，限制分区数量。
+- `sql`：和内表含义一致。
+- `sqlHash`: 和内表含义一致。
+- `partition_num`：和内表含义一致。
 - `tablet_num`：限制外表的扫描的分片数量。不同的数据源，分片的定义不尽相同。比如 Hive 表中的文件分片，Hudi 表中的增量数据分片等。
 - `cardinality`：和内表含义一致，限制扫描行数。只有当外表存在行数统计信息时（如通过手动或自动统计信息采集后），该参数才会生效。
 
