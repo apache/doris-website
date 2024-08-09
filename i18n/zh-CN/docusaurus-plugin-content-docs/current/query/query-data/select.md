@@ -170,7 +170,7 @@ INTERSECT [DISTINCT] SELECT ......
 
 `INTERSECT` 用于返回多个 `SELECT` 语句的结果之间的交集，并对结果进行去重。
 `INTERSECT` 效果等同于 `INTERSECT DISTINCT`。不支持 `ALL` 关键字。
-每条 `SELECT` 查询返回的列数必须相同，且列类型能够兼容。
+每条 `SELECT` 查询返回的列数必须相同，且当列类型不一致时，会 `CAST` 到相同类型。
 
 EXCEPT/MINUS 语法：
 
@@ -182,7 +182,7 @@ EXCEPT [DISTINCT] SELECT ......
 `EXCEPT` 子句用于返回多个查询结果之间的补集，即返回左侧查询中在右侧查询中不存在的数据，并对结果集去重。
 `EXCEPT` 和 `MINUS` 功能对等。
 `EXCEPT` 效果等同于 `EXCEPT DISTINCT`。不支持 `ALL` 关键字。
-每条 `SELECT` 查询返回的列数必须相同，且列类型能够兼容。
+每条 `SELECT` 查询返回的列数必须相同，且当列类型不一致时，会 `CAST` 到相同类型。
 
 WITH 语句：
 

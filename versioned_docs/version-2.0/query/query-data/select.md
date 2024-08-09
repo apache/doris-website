@@ -121,7 +121,7 @@ INTERSECT [DISTINCT] SELECT ......
 
 `INTERSECT` is used to return the intersection of results from multiple `SELECT` statements, with duplicate results removed.
 The effect of `INTERSECT` is equivalent to `INTERSECT DISTINCT`. The `ALL` keyword is not supported.
-Each `SELECT` query must return the same number of columns, and the column types must be compatible.
+Each `SELECT` query must return the same number of columns, And when the column types are inconsistent, they will be `CAST` to the same type.
 
 EXCEPT/MINUS:
 
@@ -134,7 +134,7 @@ EXCEPT [DISTINCT] SELECT ......
 The `EXCEPT` clause is used to return the complement between the results of multiple queries, meaning it returns the data from the left query that does not exist in the right query, with duplicates removed.
 `EXCEPT` is functionally equivalent to `MINUS`.
 The effect of `EXCEPT` is the same as `EXCEPT DISTINCT`. The `ALL` keyword is not supported.
-Each `SELECT` query must return the same number of columns, and the column types must be compatible.
+Each `SELECT` query must return the same number of columns, And when the column types are inconsistent, they will be `CAST` to the same type.
 
 WITH:
 
