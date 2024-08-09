@@ -115,8 +115,8 @@ INTERSECT:
 
 ```sql
 SELECT ...
-INTERSECT SELECT ......
-[INTERSECT SELECT ...]
+INTERSECT [DISTINCT] SELECT ......
+[INTERSECT [DISTINCT] SELECT ...]
 ```
 
 `INTERSECT` is used to return the intersection of results from multiple `SELECT` statements, with duplicate results removed.
@@ -127,8 +127,8 @@ EXCEPT/MINUS:
 
 ```sql
 SELECT ...
-EXCEPT SELECT ......
-[EXCEPT SELECT ...]
+EXCEPT [DISTINCT] SELECT ......
+[EXCEPT [DISTINCT] SELECT ...]
 ```
 
 The `EXCEPT` clause is used to return the complement between the results of multiple queries, meaning it returns the data from the left query that does not exist in the right query, with duplicates removed.
