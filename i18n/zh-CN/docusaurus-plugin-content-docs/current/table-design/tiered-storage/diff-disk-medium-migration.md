@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-可以设置参数将动态分区建在相应be的磁盘类型上，同时支持（HDD、SSD）磁盘类型间数据根据数据冷热特性进行迁移，加速doris读写性能
+Doris支持（HDD、SSD）磁盘类型间数据根据数据冷热特性进行迁移，加速读写性能。用户可以设置分区参数将动态分区建在相应be的磁盘类型上
+
+其中dynamic_partition参数可以参考[分区分桶-动态分区](../../table-design/data-partition.md#动态分区)
 
 `dynamic_partition.hot_partition_num`
 

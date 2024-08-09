@@ -480,6 +480,8 @@ ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 
   当 `time_unit` 为 `MONTH` 时，该参数用于指定每月的起始日期。取值为 1 到 28。其中 1 表示每月 1 号，28 表示每月 28 号。默认为 1，即表示每月以 1 号为起始点。暂不支持以 29、30、31 号为起始日，以避免因闰年或闰月带来的歧义。
 
+- doris支持SSD和HDD层级存储，可参考[分层存储](./tiered-storage/diff-disk-medium-migration.md)
+
 - `dynamic_partition.create_history_partition`
 
   默认为 false。当置为 true 时，Doris 会自动创建所有分区，具体创建规则见下文。同时，FE 的参数 `max_dynamic_partition_num` 会限制总分区数量，以避免一次性创建过多分区。当期望创建的分区个数大于 `max_dynamic_partition_num` 值时，操作将被禁止。

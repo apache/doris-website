@@ -28,7 +28,11 @@ It is possible to set parameters to create dynamic partitions on the correspondi
 
 - `dynamic_partition.hot_partition_num`
 
-  Specify how many of the latest partitions are hot partitions. For hot partition, the system will automatically set its `storage_medium` parameter to SSD, and set `storage_cooldown_time`.
+  Doris supports data migration between different disk types (HDD, SSD) based on the cold/hot characteristics of the data, which can accelerate read and write performance. Users can set partition parameters to create dynamic partitions on the corresponding disk types.
+
+  For the 'dynamic_partition' parameter, please refer to [data-partition](../../table-design/data-partition.md#dynamic-partitioning)."
+
+
 
   :::tip
 
