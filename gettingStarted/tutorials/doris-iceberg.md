@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Building lakehouse using Doris and Paimon",
+    "title": "Building lakehouse using Doris and Iceberg",
     "language": "en"
 }
 
