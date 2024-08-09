@@ -22,7 +22,7 @@ export default function PageHero1() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids`}>
+                    <a className="latest-button" href={`/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids/nereids-new`}>
                         <div className="home-page-hero-button-label"><div>Data Query</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
