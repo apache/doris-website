@@ -59,6 +59,11 @@ pip install adbc_driver_flightsql
 ```Python
 import adbc_driver_manager
 import adbc_driver_flightsql.dbapi as flight_sql
+
+>>> print(adbc_driver_manager.__version__)
+1.1.0
+>>> print(adbc_driver_flightsql.__version__)
+1.1.0
 ```
 
 ### 连接 Doris
@@ -74,7 +79,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 9090 和 9091 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
 
 ```Python
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "user",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "pass",
         })
@@ -223,7 +228,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
 # Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
         })
@@ -301,7 +306,12 @@ $ java --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED -
 # Indirectly via environment variables
 $ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED" java -jar ...
 ```
-否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core`
+
+否则，您可能会看到一些错误，如 `module java.base does not "opens java.nio" to unnamed module` 或者 `module java.base does not "opens java.nio" to org.apache.arrow.memory.core` 或者 `ava.lang.NoClassDefFoundError: Could not initialize class org.apache.arrow.memory.util.MemoryUtil (Internal; Prepare)`
+
+如果您在 IntelliJ IDEA 中调试，需要在 `Run/Debug Configurations` 的 `Build and run` 中增加 `--add-opens=java.base/java.nio=ALL-UNNAMED`，参照下面的图片:
+
+![IntelliJ IDEA](https://github.com/user-attachments/assets/7439ee6d-9013-40bf-89af-0365925d3fdb)
 
 连接代码示例如下：
 
