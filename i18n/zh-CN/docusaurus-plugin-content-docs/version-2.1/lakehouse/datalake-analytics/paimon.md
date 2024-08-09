@@ -1,7 +1,7 @@
 ---
 {
-    "title": "Paimon Catalog",
-    "language": "zh-CN"
+"title": "Paimon Catalog",
+"language": "zh-CN"
 }
 ---
 
@@ -24,10 +24,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+快速体验 [Apache Doris & Paimon](https://doris.apache.org/docs/gettingStarted/tutorials/doris-paimon)
+
 ## 使用须知
 
 1. 数据放在 hdfs 时，需要将 core-site.xml，hdfs-site.xml 和 hive-site.xml  放到 FE 和 BE 的 conf 目录下。优先读取 conf 目录下的 hadoop 配置文件，再读取环境变量 `HADOOP_CONF_DIR` 的相关配置文件。
-2. 当前适配的 Paimon 版本为 0.8（自 2.1.4 版本开始）。
+2. 当前适配的 Paimon 版本为 0.8。
 
 ## 创建 Catalog
 

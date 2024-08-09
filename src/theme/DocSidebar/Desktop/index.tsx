@@ -16,7 +16,6 @@ function DocSidebarDesktop({ path, sidebar, onCollapse, isHidden }) {
             sidebar: { hideable },
         },
     } = useThemeConfig();
-    console.log(sidebar,'sidebar')
     const hasLearningPath = path.includes('/docs');
     return (
         <div className={clsx('sidebar ', hideOnScroll && 'sidebar-with-hideable-navbar', isHidden && 'sidebar-hidden')}>

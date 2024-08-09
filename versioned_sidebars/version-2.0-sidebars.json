@@ -167,7 +167,7 @@
                     "type": "category",
                     "label": "Cost-Based Optimizer",
                     "items": [
-                        "query/nereids/nereids",
+                        "query/nereids/nereid",
                         "query/nereids/statistics"
                     ]
                 },
@@ -262,6 +262,7 @@
                 },
                 "lakehouse/file",
                 "lakehouse/filecache",
+                "lakehouse/compute-node",
                 "lakehouse/external-statistics"
             ]
         },
@@ -296,8 +297,7 @@
                     "label": "Managing Resource",
                     "items": [
                         "admin-manual/resource-admin/workload-group",
-                        "admin-manual/resource-admin/multi-tenant",
-                        "admin-manual/resource-admin/compute-node"
+                        "admin-manual/resource-admin/multi-tenant"
                     ]
                 },
                 {
@@ -1020,7 +1020,80 @@
                 },
                 {
                     "type": "category",
-                    "label": "SQL Reference",
+                    "label": "SQL Types",
+                    "items": [
+                        {
+                            "type": "category",
+                            "label": "Numeric Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/numeric/numeric-overview",
+                                "sql-manual/sql-data-types/numeric/BOOLEAN",
+                                "sql-manual/sql-data-types/numeric/TINYINT",
+                                "sql-manual/sql-data-types/numeric/SMALLINT",
+                                "sql-manual/sql-data-types/numeric/INT",
+                                "sql-manual/sql-data-types/numeric/BIGINT",
+                                "sql-manual/sql-data-types/numeric/LARGEINT",
+                                "sql-manual/sql-data-types/numeric/FLOAT",
+                                "sql-manual/sql-data-types/numeric/DOUBLE",
+                                "sql-manual/sql-data-types/numeric/DECIMAL"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Datetime Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/datetime/datetime-overview",
+                                "sql-manual/sql-data-types/datetime/DATE",
+                                "sql-manual/sql-data-types/datetime/DATETIME"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "String Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/string/string-overview",
+                                "sql-manual/sql-data-types/string/CHAR",
+                                "sql-manual/sql-data-types/string/VARCHAR",
+                                "sql-manual/sql-data-types/string/STRING"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Semi-Structured Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/semi-structured/semi-structured-overview",
+                                "sql-manual/sql-data-types/semi-structured/ARRAY",
+                                "sql-manual/sql-data-types/semi-structured/MAP",
+                                "sql-manual/sql-data-types/semi-structured/STRUCT",
+                                "sql-manual/sql-data-types/semi-structured/JSON",
+                                "sql-manual/sql-data-types/semi-structured/VARIANT"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Aggregation Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/aggregate/aggregate-overview",
+                                "sql-manual/sql-data-types/aggregate/HLL",
+                                "sql-manual/sql-data-types/aggregate/BITMAP",
+                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "IP Data Type",
+                            "items": [
+                                "sql-manual/sql-data-types/ip/ip-overview",
+                                "sql-manual/sql-data-types/ip/IPV4",
+                                "sql-manual/sql-data-types/ip/IPV6"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "SQL Statements",
                     "items": [
                         {
                             "type": "category",
@@ -1079,34 +1152,6 @@
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-REBALANCE-DISK",
                                 "sql-manual/sql-reference/Database-Administration-Statements/ADMIN-CANCEL-REBALANCE-DISK",
                                 "sql-manual/sql-reference/Database-Administration-Statements/enable-feature"
-                            ]
-                        },
-                        {
-                            "type": "category",
-                            "label": "Data Types",
-                            "items": [
-                                "sql-manual/sql-reference/Data-Types/BOOLEAN",
-                                "sql-manual/sql-reference/Data-Types/TINYINT",
-                                "sql-manual/sql-reference/Data-Types/SMALLINT",
-                                "sql-manual/sql-reference/Data-Types/INT",
-                                "sql-manual/sql-reference/Data-Types/BIGINT",
-                                "sql-manual/sql-reference/Data-Types/LARGEINT",
-                                "sql-manual/sql-reference/Data-Types/FLOAT",
-                                "sql-manual/sql-reference/Data-Types/DOUBLE",
-                                "sql-manual/sql-reference/Data-Types/DECIMAL",
-                                "sql-manual/sql-reference/Data-Types/DATE",
-                                "sql-manual/sql-reference/Data-Types/DATETIME",
-                                "sql-manual/sql-reference/Data-Types/CHAR",
-                                "sql-manual/sql-reference/Data-Types/VARCHAR",
-                                "sql-manual/sql-reference/Data-Types/STRING",
-                                "sql-manual/sql-reference/Data-Types/ARRAY",
-                                "sql-manual/sql-reference/Data-Types/MAP",
-                                "sql-manual/sql-reference/Data-Types/STRUCT",
-                                "sql-manual/sql-reference/Data-Types/JSON",
-                                "sql-manual/sql-reference/Data-Types/HLL",
-                                "sql-manual/sql-reference/Data-Types/BITMAP",
-                                "sql-manual/sql-reference/Data-Types/QUANTILE_STATE",
-                                "sql-manual/sql-reference/Data-Types/AGG_STATE"
                             ]
                         },
                         {
@@ -1402,13 +1447,6 @@
         "releasenotes/all-release",
         {
             "type": "category",
-            "label": "v3.0",
-            "items": [
-                "releasenotes/v3.0/release-3.0.0"
-            ]
-        },
-        {
-            "type": "category",
             "label": "v2.1",
             "items": [
                 "releasenotes/v2.1/release-2.1.5",
@@ -1423,6 +1461,7 @@
             "type": "category",
             "label": "v2.0",
             "items": [
+                "releasenotes/v2.0/release-2.0.14",
                 "releasenotes/v2.0/release-2.0.13",
                 "releasenotes/v2.0/release-2.0.12",
                 "releasenotes/v2.0/release-2.0.11",
