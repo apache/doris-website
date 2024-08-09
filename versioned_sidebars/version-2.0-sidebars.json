@@ -167,7 +167,7 @@
                     "type": "category",
                     "label": "Cost-Based Optimizer",
                     "items": [
-                        "query/nereids/nereid",
+                        "query/nereids/nereids-new",
                         "query/nereids/statistics"
                     ]
                 },

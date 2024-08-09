@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './demo-block.css';
 export default function PageHero2() {
     const [currentVersion, setCurrentVersion] = useState('')
@@ -22,7 +22,7 @@ export default function PageHero2() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids`}>
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/query/nereids/nereids-new`}>
                         <div className="home-page-hero-button-label"><div>数据查询</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
