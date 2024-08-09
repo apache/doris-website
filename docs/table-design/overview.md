@@ -32,6 +32,9 @@ Users can use the [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-St
 
 In Doris, table names are case-sensitive by default. You can configure [lower_case_table_names](../admin-manual/config/fe-config.md)to make them case-insensitive during the initial cluster setup. The default maximum length for table names is 64 bytes, but you can change this by configuring [table_name_length_limit](../admin-manual/config/fe-config.md). It is not recommended to set this value too high. For syntax on creating tables, please refer to [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md).
 
+## Table property
+
+In Doris, a table is composed of one or more partitions. The PROPERTY clause in the CREATE TABLE statement is used when creating partitions. Since dynamic partitions can be created, there may be partitions that have not been created and partitions that have been created. The differences in setting the attributes for these please refer to [modifying table properties](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
 
 ## Notes
 
@@ -39,8 +42,6 @@ In Doris, table names are case-sensitive by default. You can configure [lower_ca
 
 2. The number of buckets for an existing partition cannot be modified. You can change the number of buckets by [replacing the partition](../data-operate/delete/table-temp-partition.md). However, you can modify the number of buckets for partitions that have not yet been created under dynamic partitioning.
 
-3. To modify table and partition properties, refer to [modifying table properties](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
+3. Adding or removing VALUE columns is a lightweight operation and can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. It is best to avoid adding or removing KEY columns or modifying data types with large amounts of data.
 
-4. Adding or removing VALUE columns is a lightweight operation and can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. It is best to avoid adding or removing KEY columns or modifying data types with large amounts of data.
-
-5. You can use tiered storage to save cold data to HDD or S3 / HDFS.
+4. You can use tiered storage to save cold data to HDD or S3 / HDFS.

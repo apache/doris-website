@@ -32,14 +32,17 @@ under the License.
 
 Doris 中表名默认是大小写敏感的，可以在第一次初始化集群时配置[lower_case_table_names](../admin-manual/config/fe-config.md)为大小写不敏感的。默认的表名最大长度为 64 字节，可以通过配置[table_name_length_limit](../admin-manual/config/fe-config.md)更改，不建议配置过大。创建表的语法请参考[CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md)。
 
+## 表属性
+
+Doris中表是由一个或多个分区构成的，建表语句中PROPERTY用于创建分区时候使用。由于可以建动态分区表，存在未创建分区和已创建分区，其中设置属性的区别参考[修改表属性](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
+
+
 ## 注意事项
 
 1. 数据模型不可更改，因此建表时需要选择一个合适的[数据模型](../table-design/data-model/overview.md)。
 
 2. 已经创建的分区不能修改分桶数，可以通过[替换分区](../data-operate/delete/table-temp-partition.md) 来修改分桶数，可以修改动态分区未创建的分区分桶数。
 
-3. 修改表、分区属性可以参考[修改表属性](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PROPERTY.md)
+3. 加减 VALUE 列是轻量级实现，秒级别可以完成，加减 KEY 列或者修改数据类型是重量级操作，完成时间取决于数据量，大规模数据下尽量避免加减 KEY 列或者修改数据类型。
 
-4. 加减 VALUE 列是轻量级实现，秒级别可以完成，加减 KEY 列或者修改数据类型是重量级操作，完成时间取决于数据量，大规模数据下尽量避免加减 KEY 列或者修改数据类型。
-
-5. 可以使用层级存储将冷数据保存到 HDD 或者 S3 / HDFS。
+4. 可以使用层级存储将冷数据保存到 HDD 或者 S3 / HDFS。

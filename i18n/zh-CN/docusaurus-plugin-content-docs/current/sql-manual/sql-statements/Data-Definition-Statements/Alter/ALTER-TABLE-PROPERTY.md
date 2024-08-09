@@ -38,6 +38,7 @@ ALTER TABLE PROPERTY
   - 对于未创建的自动分区(auto partition)，可以使用alter table {tableName} set ({key} = {value}) 来修改其属性；
   - 若用户想修改分区的属性，需要修改已经创建分区的属性，同时也要修改未创建分区的属性
 - 除了上面几个属性，其他均为表级别属性
+- 具体属性可以参考[建表属性](../../../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md#properties)
 :::
 
 ### Description
