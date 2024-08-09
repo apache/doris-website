@@ -1075,7 +1075,8 @@
                                 "sql-manual/sql-functions/table-functions/jobs",
                                 "sql-manual/sql-functions/table-functions/mv_infos",
                                 "sql-manual/sql-functions/table-functions/tasks",
-                                "sql-manual/sql-functions/table-functions/query"
+                                "sql-manual/sql-functions/table-functions/query",
+                                "sql-manual/sql-functions/table-functions/explode-json-object"
                             ]
                         },
                         {
