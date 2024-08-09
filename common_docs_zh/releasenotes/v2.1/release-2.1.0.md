@@ -161,7 +161,7 @@ under the License.
 基于此，Apache Doris 可以与整个 AI 和数据科学生态进行良好的整合，这也是未来的重要发展方向。
 
 ```C++
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:9090", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "user",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "pass",
         })
