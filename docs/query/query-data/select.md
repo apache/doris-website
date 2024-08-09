@@ -111,6 +111,31 @@ UNION [ALL| DISTINCT] SELECT ......
 
 By default, `UNION` removes duplicate rows from the result. The optional `DISTINCT` keyword has no effect beyond the default, as it also specifies duplicate row removal. Using the optional `ALL` keyword, no duplicate row removal occurs, and the result includes all matching rows from all `SELECT` statements.
 
+INTERSECT:
+
+```sql
+SELECT ...
+INTERSECT SELECT ......
+[INTERSECT SELECT ...]
+```
+
+`INTERSECT` is used to return the intersection of results from multiple `SELECT` statements, with duplicate results removed.
+The effect of `INTERSECT` is equivalent to `INTERSECT DISTINCT`. The `ALL` keyword is not supported.
+Each `SELECT` query must return the same number of columns, and the column types must be compatible.
+
+EXCEPT/MINUS:
+
+```sql
+SELECT ...
+EXCEPT SELECT ......
+[EXCEPT SELECT ...]
+```
+
+The `EXCEPT` clause is used to return the complement between the results of multiple queries, meaning it returns the data from the left query that does not exist in the right query, with duplicates removed.
+`EXCEPT` is functionally equivalent to `MINUS`.
+The effect of `EXCEPT` is the same as `EXCEPT DISTINCT`. The `ALL` keyword is not supported.
+Each `SELECT` query must return the same number of columns, and the column types must be compatible.
+
 WITH:
 
 To specify a common table expression, use a `WITH` clause with one or more comma-separated subclauses. Each subclause provides a subquery that generates a result set and associates a name with the subquery. The following example defines CTEs named `cte1` and `cte2` in the `WITH` clause, and refers to them in the top-level `SELECT `following the WITH clause.
@@ -203,6 +228,22 @@ select *,(price * 0.8) as "20% off" from tb_book;
 ```
 SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
 UNION
+SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
+```
+
+- INTERSECT
+
+```sql
+SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
+INTERSECT
+SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
+```
+
+- EXCEPT
+
+```sql
+SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
+EXCEPT
 SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
 ```
 

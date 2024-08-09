@@ -160,6 +160,30 @@ UNION [ALL| DISTINCT] SELECT ......
 
 默认行为 `UNION`是从结果中删除重复的行。可选 `DISTINCT` 关键字除了默认值之外没有任何效果，因为它还指定了重复行删除。使用可选 `ALL` 关键字，不会发生重复行删除，结果包括所有 `SELECT` 语句中的 所有匹配行 
 
+INTERSECT 语法：
+
+```sql
+SELECT ...
+INTERSECT [DISTINCT] SELECT ......
+[INTERSECT [DISTINCT] SELECT ...]
+```
+
+`INTERSECT` 用于返回多个 `SELECT` 语句的结果之间的交集，并对结果进行去重。
+`INTERSECT` 效果等同于 `INTERSECT DISTINCT`。不支持 `ALL` 关键字。
+每条 `SELECT` 查询返回的列数必须相同，且列类型能够兼容。
+
+EXCEPT/MINUS 语法：
+
+```sql
+SELECT ...
+EXCEPT [DISTINCT] SELECT ......
+[EXCEPT [DISTINCT] SELECT ...]
+```
+`EXCEPT` 子句用于返回多个查询结果之间的补集，即返回左侧查询中在右侧查询中不存在的数据，并对结果集去重。
+`EXCEPT` 和 `MINUS` 功能对等。
+`EXCEPT` 效果等同于 `EXCEPT DISTINCT`。不支持 `ALL` 关键字。
+每条 `SELECT` 查询返回的列数必须相同，且列类型能够兼容。
+
 WITH 语句：
 
 要指定公用表表达式，请使用 `WITH` 具有一个或多个逗号分隔子句的子句。每个子条款都提供一个子查询，用于生成结果集，并将名称与子查询相关联。下面的示例定义名为的 CTE `cte1` 和 `cte2` 中 `WITH` 子句，并且是指在它们的顶层 `SELECT` 下面的 `WITH` 子句：
@@ -256,6 +280,22 @@ select *,(price * 0.8) as "八折" from tb_book;
 ```sql
 SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
 UNION
+SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
+```
+
+- INTERSECT 示例
+
+```sql
+SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
+INTERSECT
+SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
+```
+
+- EXCEPT 示例
+
+```sql
+SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
+EXCEPT
 SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
 ```
 
