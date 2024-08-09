@@ -234,23 +234,28 @@ The default sampling interval is 512K, usually only 10% of memory is recorded by
 If you are doing profiling, keep `prof:false` to avoid the performance penalty of heap dump.
 
 ###### 2. regular heap dump
-Also change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true`, and modify `JEMALLOC_PROF_PRFIX` in `be.conf` to any value and restart BE.
+First, change `prof:false` of `JEMALLOC_CONF` in `be.conf` to `prof:true`. The default directory of the heap dump file is `${DORIS_HOME}/log`. The file name prefix is ​​`JEMALLOC_PROF_PRFIX` in `be.conf`, which is `jemalloc_heap_profile_` by default.
 
-The directory where the heap dump file is located is `${DORIS_HOME}/log` by default, and the file name prefix is `JEMALLOC_PROF_PRFIX`.
+> Before Doris 2.1.6, `JEMALLOC_PROF_PRFIX` is empty and needs to be changed to any value as the profile file name
 
-1. Dump when accumulatively applying for a certain value of memory:
+1. Dump when the cumulative memory application reaches a certain value:
 
-    The default memory accumulatively applies for 4GB to generate a dump. You can modify the `lg_prof_interval` of `JEMALLOC_CONF` in `be.conf` to adjust the dump interval. The default value is `32` (2^32 B = 4GB).
+Change `lg_prof_interval` of `JEMALLOC_CONF` in `be.conf` to 34. At this time, the profile is dumped once when the cumulative memory application reaches 16GB (2^35 B = 16GB). You can change it to any value to adjust the dump interval.
+
+> Before Doris 2.1.6, `lg_prof_interval` defaults to 32.
+
 2. Dump every time the memory reaches a new high:
 
-    Change `prof_gdump` of `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
+Change `prof_gdump` in `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
+
 3. Dump when the program exits, and detect memory leaks:
 
-    Change `prof_leak` and `prof_final` of `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
-4. Dump memory cumulative value (growth), not real-time value:
+Change `prof_leak` and `prof_final` in `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
 
-    Change `prof_accum` of `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
-    Use `jeprof --alloc_space` to display heap dump accumulation.
+4. Dump the cumulative value (growth) of memory instead of the real-time value:
+
+Change `prof_accum` in `JEMALLOC_CONF` in `be.conf` to `true` and restart BE.
+Use `jeprof --alloc_space` to display the cumulative value of heap dump.
 
 ##### 3. jemalloc heap dump profiling
 
