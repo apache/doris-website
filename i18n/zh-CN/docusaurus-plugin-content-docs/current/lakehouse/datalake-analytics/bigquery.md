@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-BigQuery Catalog 通过 [Trino Connector](../../../../docusaurus-plugin-content-docs-community/current/how-to-contribute/trino-connector-developer-guide.md) 兼容框架，使用 BigQuery Connector 来访问 BigQuery 表。
+BigQuery Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 兼容框架，使用 BigQuery Connector 来访问 BigQuery 表。
 
 > 该功能自 Doris 3.0.1 版本开始支持。
 

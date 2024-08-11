@@ -393,7 +393,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `time_zone`
 
-  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](./time-zone)文档。
+  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](../../admin-manual/cluster-management/time-zone)文档。
 
 - `tx_isolation`
 

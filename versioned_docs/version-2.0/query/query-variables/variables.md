@@ -397,7 +397,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `time_zone`
 
-    Used to set the time zone for the current session. Defaults to the value of `system_time_zone`. It affects the results of certain time functions. For more information, see the [time zone](./time-zone) documentation.
+    Used to set the time zone for the current session. Defaults to the value of `system_time_zone`. It affects the results of certain time functions. For more information, see the [time zone](../../admin-manual/cluster-management/time-zone) documentation.
     
 * `tx_isolation`
 
