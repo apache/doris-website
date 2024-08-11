@@ -62,7 +62,7 @@ properties (
     "enable_memory_overcommit"="true"
 ).
 ```
-For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP.md), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP.md); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP.md); to view the workload group, refer to: [WORKLOAD_GROUPS()](../../sql-manual/sql-functions/table-functions/workload-group.md) and [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md).
+For details on creating a workload group, see [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP.md), and to delete a workload group, refer to [DROP-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP.md); to modify a workload group, refer to [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-reference/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP.md); to view the workload group, refer to: [WORKLOAD_GROUPS()](../../sql-manual/sql-functions/table-valued-functions/workload-group.md) and [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-reference/Show-Statements/SHOW-WORKLOAD-GROUPS.md).
 
 
 4. turn on the pipeline execution engine, the workload group cpu isolation is based on the implementation of the pipeline execution engine, so you need to turn on the session variable:

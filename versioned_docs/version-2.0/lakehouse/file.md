@@ -30,9 +30,11 @@ With the Table Value Function feature, Doris is able to query files in object st
 
 For more usage details, please see the documentation:
 
-* [S3](https://doris.apache.org/docs/dev/sql-manual/sql-functions/table-functions/s3/): supports file analysis on object storage compatible with S3
+* [S3](../sql-manual/sql-functions/table-valued-functions/s3.md): supports file analysis on object storage compatible with S3
 
-* [HDFS](https://doris.apache.org/docs/dev/sql-manual/sql-functions/table-functions/hdfs/): supports file analysis on HDFS
+* [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md): supports file analysis on HDFS
+
+* [LOCAL](../sql-manual/sql-functions/table-valued-functions/local.md): supports file analysis on local file system
 
 The followings illustrate how file analysis is conducted with the example of S3 Table Value Function.
 
