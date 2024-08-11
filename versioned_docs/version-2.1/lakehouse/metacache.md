@@ -86,11 +86,11 @@ Each Catalog has a database name list cache, and each database has a table name 
 
 	Controlled by the FE configuration item `external_cache_expire_time_minutes_after_access`. The unit is minutes, with a default of 10 minutes. Reducing this time allows for more real-time viewing of the latest name lists in Doris but increases the frequency of accessing external data sources.
 
-### Library and Table Objects
+### Database and Table Objects
 
 Cache individual library and table objects. Any access operations on libraries or tables, such as queries, writes, etc., will retrieve the corresponding objects from this cache.
 
-Note that the list of objects in this cache may be inconsistent with the cache of [Library and Table Names](#) .
+Note that the list of objects in this cache may be inconsistent with the cache of **Database and Table Name Lists** Cache .
 
 For example, by using the `SHOW TABLES` command, you can retrieve tables `A`, `B`, `C` from the name list cache. Suppose an external data source adds table `D` at this time, then `SELECT * FROM D` can access table `D`, and the cache of table objects will add the object of table `D`, but the cache of table names may still be `A`, `B`, `C`. Only when the cache of table names is refreshed, it will become `A`, `B`, `C`, `D`.
 
@@ -228,7 +228,7 @@ Each Iceberg Catalog has this cache.
 
 	Controlled by the FE configuration item `external_cache_expire_time_minutes_after_access`. Unit is in minutes. Default is 10 minutes. Decreasing this time allows for more real-time access to the latest Iceberg table properties in Doris, but will increase the frequency of accessing external data sources.
 
-### Iceberg Table Snapshot Cache
+### Iceberg Table Snapshot
 
 Used to cache the Snapshot list of Iceberg tables. These objects are loaded and constructed through the Iceberg API.
 
