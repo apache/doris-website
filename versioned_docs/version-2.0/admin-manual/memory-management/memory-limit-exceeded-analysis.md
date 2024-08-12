@@ -33,6 +33,8 @@ When the query or import error `Memory limit exceeded` is reported, the possible
 ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consuming tracker:<xxx>, xxx. backend 172.1.1.1 process memory used xxx GB, limit xxx GB. If query tracker exceeded, `set exec_mem_limit=8G ` to change limit, details mem usage see be. INFO.
 ```
 
+For more information about memory management, refer to the following documents: [Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/), [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
+
 ## The process memory exceeds the limit OR the remaining available memory of the system is insufficient
 When the following error is returned, it means that the process memory exceeds the limit, or the remaining available memory of the system is insufficient. The specific reason depends on the memory statistics.
 ```

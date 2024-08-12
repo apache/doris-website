@@ -38,6 +38,8 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Memory limit exceeded:<consumin
 自 Doris 1.2 版本开始支持该功能
 :::
 
+有关内存管理的更多介绍参考文档：[Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/)， [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
+
 ## 进程内存超限 OR 系统剩余可用内存不足
 
 当返回如下报错时，说明进程内存超限，或者系统剩余可用内存不足，具体原因看内存统计值。

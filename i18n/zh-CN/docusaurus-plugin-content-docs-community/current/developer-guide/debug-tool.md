@@ -223,6 +223,8 @@ Total: 1296.4 MB
 
 ##### JEMALLOC
 
+有关 Heap Profile 的原理解析参考 [Heap Profiling 原理解析](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/)，需要注意的是 Heap Profile 记录的是虚拟内存
+
 ###### 1. realtime heap dump
 将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true` 并重启BE，然后使用jemalloc heap dump http接口，在对应的BE机器上生成heap dump文件。
 
@@ -237,19 +239,24 @@ heap dump文件所在目录可以在 ``be.conf`` 中通过``jeprofile_dir``变�
 如果你在做性能测试，保持 `prof:false` 来避免 heap dump 的性能损耗。
 
 ###### 2. regular heap dump
-同样要将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，同时将 `be.conf` 中 `JEMALLOC_PROF_PRFIX` 修改为任意值并重启BE。
+首先将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof:false` 修改为 `prof:true`，heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `be.conf` 中的 `JEMALLOC_PROF_PRFIX`，默认是 `jemalloc_heap_profile_`。
 
-heap dump文件所在目录默认为 `${DORIS_HOME}/log`, 文件名前缀是 `JEMALLOC_PROF_PRFIX`。
+> 在 Doris 2.1.6 之前，`JEMALLOC_PROF_PRFIX` 为空，需要修改为任意值作为 profile 文件名
 
 1. 内存累计申请一定值时dump:
 
-   默认内存累计申请 4GB 生成一次dump，可以修改 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_prof_interval` 调整dump间隔，默认值 `32` (2^32 B = 4GB)。
+   将 `be.conf` 中 `JEMALLOC_CONF` 的 `lg_prof_interval` 修改为 34，此时内存累计申请 16GB (2^35 B = 16GB) 时 dump 一次 profile，可以修改为任意值来调整dump间隔。
+
+> 在 Doris 2.1.6 之前，`lg_prof_interval` 默认就是32。
+
 2. 内存每次达到新高时dump:
 
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_gdump` 修改为 `true` 并重启BE。
+
 3. 程序退出时dump, 并检测内存泄漏:
 
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_leak` 和 `prof_final` 修改为 `true` 并重启BE。
+
 4. dump内存累计值(growth)，而不是实时值:
 
    将 `be.conf` 中 `JEMALLOC_CONF` 的 `prof_accum` 修改为 `true` 并重启BE。

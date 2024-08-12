@@ -38,9 +38,11 @@ For detailed design and implementation, please refer to:
 https://cwiki.apache.org/confluence/display/DORIS/DSIP-002%3A+Refactor+memory+tracker+on+BE
 https://shimo.im/docs/DT6JXDRkdTvdyV3G
 
+For more information about Memory Tracker, refer to the following documents: [Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/), [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
+
 ## View statistics
 
-The real-time memory statistics results can be viewed through Doris BE's Web page http://ip:webserver_port/mem_tracker.(webserver_port default is 8040)
+The real-time memory statistics results can be viewed through Doris BE's Web page http://{be_host}:{be_web_server_port}/mem_tracker.(webserver_port default is 8040)
 For the memory statistics results of historical queries, you can view the `peakMemoryBytes` of each query in `fe/log/fe.audit.log`, or search `Deregister query/load memory tracker, queryId` in `be/log/be.INFO` `View memory peaks per query on a single BE.
 
 ### Home `/mem_tracker`
@@ -51,7 +53,7 @@ For the memory statistics results of historical queries, you can view the `peakM
 - global: Global Memory Tracker with the same life cycle and process, such as each Cache, Tablet Manager, Storage Engine, etc.
 - query: the in-memory sum of all queries.
 - load: Sum of all imported memory.
-- tc/jemalloc_cache: The general memory allocator TCMalloc or Jemalloc cache, you can view the original profile of the memory allocator in real time at http://ip:webserver_port/memz.
+- tc/jemalloc_cache: The general memory allocator TCMalloc or Jemalloc cache, you can view the original profile of the memory allocator in real time at http://{be_host}:{be_web_server_port}/memz.
 - compaction, schema_change, consistency, batch_load, clone: ​​corresponding to the memory sum of all Compaction, Schema Change, Consistency, Batch Load, and Clone tasks respectively.
 
 2. Current Consumption(Bytes): current memory value, unit B.

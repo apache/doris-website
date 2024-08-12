@@ -358,9 +358,10 @@
                     "type": "category",
                     "label": "Managing Memory",
                     "items": [
+                        "admin-manual/memory-management/memory-analyze-manual",
                         "admin-manual/memory-management/memory-tracker",
                         "admin-manual/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/memory-management/be-oom-analysis"
+                        "admin-manual/memory-management/memory-management-feature"
                     ]
                 },
                 {
