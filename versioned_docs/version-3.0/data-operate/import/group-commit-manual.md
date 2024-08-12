@@ -148,14 +148,122 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-Note: Due to the high frequency of INSERT INTO statements, a large number of audit logs will be printed, which can impact performance. This can be controlled by setting a session variable to determine whether to print audit logs for prepared statements.
+注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，默认关闭了打印prepared语句的audit log。可以通过设置session variable的方式控制是否打印prepared语句的audit log。
 
 ```sql
-# Configure the session variable to disable the printing of prepared statement audit logs. By default, it is true, which means audit logs for prepared statements are enabled.
-SET enable_prepared_stmt_audit_log = false;
+# 配置 session 变量开启打印parpared语句的audit log, 默认为false即关闭打印parpared语句的audit log。
+set enable_prepared_stmt_audit_log=true;
 ```
 
-See [Synchronize Data Using Insert Method](../../data-operate/import/insert-into-manual) for more details about **JDBC**.
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import/insert-into-manual)。
+
+### 使用Golang进行Group Commit
+
+Golang的prepared语句支持有限，所以我们可以通过手动客户端攒批的方式提高Group Commit的性能，以下为一个示例程序。
+
+```Golang
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "math/rand"
+    "strings"
+    "sync"
+    "sync/atomic"
+    "time"
+
+    _ "github.com/go-sql-driver/mysql"
+)
+
+const (
+    host     = "127.0.0.1"
+    port     = 9038
+    db       = "test"
+    user     = "root"
+    password = ""
+    table    = "async_lineitem"
+)
+
+var (
+    threadCount = 20
+    batchSize   = 100
+)
+
+var totalInsertedRows int64
+var rowsInsertedLastSecond int64
+
+func main() {
+    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+    db, err := sql.Open("mysql", dbDSN)
+    if err != nil {
+        fmt.Printf("Error opening database: %s\n", err)
+        return
+    }
+    defer db.Close()
+
+    var wg sync.WaitGroup
+    for i := 0; i < threadCount; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            groupCommitInsertBatch(db)
+        }()
+    }
+
+    go logInsertStatistics()
+
+    wg.Wait()
+}
+
+func groupCommitInsertBatch(db *sql.DB) {
+    for {
+        valueStrings := make([]string, 0, batchSize)
+        valueArgs := make([]interface{}, 0, batchSize*16)
+        for i := 0; i < batchSize; i++ {
+            for i = 0; i < batchSize; i++ {
+                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, "N")
+                valueArgs = append(valueArgs, "O")
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, "DELIVER IN PERSON")
+                valueArgs = append(valueArgs, "SHIP")
+                valueArgs = append(valueArgs, "N/A")
+            }
+        }
+        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+            table, strings.Join(valueStrings, ","))
+        _, err := db.Exec(stmt, valueArgs...)
+        if err != nil {
+            fmt.Printf("Error executing batch: %s\n", err)
+            return
+        }
+        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+    }
+}
+
+func logInsertStatistics() {
+    for {
+        time.Sleep(1 * time.Second)
+        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+        rowsInsertedLastSecond = 0
+    }
+}
+
+```
+
 
 ### INSERT INTO VALUES
 
@@ -471,12 +579,12 @@ We have separately tested the write performance of group commit in high-concurre
 | `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
 | `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
 | `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
-| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 1 MB    | 10   | 119       | 2,077,723  | 273.8 |
 | `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
 | `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
 | `non group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
 | `non group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
-| `non group_commit` | 10 MB   | 30   | 118  | 2095331 | 276.1|
+| `non group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
 
@@ -525,13 +633,40 @@ In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates 
 **Machine Configuration**
 
 * 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
-* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk. Note: Tests were conducted using 1, 3, and 5 BE nodes respectively.
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
 * 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
 * Test version: Doris-3.0.1
 
 **Dataset**
 
-* Simple insert into statement: `insert into tbl values(1,1);`
+* The data of tpch sf10 `lineitem` table.
+
+* The create table statement is
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+  L_ORDERKEY    INTEGER NOT NULL,
+  L_PARTKEY     INTEGER NOT NULL,
+  L_SUPPKEY     INTEGER NOT NULL,
+  L_LINENUMBER  INTEGER NOT NULL,
+  L_QUANTITY    DECIMAL(15,2) NOT NULL,
+  L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+  L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+  L_TAX         DECIMAL(15,2) NOT NULL,
+  L_RETURNFLAG  CHAR(1) NOT NULL,
+  L_LINESTATUS  CHAR(1) NOT NULL,
+  L_SHIPDATE    DATE NOT NULL,
+  L_COMMITDATE  DATE NOT NULL,
+  L_RECEIPTDATE DATE NOT NULL,
+  L_SHIPINSTRUCT CHAR(25) NOT NULL,
+  L_SHIPMODE     CHAR(10) NOT NULL,
+  L_COMMENT      VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+PROPERTIES (
+  "replication_num" = "3"
+);
+```
 
 **Testing Tool**
 
@@ -539,51 +674,34 @@ In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates 
 
 **Testing Methodology**
 
-* Data was written to `Doris` using `Jemeter`.
+* Use JMeter to write data into Doris. Each thread writes 1 row of data per execution using the insert into statement.
 
 **Test Results**
 
 * Data unit: rows per second.
-* The following tests were divided into two groups: new optimizer and old optimizer.
 
-**30 Concurrent Sync Mode Performance Test**
+* The following tests are divided into 30, 100, and 500 concurrency.
 
-| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | new: 834.1      | new: 916.5      | new: 930.2      | new: 907.1      | new: 925.7      | new: 946.2      |
-|                       | old: 822.9      | old: 913.4      | old: 917.0      | old: 925.2      | old: 940.6      | old: 932.3      |
-| 20ms                  | new: 657.3      | new: 656.3      | new: 691.9      | new: 695.5      | new: 715.0      | new: 717.2      |
-|                       | old: 649.4      | old: 658.6      | old: 691.5      | old: 711.4      | old: 715.0      | old: 709.3      |
-| 50ms                  | new: 400.2      | new: 392.0      | new: 402.0      | new: 409.3      | new: 413.7      | new: 415.1      |
-|                       | old: 387.4      | old: 387.1      | old: 411.9      | old: 415.8      | old: 415.8      | old: 414.1      |
-| 100ms                 | new: 235.9      | new: 243.2      | new: 238.4      | new: 243.5      | new: 245.0      | new: 245.1      |
-|                       | old: 236.7      | old: 243.5      | old: 239.9      | old: 244.3      | old: 245.0      | old: 244.1      |
+**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-**100 Concurrent Sync Mode Performance Test**
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true | 891.8      | 701.1      | 400.0     | 237.5    |
+|enable_nereids_planner=false | 885.8      | 688.1      | 398.7      | 232.9     |
 
-| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | new: 2321.1    | new: 2393.6    | new: 2760.3    | new: 2632.7    | new: 2614.8    | new: 2661.7    |
-|                       | old: 2437.4    | old: 2423.8    | old: 2709.2    | old: 2637.7    | old: 2718.4    | old: 2827.8    |
-| 20ms                  | new: 1889.2    | new: 1914.2    | new: 2098.7    | new: 2071.5    | new: 2043.9    | new: 2073.0    |
-|                       | old: 1969.1    | old: 2016.7    | old: 2058.3    | old: 2090.8    | old: 2189.6    | old: 2177.5    |
-| 50ms                  | new: 1222.7    | new: 1226.9    | new: 1215.3    | new: 1261.1    | new: 1268.8    | new: 1282.0    |
-|                       | old: 1227.7    | old: 1263.7    | old: 1278.1    | old: 1270.9    | old: 1290.3    | old: 1319.0    |
-| 100ms                 | new: 756.8     | new: 759.2     | new: 758.2     | new: 777.5     | new: 777.2     | new: 783.8     |
-|                       | old: 767.9     | old: 769.1     | old: 780.7     | old: 784.1     | old: 794.1     | old: 804.3     |
+**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-**500 Concurrent Sync Mode Performance Test**
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true | 2427.8     | 2068.9     | 1259.4     | 764.9  |
+|enable_nereids_planner=false | 2320.4     | 1899.3     | 1206.2     | 749.7 |
 
-| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | new: 5315.2    | new: 5333.8    | new: 5374.0    | new: 6456.4    | new: 6735.3    | new: 4816.5    |
-|                       | old: 7001.3    | old: 7747.4    | old: 8181.5    | old: 7830.2    | old: 8493.9    | old: 8022.3    |
-| 20ms                  | new: 5243.2    | new: 5301.8    | new: 5487.7    | new: 6776.9    | new: 6825.0    | new: 3917.8    |
-|                       | old: 7756.7    | old: 7996.6    | old: 7852.4    | old: 7852.1    | old: 7990.5    | old: 7902.5    |
-| 50ms                  | new: 4944.2    | new: 4978.9    | new: 5054.9    | new: 4944.0    | new: 4975.2    | new: 3843.6    |
-|                       | old: 5730.1    | old: 5746.9    | old: 5709.9    | old: 5916.3    | old: 6024.7    | old: 6024.0    |
-| 100ms                 | new: 3350.9    | new: 3353.5    | new: 3372.7    | new: 3307.6    | new: 3341.2    | new: 3120.5    |
-|                       | old: 3715.0    | old: 3682.8    | old: 3717.9    | old: 3755.7    | old: 3820.8    | old: 3832.8    |
+**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true | 5567.5     | 5713.2     | 4681.0     | 3131.2   |
+|enable_nereids_planner=false | 4471.6     | 5042.5     | 4932.2     | 3641.1 |
 
 ### Insert into Sync Mode Large Batch Data
 
@@ -591,7 +709,7 @@ In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates 
 
 * 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
 
-* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk. Note: Tests were conducted using 1, 3, and 5 BE nodes respectively.
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
 
 * 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
 
@@ -607,49 +725,31 @@ In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates 
 
 **Testing Methodology**
 
-* Data was written to `Doris` using `Jemeter`.
+* Use JMeter to write data into Doris. Each thread writes 1000 row of data per execution using the insert into statement.
 
 **Test Results**
 
 * Data unit: rows per second.
 
-* The following tests were divided into two groups: new optimizer and old optimizer.
+* The following tests are divided into 30, 100, and 500 concurrency.
 
-**30 Concurrent Sync Mode Performance Test**
+**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | new: 33.7K | new: 33.0K      | new: 33.4K      | new: 39.4K      | new: 32.2K      | new: 34.2K      |
-|                       | old: 501.4K | old: 505.3K      | old: 512.6K      | old: 37K        | old: 35.8K      | old: 297.8K     |
-| 20ms                  | new: 35.0K      | new: 32.9K      | new: 35.5K      | new: 35.4K      | new: 39.4K      | new: 35.6K      |
-|                       | old: 415.1K     | old: 425.0K     | old: 430.5K     | old: 144.4K     | old: 285.2K     | old: 287.8K     |
-| 50ms                  | new: 41.4K      | new: 42.5K      | new: 40.4K      | new: 39.6K      | new: 41.1K      | new: 39.4K      |
-|                       | old: 301.7K     | old: 312.9K     | old: 295.4K     | old: 138.1K     | old: 252.3K     | old: 255.1K     |
-| 100ms                 | new: 37.3K      | new: 38.1K      | new: 39.2K      | new: 37.3K      | new: 38.4K      | new: 40.2K      |
-|                       | old: 202.5K     | old: 202.4K     | old: 200.8K     | old: 128.2K     | old: 200.8K     | old: 201.2K     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
+|enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
-**100 Concurrent Sync Mode Performance Test**
+**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | new: 37.0K      | new: 37.1K      | new: 36.9K      | new: 37.7K      | new: 37.4K      | new: 37.2K      |
-|                       | old: 585.5K     | old: 594.6K     | old: 599.2K     | old: 587K       | old: 594.6K     | old: 468.8K     |
-| 20ms                  | new: 37.4K      | new: 37.3K      | new: 37.2K      | new: 37.7K      | new: 37.7K      | new: 37.2K      |
-|                       | old: 594.0K     | old: 595.9K     | old: 608.7K     | old: 591.7K     | old: 599.5K     | old: 467.4K     |
-| 50ms                  | new: 38.3K      | new: 37.1K      | new: 36.9K      | new: 38.5K      | new: 38.4K      | new: 36.3K      |
-|                       | old: 563.9K     | old: 572K       | old: 576.6K     | old: 563.3K     | old: 565.5K     | old: 454.5K     |
-| 100ms                 | new: 36.4K      | new: 37.7K      | new: 36.6K      | new: 36.4K      | new: 39.1K      | new: 36.3K      |
-|                       | old: 500.3K     | old: 505.5K     | old: 509K       | old: 504.3K     | old: 506.7K     | old: 403.5K     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
+|enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
-**500 Concurrent Sync Mode Performance Test**
+**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
-| Group commit internal | 1FE 5BE 5 replica | 1FE 5BE 3 replica | 1FE 5BE 1 replica | 1FE 3BE 3 replica | 1FE 3BE 1 replica | 1FE 1BE 1 replica |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | new: 23.2K      | new: 24K        | new: 23.6K      | new: 28.9K      | new: 24.9K      | new: 177.2K     |
-|                       | old: 421.9K     | old: 412.7K     | old: 414.1K     | old: 117.1K     | old: 414.1K     | old: 418.4K     |
-| 20ms                  | new: 23.9K      | new: 24.4K      | new: 23.3K      | new: 26.2K      | new: 24.9K      | new: 10.4K      |
-|                       | old: 416.4K     | old: 409.9K     | old: 401.3K     | old: 402.1K     | old: 405K       | old: 411.7K     |
-| 50ms                  | new: 24K        | new: 23.8K      | new: 22.8K      | new: 20.2K      | new: 23.7K      | new: 3.9K       |
-|                       | old: 405.9K     | old: 407.4K     | old: 402.8K     | old: 6.6K       | old: 402.1K     | old: 411.1K     |
-| 100ms                 | new: 23.5K      | new: 23.2K      | new: 22.7K      | new: 21.5K      | new: 24.4K      | new: 20.2K      |
-|                       | old: 399.8K     | old: 406.3K     | old: 407.1K     | old: 409.9K     | old: 402.4K     | old: 395.9K     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
+|enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |

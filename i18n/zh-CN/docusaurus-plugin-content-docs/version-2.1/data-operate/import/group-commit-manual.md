@@ -147,14 +147,121 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，可以通过设置session variable的方式控制是否打印parpared语句的audit log。
+注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，默认关闭了打印prepared语句的audit log。可以通过设置session variable的方式控制是否打印prepared语句的audit log。
 
 ```sql
-# 配置 session 变量关闭打印parpared语句的audit log, 默认为true即开启打印parpared语句的audit log。
-set enable_prepared_stmt_audit_log=false;
+# 配置 session 变量开启打印parpared语句的audit log, 默认为false即关闭打印parpared语句的audit log。
+set enable_prepared_stmt_audit_log=true;
 ```
 
 关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import/insert-into-manual)。
+
+### 使用Golang进行Group Commit
+
+Golang的prepared语句支持有限，所以我们可以通过手动客户端攒批的方式提高Group Commit的性能，以下为一个示例程序。
+
+```Golang
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "math/rand"
+    "strings"
+    "sync"
+    "sync/atomic"
+    "time"
+
+    _ "github.com/go-sql-driver/mysql"
+)
+
+const (
+    host     = "127.0.0.1"
+    port     = 9038
+    db       = "test"
+    user     = "root"
+    password = ""
+    table    = "async_lineitem"
+)
+
+var (
+    threadCount = 20
+    batchSize   = 100
+)
+
+var totalInsertedRows int64
+var rowsInsertedLastSecond int64
+
+func main() {
+    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+    db, err := sql.Open("mysql", dbDSN)
+    if err != nil {
+        fmt.Printf("Error opening database: %s\n", err)
+        return
+    }
+    defer db.Close()
+
+    var wg sync.WaitGroup
+    for i := 0; i < threadCount; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            groupCommitInsertBatch(db)
+        }()
+    }
+
+    go logInsertStatistics()
+
+    wg.Wait()
+}
+
+func groupCommitInsertBatch(db *sql.DB) {
+    for {
+        valueStrings := make([]string, 0, batchSize)
+        valueArgs := make([]interface{}, 0, batchSize*16)
+        for i := 0; i < batchSize; i++ {
+            for i = 0; i < batchSize; i++ {
+                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, "N")
+                valueArgs = append(valueArgs, "O")
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, "DELIVER IN PERSON")
+                valueArgs = append(valueArgs, "SHIP")
+                valueArgs = append(valueArgs, "N/A")
+            }
+        }
+        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+            table, strings.Join(valueStrings, ","))
+        _, err := db.Exec(stmt, valueArgs...)
+        if err != nil {
+            fmt.Printf("Error executing batch: %s\n", err)
+            return
+        }
+        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+    }
+}
+
+func logInsertStatistics() {
+    for {
+        time.Sleep(1 * time.Second)
+        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+        rowsInsertedLastSecond = 0
+    }
+}
+
+```
 
 ### INSERT INTO VALUES
 
@@ -480,12 +587,12 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 | `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
 | `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
 | `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
-| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 1 MB    | 10   | 119       | 2,077,723  | 273.8 |
 | `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
 | `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
 | `非group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
 | `非group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
-| `非group_commit` | 10 MB   | 30   | 118  | 2095331 | 276.1|
+| `非group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
 
 在上面的`group_commit`测试中，BE 的 CPU 使用率在 10-40% 之间。
 
@@ -533,7 +640,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 * 1 台 FE：阿里云 16 核 CPU、64GB 内存、1 块 500GB ESSD PL1 云磁盘
 
-* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。注：测试中分别用了1台，3台，5台BE进行测试。
+* 5 台 BE：阿里云 16 核 CPU、64GB 内存、1 块 1TB ESSD PL1 云磁盘。
 
 * 1 台测试客户端：阿里云 16 核 CPU、64GB 内存、1 块 100GB ESSD PL1 云磁盘
 
@@ -541,7 +648,34 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **数据集**
 
-* 简单的insert into语句。insert into tbl values(1,1);
+* tpch sf10 `lineitem` 表数据集。
+
+* 建表语句为
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+  L_ORDERKEY    INTEGER NOT NULL,
+  L_PARTKEY     INTEGER NOT NULL,
+  L_SUPPKEY     INTEGER NOT NULL,
+  L_LINENUMBER  INTEGER NOT NULL,
+  L_QUANTITY    DECIMAL(15,2) NOT NULL,
+  L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+  L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+  L_TAX         DECIMAL(15,2) NOT NULL,
+  L_RETURNFLAG  CHAR(1) NOT NULL,
+  L_LINESTATUS  CHAR(1) NOT NULL,
+  L_SHIPDATE    DATE NOT NULL,
+  L_COMMITDATE  DATE NOT NULL,
+  L_RECEIPTDATE DATE NOT NULL,
+  L_SHIPINSTRUCT CHAR(25) NOT NULL,
+  L_SHIPMODE     CHAR(10) NOT NULL,
+  L_COMMENT      VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+PROPERTIES (
+  "replication_num" = "3"
+);
+```
 
 **测试工具**
 
@@ -549,52 +683,35 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试方法**
 
-* 通过 `Jemeter` 向`Doris`写数据。
+* 通过 `Jemeter` 向`Doris`写数据。每个并发每次通过insert into写入1行数据。
 
 **测试结果**
 
 * 数据单位为行每秒。
 
-* 以下测试分为新优化器和旧优化器两组数据。
+* 以下测试分为30，100，500并发。
 
-**30并发sync模式性能测试**
+**30并发sync模式5个BE3副本性能测试**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 834.1      | 新: 916.5      | 新: 930.2      | 新: 907.1      | 新: 925.7      | 新: 946.2      |
-|                       | 旧: 822.9      | 旧: 913.4      | 旧: 917.0      | 旧: 925.2      | 旧: 940.6      | 旧: 932.3      |
-| 20ms                  | 新: 657.3      | 新: 656.3      | 新: 691.9      | 新: 695.5      | 新: 715.0      | 新: 717.2      |
-|                       | 旧: 649.4      | 旧: 658.6      | 旧: 691.5      | 旧: 711.4      | 旧: 715.0      | 旧: 709.3      |
-| 50ms                  | 新: 400.2      | 新: 392.0      | 新: 402.0      | 新: 409.3      | 新: 413.7      | 新: 415.1      |
-|                       | 旧: 387.4      | 旧: 387.1      | 旧: 411.9      | 旧: 415.8      | 旧: 415.8      | 旧: 414.1      |
-| 100ms                 | 新: 235.9      | 新: 243.2      | 新: 238.4      | 新: 243.5      | 新: 245.0      | 新: 245.1      |
-|                       | 旧: 236.7      | 旧: 243.5      | 旧: 239.9      | 旧: 244.3      | 旧: 245.0      | 旧: 244.1      |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
+|enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
+
 
 **100并发sync模式性能测试**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 2321.1    | 新: 2393.6    | 新: 2760.3    | 新: 2632.7    | 新: 2614.8    | 新: 2661.7    |
-|                       | 旧: 2437.4    | 旧: 2423.8    | 旧: 2709.2    | 旧: 2637.7    | 旧: 2718.4    | 旧: 2827.8    |
-| 20ms                  | 新: 1889.2    | 新: 1914.2    | 新: 2098.7    | 新: 2071.5    | 新: 2043.9    | 新: 2073.0    |
-|                       | 旧: 1969.1    | 旧: 2016.7    | 旧: 2058.3    | 旧: 2090.8    | 旧: 2189.6    | 旧: 2177.5    |
-| 50ms                  | 新: 1222.7    | 新: 1226.9    | 新: 1215.3    | 新: 1261.1    | 新: 1268.8    | 新: 1282.0    |
-|                       | 旧: 1227.7    | 旧: 1263.7    | 旧: 1278.1    | 旧: 1270.9    | 旧: 1290.3    | 旧: 1319.0    |
-| 100ms                 | 新: 756.8     | 新: 759.2     | 新: 758.2     | 新: 777.5     | 新: 777.2     | 新: 783.8     |
-|                       | 旧: 767.9     | 旧: 769.1     | 旧: 780.7     | 旧: 784.1     | 旧: 794.1     | 旧: 804.3     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
+|enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
 
 **500并发sync模式性能测试**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 5315.2    | 新: 5333.8    | 新: 5374.0    | 新: 6456.4    | 新: 6735.3    | 新: 4816.5    |
-|                       | 旧: 7001.3    | 旧: 7747.4    | 旧: 8181.5    | 旧: 7830.2    | 旧: 8493.9    | 旧: 8022.3    |
-| 20ms                  | 新: 5243.2    | 新: 5301.8    | 新: 5487.7    | 新: 6776.9    | 新: 6825.0    | 新: 3917.8    |
-|                       | 旧: 7756.7    | 旧: 7996.6    | 旧: 7852.4    | 旧: 7852.1    | 旧: 7990.5    | 旧: 7902.5    |
-| 50ms                  | 新: 4944.2    | 新: 4978.9    | 新: 5054.9    | 新: 4944.0    | 新: 4975.2    | 新: 3843.6    |
-|                       | 旧: 5730.1    | 旧: 5746.9    | 旧: 5709.9    | 旧: 5916.3    | 旧: 6024.7    | 旧: 6024.0    |
-| 100ms                 | 新: 3350.9    | 新: 3353.5    | 新: 3372.7    | 新: 3307.6    | 新: 3341.2    | 新: 3120.5    |
-|                       | 旧: 3715.0    | 旧: 3682.8    | 旧: 3717.9    | 旧: 3755.7    | 旧: 3820.8    | 旧: 3832.8    |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
+|enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
 
 ### Insert into sync 模式大批量数据
 
@@ -610,7 +727,34 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **数据集**
 
-* 1000条数据的insert into语句。insert into tbl values(1,1)...省略1000条数据;
+* tpch sf10 `lineitem` 表数据集。
+
+* 建表语句为
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+  L_ORDERKEY    INTEGER NOT NULL,
+  L_PARTKEY     INTEGER NOT NULL,
+  L_SUPPKEY     INTEGER NOT NULL,
+  L_LINENUMBER  INTEGER NOT NULL,
+  L_QUANTITY    DECIMAL(15,2) NOT NULL,
+  L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+  L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+  L_TAX         DECIMAL(15,2) NOT NULL,
+  L_RETURNFLAG  CHAR(1) NOT NULL,
+  L_LINESTATUS  CHAR(1) NOT NULL,
+  L_SHIPDATE    DATE NOT NULL,
+  L_COMMITDATE  DATE NOT NULL,
+  L_RECEIPTDATE DATE NOT NULL,
+  L_SHIPINSTRUCT CHAR(25) NOT NULL,
+  L_SHIPMODE     CHAR(10) NOT NULL,
+  L_COMMENT      VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+PROPERTIES (
+  "replication_num" = "3"
+);
+```
 
 **测试工具**
 
@@ -618,49 +762,31 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试方法**
 
-* 通过 `Jemeter` 向`Doris`写数据。
+* 通过 `Jemeter` 向`Doris`写数据。每个并发每次通过insert into写入1000行数据。
 
 **测试结果**
 
 * 数据单位为行每秒。
 
-* 以下测试分为新优化器和旧优化器两组数据。
+* 以下测试分为30，100，500并发。
 
 **30并发sync模式性能测试**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 33.7K | 新: 33.0K      | 新: 33.4K      | 新: 39.4K      | 新: 32.2K      | 新: 34.2K      |
-|                       | 旧: 501.4K | 旧: 505.3K      | 旧: 512.6K      | 旧: 37K        | 旧: 35.8K      | 旧: 297.8K     |
-| 20ms                  | 新: 35.0K      | 新: 32.9K      | 新: 35.5K      | 新: 35.4K      | 新: 39.4K      | 新: 35.6K      |
-|                       | 旧: 415.1K     | 旧: 425.0K     | 旧: 430.5K     | 旧: 144.4K     | 旧: 285.2K     | 旧: 287.8K     |
-| 50ms                  | 新: 41.4K      | 新: 42.5K      | 新: 40.4K      | 新: 39.6K      | 新: 41.1K      | 新: 39.4K      |
-|                       | 旧: 301.7K     | 旧: 312.9K     | 旧: 295.4K     | 旧: 138.1K     | 旧: 252.3K     | 旧: 255.1K     |
-| 100ms                 | 新: 37.3K      | 新: 38.1K      | 新: 39.2K      | 新: 37.3K      | 新: 38.4K      | 新: 40.2K      |
-|                       | 旧: 202.5K     | 旧: 202.4K     | 旧: 200.8K     | 旧: 128.2K     | 旧: 200.8K     | 旧: 201.2K     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
+|enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
 **100并发sync模式性能测试**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 37.0K      | 新: 37.1K      | 新: 36.9K      | 新: 37.7K      | 新: 37.4K      | 新: 37.2K      |
-|                       | 旧: 585.5K     | 旧: 594.6K     | 旧: 599.2K     | 旧: 587K       | 旧: 594.6K     | 旧: 468.8K     |
-| 20ms                  | 新: 37.4K      | 新: 37.3K      | 新: 37.2K      | 新: 37.7K      | 新: 37.7K      | 新: 37.2K      |
-|                       | 旧: 594.0K     | 旧: 595.9K     | 旧: 608.7K     | 旧: 591.7K     | 旧: 599.5K     | 旧: 467.4K     |
-| 50ms                  | 新: 38.3K      | 新: 37.1K      | 新: 36.9K      | 新: 38.5K      | 新: 38.4K      | 新: 36.3K      |
-|                       | 旧: 563.9K     | 旧: 572K       | 旧: 576.6K     | 旧: 563.3K     | 旧: 565.5K     | 旧: 454.5K     |
-| 100ms                 | 新: 36.4K      | 新: 37.7K      | 新: 36.6K      | 新: 36.4K      | 新: 39.1K      | 新: 36.3K      |
-|                       | 旧: 500.3K     | 旧: 505.5K     | 旧: 509K       | 旧: 504.3K     | 旧: 506.7K     | 旧: 403.5K     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
+|enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
 **500并发sync模式性能测试**
 
-| Group commit internal | 1FE 5BE 5副本 | 1FE 5BE 3副本 | 1FE 5BE 1副本 | 1FE 3BE 3副本 | 1FE 3BE 1副本 | 1FE 1BE 1副本 |
-|-----------------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| 10ms                  | 新: 23.2K      | 新: 24K        | 新: 23.6K      | 新: 28.9K      | 新: 24.9K      | 新: 177.2K     |
-|                       | 旧: 421.9K     | 旧: 412.7K     | 旧: 414.1K     | 旧: 117.1K     | 旧: 414.1K     | 旧: 418.4K     |
-| 20ms                  | 新: 23.9K      | 新: 24.4K      | 新: 23.3K      | 新: 26.2K      | 新: 24.9K      | 新: 10.4K      |
-|                       | 旧: 416.4K     | 旧: 409.9K     | 旧: 401.3K     | 旧: 402.1K     | 旧: 405K       | 旧: 411.7K     |
-| 50ms                  | 新: 24K        | 新: 23.8K      | 新: 22.8K      | 新: 20.2K      | 新: 23.7K      | 新: 3.9K       |
-|                       | 旧: 405.9K     | 旧: 407.4K     | 旧: 402.8K     | 旧: 6.6K       | 旧: 402.1K     | 旧: 411.1K     |
-| 100ms                 | 新: 23.5K      | 新: 23.2K      | 新: 22.7K      | 新: 21.5K      | 新: 24.4K      | 新: 20.2K      |
-|                       | 旧: 399.8K     | 旧: 406.3K     | 旧: 407.1K     | 旧: 409.9K     | 旧: 402.4K     | 旧: 395.9K     |
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
+|enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |

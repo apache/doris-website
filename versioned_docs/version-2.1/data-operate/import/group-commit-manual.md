@@ -148,7 +148,122 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-See [Synchronize Data Using Insert Method](../../data-operate/import/insert-into-manual) for more details about **JDBC**.
+注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，默认关闭了打印prepared语句的audit log。可以通过设置session variable的方式控制是否打印prepared语句的audit log。
+
+```sql
+# 配置 session 变量开启打印parpared语句的audit log, 默认为false即关闭打印parpared语句的audit log。
+set enable_prepared_stmt_audit_log=true;
+```
+
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import/insert-into-manual)。
+
+### 使用Golang进行Group Commit
+
+Golang的prepared语句支持有限，所以我们可以通过手动客户端攒批的方式提高Group Commit的性能，以下为一个示例程序。
+
+```Golang
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "math/rand"
+    "strings"
+    "sync"
+    "sync/atomic"
+    "time"
+
+    _ "github.com/go-sql-driver/mysql"
+)
+
+const (
+    host     = "127.0.0.1"
+    port     = 9038
+    db       = "test"
+    user     = "root"
+    password = ""
+    table    = "async_lineitem"
+)
+
+var (
+    threadCount = 20
+    batchSize   = 100
+)
+
+var totalInsertedRows int64
+var rowsInsertedLastSecond int64
+
+func main() {
+    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+    db, err := sql.Open("mysql", dbDSN)
+    if err != nil {
+        fmt.Printf("Error opening database: %s\n", err)
+        return
+    }
+    defer db.Close()
+
+    var wg sync.WaitGroup
+    for i := 0; i < threadCount; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            groupCommitInsertBatch(db)
+        }()
+    }
+
+    go logInsertStatistics()
+
+    wg.Wait()
+}
+
+func groupCommitInsertBatch(db *sql.DB) {
+    for {
+        valueStrings := make([]string, 0, batchSize)
+        valueArgs := make([]interface{}, 0, batchSize*16)
+        for i := 0; i < batchSize; i++ {
+            for i = 0; i < batchSize; i++ {
+                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, rand.Intn(1000))
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+                valueArgs = append(valueArgs, "N")
+                valueArgs = append(valueArgs, "O")
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, time.Now())
+                valueArgs = append(valueArgs, "DELIVER IN PERSON")
+                valueArgs = append(valueArgs, "SHIP")
+                valueArgs = append(valueArgs, "N/A")
+            }
+        }
+        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+            table, strings.Join(valueStrings, ","))
+        _, err := db.Exec(stmt, valueArgs...)
+        if err != nil {
+            fmt.Printf("Error executing batch: %s\n", err)
+            return
+        }
+        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+    }
+}
+
+func logInsertStatistics() {
+    for {
+        time.Sleep(1 * time.Second)
+        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+        rowsInsertedLastSecond = 0
+    }
+}
+
+```
+
 
 ### INSERT INTO VALUES
 
@@ -434,9 +549,13 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Environment
 
-* 1 FE: 8-core CPU, 16 GB RAM, 1 200 GB SSD disk
-* 3 BE: 16-core CPU, 64 GB RAM, 1 2 TB SSD disk
-* 1 Client: 8-core CPU, 64 GB RAM, 1 100 GB SSD disk
+* 1 Front End (FE) server: Alibaba Cloud with 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+
+* 3 Backend (BE) servers: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 1TB ESSD PL1 SSD.
+
+* 1 Test Client: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+
+* The version for testing is Doris-3.0.1.
 
 #### DataSet
 
@@ -454,18 +573,18 @@ We have separately tested the write performance of group commit in high-concurre
 
 | Load Way           | Single-concurrency Data Size | Concurrency | Cost Seconds | Rows / Seconds | MB / Seconds |
 |--------------------|------------------------------|-------------|--------------------|----------------|--------------|
-| `group_commit`     | 10 KB                        | 10          | 3707               | 66,697         | 8.56         |
-| `group_commit`     | 10 KB                        | 30          | 3385               | 73,042         | 9.38         |
-| `group_commit`     | 100 KB                       | 10          | 473                | 522,725        | 67.11        |
-| `group_commit`     | 100 KB                       | 30          | 390                | 633,972        | 81.39        |
-| `group_commit`     | 500 KB                       | 10          | 323                | 765,477        | 98.28        |
-| `group_commit`     | 500 KB                       | 30          | 309                | 800,158        | 102.56       |
-| `group_commit`     | 1 MB                         | 10          | 304                | 813,319        | 104.24       |
-| `group_commit`     | 1 MB                         | 30          | 286                | 864,507        | 110.88       |
-| `group_commit`     | 10 MB                        | 10          | 290                | 852,583        | 109.28       |
-| `non group_commit` | 1 MB                         | 10          | `-235 error`       |                |              |
-| `non group_commit` | 10 MB                        | 10          | 519                | 476,395        | 61.12        |
-| `non group_commit` | 10 MB                        | 30          | `-235 error`       |                |              |
+| `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
+| `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
+| `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
+| `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
+| `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
+| `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
+| `group_commit` | 1 MB    | 10   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
+| `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
+| `non group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
+| `non group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
+| `non group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
 
@@ -475,9 +594,15 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 #### Environment
 
-* 1 FE: 8-core CPU, 16 GB RAM, 1 200 GB SSD disk
-* 1 BE: 16-core CPU, 64 GB RAM, 1 2 TB SSD disk
-* 1 Client: 16-core CPU, 64 GB RAM, 1 100 GB SSD disk
+1 Front End (FE) server: Alibaba Cloud with an 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+
+1 Backend (BE) server: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 500GB ESSD PL1 SSD.
+
+1 Test Client: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+
+The testing version is Doris-3.0.1.
+
+Disable the printing of prepared statement audit logs to enhance performance.
 
 #### DataSet
 
@@ -496,6 +621,135 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 | Rows per insert | Concurrency | Rows / Second | MB / Second |
 |-----------------|-------------|---------------|-------------|
-| 100             | 20          | 106931        | 11.46       |
+| 100 | 10  | 160,758    | 17.21 |
+| 100 | 20  | 210,476    | 22.19 |
+| 100 | 30  | 214,323    | 22.92 |
 
 In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates between 60-70%.
+
+
+### Insert into Sync Mode Small Batch Data
+
+**Machine Configuration**
+
+* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
+* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
+* Test version: Doris-3.0.1
+
+**Dataset**
+
+* The data of tpch sf10 `lineitem` table.
+
+* The create table statement is
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+  L_ORDERKEY    INTEGER NOT NULL,
+  L_PARTKEY     INTEGER NOT NULL,
+  L_SUPPKEY     INTEGER NOT NULL,
+  L_LINENUMBER  INTEGER NOT NULL,
+  L_QUANTITY    DECIMAL(15,2) NOT NULL,
+  L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+  L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+  L_TAX         DECIMAL(15,2) NOT NULL,
+  L_RETURNFLAG  CHAR(1) NOT NULL,
+  L_LINESTATUS  CHAR(1) NOT NULL,
+  L_SHIPDATE    DATE NOT NULL,
+  L_COMMITDATE  DATE NOT NULL,
+  L_RECEIPTDATE DATE NOT NULL,
+  L_SHIPINSTRUCT CHAR(25) NOT NULL,
+  L_SHIPMODE     CHAR(10) NOT NULL,
+  L_COMMENT      VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+PROPERTIES (
+  "replication_num" = "3"
+);
+```
+
+**Testing Tool**
+
+* [Jemeter](https://jmeter.apache.org/)
+
+**Testing Methodology**
+
+* Use JMeter to write data into Doris. Each thread writes 1 row of data per execution using the insert into statement.
+
+**Test Results**
+
+* Data unit: rows per second.
+
+* The following tests are divided into 30, 100, and 500 concurrency.
+
+**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true | 891.8      | 701.1      | 400.0     | 237.5    |
+|enable_nereids_planner=false | 885.8      | 688.1      | 398.7      | 232.9     |
+
+**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true | 2427.8     | 2068.9     | 1259.4     | 764.9  |
+|enable_nereids_planner=false | 2320.4     | 1899.3     | 1206.2     | 749.7 |
+
+**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true | 5567.5     | 5713.2     | 4681.0     | 3131.2   |
+|enable_nereids_planner=false | 4471.6     | 5042.5     | 4932.2     | 3641.1 |
+
+### Insert into Sync Mode Large Batch Data
+
+**Machine Configuration**
+
+* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
+
+* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
+
+* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
+
+* Test version: Doris-3.0.1
+
+**Dataset**
+
+* Insert into statement for 1000 rows: `insert into tbl values(1,1)...` (1000 rows omitted)
+
+**Testing Tool**
+
+* [Jemeter](https://jmeter.apache.org/)
+
+**Testing Methodology**
+
+* Use JMeter to write data into Doris. Each thread writes 1000 row of data per execution using the insert into statement.
+
+**Test Results**
+
+* Data unit: rows per second.
+
+* The following tests are divided into 30, 100, and 500 concurrency.
+
+**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
+|enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
+
+**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
+|enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
+
+**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+
+| Group commit internal | 10ms | 20ms | 50ms | 100ms |
+|-----------------------|---------------|---------------|---------------|---------------|
+|enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
+|enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |
