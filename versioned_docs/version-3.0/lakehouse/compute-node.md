@@ -126,7 +126,7 @@ At the same time, compute nodes, as stateless BE nodes, can easily scale up and 
 
 3. Can compute nodes and mixed nodes configure a file cache directory
 
-    [File cache](../../lakehouse/filecache) caches data files from remote storage systems (HDFS or object storage) that have been recently accessed, speeding up subsequent queries for the same data.
+    [File cache](../lakehouse/filecache) caches data files from remote storage systems (HDFS or object storage) that have been recently accessed, speeding up subsequent queries for the same data.
     
     Both compute nodes and mixed nodes can set a file cache directory. The file cache directory needs to be created in advance.
     

@@ -496,7 +496,7 @@ group by
 
 
 ## 嵌套物化视图改写
-物化视图的定义SQL可以使用物化视图，此物化视图称为嵌套物化视图，嵌套的层数理论上没有限制，此物化视图可以直查，也可以进行透明改写。
+物化视图的定义 SQL 可以使用物化视图，此物化视图称为嵌套物化视图，嵌套的层数理论上没有限制，此物化视图可以直查，也可以进行透明改写。
 嵌套物化视图也可以参与透明改写。
 
 **用例 1**
@@ -549,7 +549,7 @@ where o_orderstatus = 'o'
 ```
 
 **注意：**
-1. 嵌套物化视图的层数越多，透明改写的耗时会相应增加，建议嵌套物化视图层数不要超过3层。
+1. 嵌套物化视图的层数越多，透明改写的耗时会相应增加，建议嵌套物化视图层数不要超过 3 层。
 2. 嵌套物化视图透明改写默认关闭，开启方式见下面开关。
 
 
@@ -608,7 +608,7 @@ where o_orderstatus = 'o'
 | SET materialized_view_rewrite_success_candidate_num = 3;            | 透明改写成功的结果集合，允许参与到 CBO 候选的最大数量，默认是 3                                                                   |
 | SET enable_materialized_view_union_rewrite = true;                  | 当分区物化视图不足以提供查询的全部数据时，是否允许基表和物化视图 union all 来响应查询，默认允许                                                 |
 | SET enable_materialized_view_nest_rewrite = true;                   | 是否允许嵌套改写，默认不允许                                                                                        |
-| SET materialized_view_relation_mapping_max_count = 8;               | 透明改写过程中，relation mapping最大允许数量，如果超过，进行截取。relation mapping通常由表自关联产生，数量一般会是笛卡尔积，比如3张表，可能会产生 8 种组合。默认是 8 |
+| SET materialized_view_relation_mapping_max_count = 8;               | 透明改写过程中，relation mapping 最大允许数量，如果超过，进行截取。relation mapping 通常由表自关联产生，数量一般会是笛卡尔积，比如 3 张表，可能会产生 8 种组合。默认是 8 |
 
 ## 限制
 - 物化视图定义语句中只允许包含 SELECT、FROM、WHERE、JOIN、GROUP BY 语句，JOIN 的输入可以包含简单的 GROUP BY（单表聚合），其中 JOIN 的支持的类型为
@@ -618,29 +618,29 @@ where o_orderstatus = 'o'
 - 不支持窗口函数的透明改写。
 - 物化视图中有 LIMIT，暂时不支持透明改写。
 - 当查询或者物化视图没有数据时，不支持透明改写。
-- 目前 WHERE 条件补偿，只支持列为数值和日期类型的条件范围补偿，比如物化视图定义是 a > 5，查询是 a > 10支持透明改写。
+- 目前 WHERE 条件补偿，只支持列为数值和日期类型的条件范围补偿，比如物化视图定义是 a > 5，查询是 a > 10 支持透明改写。
 
 
 # 常见问题
 ## 1. 物化视图没有命中是为什么？
-   确定物化视图是否命中需要执行如下SQL
+   确定物化视图是否命中需要执行如下 SQL
    ```sql explain your_query_sql;```
 
    a. 物化视图透明改写功能默认是关闭的，需要打开对应开关才可以改写，开关值见 异步物化视图相关开关
 
-   b. 可能物化视图不可用，导致透明改写不能命中，查看物化视图构建状态见问题2
+   b. 可能物化视图不可用，导致透明改写不能命中，查看物化视图构建状态见问题 2
 
-   c. 经过前两步的检查，如果物化视图还是不能命中，可能物化视图的定义SQL和查询SQL不在当前物化视图改写能力的范围内，见物化视图透明改写能力
+   c. 经过前两步的检查，如果物化视图还是不能命中，可能物化视图的定义 SQL 和查询 SQL 不在当前物化视图改写能力的范围内，见物化视图透明改写能力
 
 
 ## 2. 怎么查看物化状态是否正常？
 ### 2.1 确认物化视图构建状态
-物化视图的状态是Success，才可以参与透明改写，首先运行 
+物化视图的状态是 Success，才可以参与透明改写，首先运行 
 ```sql
 select * from mv_infos('database'='db_name') where Name = 'mv_name' \G
 ```   
 查看物化视图的 JobName。
-其次根据JobName查看物化视图的任务状态，运行如下语句
+其次根据 JobName 查看物化视图的任务状态，运行如下语句
 ```sql
 select * from tasks("type"="mv") where JobName = 'job_name';
 ```
@@ -650,12 +650,12 @@ select * from tasks("type"="mv") where JobName = 'job_name';
 物化视图构建成功，但是因为数据变更，和 `grace_period` 的设置导致物化视图不可用。
 查看物化视图数据一致性的方法
 * 全量构建的物化视图
-运行如下sql，查看字段 `SyncWithBaseTables` 是否是 1
+运行如下 sql，查看字段 `SyncWithBaseTables` 是否是 1
 ```sql
 select * from mv_infos('database'='db_name') where Name = 'mv_name' \G
 ```
 * 分区构建的物化视图
-运行如下sql,查看查询使用的分区是否有效
+运行如下 sql，查看查询使用的分区是否有效
 ```sql
 show partitions from mv_name;
 ```
@@ -668,11 +668,11 @@ show partitions from mv_name;
 
 1.  异步物化视图的语句，在新优化器下才支持，确保使用的是新优化器
 `SET global enable_nereids_planner = true;`
-2. 可能是构建物化的语句使用的关键词写错或者物化定义SQL的语法有问题，可以检查下物化定义SQL和创建物化语句是否正确。
+2. 可能是构建物化的语句使用的关键词写错或者物化定义 SQL 的语法有问题，可以检查下物化定义 SQL 和创建物化语句是否正确。
 
 ## 4. 构建分区物化视图报  Unable to find a suitable base table for partitioning
-   报这个错，通常指的是物化视图的SQL定义和物化视图分区字段的选择，导致不能分区增量更新，所以创建分区物化视图会报这个错。
-   物化视图想要分区增量更新，需要满足以下要求，详情见 [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW.md)
+   报这个错，通常指的是物化视图的 SQL 定义和物化视图分区字段的选择，导致不能分区增量更新，所以创建分区物化视图会报这个错。
+   物化视图想要分区增量更新，需要满足以下要求，详情见 [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-ASYNC-MATERIALIZED-VIEW)
    
 满足分区物化视图构建，举例如下：
  
@@ -763,10 +763,10 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 
 
 ## 5. 直查物化物化视图没有数据？
-可能物化在构建中，也有可能物化构建失败了。 通过如下语句查看物化构建的状态
+可能物化在构建中，也有可能物化构建失败了。通过如下语句查看物化构建的状态
 
 ```sql
-   -- 查看物化视图元数据信息,database 为当前数据库, mv_name 为物化视图名称
+   -- 查看物化视图元数据信息，database 为当前数据库，mv_name 为物化视图名称
    select * from mv_infos('database'='db_name') where Name = 'mv_name' \G
 ```
 
@@ -781,7 +781,7 @@ select * from tasks("type"="mv") where JobName = 'job_name';
 
 ## 6. 物化视图使用的基表数据变了，但是此时物化视图还没有刷新，透明改写的行为是？
 异步物化视图的数据时效性和基表是有一定时延的。
-对于内表和可以感知数据变化的外表（比如hive），当基表的数据变更时，此物化视图是否可用于透明改写是通过 `grace_period` 的阈值来决定的。
+对于内表和可以感知数据变化的外表（比如 hive），当基表的数据变更时，此物化视图是否可用于透明改写是通过 `grace_period` 的阈值来决定的。
 `grace_period` 指的是容许物化视图和所用基表数据不一致的时间。 
 
 比如 grace_period 设置成 0，意味要求物化视图和基表数据保持一致，此物化视图才可用于透明改写；
@@ -820,7 +820,7 @@ GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
 ```
 
 Explain 显示信息可以看到 `MaterializedViewRewriteFail` 有失败的摘要信息，
-`The graph logic between query and view is not consistent` 表示查询和物化join的逻辑不一致，上述查询和物化 join的表顺序不一致所以会报这个错。
+`The graph logic between query and view is not consistent` 表示查询和物化 join 的逻辑不一致，上述查询和物化 join 的表顺序不一致所以会报这个错。
 ```text
 | MaterializedView                                                                                                          |
 | MaterializedViewRewriteSuccessAndChose:                                                                                   |

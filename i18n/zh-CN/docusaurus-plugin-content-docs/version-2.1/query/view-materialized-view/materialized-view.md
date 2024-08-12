@@ -104,7 +104,7 @@ Doris 系统提供了一整套对物化视图的 DDL 语法，包括创建，查
 
 - COUNT, BITMAP_UNION, HLL_UNION (Version 0.13)
 
-- [通用聚合](../../sql-manual/sql-types/Data-Types/AGG_STATE) (Version 2.0)
+- [通用聚合](../../sql-manual/sql-data-types/aggregate/AGG_STATE) (Version 2.0)
 
   一些不在原有的支持范围内的聚合函数，会被转化为 agg_state 类型来实现预聚合。
 

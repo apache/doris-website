@@ -92,7 +92,7 @@ The aggregate functions currently supported by the materialized view function ar
 
 + COUNT, BITMAP\_UNION, HLL\_UNION (Version 0.13)
 
-+ [AGG_STATE](../../sql-manual/sql-types/Data-Types/AGG_STATE) (Version 2.0)
++ [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG_STATE) (Version 2.0)
 
   Some aggregation functions that are not originally supported will be converted to the agg_state type to achieve pre-aggregation.
 

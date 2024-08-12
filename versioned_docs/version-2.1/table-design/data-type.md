@@ -46,15 +46,15 @@ The list of data types supported by Doris is as follows:
 
 | Type name      | Storeage (bytes)| Description                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
-|  [DATE](../sql-manual/sql-data-types/datetime/DATE)             | 16              | DATE holds values for a calendar year, month and day, the  supported range is ['0000-01-01', '9999-12-31'].  Default print format: 'yyyy-MM-dd'. |
-| [DATETIME](../sql-manual/sql-data-types/datetime/DATETIME)        | 16              | A DATE and TIME combination  Format: DATETIME ([P]).   The optional parameter P represents time precision, with a value range of [0,6], supporting up to 6 decimal places (microseconds). When not set, it is 0.   The supported range is ['0000-01-01 00:00:00 [.000000]', '9999-12-31 23:59:59 [.999999]'].   Default print format: 'yyy-MM-dd HH: mm: ss. SSSSSS '. |
+|  [DATE](../sql-manual/sql-data-types/date-time/DATE)             | 16              | DATE holds values for a calendar year, month and day, the  supported range is ['0000-01-01', '9999-12-31'].  Default print format: 'yyyy-MM-dd'. |
+| [DATETIME](../sql-manual/sql-data-types/date-time/DATETIME)        | 16              | A DATE and TIME combination  Format: DATETIME ([P]).   The optional parameter P represents time precision, with a value range of [0,6], supporting up to 6 decimal places (microseconds). When not set, it is 0.   The supported range is ['0000-01-01 00:00:00 [.000000]', '9999-12-31 23:59:59 [.999999]'].   Default print format: 'yyy-MM-dd HH: mm: ss. SSSSSS '. |
 
-## [String data type](../sql-manual/sql-data-types/string/string-overview)
+## [String data type](../sql-manual/sql-data-types/string-type/string-overview)
 | Type name      | Storeage (bytes)| Description                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
-| [CHAR](../sql-manual/sql-data-types/string/CHAR)            | M               | A FIXED length string, the parameter M specifies the column length in characters. The range of M is from 1 to 255. |
-| [VARCHAR](../sql-manual/sql-data-types/string/VARCHAR)         | Variable Length | A VARIABLE length string , the parameter M specifies the maximum string length in characters. The range of M is from 1 to 65533.   The variable-length string is stored in UTF-8 encoding. English characters occupy 1 byte, and Chinese characters occupy 3 bytes. |
-| [STRING](../sql-manual/sql-data-types/string/STRING)          | Variable Length | A VARIABLE length string, default supports 1048576 bytes (1 MB), and a limit of maximum precision of 2147483643 bytes (2 GB).   Size can be configured string_type_length_soft_limit_bytes adjusted through BE.   String type can only be used in value column, not in key column and partition bucket column. |
+| [CHAR](../sql-manual/sql-data-types/string-type/CHAR)            | M               | A FIXED length string, the parameter M specifies the column length in characters. The range of M is from 1 to 255. |
+| [VARCHAR](../sql-manual/sql-data-types/string-type/VARCHAR)         | Variable Length | A VARIABLE length string , the parameter M specifies the maximum string length in characters. The range of M is from 1 to 65533.   The variable-length string is stored in UTF-8 encoding. English characters occupy 1 byte, and Chinese characters occupy 3 bytes. |
+| [STRING](../sql-manual/sql-data-types/string-type/STRING)          | Variable Length | A VARIABLE length string, default supports 1048576 bytes (1 MB), and a limit of maximum precision of 2147483643 bytes (2 GB).   Size can be configured string_type_length_soft_limit_bytes adjusted through BE.   String type can only be used in value column, not in key column and partition bucket column. |
 
 ## [Semi-structured data type](../sql-manual/sql-data-types/semi-structured/semi-structured-overview)
 

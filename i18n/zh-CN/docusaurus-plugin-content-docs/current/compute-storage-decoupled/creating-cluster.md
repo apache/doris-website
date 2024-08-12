@@ -59,7 +59,7 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 - `user_id`：创建数仓实例的用户 ID，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`，用于标识创建人，按需填写。
 - `vault`：HDFS 或者 S3 的存储后端信息，如 HDFS 属性、S3 Bucket 信息等。不同后端的详细参数不同。
 
-更多信息请参考 [Meta Service API 参考文档](./meta-service-api.md) “创建存储后端的 Instance” 章节。
+更多信息请参考 [Meta Service API 参考文档](./meta-service-api.md) “创建存储后端的 Instance”章节。
 
 **通过多次调用 Meta Service `create_instance` 接口可以创建多个不同的存算分离集群（即数仓实例/instance）。**
 
@@ -70,7 +70,7 @@ Doris 存算分离模式采用服务发现的机制进行工作，创建存算�
 | 参数名                                   | 描述                          | 是否必须 | 备注                                             |
 | ---------------------------------------- | ----------------------------- | -------- | ------------------------------------------------ |
 | instance_id                              | instance_id                   | 是       | 全局唯一（包括历史上），一般使用一个 UUID 字符串 |
-| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| name                                     | Instance 别名，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
 | user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | vault                                    | Storage Vault 的信息          | 是       |                                                  |
 | vault.hdfs_info                          | 描述 HDFS 存储后端的信息      | 是       |                                                  |
@@ -122,7 +122,7 @@ curl -s "127.0.0.1:5000/MetaService/http/create_instance?token=greedisgood9999" 
 | 参数名                     | 描述                                                         | 是否必须 | 备注                                                         |
 | -------------------------- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
 | instance_id     | 存算分离架构下数仓实例的 ID，一般使用 UUID 字符串，需要匹配模式`[0-9a-zA-Z_-]+`          | 是     |  例如 6ADDF03D-4C71-4F43-9D84-5FC89B3514F8 |
-| name                                     | Instance 别名, 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
+| name                                     | Instance 别名，要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+`  | 否       |     |
 | user_id                                  | 创建 Instance 的用户 ID 要求匹配模式 `[a-zA-Z][0-9a-zA-Z_]+` | 是       |  |
 | vault.obj_info             | 对象存储配置信息                                             | 是       |                                                              |
 | vault.obj_info.ak          | 对象存储的 Access Key                                             | 是       |                                                              |
@@ -454,14 +454,14 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
         ]
 ...
 ```
-如果需要增加或者减少 FE 节点，可以参考后续 “计算集群操作” 章节。
+如果需要增加或者减少 FE 节点，可以参考后续“计算集群操作”章节。
 
 ## 创建计算集群
 
 用户可创建一个或多个计算集群，一个计算集群由任意多个 BE 节点组成。
 创建计算集群操作也可通过 Meta Service `add_cluter` 接口进行。
 
-接口描述详见前文 “添加 FE” 章节。
+接口描述详见前文“添加 FE”章节。
 
 用户可根据实际需求调整计算集群的数量及其所包含的节点数量，不同的计算集群需要使用不同的 `cluster_name` 和 `cluster_id`。
 
@@ -514,12 +514,12 @@ curl '127.0.0.1:5000/MetaService/http/get_cluster?token=greedisgood9999' -d '{
         ]
 ...
 ```
-如果需要增加或减少 BE 节点，可以参考后续 “计算集群操作” 章节。
+如果需要增加或减少 BE 节点，可以参考后续“计算集群操作”章节。
 如果需要继续增加计算集群，重复本章节操作即可。
 
 ## FE/BE 配置
 
-相较于[存算一体模式](../cluster-deployment/standard-deployment.md)，存算分离模式下的 FE 和 BE 增加了部分配置，其中：
+相较于[存算一体模式](../install/cluster-deployment/standard-deployment.md)，存算分离模式下的 FE 和 BE 增加了部分配置，其中：
 
 - `meta_service_endpoint`：Meta Service 的地址，需在 FE 和 BE 中填写。
 - `cloud_unique_id`：根据创建存算分离集群发往 Meta Service `add_cluster` 请求中的实际值填写即可；Doris 通过该配置的值确定是否在存算分离模式下工作。
@@ -551,7 +551,7 @@ file_cache_path = [{"path":"/mnt/disk1/doris_cloud/file_cache","total_size":1048
 
 ## 启停 FE/BE
 
-Doris 存算分离模式下，FE/BE 启停方式和[存算一体模式](../cluster-deployment/standard-deployment.md)下的启停方式一致。
+Doris 存算分离模式下，FE/BE 启停方式和[存算一体模式](../install/cluster-deployment/standard-deployment.md)下的启停方式一致。
 **存算分离模式属于服务发现的模式，不需通过 `alter system add/drop frontend/backend` 等命令操作节点。**
 
 ```Shell
