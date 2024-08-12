@@ -40,9 +40,11 @@ under the License.
 https://cwiki.apache.org/confluence/display/DORIS/DSIP-002%3A+Refactor+memory+tracker+on+BE
 https://shimo.im/docs/DT6JXDRkdTvdyV3G
 
+有关 Memory Tracker 更多介绍参考文档：[Say-Goodbye-to-OOM-Crashes-en](https://doris.apache.org/blog/Say-Goodbye-to-OOM-Crashes/)， [Say-Goodbye-to-OOM-Crashes-zh-CN](https://mp.weixin.qq.com/s/Z5N-uZrFE3Qhn5zTyEDomQ)
+
 ## 查看统计结果
 
-实时的内存统计结果通过 Doris BE 的 Web 页面查看 http://ip:webserver_port/mem_tracker。（webserver_port默认8040）
+实时的内存统计结果通过 Doris BE 的 Web 页面查看 http://{be_host}:{be_web_server_port}/mem_tracker。（webserver_port默认8040）
 历史查询的内存统计结果可以查看`fe/log/fe.audit.log`中每个查询的`peakMemoryBytes`，或者在`be/log/be.INFO`中搜索`Deregister query/load memory tracker, queryId`查看单个 BE 上每个查询的内存峰值。
 
 ### 首页 `/mem_tracker`
@@ -59,7 +61,7 @@ https://shimo.im/docs/DT6JXDRkdTvdyV3G
 
 - load: 所有导入的内存总和。
 
-- tc/jemalloc_cache: 通用内存分配器 TCMalloc 或 Jemalloc 的缓存，在 http://ip:webserver_port/memz 可以实时查看到内存分配器原始的 profile。
+- tc/jemalloc_cache: 通用内存分配器 TCMalloc 或 Jemalloc 的缓存，在 http://{be_host}:{be_web_server_port}/memz 可以实时查看到内存分配器原始的 profile。
 
 - compaction、schema_change、consistency、batch_load、clone: 分别对应所有 Compaction、Schema Change、Consistency、Batch Load、Clone 任务的内存总和。
 
