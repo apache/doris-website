@@ -374,12 +374,6 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
 * Default value: 524288
 
-#### `doris_scanner_queue_size`
-
-* Type: int32
-* Description: The length of the RowBatch buffer queue between TransferThread and OlapScanner. When Doris performs data scanning, it is performed asynchronously. The Rowbatch scanned by OlapScanner will be placed in the scanner buffer queue, waiting for the upper TransferThread to take it away.
-* Default value: 1024
-
 #### `doris_scanner_row_num`
 
 * Description: The maximum number of data rows returned by each scanning thread in a single execution
