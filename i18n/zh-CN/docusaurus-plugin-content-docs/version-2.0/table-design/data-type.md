@@ -42,19 +42,19 @@ Apache Doris 已支持的数据类型列表如下：
 | [DOUBLE](../sql-manual/sql-data-types/numeric/DOUBLE)         | 8         | 浮点数，范围 [-1.79*10^308 ~ 1.79*10^308]。                  |
 | [DECIMAL](../sql-manual/sql-data-types/numeric/DECIMAL)        | 4/8/16    | 高精度定点数，格式：DECIMAL(M[,D])。其中，M 代表一共有多少个有效数字（precision），D 代表小数位有多少数字（scale）。有效数字 M 的范围是 [1, 38]，小数位数字数量 D 的范围是 [0, precision]。 <p>0 < precision <= 9 的场合，占用 4 字节。</p> <p>9 < precision <= 18 的场合，占用 8 字节。</p> <p>16 < precision <= 38 的场合，占用 16 字节。</p> |
 
-## [日期类型](../sql-manual/sql-data-types/datetime/datetime-overview)
+## [日期类型](../sql-manual/sql-data-types/date-time/datetime-overview)
 
 | 类型名         | 存储空间（字节）| 描述                                                     |
 | -------------- | --------- | ------------------------------------------------------------ |
-| [DATE](../sql-manual/sql-data-types/datetime/DATE)           | 16        | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。 |
-| [DATETIME](../sql-manual/sql-data-types/datetime/DATETIME)       | 16        | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<p>取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 </p>|
+| [DATE](../sql-manual/sql-data-types/date-time/DATE)           | 16        | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。 |
+| [DATETIME](../sql-manual/sql-data-types/date-time/DATETIME)       | 16        | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<p>取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 </p>|
 
-## [字符串类型](../sql-manual/sql-data-types/string/string-overview)
+## [字符串类型](../sql-manual/sql-data-types/string-type/string-overview)
 | 类型名         | 存储空间（字节）| 描述                                                     |
 | -------------- | --------- | ------------------------------------------------------------ |
-| [CHAR](../sql-manual/sql-data-types/string/CHAR)           | M         | 定长字符串，M 代表的是定长字符串的字节长度。M 的范围是 1-255。 |
-| [VARCHAR](../sql-manual/sql-data-types/string/VARCHAR)        | 不定长     | 变长字符串，M 代表的是变长字符串的字节长度。M 的范围是 1-65533。变长字符串是以 UTF-8 编码存储的，因此通常英文字符占 1 个字节，中文字符占 3 个字节。 |
-| [STRING](../sql-manual/sql-data-types/string/STRING)         | 不定长     | 变长字符串，默认支持 1048576 字节（1MB），可调大到 2147483643 字节（2GB）。可通过 BE 配置 string_type_length_soft_limit_bytes 调整。String 类型只能用在 Value 列，不能用在 Key 列和分区分桶列。 |
+| [CHAR](../sql-manual/sql-data-types/string-type/CHAR)           | M         | 定长字符串，M 代表的是定长字符串的字节长度。M 的范围是 1-255。 |
+| [VARCHAR](../sql-manual/sql-data-types/string-type/VARCHAR)        | 不定长     | 变长字符串，M 代表的是变长字符串的字节长度。M 的范围是 1-65533。变长字符串是以 UTF-8 编码存储的，因此通常英文字符占 1 个字节，中文字符占 3 个字节。 |
+| [STRING](../sql-manual/sql-data-types/string-type/STRING)         | 不定长     | 变长字符串，默认支持 1048576 字节（1MB），可调大到 2147483643 字节（2GB）。可通过 BE 配置 string_type_length_soft_limit_bytes 调整。String 类型只能用在 Value 列，不能用在 Key 列和分区分桶列。 |
 
 ## [半结构类型](../sql-manual/sql-data-types/semi-structured/semi-structured-overview)
 | 类型名         | 存储空间（字节）| 描述                                                     |

@@ -91,7 +91,7 @@ under the License.
 
 缓存单独的库和表对象。任何对库、表的访问操作，如查询、写入等，都会从这个缓存中获取对应的对象。
 
-注意，该缓存中的对象所组成的列表，可能与【库、表名称列表】缓存中的不一致。
+注意，该缓存中的对象所组成的列表，可能与**库、表名称列表**缓存中的不一致。
 
 比如通过 `SHOW TABLES` 命令，从名称列表缓存中获取到 `A`、`B`、`C` 三个表。假设此时外部数据源增加了表 `D`，那么 `SELECT * FROM D` 可以访问到表 `D`，同时【表对象】缓存里会增加表 `D` 对象，但【表名称列表】缓存中可能依然是 `A`、`B`、`C`。只有当【表名称列表】缓存刷新后，才会变成 `A`、`B`、`C`、`D`。
 
@@ -229,7 +229,7 @@ under the License.
 
 	由 FE 配置项 `external_cache_expire_time_minutes_after_access` 控制。单位为分钟。默认 10 分钟。减少该时间，可以更实时的在 Doris 中访问到最新的 Iceberg 表属性，但会增加访问外部数据源的频率。
 
-### Iceberg 表 Snapshot 缓存
+### Iceberg 表 Snapshot
 
 用于缓存 Iceberg 表的 Snapshot 列表。该对象通过 Iceberg API 加载并构建。
 该缓存，每个 Iceberg Catalog 有一个。

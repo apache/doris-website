@@ -236,7 +236,7 @@
                     "items": [
                         "query/query-analysis/get-profile",
                         "query/query-analysis/query-profile",
-                        "query/query-analysis/query-analysis",
+                        "query/query-analysis/query-analytics",
                         "query/query-analysis/import-analysis"
                     ]
                 },
@@ -377,9 +377,10 @@
                     "type": "category",
                     "label": "Managing Memory",
                     "items": [
+                        "admin-manual/memory-management/memory-analyze-manual",
                         "admin-manual/memory-management/memory-tracker",
                         "admin-manual/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/memory-management/be-oom-analysis"
+                        "admin-manual/memory-management/memory-management-feature"
                     ]
                 },
                 {
@@ -1157,19 +1158,19 @@
                             "type": "category",
                             "label": "Datetime Data Type",
                             "items": [
-                                "sql-manual/sql-data-types/datetime/datetime-overview",
-                                "sql-manual/sql-data-types/datetime/DATE",
-                                "sql-manual/sql-data-types/datetime/DATETIME"
+                                "sql-manual/sql-data-types/date-time/datetime-overview",
+                                "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
                         {
                             "type": "category",
                             "label": "String Data Type",
                             "items": [
-                                "sql-manual/sql-data-types/string/string-overview",
-                                "sql-manual/sql-data-types/string/CHAR",
-                                "sql-manual/sql-data-types/string/VARCHAR",
-                                "sql-manual/sql-data-types/string/STRING"
+                                "sql-manual/sql-data-types/string-type/string-overview",
+                                "sql-manual/sql-data-types/string-type/CHAR",
+                                "sql-manual/sql-data-types/string-type/VARCHAR",
+                                "sql-manual/sql-data-types/string-type/STRING"
                             ]
                         },
                         {
