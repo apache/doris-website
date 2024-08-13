@@ -38,6 +38,8 @@ under the License.
 
 别名：`rand`
 
+注意：所有参数必须为常量。
+
 ### example
 
 ```sql
