@@ -594,15 +594,6 @@
         "image": "/images/user-logo/Finance/China Everbright Bank.jpg"
     },
     {
-        "story": "Based on Apache Doris, Guangfa Securities has established a data metric service platform to accelerate the query speed of Hive data and provide data support for upper-level analysis applications.",
-        "name": "GF Securities",
-        "category": "Finance",
-        "logo": "GF Securities",
-        "order": 66,
-        "to": null,
-        "image": "/images/user-logo/Finance/GF Securities.jpg"
-    },
-    {
         "story": "Bosera Fund has upgraded its data warehouse system using Apache Doris, replacing both Teradata and Oracle, and achieved significant improvement in ETL/batch data processing efficiency.",
         "name": "Bosera Funds",
         "category": "Finance",
