@@ -83,7 +83,7 @@ In addition, Doris will pre-allocate a batch of Free Blocks based on the number 
 
 Doris BE will periodically obtain the physical memory of the process and the current available memory of the system from the system, and collect snapshots of all query, import, and compaction task MemTracker. When the BE process memory exceeds the limit or the system has insufficient available memory, Doris will release the cache and terminate some queries or imports to release memory. This process is executed regularly by a separate GC thread.
 
-![Memory GC](memory-gc.png)
+![Memory GC](/images/memory-gc.png)
 
 Minor GC is triggered when the Doris BE process memory exceeds SoftMemLimit (81% of the total system memory by default) or the remaining available system memory is lower than the Warning watermark (usually no more than 3.2GB). At this time, the query will be paused when the Allocator allocates memory, and the data in the forced cache will be imported and some Data Page Cache and expired Segment Cache will be released. If the released memory is less than 10% of the process memory, if query memory over-issuance is enabled, the query with a large memory over-issuance ratio will be canceled until 10% of the process memory is released or no query can be canceled, and then the system memory status acquisition interval and GC interval will be lowered. Other queries will continue to execute after the remaining memory is found.
 
@@ -93,8 +93,10 @@ If the BE process memory exceeds MemLimit (90% of the total system memory by def
 
 When the available memory in the error message is less than the low water mark, it is also treated as a process memory overrun. The value of the available memory in the system comes from `MemAvailable` in `/proc/meminfo`. When `MemAvailable` is insufficient, continuing to apply for memory may return std::bad_alloc or cause BE process OOM. Because refreshing process memory statistics and BE memory GC have a certain lag, a small part of the memory buffer is reserved as the low water mark to avoid OOM as much as possible.
 
-Among them, `MemAvailable` is the total amount of memory that can be provided to the user process without triggering swap as much as possible, given by the operating system after comprehensively considering the current free memory, buffer, cache, memory fragmentation and other factors. A simple calculation formula: MemAvailable = MemFree - LowWaterMark + (PageCache - min(PageCache / 2, LowWaterMark)), which is the same as the `available` value seen by cmd `free`. For details, please refer to:
-(why-is-memavailable-a-lot-less-than-memfreebufferscached)[https://serverfault.com/questions/940196/why-is-memavailable-a-lot-less-than-memfreebufferscached]
-(Linux MemAvailable)[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=34e431b0ae398fc54ea69ff85ec700722c9da773]
+Among them, `MemAvailable` is the total amount of memory that can be provided to the user process without triggering swap as much as possible, given by the operating system after comprehensively considering the current free memory, buffer, cache, memory fragmentation and other factors. A simple calculation formula: `MemAvailable = MemFree - LowWaterMark + (PageCache - min(PageCache / 2, LowWaterMark))`, which is the same as the `available` value seen by cmd `free`. For details, please refer to:
+
+[why-is-memavailable-a-lot-less-than-memfreebufferscached](https://serverfault.com/questions/940196/why-is-memavailable-a-lot-less-than-memfreebufferscached)
+
+[Linux MemAvailable](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=34e431b0ae398fc54ea69ff85ec700722c9da773)
 
 The default low water mark is 3.2G (1.6G before 2.1.5), which is calculated based on `MemTotal`, `vm/min_free_kbytes`, `confg::mem_limit`, `config::max_sys_mem_available_low_water_mark_bytes`, and avoids wasting too much memory. Among them, `MemTotal` is the total system memory, and its value is also taken from `/proc/meminfo`; `vm/min_free_kbytes` is the buffer reserved by the operating system for the memory GC process, and its value is usually between 0.4% and 5%. On some cloud servers, `vm/min_free_kbytes` may be 5%, which will make the system available memory appear to be less than the actual value; increasing `config::max_sys_mem_available_low_water_mark_bytes` will reserve more memory buffer for Full GC on machines with more than 64G memory, and decreasing it will make the memory as fully utilized as possible.

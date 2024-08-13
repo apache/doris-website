@@ -24,7 +24,6 @@ yarn-error.log*
 *.idea
 
 *.zip
-yarn.lock
 
 # sidebars.json
 # sidebarsCommunity.json

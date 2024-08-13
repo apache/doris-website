@@ -91,9 +91,9 @@ jobs:
                   cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
                   
             - name: Use Node.js
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v3
               with:
-                  node-version: 16.14.0
+                  node-version: 20
 
             - name: Build
               run: |

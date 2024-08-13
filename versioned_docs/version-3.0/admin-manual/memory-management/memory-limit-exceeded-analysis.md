@@ -26,7 +26,7 @@ under the License.
 
 When `MEM_LIMIT_EXCEEDED` appears in the error message of a query task, it means that the task is canceled because the process has insufficient available memory or the task exceeds the memory limit for a single execution.
 
-```
+```sql
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED] xxxx .
 ```
 
@@ -45,7 +45,9 @@ If the error message contains `Process memory not enough`, it means that the pro
 There are two situations when the process has insufficient available memory. One is that the current memory of the process exceeds the configured memory limit, and the other is that the remaining available memory of the system is lower than the water mark. There are three paths that will cancel tasks such as queries:
 
 - If the error message contains `cancel top memory used`, it means that the task was canceled in the memory Full GC.
+
 - If the error message contains `cancel top memory overcommit`, it means that the task was canceled in the memory Minor GC.
+
 - If the error message contains `Allocator sys memory check failed`, it means that the task was canceled after failing to apply for memory from `Doris Allocator`.
 
 For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Management Features](./memory-management-feature)
@@ -54,26 +56,40 @@ For more information about memory limits, watermark calculation methods, and mem
 
 If the BE process memory exceeds the process memory upper limit (MemLimit) or the system's remaining available memory is lower than the memory low watermark (LowWaterMark), Full GC is triggered. At this time, the task with the largest memory will be canceled first.
 
-```
+```sql
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]Process memory not enough, cancel top memory used query: <Query#Id=e862471398b14e71-9361a1ab8153cb29> consumption 866.97 MB, backend 10.16.10.8, process memory used 3.12 GB exceed limit 3.01 GB or sys available memory 191.25 GB less than low water mark 3.20 GB. Execute again after enough memory, details see be.INFO.
 ```
 
 Error message analysis:
+
 1. `(10.16.10.8)`: BE node with insufficient memory during query.
+
 2. `query: <Query#Id=e862471398b14e71-9361a1ab8153cb29> consumption 866.97 MB`: The currently canceled queryID, the query itself uses 866.97 MB of memory.
+
 3. `process memory used 3.12 GB exceed limit 3.01 GB or sys available memory 191.25 GB less than low water mark 3.20 GB` The reason for the process memory exceeding the limit is that the physical memory used by the BE process, 3.12 GB, exceeds the MemLimit of 3.01 GB. The current operating system has 191.25 GB of memory available for BE to use, which is still higher than the LowWaterMark of 3.20 GB.
 
 #### 2 Cancelled in Minor GC of memory
 
 If the Doris BE process memory exceeds the process memory soft limit (SoftMemLimit) or the system's remaining available memory is lower than the memory warning watermark (WarningWaterMark), Minor GC is triggered. At this time, the query with the largest memory limit ratio will be canceled first.
 
-``` ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]Process memory not enough, cancel top memory overcommit query: <Query#Id=e862471398b14e71-9361a1ab8153cb29> consumption 866.97 MB, backend 10.16.10.8, process memory used 2.12 GB exceed soft limit 2.71 GB or sys available memory 3.25 GB less than warning water mark 6.40 GB. Execute again after enough memory, details see be.INFO. ``` Error message analysis: 1. `process memory used 3.12 GB exceed soft limit 6.02 GB or sys available memory 3.25 GB less than warning water mark 6.40 GB` The reason for the process memory exceeding the limit is that the remaining memory available to BE in the current operating system is 3.25 GB, which is lower than the WarningWaterMark of 6.40 GB, and the physical memory used by the BE process is 2.12 GB, which does not exceed the SoftMemLimit of 2.71 GB.
+```sql
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]Process memory not enough, cancel top memory overcommit query: <Query#Id=e862471398b14e71-9361a1ab8153cb29> consumption 866.97 MB, backend 10.16.10.8, process memory used 2.12 GB exceed soft limit 2.71 GB or sys available memory 3.25 GB less than warning water mark 6.40 GB. Execute again after enough memory, details see be.INFO. 
+``` 
+
+Error message analysis: 1. `process memory used 3.12 GB exceed soft limit 6.02 GB or sys available memory 3.25 GB less than warning water mark 6.40 GB` The reason for the process memory exceeding the limit is that the remaining memory available to BE in the current operating system is 3.25 GB, which is lower than the WarningWaterMark of 6.40 GB, and the physical memory used by the BE process is 2.12 GB, which does not exceed the SoftMemLimit of 2.71 GB.
 
 #### 3 Failed to apply for memory from Allocator
 
 Doris BE's large memory requests will be allocated through `Doris Allocator`, and the memory size will be checked during allocation. If the process has insufficient available memory, an exception will be thrown and an attempt will be made to Cancel the current query or import.
 
-``` ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]PreCatch error code:11, [E11] Allocator sys memory check failed: Cannot alloc:4294967296, consuming tracker:<Query#Id=457efb1fdae74d3b-b 4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:<>, process memory used 2.23 GB exceed limit 3.01 GB or sys available memory 181.67 GB less than low water mark 3.20 GB. ```` Error message analysis: 1. `consuming tracker:<Query#Id=457efb1fdae74d3b-b4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:VAGGREGATION_NODE (id=7)>`: The queryID currently being canceled, the query currently uses 386704704 Bytes of memory, the query memory peak is 405956032 Bytes, and the operator being executed is `VAGGREGATION_NODE (id=7)>`.
+``` sql
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]PreCatch error code:11, [E11] Allocator sys memory check failed: Cannot alloc:4294967296, consuming tracker:<Query#Id=457efb1fdae74d3b-b 4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:<>, process memory used 2.23 GB exceed limit 3.01 GB or sys available memory 181.67 GB less than low water mark 3.20 GB. 
+```
+
+Error message analysis: 
+
+1. `consuming tracker:<Query#Id=457efb1fdae74d3b-b4fffdcfd4baaf32>, peak used 405956032, current used 386704704, exec node:VAGGREGATION_NODE (id=7)>`: The queryID currently being canceled, the query currently uses 386704704 Bytes of memory, the query memory peak is 405956032 Bytes, and the operator being executed is `VAGGREGATION_NODE (id=7)>`.
+
 2. `Cannot alloc:4294967296`: The current application for 4 GB of memory failed because the current process memory of 2.23 GB plus 4 GB will exceed the MemLimit of 3.01 GB.
 
 ### The task itself has too much memory
@@ -88,7 +104,7 @@ If the task itself uses very little memory, continue to refer to [Analyze memory
 
 When a task is canceled due to insufficient available memory in the process, you can find the following log in `be/log/be.INFO` to confirm whether the current process memory usage is in line with expectations. The default interval for printing process memory limit logs is 1s. After the process memory exceeds the limit, most memory requests in BE will be sensed, and the predetermined callback method will be attempted, and the process memory limit log will be printed. The log is divided into two parts: `Process Memory Summary` and `Memory Tracker Summary`.
 
-```
+```sql
 Process Memory Summary:
     os physical memory 375.81 GB. process memory used 4.09 GB(= 3.49 GB[vm/rss] - 410.44 MB[tc/jemalloc_cache] + 1 GB[reserved] + 0B[waiting_refresh]), limit 3.01 GB, soft limit 2.71 GB. sys available memory 134.41 GB(= 135.41 GB[proc/available] - 1 GB[reserved] - 0B[waiting_refresh]), low water mark 3.20 GB, warning water mark 6.40 GB.
 Memory Tracker Summary:
@@ -149,7 +165,8 @@ If the cluster is easy to restart and the phenomenon can be reproduced, it is re
 
 When `exceeded tracker` appears in the error message, it means that the task exceeds the memory limit of a single execution.
 
-``` ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]PreCatch error code:11, [E11] Allocator mem tracker check failed, [MEM_LIMIT_EXCEEDED] failed alloc size 1.03 MB, memory tracker limit exceeded, tracker label:Query#Id=f7 8208b15e064527-a84c5c0b04c04fcf, type:query, limit 100.00 MB, peak used 99.29 MB, current used 99.25 MB. backend 10.16.10.8, process memory used 2.65 GB. exec node:<execute:<ExecNode:VHASH_JOIN_NODE (id=4)>> , can `set exec_mem_limit=8G` to change limit, details see be.INFO.
+```sql
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED]PreCatch error code:11, [E11] Allocator mem tracker check failed, [MEM_LIMIT_EXCEEDED] failed alloc size 1.03 MB, memory tracker limit exceeded, tracker label:Query#Id=f7 8208b15e064527-a84c5c0b04c04fcf, type:query, limit 100.00 MB, peak used 99.29 MB, current used 99.25 MB. backend 10.16.10.8, process memory used 2.65 GB. exec node:<execute:<ExecNode:VHASH_JOIN_NODE (id=4)>> , can `set exec_mem_limit=8G` to change limit, details see be.INFO.
 ```
 
 `show variables;` You can view Doris Session Veriable, where `exec_mem_limit` is the execution memory limit for a single query and import, but since Doris 1.2, query memory overcommit is supported, which is designed to allow queries to set more flexible memory limits. When there is sufficient memory, even if the query memory exceeds the upper limit, it will not be Cancel, so users usually do not need to pay attention to query memory usage. Until the memory is insufficient, the query will wait for a while when trying to allocate new memory. At this time, based on certain rules, the query with a larger ratio of `mem_used` to `exec_mem_limit` will be canceled first. If the size of the memory released during the waiting process meets the requirements, the query will continue to execute, otherwise an exception will be thrown and the query will be terminated.
@@ -159,8 +176,11 @@ If you want to turn off query memory overcommit, refer to [BE Configuration Item
 If you need to analyze the memory usage of queries, refer to [3.1 `Label=query, Type=overview` Query Memory Usage Excessive].
 
 ### Error information analysis
+
 The error information is divided into three parts:
+
 1. `failed alloc size 1.03 MB, memory tracker limit exceeded, tracker label:Query#Id=f78208b15e064527-a84c5c0b04c04fcf, type:query, limit 100.00 MB, peak used 99.29 MB, current used 99.25 MB`: Query `f78208b15e064527-a84c5c0b04c04fcf` is currently being executed. When trying to apply for 1.03 MB of memory, it was found that the query exceeded the memory limit for a single execution. The query memory limit is 100 MB (`exec_mem_limit` in Session Variables). Currently, 99.25 MB has been used, and the peak memory is 99.29 MB.
+
 2. `backend 10.16.10.8, process memory used 2.65 GB. exec node:<execute:<ExecNode:VHASH_JOIN_NODE (id=4)>>, can set exec_mem_limit=8G to change limit, details see be.INFO.`: The location of this memory application is `VHASH_JOIN_NODE (id=4)`, and it is prompted that the memory limit of a single query can be increased by `set exec_mem_limit`.
 
 ### Log analysis
@@ -168,9 +188,10 @@ The error information is divided into three parts:
 After `set enable_profile=true`, when the task exceeds the memory limit of a single execution, more logs will be printed in `be/log/be.INFO` to confirm whether the current query memory usage meets expectations.
 
 1. `Process Memory Summary`: Process memory statistics, refer to [2.1 Process Memory Summary].
+
 2. `Memory Tracker Summary`: Memory Tracker statistics for the current query. You can see the current memory used and peak value of each operator in the query. For details, see [Memory Tracker](./memory-tracker.md).
 
-```
+```sql
 Allocator mem tracker check failed, [MEM_LIMIT_EXCEEDED]failed alloc size 32.00 MB, memory tracker limit exceeded, tracker label:Query#I
 d=41363cb6ba734ad5-bc8720bdf9b3090d, type:query, limit 100.00 MB, peak used 75.32 MB, current used 72.62 MB. backend 10.16.10.8, process memory used 2.33 GB. exec node:<>, can `set exec_mem_limit=8G`
  to change limit, details see be.INFO.
@@ -188,3 +209,4 @@ Memory Tracker Summary:    MemTrackerLimiter Label=Query#Id=41363cb6ba734ad5-bc8
     MemTracker Label=VDataStreamRecvr:41363cb6ba734ad5-bc8720bdf9b309fe, Parent Label=Query#Id=41363cb6ba734ad5-bc8720bdf9b3090d, Used=1.08 MB(1130496 B), Peak=7.17 MB(7520256 B)
     MemTracker Label=local data queue mem tracker, Parent Label=Query#Id=41363cb6ba734ad5-bc8720bdf9b3090d, Used=1.08 MB(1130496 B), Peak=7.17 MB(7520256 B)
 ```
+
