@@ -960,17 +960,22 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
                                 "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-numbers-outer",
-                                "sql-manual/sql-functions/table-functions/s3",
-                                "sql-manual/sql-functions/table-functions/hdfs",
-                                "sql-manual/sql-functions/table-functions/local",
-                                "sql-manual/sql-functions/table-functions/iceberg-meta",
-                                "sql-manual/sql-functions/table-functions/backends",
-                                "sql-manual/sql-functions/table-functions/frontends",
-                                "sql-manual/sql-functions/table-functions/workload-group",
-                                "sql-manual/sql-functions/table-functions/catalogs",
-                                "sql-manual/sql-functions/table-functions/frontends_disks",
-                                "sql-manual/sql-functions/table-functions/queries"
+                                "sql-manual/sql-functions/table-functions/explode-numbers-outer"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Table Valued Functions",
+                            "items": [
+                                "sql-manual/sql-functions/table-valued-functions/s3",
+                                "sql-manual/sql-functions/table-valued-functions/hdfs",
+                                "sql-manual/sql-functions/table-valued-functions/local",
+                                "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
+                                "sql-manual/sql-functions/table-valued-functions/backends",
+                                "sql-manual/sql-functions/table-valued-functions/frontends",
+                                "sql-manual/sql-functions/table-valued-functions/frontends_disks",
+                                "sql-manual/sql-functions/table-valued-functions/catalogs",
+                                "sql-manual/sql-functions/table-valued-functions/workload-group"
                             ]
                         },
                         {
