@@ -415,6 +415,10 @@
     "message": "存算分离",
     "description": "Compute-Storage Decoupled"
   },
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
   "sidebar.get-starting.category.Tutorials": {
     "message": "使用教程",
     "description": "The label for category BI and Database IDE in sidebar docs"
