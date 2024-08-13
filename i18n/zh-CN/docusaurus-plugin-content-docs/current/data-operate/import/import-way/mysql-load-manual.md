@@ -170,7 +170,7 @@ INTO TABLE [<db_name>.]<table_name>
 | COLUMNS TERMINATED BY | 指定导入的列分隔符。                                         |
 | LINE TERMINATED BY    | 指定导入的行分隔符。                                         |
 | IGNORE num LINES      | 指定导入的 CSV 跳过行数，通常指定 1 来跳过表头。             |
-| col_name_or_user_var  | 指定列映射语法，数据转换详见[ 列映射 ](../../data-operate/import/load-data-convert#列映射)章节。                     |
+| col_name_or_user_var  | 指定列映射语法，数据转换详见[ 列映射 ](../../../data-operate/import/load-data-convert#列映射)章节。                     |
 | PROPERTIES            | 导入参数。                                                   |
 
 ### 导入参数
@@ -270,4 +270,4 @@ PROPERTIES ("exec_mem_limit"="10737418240");
 
 ## 更多帮助
 
-关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。
+关于 MySQL Load 使用的更多详细语法及最佳实践，请参阅 [MySQL Load](../../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/MYSQL-LOAD) 命令手册。
