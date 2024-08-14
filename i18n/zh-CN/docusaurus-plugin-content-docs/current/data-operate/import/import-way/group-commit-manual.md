@@ -591,7 +591,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 | `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
 | `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
 | `非group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
-| `非group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
+| `非group_commit` | 10 MB   | 10   | 294       | 840,983  | 105.4 |
 | `非group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
 
 在上面的`group_commit`测试中，BE 的 CPU 使用率在 10-40% 之间。

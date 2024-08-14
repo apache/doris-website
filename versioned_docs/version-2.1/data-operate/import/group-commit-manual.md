@@ -555,7 +555,7 @@ We have separately tested the write performance of group commit in high-concurre
 
 * 1 Test Client: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
 
-* The version for testing is Doris-3.0.1.
+* The version for testing is Doris-2.1.5.
 
 #### DataSet
 
@@ -572,19 +572,19 @@ We have separately tested the write performance of group commit in high-concurre
 #### Test Result
 
 | Load Way           | Single-concurrency Data Size | Concurrency | Cost Seconds | Rows / Seconds | MB / Seconds |
-|--------------------|------------------------------|-------------|--------------------|----------------|--------------|
-| `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
-| `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
-| `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
-| `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
-| `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
-| `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
-| `group_commit` | 1 MB    | 10   | 119       | 2,077,723  | 273.8 |
-| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
-| `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
-| `non group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
-| `non group_commit` | 10 MB   | 10   | 965       | 256,216  | 33.8 |
-| `non group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
+|------------------|-------------|--------|-------------|--------------------|-------------------|
+| group_commit     | 10 KB       | 10     | 3306      | 74,787         | 9.8              |
+| group_commit     | 10 KB       | 30     | 3264      | 75,750         | 10.0            |
+| group_commit     | 100 KB      | 10     | 424       | 582,447        | 76.7             |
+| group_commit     | 100 KB      | 30     | 366       | 675,543        | 89.0             |
+| group_commit     | 500 KB      | 10     | 187       | 1,318,661       | 173.7            |
+| group_commit     | 500 KB      | 30     | 183       | 1,351,087       | 178.0            |
+| group_commit     | 1 MB        | 10     | 178       | 1,385,148       | 182.5            |
+| group_commit     | 1 MB        | 30     | 178       | 1,385,148       | 182.5            |
+| group_commit     | 10 MB       | 10     | 177       | 1,396,887       | 184.0            |
+| non group_commit   | 1 MB        | 10     | 2824      | 87,536          | 11.5             |
+| 非group_commit   | 10 MB       | 10     | 450       | 549,442         | 68.9             |
+| non group_commit   | 10 MB       | 30     | 177       | 1,396,887       | 184.0            |
 
 In the above test, the CPU usage of BE fluctuates between 10-40%.
 
@@ -600,7 +600,7 @@ The `group_commit` effectively enhances import performance while reducing the nu
 
 1 Test Client: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
 
-The testing version is Doris-3.0.1.
+The testing version is Doris-2.1.5.
 
 Disable the printing of prepared statement audit logs to enhance performance.
 
@@ -620,10 +620,10 @@ Disable the printing of prepared statement audit logs to enhance performance.
 
 
 | Rows per insert | Concurrency | Rows / Second | MB / Second |
-|-----------------|-------------|---------------|-------------|
-| 100 | 10  | 160,758    | 17.21 |
-| 100 | 20  | 210,476    | 22.19 |
-| 100 | 30  | 214,323    | 22.92 |
+|-------------------|--------|--------------------|--------------------|
+| 100               | 10     | 107,172            | 11.47              |
+| 100               | 20     | 140,317            | 14.79              |
+| 100               | 30     | 142,882            | 15.28              |
 
 In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates between 60-70%.
 
@@ -635,7 +635,7 @@ In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates 
 * 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
 * 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
 * 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
-* Test version: Doris-3.0.1
+* Test version: Doris-2.1.5
 
 **Dataset**
 
@@ -686,22 +686,19 @@ PROPERTIES (
 
 | Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true | 891.8      | 701.1      | 400.0     | 237.5    |
-|enable_nereids_planner=false | 885.8      | 688.1      | 398.7      | 232.9     |
+|                       | 321.5      | 307.3      | 285.8    | 224.3    |
 
 **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
 | Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true | 2427.8     | 2068.9     | 1259.4     | 764.9  |
-|enable_nereids_planner=false | 2320.4     | 1899.3     | 1206.2     | 749.7 |
+|                       | 1175.2     | 1108.7     | 1016.3    | 704.5  |
 
 **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
 | Group Commit Interval | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true | 5567.5     | 5713.2     | 4681.0     | 3131.2   |
-|enable_nereids_planner=false | 4471.6     | 5042.5     | 4932.2     | 3641.1 |
+|                       | 3289.8    | 3686.7      | 3280.7    | 2609.2   |
 
 ### Insert into Sync Mode Large Batch Data
 
@@ -713,7 +710,7 @@ PROPERTIES (
 
 * 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
 
-* Test version: Doris-3.0.1
+* Test version: Doris-2.1.5
 
 **Dataset**
 
@@ -737,19 +734,16 @@ PROPERTIES (
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
-|enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
+|                       | 92.2K     | 85.9K     | 84K     | 83.2K     |
 
 **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
-|enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
+|                       | 70.4K     |70.5K     | 73.2K      | 69.4K    |
 
 **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
-|enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |
+|                       | 46.3K      | 47.7K     | 47.4K      | 46.5K      |
