@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Log Storage and Analysis",
+    "title": "Building log analysis platform",
     "language": "en"
 }
 ---

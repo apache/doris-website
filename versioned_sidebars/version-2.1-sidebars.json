@@ -496,13 +496,6 @@
         },
         {
             "type": "category",
-            "label": "Use Case",
-            "items": [
-                "practical-guide/log-storage-analysis"
-            ]
-        },
-        {
-            "type": "category",
             "label": "SQL Reference",
             "items": [
                 {
@@ -1513,9 +1506,16 @@
             "type": "category",
             "label": "Tutorials",
             "items": [
-                "gettingStarted/tutorials/doris-hudi",
-                "gettingStarted/tutorials/doris-paimon",
-                "gettingStarted/tutorials/doris-iceberg"
+                {
+                    "type": "category",
+                    "label": "Building lakehouse",
+                    "items": [
+                        "gettingStarted/tutorials/building-lakehouse/doris-hudi",
+                        "gettingStarted/tutorials/building-lakehouse/doris-paimon",
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                    ]
+                },
+                "gettingStarted/tutorials/log-storage-analysis"
             ]
         }
     ],

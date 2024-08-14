@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './demo-block.css';
 export default function PageHero() {
     const [currentVersion, setCurrentVersion] = useState('')
@@ -22,8 +22,8 @@ export default function PageHero() {
                     </div>
                 </div> */}
                 <div className="home-page-hero-right">
-                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/practical-guide/log-storage-analysis`}>
-                        <div className="home-page-hero-button-label"><div>实践教程</div></div>
+                    <a className="latest-button-CN" href={`/zh-CN/docs${currentVersion === '' ? '' : `/${currentVersion}`}/gettingStarted/tutorials/log-storage-analysis`}>
+                        <div className="home-page-hero-button-label"><div>使用教程</div></div>
                         <div className="latest-button-title">
                             {/* <div className="home-page-hero-button-icon">
                                 <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +31,7 @@ export default function PageHero() {
                                     <path fill="none" d="M0 0h24v24H0Z"></path>
                                 </svg>
                             </div> */}
-                            <div style={{ marginBottom: 10 }}>日志存储与分析</div>
+                            <div style={{ marginBottom: 10 }}>构建日志存储与分析平台</div>
                         </div>
                         <div style={{ fontSize: 12, marginBottom: 20 }}>如何基于 Apache Doris 构建开放、高性能低成本、统一的日志存储分析平台。</div>
                     </a>
