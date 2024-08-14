@@ -1,6 +1,6 @@
 ---
 {
-    "title": "日志存储与分析",
+    "title": "构建日志存储与分析平台",
     "language": "zh-CN"
 }
 ---
@@ -144,7 +144,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | 单机 CPU 核数                    | 32    | 根据实际需求填写，默认 32 核                                 |
 | 平均写入吞吐（MB/s）             | 1214  | 算法：日增数据量 / 86400 s                                   |
 | 峰值写入吞吐（MB/s）             | 2427  | 算法：平均写入吞吐 * 写入吞吐峰值 / 均值比                   |
-| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机写入吞吐                          |
+| 峰值写入所需 CPU 核数            | 242.7 | 算法：峰值写入吞吐 / 单机写入吞吐                           |
 | 查询预留 CPU 百分比              | 50%   | 根据实际需求填写，默认 50%                                   |
 | 预估 BE 服务器数                 | 15.2  | 算法：峰值写入所需 CPU 核数 / 单机 CPU 核数 /（1 - 查询预留 CPU 百分比） |
 | 预估 BE 服务器数取整             | 15    | 算法：MAX (副本数，预估 BE 服务器数上取整)                   |
@@ -187,7 +187,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 | :--------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
 | 存储       | `storage_root_path = /path/to/dir1;/path/to/dir2;...;/path/to/dir12` | 配置热数据在磁盘目录上的存储路径。                           |
 | -          | `enable_file_cache = true`                                   | 开启文件缓存。                                               |
-| -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br/>`path`：缓存路径<br/>`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br/>`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
+| -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | 配置冷数据的缓存路径和相关设置，具体配置说明如下：<br />`path`：缓存路径<br />`total_size`：该缓存路径的总大小，单位为字节，53687091200 字节等于 50 GB<br />`query_limit`：单次查询可以从缓存路径中查询的最大数据量，单位为字节，10737418240 字节等于 10 GB |
 | 写入       | `write_buffer_size = 1073741824`                             | 增加写入缓冲区（buffer）的文件大小，减少小文件和随机 I/O 操作，提升性能。 |
 | -          | `max_tablet_version_num = 20000`                             | 配合建表的 time_series compaction 策略，允许更多版本暂时未合并。 |
 | -          | `enable_single_replica_load = true`                          | 开启单副本写入，减少 CPU 消耗。与 FE 配置相同。              |
@@ -212,7 +212,7 @@ Apache Doris 对 Flexible Schema 的日志数据提供了几个方面的支持�
 **配置分区分桶参数**
 
 - 分区时，按照以下说明配置：
-- 使用时间字段上的 [Range 分区](https://doris.apache.org/zh-CN/docs/2.0/table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](https://doris.apache.org/zh-CN/docs/2.0/table-design/data-partition#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
+- 使用时间字段上的 [Range 分区](https://doris.apache.org/zh-CN/docs/dev/table-design/data-partition/#range-%E5%88%86%E5%8C%BA)，并开启 [动态分区](https://doris.apache.org/zh-CN/docs/dev/table-design/data-partition?_highlight=%E8%87%AA%E5%8A%A8&_highlight=%E5%88%86&_highlight=%E6%A1%B6#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA)，按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key，在查询最新 N 条日志时有数倍加速。
 - 分桶时，按照以下说明配置：
 - 分桶数量大致为集群磁盘总数的 3 倍。
@@ -375,7 +375,7 @@ log_speed_interval => 10
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
 
-```YAML  
+  ```YAML  
   # input
   filebeat.inputs:
   - type: log
@@ -472,7 +472,7 @@ FROM KAFKA (
 "property.sasl.kerberos.keytab"="/path/to/xxx.keytab",  
 "property.sasl.kerberos.principal"="<xxx@yyy.com>"  
 );  
-\-- 查看routine的状态  
+-- 查看routine的状态  
 SHOW ROUTINE LOAD;
 ```
 

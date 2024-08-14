@@ -1,6 +1,6 @@
 ---
 {
-    "title": "使用 Doris 和 Iceberg 构建 Lakehouse",
+    "title": "使用 Doris 和 Iceberg",
     "language": "zh-CN"
 }
 
@@ -33,7 +33,7 @@ under the License.
 - 自 1.2 版本起，Apache Doris 正式引入 Multi-Catalog 功能，实现了多种数据源的自动元数据映射和数据访问、并对外部数据读取和查询执行等方面做了诸多性能优化，完全具备了构建极速易用 Lakehouse 架构的能力。
 - 在 2.1 版本中，Apache Doris 湖仓一体架构得到全面加强，不仅增强了主流数据湖格式（Hudi、Iceberg、Paimon 等）的读取和写入能力，还引入了多 SQL 方言兼容、可从原有系统无缝切换至 Apache Doris。在数据科学及大规模数据读取场景上，Doris 集成了 Arrow Flight 高速读取接口，使得数据传输效率实现 100 倍的提升。
 
-![](/images/quick-start/lakehouse-iceberg-arch.jpeg)
+![使用 Doris 和 Iceberg 构建 Lakehouse](/images/lakehouse-architecture-for-doris-and-iceberg.png)
 
 ## Apache Doris & Iceberg
 
