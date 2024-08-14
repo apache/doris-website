@@ -349,6 +349,11 @@ POM dependency:
         <artifactId>adbc-sql</artifactId>
         <version>${adbc.version}</version>
     </dependency>
+    <dependency>
+        <groupId>org.apache.arrow.adbc</groupId>
+        <artifactId>adbc-driver-flight-sql</artifactId>
+        <version>${adbc.version}</version>
+    </dependency>
 </dependencies>
 ```
 
