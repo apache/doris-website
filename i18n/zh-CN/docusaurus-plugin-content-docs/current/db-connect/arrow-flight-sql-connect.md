@@ -79,7 +79,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 假设 Doris 实例中 FE 和 BE 的 Arrow Flight SQL 服务将分别在端口 9090 和 9091 上运行，且 Doris 用户名/密码为“user”/“pass”，那么连接过程如下所示：
 
 ```Python
-conn = flight_sql.connect(uri="grpc://{FE_HOST}:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "user",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "pass",
         })
@@ -228,7 +228,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
 # Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
-conn = flight_sql.connect(uri="grpc://{FE_HOST}:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
         })
@@ -322,7 +322,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 Class.forName("org.apache.arrow.driver.jdbc.ArrowFlightJdbcDriver");
-String DB_URL = "jdbc:arrow-flight-sql://0.0.0.0:9090?useServerPrepStmts=false"
+String DB_URL = "jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}?useServerPrepStmts=false"
         + "&cachePrepStmts=true&useSSL=false&useEncryption=false";
 String USER = "root";
 String PASS = "";
@@ -387,7 +387,7 @@ POM dependency:
 final BufferAllocator allocator = new RootAllocator();
 FlightSqlDriver driver = new FlightSqlDriver(allocator);
 Map<String, Object> parameters = new HashMap<>();
-AdbcDriver.PARAM_URI.set(parameters, Location.forGrpcInsecure("0.0.0.0", 9090).getUri().toString());
+AdbcDriver.PARAM_URI.set(parameters, Location.forGrpcInsecure("{FE_HOST}", {fe.conf:arrow_flight_sql_port}).getUri().toString());
 AdbcDriver.PARAM_USERNAME.set(parameters, "root");
 AdbcDriver.PARAM_PASSWORD.set(parameters, "");
 AdbcDatabase adbcDatabase = driver.open(parameters);
@@ -424,7 +424,7 @@ connection.close();
 ```Java
 final Map<String, Object> parameters = new HashMap<>();
 AdbcDriver.PARAM_URI.set(
-        parameters,"jdbc:arrow-flight-sql://0.0.0.0:9090?useServerPrepStmts=false&cachePrepStmts=true&useSSL=false&useEncryption=false");
+        parameters,"jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}?useServerPrepStmts=false&cachePrepStmts=true&useSSL=false&useEncryption=false");
 AdbcDriver.PARAM_USERNAME.set(parameters, "root");
 AdbcDriver.PARAM_PASSWORD.set(parameters, "");
 try (
@@ -489,4 +489,12 @@ kylinv10 SP2 和 SP3 的 Linux 内核版本最高只有 4.19.90-24.4.v2101.ky10.
 
 4. ADBC v0.10，JDBC 和 Java ADBC/JDBCDriver 还不支持并行读取，没有实现`stmt.executePartitioned()`这个方法，只能使用原生的 FlightClient 实现并行读取多个 Endpoints, 使用方法`sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`，此外，ADBC V0.10 默认的AdbcStatement实际是JdbcStatement，executeQuery后将行存格式的 JDBC ResultSet 又重新转成的Arrow列存格式，预期到 ADBC 1.0.0 时 Java ADBC 将功能完善 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)。
 
-5. 截止Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，比如 `jdbc:arrow-flight-sql://0.0.0.0:9090/test?useServerPrepStmts=false` 中指定连接`test` database无效，只能手动执行SQL `use database`。
+5. 截止Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，比如 `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` 中指定连接`test` database无效，只能手动执行SQL `use database`。
+
+6. Doris 2.1.4 version 存在一个Bug，读取大数据量时有几率报错，在 [Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827) 这个pr修复，升级 Doris 2.1.5 version 可以解决。问题详情见：[Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
+
+7. `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant` 使用 Python 时忽略这个 Warning，这是 Python ADBC Client 的问题，这不会影响查询。
+
+8. Python 报错 `grpc: received message larger than max (20748753 vs. 16777216)`，参考 [Python: grpc: received message larger than max (20748753 vs. 16777216) #2078](https://github.com/apache/arrow-adbc/issues/2078) 在 Database Option 中增加 `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value`.
+
+9. Doris version 2.1.7 版本之前，报错 `Reach limit of connections`，这是因为没有限制单个用户的 Arrow Flight 连接数小于 `UserProperty` 中的 `max_user_connections`，默认100，可以通过 `SET PROPERTY FOR 'Billie' 'max_user_connections' = '1000';` 修改 Billie 用户的当前最大连接数到 100，或者在 `fe.conf` 中增加 `arrow_flight_token_cache_size=50` 来限制整体的 Arrow Flight 连接数。Doris version 2.1.7 版本之前 Arrow Flight 连接默认 3天 超时断开，只强制连接数小于 `qe_max_connection/2`，超过时依据lru淘汰，`qe_max_connection` 是fe所有用户的总连接数，默认1024。具体可以看 `arrow_flight_token_cache_size` 这个conf的介绍。问题详情见：[Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie-shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)

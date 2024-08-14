@@ -165,7 +165,7 @@ Now this is revolutionized in Doris V2.1, where we provide a high-throughput dat
 This allows fast data access to Apache Doris by data science tools like Pandas and Numpy, which means Apache Doris can be seamlessly integrated with the entire AI and data science ecosystem. This unveils a future of endless possibilities. 
 
 ```C++
-conn = flight_sql.connect(uri="grpc://{FE_HOST}:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "user",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "pass",
         })
