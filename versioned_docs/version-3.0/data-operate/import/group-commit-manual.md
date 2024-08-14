@@ -148,18 +148,18 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-注意：由于高频的insert into语句会打印大量的audit log，对最终性能有一定影响，默认关闭了打印prepared语句的audit log。可以通过设置session variable的方式控制是否打印prepared语句的audit log。
+**Note:** Due to the high frequency of `INSERT INTO` statements, a large amount of audit logs might be printed, which could impact overall performance. By default, the audit log for prepared statements is disabled. You can control whether to print the audit log for prepared statements by setting a session variable.
 
 ```sql
-# 配置 session 变量开启打印parpared语句的audit log, 默认为false即关闭打印parpared语句的audit log。
+# Configure the session variable to enable printing the audit log for prepared statements. By default, it is set to false, which disables printing the audit log for prepared statements.
 set enable_prepared_stmt_audit_log=true;
 ```
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import/insert-into-manual)。
+For more usage on **JDBC**, refer to [Using Insert to Synchronize Data](../import/insert-into-manual).
 
-### 使用Golang进行Group Commit
+### Using Golang for Group Commit
 
-Golang的prepared语句支持有限，所以我们可以通过手动客户端攒批的方式提高Group Commit的性能，以下为一个示例程序。
+Golang has limited support for prepared statements, so we can manually batch the statements on the client side to improve the performance of Group Commit. Below is an example program. 
 
 ```Golang
 package main
@@ -567,7 +567,7 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Test Method
 
-* Setting different single-concurrency data size and concurrency num between `non group_commit` and `group_commit` modes.
+* Setting different single-concurrency data size and concurrency num between `non group_commit` and `group_commit=async mode` modes.
 
 #### Test Result
 
