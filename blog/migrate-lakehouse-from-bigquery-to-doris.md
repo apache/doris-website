@@ -7,7 +7,7 @@
     'author': 'Dien, Tran Thanh',
     'tags': ['Best Practice'],
     'picked': "true",
-    'order': "2",
+    'order': "3",
     "image": '/images/migrate-lakehouse-from-bigquery-to-apache-doris.jpg'
 }
 
