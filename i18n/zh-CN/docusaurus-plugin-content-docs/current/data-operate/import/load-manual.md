@@ -53,10 +53,10 @@ Doris 的导入主要涉及数据源、数据格式、导入方式、错误数�
 
 | 导入方式                                      | 使用场景                                   | 支持的文件格式          | 单次导入数据量    | 导入模式 |
 | :-------------------------------------------- | :----------------------------------------- | ----------------------- | ----------------- | -------- |
-| [Stream Load](./import-way/stream-load-manual)           | 从本地数据导入                             | csv、json、parquet、orc | 小于10GB          | 同步     |
+| [Stream Load](./import-way/stream-load-manual)           | 导入本地文件或者应用程序写入         | csv、json、parquet、orc | 小于10GB          | 同步     |
 | [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS等导入                     | csv、json、parquet、orc | 数十GB到数百 GB   | 异步     |
-| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | <p>单条或小批量据量导入</p><p>通过JDBC等接口导入</p> | SQL                     | 简单测试用        | 同步     |
-| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | <p>Doris内部表之间数据导入</p><p>外部表导入</p>      | SQL                     | 根据内存大小而定  | 同步     |
+| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过JDBC等接口导入 | SQL                     | 简单测试用        | 同步     |
+| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS中的文件      | SQL                     | 根据内存大小而定  | 同步     |
 | [Routine Load](./import-way/routine-load-manual.md)      | 从kakfa实时导入                            | csv、json               | 微批导入 MB 到 GB | 异步     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 小于10GB          | 同步     |
 | [Group Commit](./import-way/group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定                     |  微批导入KB         | -     |
