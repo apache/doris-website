@@ -27,22 +27,33 @@ under the License.
 Apache Doris offers various methods for importing and integrating data, allowing you to import data from diverse sources into the database. These methods can be categorized into four types:
 
 - **Real-Time Writing**: Data is written into Doris tables in real-time via HTTP or JDBC, suitable for scenarios requiring immediate analysis and querying.
+
     - For small amounts of data (once every 5 minutes), you can use [JDBC INSERT](./import-way/insert-into-manual.md).
+
     - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), you can enable enable [Group Commit](./import-way/group-commit-manual.md) and use JDBC INSERT or Stream Load.
+
     - For high throughput, you can use [Stream Load](./import-way/stream-load-manua) via HTTP.
 
 - **Streaming Synchronization**: Real-time data streams (e.g., Flink, Kafka, transactional databases) are imported into Doris tables, ideal for real-time analysis and querying.
+
     - You can use [Flink Doris Connector](../../ecosystem/flink-doris-connector.md) to write Flink’s real-time data streams into Doris.
+
     - You can use [Routine Load](./import-way/routine-load-manual.md) or [Doris Kafka Connector](../../ecosystem/doris-kafka-connector.md) for Kafka’s real-time data streams. Routine Load pulls data from Kafka to Doris and supports CSV and JSON formats, while Kafka Connector writes data to Doris, supporting Avro, JSON, CSV, and Protobuf formats.
+
     - You can use [Flink CDC](../../ecosystem/flink-doris-connector.md) or [Datax](../../ecosystem/datax.md) to write transactional database CDC data streams into Doris.
 
 - **Batch Import**: Data is batch-loaded from external storage systems (e.g., S3, HDFS, local files, NAS) into Doris tables, suitable for non-real-time data import needs.
+
     - You can use [Broker Load](./import-way/broker-load-manual.md) to write files from S3 and HDFS into Doris.
+
     - You can use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronously load files from S3, HDFS, and NAS into Doris, and you can perform the operation asynchronously using a [JOB](../scheduler/job-scheduler.md).
+
     - You can use [Stream Load](./import-way/stream-load-manua) or [Doris Streamloader](../../ecosystem/doris-streamloader.md) to write local files into Doris.
 
 - **External Data Source Integration**: Query and partially import data from external sources (e.g., Hive, JDBC, Iceberg) into Doris tables.
+
     - You can create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous writing via [JOB](../scheduler/job-scheduler.md).
+    
     - You can use [X2Doris](./migrate-data-from-other-olap.md) to migrate data from other AP systems into Doris.
 
 Each import method in Doris is an implicit transaction by default. For more information on transactions, refer to [Transactions](../transaction.md).
