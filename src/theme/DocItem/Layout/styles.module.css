@@ -1,5 +1,5 @@
-.docItemContainer header + *,
-.docItemContainer article > *:first-child {
+.docItemContainer header+*,
+.docItemContainer article>*:first-child {
   margin-top: 0;
 }
 
@@ -7,4 +7,18 @@
   .docItemCol {
     max-width: 75% !important;
   }
+}
+
+.footerBtn {
+  border: 1px solid #dfe5f0;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  padding: 0 0.375rem;
+  border-radius: 4px;
+  display:flex;
+  align-items: center;
+  cursor: pointer;
+}
+.footerBtn:hover {
+  border: 1px solid #444FD9;
 }

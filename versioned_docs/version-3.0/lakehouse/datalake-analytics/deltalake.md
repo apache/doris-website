@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Delta Lake Catalog is compatible with the [Trino Connector](../../../../docusaurus-plugin-content-docs-community/current/how-to-contribute/trino-connector-developer-guide.md), using the Delta Lake Connector to access Delta Lake tables.
+Delta Lake Catalog is compatible with the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/), using the Delta Lake Connector to access Delta Lake tables.
 
 > This feature is supported starting from Doris version 3.0.1.
 

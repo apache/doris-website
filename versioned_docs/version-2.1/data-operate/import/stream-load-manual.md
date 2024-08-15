@@ -72,11 +72,11 @@ The following figure shows the main flow of Stream load, omitting some import de
 
 Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
 
-For detailed syntax, please refer to [STREAM LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD).
+For detailed syntax, please refer to [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD).
 
 ### Prerequisite check
 
-Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT) command.
+Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
 
 ### Create load job
 

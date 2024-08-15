@@ -33,8 +33,8 @@ The following import methods support data import in CSV format:
 - [Broker Load](./import-way/broker-load-manual.md)
 - [Routine Load](./import-way/routine-load-manual.md)
 - [MySQL Load](./import-way/mysql-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### Supported CSV Formats
 - csv: File without header and type
@@ -136,8 +136,8 @@ Currently, only the following import methods support data import in JSON format:
 - [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
 - [Routine Load](./import-way/routine-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### Supported JSON Formats
 
@@ -725,8 +725,8 @@ For Kafka data sources, the content in each Massage is treated as a complete JSO
 The following import methods support importing data in CSV format:
 - [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### Import Examples
 
@@ -762,8 +762,8 @@ WITH S3
 The following import methods support importing data in CSV format:
 - [Stream Load](./import-way/stream-load-manual.md)
 - [Broker Load](./import-way/broker-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-functions/s3)
-- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-functions/hdfs)
+- [INSERT INTO FROM S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3)
+- [INSERT INTO FROM HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ### Import Examples
 

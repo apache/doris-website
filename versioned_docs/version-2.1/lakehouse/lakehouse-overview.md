@@ -357,7 +357,7 @@ Along with the new Multi-Catalog feature, we also added privilege management at 
 
 Users can also specify a custom authentication class through `access_controller.class`. For example, if you specify it as
 
-`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Range to perform authentication management on Hive Catalog. For more information see: [Hive](../lakehouse/datalake-analytics/hive)
+`"access_controller.class"="org.apache.doris.catalog.authorizer.ranger.hive.RangerHiveAccessControllerFactory"`, then you can use Apache Ranger to perform authentication management on Hive Catalog. For more information see: [Hive](../lakehouse/datalake-analytics/hive)
 
 ### Database synchronization management
 

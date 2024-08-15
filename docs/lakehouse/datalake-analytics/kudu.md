@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Kudu Catalog is compatible with the [Trino Connector](../../../../docusaurus-plugin-content-docs-community/current/how-to-contribute/trino-connector-developer-guide.md) framework, using the Kudu Connector to access Kudu tables.
+Kudu Catalog is compatible with the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/) framework, using the Kudu Connector to access Kudu tables.
 
 > This feature is supported starting from Doris version 3.0.1.
 

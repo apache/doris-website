@@ -299,6 +299,10 @@
     "message": "性能测试",
     "description": "The label for category Benchmark in sidebar docs"
   },
+  "sidebar.releasenotes.category.Previous Release": {
+    "message": "历史版本",
+    "description": "The label for category Release notes in sidebar docs"
+  },
   "sidebar.docs.category.Lakehouse": {
     "message": "数据湖分析",
     "description": "The label for category Lakehouse in sidebar docs"
@@ -310,5 +314,17 @@
   "sidebar.docs.category.External Table": {
     "message": "外部表",
     "description": "The label for category Lakehouse.External Table in sidebar docs"
+  },
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Tutorials": {
+    "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Building lakehouse": {
+    "message": "构建 Lakehouse",
+    "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }
