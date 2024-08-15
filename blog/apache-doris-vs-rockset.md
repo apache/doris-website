@@ -7,7 +7,7 @@
     'author': 'Zaki Lu',
     'tags': ['Top News'],
     'picked': "true",
-    'order': "3",
+    'order': "4",
     "image": '/images/doris-vs-rockset.jpeg'
 }
 
