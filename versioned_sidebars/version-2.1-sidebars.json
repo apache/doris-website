@@ -1447,7 +1447,6 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-LOAD-PROFILE",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-LOAD-WARNINGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-INDEX",
-                                "sql-manual/sql-statements/Show-Statements/SHOW-MIGRATIONS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-PARTITION-ID",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SNAPSHOT",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE",
