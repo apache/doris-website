@@ -43,6 +43,8 @@ Group Commit 写入有三种模式，分别是：
 
     Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
+    WAL的数量可以通过FE http接口查看，具体可见[这里](../../../admin-manual/fe/get-wal-size-action.md)，也可以在BE的metrics中搜索关键词`wal`查看。
+
 ## Group Commit 使用方式
 
 假如表的结构为：
@@ -66,7 +68,7 @@ PROPERTIES (
 **1. 设置 JDBC URL 并在 Server 端开启 Prepared Statement**
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50
 ```
 
 **2. 配置 `group_commit` session 变量，有如下两种方式：**
@@ -74,7 +76,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
     ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&sessionVariables=group_commit=async_mode
+    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=enable_nereids_planner=false
     ```
 
 * 通过执行 SQL 设置
@@ -89,7 +91,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -126,7 +128,7 @@ private static void groupCommitInsertBatch() throws Exception {
     // add rewriteBatchedStatements=true and cachePrepStmts=true in JDBC url
     // set session variables by sessionVariables=group_commit=async_mode in JDBC url
     try (Connection conn = DriverManager.getConnection(
-            String.format(URL_PATTERN + "&rewriteBatchedStatements=true&cachePrepStmts=true&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
+            String.format(URL_PATTERN, HOST, PORT, DB), USER, PASSWD)) {
 
         String query = "insert into " + TBL + " values(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {

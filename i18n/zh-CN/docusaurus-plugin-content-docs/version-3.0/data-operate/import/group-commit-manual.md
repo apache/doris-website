@@ -43,6 +43,8 @@ Group Commit 写入有三种模式，分别是：
 
     Doris 首先将数据写入 WAL (`Write Ahead Log`)，然后导入立即返回。Doris 会根据负载和表的`group_commit_interval`属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为`sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
+    WAL的数量可以通过FE http接口查看，具体可见[这里](../../../admin-manual/fe/get-wal-size-action.md)，也可以在BE的metrics中搜索关键词`wal`查看。
+
 ## Group Commit 使用方式
 
 假如表的结构为：
@@ -66,7 +68,7 @@ PROPERTIES (
 **1. 设置 JDBC URL 并在 Server 端开启 Prepared Statement**
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50
 ```
 
 **2. 配置 `group_commit` session 变量，有如下两种方式：**
@@ -74,7 +76,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
 * 通过 JDBC url 设置，增加`sessionVariables=group_commit=async_mode`
 
     ```
-    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&sessionVariables=group_commit=async_mode
+    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=enable_nereids_planner=false
     ```
 
 * 通过执行 SQL 设置
@@ -89,7 +91,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -126,7 +128,7 @@ private static void groupCommitInsertBatch() throws Exception {
     // add rewriteBatchedStatements=true and cachePrepStmts=true in JDBC url
     // set session variables by sessionVariables=group_commit=async_mode in JDBC url
     try (Connection conn = DriverManager.getConnection(
-            String.format(URL_PATTERN + "&rewriteBatchedStatements=true&cachePrepStmts=true&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
+            String.format(URL_PATTERN, HOST, PORT, DB), USER, PASSWD)) {
 
         String query = "insert into " + TBL + " values(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -164,101 +166,101 @@ Golang的prepared语句支持有限，所以我们可以通过手动客户端攒
 package main
 
 import (
-    "database/sql"
-    "fmt"
-    "math/rand"
-    "strings"
-    "sync"
-    "sync/atomic"
-    "time"
+	"database/sql"
+	"fmt"
+	"math/rand"
+	"strings"
+	"sync"
+	"sync/atomic"
+	"time"
 
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
-    host     = "127.0.0.1"
-    port     = 9038
-    db       = "test"
-    user     = "root"
-    password = ""
-    table    = "async_lineitem"
+	host     = "127.0.0.1"
+	port     = 9038
+	db       = "test"
+	user     = "root"
+	password = ""
+	table    = "async_lineitem"
 )
 
 var (
-    threadCount = 20
-    batchSize   = 100
+	threadCount = 20
+	batchSize   = 100
 )
 
 var totalInsertedRows int64
 var rowsInsertedLastSecond int64
 
 func main() {
-    dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
-    db, err := sql.Open("mysql", dbDSN)
-    if err != nil {
-        fmt.Printf("Error opening database: %s\n", err)
-        return
-    }
-    defer db.Close()
+	dbDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", user, password, host, port, db)
+	db, err := sql.Open("mysql", dbDSN)
+	if err != nil {
+		fmt.Printf("Error opening database: %s\n", err)
+		return
+	}
+	defer db.Close()
 
-    var wg sync.WaitGroup
-    for i := 0; i < threadCount; i++ {
-        wg.Add(1)
-        go func() {
-            defer wg.Done()
-            groupCommitInsertBatch(db)
-        }()
-    }
+	var wg sync.WaitGroup
+	for i := 0; i < threadCount; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			groupCommitInsertBatch(db)
+		}()
+	}
 
-    go logInsertStatistics()
+	go logInsertStatistics()
 
-    wg.Wait()
+	wg.Wait()
 }
 
 func groupCommitInsertBatch(db *sql.DB) {
-    for {
-        valueStrings := make([]string, 0, batchSize)
-        valueArgs := make([]interface{}, 0, batchSize*16)
-        for i := 0; i < batchSize; i++ {
-            for i = 0; i < batchSize; i++ {
-                valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, rand.Intn(1000))
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
-                valueArgs = append(valueArgs, "N")
-                valueArgs = append(valueArgs, "O")
-                valueArgs = append(valueArgs, time.Now())
-                valueArgs = append(valueArgs, time.Now())
-                valueArgs = append(valueArgs, time.Now())
-                valueArgs = append(valueArgs, "DELIVER IN PERSON")
-                valueArgs = append(valueArgs, "SHIP")
-                valueArgs = append(valueArgs, "N/A")
-            }
-        }
-        stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
-            table, strings.Join(valueStrings, ","))
-        _, err := db.Exec(stmt, valueArgs...)
-        if err != nil {
-            fmt.Printf("Error executing batch: %s\n", err)
-            return
-        }
-        atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
-        atomic.AddInt64(&totalInsertedRows, int64(batchSize))
-    }
+	for {
+		valueStrings := make([]string, 0, batchSize)
+		valueArgs := make([]interface{}, 0, batchSize*16)
+		for i := 0; i < batchSize; i++ {
+			for i = 0; i < batchSize; i++ {
+				valueStrings = append(valueStrings, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+				valueArgs = append(valueArgs, rand.Intn(1000))
+				valueArgs = append(valueArgs, rand.Intn(1000))
+				valueArgs = append(valueArgs, rand.Intn(1000))
+				valueArgs = append(valueArgs, rand.Intn(1000))
+				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+				valueArgs = append(valueArgs, sql.NullFloat64{Float64: 1.0, Valid: true})
+				valueArgs = append(valueArgs, "N")
+				valueArgs = append(valueArgs, "O")
+				valueArgs = append(valueArgs, time.Now())
+				valueArgs = append(valueArgs, time.Now())
+				valueArgs = append(valueArgs, time.Now())
+				valueArgs = append(valueArgs, "DELIVER IN PERSON")
+				valueArgs = append(valueArgs, "SHIP")
+				valueArgs = append(valueArgs, "N/A")
+			}
+		}
+		stmt := fmt.Sprintf("INSERT INTO %s VALUES %s",
+			table, strings.Join(valueStrings, ","))
+		_, err := db.Exec(stmt, valueArgs...)
+		if err != nil {
+			fmt.Printf("Error executing batch: %s\n", err)
+			return
+		}
+		atomic.AddInt64(&rowsInsertedLastSecond, int64(batchSize))
+		atomic.AddInt64(&totalInsertedRows, int64(batchSize))
+	}
 }
 
 func logInsertStatistics() {
-    for {
-        time.Sleep(1 * time.Second)
-        fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
-        fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
-        rowsInsertedLastSecond = 0
-    }
+	for {
+		time.Sleep(1 * time.Second)
+		fmt.Printf("Total inserted rows: %d\n", totalInsertedRows)
+		fmt.Printf("Rows inserted in the last second: %d\n", rowsInsertedLastSecond)
+		rowsInsertedLastSecond = 0
+	}
 }
 
 ```
@@ -710,14 +712,14 @@ PROPERTIES (
 |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
 
 
-**100并发sync模式性能测试**
+**100并发sync模式5个BE3副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
 |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
 
-**500并发sync模式性能测试**
+**500并发sync模式5个BE3副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
@@ -781,21 +783,21 @@ PROPERTIES (
 
 * 以下测试分为30，100，500并发。
 
-**30并发sync模式性能测试**
+**30并发sync模式5个BE3副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
 |enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
 
-**100并发sync模式性能测试**
+**100并发sync模式5个BE3副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|
 |enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
 |enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
 
-**500并发sync模式性能测试**
+**500并发sync模式5个BE3副本性能测试**
 
 | Group commit internal | 10ms | 20ms | 50ms | 100ms |
 |-----------------------|---------------|---------------|---------------|---------------|

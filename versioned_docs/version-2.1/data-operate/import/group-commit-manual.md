@@ -44,6 +44,8 @@ Doris groups multiple loads into one transaction commit based on the `group_comm
 
 Doris writes data to the Write Ahead Log (WAL) firstly, then the load is returned. Doris groups multiple loads into one transaction commit based on the `group_commit_interval` table property, and the data is visible after the commit. To prevent excessive disk space usage by the WAL, it automatically switches to `sync_mode`. This is suitable for latency-sensitive and high-frequency writing.
 
+The number of WALs can be viewed through the FE HTTP interface, as detailed [here](../../admin-manual/fe/get-wal-size-action.md). Alternatively, you can search for the keyword `wal` in the BE metrics.
+
 ## Basic operations
 
 If the table schema is:
@@ -67,7 +69,7 @@ To reduce the CPU cost of SQL parsing and query planning, we provide the `Prepar
 1. Setup JDBC url and enable server side prepared statement
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
+url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50
 ```
 
 2. Set `group_commit` session variable, there are two ways to do it:
@@ -75,7 +77,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true
 * Add `sessionVariables=group_commit=async_mode` in JDBC url
 
 ```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&sessionVariables=group_commit=async_mode
+url = url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode
 ```
 
 * Use `SET group_commit = async_mode;` command
@@ -90,7 +92,7 @@ try (Statement statement = conn.createStatement()) {
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true";
+private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
 private static final int PORT = 9087;
 private static final String DB = "db";
@@ -127,7 +129,7 @@ private static void groupCommitInsertBatch() throws Exception {
     // add rewriteBatchedStatements=true and cachePrepStmts=true in JDBC url
     // set session variables by sessionVariables=group_commit=async_mode in JDBC url
     try (Connection conn = DriverManager.getConnection(
-            String.format(URL_PATTERN + "&rewriteBatchedStatements=true&cachePrepStmts=true&sessionVariables=group_commit=async_mode", HOST, PORT, DB), USER, PASSWD)) {
+            String.format(URL_PATTERN, HOST, PORT, DB), USER, PASSWD)) {
 
         String query = "insert into " + TBL + " values(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
