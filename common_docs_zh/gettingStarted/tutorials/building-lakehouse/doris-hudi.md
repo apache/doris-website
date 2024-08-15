@@ -55,7 +55,7 @@ Apache Doris 同样对 Apache Hudi 数据表的读取能力进行了增强：
 
 本文将在 Docker 环境下，为读者介绍如何快速搭建 Apache Doris + Apache Hudi 的测试及演示环境，并对各功能操作进行演示，帮助读者快速入门。
 
-关于更多说明，请参阅 [Hudi Catalog](../../lakehouse/datalake-analytics/hudi)
+关于更多说明，请参阅 [Hudi Catalog](../../../lakehouse/datalake-analytics/hudi)
 
 ## 使用指南
 
@@ -88,7 +88,7 @@ Apache Doris 同样对 Apache Hudi 数据表的读取能力进行了增强：
 
 3. 启动后，可以使用如下脚本，登陆 Spark 命令行或 Doris 命令行：
 
-	```
+	```sql
 	-- Doris
 	sudo ./login-spark.sh
 	
@@ -100,7 +100,7 @@ Apache Doris 同样对 Apache Hudi 数据表的读取能力进行了增强：
 
 接下来先通过 Spark 生成 Hudi 的数据。如下方代码所示，集群中已经包含一张名为 `customer` 的 Hive 表，可以通过这张 Hive 表，创建一个 Hudi 表：
 
-```
+```sql
 -- ./login-spark.sh
 spark-sql> use default;
 
@@ -131,7 +131,7 @@ AS SELECT * FROM customer;
 
 如下所示，Doris 集群中已经创建了名为 `hudi` 的 Catalog（可通过 `SHOW CATALOGS` 查看）。以下为该 Catalog 的创建语句：
 
-```
+```sql
 -- 已经创建，无需再次执行
 CREATE CATALOG `hive` PROPERTIES (
     "type"="hms",
@@ -146,21 +146,21 @@ CREATE CATALOG `hive` PROPERTIES (
 
 1. 手动刷新该 Catalog，对创建的 Hudi 表进行同步： 
 
-	```
+	```sql
 	-- ./login-doris.sh
 	doris> REFRESH CATALOG hive;
 	```
 
 2. 使用 Spark 操作 Hudi 中的数据，都可以在 Doris 中实时可见，不需要再次刷新 Catalog。我们通过 Spark 分别给 COW 和 MOR 表插入一行数据：
 
-	```
+	```sql
 	spark-sql> insert into customer_cow values (100, "Customer#000000100", "jD2xZzi", "25-430-914-2194", 3471.59, "BUILDING", "cial ideas. final, furious requests", 25);
 	spark-sql> insert into customer_mor values (100, "Customer#000000100", "jD2xZzi", "25-430-914-2194", 3471.59, "BUILDING", "cial ideas. final, furious requests", 25);
 	```
 
 3. 通过 Doris 可以直接查询到最新插入的数据：
 
-	```
+	```sql
 	doris> use hive.default;
 	doris> select * from customer_cow where c_custkey = 100;
 	doris> select * from customer_mor where c_custkey = 100;
@@ -168,14 +168,14 @@ CREATE CATALOG `hive` PROPERTIES (
 
 4. 再通过 Spark 插入 c_custkey=32 已经存在的数据，即覆盖已有数据：
 
-	```
+	```sql
 	spark-sql> insert into customer_cow values (32, "Customer#000000032_update", "jD2xZzi", "25-430-914-2194", 3471.59, "BUILDING", "cial ideas. final, furious requests", 15);
 	spark-sql> insert into customer_mor values (32, "Customer#000000032_update", "jD2xZzi", "25-430-914-2194", 3471.59, "BUILDING", "cial ideas. final, furious requests", 15);
 	```
 
 5. 通过 Doris 可以查询更新后的数据：
 
-	```
+	```sql
 	doris> select * from customer_cow where c_custkey = 32;
 	+-----------+---------------------------+-----------+-----------------+-----------+--------------+-------------------------------------+-------------+
 	| c_custkey | c_name                    | c_address | c_phone         | c_acctbal | c_mktsegment | c_comment                           | c_nationkey |
@@ -194,7 +194,7 @@ CREATE CATALOG `hive` PROPERTIES (
 
 Incremental Read 是 Hudi 提供的功能特性之一，通过 Incremental Read，用户可以获取指定时间范围的增量数据，从而实现对数据的增量处理。对此，Doris 可对插入 `c_custkey=100` 后的变更数据进行查询。如下所示，我们插入了一条 `c_custkey=32` 的数据：
 
-```
+```sql
 doris> select * from customer_cow@incr('beginTime'='20240603015018572');
 +-----------+---------------------------+-----------+-----------------+-----------+--------------+-------------------------------------+-------------+
 | c_custkey | c_name                    | c_address | c_phone         | c_acctbal | c_mktsegment | c_comment                           | c_nationkey |
@@ -216,7 +216,7 @@ spark-sql> select * from hudi_table_changes('customer_mor', 'latest_state', '202
 
 Doris 支持查询指定快照版本的 Hudi 数据，从而实现对数据的 Time Travel 功能。首先，可以通过 Spark 查询两张 Hudi 表的提交历史：
 
-```
+```sql
 spark-sql> call show_commits(table => 'customer_cow', limit => 10);
 20240603033556094        20240603033558249        commit        448833        0        1        1        183        0        0
 20240603015444737        20240603015446588        commit        450238        0        1        1        202        1        0
@@ -234,7 +234,7 @@ spark-sql> call show_commits(table => 'customer_mor', limit => 10);
 
 > 注：Time Travel 语法暂时不支持新优化器，需要先执行 set enable_nereids_planner=false;关闭新优化器，该问题将会在后续版本中修复。
 
-```
+```sql
 doris> select * from customer_cow for time as of '20240603015018572' where c_custkey = 32 or c_custkey = 100;
 +-----------+--------------------+---------------------------------------+-----------------+-----------+--------------+--------------------------------------------------+-------------+
 | c_custkey | c_name             | c_address                             | c_phone         | c_acctbal | c_mktsegment | c_comment                                        | c_nationkey |
@@ -263,7 +263,7 @@ Apache Hudi 中的数据大致可以分为两类 —— 基线数据和增量数
 
 为验证该优化思路，我们通过 EXPLAIN 语句来查看一个下方示例的查询中，分别有多少基线数据和增量数据。对于 COW 表来说，所有 101 个数据分片均为是基线数据（`hudiNativeReadSplits=101/101`），因此 COW 表全部可直接通过  Doris  Parquet Reader 进行读取，因此可获得最佳的查询性能。对于 ROW 表，大部分数据分片是基线数据（`hudiNativeReadSplits=100/101`），一个分片数为增量数据，基本也能够获得较好的查询性能。
 
-```
+```sql
 -- COW table is read natively
 doris> explain select * from customer_cow where c_custkey = 32;
 |   0:VHUDI_SCAN_NODE(68)                                        |
@@ -289,7 +289,7 @@ doris> explain select * from customer_mor where c_custkey = 32;
 
 可以通过 Spark 进行一些删除操作，进一步观察 Hudi 基线数据和增量数据的变化：
 
-```
+```sql
 -- Use delete statement to see more differences
 spark-sql> delete from customer_cow where c_custkey = 64;
 doris> explain select * from customer_cow where c_custkey = 64;
@@ -300,7 +300,7 @@ doris> explain select * from customer_mor where c_custkey = 64;
 
 此外，还可以通过分区条件进行分区裁剪，从而进一步减少数据量，以提升查询速度。如下示例中，通过分区条件 `c_nationkey=15` 进行分区裁减，使得查询请求只需要访问一个分区（`partition=1/26`）的数据即可。
 
-```
+```sql
 -- customer_xxx is partitioned by c_nationkey, we can use the partition column to prune data
 doris> explain select * from customer_mor where c_custkey = 64 and c_nationkey = 15;
 |   0:VHUDI_SCAN_NODE(68)                                        |
