@@ -124,6 +124,14 @@ Doris 支持运行和部署在 x86-64 架构的服务器平台或 ARM64 架构�
 | BE     | Doris 默认 LZ4 压缩方式进行存储，压缩比在 0.3 - 0.5 左右磁盘空间需要按照总数据量 * 3（3 副本）计算需要预留出 40% 空间用作后台 compaction 以及临时数据的存储 |
 | Broker | 如需部署 Broker，通常情况下可以将 Broker 节点与 FE / BE 节点部署在同一台机器上 |
 
+### Java 版本
+
+Doris 的所有进程都依赖 Java。
+
+在 2.1（含）版本之前，请使用 Java 8，推荐版本：`openjdk-8u352-b08-linux-x64`。
+
+从 3.0（含）版本之后，请使用 Java 17，推荐版本：`jdk-17.0.10_linux-x64_bin.tar.gz`。
+
 ## 2 操作系统检查
 
 ### 关闭 swap 分区
@@ -395,7 +403,7 @@ BE 的配置文件在 BE 部署路径下的 conf 目录中，启动 FE 节点前
 从 1.2 版本开始 Doris 支持 Java UDF 函数，BE 依赖于 Java 环境。需要预先配置操作系统 `JAVA_HOME` 环境变量，或者在 BE 配置文件中指定 Java 环境变量。
 
 ```sql
-## 修改 be/be.conf 的 Java 环境变量
+## 修改 be/conf/be.conf 的 Java 环境变量
 JAVA_HOME = <your-java-home-path>
 ```
 

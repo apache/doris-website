@@ -26,8 +26,6 @@ under the License.
 
 # WORKLOAD GROUP
 
-<version since="dev"></version>
-
 workload group 可限制组内任务在单个 be 节点上的计算资源和内存资源的使用。当前支持 query 绑定到 workload group。
 
 ## 版本说明
@@ -109,9 +107,9 @@ properties (
     "enable_memory_overcommit"="true"
 );
 ```
-此时配置的 CPU 限制为软限。自2.1版本起，系统会自动创建一个名为```normal```的group，不可删除。
+此时配置的 CPU 限制为软限。自 2.1 版本起，系统会自动创建一个名为```normal```的 group，不可删除。
 
-创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看workload group可访问Doris系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
+创建 workload group 详细可参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-WORKLOAD-GROUP)，删除 workload group 可参考[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-WORKLOAD-GROUP)；修改 workload group 可参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-WORKLOAD-GROUP)；查看 workload group 可访问 Doris 系统表```information_schema.workload_groups```或者使用命令[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS)。
 
 2. 绑定 workload group。
 * 通过设置 user property 将 user 默认绑定到 workload group，默认为`normal`:
@@ -125,7 +123,7 @@ set workload_group = 'g1';
 ```
 session 变量`workload_group`优先于 user property `default_workload_group`, 在`workload_group`为空时，查询将绑定到`default_workload_group`, 在 session 变量`workload_group`不为空时，查询将绑定到`workload_group`。
 
-如果是非admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+如果是非 admin 用户，需要先执行[SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/Show-Statements/SHOW-WORKLOAD-GROUPS) 确认下当前用户能否看到该 workload group，不能看到的 workload group 可能不存在或者当前用户没有权限，执行查询时会报错。给 workload group 授权参考：[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
 
 6. 执行查询，查询将关联到指定的 workload group。
 
@@ -197,3 +195,51 @@ ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
 
 如果用户期望从 CPU 的硬限切换回 CPU 的软限，那么只需要在 FE 修改 enable_cpu_hard_limit 的值为 false 即可。
 CPU 软限的属性 cpu_share 默认会填充一个有效值 1024(如果之前未指定 cpu_share 的值)，用户可以根据 group 的优先级对 cpu_share 的值进行重新调整。
+
+# Workload Group权限表
+可以通过Workload Group权限表查看user或者role有权限访问的Workload Group，授权相关的用法可以参考[grant 语句](../../sql-manual/sql-statements/Account-Management-Statements/GRANT)。
+
+该表目前存在行级别的权限控制，root或者admin账户可以查看所有的数据，非root/admin账户只能看到自己有权限访问的Workload Group的数据。
+
+Workload Group权限表结构如下：
+```
+mysql [information_schema]>desc information_schema.workload_group_privileges;
++---------------------+--------------+------+-------+---------+-------+
+| Field               | Type         | Null | Key   | Default | Extra |
++---------------------+--------------+------+-------+---------+-------+
+| GRANTEE             | varchar(64)  | Yes  | false | NULL    |       |
+| WORKLOAD_GROUP_NAME | varchar(256) | Yes  | false | NULL    |       |
+| PRIVILEGE_TYPE      | varchar(64)  | Yes  | false | NULL    |       |
+| IS_GRANTABLE        | varchar(3)   | Yes  | false | NULL    |       |
++---------------------+--------------+------+-------+---------+-------+
+```
+
+字段说明：
+1. grantee，代表user或者role。
+2. workload_group_name，取值为Workload Group的名称或者%，%代表可以访问所有的Workload Group。
+3. privilege_type，权限的类型，目前该列的值只有Usage_priv。
+4. is_grantable，取值为YES或者NO，字段含义为是否可以给其他用户授予Workload Group的访问权限。目前只有root用户或者admin用户这个字段为YES，其他用户都为NO。
+
+基本用法：
+1. 根据用户名查找有权限访问的Workload Group
+```
+mysql [information_schema]>select * from workload_group_privileges where GRANTEE like '%test_wlg_user%';
++---------------------+---------------------+----------------+--------------+
+| GRANTEE             | WORKLOAD_GROUP_NAME | PRIVILEGE_TYPE | IS_GRANTABLE |
++---------------------+---------------------+----------------+--------------+
+| 'test_wlg_user'@'%' | normal              | Usage_priv     | NO           |
+| 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
++---------------------+---------------------+----------------+--------------+
+2 rows in set (0.04 sec)
+```
+
+2. 查看某个Workload Group可以有哪些用户访问
+```
+mysql [information_schema]>select * from workload_group_privileges where WORKLOAD_GROUP_NAME='test_group';
++---------------------+---------------------+----------------+--------------+
+| GRANTEE             | WORKLOAD_GROUP_NAME | PRIVILEGE_TYPE | IS_GRANTABLE |
++---------------------+---------------------+----------------+--------------+
+| 'test_wlg_user'@'%' | test_group          | Usage_priv     | NO           |
++---------------------+---------------------+----------------+--------------+
+1 row in set (0.03 sec)
+```

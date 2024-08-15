@@ -214,8 +214,8 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 #### `trash_file_expire_time_sec`
 
-* 描述：回收站清理的间隔，72 个小时，当磁盘空间不足时，trash 下的文件保存期可不遵守这个参数
-* 默认值：259200
+* 描述：回收站清理的间隔，24 个小时，当磁盘空间不足时，trash 下的文件保存期可不遵守这个参数
+* 默认值：86400
 
 #### `es_http_timeout_ms`
 
@@ -287,6 +287,14 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
   - 若该参数为`THREADED`, 该模型为非阻塞式 I/O 模型，
 
   - 若该参数为`THREAD_POOL`, 该模型为阻塞式 I/O 模型。
+
+#### `thrift_max_message_size`
+
+<version since="2.1.4"></version>
+
+默认值: 100MB
+
+thrift 服务器接收请求消息的大小（字节数）上限。如果客户端发送的消息大小超过该值，那么 thrift 服务器会拒绝该请求并关闭连接，这种情况下，client 会遇到错误：“connection has been closed by peer”，使用者可以尝试增大该参数以绕过上述限制。
 
 #### `txn_commit_rpc_timeout_ms`
 
@@ -366,12 +374,6 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 * 类型：int32
 * 描述：BE 在进行数据扫描时，会将同一个扫描范围拆分为多个 ScanRange。该参数代表了每个 ScanRange 代表扫描数据范围。通过该参数可以限制单个 OlapScanner 占用 io 线程的时间。
 * 默认值：524288
-
-#### `doris_scanner_queue_size`
-
-* 类型：int32
-* 描述：TransferThread 与 OlapScanner 之间 RowBatch 的缓存队列的长度。Doris 进行数据扫描时是异步进行的，OlapScanner 扫描上来的 Rowbatch 会放入缓存队列之中，等待上层 TransferThread 取走。
-* 默认值：1024
 
 #### `doris_scanner_row_num`
 

@@ -72,11 +72,11 @@ The following figure shows the main flow of Stream load, omitting some import de
 
 Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
 
-For detailed syntax, please refer to [STREAM LOAD](../../sql-manual/sql-reference/Data-Manipulation-Statements/Load/STREAM-LOAD).
+For detailed syntax, please refer to [STREAM LOAD](../../sql-manual/sql-statements/Data-Manipulation-Statements/Load/STREAM-LOAD).
 
 ### Prerequisite check
 
-Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../sql-manual/sql-reference/Account-Management-Statements/GRANT) command.
+Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../sql-manual/sql-statements/Account-Management-Statements/GRANT) command.
 
 ### Create load job
 
@@ -1275,11 +1275,10 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
   Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
   It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
 - partial_columns
-   <version since="2.0">
+  
    Whether to enable partial column updates, Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
 
    eg: `curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://127.0.0.1:48037/api/db1/user_profile/_stream_load`
-  </version>
 
 ### Use stream load with SQL
 

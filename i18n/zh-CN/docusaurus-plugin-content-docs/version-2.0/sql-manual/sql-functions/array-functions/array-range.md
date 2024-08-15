@@ -26,11 +26,7 @@ under the License.
 
 ## array_range
 
-<version since="1.2.0">
-
 array_range
-
-</version>
 
 ### description
 
@@ -44,15 +40,9 @@ ARRAY<Int> array_range(Int start, Int end, Int step)
 参数均为正整数 start 默认为 0, step 默认为 1。
 最终返回一个数组，从start 到 end - 1, 步长为 step。
 
-### notice
-
-`仅支持向量化引擎中使用`
-
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select array_range(10);
 +--------------------------------+
 | array_range(10)                |

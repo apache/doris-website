@@ -26,11 +26,7 @@ under the License.
 
 ## IN
 
-<version since="1.2.0">
-
 IN
-
-</version>
 
 ### description
 
@@ -45,10 +41,6 @@ If expr is equal to any value in the IN list, return true; otherwise, return fal
 Subquery can only return one column, and the column types returned by subquery must be compatible with expr types.
 
 If subquery returns a bitmap data type column, expr must be an integer.
-
-#### notice
-
-- Currently, bitmap columns are only returned to in subqueries supported in the vectorized engine.
 
 ### example
 

@@ -409,7 +409,7 @@ SELECT /*+ SET_VAR(query_timeout = 1, enable_partition_cache=true) */ sleep(3);
 
 - `time_zone`
 
-  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](../query-variables/time-zone)文档。
+  用于设置当前会话的时区。默认值为 `system_time_zone` 的值。时区会对某些时间函数的结果产生影响。关于时区，可以参阅 [时区](../../admin-manual/cluster-management/time-zone)文档。
 
 - `tx_isolation`
 
@@ -689,20 +689,13 @@ try (Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:9030/
 
   用于 ClickHouse 的 ReplacingMergeTree 表引擎查询去重
 
-* `enable_memtable_on_sink_node`
-
-  <version since="2.1.0">
-  是否在数据导入中启用 MemTable 前移，默认为 false
-  </version>
-
-  在 DataSink 节点上构建 MemTable，并通过 brpc streaming 发送 segment 到其他 BE。
-  该方法减少了多副本之间的重复工作，并且节省了数据序列化和反序列化的时间。
-
 * `enable_unique_key_partial_update`
 
-  <version since="2.0.2">
+  :::info 备注
+  该参数自 2.0.2 版本起支持。
+  :::
+
   是否在对 insert into 语句启用部分列更新的语义，默认为 false。需要注意的是，控制 insert 语句是否开启严格模式的会话变量`enable_insert_strict`的默认值为 true，即 insert 语句默认开启严格模式，而在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新的时候如果希望能插入不存在的 key，需要在`enable_unique_key_partial_update`设置为 true 的基础上同时将`enable_insert_strict`设置为 false。
-  </version>
 
 ***
 

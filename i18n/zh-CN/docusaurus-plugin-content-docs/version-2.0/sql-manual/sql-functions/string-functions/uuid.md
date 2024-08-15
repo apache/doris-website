@@ -26,11 +26,7 @@ under the License.
 
 ## uuid
 
-<version since="1.2.0">
-
 uuid
-
-</version>
 
 ### description
 #### Syntax

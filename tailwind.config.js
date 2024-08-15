@@ -13,6 +13,7 @@ module.exports = {
         },
         fontFamily: {
             misans: ['MiSans Latin'],
+            // sans: ['"SF Pro Display"', '"SF Pro Icons"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         },
     },
     darkMode: ['class', '[data-theme="dark"]'],

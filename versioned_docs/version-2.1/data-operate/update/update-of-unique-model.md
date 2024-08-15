@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Updaing Data on Unique Key Model",
+    "title": "Updating Data on Unique Key Model",
     "language": "en"
 }
 ---
@@ -122,7 +122,7 @@ If you are using `INSERT INTO`, you can update as following methods:
 
 ```sql
 set enable_unique_key_partial_update=true;
-INSERT INTO order_tbl (order_id, order_status) values (1,'待发货');
+INSERT INTO order_tbl (order_id, order_status) values (1,'To be shipped');
 ```
 
 The translated version in English:

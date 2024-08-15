@@ -69,7 +69,7 @@ Variables that support both session-level and global-level setting include:
 * `sql_mode`
 * `enable_profile`
 * `query_timeout`
-* <version since="dev" type="inline">`insert_timeout`</version>
+* `insert_timeout`
 * `exec_mem_limit`
 * `batch_size`
 * `parallel_fragment_exec_instance_num`
@@ -368,7 +368,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
 
 * `insert_timeout`
 
-  <version since="dev"></version>Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
+    Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
     greater than itself to make it compatible with the habits of older version users to use query_timeout to control the timeout of INSERT statements.
 
 * `resource_group`
@@ -397,7 +397,7 @@ Note that the comment must start with /*+ and can only follow the SELECT.
     
 * `time_zone`
 
-    Used to set the time zone for the current session. Defaults to the value of `system_time_zone`. It affects the results of certain time functions. For more information, see the [time zone](./time-zone) documentation.
+    Used to set the time zone for the current session. Defaults to the value of `system_time_zone`. It affects the results of certain time functions. For more information, see the [time zone](../../admin-manual/cluster-management/time-zone) documentation.
     
 * `tx_isolation`
 
@@ -686,22 +686,17 @@ Note that the comment must start with /*+ and can only follow the SELECT.
   
   It is used for the ReplacingMergeTree table engine of ClickHouse to deduplicate queries.
 
-* `enable_memtable_on_sink_node`
-
-  <version since="2.1.0">
-  Whether to enable MemTable on DataSink node when loading data, default is false.
-  </version>
-
-  Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
-  It reduces duplicate work among replicas, and saves time in data serialization & deserialization.
-
 * `enable_unique_key_partial_update`
 
-  <version since="2.0.2">
-  Whether to enable partial columns update semantics for native insert into statement, default is false. Please note that the default value of the session variable `enable_insert_strict`, which controls whether the insert statement operates in strict mode, is true. In other words, the insert statement is in strict mode by default, and in this mode, updating non-existing keys in partial column updates is not allowed. Therefore, when using the insert statement for partial columns update and wishing to insert non-existing keys, you need to set `enable_unique_key_partial_update` to true and simultaneously set `enable_insert_strict` to false.
-  </version>
+:::info Note
 
-***
+This field is supported since version 2.0.2.
+
+:::
+
+  Whether to enable partial columns update semantics for native insert into statement, default is false. Please note that the default value of the session variable `enable_insert_strict`, which controls whether the insert statement operates in strict mode, is true. In other words, the insert statement is in strict mode by default, and in this mode, updating non-existing keys in partial column updates is not allowed. Therefore, when using the insert statement for partial columns update and wishing to insert non-existing keys, you need to set `enable_unique_key_partial_update` to true and simultaneously set `enable_insert_strict` to false.
+  
+
 
 #### Supplementary instructions on statement execution timeout control
 

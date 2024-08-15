@@ -26,15 +26,14 @@ under the License.
 
 # Runtime Filter
 
-Runtime Filter is designed to dynamically generate filter conditions for certain Join queries at runtime to reduce the amount of scanned data, avoid unnecessary I/O and network transmission, and speed up the query.
-
+Runtime Filter is designed to dynamically generate filter conditions for certain Join queries at runtime to reduce the amount of data scanned, avoid unnecessary I/O and calculations, and thereby speed up queries.
 ## Noun Interpretation
 
 * Left table: the table on the left during Join query. Perform Probe operation. The order can be adjusted by Join Reorder.
 * Right table: the table on the right during Join query. Perform the Build operation. The order can be adjusted by Join Reorder.
 * Fragment: FE will convert the execution of specific SQL statements into corresponding fragments and send them to BE for execution. The corresponding Fragment is executed on the BE, and the results are aggregated and returned to the FE.
 * Join on clause: `Aa=Bb` in `A join B on Aa=Bb`, based on this to generate join conjuncts during query planning, including expr used by join Build and Probe, where Build expr is called in Runtime Filter src expr, Probe expr are called target expr in Runtime Filter.
-
+- rf: Abbreviation of Runtime Filter.
 ## Principle
 
 Runtime Filter is generated during query planning, constructed in HashJoinNode, and applied in ScanNode.
@@ -75,35 +74,35 @@ If the filter condition (Runtime Filter) can be pushed down to the storage engin
 |        T1                        T2
 |
 ```
-It can be seen that, unlike predicate push-down and partition cutting, Runtime Filter is a filter condition dynamically generated at runtime, that is, when the query is run, the join on clause is parsed to determine the filter expression, and the expression is broadcast to ScanNode that is reading the left table , Thereby reducing the amount of scanned data, thereby reducing the number of probe hash table, avoiding unnecessary I/O and network transmission.
+It can be seen that, unlike predicate pushdown and partition pruning, Runtime Filter is a filter condition dynamically generated at runtime, that is the join on clause is parsed to determine the filter expression when the query is running, and the expression is broadcast to the ScanNode that is reading the left table , thereby reducing the amount of data scanned, thereby reducing the number of probe hash tables and avoiding unnecessary I/O and calculations.
 
-Runtime Filter is mainly used to optimize joins for large tables. If the amount of data in the left table is too small, or the amount of data in the right table is too large, the Runtime Filter may not achieve the expected effect.
+Runtime Filter is mainly used to optimize the join of large tables and small tables. If the amount of data in the left table is too small, the effect of rf's early filtering may not be great. If the amount of data in the right table is too large, there will be a relatively large cost when building and transmitting rf.
 
 ## Usage
 
 ### Runtime Filter query options
 
-For query options related to Runtime Filter, please refer to the following sections:
+The default configuration has been adapted to most scenarios as much as possible. Only in some specific scenarios, further adjustments are required to achieve the best results. Usually, optimization is only performed for resource-intensive queries that take a long enough time to run and are frequent enough after performance testing.
 
-- The first query option is to adjust the type of Runtime Filter used. In most cases, you only need to adjust this option, and keep the other options as default.
+For configuration options related to Runtime Filter, please refer to the following section:
 
-  - `runtime_filter_type`: Including Bloom Filter, MinMax Filter, IN predicate, IN_OR_BLOOM Filter and Bitmap_Filter. By default, only IN_OR_BLOOM Filter will be used. In some cases, the performance will be higher when both Bloom Filter, MinMax Filter and IN predicate are used at the same time.
+- `enable_sync_runtime_filter_size`: When the optimizer cannot accurately estimate the cardinality, the executor is required to synchronize and obtain the global Build end size before generating rf, and determine the final type of IN Or Bloom Filter and the size of Bloom Filter based on this actual size. If set to false, no synchronization operation is performed to obtain the global size. The default value of this variable is true.
 
-- Other query options usually only need to be further adjusted in certain specific scenarios to achieve the best results. Usually only after performance testing, optimize for resource-intensive, long enough running time and high enough frequency queries.
+- `runtime_filter_max_in_num`: If the Build-side size is larger than this value, we will not generate IN predicate. The default value of this variable is 1024.
 
-  - `runtime_filter_mode`: Used to adjust the push-down strategy of Runtime Filter, including three strategies of OFF, LOCAL, and GLOBAL. The default setting is the GLOBAL strategy
+- `runtime_filter_mode`: Used to adjust the generation strategy of rf, including OFF, LOCAL, and GLOBAL. If set to OFF, rf will not be generated. The default value of this variable is GLOBAL.
 
-  - `runtime_filter_wait_time_ms`: the time that ScanNode in the left table waits for each Runtime Filter, the default is 1000ms
+- `runtime_filter_type`: The types of rf allowed to be generated, including Bloom Filter, MinMax Filter, IN predicate, IN Or Bloom Filter, and Bitmap Filter. The default value of this variable is IN_OR_BLOOM_FILTER,MIN_MAX.
 
-  - `runtime_filters_max_num`: The maximum number of Bloom Filters in the Runtime Filter that can be applied to each query, the default is 10
+- `runtime_filter_wait_infinitely`: If set to true, the scan node of the left table will wait until rf is received or the query times out, which is equivalent to runtime_filter_wait_time_ms being set to infinity. The default value of this variable is false.
 
-  - `runtime_bloom_filter_min_size`: the minimum length of Bloom Filter in Runtime Filter, default 1048576 (1M)
+- `runtime_filter_wait_time_ms`: The time the ScanNode of the left table waits for rf. If the waiting time has passed and no rf is received, the ScanNode will start scanning the data first, and the rf received later will take effect on the data that the ScanNode has not returned at this moment. The default value of this variable is 1000.
 
-  - `runtime_bloom_filter_max_size`: the maximum length of Bloom Filter in Runtime Filter, the default is 16777216 (16M)
+- `runtime_bloom_filter_min_size`: The minimum length of the Bloom Filter in the rf estimated by the optimizer. The default value of this variable is 1048576 (1M).
 
-  - `runtime_bloom_filter_size`: The default length of Bloom Filter in Runtime Filter, the default is 2097152 (2M)
+- `runtime_bloom_filter_max_size`: The maximum length of the Bloom Filter in the rf estimated by the optimizer. The default value of this variable is 16777216 (16M).
 
-  - `runtime_filter_max_in_num`: If the number of rows in the right table of the join is greater than this value, we will not generate an IN predicate, the default is 1024
+- `runtime_bloom_filter_size`: The default length of the Bloom Filter in the rf estimated by the optimizer. The default value of this variable is 2097152 (2M).
 
 The query options are further explained below.
 
@@ -121,24 +120,28 @@ set runtime_filter_type=7;
 
 **Precautions for use**
 
-- **IN or Bloom Filter**: According to the actual number of rows in the right table during execution, the system automatically determines whether to use IN predicate or Bloom Filter.
-    - By default, IN Predicate will be used when the number of data rows in the right table is less than 102400 (which can be adjusted by ` runtime_filter_max_in_num 'in the session variable). Otherwise, use bloom filter.
-- **Bloom Filter**: There is a certain misjudgment rate, which results in the filtered data being a little less than expected, but it will not cause the final result to be inaccurate. In most cases, Bloom Filter can improve performance or has no significant impact on performance, but in some cases Under circumstances will cause performance degradation.
-    - Bloom Filter construction and application overhead is high, so when the filtering rate is low, or the amount of data in the left table is small, Bloom Filter may cause performance degradation.
-    - At present, only the Key column of the left table can be pushed down to the storage engine if the Bloom Filter is applied, and the test results show that the performance of the Bloom Filter is often reduced when the Bloom Filter is not pushed down to the storage engine.
-    - Currently Bloom Filter only has short-circuit logic when using expression filtering on ScanNode, that is, when the false positive rate is too high, the Bloom Filter will not continue to be used, but there is no short-circuit logic when the Bloom Filter is pushed down to the storage engine , So when the filtration rate is low, it may cause performance degradation.
+- **IN or Bloom Filter**: Based on the actual number of rows in the right table during execution, the system automatically determines whether to use IN predicate or Bloom Filter.
 
-- **MinMax Filter**: Contains the maximum value and the minimum value, thereby filtering data smaller than the minimum value and greater than the maximum value. The filtering effect of the MinMax Filter is related to the type of the Key column in the join on clause and the data distribution of the left and right tables.
-    - When the type of the Key column in the join on clause is int/bigint/double, etc., in extreme cases, if the maximum and minimum values ​​of the left and right tables are the same, there is no effect, otherwise the maximum value of the right table is less than the minimum value of the left table, or the minimum of the right table The value is greater than the maximum value in the left table, the effect is best.
-    - When the type of the Key column in the join on clause is varchar, etc., applying the MinMax Filter will often cause performance degradation.
+ - By default, IN predicate will be used when the number of data rows in the right table is less than runtime_filter_max_in_num, otherwise Bloom filter will be used.
 
-- **IN predicate**: Construct IN predicate based on all the values ​​of Key listed in the join on clause on the right table, and use the constructed IN predicate to filter on the left table. Compared with Bloom Filter, the cost of construction and application is lower. The amount of data in the right table is lower. When it is less, it tends to perform better.
-    - Currently IN predicate already implement a merge method.
-    - When IN predicate and other filters are specified at the same time, and the filtering value of IN predicate does not reach runtime_filter_max_in_num will try to remove other filters. The reason is that IN predicate is an accurate filtering condition. Even if there is no other filter, it can filter efficiently. If it is used at the same time, other filters will do useless work. Currently, only when the producer and consumer of the runtime filter are in the same fragment can there be logic to remove the Non-IN predicate.
+- **Bloom Filter**: There is a certain misjudgment rate, resulting in a little less filtered data than expected, but it will not cause the final result to be inaccurate. In most cases, Bloom Filter can improve performance or have no significant impact on performance. Impact, but may result in reduced performance in some cases.
+
+ - Bloom Filter construction and application overhead is high, so when the filtering rate is low, or when the amount of data in the left table is small, Bloom Filter may cause performance degradation.
+ - If the Bloom Filter is too large, it may take longer to build/transmit/filter.
+
+
+- **MinMax Filter**: Contains the maximum value and the minimum value, thereby filtering data smaller than the minimum value and larger than the maximum value. The filtering effect of MinMax Filter is related to the type of the Key column in the join on clause and the data distribution of the left and right tables.
+
+ - When the type of the Key column in the join on clause is int/bigint/double, etc., in extreme cases, if the maximum and minimum values ​​of the left and right tables are the same, there will be no effect. Otherwise, the maximum value of the right table is smaller than the minimum value of the left table, or the right table is the smallest. If the value is greater than the maximum value in the left table, the effect will be best.
+
+ - When the type of the Key column in the join on clause is varchar, etc., applying MinMax Filter will often lead to performance degradation.
+
+- **IN predicate**: Construct an IN predicate based on all the values ​​of the Key column in the join on clause on the right table, and use the constructed IN predicate to filter on the left table. Compared with Bloom Filter, the construction and application overhead is lower. Performance is often higher when the amount of data in the right table is smaller.
+
+ - When In predicate and other filters are specified at the same time, and the filter value of in does not reach runtime_filter_max_in_num, other filters will be tried to be removed. The reason is that In predicate is a precise filtering condition, which can filter efficiently even without other filters. If used at the same time, other filters will do useless work.
 
 - **Bitmap Filter**:
-    - Currently, the bitmap filter is used only when the subquery in the [in subquery](../../sql-manual/sql-statements/Operators/in) operation returns a bitmap column.
-    - Currently, bitmap filter is only supported in vectorization engine.
+ - Bitmap filter is currently only used when the subquery in the [in subquery](../../sql-manual/sql-statements/Operators/in) operation returns a bitmap column.
 
 #### 2.runtime_filter_mode
 Used to control the transmission range of Runtime Filter between instances.
@@ -164,30 +167,15 @@ Waiting for Runtime Filter is time consuming.
 
 **Precautions for use**
 
-After the Runtime Filter is turned on, the ScanNode in the table on the left will wait for a period of time for each Runtime Filter assigned to itself before scanning the data, that is, if the ScanNode is assigned 3 Runtime Filters, it will wait at most 3000ms.
+After the Runtime Filter is turned on, the ScanNode of the left table will wait for a while for the Runtime Filter assigned to it before scanning the data.
 
 Because it takes time to build and merge the Runtime Filter, ScanNode will try to push down the Runtime Filter that arrives within the waiting time to the storage engine. If the waiting time is exceeded, ScanNode will directly start scanning data using the Runtime Filter that has arrived.
 
-If the Runtime Filter arrives after ScanNode starts scanning, ScanNode will not push the Runtime Filter down to the storage engine. Instead, it will use expression filtering on ScanNode based on the Runtime Filter for the data that has been scanned from the storage engine. The scanned data will not apply the Runtime Filter, so the intermediate data size obtained will be larger than the optimal solution, but serious cracking can be avoided.
+If the Runtime Filter arrives after the ScanNode starts scanning, the ScanNode will not push the Runtime Filter down to the storage engine. Instead, the ScanNode will use an expression to filter the data that has been scanned from the storage engine based on the Runtime Filter. The Runtime Filter will not be applied to the data that has been scanned before. The size of the intermediate data obtained in this way will be larger than the optimal solution, but serious degradation can be avoided.
 
 If the cluster is busy and there are many resource-intensive or long-time-consuming queries on the cluster, consider increasing the waiting time to avoid missing optimization opportunities for complex queries. If the cluster load is light, and there are many small queries on the cluster that only take a few seconds, you can consider reducing the waiting time to avoid an increase of 1s for each query.
 
-#### 4.runtime_filters_max_num
-The upper limit of the number of Bloom Filters in the Runtime Filter generated by each query.
-
-**Type**: integer, default 10
-
-**Precautions for use**
-Currently, only the number of Bloom Filters is limited, because the construction and application of Bloom Filters are more expensive than MinMax Filter and IN predicate.
-
-If the number of Bloom Filters generated exceeds the maximum allowable number, then the Bloom Filter with a large selectivity is retained. A large selectivity means that more rows are expected to be filtered. This setting can prevent Bloom Filter from consuming too much memory overhead and causing potential problems.
-```
-Selectivity = (HashJoinNode Cardinality / HashJoinNode left child Cardinality)
-- Because the cardinality of FE is currently inaccurate, the selectivity of Bloom Filter calculation here is inaccurate, so in the end, it may only randomly reserve part of Bloom Filter.
-```
-This query option needs to be adjusted only when tuning some long-consuming queries involving joins between large tables.
-
-#### 5. Bloom Filter length related parameters
+#### 4. Bloom Filter length related parameters
 Including `runtime_bloom_filter_min_size`, `runtime_bloom_filter_max_size`, `runtime_bloom_filter_size`, used to determine the size (in bytes) of the Bloom Filter data structure used by the Runtime Filter.
 
 **Type**: Integer
@@ -195,7 +183,8 @@ Including `runtime_bloom_filter_min_size`, `runtime_bloom_filter_max_size`, `run
 **Precautions for use**
 Because it is necessary to ensure that the length of the Bloom Filter constructed by each HashJoinNode is the same to be merged, the length of the Bloom Filter is currently calculated in the FE query planning.
 
-If you can get the number of data rows (Cardinality) in the statistical information of the join right table, it will try to estimate the optimal size of the Bloom Filter based on Cardinality, and round to the nearest power of 2 (log value with the base 2). If the Cardinality of the table on the right cannot be obtained, the default Bloom Filter length `runtime_bloom_filter_size` will be used. `runtime_bloom_filter_min_size` and `runtime_bloom_filter_max_size` are used to limit the minimum and maximum length of the final Bloom Filter.
+If the number of data rows (Cardinality) in the statistics of the right table of the join can be obtained, the optimal size of the Bloom Filter will be estimated based on the Cardinality and rounded to the nearest power of 2 (log value with base 2). If there is no accurate statistics, but enable_sync_runtime_filter_size is turned on, the optimal size of the Bloom Filter will be estimated based on the actual number of data rows at runtime, but there will be some performance overhead caused by runtime statistics.
+Finally, if the Cardinality of the right table is still not available, the default Bloom Filter length `runtime_bloom_filter_size` will be used. `runtime_bloom_filter_min_size` and `runtime_bloom_filter_max_size` are used to limit the minimum and maximum lengths of the Bloom Filter that are ultimately used.
 
 Larger Bloom Filters are more effective when processing high-cardinality input sets, but require more memory. If the query needs to filter high cardinality columns (for example, containing millions of different values), you can consider increasing the value of `runtime_bloom_filter_size` for some benchmark tests, which will help make the Bloom Filter filter more accurate, so as to obtain the expected Performance improvement.
 
@@ -216,39 +205,64 @@ CREATE TABLE test2 (t2 INT) DISTRIBUTED BY HASH (t2) BUCKETS 2 PROPERTIES("repli
 INSERT INTO test2 VALUES (3), (4), (5);
 
 EXPLAIN SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2;
-+-------------------------------------------------------------------+
-| Explain String                                                    |
-+-------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                   |
-|  OUTPUT EXPRS:`t1`                                                |
-|                                                                   |
-|   4:EXCHANGE                                                      |
-|                                                                   |
-| PLAN FRAGMENT 1                                                   |
-|  OUTPUT EXPRS:                                                    |
-|   PARTITION: HASH_PARTITIONED: `default_cluster:ssb`.`test`.`t1`  |
-|                                                                   |
-|   2:HASH JOIN                                                     |
-|   |  join op: INNER JOIN (BUCKET_SHUFFLE)                         |
-|   |  equal join conjunct: `test`.`t1` = `test2`.`t2`              |
-|   |  runtime filters: RF000[in] <- `test2`.`t2`                   |
-|   |                                                               |
-|   |----3:EXCHANGE                                                 |
-|   |                                                               |
-|   0:OlapScanNode                                                  |
-|      TABLE: test                                                  |
-|      runtime filters: RF000[in] -> `test`.`t1`                    |
-|                                                                   |
-| PLAN FRAGMENT 2                                                   |
-|  OUTPUT EXPRS:                                                    |
-|   PARTITION: HASH_PARTITIONED: `default_cluster:ssb`.`test2`.`t2` |
-|                                                                   |
-|   1:OlapScanNode                                                  |
-|      TABLE: test2                                                 |
-+-------------------------------------------------------------------+
--- The line of `runtime filters` above shows that `2:HASH JOIN` of `PLAN FRAGMENT 1` generates IN predicate with ID RF000,
--- Among them, the key values of `test2`.`t2` are only known at runtime,
--- This IN predicate is used in `0:OlapScanNode` to filter unnecessary data when reading `test`.`t1`.
++--------------------------------------------------------------------------------------------------+
+| Explain String(Nereids Planner)                                                                  |
++--------------------------------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                                                  |
+|   OUTPUT EXPRS:                                                                                  |
+|     t1[#4]                                                                                       |
+|   PARTITION: HASH_PARTITIONED: t1[#1]                                                            |
+|                                                                                                  |
+|   HAS_COLO_PLAN_NODE: false                                                                      |
+|                                                                                                  |
+|   VRESULT SINK                                                                                   |
+|      MYSQL_PROTOCAL                                                                              |
+|                                                                                                  |
+|   3:VHASH JOIN(157)                                                                              |
+|   |  join op: INNER JOIN(BUCKET_SHUFFLE)[]                                                       |
+|   |  equal join conjunct: (t1[#1] = t2[#0])                                                      |
+|   |  runtime filters: RF000[min_max] <- t2[#0](3/4/2048), RF001[in_or_bloom] <- t2[#0](3/4/2048) |
+|   |  cardinality=3                                                                               |
+|   |  vec output tuple id: 3                                                                      |
+|   |  output tuple id: 3                                                                          |
+|   |  vIntermediate tuple ids: 2                                                                  |
+|   |  hash output slot ids: 1                                                                     |
+|   |  final projections: t1[#2]                                                                   |
+|   |  final project output tuple id: 3                                                            |
+|   |  distribute expr lists: t1[#1]                                                               |
+|   |  distribute expr lists: t2[#0]                                                               |
+|   |                                                                                              |
+|   |----1:VEXCHANGE                                                                               |
+|   |       offset: 0                                                                              |
+|   |       distribute expr lists: t2[#0]                                                          |
+|   |                                                                                              |
+|   2:VOlapScanNode(150)                                                                           |
+|      TABLE: test.test(test), PREAGGREGATION: ON                                                  |
+|      runtime filters: RF000[min_max] -> t1[#1], RF001[in_or_bloom] -> t1[#1]                     |
+|      partitions=1/1 (test)                                                                       |
+|      tablets=2/2, tabletList=61032,61034                                                         |
+|      cardinality=4, avgRowSize=0.0, numNodes=1                                                   |
+|      pushAggOp=NONE                                                                              |
+|                                                                                                  |
+| PLAN FRAGMENT 1                                                                                  |
+|                                                                                                  |
+|   PARTITION: HASH_PARTITIONED: t2[#0]                                                            |
+|                                                                                                  |
+|   HAS_COLO_PLAN_NODE: false                                                                      |
+|                                                                                                  |
+|   STREAM DATA SINK                                                                               |
+|     EXCHANGE ID: 01                                                                              |
+|     BUCKET_SHFFULE_HASH_PARTITIONED: t2[#0]                                                      |
+|                                                                                                  |
+|   0:VOlapScanNode(151)                                                                           |
+|      TABLE: test.test2(test2), PREAGGREGATION: ON                                                |
+|      partitions=1/1 (test2)                                                                      |
+|      tablets=2/2, tabletList=61041,61043                                                         |
+|      cardinality=3, avgRowSize=0.0, numNodes=1                                                   |
+|      pushAggOp=NONE                                                                              |
++--------------------------------------------------------------------------------------------------+
+-- The line of `runtime filters` above shows that `2:HASH JOIN` of `PLAN FRAGMENT 1` generates min_max with ID RF000 and in_or_bloom with ID RF001,
+-- RF000/RF001 are used in `2:VOlapScanNode(150)` to filter unnecessary data when reading `test`.`t1`.
 
 SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2; 
 -- Return 2 rows of results [3, 4];
@@ -256,28 +270,17 @@ SELECT t1 FROM test JOIN test2 where test.t1 = test2.t2;
 -- Through the query profile (set enable_profile=true;) you can view the detailed information of the internal work of the query,
 -- Including whether each Runtime Filter is pushed down, waiting time, 
 -- and the total time from prepare to receiving Runtime Filter for OLAP_SCAN_NODE.
-RuntimeFilter:in:
-    -  HasPushDownToEngine:  true
-    -  AWaitTimeCost:  0ns
-    -  EffectTimeCost:  2.76ms
+RuntimeFilter:  (id  =  1,  type  =  in_or_bloomfilter):
+      -  Info:  [IsPushDown  =  true,  RuntimeFilterState  =  READY,  HasRemoteTarget  =  false,  HasLocalTarget  =  true,  Ignored  =  false]
+      -  RealRuntimeFilterType:  in
+      -  InFilterSize:  3
+      -  always_true:  0
+      -  expr_filtered_rows:  0
+      -  expr_input_rows:  0
+-- expr_input_rows and expr_filtered_rows are both 0 because in filter directly filters the data in advance according to the key range without calculating it row by row.
 
 -- In addition, in the OLAP_SCAN_NODE of the profile, you can also view the filtering effect 
 -- and time consumption after the Runtime Filter is pushed down.
     -  RowsVectorPredFiltered:  9.320008M  (9320008)
     -  VectorPredEvalTime:  364.39ms
 ```
-
-## Runtime Filter planning rules
-1. Only support the generation of Runtime Filter for the equivalent conditions in the join on clause, excluding the Null-safe condition, because it may filter out the null value of the join left table.
-2. Does not support pushing down Runtime Filter to the left table of left outer, full outer, and anti join;
-3. Does not support src expr or target expr is constant;
-4. The equality of src expr and target expr is not supported;
-5. The type of src expr is not supported to be equal to `HLL` or `BITMAP`;
-6. Currently only supports pushing down Runtime Filter to OlapScanNode;
-7. Target expr does not support NULL-checking expressions, such as `COALESCE/IFNULL/CASE`, because when the join on clause of other joins at the upper level of the outer join contains NULL-checking expressions and a Runtime Filter is generated, this Runtime Filter is downloaded Pushing to the left table of outer join may cause incorrect results;
-8. The column (slot) in target expr is not supported, and an equivalent column cannot be found in the original table;
-9. Column conduction is not supported. This includes two cases:
-    - First, when the join on clause contains A.k = B.k and B.k = C.k, currently C.k can only be pushed down to B.k, but not to A.k;
-    - Second, for example, the join on clause contains Aa + Bb = Cc. If Aa can be transmitted to Ba, that is, Aa and Ba are equivalent columns, then you can replace Aa with Ba, and then you can try to push the Runtime Filter down to B ( If Aa and Ba are not equivalent columns, they cannot be pushed down to B, because target expr must be bound to the only join left table);
-10. The types of Target expr and src expr must be equal, because Bloom Filter is based on hash, if the types are not equal, it will try to convert the type of target expr to the type of src expr;
-11. The Runtime Filter generated by `PlanNode.Conjuncts` is not supported. Unlike HashJoinNode's `eqJoinConjuncts` and `otherJoinConjuncts`, the Runtime Filter generated by `PlanNode.Conjuncts` found in the test that it may cause incorrect results, such as ` When an IN` subquery is converted to a join, the automatically generated join on clause will be stored in `PlanNode.Conjuncts`. At this time, applying Runtime Filter may result in missing some rows in the result.

@@ -24,11 +24,7 @@ under the License.
 
 ## array_sort
 
-<version since="1.2.0">
-
 array_sort
-
-</version>
 
 ### description
 
@@ -45,9 +41,7 @@ array_sort
 
 ### example
 
-```
-mysql> set enable_vectorized_engine=true;
-mysql> select k1, k2, array_sort(k2) from array_test;
+```mysql> select k1, k2, array_sort(k2) from array_test;
 +------+-----------------------------+-----------------------------+
 | k1   | k2                          | array_sort(`k2`)            |
 +------+-----------------------------+-----------------------------+

@@ -32,17 +32,10 @@ under the License.
 
 Returns an array consisting of all values in expr within the group, and ,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements.The order of elements in the array is non-deterministic. NULL values are excluded.
 It has an alias `group_array`.
-### notice
-
-```
-Only supported in vectorized engine
-```
 
 ### example
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k1,k2,k3 from collect_list_test order by k1;
 +------+------------+-------+
 | k1   | k2         | k3    |

@@ -24,11 +24,7 @@ under the License.
 
 ## array_slice
 
-<version since="1.2.0">
-
 array_slice
-
-</version>
 
 ### description
 
@@ -45,16 +41,10 @@ An empty array is returned when the off is not within the actual range of the ar
 A negative len will be treated as 0.
 ```
 
-### notice
-
-`Only supported in vectorized engine`
-
 ### example
 
 
 ```
-mysql> set enable_vectorized_engine=true;
-
 mysql> select k2, k2[2:2] from array_type_table_nullable;
 +-----------------+-------------------------+
 | k2              | array_slice(`k2`, 2, 2) |

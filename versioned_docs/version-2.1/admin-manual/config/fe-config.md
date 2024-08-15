@@ -331,25 +331,6 @@ The multi cluster feature will be deprecated in version 0.12 , set this config t
 3. change the backends num of cluster
 4. link/migration db
 
-#### `enable_deploy_manager`
-
-Default：disable
-
-Set to true if you deploy Doris using thirdparty deploy manager
-
-Valid options are:
-
-- disable:    no deploy manager
--  k8s:        Kubernetes
-- ambari:     Ambari
-- local:      Local File (for test or Boxer2 BCC version)
-
-#### `with_k8s_certs`
-
-Default：false
-
-If use k8s deploy manager locally, set this to true and prepare the certs files
-
 #### `enable_fqdn_mode`
 
 This configuration is mainly used in the k8s cluster environment. When enable_fqdn_mode is true, the name of the pod where the be is located will remain unchanged after reconstruction, while the ip can be changed.
@@ -490,6 +471,14 @@ Default：0
 The connection timeout and socket timeout config for thrift server.
 
 The value for thrift_client_timeout_ms is set to be zero to prevent read timeout.
+
+#### `thrift_max_message_size`
+
+<version since="2.1.4"></version>
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
 
 #### `use_compact_thrift_rpc`
 

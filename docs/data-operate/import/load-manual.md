@@ -24,87 +24,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+Apache Doris offers various methods for importing and integrating data, allowing you to import data from diverse sources into the database. These methods can be categorized into four types:
 
+1. **Real-Time Writing**: Data is written into Doris tables in real-time via HTTP or JDBC, suitable for scenarios requiring immediate analysis and querying.
+    - For small amounts of data (once every 5 minutes), use [JDBC INSERT](./import-way/insert-into-manual.md).
+    - For higher concurrency or frequency (more than 20 concurrent writes or multiple writes per minute), enable [Group Commit](./import-way/group-commit-manual.md) and use JDBC INSERT or Stream Load.
+    - For high throughput, use [Stream Load](./import-way/stream-load-manua) via HTTP.
 
-## Supported Data Sources
+2. **Streaming Synchronization**: Real-time data streams (e.g., Flink, Kafka, transactional databases) are imported into Doris tables, ideal for real-time analysis and querying.
+    - Use [Flink Doris Connector](../../ecosystem/flink-doris-connector.md) to write Flink’s real-time data streams into Doris.
+    - Use [Routine Load](./import-way/routine-load-manual.md) or [Doris Kafka Connector](../../ecosystem/doris-kafka-connector.md) for Kafka’s real-time data streams. Routine Load pulls data from Kafka to Doris and supports CSV and JSON formats, while Kafka Connector writes data to Doris, supporting Avro, JSON, CSV, and Protobuf formats.
+    - Use [Flink CDC](../../ecosystem/flink-doris-connector.md) or [Datax](../../ecosystem/datax.md) to write transactional database CDC data streams into Doris.
 
-Doris provides a variety of data import solutions, and you can choose different data import methods for different data sources.
+3. **Batch Import**: Data is batch-loaded from external storage systems (e.g., S3, HDFS, local files, NAS) into Doris tables, suitable for non-real-time data import needs.
+    - Use [Broker Load](./import-way/broker-load-manual.md) to write files from S3 and HDFS into Doris.
+    - Use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize files from S3, HDFS, and NAS into Doris, with asynchronous writing via [JOB](../scheduler/job-scheduler.md).
+    - Use [Stream Load](./import-way/stream-load-manua) or [Doris Streamloader](../../ecosystem/doris-streamloader.md) to write local files into Doris.
 
-### By Scene
+4. **External Data Source Integration**: Query and partially import data from external sources (e.g., Hive, JDBC, Iceberg) into Doris tables.
+    - Create a [Catalog](../../lakehouse/lakehouse-overview.md) to read data from external sources and use [INSERT INTO SELECT](./import-way/insert-into-manual.md) to synchronize this data into Doris, with asynchronous writing via [JOB](../scheduler/job-scheduler.md).
+    - Use [X2Doris](./migrate-data-from-other-olap.md) to migrate data from other AP systems into Doris.
 
-| Data Source                          | Loading Method                                        |
-| ------------------------------------ |-------------------------------------------------------|
-| Object Storage (s3), HDFS            | [Loading data using Broker](./broker-load-manual)     |
-| Local file                           | [Loading local data](./stream-load-manual)            |
-| Kafka                                | [Subscribing to Kafka data](./routine-load-manual)    |
-| MySQL, PostgreSQL, Oracle, SQLServer | [Sync data via external table](./mysql-load-manual)   |
-| Loading via JDBC                      | [Sync data using JDBC](../../lakehouse/database/jdbc) |
-| Loading JSON format data              | [JSON format data Loading](./load-json-format)        |
-| AutoMQ                            | [AutoMQ Load](../../ecosystem/automq-load.md)                       |
+Each import method in Doris is an implicit transaction by default. For more information on transactions, refer to [Transactions](../transaction.md).
 
-### By Loading Method
+### Quick Overview of Import Methods
 
-| Loading method name | Use method                                                   |
-| ------------------ | ------------------------------------------------------------ |
-| Broker Load        | [Import external storage data via Broker](./broker-load-manual) |
-| Stream Load        | [Stream import data (local file and memory data)](./stream-load-manual) |
-| Routine Load       | [Import Kafka data](./routine-load-manual)   |
-| Insert Into        | [External table imports data through INSERT](./insert-into-manual) |
-| S3 Load            | [Object storage data import of S3 protocol](./broker-load-manual) |
-| MySQL Load         | [Local data import of MySql protocol](./mysql-load-manual) |
+Doris's import process mainly involves various aspects such as data sources, data formats, import methods, error handling, data transformation, and transactions. You can quickly browse the scenarios suitable for each import method and the supported file formats in the table below.
 
-## Supported Data Formats
-
-Different import methods support slightly different data formats.
-
-| Import Methods | Supported Formats       |
-| -------------- | ----------------------- |
-| Broker Load    | parquet, orc, csv, gzip |
-| Stream Load    | csv, json, parquet, orc |
-| Routine Load   | csv, json               |
-| MySql Load     | csv                     |
-
-## Import Instructions
-
-The data import implementation of Apache Doris has the following common features, which are introduced here to help you better use the data import function
-
-## Import Atomicity Guarantees
-
-Each import job of Doris, whether it is batch import using Broker Load or single import using INSERT statement, is a complete transaction operation. The import transaction can ensure that the data in a batch takes effect atomically, and there will be no partial data writing.
-
-At the same time, an import job will have a Label. This Label is unique under a database (Database) and is used to uniquely identify an import job. Label can be specified by the user, and some import functions will also be automatically generated by the system.
-
-Label is used to ensure that the corresponding import job can only be successfully imported once. A successfully imported Label, when used again, will be rejected with the error `Label already used`. Through this mechanism, `At-Most-Once` semantics can be implemented in Doris. If combined with the `At-Least-Once` semantics of the upstream system, the `Exactly-Once` semantics of imported data can be achieved.
-
-For best practices on atomicity guarantees, see Importing Transactions and Atomicity.
-
-## Synchronous and Asynchronous Imports
-
-Import methods are divided into synchronous and asynchronous. For the synchronous import method, the returned result indicates whether the import succeeds or fails. For the asynchronous import method, a successful return only means that the job was submitted successfully, not that the data was imported successfully. You need to use the corresponding command to check the running status of the import job.
-
-## Import the Data of Array Types
-
-The array function can only be supported in vectorization scenarios, but non-vectorization scenarios are not supported.
-if you want to apply the array function to import data, you should enable vectorization engine. Then you need to cast the input parameter column into the array type according to the parameter of the array function. Finally, you can continue to use the array function.
-
-For example, in the following import, you need to cast columns b14 and a13 into `array<string>` type, and then use the `array_union` function.
-
-```sql
-LOAD LABEL label_03_14_49_34_898986_19090452100 ( 
-  DATA INFILE("hdfs://test.hdfs.com:9000/user/test/data/sys/load/array_test.data") 
-  INTO TABLE `test_array_table` 
-  COLUMNS TERMINATED BY "|" (`k1`, `a1`, `a2`, `a3`, `a4`, `a5`, `a6`, `a7`, `a8`, `a9`, `a10`, `a11`, `a12`, `a13`, `b14`) 
-  SET(a14=array_union(cast(b14 as array<string>), cast(a13 as array<string>))) WHERE size(a2) > 270) 
-  WITH BROKER "hdfs" ("username"="test_array", "password"="") 
-  PROPERTIES( "max_filter_ratio"="0.8" );
-```
-
-## Execution Engine Selected
-
-The Pipeline engine is turned off by default on import, and is enabled by the following two variables:
-
-1. `enable_pipeline_load` in [FE CONFIG](../../admin-manual/config/fe-config) `enable_pipeline_load`. When enabled, import tasks such as Streamload will try to use the Pipeline engine.
-
-2. `enable_nereids_dml_with_pipeline` in Session Variable to enable insert into to try to use the Pipeline engine.
-
-When the above variables are turned on, whether and which set of Pipeline engine is used still depends on the settings of the other two Session Variables `enable_pipeline_engine` and `enable_pipeline_x_engine`. When both are enabled, PipelineX is selected in preference to the Pipeline Engine. If neither is enabled, the import will not be executed using the Pipeline engine even if the above variables are set to `true`.
+| Import Method                                      | Use Case                                   | Supported File Formats | Single Import Volume | Import Mode |
+| :-------------------------------------------- | :----------------------------------------- | ----------------------- | ----------------- | -------- |
+| [Stream Load](./import-way/stream-load-manual)           | Import from local data                             | csv, json, parquet, orc | Less than 10GB          | Synchronous     |
+| [Broker Load](./import-way/broker-load-manual.md)        | Import from object storage, HDFS, etc.                     | csv, json, parquet, orc | Tens of GB to hundreds of GB   | Asynchronous     |
+| [INSERT INTO VALUES](./import-way/insert-into-manual.md) | <p>Import single or small batch data</p><p>Import via JDBC, etc.</p> | SQL                     | Simple testing | Synchronous     |
+| [INSERT INTO SELECT](./import-way/insert-into-manual.md) | <p>Import data between Doris internal tables</p><p>Import external tables</p>      | SQL                     | Depending on memory size  | Synchronous     |
+| [Routine Load](./import-way/routine-load-manual.md)      | Real-time import from Kafka                            | csv, json               | Micro-batch import MB to GB | Asynchronous     |
+| [MySQL Load](./import-way/mysql-load-manual.md)          | Import from local data                             | csv                     | Less than 10GB          | Synchronous     |
+| [Group Commit](./import-way/group-commit-manual.md)          | High-frequency small batch import                             | Depending on the import method used                     |  Micro-batch import KB         | -     |

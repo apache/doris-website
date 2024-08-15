@@ -205,6 +205,20 @@ The connection pool size can be adjusted to better suit your workload. Typically
 
 At the same time, in order to avoid accumulating too many unused connection pool caches on BE, you can specify the time interval for clearing the cache by setting the `jdbc_connection_pool_cache_clear_time_sec` parameter of BE. The default value is 28800 seconds (8 hours). After this interval, BE will forcefully clear all connection pool caches that have not been used for more than this time.
 
+:::warning
+When using Doris JDBC Catalog to connect to external data sources, you need to be careful when updating database credentials.
+Doris maintains active connections through a connection pool to respond to queries quickly. However, after the credentials are changed, the connection pool may continue to use the old credentials to try to establish new connections and fail. Such erroneous attempts are repeated as the system attempts to maintain a certain number of active connections, and in some database systems, frequent failures may result in account lockout.
+It is recommended that when credentials must be changed, the Doris JDBC Catalog configuration is updated synchronously and the Doris cluster is restarted to ensure that all nodes use the latest credentials to prevent connection failures and potential account lockouts.
+
+Account lockouts you may encounter are as follows:
+
+MySQL: account is locked
+
+Oracle: ORA-28000: the account is locked
+
+SQL Server: Login is locked out
+:::
+
 ### Insert transaction
 
 Doris' data is written to the JDBC Catalog in a batch manner. If the import is interrupted midway, the previously written data may need to be rolled back. Therefore, JDBC Catalog supports transactions when data is written. Transaction support needs to be set by setting session variable: `enable_odbc_transcation`.
@@ -302,3 +316,32 @@ Through the `CALL EXECUTE_STMT()` command, Doris will directly send the SQL stat
 - Only users with LOAD permissions on the Catalog can execute the `CALL EXECUTE_STMT()` command.
 - Only users with SELECT permissions on Catalog can execute the `query()` table function.
 - The supported data types of the data read by the `query` table function are consistent with the data types supported by the queried catalog type.
+
+## Troubleshooting connection pool issues
+
+1. In versions less than 2.0.5, the connection pool related configuration can only be configured in JAVA_OPTS of BE conf, refer to version 2.0.4 [be.conf](https://github.com/apache/doris/blob/ 2.0.4-rc06/conf/be.conf#L22).
+2. In versions 2.0.5 and later, connection pool related configurations can be configured in the Catalog properties, refer to [Connection Pool Properties](#Connection Pool Properties).
+3. The connection pool used by Doris was changed from Druid to HikariCP starting from 2.0.10 (2.0 Release) and 2.1.3 (2.1 Release), so the connection pool related errors and troubleshooting methods are different, refer to the following
+
+* Druid connection pool version
+    * Initialize datasource failed: CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 10, creating 1
+        * Reason 1: Too many queries cause the number of connections to exceed the configuration
+        * Reason 2: The connection pool count is abnormal and the active count does not decrease.
+        * Solution
+            * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); Temporarily increase the connection pool capacity by adjusting the number of connections, and the connection pool cache can be refreshed in this way
+            * Upgrade to replace the connection pool to Hikari version
+        * Initialize datasource failed: CAUSED BY: GetConnectionTimeoutException: wait millis 5006, active 10, maxActive 0, creating 1
+            * Reason 1: Network failure
+            * Reason 2: The network latency is high, causing the connection creation to take more than 5s
+            * Solution
+                * Check network
+                * alter catalog <catalog_name> set properties ('connection_pool_max_wait' = '10000'); Increase the timeout
+* HikariCP connection pool version
+    * HikariPool-2 - Connection is not available, request timed out after 5000ms
+        * Reason 1: Network failure
+        * Reason 2: The network delay is high, causing the connection creation to take more than 5s
+        * Reason 3: Too many queries cause the number of connections to exceed the configuration
+        * Solution
+            * Check network
+            * alter catalog <catalog_name> set properties ('connection_pool_max_size' = '100'); Increase the number of connections
+            * alter catalog <catalog_name> set properties ('connection_pool_max_wait_time' = '10000'); Increase the timeout

@@ -1,7 +1,7 @@
 ---
 {
-  "title": "SAP HANA",
-  "language": "zh-CN"
+   "title": "SAP HANA",
+   "language": "zh-CN"
 }
 ---
 
@@ -43,11 +43,15 @@ CREATE CATALOG saphana PROPERTIES (
     "type"="jdbc",
     "user"="USERNAME",
     "password"="PASSWORD",
-    "jdbc_url" = "jdbc:sap://example.net:30015/DATABASE",
+    "jdbc_url" = "jdbc:sap://Hostname:Port/?optionalparameters",
     "driver_url" = "ngdbc-2.4.51.jar",
     "driver_class" = "com.sap.db.jdbc.Driver"
 )
 ```
+
+:::info 备注
+有关 SAP HANA JDBC 驱动程序支持的 JDBC URL 格式和参数的更多信息，请参阅 [SAP HANA](https://help.sap.com/docs/)。
+:::
 
 ## 层级映射
 

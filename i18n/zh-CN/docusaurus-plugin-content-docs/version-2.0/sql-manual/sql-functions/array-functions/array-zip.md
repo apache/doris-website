@@ -24,11 +24,7 @@ under the License.
 
 ## array_zip
 
-<version since="2.0">
-
 array_zip
-
-</version>
 
 ### description
 
@@ -41,10 +37,6 @@ array_zip
 #### Returned value
 
 将来自源数组的元素分组成结构体的数组。结构体中的数据类型与输入数组的类型相同，并按照传递数组的顺序排列。
-
-### notice
-
-`仅支持向量化引擎中使用`
 
 ### example
 

@@ -205,8 +205,8 @@ There are two ways to configure BE configuration items:
 
 #### `trash_file_expire_time_sec`
 
-* Description: The interval for cleaning the recycle bin is 72 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
-* Default value: 259200
+* Description: The interval for cleaning the recycle bin is 24 hours. When the disk space is insufficient, the file retention period under trash may not comply with this parameter
+* Default value: 86400
 
 #### `es_http_timeout_ms`
 
@@ -276,6 +276,14 @@ There are two ways to configure BE configuration items:
     - If the parameter is `THREADED`, the model is a non-blocking I/O model.
 
     - If the parameter is `THREAD_POOL`, the model is a blocking I/O model.
+
+#### `thrift_max_message_size`
+
+<version since="2.1.4"></version>
+
+Default: 100MB
+
+The maximum size of a (received) message of the thrift server, in bytes. If the size of the message sent by the client exceeds this limit, the Thrift server will reject the request and close the connection. As a result, the client will encounter the error: "connection has been closed by peer." In this case, you can try increasing this parameter.
 
 #### `txn_commit_rpc_timeout_ms`
 
@@ -355,12 +363,6 @@ There are two ways to configure BE configuration items:
 * Type: int32
 * Description: When BE performs data scanning, it will split the same scanning range into multiple ScanRanges. This parameter represents the scan data range of each ScanRange. This parameter can limit the time that a single OlapScanner occupies the io thread.
 * Default value: 524288
-
-#### `doris_scanner_queue_size`
-
-* Type: int32
-* Description: The length of the RowBatch buffer queue between TransferThread and OlapScanner. When Doris performs data scanning, it is performed asynchronously. The Rowbatch scanned by OlapScanner will be placed in the scanner buffer queue, waiting for the upper TransferThread to take it away.
-* Default value: 1024
 
 #### `doris_scanner_row_num`
 

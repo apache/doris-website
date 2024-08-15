@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Compling with LDB Toolchain (Recommended)",
+    "title": "Compiling with LDB Toolchain (Recommended)",
     "language": "en"
 }
 ---
@@ -66,6 +66,9 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 3. **Download and install other compilation components**
 
 - Download [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz) and install it to /path/to/java.
+
+    > For versions later than 3.0 (inclusive), or the master branch, please use [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz).
+
 - Download [Apache Maven 3.6.3](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/apache-maven-3.6.3-bin.tar.gz) and install it to /path/to/maven.
 - Download [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz) and install it to /path/to/node.
 - Different Linux distributions may include different default components. Therefore, you may need to install some additional components. The following takes CentOS 6 as an example. Similar steps may apply to other distributions:

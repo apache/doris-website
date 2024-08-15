@@ -27,11 +27,7 @@ under the License.
 
 # File Analysis
 
-<version since="1.2.0">
-
 With the Table Value Function feature, Doris is able to query files in object storage or HDFS as simply as querying Tables. In addition, it supports automatic column type inference.
-
-</version>
 
 ## Usage
 

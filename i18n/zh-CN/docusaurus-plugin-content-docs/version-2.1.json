@@ -7,6 +7,10 @@
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
   },
+  "sidebar.docs.category.Quick Start": {
+    "message": "快速体验",
+    "description": "The label for category Quick Start in sidebar docs"
+  },
   "sidebar.docs.category.Installation and Deployment": {
     "message": "安装部署",
     "description": "The label for category Install and Deploy in sidebar docs"
@@ -59,21 +63,25 @@
     "message": "数据导出",
     "description": "The label for category Exporting Data in sidebar docs"
   },
-  "sidebar.docs.category.Lakehouse": {
+  "sidebar.docs.category.Job Scheduler": {
+    "message": "作业调度",
+    "description": "The label for category job scheduler in sidebar docs"
+  },
+  "sidebar.docs.category.Data Lakehouse": {
     "message": "湖仓一体",
-    "description": "The label for category Lakehouse in sidebar docs"
+    "description": "The label for category Data Lakehouse in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Data Lake": {
+  "sidebar.docs.category.Querying Data Lakes": {
     "message": "数据湖分析",
-    "description": "The label for category Analyzing Data Lake in sidebar docs"
+    "description": "The label for category Querying Data Lakes in sidebar docs"
   },
-  "sidebar.docs.category.Building Data Lake": {
+  "sidebar.docs.category.Building Data Lakes": {
     "message": "数据湖构建",
     "description": "The label for category Building Data Lake in sidebar docs"
   },
-  "sidebar.docs.category.Analyzing Database": {
+  "sidebar.docs.category.Querying Databases": {
     "message": "数据库分析",
-    "description": "The label for category Analyzing Database in sidebar docs"
+    "description": "The label for category Querying Databases in sidebar docs"
   },
   "sidebar.docs.category.Data Queries": {
     "message": "数据查询",
@@ -103,13 +111,13 @@
     "message": "视图与物化视图",
     "description": "The label for category View and Materialize View in sidebar docs"
   },
-  "sidebar.docs.category.Join Queries": {
+  "sidebar.docs.category.Join Optimization": {
     "message": "Join 优化",
-    "description": "The label for category Join Queries in sidebar docs"
+    "description": "The label for category Join Optimization in sidebar docs"
   },
-  "sidebar.docs.category.Duplicating Query Results": {
+  "sidebar.docs.category.Distincting Counts": {
     "message": "高效去重",
-    "description": "The label for category Duplicating Query Results in sidebar docs"
+    "description": "The label for category Distincting Counts in sidebar docs"
   },
   "sidebar.docs.category.Analyzing Query": {
     "message": "查询分析",
@@ -209,7 +217,31 @@
   },
   "sidebar.docs.category.SQL Types": {
     "message": "SQL 类型",
-    "description": "The label for category SQL Types in sidebar docs"
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregation Data Type": {
+    "message": "聚合类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Datetime Data Type": {
+    "message": "日期类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.String Data Type": {
+    "message": "字符串类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Data Type": {
+    "message": "数值类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Semi-Structured Data Type": {
+    "message": "半结构化类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.IP Data Type": {
+    "message": "IP 类型",
+    "description": "The label for category Data Types in sidebar docs"
   },
   "sidebar.docs.category.Array Functions": {
     "message": "数组函数",
@@ -274,6 +306,10 @@
   "sidebar.docs.category.Table Functions": {
     "message": "表函数",
     "description": "The label for category Table Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "表值函数",
+    "description": "The label for category Table Valued Functions in sidebar docs"
   },
   "sidebar.docs.category.Analytic(Window) Functions": {
     "message": "分析（窗口）函数",
@@ -347,6 +383,10 @@
     "message": "版本发布",
     "description": "The label for category Release notes in sidebar docs"
   },
+  "sidebar.releasenotes.category.Previous Release": {
+    "message": "历史版本",
+    "description": "The label for category Release notes in sidebar docs"
+  },
   "sidebar.docs.category.cluster management": {
     "message": "集群管理",
     "description": "The label for category cluster management in sidebar docs"
@@ -366,5 +406,21 @@
   "sidebar.docs.category.External Table": {
     "message": "外部表",
     "description": "The label for category Lakehouse.External Table in sidebar docs"
+  },
+  "sidebar.docs.category.Use Case": {
+    "message": "实践教程",
+    "description": "The label for category Practical Guide in sidebar docs"
+  },
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Tutorials": {
+    "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Building lakehouse": {
+    "message": "构建 Lakehouse",
+    "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

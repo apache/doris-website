@@ -5,7 +5,7 @@
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -38,31 +38,31 @@ A table consists of rows and columns:
 
 - Column: Used to describe different fields in a row of data;
 
-- Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns, respectively. The key columns in Doris are those specified in the table creation statement, which are the columns following the keywords `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../table-design/data-model/overview).
+- Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns respectively. The key columns in Apache Doris are those specified in the table creation statement, which are the columns following the keywords  `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../table-design/data-model/overview).
 
 ### Partition & Tablet
 
-Doris supports two levels of data partitioning. The first level is Partitioning, which supports Range and List partition. The second level is Bucket (also known as Tablet), which supports Hash and Random . If no partitioning is established during table creation, Doris generates a default partition that is transparent to the user. When using the default partition, only Bucket is supported.
+Apache Doris supports two levels of data partitioning. The first level is partition, which supports RANGE partitioning and LIST partitioning. The second level is tablet (also called bucket), which supports Hash bucket and Random bucket. If no partition is established during table creation, Apache Doris generates a default partition that is transparent to the user. When using the default partition, only bucket is supported.
 
-In the Doris storage engine, data is horizontally partitioned into several tablets. Each tablet contains several rows of data. There is no overlap between the data in different tablets, and they are stored physically independently.
+In the Apache Doris storage engine, data is horizontally partitioned into several tablets. Each tablet contains several rows of data. There is no overlap between the data in different tablets, and they are stored physically independently.
 
 Multiple tablets logically belong to different partitions. A single tablet belongs to only one partition, while a partition contains several tablets. Because tablets are stored physically independently, partitions can also be considered physically independent. The tablet is the smallest physical storage unit for operations such as data movement and replication.
 
 Several partitions compose a table. The partition can be considered the smallest logical management unit.
 
-Benefits of Two-Level data partitioning:
+The benefits of Apache Doris's two-level data partitioning are as follows:
 
-- For dimensions with time or similar ordered values, such dimension columns can be used as partitioning columns. The partition granularity can be evaluated based on import frequency and partition data volume.
+- Columns with ordered values can be used as partitioning columns. The partition granularity can be evaluated based on import frequency and partition data volume.
 
-- Historical data deletion requirements: If there is a need to delete historical data (such as retaining only the data for the most recent several days), composite partition can be used to achieve this goal by deleting historical partitions. Alternatively, DELETE statements can be sent within specified partitions to delete data.
+- If there is a need to delete historical data (such as retaining only the data for the most recent several days), composite partition can be used to achieve this goal by deleting historical partitions. Alternatively, `DELETE` statements can be sent within specified partitions to delete data.
 
-- Solving data skew issues: Each partition can specify the number of buckets independently. For example, when partitioning by day and there are significant differences in data volume between days, the number of buckets for each partition can be specified to reasonably distribute data across different partitions. It is recommended to choose a column with high distinctiveness as the bucketing column.
+- Each partition can specify the number of buckets independently. For example, when data is partitioned by day and there are significant differences in data volume between days, the number of buckets for each partition can be specified to reasonably distribute data across different partitions. It is recommended to choose a column with high distinctiveness as the bucketing column.
 
-### Example of creating a table 
+### Example of creating a table
 
-CREATE TABLE in Doris is a synchronous command. It returns results after the SQL execution is completed. Successful returns indicate successful table creation. For more information, please refer to [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE), or input  the `HELP CREATE TABLE;` command. 
+`CREATE TABLE` in Apache Doris is a synchronous command which returns the result once the SQL is executed. Successful returns indicate successful table creation. For more information, refer to [CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE) or input  the `HELP CREATE TABLE` command.
 
-This section introduces how to create tables in Doris by range partiton and hash buckets.
+The following code sample introduces how to create tables in Apache Doris by RANGE partitioning and Hash buckets.
 
 ```sql
 -- Range Partition
@@ -94,17 +94,17 @@ PROPERTIES
 );
 ```
 
-Here use the AGGREGATE KEY data model as an example. In the AGGREGATE KEY data model, all columns that are specified with an aggregation type (SUM, REPLACE, MAX, or MIN) are Value columns. The rest are the Key columns.
+Here use Aggregate Key Model as an example. In Aggregate Key Model, all columns that are specified with an aggregation type (SUM, REPLACE, MAX, or MIN) are Value columns. The rest are the Key columns.
 
-In the PROPERTIES at the end of the CREATE TABLE statement, you can find detailed information about the relevant parameters that can be set in PROPERTIES by referring to the documentation on [CREATE TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE).
+For more information about what fields can be set in the `PROPERTIES` section of  `CREATE TABLE`, refer to [CREATE-TABLE](../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-TABLE.md).
 
-The default type of ENGINE is OLAP. In Doris, only this OLAP ENGINE type is responsible for data management and storage by Doris itself. Other ENGINE types, such as mysql, broker, es, etc., are essentially just mappings to tables in other external databases or systems, allowing Doris to read this data. However, Doris itself does not create, manage, or store any tables or data for non-OLAP ENGINE types.
+The default type of `ENGINE` is `OLAP`. Only OLAP is responsible for data management and storage by Apache Doris itself. Other engine types, such as MySQL, Broker and ES, are essentially just mappings to tables in other external databases or systems, allowing Apache Doris to read this data. However, Apache Doris itself does not create, manage, or store any tables or data for engine types except OLAP.
 
-`IF NOT EXISTS` indicates that if the table has not been created before, it will be created. Note that this only checks if the table name exists and does not check if the schema of the new table is the same as the schema of an existing table. Therefore, if there is a table with the same name but a different schema, this command will also return successfully, but it does not mean that a new table and a new schema have been created.
+`IF NOT EXISTS`  indicates that if the table has not been created before, it will be created. Note that this only checks if the table name exists and does not check if the schema of the new table is the same as the schema of an existing table. Therefore, if there is a table with the same name but a different schema, this command will also return successfully, but it does not mean that a new table with a new schema has been created.
 
-### View partition
+### View partitions
 
-You can use the `show create table` command to view the partition information of a table.
+View the partiton information of a table by running the  `show create table` command.
 
 ```sql
 > show create table  example_range_tbl 
@@ -141,7 +141,7 @@ You can use the `show create table` command to view the partition information of
 +-------------------+---------------------------------------------------------------------------------------------------------+   
 ```
 
-You can use `show partitions from your_table` command to view the partition information of a table.
+Or run the  `show partitions from your_table` command.
 
 ```
 > show partitions from example_range_tbl
@@ -161,15 +161,15 @@ You can use `show partitions from your_table` command to view the partition info
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
 ```
 
-### Alter partition
+### Alter partitions
 
-You can add a new partition by using the `alter table add partition` command.
+You can add a new partition by running the  `alter table add partition ` command.
 
 ```sql
 ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
 ```
 
-For more partition modification operations, please refer to the SQL manual on [ALTER-TABLE-PARTITION](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION).
+For more information about how to alter partitions, refer to [ALTER-TABLE-PARTITION](../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION.md).
 
 ## Manual partitioning
 
@@ -187,13 +187,13 @@ For more partition modification operations, please refer to the SQL manual on [A
 
 - Overlapping ranges are not allowed when creating partitions.
 
-### Range partition
+### RANGE partitioning
 
-Partition columns are usually time columns for convenient management of old and new data. Range partition supports column types such as DATE, DATETIME, TINYINT, SMALLINT, INT, BIGINT, and LARGEINT.
+Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as `DATE`, `DATETIME`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, and `LARGEINT`.
 
-Partition information supports four writing methods:
+Partition information supports the following four writing methods:
 
-- FIXED RANGE: the partition as a left-closed, right-open interval.
+- `FIXED RANGE`: This method defines the partition as a left-closed, right-open interval.
 
 ```sql
 PARTITION BY RANGE(col1[, col2, ...])                                                                                                                                                                                                  
@@ -214,7 +214,7 @@ PARTITION BY RANGE(`date`)
 )
 ```
 
-- LESS THAN: Only define the upper bound of the partition. The lower bound is determined by the upper bound of the previous partition.
+- `LESS THAN`: This method only defines the upper bound of the partition. The lower bound is determined by the upper bound of the previous partition.
 
 ```sql
 PARTITION BY RANGE(col1[, col2, ...])                                                                                                                                                                                                  
@@ -243,7 +243,7 @@ PARTITION BY RANGE(`date`)
 )
 ```
 
-- BATCH RANGE: Batch create RANGE partitions of numeric and time types, defining the partitions as left-closed, right-open intervals, and setting the step size.
+- `BATCH RANGE`: This method batch creates partitions based on ranges of number or time, defining the partitions as left-closed, right-open intervals and setting the step size.
 
 ```sql
 PARTITION BY RANGE(int_col)                                                                                                                                                                                                            
@@ -271,7 +271,7 @@ PARTITION BY RANGE(`date`)
 )
 ```
 
-- MULTI RANGE: Batch create RANGE partitions, defining the partitions as left-closed, right-open intervals. For example:
+- `MULTI RANGE`: This method batch creates partitions based on range partitioning, defining the partitions as left-closed, right-open intervals. For example:
 
 ```sql
 PARTITION BY RANGE(col)                                                                                                                                                                                                                
@@ -284,11 +284,11 @@ PARTITION BY RANGE(col)
 )                                                                                                                                                                                                                                      
 ```
 
-### List partition
+### LIST partitioning
 
-Partition columns support data types such as BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, CHAR, and VARCHAR. Partition values are enumerated values. Only when the data is one of the enumerated values of the target partition, the partition can be hit .
+Partition columns based on LIST partitioning support data types such as `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, and `VARCHAR`. Partition values are enumerated values. Only when the data is one of the enumerated values of the target partition, the partition can be hit.
 
-Partitions support specifying the enumerated values contained in each partition through VALUES IN (...).
+Partitions support specifying the enumerated values contained in each partition through `VALUES IN (...)`.
 
 For example:
 
@@ -301,7 +301,7 @@ PARTITION BY LIST(city)
 )
 ```
 
-List partition also supports multi-column partitioning, for example:
+LIST partitioning also supports multi-column partitioning, for example:
 
 ```sql
 PARTITION BY LIST(id, city)
@@ -312,17 +312,91 @@ PARTITION BY LIST(id, city)
 )
 ```
 
-## Dynamic partition
+### NULL partitioning
 
-Dynamic partition is designed to manage partition's Time-to-Life (TTL), reducing the burden on users.
+Partition columns based on NULL partitioning must be not null columns by default. If you need to use null columns, set the session variable `allow_partition_column_nullable` to `true`. For LIST partitioning, the NULL partitioning is supported, while for RANGE partitioning, null values will be assigned to the `less than` partition. The columns are as follows:
 
-In some usage scenarios, the user will partition the table according to the day and perform routine tasks regularly every day. At this time, the user needs to manually manage the partition. Otherwise, the data load may fail because the user does not create a partition. This brings additional maintenance costs to the user.
+**LIST partitioning**
 
-With dynamic partitioning, users can define rules for partition creation and deletion when establishing tables. The FE initiates a background thread to handle partition creation or deletion based on these user-defined rules. Users also have the flexibility to modify these rules during runtime.
+```sql
+mysql> create table null_list(
+    -> k0 varchar null
+    -> )
+    -> partition by list (k0)
+    -> (
+    -> PARTITION pX values in ((NULL))
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.11 sec)
 
-It's important to note that dynamic partitioning is exclusively supported by range partitions. Currently, the functionality enables dynamic addition and deletion of partitions.
+mysql> insert into null_list values (null);
+Query OK, 1 row affected (0.19 sec)
 
-:::tip
+mysql> select * from null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.18 sec)
+```
+
+**RANGE partitioning with the `less than` partition**
+
+```sql
+mysql> create table null_range(
+    -> k0 int null
+    -> )
+    -> partition by range (k0)
+    -> (
+    -> PARTITION p10 values less than (10),
+    -> PARTITION p100 values less than (100),
+    -> PARTITION pMAX values less than (maxvalue)
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> insert into null_range values (null);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from null_range partition(p10);
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.18 sec)
+```
+
+**RANGE partitioning without the `less than` partition**
+
+```sql
+mysql> create table null_range2(
+    -> k0 int null
+    -> )
+    -> partition by range (k0)
+    -> (
+    -> PARTITION p200 values [("100"), ("200"))
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into null_range2 values (null);
+ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
+```
+
+## Dynamic partitioning
+
+Dynamic partitioning is designed to manage the lifecycle of partitions, reducing the burden on users.
+
+Dynamic partitioning only supports RANGE partitioning based on `DATE` or `DATETIME` columns. It is applicable for cases where time data in partition columns grows synchronously with the real world. In such scenarios, data can be partitioned flexibly based on time data, and can be automatically stored with the cold-hot tiering strategy or recycled according to settings. 
+
+For partitioning method that can be more widely applicable, see [Auto partitioning](https://doris.apache.org/docs/table-design/data-partition/#auto-partitioning).
+
+:::caution Warning
 
 This feature will be disabled when synchronized by CCR. If this table is copied by CCR, that is, PROPERTIES contains `is_being_synced = true`, it will be displayed as enabled in show create table, but will not actually take effect. When `is_being_synced` is set to `false`, these features will resume working, but the `is_being_synced` property is for CCR peripheral modules only and should not be manually set during CCR synchronization.
 
@@ -388,6 +462,10 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
   The starting offset of the dynamic partition, usually a negative number. Depending on the `time_unit` attribute, based on the current day (week / month), the partitions with a partition range before this offset will be deleted. If not filled, the default is `-2147483648`, that is, the history partition will not be  deleted.
 
+:::caution
+Note that if the user sets history_partition_num (> 0), the starting partition for creating dynamic partitions will use max(start, -history_partition_num), and when deleting historical partitions, the range up to start will still be retained, where start < 0.
+:::
+
 - `dynamic_partition.end`(required parameters)
 
   The end offset of the dynamic partition, usually a positive number. According to the difference of the `time_unit` attribute, the partition of the corresponding range is created in advance based on the current day (week / month).
@@ -400,21 +478,22 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 
 - `dynamic_partition.buckets`
 
-    The number of buckets corresponding to the dynamically created partitions.
+    The number of buckets corresponding to the dynamically created partitions.
 
 - `dynamic_partition.replication_num`
 
-  The replication number of dynamic partition.If not filled in, defaults to the number of table's replication number.    
+  The replication number of dynamic partition.If not filled in, defaults to the number of table's replication number.    
 
 - `dynamic_partition.start_day_of_week`
 
-  When `time_unit` is` WEEK`, this parameter is used to specify the starting point of the week. The value ranges from 1 to 7. Where 1 is Monday and 7 is Sunday. The default is 1, which means that every week starts on Monday.    
+  When `time_unit` is` WEEK`, this parameter is used to specify the starting point of the week. The value ranges from 1 to 7. Where 1 is Monday and 7 is Sunday. The default is 1, which means that every week starts on Monday.    
 
 
 - `dynamic_partition.start_day_of_month`
 
   When `time_unit` is` MONTH`, this parameter is used to specify the start date of each month. The value ranges from 1 to 28. 1 means the 1st of every month, and 28 means the 28th of every month. The default is 1, which means that every month starts at 1st. The 29, 30 and 31 are not supported at the moment to avoid ambiguity caused by lunar years or months.
 
+- Doris supports multi-level storage with SSD and HDD tiers. For more details, please refer to [tiered-storage](./tiered-storage/diff-disk-medium-migration.md)
 
 - `dynamic_partition.create_history_partition`
 
@@ -425,30 +504,6 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
 - `dynamic_partition.history_partition_num`
 
   When `create_history_partition` is `true`, this parameter is used to specify the number of history partitions. The default value is -1, which means it is not set.
-
-- `dynamic_partition.hot_partition_num`
-
-  Specify how many of the latest partitions are hot partitions. For hot partition, the system will automatically set its `storage_medium` parameter to SSD, and set `storage_cooldown_time`.
-
-  :::tip
-
-  If there is no SSD disk path under the storage path, configuring this parameter will cause dynamic partition creation to fail.
-
-  :::
-
-  `hot_partition_num` is all partitions in the previous n days and in the future.
-
-  Let us give an example. Suppose today is 2021-05-20, partition by day, and the properties of dynamic partition are set to: hot_partition_num=2, end=3, start=-3. Then the system will automatically create the following partitions, and set the `storage_medium` and `storage_cooldown_time` properties:
-
-  ```sql
-  p20210517: ["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
-  p20210518: ["2021-05-18", "2021-05-19") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
-  p20210519: ["2021-05-19", "2021-05-20") storage_medium=SSD storage_cooldown_time=2021-05-21 00:00:00
-  p20210520: ["2021-05-20", "2021-05-21") storage_medium=SSD storage_cooldown_time=2021-05-22 00:00:00
-  p20210521: ["2021-05-21", "2021-05-22") storage_medium=SSD storage_cooldown_time=2021-05-23 00:00:00
-  p20210522: ["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
-  p20210523: ["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
-  ```
 
 
 - `dynamic_partition.reserved_history_periods`
@@ -479,18 +534,7 @@ The rules of dynamic partition are prefixed with `dynamic_partition.`:
   Otherwise, every `[...,...]` in `reserved_history_periods` is a couple of properties, and they should be set at the same time. And the first date can't be larger than the second one.
 
 
-- `dynamic_partition.storage_medium`
-
-  
-  :::info Note
-  This parameteres is supported since Doris version 1.2.3
-  :::
-
-  Specifies the default storage medium for the created dynamic partition. HDD is the default, SSD can be selected.
-
-  Note that when set to SSD, the `hot_partition_num` property will no longer take effect, all partitions will default to SSD storage media and the cooldown time will be 9999-12-31 23:59:59.
-
-#### Create history partition rules
+### Create history partition rules
 
 When `create_history_partition` is `true`, i.e. history partition creation is enabled, Doris determines the number of history partitions to be created based on `dynamic_partition.start` and `dynamic_partition.history_partition_num`. 
 
@@ -670,9 +714,35 @@ p20210523
    p202006: ["2020-06-28", "2020-07-28")
    ```
 
-### Modify dynamic partition properties
+### Principle and control behavior
 
-You can modify the properties of the dynamic partition with the following command
+Apache Doris sets a fixed FE control thread that continuously checks the table based on dynamic partitioning at specific time intervals (specified by the `dynamic_partition_check_interval_seconds` field) to perform the necessary partition creation and deletion operations.
+
+Specifically, when dynamic partitioning is executed, the following checks and operations are performed (refer to the start time of the partition as `START` and the end time as `END`, and omit `dynamic_partition.`):
+
+- All partitions before `START` are deleted. 
+- If `create_history_partition` is `false`, create all partitions between the current time and `END`; if `create_history_partition` is `true`, not only all partitions between the current time and `END` are created, but also all partitions between `START` and current time are created. If `history_partition_num` is specified, the number of created partitions before current time cannot exceed the value of `history_partition_num`. 
+
+Note that:
+
+- If the partition time range intersects with the `[START, END]` range, it is considered to belong to the current dynamic partition time range.
+- If the newly created partition conflicts with an existing partition, the current partition is retained, and the new partition is not created. If the conflict occurs when the table is created, DDL will occur an error.
+
+Therefore, after the automatic maintenance of the partition table, the state presented is as follows:
+
+- **No partitions are included** before the `START` time except for those specified in `reserved_history_periods`.
+- **All manually created partitions** after the `END` time are retained. 
+- Apart from manually deleted or accidentally lost partitions, the table contains all partitions within a specific range:
+  - If `create_history_partition` is `true`, 
+    - if `history_partition_num` is specified, the specific range is `[max(START, current time) - history_partition_num * time_unit), END]`;
+    - if `history_partition_num` is not specified, the specific range is `[START, END]`.
+  - If `dynamic_partition.create_history_partition` is `false`, the specific range is `[current time, END]`, also including existing partitions in `[START, current time)`.
+  The entire specific range is divided into multiple partition ranges based on `time_unit`. If a range intersects with an existing partition `X`, `X` is preserved; otherwise, the range will be completely covered by a partition created by dynamic partition. 
+- Unless the number of partitions is about to exceed `max_dynamic_partition_num`, the creation will fail.
+
+### Modify properties
+
+You can modify the properties of the dynamic partitioning with the following command:
 
 ```
 ALTER TABLE tbl1 SET
@@ -692,7 +762,7 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 If the partition granularity is changed to MONTH at this time, the system will try to create a partition with the range `["2020-05-01", "2020-06-01")`, and this range conflicts with the existing partition. So it cannot be created. And the partition with the range `["2020-06-01", "2020-07-01")` can be created normally. Therefore, the partition between 2020-05-22 and 2020-05-30 needs to be filled manually.
 
-### Check dynamic partition table scheduling status
+### Check table scheduling status
 
 You can further view the scheduling of dynamic partitioned tables by using the following command:
 
@@ -711,19 +781,19 @@ mysql> SHOW DYNAMIC PARTITION TABLES;
 7 rows in set (0.02 sec)
 ```
 
-- LastUpdateTime: The last time of modifying dynamic partition properties 
-- LastSchedulerTime: The last time of performing dynamic partition scheduling
-- State: The state of the last execution of dynamic partition scheduling
-- LastCreatePartitionMsg: Error message of the last time to dynamically add partition scheduling
-- LastDropPartitionMsg: Error message of the last execution of dynamic deletion partition scheduling
+- `LastUpdateTime`: The last time of modifying dynamic partition properties 
+- `LastSchedulerTime`: The last time of performing dynamic partition scheduling
+- `State`: The state of the last execution of dynamic partition scheduling
+- `LastCreatePartitionMsg`: Error message of the last time to dynamically add partition scheduling
+- `LastDropPartitionMsg`: Error message of the last execution of dynamic deletion partition scheduling
 
-### Advanced operation
+### Advanced operations
 
-**FE Configuration Item**
+**Modify FE configuration items**
 
-- dynamic\_partition\_enable
+- `dynamic\_partition\_enable`
 
-  Whether to enable Doris's dynamic partition feature. The default value is false, which is off. This parameter only affects the partitioning operation of dynamic partition tables, not normal tables. You can modify the parameters in `fe.conf` and restart FE to take effect. You can also execute the following commands at runtime to take effect:
+  Whether to enable Doris's dynamic partition feature. The default value is `false`, which is off. This parameter only affects the partitioning operation of dynamic partition tables, not normal tables. You can modify the parameters in `fe.conf` and restart FE to take effect. You can also execute the following commands at runtime to take effect:
 
   ```sql
   MySQL protocol:
@@ -735,65 +805,47 @@ mysql> SHOW DYNAMIC PARTITION TABLES;
   `curl --location-trusted -u username:password -XGET http://fe_host:fe_http_port/api/_set_config?dynamic_partition_enable=true`
   ```
 
-  To turn off dynamic partitioning globally, set this parameter to false.
+  To turn off dynamic partitioning globally, set this parameter to `false`.
 
-- dynamic\_partition\_check\_interval\_seconds
+- `dynamic\_partition\_check\_interval\_seconds`
 
-  The execution frequency of dynamic partition threads defaults to 3600 (1 hour), that is, scheduling is performed every 1 hour. You can modify the parameters in `fe.conf` and restart FE to take effect. You can also modify the following commands at runtime:
+  The execution frequency of dynamic partition threads defaults to 600 (10 minutes), that is, scheduling is performed every 10 minutes. You can modify the parameters in `fe.conf` and restart FE to take effect. You can also modify the following commands at runtime:
 
   ```sql
   MySQL protocol:
-
+  
   `ADMIN SET FRONTEND CONFIG ("dynamic_partition_check_interval_seconds" = "7200")`
-
+  
   HTTP protocol:
-
+  
   `curl --location-trusted -u username:password -XGET http://fe_host:fe_http_port/api/_set_config?dynamic_partition_check_interval_seconds=432000`
   ```
 
-**Converting dynamic and manual partition tables to each other**
+**Switching between dynamic partitioning and manual partitioning**
 
-For a table, dynamic and manual partitioning can be freely converted, but they cannot exist at the same time, there is and only one state.
+You can switch a table between dynamic and manual partitioning, but a table cannot be partitioned simultaneously by dynamic and manual partitioning.
 
-**Converting Manual Partitioning to Dynamic Partitioning**
+By running the `ALTER TABLE tbl_name SET ("dynamic_partition.enable" = "<true/false>")` command, you can turn on and off dynamic partitioning.
 
-If a table is not dynamically partitioned when it is created, it can be converted to dynamic partitioning at runtime by modifying the dynamic partitioning properties with `ALTER TABLE`, an example of which can be seen with `HELP ALTER TABLE`.
+When dynamic partitioning is turned off, Apache Doris will no longer manage partitions automatically, and users need to create or delete partitions manually by using `ALTER TABLE`; when dynamic partitioning is turned on, redundant partitions will be deleted according to the rules of dynamic partitioning.
 
-When dynamic partitioning feature is enabled, Doris will no longer allow users to manage partitions manually, but will automatically manage partitions based on dynamic partition properties.
+## Auto partitioning
 
-:::tip
-
-If `dynamic_partition.start` is set, historical partitions with a partition range before the start offset of the dynamic partition will be deleted.
-
-:::
-
-**Converting Dynamic Partitioning to Manual Partitioning**
-
-The dynamic partitioning feature can be disabled by executing `ALTER TABLE tbl_name SET ("dynamic_partition.enable" = "false") ` and converting it to a manual partition table.
-
-When dynamic partitioning feature is disabled, Doris will no longer manage partitions automatically, and users will have to create or delete partitions manually by using `ALTER TABLE`.
-
-## Auto partition
-
-:::tip
-
-Doris version 2.1 starts to support automatic partitioning. To use this feature, please [download Doris 2.1](https://doris.apache.org/zh-CN/download) and refer to the documentation for version 2.1.
-
-:::
+### Application scenario
 
 The Auto Partitioning feature supports automatic detection of whether the corresponding partition exists during the data import process. If it does not exist, the partition will be created automatically and imported normally.
 
 The auto partition function mainly solves the problem that the user expects to partition the table based on a certain column, but the data distribution of the column is scattered or unpredictable, so it is difficult to accurately create the required partitions when building or adjusting the structure of the table, or the number of partitions is so large that it is too cumbersome to create them manually.
 
-Take the time type partition column as an example, in the Dynamic Partition function, we support the automatic creation of new partitions to accommodate real-time data at specific time periods. For real-time user behavior logs and other scenarios, this feature basically meets the requirements. However, in more complex scenarios, such as dealing with non-real-time data, the partition column is independent of the current system time and contains a large number of discrete values. At this time to improve efficiency we want to partition the data based on this column, but the data may actually involve the partition can not be grasped in advance, or the expected number of required partitions is too large. In this case, dynamic partitioning or manually created partitions can not meet our needs, automatic partitioning function is very good to cover such needs.
+Take the time type partition column as an example, in dynamic partitioning, we support the automatic creation of new partitions to accommodate real-time data at specific time periods. For real-time user behavior logs and other scenarios, this feature basically meets the requirements. However, in more complex scenarios, such as dealing with non-real-time data, the partition column is independent of the current system time and contains a large number of discrete values. At this time, to improve efficiency we want to partition the data based on this column, but the data may actually involve the partition can not be grasped in advance, or the expected number of required partitions is too large. In this case, dynamic partitioning or manually created partitions cannot meet our needs, while auto partitioning covers such needs.
 
-Suppose our table DDL is as follows:
+Suppose the table DDL is as follows:
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
 (
-    `TRADE_DATE`              datev2 NOT NULL COMMENT '交易日期',
-    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
+    `TRADE_DATE`              datev2 NOT NULL COMMENT 'TRADE_DATE',
+    `TRADE_ID`                varchar(40) NOT NULL COMMENT 'TRADE_ID',
     ......
 )
 UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
@@ -828,7 +880,202 @@ PROPERTIES (
 );
 ```
 
-The table stores a large amount of business history data, partitioned based on the date the transaction occurred. As you can see when building the table, we need to manually create the partitions in advance. If the data range of the partitioned columns changes, for example, 2022 is added to the above table, we need to create a partition by [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) to make changes to the table partition. If such partitions need to be changed, or subdivided at a finer level of granularity, it is very tedious to modify them. At this point we can rewrite the table DDL using AUTO PARTITION.
+The table stores a large amount of business history data, partitioned based on the date the transaction occurred. As you can see when building the table, we need to manually create the partitions in advance. If the data range of the partitioned columns changes, for example, 2022 is added to the above table, we need to create a partition by [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/Data-Definition-Statements/Alter/ALTER-TABLE-PARTITION) to make changes to the table partition. If such partitions need to be changed, or subdivided at a finer level of granularity, it is very tedious to modify them. At this point we can rewrite the table DDL using auto partitioning.
+
+### Syntax
+
+When creating a table, use the following syntax to populate the `partition_info` section in the `CREATE-TABLE`statement:
+
+- For RANGE partitioning:
+
+  ```sql
+   AUTO PARTITION BY RANGE (FUNC_CALL_EXPR)
+     (
+     )
+  ```
+
+   Where,
+
+  ```sql
+  FUNC_CALL_EXPR ::= date_trunc ( <partition_column>, '<interval>' )
+  ```
+
+:::info Note
+
+In Apache Doris 2.1.0 version, `FUNC_CALL_EXPR` needs not to be enclosed in parentheses.
+
+:::
+
+- For LIST partitioning:
+
+  ```sql
+  AUTO PARTITION BY LIST(`partition_col`)
+  (
+  )
+  ```
+
+**Sample**
+
+
+- For RANGE partitioning:
+
+  ```sql
+     CREATE TABLE `date_table` (
+         `TIME_STAMP` datev2 NOT NULL COMMENT '采集日期'
+     ) ENGINE=OLAP
+     DUPLICATE KEY(`TIME_STAMP`)
+     AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
+     (
+     )
+     DISTRIBUTED BY HASH(`TIME_STAMP`) BUCKETS 10
+     PROPERTIES (
+     "replication_allocation" = "tag.location.default: 1"
+     );
+  ```
+
+- For LIST partitioning:
+
+  ```sql
+  CREATE TABLE `str_table` (
+      `str` varchar not null
+  ) ENGINE=OLAP
+  DUPLICATE KEY(`str`)
+  AUTO PARTITION BY LIST (`str`)
+  (
+  )
+  DISTRIBUTED BY HASH(`str`) BUCKETS 10
+  PROPERTIES (
+  "replication_allocation" = "tag.location.default: 1"
+  );
+  ```
+
+**Constraints**
+
+- In auto LIST partitioning, the partition name length **must** **not exceed 50 characters**. This length is derived from the concatenation and escape of contents of partition columns on corresponding data rows, so the actual allowed length may be shorter.
+- In auto RANGE partitioning, the partition function only supports `date_trunc`, and the partition column supports only `DATE` or `DATETIME` formats. 
+- In auto LIST partitioning, function calls are not supported, and the partition column supports `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` data types, with partition values being enumeration values. 
+- In auto LIST partitioning, for every existing value in the partition column that does not correspond to a partition, a new independent partitioning will be created. 
+
+**NULL value partitioning**
+
+When the session variable `allow_partition_column_nullable` is enabled, LIST and RANGE partitioning support null columns as partition columns. 
+
+When an actual insertion encounters a null value in the partition column:
+
+- For auto LIST partitioning, the corresponding NULL value partition will be created automatically:
+```sql
+mysql> create table auto_null_list(
+    -> k0 varchar null
+    -> )
+    -> auto partition by list (k0)
+    -> (
+    -> )
+    -> DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+    -> properties("replication_num" = "1");
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> insert into auto_null_list values (null);
+Query OK, 1 row affected (0.28 sec)
+
+mysql> select * from auto_null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.20 sec)
+
+mysql> select * from auto_null_list partition(pX);
++------+
+| k0   |
++------+
+| NULL |
++------+
+1 row in set (0.20 sec)
+```
+
+- For auto LIST partitioning, **null columns are not supported to be partition columns**.
+```sql
+mysql>  CREATE TABLE `range_table_nullable` (
+    ->      `k1` INT,
+    ->      `k2` DATETIMEV2(3),
+    ->      `k3` DATETIMEV2(6)
+    ->  ) ENGINE=OLAP
+    ->  DUPLICATE KEY(`k1`)
+    ->  AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
+    ->  (
+    ->  )
+    ->  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
+    ->  PROPERTIES (
+    ->  "replication_allocation" = "tag.location.default: 1"
+    ->  );
+ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
+```
+
+### Example
+
+When using auto partitioning, the example in the Application scenarios section can be rewritten as:
+
+```sql
+CREATE TABLE `DAILY_TRADE_VALUE`
+(
+    `TRADE_DATE`              datev2 NOT NULL COMMENT '交易日期',
+    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
+    ......
+)
+UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
+AUTO PARTITION BY RANGE (date_trunc(`TRADE_DATE`, 'year'))
+(
+)
+DISTRIBUTED BY HASH(`TRADE_DATE`) BUCKETS 10
+PROPERTIES (
+  "replication_num" = "1"
+);
+```
+
+At this point, the new table has no default partitions:
+
+```sql
+mysql> show partitions from `DAILY_TRADE_VALUE`;
+Empty set (0.12 sec)
+```
+
+After inserting data and checking again, it is found that the table has created the corresponding partitions:
+
+```sql
+mysql> insert into `DAILY_TRADE_VALUE` values ('2012-12-13', 1), ('2008-02-03', 2), ('2014-11-11', 3);
+Query OK, 3 rows affected (0.88 sec)
+
+mysql> show partitions from `DAILY_TRADE_VALUE`;
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
+| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
+| 180060      | p20080101000000 | 2              | 2023-09-18 21:49:29 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2008-01-01]; ..types: [DATEV2]; keys: [2009-01-01]; ) | TRADE_DATE      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      |
+| 180039      | p20120101000000 | 2              | 2023-09-18 21:49:29 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2012-01-01]; ..types: [DATEV2]; keys: [2013-01-01]; ) | TRADE_DATE      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      |
+| 180018      | p20140101000000 | 2              | 2023-09-18 21:49:29 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2014-01-01]; ..types: [DATEV2]; keys: [2015-01-01]; ) | TRADE_DATE      | 10      | 1              | HDD           | 9999-12-31 23:59:59 |                     | NULL                     | 0.000    | false      | tag.location.default: 1 | true      |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
+3 rows in set (0.12 sec)
+```
+
+It can be concluded that the partitions created by auto partitioning share the same functionality as partitions created by manual partitioning.
+
+### Conjunct with dynamic partitioning
+
+In order to maintain a clear partitioning logic, Apache Doris prohibits the simultaneous use of auto partitioning and dynamic partitioning on a single table, as this usage can easily lead to misuse. It is recommended to replace this with the standalone Auto Partitioning feature.
+
+:::info Note
+In some early versions of Doris 2.1, this functionality was not prohibited but not recommended.
+:::
+
+### Key points
+
+- Similar to regular partitioned tables, aoto LIST partitioning supports multi-column partitioning with no syntax differences. 
+- If partitions are created during data insertion or import processes, and the entire import process is not completed (fails or is canceled), the created partitions will not be automatically deleted. 
+- Tables using auto partitioning only differ in the method of partition creation, switching from manual to automatic. The original usage of the table and its created partitions remains the same as non-auto partitioning tables or partitions. 
+- To prevent the accidental creation of too many partitions, Apache Doris controls the maximum number of partitions an auto partitioning table can accommodate through the `max_auto_partition_num setting` in the FE configuration. This value can be adjusted if needed.
+- When importing data into a table with auto partitioning enabled, the coordinator sends data with a polling interval different from regular tables. Refer to `olap_table_sink_send_interval_auto_partition_factor`  in [BE Configuration](../admin-manual/config/be-config.md) for details. This setting does not have an impact after `enable_memtable_on_sink_node` is enabled. 
+- During data insertion using `INSERT-OVERWRITE`, if a specific partition for override is specified, the auto partitioning table behaves like a regular table during this process and does not create new partitions. 
+- If metadata operations are involved when importing and creating partitions, the import process may fail.
 
 ## Manual bucketing
 
@@ -891,7 +1138,7 @@ properties("estimate_partition_size" = "100G")
 
 The new configuration parameter estimate_partition_size indicates the amount of data for a single partition. This parameter is optional and if not given, Doris will take the default value of estimate_partition_size to 10GB.
 
-As you know from the above, a partitioned bucket is a Tablet at the physical level, and for best performance, it is recommended that the Tablet size be in the range of 1GB - 10GB. So how does the automatic bucketing projection ensure that the Tablet size is within this range? 
+As you know from the above, a partitioned bucket is a tablet at the physical level, and for best performance, it is recommended that the tablet size be in the range of 1GB - 10GB. So how does the automatic bucketing projection ensure that the tablet size is within this range? 
 
 To summarize, there are a few principles.
 
@@ -1050,9 +1297,9 @@ According to the above algorithm, the initial number of buckets and the number o
    When encountering this error, it is usually because the BE encountered a problem when creating data tablets. You can troubleshoot by following these steps:
 
    - In the fe.log, search for the `Failed to create partition` log entry at the corresponding timestamp. In this log entry, you may find a series of number pairs similar to `{10001-10010}`. The first number in the pair represents the Backend ID, and the second number represents the Tablet ID. For example, this number pair indicates that the creation of Tablet ID 10010 on Backend ID 10001 failed.  
-   - Go to the be.INFO log of the corresponding Backend and search for tablet ID-related logs within the corresponding time period to find error messages.  
+   - Go to the be.INFO log of the corresponding Backend and search for Tablet ID-related logs within the corresponding time period to find error messages.  
    - Here are some common tablet creation failure errors, including but not limited to:  
-     - The BE did not receive the relevant task. In this case, you cannot find tablet ID-related logs in be.INFO or the BE reports success but actually fails. For these issues, please refer to the [Installation and Deployment](../install/cluster-deployment/standard-deployment) section to check the connectivity between FE and BE.  
+     - The BE did not receive the relevant task. In this case, you cannot find Tablet ID-related logs in be.INFO or the BE reports success but actually fails. For these issues, please refer to the [Installation and Deployment](../install/cluster-deployment/standard-deployment) section to check the connectivity between FE and BE.  
      - Pre-allocated memory failure. This may be because the byte length of a row in the table exceeds 100KB.  
      - `Too many open files`. The number of open file handles exceeds the Linux system limit. You need to modify the handle limit of the Linux system.  
 

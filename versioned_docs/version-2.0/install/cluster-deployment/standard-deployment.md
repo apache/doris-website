@@ -115,6 +115,14 @@ In a Doris cluster, FE is mainly responsible for metadata storage, including met
 | BE        | Doris uses LZ4 compression by default, with a compression ratio of 0.3~0.5.Disk space needs to be calculated based on the total data volume * 3 (3 data replicas)There is a need to reserve 40% disk space for background data compaction and temporary data storage. |
 | Broker    | If you want to deploy a Broker, you can usually deploy the Broker node on the same machine as the FE /BE nodes. |
 
+### Java version
+
+All Doris processes depend on Java.
+
+Before version 2.1 (inclusive), please use Java 8, recommended version: `openjdk-8u352-b08-linux-x64`.
+
+After version 3.0 (inclusive), please use Java 17, recommended version: `jdk-17.0.10_linux-x64_bin.tar.gz`.
+
 ## 2. Check operating system
 
 ### Disable swap partition
@@ -368,7 +376,7 @@ The configuration file for BE is in the "conf" directory under the BE deployment
 1. Configure Java environment Starting from version 1.2, Doris supports Java UDF (User-Defined Function), and BE relies on the Java environment. You need to configure the `JAVA_HOME` environment variable in the operating system beforehand or specify the Java environment variable in the BE configuration file.
 
 ```SQL
-## Modify Java environment variable in be/be.conf
+## Modify Java environment variable in be/conf/be.conf
 JAVA_HOME = <your-java-home-path>
 ```
 

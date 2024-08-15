@@ -2,13 +2,6 @@
     "docs": [
         {
             "type": "category",
-            "label": "Getting Started",
-            "items": [
-                "get-starting/get-starting"
-            ]
-        },
-        {
-            "type": "category",
             "label": "Doris Introduction",
             "items": [
                 "summary/basic-summary"
@@ -93,7 +86,6 @@
                                 "data-operate/import/import-way/routine-load-manual",
                                 "data-operate/import/import-way/spark-load-manual",
                                 "data-operate/import/import-way/stream-load-manual",
-                                "data-operate/import/import-way/mysql-load-manual",
                                 "data-operate/import/import-way/s3-load-manual",
                                 "data-operate/import/import-way/insert-into-manual",
                                 "data-operate/import/import-way/load-json-format"
@@ -230,41 +222,6 @@
         },
         {
             "type": "category",
-            "label": "Ecosystem",
-            "items": [
-                "ecosystem/spark-doris-connector",
-                "ecosystem/flink-doris-connector",
-                "ecosystem/datax",
-                "ecosystem/seatunnel",
-                "ecosystem/kyuubi",
-                "ecosystem/logstash",
-                "ecosystem/beats",
-                "ecosystem/plugin-development-manual",
-                "ecosystem/audit-plugin",
-                "ecosystem/cloudcanal",
-                "ecosystem/automq-load",
-                "ecosystem/hive-bitmap-udf",
-                {
-                    "type": "category",
-                    "label": "UDF",
-                    "items": [
-                        "ecosystem/udf/contribute-udf",
-                        "ecosystem/udf/remote-user-defined-function",
-                        "ecosystem/udf/native-user-defined-function",
-                        "ecosystem/udf/java-user-defined-function"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "UDAF",
-                    "items": [
-                        "ecosystem/udaf/remote-user-defined-aggregation-function"
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "category",
             "label": "SQL Manual",
             "items": [
                 {
@@ -363,6 +320,18 @@
                                 "sql-manual/sql-functions/date-time-functions/date_trunc",
                                 "sql-manual/sql-functions/date-time-functions/date_format",
                                 "sql-manual/sql-functions/date-time-functions/datediff",
+                                "sql-manual/sql-functions/date-time-functions/second_floor",
+                                "sql-manual/sql-functions/date-time-functions/minute_floor",
+                                "sql-manual/sql-functions/date-time-functions/hour_floor",
+                                "sql-manual/sql-functions/date-time-functions/day_floor",
+                                "sql-manual/sql-functions/date-time-functions/month_floor",
+                                "sql-manual/sql-functions/date-time-functions/year_floor",
+                                "sql-manual/sql-functions/date-time-functions/second_ceil",
+                                "sql-manual/sql-functions/date-time-functions/minute_ceil",
+                                "sql-manual/sql-functions/date-time-functions/hour_ceil",
+                                "sql-manual/sql-functions/date-time-functions/day_ceil",
+                                "sql-manual/sql-functions/date-time-functions/month_ceil",
+                                "sql-manual/sql-functions/date-time-functions/year_ceil",
                                 "sql-manual/sql-functions/date-time-functions/microseconds_add",
                                 "sql-manual/sql-functions/date-time-functions/microseconds_sub",
                                 "sql-manual/sql-functions/date-time-functions/minutes_add",
@@ -463,7 +432,6 @@
                                 "sql-manual/sql-functions/string-functions/extract_url_parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
-                                "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
                                 "sql-manual/sql-functions/string-functions/mask/mask",
                                 "sql-manual/sql-functions/string-functions/mask/mask_first_n",
@@ -486,8 +454,7 @@
                                         "sql-manual/sql-functions/string-functions/regexp/regexp_extract",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp_extract_all",
                                         "sql-manual/sql-functions/string-functions/regexp/regexp_replace",
-                                        "sql-manual/sql-functions/string-functions/regexp/regexp_replace_one",
-                                        "sql-manual/sql-functions/string-functions/regexp/not_regexp"
+                                        "sql-manual/sql-functions/string-functions/regexp/regexp_replace_one"
                                     ]
                                 }
                             ]
@@ -1202,43 +1169,130 @@
                     ]
                 }
             ]
-        },
+        }
+    ],
+    "get-starting": [
+        "gettingStarted/what-is-new",
+        "gettingStarted/what-is-apache-doris",
+        "gettingStarted/quick-start",
         {
             "type": "category",
-            "label": "FAQ",
+            "label": "Tutorials",
             "items": [
-                "faq/install-faq",
-                "faq/data-faq",
-                "faq/sql-faq"
+                {
+                    "type": "category",
+                    "label": "Building lakehouse",
+                    "items": [
+                        "gettingStarted/tutorials/building-lakehouse/doris-hudi",
+                        "gettingStarted/tutorials/building-lakehouse/doris-paimon",
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                    ]
+                },
+                "gettingStarted/tutorials/log-storage-analysis"
+            ]
+        }
+    ],
+    "benchmark": [
+        "benchmark/ssb",
+        "benchmark/tpch",
+        "benchmark/tpcds"
+    ],
+    "ecosystem": [
+        "ecosystem/spark-doris-connector",
+        "ecosystem/flink-doris-connector",
+        "ecosystem/doris-kafka-connector",
+        "ecosystem/datax",
+        "ecosystem/dbt-doris-adapter",
+        "ecosystem/seatunnel",
+        "ecosystem/kyuubi",
+        "ecosystem/logstash",
+        "ecosystem/beats",
+        "ecosystem/cloudcanal",
+        "ecosystem/automq-load",
+        "ecosystem/doris-streamloader",
+        "ecosystem/hive-bitmap-udf",
+        "ecosystem/hive-hll-udf",
+        {
+            "type": "category",
+            "label": "BI and Database IDE",
+            "items": [
+                "ecosystem/bi/apache-superset",
+                "ecosystem/bi/dbeaver",
+                "ecosystem/bi/datagrip",
+                "ecosystem/bi/finebi",
+                "ecosystem/bi/powerbi",
+                "ecosystem/bi/tableau",
+                "ecosystem/bi/quicksight",
+                "ecosystem/bi/quickbi"
+            ]
+        }
+    ],
+    "faq": [
+        "faq/install-faq",
+        "faq/data-faq",
+        "faq/sql-faq",
+        "faq/lakehouse-faq"
+    ],
+    "releasenotes": [
+        "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v2.1",
+            "items": [
+                "releasenotes/v2.1/release-2.1.5",
+                "releasenotes/v2.1/release-2.1.4",
+                "releasenotes/v2.1/release-2.1.3",
+                "releasenotes/v2.1/release-2.1.2",
+                "releasenotes/v2.1/release-2.1.1",
+                "releasenotes/v2.1/release-2.1.0"
             ]
         },
         {
             "type": "category",
-            "label": "Benchmark",
+            "label": "v2.0",
             "items": [
-                "benchmark/ssb",
-                "benchmark/tpch"
+                "releasenotes/v2.0/release-2.0.14",
+                "releasenotes/v2.0/release-2.0.13",
+                "releasenotes/v2.0/release-2.0.12",
+                "releasenotes/v2.0/release-2.0.11",
+                "releasenotes/v2.0/release-2.0.10",
+                "releasenotes/v2.0/release-2.0.9",
+                "releasenotes/v2.0/release-2.0.8",
+                "releasenotes/v2.0/release-2.0.7",
+                "releasenotes/v2.0/release-2.0.6",
+                "releasenotes/v2.0/release-2.0.5",
+                "releasenotes/v2.0/release-2.0.4",
+                "releasenotes/v2.0/release-2.0.3",
+                "releasenotes/v2.0/release-2.0.2",
+                "releasenotes/v2.0/release-2.0.1",
+                "releasenotes/v2.0/release-2.0.0"
             ]
         },
         {
             "type": "category",
-            "label": "Release notes",
+            "label": "v1.2",
             "items": [
-                "releasenotes/release-1.2.8",
-                "releasenotes/release-1.2.7",
-                "releasenotes/release-1.2.6",
-                "releasenotes/release-1.2.5",
-                "releasenotes/release-1.2.4",
-                "releasenotes/release-1.2.3",
-                "releasenotes/release-1.2.2",
-                "releasenotes/release-1.2.1",
-                "releasenotes/release-1.2.0",
-                "releasenotes/release-1.1.5",
-                "releasenotes/release-1.1.4",
-                "releasenotes/release-1.1.3",
-                "releasenotes/release-1.1.2",
-                "releasenotes/release-1.1.1",
-                "releasenotes/release-1.1.0"
+                "releasenotes/v1.2/release-1.2.8",
+                "releasenotes/v1.2/release-1.2.7",
+                "releasenotes/v1.2/release-1.2.6",
+                "releasenotes/v1.2/release-1.2.5",
+                "releasenotes/v1.2/release-1.2.4",
+                "releasenotes/v1.2/release-1.2.3",
+                "releasenotes/v1.2/release-1.2.2",
+                "releasenotes/v1.2/release-1.2.1",
+                "releasenotes/v1.2/release-1.2.0"
+            ]
+        },
+        {
+            "type": "category",
+            "label": "v1.1",
+            "items": [
+                "releasenotes/v1.1/release-1.1.5",
+                "releasenotes/v1.1/release-1.1.4",
+                "releasenotes/v1.1/release-1.1.3",
+                "releasenotes/v1.1/release-1.1.2",
+                "releasenotes/v1.1/release-1.1.1",
+                "releasenotes/v1.1/release-1.1.0"
             ]
         }
     ]

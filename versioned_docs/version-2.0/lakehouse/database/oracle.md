@@ -50,7 +50,11 @@ CREATE CATALOG oracle PROPERTIES (
 ```
 
 :::info remarks
-The correct syntax for jdbc_url varies depending on Oracle version and configuration. The above example URL connects to an Oracle SID named `orcl`.
+`jdbc_url` defines the connection information and parameters to be passed to the JDBC driver.
+When using the Oracle JDBC Thin driver, the syntax of the URL may vary depending on your Oracle configuration.
+For example, if you are connecting to an Oracle SID or Oracle service name, the connection URL will be different.
+For more information, see [Oracle Database JDBC Driver Documentation](https://docs.oracle.com/en/database/oracle/oracle-database/19/jjdbc/data-sources-and-URLs.html) .
+The above example URL connects to an Oracle SID named `orcl`.
 :::
 
 ## Hierarchical mapping
@@ -120,4 +124,4 @@ Doris will automatically add the escape character ("") to the field names and ta
 
 2. `Non supported character set (add orai18n.jar in your classpath): ZHS16GBK` exception occurs when creating or querying Oracle Catalog
 
-   Download [orai18n.jar](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) and put it in the `custom_lib/` directory under each FE and BE directory (if not exists, just create it manually).
+   Download [orai18n.jar](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) and put it in the `custom_lib/` directory under each FE and BE directory (if not exists, just create it manually) and restart each FE and BE.
