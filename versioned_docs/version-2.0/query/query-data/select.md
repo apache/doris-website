@@ -55,7 +55,7 @@ SELECT
 - `ALL | DISTINCT`Filters the result set. `ALL` selects all rows, while `DISTINCT` or `DISTINCTROW` filters out duplicate rows. The default is `ALL`.
 - `ALL EXCEPT`Filters the result set from `ALL` by specifying one or more column names to exclude from the full result set. All matching column names will be ignored in the output.
 - `INTO OUTFILE 'file_name'`Saves the result set to a new file (which must not exist beforehand), with differences in the saved format.
-- `Group by having`Groups the result set by one or more columns. If `HAVING` is present, it filters the groups produced by `GROUP BY`. Extensions to `GROUP BY` such as `GROUPING SETS`, `ROLLUP`, and `CUBE` are available and detailed in the [GROUPING SETS](../../../../docusaurus-plugin-content-docs-community/current/design/grouping_sets_design.md).
+- `Group by having`Groups the result set by one or more columns. If `HAVING` is present, it filters the groups produced by `GROUP BY`. Extensions to `GROUP BY` such as `GROUPING SETS`, `ROLLUP`, and `CUBE` are available and detailed in the [GROUPING SETS](https://doris.apache.org/community/design/grouping_sets_design).
 - `Order by`Sorts the final result set. `ORDER BY` sorts the result set by comparing values in one or more columns. Sorting operations can be time-consuming and resource-intensive because all data needs to be sent to a single node for sorting. Sorting requires more memory compared to non-sorted operations. If you need to return the top N sorted results, use the `LIMIT` clause. 
 - `Limit n`Limits the number of rows in the output result set. `LIMIT m,n` means to start outputting from the mth row and return n records. Using `LIMIT m,n` is meaningful only when combined with `ORDER BY`, otherwise the data returned may be inconsistent each time the query is executed.
 - `Having`The `HAVING` clause does not filter rows in the table but filters the results produced by aggregate functions. Typically, `HAVING` is used with aggregate functions (such as `COUNT()`, `SUM()`, `AVG()`, `MIN()`, `MAX()`) and the `GROUP BY` clause.
@@ -110,6 +110,31 @@ UNION [ALL| DISTINCT] SELECT ......
 `UNION` is used to combine the results of multiple `SELECT` statements into a single result set. The column names from the first `SELECT` statement are used as the column names for the returned result. The selected columns listed in the corresponding positions of each `SELECT` statement should have the same data type. (For example, the first column selected in the first statement should have the same type as the first column selected in the other statements.)
 
 By default, `UNION` removes duplicate rows from the result. The optional `DISTINCT` keyword has no effect beyond the default, as it also specifies duplicate row removal. Using the optional `ALL` keyword, no duplicate row removal occurs, and the result includes all matching rows from all `SELECT` statements.
+
+INTERSECT:
+
+```sql
+SELECT ...
+INTERSECT [DISTINCT] SELECT ......
+[INTERSECT [DISTINCT] SELECT ...]
+```
+
+`INTERSECT` is used to return the intersection of results from multiple `SELECT` statements, with duplicate results removed.
+The effect of `INTERSECT` is equivalent to `INTERSECT DISTINCT`. The `ALL` keyword is not supported.
+Each `SELECT` query must return the same number of columns, And when the column types are inconsistent, they will be `CAST` to the same type.
+
+EXCEPT/MINUS:
+
+```sql
+SELECT ...
+EXCEPT [DISTINCT] SELECT ......
+[EXCEPT [DISTINCT] SELECT ...]
+```
+
+The `EXCEPT` clause is used to return the complement between the results of multiple queries, meaning it returns the data from the left query that does not exist in the right query, with duplicates removed.
+`EXCEPT` is functionally equivalent to `MINUS`.
+The effect of `EXCEPT` is the same as `EXCEPT DISTINCT`. The `ALL` keyword is not supported.
+Each `SELECT` query must return the same number of columns, And when the column types are inconsistent, they will be `CAST` to the same type.
 
 WITH:
 
@@ -203,6 +228,22 @@ select *,(price * 0.8) as "20% off" from tb_book;
 ```
 SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
 UNION
+SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
+```
+
+- INTERSECT
+
+```sql
+SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
+INTERSECT
+SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
+```
+
+- EXCEPT
+
+```sql
+SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by a LIMIT 10
+EXCEPT
 SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by a LIMIT 10;
 ```
 

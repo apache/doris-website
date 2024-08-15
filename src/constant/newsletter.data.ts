@@ -1,17 +1,17 @@
 export const NEWSLETTER_DATA = [
     {
-        tags: ['Recent Events'],
-        title: "Register | Apache Doris Meetup 2024 · Shenzhen on August 3",
-        content: `Jointly launched by Apache Doris community and Tencent Cloud, this collaboration offers practical experience in finance, entertainment, advertising, logistics, and digital marketing, powered by Apache Doris.`,
-        to: 'https://5234442745174.huodongxing.com/event/4764741344811?layout=EN',
-        image: 'doris-meetup-shenzhen-banner.jpeg',
+        tags: ['Tech Sharing'],
+        title: "Automatic and flexible data sharding: Auto Partition in Apache Doris",
+        content: `Apache Doris 2.1.0 introduces Auto Partition. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.`,
+        to: '/blog/auto-partition-in-apache-doris',
+        image: 'auto-partition-in-apache-doris.jpg',
     },
     {
         tags: ['Release Note'],
-        title: "Apache Doris version 2.1.5 has been released",
-        content: `In this update, we have optimized various functional experiences for data lakehouse and high concurrency scenarios, functionalities of asynchronous materialized views. Additionaly, we have implemented several improvemnents and bug fixes to enhance the stability.`,
-        to: '/blog/release-note-2.1.5',
-        image: '2.1.5.jpg',
+        title: "Apache Doris version 2.0.14 has been released",
+        content: `Thanks to our community users and developers, about 110 improvements and bug fixes have been made in Doris 2.0.14 version`,
+        to: '/blog/release-note-2.0.14',
+        image: '2.0.14.jpg',
     },
     {
         tags: ['Best Practice'],
@@ -27,5 +27,6 @@ export const NEWSLETTER_DATA = [
         to: '/blog/apache-doris-vs-rockset',
         image: 'doris-vs-rockset.jpeg',
     },
+
 
 ];

@@ -71,6 +71,10 @@
     "message": "作业调度",
     "description": "The label for category job scheduler in sidebar docs"
   },
+  "sidebar.releasenotes.category.Previous Release": {
+    "message": "历史版本",
+    "description": "The label for category Release notes in sidebar docs"
+  },
   "sidebar.docs.category.Data Lakehouse": {
     "message": "湖仓一体",
     "description": "The label for category Data Lakehouse in sidebar docs"
@@ -291,6 +295,10 @@
     "message": "表函数",
     "description": "The label for category Table Functions in sidebar docs"
   },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "表值函数",
+    "description": "The label for category Table Valued Functions in sidebar docs"
+  },
   "sidebar.docs.category.Analytic(Window) Functions": {
     "message": "分析（窗口）函数",
     "description": "The label for category Analytic(Window) Functions in sidebar docs"
@@ -347,8 +355,28 @@
     "message": "Show",
     "description": "The label for category Show in sidebar docs"
   },
-  "sidebar.docs.category.Data Types": {
-    "message": "数据类型",
+  "sidebar.docs.category.Aggregation Data Type": {
+    "message": "聚合类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Datetime Data Type": {
+    "message": "日期类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.String Data Type": {
+    "message": "字符串类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Data Type": {
+    "message": "数值类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Semi-Structured Data Type": {
+    "message": "半结构化类型",
+    "description": "The label for category Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.IP Data Type": {
+    "message": "IP 类型",
     "description": "The label for category Data Types in sidebar docs"
   },
   "sidebar.docs.category.Utility": {
@@ -391,8 +419,16 @@
     "message": "存算分离",
     "description": "Compute-Storage Decoupled"
   },
-  "sidebar.docs.category.Practical Guide": {
-    "message": "实践教程",
-    "description": "The label for category Practical Guide in sidebar docs"
+  "sidebar.ecosystem.category.BI and Database IDE": {
+    "message": "BI 与数据库 IDE",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Tutorials": {
+    "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Building lakehouse": {
+    "message": "构建 Lakehouse",
+    "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

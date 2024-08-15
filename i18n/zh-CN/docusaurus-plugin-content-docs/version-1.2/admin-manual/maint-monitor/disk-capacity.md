@@ -109,7 +109,7 @@ capacity_min_left_bytes_flood_stage 默认 1GB。
 
 - 修改表或分区的副本
 
-  可以将表或分区的副本数降低。比如默认3副本可以降低为2副本。该方法虽然降低了数据的可靠性，但是能够快速的降低磁盘使用率，使集群恢复正常。该方法通常用于紧急恢复系统。请在恢复后，通过扩容或删除数据等方式，降低磁盘使用率后，将副本数恢复为 3。
+  可以将表或分区的副本数降低。比如默认 3 副本可以降低为 2 副本。该方法虽然降低了数据的可靠性，但是能够快速的降低磁盘使用率，使集群恢复正常。该方法通常用于紧急恢复系统。请在恢复后，通过扩容或删除数据等方式，降低磁盘使用率后，将副本数恢复为 3。
 
   修改副本操作为瞬间生效，后台会自动异步的删除多余的副本。
 
@@ -127,14 +127,14 @@ capacity_min_left_bytes_flood_stage 默认 1GB。
 
   **这种操作会对 [从 BE 回收站中恢复数据](./tablet-restore-tool.md) 产生影响。**
 
-  如果BE还能够启动，则可以使用`ADMIN CLEAN TRASH ON(BackendHost:BackendHeartBeatPort);`来主动清理临时文件，会清理 **所有** trash文件和过期snapshot文件，**这将影响从回收站恢复数据的操作** 。
+  如果 BE 还能够启动，则可以使用`ADMIN CLEAN TRASH ON(BackendHost:BackendHeartBeatPort);`来主动清理临时文件，会清理 **所有** trash 文件和过期 snapshot 文件，**这将影响从回收站恢复数据的操作** 。
 
   如果不手动执行`ADMIN CLEAN TRASH`，系统仍将会在几分钟至几十分钟内自动执行清理，这里分为两种情况：
 
-  - 如果磁盘占用未达到 **危险水位(Flood Stage)** 的90%，则会清理过期trash文件和过期snapshot文件，此时会保留一些近期文件而不影响恢复数据。
-  - 如果磁盘占用已达到 **危险水位(Flood Stage)** 的90%，则会清理 **所有** trash文件和过期snapshot文件， **此时会影响从回收站恢复数据的操作** 。 自动执行的时间间隔可以通过配置项中的`max_garbage_sweep_interval`和`min_garbage_sweep_interval`更改。
+  - 如果磁盘占用未达到 **危险水位 (Flood Stage)** 的 90%，则会清理过期 trash 文件和过期 snapshot 文件，此时会保留一些近期文件而不影响恢复数据。
+  - 如果磁盘占用已达到 **危险水位 (Flood Stage)** 的 90%，则会清理 **所有** trash 文件和过期 snapshot 文件， **此时会影响从回收站恢复数据的操作** 。自动执行的时间间隔可以通过配置项中的`max_garbage_sweep_interval`和`min_garbage_sweep_interval`更改。
 
-  出现由于缺少trash文件而导致恢复失败的情况时，可能返回如下结果：
+  出现由于缺少 trash 文件而导致恢复失败的情况时，可能返回如下结果：
 
   ```text
   {"status": "Fail","msg": "can find tablet path in trash"}
