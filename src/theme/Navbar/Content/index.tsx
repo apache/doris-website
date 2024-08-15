@@ -29,6 +29,12 @@ function NavbarItems({ items, isDocsPage }) {
     );
 }
 function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
+    const [isEN, setIsEN] = useState(true);
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
+        }
+    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <>
             <div
@@ -39,6 +45,14 @@ function NavbarContentLayout({ left, right, bottom, isDocsPage = false }) {
             >
                 <div className="navbar__items">{left}</div>
                 <div className="navbar__items navbar__items--right">{right}</div>
+            </div>
+            <div className="navbar__bottom">
+                <div className="docs-nav-mobile">
+                    <NavbarItems
+                        items={isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items}
+                        isDocsPage={isDocsPage}
+                    />
+                </div>
             </div>
             <div className="navbar__bottom">{bottom}</div>
         </>
