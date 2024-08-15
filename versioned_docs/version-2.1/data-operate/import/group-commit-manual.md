@@ -672,6 +672,25 @@ PROPERTIES (
 
 * [Jemeter](https://jmeter.apache.org/)
 
+JMeter Parameter Settings as Shown in the Images
+
+![jemeter1](/images/group-commit/jemeter1.jpg)
+![jemeter2](/images/group-commit/jemeter2.jpg)
+
+1. Set the Init Statement Before Testing:
+set group_commit=async_mode and set enable_nereids_planner=false.
+
+2. Enable JDBC Prepared Statement:
+Complete URL:
+jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode&sessionVariables=enable_nereids_planner=false.
+
+3. Set the Import Type to Prepared Update Statement.
+
+4. Set the Import Statement.
+
+5. Set the Values to Be Imported:
+Ensure that the imported values match the data types one by one.
+
 **Testing Methodology**
 
 * Use JMeter to write data into Doris. Each thread writes 1 row of data per execution using the insert into statement.
