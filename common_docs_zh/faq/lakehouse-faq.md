@@ -272,6 +272,48 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
 
+12. 在使用数据湖构建/Hive功能，即使用Doris对hive进行DDL操作的时候，遇到错误如下：
+
+    ```
+    Exception:
+    java.sql.SQLException: errCode = 2, detailMessage = Task java.util.concurrent.CompletableFuture$AsyncRun@7d81ae72 rejected from java.util.concurrent.ThreadPoolExecutor@632c31e5[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 6]
+    at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+    at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+    at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+    at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:371)
+    at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+    at org.apache.doris.regression.util.JdbcUtils$_executeToList_closure1.doCall(JdbcUtils.groovy:31)
+    at sun.reflect.GeneratedMethodAccessor34.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+        ...
+    ```
+
+    查看`fe.log`可以看到如下日志：
+
+    ```
+    Caused by: org.apache.hadoop.hive.metastore.api.MetaException: java.lang.IllegalStateException: Event not set up correctly
+            at org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore$alter_partition_with_environment_context_result$alter_partition_with_environment_context_resultStandardScheme.read(ThriftHiveMetastore.java) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore$alter_partition_with_environment_context_result$alter_partition_with_environment_context_resultStandardScheme.read(ThriftHiveMetastore.java) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore$alter_partition_with_environment_context_result.read(ThriftHiveMetastore.java) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at shade.doris.hive.org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:86) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore$Client.recv_alter_partition_with_environment_context(ThriftHiveMetastore.java:3452) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore$Client.alter_partition_with_environment_context(ThriftHiveMetastore.java:3436) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at org.apache.hadoop.hive.metastore.HiveMetaStoreClient.alter_partition(HiveMetaStoreClient.java:2093) ~[doris-fe.jar:2.1.1]
+            at org.apache.hadoop.hive.metastore.HiveMetaStoreClient.alter_partition(HiveMetaStoreClient.java:2081) ~[doris-fe.jar:2.1.1]
+            at jdk.internal.reflect.GeneratedMethodAccessor37.invoke(Unknown Source) ~[?:?]
+            at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+            at java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+            at org.apache.hadoop.hive.metastore.RetryingMetaStoreClient.invoke(RetryingMetaStoreClient.java:208) ~[hive-catalog-shade-2.1.1.jar:2.1.1]
+            at jdk.proxy2.$Proxy121.alter_partition(Unknown Source) ~[?:?]
+            at org.apache.doris.datasource.hive.ThriftHMSCachedClient.updatePartitionStatistics(ThriftHMSCachedClient.java:738) ~[doris-fe.jar:1.2-SNAPSHOT]
+            ... 7 more
+    ```
+
+    这是由于Hive服务端的问题，详情参阅：<https://issues.apache.org/jira/browse/HIVE-19874>
+
+    建议您在使用该功能的时候，降低连续DDL操作的频率。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
