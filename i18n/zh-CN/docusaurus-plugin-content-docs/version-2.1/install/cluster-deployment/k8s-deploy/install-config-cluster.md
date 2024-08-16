@@ -238,9 +238,11 @@ data:
     rpc_port = 9020
     query_port = 9030
     edit_log_port = 9010
+    enable_fqdn_mode = true
 ```
 
 其中，在 metadata.name 中定义 FE ConfigMap 的名字，在 data 中定义 fe.conf 中的数据库配置。
+自己配置的 `fe.conf` 一定要添加 `enable_fqdn_mode = true`
 
 :::tip 提示
 在 ConfigMap 中使用 data 字段存储键值对。在上述 FE ConfigMap 中：
