@@ -535,11 +535,11 @@ select ... from t1;
 |--------------| -- | --- | --- |
 | Internal     | 2.1 | 2.1 | 2.1.4
 | Hive         | 2.1 | 2.1 | N/A
-| Iceberg      | N/A | N/A | N/A
-| Paimon       | N/A | N/A | N/A
-| Hudi         | N/A | N/A | N/A
-| JDBC         | N/A | N/A | N/A
-| ES           | N/A | N/A | N/A
+| Iceberg      | 2.1 | N/A | N/A
+| Paimon       | 2.1 | N/A | N/A
+| Hudi         | 2.1 | N/A | N/A
+| JDBC         | 2.1 | N/A | N/A
+| ES           | 2.1 | N/A | N/A
 
 ## Permission Description
 - Create a materialized view : Create permissions for materialized views (similar to table creation) and query permissions for creating materialized view query statements (similar to SELECT)
