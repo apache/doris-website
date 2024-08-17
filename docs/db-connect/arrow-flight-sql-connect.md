@@ -58,6 +58,11 @@ Import the following modules/libraries in the code to use the installed Library:
 ```Python
 import adbc_driver_manager
 import adbc_driver_flightsql.dbapi as flight_sql
+
+>>> print(adbc_driver_manager.__version__)
+1.1.0
+>>> print(adbc_driver_flightsql.__version__)
+1.1.0
 ```
 
 ### Connect to Doris
@@ -73,7 +78,7 @@ Modify the configuration parameters of Doris FE and BE:
 Assuming that the Arrow Flight SQL services of FE and BE in the Doris instance will run on ports 9090 and 9091 respectively, and the Doris username/password is "user"/"pass", the connection process is as follows:
 
 ```Python
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "user",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "pass",
         })
@@ -222,7 +227,7 @@ import adbc_driver_flightsql.dbapi as flight_sql
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
 # Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
 # Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
-conn = flight_sql.connect(uri="grpc://127.0.0.1:9090", db_kwargs={
+conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
         })
@@ -301,7 +306,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 Class.forName("org.apache.arrow.driver.jdbc.ArrowFlightJdbcDriver");
-String DB_URL = "jdbc:arrow-flight-sql://0.0.0.0:9090?useServerPrepStmts=false"
+String DB_URL = "jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}?useServerPrepStmts=false"
         + "&cachePrepStmts=true&useSSL=false&useEncryption=false";
 String USER = "root";
 String PASS = "";
@@ -366,7 +371,7 @@ The connection code example is as follows:
 final BufferAllocator allocator = new RootAllocator();
 FlightSqlDriver driver = new FlightSqlDriver(allocator);
 Map<String, Object> parameters = new HashMap<>();
-AdbcDriver.PARAM_URI.set(parameters, Location.forGrpcInsecure("0.0.0.0", 9090).getUri().toString());
+AdbcDriver.PARAM_URI.set(parameters, Location.forGrpcInsecure("{FE_HOST}", {fe.conf:arrow_flight_sql_port}).getUri().toString());
 AdbcDriver.PARAM_USERNAME.set(parameters, "root");
 AdbcDriver.PARAM_PASSWORD.set(parameters, "");
 AdbcDatabase adbcDatabase = driver.open(parameters);
@@ -407,14 +412,18 @@ $ java --add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED -
 $ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED" java -jar ...
 ```
 
-Otherwise, you may see errors like `module java.base does not "opens java.nio" to unnamed module` or `module java.base does not "opens java.nio" to org.apache.arrow.memory.core`
+Otherwise, you may see some errors such as `module java.base does not "opens java.nio" to unnamed module` or `module java.base does not "opens java.nio" to org.apache.arrow.memory.core` or `ava.lang.NoClassDefFoundError: Could not initialize class org.apache.arrow.memory.util.MemoryUtil (Internal; Prepare)`
+
+If you debug in IntelliJ IDEA, you need to add `--add-opens=java.base/java.nio=ALL-UNNAMED` in `Build and run` of `Run/Debug Configurations`, refer to the picture below:
+
+![IntelliJ IDEA](https://github.com/user-attachments/assets/7439ee6d-9013-40bf-89af-0365925d3fdb)
 
 The connection code example is as follows:
 
 ```Java
 final Map<String, Object> parameters = new HashMap<>();
 AdbcDriver.PARAM_URI.set(
-        parameters,"jdbc:arrow-flight-sql://0.0.0.0:9090?useServerPrepStmts=false&cachePrepStmts=true&useSSL=false&useEncryption=false");
+        parameters,"jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}?useServerPrepStmts=false&cachePrepStmts=true&useSSL=false&useEncryption=false");
 AdbcDriver.PARAM_USERNAME.set(parameters, "root");
 AdbcDriver.PARAM_PASSWORD.set(parameters, "");
 try (
@@ -479,4 +488,12 @@ The Linux kernel version of kylinv10 SP2 and SP3 is only up to 4.19.90-24.4.v210
 
 4. ADBC ​​v0.10, JDBC and Java ADBC/JDBCDriver do not support parallel reading, and the `stmt.executePartitioned()` method is not implemented. You can only use the native FlightClient to implement parallel reading of multiple Endpoints, using the method `sqlClient=new FlightSqlClient, execute=sqlClient.execute(sql), endpoints=execute.getEndpoints(), for(FlightEndpoint endpoint: endpoints)`. In addition, the default AdbcStatement of ADBC ​​V0.10 is actually JdbcStatement. After executeQuery, the row-format JDBC ResultSet is converted back to the Arrow column-format. It is expected that Java ADBC ​​will be fully functional by ADBC ​​1.0.0 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490).
 
-5. As of Arrow v15.0, Arrow JDBC Connector does not support specifying the database name in the URL. For example, `jdbc:arrow-flight-sql://0.0.0.0:9090/test?useServerPrepStmts=false` specifies that the connection to the `test` database is invalid. You can only execute the SQL `use database` manually.
+5. As of Arrow v15.0, Arrow JDBC Connector does not support specifying the database name in the URL. For example, `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` specifies that the connection to the `test` database is invalid. You can only execute the SQL `use database` manually.
+
+6. There is a bug in Doris 2.1.4 version. There is a chance of error when reading large amounts of data. This bug is fixed in [Fix arrow flight result sink #36827](https://github.com/apache/doris/pull/36827) PR. Upgrading Doris 2.1.5 version can solve this problem. For details of the problem, see: [Questions](https://ask.selectdb.com/questions/D1Ia1/arrow-flight-sql-shi-yong-python-de-adbc-driver-lian-jie-doris-zhi-xing-cha-xun-sql-du-qu-bu-dao-shu-ju)
+
+7. `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant` Ignore this warning when using Python. This is a problem with the Python ADBC ​​Client and will not affect the query.
+
+8. Python reports an error `grpc: received message larger than max (20748753 vs. 16777216)`. Refer to [Python: grpc: received message larger than max (20748753 vs. 16777216) #2078](https://github.com/apache/arrow-adbc/issues/2078) to add `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value` in Database Option.
+
+9. Before Doris version 2.1.7, the error `Reach limit of connections` is reported. This is because there is no limit on the number of Arrow Flight connections for a single user, which is less than `max_user_connections` in `UserProperty`, which is 100 by default. You can modify the current maximum number of connections for Billie user to 100 by `SET PROPERTY FOR 'Billie' 'max_user_connections' = '1000';`, or add `arrow_flight_token_cache_size=50` in `fe.conf` to limit the overall number of Arrow Flight connections. Before Doris version 2.1.7, Arrow Flight connections are disconnected after a default timeout of 3 days. It only forces the number of connections to be less than `qe_max_connection/2`. If the number of connections exceeds the limit, they will be eliminated according to lru. `qe_max_connection` is the total number of connections for all fe users, which is 1024 by default. For details, see the introduction of the conf `arrow_flight_token_cache_size`. Fixed in [Fix exceed user property max connection cause Reach limit of connections #39127](https://github.com/apache/doris/pull/39127). For details, please see: [Questions](https://ask.selectdb.com/questions/D18b1/2-1-4-ban-ben-python-shi-yong-arrow-flight-sql-lian-jie-bu-hui-duan-kai-lian-jie- shu-zhan-man-da-dao-100/E1ic1?commentId=10070000000005324)
