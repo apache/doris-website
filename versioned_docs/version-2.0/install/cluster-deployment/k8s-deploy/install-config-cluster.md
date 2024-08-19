@@ -238,9 +238,11 @@ data:
     rpc_port = 9020
     query_port = 9030
     edit_log_port = 9010
+    enable_fqdn_mode = true
 ```
 
 Among them, the name of FE ConfigMap is defined in metadata.name, and the database configuration in fe.conf is defined in data.
+Be sure to add `enable_fqdn_mode = true` to your self-configured `fe.conf`
 
 :::tip Tip
 Use the data field in ConfigMap to store key-value pairs. In the above FE ConfigMap:

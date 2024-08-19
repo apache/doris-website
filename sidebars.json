@@ -27,14 +27,45 @@
                             "label": "Deploying on Kubernetes",
                             "items": [
                                 "install/cluster-deployment/k8s-deploy/install-env",
-                                "install/cluster-deployment/k8s-deploy/install-operator",
-                                "install/cluster-deployment/k8s-deploy/install-config-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-doris-cluster",
-                                "install/cluster-deployment/k8s-deploy/install-access-cluster",
-                                "install/cluster-deployment/k8s-deploy/doris-cluster-upgrade",
-                                "install/cluster-deployment/k8s-deploy/root-user-use",
-                                "install/cluster-deployment/k8s-deploy/expansion-and-contraction",
-                                "install/cluster-deployment/k8s-deploy/debug-crash"
+                                {
+                                    "type": "category",
+                                    "label": "Compute-storage coupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-operator",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-config-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-doris-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/install-access-cluster",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/doris-cluster-upgrade",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/root-user-use",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/expansion-and-contraction",
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-coupled/debug-crash"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Compute-storage decoupled",
+                                    "items": [
+                                        "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-quickstart",
+                                        {
+                                            "type": "category",
+                                            "label": "Install Metaservice",
+                                            "items": [
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-metaservice/config-fdb",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-metaservice/config-ms",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-metaservice/config-recycler"
+                                            ]
+                                        },
+                                        {
+                                            "type": "category",
+                                            "label": "Install Cluster",
+                                            "items": [
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-cluster/config-relation",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-cluster/config-fe",
+                                                "install/cluster-deployment/k8s-deploy/compute-storage-decoupled/install-cluster/config-cc"
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         },
                         "install/cluster-deployment/doris-on-aws"
