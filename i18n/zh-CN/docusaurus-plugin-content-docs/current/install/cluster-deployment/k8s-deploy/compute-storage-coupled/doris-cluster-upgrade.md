@@ -121,7 +121,7 @@ $ kubectl get pod -n doris
 
 ## 升级完成后
 ### 验证集群节点状态
-通过  [访问 Doris 集群](../k8s-deploy/install-access-cluster) 文档提供的方式，通过 `mysql-client` 访问 Doris。 
+通过  [访问 Doris 集群](install-access-cluster.md) 文档提供的方式，通过 `mysql-client` 访问 Doris。 
 使用 `show frontends` 和 `show backends` 等 SQL 查看各个组件的 版本 和 状态。
 ```
 mysql> show frontends\G;
