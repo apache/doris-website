@@ -1135,6 +1135,7 @@
                             "items": [
                                 "sql-manual/sql-data-types/date-time/datetime-overview",
                                 "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/TIME",
                                 "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
