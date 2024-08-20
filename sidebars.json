@@ -454,7 +454,8 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start"
+                        "admin-manual/maint-monitor/automatic-service-start",
+                        "admin-manual/maint-monitor/frontend-lock-manager"
                     ]
                 },
                 {
