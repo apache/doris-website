@@ -395,7 +395,12 @@
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
                         "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant"
+                        "admin-manual/resource-admin/multi-tenant",
+                        "admin-manual/resource-admin/workload-fusing",
+                        "admin-manual/resource-admin/use-workload-mem-limit",
+                        "admin-manual/resource-admin/use-workload-cpu-limit",
+                        "admin-manual/resource-admin/use-workload-local-io-limit",
+                        "admin-manual/resource-admin/use-workload-remote-io-limit"
                     ]
                 },
                 {
