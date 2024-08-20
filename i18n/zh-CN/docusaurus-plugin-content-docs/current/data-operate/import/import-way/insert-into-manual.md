@@ -84,7 +84,7 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-INSERT INTO 是一种同步导入方式，导入结果会直接返回给用户。
+INSERT INTO 是一种同步导入方式，导入结果会直接返回给用户。可以打开 [group commit](../import-way/group-commit-manual.md) 达到更高的性能。
 
 ```JSON
 Query OK, 5 rows affected (0.308 sec)
@@ -131,6 +131,10 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table2;
 +----------+
 1 row in set (0.071 sec)
 ```
+
+4. 可以使用 [JOB](../../scheduler/job-scheduler.md) 异步执行 INSERT。
+
+5. 数据源可以是 [tvf](../../../lakehouse/file.md) 或者 [catalog](../../../lakehouse/database) 中的表。
 
 ### 查看导入作业
 
@@ -381,6 +385,7 @@ INSERT INTO target_tbl SELECT k1,k2,k3 FROM  hive.db1.source_tbl limit 100;
 ```
 
 INSERT 命令是同步命令，返回成功，即表示导入成功。
+
 
 ### 注意事项
 

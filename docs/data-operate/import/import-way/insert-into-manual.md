@@ -79,7 +79,7 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-INSERT INTO is a synchronous import method, where the import result is directly returned to the user.
+INSERT INTO is a synchronous import method, where the import result is directly returned to the user. You can enable [group commit](../import-way/group-commit-manual.md) to achieve high performance. 
 
 ```JSON
 Query OK, 5 rows affected (0.308 sec)
@@ -126,6 +126,10 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table2;
 +----------+
 1 row in set (0.071 sec)
 ```
+
+4. You can use [JOB](../../scheduler/job-scheduler.md) make the INSERT operation execute asynchronously.
+
+5. Sources can be [tvf](../../../lakehouse/file.md) or tables in a [catalog](../../../lakehouse/database).
 
 ### View INSERT INTO jobs
 
