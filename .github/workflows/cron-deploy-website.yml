@@ -3,7 +3,7 @@ name: Cron Deploy
 on:
     schedule:
         - cron: '0 4,10,17 * * *' # UTC time
-
+permissions: write-all
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
