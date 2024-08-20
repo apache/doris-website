@@ -57,11 +57,15 @@ CANCELED 即取消状态 ，TASK持久化最终状态，即SUCCESS/FAILED,其他
 
 - 目前仅支持 ***ADMIN*** 权限执行此操作。
 
-#### 相关文档   [暂停-JOB](../Alter/PAUSE-JOB.md),[恢复-JOB](../Alter/RESUME-JOB.md),[删除-JOB](../Drop/DROP-JOB.md), [查询-JOB](../../../sql-functions/table-functions/jobs.md),
+#### 相关文档
 
-[查询-TASKS](../../../sql-functions/table-functions/tasks)
+- [暂停-JOB](../Alter/PAUSE-JOB.md)
+- [恢复-JOB](../Alter/RESUME-JOB.md)
+- [删除-JOB](../Drop/DROP-JOB.md)
+- [查询-JOB](../../../sql-functions/table-valued-functions/jobs.md)
+- [查询-TASKS](../../../sql-functions/table-valued-functions/tasks.md)
 
-### 语法：
+### 语法
 
 ```sql
 CREATE
