@@ -77,7 +77,7 @@ Copy this file to `classpath` of `Flink` to use `Flink-Doris-Connector`. For exa
 
 ## Instructions
 
-### read
+### Read
 
 **SQL**
 
@@ -116,7 +116,7 @@ DorisSource<List<?>> dorisSource = DorisSource.<List<?>>builder()
 env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").print();
 ```
 
-### write
+### Write
 
 **SQL**
 
@@ -307,7 +307,7 @@ LEFT JOIN dim_city FOR SYSTEM_TIME AS OF a.process_time AS c
 ON a.city = c.city
 ```
 
-## configuration
+## Configuration
 
 ### General configuration items
 
@@ -502,16 +502,16 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 
 ```
 
-## Use FlinkCDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer)
+## Use Flink CDC to access multiple tables or the entire database (Supports MySQL, Oracle, PostgreSQL, SQLServer, MongoDB)
 
 
-### grammar
+### Grammar
 
 ```shell
 <FLINK_HOME>bin/flink run \
      -c org.apache.doris.flink.tools.cdc.CdcTools \
      lib/flink-doris-connector-1.16-1.4.0-SNAPSHOT.jar\
-     <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database> \
+     <mysql-sync-database|oracle-sync-database|postgres-sync-database|sqlserver-sync-database|mongodb-sync-database> \
      --database <doris-database-name> \
      [--job-name <flink-job-name>] \
      [--table-prefix <doris-table-prefix>] \
@@ -538,10 +538,14 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --oracle-conf           | Oracle CDCSource configuration, for example --oracle-conf hostname=127.0.0.1, you can find [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/oracle-cdc/) View all configurations Oracle-CDC, where hostname/username/password/database-name/schema-name is required. |
 | --postgres-conf         | Postgres CDCSource configuration, e.g. --postgres-conf hostname=127.0.0.1, you can find [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/postgres-cdc/) View all configurations Postgres-CDC where hostname/username/password/database-name/schema-name/slot.name is required. |
 | --sqlserver-conf        | SQLServer CDCSource configuration, for example --sqlserver-conf hostname=127.0.0.1, you can find it [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/legacy-flink-cdc-sources/sqlserver-cdc/) View all configurations SQLServer-CDC, where hostname/username/password/database-name/schema-name is required. |
+<<<<<<< HEAD
 | --db2-conf        | DB2 CDCSource configuration, for example --db2-conf hostname=127.0.0.1, you can find it [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.1/docs/connectors/flink-sources/db2-cdc/) View all configurations DB2-CDC, where hostname/username/password/database-name/schema-name is required. |
+=======
+| --mongodb-conf          | MongoDB CDCSource configuration, for example --mongodb-conf hosts=127.0.0.1:27017, you can find all Mongo-CDC configurations [here](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.0/docs/connectors/flink-sources/mongodb-cdc/), where hosts/username/password/database are required. The --mongodb-conf schema.sample-percent configuration is for automatically sampling MongoDB data for creating a table in Doris, with a default value of 0.2. |
+>>>>>>> 59a26707 (Add a guide related to Mongo CDC to the flink-doris-connector documentation.)
 | --sink-conf             | All configurations of Doris Sink can be found [here](https://doris.apache.org/zh-CN/docs/dev/ecosystem/flink-doris-connector/#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9) View the complete configuration items. |
 | --table-conf            | The configuration items of the Doris table(The exception is table-buckets, non-properties attributes), that is, the content contained in properties. For example `--table-conf replication_num=1`, and the `--table-conf table-buckets="tbl1:10,tbl2:20,a.*:30,b.*:40,.*:50"` option specifies the number of buckets for different tables based on the order of regular expressions. If there is no match, the table is created with the default setting of BUCKETS AUTO. |
-| --ignore-default-value  | Turn off the default value of synchronizing mysql table structure. It is suitable for synchronizing mysql data to doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152) |
+| --ignore-default-value  | Turn off the default value of synchronizing MySQL table structure. It is suitable for synchronizing MySQL data to Doris when the field has a default value but the actual inserted data is null. Reference [here](https://github.com/apache/doris-flink-connector/pull/152) |
 | --use-new-schema-change | Whether to use the new schema change to support synchronization of MySQL multi-column changes and default values. since version 1.6.0, the default value has been set to true. Reference [here](https://github.com/apache/doris-flink-connector/pull/167) |
 | --schema-change-mode    | The mode for parsing schema change supports two parsing modes: `debezium_structure` and `sql_parser`. The default mode is `debezium_structure`. <br/><br/> `debezium_structure` parses the data structure used when upstream CDC synchronizes data, and determines DDL change operations by parsing this structure. <br/> `sql_parser` determines the DDL change operation by parsing the DDL statement when the upstream CDC synchronizes data, so this parsing mode is more accurate. <br/> Usage example: `--schema-change-mode debezium_structure`<br/> This feature will be available in versions after 1.6.2.1|
 | --single-sink           | Whether to use a single Sink to synchronize all tables. When turned on, newly created tables in the upstream can also be automatically recognized and tables automatically created. |
@@ -549,7 +553,9 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
 | --multi-to-one-target   | Used with multi-to-one-origin, the configuration of the target table, such as: --multi-to-one-target="a\|b" |
 | --create-table-only     | Whether only the table schema should be synchronized                                                                   |
 
->Note: When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar
+:::info Note
+When synchronizing, you need to add the corresponding Flink CDC dependencies in the $FLINK_HOME/lib directory, such as flink-sql-connector-mysql-cdc-${version}.jar, flink-sql-connector-oracle-cdc-${version}.jar , flink-sql-connector-mongodb-cdc-${version}.jar
+:::
 
 ### MySQL synchronization example
 
@@ -677,16 +683,42 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
     --sink-conf sink.label-prefix=label \
     --table-conf replication_num=1 
-   
 ```
 
-## Use FlinkCDC to update Key column
+### MongoDB synchronization example
+
+```shell
+<FLINK_HOME>/bin/flink run \
+    -Dexecution.checkpointing.interval=10s \
+    -Dparallelism.default=1 \
+    -c org.apache.doris.flink.tools.cdc.CdcTools \
+    ./lib/flink-doris-connector-1.18-1.6.2-SNAPSHOT.jar \
+    mongodb-sync-database \
+    --database doris_db \
+    --schema-change-mode debezium_structure \
+    --mongodb-conf hosts=127.0.0.1:27017 \
+    --mongodb-conf username=flinkuser \
+    --mongodb-conf password=flinkpwd \
+    --mongodb-conf database=test \
+    --mongodb-conf scan.startup.mode=initial \
+    --mongodb-conf schema.sample-percent=0.2 \
+    --including-tables "tbl1|tbl2" \
+    --sink-conf fenodes=127.0.0.1:8030 \
+    --sink-conf username=root \
+    --sink-conf password= \
+    --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
+    --sink-conf sink.label-prefix=label \
+    --sink-conf sink.enable-2pc=false \
+    --table-conf replication_num=1
+```
+
+## Use Flink CDC to update Key column
 
 Generally, in a business database, the number is used as the primary key of the table, such as the Student table, the number (id) is used as the primary key, but with the development of the business, the number corresponding to the data may change.
-In this scenario, using FlinkCDC + Doris Connector to synchronize data can automatically update the data in the Doris primary key column.
+In this scenario, using Flink CDC + Doris Connector to synchronize data can automatically update the data in the Doris primary key column.
 ### Principle
 The underlying collection tool of Flink CDC is Debezium. Debezium internally uses the op field to identify the corresponding operation: the values of the op field are c, u, d, and r, corresponding to create, update, delete, and read.
-For the update of the primary key column, FlinkCDC will send DELETE and INSERT events downstream, and after the data is synchronized to Doris, it will automatically update the data of the primary key column.
+For the update of the primary key column, Flink CDC will send DELETE and INSERT events downstream, and after the data is synchronized to Doris, it will automatically update the data of the primary key column.
 
 ### Example
 The Flink program can refer to the CDC synchronization example above. After the task is successfully submitted, execute the Update primary key column statement (`update student set id = '1002' where id = '1001'`) on the MySQL side to modify the data in Doris .
@@ -738,7 +770,7 @@ from KAFKA_SOURCE;
 
 ### Application scenarios
 
-The most suitable scenario for using Flink Doris Connector is to synchronize source data to Doris (Mysql, Oracle, PostgreSQL) in real time/batch, etc., and use Flink to perform joint analysis on data in Doris and other data sources. You can also use Flink Doris Connector
+The most suitable scenario for using Flink Doris Connector is to synchronize source data to Doris (MySQL, Oracle, PostgreSQL) in real time/batch, etc., and use Flink to perform joint analysis on data in Doris and other data sources. You can also use Flink Doris Connector
 
 ### Other
 
@@ -806,7 +838,7 @@ It usually occurs before Connector1.1.0, because the writing frequency is too fa
 When Flink imports data, if there is dirty data, such as field format, length, etc., it will cause StreamLoad to report an error, and Flink will continue to retry at this time. If you need to skip, you can disable the strict mode of StreamLoad (strict_mode=false, max_filter_ratio=1) or filter the data before the Sink operator.
 
 11. **How should the source table and Doris table correspond?**
-When using Flink Connector to import data, pay attention to two aspects. The first is that the columns and types of the source table correspond to the columns and types in flink sql; the second is that the columns and types in flink sql must match those of the doris table For the correspondence between columns and types, please refer to the above "Doris & Flink Column Type Mapping" for details
+When using Flink Connector to import data, pay attention to two aspects. The first is that the columns and types of the source table correspond to the columns and types in flink sql; the second is that the columns and types in flink sql must match those of the Doris table For the correspondence between columns and types, please refer to the above "Doris & Flink Column Type Mapping" for details
 
 12. **TApplicationException: get_next failed: out of sequence response: expected 4 but got 3**
 
