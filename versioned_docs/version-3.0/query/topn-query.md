@@ -1,7 +1,7 @@
 ---
 {
-    "title": "TOPN 查询优化",
-    "language": "zh-CN"
+    "title": "TOPN Query Optimization",
+    "language": "en"
 }
 ---
 
@@ -25,7 +25,6 @@ under the License.
 -->
 
 
-## Hybrid Storage
 
 TOPN queries refer to queries that involve ORDER BY LIMIT operations, which are common in log retrieval and other detailed query scenarios. Doris automatically optimizes this type of query.
 
