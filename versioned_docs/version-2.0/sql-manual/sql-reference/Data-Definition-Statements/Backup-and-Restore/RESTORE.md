@@ -61,6 +61,8 @@ illustrate:
   - "reserve_dynamic_partition_enable" = "true": Default is false. When this property is true, the restored table will have the same value of 'dynamic_partition_enable' as before the backup. if this property is not true, the restored table will set 'dynamic_partition_enable=false'.
   - "timeout" = "3600": The task timeout period, the default is one day. in seconds.
   - "meta_version" = 40: Use the specified meta_version to read the previously backed up metadata. Note that this parameter is used as a temporary solution and is only used to restore the data backed up by the old version of Doris. The latest version of the backup data already contains the meta version, no need to specify it.
+  - <version since="2.0.15" type="inline"> "clean_tables" </version>: Indicates whether to clean up tables that do not belong to the restore target. For example, if the target db before the restore has tables that are not present in the snapshot, specifying `clean_tables` can drop these extra tables and move them into the recycle bin during the restore.
+  - <version since="2.0.15" type="inline"> "clean_partitions" </version>: Indicates whether to clean up partitions that do not belong to the restore target. For example, if the target table before the restore has partitions that are not present in the snapshot, specifying `clean_partitions` can drop these extra partitions and move them into the recycle bin during the restore.
 
 ### Example
 

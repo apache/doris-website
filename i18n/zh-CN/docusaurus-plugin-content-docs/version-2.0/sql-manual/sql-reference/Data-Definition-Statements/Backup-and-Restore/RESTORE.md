@@ -60,6 +60,8 @@ PROPERTIES ("key"="value", ...);
   - <version since="1.2" type="inline"> "reserve_dynamic_partition_enable" = "true"：默认为 false。当该属性为 true 时，恢复的表会保留该表备份之前的'dynamic_partition_enable'属性值。该值不为true时，则恢复出来的表的'dynamic_partition_enable'属性值会设置为false。</version>
   - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
   - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。     
+  - <version since="2.0.15" type="inline"> "clean_tables" </version>: 表示是否清理不属于恢复目标的表。例如，如果恢复之前的目标数据库有备份中不存在的表，指定 `clean_tables` 就可以在恢复期间删除这些额外的表并将其移入回收站。
+  - <version since="2.0.15" type="inline"> "clean_partitions" </version>：表示是否清理不属于恢复目标的分区。例如，如果恢复之前的目标表有备份中不存在的分区，指定 `clean_partitions` 就可以在恢复期间删除这些额外的分区并将其移入回收站。
 
 ### Example
 
