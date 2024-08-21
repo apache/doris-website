@@ -25,7 +25,7 @@ under the License.
 -->
 
 
-TOPN 查询是指下面这种 ORDER BY LIMIT 查询，在日志检索等明细查询场景中很场景，Doris 会自动对这种类型的查询进行优化。
+TOPN 查询是指下面这种 ORDER BY LIMIT 查询，在日志检索等明细查询场景中很常见，Doris 会自动对这种类型的查询进行优化。
 
 ```
 SELECT * FROM tablex WHERE xxx ORDER BY c1,c2 ... LIMIT n
