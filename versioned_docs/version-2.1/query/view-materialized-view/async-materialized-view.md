@@ -111,7 +111,7 @@ Specific syntax can be viewed [CREATE ASYNC MATERIALIZED VIEW](../../sql-manual/
 select * from mv_infos("database"="tpch") where Name="mv1";
 ```
 
-The unique features of materialized views can be viewed through [mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos.md)
+The unique features of materialized views can be viewed through [mv_infos()](../../sql-manual/sql-functions/table-valued-functions/mv_infos.md)
 
 Properties related to table, still viewed through [SHOW TABLES](../../sql-manual/sql-statements/Show-Statements/SHOW-TABLES.md)
 
@@ -142,7 +142,7 @@ Task is used to describe specific refresh information, such as the time used for
 select * from jobs("type"="mv") order by CreateTime;
 ```
 
-Specific syntax can be viewed [jobs("type"="mv")](../../sql-manual/sql-functions/table-functions/jobs.md)
+Specific syntax can be viewed [jobs("type"="mv")](../../sql-manual/sql-functions/table-valued-functions/jobs.md)
 
 #### Pause materialized view job scheduled scheduling
 
@@ -170,7 +170,7 @@ Specific syntax can be viewed [RESUME MATERIALIZED VIEW JOB](../../sql-manual/sq
 select * from tasks("type"="mv");
 ```
 
-Specific syntax can be viewed [tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
+Specific syntax can be viewed [tasks("type"="mv")](../../sql-manual/sql-functions/table-valued-functions/tasks.md)
 
 #### Cancel the task of objectifying the view
 
@@ -438,7 +438,7 @@ The commonly used commands for `olapTable` are also applicable to materialized v
 
 The unique commands for materialized views mainly include the following:
 #### View materialized view metadata
-[mv_infos()](../../sql-manual/sql-functions/table-functions/mv_infos)
+[mv_infos()](../../sql-manual/sql-functions/table-valued-functions/mv_infos)
 
 Focus on the following fields:
 - State: If the state changes to SCHEMA_CHANGE, it means the schema of the base table has changed. In this case, the materialized view cannot be used for transparent rewriting (but direct querying of the materialized view is not affected). If the next refresh task is successful, the state will be restored to NORMAL.
@@ -446,7 +446,7 @@ Focus on the following fields:
 - RefreshState: The status of the last refresh task of the materialized view. If it is FAIL, it means the execution failed, and further localization can be done through tasks().
 - SyncWithBaseTables: Whether the materialized view is synchronized with the base table data. If not synchronized, further determination can be made by using show partitions to identify which partition is not synchronized.
 #### View tasks for the materialized view
-[tasks("type"="mv")](../../sql-manual/sql-functions/table-functions/tasks.md)
+[tasks("type"="mv")](../../sql-manual/sql-functions/table-valued-functions/tasks.md)
 
 Focus on the following fields:
 - Status: If it is FAILED, it means the task execution failed. You can check the reason for failure through ErrorMsg. You can also search Doris logs using LastQueryId to get more detailed error information.
@@ -562,5 +562,5 @@ can be viewed [Query async materialized view](./query-async-materialized-view.md
 
 ## Notice
 
-- Asynchronous materialized views are only supported for use in the [Nereids optimizer](../nereids/nereids.md)
+- Asynchronous materialized views are only supported for use in the [Nereids optimizer](../../query/nereids/nereids-new.md)
 - Currently, determining the synchronization between materialized views and base tables is only supported for `OlapTable`. For other types of external tables, they are directly considered to be synchronized. For instance, if the base tables of a materialized view are all external tables, they are assumed to be synchronized. When querying `mv_infos()`, the SyncWithBaseTables flag will always return 1 (true) for these external tables. When refreshing a materialized view, it is necessary to manually refresh specific partitions or specify `complete` to refresh all partitions.

@@ -1,5 +1,12 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Tech Sharing'],
+        title: "Automatic and flexible data sharding: Auto Partition in Apache Doris",
+        content: `Apache Doris 2.1.0 introduces Auto Partition. It supports partitioning data by RANGE or by LIST and further enhances flexibility on top of automatic partitioning.`,
+        to: '/blog/auto-partition-in-apache-doris',
+        image: 'auto-partition-in-apache-doris.jpg',
+    },
+    {
         tags: ['Release Note'],
         title: "Apache Doris version 2.0.14 has been released",
         content: `Thanks to our community users and developers, about 110 improvements and bug fixes have been made in Doris 2.0.14 version`,
@@ -20,12 +27,6 @@ export const NEWSLETTER_DATA = [
         to: '/blog/apache-doris-vs-rockset',
         image: 'doris-vs-rockset.jpeg',
     },
-    {
-        tags: ['Recent Events'],
-        title: "Steps to industry-leading query speed: evolution of the Apache Doris execution engine",
-        content: `From the Volcano Model to the Pipeline Execution Engine, and now PipelineX, Apache Doris brings its computation efficiency to a higher level with each iteration.`,
-        to: '/blog/evolution-of-the-apache-doris-execution-engine',
-        image: 'evolution-of-the-apache-doris-execution-engine.jpg',
-    },
+
 
 ];

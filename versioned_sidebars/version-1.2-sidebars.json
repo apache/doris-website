@@ -432,7 +432,6 @@
                                 "sql-manual/sql-functions/string-functions/extract_url_parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
-                                "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
                                 "sql-manual/sql-functions/string-functions/mask/mask",
                                 "sql-manual/sql-functions/string-functions/mask/mask_first_n",
@@ -1180,8 +1179,16 @@
             "type": "category",
             "label": "Tutorials",
             "items": [
-                "gettingStarted/tutorials/doris-hudi",
-                "gettingStarted/tutorials/doris-paimon"
+                {
+                    "type": "category",
+                    "label": "Building lakehouse",
+                    "items": [
+                        "gettingStarted/tutorials/building-lakehouse/doris-hudi",
+                        "gettingStarted/tutorials/building-lakehouse/doris-paimon",
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                    ]
+                },
+                "gettingStarted/tutorials/log-storage-analysis"
             ]
         }
     ],

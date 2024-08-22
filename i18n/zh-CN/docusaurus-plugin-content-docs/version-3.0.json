@@ -311,6 +311,10 @@
     "message": "表函数",
     "description": "The label for category Table Functions in sidebar docs"
   },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "表值函数",
+    "description": "The label for category Table Valued Functions in sidebar docs"
+  },
   "sidebar.docs.category.Analytic(Window) Functions": {
     "message": "分析（窗口）函数",
     "description": "The label for category Analytic(Window) Functions in sidebar docs"
@@ -421,6 +425,10 @@
   },
   "sidebar.get-starting.category.Tutorials": {
     "message": "使用教程",
+    "description": "The label for category BI and Database IDE in sidebar docs"
+  },
+  "sidebar.get-starting.category.Building lakehouse": {
+    "message": "构建 Lakehouse",
     "description": "The label for category BI and Database IDE in sidebar docs"
   }
 }

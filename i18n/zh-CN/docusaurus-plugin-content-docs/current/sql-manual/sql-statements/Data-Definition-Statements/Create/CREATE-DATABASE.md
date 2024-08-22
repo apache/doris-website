@@ -68,6 +68,10 @@ CREATE DATABASE [IF NOT EXISTS] db_name
    );
    ```
 
+:::caution
+若建表语句属性key带replication_allocation或replication_num，则db的默认的副本分布策略不会生效
+:::
+
 ### Keywords
 
 ```text

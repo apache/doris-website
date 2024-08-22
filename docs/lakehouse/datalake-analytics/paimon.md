@@ -24,6 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+[Apache Doris & Paimon Quick Start](https://doris.apache.org/docs/gettingStarted/tutorials/doris-paimon)
 
 ## Instructions for use
 

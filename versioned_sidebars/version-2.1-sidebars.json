@@ -179,7 +179,7 @@
                     "type": "category",
                     "label": "Cost-Based Optimizer",
                     "items": [
-                        "query/nereids/nereids",
+                        "query/nereids/nereids-new",
                         "query/nereids/statistics"
                     ]
                 },
@@ -235,7 +235,7 @@
                     "items": [
                         "query/query-analysis/get-profile",
                         "query/query-analysis/query-profile",
-                        "query/query-analysis/query-analysis",
+                        "query/query-analysis/query-analytics",
                         "query/query-analysis/import-analysis"
                     ]
                 },
@@ -292,6 +292,8 @@
                 },
                 "lakehouse/file",
                 "lakehouse/filecache",
+                "lakehouse/metacache",
+                "lakehouse/compute-node",
                 "lakehouse/external-statistics",
                 "lakehouse/cloud-auth",
                 "lakehouse/sql-dialect"
@@ -330,8 +332,7 @@
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
                         "admin-manual/resource-admin/workload-system-table",
-                        "admin-manual/resource-admin/multi-tenant",
-                        "admin-manual/resource-admin/compute-node"
+                        "admin-manual/resource-admin/multi-tenant"
                     ]
                 },
                 {
@@ -357,9 +358,10 @@
                     "type": "category",
                     "label": "Managing Memory",
                     "items": [
+                        "admin-manual/memory-management/memory-analyze-manual",
                         "admin-manual/memory-management/memory-tracker",
                         "admin-manual/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/memory-management/be-oom-analysis"
+                        "admin-manual/memory-management/memory-management-feature"
                     ]
                 },
                 {
@@ -389,7 +391,8 @@
                         "admin-manual/maint-monitor/monitor-alert",
                         "admin-manual/maint-monitor/tablet-local-debug",
                         "admin-manual/maint-monitor/metadata-operation",
-                        "admin-manual/maint-monitor/automatic-service-start"
+                        "admin-manual/maint-monitor/automatic-service-start",
+                        "admin-manual/maint-monitor/frontend-lock-manager"
                     ]
                 },
                 {
@@ -435,6 +438,7 @@
                         "admin-manual/fe/get-load-state",
                         "admin-manual/fe/get-log-file-action",
                         "admin-manual/fe/get-small-file",
+                        "admin-manual/fe/get-wal-size-action",
                         "admin-manual/fe/health-action",
                         "admin-manual/fe/meta-info-action",
                         "admin-manual/fe/meta-replay-state-action",
@@ -490,13 +494,6 @@
                 "admin-manual/small-file-mgr",
                 "admin-manual/compaction",
                 "admin-manual/rowsets"
-            ]
-        },
-        {
-            "type": "category",
-            "label": "Use Case",
-            "items": [
-                "practical-guide/log-storage-analysis"
             ]
         },
         {
@@ -730,7 +727,6 @@
                                 "sql-manual/sql-functions/string-functions/extract-url-parameter",
                                 "sql-manual/sql-functions/string-functions/uuid",
                                 "sql-manual/sql-functions/string-functions/space",
-                                "sql-manual/sql-functions/string-functions/sleep",
                                 "sql-manual/sql-functions/string-functions/esquery",
                                 "sql-manual/sql-functions/string-functions/random_bytes",
                                 {
@@ -1024,21 +1020,28 @@
                                 "sql-manual/sql-functions/table-functions/explode-bitmap",
                                 "sql-manual/sql-functions/table-functions/numbers",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-numbers-outer",
-                                "sql-manual/sql-functions/table-functions/s3",
-                                "sql-manual/sql-functions/table-functions/hdfs",
-                                "sql-manual/sql-functions/table-functions/local",
-                                "sql-manual/sql-functions/table-functions/iceberg-meta",
-                                "sql-manual/sql-functions/table-functions/backends",
-                                "sql-manual/sql-functions/table-functions/frontends",
-                                "sql-manual/sql-functions/table-functions/workload-group",
-                                "sql-manual/sql-functions/table-functions/catalogs",
-                                "sql-manual/sql-functions/table-functions/frontends_disks",
-                                "sql-manual/sql-functions/table-functions/active_queries",
-                                "sql-manual/sql-functions/table-functions/jobs",
-                                "sql-manual/sql-functions/table-functions/mv_infos",
-                                "sql-manual/sql-functions/table-functions/tasks",
-                                "sql-manual/sql-functions/table-functions/query"
+                                "sql-manual/sql-functions/table-functions/explode-numbers-outer"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Table Valued Functions",
+                            "items": [
+                                "sql-manual/sql-functions/table-valued-functions/s3",
+                                "sql-manual/sql-functions/table-valued-functions/hdfs",
+                                "sql-manual/sql-functions/table-valued-functions/local",
+                                "sql-manual/sql-functions/table-valued-functions/query",
+                                "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
+                                "sql-manual/sql-functions/table-valued-functions/backends",
+                                "sql-manual/sql-functions/table-valued-functions/frontends",
+                                "sql-manual/sql-functions/table-valued-functions/frontends_disks",
+                                "sql-manual/sql-functions/table-valued-functions/catalogs",
+                                "sql-manual/sql-functions/table-valued-functions/workload-group",
+                                "sql-manual/sql-functions/table-valued-functions/active_queries",
+                                "sql-manual/sql-functions/table-valued-functions/jobs",
+                                "sql-manual/sql-functions/table-valued-functions/mv_infos",
+                                "sql-manual/sql-functions/table-valued-functions/partitions",
+                                "sql-manual/sql-functions/table-valued-functions/tasks"
                             ]
                         },
                         {
@@ -1130,19 +1133,19 @@
                             "type": "category",
                             "label": "Datetime Data Type",
                             "items": [
-                                "sql-manual/sql-data-types/datetime/datetime-overview",
-                                "sql-manual/sql-data-types/datetime/DATE",
-                                "sql-manual/sql-data-types/datetime/DATETIME"
+                                "sql-manual/sql-data-types/date-time/datetime-overview",
+                                "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
                         {
                             "type": "category",
                             "label": "String Data Type",
                             "items": [
-                                "sql-manual/sql-data-types/string/string-overview",
-                                "sql-manual/sql-data-types/string/CHAR",
-                                "sql-manual/sql-data-types/string/VARCHAR",
-                                "sql-manual/sql-data-types/string/STRING"
+                                "sql-manual/sql-data-types/string-type/string-overview",
+                                "sql-manual/sql-data-types/string-type/CHAR",
+                                "sql-manual/sql-data-types/string-type/VARCHAR",
+                                "sql-manual/sql-data-types/string-type/STRING"
                             ]
                         },
                         {
@@ -1505,8 +1508,16 @@
             "type": "category",
             "label": "Tutorials",
             "items": [
-                "gettingStarted/tutorials/doris-hudi",
-                "gettingStarted/tutorials/doris-paimon"
+                {
+                    "type": "category",
+                    "label": "Building lakehouse",
+                    "items": [
+                        "gettingStarted/tutorials/building-lakehouse/doris-hudi",
+                        "gettingStarted/tutorials/building-lakehouse/doris-paimon",
+                        "gettingStarted/tutorials/building-lakehouse/doris-iceberg"
+                    ]
+                },
+                "gettingStarted/tutorials/log-storage-analysis"
             ]
         }
     ],

@@ -78,7 +78,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                             </Link>
                         )}
                         <Link
-                            to="https://github.com/apache/doris-website/issues/new"
+                            to={`https://github.com/apache/doris-website/issues/new?title=Issue on docs&body=Path:${typeof window !== 'undefined' && location.pathname}`}
                             className={`mr-6 ${styles.footerBtn}`}
                         >
                             <DocsAttention /> <span className="ml-2">{isZH ? '反馈问题' : 'Report issue'}</span>
