@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload CPU Limit",
+"title": "使用Workload Group管理CPU资源",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 使用Workload Group管理CPU资源
 
 Doris 的负载大体可以分为三类：
 1. 核心报表查询，通常给公司高层查看报表使用，负载不一定很高，但是对可用性要求较高，这类查询可以划分到一个分组，配置较高优先级的软限，保证CPU资源不够时可以获得更多的CPU资源。

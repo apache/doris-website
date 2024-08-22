@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload Local IO Limit",
+"title": "使用Workload Group管理本地IO",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 使用Workload Group管理本地IO
 
 OLAP 系统在做ETL或者大的Adhoc 查询时，需要读取大量的数据，Doris 为了加速数据分析过程，内部会使用多线程并行的方式对多个磁盘文件扫描，会产生巨大的磁盘IO，就会对其他的查询（比如报表分析）产生影响。
 可以通过Workload Group 对离线的ETL数据处理和在线的报表查询做分组，限制离线数据处理IO带宽的方式，降低它对在线报表分析的影响。
