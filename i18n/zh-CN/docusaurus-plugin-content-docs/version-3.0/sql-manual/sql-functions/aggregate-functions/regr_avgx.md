@@ -28,7 +28,7 @@ under the License.
 
 `regr_avgx(y, x)`
 
-计算线性回归分析中自变量 x 的平均值。
+计算线性回归分析中自变量 `x` 的平均值。
 
 ### example
 

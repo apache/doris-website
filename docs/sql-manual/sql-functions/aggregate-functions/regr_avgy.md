@@ -28,7 +28,7 @@ under the License.
 
 `regr_avgy(y, x)`
 
-Computes the average value of the independent variable y in a linear regression analysis.
+Computes the average value of the independent variable `y` in a linear regression analysis.
 
 ### example
 
