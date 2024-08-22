@@ -358,10 +358,21 @@
                     "type": "category",
                     "label": "Managing Memory",
                     "items": [
-                        "admin-manual/memory-management/memory-analyze-manual",
+                        "admin-manual/memory-management/doris-cache-memory-analysis",
+                        "admin-manual/memory-management/global-memory-analysis",
+                        "admin-manual/memory-management/heap-profile-memory-analysis",
+                        "admin-manual/memory-management/jemalloc-memory-analysis",
+                        "admin-manual/memory-management/load-memory-analysis",
+                        "admin-manual/memory-management/memory-control-strategy",
+                        "admin-manual/memory-management/memory-issue-faq",
+                        "admin-manual/memory-management/memory-log-analysis",
                         "admin-manual/memory-management/memory-tracker",
-                        "admin-manual/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/memory-management/memory-management-feature"
+                        "admin-manual/memory-management/metadata-memory-analysis",
+                        "admin-manual/memory-management/oom-crash-analysis",
+                        "admin-manual/memory-management/overview",
+                        "admin-manual/memory-management/query-cancelled-after-process-memory-exceeded",
+                        "admin-manual/memory-management/query-cancelled-after-query-memory-exceeded",
+                        "admin-manual/memory-management/query-memory-analysis"
                     ]
                 },
                 {
