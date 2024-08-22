@@ -1,6 +1,6 @@
 ---
 {
-    "title": "列转行 (Literal Views)",
+    "title": "列转行 (Lateral View)",
     "language": "zh-CN"
 }
 ---

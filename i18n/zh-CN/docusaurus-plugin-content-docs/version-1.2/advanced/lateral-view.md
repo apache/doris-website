@@ -1,6 +1,6 @@
 ---
 {
-    "title": "行转列",
+    "title": "列转行",
     "language": "zh-CN"
 }
 ---
