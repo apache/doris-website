@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload Memory Limit",
+"title": "Use Workload Group limit memory",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Use Workload Group limit memory
 
 Ad-hoc queries typically have unpredictable SQL input and uncertain memory usage, which carries the risk of a few queries consuming a large amount of memory. This type of load can be assigned to a separate group. By using the hard memory limits feature of the Workload Group, sudden large queries can be prevented from consuming all available memory, which would otherwise leave no memory for other queries or cause an Out of Memory (OOM) error.
 

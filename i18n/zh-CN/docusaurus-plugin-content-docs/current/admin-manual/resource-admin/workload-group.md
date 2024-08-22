@@ -24,7 +24,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# WORKLOAD GROUP
 你可以使用Workload Group管理Doris集群中查询和导入负载所使用的CPU/内存/IO资源用量，控制集群中查询的最大并发。Workload Group的使用权限可以授予给特定的角色和用户。
 
 在以下场景使用Workload Group通常会取得不错的效果：

@@ -394,7 +394,7 @@
                     "items": [
                         "admin-manual/resource-admin/workload-group",
                         "admin-manual/resource-admin/workload-policy",
-                        "admin-manual/resource-admin/workload-system-table",
+                        "admin-manual/resource-admin/workload-analysis",
                         "admin-manual/resource-admin/multi-tenant",
                         "admin-manual/resource-admin/workload-fusing",
                         "admin-manual/resource-admin/use-workload-mem-limit",
