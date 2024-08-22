@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload Memory Limit",
+"title": "使用Workload Group管理内存资源",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 使用Workload Group管理内存资源
 
 Adhoc类查询通常输入的SQL不确定，使用的内存资源也不确定，因此存在少数查询占用很大内存的风险。
 可以对这类负载可以划分到独立的分组，通过Workload Group对内存的硬限的功能，避免突发性的大查询占满所有内存，导致其他查询没有可用内存或者OOM。

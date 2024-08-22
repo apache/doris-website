@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload Remote IO Limit",
+"title": "使用Workload Group管理远程IO",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 使用Workload Group管理远程IO
 
 BrokerLoad和S3Load 是常用的大批量数据导入方式，用户可以把数据先上传到HDFS或者S3，然后通过Brokerload和S3Load 对数据进行并行导入。 Doris为了加快导入速度，会使用多线程并行的方式从HDFS/S3拉取数据，此时会对HDFS/S3 产生巨大的压力，会导致HDFS/S3上运行的别的作业不稳定。
 可以通过Workload Group 远程IO的限制功能来限制导入过程中对HDFS/S3的带宽，降低对其他业务的影响。

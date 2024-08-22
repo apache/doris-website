@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload Local IO Limit",
+"title": "Use Workload Group limit local IO",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Use Workload Group limit local IO
 
 In OLAP systems, when performing ETL or large ad-hoc queries, a significant amount of data needs to be read. To speed up data analysis, Doris internally uses multithreading to scan multiple disk files in parallel, which generates a large amount of disk I/O and can negatively impact other queries, such as report analysis.
 
