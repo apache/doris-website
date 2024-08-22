@@ -1,6 +1,6 @@
 ---
 {
-"title": "Use Workload Remote IO Limit",
+"title": "Use Workload Group limit remote IO",
 "language": "zh-CN"
 }
 ---
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# Use Workload Group limit remote IO
 
 BrokerLoad and S3Load are commonly used methods for importing large volumes of data. Users can first upload data to HDFS or S3 and then use BrokerLoad and S3Load for parallel data imports. To speed up the import process, Doris uses multithreading to pull data from HDFS/S3 in parallel. This can put significant pressure on HDFS/S3, potentially causing instability for other jobs running on HDFS/S3.
 

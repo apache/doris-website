@@ -1,7 +1,7 @@
 ---
 {
-"title": "Workload Fusing",
-"language": "zh-CN"
+    "title": "大查询熔断",
+    "language": "zh-CN"
 }
 ---
 
@@ -23,8 +23,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-# 大查询熔断
 
 大查询熔断通常适用于线上集群经常出现个别占用资源过多的查询导致集群整体可用性下降的场景，此时可以通过在运行时检测异常的大查询，并且阻止这个查询运行的方式使得集群恢复正常。
 如果用户已经根据查询延迟对负载进行了分组，比如大查询划分到一个Workload Group，小查询划分到一个Workload Group，那么也可以通过大查询熔断的方式提高小查询分组的可用性。
