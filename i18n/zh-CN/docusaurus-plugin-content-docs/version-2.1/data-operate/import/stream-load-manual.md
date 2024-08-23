@@ -308,7 +308,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | 标签                         | 参数说明                                                     |
 | ---------------------------- | ------------------------------------------------------------ |
 | label                        | 用于指定 Doris 该次导入的标签，标签相同的数据无法多次导入。如果不指定 label，Doris 会自动生成一个标签。用户可以通过指定 label 的方式来避免一份数据重复导入的问题。Doris 默认保留三天内的导入作业标签，可以 `label_keep_max_second` 调整保留时长。例如，指定本次导入 label 为 123，需要指定命令 `-H "label:123"`。label 的使用，可以防止用户重复导入相同的数据。强烈推荐用户同一批次数据使用相同的 label。这样同一批次数据的重复请求只会被接受一次，保证了 At-Most-Once 当 label 对应的导入作业状态为 CANCELLED 时，该 label 可以再次被使用。 |
-| column_separator             | 用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 \x01，需要指定命令 `-H "column_separator:\x01"`。 |
+| column_separator             | 用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加`\x`作为前缀，使用十六进制来表示分隔符。可以使用多个字符的组合作为列分隔符。例如，hive 文件的分隔符 `\x01`，需要指定命令 `-H "column_separator:\x01"`。 |
 | line_delimiter               | 用于指定导入文件中的换行符，默认为 `\n`。可以使用做多个字符的组合作为换行符。例如，指定换行符为 `\n`，需要指定命令 `-H "line_delimiter:`\n`"`。 |
 | columns                      | 用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。如果源文件与表 schema 不对应，那么需要这个字段进行一些数据转换。有两种形式 column：直接对应导入文件中的字段，直接使用字段名表示衍生列，语法为 `column_name` = expression 详细案例参考 [导入过程中数据转换](../../data-operate/import/load-data-convert)。 |
 | where                        | 用于抽取部分数据。用户如果有需要将不需要的数据过滤掉，那么可以通过设定这个选项来达到。例如，只导入大于 k1 列等于 20180601 的数据，那么可以在导入时候指定 `-H "where: k1 = 20180601"`。 |
@@ -336,7 +336,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | skip_lines                   | 整数类型，默认值为 0，含义为跳过 CSV 文件的前几行。当设置 format 设置为 `csv_with_names`或`csv_with_names_and_types`时，该参数会失效。 |
 | comment                      | 字符串类型，默认值为空。给任务增加额外的信息。               |
 | enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
-| escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
+| escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，将数据修改为 `a,b,\c`。 |
 | memtable_on_sink_node        | 导入数据的时候是否开启 MemTable 前移，默认为 false。 |
 
 ### 导入返回值
@@ -370,7 +370,7 @@ Stream Load 是一种同步的导入方式，导入结果会通过创建导入�
 | 参数名称               | 说明                                                         |
 | ---------------------- | ------------------------------------------------------------ |
 | TxnId                  | 导入事务的 ID                                                |
-| Label                  | 导入作业的 label，通过 -H "label:<label_id>" 指定            |
+| Label                  | 导入作业的 label，通过 `-H "label:<label_id>` 指定            |
 | Status                 | 导入的最终状态 Success：表示导入成功 Publish Timeout：该状态也表示导入已经完成，只是数据可能会延迟可见，无需重试 Label Already Exists：Label 重复，需要更换 labelFail：导入失败 |
 | ExistingJobStatus      | 已存在的 Label 对应的导入作业的状态。这个字段只有在当 Status 为 "Label Already Exists" 时才会显示。用户可以通过这个状态，知晓已存在 Label 对应的导入作业的状态。"RUNNING" 表示作业还在执行，"FINISHED" 表示作业成功。 |
 | Message                | 导入错误信息                                                 |
@@ -681,13 +681,13 @@ mysql> DESC table1;
 
 导入数据为：
 
-```SQL
+```sql
 li,male,10
 ```
 
 由于指定了 function_column.sequence_col: age，并且 age 大于等于表中原有的列，原表数据被删除，表中数据变为：
 
-```SQL
+```sql
 +-------+--------+------+
 | name  | gender | age  |
 +-------+--------+------+
@@ -700,7 +700,7 @@ li,male,10
 
 导入数据为：
 
-```SQL
+```sql
 li,male,9
 ```
 
@@ -773,7 +773,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 JSON 数据格式：
 
-```Plain
+```sql
 {"id":1,"order_Code":"avc"}
 ```
 
@@ -938,7 +938,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 当导入数据中包含 map 类型，如以下的例子中：
 
-```SQL
+```sql
 [
 {"user_id":1,"namemap":{"Emily":101,"age":25}},
 {"user_id":2,"namemap":{"Benjamin":102,"age":35}},
@@ -981,7 +981,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 如导入数据如下：
 
-```SQL
+```sql
 1|koga|17723
 2|nijg|146285
 3|lojn|347890
@@ -1020,7 +1020,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 通过 hll_hash 函数可以将数据转换成 hll 类型，如下数据：
 
-```SQL
+```sql
 1001|koga
 1002|nijg
 1003|lojn
@@ -1069,7 +1069,7 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 导入时进行部分列更新
 
-关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../) 文档
+关于导入时，如何表达部分列更新，可以参考 [数据操作/数据更新](../../data-operate/update/update-of-unique-model) 文档
 
 ## 更多帮助
 

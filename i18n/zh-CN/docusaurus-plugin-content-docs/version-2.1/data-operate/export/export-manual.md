@@ -47,8 +47,8 @@ under the License.
 * Parquet
 * ORC
 * csv
-* csv\_with\_names
-* csv\_with\_names\_and\_types
+* csv _with names
+* csv with names and types
 
 不支持压缩格式的导出。
 
