@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-MS is the abbreviation of MetaService, the Compute-storage decoupled component of Doris, which provides metadata management and query services. The configuration field in `DorisDisaggregatedMetaService` is MS.
+MS is the abbreviation of Meta Service, the Compute-storage decoupled component of Doris, which provides metadata management and query services. The configuration field in `DorisDisaggregatedMetaService` is MS.
 
 ## Simplest configuration
 
@@ -60,7 +60,7 @@ Update the modified configuration to the [metadata management resources](../inst
 
 ## Customized configuration file
 
-Configuration files are mounted on K8s through ConfigMap. Doris-Operator automates the configuration of mutual perception between Compute-storage decoupled components. When deploying MS services using customized configuration files, please do not configure [fdb-related configuration](../../../../../compute-storage-decoupled/compilation-and-deployment#deploy-meta-service).
+Configuration files are mounted on K8s through ConfigMap. Doris-Operator automates the configuration of mutual perception between Compute-storage decoupled components. When deploying MS services using customized configuration files, please do not configure [FDB related configuration](../../../../../compute-storage-decoupled/compilation-and-deployment#deploy-meta-service).
 
 **ConfigMap**:
 
@@ -109,5 +109,5 @@ spec:
 In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [Compute-storage decoupled metadata management resource](../install-quickstart.md#Install DorisDisaggregatedMetaService) to be deployed according to the above sample format. The startup configuration file used by the MS service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.
 
 :::tip Tip
-MS service needs to use fdb as the backend metadata storage, and the fdb service must be deployed when deploying MS service.
+MS service needs to use FDB as the backend metadata storage, and the FDB service must be deployed when deploying MS service.
 :::

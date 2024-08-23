@@ -24,13 +24,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris Compute-storage decoupled uses foundationdb as the metadata storage component. In K8s deployment mode, use the `v1beta2` version of [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy `fdb`.
+Doris Compute-storage decoupled uses FoundationDB as the metadata storage component. In K8s deployment mode, use the `v1beta2` version of [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy `fdb`.
 
-Doris-Operator shields the tediousness of manually configuring `FoundationDBCluster`, and abstracts very little configuration information to reduce the cost of learning to use `FoundationDBCluster` resources. Through abstraction, Doris-Operator hopes that users only focus on matters related to fdb deployment, without paying attention to the internal operating mechanism of fdb and the complex connection between Doris and fdb.
+Doris-Operator shields the tediousness of manually configuring `FoundationDBCluster`, and abstracts very little configuration information to reduce the cost of learning to use `FoundationDBCluster` resources. Through abstraction, Doris-Operator hopes that users only focus on matters related to FDB deployment, without paying attention to the internal operating mechanism of FDB and the complex connection between Doris and FDB.
 
 ## Simplest configuration
 
-By default, you only need to configure the resources used by fdb, and Doris-Operator automatically generates `FoundationDBCluster` to deploy the fdb metadata management cluster.
+By default, you only need to configure the resources used by FDB, and Doris-Operator automatically generates `FoundationDBCluster` to deploy the FDB metadata management cluster.
 
 Default configuration:
 
@@ -44,11 +44,11 @@ spec:
       cpu: 4
       memory: 4Gi
 ```
-With the above configuration, Doris-Operator will automatically deploy an fdb cluster consisting of 5 pods.
+With the above configuration, Doris-Operator will automatically deploy an FDB cluster consisting of 5 pods.
 
 ## Specify image deployment
 
-Doris-Operator uses the 7.1.38 version recommended by Doris to deploy fdb by default. In a privatized environment and if there are special requirements for the fdb version, please configure the image or configure the private warehouse image pull key in the following format.
+Doris-Operator uses the 7.1.38 version recommended by Doris to deploy FDB by default. In a privatized environment and if there are special requirements for the FDB version, please configure the image or configure the private warehouse image pull key in the following format.
 
 ### Private warehouse public image configuration
 
@@ -60,7 +60,7 @@ spec:
     image: {fdb_image}
     sidecarImage: {fdb_sidecarImage}
 ```
-Set `{fdb_image}` to the corresponding foundationdb main image (`selectdb/foundationdb:xxx` in the selectdb repository), and `{fdb_sidecarImage}` to the fdb sidecar container image (`selectdb/foundationdb-kubernetes-sidecar:xxx` in the selectdb repository).
+Set `{fdb_image}` to the corresponding FoundationDB main image (`selectdb/foundationdb:xxx` in the selectdb repository), and `{fdb_sidecarImage}` to the FDB sidecar container image (`selectdb/foundationdb-kubernetes-sidecar:xxx` in the selectdb repository).
 
 Configure the specified image-related configuration to the [`DorisDisaggregatedMetaService`](../install-quickstart#Install DorisDisaggregatedMetaService) resource that needs to be deployed.
 
@@ -89,7 +89,7 @@ Add the above configuration to the [`DorisDisaggregatedMetaSerivce`](../install-
 
 ## Configure storage
 
-Foundationdb is a stateful distributed storage service that needs to configure persistent storage. By default, Doris-Operator will use the default StorageClass in Kubernetes to build the relevant pvc for the fdb pod. The default size of pvc is 128Gi. If you need to specify StorageClass and modify the default configuration size, please modify it as follows:
+FoundationDB is a stateful distributed storage service that needs to configure persistent storage. By default, Doris-Operator will use the default StorageClass in Kubernetes to build the relevant pvc for the FDB pod. The default size of pvc is 128Gi. If you need to specify StorageClass and modify the default configuration size, please modify it as follows:
 
 ```yaml
 spec:
@@ -101,6 +101,6 @@ spec:
           requests:
             storage: "200Gi"
 ```
-The above configuration uses the default StorageClass to create a 200Gi storage for the fdb service. If you need to specify a StorageClass, uncomment it and replace the variable `{storageClassName}` with the name of the StorageClass you want to specify.
+The above configuration uses the default StorageClass to create a 200Gi storage for the FDB service. If you need to specify a StorageClass, uncomment it and replace the variable `{storageClassName}` with the name of the StorageClass you want to specify.
 
 Add the above configuration to the [`DorisDisaggregatedMetaSerivce`](../install-quickstart.md#Install DorisDisaggregatedMetaService) resource that needs to be deployed.

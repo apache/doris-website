@@ -58,7 +58,7 @@ Update the modified configuration to the [Compute-storage decoupled metadata man
 
 ## Customized configuration file
 
-ConfigMap is used to mount the configuration file on K8s. Doris-Operator automates the configuration of mutual perception between Compute-storage decoupled components. When deploying MS services using customized configuration files, please do not configure [fdb-related configuration](../../../../../compute-storage-decoupled/compilation-and-deployment#deploy-meta-service).
+ConfigMap is used to mount the configuration file on K8s. Doris-Operator automates the configuration of mutual perception between Compute-storage decoupled components. When deploying MS services using customized configuration files, please do not configure [FDB related configuration](../../../../../compute-storage-decoupled/compilation-and-deployment#deploy-meta-service).
 
 Use ConfigMap to mount the configuration file to deploy the Recycler service:
 
@@ -108,5 +108,5 @@ spec:
 In actual deployment, configure the name and namespace of ConfigMap as needed, and configure the configuration information in the [Compute-storage decoupled Metadata Management Resource](../install-quickstart.md#Install DorisDisaggregatedMetaService) to be deployed according to the above sample format. The startup configuration file used by the Recycler service is named `doris_cloud.conf`, so the key of the ConfigMap for mounting the startup configuration must also be `doris_cloud.conf`. The startup configuration must be mounted to the `/etc/doris` directory, that is, the mountPath is `/etc/doris`.
 
 :::tip Tip
-The Recyler service needs to use fdb as the backend metadata storage. The fdb service must be deployed when deploying the Recyler service.
+The Recyler service needs to use FDB as the backend metadata storage. The FDB service must be deployed when deploying the Recyler service.
 :::
