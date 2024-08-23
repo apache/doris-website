@@ -56,8 +56,8 @@ Doris JDBC Catalog 支持连接以下数据库：
 
 ### 可选属性
 
-| 参数                        | 默认值     | 说明                                                                                                      |
-|---------------------------|---------|---------------------------------------------------------------------------------------------------------|
+| 参数                        | 默认值     | 说明                                          |
+|---------------------------|---------|-------------------------------------------------|
 | `lower_case_meta_names`   | "false" | 是否以小写的形式同步外部数据源的库名和表名以及列名                                                                               |
 | `meta_names_mapping`      | ""      | 当外部数据源存在名称相同只有大小写不同的情况，例如 DORIS 和 doris，Doris 由于歧义而在查询 Catalog 时报错，此时需要配置 `meta_names_mapping` 参数来解决冲突。 |
 | `only_specified_database` | "false" | 是否只同步 JDBC URL 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）                                 |
@@ -66,13 +66,13 @@ Doris JDBC Catalog 支持连接以下数据库：
 
 ### 连接池属性
 
-| 参数                              | 默认值     | 说明                                                                          |
-|---------------------------------|---------|-----------------------------------------------------------------------------|
-| `connection_pool_min_size`      | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。                             |
-| `connection_pool_max_size`      | 10      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。                         |
-| `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。                                               |
+| 参数                              | 默认值     | 说明                                |
+|---------------------------------|---------|----------------------------------------|
+| `connection_pool_min_size`      | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。  |
+| `connection_pool_max_size`      | 10      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。   |
+| `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。     |
 | `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。 |
-| `connection_pool_keep_alive`    | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。              |
+| `connection_pool_keep_alive`    | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。  |
 
 ## 属性须知
 
@@ -93,7 +93,7 @@ Doris JDBC Catalog 支持连接以下数据库：
 
 1. 针对上述方式 1，Doris 默认用户配置的 `jdbc_drivers_dir` 和其目录下的所有 Jar 包都是安全的，不会对其进行路径检查。
 
-2. 针对上述方式 2、3 ，Doris 会对 Jar 包的来源进行检查，检查规则如下：
+2. 针对上述方式 2、3，Doris 会对 Jar 包的来源进行检查，检查规则如下：
 
     * 通过 FE 配置项 `jdbc_driver_secure_path` 来控制允许的驱动包路径，该配置项可配置多个路径，以分号分隔。当配置了该项时，Doris
       会检查 Catalog properties 中 driver_url 的路径是的部分前缀是否在 `jdbc_driver_secure_path` 中，如果不在其中，则会拒绝创建
@@ -194,7 +194,7 @@ Doris 显示的小写名称去查询。
 
 :::info 备注
 - 上述三个参数中提到的 Database 是指 Doris 中的 Database 层级，而不是外部数据源的 Database 层级，具体的映射关系可以参考各个数据源文档。
-- 当 `include_database_list` 和 `exclude_database_list` 有重合的database配置时，`exclude_database_list`会优先生效。
+- 当 `include_database_list` 和 `exclude_database_list` 有重合的 database 配置时，`exclude_database_list`会优先生效。
 :::
 
 ### 连接池配置
@@ -203,9 +203,9 @@ Doris 显示的小写名称去查询。
 
 可以根据实际情况调整连接池的大小，以便更好地适应您的工作负载。通常情况下，连接池的最小连接数应该设置为 1，以确保在启用保活机制时至少有一个连接处于活跃状态。连接池的最大连接数应该设置为一个合理的值，以避免过多的连接占用资源。
 
-同时为了避免在 BE 上累积过多的未使用的连接池缓存，可以通过设置 BE 的 `jdbc_connection_pool_cache_clear_time_sec` 参数来指定清理缓存的时间间隔。默认值为 28800 秒（8小时），此间隔过后，BE 将强制清理所有超过该时间未使用的连接池缓存。
+同时为了避免在 BE 上累积过多的未使用的连接池缓存，可以通过设置 BE 的 `jdbc_connection_pool_cache_clear_time_sec` 参数来指定清理缓存的时间间隔。默认值为 28800 秒（8 小时），此间隔过后，BE 将强制清理所有超过该时间未使用的连接池缓存。
 
-:::warning
+:::warning 注意
 使用 Doris JDBC Catalog 连接外部数据源时，需谨慎更新数据库凭证。
 Doris 通过连接池维持活跃连接以快速响应查询。但凭证变更后，连接池可能会继续使用旧凭证尝试建立新连接并失败。由于系统试图保持一定数量的活跃连接，这种错误尝试会重复执行，且在某些数据库系统中，频繁的失败可能导致账户被锁定。
 建议在必须更改凭证时，同步更新 Doris JDBC Catalog 配置，并重启 Doris 集群，以确保所有节点使用最新凭证，防止连接失败和潜在的账户锁定。
@@ -279,7 +279,7 @@ CALL EXECUTE_STMT("catalog_name", "raw_stmt_string");
 - Catalog Name：目前仅支持 JDBC 类型 Catalog。
 - 执行语句：目前仅支持 DDL 和 DML 语句，并且需要直接使用数据源对应的语法。
 
-```
+```sql
 CALL EXECUTE_STMT("jdbc_catalog", "insert into db1.tbl1 values(1,2), (3, 4)");
 
 CALL EXECUTE_STMT("jdbc_catalog", "delete from db1.tbl1 where k1 = 2");
@@ -298,8 +298,8 @@ query(
 
 `query` 表函数有两个参数：
 
-- `catalog`： Catalog 名称，需要按照 Catalog 的名称填写。
-- `query`： 需要执行的查询语句，并且需要直接使用数据源对应的语法。
+- `catalog`：Catalog 名称，需要按照 Catalog 的名称填写。
+- `query`：需要执行的查询语句，并且需要直接使用数据源对应的语法。
 
 ```sql
 select * from query("catalog" = "jdbc_catalog", "query" = "select * from db_name.table_name where condition");
