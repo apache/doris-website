@@ -32,59 +32,59 @@ Doris 自己管理的 Cache 目前均为 LRU 淘汰策略，均支持单独通�
 
 用于加速数据扫描。
 
+```
 - DataPageCache: 缓存数据 Page。
-
 - IndexPageCache: 缓存数据 Page 的索引。
-
 - PKIndexPageCache: 缓存 Page 的主键索引。
+```
 
 2. Metadata Cache
 
 用于加速元数据读取。
 
+```
 - SegmentCache: 缓存已打开的 Segment，如索引信息。
-
 - SchemaCache: 缓存 Rowset Schema。
-
 - TabletSchemaCache: 缓存 Tablet Schema。
-
 - CreateTabletRRIdxCache:  缓存 Create Tabelt 索引。
-
 - MowTabletVersionCache: 缓存 Mow Tablet Version。
-
 - MowDeleteBitmapAggCache: 缓存 Mow DeleteBitmap。
+```
 
 3. Cloud Cache
 
 云上专用的缓存。
 
+```
 - CloudTabletCache: Cloud 上缓存 Tablet。
-
 - CloudTxnDeleteBitmapCache: Cloud 上缓存 DeleteBitmap。
+```
 
 4. Inverted Index Cache
 
 加速倒排索引。
 
+```
 - InvertedIndexSearcherCache
-
 - InvertedIndexQueryCache
+```
 
 5. Point Query Cache
 
 加速点查询执行，主要用于日志分析。
 
+```
 - PointQueryRowCache
-
 - PointQueryLookupConnectionCache
+```
 
 6. Other Cache
 
+```
 - FileCache: 外表查询和 Cloud 使用的文件缓存。
-
 - CommonObjLRUCache
-
 - LastSuccessChannelCache
+```
 
 ## Doris Cache 查看方法
 
@@ -94,19 +94,15 @@ Doris 自己管理的 Cache 目前均为 LRU 淘汰策略，均支持单独通�
 
 Web 页面 `http://http://{be_host}:{be_web_server_port}/metrics` 可以看到 BE 进程内存监控(Metrics)，包括每个 Cache 的容量、使用率、元素个数、查找和命中次数等指标。
 
+```
 - `doris_be_cache_capacity{name="TabletSchemaCache"} 102400`：Cache 容量，内存大小或者元素个数两种限制方法。
-
 - `doris_be_cache_usage{name="TabletSchemaCache"} 40838`：Cache 使用量，内存大小或者元素个数，对应 Cache 容量的限制。
-
 - `doris_be_cache_usage_ratio{name="TabletSchemaCache"} 0.398809`：Cache 使用率，等于`(cache_usage / cache_capacity)`。
-
 - `doris_be_cache_element_count{name="TabletSchemaCache"} 1628`：Cache 元素个数，当 Cache 容量限制元素个数时等于 Cache Usage。
-
 - `doris_be_cache_lookup_count{name="TabletSchemaCache"} 63393`：查找 Cache 的次数。
-
 - `doris_be_cache_hit_count{name="TabletSchemaCache"} 61765`：查找 Cache 时命中的次数。
-
 - `doris_be_cache_hit_ratio{name="TabletSchemaCache"} 0.974319`：命中率，等于`(hit_count / lookup_count)`
+```
 
 2. Doris BE Bvar
 

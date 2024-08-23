@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Cache Memory Analysis",
+    "title": "Cache Memory Analysis",
     "language": "zh-CN"
 }
 ---
@@ -32,59 +32,60 @@ The caches managed by Doris are currently all LRU elimination strategies, and al
 
 Used to speed up data scanning.
 
+```
 - DataPageCache: Cache data Page.
-
-- IndexPageCache: Cache the index of data Page.
-
-- PKIndexPageCache: Cache the primary key index of Page.
+- IndexPageCache: Cache data Page index.
+- PKIndexPageCache: Cache Page primary key index.
+```
 
 2. Metadata Cache
 
 Used to speed up metadata reading.
 
-- SegmentCache: Cache the opened Segment, such as index information.
-
+```
+- SegmentCache: Cache open Segments, such as index information.
 - SchemaCache: Cache Rowset Schema.
-
 - TabletSchemaCache: Cache Tablet Schema.
-
-- CreateTabletRRIdxCache: Cache Create Tabelt Index.
-
+- CreateTabletRRIdxCache: Cache Create Tabelt index.
 - MowTabletVersionCache: Cache Mow Tablet Version.
-
 - MowDeleteBitmapAggCache: Cache Mow DeleteBitmap.
+```
 
 3. Cloud Cache
 
 A dedicated cache on the cloud.
 
-- CloudTabletCache: Cache Tablet on Cloud.
-
+```
+- CloudTabletCache: Cache Tablet on the Cloud.
 - CloudTxnDeleteBitmapCache: Cache DeleteBitmap on Cloud.
+```
 
 4. Inverted Index Cache
 
 Speed ​​up inverted index.
 
+```
 - InvertedIndexSearcherCache
-
 - InvertedIndexQueryCache
+```
 
 5. Point Query Cache
 
 Speed ​​up point query execution, mainly used for log analysis.
 
+```
 - PointQueryRowCache
-
 - PointQueryLookupConnectionCache
+```
 
 6. Other Cache
 
-- FileCache: File cache used by external table query and Cloud.
+```
+- FileCache: File cache used by external table queries and Cloud.
 
 - CommonObjLRUCache
-
 - LastSuccessChannelCache
+```
 
 ## Doris Cache View Method
 
@@ -94,19 +95,15 @@ There are three ways to view Doris Cache related indicators.
 
 Web page `http://http://{be_host}:{be_web_server_port}/metrics` can see BE process memory monitoring (Metrics), including each cache capacity, usage, number of elements, search and hit times and other indicators.
 
+```
 - `doris_be_cache_capacity{name="TabletSchemaCache"} 102400`: Cache capacity, two limiting methods: memory size or number of elements.
-
-- `doris_be_cache_usage{name="TabletSchemaCache"} 40838`: Cache usage, memory size or number of elements, corresponding to the cache capacity limit.
-
+- `doris_be_cache_usage{name="TabletSchemaCache"} 40838`: Cache usage, memory size or number of elements, corresponding to the limit of cache capacity.
 - `doris_be_cache_usage_ratio{name="TabletSchemaCache"} 0.398809`: Cache usage, equal to `(cache_usage / cache_capacity)`.
-
 - `doris_be_cache_element_count{name="TabletSchemaCache"} 1628`: Number of cache elements, equal to Cache Usage when the cache capacity limits the number of elements.
-
 - `doris_be_cache_lookup_count{name="TabletSchemaCache"} 63393`: Number of cache lookups.
-
-- `doris_be_cache_hit_count{name="TabletSchemaCache"} 61765`: Number of cache hits when looking up.
-
+- `doris_be_cache_hit_count{name="TabletSchemaCache"} 61765`: Number of hits when looking up the cache.
 - `doris_be_cache_hit_ratio{name="TabletSchemaCache"} 0.974319`: Hit ratio, equal to `(hit_count / lookup_count)`
+```
 
 2. Doris BE Bvar
 
