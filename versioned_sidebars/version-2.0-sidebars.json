@@ -1452,6 +1452,13 @@
         "releasenotes/all-release",
         {
             "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.1"
+            ]
+        },
+        {
+            "type": "category",
             "label": "v2.1",
             "items": [
                 "releasenotes/v2.1/release-2.1.5",
