@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Global 内存分析",
+    "title": "全局内存分析",
     "language": "zh-CN"
 }
 ---
@@ -77,7 +77,7 @@ Global Memory Tracker `Label=global, Type=overview` 的值等于所有 `Type=glo
 
 ### Cache 分析方法
 
-参考 [Doris Cache 内存分析](./doris-cache-memory-analysis.md) 
+参考 [Cache 内存分析](./doris-cache-memory-analysis.md) 
 
 ### Metadata 分析方法
 

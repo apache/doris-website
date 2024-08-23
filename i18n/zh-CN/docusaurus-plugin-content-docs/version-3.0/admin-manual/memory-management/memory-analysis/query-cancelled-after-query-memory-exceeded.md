@@ -1,6 +1,6 @@
 ---
 {
-    "title": "查询或导入报错超过单次执行内存限制",
+    "title": "查询报错 Memory Tracker Limit Exceeded",
     "language": "zh-CN"
 }
 ---

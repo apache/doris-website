@@ -56,7 +56,7 @@ Web 页面 `http://http://{be_host}:{brpc_port}/vars` 可以看到 Bvar 统计�
 
 ### Doris BE Metrics
 
-Web 页面 `http://http://{be_host}:{be_web_server_port}/metrics` 可以看到 BE 进程内存监（Metrics）中的一些元数据指标。其中 Metadata Cache 相关指标参考 [Doris Cache 内存分析](./doris-cache-memory-analysis.md)。
+Web 页面 `http://http://{be_host}:{be_web_server_port}/metrics` 可以看到 BE 进程内存监（Metrics）中的一些元数据指标。其中 Metadata Cache 相关指标参考 [Cache 内存分析](./doris-cache-memory-analysis.md)。
 
 ```
 - `doris_be_all_rowsets_num`：所有 Rowset 的数量。

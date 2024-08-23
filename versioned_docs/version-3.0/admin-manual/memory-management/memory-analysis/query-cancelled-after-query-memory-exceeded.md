@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Query Cancelled After Query Memory Exceeded",
+    "title": "Query error Memory Tracker Limit Exceeded",
     "language": "zh-CN"
 }
 ---

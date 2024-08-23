@@ -1,6 +1,6 @@
 ---
 {
-    "title": "查询或导入报错进程可用内存不足",
+    "title": "查询报错 Process Memory Not Enough",
     "language": "zh-CN"
 }
 ---

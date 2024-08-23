@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Cache 内存分析",
+    "title": "Cache 内存分析",
     "language": "zh-CN"
 }
 ---
@@ -116,9 +116,9 @@ Web 页面 `http://http://{be_host}:{brpc_port}/vars/*cache*` 可以看到部分
 
 3. Memory Trakcer
 
-实时查看每个 Cache 占用内存大小，参考 [Global 内存分析](./global-memory-analysis.md)，当存在内存报错时在 `be/log/be.INFO` 日志中可以找到 `Memory Tracker Summary` 中，其中包含当时的 Cache 内存大小。
+实时查看每个 Cache 占用内存大小，参考 [全局内存分析](./global-memory-analysis.md)，当存在内存报错时在 `be/log/be.INFO` 日志中可以找到 `Memory Tracker Summary` 中，其中包含当时的 Cache 内存大小。
 
-## Doris Cache 内存分析
+## Cache 内存分析
 
 Doris BE 运行时存在各种 Cache，通常无需关注 Cache 内存，因为在 BE 进程可用内存不足时会触发内存 GC 首先清理 Cache。
 
