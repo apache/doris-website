@@ -1,7 +1,7 @@
 ---
 {
     "title": "file_cache_statistics",
-    "language": "zh-CN"
+    "language": "en"
 }
 ---
 
@@ -24,71 +24,69 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 概述
+## Overview
 
-用于查看各个 BE 节点 [数据缓存](../../lakehouse/filecache.md) 相关的指标信息。
-
-指标信息来源于 BE 的数据缓存相关监控指标。
+Used to view the metric information related to data cache on each BE node. The metric information is sourced from the monitoring metrics related to BE's data cache.
 
 :::tip
-该系统表自 2.1.6 和 3.0.2 版本支持。
+This system table is supported from versions 2.1.6 and 3.0.2.
 :::
 
-## 所属数据库
+## Belongs to Database
 
 `information_schema`
 
-## 表信息
+## Table Information
 
-| 列名 | 类型 | 说明 |
+| Column Name | Type | Description |
 |---|---|---|
-| BE_ID | BIGINT  | BE 节点 ID  | 
-| BE_IP | VARCHAR(256)  | BE 节点 IP  | 
-| CACHE_PATH | VARCHAR(256)  | BE 节点缓存路径  | 
-| METRIC_NAME    | VARCHAR(256)   | 指标名称  | 
-| METRIC_VALUE      | DOUBLE   | 指标值  | 
+| BE_ID | BIGINT | BE node ID |
+| BE_IP | VARCHAR(256) | BE node IP |
+| CACHE_PATH | VARCHAR(256) | BE node cache path |
+| METRIC_NAME | VARCHAR(256) | Metric name |
+| METRIC_VALUE | DOUBLE | Metric value |
 
-> 不同 Doris 版本可能包含不同的指标信息。
+> Different Doris version may have different metrics
 
-### 2.1.x 版本指标说明
+### 2.1.x Metrics
 
-> 仅列举重要指标。
+> Only important metrics are listed.
 
 - `normal_queue_curr_elements`
 
-    当前缓存中 File Block 的个数。
+    Number of File Blocks currently in the cache.
 
 - `normal_queue_max_elements`
 
-    缓存允许的 File Block 最大个数。
+    Maximum number of File Blocks allowed in the cache.
 
 - `normal_queue_curr_size`
 
-    当前缓存大小
+    Current cache size.
 
 - `normal_queue_max_size`
 
-    缓存允许的最大大小
+    Maximum cache size allowed.
 
 - `hits_ratio`
 
-    自 BE 启动后的缓存总命中率。
+    Overall cache hit ratio since BE startup.
 
 - `hits_ratio_5m`
 
-    最近 5 分钟的缓存命中率。
+    Cache hit ratio in the last 5 minutes.
 
 - `hits_ratio_1h`
 
-    最近 1 小时的缓存命中率。
+    Cache hit ratio in the last 1 hour.
 
-### 3.0.x 版本指标说明
+### 3.0.x Metrics
 
 TODO
 
-## 示例
+## Examples
 
-1. 查询所有缓存指标
+1. Query all cache metrics
 
     ```
     mysql> select * from information_schema.file_cache_statistics;
@@ -105,9 +103,8 @@ TODO
     +-------+---------------+----------------------------+----------------------------+--------------------+
     ```
 
-2. 查询缓存命中率，并按命中率排序
+2. Query cache hit ratio and sort by hit ratio
 
     ```
     select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by METRIC_VALUE desc;
     ```
-

@@ -1,7 +1,7 @@
 ---
 {
     "title": "table_properties",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -24,35 +24,35 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-### Overview
+## 概述
 
-Used to view the properties of tables (including internal and external tables).
+用于查看表（包括内表和外表）的属性信息。
 
 :::tip
-This system table is supported from versions 2.1.6 and 3.0.2.
+该系统表自 2.1.6 和 3.0.2 版本支持。
 :::
 
-### Database
+## 所属数据库
 
 `information_schema`
 
-### Table Information
+## 表信息
 
-| Column Name     | Type         | Description         |
-|-----------------|--------------|---------------------|
-| TABLE_CATALOG   | VARCHAR(64)  | Catalog to which the table belongs |
-| TABLE_SCHEMA    | VARCHAR(64)  | Database to which the table belongs |
-| TABLE_NAME      | VARCHAR(64)  | Name of the table |
-| PROPERTY_NAME   | STRING       | Name of the property |
-| PROPERTY_VALUE  | STRING       | Value of the property |
+| 列名 | 类型 | 说明 |
+|---|---|---|
+| TABLE_CATALOG | VARCHAR(64 )| 表所属 Catalog  | 
+| TABLE_SCHEMA | VARCHAR(64)  | 表所属 Database  | 
+| TABLE_NAME | VARCHAR(64)  | 表名  | 
+| PROPERTY_NAME    | STRING   | 属性名称  | 
+| PROPERTY_VALUE      | STRING   | 属性值  | 
 
 :::tip
-For specific details on table properties, refer to the **Create Table** documentation.
+关于表属性的具体减少，请参阅**建表**相关文档。
 :::
 
-### Examples
+## 示例
 
-1. Query all table properties
+1. 查询所有表属性
 
     ```
     mysql> select * from information_schema.table_properties;
@@ -95,7 +95,7 @@ For specific details on table properties, refer to the **Create Table** document
     +---------------+---------------+----------------------+------------------------------------------------+-------------------------+
     ```
 
-2. Query the default replication number
+2. 查询默认副本数
 
     ```
     mysql> select * from information_schema.table_properties where PROPERTY_NAME="default.replication_allocation";
@@ -108,3 +108,4 @@ For specific details on table properties, refer to the **Create Table** document
     | internal      | test_database        | test_table           | default.replication_allocation | tag.location.default: 1 |
     +---------------+----------------------+----------------------+--------------------------------+-------------------------+
     ```
+
