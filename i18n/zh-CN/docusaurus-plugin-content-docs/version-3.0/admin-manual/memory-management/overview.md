@@ -34,6 +34,7 @@ Apache Doris 作为基于 MPP 架构的 OLAP 数据库，数据从磁盘加载�
 
 ![Memory Structure](/images/memory-structure.png)
 
+```
 Server physical memory: 供服务器上所有进程使用的的物理内存，`cat /proc/meminfo` 或 `free -h` 看到的 MemTotal。
     |
     |---> Linux Kernel Memory And Other Process Memory: Linux 内核和其他进程使用的内存。
@@ -65,6 +66,7 @@ Server physical memory: 供服务器上所有进程使用的的物理内存，`c
                     |       |       |---> fragment: 和查询的 fragment 执行相同，stream load 通常只有 scan operator。
                     |       |       |
                     |       |       |---> channel: tablet channel 将数据写入临时的数据结构 memtable，然后 delta writer 将数据压缩后写入文件。
+```
 
 ---
 
@@ -83,15 +85,10 @@ Memory Tracker 分为不同的类型，其中 `type=overview` 的 Memory Tracker
 Memory Tracker 拥有如下的属性：
 
 1. Label: Memory Tracker 的名称
-
 2. Current Consumption(Bytes): 当前内存值，单位 B。
-
 3. Current Consumption(Normalize): 当前内存值的 .G.M.K 格式化输出。
-
 4. Peak Consumption(Bytes): BE 进程启动后的内存峰值，单位 B，BE 重启后重置。
-
 5. Peak Consumption(Normalize): BE 进程启动后内存峰值的 .G.M.K 格式化输出，BE 重启后重置。
-
 6. Parent Label: 用于表明两个 Memory Tracker 的父子关系，Child Tracker 记录的内存是 Parent Tracker 的子集，Parent 相同的不同 Tracker 记录的内存可能存在交集。
 
 有关 Memory Tracker 的更多介绍参考 [内存跟踪器](./memory-tracker.md)。
@@ -104,10 +101,13 @@ Memory Tracker 拥有如下的属性：
 
 当报错进程内存超限或可用内存不足时，在 `be/log/be.INFO` 日志中可以找到 `Memory Tracker Summary`，包含所有 `Type=overview` 和 `Type=global` 的 Memory Tracker，帮助使用者分析当时的内存状态，具体参考 [内存日志分析](./memory-log-analysis.md)
 
+---
+
 ## 内存分析
 
 将 `type=overview` 的 Memory Tracker 对应到上述内存结构中 `tracked` 下的每一部分内存：
 
+```
 Doris BE Process Memory
     |
     |---> tracked: 对应 `MemTrackerLimiter Label=sum of all trackers, Type=overview`，是 Memory Tracker 统计到的所有内存，即除 `Label=process resident memory` 和 `Label=process virtual memory` 外，其他 `type=overview` 的 Memory Tracker 的 Current Consumption 总和。
@@ -138,21 +138,26 @@ Doris BE Process Memory
     |---> Doris BE 进程物理内存，对应 `MemTrackerLimiter Label=process resident memory, Type=overview`，Current Consumption 取自 VmRSS in `/proc/self/status`，Peak Consumption 取自 VmHWM in `/proc/self/status`。
     |
     |---> Doris BE 进程虚拟内存，对应 `MemTrackerLimiter Label=process virtual memory, Type=overview`，Current Consumption 取自 VmSize in `/proc/self/status`，Peak Consumption 取自 VmPeak in `/proc/self/status`。
+```
 
 上述内存结构中每一部分内存的分析方法:
 
 1. [Jemalloc 内存分析](./jemalloc-memory-analysis.md)
 
-2. [Global 内存分析](./global-memory-analysis.md)
+2. [全局内存分析](./global-memory-analysis.md)
 
 3. [Query 内存分析](./query-memory-analysis.md)
 
 4. [Load 内存分析](./load-memory-analysis.md)
 
+---
+
 ## 内存问题 FAQ
 
 参考 [内存问题 FAQ](./memory-issue-faq.md) 分析常见的内存问题。
 
+---
+
 ## 内存控制策略
 
-参考 [内存控制策略](./memory-control-strategy.md) 中对内存分配、监控、回收的介绍，确保 Doris BE 进程内存的高效可控。
+参考 [内存控制策略](./memory-control-strategy.md) 中对内存分配、监控、回收的介绍，它们保证了 Doris BE 进程内存的高效可控。

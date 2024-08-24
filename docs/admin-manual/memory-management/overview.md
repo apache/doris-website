@@ -34,6 +34,7 @@ When facing complex calculations and large-scale operations with huge memory res
 
 ![Memory Structure](/images/memory-structure.png)
 
+```
 Server physical memory: The physical memory used by all processes on the server, MemTotal seen by `cat /proc/meminfo` or `free -h`.
     |
     |---> Linux Kernel Memory And Other Process Memory: Memory used by the Linux kernel and other processes.
@@ -65,6 +66,7 @@ Server physical memory: The physical memory used by all processes on the server,
                     |       |       |---> fragment: Same as query fragment execution, stream load usually only has scan operator.
                     |       |       |
                     |       |       |---> channel: The tablet channel writes data to a temporary data structure called memtable, and then the delta writer compresses the data and writes it to the file.
+```
 
 ---
 
@@ -83,15 +85,10 @@ Memory Tracker is divided into different types. Among the Memory Tracker of type
 Memory Tracker has the following properties:
 
 1. Label: the name of the Memory Tracker
-
 2. Current Consumption(Bytes): the current memory value, in B.
-
 3. Current Consumption(Normalize): the .G.M.K formatted output of the current memory value.
-
 4. Peak Consumption (Bytes): The peak memory value after the BE process is started, in units of B, and reset after the BE is restarted.
-
 5. Peak Consumption (Normalize): The .G.M.K formatted output of the peak memory value after the BE process is started, and reset after the BE is restarted.
-
 6. Parent Label: Used to indicate the parent-child relationship between two memory trackers. The memory recorded by the Child Tracker is a subset of the Parent Tracker. The memory recorded by different trackers with the same Parent may have an intersection.
 
 For more information about Memory Tracker, refer to [Memory Tracker](./memory-tracker.md).
@@ -104,10 +101,13 @@ Historical memory statistics can be viewed through Doris BE's Bvar page `http://
 
 When the error process memory exceeds the limit or the available memory is insufficient, you can find the `Memory Tracker Summary` in the `be/log/be.INFO` log, which contains all the Memory Trackers of `Type=overview` and `Type=global`, to help users analyze the memory status at that time. For details, please refer to [Memory Log Analysis](./memory-log-analysis.md)
 
+---
+
 ## Memory Analysis
 
 Correspond the Memory Tracker of `type=overview` to each part of the memory under `tracked` in the above memory structure:
 
+```
 Doris BE Process Memory
     |
     |---> tracked: corresponds to `MemTrackerLimiter Label=sum of all trackers, Type=overview`, which is all the memory counted by the Memory Tracker, that is, the sum of the Current Consumption of other Memory Trackers with `type=overview` except `Label=process resident memory` and `Label=process virtual memory`.
@@ -138,6 +138,7 @@ Doris BE Process Memory
     |---> Doris BE process physical memory, corresponding to `MemTrackerLimiter Label=process resident memory, Type=overview`, Current Consumption is taken from VmRSS in `/proc/self/status`, Peak Consumption is taken from VmHWM in `/proc/self/status`.
     |
     |---> Doris BE process virtual memory, corresponding to `MemTrackerLimiter Label=process virtual memory, Type=overview`, Current Consumption is taken from VmSize in `/proc/self/status`, and Peak Consumption is taken from VmPeak in `/proc/self/status`.
+```
 
 Analysis methods for each part of the memory in the above memory structure:
 
@@ -149,10 +150,14 @@ Analysis methods for each part of the memory in the above memory structure:
 
 4. [Load memory analysis](./load-memory-analysis.md)
 
+---
+
 ## Memory problem FAQ
 
 Refer to [Memory problem FAQ](./memory-issue-faq.md) to analyze common memory problems.
 
+---
+
 ## Memory control strategy
 
-Refer to [Memory control strategy](./memory-control-strategy.md) for an introduction to memory allocation, monitoring, and recycling to ensure efficient and controllable memory of the Doris BE process.
+Refer to [Memory Control Strategy](./memory-control-strategy.md) for an introduction to memory allocation, monitoring, and recycling, which ensure the efficient and controllable memory of the Doris BE process.
