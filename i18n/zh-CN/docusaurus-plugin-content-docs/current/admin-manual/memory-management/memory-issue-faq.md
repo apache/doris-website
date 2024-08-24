@@ -82,7 +82,7 @@ Doris 目前仍存在 Doris BE 进程虚拟内存过大的问题，通常是因�
 
 - 如果 `tablet_meta_schema_columns_count` 过大，是 `doris_total_tablet_schema_num` 的成百上千倍，说明集群中存在几百上千列的大宽表，此时相同数量的 Tablet 会占用更多的内存。
 
-### 7 Query 没有复杂算子只是简单的 Scan 数据，却要使用很大的内存
+## 7 Query 没有复杂算子只是简单的 Scan 数据，却要使用很大的内存
 
 可能是读取 Segment 时打开的 Column Reader、Index Read 占用的内存，参考 [Metadata 内存分析](./metadata-memory-analysis.md) 查看 Doris BE Bvar 中的 `doris_total_segment_num`、`doris_column_reader_num`、`doris_ordinal_index_memory_bytes`、`doris_zone_map_memory_bytes`、`doris_short_key_index_memory_bytes`的变化，这个现象同样常见于读取大宽表，当打开几十万个 Column Reader 时，内存可能会占用几十GB。
 
