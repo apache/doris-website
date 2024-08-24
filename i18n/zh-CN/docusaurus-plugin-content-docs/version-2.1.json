@@ -179,6 +179,14 @@
     "message": "内存管理",
     "description": "The label for category Memory Management in sidebar docs"
   },
+  "sidebar.docs.category.Managing Memory Analysis": {
+    "message": "内存分析",
+    "description": "The label for category Managing Memory Analysis in sidebar docs"
+  },
+  "sidebar.docs.category.Managing Memory Feature": {
+    "message": "内存特性",
+    "description": "The label for category Managing Memory Feature in sidebar docs"
+  },
   "sidebar.docs.category.Maintenance": {
     "message": "运维监控",
     "description": "The label for category Maintenance and Monitor in sidebar docs"

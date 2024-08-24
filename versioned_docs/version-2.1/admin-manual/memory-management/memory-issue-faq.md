@@ -82,7 +82,7 @@ This is usually because the metadata memory loaded when the BE process starts is
 
 - If `tablet_meta_schema_columns_count` is too large, hundreds or thousands of times larger than `doris_total_tablet_schema_num`, it means that there are large wide tables with hundreds or thousands of columns in the cluster. At this time, the same number of tablets will occupy more memory.
 
-### 7 Query does not have complex operators but simply scans data, but it uses a lot of memory
+## 7 Query does not have complex operators but simply scans data, but it uses a lot of memory
 
 It may be the memory occupied by the Column Reader and Index Read opened when reading the Segment. Refer to [Metadata Memory Analysis](./metadata-memory-analysis.md) to view the changes of `doris_total_segment_num`, `doris_column_reader_num`, `doris_ordinal_index_memory_bytes`, `doris_zone_map_memory_bytes`, and `doris_short_key_index_memory_bytes` in Doris BE Bvar. This phenomenon is also common when reading large wide tables. When hundreds of thousands of Column Readers are opened, the memory may occupy tens of GB.
 
