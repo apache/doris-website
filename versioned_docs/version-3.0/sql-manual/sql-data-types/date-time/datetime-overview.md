@@ -24,11 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+### Description
 
+Date types include DATE, TIME and DATETIME, DATE type only stores the date accurate to the day, DATETIME type stores the date and time, which can be accurate to microseconds. TIME type only stores the time, and **does not support the construction of the table storage for the time being, can only be used in the query process**.
 
+Do calculation for datetime types or converting them to numeric types, please use functions like [TIME_TO_SEC](../../sql-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/date-time-functions/unix-timestamp) . The result of directly converting them as numeric types as not guaranteed.
 
-The date data types include DATE and DATETIME:
-
-- **[DATE](../datetime/DATE.md)**: It stores only the date. The minimum precision unit is days.
-
-- **[DATETIME](../datetime/DATETIME.md)**: It stores both the date and time. The minimum precision unit is milliseconds.
+For more information refer to [DATE](./DATE), [TIME](./TIME) and [DATETIME](./DATETIME) documents.
