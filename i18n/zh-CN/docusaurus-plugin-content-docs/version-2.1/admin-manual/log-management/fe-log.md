@@ -79,7 +79,7 @@ under the License.
 | `audit_log_modules` | `{"slow_query", "query", "load", "stream_load"}` |  | `fe.audit.log` 中的模块类型。默认包括慢查询、查询、导入、stream load。其中“查询”只所有 DDL、DML、SQL 操作。“慢查询”指这些操作执行时间超过 `qe_slow_log_ms` 阈值的操作。“导入”指 Broker Load。“stream load”指 stream load 操作。 |
 | `qe_slow_log_ms` | 5000 |  | 当 DDL、DML、SQL 语句的执行时间超过这个阈值后，会在 `fe.audit.log` 的 `slow_query` 模块中单独记录。默认 5000 ms |
 | `audit_log_enable_compress` | false | true, false | 是否开启历史 `fe.audit.log` 日志压缩。默认关闭。开启后，历史审计日志会使用 gzip 压缩归档 |
-| `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE 日志的输出模式，其中 `NORMAL` 为默认的输出模式，日志同步输出且包含位置信息。`BRIEF` 模式是日志同步输出但不包含位置信息。`ASYNC` 模式是日志异步输出且不包含位置信息，三种日志输出模式的性能依次递增 |
+| `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE 日志的输出模式，其中 `NORMAL` 为默认的输出模式，日志同步输出且包含位置信息。`ASYNC` 默认是日志异步输出且包含位置信息。 `BRIEF` 模式是日志异步输出但不包含位置信息。三种日志输出模式的性能依次递增。|
 
 ## 开启 DEBUG 日志
 
