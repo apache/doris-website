@@ -199,6 +199,10 @@
     "message": "配置管理",
     "description": "The label for category Config in sidebar docs"
   },
+  "sidebar.docs.category.System Tables": {
+    "message": "系统表",
+    "description": "The label for category System Table in sidebar docs"
+  },
   "sidebar.docs.category.FE OPEN API": {
     "message": "FE OPEN API",
     "description": "The label for category FE OPEN API in sidebar docs"
