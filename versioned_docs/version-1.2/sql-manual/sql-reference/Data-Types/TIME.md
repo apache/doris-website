@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DATE",
+    "title": "TIME",
     "language": "en"
 }
 ---
@@ -24,25 +24,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## DATE
+## TIME
 
-DATE
+### name
 
-### Description
-#### Syntax
-date
-Date type, the current range of values is ['0000-01-01','9999-12-31'], and the default print form is 'yyyy-MM-dd'.
+TIME
+
+### description
+
+TIME type
+    `TIME` type that can appear as a query result. Table storage and manual CAST generation are not supported.
+    When calculating without constant folding, it could represent `[-838:59:59, 838:59:59]`。
 
 ### example
 
 ```sql
-SELECT DATE('2003-12-31 01:02:03');
-+-----------------------------+
-| DATE('2003-12-31 01:02:03') |
-+-----------------------------+
-| 2003-12-31                  |
-+-----------------------------+
+mysql [(none)]> select timediff('2020-01-01', '2000-01-01');
++--------------------------------------------------------+
+| timediff('2020-01-01 00:00:00', '2000-01-01 00:00:00') |
++--------------------------------------------------------+
+| 175320:00:00                                           |
++--------------------------------------------------------+
+1 row in set (0.00 sec)
 ```
 
 ### keywords
-DATE
+
+    TIME

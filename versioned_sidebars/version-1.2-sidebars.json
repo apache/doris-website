@@ -969,6 +969,7 @@
                                 "sql-manual/sql-reference/Data-Types/DECIMAL",
                                 "sql-manual/sql-reference/Data-Types/DECIMALV3",
                                 "sql-manual/sql-reference/Data-Types/DATE",
+                                "sql-manual/sql-reference/Data-Types/TIME",
                                 "sql-manual/sql-reference/Data-Types/DATETIME",
                                 "sql-manual/sql-reference/Data-Types/DATEV2",
                                 "sql-manual/sql-reference/Data-Types/DATETIMEV2",
