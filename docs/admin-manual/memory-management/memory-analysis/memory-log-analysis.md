@@ -87,4 +87,4 @@ Memory Tracker Summary:
 
 `Process Memory Summary` is the process memory status, refer to [Process Memory Status Log Analysis] above.
 
-`Memory Tracker Summary` is a summary of the process Memory Tracker, including all Memory Trackers of `Type=overview` and `Type=global`, to help users analyze the current memory status. Refer to [Overview](./overview.md) to analyze the meaning of each part of memory.
+`Memory Tracker Summary` is a summary of the process Memory Tracker, including all Memory Trackers of `Type=overview` and `Type=global`, to help users analyze the current memory status. Refer to [Overview](./../overview.md) to analyze the meaning of each part of memory.

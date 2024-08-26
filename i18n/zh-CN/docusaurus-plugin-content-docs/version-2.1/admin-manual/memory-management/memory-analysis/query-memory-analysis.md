@@ -44,7 +44,7 @@ MemTrackerLimiter Label=query, Type=overview, Limit=-1.00 B(-1 B), Used=83.32 MB
 
 ## 使用 Query Profile 分析查询内存使用
 
-依据 QueryID 在 `fe/log/fe.audit.log` 中找到包括 SQL 在内的查询信息，`explain SQL` 得到查询计划，`set enable_profile=true`后执行 SQL 得到查询的 Query Profile，有关 Query Profile 的详细介绍参考文档 [Query Profile](../../query/query-analysis/query-profile.md)，这里只介绍 Query Profile 中内存相关的内容，并据此定位使用大量内存的 Operator 和数据结构。
+依据 QueryID 在 `fe/log/fe.audit.log` 中找到包括 SQL 在内的查询信息，`explain SQL` 得到查询计划，`set enable_profile=true`后执行 SQL 得到查询的 Query Profile，有关 Query Profile 的详细介绍参考文档 [Query Profile](../../../query/query-analysis/query-profile.md)，这里只介绍 Query Profile 中内存相关的内容，并据此定位使用大量内存的 Operator 和数据结构。
 
 1. 定位使用大量内存的 Operator 或内存数据结构
 

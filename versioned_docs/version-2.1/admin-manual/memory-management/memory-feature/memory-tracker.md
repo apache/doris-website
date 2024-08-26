@@ -24,9 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris BE uses Memory Tracker to record process memory usage, including memory used in the life cycle of tasks such as query, import, compaction, schema change, and various caches. It supports real-time viewing of web pages and prints them to BE logs when memory-related errors are reported, which is used for memory analysis and troubleshooting of memory problems.
+Doris BE uses Memory Tracker to record process memory usage, including memory used in the life cycle of tasks such as query, load, compaction, schema change, and various caches. It supports real-time viewing of web pages and prints them to BE logs when memory-related errors are reported, which is used for memory analysis and troubleshooting of memory problems.
 
-The viewing methods of Memory Tracker, the reasons for excessive memory usage represented by different Memory Trackers, and the analysis methods for reducing their memory usage have been introduced in [Overview](overview) in conjunction with the Doris BE memory structure. This article only introduces the principles, structure, and some common problems of Memory Tracker.
+The viewing methods of Memory Tracker, the reasons for excessive memory usage represented by different Memory Trackers, and the analysis methods for reducing their memory usage have been introduced in [Overview](./../overview.md) in conjunction with the Doris BE memory structure. This article only introduces the principles, structure, and some common problems of Memory Tracker.
 
 ## Memory Tracking Principle
 
@@ -34,7 +34,7 @@ Memory Tracker relies on Doris Allocator to track each application and release o
 
 Process memory: Doris BE will periodically obtain Doris BE process memory from the system and is compatible with Cgroup.
 
-Task memory: Each query, import, compaction and other tasks will create its own unique Memory Tracker when initialized, and put the Memory Tracker into TLS (Thread Local Storage) during execution. Doris's main memory data structures are inherited from Allocator. Allocator will record each application and release of memory in TLS's Memory Tracker.
+Task memory: Each query, load, compaction and other tasks will create its own unique Memory Tracker when initialized, and put the Memory Tracker into TLS (Thread Local Storage) during execution. Doris's main memory data structures are inherited from Allocator. Allocator will record each application and release of memory in TLS's Memory Tracker.
 
 Operator memory: Different execution operators of tasks will also create their own Memory Trakcer, such as Join/Agg/Sink, etc., which support manual memory tracking or put it into TLS and recorded by `Doris Allocator` for execution logic control and analysis of memory usage of different operators in Query Profile.
 
@@ -44,7 +44,7 @@ Among them, the Doris BE process memory is taken from the operating system and c
 
 ## Memory Tracker Structure
 
-Based on the usage, Memory Tracker is divided into two categories. The first category, Memory Tracker Limiter, is unique in each query, import, Compaction and other tasks and global Cache, TabletMeta, and is used to observe and control memory usage; the second category, Memory Tracker, is mainly used to track memory hotspots during query execution, such as HashTable in Join/Aggregation/Sort/window functions, serialized intermediate data, etc., to analyze the memory usage of different operators in the query, and for memory control of imported data flushing.
+Based on the usage, Memory Tracker is divided into two categories. The first category, Memory Tracker Limiter, is unique in each query, load, Compaction and other tasks and global Cache, TabletMeta, and is used to observe and control memory usage; the second category, Memory Tracker, is mainly used to track memory hotspots during query execution, such as HashTable in Join/Aggregation/Sort/window functions, serialized intermediate data, etc., to analyze the memory usage of different operators in the query, and for memory control of load data flushing.
 
 The parent-child relationship between the two is only used for snapshot printing, and is associated with the label name, which is equivalent to a soft link. It does not rely on the parent-child relationship for simultaneous consumption, and the life cycle does not affect each other, reducing the cost of understanding and use. All memory trackers are stored in a set of maps, and provide methods such as printing snapshots of all memory tracker types, printing snapshots of tasks such as query/load/compaction, obtaining the group of queries/loads that currently use the most memory, and obtaining the group of queries/loads that currently use the most excessive memory.
 
@@ -66,11 +66,11 @@ The phenomenon of Memory Tracker Statistics Missing is different in versions bef
 
 ### Analysis of missing Memory Tracker statistics
 
-If the above phenomenon is observed, if the cluster is easy to restart and the phenomenon can be reproduced, refer to [Heap Profile Memory Analysis](heap-profile-memory-analysis.md) to use Jemalloc Heap Profile to analyze process memory.
+If the above phenomenon is observed, if the cluster is easy to restart and the phenomenon can be reproduced, refer to [Heap Profile Memory Analysis](./../memory-analysis/heap-profile-memory-analysis.md) to use Jemalloc Heap Profile to analyze process memory.
 
-Otherwise, you can refer to [Metadata Memory Analysis](./metadata-memory-analysis.md) to analyze the metadata memory of Doris BE.
+Otherwise, you can refer to [Metadata Memory Analysis](./../memory-analysis/metadata-memory-analysis.md) to analyze the metadata memory of Doris BE.
 
-> In versions prior to Doris 2.1.5, Segment Cache Memory Tacker is inaccurate. When you find that Memory Tracker statistics are missing or BE process memory does not decrease, you can refer to [Doris Cache Memory Analysis](./doris-cache-memory-analysis.md) to analyze SegmentCache memory usage and try to close Segment Cache before continuing the test. This is because the memory statistics of some indexes, including the Primary Key Index, are inaccurate, resulting in the Segment Cache memory not being effectively restricted, often occupying too much memory, especially on large wide tables with hundreds or thousands of columns. Refer to [Metadata Memory Analysis](./metadata-memory-analysis.md) If you find that `doris_be_cache_usage{name="SegmentCache"}` in Doris BE Metrics is not large, but `doris_column_reader_num` in Doris BE Bvar is large, you need to suspect the memory usage of Segment Cache. If you see `Segment` and `ColumnReader` fields in the call stack with a large memory usage in Heap Profile, it can be basically confirmed that Segment Cache occupies a large amount of memory.
+> In versions prior to Doris 2.1.5, Segment Cache Memory Tacker is inaccurate. When you find that Memory Tracker statistics are missing or BE process memory does not decrease, you can refer to [Doris Cache Memory Analysis](./../memory-analysis/doris-cache-memory-analysis.md) to analyze SegmentCache memory usage and try to close Segment Cache before continuing the test. This is because the memory statistics of some indexes, including the Primary Key Index, are inaccurate, resulting in the Segment Cache memory not being effectively restricted, often occupying too much memory, especially on large wide tables with hundreds or thousands of columns. Refer to [Metadata Memory Analysis](./../memory-analysis/metadata-memory-analysis.md) If you find that `doris_be_cache_usage{name="SegmentCache"}` in Doris BE Metrics is not large, but `doris_column_reader_num` in Doris BE Bvar is large, you need to suspect the memory usage of Segment Cache. If you see `Segment` and `ColumnReader` fields in the call stack with a large memory usage in Heap Profile, it can be basically confirmed that Segment Cache occupies a large amount of memory.
 
 ### Reasons for missing Memory Tracker statistics
 

@@ -82,7 +82,6 @@ Speed ​​up point query execution, mainly used for log analysis.
 
 ```
 - FileCache: File cache used by external table queries and Cloud.
-
 - CommonObjLRUCache
 - LastSuccessChannelCache
 ```
@@ -119,7 +118,7 @@ To view the memory size occupied by each cache in real time, refer to [Global Me
 
 There are various caches when Doris BE is running. Usually, there is no need to pay attention to the cache memory, because when the BE process has insufficient available memory, the memory GC will be triggered to clean up the cache first.
 
-However, if the cache is too large, it will increase the pressure of memory GC, increase the risk of insufficient available memory for query or import error processes, and increase the risk of BE process OOM Crash. So if the memory is constantly tight, you can consider lowering the upper limit of the cache, closing the cache, or reducing the survival time of the cache entry. A smaller cache may reduce query performance in some scenarios, but it is usually tolerable in a production environment. After adjustment, you can observe the query and import performance for a period of time.
+However, if the cache is too large, it will increase the pressure of memory GC, increase the risk of insufficient available memory for query or load error processes, and increase the risk of BE process OOM Crash. So if the memory is constantly tight, you can consider lowering the upper limit of the cache, closing the cache, or reducing the survival time of the cache entry. A smaller cache may reduce query performance in some scenarios, but it is usually tolerable in a production environment. After adjustment, you can observe the query and load performance for a period of time.
 
 After Doris 2.1.6, if you want to manually clean up all caches during BE operation, execute `curl http://{be_host}:{be_web_server_port}/api/clear_cache/all`, and the released memory size will be returned.
 
@@ -131,7 +130,7 @@ The following analyzes the situation where different caches use more memory.
 
 - Execute `curl -X POST http://{be_host}:{be_web_server_port}/api/update_config?disable_storage_page_cache=true` to disable DataPageCache for the running BE, and clear it after a maximum of 10 minutes by default. However, this is a temporary method. DataPageCache will take effect again after BE restarts.
 
-- If you are sure that you want to reduce the memory usage of DataPageCache for a long time, refer to [BE Configuration Items](../../admin-manual/config/be-config.md), reduce `storage_page_cache_limit` in `conf/be.conf` to reduce the capacity of DataPageCache, or reduce `data_page_cache_stale_sweep_time_sec` to reduce the effective time of DataPageCache cache, or increase `disable_storage_page_cache=true` to disable DataPageCache, and then restart the BE process.
+- If you are sure that you want to reduce the memory usage of DataPageCache for a long time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md), reduce `storage_page_cache_limit` in `conf/be.conf` to reduce the capacity of DataPageCache, or reduce `data_page_cache_stale_sweep_time_sec` to reduce the effective time of DataPageCache cache, or increase `disable_storage_page_cache=true` to disable DataPageCache, and then restart the BE process.
 
 ### SegmentCache uses a lot of memory
 
@@ -139,10 +138,10 @@ The following analyzes the situation where different caches use more memory.
 
 - Execute `curl -X POST http:/{be_host}:{be_web_server_port}/api/update_config?disable_segment_cache=true` to disable SegmentCache for the running BE, and clear it after a maximum of 10 minutes by default, but this is a temporary method, and SegmentCache will take effect again after BE restarts.
 
-- If you are sure that you want to reduce the memory usage of SegmentCache for a long time, refer to [BE Configuration Items](../../admin-manual/config/be-config.md), adjust `segment_cache_capacity` or `segment_cache_memory_percentage` in `conf/be.conf` to reduce the capacity of SegmentCache, or reduce `tablet_rowset_stale_sweep_time_sec` to reduce the effective time of SegmentCache cache, or add `disable_segment_cache=true` in `conf/be.conf` to disable SegmentCache and restart the BE process.
+- If you are sure that you want to reduce the memory usage of SegmentCache for a long time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md), adjust `segment_cache_capacity` or `segment_cache_memory_percentage` in `conf/be.conf` to reduce the capacity of SegmentCache, or reduce `tablet_rowset_stale_sweep_time_sec` to reduce the effective time of SegmentCache cache, or add `disable_segment_cache=true` in `conf/be.conf` to disable SegmentCache and restart the BE process.
 
 ### PKIndexPageCache uses a lot of memory
 
 - After Doris 2.1.6, execute `curl http://{be_host}:{be_web_server_port}/api/clear_cache/PKIndexPageCache` to manually clean up during BE operation.
 
-- Refer to [BE configuration items](../../admin-manual/config/be-config.md), reduce the capacity of PKIndexPageCache by lowering `pk_storage_page_cache_limit` in `conf/be.conf`, or reduce the effective time of PKIndexPageCache by lowering `pk_index_page_cache_stale_sweep_time_sec`, or add `disable_pk_storage_page_cache=true` in `conf/be.conf` to disable PKIndexPageCache, and then restart the BE process.
+- Refer to [BE configuration items](../../../admin-manual/config/be-config.md), reduce the capacity of PKIndexPageCache by lowering `pk_storage_page_cache_limit` in `conf/be.conf`, or reduce the effective time of PKIndexPageCache by lowering `pk_index_page_cache_stale_sweep_time_sec`, or add `disable_pk_storage_page_cache=true` in `conf/be.conf` to disable PKIndexPageCache, and then restart the BE process.

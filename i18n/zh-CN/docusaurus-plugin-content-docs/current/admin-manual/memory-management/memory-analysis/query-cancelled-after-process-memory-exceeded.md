@@ -51,7 +51,7 @@ under the License.
 
 - 若任务自身使用的内存很少，参考 [查询和导入之外的进程内存过大] 尝试减少进程其他位置的内存使用，从而保留更多的内存用于查询等任务执行。
 
-有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./memory-control-strategy.md)
+有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)
 
 ### 1 在内存 Full GC 中被 Cancel
 
@@ -103,8 +103,8 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[MEM_LIMIT_EXCEEDED
 
 ## 查询和导入之外的进程内存过大
 
-任务因进程可用内存不足被 Cancel 的同时可以在 `be/log/be.INFO` 中找到进程内存统计日志。参考 [内存日志分析](./memory-log-analysis.md) 找到日志中的 `Memory Tracker Summary`，然后参考 [内存跟踪器](./memory-tracker.md) 中 [Memory Tracker 统计缺失] 章节分析 Memory Tracker 是否存在统计缺失。
+任务因进程可用内存不足被 Cancel 的同时可以在 `be/log/be.INFO` 中找到进程内存统计日志。参考 [内存日志分析](./memory-log-analysis.md) 找到日志中的 `Memory Tracker Summary`，然后参考 [内存跟踪器](./../memory-feature/memory-tracker.md) 中 [Memory Tracker 统计缺失] 章节分析 Memory Tracker 是否存在统计缺失。
 
-若 Memory Tracker 存在统计缺失，则参考 [Memory Tracker 统计缺失] 章节进一步分析。否则 Memory Tracker 统计了大部分内存，不存在统计缺失，参考 [Overview](./overview.md) 分析 Doris BE 进程不同部分内存占用过大的原因以及减少其内存使用的方法。
+若 Memory Tracker 存在统计缺失，则参考 [Memory Tracker 统计缺失] 章节进一步分析。否则 Memory Tracker 统计了大部分内存，不存在统计缺失，参考 [Overview](./../overview.md) 分析 Doris BE 进程不同部分内存占用过大的原因以及减少其内存使用的方法。
 
 此外需要注意 Query Cancel 卡住的问题。Full GC 会先按照内存从大到小 Cancel Query，再按照内存从大到小 Cancel Load。若 Query 在内存 Full GC 中被 Cancel，但此时 BE 进程中存在其他 Query 的内存大于当前被 Cancel 的 Query，需要关注这些更大内存的 Query 是否在 Cancel 过程中卡住。通常执行 `grep 更大内存的queryID be/log/be.INFO` 后查看这些更大内存的 Query 是否触发过 Cancel，并对比 Cancel 的时间和此次 Full GC 的时间，若相隔较长（大于 3s），那么这些在 Cancel 过程中卡住的更大内存的 Query 无法释放内存，也将导致后续的 Query 执行内存不足。
