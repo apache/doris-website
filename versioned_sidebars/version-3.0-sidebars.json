@@ -871,7 +871,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile-approx",
-                                "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
+                                "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/histogram",
                                 "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
                                 "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
@@ -1222,8 +1222,8 @@
                                 "sql-manual/sql-data-types/aggregate/aggregate-overview",
                                 "sql-manual/sql-data-types/aggregate/HLL",
                                 "sql-manual/sql-data-types/aggregate/BITMAP",
-                                "sql-manual/sql-data-types/aggregate/QUANTILE_STATE",
-                                "sql-manual/sql-data-types/aggregate/AGG_STATE"
+                                "sql-manual/sql-data-types/aggregate/QUANTILE-STATE",
+                                "sql-manual/sql-data-types/aggregate/AGG-STATE"
                             ]
                         },
                         {

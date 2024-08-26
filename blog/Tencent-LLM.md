@@ -116,7 +116,7 @@ We have drawn two main takeaways for you from our architectural optimization exp
 
 Before we adopted Apache Doris, we used to have ClickHouse to accelerate the computation of tags and metrics, and Elasticsearch to process dimensional data. That's two analytic engines and requires us to adapt the query statements to both of them. It was high-maintenance.
 
-Thus, we replaced ClickHouse with Apache Doris, and utilized the [Elasticsearch Catalog](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/es) functionality to connect Elasticsearch data to Doris. In this way, we make Doris our unified query gateway. 
+Thus, we replaced ClickHouse with Apache Doris, and utilized the [Elasticsearch Catalog](https://doris.apache.org/docs/lakehouse/database/es) functionality to connect Elasticsearch data to Doris. In this way, we make Doris our unified query gateway. 
 
 **2. Split the flat tables**
 
