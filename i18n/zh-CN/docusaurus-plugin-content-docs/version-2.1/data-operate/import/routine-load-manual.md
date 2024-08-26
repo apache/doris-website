@@ -419,7 +419,7 @@ FROM KAFKA [data_source_properties]
 | 子模块                | 参数                                                         | 说明                                                         |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | COLUMNS TERMINATED BY | <column_separator>                                           | 用于指定列分隔符，默认为 `\t`。例如需要指定逗号为分隔符，可以使用以下命令：`COLUMN TERMINATED BY ","`对于空值处理，需要注意以下事项：<br />- 空值（null）需要用 `\n` 表示，`a,\n,b` 数据表示中间列是一个空值（null）<br />- 空字符串（''）直接将数据置空，a,,b 数据表示中间列是一个空字符串（''）|
-| COLUMNS               | <column_name>                                                | 用于指定对应的列名例如需要指定导入列 `(k1, k2, k3)`，可以使用以下命令：`COLUMNS(k1, k2, k3)`在以下情况下可以缺省 COLUMNS 子句：<br />- CSV 中的列与表中的列一一对应 <br />- JSON 中的 key 列与表中的列名相同</p> |   
+| COLUMNS               | <column_name>                                                | 用于指定对应的列名例如需要指定导入列 `(k1, k2, k3)`，可以使用以下命令：`COLUMNS(k1, k2, k3)`在以下情况下可以缺省 COLUMNS 子句：<br />- CSV 中的列与表中的列一一对应 <br />- JSON 中的 key 列与表中的列名相同 |   
 | &nbsp;&nbsp;               | <column_mapping>      | 在导入过程中，可以通过列映射进行列的过滤和转换。如在导入的过程中，目标列需要基于数据源的某一列进行衍生计算，目标列 k4 基于 k3 列使用公式 k3+1 计算得出，需要可以使用以下命令：`COLUMNS(k1, k2, k3, k4 = k3 + 1)`详细内容可以参考[数据转换](../import/load-data-convert) |                                                              |
 | WHERE                 | <where_expr>                                                 | 指定 where_expr 可以根据条件过滤导入的数据源。如只希望导入 age > 30 的数据源，可以使用以下命令：`WHERE age > 30` |
 | PARTITION             | <partition_name>                                             | 指定导入目标表中的哪些 partition。如果不指定，会自动导入对应的 partition 中。如希望导入目标表 p1 与 p2 分区，可以使用以下命令：`PARTITION(p1, p2)` |
