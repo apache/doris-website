@@ -57,13 +57,13 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
    
     当前 Doris 内部保留 30 分钟内最近成功的 label。
     
-2. column_separator：用于指定导入文件中的列分隔符，默认为\t。如果是不可见字符，则需要加\x作为前缀，使用十六进制来表示分隔符。
+2. column_separator：用于指定导入文件中的列分隔符，默认为`\t`。如果是不可见字符，则需要加`\x`作为前缀，使用十六进制来表示分隔符。
    
-    如 hive 文件的分隔符\x01，需要指定为-H "column_separator:\x01"。
+    如 hive 文件的分隔符`\x01`，需要指定为`-H column_separator:\x01`。
     
     可以使用多个字符的组合作为列分隔符。
     
-3. line_delimiter：用于指定导入文件中的换行符，默认为\n。可以使用做多个字符的组合作为换行符。
+3. line_delimiter：用于指定导入文件中的换行符，默认为`\n`。可以使用做多个字符的组合作为换行符。
    
 4. columns：用于指定导入文件中的列和 table 中的列的对应关系。如果源文件中的列正好对应表中的内容，那么是不需要指定这个字段的内容的。
    
@@ -105,19 +105,20 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     
     简单模式：没有设置 jsonpaths 参数即为简单模式，这种模式下要求 json 数据是对象类型，例如：
     
-       ```
-       {"k1":1, "k2":2, "k3":"hello"}，其中 k1，k2，k3 是列名字。
-       ```
+    ```sql
+    {"k1":1, "k2":2, "k3":"hello"}，其中 k1，k2，k3 是列名字。
+    ```
     匹配模式：用于 json 数据相对复杂，需要通过 jsonpaths 参数匹配对应的 value。
     
 14. strip_outer_array: 布尔类型，为 true 表示 json 数据以数组对象开始且将数组对象中进行展平，默认值是 false。例如：
-       ```
-           [
-            {"k1" : 1, "v1" : 2},
-            {"k1" : 3, "v1" : 4}
-           ]
-           当strip_outer_array为true，最后导入到doris中会生成两行数据。
-       ```
+
+    ```sql
+    [
+    {"k1" : 1, "v1" : 2},
+    {"k1" : 3, "v1" : 4}
+    ]
+    当strip_outer_array为true，最后导入到doris中会生成两行数据。
+    ```
     
 15. json_root: json_root 为合法的 jsonpath 字符串，用于指定 json document 的根节点，默认值为""。
     
@@ -137,10 +138,10 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 
 23. hidden_columns: 用于指定导入数据中包含的隐藏列，在 Header 中不包含 columns 时生效，多个 hidden column 用逗号分割。
 
-      ```
-      hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__
-      系统会使用用户指定的数据导入数据。在上述用例中，导入数据中最后一列数据为__DORIS_SEQUENCE_COL__。
-      ```
+    ```text
+    hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__
+    系统会使用用户指定的数据导入数据。在上述用例中，导入数据中最后一列数据为__DORIS_SEQUENCE_COL__。
+    ```
 
 24. load_to_single_tablet: 布尔类型，为 true 表示支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。
 
@@ -154,84 +155,87 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 
 29. enclose: 包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。
   
-30. escape：转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，然后将数据修改为"a,'b,\'c'"。 
+30. escape：转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。 
 
 ### Example
 
 1. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，使用 Label 用于去重。指定超时时间为 100 秒
    
-   ```
+   ```sql
    curl --location-trusted -u root -H "label:123" -H "timeout:100" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
 
 2. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，使用 Label 用于去重，并且只导入 k1 等于 20180601 的数据
         
-   ```
+   ```sql
    curl --location-trusted -u root -H "label:123" -H "where: k1=20180601" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
     
 3. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，允许 20% 的错误率（用户是 defalut_cluster 中的）
         
-   ```
+   ```sql
    curl --location-trusted -u root -H "label:123" -H "max_filter_ratio:0.2" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
     
 4. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表，允许 20% 的错误率，并且指定文件的列名（用户是 defalut_cluster 中的）
    
-   ```
+   ```sql
    curl --location-trusted -u root  -H "label:123" -H "max_filter_ratio:0.2" -H "columns: k2, k1, v1" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
     
 5. 将本地文件'testData'中的数据导入到数据库'testDb'中'testTbl'的表中的 p1, p2 分区，允许 20% 的错误率。
         
-   ```
+   ```sql
    curl --location-trusted -u root  -H "label:123" -H "max_filter_ratio:0.2" -H "partitions: p1, p2" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
     
 6. 使用 streaming 方式导入（用户是 defalut_cluster 中的）
         
-   ```
+   ```sql
    seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
    ```
     
 7. 导入含有 HLL 列的表，可以是表中的列或者数据中的列用于生成 HLL 列，也可使用 hll_empty 补充数据中没有的列
         
-   ```
+   ```sql
    curl --location-trusted -u root -H "columns: k1, k2, v1=hll_hash(k1), v2=hll_empty()" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
     
 8. 导入数据进行严格模式过滤，并设置时区为 Africa/Abidjan
         
-    ```
+    ```sql
     curl --location-trusted -u root -H "strict_mode: true" -H "timezone: Africa/Abidjan" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
     
 9. 导入含有 BITMAP 列的表，可以是表中的列或者数据中的列用于生成 BITMAP 列，也可以使用 bitmap_empty 填充空的 Bitmap
 
-   ```
+   ```sql
    curl --location-trusted -u root -H "columns: k1, k2, v1=to_bitmap(k1), v2=bitmap_empty()" -T testData http://host:port/api/testDb/testTbl/_stream_load
    ```
    
 10. 简单模式，导入 json 数据
     
     表结构：
-     ```
-     `category` varchar(512) NULL COMMENT "",
-     `author` varchar(512) NULL COMMENT "",
-     `title` varchar(512) NULL COMMENT "",
-     `price` double NULL COMMENT ""
+    ```sql
+    `category` varchar(512) NULL COMMENT "",
+    `author` varchar(512) NULL COMMENT "",
+    `title` varchar(512) NULL COMMENT "",
+    `price` double NULL COMMENT ""
     ```
     json数据格式：
-    ```
+    
+    ```json
     {"category":"C++","author":"avc","title":"C++ primer","price":895}
     ```
+    
     导入命令：
-    ```
+
+    ```sql
     curl --location-trusted -u root  -H "label:123" -H "format: json" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
-    为了提升吞吐量，支持一次性导入多条json数据，每行为一个json对象，默认使用\n作为换行符，需要将read_json_by_line设置为true，json数据格式如下：
+    为了提升吞吐量，支持一次性导入多条json数据，每行为一个json对象，默认使用`\n`作为换行符，需要将read_json_by_line设置为true，json数据格式如下：
             
-    ```
+    ```json
     {"category":"C++","author":"avc","title":"C++ primer","price":89.5}
     {"category":"Java","author":"avc","title":"Effective Java","price":95}
     {"category":"Linux","author":"avc","title":"Linux kernel","price":195}
@@ -241,14 +245,15 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 
     json数据格式：
 
-    ```
+    ```json
     [
     {"category":"xuxb111","author":"1avc","title":"SayingsoftheCentury","price":895},{"category":"xuxb222","author":"2avc","title":"SayingsoftheCentury","price":895},
     {"category":"xuxb333","author":"3avc","title":"SayingsoftheCentury","price":895}
     ]
     ```
     通过指定jsonpath进行精准导入，例如只导入category、author、price三个属性
-    ```
+
+    ```sql
     curl --location-trusted -u root  -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\"$.price\",\"$.author\"]" -H "strip_outer_array: true" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
     
@@ -259,7 +264,8 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 12. 用户指定 json 根节点
 
     json数据格式:
-    ```
+
+    ```json
     {
      "RECORDS":[
     {"category":"11","title":"SayingsoftheCentury","price":895,"timestamp":1589191587},
@@ -269,23 +275,24 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     }
     ```
     通过指定jsonpath进行精准导入，例如只导入category、author、price三个属性 
-    ```
+
+    ```sql
     curl --location-trusted -u root  -H "columns: category, price, author" -H "label:123" -H "format: json" -H "jsonpaths: [\"$.category\",\"$.price\",\"$.author\"]" -H "strip_outer_array: true" -H "json_root: $.RECORDS" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
 13. 删除与这批导入 key 相同的数据
     
-    ```
+    ```sql
     curl --location-trusted -u root -H "merge_type: DELETE" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
 
 14. 将这批数据中与 flag 列为 ture 的数据相匹配的列删除，其他行正常追加
     
-    ```
+    ```sql
     curl --location-trusted -u root: -H "column_separator:," -H "columns: siteid, citycode, username, pv, flag" -H "merge_type: MERGE" -H "delete: flag=1"  -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
 15. 导入数据到含有 sequence 列的 UNIQUE_KEYS 表中
 
-    ```
+    ```sql
     curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
     
@@ -293,18 +300,20 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
    
     文件数据：
 
-    ```
-     id,name,age
-     1,doris,20
-     2,flink,10
+    ```sql
+    id,name,age
+    1,doris,20
+    2,flink,10
     ```
     通过指定`format=csv_with_names`过滤首行导入
-    ```
+
+    ```sql
     curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_names" -H "column_separator:," http://host:port/api/testDb/testTbl/_stream_load
     ```
 17. 导入数据到表字段含有 DEFAULT CURRENT_TIMESTAMP 的表中
 
     表结构：
+
     ```sql
     `id` bigint(30) NOT NULL,
     `order_code` varchar(30) DEFAULT NULL COMMENT '',
@@ -312,12 +321,14 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
     ```
     
     json数据格式：
-    ```
+
+    ```json
     {"id":1,"order_Code":"avc"}
     ```
 
     导入命令：
-    ```
+
+    ```sql
     curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
     ```
 ### Keywords
