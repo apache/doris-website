@@ -24,7 +24,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Memory management is one of the most important components of Doris. During the operation of Doris, both importing and querying rely on a large number of memory operations. The quality of memory management directly affects the stability and performance of Doris.
+Memory management is one of the most important components of Doris. During the operation of Doris, both load and query rely on a large number of memory operations. The quality of memory management directly affects the stability and performance of Doris.
 
 As an OLAP database based on the MPP architecture, Apache Doris will stream and calculate between operators after loading data from disk to memory, and store the intermediate results of calculation in memory. This method reduces frequent disk I/O operations and makes full use of the parallel computing capabilities of multiple machines and multiple cores, which can show huge advantages in performance.
 
@@ -61,7 +61,7 @@ Server physical memory: The physical memory used by all processes on the server,
                     |       |       |       |
                     |       |       |       |---> operator: includes memory data structures such as data block, hash table, arena, exchange sink buffer, etc.
                     |       |
-                    |       |---> load: Memory used during data import. Data import includes two stages: fragment reading and channel writing data.
+                    |       |---> load: Memory used during data load. Data load includes two stages: fragment reading and channel writing data.
                     |       |       |
                     |       |       |---> fragment: Same as query fragment execution, stream load usually only has scan operator.
                     |       |       |
@@ -91,7 +91,7 @@ Memory Tracker has the following properties:
 5. Peak Consumption (Normalize): The .G.M.K formatted output of the peak memory value after the BE process is started, and reset after the BE is restarted.
 6. Parent Label: Used to indicate the parent-child relationship between two memory trackers. The memory recorded by the Child Tracker is a subset of the Parent Tracker. The memory recorded by different trackers with the same Parent may have an intersection.
 
-For more information about Memory Tracker, refer to [Memory Tracker](./memory-tracker.md).
+For more information about Memory Tracker, refer to [Memory Tracker](./memory-feature/memory-tracker.md).
 
 ### Historical memory statistics
 
@@ -99,7 +99,7 @@ Historical memory statistics can be viewed through Doris BE's Bvar page `http://
 
 ![Bvar Memory](/images/bvar-memory.png)
 
-When the error process memory exceeds the limit or the available memory is insufficient, you can find the `Memory Tracker Summary` in the `be/log/be.INFO` log, which contains all the Memory Trackers of `Type=overview` and `Type=global`, to help users analyze the memory status at that time. For details, please refer to [Memory Log Analysis](./memory-log-analysis.md)
+When the error process memory exceeds the limit or the available memory is insufficient, you can find the `Memory Tracker Summary` in the `be/log/be.INFO` log, which contains all the Memory Trackers of `Type=overview` and `Type=global`, to help users analyze the memory status at that time. For details, please refer to [Memory Log Analysis](./memory-analysis/memory-log-analysis.md)
 
 ---
 
@@ -126,7 +126,7 @@ Doris BE Process Memory
             |       |
             |       |---> load: corresponds to `MemTrackerLimiter Label=load, Type=overview`, the sum of Current Consumption of all Load Memory Trackers. The web page `http://{be_host}:{be_web_server_port}/mem_tracker?type=load` displays all Memory Trackers of `type=load`.
             |       |
-            |       |---> reserved: corresponds to `MemTrackerLimiter Label=reserved_memory, Type=overview`. The reserved memory is used when querying the Hash Table and other memory-intensive behaviors. Before querying the Hash Table, the memory of the Hash Table to be constructed will be reserved from the Memory Tracker to ensure that subsequent memory requests can be met.
+            |       |---> reserved: corresponds to `MemTrackerLimiter Label=reserved_memory, Type=overview`. The reserved memory is used when query the Hash Table and other memory-intensive behaviors. Before query the Hash Table, the memory of the Hash Table to be constructed will be reserved from the Memory Tracker to ensure that subsequent memory requests can be met.
             |       |
             |       |---> compaction: corresponds to `MemTrackerLimiter Label=compaction, Type=overview`, the sum of Current Consumption of all Compaction Memory Trackers. The web page `http://{be_host}:{be_web_server_port}/mem_tracker?type=compaction` displays all Memory Trackers of `type=compaction`.
             |       |
@@ -142,13 +142,13 @@ Doris BE Process Memory
 
 Analysis methods for each part of the memory in the above memory structure:
 
-1. [Jemalloc memory analysis](./jemalloc-memory-analysis.md)
+1. [Jemalloc memory analysis](./memory-analysis/jemalloc-memory-analysis.md)
 
-2. [Global memory analysis](./global-memory-analysis.md)
+2. [Global memory analysis](./memory-analysis/global-memory-analysis.md)
 
-3. [Query memory analysis](./query-memory-analysis.md)
+3. [Query memory analysis](./memory-analysis/query-memory-analysis.md)
 
-4. [Load memory analysis](./load-memory-analysis.md)
+4. [Load memory analysis](./memory-analysis/load-memory-analysis.md)
 
 ---
 
@@ -160,4 +160,4 @@ Refer to [Memory problem FAQ](./memory-issue-faq.md) to analyze common memory pr
 
 ## Memory control strategy
 
-Refer to [Memory Control Strategy](./memory-control-strategy.md) for an introduction to memory allocation, monitoring, and recycling, which ensure the efficient and controllable memory of the Doris BE process.
+Refer to [Memory Control Strategy](./memory-feature/memory-control-strategy.md) for an introduction to memory allocation, monitoring, and recycling, which ensure the efficient and controllable memory of the Doris BE process.

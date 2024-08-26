@@ -93,4 +93,4 @@ Memory Tracker Summary:
 
 `Process Memory Summary` 是进程内存状态，参考上文 [进程内存状态日志分析]。
 
-`Memory Tracker Summary` 是进程 Memory Tracker 汇总，包含所有 `Type=overview` 和 `Type=global` 的 Memory Tracker，帮助使用者分析当时的内存状态，参考 [Overview](./overview.md) 分析每一部分内存的含义。
+`Memory Tracker Summary` 是进程 Memory Tracker 汇总，包含所有 `Type=overview` 和 `Type=global` 的 Memory Tracker，帮助使用者分析当时的内存状态，参考 [Overview](./../overview.md) 分析每一部分内存的含义。

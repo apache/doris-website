@@ -85,4 +85,4 @@ Global Memory Tracker `Label=global, Type=overview` 的值等于所有 `Type=glo
 
 ### Orphan 分析方法
 
-如果 Orphan Memory Tracker 值过大意味着 Memory Tracker 统计缺失，参考 [内存跟踪器](./memory-tracker.md) 中 [Memory Tracker 统计缺失] 中的分析。
+如果 Orphan Memory Tracker 值过大意味着 Memory Tracker 统计缺失，参考 [内存跟踪器](./../memory-feature/memory-tracker.md) 中 [Memory Tracker 统计缺失] 中的分析。

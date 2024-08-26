@@ -50,7 +50,7 @@ If the following phenomenon is met, it can be considered that the cluster memory
 
 - Locate the memory log before the OOM Killer time point in `be/log/be.INFO`, search the `GC` keyword from bottom to top, and find that the BE process frequently executes memory GC.
 
-At this time, refer to [BE Configuration Items](../../admin-manual/config/be-config.md) to reduce `mem_limit` and increase `max_sys_mem_available_low_water_mark_bytes` in `be/conf/be.conf`. For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Control Strategy](./memory-control-strategy.md).
+At this time, refer to [BE Configuration Items](../../../admin-manual/config/be-config.md) to reduce `mem_limit` and increase `max_sys_mem_available_low_water_mark_bytes` in `be/conf/be.conf`. For more information about memory limits, watermark calculation methods, and memory GC, see [Memory Control Strategy](./../memory-feature/memory-control-strategy.md).
 
 In addition, other parameters can be adjusted to control memory status refresh and GC, including `memory_gc_sleep_time_ms`, `soft_mem_limit_frac`, `memory_maintenance_sleep_time_ms`, `process_minor_gc_size`, `process_full_gc_size`, `enable_query_memory_overcommit`, `thread_wait_gc_max_milliseconds`, etc.
 
@@ -60,7 +60,7 @@ If the cluster memory pressure is too high, the memory status may be abnormal at
 
 ### Memory Tracker Statistics Missing
 
-If the difference between `Label=process resident memory` Memory Tracker and `Label=sum of all trackers` Memory Tracker in the log `Memory Tracker Summary` is large, or the Orphan Memory Tracker value is too large, it means that there is a statistical missing in the Memory Tracker. Refer to the [Memory Tracker Statistics Missing] section in [Memory Tracker](./memory-tracker.md) for further analysis.
+If the difference between `Label=process resident memory` Memory Tracker and `Label=sum of all trackers` Memory Tracker in the log `Memory Tracker Summary` is large, or the Orphan Memory Tracker value is too large, it means that there is a statistical missing in the Memory Tracker. Refer to the [Memory Tracker Statistics Missing] section in [Memory Tracker](./../memory-feature/memory-tracker.md) for further analysis.
 
 ### Query Cancel stuck
 
@@ -70,7 +70,7 @@ Locate the memory log before the OOM Killer time point in `be/log/be.INFO`, and 
 
 ### Jemalloc Metadata has a large memory footprint
 
-Memory GC currently cannot release Jemalloc Metadata. Refer to the analysis of `Label=tc/jemalloc_metadata` Memory Tracker in [Memory Tracker](./memory-tracker.md) to reduce memory usage.
+Memory GC currently cannot release Jemalloc Metadata. Refer to the analysis of `Label=tc/jemalloc_metadata` Memory Tracker in [Memory Tracker](./../memory-feature/memory-tracker.md) to reduce memory usage.
 
 ### Jemalloc Cache has a large memory footprint
 
