@@ -213,7 +213,7 @@ with HDFS (
 
 ### Export to S3
 
-Export all data from the s3_test table to S3, with the export format as csv and using the invisible character "\x07" as the row delimiter.
+Export all data from the s3_test table to S3, with the export format as csv and using the invisible character `\x07` as the row delimiter.
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
