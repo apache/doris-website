@@ -46,7 +46,7 @@ The web page `http://{be_host}:{be_web_server_port}/mem_tracker?type=global` dis
 - PageNoCache: If page cache is turned off, this Memory Trakcer will track the sum of all page memory used by all Queries.
 - IOBufBlockMemory: The total IOBuf memory used by BRPC.
 - PointQueryLookupConnectionCache[number]: The number of cached Point Query Lookup Connection entries.
-- AllMemTableMemory: The total Memtable memory of all imports cached in memory waiting to be flushed.
+- AllMemTableMemory: The total Memtable memory of all loads cached in memory waiting to be flushed.
 - MowTabletVersionCache[number]: The number of cached Mow Tablet Version entries.
 - MowDeleteBitmapAggCache[size]: The cached Mow DeleteBitmap memory size.
 - SegCompaction: The total memory allocated from `Doris Allocator` by all SegCompaction tasks.
@@ -85,4 +85,4 @@ Refer to [Metadata Memory Analysis](./metadata-memory-analysis.md)
 
 ### Orphan analysis method
 
-If the Orphan Memory Tracker value is too large, it means that the Memory Tracker statistics are missing. Refer to the analysis in [Memory Tracker Statistics Missing] in [Memory Tracker](./memory-tracker.md).
+If the Orphan Memory Tracker value is too large, it means that the Memory Tracker statistics are missing. Refer to the analysis in [Memory Tracker Statistics Missing] in [Memory Tracker](./../memory-feature/memory-tracker.md).

@@ -91,7 +91,7 @@ Memory Tracker 拥有如下的属性：
 5. Peak Consumption(Normalize): BE 进程启动后内存峰值的 .G.M.K 格式化输出，BE 重启后重置。
 6. Parent Label: 用于表明两个 Memory Tracker 的父子关系，Child Tracker 记录的内存是 Parent Tracker 的子集，Parent 相同的不同 Tracker 记录的内存可能存在交集。
 
-有关 Memory Tracker 的更多介绍参考 [内存跟踪器](./memory-tracker.md)。
+有关 Memory Tracker 的更多介绍参考 [内存跟踪器](./memory-feature/memory-tracker.md)。
 
 ### 历史内存统计
 
@@ -99,7 +99,7 @@ Memory Tracker 拥有如下的属性：
 
 ![Bvar Memory](/images/bvar-memory.png)
 
-当报错进程内存超限或可用内存不足时，在 `be/log/be.INFO` 日志中可以找到 `Memory Tracker Summary`，包含所有 `Type=overview` 和 `Type=global` 的 Memory Tracker，帮助使用者分析当时的内存状态，具体参考 [内存日志分析](./memory-log-analysis.md)
+当报错进程内存超限或可用内存不足时，在 `be/log/be.INFO` 日志中可以找到 `Memory Tracker Summary`，包含所有 `Type=overview` 和 `Type=global` 的 Memory Tracker，帮助使用者分析当时的内存状态，具体参考 [内存日志分析](./memory-analysis/memory-log-analysis.md)
 
 ---
 
@@ -142,13 +142,13 @@ Doris BE Process Memory
 
 上述内存结构中每一部分内存的分析方法:
 
-1. [Jemalloc 内存分析](./jemalloc-memory-analysis.md)
+1. [Jemalloc 内存分析](./memory-analysis/jemalloc-memory-analysis.md)
 
-2. [全局内存分析](./global-memory-analysis.md)
+2. [全局内存分析](./memory-analysis/global-memory-analysis.md)
 
-3. [Query 内存分析](./query-memory-analysis.md)
+3. [Query 内存分析](./memory-analysis/query-memory-analysis.md)
 
-4. [Load 内存分析](./load-memory-analysis.md)
+4. [Load 内存分析](./memory-analysis/load-memory-analysis.md)
 
 ---
 
@@ -160,4 +160,4 @@ Doris BE Process Memory
 
 ## 内存控制策略
 
-参考 [内存控制策略](./memory-control-strategy.md) 中对内存分配、监控、回收的介绍，它们保证了 Doris BE 进程内存的高效可控。
+参考 [内存控制策略](./memory-feature/memory-control-strategy.md) 中对内存分配、监控、回收的介绍，它们保证了 Doris BE 进程内存的高效可控。

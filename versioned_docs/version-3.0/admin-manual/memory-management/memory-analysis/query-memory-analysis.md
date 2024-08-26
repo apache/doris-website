@@ -38,13 +38,13 @@ If you already know the query to be analyzed, skip this section and continue wit
 
 First locate the QueryID of the large memory query. In the BE web page `http://{be_host}:{be_web_server_port}/mem_tracker?type=query`, you can see the real-time large memory query by sorting by `Current Consumption`. You can find the QueryID in `label`.
 
-When the error process memory exceeds the limit or the available memory is insufficient, the lower part of the `Memory Tracker Summary` in the `be.INFO` log contains the Memory Tracker of the top 10 tasks (query/import/compaction, etc.) with the highest memory usage. The format is `MemTrackerLimiter Label=Query#Id=xxx, Type=query`. Usually, the QueryID of the large memory query can be located in the top 10 tasks.
+When the error process memory exceeds the limit or the available memory is insufficient, the lower part of the `Memory Tracker Summary` in the `be.INFO` log contains the Memory Tracker of the top 10 tasks (query/load/compaction, etc.) with the highest memory usage. The format is `MemTrackerLimiter Label=Query#Id=xxx, Type=query`. Usually, the QueryID of the large memory query can be located in the top 10 tasks.
 
 The memory statistics of historical queries can be viewed in `peakMemoryBytes` of each query in `fe/log/fe.audit.log`, or search `Deregister query/load memory tracker, queryId` in `be/log/be.INFO` to view the peak memory of each query on a single BE.
 
 ## Use Query Profile to analyze query memory usage
 
-Find query information including SQL in `fe/log/fe.audit.log` based on QueryID, get the query plan by `explain SQL`, and get the query profile by executing SQL after `set enable_profile=true`. For a detailed introduction to Query Profile, refer to the document [Query Profile](../../query/query-analysis/query-profile.md). Here we only introduce the memory-related content in Query Profile, and locate the Operator and data structure that use a lot of memory based on it.
+Find query information including SQL in `fe/log/fe.audit.log` based on QueryID, get the query plan by `explain SQL`, and get the query profile by executing SQL after `set enable_profile=true`. For a detailed introduction to Query Profile, refer to the document [Query Profile](../../../query/query-analysis/query-profile.md). Here we only introduce the memory-related content in Query Profile, and locate the Operator and data structure that use a lot of memory based on it.
 
 1. Locate Operators or memory data structures that use a lot of memory
 

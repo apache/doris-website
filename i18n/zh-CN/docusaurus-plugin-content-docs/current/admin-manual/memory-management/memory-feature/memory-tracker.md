@@ -26,7 +26,7 @@ under the License.
 
 Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，包括查询、导入、Compaction、Schema Change 等任务生命周期中使用的内存，以及各项缓存。支持 Web 页面实时查看，并在内存相关报错时打印到 BE 日志中，用于内存分析和排查内存问题。
 
-有关 Memory Tracker 的查看方法，以及不同 Memory Tracker 所代表内存占用过大的原因以及减少其内存使用的分析方法在 [Overview](overview) 中已结合 Doris BE 内存结构一起介绍。本文只介绍 Memory Tracker 原理、结构，以及一些常见问题。
+有关 Memory Tracker 的查看方法，以及不同 Memory Tracker 所代表内存占用过大的原因以及减少其内存使用的分析方法在 [Overview](./../overview.md) 中已结合 Doris BE 内存结构一起介绍。本文只介绍 Memory Tracker 原理、结构，以及一些常见问题。
 
 ## 内存跟踪原理
 
@@ -66,11 +66,11 @@ Doris 2.1 之前和之后的版本中 Memory Tracker 统计缺失的现象不同
 
 ### Memory Tracker 统计缺失分析
 
-如果观察到上述现象，若集群方便重启，并且现象可以被复现，参考 [Heap Profile 内存分析](heap-profile-memory-analysis.md) 使用 Jemalloc Heap Profile 分析进程内存。
+如果观察到上述现象，若集群方便重启，并且现象可以被复现，参考 [Heap Profile 内存分析](./../memory-analysis/heap-profile-memory-analysis.md) 使用 Jemalloc Heap Profile 分析进程内存。
 
-否则可以先参考 [Metadata 内存分析](./metadata-memory-analysis.md) 分析 Doris BE 的元数据内存。
+否则可以先参考 [Metadata 内存分析](./../memory-analysis/metadata-memory-analysis.md) 分析 Doris BE 的元数据内存。
 
-> 在 Doris 2.1.5 之前的版本中 Segment Cache Memory Tacker 不准确，通常发现 Memory Tracker 统计缺失或 BE 进程内存不下降时，可以优先参考 [Cache 内存分析](./doris-cache-memory-analysis.md) 分析 SegmentCache 内存使用，尝试关闭 Segment Cache 后继续测试。这是因为包括 Primary Key Index 在内的一些 Index 内存统计的是不准确的，导致 Segment Cache 内存没有得到有效限制，经常占用过大的内存，尤其是在成百上千列的大宽表上，参考 [Metadata 内存分析](./metadata-memory-analysis.md) 如果你发现 Doris BE Metrics 中 `doris_be_cache_usage{name="SegmentCache"}` 不大，但 Doris BE Bvar 中 `doris_column_reader_num` 很大，则需要怀疑 Segment Cache 的内存占用，如果你在 Heap Profile 内存占比大的调用栈中看到 `Segment`，`ColumnReader` 字段，则基本可以确认是 Segment Cache 占用了大量内存。
+> 在 Doris 2.1.5 之前的版本中 Segment Cache Memory Tacker 不准确，通常发现 Memory Tracker 统计缺失或 BE 进程内存不下降时，可以优先参考 [Cache 内存分析](./../memory-analysis/doris-cache-memory-analysis.md) 分析 SegmentCache 内存使用，尝试关闭 Segment Cache 后继续测试。这是因为包括 Primary Key Index 在内的一些 Index 内存统计的是不准确的，导致 Segment Cache 内存没有得到有效限制，经常占用过大的内存，尤其是在成百上千列的大宽表上，参考 [Metadata 内存分析](./../memory-analysis/metadata-memory-analysis.md) 如果你发现 Doris BE Metrics 中 `doris_be_cache_usage{name="SegmentCache"}` 不大，但 Doris BE Bvar 中 `doris_column_reader_num` 很大，则需要怀疑 Segment Cache 的内存占用，如果你在 Heap Profile 内存占比大的调用栈中看到 `Segment`，`ColumnReader` 字段，则基本可以确认是 Segment Cache 占用了大量内存。
 
 ### Memory Tracker 统计缺失原因
 

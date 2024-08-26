@@ -97,7 +97,7 @@ Parameter introduction:
 
 10. timezone: Specify the time zone used for this import. The default is Dongba District. This parameter affects the results of all time zone-related functions involved in the import.
 
-11. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+11. exec_mem_limit: Load memory limit. Default is 2GB. The unit is bytes.
 
 12. format: Specify load data format, support csv, json, <version since="1.2" type="inline"> csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc</version>, default is csv.
 

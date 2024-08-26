@@ -75,7 +75,7 @@ This import method can still guarantee the atomicity of a batch of import tasks,
 
 4. timezone: Specify the time zone used for this import. The default is Dongba District. This parameter affects the results of all time zone-related functions involved in the import.
 
-5. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+5. exec_mem_limit: Load memory limit. Default is 2GB. The unit is bytes.
 
 6. trim_double_quotes: Boolean type, The default value is false. True means that the outermost double quotes of each field in the load file are trimmed.
 
@@ -161,7 +161,7 @@ This import method can still guarantee the atomicity of a batch of import tasks,
     PROPERTIES ("strict_mode"="true", "timezone"="Africa/Abidjan")
     ```
 
-9. Import data is limited to 10GB of import memory and timed out in 10 minutes
+9. Import data is limited to 10GB of load memory and timed out in 10 minutes
 
     ```sql
     LOAD DATA LOCAL
