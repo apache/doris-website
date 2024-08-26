@@ -93,7 +93,7 @@ Doris JDBC Catalog 支持连接以下数据库：
 
 1. 针对上述方式 1，Doris 默认用户配置的 `jdbc_drivers_dir` 和其目录下的所有 Jar 包都是安全的，不会对其进行路径检查。
 
-2. 针对上述方式 2、3 ，Doris 会对 Jar 包的来源进行检查，检查规则如下：
+2. 针对上述方式 2、3，Doris 会对 Jar 包的来源进行检查，检查规则如下：
 
     * 通过 FE 配置项 `jdbc_driver_secure_path` 来控制允许的驱动包路径，该配置项可配置多个路径，以分号分隔。当配置了该项时，Doris
       会检查 Catalog properties 中 driver_url 的路径是的部分前缀是否在 `jdbc_driver_secure_path` 中，如果不在其中，则会拒绝创建
@@ -194,7 +194,7 @@ Doris 显示的小写名称去查询。
 
 :::info 备注
 - 上述三个参数中提到的 Database 是指 Doris 中的 Database 层级，而不是外部数据源的 Database 层级，具体的映射关系可以参考各个数据源文档。
-- 当 `include_database_list` 和 `exclude_database_list` 有重合的database配置时，`exclude_database_list`会优先生效。
+- 当 `include_database_list` 和 `exclude_database_list` 有重合的 database 配置时，`exclude_database_list`会优先生效。
 :::
 
 ### 连接池配置
@@ -203,7 +203,7 @@ Doris 显示的小写名称去查询。
 
 可以根据实际情况调整连接池的大小，以便更好地适应您的工作负载。通常情况下，连接池的最小连接数应该设置为 1，以确保在启用保活机制时至少有一个连接处于活跃状态。连接池的最大连接数应该设置为一个合理的值，以避免过多的连接占用资源。
 
-同时为了避免在 BE 上累积过多的未使用的连接池缓存，可以通过设置 BE 的 `jdbc_connection_pool_cache_clear_time_sec` 参数来指定清理缓存的时间间隔。默认值为 28800 秒（8小时），此间隔过后，BE 将强制清理所有超过该时间未使用的连接池缓存。
+同时为了避免在 BE 上累积过多的未使用的连接池缓存，可以通过设置 BE 的 `jdbc_connection_pool_cache_clear_time_sec` 参数来指定清理缓存的时间间隔。默认值为 28800 秒（8 小时），此间隔过后，BE 将强制清理所有超过该时间未使用的连接池缓存。
 
 :::warning
 使用 Doris JDBC Catalog 连接外部数据源时，需谨慎更新数据库凭证。
@@ -298,8 +298,8 @@ query(
 
 `query` 表函数有两个参数：
 
-- `catalog`： Catalog 名称，需要按照 Catalog 的名称填写。
-- `query`： 需要执行的查询语句，并且需要直接使用数据源对应的语法。
+- `catalog`：Catalog 名称，需要按照 Catalog 的名称填写。
+- `query`：需要执行的查询语句，并且需要直接使用数据源对应的语法。
 
 ```sql
 select * from query("catalog" = "jdbc_catalog", "query" = "select * from db_name.table_name where condition");

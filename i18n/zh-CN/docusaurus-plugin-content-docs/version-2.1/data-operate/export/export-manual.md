@@ -47,8 +47,8 @@ under the License.
 * Parquet
 * ORC
 * csv
-* csv\_with\_names
-* csv\_with\_names\_and\_types
+* csv_with_names
+* csv_with_names_and_types
 
 不支持压缩格式的导出。
 
@@ -107,17 +107,17 @@ OutfileInfo: [
   * FINISHED：作业成功
   * CANCELLED：作业失败
 * Progress：作业进度。该进度以查询计划为单位。假设一共 10 个线程，当前已完成 3 个，则进度为 30%。
-* TaskInfo：以 Json 格式展示的作业信息：
+* TaskInfo：以 JSON 格式展示的作业信息：
   * db：数据库名
   * tbl：表名
   * partitions：指定导出的分区。`空`列表 表示所有分区。
-  * column\_separator：导出文件的列分隔符。
-  * line\_delimiter：导出文件的行分隔符。
+  * column_separator：导出文件的列分隔符。
+  * line_delimiter：导出文件的行分隔符。
   * tablet num：涉及的总 Tablet 数量。
   * broker：使用的 broker 的名称。
   * coord num：查询计划的个数。
-  * max\_file\_size：一个导出文件的最大大小。
-  * delete\_existing\_files：是否删除导出目录下已存在的文件及目录。
+  * max_file_size：一个导出文件的最大大小。
+  * delete_existing_files：是否删除导出目录下已存在的文件及目录。
   * columns：指定需要导出的列名，空值代表导出所有列。
   * format：导出的文件格式
 * Path：远端存储上的导出路径。
@@ -140,7 +140,7 @@ CANCEL EXPORT FROM tpch1 WHERE LABEL like "%export_%";
 
 ### 导出到 HDFS
 
-将 db1.tbl1 表的 p1 和 p2 分区中的`col1` 列和`col2` 列数据导出到 HDFS 上，设置导出作业的 label 为 `mylabel`。导出文件格式为 csv（默认格式），列分割符为`,`，导出作业单个文件大小限制为 512MB。
+将 db1.tbl1 表的 p1 和 p2 分区中的`col1` 列和`col2` 列数据导出到 HDFS 上，设置导出作业的 label 为 `mylabel`。导出文件格式为 CSV `,`，导出作业单个文件大小限制为 512MB。
 
 ```sql
 EXPORT TABLE db1.tbl1 
@@ -213,7 +213,7 @@ with HDFS (
 
 ### 导出到 S3
 
-将 s3_test 表中的所有数据导出到 s3 上，导出格式为 csv，以不可见字符 "\x07" 作为行分隔符。
+将 s3_test 表中的所有数据导出到 s3 上，导出格式为 CSV，以不可见字符 `\x07` 作为行分隔符。
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
@@ -324,7 +324,7 @@ PROPERTIES(
 
 ### 导出一致性
 
-`Export`导出支持 partition / tablets 两种粒度。`data_consistency`参数用来指定以何种粒度切分希望导出的表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
+`Export`导出支持 `partition / tablets` 两种粒度。`data_consistency`参数用来指定以何种粒度切分希望导出的表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp"
