@@ -32,9 +32,9 @@ EXPORT
 
 ### Description
 
- `EXPORT` 命令用于将指定表的数据导出为文件到指定位置。目前支持通过 Broker 进程, S3 协议或HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
+ `EXPORT` 命令用于将指定表的数据导出为文件到指定位置。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。
 
-`EXPORT`是一个异步操作，该命令会提交一个`EXPORT JOB`到Doris，任务提交成功立即返回。执行后可使用 [SHOW EXPORT](../../Show-Statements/SHOW-EXPORT.md) 命令查看进度。
+`EXPORT`是一个异步操作，该命令会提交一个`EXPORT JOB`到 Doris，任务提交成功立即返回。执行后可使用 [SHOW EXPORT](../../Show-Statements/SHOW-EXPORT.md) 命令查看进度。
 
 语法：
 
@@ -84,22 +84,22 @@ EXPORT
 
   - `format`：指定导出作业的文件格式，支持：parquet, orc, csv, csv_with_names、csv_with_names_and_types。默认为 CSV 格式。
 
-  - `max_file_size`：导出作业单个文件大小限制，如果结果超过这个值，将切割成多个文件。`max_file_size`取值范围是[5MB, 2GB], 默认为1GB。（当指定导出为orc文件格式时，实际切分文件的大小将是64MB的倍数，如：指定 max_file_size = 5MB, 实际将以 64MB 为切分；指定 max_file_size = 65MB, 实际将以 128MB 为切分）
+  - `max_file_size`：导出作业单个文件大小限制，如果结果超过这个值，将切割成多个文件。`max_file_size`取值范围是[5MB, 2GB], 默认为 1GB。（当指定导出为 orc 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 max_file_size = 5MB, 实际将以 64MB 为切分；指定 max_file_size = 65MB, 实际将以 128MB 为切分）
 
   - `parallelism`：导出作业的并发度，默认为`1`，导出作业会开启`parallelism`个数的线程去执行`select into outfile`语句。（如果 Parallelism 个数大于表的 Tablets 个数，系统将自动把 Parallelism 设置为 Tablets 个数大小，即每一个`select into outfile`语句负责一个 Tablets）
 
   - `delete_existing_files`: 默认为 `false`，若指定为 `true`，则会先删除`export_path`所指定目录下的所有文件，然后导出数据到该目录下。例如："export_path" = "/user/tmp", 则会删除"/user/"下所有文件及目录；"file_path" = "/user/tmp/", 则会删除"/user/tmp/"下所有文件及目录。
 
-  - `with_bom`: 默认为 `false`，若指定为 `true`，则导出的文件编码为带有BOM的UTF8编码（只对csv相关的文件格式生效）。
+  - `with_bom`: 默认为 `false`，若指定为 `true`，则导出的文件编码为带有 BOM 的 UTF8 编码（只对 csv 相关的文件格式生效）。
 
   - `data_consistency`: 可以设置为 `none` / `partition` ，默认为 `partition` 。指示以何种粒度切分导出表，`none` 代表 Tablets 级别，`partition`代表 Partition 级别。
 
-  - `timeout`：导出作业的超时时间，默认为2小时，单位是秒。
+  - `timeout`：导出作业的超时时间，默认为 2 小时，单位是秒。
 
-  - `compress_type`：(自 2.1.5 支持) 当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自2.1.5版本开始支持。（PLAIN 就是不采用压缩）
+  - `compress_type`：(自 2.1.5 支持) 当指定导出的文件格式为 Parquet / ORC 文件时，可以指定 Parquet / ORC 文件使用的压缩方式。Parquet 文件格式可指定压缩方式为 SNAPPY，GZIP，BROTLI，ZSTD，LZ4 及 PLAIN，默认值为 SNAPPY。ORC 文件格式可指定压缩方式为 PLAIN，SNAPPY，ZLIB 以及 ZSTD，默认值为 ZLIB。该参数自 2.1.5 版本开始支持。（PLAIN 就是不采用压缩）
 
   :::caution 注意
-  要使用delete_existing_files参数，还需要在fe.conf中添加配置`enable_delete_existing_files = true`并重启fe，此时delete_existing_files才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
+  要使用 delete_existing_files 参数，还需要在 fe.conf 中添加配置`enable_delete_existing_files = true`并重启 fe，此时 delete_existing_files 才会生效。delete_existing_files = true 是一个危险的操作，建议只在测试环境中使用。
   :::
 
 
@@ -124,18 +124,18 @@ EXPORT
 
 - `WITH HDFS`
 
-  可以直接将数据写到远端HDFS上。
+  可以直接将数据写到远端 HDFS 上。
 
   ```sql
   语法：
   WITH HDFS ("key"="value"[,...])
 
-  HDFS 相关属性:
+  HDFS 相关属性：
     fs.defaultFS: namenode 地址和端口
     hadoop.username: hdfs 用户名
-    dfs.nameservices: name service名称，与hdfs-site.xml保持一致
-    dfs.ha.namenodes.[nameservice ID]: namenode的id列表,与hdfs-site.xml保持一致
-    dfs.namenode.rpc-address.[nameservice ID].[name node ID]: Name node的rpc地址，数量与namenode数量相同，与hdfs-site.xml保
+    dfs.nameservices: name service 名称，与 hdfs-site.xml 保持一致
+    dfs.ha.namenodes.[nameservice ID]: namenode 的 id 列表，与 hdfs-site.xml 保持一致
+    dfs.namenode.rpc-address.[nameservice ID].[name node ID]: Name node 的 rpc 地址，数量与 namenode 数量相同，与 hdfs-site.xml 保
 
     对于开启kerberos认证的Hadoop 集群，还需要额外设置如下 PROPERTIES 属性:
     dfs.namenode.kerberos.principal: HDFS namenode 服务的 principal 名称
@@ -146,13 +146,13 @@ EXPORT
 
 - `WITH S3`
 
-  可以直接将数据写到远端S3对象存储上。
+  可以直接将数据写到远端 S3 对象存储上。
 
   ```sql
   语法：
   WITH S3 ("key"="value"[,...])
 
-  S3 相关属性:
+  S3 相关属性：
     AWS_ENDPOINT
     AWS_ACCESS_KEY
     AWS_SECRET_KEY
@@ -163,14 +163,14 @@ EXPORT
 ### Example
 
 #### Export 数据到本地
-> Export数据到本地文件系统，需要在 `fe.conf` 中添加 `enable_outfile_to_local=true` 并且重启 FE。
+> Export 数据到本地文件系统，需要在 `fe.conf` 中添加 `enable_outfile_to_local=true` 并且重启 FE。
 
-1. 将 Test 表中的所有数据导出到本地存储, 默认导出 CSV 格式文件
+1. 将 Test 表中的所有数据导出到本地存储，默认导出 CSV 格式文件
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/";
 ```
 
-2. 将 Test 表中的 k1,k2 列导出到本地存储, 默认导出 CSV 文件格式，并设置 Label
+2. 将 Test 表中的 k1,k2 列导出到本地存储，默认导出 CSV 文件格式，并设置 Label
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -179,7 +179,7 @@ PROPERTIES (
 );
 ```
 
-3. 将 Test 表中的 `k1 < 50` 的行导出到本地存储, 默认导出 CSV 格式文件，并以 `,` 作为列分割符
+3. 将 Test 表中的 `k1 < 50` 的行导出到本地存储，默认导出 CSV 格式文件，并以 `,` 作为列分割符
 ```sql
 EXPORT TABLE test WHERE k1 < 50 TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -188,13 +188,13 @@ PROPERTIES (
 );
 ```
 
-4. 将 Test 表中的分区p1,p2导出到本地存储, 默认导出csv格式文件
+4. 将 Test 表中的分区 p1,p2 导出到本地存储，默认导出 csv 格式文件
 ```sql
 EXPORT TABLE test PARTITION (p1,p2) TO "file:///home/user/tmp/" 
 PROPERTIES ("columns" = "k1,k2");
 ```
 
-5. 将 Test 表中的所有数据导出到本地存储,导出其他格式的文件
+5. 将 Test 表中的所有数据导出到本地存储，导出其他格式的文件
 ```sql
 // parquet格式
 EXPORT TABLE test TO "file:///home/user/tmp/"
@@ -258,7 +258,7 @@ Export 导出数据时会先将`/home/user/`目录下所有文件及目录删除
 
 #### export with S3
 
-1. 将 s3_test 表中的所有数据导出到 S3 上，以不可见字符 "\x07" 作为列或者行分隔符。如果需要将数据导出到 minio，还需要指定 `use_path_style`=`true`。
+1. 将 s3_test 表中的所有数据导出到 S3 上，以不可见字符 `\x07` 作为列或者行分隔符。如果需要将数据导出到 minio，还需要指定 `use_path_style`=`true`。
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
@@ -291,7 +291,7 @@ with HDFS (
 ```
 
 #### export with Broker
-需要先启动 Broker 进程，并在FE中添加该 Broker。
+需要先启动 Broker 进程，并在 FE 中添加该 Broker。
 1. 将 Test 表中的所有数据导出到 hdfs 上
 ```sql
 EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c" 
@@ -344,20 +344,20 @@ WITH BROKER "broker_name"
 
 一个 Export 作业的底层执行逻辑实际上是`SELECT INTO OUTFILE`语句，`parallelism`参数设置的每一个线程都会去执行独立的`SELECT INTO OUTFILE`语句。
 
-Export 作业拆分成多个`SELECT INTO OUTFILE`的具体逻辑是：将该表的所有tablets平均的分给所有parallel线程，如：
-- num(tablets) = 40, parallelism = 3，则这3个线程各自负责的tablets数量分别为 14，13，13个。
-- num(tablets) = 2, parallelism = 3，则Doris会自动将parallelism设置为2，每一个线程负责一个tablets。
+Export 作业拆分成多个`SELECT INTO OUTFILE`的具体逻辑是：将该表的所有 tablets 平均的分给所有 parallel 线程，如：
+- num(tablets) = 40, parallelism = 3，则这 3 个线程各自负责的 tablets 数量分别为 14，13，13 个。
+- num(tablets) = 2, parallelism = 3，则 Doris 会自动将 parallelism 设置为 2，每一个线程负责一个 tablets。
 
-当一个线程负责的tablest超过 `maximum_tablets_of_outfile_in_export` 数值（默认为10，可在fe.conf中添加`maximum_tablets_of_outfile_in_export`参数来修改该值）时，该线程就会拆分为多个`SELECT INTO OUTFILE`语句，如：
-- 一个线程负责的tablets数量分别为 14，`maximum_tablets_of_outfile_in_export = 10`，则该线程负责两个`SELECT INTO OUTFILE`语句，第一个`SELECT INTO OUTFILE`语句导出10个tablets，第二个`SELECT INTO OUTFILE`语句导出4个tablets，两个`SELECT INTO OUTFILE`语句由该线程串行执行。
+当一个线程负责的 tablest 超过 `maximum_tablets_of_outfile_in_export` 数值（默认为 10，可在 fe.conf 中添加`maximum_tablets_of_outfile_in_export`参数来修改该值）时，该线程就会拆分为多个`SELECT INTO OUTFILE`语句，如：
+- 一个线程负责的 tablets 数量分别为 14，`maximum_tablets_of_outfile_in_export = 10`，则该线程负责两个`SELECT INTO OUTFILE`语句，第一个`SELECT INTO OUTFILE`语句导出 10 个 tablets，第二个`SELECT INTO OUTFILE`语句导出 4 个 tablets，两个`SELECT INTO OUTFILE`语句由该线程串行执行。
 
 
-当所要导出的数据量很大时，可以考虑适当调大`parallelism`参数来增加并发导出。若机器核数紧张，无法再增加`parallelism` 而导出表的Tablets又较多时，可以考虑调大`maximum_tablets_of_outfile_in_export`来增加一个`SELECT INTO OUTFILE`语句负责的tablets数量，也可以加快导出速度。
+当所要导出的数据量很大时，可以考虑适当调大`parallelism`参数来增加并发导出。若机器核数紧张，无法再增加`parallelism` 而导出表的 Tablets 又较多时，可以考虑调大`maximum_tablets_of_outfile_in_export`来增加一个`SELECT INTO OUTFILE`语句负责的 tablets 数量，也可以加快导出速度。
 
-若希望以 Parition 粒度导出 Table ，可以设置 Export 属性 `"data_consistency" = "partition"` ，此时 Export 任务并发的线程会以 Parition 粒度来划分为多个 Outfile 语句，不同的 Outfile 语句导出的 Parition 不同，而同一个 Outfile 语句导出的数据一定属于同一个 Partition。如：设置 `"data_consistency" = "partition"` 后
+若希望以 Parition 粒度导出 Table，可以设置 Export 属性 `"data_consistency" = "partition"` ，此时 Export 任务并发的线程会以 Parition 粒度来划分为多个 Outfile 语句，不同的 Outfile 语句导出的 Parition 不同，而同一个 Outfile 语句导出的数据一定属于同一个 Partition。如：设置 `"data_consistency" = "partition"` 后
 
-- num(partition) = 40, parallelism = 3，则这3个线程各自负责的 Partition 数量分别为 14，13，13个。
-- num(partition) = 2, parallelism = 3，则 Doris 会自动将 Parallelism 设置为2，每一个线程负责一个 Partition 。
+- num(partition) = 40, parallelism = 3，则这 3 个线程各自负责的 Partition 数量分别为 14，13，13 个。
+- num(partition) = 2, parallelism = 3，则 Doris 会自动将 Parallelism 设置为 2，每一个线程负责一个 Partition。
 
 
 #### 内存限制
