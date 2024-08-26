@@ -90,6 +90,21 @@ jobs:
                   cp -rf common_docs_zh/releasenotes i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
                   cp -rf common_docs_zh/gettingStarted i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0
                   
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.9'
+            
+            - name: Run Python script with all commit SHAs
+              run: python check_move.py "${{ github.sha }}"
+        
+            - name: Check exit code
+              run: |
+                if [ $? -ne 0 ]; then
+                    echo "Have detected not processed link changes, please fix them."
+                    exit 1
+                fi
+            
             - name: Use Node.js
               uses: actions/setup-node@v3
               with:
