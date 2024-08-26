@@ -45,7 +45,7 @@ PAUSE MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 1. 暂停物化视图mv1的定时调度
 
     ```sql
-    PAUSE MATERIALIZED VIEW mv1;
+    PAUSE MATERIALIZED VIEW JOB ON mv1;
     ```
    
 ### Keywords

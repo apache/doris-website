@@ -45,7 +45,7 @@ PAUSE MATERIALIZED VIEW JOB ON mvName=multipartIdentifier
 1. Pause scheduled scheduling of materialized view mv1
 
     ```sql
-    PAUSE MATERIALIZED VIEW mv1;
+    PAUSE MATERIALIZED VIEW JOB ON mv1;
     ```
    
 ### Keywords
