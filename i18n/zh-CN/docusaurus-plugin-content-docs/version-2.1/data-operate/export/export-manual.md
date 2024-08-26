@@ -47,8 +47,8 @@ under the License.
 * Parquet
 * ORC
 * csv
-* csv\_with\_names
-* csv\_with\_names\_and\_types
+* csv _with names
+* csv with names and types
 
 不支持压缩格式的导出。
 
@@ -213,7 +213,7 @@ with HDFS (
 
 ### 导出到 S3
 
-将 s3_test 表中的所有数据导出到 s3 上，导出格式为 csv，以不可见字符 "\x07" 作为行分隔符。
+将 s3_test 表中的所有数据导出到 s3 上，导出格式为 csv，以不可见字符 `\x07` 作为行分隔符。
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 

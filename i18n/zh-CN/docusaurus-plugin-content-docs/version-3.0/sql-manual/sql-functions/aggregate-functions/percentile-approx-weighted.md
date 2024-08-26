@@ -24,18 +24,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## PERCENTILE_APPROX_WEIGHTED
-### description
-#### Syntax
+
+## Description
+
 
 `PERCENTILE_APPROX_WEIGHTED(expr, w ,DOUBLE p [, DOUBLE compression])`
 
 
-该函数和PERCENTILE_APPROX类似，唯一的区别是多了一个参数w，用来表示expr出现的次数。
+该函数和 PERCENTILE_APPROX 类似，唯一的区别是多了一个参数 w，用来表示 expr 出现的次数。
 
-### example
-```
-mysql >select * from quantile_weighted_table order by k;
+## Example
+
+```sql
+$ mysql >select * from quantile_weighted_table order by k;
 +------+------+
 | k    | w    |
 +------+------+
@@ -44,8 +45,7 @@ mysql >select * from quantile_weighted_table order by k;
 |    5 |    2 |
 +------+------+
 
-
-mysql >select percentile_approx_weighted(k,w,0.55) from quantile_weighted_table;
+$ mysql >select percentile_approx_weighted(k,w,0.55) from quantile_weighted_table;
 +----------------------------------------------------------------------------------------+
 | percentile_approx_weighted(cast(k as DOUBLE), cast(w as DOUBLE), cast(0.55 as DOUBLE)) |
 +----------------------------------------------------------------------------------------+
@@ -54,5 +54,6 @@ mysql >select percentile_approx_weighted(k,w,0.55) from quantile_weighted_table;
 
 ```
 
-### keywords
-PERCENTILE_APPROX,PERCENTILE,APPROX,PERCENTILE_APPROX_WEIGHTED
+## Keywords
+
+RCENTILE_APPROX, PERCENTILE, APPROX, PERCENTILE_APPROX_WEIGHTED
