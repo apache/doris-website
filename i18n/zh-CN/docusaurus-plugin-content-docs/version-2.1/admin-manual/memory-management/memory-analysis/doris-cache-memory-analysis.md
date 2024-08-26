@@ -130,7 +130,7 @@ Doris 2.1.6 之后，如果希望在 BE 运行中手动清理所有 Cache，执�
 
 - 执行 `curl -X POST http://{be_host}:{be_web_server_port}/api/update_config?disable_storage_page_cache=true` 对正在运行的 BE 禁用 DataPageCache，并默认在最长 10 分钟后清空，但这是临时方法，BE 重启后 DataPageCache 将重新生效。
 
-- 若确认要长期减少 DataPageCache 的内存使用，参考 [BE 配置项](../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `storage_page_cache_limit` 减小 DataPageCache 的容量，或调小 `data_page_cache_stale_sweep_time_sec` 减小 DataPageCache 缓存有效时长，或增加 `disable_storage_page_cache=true` 禁用 DataPageCache，然后重启 BE 进程。
+- 若确认要长期减少 DataPageCache 的内存使用，参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `storage_page_cache_limit` 减小 DataPageCache 的容量，或调小 `data_page_cache_stale_sweep_time_sec` 减小 DataPageCache 缓存有效时长，或增加 `disable_storage_page_cache=true` 禁用 DataPageCache，然后重启 BE 进程。
 
 ### SegmentCache 内存使用多
 
@@ -138,10 +138,10 @@ Doris 2.1.6 之后，如果希望在 BE 运行中手动清理所有 Cache，执�
 
 - 执行 `curl -X POST http:/{be_host}:{be_web_server_port}/api/update_config?disable_segment_cache=true` 对正在运行的 BE 禁用 SegmentCache，并默认在最长 10 分钟后清空，但这是临时方法，BE 重启后 SegmentCache 将重新生效。
 
-- 若确认要长期减少 SegmentCache 的内存使用，参考 [BE 配置项](../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调整 `segment_cache_capacity` 或 `segment_cache_memory_percentage` 减小 SegmentCache 的容量，或调小 `tablet_rowset_stale_sweep_time_sec` 减小 SegmentCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_segment_cache=true` 禁用 SegmentCache 并重启 BE 进程。
+- 若确认要长期减少 SegmentCache 的内存使用，参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调整 `segment_cache_capacity` 或 `segment_cache_memory_percentage` 减小 SegmentCache 的容量，或调小 `tablet_rowset_stale_sweep_time_sec` 减小 SegmentCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_segment_cache=true` 禁用 SegmentCache 并重启 BE 进程。
 
 ### PKIndexPageCache 内存使用多
 
 - Doris 2.1.6 之后，执行 `curl http://{be_host}:{be_web_server_port}/api/clear_cache/PKIndexPageCache` 可以在 BE 运行中手动清理。
 
-- 参考 [BE 配置项](../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `pk_storage_page_cache_limit` 减小 PKIndexPageCache 的容量，或调小 `pk_index_page_cache_stale_sweep_time_sec` 减小 PKIndexPageCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_pk_storage_page_cache=true` 禁用 PKIndexPageCache，然后重启 BE 进程。
+- 参考 [BE 配置项](../../../admin-manual/config/be-config.md)，在 `conf/be.conf` 中调小 `pk_storage_page_cache_limit` 减小 PKIndexPageCache 的容量，或调小 `pk_index_page_cache_stale_sweep_time_sec` 减小 PKIndexPageCache 缓存有效时长，或者在 `conf/be.conf` 中增加 `disable_pk_storage_page_cache=true` 禁用 PKIndexPageCache，然后重启 BE 进程。

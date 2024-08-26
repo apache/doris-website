@@ -97,7 +97,7 @@ Parameter introduction:
 
 10. timezone: Specifies the timezone used for this import. The default is "+08:00". This variable replaces the session variable `time_zone` in this import transaction. See the section "Importing with timezones" in [Best Practice](#best-practice) for more information.
 
-11. exec_mem_limit: Import memory limit. Default is 2GB. The unit is bytes.
+11. exec_mem_limit: Load memory limit. Default is 2GB. The unit is bytes.
 
 12. format: Specify load data format, support csv, json, <version since="1.2" type="inline"> csv_with_names(support csv file line header filter), csv_with_names_and_types(support csv file first two lines filter), parquet, orc</version>, default is csv.
 
