@@ -56,23 +56,23 @@ Doris JDBC Catalog 支持连接以下数据库：
 
 ### 可选属性
 
-| 参数                        | 默认值     | 说明                                                                                                      |
-|---------------------------|---------|---------------------------------------------------------------------------------------------------------|
-| `lower_case_meta_names`   | "false" | 是否以小写的形式同步外部数据源的库名和表名以及列名                                                                               |
+| 参数                        | 默认值     | 说明                                      |
+|---------------------------|---------|----------------------------------------------|
+| `lower_case_meta_names`   | "false" | 是否以小写的形式同步外部数据源的库名和表名以及列名         |
 | `meta_names_mapping`      | ""      | 当外部数据源存在名称相同只有大小写不同的情况，例如 DORIS 和 doris，Doris 由于歧义而在查询 Catalog 时报错，此时需要配置 `meta_names_mapping` 参数来解决冲突。 |
-| `only_specified_database` | "false" | 是否只同步 JDBC URL 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）                                 |
-| `include_database_list`   | ""      | 当 `only_specified_database=true` 时，指定同步多个 Database，以','分隔。Database 名称是大小写敏感的。                           |
-| `exclude_database_list`   | ""      | 当 `only_specified_database=true` 时，指定不需要同步的多个 Database，以','分割。Database 名称是大小写敏感的。                       |
+| `only_specified_database` | "false" | 是否只同步 JDBC URL 中指定的数据源的 Database（此处的 Database 为映射到 Doris 的 Database 层级）  |
+| `include_database_list`   | ""      | 当 `only_specified_database=true` 时，指定同步多个 Database，以','分隔。Database 名称是大小写敏感的。     |
+| `exclude_database_list`   | ""      | 当 `only_specified_database=true` 时，指定不需要同步的多个 Database，以','分割。Database 名称是大小写敏感的。  |
 
 ### 连接池属性
 
-| 参数                              | 默认值     | 说明                                                                          |
-|---------------------------------|---------|-----------------------------------------------------------------------------|
-| `connection_pool_min_size`      | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。                             |
-| `connection_pool_max_size`      | 10      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。                         |
-| `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。                                               |
+| 参数                              | 默认值     | 说明                                           |
+|---------------------------------|---------|---------------------------------------------------|
+| `connection_pool_min_size`      | 1       | 定义连接池的最小连接数，用于初始化连接池并保证在启用保活机制时至少有该数量的连接处于活跃状态。 |
+| `connection_pool_max_size`      | 10      | 定义连接池的最大连接数，每个 Catalog 对应的每个 FE 或 BE 节点最多可持有此数量的连接。   |
+| `connection_pool_max_wait_time` | 5000    | 如果连接池中没有可用连接，定义客户端等待连接的最大毫秒数。   |
 | `connection_pool_max_life_time` | 1800000 | 设置连接在连接池中保持活跃的最大时长（毫秒）。超时的连接将被回收。同时，此值的一半将作为连接池的最小逐出空闲时间，达到该时间的连接将成为逐出候选对象。 |
-| `connection_pool_keep_alive`    | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。              |
+| `connection_pool_keep_alive`    | false   | 仅在 BE 节点上有效，用于决定是否保持达到最小逐出空闲时间但未到最大生命周期的连接活跃。默认关闭，以减少不必要的资源使用。 |
 
 ## 属性须知
 

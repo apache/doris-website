@@ -1041,6 +1041,7 @@
                             "items": [
                                 "sql-manual/sql-data-types/date-time/datetime-overview",
                                 "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/TIME",
                                 "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
@@ -1315,7 +1316,6 @@
                                 "sql-manual/sql-reference/Show-Statements/SHOW-LOAD-PROFILE",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-LOAD-WARNINGS",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-INDEX",
-                                "sql-manual/sql-reference/Show-Statements/SHOW-MIGRATIONS",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-PARTITION-ID",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-SNAPSHOT",
                                 "sql-manual/sql-reference/Show-Statements/SHOW-SQL-BLOCK-RULE",
@@ -1450,6 +1450,13 @@
     ],
     "releasenotes": [
         "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.1"
+            ]
+        },
         {
             "type": "category",
             "label": "v2.1",

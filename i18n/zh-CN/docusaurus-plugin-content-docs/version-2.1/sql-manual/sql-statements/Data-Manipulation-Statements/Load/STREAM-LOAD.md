@@ -148,13 +148,14 @@ curl --location-trusted -u user:passwd [-H ""...] -T data.file -XPUT http://fe_h
 
 26. trim_double_quotes: 布尔类型，默认值为 false，为 true 时表示裁剪掉 csv 文件每个字段最外层的双引号。
 
-27. skip_lines: <version since="dev" type="inline"> 整数类型，默认值为 0, 含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或、`csv_with_names_and_types` 时，该参数会失效。</version>
+27. skip_lines:  整数类型，默认值为 0, 含义为跳过 csv 文件的前几行。当设置 format 设置为 `csv_with_names` 或、`csv_with_names_and_types` 时，该参数会失效。
 
 28. comment: <version since="1.2.3" type="inline"> 字符串类型，默认值为空。给任务增加额外的信息。</version>
 
 29. enclose: <version since="dev" type="inline"> 包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为","，包围符为"'"，数据为"a,'b,c'",则"b,c"会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。</version>
   
-30. escape <version since="dev" type="inline"> 转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如`\`，然后将数据修改为 `a,'b,\'c'`。 </version>
+
+30. escape 转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如`\`，然后将数据修改为 `a,'b,\'c'`。 
 
 ### Example
 
@@ -424,10 +425,8 @@ STREAM, LOAD
 
    在某些情况下，用户的 HTTP 连接可能会异常断开导致无法获取最终的返回结果。此时可以使用相同的 Label 重新提交导入任务，重新提交的任务可能有如下结果：
 
-   1. `Status` 状态为 `Success`，`Fail` 或者 `Publish Timeout`。此时按照正常的流程处理即可。
+   `Status` 状态为 `Success`，`Fail` 或者 `Publish Timeout`。此时按照正常的流程处理即可。
    
-   2. `Status` 状态为 `Label Already Exists`。则此时需继续查看 `ExistingJobStatus` 字段。如果该字段值为 `FINISHED`，则表示这个 Label 对应的导入任务已经成功，无需在重试。如果为 `RUNNING`，则表示这个 Label 对应的导入任务依然在运行，则此时需每间隔一段时间（如 10 秒），使用相同的 Label 继续重复提交，直到 `Status` 不为 `Label Already Exists`，或者 `ExistingJobStatus` 字段值为 `FINISHED` 为止。
-
 3. 取消导入任务
 
    已提交切尚未结束的导入任务可以通过 CANCEL LOAD 命令取消。取消后，已写入的数据也会回滚，不会生效。
@@ -467,7 +466,7 @@ STREAM, LOAD
     而在导入中，我们的目标时区通过参数 `timezone` 指定，该变量在发生时区转换、运算时区敏感函数时将会替代 session variable `time_zone`。因此，如果没有特殊情况，在导入事务中应当设定 `timezone` 与当前 Doris 集群的 `time_zone` 一致。此时意味着所有带时区的时间数据，均会发生向该时区的转换。
     例如，Doris 系统时区为 "+08:00"，导入数据中的时间列包含两条数据，分别为 "2012-01-01 01:00:00Z" 和 "2015-12-12 12:12:12-08:00"，则我们在导入时通过 `-H "timezone: +08:00"` 指定导入事务的时区后，这两条数据都会向该时区发生转换，从而得到结果 "2012-01-01 09:00:00" 和 "2015-12-13 04:12:12"。
 
-    更详细的理解，请参阅[时区](../../../../advanced/time-zone)文档。
+    更详细的理解，请参阅[时区](../../../../admin-manual/cluster-management/time-zone)文档。
 
 11. 导入的执行引擎使用
 

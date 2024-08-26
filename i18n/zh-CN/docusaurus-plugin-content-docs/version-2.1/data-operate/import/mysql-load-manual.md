@@ -147,7 +147,7 @@ show load warnings where label='b612907c-ccf4-4ac2-82fe-107ece655f0f';
 
 LOAD DATA 语法如下：
 
-```SQL
+```sql
 LOAD DATA LOCAL
 INFILE '<load_data_file>'
 INTO TABLE [<db_name>.]<table_name>
@@ -186,7 +186,7 @@ INTO TABLE [<db_name>.]<table_name>
 | exec_mem_limit     | 导入内存限制。默认为 2GB。单位为字节。                       |
 | trim_double_quotes | 布尔类型，默认值为 false，为 true 时表示裁剪掉导入文件每个字段最外层的双引号。 |
 | enclose            | 指定包围符。当 csv 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
-| escape             | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
+| escape             | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，将数据修改为 `a,'b,\c`。 |
 
 ## 导入举例
 
@@ -225,7 +225,7 @@ INTO TABLE testDb.testTbl
 
 ### 指定导入列分隔符与行分隔符
 
-通过 COLUMNS TERMINATED BY 与 LINES TERMINATED BY 子句可以指定导入的列与行分隔符。在以下案例中使用逗号（,）与换行符（\n）作为列与行分隔符：
+通过 COLUMNS TERMINATED BY 与 LINES TERMINATED BY 子句可以指定导入的列与行分隔符。在以下案例中使用逗号（,）与换行符（`\n`）作为列与行分隔符：
 
 ```sql
 LOAD DATA LOCAL

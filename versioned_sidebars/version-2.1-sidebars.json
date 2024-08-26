@@ -358,10 +358,33 @@
                     "type": "category",
                     "label": "Managing Memory",
                     "items": [
-                        "admin-manual/memory-management/memory-analyze-manual",
-                        "admin-manual/memory-management/memory-tracker",
-                        "admin-manual/memory-management/memory-limit-exceeded-analysis",
-                        "admin-manual/memory-management/memory-management-feature"
+                        "admin-manual/memory-management/overview",
+                        "admin-manual/memory-management/memory-issue-faq",
+                        {
+                            "type": "category",
+                            "label": "Managing Memory Analysis",
+                            "items": [
+                                "admin-manual/memory-management/memory-analysis/jemalloc-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/global-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/doris-cache-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/metadata-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/query-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/load-memory-analysis",
+                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+                                "admin-manual/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
+                                "admin-manual/memory-management/memory-analysis/oom-crash-analysis",
+                                "admin-manual/memory-management/memory-analysis/memory-log-analysis",
+                                "admin-manual/memory-management/memory-analysis/heap-profile-memory-analysis"
+                            ]
+                        },
+                        {
+                            "type": "category",
+                            "label": "Managing Memory Feature",
+                            "items": [
+                                "admin-manual/memory-management/memory-feature/memory-tracker",
+                                "admin-manual/memory-management/memory-feature/memory-control-strategy"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -403,6 +426,15 @@
                         "admin-manual/config/fe-config",
                         "admin-manual/config/be-config",
                         "admin-manual/config/user-property"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "System Tables",
+                    "items": [
+                        "admin-manual/system-tables/file_cache_statistics",
+                        "admin-manual/system-tables/tables",
+                        "admin-manual/system-tables/table_properties"
                     ]
                 },
                 "admin-manual/audit-plugin",
@@ -1135,6 +1167,7 @@
                             "items": [
                                 "sql-manual/sql-data-types/date-time/datetime-overview",
                                 "sql-manual/sql-data-types/date-time/DATE",
+                                "sql-manual/sql-data-types/date-time/TIME",
                                 "sql-manual/sql-data-types/date-time/DATETIME"
                             ]
                         },
@@ -1423,7 +1456,6 @@
                                 "sql-manual/sql-statements/Show-Statements/SHOW-LOAD-PROFILE",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-LOAD-WARNINGS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-INDEX",
-                                "sql-manual/sql-statements/Show-Statements/SHOW-MIGRATIONS",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-PARTITION-ID",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SNAPSHOT",
                                 "sql-manual/sql-statements/Show-Statements/SHOW-SQL-BLOCK-RULE",
@@ -1564,6 +1596,13 @@
     ],
     "releasenotes": [
         "releasenotes/all-release",
+        {
+            "type": "category",
+            "label": "v3.0",
+            "items": [
+                "releasenotes/v3.0/release-3.0.1"
+            ]
+        },
         {
             "type": "category",
             "label": "v2.1",

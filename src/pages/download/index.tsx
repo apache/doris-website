@@ -24,6 +24,7 @@ import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
     { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier }
 ];
 
 function downloadFile(url: string) {
@@ -55,7 +56,8 @@ export default function Download() {
     const [downloadInfo, setDownloadInfo] = useState<any>({});
     const [releaseFlag, setReleaseFlag] = useState<boolean>(true)
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
+    // const [releaseNote, setReleaseNote] = useState('/docs/2.1/releasenotes/v2.1/release-2.1.5');
+    const [releaseNote, setReleaseNote] = useState('/docs/releasenotes/v3.0/release-3.0.1')
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -107,6 +109,8 @@ export default function Download() {
             setReleaseNote('https://github.com/apache/doris/releases');
         } else if (values.version[0] === '1.2') {
             setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
+        } else if (['2.1','2.0'].includes(values.version[0])) {
+            setReleaseNote(`/docs/${values.version[0]}/releasenotes/release-${values.version[1]}`);
         } else {
             setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
         }

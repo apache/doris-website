@@ -69,7 +69,7 @@ doris-operator-5b667b4954-d674k              1/1     Running   0          11s
 curl -O https://raw.githubusercontent.com/selectdb/doris-operator/master/doc/examples/disaggregated/metaservice/ddm-sample.yaml
 ```
 
-根据配置元数据部署资源章节：[fdb](./install-metaservice/config-fdb.md)，[ms](./install-metaservice/config-ms.md)， [recycler](./install-metaservice/config-recycler.md) 按照实际需要配置资源。
+根据配置元数据部署资源章节：[FDB](./install-metaservice/config-fdb.md)，[ms](./install-metaservice/config-ms.md)， [recycler](./install-metaservice/config-recycler.md) 按照实际需要配置资源。
 
 2. 下发 `DorisDisaggregatedMetaService` 资源:
 

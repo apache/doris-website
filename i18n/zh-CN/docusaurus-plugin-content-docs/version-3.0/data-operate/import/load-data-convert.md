@@ -169,11 +169,11 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| 4    | \N   | chongqing | 1.4  |
+| 4    | `\N` | chongqing | 1.4  |
 
-:::note
+
 注：`\N` 在源文件中表示 null。
-:::
+
 
 1. 调整映射顺序
 
@@ -261,7 +261,7 @@ Insert Into 可以直接在 `SELECT` 语句中完成数据变换，增加 `WHERE
 | 1    | 100  | beijing   | 1.1  |
 | 2    | 200  | shanghai  | 1.2  |
 | 3    | 300  | guangzhou | 1.3  |
-| \N   | 400  | chongqing | 1.4  |
+| `\N`  | 400  | chongqing | 1.4  |
 
 1. 将源文件中的列值经转换后导入表中
 
@@ -421,8 +421,8 @@ Doris 的导入任务允许用户设置最大错误率（`max_filter_ratio`）�
 
 错误率的计算方式为：
 
-```Plain
-#Filtered Rows / (#Filtered Rows + #Loaded Rows)
+```sql
+# Filtered Rows / (#Filtered Rows + #Loaded Rows)
 ```
 
 也就是说 `Unselected Rows` 不会参与错误率的计算。

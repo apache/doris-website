@@ -79,8 +79,7 @@ The following configuration items are configured in the `fe.conf` file.
 | `audit_log_modules` | `{"slow_query", "query", "load", "stream_load"}` |  | Module types in `fe.audit.log`. Default includes slow query, query, load, stream load. "Query" includes all DDL, DML, SQL operations. "Slow query" refers to operations that exceed the `qe_slow_log_ms` threshold. "Load" refers to Broker Load. "Stream load" refers to stream load operations. |
 | `qe_slow_log_ms` | 5000 |  | When the execution time of DDL, DML, SQL statements exceeds this threshold, it will be separately recorded in the `slow_query` module of `fe.audit.log`. Default is 5000 ms. |
 | `audit_log_enable_compress` | false | true, false | Whether to enable compression for historical `fe.audit.log` logs. Default is off. When enabled, historical audit logs will be archived using gzip compression. |
-| `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | Output mode of FE logs. `NORMAL` is the default output mode, with synchronous output and location information. `BRIEF` mode is synchronous output without location information. `ASYNC` mode is asynchronous output without location information, with performance increasing in that order. |
-
+| `sys_log_mode` | `NORMAL` | `NORMAL`, `BRIEF`, `ASYNC` | FE log output mode, where `NORMAL` is the default output mode, log output is synchronous and includes location information. `ASYNC` is the default log output is asynchronous and includes location information. `BRIEF` mode is log output asynchronously but does not include location information. The performance of the three log output modes increases in sequence. |
 
 ## Enable DEBUG Log
 

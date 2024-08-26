@@ -50,6 +50,7 @@ under the License.
 * csv_with_names
 * csv_with_names_and_types
 
+
 不支持压缩格式的导出。
 
 示例：
@@ -213,7 +214,9 @@ with HDFS (
 
 ### 导出到 S3
 
+
 将 s3_test 表中的所有数据导出到 s3 上，导出格式为 CSV，以不可见字符 `\x07` 作为行分隔符。
+
 
 ```sql
 EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
