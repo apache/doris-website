@@ -366,8 +366,10 @@ FROM data_source [data_source_properties]
         ```text
         "property.kafka_default_offsets" = "OFFSET_BEGINNING"
         ```
--  <version since="1.2.3" type="inline"> comment </version>
+-  comment 
   - 例行导入任务的注释信息。
+  - 该功能自 Apache Doris  1.2.3 版本起支持
+:::
 ### Example
 
 1. 为 example_db 的 example_tbl 创建一个名为 test1 的 Kafka 例行导入任务。指定列分隔符和 group.id 和 client.id，并且自动默认消费所有分区，且从有数据的位置（OFFSET_BEGINNING）开始订阅

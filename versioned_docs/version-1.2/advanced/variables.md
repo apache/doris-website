@@ -69,7 +69,7 @@ Variables that support both session-level and global-level setting include:
 * `sql_mode`
 * `enable_profile`
 * `query_timeout`
-* `insert_timeout`<version since="dev"></version>
+* `insert_timeout` 
 * `exec_mem_limit`
 * `batch_size`
 * `parallel_fragment_exec_instance_num`
@@ -367,7 +367,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `insert_timeout`
 
-  <version since="dev"></version>Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
+   Used to set the insert timeout. This variable applies to INSERT statements particularly in the current connection, and is recommended to manage long-duration INSERT action. The default is 4 hours, in seconds. It will lose effect when query_timeout is
     greater than itself to make it compatible with the habits of older version users to use query_timeout to control the timeout of INSERT statements.
 
 * `resource_group`
@@ -626,7 +626,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `show_user_default_role`
 
-    <version since="dev"></version>
+     
 
     Controls whether to show each user's implicit roles in the results of `show roles`. Default is false.
 
@@ -636,7 +636,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 * `dry_run_query`
 
-    <version since="dev"></version>
+     
 
     If set to true, for query requests, the actual result set will no longer be returned, but only the number of rows. The default is false.
 

@@ -28,18 +28,19 @@ under the License.
 
 ### Name
 
-<version since="1.2">
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 CREATE POLICY
 
-</version>
 
 ### Description
 
 创建策略，包含以下几种：
 
-1. 创建安全策略(ROW POLICY)，explain 可以查看改写后的 SQL。
-2. 创建数据迁移策略(STORAGE POLICY)，用于冷热数据转换。
+1. 创建安全策略 (ROW POLICY)，explain 可以查看改写后的 SQL。
+2. 创建数据迁移策略 (STORAGE POLICY)，用于冷热数据转换。
 
 #### 语法：
 
@@ -50,7 +51,7 @@ AS {RESTRICTIVE|PERMISSIVE} TO test USING (id in (1, 2));
 ```
 参数说明：
 
-- filterType：RESTRICTIVE 将一组策略通过 AND 连接, PERMISSIVE 将一组策略通过 OR 连接
+- filterType：RESTRICTIVE 将一组策略通过 AND 连接，PERMISSIVE 将一组策略通过 OR 连接
 - 配置多个策略首先合并 RESTRICTIVE 的策略，再添加 PERMISSIVE 的策略
 - RESTRICTIVE 和 PERMISSIVE 之间通过 AND 连接的
 - 不允许对 root 和 admin 用户创建
@@ -61,13 +62,13 @@ CREATE STORAGE POLICY test_storage_policy_1
 PROPERTIES ("key"="value", ...);
 ```
 参数说明：
-- PROPERTIES中需要指定资源的类型:
-    1. storage_resource：指定策略使用的storage resource名称。
-    2. cooldown_datetime：热数据转为冷数据时间，不能与cooldown_ttl同时存在。
+- PROPERTIES 中需要指定资源的类型：
+    1. storage_resource：指定策略使用的 storage resource 名称。
+    2. cooldown_datetime：热数据转为冷数据时间，不能与 cooldown_ttl 同时存在。
     3. cooldown_ttl：热数据持续时间。从数据分片生成时开始计算，经过指定时间后转为冷数据。支持的格式：
-        1d：1天
-        1h：1小时
-        50000: 50000秒
+        1d：1 天
+        1h：1 小时
+        50000: 50000 秒
 
 ### Example
 
@@ -97,8 +98,8 @@ PROPERTIES ("key"="value", ...);
    ```
 2. 创建数据迁移策略
     1. 说明
-        - 冷热分层创建策略，必须先创建resource，然后创建迁移策略时候关联创建的resource名
-        - 当前不支持删除drop数据迁移策略，防止数据被迁移后。策略被删除了，系统无法找回数据
+        - 冷热分层创建策略，必须先创建 resource，然后创建迁移策略时候关联创建的 resource 名
+        - 当前不支持删除 drop 数据迁移策略，防止数据被迁移后。策略被删除了，系统无法找回数据
    
     2. 指定数据冷却时间创建数据迁移策略
     ```sql

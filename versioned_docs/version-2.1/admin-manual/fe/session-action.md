@@ -30,11 +30,11 @@ under the License.
 
 `GET /rest/v1/session`
 
-<version since="dev">
+
 
 `GET /rest/v1/session/all`
 
-</version>
+
 
 ## Description
 

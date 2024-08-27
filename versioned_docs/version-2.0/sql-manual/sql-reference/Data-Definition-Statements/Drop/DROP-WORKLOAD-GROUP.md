@@ -30,7 +30,7 @@ under the License.
 
 DROP WORKLOAD GROUP
 
-<version since="dev"></version>
+ 
 
 ### Description
 

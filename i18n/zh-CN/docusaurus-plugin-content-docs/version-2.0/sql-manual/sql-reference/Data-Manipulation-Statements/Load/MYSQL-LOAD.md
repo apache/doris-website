@@ -27,9 +27,9 @@ under the License.
 ## MYSQL-LOAD
 
 ### Name
-<version since="dev">
+
     MYSQL LOAD
-</version>
+
 
 ### Description
 

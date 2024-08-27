@@ -34,7 +34,7 @@ UPDATE
 
 该语句是为进行对数据进行更新的操作，UPDATE 语句目前仅支持 UNIQUE KEY 模型。
 
-UPDATE操作目前只支持更新Value列，Key列的更新可参考[使用FlinkCDC更新Key列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
+UPDATE 操作目前只支持更新 Value 列，Key 列的更新可参考[使用 FlinkCDC 更新 Key 列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
 
 #### Syntax
 
@@ -53,7 +53,7 @@ value:
     {expr | DEFAULT}
 ```
 
-<version since="dev">
+
 
 ```sql
 UPDATE target_table [table_alias]
@@ -62,7 +62,7 @@ UPDATE target_table [table_alias]
     WHERE condition
 ```
 
-</version>
+
 
 #### Required Parameters
 
@@ -72,12 +72,12 @@ UPDATE target_table [table_alias]
 
 #### Optional Parameters
 
-<version since="dev">
+
 
 + table_alias: 表的别名
 + FROM additional_tables: 指定一个或多个表，用于选中更新的行，或者获取更新的值。注意，如需要在此列表中再次使用目标表，需要为其显式指定别名。
 
-</version>
+
 
 #### Note
 
@@ -85,7 +85,7 @@ UPDATE target_table [table_alias]
 
 ### Example
 
-`test` 表是一个 unique 模型的表，包含: k1, k2, v1, v2  四个列。其中 k1, k2 是 key，v1, v2 是value，聚合方式是 Replace。
+`test` 表是一个 unique 模型的表，包含：k1, k2, v1, v2  四个列。其中 k1, k2 是 key，v1, v2 是 value，聚合方式是 Replace。
 
 1. 将 'test' 表中满足条件 k1 =1 , k2 =2 的 v1 列更新为 1
 
@@ -93,18 +93,18 @@ UPDATE target_table [table_alias]
 UPDATE test SET v1 = 1 WHERE k1=1 and k2=2;
 ```
 
-2. 将 'test' 表中 k1=1 的列的 v1 列自增1
+2. 将 'test' 表中 k1=1 的列的 v1 列自增 1
 
 ```sql
 UPDATE test SET v1 = v1+1 WHERE k1=1;
 ```
 
-<version since="dev">
+
 
 3. 使用`t2`和`t3`表连接的结果，更新`t1`
 
 ```sql
--- 创建t1, t2, t3三张表
+-- 创建 t1, t2, t3 三张表
 CREATE TABLE t1
   (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
 UNIQUE KEY (id)
@@ -158,7 +158,7 @@ UPDATE t1
 +----+----+----+--------+------------+
 ```
 
-</version>
+
 
 ### Keywords
 

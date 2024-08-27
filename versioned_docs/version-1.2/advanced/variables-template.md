@@ -69,7 +69,7 @@ Variables that support both session-level and global-level setting include:
 * `sql_mode`
 * `enable_profile`
 * `query_timeout`
-* `insert_timeout`<version since="dev"></version>
+* `insert_timeout` 
 * `exec_mem_limit`
 * `batch_size`
 * `parallel_fragment_exec_instance_num`

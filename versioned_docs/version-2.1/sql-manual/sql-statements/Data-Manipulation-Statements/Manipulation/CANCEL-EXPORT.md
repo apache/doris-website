@@ -28,7 +28,9 @@ under the License.
 
 ### Name
 
-<version since="1.2.2"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 1.2.2 version
+:::
 
 CANCEL EXPORT 
 

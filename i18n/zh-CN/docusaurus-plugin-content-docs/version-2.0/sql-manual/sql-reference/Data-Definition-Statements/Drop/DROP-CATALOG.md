@@ -28,11 +28,14 @@ under the License.
 
 ### Name
 
-<version since="1.2">
+
+:::tip 提示
+该功能自 Apache Doris  1.2 版本起支持
+:::
 
 CREATE CATALOG
 
-</version>
+
 
 ### Description
 

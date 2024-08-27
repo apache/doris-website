@@ -26,7 +26,9 @@ under the License.
 
 ## ALTER-RESOURCE
 
-<version since="1.2.0"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 ### Name
 

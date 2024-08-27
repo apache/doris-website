@@ -24,7 +24,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="2.0.4"></version> 
+:::tip Tips
+This feature is supported since the Apache Doris 2.0.4 version
+:::
 
 In the database, "Hint" is an instruction that instructs the query optimizer to execute a plan. By embedding hints in SQL statements, you can influence the optimizer's decision to select the desired execution path. Here is a background example using Hint:
 
