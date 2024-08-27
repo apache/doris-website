@@ -64,6 +64,8 @@ SET GLOBAL enable_file_cache = true;
 | `enable_file_cache_query_limit` | 否 | 是否限制单个 query 使用的缓存大小，默认 false |
 | `clear_file_cache` | 否 | BE 重启时是否删除之前的缓存数据，默认 false |
 
+## 缓存可观测性
+
 ### 查看 Data Cache 命中情况
 
 执行 `set enable_profile=true` 打开会话变量，可以在 FE 的 web 页面的 Queris 标签中查看到作业的 Profile。Data Cache 相关的指标如下:
@@ -91,4 +93,8 @@ SET GLOBAL enable_file_cache = true;
 - `WriteCacheIOUseTimer`：写入缓存的 IO 时间。
 
 如果 `BytesScannedFromRemote` 为 0，表示全部命中缓存。
+
+### 监控指标
+
+用户可以通过系统表 [file_cache_statistics](../admin-manual/system-tables/file_cache_statistics.md) 查看各个 Backend 节点的缓存统计指标。
 
