@@ -121,7 +121,7 @@ The meaning of each column in the result returned by the `show export` command i
   - columns: Specified column names to export, empty value represents exporting all columns.
   - format: File format for export
 - Path: Export path on the remote storage.
-- CreateTime/StartTime/FinishTime: Job creation time, scheduling start time, and end time.
+- `CreateTime/StartTime/FinishTime`: Job creation time, scheduling start time, and end time.
 - Timeout: Job timeout time in seconds. This time is calculated from CreateTime.
 - ErrorMsg: If there is an error in the job, the error reason will be displayed here.
 - OutfileInfo: If the job is successfully exported, specific `SELECT INTO OUTFILE` result information will be displayed here.
@@ -325,7 +325,7 @@ Exporting Catalog external table data does not support concurrent exports. Even 
 
 ### Export Consistency
 
-`Export` supports two granularities for export: partition / tablets. The `data_consistency` parameter is used to specify the granularity at which the table to be exported is split. `none` represents Tablets level, and `partition` represents Partition level.
+`Export` supports two granularities for export: `partition / tablets`. The `data_consistency` parameter is used to specify the granularity at which the table to be exported is split. `none` represents Tablets level, and `partition` represents Partition level.
 
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp"

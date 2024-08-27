@@ -33,40 +33,40 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
 | 类型         | MySQL                                                        | Doris                                                  |
 | ------------ | ------------------------------------------------------------ | ------------------------------------------------------ |
-| Boolean      | <p>- 支持</p> <p>- 范围：0 代表 false，1 代表 true</p>                         | <p>- 支持</p> <p>- 关键字：Boolean</p> <p>- 范围：0 代表 false，1 代表 true</p> |
-| Bit          | <p>- 支持</p> <p>- 范围：1 ~ 64</p>                                        | 不支持                                                 |
-| Tinyint      | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：  - signed: -128 ~ 127</p>  <p>- unsigned: 0 ~ 255</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-128 ~ 127</p>               |
-| Smallint     | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^15 ~ 2^15-1</p> <p>- unsigned: 0 ~ 2^16-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-32768 ~ 32767</p>           |
-| Mediumint    | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^23 ~ 2^23-1</p>  <p>- unsigned: 0 ~ -2^24-1</p> | - 不支持                                               |
-| int          | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^31 ~ 2^31-1</p>  <p>- unsigned: 0 ~ -2^32-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围： -2147483648~ 2147483647</p> |
-| Bigint       | <p>- 支持</p> <p>- 支持 signed,unsigned</p> <p>- 范围：</p>  <p>- signed: -2^63 ~ 2^63-1</p>  <p>- unsigned: 0 ~ 2^64-1</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围： -2^63 ~ 2^63-1 </p>         |
-| Largeint     | - 不支持                                                     | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 范围：-2^127 ~ 2^127-1</p>         |
-| Decimal      | <p>- 支持</p> <p>- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）</p> <p>- 默认值：Decimal(10, 0)</p> | <p>- 支持</p> <p>- 只支持 signed</p> <p>- 默认值：Decimal(9, 0)</p>          |
-| Float/Double | <p>- 支持</p> <p>- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）</p> | <p>- 支持</p> <p>- 只支持 signed</p>                                  |
+| Boolean      | - 支持<br />- 范围：0 代表 false，1 代表 true                    | - 支持<br />- 关键字：Boolean <br />- 范围：0 代表 false，1 代表 true |
+| Bit          | - 支持 <br />- 范围：1 ~ 64                                     | 不支持                                                 |
+| Tinyint      | - 支持 <br />- 支持 signed,unsigned <br />- 范围：  - signed: -128 ~ 127 <br />- unsigned: 0 ~ 255 | - 支持 <br />- 只支持 signed <br />- 范围：-128 ~ 127 |
+| Smallint     | - 支持 <br />- 支持 signed,unsigned <br />- 范围： <br />- signed: -2^15 ~ 2^15-1 <br />- unsigned: 0 ~ 2^16-1 | - 支持 <br />- 只支持 signed <br />- 范围：-32768 ~ 32767           |
+| Mediumint    | - 支持 <br />- 支持 signed,unsigned <br />- 范围：<br />- signed: -2^23 ~ 2^23-1 <br />- unsigned: 0 ~ -2^24-1 | - 不支持                  |
+| int          | - 支持 <br />- 支持 signed,unsigned <br />- 范围：<br />- signed: -2^31 ~ 2^31-1 <br />- unsigned: 0 ~ -2^32-1 | - 支持 <br />- 只支持 signed <br />- 范围： -2147483648~ 2147483647 |
+| Bigint       | - 支持 <br />- 支持 signed,unsigned <br />- 范围：<br />- signed: -2^63 ~ 2^63-1 <br />- unsigned: 0 ~ 2^64-1 | - 支持 <br />- 只支持 signed <br />- 范围： -2^63 ~ 2^63-1      |
+| Largeint     | - 不支持                                                     | - 支持 <br />- 只支持 signed <br />- 范围：-2^127 ~ 2^127-1       |
+| Decimal      | - 支持 <br />- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated）<br />- 默认值：Decimal(10, 0)| - 支持 <br />- 只支持 signed <br />- 默认值：Decimal(9, 0)        |
+| Float/Double | - 支持 <br />- 支持 signed,unsigned（8.0.17 以前支持，以后被标记为 deprecated） | - 支持 <br />- 只支持 signed                                 |
 
 ### 日期类型
 
 | 类型      | MySQL                                                        | Doris                                                        |
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Date      | <p>- 支持 - 范围：['1000-01-01','9999-12-31']</p> <p>- 格式：YYYY-MM-DD</p> | <p>- 支持</p> <p>- 范围：['0000-01-01', '9999-12-31']</p> <p>- 格式：YYYY-MM-DD</p> |
-| DateTime  | <p>- 支持</p> <p>- DATETIME([P])，可选参数 P 表示精度</p> <p>- 范围：'1000-01-01 00:00:00.000000' ,'9999-12-31 23:59:59.999999'</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- 支持</p> <p>- DATETIME([P])，可选参数 P 表示精度</p> <p>- 范围：['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> |
-| Timestamp | <p>- 支持</p> <p>- Timestamp[(p)]，可选参数 P 表示精度</p> <p>- 范围：['1970-01-01 00:00:01.000000' UTC , '2038-01-19 03:14:07.999999' UTC]</p> <p>- 格式：YYYY-MM-DD hh:mm:ss[.fraction]</p> | - 不支持                                                     |
-| Time      | <p>- 支持</p> <p>- Time[(p)]</p> <p>- 范围：['-838:59:59.000000' to '838:59:59.000000']</p> <p>- 格式：hh:mm:ss[.fraction]</p> | - 不支持                                                     |
-| Year      | <p>- 支持</p> <p>- 范围：1901 to 2155, or 0000</p> <p>- 格式：yyyy</p>            | - 不支持                                                     |
+| Date      | - 支持 <br />- 范围：['1000-01-01','9999-12-31'] <br />- 格式：YYYY-MM-DD | - 支持 <br />- 范围：['0000-01-01', '9999-12-31'] <br />- 格式：YYYY-MM-DD|
+| DateTime  | - 支持 <br />- DATETIME([P])，可选参数 P 表示精度 <br />- 范围：'1000-01-01 00:00:00.000000' ,'9999-12-31 23:59:59.999999' <br />- 格式：YYYY-MM-DD hh:mm:ss[.fraction] | - 支持 <br />- DATETIME([P])，可选参数 P 表示精度 <br />- 范围：['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]'] <br />- 格式：YYYY-MM-DD hh:mm:ss[.fraction] |
+| Timestamp | - 支持 <br />- Timestamp[(p)]，可选参数 P 表示精度 <br />- 范围：['1970-01-01 00:00:01.000000' UTC , '2038-01-19 03:14:07.999999' UTC] <br />- 格式：YYYY-MM-DD hh:mm:ss[.fraction] | - 不支持                                                     |
+| Time      | - 支持 <br />- Time[(p)] <br /> - 范围：['-838:59:59.000000' to '838:59:59.000000'] <br />- 格式：hh:mm:ss[.fraction] | - 不支持                                                     |
+| Year      | - 支持 <br />- 范围：1901 to 2155, or 0000 <br />- 格式：yyyy          | - 不支持                                                     |
 
 ### 字符串类型
 
 | 类型      | MySQL                                                        | Doris                                                        |
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Char      | <p>- 支持</p> <p>- CHAR[(M)，M 为字符长度，缺省表示长度为 1</p> <p>- 定长</p> <p>- 范围：[0,255]，字节大小</p> | <p>- 支持</p> <p>- CHAR[(M)，M 为字节长度</p> <p>- 可变</p> <p>- 范围：[1,255]</p>        |
-| Varchar   | <p>- 支持</p> <p>- VARCHAR(M)，M 为字符长度</p> <p>- 范围：[0,65535]，字节大小</p> | <p>- 支持</p> <p>- VARCHAR(M)，M 为字节长度。</p> <p>- 范围：[1, 65533]</p>        |
-| String    | - 不支持                                                     | <p>- 支持</p> <p>- 1048576 字节（1MB），可调大到 2147483643 字节（2G）</p> |
-| Binary    | <p>- 支持</p> <p>- 类似于 Char</p>                                          | - 不支持                                                     |
-| Varbinary | <p>- 支持</p> <p>- 类似于 Varchar</p>                                       | - 不支持                                                     |
-| Blob      | <p>- 支持</p> <p>- TinyBlob、Blob、MediumBlob、LongBlob</p>                | - 不支持                                                     |
-| Text      | <p>- 支持</p> <p>- TinyText、Text、MediumText、LongText</p>                | - 不支持                                                     |
-| Enum      | <p>- 支持</p> <p>- 最多支持 65535 个 elements</p>                             | - 不支持                                                     |
-| Set       | <p>- 支持</p> <p>- 最多支持 64 个 elements</p>                                | - 不支持                                                     |
+| Char      | - 支持 <br />- CHAR(M)，M 为字符长度，缺省表示长度为 1 <br />- 定长 <br />- 范围：[0,255]，字节大小 | - 支持 <br />- CHAR(M)，M 为字节长度 <br />- 可变 <br />- 范围：[1,255]      |
+| Varchar   | - 支持 <br />- VARCHAR(M)，M 为字符长度 <br />- 范围：[0,65535]，字节大小 | - 支持 <br />- VARCHAR(M)，M 为字节长度。<br />- 范围：[1, 65533]      |
+| String    | - 不支持                                                     | - 支持 <br />- 1048576 字节（1MB），可调大到 2147483643 字节（2G）|
+| Binary    | - 支持 <br />- 类似于 Char                                         | - 不支持                                                     |
+| Varbinary | - 支持 <br />- 类似于 Varchar                                      | - 不支持                                                     |
+| Blob      | - 支持 <br />- TinyBlob、Blob、MediumBlob、LongBlob              | - 不支持                                                     |
+| Text      | - 支持 <br />- TinyText、Text、MediumText、LongText           | - 不支持                                                     |
+| Enum      | - 支持 <br />- 最多支持 65535 个 elements                            | - 不支持                                                     |
+| Set       | - 支持 <br />- 最多支持 64 个 elements                              | - 不支持                                                     |
 
 ### JSON 数据类型
 
@@ -78,53 +78,53 @@ Doris 是高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL �
 
 - **HyperLogLog**
 
-    HLL 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 HLL_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 HLL 列只能通过配套的 hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 进行查询或使用。
+  HLL 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 HLL_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 HLL 列只能通过配套的 hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 进行查询或使用。
 
-    HLL 是模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的误差通常在 1% 左右，有时会达到 2%。
+  HLL 是模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的误差通常在 1% 左右，有时会达到 2%。
 
 - **Bitmap**
 
-    BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。在 Unique 表或 duplicate 表中使用时，其必须作为非 key 列使用。在 Aggregate 表中使用时，其必须作为非 key 列使用，且建表时配合的聚合类型为 BITMAP_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 BITMAP 列只能通过配套的 bitmap_union_count、bitmap_union、bitmap_hash、bitmap_hash64 等函数进行查询或使用。
+  BITMAP 类型的列可以在 Aggregate 表、Unique 表或 Duplicate 表中使用。在 Unique 表或 duplicate 表中使用时，其必须作为非 key 列使用。在 Aggregate 表中使用时，其必须作为非 key 列使用，且建表时配合的聚合类型为 BITMAP_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 BITMAP 列只能通过配套的 bitmap_union_count、bitmap_union、bitmap_hash、bitmap_hash64 等函数进行查询或使用。
 
-    离线场景下使用 BITMAP 会影响导入速度，在数据量大的情况下查询速度会慢于 HLL，并优于 Count Distinct。注意：实时场景下 BITMAP 如果不使用全局字典，使用了 bitmap_hash() 可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用 bitmap_hash64。
+  离线场景下使用 BITMAP 会影响导入速度，在数据量大的情况下查询速度会慢于 HLL，并优于 Count Distinct。注意：实时场景下 BITMAP 如果不使用全局字典，使用了 bitmap_hash() 可能会导致有千分之一左右的误差。如果这个误差不可接受，可以使用 bitmap_hash64。
 
 - **QUANTILE_PERCENT**
 
-    QUANTILE_STATE 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 QUANTILE_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 QUANTILE_STATE 列只能通过配套的 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数进行查询或使用。
+  QUANTILE_STATE 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 QUANTILE_UNION。用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。并且 QUANTILE_STATE 列只能通过配套的 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数进行查询或使用。
 
-    QUANTILE_STATE 是一种计算分位数近似值的类型，在导入时会对相同的 key，不同 value 进行预聚合，当 value 数量不超过 2048 时采用明细记录所有数据，当 value 数量大于 2048 时采用 [TDigest](https://github.com/tdunning/t-digest/blob/main/docs/t-digest-paper/histo.pdf) 算法，对数据进行聚合（聚类）保存聚类后的质心点。
+  QUANTILE_STATE 是一种计算分位数近似值的类型，在导入时会对相同的 key，不同 value 进行预聚合，当 value 数量不超过 2048 时采用明细记录所有数据，当 value 数量大于 2048 时采用 [TDigest](https://github.com/tdunning/t-digest/blob/main/docs/t-digest-paper/histo.pdf) 算法，对数据进行聚合（聚类）保存聚类后的质心点。
 
-- **Array<T\>**
+- **`Array<T\>`**
 
-    由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 模型的表中使用，也支持在 Unique 模型的表中非 key 列使用。
+  由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 模型的表中使用，也支持在 Unique 模型的表中非 key 列使用。
 
-    T 类型：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,CHAR, VARCHAR, STRING
+  T 类型：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,CHAR, VARCHAR, STRING
 
 - **MAP<K, V>**
 
-        由 K, V 类型元素组成的 map，不能作为 key 列使用。目前支持在 Duplicate，Unique 模型的表中使用。
+  由 K, V 类型元素组成的 map，不能作为 key 列使用。目前支持在 Duplicate，Unique 模型的表中使用。
 
 K,V 支持的类型有：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,  CHAR, VARCHAR, STRING
 
 - **STRUCT<field_name:field_type, ... >**
 
-    由多个 Field 组成的结构体，也可被理解为多个列的集合。不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。
+  由多个 Field 组成的结构体，也可被理解为多个列的集合。不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。
 
-    一个 Struct 中的 Field 的名字和数量固定，总是为 Nullable，一个 Field 通常由下面部分组成。
+  一个 Struct 中的 Field 的名字和数量固定，总是为 Nullable，一个 Field 通常由下面部分组成。
 
-    - field_name: Field 的标识符，不可重复
+  - field_name: Field 的标识符，不可重复
 
-    - field_type: Field 的类型
+  - field_type: Field 的类型
 
-    当前可支持的类型有：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING
+  当前可支持的类型有：BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING
 
 - Agg_State
 
-    AGG_STATE 不能作为 key 列使用，建表时需要同时声明聚合函数的签名。
+  AGG_STATE 不能作为 key 列使用，建表时需要同时声明聚合函数的签名。
 
-    用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
+  用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。
 
-    AGG_STATE 只能配合[state](../../sql-manual/sql-functions/combinators/state) /[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union)函数组合器使用。 
+  AGG_STATE 只能配合[state](../../sql-manual/sql-functions/combinators/state) /[merge](../../sql-manual/sql-functions/combinators/merge)/[union](../../sql-manual/sql-functions/combinators/union)函数组合器使用。 
 
 ## 语法区别
 
