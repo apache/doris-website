@@ -63,7 +63,9 @@ Add settings to the BE node's configuration file `conf/be.conf`, and restart the
 | `enable_file_cache_query_limit` | No | Whether to limit the cache size used by a single query, default false |
 | `clear_file_cache` | No | Whether to delete the previous cache data when the BE restarts, default false |
 
-## Check whether a query hits cache
+## Cache Observability
+
+### Check whether a query hits cache
 
 Execute `set enable_profile = true` to enable the session variable, and you can view the query profile in the Queris tab of FE's web page. The metrics related to Data cache are as follows:
 
@@ -90,4 +92,10 @@ Execute `set enable_profile = true` to enable the session variable, and you can 
 - `WriteCacheIOUseTimer`: IO time to write cache.
 
 If `BytesScannedFromRemote` is 0, it means all caches are hit.
+
+### Metrics
+
+User can query system table [file_cache_statistics](../admin-manual/system-tables/file_cache_statistics.md) to view the cache stats of each Backends.
+
+
 
