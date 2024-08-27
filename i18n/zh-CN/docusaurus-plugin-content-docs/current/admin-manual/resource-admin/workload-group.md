@@ -72,9 +72,13 @@ Workload Group 是从 2.0 版本开始支持的功能，Workload Group 在 2.0 �
 
 注意事项：
 
-1 目前暂不支持 CPU 的软限和硬限的同时使用，一个集群某一时刻只能是软限或者硬限，下文中会描述切换方法。
+1. 目前暂不支持 CPU 的软限和硬限的同时使用，一个集群某一时刻只能是软限或者硬限，下文中会描述切换方法。
 
-2 所有属性均为可选，但是在创建 Workload Group 时需要指定至少一个属性。
+2. 所有属性均为可选，但是在创建 Workload Group 时需要指定至少一个属性。
+
+3. 需要注意 cgroup v1 和cgroup v2 版本 cpu 软限默认值是有区别的, cgroup v1 的 cpu 软限默认值为1024，取值范围为2到262144。而 cgroup v2 的 cpu 软限默认值为100，取值范围是1到10000。
+如果软限填了一个超出范围的值，这会导致 cpu 软限在BE修改失败。还有就是在cgroup v1的环境上如果按照cgroup v2的默认值100设置，这可能导致这个workload group的优先级在该机器上是最低的。
+
 
 ## Workload Group分组功能
 Workload Group功能是对单台BE资源用量的划分。当用户创建了一个Group A，默认情况下这个Group A的元信息会被发送到所有BE上并启动线程，这会带来以下问题：
@@ -99,8 +103,8 @@ Workload Group和BE的匹配规则说明:
 1. 当Workload Group的Tag为空，那么这个Workload Group可以发送给所有的BE，不管该BE是否指定了tag。
 2. 当Workload Group的Tag不为空，那么Workload Group只会发送给具有相同标签的BE。
 
-## 配置 cgroup v1 的环境
-Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup v1 版本对 CPU 资源进行限制（暂不支持 CGroup v2），因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup v1 的环境。
+## 配置 cgroup 的环境
+Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但是从 2.1 版本起，Doris 默认使用基于 CGroup v1 版本对 CPU 资源进行限制，因此如果期望在 2.1 版本对 CPU 资源进行约束，那么需要 BE 所在的节点上已经安装好 CGroup 的环境。
 
 用户如果在 2.0 版本使用了 Workload Group 的软限并升级到了 2.1 版本，那么也需要配置 CGroup，否则可能导致软限失效。
 
@@ -108,13 +112,28 @@ Doris 的 2.0 版本使用基于 Doris 的调度实现 CPU 资源的限制，但
 
 在不配置 cgroup 的情况下，用户可以使用 workload group 除 CPU 限制外的所有功能。
 
-1 首先确认 BE 所在节点已经安装好 CGroup v1 版本，确认存在路径```/sys/fs/cgroup/cpu/```即可
+1. 首先确认 BE 所在节点是否已经安装好cgroup
+```
+cat /proc/filesystems | grep cgroup
+nodev	cgroup
+nodev	cgroup2
+nodev	cgroupfs
+```
 
-2 在 cgroup 的 cpu 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
+2. 确认cgroup的版本
+```
+如果包含这个路径说明目前生效的是cgroup v1
+/sys/fs/cgroup/cpu/
+
+如果包含这个路径说明目前生效的是cgroup v2
+/sys/fs/cgroup/cgroup.controllers
+```
+
+3. 在 cgroup 的 cpu 路径下新建一个名为 doris 的目录，这个目录名用户可以自行指定
 
 ```mkdir /sys/fs/cgroup/cpu/doris```
 
-3 需要保证 Doris 的 BE 进程对于这个目录有读/写/执行权限
+4. 需要保证 Doris 的 BE 进程对于这个目录有读/写/执行权限
 ```
 // 修改这个目录的权限为可读可写可执行
 chmod 770 /sys/fs/cgroup/cpu/doris
@@ -123,14 +142,23 @@ chmod 770 /sys/fs/cgroup/cpu/doris
 chown -R doris:doris /sys/fs/cgroup/cpu/doris
 ```
 
-4 修改 BE 的配置，指定 cgroup 的路径
+5. 如果目前环境里使用的是cgroup v2版本，那么需要做以下操作。这是因为cgroup v2对于权限管控比较严格，需要具备根目录的cgroup.procs文件的写权限才能实现进程在group之间的移动。
+```
+chmod a+w /sys/fs/cgroup/cgroup.procs
+```
+
+6. 修改 BE 的配置，指定 cgroup 的路径
 ```
 doris_cgroup_cpu_path = /sys/fs/cgroup/cpu/doris
 ```
 
-5 重启 BE，在日志（be.INFO）可以看到"add thread xxx to group"的字样代表配置成功
+7. 重启 BE，在日志（be.INFO）可以看到"add thread xxx to group"的字样代表配置成功
 
-需要注意的是，目前的 workload group 暂时不支持一个机器多个 BE 的部署方式。
+:::tip
+注意事项：
+1. 目前的 workload group 暂时不支持一个机器多个 BE 的部署方式。
+2. 当机器重启之后，上面的cgroup配置就会清空。如果期望上述配置重启之后可以也可以生效，可以使用systemd把以上操作设置成系统的自定义服务，这样在每次机器重启的时候，自动完成创建和授权操作。
+:::
 
 ## 在K8S中使用Workload Group的注意事项
 Workload的CPU管理是基于CGroup实现的，如果期望在容器中使用Workload Group，那么需要以特权模式启动容器，容器内的Doris进程才能具备读写宿主机CGroup文件的权限。
