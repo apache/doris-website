@@ -26,7 +26,7 @@ under the License.
 
 # K8s部署doris
 
-<version since="dev"></version>
+ 
 
 ## 环境准备
 

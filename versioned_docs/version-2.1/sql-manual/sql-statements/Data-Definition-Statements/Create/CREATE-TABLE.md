@@ -242,9 +242,13 @@ Partition information supports three writing methods:
     )
     ```
            
-<version since="1.2.0">
+
     
 3. MULTI RANGE: Multi build RANGE partitions,Define the left closed and right open interval of the zone, Set the time unit and step size, the time unit supports year, month, day, week and hour.
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
     ```
     PARTITION BY RANGE(col)
@@ -256,7 +260,7 @@ Partition information supports three writing methods:
     )
     ```
     
-</version>
+
 
 
 4. MULTI RANGE: Multi build integer RANGE partitions,Define the left closed and right open interval of the zone, and step size.
@@ -384,7 +388,7 @@ Set table properties. The following attributes are currently supported:
 
 * `enable_unique_key_merge_on_write`
 
-    <version since="1.2" type="inline"> Wheather the unique table use merge-on-write implementation. </version>
+    Wheather the unique table use merge-on-write implementation. 
 
     The property is disabled by default before version 2.1 and is enabled by default since version 2.1.
 
@@ -753,9 +757,14 @@ NOTE: Need to create the s3 resource and storage policy before the table can be 
     ```
 NOTE: Need to create the s3 resource and storage policy before the table can be successfully associated with the migration policy 
 
-<version since="1.2.0">
+
 
 13. Multi Partition by a partition desc
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
     ```sql
         CREATE TABLE create_table_multi_partion_date
         (
@@ -802,7 +811,7 @@ NOTE: Need to create the s3 resource and storage policy before the table can be 
 
 NOTE: Multi Partition can be mixed with conventional manual creation of partitions. When using, you need to limit the partition column to only one, The default maximum number of partitions created in multi partition is 4096, This parameter can be adjusted in fe configuration `max_multi_partition_num`.
 
-</version>
+
 
 1.  Add a duplicate without sorting column table
 

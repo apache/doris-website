@@ -1176,7 +1176,11 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
   Specify the import data format, support csv, json, the default is csv
 
-  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc</version>
+  supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc
+
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
 
 + exec_mem_limit
 
@@ -1264,13 +1268,20 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
 + enable_profile
 
-  <version since="1.2.7">When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).</version>
+:::tip Tips
+This feature is supported since the Apache Doris 1.2.7 version
+:::
+
+  When `enable_profile` is true, the Stream Load profile will be printed to logs (be.INFO).
 
 + memtable_on_sink_node
 
-  <version since="2.1.0">
+:::tip Tips
+This feature is supported since the Apache Doris 1.2 version
+:::
+
   Whether to enable MemTable on DataSink node when loading data, default is false.
-  </version>
+
 
   Build MemTable on DataSink node, and send segments to other backends through brpc streaming.
   It reduces duplicate work among replicas, and saves time in data serialization & deserialization.

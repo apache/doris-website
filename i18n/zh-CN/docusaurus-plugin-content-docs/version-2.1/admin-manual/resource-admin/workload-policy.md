@@ -24,85 +24,87 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<version since="2.1.3"></version>
+:::tip 提示
+该功能自 Apache Doris  2.1.3 版本起支持
+:::
 
 ## 功能背景
-Workload Group功能解决了不同负载间的隔离问题，但无法解决同一个Group内的大查询熔断的问题， 用户遇到大查询影响集群稳定性时只能手动处理。
+Workload Group 功能解决了不同负载间的隔离问题，但无法解决同一个 Group 内的大查询熔断的问题，用户遇到大查询影响集群稳定性时只能手动处理。
 
-因此Doris实现了Workload Policy的功能，支持查询负载管理的自动化，比如实现自动取消运行时间超过5s的查询这样的功能。
+因此 Doris 实现了 Workload Policy 的功能，支持查询负载管理的自动化，比如实现自动取消运行时间超过 5s 的查询这样的功能。
 
 ## 基础概念
-给出一个创建Workload Policy的语法
+给出一个创建 Workload Policy 的语法
 ```
 create workload policy test_cancel_policy
 conditions(query_time > 1000)
 actions(cancel_query) 
 properties('enabled'='true'); 
 ```
-Workload Policy主要包含以下几个概念：
-* policy，代表了用户定义的策略，包含触发策略的条件(conditions)和触发策略后的动作(actions)。
-* conditions，代表了策略的触发条件，比如当查询时间大于3s，就触发当前policy的action。一个policy可以有多个condition，多个condition之间是“与”的关系。
-* actions，当policy被触发时所采取的动作，比如可以取消查询，目前一个policy只能定义一个action(除了`set_session_variable`)。
-* properties，定义了当前policy的属性，包括是否启用和优先级。
+Workload Policy 主要包含以下几个概念：
+* policy，代表了用户定义的策略，包含触发策略的条件 (conditions) 和触发策略后的动作 (actions)。
+* conditions，代表了策略的触发条件，比如当查询时间大于 3s，就触发当前 policy 的 action。一个 policy 可以有多个 condition，多个 condition 之间是“与”的关系。
+* actions，当 policy 被触发时所采取的动作，比如可以取消查询，目前一个 policy 只能定义一个 action(除了`set_session_variable`)。
+* properties，定义了当前 policy 的属性，包括是否启用和优先级。
 
-上面例子中policy的含义是，创建一个名为`test_cancel_policy`的policy，它会取消掉集群中运行时间超过1s的查询，当前状态为启用。
+上面例子中 policy 的含义是，创建一个名为`test_cancel_policy`的 policy，它会取消掉集群中运行时间超过 1s 的查询，当前状态为启用。
 创建 Workload Policy 需要 admin_priv 权限。
 
 ## 基本用法
-由于action的行为有的只能在FE生效，有的只能在BE生效，因此policy本身也有FE和BE的区别。
+由于 action 的行为有的只能在 FE 生效，有的只能在 BE 生效，因此 policy 本身也有 FE 和 BE 的区别。
 
-### 适用于FE的policy
+### 适用于 FE 的 policy
 1. Condition
-   * username，当一个查询的username为某个值时，就会触发相应的action
+   * username，当一个查询的 username 为某个值时，就会触发相应的 action
 2. Action
-   * set_session_variable，这个action可以执行一条set session variable的语句。同一个policy可以有多个`set_session_variable`，也就是说一个policy可以执行多个修改session变量的语句。
+   * set_session_variable，这个 action 可以执行一条 set session variable 的语句。同一个 policy 可以有多个`set_session_variable`，也就是说一个 policy 可以执行多个修改 session 变量的语句。
 
-适用于FE的policy主要是用于修改某个user的session变量，目前不支持set global的用法。
+适用于 FE 的 policy 主要是用于修改某个 user 的 session 变量，目前不支持 set global 的用法。
 
-### 适用于BE的policy
+### 适用于 BE 的 policy
 1. Condition
-   * be_scan_rows，一个sql在单个BE进程内scan的行数，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值。
-   * be_scan_bytes，一个sql在单个BE进程内scan的字节数，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值，单位是字节。
-   * query_time，一个sql在单个BE进程上的运行时间，时间单位是毫秒。
-   * query_be_memory_bytes，从2.1.5版本开始支持。一个sql在单个BE进程内使用的内存用量，如果这个sql在BE上是多并发执行，那么就是多个并发的累加值，单位是字节。
+   * be_scan_rows，一个 sql 在单个 BE 进程内 scan 的行数，如果这个 sql 在 BE 上是多并发执行，那么就是多个并发的累加值。
+   * be_scan_bytes，一个 sql 在单个 BE 进程内 scan 的字节数，如果这个 sql 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。
+   * query_time，一个 sql 在单个 BE 进程上的运行时间，时间单位是毫秒。
+   * query_be_memory_bytes，从 2.1.5 版本开始支持。一个 sql 在单个 BE 进程内使用的内存用量，如果这个 sql 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。
   
 2. Action
    * cancel_query，取消查询。
 
-目前BE的policy主要是用于BE负载的管理，比如当某个query的scan数据量过大或者查询时间过长，就取消这个query。
+目前 BE 的 policy 主要是用于 BE 负载的管理，比如当某个 query 的 scan 数据量过大或者查询时间过长，就取消这个 query。
 
 ### 属性
-* enabled，取值为true或false，默认值为true，表示当前policy处于启用状态，false表示当前policy处于禁用状态。
-* priority，取值范围为0到100的正整数，默认值为0，代表policy的优先级，该值越大，优先级越高。这个属性的主要作用是，当匹配到多个policy时，选择优先级最高的policy。
-* workload_group，目前一个policy可以绑定一个workload group，代表这个policy只对某个workload group生效。默认为空，代表对所有查询生效。
+* enabled，取值为 true 或 false，默认值为 true，表示当前 policy 处于启用状态，false 表示当前 policy 处于禁用状态。
+* priority，取值范围为 0 到 100 的正整数，默认值为 0，代表 policy 的优先级，该值越大，优先级越高。这个属性的主要作用是，当匹配到多个 policy 时，选择优先级最高的 policy。
+* workload_group，目前一个 policy 可以绑定一个 workload group，代表这个 policy 只对某个 workload group 生效。默认为空，代表对所有查询生效。
 
 ### 注意事项
-* 同一个policy的condition和action要么都是FE的，要么都是BE的，比如`set_session_variable`和`cancel_query`无法配置到同一个policy中。condition `be_scan_rows`和condition `username`无法配置到同一个policy中。
+* 同一个 policy 的 condition 和 action 要么都是 FE 的，要么都是 BE 的，比如`set_session_variable`和`cancel_query`无法配置到同一个 policy 中。condition `be_scan_rows`和 condition `username`无法配置到同一个 policy 中。
 
-* 由于目前的policy是异步线程以固定时间间隔执行的，因此策略的生效存在一定的滞后性。比如用户配置了scan行数大于100万就取消查询的策略，如果此时集群资源比较空闲，那么有可能在取消策略生效之前查询就已经结束了。目前这个时间间隔为500ms，这意味着运行时间过短的查询可能会绕过策略的检查。
+* 由于目前的 policy 是异步线程以固定时间间隔执行的，因此策略的生效存在一定的滞后性。比如用户配置了 scan 行数大于 100 万就取消查询的策略，如果此时集群资源比较空闲，那么有可能在取消策略生效之前查询就已经结束了。目前这个时间间隔为 500ms，这意味着运行时间过短的查询可能会绕过策略的检查。
 
-* 当前支持的负载类型包括select/insert select/stream load/broker load/routine load。
+* 当前支持的负载类型包括 select/insert select/stream load/broker load/routine load。
 
-* 一个查询可能匹配到多个policy，但是只有优先级最高的policy会生效。
+* 一个查询可能匹配到多个 policy，但是只有优先级最高的 policy 会生效。
 
-* 目前不支持action和condition的修改，只能通过删除新建的方式修改。
+* 目前不支持 action 和 condition 的修改，只能通过删除新建的方式修改。
 
 ## 常见用法
-1. 将用户名为admin的所有session变量中的workload group修改为normal
+1. 将用户名为 admin 的所有 session 变量中的 workload group 修改为 normal
 ```
 create workload policy test_set_var_policy
 conditions(username='admin')
 actions(set_session_variable 'workload_group=normal') 
 ```
 
-2. 取消所有单个be上scan行数大于1000行的sql
+2. 取消所有单个 be 上 scan 行数大于 1000 行的 sql
 ```
 create workload policy test_cancel_query
 conditions(be_scan_rows > 1000)
 actions(cancel_query) 
 ```
 
-3. 取消所有scan字节数大于5G且运行时间超过1s的sql
+3. 取消所有 scan 字节数大于 5G 且运行时间超过 1s 的 sql
 ```
 create workload policy test_cancel_big_query
 conditions(query_time > 1000, be_scan_bytes > 5368709120)
@@ -114,7 +116,7 @@ actions(cancel_query)
 alter workload policy test_cancel_big_query properties('workload_group'='normal');
 ```
 
-5. 查看已创建的policy
+5. 查看已创建的 policy
 ```
 mysql [information_schema]>select * from workload_policy;
 +-------+-----------------------+----------------------------------------------+--------------+----------+---------+---------+----------------+
@@ -126,14 +128,14 @@ mysql [information_schema]>select * from workload_policy;
 ```
 
 
-6. 删除policy
+6. 删除 policy
 ```
 drop workload policy test_cancel_big_query;
 ```
 
 ## 效果测试
-### 1 session变量修改测试
-尝试修改admin账户的session变量中的并发相关的参数
+### 1 session 变量修改测试
+尝试修改 admin 账户的 session 变量中的并发相关的参数
 ```
 // 登录 admin账户查看并发参数
 mysql [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
@@ -160,7 +162,7 @@ mysql [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
 ```
 
 ### 2 大查询熔断测试
-测试对运行时间超过3s的查询进行熔断，以下是一个ckbench的q29运行成功时的审计日志，可以看到这个sql跑完需要4.5s的时间
+测试对运行时间超过 3s 的查询进行熔断，以下是一个 ckbench 的 q29 运行成功时的审计日志，可以看到这个 sql 跑完需要 4.5s 的时间
 ```
 mysql [hits]>SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\.)?([^/]+)/.*$', '\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
 +-----------------------------------------------------------------------+------------------+----------+---------------------------------------------------------------------------------------------------------------------+
@@ -181,14 +183,14 @@ mysql [hits]>SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\.)?([^/]+)/.*$', '
 11 rows in set (4.50 sec)
 ```
 
-创建一个运行时间超过3s就取消查询的policy
+创建一个运行时间超过 3s 就取消查询的 policy
 ```
 create workload policy test_cancel_3s_query
 conditions(query_time > 3000)
 actions(cancel_query) 
 ```
 
-再次执行sql可以看到SQL执行会直接报错
+再次执行 sql 可以看到 SQL 执行会直接报错
 ```
 mysql [hits]>SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\.)?([^/]+)/.*$', '\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.8)[CANCELLED]query cancelled by workload policy,id:12345

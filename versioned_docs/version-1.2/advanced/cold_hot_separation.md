@@ -52,7 +52,7 @@ The cold and hot separation supports all doris functions, but only places some d
 
 The storage policy is the entry to use the cold and hot separation function. Users only need to associate a storage policy with a table or partition during table creation or doris use. that is, they can use the cold and hot separation function.
 
-<version since="dev"></version> When creating an S3 RESOURCE, the S3 remote link verification will be performed to ensure that the RESOURCE is created correctly.
+  When creating an S3 RESOURCE, the S3 remote link verification will be performed to ensure that the RESOURCE is created correctly.
 
 In addition, fe configuration needs to be added: `enable_storage_policy=true`
 

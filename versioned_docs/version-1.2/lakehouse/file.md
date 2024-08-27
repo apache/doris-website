@@ -83,7 +83,7 @@ Besides Parquet, Doris supports analysis and auto column type inference of ORC, 
 
 **CSV Schema**
 
-<version since="dev"></version>
+ 
 
 By default, for CSV format files, all columns are of type String. Column names and column types can be specified individually via the `csv_schema` attribute. Doris will use the specified column type for file reading. The format is as follows:
 
@@ -149,7 +149,7 @@ LIMIT 5;
 
 You can put the Table Value Function anywhere that you used to put Table in the SQL, such as in the WITH or FROM clause in CTE. In this way, you can treat the file as a normal table and conduct analysis conveniently.
 
-<version since="dev"></version>
+ 
 
 你也可以用过 `CREATE VIEW` 语句为 Table Value Function 创建一个逻辑视图。这样，你可以想其他视图一样，对这个 Table Value Function 进行访问、权限管理等操作，也可以让其他用户访问这个 Table Value Function。
 You can also create a logic view by using `CREATE VIEW` statement for a Table Value Function. So that you can query this view, grant priv on this view or allow other user to access this Table Value Function.

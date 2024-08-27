@@ -24,11 +24,13 @@ under the License.
 
 ## struct()
 
-<version since="2.0.0">
+:::tip 提示
+该功能自 Apache Doris  2.0 版本起支持
+:::
 
 struct()
 
-</version>
+
 
 ### description
 
@@ -36,7 +38,7 @@ struct()
 
 `STRUCT<T1, T2, T3, ...> struct(T1, T2, T3, ...)`
 
-根据给定的值构造并返回struct，参数可以是多列或常量
+根据给定的值构造并返回 struct，参数可以是多列或常量
 
 ### example
 

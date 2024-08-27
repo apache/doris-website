@@ -28,11 +28,13 @@ under the License.
 
 array_filter(lambda,array)
 
-<version since="2.0.2">
+:::tip Tips
+This functions is supported since the Apache Doris 2.0.2 version
+:::
 
 array array_filter(array arr, array_bool filter_column)
 
-</version>
+
 
 ### description
 

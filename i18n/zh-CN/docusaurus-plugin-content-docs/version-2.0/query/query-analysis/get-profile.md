@@ -39,7 +39,7 @@ under the License.
 
    该参数开启的是 session 变量，此变量不建议全局开启。
 
-    ```
+    ```sql
     --开启变量
     mysql> set enable_profile=true;
     Query OK, 0 rows affected (0.00 sec)
@@ -58,7 +58,7 @@ under the License.
 
    集群在多个 FE 的情况下，需要到开启 Profile 上报参数的 FE 上执行对应 Query, 参数并没有全局生效。
 
-    ```
+    ```sql
     --开启变量
     mysql> set enable_profile=true;
     Query OK, 0 rows affected (0.00 sec)
@@ -73,11 +73,11 @@ under the License.
     
     --执行对应 Query
     mysql> select id,name from test.test where name like "%RuO%";
-    +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-    | id                        | name                                                                                                                        |
-    +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+    +---------------------------+-------------------------------------------------------------------------------------------+
+    | id                        | name                                                                                      |
+    +---------------------------+-------------------------------------------------------------------------------------------+
     | 1ZWXYGbb8nr5Pi29J4cEMyEMb | ZN1nqzBRSl1rTrr99rnX1aplxhRuOUTLw6so7rzjlRQ317gTPxh0dHljmrARDJjH7FjRkJW9c7YuUBmWikq7eNgmFKJPreWirDrGrFzUYH4eP6kDtSA3UTnNIIj |
-    +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+    +---------------------------+-------------------------------------------------------------------------------------------+
     1 row in set (0.01 sec)
     ```
 
@@ -86,6 +86,7 @@ under the License.
    集群在多个 FE 的情况下，需要访问执行对应 Query 的 FE HTTP 界面 ( HTTP://FE_IP:HTTP_PORT ) 的 QueryProfile 页面，点击对应 Profile ID 查看对应 Profile，还可以在 Profile 界面下载对应 Profile。
 
    ![profile1.png](/images/profile1.png)
+
    ![profile2.png](/images/profile2.png)
 
 ## Doris 集群访问外网受到限制
@@ -96,21 +97,21 @@ under the License.
 
 - 找到对应 Query ID
 
-    ```
+    ```sql
     --根据对应 Query 找到 Profile ID
     mysql> show query profile "/";
-    +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
-    | Profile ID                        | Task Type | Start Time          | End Time            | Total | Task State | User | Default Db | Sql Statement                                         |
-    +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
+    +---------------------------+-----------+-------------------+-------------------+-------+------------+------+------------+---------------+
+    | Profile ID                | Task Type | Start Time        | End Time          | Total | Task State | User | Default Db | Sql Statement  |
+    +---------------------------+-----------+-------------------+-------------------+-------+------------+------+------------+---------------+
     | 1b0bb22689734d30-bbe56e17c2ff21dc | QUERY     | 2024-02-28 11:00:17 | 2024-02-28 11:00:17 | 7ms   | EOF        | root |            | select id,name from test.test where name like "%RuO%" |
     | 202fb174510c4772-965289e8f7f0cf10 | QUERY     | 2024-02-25 19:39:20 | 2024-02-25 19:39:20 | 19ms  | EOF        | root |            | select id,name from test.test where name like "%KJ%"  |
-    +-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+------------+-------------------------------------------------------+
+    +---------------------------+-----------+-------------------+-------------------+-------+------------+------+------------+---------------+
     2 rows in set (0.00 sec)
     ```
 
 - 查询 Profile 并将 Profile 重定向到一个文本中
 
-    ```
+    ```sql
     模板：CURL -X GET -u user:password http://fe_ip:http_port/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
     
     [user@VM-10-6-centos profile]$ curl -X GET -u root:root http://127.0.0.1:8030/api/profile?query_id=1b0bb22689734d30-bbe56e17c2ff21dc > test.profile
@@ -119,9 +120,9 @@ under the License.
     100  1211    0  1211    0     0   168k      0 --:--:-- --:--:-- --:--:--  168k
     ```
 
-- 返回的 Profile 换行符为 \ \n 分析起来很不方便，可以在文本编辑工具中将 \ \n 替换为 \n
+- 返回的 Profile 换行符为 `\ \n` 分析起来很不方便，可以在文本编辑工具中将 `\ \n` 替换为 `\n`
 
-    ```
+    ```sql
     [user@VM-10-6-centos profile]$ cat test.profile
     {"msg":"success","code":0,"data":{"profile":"Query:\n  Summary:\n     
     - Profile ID: 1b0bb22689734d30-bbe56e17c2ff21dc\n     - Task Type: QUERY\n     
@@ -142,7 +143,7 @@ under the License.
     ```
 - 替换后的效果如下
 
-    ```
+    ```json
     {"msg":"success","code":0,"data":{"profile":"Query:
       Summary:
          - Profile ID: 1b0bb22689734d30-bbe56e17c2ff21dc

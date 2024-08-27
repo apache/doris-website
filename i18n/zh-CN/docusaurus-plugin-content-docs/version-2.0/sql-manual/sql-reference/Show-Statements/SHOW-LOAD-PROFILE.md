@@ -66,42 +66,42 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
    ```sql
    mysql> show load profile "/"\G
-*************************** 1. row ***************************
-                 JobId: 20010
+   *************************** 1. row ***************************
+                  JobId: 20010
                QueryId: 980014623046410a-af5d36f23381017f
                   User: root
-             DefaultDb: default_cluster:test
-                   SQL: LOAD LABEL xxx
-             QueryType: Load
-             StartTime: 2023-03-07 19:48:24
+               DefaultDb: default_cluster:test
+                     SQL: LOAD LABEL xxx
+               QueryType: Load
+               StartTime: 2023-03-07 19:48:24
                EndTime: 2023-03-07 19:50:45
-             TotalTime: 2m21s
+               TotalTime: 2m21s
             QueryState: N/A
                TraceId:
-          AnalysisTime: NULL
-              PlanTime: NULL
-          ScheduleTime: NULL
-       FetchResultTime: NULL
-       WriteResultTime: NULL
-WaitAndFetchResultTime: NULL
-*************************** 2. row ***************************
-                 JobId: N/A
+            AnalysisTime: NULL
+               PlanTime: NULL
+            ScheduleTime: NULL
+         FetchResultTime: NULL
+         WriteResultTime: NULL
+   WaitAndFetchResultTime: NULL
+   *************************** 2. row ***************************
+                  JobId: N/A
                QueryId: 7cc2d0282a7a4391-8dd75030185134d8
                   User: root
-             DefaultDb: default_cluster:test
-                   SQL: insert into xxx
-             QueryType: Load
-             StartTime: 2023-03-07 19:49:15
+               DefaultDb: default_cluster:test
+                     SQL: insert into xxx
+               QueryType: Load
+               StartTime: 2023-03-07 19:49:15
                EndTime: 2023-03-07 19:49:15
-             TotalTime: 102ms
+               TotalTime: 102ms
             QueryState: OK
                TraceId:
-          AnalysisTime: 825.277us
-              PlanTime: 4.126ms
-          ScheduleTime: N/A
-       FetchResultTime: 0ns
-       WriteResultTime: 0ns
-WaitAndFetchResultTime: N/A
+            AnalysisTime: 825.277us
+               PlanTime: 4.126ms
+            ScheduleTime: N/A
+         FetchResultTime: 0ns
+         WriteResultTime: 0ns
+   WaitAndFetchResultTime: N/A
    ```
 
 2. 查看有导入作业的子任务概况：

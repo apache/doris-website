@@ -24,9 +24,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# High-Concurrency Point Query
 
-<version since="2.0.0"></version>
+:::tip Tips
+This feature is supported since the Apache Doris 2.0 version
+:::
 
 ## Background 
 
