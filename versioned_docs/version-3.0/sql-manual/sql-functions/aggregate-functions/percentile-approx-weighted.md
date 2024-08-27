@@ -32,7 +32,7 @@ under the License.
 
 
 The function is similar to PERCENTILE_APPROX, with the only difference being an additional parameter w, which represents the number of times expr appears.
-
+Note that the value of parameter W needs to be greater than 0. If the value of a row is less than or equal to 0 during the calculation process, the current row will be skipped.
 ### example
 ```
 mysql >select * from quantile_weighted_table order by k;
