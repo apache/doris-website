@@ -1175,7 +1175,11 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
 
   Specify the import data format, support csv, json, the default is csv
 
-  <version since="1.2">supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc</version>
+  :::tip Tips
+  This feature is supported since the Apache Doris 1.2 version
+  :::
+  
+  supports `csv_with_names` (csv file line header filter), `csv_with_names_and_types` (csv file first two lines filter), parquet, orc
 
 + exec\_mem\_limit
 

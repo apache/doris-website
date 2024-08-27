@@ -203,7 +203,7 @@ When Trino is mapped, Doris's Database corresponds to a Schema in Trino that spe
 9. OceanBase
 
 <<<<<<< HEAD
-<version since="dev"></version>
+ 
 
 ```sql
 CREATE CATALOG jdbc_oceanbase_mysql PROPERTIES (
@@ -406,7 +406,7 @@ The transaction mechanism ensures the atomicity of data writing to JDBC External
 | Int256/UInt128/UInt256                               | STRING                   | Doris does not support data types of such orders of magnitude so these will be mapped to STRING.                                     |
 | DECIMAL                                              | DECIMAL/DECIMALV3/STRING | The Data type is based on the DECIMAL field's (precision, scale) and the `enable_decimal_conversion` configuration.                  |
 | Enum/IPv4/IPv6/UUID                                  | STRING                   | Data of IPv4 and IPv6 type will be displayed with an extra `/` as a prefix. To remove the `/`, you can use the `split_part`function. |
-| <version since="dev" type="inline"> Array </version> | ARRAY                    | Array internal basic type adaptation logic refers to the preceding types. Nested types are not supported                             |
+|   Array  | ARRAY                    | Array internal basic type adaptation logic refers to the preceding types. Nested types are not supported                             |
 | Other                                                | UNSUPPORTED              |                                                                                                                                      |
 
 ### Doris
@@ -473,7 +473,7 @@ The transaction mechanism ensures the atomicity of data writing to JDBC External
 | timestamp                                            | DATETIME/DATETIMEV2      | JDBC CATLOG uses DATETIMEV2 type default when connecting Trino                                                     |
 | varchar                                              | TEXT                     |                                                                                                                    |
 | char                                                 | CHAR                     |                                                                                                                    |
-| <version since="dev" type="inline"> array </version> | ARRAY                    | Array internal basic type adaptation logic refers to the preceding types. Nested types are not supported           |
+|   array  | ARRAY                    | Array internal basic type adaptation logic refers to the preceding types. Nested types are not supported           |
 | others                                               | UNSUPPORTED              |                                                                                                                    |
 
 **Note:**

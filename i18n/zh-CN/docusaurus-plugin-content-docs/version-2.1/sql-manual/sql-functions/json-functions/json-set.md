@@ -26,7 +26,7 @@ under the License.
 
 ## json_set
 
-<version since="dev"></version>
+ 
 
 ### Description
 #### Syntax
