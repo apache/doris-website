@@ -31,11 +31,10 @@ jobs:
         runs-on: ubuntu-latest
         environment: Production
         steps:
-            - name: Checkout
-              uses: actions/checkout@master
+            - name: Checkout ${{ github.ref }} ( ${{ github.event.pull_request.head.sha }} )
+              uses: actions/checkout@v3
               with:
-                  persist-credentials: false
-                  submodules: recursive
+                ref: ${{ github.event.pull_request.head.sha }}
 
             - name: clone common docs to versioned_docs
               run: |
@@ -96,7 +95,7 @@ jobs:
                 python-version: '3.9'
             
             - name: Run Python script with all commit SHAs
-              run: python check_move.py "${{ github.sha }}"
+              run: python check_move.py "${{ github.event.pull_request.head.sha }}"
         
             - name: Check exit code
               run: |
